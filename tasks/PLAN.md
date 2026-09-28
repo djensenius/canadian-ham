@@ -11,9 +11,9 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | P0 | Foundations | Monorepo skeleton, schemas, tooling, CI skeleton, and docs baseline exist. | todo |
 | P1 | Question bank pipeline | Official 2025 Basic source is vendored and importer emits validated EN+FR JSON. | todo |
 | P2 | Shared engine spec and fixtures | TypeScript and Swift fixture contracts define exam, quiz, scoring, and spaced repetition. | todo |
-| P3 | Web MVP | Static web app supports lessons shell, practice, mock exam, local progress, export/import/reset, and offline PWA. | todo |
+| P3 | Web MVP | Static web app supports lesson rendering, lesson quizzes, practice immediate/review-later modes, mock exam with reference sheet access, readiness guidance, local progress, export/import/reset, and offline PWA. | todo |
 | P4 | Curriculum | Lesson outline covers all 100 subsections; first authored lessons and explanations are tracked by coverage. | todo |
-| P5 | Apple app | SwiftUI iPhone/iPad/Mac app works fully offline with bundled content, SwiftData progress, mock exams, reference viewer, and no network code. | todo |
+| P5 | Apple app | SwiftUI iPhone/iPad/Mac app works fully offline with bundled lessons, quizzes, content, SwiftData progress, practice, mock exams, reference viewer, and no network code. | todo |
 | P6 | Polish and release | Accessibility, French UI, privacy label, web deployment, content-update process, and release checklists are complete. | todo |
 | Later | Deferred scope | Advanced, Morse trainer, watchOS, visionOS, and other deferred ideas are revisited only after v1. | todo |
 
@@ -28,28 +28,35 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-004 | P0 | todo | worker | T-003 | Add schema validation tests using small synthetic fixtures; tests pass locally and in CI skeleton. |
 | T-005 | P0 | todo | worker | T-002,T-004 | Add CI skeleton for markdown links, schema validation, content validation placeholder, and web/package tests placeholder. |
 | T-006 | P0 | todo | worker | T-000 | Add documentation release checklist issue template or task checklist covering licensing, privacy, and source verification. |
-| T-101 | P1 | todo | worker | T-001 | Vendor official 2025-07-15 Basic source files under `content/sources/ised/basic-2025-07-15/`; include checksum manifest for delimited TXT, English PDF, and English reference PDFs. |
-| T-102 | P1 | todo | worker | T-003,T-101 | Implement importer parser for semicolon-delimited UTF-8 CRLF TXT; trim header names; preserve official text verbatim. |
-| T-103 | P1 | todo | worker | T-102 | Add importer validation tests asserting 984 questions, 100 subsections, 11 fields, first/last IDs, 0 duplicate IDs, 0 missing French, and category counts. |
+| T-007 | P0 | todo | worker | T-006 | Record the ISED permission reference number/date/scope in `docs/content-licensing.md`; do not commit private correspondence unless explicitly approved. |
+| T-101 | P1 | todo | worker | T-001,T-007 | Vendor official 2025-07-15 Basic source files under `content/sources/ised/basic-2025-07-15/` only for artifacts covered by the permission record; include checksum manifest for covered artifacts; for any artifact not clearly in scope, commit only URL plus checksum metadata. |
+| T-102 | P1 | todo | worker | T-003,T-101 | Implement importer parser for semicolon-delimited UTF-8 CRLF TXT; trim header names only; preserve field values verbatim; assert no quoting and no embedded newlines for the current source. |
+| T-103 | P1 | todo | worker | T-102 | Add importer validation tests asserting 984 questions, 100 subsections, 11 fields, first/last IDs, 0 duplicate IDs, 0 missing French, category counts, and the privilege question-ID citations in `exam-facts.md` against imported correct answers. |
 | T-104 | P1 | todo | worker | T-102 | Add position-dependent answer lint; fail on phrases requiring fixed answer letters or positions; document reviewed exceptions if any. |
-| T-105 | P1 | todo | worker | T-102,T-103 | Emit normalized `basic-2025-07-15` JSON for questions, subsections, categories, and source manifest. |
-| T-106 | P1 | todo | worker | T-105 | Add hand-maintained `content/categories.json` with eight English names, verified counts, and pending French names. |
+| T-106 | P1 | todo | worker | T-102,T-103 | Add hand-maintained `content/categories.json` with eight English names, verified counts, and pending French names. |
+| T-105 | P1 | todo | worker | T-102,T-103,T-106 | Emit normalized `basic-2025-07-15` JSON for questions, subsections, categories, and source manifest. |
 | T-107 | P1 | todo | worker | T-105 | Add import reproducibility test comparing normalized output from source to committed/generated expected output. |
-| T-201 | P2 | todo | worker | T-003 | Create shared fixture format for seeded RNG, question selection, answer shuffling, scoring, category breakdown, weak subsections, and Leitner updates. |
-| T-202 | P2 | todo | worker | T-201 | Add deterministic exam-generation fixtures requiring exactly one question per subsection and category counts 25/9/21/6/13/13/8/5. |
-| T-203 | P2 | todo | worker | T-201 | Add scoring fixtures for fail, pass, honours, and per-category breakdown. |
-| T-204 | P2 | todo | worker | T-201 | Add Leitner fixtures for correct promotions, incorrect reset to box 0, due intervals, and session submit timing. |
-| T-205 | P2 | todo | worker | T-202,T-203,T-204 | Implement TypeScript engine package that passes shared fixtures. |
-| T-206 | P2 | todo | worker | T-202,T-203,T-204 | Implement Swift engine package/test target that passes shared fixtures using `xbuild`. |
+| T-201 | P2 | todo | worker | T-003 | Create shared fixture format for seeded RNG, question selection, answer shuffling, scoring, category breakdown, weak subsections, readiness aggregation, and Leitner updates. |
+| T-202 | P2 | todo | worker | T-201 | Add deterministic exam-generation fixtures requiring exactly one question per subsection, category counts 25/9/21/6/13/13/8/5, specified RNG vector outputs, final question order, and choice permutations. |
+| T-203 | P2 | todo | worker | T-201 | Add scoring fixtures for boundary scores 0, 69, 70, 79, 80, and 100, per-category breakdown, and unanswered mock questions counted incorrect with `selectedSourceIndex: null`. |
+| T-204 | P2 | todo | worker | T-201 | Add Leitner fixtures for correct promotions, correct-before-due promotion, incorrect reset to box 0, fixed 86,400-second UTC due intervals, unseen virtual state, explicit `now`, and repeated session answers applied in order. |
+| T-208 | P2 | todo | worker | T-201 | Add readiness guidance fixtures for fewer than two exams, last-three aggregation, category-precedence checks, due-review precedence, pass-ready, honours-ready, and needs-review states. |
+| T-205 | P2 | todo | worker | T-202,T-203,T-204,T-208 | Implement TypeScript engine package that passes shared fixtures. |
+| T-206 | P2 | todo | worker | T-202,T-203,T-204,T-208 | Implement Swift engine SwiftPM package under `packages/engine-swift/` and test target that passes shared fixtures using `xbuild`. |
 | T-207 | P2 | todo | worker | T-205,T-206 | Add cross-platform fixture parity CI job or documented local command that runs both implementations. |
 | T-301 | P3 | todo | worker | T-002,T-205 | Scaffold static web app using owner-confirmed stack; default is Vite + React + TypeScript unless changed. |
 | T-302 | P3 | todo | worker | T-301,T-105 | Add web content loader for bundled normalized bank, lesson metadata, explanations, and manifest. |
-| T-303 | P3 | todo | worker | T-302 | Implement practice by category/subsection/all with answer shuffling and immediate feedback. |
-| T-304 | P3 | todo | worker | T-303 | Implement weak-area and due-review practice using local progress and Leitner state. |
-| T-305 | P3 | todo | worker | T-302,T-205 | Implement mock exam generation, review, scoring, pass/honours display, category breakdown, and optional timer default off. |
-| T-306 | P3 | todo | worker | T-303,T-305 | Implement IndexedDB progress store with export/import JSON and reset all data. |
-| T-307 | P3 | todo | worker | T-301,T-302 | Add PWA service worker caching app shell and bundled content; show offline readiness status. |
-| T-308 | P3 | todo | worker | T-307 | Add web privacy audit test confirming no third-party requests in normal flows. |
+| T-303 | P3 | todo | worker | T-302 | Implement IndexedDB progress store with export/import JSON and reset all data. |
+| T-304 | P3 | todo | worker | T-303,T-205 | Implement practice by category/subsection/all with answer shuffling and immediate feedback; progress and Leitner state update through the progress store. |
+| T-305 | P3 | todo | worker | T-304 | Implement web review-later practice mode with submit-time feedback and submit-time progress updates. |
+| T-306 | P3 | todo | worker | T-304,T-208 | Implement weak-area and due-review practice using local progress, `recentResults`, and Leitner state. |
+| T-307 | P3 | todo | worker | T-303,T-302,T-205 | Implement mock exam generation, review, scoring, pass/honours display, category breakdown, optional timer default off, unanswered-as-incorrect scoring, and progress updates. |
+| T-308 | P3 | todo | worker | T-307,T-101 | Add reference sheet access in web mock exam mode when licensing permits bundling; label it as exam reference material and keep it available offline when cached. |
+| T-309 | P3 | todo | worker | T-302 | Render available platform-neutral lessons on web with metadata, body content, previous/next navigation, and module overview. |
+| T-310 | P3 | todo | worker | T-304,T-309 | Implement web built-in lesson quizzes with official-bank and concept-check items, shuffled official answers, local scores, and retry history. |
+| T-311 | P3 | todo | worker | T-303,T-307,T-208 | Implement web readiness guidance for weak categories/subsections and due items using the shared readiness fixtures for REQ-LESSON-003. |
+| T-312 | P3 | todo | worker | T-307,T-309,T-310,T-311 | Add PWA service worker caching app shell, bundled content, lessons, fixtures needed at runtime, and permitted reference assets; show offline readiness status. |
+| T-313 | P3 | todo | worker | T-312 | Add web privacy audit test confirming no third-party requests in normal flows and document host log/CSP configuration. |
 | T-401 | P4 | todo | worker | T-105 | Create lesson directory structure and module index for eight categories. |
 | T-402 | P4 | todo | worker | T-401 | Add lesson outline front matter mapping all 100 subsections to lesson IDs; no full lesson prose required. |
 | T-403 | P4 | todo | worker | T-402 | Implement coverage check script that fails on missing or unknown subsection IDs and reports duplicate coverage. |
@@ -58,20 +65,22 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-406 | P4 | todo | worker | T-403,T-405 | Add explanation coverage report showing count covered out of 984 and blocking invalid question IDs. |
 | T-407 | P4 | todo | worker | T-404 | Add reference-sheet teaching links in relevant lessons without copying unapproved diagrams. |
 | T-501 | P5 | todo | worker | T-206 | Scaffold SwiftUI multiplatform Apple project for iOS, iPadOS, and macOS; verify build with `xbuild`. |
-| T-502 | P5 | todo | worker | T-501,T-105 | Bundle normalized question bank, lesson metadata, explanations, manifest, and permitted reference assets in Apple app. |
+| T-502 | P5 | todo | worker | T-501,T-105,T-402,T-405 | Bundle normalized question bank, lesson metadata, explanations, manifest, and permitted reference assets in Apple app. |
 | T-503 | P5 | todo | worker | T-502 | Implement SwiftData local progress models for QuestionProgress, ExamAttempt, lesson progress, and preferences. |
-| T-504 | P5 | todo | worker | T-502,T-206 | Implement Apple practice flow with shuffled answers, immediate feedback, and review-later mode. |
-| T-505 | P5 | todo | worker | T-502,T-206 | Implement Apple mock exam flow, scoring, review, category breakdown, and optional timer default off. |
+| T-504 | P5 | todo | worker | T-502,T-206,T-503 | Implement Apple practice flow with shuffled answers, immediate feedback, and review-later mode. |
+| T-505 | P5 | todo | worker | T-502,T-206,T-503 | Implement Apple mock exam flow, scoring, review, category breakdown, optional timer default off, unanswered-as-incorrect scoring, and progress updates. |
 | T-506 | P5 | todo | worker | T-503 | Implement user-initiated progress export/import JSON and reset all data. |
 | T-507 | P5 | todo | worker | T-502 | Implement offline reference sheet viewer for permitted bundled assets. |
-| T-508 | P5 | todo | worker | T-501,T-504,T-505 | Add Apple no-network audit: source search, entitlement review, no third-party SDK check, and airplane-mode smoke test plan. |
-| T-509 | P5 | todo | worker | T-508 | Run Apple app tests/build through `xbuild`; record command and result in task review notes. |
-| T-601 | P6 | todo | worker | T-306,T-506 | Run accessibility audit for web and Apple; fix labels, keyboard/VoiceOver navigation, dynamic text, contrast, and non-colour indicators. |
+| T-508 | P5 | todo | worker | T-506,T-507,T-504,T-505 | Add Apple no-network audit: source search, entitlement review, no third-party SDK check, and airplane-mode smoke test plan. |
+| T-509 | P5 | todo | worker | T-502 | Render platform-neutral lessons in the Apple app with metadata, body content, previous/next navigation, and module overview. |
+| T-510 | P5 | todo | worker | T-503,T-509,T-206 | Implement Apple built-in lesson quizzes with shuffled official-bank answers, local scores, and retry history. |
+| T-511 | P5 | todo | worker | T-508,T-509,T-510 | Run Apple app tests/build through `xbuild`; record command and result in task review notes. |
+| T-601 | P6 | todo | worker | T-313,T-508 | Run accessibility audit for web and Apple; fix labels, keyboard/VoiceOver navigation, dynamic text, contrast, and non-colour indicators. |
 | T-602 | P6 | todo | worker | T-302,T-502 | Add French UI infrastructure and translate original UI copy; use official ISED French question text only. |
-| T-603 | P6 | todo | worker | T-308,T-508 | Prepare App Store privacy label evidence for Data Not Collected and web privacy summary. |
-| T-604 | P6 | todo | worker | T-307 | Add static web deployment configuration and post-deploy offline smoke test checklist. |
+| T-603 | P6 | todo | worker | T-313,T-508 | Prepare App Store privacy label evidence for Data Not Collected and web privacy summary. |
+| T-604 | P6 | todo | worker | T-312 | Add static web deployment configuration and post-deploy offline smoke test checklist. |
 | T-605 | P6 | todo | worker | T-101,T-103,T-105 | Document and test content-update process for future ISED bank updates using checksum and validation, not file dates. |
-| T-606 | P6 | todo | worker | T-404,T-405,T-603 | Complete release about pages with attribution, disclaimer, source manifest, privacy summary, and active bank version. |
+| T-606 | P6 | todo | worker | T-309,T-405,T-603 | Complete release about pages with attribution, disclaimer, source manifest, privacy summary, and active bank version. |
 | T-607 | P6 | todo | worker | T-601,T-603,T-604,T-606 | Release candidate pass: all tests, link checks, privacy checks, accessibility checks, and licensing checklist pass. |
 | T-701 | Later | todo | worker | v1 release | Investigate Advanced qualification course as separate scope; do not mix with Basic bank pipeline unless approved. |
 | T-702 | Later | todo | worker | v1 release | Investigate Morse 5 wpm trainer as separate module. |

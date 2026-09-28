@@ -53,7 +53,7 @@ Implementation rules:
 
 ## Web no-data design
 
-The web app is a fully static site.
+The web app is a fully static site. Static hosting still means the host may see client IP addresses and user-agent data in ordinary HTTP request logs for app assets; the project does not add application-level tracking or server-side progress storage.
 
 Allowed local data:
 
@@ -79,7 +79,8 @@ Implementation rules:
 - Self-host fonts and static assets.
 - Serve content from same-origin static assets.
 - Avoid embedding third-party iframes, scripts, or pixels.
-- Use Content Security Policy compatible with a static app and no third-party connections.
+- Use Content Security Policy compatible with a static app and no third-party connections; some static hosts may require a `<meta http-equiv="Content-Security-Policy">` tag if response headers are not configurable.
+- Choose hosting and log settings that minimize retained request logs where possible, such as disabling optional access logs or setting the shortest available retention.
 - Export/import/reset are explicit settings actions.
 
 ## Forbidden dependency list
@@ -154,14 +155,15 @@ The project may still contain source URLs in documentation and source manifests 
 
 ### Web
 
-Policy: same-origin static asset requests only.
+Policy: same-origin static asset requests only. The app sends no progress or identifiers, but the static host can still observe asset requests and may record IP addresses in standard request logs.
 
 Verification targets:
 
 - No third-party requests in browser developer tools during app load and normal flows.
 - Service worker caches only same-origin app shell, content JSON, Markdown, and permitted reference assets.
 - Fonts are self-hosted.
-- Content Security Policy blocks unexpected `connect-src`, `script-src`, `img-src`, and `font-src` third-party origins.
+- Content Security Policy blocks unexpected `connect-src`, `script-src`, `img-src`, and `font-src` third-party origins; if host response headers are unavailable, document and test the fallback CSP `<meta>` tag.
+- Hosting configuration disables optional access logs or uses the shortest retention available; any unavoidable host logs are treated as hosting operations data, not application analytics.
 
 ## Verification checklist
 
@@ -216,6 +218,7 @@ Reset semantics:
 
 - Deletes lesson progress, practice history, mock exam attempts, question progress, and local preferences unless the user chooses a narrower reset in a future feature.
 - Does not delete bundled content because bundled content is app/site data, not user progress.
+- On macOS, deleting the app bundle may leave the app container behind; users should use Reset all data when they want reliable local progress deletion. On iOS and iPadOS, deleting the app normally removes app-local progress.
 
 ## Open privacy questions
 

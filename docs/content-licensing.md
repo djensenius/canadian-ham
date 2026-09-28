@@ -25,7 +25,7 @@ Record the written permission here when available in project records.
 | Storage location for permission evidence | Pending: private owner records; do not commit private correspondence unless approved |
 | Release review status | Blocked until reference number/date/scope are recorded |
 
-Do not infer permission scope beyond the written clearance. If the permission does not clearly cover an artifact, treat that artifact as blocked for bundling until clarified.
+Do not infer permission scope beyond the written clearance. T-101 must not commit ISED source artifacts until the permission reference record exists. If the permission does not clearly cover an artifact, commit only its canonical URL and checksum until clarified; do not vendor or bundle the artifact itself.
 
 ## Attribution text
 
@@ -49,7 +49,7 @@ The repository must keep ISED source data separate from original project content
 
 | Content class | Location | Rules |
 |---|---|---|
-| ISED official source artifacts | `content/sources/ised/basic-2025-07-15/` | Store verbatim files and checksums. Do not edit. |
+| ISED official source artifacts | `content/sources/ised/basic-2025-07-15/` | Store verbatim files and checksums only after the permission record is filed and scope covers the artifact. Do not edit. For artifacts not clearly in scope, store only URL and checksum metadata. |
 | Normalized ISED question data | `content/normalized/basic-2025-07-15/` | Generated from official source. Preserve text verbatim. Include source manifest. |
 | Category metadata | `content/categories.json` | Hand-maintained. English names from verified ISED/RAC materials. French names pending official verification. |
 | Original lessons | `content/lessons/` | Original writing by project. May cite ISED question IDs and RBR-4. Must not copy RAC/Coax study-guide text. |

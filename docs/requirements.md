@@ -64,7 +64,7 @@ Needs:
 
 | ID | Decision | Rationale |
 |---|---|---|
-| DEC-REPO-001 | Use a single monorepo for now with `content/`, `apps/web/`, `apps/apple/`, `packages/`, `fixtures/`, `docs/`, and `tasks/`. Split only if real pain appears. | Solo developer, schema churn, atomic cross-platform changes, and the AGENTS.md worktree/review workflow. |
+| DEC-REPO-001 | Use a single monorepo for now with `content/`, `apps/web/`, `apps/apple/`, `packages/engine-ts/`, `packages/engine-swift/`, `packages/schemas/`, `fixtures/`, `docs/`, and `tasks/`. Split only if real pain appears. | Solo developer, schema churn, atomic cross-platform changes, and the AGENTS.md worktree/review workflow. |
 | DEC-CONTENT-001 | Course content is platform-neutral Markdown plus JSON. | Keeps lesson and bank content reusable across web and Apple apps. |
 | DEC-ENGINE-001 | Implement the quiz and exam engine natively twice: TypeScript for web and Swift for Apple. Both must pass the same JSON fixtures in `fixtures/`. | Avoids cross-language runtime dependencies while preserving behavioural consistency. |
 | DEC-BANK-001 | Use only the 2025 Basic question bank effective 2025-07-15. | Prevents user confusion and fixture ambiguity. |
@@ -89,10 +89,11 @@ The system shall ingest only the 2025 Basic delimited question bank described in
 Acceptance criteria:
 
 - Importer accepts UTF-8 without BOM, CRLF line endings, semicolon separator, one header row, and 11 fields.
-- Importer trims header names, including the trailing space in `question_id `.
+- Importer trims header names, including the trailing space in `question_id `, but does not trim field values.
+- Importer asserts the current source format has no quoted fields and no embedded newlines.
 - Validation asserts 984 questions, 100 subsections, no duplicate IDs, no missing French, first ID `B-001-001-001`, and last ID `B-008-005-011`.
 - Validation asserts the eight category totals from [exam-facts.md](exam-facts.md).
-- Any source checksum mismatch is shown as a deliberate bank-version warning, not silently ignored.
+- Any source checksum mismatch fails the import. New bank versions must follow the re-verification procedure in [exam-facts.md](exam-facts.md) before being accepted.
 
 #### REQ-CONTENT-002: Verbatim ISED question text
 
@@ -100,7 +101,7 @@ The system shall preserve ISED question and answer text verbatim in English and 
 
 Acceptance criteria:
 
-- Normalized JSON stores source text exactly except for parser-level newline decoding and surrounding field parsing.
+- Normalized JSON stores source field values exactly as imported; header names may be trimmed, but question and answer field values are not trimmed or rewritten.
 - Review tooling can compare normalized text back to imported source records.
 - No lesson or UI pipeline rewrites ISED question or answer text.
 - The app can display the official French question text even before French UI is complete.
@@ -114,7 +115,7 @@ Acceptance criteria:
 - Category metadata includes the eight English names and counts from [exam-facts.md](exam-facts.md).
 - French category names are empty or marked pending until verified.
 - Subsections are derived from question IDs and linked to lesson coverage.
-- Build validation fails if any expected subsection is missing from content coverage.
+- Build validation fails if any expected subsection is missing from content coverage or if lesson coverage names an unknown subsection ID.
 
 #### REQ-CONTENT-004: Lesson curriculum coverage
 
@@ -123,7 +124,7 @@ The system shall define a lesson outline that maps all 100 subsections to at lea
 Acceptance criteria:
 
 - Lesson front matter declares covered subsection IDs.
-- A coverage script fails if any of the 100 subsections has zero lesson mappings.
+- A coverage script fails if any of the 100 subsections has zero lesson mappings or if a lesson references an unknown subsection ID.
 - A coverage report lists subsections covered by more than one lesson for review.
 - Curriculum modules map to the eight official categories.
 
@@ -179,6 +180,7 @@ Acceptance criteria:
 
 - After practice or mock exams, the app can list the weakest subsections by recent correctness.
 - Recommendations are local-only and deterministic from stored progress.
+- Readiness aggregation uses the fixture-testable precedence in [architecture.md](architecture.md): fewer than two completed mock exams returns `not-enough-data`; category weakness or due reviews returns `needs-review`; otherwise two of the last three exams determine `honours-ready` or `pass-ready`.
 - Readiness copy distinguishes passing readiness from Basic with Honours readiness.
 
 ### Practice and quiz engine
@@ -232,7 +234,7 @@ The system shall store per-question and per-subsection progress locally.
 
 Acceptance criteria:
 
-- Progress includes attempts, correct attempts, last attempted timestamp, last result, Leitner box, due date, and recent streak.
+- Progress includes attempts, correct attempts, last attempted timestamp, last result, Leitner box, due date, and `recentResults`.
 - Progress can be exported to JSON and imported on another device/browser by user action.
 - Reset all data deletes local progress and preferences.
 
@@ -259,7 +261,7 @@ Acceptance criteria:
 - `score >= 70` is pass.
 - `score >= 80` is Basic with Honours.
 - Category breakdown shows correct/total and percent for each category.
-- Weak subsections include wrong answers and optionally slow or low-confidence answers if captured locally.
+- Weak subsections include wrong and unanswered answers; unanswered mock-exam questions are stored with `selectedSourceIndex: null` and count as incorrect.
 
 #### REQ-EXAM-003: Exam timer
 
@@ -343,7 +345,7 @@ The Apple app shall store progress locally using SwiftData.
 Acceptance criteria:
 
 - Progress schema stores the fields in REQ-QUIZ-005.
-- Deleting the app deletes app-local progress.
+- On iOS and iPadOS, deleting the app deletes app-local progress. On macOS, deleting the app does not reliably delete the app container, so Reset all data must be available and documented.
 - No iCloud sync is enabled in v1.
 - Import/export JSON is user-initiated only.
 
@@ -469,7 +471,7 @@ Coverage check requirement:
 - Generate the expected subsection set from normalized question IDs.
 - Read lesson front matter `covers` arrays.
 - Fail if expected minus covered is non-empty.
-- Warn if a lesson references an unknown subsection.
+- Fail if a lesson references an unknown subsection.
 - Report duplicate coverage as informational.
 
 ## Open questions
