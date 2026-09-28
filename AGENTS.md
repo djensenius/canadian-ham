@@ -27,4 +27,8 @@
 - If a build is waiting on the lock, wait. Do not kill other builds.
 
 ## Project notes
-<!-- Scheme names, test destinations, conventions, things agents get wrong. -->
+- Monorepo layout planned as `content/`, `apps/web/`, `apps/apple/`, `packages/`, `fixtures/`, `docs/`, and `tasks/`.
+- Active question bank is only ISED Basic 2025-07-15; delimited TXT SHA-256 `34c7cd7967addfde648c566d0ecf25bf3d1e071c603b5101cfecc7bd0cbc284f`.
+- Preserve ISED EN/FR question text verbatim; original lessons/explanations stay separate from official data.
+- Apple app must work fully offline and collect no data; no networking code, third-party SDKs, analytics, or iCloud sync in v1.
+- Use `xbuild` for Apple builds/tests; never call `xcodebuild` directly.
