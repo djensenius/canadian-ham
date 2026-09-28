@@ -180,7 +180,7 @@ Acceptance criteria:
 
 - After practice or mock exams, the app can list the weakest subsections by recent correctness.
 - Recommendations are local-only and deterministic from stored progress.
-- Readiness aggregation uses the fixture-testable precedence in [architecture.md](architecture.md): fewer than two completed mock exams returns `not-enough-data`; category weakness or due reviews returns `needs-review`; otherwise two of the last three exams determine `honours-ready` or `pass-ready`.
+- Readiness aggregation uses the fixture-testable precedence in [architecture.md](architecture.md): fewer than two completed mock exams returns `not-enough-data`; category weakness or due reviews from stored progress records returns `needs-review`; otherwise two of the last three exams determine `honours-ready` or `pass-ready`.
 - Readiness copy distinguishes passing readiness from Basic with Honours readiness.
 
 ### Practice and quiz engine
@@ -194,7 +194,7 @@ Acceptance criteria:
 - Category practice draws only from selected category IDs.
 - Subsection practice draws only from selected subsection IDs.
 - Weak-area practice draws from locally computed weak subsections.
-- Due-review practice draws from Leitner due dates.
+- Due-review practice draws only from stored progress records whose Leitner `dueAt <= now`; unseen questions with no stored progress record are not due.
 
 #### REQ-QUIZ-002: Answer shuffling
 
@@ -234,7 +234,7 @@ The system shall store per-question and per-subsection progress locally.
 
 Acceptance criteria:
 
-- Progress includes attempts, correct attempts, last attempted timestamp, last result, Leitner box, due date, and `recentResults`.
+- Progress includes attempts, correct attempts, last attempted timestamp, last result, Leitner box, due date, and `recentResults`; `recentResults` keeps at most five booleans, ordered oldest to newest.
 - Progress can be exported to JSON and imported on another device/browser by user action.
 - Reset all data deletes local progress and preferences.
 

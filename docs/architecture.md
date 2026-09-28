@@ -45,7 +45,7 @@ canadian-ham/
 Notes:
 
 - The layout separates ISED data from original lessons and explanations.
-- `content/sources/ised/basic-2025-07-15/` contains official artifacts and checksum files for traceability after the permission record confirms scope; artifacts outside scope are represented only by URL and checksum metadata.
+- `content/sources/ised/basic-2025-07-15/` contains the official question-bank TXT and PDF, plus checksum files, after T-007 records the permission reference/date/scope that the owner states covers those question-bank artifacts. Artifacts outside the recorded scope are represented only by URL and checksum metadata.
 - `content/normalized/` contains generated app-ready JSON only after the importer is implemented and reviewed.
 - Shared fixtures in `fixtures/` are the contract between TypeScript and Swift engines.
 
@@ -62,9 +62,9 @@ Notes:
 
 ### Pipeline stages
 
-1. Vendor official source files under `content/sources/ised/basic-2025-07-15/` only after the permission record covers the artifact; otherwise record only URL plus checksum metadata.
+1. Vendor the official question-bank TXT and PDF under `content/sources/ised/basic-2025-07-15/` after T-007 records the permission reference/date/scope that the owner states covers those artifacts. For artifacts outside the recorded scope, record only URL plus checksum metadata.
 2. Record SHA-256 checksums in a manifest and fail import on any checksum mismatch.
-3. Parse the delimited TXT with strict format checks: trim header names only, preserve field values exactly, and assert the current source has no quoting or embedded newlines.
+3. Parse the committed delimited TXT in importer and CI runs with strict format checks: trim header names only, preserve field values exactly, and reject quoted fields or embedded newlines.
 4. Normalize records into JSON with stable IDs and language-keyed text.
 5. Derive categories and subsections from question IDs.
 6. Join hand-maintained category metadata.
@@ -383,7 +383,7 @@ PCG32 initialization and output:
 
 - Algorithm: PCG32 XSH RR 64/32, matching the reference `pcg32_srandom` procedure.
 - Multiplier: `6364136223846793005` (`0x5851f42d4c957f2d`).
-- Fixed `initseq`: `1442695040888963407` (`0x14057b7ef767814f`).
+- Fixed `initseq`: `1442695040888963407` (`0x14057b7ef767814f`). This value is passed as `initseq`, so `inc = (initseq << 1) | 1 = 0x280af6fdeecf029f`; implementers must not use `1442695040888963407` directly as `inc`.
 - Initialization procedure, with all arithmetic modulo `2^64`:
   1. `state = 0`.
   2. `inc = (initseq << 1) | 1`.
@@ -423,8 +423,8 @@ Input:
 Algorithm and exact RNG consumption order:
 
 1. Group questions by subsection ID.
-2. Assert a full mock exam has exactly 100 groups. Fixture inputs may use a smaller explicit group count and must assert that count instead.
-3. For each subsection in ascending ID order, choose one question with `bounded(questionCountInSubsection)`. This consumes one bounded RNG result per subsection before any shuffling.
+2. Assert a full mock exam has exactly 100 groups. Fixture inputs may use a smaller explicit group count and must assert that count instead. Sort subsection IDs ascending by ordinal byte/ASCII comparison of the ID string, and sort question IDs within each subsection ascending by the same ordinal byte/ASCII comparison.
+3. For each subsection in sorted order, choose `questionIds[bounded(questionIds.count)]` from that subsection's sorted question ID list. This consumes one bounded RNG result per subsection before any shuffling.
 4. Create an exam item with question ID, category ID, subsection ID, and source answer indexes `[0, 1, 2, 3]`. Source index `0` is the correct answer because the importer preserves ISED's correct-answer column first.
 5. Shuffle the selected exam items using Fisher-Yates and the same seeded RNG. This consumes all question-order shuffle draws after selection and before answer shuffles.
 6. For each item in final question order, shuffle answer source indexes `[0, 1, 2, 3]` using Fisher-Yates and record the resulting `choicePermutation`. This consumes all choice-shuffle draws in final display order.
@@ -450,14 +450,14 @@ Supported scopes:
 - `category`: selected category IDs.
 - `subsection`: selected subsection IDs.
 - `weak`: subsections whose recent performance is below threshold.
-- `due`: questions whose Leitner `dueAt` is in the past.
+- `due`: questions with a stored progress record whose Leitner `dueAt <= now`; unseen questions with no stored progress record are not due and are excluded from this scope.
 - `all`: all active questions.
 
 Default item selection:
 
 1. Build eligible question IDs from the selected scope.
 2. Exclude questions only if the user explicitly chooses an exclusion filter.
-3. Prioritize due questions, then unseen questions, then weakest recent performance.
+3. Prioritize due questions, then unseen questions, then other questions ordered by weakest recent performance. In the `due` scope, eligible questions are only stored progress records with `dueAt <= now`, so unseen questions are excluded.
 4. Shuffle ties with seeded RNG.
 5. Record answer choice permutations.
 
@@ -484,7 +484,7 @@ Readiness inputs for v1:
 - Completed mock exams sorted by `submittedAt` descending.
 - The most recent three completed mock exams, or all completed mock exams if only two exist.
 - Per-attempt category breakdowns from those same attempts.
-- Current due-review item count from Leitner progress.
+- Current due-review item count from stored Leitner progress records where `dueAt <= now`; unseen questions with no record are not counted.
 
 Readiness aggregation and precedence:
 
@@ -495,12 +495,15 @@ Readiness aggregation and precedence:
 5. If at least two considered attempts score 70 or higher, return `pass-ready`.
 6. Otherwise return `needs-review`.
 
-This order is fixture-testable: fixtures provide ordered mock attempts, per-category totals, due-review count, and the expected readiness state/reasons.
+This order is fixture-testable: fixtures provide ordered mock attempts, per-category totals, due-review count, and the expected readiness state/reasons. A new user with zero stored progress records has due-review count `0`; with fewer than two completed mock exams, readiness is `not-enough-data`.
 
 Weak subsection detection:
 
-- A subsection is weak if it has at least two recent attempts and its last five attempts have less than 70% correct.
+- `recentResults` has maximum length 5 per question record, is ordered oldest to newest, and is updated by appending the newest result then truncating from the front until at most 5 entries remain.
+- A subsection's recent attempts are the multiset union of every boolean in `recentResults` from stored progress records for active questions in that subsection; duplicate true/false entries are counted, and questions with no progress record contribute zero attempts.
+- A subsection is weak if that union has at least two attempts and `correct / total < 70%`.
 - A subsection is also weak if it was missed or unanswered on the latest mock exam.
+- Fixtures must cover the max length, ordering, append/truncate behaviour, and subsection weak threshold.
 - If confidence ratings are later added, they must remain local-only and fixture-tested before affecting readiness.
 
 ### Spaced repetition
@@ -511,13 +514,14 @@ State per stored question record:
 
 - `box`: integer from 0 to 5.
 - `dueAt`: UTC timestamp.
-- `attempts`, `correctAttempts`, `recentResults`.
+- `attempts`, `correctAttempts`, `recentResults` where `recentResults` follows the max-length and ordering rules above.
 
 Time rules:
 
 - `now` is an explicit engine input for every progress update; engines must not read wall-clock time inside the Leitner update function.
 - Interval units are fixed multiples of 86,400 seconds in UTC, not calendar days in local time.
-- Unseen questions have no stored record. When evaluated, they are treated as virtual `box = 0`, `dueAt = now`.
+- A question is due only when it has a stored progress record and `dueAt <= now`; unseen questions have no stored record, are not due, and are excluded from due-review counts and the `due` practice scope.
+- The virtual `box = 0` state is used only as the starting point when applying the first answer to an unseen question.
 - A correct answer before `dueAt` still promotes; v1 does not block early promotion.
 - Repeated answers to the same question in one session are applied in answer order, each with its own explicit `now` value or the session submit time if the mode batches updates.
 
@@ -579,7 +583,7 @@ Build rule:
 
 Fixture categories:
 
-- Importer fixtures: header trimming, checksum manifest, count validation, duplicate detection, missing French detection, category counts.
+- Importer fixtures: header trimming, checksum manifest, checksum-mismatch failure, count validation, duplicate detection, missing French detection, category counts, untrimmed field values, and rejection of quoted fields or embedded newlines.
 - Engine fixtures: deterministic mock exam generation, RNG vectors, answer permutation recording, scoring boundary cases (`0`, `69`, `70`, `79`, `80`, `100`), unanswered-as-incorrect scoring, category breakdown, weak-subsection detection, readiness aggregation, and Leitner updates.
 - Progress fixtures: export/import round trip, reset semantics, schema version migration when needed.
 - Content coverage fixtures: all 100 subsections mapped to lessons; unknown subsection IDs fail validation; explanations reference known question IDs.

@@ -2,7 +2,7 @@
 
 This document defines how `canadian-ham` separates official ISED data from original project content and how it records permission, attribution, and disclaimers.
 
-The owner states that written Crown copyright clearance from ISED has been granted. The project must still record permission details before release.
+The owner states that written Crown copyright clearance from ISED has been granted and covers the 2025 Basic question bank TXT and PDF. The project must still record permission reference number, date, and scope before vendoring those files or release.
 
 Related documents:
 
@@ -25,7 +25,7 @@ Record the written permission here when available in project records.
 | Storage location for permission evidence | Pending: private owner records; do not commit private correspondence unless approved |
 | Release review status | Blocked until reference number/date/scope are recorded |
 
-Do not infer permission scope beyond the written clearance. T-101 must not commit ISED source artifacts until the permission reference record exists. If the permission does not clearly cover an artifact, commit only its canonical URL and checksum until clarified; do not vendor or bundle the artifact itself.
+Do not infer permission scope beyond the written clearance. Once T-007 records the reference number/date/scope for the question-bank permission, T-101 may commit the covered question-bank TXT and PDF under `content/sources/ised/basic-2025-07-15/`; importer and CI jobs run against the committed TXT. URL-plus-checksum-only handling applies only to artifacts outside the recorded scope; do not vendor or bundle those artifacts until clarified.
 
 ## Attribution text
 
@@ -49,7 +49,7 @@ The repository must keep ISED source data separate from original project content
 
 | Content class | Location | Rules |
 |---|---|---|
-| ISED official source artifacts | `content/sources/ised/basic-2025-07-15/` | Store verbatim files and checksums only after the permission record is filed and scope covers the artifact. Do not edit. For artifacts not clearly in scope, store only URL and checksum metadata. |
+| ISED official source artifacts | `content/sources/ised/basic-2025-07-15/` | Store the covered question-bank TXT and PDF verbatim with checksums after T-007 records the permission reference/date/scope. Do not edit. Importer and CI jobs run against the committed TXT. For artifacts outside the recorded scope, store only URL and checksum metadata. |
 | Normalized ISED question data | `content/normalized/basic-2025-07-15/` | Generated from official source. Preserve text verbatim. Include source manifest. |
 | Category metadata | `content/categories.json` | Hand-maintained. English names from verified ISED/RAC materials. French names pending official verification. |
 | Original lessons | `content/lessons/` | Original writing by project. May cite ISED question IDs and RBR-4. Must not copy RAC/Coax study-guide text. |
@@ -143,6 +143,5 @@ Before any public release:
 - Fill in ISED permission reference number.
 - Fill in ISED permission date.
 - Confirm whether permission explicitly covers bundling the English reference PDFs in both web and Apple apps.
-- Confirm whether permission covers generated normalized JSON derived from the delimited TXT.
 - Verify official French category names before displaying French category headings.
 - Locate French 2025 Basic reference material or document its absence in release notes.
