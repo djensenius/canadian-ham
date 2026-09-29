@@ -11,6 +11,8 @@ import { afterEach, beforeEach, describe, it, vi } from "vitest";
 
 import { App, AppErrorBoundary } from "./App";
 import { bankId, loadQuestions, loadQuestionsFromUrl, type Question } from "./data/bank";
+import { explanationForQuestion, parseChoiceNotes } from "./data/explanations";
+import { lessonQuizzesById, buildLessonQuizItems } from "./data/quizzes";
 import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExportV1 } from "./lib/progressStore";
 import { applyThemePreference, readStoredThemePreference, THEME_COLORS, THEME_STORAGE_KEY } from "./lib/theme";
 import { buildExamAttempt, createMockExam } from "./lib/studyEngine";
@@ -124,6 +126,37 @@ function readinessAttempt(seed: string, submittedAt: string, percent: number): E
   };
 }
 
+function assertChoiceNoteMapping(quizId: string): void {
+  const quiz = lessonQuizzesById.get(quizId);
+  assert.ok(quiz);
+  for (let seedIndex = 0; seedIndex < 100; seedIndex += 1) {
+    const officialItem = buildLessonQuizItems(quiz, `mapping-${quizId}-${seedIndex}`).find((item) => item.type === "official" && item.choicePermutation.some((sourceIndex, displayIndex) => sourceIndex !== displayIndex));
+    if (officialItem?.type !== "official") {
+      continue;
+    }
+    const question = testQuestions.find((candidate) => candidate.id === officialItem.questionId);
+    const explanation = explanationForQuestion(officialItem.questionId);
+    assert.ok(question);
+    assert.ok(explanation);
+    const notes = parseChoiceNotes(explanation, "en");
+    assert.ok(notes.length > 0);
+    for (const note of notes) {
+      const displayedIndex = officialItem.choicePermutation.findIndex((sourceIndex) => sourceIndex === note.sourceIndex);
+      const answer = question.answers.find((candidate) => candidate.sourceIndex === note.sourceIndex);
+      assert.ok(displayedIndex >= 0, `${officialItem.questionId} sourceIndex ${note.sourceIndex} is displayed`);
+      assert.ok(answer, `${officialItem.questionId} sourceIndex ${note.sourceIndex} has an answer`);
+      assert.match(note.note, new RegExp(escapeRegExp(answer.text.en.slice(0, 12))));
+      assert.equal(officialItem.choicePermutation[displayedIndex], note.sourceIndex);
+    }
+    return;
+  }
+  assert.fail(`No shuffled official item found for ${quizId}.`);
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function progressExport(): ProgressExportV1 {
   return {
     schema: "canadian-ham.progress-export",
@@ -132,6 +165,8 @@ function progressExport(): ProgressExportV1 {
     bankId,
     questionProgress: [],
     examAttempts: [allCorrectAttempt("imported", "2026-01-02T04:00:00.000Z")],
+    lessonProgress: [{ lessonId: "L-005-01", readAt: fixedNow, readCount: 1 }],
+    lessonQuizAttempts: [{ id: "imported-lesson-quiz", quizId: "QZ-L-005-01-A", lessonId: "L-005-01", submittedAt: fixedNow, correct: 1, total: 1, percent: 100, officialQuestionIds: ["B-005-001-001"], incorrectOfficialQuestionIds: [], incorrectConceptCheckIds: [] }],
     preferences: defaultPreferences,
   };
 }
@@ -210,6 +245,67 @@ describe("App accessibility and flows", () => {
     await expectNoAxeViolations(container);
   });
 
+  it("automatically includes M4 and M6 lessons from content and renders them", async () => {
+    window.location.hash = "#/learn";
+    const store = createStore("m4-m6-lessons");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "m4-m6-seed"} />);
+
+    await screen.findByRole("heading", { name: "Learn" });
+    assert.ok(screen.getByRole("heading", { name: "Circuit Components" }));
+    assert.ok(screen.getByRole("heading", { name: "Feedlines and Antenna Systems" }));
+
+    window.location.hash = "#/learn/M4/L-004-01";
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+    await screen.findByRole("heading", { name: "Amplifiers and diodes" });
+    await screen.findByRole("heading", { name: "QZ-L-004-01-A" });
+
+    await user.click(screen.getByRole("button", { name: "Learn" }));
+    window.location.hash = "#/learn/M6/L-006-01";
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+    await screen.findByRole("heading", { name: "Feedline basics and types" });
+    await screen.findByRole("heading", { name: "QZ-L-006-01-A" });
+  });
+
+  it("updates lesson navigation state for next, previous, sidebar, and browser history", async () => {
+    window.location.hash = "#/learn/M5/L-005-01";
+    const store = createStore("lesson-navigation");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "lesson-nav-seed"} />);
+
+    await screen.findByRole("heading", { name: "Units, conductors, and current" });
+    await user.click(screen.getByRole("button", { name: /^Next:/ }));
+    await screen.findByRole("heading", { name: "Power and Ohm’s law" });
+    await waitFor(() => assert.equal(document.activeElement?.tagName, "MAIN"));
+    assert.equal(window.location.hash, "#/learn/M5/L-005-02");
+
+    await user.click(screen.getByRole("button", { name: "Units, conductors, and current" }));
+    await screen.findByRole("heading", { name: "Units, conductors, and current" });
+    assert.equal(window.location.hash, "#/learn/M5/L-005-01");
+
+    await user.click(screen.getByRole("button", { name: /^Next:/ }));
+    await screen.findByRole("heading", { name: "Power and Ohm’s law" });
+    await user.click(screen.getByRole("button", { name: /^Previous:/ }));
+    await screen.findByRole("heading", { name: "Units, conductors, and current" });
+
+    await user.click(screen.getByRole("button", { name: /^Next:/ }));
+    await screen.findByRole("heading", { name: "Power and Ohm’s law" });
+    window.history.back();
+    await waitFor(() => assert.equal(window.location.hash, "#/learn/M5/L-005-01"));
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+    await screen.findByRole("heading", { name: "Units, conductors, and current" });
+
+    window.history.forward();
+    await waitFor(() => assert.equal(window.location.hash, "#/learn/M5/L-005-02"));
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+    await screen.findByRole("heading", { name: "Power and Ohm’s law" });
+  });
+
+  it("maps shuffled explanation notes to displayed choices for real M4 and M6 questions", () => {
+    assertChoiceNoteMapping("QZ-L-004-01-A");
+    assertChoiceNoteMapping("QZ-L-006-01-A");
+  });
+
   it("renders lesson quizzes with official explanations and stores attempts without concept Leitner updates", async () => {
     window.location.hash = "#/learn/M5/L-005-01";
     const store = createStore("lesson-quiz");
@@ -224,6 +320,8 @@ describe("App accessibility and flows", () => {
       } else {
         await user.click(screen.getAllByTestId("answer-choice")[0]!);
       }
+      const status = await screen.findByRole("status");
+      assert.equal(document.activeElement, status);
       const next = screen.getByRole("button", { name: "Next" });
       if (!next.hasAttribute("disabled")) {
         await user.click(next);
@@ -231,9 +329,14 @@ describe("App accessibility and flows", () => {
     }
     await user.click(screen.getByRole("button", { name: "Submit lesson quiz" }));
     await waitFor(async () => assert.equal((await store.getLessonQuizAttempts()).length, 1));
+    const attempts = await store.getLessonQuizAttempts();
+    assert.equal(attempts[0]?.total, 11);
+    assert.equal(attempts[0]?.officialQuestionIds.length, 8);
+    assert.ok((attempts[0]?.incorrectConceptCheckIds.length ?? 0) <= 3);
     const progress = await store.getQuestionProgress();
     assert.ok(progress.length > 0);
     assert.ok(progress.length <= 8);
+    assert.ok(progress.every((record) => attempts[0]?.officialQuestionIds.includes(record.questionId)));
     await expectNoAxeViolations(container);
   });
 

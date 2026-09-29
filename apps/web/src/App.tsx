@@ -167,8 +167,8 @@ async function readRecoverablePreferences(store: ProgressStore): Promise<WebPref
   }
 }
 
-function routeFromHash(fallback: Route): Route {
-  const segments = hashSegments();
+function routeFromHash(fallback: Route, hash = globalThis.location?.hash ?? ""): Route {
+  const segments = hashSegments(hash);
   if (segments[0] === "learn" && segments.length >= 3) {
     return "lesson";
   }
@@ -179,9 +179,9 @@ function routeFromHash(fallback: Route): Route {
   return isRoute(route) ? route : fallback;
 }
 
-function hashSegments(): readonly string[] {
-  const hash = globalThis.location?.hash.replace(/^#\/?/, "") ?? "";
-  return hash.split("/").filter(Boolean);
+function hashSegments(hash = globalThis.location?.hash ?? ""): readonly string[] {
+  const normalizedHash = hash.replace(/^#\/?/, "");
+  return normalizedHash.split("/").filter(Boolean);
 }
 
 function isRoute(value: string): value is Route {
@@ -211,6 +211,7 @@ function AppContent({
   now = defaultNow,
   seedFactory = defaultSeed,
 }: AppProps) {
+  const [locationHash, setLocationHash] = useState(() => globalThis.location?.hash ?? "");
   const [route, setRoute] = useState<Route>(() => routeFromHash(initialView));
   const [language, setLanguage] = useState<Language>("en");
   const [bankQuestions, setBankQuestions] = useState<readonly Question[] | null>(null);
@@ -277,14 +278,18 @@ function AppContent({
   }, []);
 
   useEffect(() => {
-    const onHashChange = () => setRoute(routeFromHash("home"));
+    const onHashChange = () => {
+      const nextHash = window.location.hash;
+      setLocationHash(nextHash);
+      setRoute(routeFromHash("home", nextHash));
+    };
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
 
   useEffect(() => {
     mainRef.current?.focus();
-  }, [route]);
+  }, [locationHash, route]);
 
   useEffect(() => {
     applyThemePreference(preferences.theme);
@@ -313,25 +318,37 @@ function AppContent({
     [latestAttempt, progress],
   );
   const dueReviewCount = useMemo(() => dueCount(progress, now()), [now, progress]);
-  const routeSegments = hashSegments();
+  const routeSegments = hashSegments(locationHash);
   const currentModuleId = route === "module" || route === "lesson" ? routeSegments[1] : undefined;
   const currentLessonId = route === "lesson" ? routeSegments[2] : undefined;
 
+  function updateRouteForHash(nextHash: string): void {
+    setLocationHash(nextHash);
+    setRoute(routeFromHash("home", nextHash));
+  }
+
   function navigate(nextRoute: Route): void {
-    setRoute(nextRoute);
-    if (window.location.hash !== `#/${nextRoute}`) {
+    const nextHash = `#/${nextRoute}`;
+    updateRouteForHash(nextHash);
+    if (window.location.hash !== nextHash) {
       window.location.hash = `/${nextRoute}`;
     }
   }
 
   function navigateToModule(moduleId: string): void {
-    setRoute("module");
-    window.location.hash = `/learn/${moduleId}`;
+    const nextHash = `#/learn/${moduleId}`;
+    updateRouteForHash(nextHash);
+    if (window.location.hash !== nextHash) {
+      window.location.hash = `/learn/${moduleId}`;
+    }
   }
 
   function navigateToLesson(moduleId: string, lessonId: string): void {
-    setRoute("lesson");
-    window.location.hash = `/learn/${moduleId}/${lessonId}`;
+    const nextHash = `#/learn/${moduleId}/${lessonId}`;
+    updateRouteForHash(nextHash);
+    if (window.location.hash !== nextHash) {
+      window.location.hash = `/learn/${moduleId}/${lessonId}`;
+    }
   }
 
   function startPractice(scope: PracticeScope = practiceScope, mode: PracticeMode = preferences.practiceMode): void {
@@ -397,20 +414,17 @@ function AppContent({
       setAlertMessage("");
     } catch (error) {
       setAlertMessage(`Unable to save lesson progress locally: ${formatError(error)}`);
-      throw error;
     }
   }
 
   async function commitLessonQuizAttempt(attempt: LessonQuizAttempt, nextProgress: readonly QuestionProgressRecord[]): Promise<void> {
     try {
-      await store.putLessonQuizAttempt(attempt);
-      await store.putQuestionProgressMany(nextProgress);
+      await store.putLessonQuizAttemptWithQuestionProgress(attempt, nextProgress);
       setLessonQuizAttempts((current) => [...current, attempt].sort((a, b) => a.submittedAt.localeCompare(b.submittedAt)));
       setProgress(nextProgress);
       setAlertMessage("");
     } catch (error) {
       setAlertMessage(`Unable to save lesson quiz locally: ${formatError(error)}`);
-      throw error;
     }
   }
 
@@ -445,7 +459,7 @@ function AppContent({
           </div>
         </div>
         <div className="header-actions">
-          <PwaStatus />
+          <PwaStatus updateDisabled={mockExam !== null} />
           <LanguageToggle language={language} onLanguageChange={setLanguage} />
         </div>
       </header>
@@ -683,7 +697,15 @@ function Learn({ lessonProgress, onOpenModule, onOpenLesson }: LearnProps) {
 }
 
 function ModulePage({ moduleId, lessonProgress, onOpenLesson }: { readonly moduleId: string; readonly lessonProgress: readonly LessonProgressRecord[]; readonly onOpenLesson: (moduleId: string, lessonId: string) => void }) {
-  const module = modulesById.get(moduleId) ?? modules[0]!;
+  const module = modulesById.get(moduleId);
+  if (module === undefined) {
+    return (
+      <section className="card module-page" aria-labelledby="module-title">
+        <h2 id="module-title">Module not found</h2>
+        <p>The requested module route is not in the bundled curriculum.</p>
+      </section>
+    );
+  }
   const moduleLessons = lessonsByModuleId.get(module.id) ?? [];
   const readLessonIds = new Set(lessonProgress.map((record) => record.lessonId));
   return (
@@ -892,6 +914,13 @@ function LessonQuizView({ quiz, lesson, language, bankQuestionsById, progress, a
 }
 
 function LessonQuizQuestion({ item, language, questionsById, selectedSourceOrChoiceIndex, showCorrectness, onChoose }: { readonly item: LessonQuizItem; readonly language: Language; readonly questionsById: ReadonlyMap<string, Question>; readonly selectedSourceOrChoiceIndex: number | undefined; readonly showCorrectness: boolean; readonly onChoose: (displayIndex: number) => void }) {
+  const feedbackRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (showCorrectness) {
+      feedbackRef.current?.focus();
+    }
+  }, [showCorrectness, item.id]);
+
   if (item.type === "official") {
     const question = questionsById.get(item.questionId);
     if (question === undefined) {
@@ -899,8 +928,13 @@ function LessonQuizQuestion({ item, language, questionsById, selectedSourceOrCho
     }
     return (
       <>
-        <QuestionCard choicePermutation={item.choicePermutation} disabled={showCorrectness} language={language} onChoose={onChoose} question={question} selectedSourceIndex={selectedSourceOrChoiceIndex} showCorrectness={showCorrectness} />
-        {showCorrectness ? <ExplanationPanel explanation={explanationForQuestion(question.id)} language={language} choicePermutation={item.choicePermutation} /> : null}
+        <QuestionCard choicePermutation={item.choicePermutation} disabled={showCorrectness} headingLevel={4} language={language} onChoose={onChoose} question={question} selectedSourceIndex={selectedSourceOrChoiceIndex} showCorrectness={showCorrectness} />
+        {showCorrectness ? (
+          <div className="feedback" role="status" ref={feedbackRef} tabIndex={-1}>
+            <p>{selectedSourceOrChoiceIndex === 0 ? "Correct." : "Incorrect."}</p>
+            <ExplanationPanel explanation={explanationForQuestion(question.id)} language={language} choicePermutation={item.choicePermutation} />
+          </div>
+        ) : null}
       </>
     );
   }
@@ -908,13 +942,20 @@ function LessonQuizQuestion({ item, language, questionsById, selectedSourceOrCho
 }
 
 function ConceptCheckCard({ conceptCheck, choicePermutation, selectedChoiceIndex, showCorrectness, disabled, language, onChoose }: { readonly conceptCheck: ConceptCheck; readonly choicePermutation: readonly number[]; readonly selectedChoiceIndex: number | undefined; readonly showCorrectness: boolean; readonly disabled: boolean; readonly language: Language; readonly onChoose: (displayIndex: number) => void }) {
+  const feedbackRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (showCorrectness) {
+      feedbackRef.current?.focus();
+    }
+  }, [showCorrectness, conceptCheck.id]);
   const selectedChoice = selectedChoiceIndex === undefined ? undefined : conceptCheck.choices[selectedChoiceIndex];
   const prompt = conceptCheck.prompt[language] ?? conceptCheck.prompt.en;
+  const promptLanguage = conceptCheck.prompt[language] === null ? "en" : language;
   return (
     <article className="question-panel" aria-labelledby={`concept-${conceptCheck.id}`}>
       <p className="question-meta">Concept check · {conceptCheck.id}</p>
       <h4 id={`concept-${conceptCheck.id}`}>Question</h4>
-      <p className="question-text" lang={languageTag(language)}>{prompt}</p>
+      <p className="question-text" lang={languageTag(promptLanguage)}>{prompt}</p>
       <div className="answers" role="group" aria-label="Answer choices">
         {choicePermutation.map((choiceIndex, displayIndex) => {
           const choice = conceptCheck.choices[choiceIndex]!;
@@ -924,7 +965,7 @@ function ConceptCheckCard({ conceptCheck, choicePermutation, selectedChoiceIndex
           return (
             <button aria-pressed={selected} className={className} data-testid="lesson-quiz-choice" disabled={disabled} key={choice.text.en} type="button" onClick={() => onChoose(displayIndex)}>
               <span className="answer-label">{String.fromCharCode(65 + displayIndex)}</span>
-              <span lang={languageTag(language)}>{choice.text[language] ?? choice.text.en}</span>
+              <span lang={languageTag(choice.text[language] === null ? "en" : language)}>{choice.text[language] ?? choice.text.en}</span>
               {showCorrectness && correct ? <strong>Correct answer</strong> : null}
               {showCorrectness && selected && !correct ? <strong>Your answer</strong> : null}
             </button>
@@ -932,8 +973,8 @@ function ConceptCheckCard({ conceptCheck, choicePermutation, selectedChoiceIndex
         })}
       </div>
       {showCorrectness ? (
-        <div className="feedback" role="status">
-          <p>{selectedChoice?.isCorrect ? "Correct." : "Incorrect."} {conceptCheck.explanation[language] ?? conceptCheck.explanation.en}</p>
+        <div className="feedback" role="status" ref={feedbackRef} tabIndex={-1}>
+          <p lang={languageTag(conceptCheck.explanation[language] === null ? "en" : language)}>{selectedChoice?.isCorrect ? "Correct." : "Incorrect."} {conceptCheck.explanation[language] ?? conceptCheck.explanation.en}</p>
         </div>
       ) : null}
     </article>
@@ -1148,13 +1189,15 @@ interface QuestionCardProps {
   readonly disabled: boolean;
   readonly language: Language;
   readonly onChoose: (displayIndex: number) => void;
+  readonly headingLevel?: 3 | 4;
 }
 
-function QuestionCard({ question, choicePermutation, selectedSourceIndex, showCorrectness, disabled, language, onChoose }: QuestionCardProps) {
+function QuestionCard({ question, choicePermutation, selectedSourceIndex, showCorrectness, disabled, language, onChoose, headingLevel = 3 }: QuestionCardProps) {
+  const HeadingTag = `h${headingLevel}` as "h3" | "h4";
   return (
     <article className="question-panel" aria-labelledby={`question-${question.id}`}>
       <p className="question-meta">{question.id} · {question.categoryId} · {subsectionTitle(question.subsectionId)}</p>
-      <h3 id={`question-${question.id}`}>Question</h3>
+      <HeadingTag id={`question-${question.id}`}>Question</HeadingTag>
       <p className="question-text" lang={languageTag(language)}>{question.text[language]}</p>
       <div className="answers" role="group" aria-label="Answer choices">
         {choicePermutation.map((sourceIndex, displayIndex) => {
@@ -1219,25 +1262,39 @@ function ExplanationPanel({ explanation, language, choicePermutation }: { readon
   if (explanation === null) {
     return <p className="explanation-panel explanation-panel--missing">No project explanation is bundled for this question yet.</p>;
   }
+  const explanationLanguage: Language = explanation.body[language] === null ? "en" : language;
   const choiceNotes = parseChoiceNotes(explanation, language);
   return (
     <section className="explanation-panel" aria-label={`Explanation for ${explanation.questionId}`}>
       <h4>Explanation</h4>
-      {mainExplanationText(explanation, language).split(/\n\n+/).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+      {mainExplanationText(explanation, language).split(/\n\n+/).map((paragraph) => <p key={paragraph} lang={languageTag(explanationLanguage)}>{paragraph}</p>)}
       {choiceNotes.length > 0 ? (
         <ul>
           {choiceNotes.map((note) => {
             const displayIndex = choicePermutation?.findIndex((sourceIndex) => sourceIndex === note.sourceIndex);
             const label = displayIndex === undefined || displayIndex < 0 ? `sourceIndex ${note.sourceIndex}` : `Displayed choice ${String.fromCharCode(65 + displayIndex)}`;
-            return <li key={note.sourceIndex}><strong>{label}:</strong> {note.note}</li>;
+            return <li key={note.sourceIndex} lang={languageTag(explanationLanguage)}><strong>{label}:</strong> {note.note}</li>;
           })}
         </ul>
       ) : null}
       {explanation.citations.length > 0 ? (
-        <p className="question-meta">Citations: {explanation.citations.map((citation) => citation.id ?? citation.type).join(", ")}</p>
+        <p className="question-meta">Citations: {explanation.citations.map((citation, index) => <CitationLink citation={citation} key={`${citation.type}-${citation.id ?? index}`} />).reduce<ReactNode[]>((nodes, element, index) => index === 0 ? [element] : [...nodes, ", ", element], [])}</p>
       ) : null}
     </section>
   );
+}
+
+function CitationLink({ citation }: { readonly citation: Explanation["citations"][number] }) {
+  if (citation.type === "lesson" && citation.id !== undefined) {
+    const lesson = lessonsById.get(citation.id);
+    if (lesson !== undefined) {
+      return <a href={`#/learn/${lesson.moduleId}/${lesson.id}`}>{citation.id}</a>;
+    }
+  }
+  if (citation.url !== undefined) {
+    return <a href={citation.url} target="_blank" rel="noreferrer">{citation.id ?? citation.type}</a>;
+  }
+  return <>{citation.id ?? citation.type}</>;
 }
 
 interface MockExamProps {
@@ -1578,7 +1635,7 @@ function Settings({ store, now, preferences, statusMessage, onProgressImported, 
         return;
       }
       setPendingImport(result.data);
-      setMessage(`Import file is valid: ${result.data.questionProgress.length} question records and ${result.data.examAttempts.length} exam attempts. Confirm to replace local data.`);
+      setMessage(`Import file is valid: ${result.data.questionProgress.length} question records, ${result.data.examAttempts.length} exam attempts, ${result.data.lessonProgress?.length ?? 0} lesson read records, and ${result.data.lessonQuizAttempts?.length ?? 0} lesson quiz attempts. Confirm to replace local data.`);
     } catch (error) {
       setErrors([`Import file is not valid JSON: ${error instanceof Error ? error.message : String(error)}`]);
     }

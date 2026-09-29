@@ -1,4 +1,6 @@
 import { createHash } from "node:crypto";
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import { join, relative } from "node:path";
 import { defineConfig } from "vitest/config";
 import type { Plugin } from "vite";
 
@@ -23,14 +25,25 @@ function allowDevInlineStyles(): Plugin {
 }
 
 function canadianHamPwa(): Plugin {
+  let root = process.cwd();
   return {
     name: "canadian-ham-pwa",
+    configResolved(config) {
+      root = config.root;
+    },
     generateBundle(_options, bundle) {
-      const emittedFiles = Object.values(bundle)
-        .map((entry) => entry.fileName)
-        .filter((fileName) => fileName !== "sw.js" && fileName !== "manifest.webmanifest");
-      const precacheEntries = createPrecacheManifest(emittedFiles);
-      const version = createHash("sha256").update(precacheEntries.join("\n")).digest("hex").slice(0, 16);
+      const emittedEntries = Object.values(bundle)
+        .filter((entry) => entry.fileName !== "sw.js" && entry.fileName !== "manifest.webmanifest")
+        .map((entry) => ({ fileName: entry.fileName, source: bundleEntrySource(entry) }));
+      const precacheEntries = createPrecacheManifest(emittedEntries.map((entry) => entry.fileName));
+      const versionHash = createHash("sha256");
+      for (const entry of [...emittedEntries, ...publicAssetEntries(root)].sort((a, b) => a.fileName.localeCompare(b.fileName))) {
+        versionHash.update(entry.fileName);
+        versionHash.update("\0");
+        versionHash.update(entry.source);
+        versionHash.update("\0");
+      }
+      const version = versionHash.digest("hex").slice(0, 16);
       this.emitFile({
         type: "asset",
         fileName: "manifest.webmanifest",
@@ -43,6 +56,33 @@ function canadianHamPwa(): Plugin {
       });
     },
   };
+}
+
+function bundleEntrySource(entry: { readonly type: string; readonly code?: string; readonly source?: string | Uint8Array }): string | Uint8Array {
+  if (entry.type === "chunk") {
+    return entry.code ?? "";
+  }
+  return entry.source ?? "";
+}
+
+function publicAssetEntries(root: string): readonly { readonly fileName: string; readonly source: string | Uint8Array }[] {
+  const publicDir = join(root, "public");
+  try {
+    return walkPublicDir(publicDir).map((path) => ({ fileName: relative(publicDir, path).replace(/\\/g, "/"), source: readFileSync(path) }));
+  } catch (error) {
+    if ((error as { readonly code?: string }).code === "ENOENT") {
+      return [];
+    }
+    throw error;
+  }
+}
+
+function walkPublicDir(directory: string): string[] {
+  return readdirSync(directory).flatMap((entry) => {
+    const path = join(directory, entry);
+    const stats = statSync(path);
+    return stats.isDirectory() ? walkPublicDir(path) : [path];
+  });
 }
 
 export default defineConfig({

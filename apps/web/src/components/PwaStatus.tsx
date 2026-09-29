@@ -1,18 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type OfflineState = "unsupported" | "installing" | "ready" | "error";
 
-export function PwaStatus() {
-  const [offlineState, setOfflineState] = useState<OfflineState>(() => typeof navigator === "undefined" || !("serviceWorker" in navigator) ? "unsupported" : "installing");
+interface PwaStatusProps {
+  readonly updateDisabled?: boolean;
+}
+
+export function PwaStatus({ updateDisabled = false }: PwaStatusProps) {
+  const serviceWorkerAvailable = typeof navigator !== "undefined" && "serviceWorker" in navigator && import.meta.env.PROD;
+  const [offlineState, setOfflineState] = useState<OfflineState>(() => serviceWorkerAvailable ? "installing" : "unsupported");
   const [updateWorker, setUpdateWorker] = useState<ServiceWorker | null>(null);
   const [message, setMessage] = useState("");
+  const applyingUpdateRef = useRef(false);
 
   useEffect(() => {
-    if (!("serviceWorker" in navigator)) {
+    if (!serviceWorkerAvailable) {
       return undefined;
     }
     let cancelled = false;
     let registration: ServiceWorkerRegistration | null = null;
+
+    function onControllerChange(): void {
+      if (applyingUpdateRef.current) {
+        window.location.reload();
+      }
+    }
+
+    navigator.serviceWorker.addEventListener("controllerchange", onControllerChange);
 
     function watchInstalling(worker: ServiceWorker | null): void {
       if (worker === null) {
@@ -56,8 +70,9 @@ export function PwaStatus() {
 
     return () => {
       cancelled = true;
+      navigator.serviceWorker.removeEventListener("controllerchange", onControllerChange);
     };
-  }, []);
+  }, [serviceWorkerAvailable]);
 
   const label = offlineState === "ready"
     ? "Available offline"
@@ -75,12 +90,14 @@ export function PwaStatus() {
       {updateWorker !== null ? (
         <button
           type="button"
+          disabled={updateDisabled}
           onClick={() => {
+            applyingUpdateRef.current = true;
             updateWorker.postMessage({ type: "SKIP_WAITING" });
             setUpdateWorker(null);
-            setMessage("Offline update applied. Finish current work before refreshing.");
+            setMessage("Offline update is applying. The app will reload to finish installing it.");
           }}
-        >Apply offline update</button>
+        >{updateDisabled ? "Finish mock exam before updating" : "Reload to apply offline update"}</button>
       ) : null}
     </div>
   );

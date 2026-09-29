@@ -59,7 +59,7 @@ function renderBlock(block: MarkdownBlock, index: number): ReactNode {
   );
 }
 
-function parseMarkdownBlocks(markdown: string, title?: string): MarkdownBlock[] {
+export function parseMarkdownBlocks(markdown: string, title?: string): MarkdownBlock[] {
   const normalized = markdown.replace(/\r\n/g, "\n");
   const lines = normalized.split("\n");
   const blocks: MarkdownBlock[] = [];
@@ -72,10 +72,14 @@ function parseMarkdownBlocks(markdown: string, title?: string): MarkdownBlock[] 
       continue;
     }
 
-    const heading = /^(#{1,6})\s+(.+)$/.exec(line);
+    const heading = /^(#{1,6})(?:\s+(.*))?$/.exec(line);
     if (heading !== null) {
-      const text = stripInlineMarkdown(heading[2]!.trim());
+      const text = stripInlineMarkdown((heading[2] ?? "").trim());
       const depth = heading[1]!.length;
+      if (text.length === 0) {
+        index += 1;
+        continue;
+      }
       if (/^illustration brief$/i.test(text)) {
         const { block, nextIndex } = parseIllustration(lines, index + 1);
         blocks.push(block);
@@ -96,10 +100,10 @@ function parseMarkdownBlocks(markdown: string, title?: string): MarkdownBlock[] 
       continue;
     }
 
-    if (/^\s*-\s+/.test(line)) {
+    if (/^\s*[-*+]\s+/.test(line)) {
       const items: string[] = [];
-      while (index < lines.length && /^\s*-\s+/.test(lines[index] ?? "")) {
-        items.push(stripInlineMarkdown((lines[index] ?? "").replace(/^\s*-\s+/, "").trim()));
+      while (index < lines.length && /^\s*[-*+]\s+/.test(lines[index] ?? "")) {
+        items.push(stripInlineMarkdown((lines[index] ?? "").replace(/^\s*[-*+]\s+/, "").trim()));
         index += 1;
       }
       blocks.push({ type: "unordered-list", items });
@@ -119,11 +123,15 @@ function parseMarkdownBlocks(markdown: string, title?: string): MarkdownBlock[] 
     const paragraphLines: string[] = [];
     while (index < lines.length) {
       const paragraphLine = lines[index] ?? "";
-      if (paragraphLine.trim() === "" || /^(#{1,6})\s+/.test(paragraphLine) || /^\s*[-*]\s+/.test(paragraphLine) || /^\s*\d+\.\s+/.test(paragraphLine) || isTableStart(lines, index)) {
+      if (paragraphLine.trim() === "" || /^(#{1,6})(?:\s|$)/.test(paragraphLine) || /^\s*[-*+]\s+/.test(paragraphLine) || /^\s*\d+\.\s+/.test(paragraphLine) || isTableStart(lines, index)) {
         break;
       }
       paragraphLines.push(paragraphLine.trim());
       index += 1;
+    }
+    if (paragraphLines.length === 0) {
+      index += 1;
+      continue;
     }
     blocks.push({ type: "paragraph", text: stripInlineMarkdown(paragraphLines.join(" ")) });
   }
@@ -136,7 +144,10 @@ function parseIllustration(lines: readonly string[], startIndex: number): { read
   const content: string[] = [];
   while (index < lines.length) {
     const line = lines[index] ?? "";
-    if (/^(#{1,6})\s+/.test(line)) {
+    if (/^(#{1,6})(?:\s|$)/.test(line)) {
+      break;
+    }
+    if (line.trim() === "" && content.some((entry) => /^Description:/i.test(entry))) {
       break;
     }
     if (line.trim() !== "") {
@@ -177,7 +188,7 @@ function stripInlineMarkdown(value: string): string {
     .replace(/`([^`]+)`/g, "$1")
     .replace(/\*\*([^*]+)\*\*/g, "$1")
     .replace(/__([^_]+)__/g, "$1")
-    .replace(/\*([^*]+)\*/g, "$1")
-    .replace(/_([^_]+)_/g, "$1")
+    .replace(/\*([^\s*](?:[^*]*[^\s*])?)\*/g, "$1")
+    .replace(/_([^\s_](?:[^_]*[^\s_])?)_/g, "$1")
     .replace(/\\([\\`*_[\]{}()#+\-.!|])/g, "$1");
 }

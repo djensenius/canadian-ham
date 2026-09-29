@@ -1,6 +1,8 @@
 import { dueCount, type CategoryBreakdownEntry, type QuestionProgressRecord } from "@canadian-ham/engine-ts";
 
 import { bankId, categories, knownQuestionIds, subsections } from "../data/bank";
+import { lessonsById } from "../data/lessons";
+import { lessonQuizzesById } from "../data/quizzes";
 
 export type PracticeMode = "immediate" | "review-later";
 export type ReadinessPreference = "not-enough-data" | "needs-review" | "pass-ready" | "honours-ready";
@@ -144,6 +146,17 @@ export class ProgressStore {
 
   async putLessonQuizAttempt(attempt: LessonQuizAttempt): Promise<void> {
     await this.put("lessonQuizAttempts", attempt);
+  }
+
+  async putLessonQuizAttemptWithQuestionProgress(attempt: LessonQuizAttempt, records: readonly QuestionProgressRecord[]): Promise<void> {
+    const db = await this.open();
+    await runTransaction(db, ["lessonQuizAttempts", "questionProgress"], "readwrite", (transaction) => {
+      transaction.objectStore("lessonQuizAttempts").put(attempt);
+      const questionStore = transaction.objectStore("questionProgress");
+      for (const record of records) {
+        questionStore.put(record);
+      }
+    });
   }
 
   async getPreferences(): Promise<WebPreferences> {
@@ -325,6 +338,12 @@ export function validateProgressImport(raw: unknown): ImportValidationResult {
   if (!Array.isArray(raw.examAttempts)) {
     errors.push("Import examAttempts must be an array.");
   }
+  if (raw.lessonProgress !== undefined && !Array.isArray(raw.lessonProgress)) {
+    errors.push("Import lessonProgress must be an array when present.");
+  }
+  if (raw.lessonQuizAttempts !== undefined && !Array.isArray(raw.lessonQuizAttempts)) {
+    errors.push("Import lessonQuizAttempts must be an array when present.");
+  }
   if (!isPreferences(raw.preferences)) {
     errors.push("Import preferences are invalid.");
   }
@@ -346,6 +365,30 @@ export function validateProgressImport(raw: unknown): ImportValidationResult {
     }
   }
 
+  const lessonProgress = Array.isArray(raw.lessonProgress) ? raw.lessonProgress : [];
+  const lessonProgressIds = new Set<string>();
+  for (const [index, record] of lessonProgress.entries()) {
+    errors.push(...validateLessonProgressRecord(record, index));
+    if (isRecord(record) && typeof record.lessonId === "string") {
+      if (lessonProgressIds.has(record.lessonId)) {
+        errors.push(`Import lessonProgress[${index}].lessonId duplicates another lesson progress record.`);
+      }
+      lessonProgressIds.add(record.lessonId);
+    }
+  }
+
+  const lessonQuizAttempts = Array.isArray(raw.lessonQuizAttempts) ? raw.lessonQuizAttempts : [];
+  const lessonQuizAttemptIds = new Set<string>();
+  for (const [index, attempt] of lessonQuizAttempts.entries()) {
+    errors.push(...validateLessonQuizAttempt(attempt, index));
+    if (isRecord(attempt) && typeof attempt.id === "string") {
+      if (lessonQuizAttemptIds.has(attempt.id)) {
+        errors.push(`Import lessonQuizAttempts[${index}].id duplicates another lesson quiz attempt.`);
+      }
+      lessonQuizAttemptIds.add(attempt.id);
+    }
+  }
+
   if (errors.length > 0) {
     return { ok: false, errors };
   }
@@ -360,6 +403,8 @@ export function validateProgressImport(raw: unknown): ImportValidationResult {
       bankId,
       questionProgress: questionProgress as QuestionProgressRecord[],
       examAttempts: examAttempts as ExamAttempt[],
+      lessonProgress: lessonProgress as LessonProgressRecord[],
+      lessonQuizAttempts: lessonQuizAttempts as LessonQuizAttempt[],
       preferences: { ...defaultPreferences, ...(raw.preferences as WebPreferences) },
     },
   };
@@ -441,6 +486,75 @@ function validateQuestionProgressRecord(value: unknown, index: number): string[]
     }
   }
   return errors;
+}
+
+function validateLessonProgressRecord(value: unknown, index: number): string[] {
+  const prefix = `Import lessonProgress[${index}]`;
+  const errors: string[] = [];
+  if (!isRecord(value)) {
+    return [`${prefix} must be an object.`];
+  }
+  if (typeof value.lessonId !== "string" || !lessonsById.has(value.lessonId)) {
+    errors.push(`${prefix}.lessonId must be a known lesson ID.`);
+  }
+  if (typeof value.readAt !== "string") {
+    errors.push(`${prefix}.readAt must be a canonical UTC timestamp string.`);
+  } else {
+    pushCanonicalTimestampError(errors, value.readAt, `${prefix}.readAt`);
+  }
+  if (!isPositiveInteger(value.readCount)) {
+    errors.push(`${prefix}.readCount must be a positive integer.`);
+  }
+  return errors;
+}
+
+function validateLessonQuizAttempt(value: unknown, index: number): string[] {
+  const prefix = `Import lessonQuizAttempts[${index}]`;
+  const errors: string[] = [];
+  if (!isRecord(value)) {
+    return [`${prefix} must be an object.`];
+  }
+  const quiz = typeof value.quizId === "string" ? lessonQuizzesById.get(value.quizId) : undefined;
+  if (typeof value.id !== "string" || value.id.length === 0) {
+    errors.push(`${prefix}.id must be a non-empty string.`);
+  }
+  if (quiz === undefined) {
+    errors.push(`${prefix}.quizId must be a known lesson quiz ID.`);
+  }
+  if (typeof value.lessonId !== "string" || !lessonsById.has(value.lessonId) || (quiz !== undefined && value.lessonId !== quiz.lessonId)) {
+    errors.push(`${prefix}.lessonId must match the known lesson quiz.`);
+  }
+  if (typeof value.submittedAt !== "string") {
+    errors.push(`${prefix}.submittedAt must be a canonical UTC timestamp string.`);
+  } else {
+    pushCanonicalTimestampError(errors, value.submittedAt, `${prefix}.submittedAt`);
+  }
+  if (!isNonNegativeInteger(value.correct)) {
+    errors.push(`${prefix}.correct must be a non-negative integer.`);
+  }
+  if (!isPositiveInteger(value.total)) {
+    errors.push(`${prefix}.total must be a positive integer.`);
+  }
+  if (!isNonNegativeFiniteNumber(value.percent) || (typeof value.percent === "number" && value.percent > 100)) {
+    errors.push(`${prefix}.percent must be a number between 0 and 100.`);
+  }
+  if (typeof value.correct === "number" && typeof value.total === "number" && value.correct > value.total) {
+    errors.push(`${prefix}.correct must not exceed total.`);
+  }
+  if (!isKnownQuestionIdArray(value.officialQuestionIds)) {
+    errors.push(`${prefix}.officialQuestionIds must contain known question IDs.`);
+  }
+  if (!isKnownQuestionIdArray(value.incorrectOfficialQuestionIds)) {
+    errors.push(`${prefix}.incorrectOfficialQuestionIds must contain known question IDs.`);
+  }
+  if (!Array.isArray(value.incorrectConceptCheckIds) || !value.incorrectConceptCheckIds.every((id) => typeof id === "string" && (quiz === undefined || quiz.conceptChecks.some((conceptCheck) => conceptCheck.id === id)))) {
+    errors.push(`${prefix}.incorrectConceptCheckIds must contain known concept check IDs for the quiz.`);
+  }
+  return errors;
+}
+
+function isKnownQuestionIdArray(value: unknown): value is readonly string[] {
+  return Array.isArray(value) && value.every((id) => typeof id === "string" && knownQuestionIds.has(id));
 }
 
 function validateExamAttempt(value: unknown, index: number): string[] {
@@ -602,6 +716,10 @@ function pushCanonicalTimestampError(errors: string[], value: string, fieldName:
 
 function isNonNegativeInteger(value: unknown): value is number {
   return typeof value === "number" && Number.isInteger(value) && value >= 0;
+}
+
+function isPositiveInteger(value: unknown): value is number {
+  return typeof value === "number" && Number.isInteger(value) && value > 0;
 }
 
 function isNonNegativeFiniteNumber(value: unknown): value is number {

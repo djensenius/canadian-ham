@@ -38,7 +38,6 @@ export function createWebAppManifest(): WebAppManifest {
     icons: [
       { src: "./pwa-icon-192.png", sizes: "192x192", type: "image/png" },
       { src: "./pwa-icon-512.png", sizes: "512x512", type: "image/png" },
-      { src: "./pwa-icon-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
   };
 }
@@ -69,7 +68,7 @@ export function createServiceWorkerSource(precacheEntries: readonly string[], ca
 const PRECACHE_URLS = ${manifestJson};
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_URLS)));
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_URLS.map((url) => new Request(url, { cache: "reload" })))));
 });
 
 self.addEventListener("activate", (event) => {
@@ -97,11 +96,30 @@ self.addEventListener("fetch", (event) => {
     return;
   }
   if (request.mode === "navigate") {
-    event.respondWith(caches.match("./index.html").then((cached) => cached || fetch(request)));
+    event.respondWith(navigationResponse(request));
     return;
   }
   event.respondWith(cacheFirst(request));
 });
+
+async function navigationResponse(request) {
+  const cachedExact = await caches.match(request);
+  if (cachedExact) {
+    return cachedExact;
+  }
+  if (isAppShellNavigation(request)) {
+    const cachedShell = await caches.match("./index.html");
+    return cachedShell || fetch(request);
+  }
+  return fetch(request);
+}
+
+function isAppShellNavigation(request) {
+  const requestUrl = new URL(request.url);
+  const scopePath = new URL(self.registration.scope).pathname;
+  const relativePath = requestUrl.pathname.slice(scopePath.length).replace(/^\\/+/, "");
+  return relativePath === "" || relativePath === "index.html";
+}
 
 async function cacheFirst(request) {
   const cached = await caches.match(request);
