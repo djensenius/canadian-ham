@@ -53,18 +53,18 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-207 | P2 | todo | worker | T-205,T-206 | Add cross-platform fixture parity CI job or documented local command that runs both implementations. |
 | T-301 | P3 | done | worker | T-002,T-205 | Scaffold static web app using Vite + React + TypeScript. |
 | T-301b | P3 | done | worker | T-301 | Web slice polish from review: check-links anchors/code fences/footnotes/slugs, focus management, lang attribute, stronger render test, pnpm settings, dist URL audit script. |
-| T-314 | P3 | in progress | worker | T-301b,T-011,T-012,T-205 | Apply design tokens and design.md components to the web app; switch web practice to @canadian-ham/engine-ts; add axe-core checks to component tests; bump vitest to >= 4.1.11 (Dependabot); wire favicon/touch icons. |
+| T-314 | P3 | done | worker | T-301b,T-011,T-012,T-205 | Apply design tokens and design.md components to the web app; switch web practice to @canadian-ham/engine-ts; add axe-core checks to component tests; bump vitest to >= 4.1.11 (Dependabot); wire favicon/touch icons. |
 | T-302 | P3 | todo | worker | T-301,T-102 | Add web content loader for bundled generated bank, lesson metadata, explanations, and manifest. |
 | T-303 | P3 | done | worker | T-302 | Implement IndexedDB progress store with export/import JSON and reset all data. |
 | T-304 | P3 | done | worker | T-303,T-205 | Implement practice by category/subsection/all with answer shuffling and immediate feedback; progress and Leitner state update through the progress store. |
 | T-305 | P3 | done | worker | T-304 | Implement web review-later practice mode with submit-time feedback and submit-time progress updates. |
 | T-306 | P3 | done | worker | T-304,T-208 | Implement weak-area and due-review practice using local progress, `recentResults`, and Leitner state. |
 | T-307 | P3 | done | worker | T-303,T-302,T-205 | Implement mock exam generation, review, scoring, pass/honours display, category breakdown, optional timer default off, unanswered-as-incorrect scoring, and progress updates. |
-| T-308 | P3 | in progress | worker | T-307,T-101 | Add reference sheet access in web mock exam mode with reference assets bundled for private development; label it as exam reference material, keep it available offline when cached, and keep public release gated by T-007. |
-| T-309 | P3 | todo | worker | T-302 | Render available platform-neutral lessons on web with metadata, body content, previous/next navigation, and module overview. |
-| T-310 | P3 | todo | worker | T-304,T-309 | Implement web built-in lesson quizzes with official-bank and concept-check items, shuffled official answers, local scores, and retry history. |
+| T-308 | P3 | done | worker | T-307,T-101 | Add reference sheet access in web mock exam mode with reference assets bundled for private development; label it as exam reference material, keep it available offline when cached, and keep public release gated by T-007. |
+| T-309 | P3 | in progress | worker | T-302 | Render available platform-neutral lessons on web with metadata, body content, previous/next navigation, and module overview. |
+| T-310 | P3 | in progress | worker | T-304,T-309 | Implement web built-in lesson quizzes with official-bank and concept-check items, shuffled official answers, local scores, and retry history. |
 | T-311 | P3 | done | worker | T-303,T-307,T-208 | Implement web readiness guidance for weak categories/subsections and due items using the shared readiness fixtures for REQ-LESSON-003. |
-| T-312 | P3 | todo | worker | T-305,T-306,T-307,T-308,T-309,T-310,T-311 | Add PWA service worker caching app shell, bundled content, lessons, fixtures needed at runtime, and reference assets allowed for the current private-development or release stage; show offline readiness status. |
+| T-312 | P3 | in progress | worker | T-305,T-306,T-307,T-308,T-309,T-310,T-311 | Add PWA service worker caching app shell, bundled content, lessons, fixtures needed at runtime, and reference assets allowed for the current private-development or release stage; show offline readiness status. |
 | T-313 | P3 | todo | worker | T-312 | Add web privacy audit test confirming no third-party requests in normal flows and document host log/CSP configuration. |
 | T-401 | P4 | done | worker | T-102 | Create lesson directory structure and module index for eight categories. |
 | T-402 | P4 | done | worker | T-401 | Add lesson outline front matter mapping all 100 subsections to lesson IDs; no full lesson prose required. |
@@ -80,7 +80,7 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-513 | P5 | todo | worker | T-501b,T-206 | Native visionOS app target (visionOS 2.0+): window-based practice flow, glass materials, hover effects, ornaments for EN/FR; shared SwiftUI code where sensible; builds/tests via xbuild on the visionOS simulator. |
 | T-514 | P5 | todo | worker | T-501b,T-206 | Native tvOS app target (tvOS 18.0+): focus-engine practice flow with 10-foot typography and overscan-safe layout; builds/tests via xbuild on an Apple TV simulator. |
 | T-515 | P5 | todo | worker | T-011,T-513,T-514 | Wire app icons into all targets: iOS/macOS icon (Icon Composer bundle if validated), visionOS 3-layer solid image stack, tvOS layered App Icon + Top Shelf/Top Shelf Wide brand assets. |
-| T-516 | P5 | todo | worker | T-011,T-012,T-206,T-501b | Apply design tokens to Apple UI; replace TempShuffle with CanadianHamEngine; performAccessibilityAudit on every screen for each platform. |
+| T-516 | P5 | in progress | worker | T-011,T-012,T-206,T-501b | Apply design tokens to Apple UI; replace TempShuffle with CanadianHamEngine; performAccessibilityAudit on every screen for each platform. |
 | T-502 | P5 | todo | worker | T-501,T-102,T-402,T-405 | Bundle generated question bank, lesson metadata, explanations, manifest, and reference assets for private development in the Apple app; public release remains gated by T-007. |
 | T-503 | P5 | todo | worker | T-502 | Implement SwiftData local progress models for QuestionProgress, ExamAttempt, lesson progress, and preferences. |
 | T-504 | P5 | todo | worker | T-502,T-206,T-503 | Implement Apple practice flow with shuffled answers, immediate feedback, and review-later mode. |
