@@ -450,7 +450,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
             "-CanadianHamInitialScreen", "mock",
             "-CanadianHamMockExamSeed", "ui-a11y-mock-exam-answered-flagged",
             "-CanadianHamMockExamQuestionID", "B-001-002-002",
-            "-CanadianHamMockExamLimit", "1"
+            "-CanadianHamMockExamLimit", "3"
         ])
         openMockExamStart(in: app)
         XCTAssertTrue(app.staticTexts["mock-exam-seed"].waitForExistence(timeout: 10))
@@ -458,8 +458,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
         scrollAndTap("Flag for review", in: app)
         waitBriefly()
         XCTAssertTrue(app.buttons["Flagged for review"].firstMatch.waitForExistence(timeout: 5), "Mock exam should expose the flagged state before auditing")
-        app.scrollViews.firstMatch.swipeUp()
-        waitBriefly()
+        let next = app.buttons["mock-next-button"].firstMatch
+        XCTAssertTrue(next.isEnabled, "Answered-flagged audit fixture should keep mock Next enabled")
+        next.tap()
         try performAudit(on: app, context: "\(appearance.rawValue) mock exam question navigator answered flagged")
 
         scrollAndTap("Submit exam", in: app)
