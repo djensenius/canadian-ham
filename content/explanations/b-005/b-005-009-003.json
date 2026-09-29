@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-009-003",
+  "questionId": "B-005-009-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-009-003.\n\nWhy the correct answer is right: Equal capacitors in series use the reciprocal rule. With two of value C, 1/Ct = 1/C + 1/C = 2/C, so Ct = C/2.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Twice the value of one capacitor\": Doubling is the parallel-capacitor rule, where plate areas effectively add.\n- sourceIndex 2: \"The value of one capacitor times 4\": Four times the value would not come from two capacitors in series; series reduces the total.\n- sourceIndex 3: \"The value of one capacitor divided by 4\": One-quarter would fit four equal capacitors in series, not a pair.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-009-003"
+    }
+  ],
+  "licenseClass": "original"
+}

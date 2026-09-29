@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-012-006",
+  "questionId": "B-005-012-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-012-006.\n\nWhy the correct answer is right: At resonance, a parallel-resonant circuit has high impedance. The circulating branch currents balance in a way that makes the outside circuit see a large opposition.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"low impedance\": Low impedance belongs to a series-resonant circuit at resonance.\n- sourceIndex 2: \"low mutual inductance\": Mutual inductance describes coupling between coils, not the impedance property of a parallel LC circuit.\n- sourceIndex 3: \"high mutual inductance\": Strong coil coupling is a different subject and does not state the parallel-resonance impedance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-012-006"
+    }
+  ],
+  "licenseClass": "original"
+}

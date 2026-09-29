@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-013-005",
+  "questionId": "B-005-013-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-013-005.\n\nWhy the correct answer is right: A voltmeter should draw very little current while connected across a component. To the circuit, it should look like a high resistance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A low value resistance\": A low resistance would shunt the component and disturb the voltage being measured.\n- sourceIndex 2: \"An open circuit\": An ideal voltmeter is very high resistance, but an actual measurement still requires a connected instrument, not a completely open path.\n- sourceIndex 3: \"A perfect conductor\": A perfect conductor would short the component and collapse the voltage measurement.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-013-005"
+    }
+  ],
+  "licenseClass": "original"
+}

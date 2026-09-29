@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-011-006",
+  "questionId": "B-005-011-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-011-006.\n\nWhy the correct answer is right: Induced voltage depends on how fast the magnetic field is changing. The fastest current change gives the strongest induced voltage in the coil.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"the current through the coil is DC\": Steady DC does not keep changing the magnetic field after the initial transient.\n- sourceIndex 2: \"current is going through its least rate of change\": The least rate of change gives little or no induced voltage, not the maximum.\n- sourceIndex 3: \"the magnetic field around the coil is not changing\": Without a changing magnetic field, there is no transformer-style induction to create maximum voltage.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-011-006"
+    }
+  ],
+  "licenseClass": "original"
+}

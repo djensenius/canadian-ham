@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-010-002",
+  "questionId": "B-005-010-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-010-002.\n\nWhy the correct answer is right: Capacitive reactance follows XC = 1/(2πfC). With capacitance fixed, a higher AC frequency makes the denominator larger and the reactance smaller.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"As the frequency of the applied AC increases, the reactance increases\": That is the inductor pattern, not the capacitor rule.\n- sourceIndex 2: \"As the amplitude of the applied AC increases, the reactance increases\": Ideal capacitive reactance is set by frequency and capacitance, not signal amplitude.\n- sourceIndex 3: \"As the amplitude of the applied AC increases, the reactance decreases\": Changing amplitude does not create the frequency-dependent decrease described by XC = 1/(2πfC).",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-010-002"
+    }
+  ],
+  "licenseClass": "original"
+}

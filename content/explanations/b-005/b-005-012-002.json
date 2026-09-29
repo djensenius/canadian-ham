@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-012-002",
+  "questionId": "B-005-012-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-012-002.\n\nWhy the correct answer is right: A parallel tuned circuit presents high impedance at resonance. This is the opposite impedance behaviour from a series tuned circuit.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Low impedance\": Low impedance is the series-resonance behaviour, not the parallel tuned-circuit result.\n- sourceIndex 2: \"Impedance equal to reactance of the circuit\": At resonance the branch reactances balance; the simple answer is high impedance, not equality to a reactance value.\n- sourceIndex 3: \"Impedance equal to resistance of the circuit\": This misses the high-impedance property that defines the parallel resonant response.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-012-002"
+    }
+  ],
+  "licenseClass": "original"
+}

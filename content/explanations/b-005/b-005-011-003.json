@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-011-003",
+  "questionId": "B-005-011-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-011-003.\n\nWhy the correct answer is right: Primary power is 120 V x 0.5 A = 60 W. With no losses, secondary current is 60 W / 12 V = 5 A.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"2.5 amperes\": This is half of the correct current and would deliver only 30 W at 12 V.\n- sourceIndex 2: \"25 amperes\": This multiplies in the wrong direction too far; 25 A at 12 V would be 300 W.\n- sourceIndex 3: \"50 amperes\": This treats the current step-up as 100 times; 50 A at 12 V would require 600 W.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-011-003"
+    }
+  ],
+  "licenseClass": "original"
+}

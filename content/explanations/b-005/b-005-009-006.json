@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-009-006",
+  "questionId": "B-005-009-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-009-006.\n\nWhy the correct answer is right: For a simple air-spaced plate capacitor, capacitance increases with facing plate area and decreases as plate spacing grows. Those physical dimensions set how much electric field can be stored.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Operating frequency and spacing between the plates\": Frequency changes capacitive reactance, but it does not set the capacitance of the plates.\n- sourceIndex 2: \"Type of metal and spacing between the plates\": The plate material is not the determining Basic-level factor; the plate area is missing.\n- sourceIndex 3: \"Surface area of the plates and applied voltage\": Applied voltage changes stored charge for a given capacitor, but it does not define the capacitance value here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-009-006"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-009-002",
+  "questionId": "B-005-009-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-009-002.\n\nWhy the correct answer is right: For two equal ideal inductors in parallel, the reciprocal rule gives 1/Lt = 1/L + 1/L = 2/L, so Lt = L/2.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Twice the value of one inductor\": Twice the value comes from adding two equal inductors in series.\n- sourceIndex 2: \"The value of one inductor times 4\": A factor of four is not produced by the two-branch reciprocal calculation.\n- sourceIndex 3: \"The value of one inductor divided by 4\": One-quarter would be the result for four equal inductors in parallel, not two.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-009-002"
+    }
+  ],
+  "licenseClass": "original"
+}

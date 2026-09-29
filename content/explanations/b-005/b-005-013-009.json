@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-013-009",
+  "questionId": "B-005-013-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-013-009.\n\nWhy the correct answer is right: Electrical current is measured in amperes, and the meter for current is an ammeter.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Wavemeter\": A wavemeter is for wave or frequency-related checks, not electric current.\n- sourceIndex 2: \"Wattmeter\": A wattmeter measures power in watts rather than current in amperes.\n- sourceIndex 3: \"Voltmeter\": A voltmeter measures potential difference, not current flow.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-013-009"
+    }
+  ],
+  "licenseClass": "original"
+}

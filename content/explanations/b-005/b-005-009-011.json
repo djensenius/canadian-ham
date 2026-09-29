@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-009-011",
+  "questionId": "B-005-009-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-009-011.\n\nWhy the correct answer is right: Parallel capacitors add directly. 24 microfarads + 24 microfarads = 48 microfarads.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"12 microfarads\": Twelve microfarads is half of one capacitor, the answer for two equal capacitors in series.\n- sourceIndex 2: \"96 microfarads\": Ninety-six microfarads is four times a 24 microfarad part, not the sum of two parts.\n- sourceIndex 3: \"4 microfarads\": Four microfarads is not produced by either the two-capacitor series shortcut or the parallel sum.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-009-011"
+    }
+  ],
+  "licenseClass": "original"
+}

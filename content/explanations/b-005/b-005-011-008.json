@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-011-008",
+  "questionId": "B-005-011-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-011-008.\n\nWhy the correct answer is right: A 1:5 step-up raises voltage by 5, so ideal current changes oppositely by 5. Primary current is 50 mA x 5 = 250 mA.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"2500 mA\": This adds an extra factor of ten; 2500 mA would be fifty times the secondary current.\n- sourceIndex 2: \"10 mA\": This divides 50 mA by 5, but in a step-up transformer the primary current is higher than the secondary current.\n- sourceIndex 3: \"0.25 mA\": This is a unit-scale error; 250 mA equals 0.25 A, not 0.25 mA.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-011-008"
+    }
+  ],
+  "licenseClass": "original"
+}

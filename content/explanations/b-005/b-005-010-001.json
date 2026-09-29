@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-010-001",
+  "questionId": "B-005-010-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-010-001.\n\nWhy the correct answer is right: Inductive reactance follows XL = 2πfL. With the same inductor, raising AC frequency raises its opposition to AC.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"As the amplitude of the applied AC increases, the reactance decreases\": Amplitude changes voltage or current level; it is not the frequency term in XL = 2πfL.\n- sourceIndex 2: \"As the amplitude of the applied AC increases, the reactance increases\": A larger signal does not by itself increase ideal inductive reactance.\n- sourceIndex 3: \"As the frequency of the applied AC increases, the reactance decreases\": This reverses the inductor rule; decreasing reactance with frequency is the capacitor pattern.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-010-001"
+    }
+  ],
+  "licenseClass": "original"
+}

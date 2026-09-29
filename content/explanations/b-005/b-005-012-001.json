@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-012-001",
+  "questionId": "B-005-012-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-012-001.\n\nWhy the correct answer is right: Resonance occurs at the frequency where inductive reactance and capacitive reactance are equal in magnitude. Their effects balance to produce the tuned-circuit response.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"inductive reactance is the only opposition in the circuit\": A resonant circuit needs both inductive and capacitive reactance, not only one kind.\n- sourceIndex 2: \"the circuit contains no resistance\": Real tuned circuits may have resistance; zero resistance is not the definition of resonance.\n- sourceIndex 3: \"resistance is equal to the reactance\": Matching resistance to reactance is not the balance condition between inductance and capacitance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-012-001"
+    }
+  ],
+  "licenseClass": "original"
+}

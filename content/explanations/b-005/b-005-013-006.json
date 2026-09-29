@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-013-006",
+  "questionId": "B-005-013-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-013-006.\n\nWhy the correct answer is right: An ammeter is placed in series, so it should add as little voltage drop as practical. To the circuit, it appears as a low value resistance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A perfect conductor\": A real ammeter is designed to be low resistance, but not literally zero resistance.\n- sourceIndex 2: \"An additional load\": A poorly chosen meter could load a circuit, but the intended ammeter behaviour is low resistance in series.\n- sourceIndex 3: \"A high value resistance\": High resistance in series would severely reduce current and spoil the measurement.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-013-006"
+    }
+  ],
+  "licenseClass": "original"
+}

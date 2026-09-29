@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-012-005",
+  "questionId": "B-005-012-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-012-005.\n\nWhy the correct answer is right: In a parallel LC circuit, impedance reaches its highest point at the resonant frequency. That one frequency is where the inductive and capacitive reactances balance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"maximum frequency\": Maximum frequency would just mean the high end of a sweep, not the special frequency where impedance peaks.\n- sourceIndex 2: \"inductive frequency\": This is not the standard term; both inductive and capacitive reactance are involved.\n- sourceIndex 3: \"reactive frequency\": Reactance exists at many frequencies, so this does not name the single peak-impedance point.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-012-005"
+    }
+  ],
+  "licenseClass": "original"
+}

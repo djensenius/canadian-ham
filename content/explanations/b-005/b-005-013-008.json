@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-013-008",
+  "questionId": "B-005-013-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-013-008.\n\nWhy the correct answer is right: Potential difference is voltage. The instrument for measuring voltage between two points is a voltmeter.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"a wattmeter\": A wattmeter measures power, not potential difference.\n- sourceIndex 2: \"an ohmmeter\": An ohmmeter measures resistance and is not used to read circuit voltage.\n- sourceIndex 3: \"an ammeter\": An ammeter measures current through a path, not voltage across two points.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-013-008"
+    }
+  ],
+  "licenseClass": "original"
+}

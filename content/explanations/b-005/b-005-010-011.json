@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-010-011",
+  "questionId": "B-005-010-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-010-011.\n\nWhy the correct answer is right: An inductor's reactance increases as AC frequency increases. The XL = 2πfL relationship puts frequency in direct proportion to reactance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"decreasing AC frequency\": Lower AC frequency lowers inductive reactance, not raises it.\n- sourceIndex 2: \"decreasing applied voltage\": Applied voltage level is not the variable that sets ideal inductive reactance.\n- sourceIndex 3: \"increasing applied voltage\": A higher voltage may drive more current depending on the whole circuit, but it does not make XL larger by itself.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-010-011"
+    }
+  ],
+  "licenseClass": "original"
+}

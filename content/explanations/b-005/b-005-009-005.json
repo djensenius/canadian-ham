@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-009-005",
+  "questionId": "B-005-009-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-009-005.\n\nWhy the correct answer is right: In an air-core coil, inductance depends mainly on the coil geometry and winding count. Diameter, length, and number of turns set the magnetic field pattern.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Coil diameter, coil length and operating frequency\": Operating frequency changes reactance, not the coil's inductance value.\n- sourceIndex 2: \"Type of wire, coil length and number of turns of wire\": Ordinary wire material is not the key geometry factor; the missing coil diameter changes the field shape.\n- sourceIndex 3: \"Coil diameter, coil orientation and number of turns of wire\": Turning the finished coil to face another direction does not replace the coil-length dimension that helps set inductance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-009-005"
+    }
+  ],
+  "licenseClass": "original"
+}

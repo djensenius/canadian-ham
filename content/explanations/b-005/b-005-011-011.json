@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-011-011",
+  "questionId": "B-005-011-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-011-011.\n\nWhy the correct answer is right: Warm laminations show that some transferred energy has become heat in the core. That heat is direct evidence that the transformer is not perfectly efficient.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Noisy operation\": Audible noise may occur in some equipment, but it is not the direct energy-loss evidence named here.\n- sourceIndex 2: \"Large secondary current\": A large secondary current can be normal for a low-voltage winding and does not by itself prove imperfect transfer.\n- sourceIndex 3: \"High primary voltage\": Primary voltage is an operating condition, not evidence that energy is being lost during transfer.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-011-011"
+    }
+  ],
+  "licenseClass": "original"
+}

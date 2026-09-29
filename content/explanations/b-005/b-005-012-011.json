@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-012-011",
+  "questionId": "B-005-012-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-012-011.\n\nWhy the correct answer is right: In a series RLC circuit at the source frequency, inductive and capacitive reactance cancel. The remaining impedance is at its lowest, so current reaches a maximum.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It is limited by inductive reactance\": At resonance, inductive reactance is balanced by capacitive reactance rather than acting alone as the limiter.\n- sourceIndex 2: \"It is limited by capacitive reactance\": Capacitive reactance is cancelled by the equal inductive reactance at resonance.\n- sourceIndex 3: \"It reaches minimum\": Minimum current would correspond to high impedance, while a series resonant circuit has low impedance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-012-011"
+    }
+  ],
+  "licenseClass": "original"
+}

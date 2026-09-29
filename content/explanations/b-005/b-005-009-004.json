@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-009-004",
+  "questionId": "B-005-009-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-009-004.\n\nWhy the correct answer is right: Capacitors in parallel add directly. Two equal capacitors total C + C = 2C, twice one capacitor's value.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Half the value of either capacitor\": Half is the result for two equal capacitors in series.\n- sourceIndex 2: \"The value of one capacitor times 4\": Four times would need four equal capacitors in parallel, not two.\n- sourceIndex 3: \"The value of one capacitor divided by 4\": Dividing by four moves in the wrong direction and would not match a two-capacitor parallel total.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-009-004"
+    }
+  ],
+  "licenseClass": "original"
+}
