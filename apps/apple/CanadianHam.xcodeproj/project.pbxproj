@@ -76,6 +76,7 @@
 		B9D65B4D05709AA74DE896F0 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
 		BF95B48C3152C964718844AD /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 641771DDA6C72AE924365999 /* manifest.json */; };
 		C35F4DB3660A226431C7A5B4 /* lessons in Resources */ = {isa = PBXBuildFile; fileRef = EF0A093E186AB771F904629B /* lessons */; };
+		C36A6BEF7CD1655C4C09136A /* AccessibleSecondaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658B2A641A5BBF5D6B65B2DD /* AccessibleSecondaryButtonStyle.swift */; };
 		C67627A6755066FA8F2B034E /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543DA6642D20EAF6FA88693D /* Tokens.swift */; };
 		C79F4B014C66CBB77F1CECDF /* EngineShuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */; };
 		CBBD854076689D0E6F2EE822 /* lessons in Resources */ = {isa = PBXBuildFile; fileRef = EF0A093E186AB771F904629B /* lessons */; };
@@ -142,6 +143,7 @@
 		543DA6642D20EAF6FA88693D /* Tokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tokens.swift; sourceTree = "<group>"; };
 		5B61FF08B59BD2425E771B49 /* categories.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = categories.json; sourceTree = "<group>"; };
 		641771DDA6C72AE924365999 /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = manifest.json; sourceTree = "<group>"; };
+		658B2A641A5BBF5D6B65B2DD /* AccessibleSecondaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibleSecondaryButtonStyle.swift; sourceTree = "<group>"; };
 		68B2019B8C107CCE6C8C9198 /* quizzes */ = {isa = PBXFileReference; lastKnownFileType = folder; name = quizzes; path = ../../content/quizzes; sourceTree = SOURCE_ROOT; };
 		7036F3D3AAFB91C2998565A0 /* CanadianHamApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamApp.swift; sourceTree = "<group>"; };
 		73750B729415D5254CB490A4 /* subsections.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = subsections.json; sourceTree = "<group>"; };
@@ -384,6 +386,7 @@
 		930C7B7F4C0244035E067E06 /* Design */ = {
 			isa = PBXGroup;
 			children = (
+				658B2A641A5BBF5D6B65B2DD /* AccessibleSecondaryButtonStyle.swift */,
 				543DA6642D20EAF6FA88693D /* Tokens.swift */,
 			);
 			path = Design;
@@ -876,6 +879,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6EE8F69155AFDCD869C6D68F /* AboutView.swift in Sources */,
+				C36A6BEF7CD1655C4C09136A /* AccessibleSecondaryButtonStyle.swift in Sources */,
 				02D2C3FC60500A28C043164F /* AppleStudyEngine.swift in Sources */,
 				1C042178F4987890B4904111 /* CanadianHamApp.swift in Sources */,
 				7E2869C0EF3CD0A21C072580 /* EngineShuffle.swift in Sources */,
