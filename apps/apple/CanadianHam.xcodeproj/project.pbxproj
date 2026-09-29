@@ -8,19 +8,26 @@
 
 /* Begin PBXBuildFile section */
 		00B831D959039736491B5A01 /* PracticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8C7D863EDBFCB83BF1BB73 /* PracticeView.swift */; };
+		02D2C3FC60500A28C043164F /* AppleStudyEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76177BE24F1B7915BB916C63 /* AppleStudyEngine.swift */; };
 		06F98767DA87C95EB04ABFEF /* CanadianHamEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 94C45D93BD1BF4DF19826B39 /* CanadianHamEngine */; };
 		11AF272441DB6AFFE7F934DC /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 641771DDA6C72AE924365999 /* manifest.json */; };
+		1A532FBCB03EEDAB5AD727F0 /* StudyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0390C2BF7D07DEAD8A246557 /* StudyViews.swift */; };
 		1ACC1B99ACDE3E66DE37445D /* QuestionBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */; };
 		1C042178F4987890B4904111 /* CanadianHamApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7036F3D3AAFB91C2998565A0 /* CanadianHamApp.swift */; };
+		27736D9704E4F326B1A87197 /* ProgressStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DED9AA3F205BE249BD8DC23 /* ProgressStore.swift */; };
 		29093220F5952D4EEFCB3282 /* EngineShuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */; };
 		2C8F5043E3CA9DA4C9220BCF /* QuestionBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */; };
 		306D368114DE44A3C3C2B06E /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 5B61FF08B59BD2425E771B49 /* categories.json */; };
 		3570042246D47C705FC3807A /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 5B61FF08B59BD2425E771B49 /* categories.json */; };
+		3C5EF20558CB56EAB8005430 /* ProgressModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB023709CD1B8683292D109F /* ProgressModels.swift */; };
 		3D7E53A765016E133D5B3E7B /* CanadianHamPracticeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41444275857B5CF1758CE3B6 /* CanadianHamPracticeUITests.swift */; };
+		42B335E4F445B4521F5ACA40 /* ProgressModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB023709CD1B8683292D109F /* ProgressModels.swift */; };
 		4A3F7F0CD01A2A85311ACD13 /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = A235069367EFC3776ADEE826 /* questions.json */; };
+		4CBF95D998062361B45D4394 /* ProgressStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A387AB9BF7A49146142C4A66 /* ProgressStoreTests.swift */; };
 		4E053E6B26ECB02C90C4C646 /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = A235069367EFC3776ADEE826 /* questions.json */; };
 		53AFCF2AAFF2212EA63976C9 /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = A235069367EFC3776ADEE826 /* questions.json */; };
 		56297686DFF5FF6625A68B96 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 641771DDA6C72AE924365999 /* manifest.json */; };
+		5A1CE4F99519795442DFAA39 /* ProgressStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DED9AA3F205BE249BD8DC23 /* ProgressStore.swift */; };
 		65C653416A3A39692B571631 /* subsections.json in Resources */ = {isa = PBXBuildFile; fileRef = 73750B729415D5254CB490A4 /* subsections.json */; };
 		6EE8F69155AFDCD869C6D68F /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140A13D95FE054984DF26281 /* AboutView.swift */; };
 		787141F841B959AE48679C1F /* subsections.json in Resources */ = {isa = PBXBuildFile; fileRef = 73750B729415D5254CB490A4 /* subsections.json */; };
@@ -32,6 +39,7 @@
 		B7DB41FE2F0E756C08A1885F /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543DA6642D20EAF6FA88693D /* Tokens.swift */; };
 		B9D65B4D05709AA74DE896F0 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
 		CBC1FACE31E263275CCC7AE3 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
+		D7E320E0C9430271DF5C5CCE /* AppleStudyEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76177BE24F1B7915BB916C63 /* AppleStudyEngine.swift */; };
 		DA8494DE030F9968C7D5505E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
@@ -46,10 +54,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0390C2BF7D07DEAD8A246557 /* StudyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyViews.swift; sourceTree = "<group>"; };
 		0517B98CAB6282BC63A22BB5 /* QuestionBankTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionBankTests.swift; sourceTree = "<group>"; };
 		053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		073C44134E027E62BEC27FEC /* CanadianHamUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CanadianHamUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		140A13D95FE054984DF26281 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		1DED9AA3F205BE249BD8DC23 /* ProgressStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStore.swift; sourceTree = "<group>"; };
 		31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionBankStore.swift; sourceTree = "<group>"; };
 		41444275857B5CF1758CE3B6 /* CanadianHamPracticeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamPracticeUITests.swift; sourceTree = "<group>"; };
 		4EF15EA3BC012EB6FC4367D8 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -59,9 +69,12 @@
 		641771DDA6C72AE924365999 /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = manifest.json; sourceTree = "<group>"; };
 		7036F3D3AAFB91C2998565A0 /* CanadianHamApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamApp.swift; sourceTree = "<group>"; };
 		73750B729415D5254CB490A4 /* subsections.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = subsections.json; sourceTree = "<group>"; };
+		76177BE24F1B7915BB916C63 /* AppleStudyEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleStudyEngine.swift; sourceTree = "<group>"; };
 		86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineShuffle.swift; sourceTree = "<group>"; };
 		8D63616999E30A9A60763F71 /* CanadianHam.macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CanadianHam.macOS.entitlements; sourceTree = "<group>"; };
 		A235069367EFC3776ADEE826 /* questions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = questions.json; sourceTree = "<group>"; };
+		A387AB9BF7A49146142C4A66 /* ProgressStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStoreTests.swift; sourceTree = "<group>"; };
+		BB023709CD1B8683292D109F /* ProgressModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressModels.swift; sourceTree = "<group>"; };
 		D0021458FA54A1439DDAA83E /* CanadianHam.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CanadianHam.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCAE5A136902875D58354C00 /* LaunchArguments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchArguments.swift; sourceTree = "<group>"; };
 		E7452A4F0FC8FB892C278685 /* engine-swift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "engine-swift"; path = "../../packages/engine-swift"; sourceTree = SOURCE_ROOT; };
@@ -110,6 +123,7 @@
 		37E36FF1524FE1D4BAEBEF30 /* CanadianHamTests */ = {
 			isa = PBXGroup;
 			children = (
+				A387AB9BF7A49146142C4A66 /* ProgressStoreTests.swift */,
 				0517B98CAB6282BC63A22BB5 /* QuestionBankTests.swift */,
 			);
 			path = CanadianHamTests;
@@ -149,6 +163,8 @@
 		547A0C994CB31901FAB1913A /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				76177BE24F1B7915BB916C63 /* AppleStudyEngine.swift */,
+				1DED9AA3F205BE249BD8DC23 /* ProgressStore.swift */,
 				31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */,
 			);
 			path = Services;
@@ -157,6 +173,7 @@
 		715C649D0C483D6BC6DA19FB /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				BB023709CD1B8683292D109F /* ProgressModels.swift */,
 				EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */,
 			);
 			path = Models;
@@ -168,6 +185,7 @@
 				140A13D95FE054984DF26281 /* AboutView.swift */,
 				5D8C7D863EDBFCB83BF1BB73 /* PracticeView.swift */,
 				4EF15EA3BC012EB6FC4367D8 /* RootView.swift */,
+				0390C2BF7D07DEAD8A246557 /* StudyViews.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -367,7 +385,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D7E320E0C9430271DF5C5CCE /* AppleStudyEngine.swift in Sources */,
 				29093220F5952D4EEFCB3282 /* EngineShuffle.swift in Sources */,
+				42B335E4F445B4521F5ACA40 /* ProgressModels.swift in Sources */,
+				5A1CE4F99519795442DFAA39 /* ProgressStore.swift in Sources */,
+				4CBF95D998062361B45D4394 /* ProgressStoreTests.swift in Sources */,
 				1ACC1B99ACDE3E66DE37445D /* QuestionBankModels.swift in Sources */,
 				B9D65B4D05709AA74DE896F0 /* QuestionBankStore.swift in Sources */,
 				9405A070EB557B342A128819 /* QuestionBankTests.swift in Sources */,
@@ -379,13 +401,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				6EE8F69155AFDCD869C6D68F /* AboutView.swift in Sources */,
+				02D2C3FC60500A28C043164F /* AppleStudyEngine.swift in Sources */,
 				1C042178F4987890B4904111 /* CanadianHamApp.swift in Sources */,
 				7E2869C0EF3CD0A21C072580 /* EngineShuffle.swift in Sources */,
 				93A17F0A518F9EFA2B532E3A /* LaunchArguments.swift in Sources */,
 				00B831D959039736491B5A01 /* PracticeView.swift in Sources */,
+				3C5EF20558CB56EAB8005430 /* ProgressModels.swift in Sources */,
+				27736D9704E4F326B1A87197 /* ProgressStore.swift in Sources */,
 				2C8F5043E3CA9DA4C9220BCF /* QuestionBankModels.swift in Sources */,
 				CBC1FACE31E263275CCC7AE3 /* QuestionBankStore.swift in Sources */,
 				A5C84AF9525F86DFA166EF45 /* RootView.swift in Sources */,
+				1A532FBCB03EEDAB5AD727F0 /* StudyViews.swift in Sources */,
 				B7DB41FE2F0E756C08A1885F /* Tokens.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

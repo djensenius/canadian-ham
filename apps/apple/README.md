@@ -7,10 +7,10 @@ SwiftUI multiplatform first slice for iPhone, iPad, and Mac. The app is generate
 - `project.yml` — XcodeGen project specification and the source of truth for targets, resources, settings, and schemes.
 - `CanadianHam.xcodeproj` — generated Xcode project committed for direct opening.
 - `CanadianHam/` — app sources.
-  - `Models/` — decodable question-bank models matching `content/generated/basic-2025-07-15/*.json`.
-  - `Services/` — bundled JSON loading.
+  - `Models/` — decodable question-bank models matching `content/generated/basic-2025-07-15/*.json`, plus SwiftData progress models.
+  - `Services/` — bundled JSON loading, SwiftData progress storage, export/import validation, and Apple adapters over `CanadianHamEngine`.
   - `Practice/EngineShuffle.swift` — adapter from the app models to the shared Swift practice/exam engine in `packages/engine-swift`.
-  - `Views/` — SwiftUI category list, practice, and about views.
+  - `Views/` — SwiftUI Home/readiness, Practice, Mock exam, Settings/export-import-reset, Learn placeholder, and About views.
   - `Resources/` — privacy manifest and macOS sandbox entitlements.
 - `CanadianHamTests/` — unit tests for bundled content decoding and answer shuffling.
 - `CanadianHamUITests/` — XCUITests for the compact iPhone practice flow.
@@ -41,13 +41,27 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/ap
 
 Scheme: `CanadianHam`.
 
+## Progress, practice, and mock exams
+
+The Apple app stores progress locally with SwiftData only. The schema is versioned in source with a migration-plan stub, and the runtime uses local app-container storage without iCloud. If the store cannot open, the app shows a recovery screen that still offers Reset local data.
+
+Current implemented flows for iPhone, iPad, and Mac:
+
+- Home readiness card using `CanadianHamEngine.computeReadiness` and local mock-exam/due-review records.
+- Practice scopes for all questions, categories, weak areas, and due review; due review excludes unseen questions. Subsection records are present in the bank model for subsection-scoped expansion.
+- Immediate-feedback and review-later preferences, with progress updates routed through `CanadianHamEngine.applyAnswer` using explicit canonical timestamps.
+- Mock exam generation via `CanadianHamEngine.generateExam(requireFullMockExam: true)`, visible seed, question navigator, flag-for-review, submit confirmation, results, category breakdown, and wrong-answer review. The reference-sheet button is intentionally a placeholder for the separate reference-viewer task.
+- Settings export/import/reset. Export JSON uses the web progress schema (`canadian-ham.progress-export`, version 1); import validates canonical timestamps, known IDs, Leitner box range, and duplicate `submittedAt` values before replacement.
+
 ## Accessibility audit tests
 
-The default iOS UI suite includes a fast deterministic accessibility regression that runs `performAccessibilityAudit()` with no allow-list in light and dark appearances for:
+The default iOS UI suite includes deterministic accessibility regressions that run `performAccessibilityAudit()` with no allow-list in light and dark appearances for the new top-level screens:
 
-- the category list;
-- an unanswered fixed practice question (`B-001-002-002`);
-- the same practice question after answering it correctly.
+- Home/readiness;
+- Practice hub;
+- Mock exam start;
+- Settings;
+- About.
 
 The heavier T-516 diagnostic harness (screenshots, position logs, and raw audit findings for the two-pass audit) is skipped by default. Run it only when collecting accessibility evidence:
 

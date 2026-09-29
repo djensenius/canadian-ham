@@ -116,6 +116,9 @@ struct QuestionBank: Sendable {
     let subsections: [BankSubsection]
     let manifest: BankManifest
     let questionsByCategory: [String: [BankQuestion]]
+    let questionsById: [String: BankQuestion]
+    let subsectionsByCategory: [String: [BankSubsection]]
+    let subsectionsById: [String: BankSubsection]
 
     init(
         questions: [BankQuestion],
@@ -128,9 +131,21 @@ struct QuestionBank: Sendable {
         self.subsections = subsections
         self.manifest = manifest
         self.questionsByCategory = Dictionary(grouping: questions, by: \.categoryId)
+        self.questionsById = Dictionary(uniqueKeysWithValues: questions.map { ($0.id, $0) })
+        self.subsectionsByCategory = Dictionary(grouping: subsections, by: \.categoryId)
+        self.subsectionsById = Dictionary(uniqueKeysWithValues: subsections.map { ($0.id, $0) })
     }
 
     func questions(in category: BankCategory) -> [BankQuestion] {
         questionsByCategory[category.id] ?? []
+    }
+
+    func question(id: String) -> BankQuestion? {
+        questionsById[id]
+    }
+
+    func subsectionTitle(_ subsection: BankSubsection, language: BankLanguage) -> String {
+        let authored = subsection.title.text(for: language)
+        return authored.isEmpty ? subsection.id : authored
     }
 }

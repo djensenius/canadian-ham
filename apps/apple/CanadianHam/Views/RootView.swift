@@ -1,7 +1,12 @@
 import SwiftUI
 
 private enum SidebarSelection: Hashable {
-    case category(String)
+    case home
+    case learn
+    case practiceHub
+    case practice(PracticeScope)
+    case mockExam
+    case settings
     case about
 }
 
@@ -11,24 +16,33 @@ struct RootView: View {
 #endif
 
     @State private var bank: QuestionBank?
-    @State private var loadError: String?
-    @State private var selection: SidebarSelection?
+    @State private var bankLoadError: String?
+    @State private var progressStore: ProgressStoreService?
+    @State private var progressStoreError: String?
+    @State private var selection: SidebarSelection = .home
     @State private var language: BankLanguage = .english
+    @State private var dataRevision = 0
 
     var body: some View {
         Group {
-            if let bank {
-                appContent(for: bank)
-            } else if let loadError {
+            if let bank, let progressStore {
+                appContent(bank: bank, progressStore: progressStore)
+                    .preferredColorScheme(colorScheme(for: progressStore.preferences.theme))
+            } else if let progressStoreError {
+                StoreRecoveryView(message: progressStoreError) {
+                    ProgressStoreService.resetPersistentStoreFiles()
+                    reloadStore()
+                }
+            } else if let bankLoadError {
                 ContentUnavailableView(
                     "Question bank unavailable",
                     systemImage: "exclamationmark.triangle",
-                    description: Text(loadError)
+                    description: Text(bankLoadError)
                 )
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .background(DesignTokens.Colors.paper)
             } else {
-                ProgressView("Loading question bank…")
+                ProgressView("Loading Canadian Ham…")
                     .controlSize(.large)
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -37,58 +51,104 @@ struct RootView: View {
         }
         .task {
             loadBankIfNeeded()
+            reloadStoreIfNeeded()
         }
     }
 
     @ViewBuilder
-    private func appContent(for bank: QuestionBank) -> some View {
+    private func appContent(bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
+#if os(iOS)
+        if horizontalSizeClass == .compact {
+            NavigationStack {
+                detailView(bank: bank, progressStore: progressStore)
+                    .background(DesignTokens.Colors.paper)
+                    .toolbar { languageToolbarItem(progressStore: progressStore) }
+            }
+            .toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .onAppear {
+                language = progressStore.preferences.language
+                applyLaunchNavigation(bank: bank)
+            }
+            .onChange(of: progressStore.preferences.language) { _, next in
+                language = next
+            }
+        } else {
+            splitContent(bank: bank, progressStore: progressStore)
+        }
+#else
+        splitContent(bank: bank, progressStore: progressStore)
+#endif
+    }
+
+    @ViewBuilder
+    private func splitContent(bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
         NavigationSplitView {
-            List(selection: $selection) {
+            List {
                 Section {
+                    SidebarButton(selection: .home, current: selection) {
+                        Label("Home", systemImage: "house")
+                    } action: { selection = .home }
+                    SidebarButton(selection: .learn, current: selection) {
+                        Label("Learn", systemImage: "book.closed")
+                    } action: { selection = .learn }
+                } header: {
+                    Text("Study")
+                        .textCase(nil)
+                        .accessibilityAddTraits(.isHeader)
+                }
+
+                Section {
+                    SidebarButton(selection: .practiceHub, current: selection) {
+                        Label("Practice", systemImage: "checklist")
+                    } action: { selection = .practiceHub }
+                    SidebarButton(selection: .practice(.all), current: selection) {
+                        Label("All questions", systemImage: "tray.full")
+                    } action: { selection = .practice(.all) }
+                    SidebarButton(selection: .practice(.weak), current: selection) {
+                        Label("Weak areas", systemImage: "exclamationmark.triangle")
+                    } action: { selection = .practice(.weak) }
+                    SidebarButton(selection: .practice(.due), current: selection) {
+                        Label("Due review", systemImage: "calendar.badge.clock")
+                    } action: { selection = .practice(.due) }
                     ForEach(bank.categories) { category in
-                        NavigationLink(value: SidebarSelection.category(category.id)) {
+                        SidebarButton(selection: .practice(.category(category.id)), current: selection) {
                             CategoryRow(category: category, language: language)
-                        }
-                        .listRowBackground(DesignTokens.Colors.paperElevated)
+                        } action: { selection = .practice(.category(category.id)) }
                         .accessibilityLabel(categoryAccessibilityLabel(category))
                     }
                 } header: {
                     Text("Practice categories")
                         .font(DesignTokens.FontScale.title.weight(.bold))
-                        .foregroundStyle(DesignTokens.Colors.ink)
                         .textCase(nil)
                         .accessibilityAddTraits(.isHeader)
                 }
                 .headerProminence(.increased)
 
                 Section {
-                    NavigationLink(value: SidebarSelection.about) {
+                    SidebarButton(selection: .mockExam, current: selection) {
+                        Label("Mock exam", systemImage: "doc.text.magnifyingglass")
+                    } action: { selection = .mockExam }
+                    SidebarButton(selection: .settings, current: selection) {
+                        Label("Settings", systemImage: "gearshape")
+                    } action: { selection = .settings }
+                    SidebarButton(selection: .about, current: selection) {
                         Label("About", systemImage: "info.circle")
-                            .font(DesignTokens.FontScale.body.weight(.semibold))
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                    }
-                    .listRowBackground(DesignTokens.Colors.paperElevated)
-                    .accessibilityLabel("About Canadian Ham")
+                    } action: { selection = .about }
                 } header: {
-                    Text("Information")
-                        .font(DesignTokens.FontScale.title.weight(.bold))
-                        .foregroundStyle(DesignTokens.Colors.ink)
+                    Text("Tools")
                         .textCase(nil)
                         .accessibilityAddTraits(.isHeader)
                 }
-                .headerProminence(.increased)
             }
             .listStyle(.sidebar)
             .scrollContentBackground(.hidden)
             .background(DesignTokens.Colors.paper)
             .navigationTitle("Canadian Ham")
-            .toolbar {
-                if showsSidebarLanguagePicker {
-                    languageToolbarItem
-                }
-            }
+            .toolbar { languageToolbarItem(progressStore: progressStore) }
         } detail: {
-            detailView(for: bank)
+            detailView(bank: bank, progressStore: progressStore)
+                .id(detailIdentity)
                 .background(DesignTokens.Colors.paper)
         }
         .navigationSplitViewStyle(.balanced)
@@ -97,68 +157,121 @@ struct RootView: View {
         .toolbarBackground(.visible, for: .navigationBar)
 #endif
 #if os(macOS)
-        .frame(minWidth: 920, minHeight: 640)
+        .frame(minWidth: 980, minHeight: 680)
 #endif
+        .onAppear {
+            language = progressStore.preferences.language
+            applyLaunchNavigation(bank: bank)
+        }
+        .onChange(of: progressStore.preferences.language) { _, next in
+            language = next
+        }
     }
 
     @ViewBuilder
-    private func detailView(for bank: QuestionBank) -> some View {
+    private func detailView(bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
         switch selection {
-        case .category(let categoryId):
-            if let category = bank.categories.first(where: { $0.id == categoryId }) {
-                PracticeView(
-                    bank: bank,
-                    category: category,
-                    showsLanguagePicker: showsPracticeLanguagePicker,
-                    language: $language
-                )
-                .id(category.id)
-            } else {
-                ContentUnavailableView("Category not found", systemImage: "questionmark.folder")
-                    .foregroundStyle(DesignTokens.Colors.ink)
+        case .home:
+            HomeView(bank: bank, progressStore: progressStore, language: language, revision: dataRevision) { scope in
+                selection = .practice(scope)
+            } openMockExam: {
+                selection = .mockExam
+            }
+        case .learn:
+            LearnPlaceholderView()
+        case .practiceHub:
+            PracticeHubView(bank: bank, progressStore: progressStore, language: language, revision: dataRevision) { scope in
+                selection = .practice(scope)
+            }
+        case .practice(let scope):
+            PracticeSessionView(
+                bank: bank,
+                progressStore: progressStore,
+                scope: scope,
+                language: $language,
+                revision: dataRevision
+            ) {
+                dataRevision += 1
+            }
+        case .mockExam:
+            MockExamView(bank: bank, progressStore: progressStore, language: language) {
+                dataRevision += 1
+            }
+        case .settings:
+            SettingsView(bank: bank, progressStore: progressStore) {
+                dataRevision += 1
             }
         case .about:
             AboutView(bank: bank)
-        case nil:
-            ContentUnavailableView(
-                "Choose a practice category",
-                systemImage: "list.bullet.rectangle",
-                description: Text("Select a category to answer a random question from that part of the Basic bank.")
-            )
-            .foregroundStyle(DesignTokens.Colors.ink)
+        }
+    }
+
+    private var detailIdentity: String {
+        switch selection {
+        case .practice(let scope): "practice-\(scope)"
+        default: "\(selection)-\(dataRevision)"
         }
     }
 
     private func loadBankIfNeeded() {
-        guard bank == nil, loadError == nil else { return }
-
+        guard bank == nil, bankLoadError == nil else { return }
         do {
-            let loadedBank = try QuestionBankStore.load()
-            bank = loadedBank
-            if ProcessInfo.processInfo.arguments.contains("-CanadianHamShowCategoryList") {
-                selection = nil
-            } else if let requestedCategoryID = AppLaunchArguments.value(after: "-CanadianHamInitialCategoryID"),
-                      loadedBank.categories.contains(where: { $0.id == requestedCategoryID }) {
-                selection = .category(requestedCategoryID)
-            } else {
-                selection = loadedBank.categories.first.map { .category($0.id) }
-            }
+            bank = try QuestionBankStore.load()
         } catch {
-            loadError = error.localizedDescription
+            bankLoadError = error.localizedDescription
         }
     }
 
-#if os(macOS)
-    private var showsSidebarLanguagePicker: Bool { true }
-    private var showsPracticeLanguagePicker: Bool { false }
-#else
-    private var showsSidebarLanguagePicker: Bool { true }
-    private var showsPracticeLanguagePicker: Bool { horizontalSizeClass == .compact }
-#endif
+    private func reloadStoreIfNeeded() {
+        guard progressStore == nil, progressStoreError == nil else { return }
+        reloadStore()
+    }
 
-    private var languageToolbarItem: some ToolbarContent {
+    private func reloadStore() {
+        do {
+            if ProcessInfo.processInfo.arguments.contains("-CanadianHamResetDataOnLaunch") {
+                ProgressStoreService.resetPersistentStoreFiles()
+            }
+            progressStore = try ProgressStoreService.open()
+            progressStoreError = nil
+            language = progressStore?.preferences.language ?? .english
+        } catch {
+            progressStore = nil
+            progressStoreError = error.localizedDescription
+        }
+    }
+
+    private func applyLaunchNavigation(bank: QuestionBank) {
+        if let screen = AppLaunchArguments.value(after: "-CanadianHamInitialScreen") {
+            switch screen {
+            case "home": selection = .home
+            case "learn": selection = .learn
+            case "practice": selection = .practiceHub
+            case "mock": selection = .mockExam
+            case "settings": selection = .settings
+            case "about": selection = .about
+            default: break
+            }
+        }
+        if ProcessInfo.processInfo.arguments.contains("-CanadianHamShowCategoryList") {
+            selection = .practiceHub
+        } else if let requestedCategoryID = AppLaunchArguments.value(after: "-CanadianHamInitialCategoryID"),
+                  bank.categories.contains(where: { $0.id == requestedCategoryID }) {
+            selection = .practice(.category(requestedCategoryID))
+        }
+    }
+
+    private func languageToolbarItem(progressStore: ProgressStoreService) -> some ToolbarContent {
         ToolbarItem(placement: .automatic) {
-            Picker("Question language", selection: $language) {
+            Picker("Question language", selection: Binding(
+                get: { language },
+                set: { next in
+                    language = next
+                    var preferences = progressStore.preferences
+                    preferences.language = next
+                    try? progressStore.updatePreferences(preferences)
+                }
+            )) {
                 ForEach(BankLanguage.allCases) { language in
                     Text(language.displayName).tag(language)
                 }
@@ -171,6 +284,62 @@ struct RootView: View {
 
     private func categoryAccessibilityLabel(_ category: BankCategory) -> String {
         "\(category.name.text(for: language)), \(category.questionCount) questions, \(category.subsectionCount) subsections"
+    }
+
+    private func colorScheme(for theme: ApplePreferences.Theme) -> ColorScheme? {
+        switch theme {
+        case .system: nil
+        case .light: .light
+        case .dark: .dark
+        }
+    }
+}
+
+private struct StoreRecoveryView: View {
+    let message: String
+    let reset: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            Label("Local progress store unavailable", systemImage: "externaldrive.badge.exclamationmark")
+                .font(DesignTokens.FontScale.headline.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.warningText)
+                .accessibilityAddTraits(.isHeader)
+            Text(message)
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
+            Text("Reset remains available so damaged local SwiftData files can be cleared. Bundled questions are not deleted.")
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
+            Button("Reset local data and retry", role: .destructive) {
+                reset()
+            }
+            .buttonStyle(.borderedProminent)
+            .accessibilityHint("Deletes local progress and preferences, then attempts to reopen the store")
+        }
+        .padding(DesignTokens.Spacing.xl)
+        .frame(maxWidth: 720, alignment: .leading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(DesignTokens.Colors.paper)
+    }
+}
+
+private struct SidebarButton<LabelContent: View>: View {
+    let selection: SidebarSelection
+    let current: SidebarSelection
+    @ViewBuilder let label: () -> LabelContent
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            label()
+                .font(DesignTokens.FontScale.body.weight(current == selection ? .bold : .regular))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .buttonStyle(.plain)
+        .listRowBackground(current == selection ? DesignTokens.Colors.paperInset : DesignTokens.Colors.paperElevated)
+        .accessibilityAddTraits(current == selection ? .isSelected : [])
     }
 }
 
