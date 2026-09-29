@@ -110,9 +110,9 @@ The voice information has not changed into a different message. The mixer has mo
 
 ## Try it
 
-Question: A CW practice transmitter is exactly on frequency, but each dit begins with a sharp click in a nearby monitor receiver. Which part of the keying is suspect?
+Question: A filtered SSB signal at 9.000 MHz is mixed with a 5.000 MHz VFO, and the transmitter design selects the difference product. What output frequency should the next filter pass, and what other mixer product should it reject?
 
-Worked answer: The on-off transition is too abrupt. Keeping the carrier frequency steady is not enough; practical keying also needs controlled rise and fall times so the element edges do not spread energy as clicks.
+Worked answer: The difference product is 9.000 MHz - 5.000 MHz = 4.000 MHz, so that is the wanted output. The same mixer also creates a sum product at 14.000 MHz, which later filtering should reject.
 
 Question: A receiver has both a 500 Hz IF filter and a 2.4 kHz IF filter. Predict which one will admit more nearby signals during a narrow CW contact, and why.
 

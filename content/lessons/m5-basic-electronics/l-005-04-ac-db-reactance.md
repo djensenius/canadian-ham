@@ -14,7 +14,7 @@ covers:
   - B-005-010
 objectives:
   - "Describe frequency, wavelength, phase, harmonics, and audio range."
-  - "Use simple dB power-ratio shortcuts."
+  - "Use simple dB power-ratio shortcuts, including S-meter readings above S9."
   - "Combine equal inductors and capacitors in series or parallel."
   - "Predict how inductive and capacitive reactance change with frequency."
 prerequisites:
@@ -36,7 +36,8 @@ By the end of this lesson, you can:
 
 - define frequency, wavelength, phase, sine wave, and harmonic;
 - identify audio and HF frequency ranges as general radio concepts;
-- use common decibel power-ratio shortcuts;
+- recognize LF, MF, HF, and VHF as increasing frequency ranges;
+- use common decibel power-ratio shortcuts and S-meter readings above S9;
 - combine equal capacitors and inductors in simple series or parallel circuits;
 - explain the construction factors for coils and capacitors; and
 - predict how inductors and capacitors behave as AC frequency changes.
@@ -45,17 +46,19 @@ By the end of this lesson, you can:
 
 Frequency is the number of complete cycles per second. The unit is hertz. A 400 Hz tone completes 400 cycles each second.
 
-Most humans can hear roughly 20 Hz to 20 000 Hz. That is why this range is called audio frequency. Radio frequencies are much higher. For example, a signal around 14 MHz is in the HF range.
+Most humans can hear roughly 20 Hz to 20 000 Hz. That is why this range is called audio frequency. Radio frequencies are much higher. HF means high frequency and covers 3 MHz to 30 MHz, so many familiar shortwave amateur bands sit in HF. From lower to higher radio-frequency labels, the order is LF, MF, HF, then VHF.
 
 Wavelength is the distance a signal travels during a complete cycle. As frequency increases, wavelength decreases. As wavelength gets shorter, frequency is higher.
 
 Phase describes timing between waveforms. A pair of AC signals may have the same frequency but not start their cycles at the same instant; that timing difference is phase.
 
-A sine wave is the smooth waveform associated with ideal AC. A harmonic is a signal at an integer multiple of a fundamental frequency, so harmonic signals sit above the fundamental at regular frequency intervals.
+A sine wave is the smooth waveform associated with ideal AC. Household mains from a receptacle is AC and is intended to be sinusoidal. A harmonic is a signal at an integer multiple of a fundamental frequency, so harmonic signals sit above the fundamental at regular frequency intervals.
 
 ## Decibels as power ratios
 
-The decibel compares two levels. For Basic-level estimating, use practical power shortcuts:
+The decibel compares two levels. Receiver signal reports may use an S-meter reading such as S9, then add a number of decibels above S9 for stronger signals. For example, a monitor reading of S9 plus 18 dB that loses 6 dB would be expected near S9 plus 12 dB, because the change is subtracted from the amount above S9.
+
+For Basic-level estimating, use practical power shortcuts:
 
 | dB change | Power ratio |
 |---:|---:|
@@ -134,7 +137,7 @@ Impedance is the combined effect of resistance and reactance in an AC circuit. Y
 
 ## Try it
 
-1. What does 400 Hz mean? A waveform completes 400 cycles each second.
+1. A logging note says 14.1 MHz, 900 kHz, and 146 MHz. Which one is HF, and where does HF sit in the LF/MF/HF/VHF order? 14.1 MHz is HF because it is between 3 MHz and 30 MHz; the order from lower to higher is LF, MF, HF, then VHF.
 2. If a signal level rises by about 7 dB, what rough power ratio can you use? About five times.
 3. If transmitter power goes from 7 W to 21 W, what happened to the power? It became three times larger.
 4. If frequency increases, what happens to inductive reactance? It increases.
@@ -164,6 +167,8 @@ Description: Draw a smooth sine wave with a full cycle bracketed and labelled "c
 - Frequency is cycles per second; wavelength gets shorter as frequency increases.
 - Phase is timing difference between AC waveforms.
 - Harmonics are integer multiples of a fundamental frequency.
+- Household mains is sinusoidal AC, while radio signals use much higher AC frequencies.
+- HF spans 3 MHz to 30 MHz, with LF, MF, HF, and VHF in increasing frequency order.
 - Decibels compare levels; positive values mean a power increase and negative values mean a power reduction.
 - Inductors add in series; capacitors add in parallel.
 - Inductive reactance increases with frequency; capacitive reactance decreases with frequency.
