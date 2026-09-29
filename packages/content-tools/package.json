@@ -1,8 +1,12 @@
 {
+  "name": "@canadian-ham/content-tools",
+  "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "import:basic": "node src/import-basic.ts",
     "import:basic:check": "node src/import-basic.ts --check",
+    "check:links": "node src/check-links.ts",
     "test": "node --test test/"
   }
 }

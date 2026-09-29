@@ -43,3 +43,27 @@ canadian-ham/
 ## Build rule
 
 Use `xbuild` for all Apple builds and tests. Never call `xcodebuild` directly.
+
+## Commands
+
+Install the workspace dependencies with the pinned pnpm version from `package.json`:
+
+```sh
+pnpm install
+```
+
+Common checks:
+
+```sh
+pnpm test
+pnpm import:check
+pnpm check:links
+pnpm -r typecheck
+pnpm build:web
+```
+
+Web app during development:
+
+```sh
+pnpm --filter @canadian-ham/web dev
+```
