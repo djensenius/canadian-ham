@@ -66,6 +66,7 @@ Needs:
 |---|---|---|
 | DEC-REPO-001 | Use a single monorepo for now with `content/`, `apps/web/`, `apps/apple/`, `packages/engine-ts/`, `packages/engine-swift/`, `packages/schemas/`, `fixtures/`, `docs/`, and `tasks/`. Split only if real pain appears. | Solo developer, schema churn, atomic cross-platform changes, and the AGENTS.md worktree/review workflow. |
 | DEC-CONTENT-001 | Course content is platform-neutral Markdown plus JSON. | Keeps lesson and bank content reusable across web and Apple apps. |
+| DEC-CONTENT-002 | Rule-based modules may use a reference-style lesson format with official-question-only lesson quizzes and no original concept checks. | Some modules, such as regulations, are made of discrete official rules. The ISED bank already enumerates those rules, so homemade concept checks and practice scenarios risk restating bank items; labelled reference tables plus explanatory prose preserve accuracy without creating near-duplicate practice content. |
 | DEC-ENGINE-001 | Implement the quiz and exam engine natively twice: TypeScript for web and Swift for Apple. Both must pass the same JSON fixtures in `fixtures/`. | Avoids cross-language runtime dependencies while preserving behavioural consistency. |
 | DEC-BANK-001 | Use only the 2025 Basic question bank effective 2025-07-15. | Prevents user confusion and fixture ambiguity. |
 | DEC-WEB-001 | The web app is fully static: no server, no accounts, no analytics, no third-party requests, and self-hosted fonts/assets. | Supports privacy, low hosting cost, and offline PWA. |
@@ -171,8 +172,9 @@ Lessons shall include short quizzes tied to lesson concepts and official subsect
 Acceptance criteria:
 
 - A lesson quiz can include official bank questions and original concept-check questions.
+- Rule-based reference-style modules may omit original concept checks and use official bank questions only, represented in quiz JSON with `conceptChecks: []`.
 - Official bank questions in quizzes use shuffled answer order.
-- Quiz completion records local score and incorrect concepts.
+- Quiz completion records local score and incorrect concepts; quizzes with no concept checks record no concept-check concepts.
 - Users can retry a lesson quiz without erasing historical attempts unless they choose reset.
 
 #### REQ-LESSON-003: Readiness guidance

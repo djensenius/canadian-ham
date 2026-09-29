@@ -2,59 +2,52 @@
   "id": "QZ-L-001-03-A",
   "lessonId": "L-001-03",
   "officialQuestionIds": [
+    "B-001-010-001",
     "B-001-010-002",
     "B-001-010-003",
+    "B-001-010-004",
+    "B-001-010-005",
     "B-001-010-006",
+    "B-001-010-007",
     "B-001-010-008",
     "B-001-010-009",
+    "B-001-010-010",
+    "B-001-011-001",
+    "B-001-011-002",
     "B-001-011-003",
+    "B-001-011-004",
     "B-001-011-005",
+    "B-001-011-006",
     "B-001-011-007",
     "B-001-011-008",
+    "B-001-011-009",
     "B-001-011-010",
     "B-001-012-001",
+    "B-001-012-002",
+    "B-001-012-003",
     "B-001-012-004",
+    "B-001-013-001",
     "B-001-013-002",
+    "B-001-013-003",
+    "B-001-013-004",
+    "B-001-013-005",
+    "B-001-013-006",
     "B-001-013-007",
+    "B-001-013-008",
+    "B-001-013-009",
     "B-001-013-010",
+    "B-001-013-011",
+    "B-001-014-001",
     "B-001-014-002",
+    "B-001-014-003",
+    "B-001-014-004",
+    "B-001-014-005",
     "B-001-014-006",
     "B-001-014-007",
-    "B-001-014-010"
+    "B-001-014-008",
+    "B-001-014-009",
+    "B-001-014-010",
+    "B-001-014-011"
   ],
-  "conceptChecks": [
-    {
-      "id": "QZ-L-001-03-A-C1",
-      "prompt": { "en": "Two club experiments are being planned: a 432 MHz link near a non-amateur user, and a 915 MHz link in a building full of licence-exempt devices. Which plan applies the two shared-band facts correctly?", "fr": null },
-      "choices": [
-        { "text": { "en": "Move or redesign the 432 MHz link if it disturbs the other service, and treat the 915 MHz link as a path that may receive unprotected interference.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Keep the 432 MHz link on the air unless the other user is amateur, and ask ISED to clear licence-exempt devices from 915 MHz.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Use the same rule for both links: amateur operation has priority because both frequencies are in amateur allocations.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Avoid 915 MHz only during emergencies, but use 432 MHz freely once the link has identified by call sign.", "fr": null }, "isCorrect": false }
-      ],
-      "explanation": { "en": "The two-step distinction is the point: the 430.0 MHz to 450.0 MHz fact is a must-not-interfere rule for other services, while the 902 MHz to 928 MHz facts warn that amateur operation may be unprotected and crowded by licence-exempt devices.", "fr": null }
-    },
-    {
-      "id": "QZ-L-001-03-A-C2",
-      "prompt": { "en": "Which statement is NOT true about using or divulging message content under the lesson's privacy boundary?", "fr": null },
-      "choices": [
-        { "text": { "en": "Amateur-station transmissions are in the category the bank allows to be divulged or used.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Protecting property or preventing harm is treated differently from answering a reporter's questions.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Giving evidence in a criminal or civil court is one of the allowed purposes for other non-broadcast radiocommunication content.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A media interview automatically becomes an allowed purpose if the operator heard the traffic during a public-service exercise.", "fr": null }, "isCorrect": true }
-      ],
-      "explanation": { "en": "The first three statements match the bank's privacy distinctions. A media interview is the near miss: answering media questions is the prohibited purpose for other non-broadcast radiocommunications, and an exercise label does not change that boundary.", "fr": null }
-    },
-    {
-      "id": "QZ-L-001-03-A-C3",
-      "prompt": { "en": "Spot the error in this voice identification plan for a United States-issued call sign holder operating while travelling in Canada: 'give the call sign, say mobile or portable, add the Canadian prefix for the station location, and give only a grid square for location.'", "fr": null },
-      "choices": [
-        { "text": { "en": "The plan uses a mobile or portable qualifier, but voice visitors should avoid those words.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The plan gives a Canadian prefix, but a United States-issued call sign holder must never add one.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The grid square does not replace the required city-and-province location statement at least once during the contact.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The plan includes the call sign, but visitors identify only with the province name while in Canada.", "fr": null }, "isCorrect": false }
-      ],
-      "explanation": { "en": "For voice operation, the call sign, mobile or portable qualifier, and Canadian prefix belong in the plan. The missing piece is location by city and province at least once during the contact; a grid square is not the same requirement.", "fr": null }
-    }
-  ]
+  "conceptChecks": []
 }

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-002-009.\n\nWhy the correct answer is right: The current bank gives $60 for changing an existing call sign, including a two-letter call sign request.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"$55\": Fifty-five dollars is close enough to be tempting, but it is not the bank's fee.\n- sourceIndex 2: \"$30\": Thirty dollars halves the correct fee and does not match the current bank.\n- sourceIndex 3: \"Free\": Free applies to other certificate or address-related situations, not this voluntary call-sign change.",
+    "en": "Question B-001-002-009.\n\nWhy the correct answer is right: Changing an existing call sign, including a two-letter call sign request, costs $60.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"$55\": Fifty-five dollars is close enough to be tempting, but it is not the stated fee.\n- sourceIndex 2: \"$30\": Thirty dollars halves the correct fee and does not match the stated fee.\n- sourceIndex 3: \"Free\": Free applies to other certificate or address-related situations, not this voluntary call-sign change.",
     "fr": null
   },
   "citations": [

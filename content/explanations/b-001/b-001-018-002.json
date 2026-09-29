@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-018-002.\n\nWhy the correct answer is right: An unmodulated carrier is allowed only for brief tests on frequencies below 30 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"if the final RF amplifier output is kept under 5 watts\": A low final-amplifier output limit is not the condition named for transmitting an unmodulated carrier.\n- sourceIndex 2: \"for CW communication\": CW communication is keyed radiotelegraphy, not permission to send an unmodulated carrier under this rule.\n- sourceIndex 3: \"for holding a frequency until a net begins\": Holding a frequency for a future net is not a permitted use of an unmodulated carrier.",
+    "en": "Question B-001-018-002.\n\nWhy the correct answer is right: An unmodulated carrier is allowed only for brief tests on frequencies below 30 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"if the final RF amplifier output is kept under 5 watts\": The unmodulated-carrier rule is about brief testing below 30 MHz, not a low-power exception.\n- sourceIndex 2: \"for CW communication\": CW communication is keyed radiotelegraphy, not permission to send an unmodulated carrier under this rule.\n- sourceIndex 3: \"for holding a frequency until a net begins\": A future net does not turn an unmodulated carrier into a brief below-30-MHz test.",
     "fr": null
   },
   "citations": [

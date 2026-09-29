@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-004-007.\n\nWhy the correct answer is right: The current bank requires candidates to have a valid address in Canada.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Be a Canadian citizen\": Citizenship is not the condition named by the bank.\n- sourceIndex 2: \"Be a Canadian citizen or permanent resident\": Permanent-resident status is not added to the bank's address requirement.\n- sourceIndex 3: \"Be at least 14 years of age and a Canadian citizen or permanent resident\": This combines an age and status requirement that the bank does not impose.",
+    "en": "Question B-001-004-007.\n\nWhy the correct answer is right: Candidates must have a valid address in Canada.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Be a Canadian citizen\": Citizenship is not the condition named here.\n- sourceIndex 2: \"Be a Canadian citizen or permanent resident\": Permanent-resident status is not added to the address requirement.\n- sourceIndex 3: \"Be at least 14 years of age and a Canadian citizen or permanent resident\": This combines an age and status requirement that the bank does not impose.",
     "fr": null
   },
   "citations": [

@@ -11,122 +11,127 @@
   },
   {
     "lessonId": "L-001-01",
-    "blockHeading": "Certificate records and address duties",
-    "reason": "Reviewed regulatory fact table: exact deadlines and fee amounts are required current-bank facts, not copied examples."
-  },
-  {
-    "lessonId": "L-001-01",
-    "blockHeading": "False information, distress, and penalties",
-    "reason": "Reviewed regulatory fact table: exact offence and penalty wording is required current-bank content and keeps the lesson grounded."
-  },
-  {
-    "lessonId": "L-001-01",
-    "blockHeading": "Basic entry, additional qualifications, and other services",
-    "reason": "Reviewed regulatory facts: the Morse speed, sequence rule, address rule, and named credential are current-bank facts needed for coverage."
-  },
-  {
-    "lessonId": "L-001-01",
-    "blockHeading": "Examination fees and accommodations",
-    "reason": "Reviewed regulatory fact table: fee, examiner-qualification, and accommodation rows intentionally preserve current-bank facts."
-  },
-  {
-    "lessonId": "L-001-02",
-    "blockHeading": "Communications that fit amateur radio",
-    "reason": "Reviewed regulatory fact table: allowed and prohibited communication examples are current-bank facts needed for accurate coverage."
-  },
-  {
-    "lessonId": "L-001-02",
-    "blockHeading": "Station types and construction privileges",
-    "reason": "Reviewed regulatory fact table: station-type and qualification rows intentionally preserve current-bank facts, including beacon one-way communications."
-  },
-  {
-    "lessonId": "L-001-01",
     "blockHeading": "Reference facts: Authority and source roles",
-    "reason": "Reviewed regulatory reference table: single source-role facts are current-bank facts intentionally labelled for memorization, not practice prompts."
+    "reason": "Reviewed regulatory reference table: single source-role facts are established by official answers and kept in a labelled table rather than a practice prompt."
   },
   {
     "lessonId": "L-001-01",
-    "blockHeading": "Reference facts: Certificate records and address duties",
-    "reason": "Reviewed regulatory reference table: exact deadlines, retention locations, lifetime validity, and fee amounts are required current-bank facts."
+    "blockHeading": "Reference facts: Certificate records, addresses, and call-sign fees",
+    "reason": "Reviewed regulatory reference table: exact validity, deadline, retention, and fee facts are established by official answers."
   },
   {
     "lessonId": "L-001-01",
-    "blockHeading": "Reference facts: False information, distress, and penalties",
-    "reason": "Reviewed regulatory reference table: offence, due-process, and penalty wording is required current-bank content and not a copied practice scenario."
+    "blockHeading": "Reference facts: Offences, penalties, and process boundaries",
+    "reason": "Reviewed regulatory reference table: offence, penalty, and process-boundary facts are established by official answers."
   },
   {
     "lessonId": "L-001-01",
-    "blockHeading": "Reference facts: Basic entry, additional qualifications, and other services",
-    "reason": "Reviewed regulatory reference table: Basic-entry, qualification-sequence, Morse-speed, other-service, and named-credential facts are required current-bank facts."
-  },
-  {
-    "lessonId": "L-001-01",
-    "blockHeading": "Reference facts: Examination fees and accommodations",
-    "reason": "Reviewed regulatory reference table: fee, examiner-qualification, and accommodation facts are required current-bank facts kept out of Try-it prompts."
+    "blockHeading": "Reference facts: Basic eligibility, qualifications, exams, and accommodations",
+    "reason": "Reviewed regulatory reference table: eligibility, qualification sequence, fee, and accommodation facts are established by official answers."
   },
   {
     "lessonId": "L-001-02",
     "blockHeading": "Reference facts: Work done for another person",
-    "reason": "Reviewed regulatory reference table: two-sided authorization facts for work on another person's apparatus are required current-bank facts."
+    "reason": "Reviewed regulatory reference table: authorization requirements for work on another person's apparatus are established by official answers."
   },
   {
     "lessonId": "L-001-02",
-    "blockHeading": "Reference facts: Amateur service is not every radio service",
-    "reason": "Reviewed regulatory reference table: service-boundary and equipment-certification facts are required current-bank facts."
+    "blockHeading": "Reference facts: Amateur service boundaries",
+    "reason": "Reviewed regulatory reference table: service-boundary and equipment-certification facts are established by official answers."
   },
   {
     "lessonId": "L-001-02",
     "blockHeading": "Reference facts: Communications that fit amateur radio",
-    "reason": "Reviewed regulatory reference table: permitted and prohibited communication examples are required current-bank facts, not practice prompts."
+    "reason": "Reviewed regulatory reference table: communication-purpose and encoding facts are established by official answers."
   },
   {
     "lessonId": "L-001-02",
-    "blockHeading": "Reference facts: Station types and construction privileges",
-    "reason": "Reviewed regulatory reference table: station-type and qualification minimums are required current-bank facts, including the one-way station case."
+    "blockHeading": "Reference facts: Station privileges and construction",
+    "reason": "Reviewed regulatory reference table: Basic and Basic-plus-Advanced station-privilege facts are established by official answers."
   },
   {
     "lessonId": "L-001-02",
     "blockHeading": "Reference facts: Control operator and station owner",
-    "reason": "Reviewed regulatory reference table: responsibility, control-point, and supervised-operation facts are required current-bank facts."
+    "reason": "Reviewed regulatory reference table: responsibility and supervision facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-03",
+    "blockHeading": "Reference facts: Interference and shared bands",
+    "reason": "Reviewed regulatory reference table: interference, secondary-service, and shared-band facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-03",
+    "blockHeading": "Reference facts: Emergency, disaster, and public-service communication",
+    "reason": "Reviewed regulatory reference table: emergency and relief-operation facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-03",
+    "blockHeading": "Reference facts: Privacy, payment, and message handling",
+    "reason": "Reviewed regulatory reference table: privacy and remuneration facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-03",
+    "blockHeading": "Reference facts: Station identification",
+    "reason": "Reviewed regulatory reference table: identification timing and language facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-03",
+    "blockHeading": "Reference facts: Third-party and visiting-operator communication",
+    "reason": "Reviewed regulatory reference table: third-party, visitor, and international permission facts are established by official answers."
   },
   {
     "lessonId": "L-001-04",
-    "blockHeading": "The below-30-MHz gate",
-    "reason": "Regulatory principle block: below-30-MHz qualification threshold values are established by official answers and RBR-4 facts."
+    "blockHeading": "Reference facts: Operator privileges and below-30-MHz access",
+    "reason": "Reviewed regulatory reference table: operator-privilege and below-30-MHz gate facts are established by official answers and docs/exam-facts.md."
   },
   {
     "lessonId": "L-001-04",
     "blockHeading": "Reference facts: HF band ranges named in the bank",
-    "reason": "Reference fact table: band ranges are established by official answers and are intentionally taught as single facts rather than Try-its."
+    "reason": "Reviewed regulatory reference table: HF band ranges are established by official answers and intentionally taught as exact facts."
   },
   {
     "lessonId": "L-001-04",
-    "blockHeading": "Reference facts: bandwidth limits",
-    "reason": "Reference fact table: bandwidth and mode-limit values are established by official answers and are intentionally taught as single facts rather than Try-its."
+    "blockHeading": "Reference facts: Bandwidth and mode-fit cues",
+    "reason": "Reviewed regulatory reference table: bandwidth limits and mode-fit cues are established by official answers, with no unsupported mode-width expansion."
   },
   {
     "lessonId": "L-001-04",
-    "blockHeading": "Reference facts: power limits",
-    "reason": "Reference fact table: power values are established by official answers and RBR-4 and are intentionally taught as single facts rather than Try-its."
+    "blockHeading": "Reference facts: Power quantities and limits",
+    "reason": "Reviewed regulatory reference table: power values and quantities are established by official answers and docs/exam-facts.md."
   },
   {
     "lessonId": "L-001-04",
-    "blockHeading": "Reference facts: mode-fit cues from the bank",
-    "reason": "Reference fact table: mode-width cues are drawn from official B-001 and B-003 answers so B-001-016 explanations can reason about mode fit without copying a worked example."
-  },
-  {
-    "lessonId": "L-001-04",
-    "blockHeading": "Reference facts: station-type cues",
-    "reason": "Reference fact table: station-type cues are drawn from official answer/distractor terms to explain B-001-018 station-role distinctions."
+    "blockHeading": "Reference facts: Repeaters, automatic transmissions, stability, and modulation quality",
+    "reason": "Reviewed regulatory reference table: station-type, frequency-stability, measurement, and modulation-quality facts are established by official answers."
   },
   {
     "lessonId": "L-001-05",
-    "blockHeading": "Reference facts",
-    "reason": "Reviewed regulatory reference table: single-rule ITU-region and Morse authorization facts are intentionally isolated from the multi-rule practice items required by the module policy."
+    "blockHeading": "Reference facts: International message purpose and regulatory source",
+    "reason": "Reviewed regulatory reference table: international message-purpose, administration-objection, Morse, and ITU-source facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-05",
+    "blockHeading": "Reference facts: ITU regions and operating location",
+    "reason": "Reviewed regulatory reference table: ITU-region and operating-location facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-05",
+    "blockHeading": "Reference facts: United States and CEPT-style visits",
+    "reason": "Reviewed regulatory reference table: United States and CEPT qualification and voice-identification facts are established by official answers."
   },
   {
     "lessonId": "L-001-06",
-    "blockHeading": "Reference facts",
-    "reason": "Reviewed regulatory reference table: exact official names, OR wording, comment-period duration, exemption wording, RF frequency/effect facts, and EMCAB-2 criterion facts are intentionally preserved as single-rule anchors instead of being used as standalone practice items."
+    "blockHeading": "Reference facts: Antenna siting and public consultation",
+    "reason": "Reviewed regulatory reference table: antenna authority, process, exclusion, and consultation facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-06",
+    "blockHeading": "Reference facts: Safety Code 6 and RF exposure",
+    "reason": "Reviewed regulatory reference table: Safety Code 6, exposure-factor, and exposure-quantity facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-06",
+    "blockHeading": "Reference facts: EMCAB-2 interference criteria",
+    "reason": "Reviewed regulatory reference table: EMCAB-2 field-strength and equipment-category facts are established by official answers."
   }
 ]

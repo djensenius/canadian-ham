@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-019-006.\n\nWhy the correct answer is right: The maximum modulation percentage for amateur voice communications is 100%.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"90%\": Ninety percent could be an operating margin, but it would understate the permitted maximum for voice communications.\n- sourceIndex 2: \"75%\": Seventy-five percent is below full modulation and is not the ceiling the bank asks for.\n- sourceIndex 3: \"50%\": Fifty percent is much lower than full modulation, so it cannot be the maximum percentage permitted.",
+    "en": "Question B-001-019-006.\n\nWhy the correct answer is right: The maximum modulation percentage for amateur voice communications is 100%.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"90%\": Ninety percent could be an operating margin, but it would understate the permitted maximum for voice communications.\n- sourceIndex 2: \"75%\": Seventy-five percent is below full modulation, so it understates the permitted voice-modulation maximum.\n- sourceIndex 3: \"50%\": Fifty percent is much lower than full modulation, so it cannot be the maximum percentage permitted.",
     "fr": null
   },
   "citations": [

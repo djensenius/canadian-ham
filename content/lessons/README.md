@@ -45,6 +45,18 @@ node packages/content-tools/src/check-lesson-coverage.ts
 
 The checker parses lesson front matter, compares lesson `covers` entries with `content/generated/basic-2025-07-15/subsections.json`, fails on missing or unknown subsection IDs, fails on malformed lesson/module front matter, and reports duplicate subsection coverage for review.
 
+## Reference-style lessons for rule-based modules
+
+Some modules are primarily made of rule facts already enumerated by the official question bank. For those modules, such as Module 1 regulations, lessons use a reference-style format instead of homemade practice prompts:
+
+- keep single facts in clearly labelled `Reference facts` tables;
+- explain relationships in prose under a `How these rules fit together` section;
+- do not include Try-its, question-and-answer worked examples, or original practice items that restate an official scenario;
+- phrase `Common mistakes` as general guidance, not as copied or paraphrased wrong answer choices; and
+- use lesson quiz JSON that includes all official question IDs for the covered subsections and `conceptChecks: []`.
+
+The format lets the app teach the official rules without creating near-duplicate concept checks for a rule bank that is already exhaustive.
+
 ## Quiz check
 
 Run the strict full-repository quiz check from the repository root:

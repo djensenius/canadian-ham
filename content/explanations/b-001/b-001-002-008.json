@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-002-008.\n\nWhy the correct answer is right: A replacement prefix caused by moving to a new province or territory is free in the current bank.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"$25\": The bank does not attach a twenty-five-dollar charge to this address-related prefix replacement.\n- sourceIndex 2: \"$40\": Forty dollars is not the replacement-prefix fee stated here.\n- sourceIndex 3: \"$60\": Sixty dollars belongs to a different call-sign change context, not this address-related replacement prefix.",
+    "en": "Question B-001-002-008.\n\nWhy the correct answer is right: A replacement prefix caused by moving to a new province or territory is free.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"$25\": A twenty-five-dollar charge does not apply to this address-related prefix replacement.\n- sourceIndex 2: \"$40\": Forty dollars is not the replacement-prefix fee stated here.\n- sourceIndex 3: \"$60\": Sixty dollars belongs to a different call-sign change context, not this address-related replacement prefix.",
     "fr": null
   },
   "citations": [
