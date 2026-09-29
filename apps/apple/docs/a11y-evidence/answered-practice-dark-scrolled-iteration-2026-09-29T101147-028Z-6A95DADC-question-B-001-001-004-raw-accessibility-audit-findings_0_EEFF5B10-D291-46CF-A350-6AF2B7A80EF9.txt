@@ -1,0 +1,47 @@
+Screen: answered-practice
+
+Appearance: dark
+
+Pass: scrolled
+
+Iteration: 2026-09-29T101147-028Z-6A95DADC
+
+Question ID: B-001-001-004
+
+Screen frame: x: 0.0, y: 0.0, width: 402.0, height: 874.0
+
+Navigation bar frame: x: 0.0, y: 62.0, width: 402.0, height: 54.00000000000004
+
+Status bar frame: x: 0.0, y: 0.0, width: 402.0, height: 62.0
+
+Issue 1:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+auditTypeName: contrast
+element.identifier: question-identifier
+element.label: B-001-001-004
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 40.0, y: 204.6057942708333, width: 136.66666666666666, height: 20.333333333333314
+recordedElement.frame: x: 40.0, y: 16.605794270833314, width: 136.66666666666666, height: 20.333333333333314
+recordedElement.status: entirely-offscreen-or-under-bars
+recordedElement.detail: Question identifier: entirely-offscreen-or-under-bars; required=true; enforcesVisibility=false; identifier=question-identifier; label=B-001-001-004; frame=x: 40.0, y: 16.605794270833314, width: 136.66666666666666, height: 20.333333333333314; navBar.maxY=116.00000000000004; statusBar.maxY=62.0
+compactDescription: Contrast failed
+exclusion.kind: occluded-by-bar
+exclusion.isExcluded: true
+exclusion.reason: Excluded because the same element is fully visible in the other answered-practice pass.
+exclusion.proof: recordedRealFrame=((40.0, 16.605794270833314, 136.66666666666666, 20.333333333333314)); auditReportedFrame=((40.0, 204.6057942708333, 136.66666666666666, 20.333333333333314)); navigationBarFrame=((0.0, 62.0, 402.0, 54.00000000000004)); statusBarFrame=((0.0, 0.0, 402.0, 62.0)); intersectsNavigationBar=false; intersectsStatusBar=true
+
+Occluded-by-bar findings:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+auditTypeName: contrast
+element.identifier: question-identifier
+element.label: B-001-001-004
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 40.0, y: 204.6057942708333, width: 136.66666666666666, height: 20.333333333333314
+recordedElement.frame: x: 40.0, y: 16.605794270833314, width: 136.66666666666666, height: 20.333333333333314
+recordedElement.status: entirely-offscreen-or-under-bars
+recordedElement.detail: Question identifier: entirely-offscreen-or-under-bars; required=true; enforcesVisibility=false; identifier=question-identifier; label=B-001-001-004; frame=x: 40.0, y: 16.605794270833314, width: 136.66666666666666, height: 20.333333333333314; navBar.maxY=116.00000000000004; statusBar.maxY=62.0
+compactDescription: Contrast failed
+exclusion.kind: occluded-by-bar
+exclusion.isExcluded: true
+exclusion.reason: Excluded because the same element is fully visible in the other answered-practice pass.
+exclusion.proof: recordedRealFrame=((40.0, 16.605794270833314, 136.66666666666666, 20.333333333333314)); auditReportedFrame=((40.0, 204.6057942708333, 136.66666666666666, 20.333333333333314)); navigationBarFrame=((0.0, 62.0, 402.0, 54.00000000000004)); statusBarFrame=((0.0, 0.0, 402.0, 62.0)); intersectsNavigationBar=false; intersectsStatusBar=true
