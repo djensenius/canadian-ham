@@ -290,6 +290,15 @@ private struct LessonReaderView: View {
                     MessagePanel(title: "Lesson progress unavailable", message: errorMessage, kind: .warning)
                 }
 
+                if lesson.status == .outline {
+                    OutlineLessonView(lesson: lesson, library: library)
+                } else {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                        LessonMarkdownView(markdown: lesson.bodyMarkdown, title: lesson.title.en)
+                    }
+                    .paperCard()
+                }
+
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                     Button { markRead() } label: {
                         lessonActionLabel("Mark lesson read")
@@ -313,15 +322,6 @@ private struct LessonReaderView: View {
                         }
                         .buttonStyle(.plain)
                     }
-                }
-
-                if lesson.status == .outline {
-                    OutlineLessonView(lesson: lesson, library: library)
-                } else {
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                        LessonMarkdownView(markdown: lesson.bodyMarkdown, title: lesson.title.en)
-                    }
-                    .paperCard()
                 }
 
                 quizCards
