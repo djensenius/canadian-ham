@@ -27,7 +27,7 @@ export function LanguageToggle({ language, onLanguageChange }: LanguageTogglePro
           checked={language === "fr"}
           onChange={() => onLanguageChange("fr")}
         />
-        Français
+        <span lang="fr">Français</span>
       </label>
     </fieldset>
   );

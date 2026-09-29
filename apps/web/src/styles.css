@@ -202,6 +202,13 @@ button.danger,
   color: var(--ch-color-warning-text);
 }
 
+button.danger:hover:not(:disabled),
+.danger:hover:not(:disabled) {
+  border-color: var(--ch-color-warning-border);
+  background: var(--ch-color-warning-bg);
+  color: var(--ch-color-warning-text);
+}
+
 button:disabled,
 button[aria-disabled="true"] {
   cursor: not-allowed;
@@ -405,6 +412,9 @@ li {
 }
 
 .category-card:hover:not(:disabled) {
+  border-color: var(--ch-color-border);
+  background: var(--ch-color-paper-elevated);
+  color: var(--ch-color-ink);
   transform: translateY(-1px);
 }
 
@@ -498,9 +508,47 @@ input:not([type]) {
 
 input[type="radio"],
 input[type="checkbox"] {
+  display: inline-grid;
+  flex: 0 0 auto;
+  place-content: center;
   width: 1.25rem;
   height: 1.25rem;
-  accent-color: var(--ch-color-accent);
+  margin: 0;
+  appearance: none;
+  border: 2px solid var(--ch-color-border);
+  background: var(--ch-color-paper-inset);
+  color: var(--ch-color-accent);
+}
+
+input[type="radio"] {
+  border-radius: var(--ch-radius-pill);
+}
+
+input[type="checkbox"] {
+  border-radius: var(--ch-radius-xs);
+}
+
+input[type="radio"]::after,
+input[type="checkbox"]::after {
+  content: "";
+  width: 0.65rem;
+  height: 0.65rem;
+  transform: scale(0);
+  transition: transform var(--ch-motion-fast) var(--ch-ease-standard);
+  background: currentColor;
+}
+
+input[type="radio"]::after {
+  border-radius: var(--ch-radius-pill);
+}
+
+input[type="checkbox"]::after {
+  border-radius: calc(var(--ch-radius-xs) / 2);
+}
+
+input[type="radio"]:checked::after,
+input[type="checkbox"]:checked::after {
+  transform: scale(1);
 }
 
 .session-summary {
@@ -718,7 +766,7 @@ input[type="checkbox"] {
     top: var(--ch-space-lg);
   }
 
-  .mock-exam:has(.question-navigator) {
+  .mock-exam--running {
     grid-template-columns: minmax(14rem, 0.35fr) minmax(0, 1fr);
     grid-template-areas:
       "title title"
@@ -731,37 +779,37 @@ input[type="checkbox"] {
     align-items: start;
   }
 
-  .mock-exam:has(.question-navigator) > h2 {
+  .mock-exam--running > h2 {
     grid-area: title;
   }
 
-  .mock-exam:has(.question-navigator) > .session-summary {
+  .mock-exam--running > .session-summary {
     grid-area: summary;
   }
 
-  .mock-exam:has(.question-navigator) > .exam-tool-row {
+  .mock-exam--running > .exam-tool-row {
     grid-area: tools;
   }
 
-  .mock-exam:has(.question-navigator) > .timer-panel,
-  .mock-exam:has(.question-navigator) > .timer-off-note {
+  .mock-exam--running > .timer-panel,
+  .mock-exam--running > .timer-off-note {
     grid-area: timer;
   }
 
-  .mock-exam:has(.question-navigator) > .question-panel {
+  .mock-exam--running > .question-panel {
     grid-area: question;
   }
 
-  .mock-exam:has(.question-navigator) > .action-row {
+  .mock-exam--running > .action-row {
     grid-area: actions;
   }
 
-  .mock-exam:has(.question-navigator) > .question-navigator {
+  .mock-exam--running > .question-navigator {
     grid-area: navigator;
     align-self: start;
   }
 
-  .mock-exam:has(.question-navigator) > .confirm-panel {
+  .mock-exam--running > .confirm-panel {
     grid-area: confirm;
   }
 }

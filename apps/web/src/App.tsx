@@ -97,19 +97,21 @@ interface AppErrorBoundaryProps {
 
 interface AppErrorBoundaryState {
   readonly errorMessage: string | null;
+  readonly recoveryPreferences: WebPreferences | null;
 }
 
-class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorBoundaryState> {
-  override state: AppErrorBoundaryState = { errorMessage: null };
+export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorBoundaryState> {
+  override state: AppErrorBoundaryState = { errorMessage: null, recoveryPreferences: null };
 
   static getDerivedStateFromError(error: unknown): AppErrorBoundaryState {
-    return { errorMessage: formatError(error) };
+    return { errorMessage: formatError(error), recoveryPreferences: null };
   }
 
   override render(): ReactNode {
     if (this.state.errorMessage === null) {
       return this.props.children;
     }
+    const recoveryPreferences = this.state.recoveryPreferences ?? { ...defaultPreferences, theme: readStoredThemePreference() };
     return (
       <div className="app-shell">
         <header className="site-header" role="banner">
@@ -131,11 +133,14 @@ class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorBoundary
               onProgressImported={() => this.setState({ errorMessage: null })}
               onReset={() => this.setState({ errorMessage: null })}
               onSetPreferences={async (preferences) => {
-                await this.props.store.putPreferences(preferences);
-                applyThemePreference(preferences.theme);
-                mirrorThemePreference(preferences.theme);
+                const storedPreferences = await readRecoverablePreferences(this.props.store);
+                const nextPreferences = { ...storedPreferences, theme: preferences.theme };
+                await this.props.store.putPreferences(nextPreferences);
+                applyThemePreference(nextPreferences.theme);
+                mirrorThemePreference(nextPreferences.theme);
+                this.setState({ recoveryPreferences: nextPreferences });
               }}
-              preferences={{ ...defaultPreferences, theme: readStoredThemePreference() }}
+              preferences={recoveryPreferences}
               statusMessage=""
               store={this.props.store}
             />
@@ -144,6 +149,14 @@ class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorBoundary
         <Footer />
       </div>
     );
+  }
+}
+
+async function readRecoverablePreferences(store: ProgressStore): Promise<WebPreferences> {
+  try {
+    return await store.getPreferences();
+  } catch {
+    return { ...defaultPreferences, theme: readStoredThemePreference() };
   }
 }
 
@@ -259,8 +272,12 @@ function AppContent({
       return undefined;
     }
     const onSystemThemeChange = () => applyThemePreference("system");
-    media.addEventListener("change", onSystemThemeChange);
-    return () => media.removeEventListener("change", onSystemThemeChange);
+    if (typeof media.addEventListener === "function") {
+      media.addEventListener("change", onSystemThemeChange);
+      return () => media.removeEventListener("change", onSystemThemeChange);
+    }
+    media.addListener?.(onSystemThemeChange);
+    return () => media.removeListener?.(onSystemThemeChange);
   }, [preferences.theme]);
 
   const bankQuestionsById = useMemo(() => bankQuestions === null ? new Map<string, Question>() : questionsById(bankQuestions), [bankQuestions]);
@@ -928,7 +945,7 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
   }
 
   return (
-    <section className="card mock-exam" aria-labelledby="mock-title">
+    <section className="card mock-exam mock-exam--running" aria-labelledby="mock-title">
       <h2 id="mock-title">Mock exam</h2>
       <div className="session-summary" aria-label="Mock exam progress">
         <span>Question {exam.currentIndex + 1} of {exam.generatedItems.length}</span>
@@ -953,21 +970,6 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
           <span className="sr-only" role="status" aria-live="polite">{timerAnnouncement}</span>
         </div>
       ) : <p className="timer-off-note">Timer off. No time pressure by default.</p>}
-      <QuestionCard
-        choicePermutation={item.choicePermutation}
-        disabled={false}
-        language={language}
-        onChoose={choose}
-        question={question}
-        selectedSourceIndex={selectedSourceIndex}
-        showCorrectness={false}
-      />
-      <div className="action-row">
-        <button type="button" onClick={toggleFlag}>{exam.flaggedQuestionIds.has(question.id) ? "Remove flag" : "Flag for review"}</button>
-        <button type="button" disabled={exam.currentIndex === 0} onClick={() => onExamChange({ ...exam, currentIndex: exam.currentIndex - 1 })}>Previous</button>
-        <button type="button" disabled={exam.currentIndex >= exam.generatedItems.length - 1} onClick={() => onExamChange({ ...exam, currentIndex: exam.currentIndex + 1 })}>Next</button>
-        <button type="button" ref={submitButtonRef} onClick={() => onExamChange({ ...exam, confirmingSubmit: true })}>Submit exam</button>
-      </div>
       <nav className="question-navigator" aria-label="Question navigator">
         {exam.generatedItems.map((candidate, index) => {
           const answered = exam.selectedByQuestionId.has(candidate.questionId);
@@ -986,6 +988,21 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
           );
         })}
       </nav>
+      <QuestionCard
+        choicePermutation={item.choicePermutation}
+        disabled={false}
+        language={language}
+        onChoose={choose}
+        question={question}
+        selectedSourceIndex={selectedSourceIndex}
+        showCorrectness={false}
+      />
+      <div className="action-row">
+        <button type="button" onClick={toggleFlag}>{exam.flaggedQuestionIds.has(question.id) ? "Remove flag" : "Flag for review"}</button>
+        <button type="button" disabled={exam.currentIndex === 0} onClick={() => onExamChange({ ...exam, currentIndex: exam.currentIndex - 1 })}>Previous</button>
+        <button type="button" disabled={exam.currentIndex >= exam.generatedItems.length - 1} onClick={() => onExamChange({ ...exam, currentIndex: exam.currentIndex + 1 })}>Next</button>
+        <button type="button" ref={submitButtonRef} onClick={() => onExamChange({ ...exam, confirmingSubmit: true })}>Submit exam</button>
+      </div>
       {exam.confirmingSubmit ? (
         <section className="confirm-panel" aria-labelledby="submit-confirm-title" role="alertdialog" aria-modal="false" ref={confirmRef} tabIndex={-1}>
           <h3 id="submit-confirm-title">Submit mock exam?</h3>

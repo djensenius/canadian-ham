@@ -2,7 +2,7 @@ import type { ThemePreference } from "./progressStore";
 
 export const THEME_STORAGE_KEY = "canadian-ham.theme-preference";
 
-const THEME_COLORS: Record<"light" | "dark", string> = {
+export const THEME_COLORS: Record<"light" | "dark", string> = {
   light: "#F6EEDC",
   dark: "#201B16",
 };

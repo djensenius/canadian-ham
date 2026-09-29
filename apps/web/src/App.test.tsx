@@ -1,14 +1,16 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
 import { IDBFactory } from "fake-indexeddb";
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
 
-import { App } from "./App";
+import { App, AppErrorBoundary } from "./App";
 import { bankId, loadQuestions, loadQuestionsFromUrl, type Question } from "./data/bank";
 import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExportV1 } from "./lib/progressStore";
-import { applyThemePreference, readStoredThemePreference, THEME_STORAGE_KEY } from "./lib/theme";
+import { applyThemePreference, readStoredThemePreference, THEME_COLORS, THEME_STORAGE_KEY } from "./lib/theme";
 import { buildExamAttempt, createMockExam } from "./lib/studyEngine";
 
 const fixedNow = "2026-01-02T03:04:05.000Z";
@@ -53,6 +55,22 @@ function createMemoryStorage(): Storage {
     removeItem: (key: string) => { values.delete(key); },
     setItem: (key: string, value: string) => { values.set(key, value); },
   };
+}
+
+function webIndexHtml(): string {
+  return readFileSync("index.html", "utf8");
+}
+
+function extractInlineThemeScript(html: string): string {
+  const match = html.match(/<script>([\s\S]*?)<\/script>/);
+  assert.ok(match?.[1]);
+  return match[1];
+}
+
+function extractCsp(html: string): string {
+  const match = html.match(/<meta\s+http-equiv="Content-Security-Policy"\s+content="([^"]+)"/);
+  assert.ok(match?.[1]);
+  return match[1];
 }
 
 async function expectNoAxeViolations(container: Element): Promise<void> {
@@ -197,6 +215,10 @@ describe("App accessibility and flows", () => {
 
     await user.click(screen.getByRole("button", { name: "Start mock exam" }));
     await screen.findByText(/Question 1 of 100/);
+    const navigator = screen.getByRole("navigation", { name: "Question navigator" });
+    const questionPanel = document.querySelector(".question-panel");
+    assert.ok(questionPanel);
+    assert.ok(navigator.compareDocumentPosition(questionPanel) & Node.DOCUMENT_POSITION_FOLLOWING);
     const firstChoice = screen.getAllByTestId("answer-choice")[0]!;
     firstChoice.focus();
     await user.keyboard("{Enter}");
@@ -273,8 +295,10 @@ describe("App accessibility and flows", () => {
     await screen.findByRole("heading", { name: "Settings and local data" });
     await expectNoAxeViolations(container);
     await user.click(screen.getByLabelText("Dark"));
-    await waitFor(async () => assert.equal((await store.getPreferences()).theme, "dark"));
-    assert.equal(document.documentElement.dataset.theme, "dark");
+    await waitFor(async () => {
+      assert.equal((await store.getPreferences()).theme, "dark");
+      assert.equal(document.documentElement.dataset.theme, "dark");
+    });
     assert.equal(window.localStorage.getItem(THEME_STORAGE_KEY), "dark");
   });
 
@@ -288,7 +312,44 @@ describe("App accessibility and flows", () => {
     applyThemePreference(readStoredThemePreference());
 
     assert.equal(document.documentElement.dataset.theme, "dark");
-    assert.equal(themeColor.getAttribute("content"), "#201B16");
+    assert.equal(themeColor.getAttribute("content"), THEME_COLORS.dark);
+  });
+
+  it("keeps the inline theme script hash in the CSP and applies stored dark theme", () => {
+    const html = webIndexHtml();
+    const script = extractInlineThemeScript(html);
+    const csp = extractCsp(html);
+    const hash = createHash("sha256").update(script).digest("base64");
+    const themeColor = document.createElement("meta");
+    themeColor.setAttribute("name", "theme-color");
+    document.head.append(themeColor);
+    window.localStorage.setItem(THEME_STORAGE_KEY, "dark");
+
+    assert.ok(csp.includes(`'sha256-${hash}'`));
+    assert.doesNotMatch(csp, /style-src[^;]*'unsafe-inline'/);
+    new Function("window", "document", "localStorage", script)(window, document, window.localStorage);
+
+    assert.equal(document.documentElement.dataset.theme, "dark");
+    assert.equal(themeColor.getAttribute("content"), THEME_COLORS.dark);
+  });
+
+  it("preserves stored preferences and re-renders theme radios in recovery settings", async () => {
+    const store = createStore("error-boundary-theme");
+    const user = userEvent.setup();
+    await store.putPreferences({ ...defaultPreferences, practiceMode: "review-later", examTimerEnabled: true, theme: "light" });
+    function BrokenContent() {
+      throw new Error("corrupt local progress");
+      return null;
+    }
+
+    render(<AppErrorBoundary store={store} now={() => fixedNow}><BrokenContent /></AppErrorBoundary>);
+    await screen.findByText(/The app could not render saved progress/);
+    await user.click(screen.getByLabelText("Dark"));
+    await screen.findByText(/Theme preference saved: Dark/);
+
+    assert.deepEqual(await store.getPreferences(), { ...defaultPreferences, practiceMode: "review-later", examTimerEnabled: true, theme: "dark" });
+    assert.equal((screen.getByLabelText("Dark") as HTMLInputElement).checked, true);
+    assert.equal(document.documentElement.dataset.theme, "dark");
   });
 
   it("keeps the root language stable and marks only question content as French", async () => {
@@ -301,6 +362,7 @@ describe("App accessibility and flows", () => {
     await screen.findByText(/Question 1 of/);
     await user.click(screen.getByLabelText("Français"));
 
+    assert.equal(screen.getByText("Français").getAttribute("lang"), "fr");
     assert.equal(document.documentElement.lang, "en");
     assert.ok(document.querySelector(".question-text[lang='fr-CA']"));
   });
