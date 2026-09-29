@@ -14,7 +14,7 @@ The token source of truth is [`packages/design-tokens/tokens.json`](../packages/
 
 ## Palette
 
-The palette uses warm cream paper, near-black ink, and one restrained accent: **vermilion seal red**. Vermilion is justified because it fits the sumi-e family as a small artist seal, reads well beside black ink, and stays visually distinct from success/warning/error semantics. Do not use it as an error colour.
+The palette uses warm cream paper, near-black ink, and one restrained accent: **vermilion red**. Vermilion is justified because it fits the sumi-e family as a small, sparing accent, reads well beside black ink, and stays visually distinct from success/warning/error semantics. Do not use it as an error colour.
 
 ### Light theme
 
@@ -26,7 +26,7 @@ The palette uses warm cream paper, near-black ink, and one restrained accent: **
 | Ink | `ink` | `#1F1A14` | Primary text and brush marks |
 | Muted ink | `inkMuted` | `#5E5347` | Secondary text |
 | Paper edge | `border` | `#8C7656` | Borders, dividers, UI boundaries |
-| Accent | `accent` | `#A53A2A` | Links, selected state, seal |
+| Accent | `accent` | `#A53A2A` | Links, selected state |
 | Accent strong/focus | `accentStrong`, `focus` | `#8F2E1D` | Focus rings, active emphasis |
 
 ### Dark theme
@@ -41,7 +41,7 @@ Dark mode is **ink-dark paper**, not pure black. Text is warm off-white, and sur
 | Warm light ink | `ink` | `#F3E8D2` | Primary text |
 | Muted warm ink | `inkMuted` | `#CBBDA4` | Secondary text |
 | Warm edge | `border` | `#8A7759` | Borders, dividers |
-| Accent | `accent` | `#FF8A70` | Links, selected state, seal |
+| Accent | `accent` | `#FF8A70` | Links, selected state |
 | Focus | `focus` | `#FFB36B` | Focus rings |
 
 ### Semantic colours

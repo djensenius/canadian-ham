@@ -55,9 +55,38 @@ func normal(for points: [CGPoint], at index: Int) -> CGPoint {
     return CGPoint(x: -dy / length, y: dx / length)
 }
 
+func clamp01(_ value: CGFloat) -> CGFloat {
+    min(1, max(0, value))
+}
+
+func smoothstep(_ value: CGFloat) -> CGFloat {
+    let t = clamp01(value)
+    return t * t * (3 - 2 * t)
+}
+
+func mix(_ a: CGFloat, _ b: CGFloat, _ t: CGFloat) -> CGFloat {
+    a + (b - a) * t
+}
+
+func noiseControls(seed: UInt64, count: Int) -> [CGFloat] {
+    var noise = SeededNoise(seed)
+    return (0..<count).map { _ in noise.next() }
+}
+
+func lowFrequencyValue(_ controls: [CGFloat], at t: CGFloat) -> CGFloat {
+    guard controls.count > 1 else { return controls.first ?? 0 }
+    let scaled = clamp01(t) * CGFloat(controls.count - 1)
+    let lower = min(controls.count - 2, max(0, Int(floor(scaled))))
+    let local = smoothstep(scaled - CGFloat(lower))
+    return mix(controls[lower], controls[lower + 1], local)
+}
+
 func brushedPath(points: [CGPoint], widths: [CGFloat], seed: UInt64, roughness: CGFloat) -> String {
     precondition(points.count == widths.count)
-    var noise = SeededNoise(seed)
+    let leftBody = noiseControls(seed: seed ^ 0x510B_0D1E, count: 5)
+    let rightBody = noiseControls(seed: seed ^ 0xB01D_FACE, count: 5)
+    let leftTail = noiseControls(seed: seed ^ 0xD2A1_BA55, count: 4)
+    let rightTail = noiseControls(seed: seed ^ 0xF00D_CAFE, count: 4)
     var left: [CGPoint] = []
     var right: [CGPoint] = []
 
@@ -65,10 +94,16 @@ func brushedPath(points: [CGPoint], widths: [CGFloat], seed: UInt64, roughness: 
         let t = CGFloat(index) / CGFloat(points.count - 1)
         let n = normal(for: points, at: index)
         let body = pow(max(0, sin(.pi * t)), 0.6)
-        let taperGuard: CGFloat = index == 0 || index == points.count - 1 ? 0.2 : 1
-        let edgeEnergy = (0.25 + 0.75 * body) * taperGuard
-        let leftWidth = max(0.35, widths[index] + noise.next() * roughness * edgeEnergy)
-        let rightWidth = max(0.35, widths[index] + noise.next() * roughness * edgeEnergy)
+        let dryTail = smoothstep((t - 0.8) / 0.2)
+        let bodyEnergy = 0.35 + 0.65 * body
+        let tailEnergy = dryTail * (0.3 + 0.7 * body)
+        let lowLeft = lowFrequencyValue(leftBody, at: t)
+        let lowRight = lowFrequencyValue(rightBody, at: t)
+        let dryLeft = lowFrequencyValue(leftTail, at: t)
+        let dryRight = lowFrequencyValue(rightTail, at: t)
+        let baseWidth = widths[index]
+        let leftWidth = max(0.35, baseWidth + baseWidth * 0.07 * lowLeft * bodyEnergy + roughness * dryLeft * tailEnergy)
+        let rightWidth = max(0.35, baseWidth + baseWidth * 0.07 * lowRight * bodyEnergy + roughness * dryRight * tailEnergy)
         left.append(CGPoint(x: points[index].x + n.x * leftWidth / 2, y: points[index].y + n.y * leftWidth / 2))
         right.append(CGPoint(x: points[index].x - n.x * rightWidth / 2, y: points[index].y - n.y * rightWidth / 2))
     }
@@ -80,7 +115,38 @@ func brushedPath(points: [CGPoint], widths: [CGFloat], seed: UInt64, roughness: 
     return commands.joined(separator: " ")
 }
 
-func cubicBrushPath(_ p0: CGPoint, _ p1: CGPoint, _ p2: CGPoint, _ p3: CGPoint, samples: Int, seed: UInt64, roughness: CGFloat, width: (CGFloat) -> CGFloat) -> String {
+struct BrushStroke {
+    let body: String
+    let hairs: [String]
+}
+
+func tailHairStrokes(points: [CGPoint], widths: [CGFloat], seed: UInt64, count: Int) -> [String] {
+    guard count > 0 else { return [] }
+    var noise = SeededNoise(seed ^ 0x7A11_5EED)
+    return (0..<count).map { index in
+        let start = 0.79 + CGFloat(index) * 0.035 + max(0, noise.next()) * 0.018
+        let side: CGFloat = noise.next() < 0 ? -1 : 1
+        let spread = 0.24 + CGFloat(index) * 0.08 + abs(noise.next()) * 0.08
+        let steps = 6
+        let hairPoints: [CGPoint] = (0..<steps).map { step in
+            let local = CGFloat(step) / CGFloat(steps - 1)
+            let t = min(1, start + (1 - start) * local)
+            let sample = min(points.count - 1, max(0, Int(round(t * CGFloat(points.count - 1)))))
+            let n = normal(for: points, at: sample)
+            let offset = side * (widths[sample] * spread + CGFloat(index) * 0.9) + noise.next() * 0.35
+            return CGPoint(x: points[sample].x + n.x * offset, y: points[sample].y + n.y * offset)
+        }
+        return (["M \(point(hairPoints[0]))"] + hairPoints.dropFirst().map { "L \(point($0))" }).joined(separator: " ")
+    }
+}
+
+func brushElements(_ stroke: BrushStroke, fill: String = ink) -> String {
+    (["<path d=\"\(stroke.body)\" fill=\"\(fill)\"/>"]
+        + stroke.hairs.map { "<path d=\"\($0)\" fill=\"none\" stroke=\"\(fill)\" stroke-width=\"1.45\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>" })
+        .joined(separator: "\n  ")
+}
+
+func cubicBrushStroke(_ p0: CGPoint, _ p1: CGPoint, _ p2: CGPoint, _ p3: CGPoint, samples: Int, seed: UInt64, roughness: CGFloat, hairCount: Int = 0, width: (CGFloat) -> CGFloat) -> BrushStroke {
     var points: [CGPoint] = []
     var widths: [CGFloat] = []
     for step in 0..<samples {
@@ -88,10 +154,13 @@ func cubicBrushPath(_ p0: CGPoint, _ p1: CGPoint, _ p2: CGPoint, _ p3: CGPoint, 
         points.append(cubic(p0, p1, p2, p3, t))
         widths.append(max(0.35, width(t)))
     }
-    return brushedPath(points: points, widths: widths, seed: seed, roughness: roughness)
+    return BrushStroke(
+        body: brushedPath(points: points, widths: widths, seed: seed, roughness: roughness),
+        hairs: tailHairStrokes(points: points, widths: widths, seed: seed, count: hairCount)
+    )
 }
 
-func arcBrushPath(center: CGPoint, radius: CGFloat, startDegrees: CGFloat, endDegrees: CGFloat, samples: Int, maxWidth: CGFloat, seed: UInt64) -> String {
+func arcBrushStroke(center: CGPoint, radius: CGFloat, startDegrees: CGFloat, endDegrees: CGFloat, samples: Int, maxWidth: CGFloat, seed: UInt64, hairCount: Int = 0) -> BrushStroke {
     let start = startDegrees * .pi / 180
     let end = endDegrees * .pi / 180
     var points: [CGPoint] = []
@@ -99,12 +168,15 @@ func arcBrushPath(center: CGPoint, radius: CGFloat, startDegrees: CGFloat, endDe
     for step in 0..<samples {
         let t = CGFloat(step) / CGFloat(samples - 1)
         let angle = start + (end - start) * t
-        let irregularRadius = radius + sin(t * .pi * 4 + CGFloat(seed % 11)) * 2.0
+        let irregularRadius = radius + sin(t * .pi * 1.5 + CGFloat(seed % 11)) * 1.35
         points.append(CGPoint(x: center.x + cos(angle) * irregularRadius, y: center.y + sin(angle) * irregularRadius))
         let pressure = pow(max(0, sin(.pi * t)), 0.6)
         widths.append(max(0.5, pressure * maxWidth))
     }
-    return brushedPath(points: points, widths: widths, seed: seed, roughness: maxWidth * 0.11)
+    return BrushStroke(
+        body: brushedPath(points: points, widths: widths, seed: seed, roughness: maxWidth * 0.05),
+        hairs: tailHairStrokes(points: points, widths: widths, seed: seed, count: hairCount)
+    )
 }
 
 func svgDocument(_ body: String, width: Int = 1024, height: Int = 1024) -> String {
@@ -130,78 +202,71 @@ func generateSourceSVGs() {
       <rect width=\"1024\" height=\"1024\" fill=\"url(#warmth)\"/>
     """)
 
+    let mastTip = CGPoint(x: 350, y: 455)
     let arcs = [
-        arcBrushPath(center: CGPoint(x: 427, y: 430), radius: 142, startDegrees: -50, endDegrees: 42, samples: 58, maxWidth: 22, seed: 0xA111),
-        arcBrushPath(center: CGPoint(x: 427, y: 430), radius: 265, startDegrees: -55, endDegrees: 50, samples: 72, maxWidth: 38, seed: 0xB222),
-        arcBrushPath(center: CGPoint(x: 427, y: 430), radius: 380, startDegrees: -52, endDegrees: 52, samples: 80, maxWidth: 47, seed: 0xC333)
+        arcBrushStroke(center: mastTip, radius: 96, startDegrees: -48, endDegrees: 48, samples: 50, maxWidth: 14, seed: 0xA111),
+        arcBrushStroke(center: mastTip, radius: 194, startDegrees: -48, endDegrees: 49, samples: 64, maxWidth: 26, seed: 0xB222, hairCount: 1),
+        arcBrushStroke(center: mastTip, radius: 306, startDegrees: -47, endDegrees: 49, samples: 76, maxWidth: 34, seed: 0xC333, hairCount: 1)
     ]
-    let waveBody = arcs.map { "<path d=\"\($0)\" fill=\"\(ink)\"/>" }.joined(separator: "\n  ")
+    let waveBody = arcs.map { brushElements($0) }.joined(separator: "\n  ")
 
-    let mastPath = cubicBrushPath(
-        CGPoint(x: 312, y: 746), CGPoint(x: 335, y: 610), CGPoint(x: 369, y: 380), CGPoint(x: 413, y: 224),
-        samples: 56,
+    let mastStroke = cubicBrushStroke(
+        CGPoint(x: 318, y: 788), CGPoint(x: 330, y: 676), CGPoint(x: 341, y: 558), mastTip,
+        samples: 64,
         seed: 0xD444,
-        roughness: 4
+        roughness: 2.2,
+        hairCount: 2
     ) { t in
-        1.2 + pow(1 - t, 0.82) * 58 + sin(.pi * t) * 8
+        2.5 + pow(1 - t, 0.88) * 48 + sin(.pi * t) * 4
     }
-    let groundPath = cubicBrushPath(
-        CGPoint(x: 235, y: 758), CGPoint(x: 308, y: 725), CGPoint(x: 423, y: 728), CGPoint(x: 519, y: 744),
-        samples: 38,
-        seed: 0xE555,
-        roughness: 3
-    ) { t in
-        pow(max(0, sin(.pi * t)), 0.55) * 26
-    }
-    let mastBody = """
-      <path d=\"\(groundPath)\" fill=\"\(ink)\"/>
-      <path d=\"\(mastPath)\" fill=\"\(ink)\"/>
-    """
+    let mastBody = "  \(brushElements(mastStroke))"
 
     let sealBody = "<!-- seal intentionally omitted: the maple mark did not remain legible at 60 px -->"
 
-    let landscapeGround = cubicBrushPath(
-        CGPoint(x: 120, y: 430), CGPoint(x: 390, y: 380), CGPoint(x: 790, y: 430), CGPoint(x: 1120, y: 395),
-        samples: 74,
+    let landscapeTip = CGPoint(x: 260, y: 284)
+    let landscapeBase = cubicBrushStroke(
+        CGPoint(x: 170, y: 462), CGPoint(x: 210, y: 448), CGPoint(x: 285, y: 448), CGPoint(x: 330, y: 462),
+        samples: 38,
         seed: 0xF666,
-        roughness: 4
+        roughness: 1.2
     ) { t in
-        pow(max(0, sin(.pi * t)), 0.5) * 28
+        pow(max(0, sin(.pi * t)), 0.55) * 12
     }
-    let landscapeMast = cubicBrushPath(
-        CGPoint(x: 365, y: 415), CGPoint(x: 386, y: 330), CGPoint(x: 416, y: 205), CGPoint(x: 452, y: 105),
-        samples: 42,
+    let landscapeMast = cubicBrushStroke(
+        CGPoint(x: 226, y: 455), CGPoint(x: 235, y: 392), CGPoint(x: 246, y: 332), landscapeTip,
+        samples: 44,
         seed: 0xABCD,
-        roughness: 3
+        roughness: 1.6,
+        hairCount: 1
     ) { t in
-        1 + pow(1 - t, 0.82) * 38 + sin(.pi * t) * 5
+        1.2 + pow(1 - t, 0.86) * 28 + sin(.pi * t) * 3
     }
     let landscapeArcs = [
-        arcBrushPath(center: CGPoint(x: 460, y: 235), radius: 118, startDegrees: -38, endDegrees: 44, samples: 30, maxWidth: 19, seed: 0x7711),
-        arcBrushPath(center: CGPoint(x: 460, y: 235), radius: 198, startDegrees: -34, endDegrees: 38, samples: 36, maxWidth: 27, seed: 0x7722),
-        arcBrushPath(center: CGPoint(x: 460, y: 235), radius: 286, startDegrees: -28, endDegrees: 32, samples: 42, maxWidth: 32, seed: 0x7733)
-    ].map { "<path d=\"\($0)\" fill=\"\(ink)\"/>" }.joined(separator: "\n  ")
+        arcBrushStroke(center: landscapeTip, radius: 150, startDegrees: -20, endDegrees: 22, samples: 36, maxWidth: 14, seed: 0x7711),
+        arcBrushStroke(center: landscapeTip, radius: 310, startDegrees: -20, endDegrees: 22, samples: 46, maxWidth: 21, seed: 0x7722),
+        arcBrushStroke(center: landscapeTip, radius: 540, startDegrees: -19, endDegrees: 21, samples: 58, maxWidth: 25, seed: 0x7733, hairCount: 1)
+    ].map { brushElements($0) }.joined(separator: "\n  ")
     let landscape = svgDocument("""
-      <path d=\"\(landscapeGround)\" fill=\"\(ink)\" opacity=\"0.95\"/>
+      \(brushElements(landscapeBase))
       \(landscapeArcs)
-      <path d=\"\(landscapeMast)\" fill=\"\(ink)\"/>
+      \(brushElements(landscapeMast))
     """, width: 1400, height: 600)
 
     let favicon = """
     <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\">
       <style>
         .paper { fill: #f6eedc; }
-        .ink { fill: #000; }
+        .ink { fill: none; stroke: #000; stroke-linecap: round; stroke-linejoin: round; }
         @media (prefers-color-scheme: dark) {
           .paper { fill: #201b16; }
-          .ink { fill: #f3e8d2; }
+          .ink { stroke: #f3e8d2; }
         }
       </style>
       <rect width=\"64\" height=\"64\" rx=\"14\" class=\"paper\"/>
-      <path class=\"ink\" d=\"M22 49 C24 39 26 28 30 12 C32 8 36 9 35 14 C32 29 30 40 29 51 C28 56 20 55 22 49 Z\"/>
-      <path class=\"ink\" d=\"M16 50 C24 45 35 45 44 49 C48 51 46 55 42 54 C33 51 25 51 18 54 C14 55 12 52 16 50 Z\"/>
-      <path class=\"ink\" d=\"M38 18 C47 22 53 30 55 41 C56 46 49 47 48 42 C47 34 42 28 34 25 C30 23 33 16 38 18 Z\"/>
-      <path class=\"ink\" d=\"M39 29 C44 32 47 36 48 42 C48 46 42 47 41 43 C40 39 37 36 34 35 C30 33 34 27 39 29 Z\" opacity=\"0.92\"/>
+      <path class=\"ink\" stroke-width=\"6.8\" d=\"M23 53 C24 43 26 32 30 22\"/>
+      <path class=\"ink\" stroke-width=\"3.0\" d=\"M39 17 C44 21 46 28 46 35\"/>
+      <path class=\"ink\" stroke-width=\"4.0\" d=\"M45 10 C52 17 55 27 54 39\"/>
+      <path class=\"ink\" stroke-width=\"4.8\" d=\"M51 5 C59 16 62 30 59 45\"/>
     </svg>
     """
 
@@ -267,6 +332,21 @@ func draw(_ image: NSImage, in rect: CGRect, fraction: CGFloat = 1) {
     image.draw(in: rect, from: sourceRect, operation: .sourceOver, fraction: fraction, respectFlipped: true, hints: [.interpolation: NSImageInterpolation.high.rawValue])
 }
 
+func aspectFitRect(for image: NSImage, in rect: CGRect) -> CGRect {
+    let imageAspect = image.size.width / image.size.height
+    let rectAspect = rect.width / rect.height
+    if rectAspect > imageAspect {
+        let width = rect.height * imageAspect
+        return CGRect(x: rect.midX - width / 2, y: rect.minY, width: width, height: rect.height)
+    }
+    let height = rect.width / imageAspect
+    return CGRect(x: rect.minX, y: rect.midY - height / 2, width: rect.width, height: height)
+}
+
+func drawAspectFit(_ image: NSImage, in rect: CGRect, fraction: CGFloat = 1) {
+    draw(image, in: aspectFitRect(for: image, in: rect), fraction: fraction)
+}
+
 func centeredSquare(in rect: CGRect, scale: CGFloat = 1) -> CGRect {
     let side = min(rect.width, rect.height) * scale
     return CGRect(x: rect.midX - side / 2, y: rect.midY - side / 2, width: side, height: side)
@@ -277,10 +357,12 @@ func iconRect(in rect: CGRect, scale: CGFloat = 1) -> CGRect {
 }
 
 func landscapeRect(in rect: CGRect, wide: Bool) -> CGRect {
-    let heightScale: CGFloat = wide ? 0.78 : 0.72
-    let height = rect.height * heightScale
-    let width = min(rect.width * (wide ? 0.48 : 0.44), height * 2.2)
-    return CGRect(x: rect.width * 0.08, y: rect.midY - height / 2, width: width, height: height)
+    let sourceAspect: CGFloat = 1400 / 600
+    let maxHeight = rect.height * (wide ? 0.55 : 0.52)
+    let maxWidth = rect.width * (wide ? 0.42 : 0.46)
+    let height = min(maxHeight, maxWidth / sourceAspect)
+    let width = height * sourceAspect
+    return CGRect(x: rect.width * 0.04, y: rect.midY - height / 2, width: width, height: height)
 }
 
 func write(_ name: String, width: Int, height: Int, opaque: Bool, drawBlock: @escaping (CGRect) -> Void) {
@@ -319,15 +401,19 @@ for spec in tvSpecs {
 }
 
 func serifFont(size: CGFloat) -> NSFont {
-    NSFont(name: "NewYork-Regular", size: size)
-        ?? NSFont(name: "IowanOldStyle-Roman", size: size)
+    let base = NSFont.systemFont(ofSize: size, weight: .semibold)
+    if let descriptor = base.fontDescriptor.withDesign(.serif),
+       let font = NSFont(descriptor: descriptor, size: size) {
+        return font
+    }
+    return NSFont(name: "IowanOldStyle-Roman", size: size)
         ?? NSFont(name: "Georgia", size: size)
-        ?? NSFont.systemFont(ofSize: size, weight: .semibold)
+        ?? base
 }
 
 func drawTopShelf(in rect: CGRect, wide: Bool) {
     draw(background, in: rect)
-    draw(landscape, in: landscapeRect(in: rect, wide: wide))
+    drawAspectFit(landscape, in: landscapeRect(in: rect, wide: wide))
     let textX = rect.width * (wide ? 0.58 : 0.57)
     let textRect = CGRect(x: textX, y: rect.height * 0.36, width: rect.width * 0.34, height: rect.height * 0.3)
     let title = "Canadian Ham"
@@ -350,6 +436,11 @@ write("apple-touch-icon-180.png", width: 180, height: 180, opaque: true) { drawF
 write("pwa-icon-192.png", width: 192, height: 192, opaque: true) { drawFullIcon(in: $0) }
 write("pwa-icon-512.png", width: 512, height: 512, opaque: true) { drawFullIcon(in: $0) }
 
+let faviconImage = NSImage(contentsOf: exports.appendingPathComponent("favicon.svg"))!
+write("favicon-16.png", width: 16, height: 16, opaque: true) { draw(faviconImage, in: $0) }
+write("favicon-32.png", width: 32, height: 32, opaque: true) { draw(faviconImage, in: $0) }
+write("favicon-64.png", width: 64, height: 64, opaque: true) { draw(faviconImage, in: $0) }
+
 let previewItems = [
     SizeSpec(name: "app-icon-1024.png", width: 160, height: 160),
     SizeSpec(name: "app-icon-60.png", width: 60, height: 60),
@@ -360,6 +451,9 @@ let previewItems = [
     SizeSpec(name: "apple-touch-icon-180.png", width: 90, height: 90),
     SizeSpec(name: "pwa-icon-192.png", width: 90, height: 90),
     SizeSpec(name: "pwa-icon-512.png", width: 90, height: 90),
+    SizeSpec(name: "favicon-16.png", width: 16, height: 16),
+    SizeSpec(name: "favicon-32.png", width: 32, height: 32),
+    SizeSpec(name: "favicon-64.png", width: 64, height: 64),
     SizeSpec(name: "tvos-small-400x240-back.png", width: 150, height: 90),
     SizeSpec(name: "tvos-small-400x240-middle.png", width: 150, height: 90),
     SizeSpec(name: "tvos-small-400x240-front.png", width: 150, height: 90),

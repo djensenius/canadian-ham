@@ -214,14 +214,15 @@ Module `index.md` files store the ordering and lesson list for each curriculum m
 
 ```json
 {
-  "id": "M1",
-  "categoryId": "B-001",
+  "type": "module",
+  "id": "M5",
+  "categoryId": "B-005",
   "order": 1,
   "title": {
-    "en": "Regulations and Policies",
+    "en": "Basic Electronics and Theory",
     "fr": null
   },
-  "lessonIds": ["L-001-01", "L-001-02", "L-001-03", "L-001-04"],
+  "lessonIds": ["L-005-01", "L-005-02", "L-005-03", "L-005-04", "L-005-05"],
   "status": "outline"
 }
 ```
