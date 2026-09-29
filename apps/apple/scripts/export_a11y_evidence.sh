@@ -8,7 +8,14 @@ output_dir="$apple_dir/docs/a11y-evidence"
 if [[ $# -gt 0 ]]; then
   xcresult_path="$1"
 else
-  xcresult_path="$(find "$HOME/Library/Developer/Xcode/DerivedData" -path '*/Logs/Test/*.xcresult' -type d -print 2>/dev/null | sort | tail -n 1)"
+  xcresult_path="$(python3 - <<'PY'
+from pathlib import Path
+root = Path.home() / "Library" / "Developer" / "Xcode" / "DerivedData"
+paths = [path for path in root.glob("*/Logs/Test/*.xcresult") if path.is_dir()]
+if paths:
+    print(max(paths, key=lambda path: path.stat().st_mtime))
+PY
+)"
 fi
 
 if [[ -z "${xcresult_path:-}" || ! -d "$xcresult_path" ]]; then

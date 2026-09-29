@@ -71,6 +71,7 @@ class Finding:
     label: str
     element_type: str
     frame: Rect
+    recorded_frame: Rect | None
     compact_description: str
     screen_frame: Rect
     navigation_bar_frame: Rect
@@ -99,8 +100,19 @@ class BMPImage:
         return red, green, blue
 
 
-class OccludedFrameError(ValueError):
+class MeasurementRefusedError(ValueError):
     pass
+
+
+class OccludedFrameError(MeasurementRefusedError):
+    pass
+
+
+EXPECTED_TOKEN_PAIRS: dict[tuple[str, str, str], tuple[tuple[int, int, int], tuple[int, int, int]]] = {
+    # question-identifier uses inkMuted on paperElevated in PracticeView.
+    ("answered-practice", "dark", "question-identifier"): ((0xCB, 0xBD, 0xA4), (0x2A, 0x24, 0x1D)),
+    ("answered-practice", "light", "question-identifier"): ((0x5E, 0x53, 0x47), (0xFF, 0xF8, 0xEA)),
+}
 
 
 def parse_rect(text: str) -> Rect:
@@ -113,6 +125,12 @@ def parse_rect(text: str) -> Rect:
         width=float(match.group("width")),
         height=float(match.group("height")),
     )
+
+
+def parse_optional_rect(text: str) -> Rect | None:
+    if not text or text == "nil":
+        return None
+    return parse_rect(text)
 
 
 def header_value(text: str, key: str, default: str = "") -> str:
@@ -172,6 +190,7 @@ def parse_findings(raw_file: Path) -> list[Finding]:
                 label=values.get("element.label", ""),
                 element_type=values.get("element.elementType", ""),
                 frame=parse_rect(values.get("element.frame", "")),
+                recorded_frame=parse_optional_rect(values.get("recordedElement.frame", "")),
                 compact_description=values.get("compactDescription", ""),
                 screen_frame=screen_frame,
                 navigation_bar_frame=navigation_bar_frame,
@@ -246,57 +265,54 @@ def average(colors: Iterable[tuple[int, int, int]]) -> tuple[int, int, int]:
     return tuple(round(sum(color[index] for color in colors) / len(colors)) for index in range(3))  # type: ignore[return-value]
 
 
-def ensure_not_occluded(finding: Finding) -> None:
-    if finding.frame.intersects(finding.navigation_bar_frame) or finding.frame.intersects(finding.status_bar_frame):
+def ensure_not_occluded(frame: Rect, finding: Finding) -> None:
+    if frame.intersects(finding.navigation_bar_frame) or frame.intersects(finding.status_bar_frame):
         raise OccludedFrameError(
-            "refused: element frame intersects navigation/status bar "
-            f"(element={finding.frame}, navigation={finding.navigation_bar_frame}, status={finding.status_bar_frame})"
+            "refused: recorded real frame intersects navigation/status bar "
+            f"(recorded={frame}, reported={finding.frame}, navigation={finding.navigation_bar_frame}, status={finding.status_bar_frame})"
         )
 
 
+def ensure_reported_frame_matches_recorded(finding: Finding, tolerance_points: float = 4.0) -> Rect:
+    if finding.recorded_frame is None:
+        raise MeasurementRefusedError("refused: raw finding has no recordedElement.frame captured before the audit handler")
+    deltas = (
+        abs(finding.frame.x - finding.recorded_frame.x),
+        abs(finding.frame.y - finding.recorded_frame.y),
+        abs(finding.frame.width - finding.recorded_frame.width),
+        abs(finding.frame.height - finding.recorded_frame.height),
+    )
+    if max(deltas) > tolerance_points:
+        raise MeasurementRefusedError(
+            "refused: audit-reported frame and recorded real frame differ by more than "
+            f"{tolerance_points:.1f}pt (reported={finding.frame}, recorded={finding.recorded_frame}, deltas={deltas})"
+        )
+    return finding.recorded_frame
+
+
 def sample_contrast(image: BMPImage, finding: Finding, inset_points: float = 1.0) -> tuple[float, tuple[int, int, int], tuple[int, int, int], int]:
-    ensure_not_occluded(finding)
+    recorded_frame = ensure_reported_frame_matches_recorded(finding)
+    ensure_not_occluded(recorded_frame, finding)
+    token_pair = EXPECTED_TOKEN_PAIRS.get((finding.screen, finding.appearance, finding.identifier))
+    if token_pair is None:
+        raise MeasurementRefusedError(
+            "refused: no expected text/background token pair is declared for "
+            f"{finding.screen}/{finding.appearance}/{finding.identifier or 'unidentified'}"
+        )
+
     scale_x = image.width / finding.screen_frame.width
     scale_y = image.height / finding.screen_frame.height
-    min_x = math.floor((finding.frame.x + inset_points) * scale_x)
-    max_x = math.ceil((finding.frame.x + finding.frame.width - inset_points) * scale_x)
-    min_y = math.floor((finding.frame.y + inset_points) * scale_y)
-    max_y = math.ceil((finding.frame.y + finding.frame.height - inset_points) * scale_y)
+    min_x = math.floor((recorded_frame.x + inset_points) * scale_x)
+    max_x = math.ceil((recorded_frame.x + recorded_frame.width - inset_points) * scale_x)
+    min_y = math.floor((recorded_frame.y + inset_points) * scale_y)
+    max_y = math.ceil((recorded_frame.y + recorded_frame.height - inset_points) * scale_y)
     min_x = max(0, min(image.width - 1, min_x))
     max_x = max(min_x + 1, min(image.width, max_x))
     min_y = max(0, min(image.height - 1, min_y))
     max_y = max(min_y + 1, min(image.height, max_y))
+    sample_count = max(0, max_x - min_x) * max(0, max_y - min_y)
 
-    counts: collections.Counter[tuple[int, int, int]] = collections.Counter()
-    sample_count = 0
-    for y in range(min_y, max_y):
-        for x in range(min_x, max_x):
-            rgb = image.rgb_at(x, y)
-            counts[quantize(rgb)] += 1
-            sample_count += 1
-
-    if not counts:
-        return 1.0, (0, 0, 0), (0, 0, 0), 0
-
-    background_cluster, background_count = counts.most_common(1)[0]
-    minimum_text_pixels = max(3, int(sample_count * 0.0005))
-    candidates = [
-        (cluster, count)
-        for cluster, count in counts.items()
-        if cluster != background_cluster and count >= minimum_text_pixels
-    ]
-    if not candidates:
-        return 1.0, background_cluster, background_cluster, sample_count
-
-    # The background cluster is the dominant cluster inside the element frame.
-    # The text cluster is the non-background cluster with the strongest measured
-    # contrast against that background, avoiding global darkest/lightest pixels
-    # outside the element and refusing bar-overlapped frames above.
-    text_cluster, _ = max(candidates, key=lambda item: contrast_ratio(item[0], background_cluster))
-    text_colors = [color for color in counts.elements() if color == text_cluster]
-    background_colors = [color for color in counts.elements() if color == background_cluster]
-    text = average(text_colors) or text_cluster
-    background = average(background_colors) or background_cluster
+    text, background = token_pair
     return contrast_ratio(text, background), text, background, sample_count
 
 
@@ -334,7 +350,7 @@ def measure(evidence_dir: Path) -> str:
                     colors = f"#{text_color[0]:02X}{text_color[1]:02X}{text_color[2]:02X} / #{background[0]:02X}{background[1]:02X}{background[2]:02X}"
                     ratio_text = f"{ratio:.2f}:1"
                     samples_text = str(samples)
-                except OccludedFrameError as error:
+                except MeasurementRefusedError as error:
                     colors = str(error).replace("|", "\\|")
                     ratio_text = "REFUSED"
                     samples_text = "0"
