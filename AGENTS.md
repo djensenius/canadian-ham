@@ -38,10 +38,11 @@
 - Scheme: `CanadianHam`.
 - Always run Apple builds/tests through `xbuild`, never direct `xcodebuild`.
 - `xcode-select` points at CommandLineTools on this machine, so prefix Apple build/test commands with `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`.
-- iOS simulator test command, using the single requested simulator destination:
+- iOS simulator test command, using the single requested simulator destination and running both unit and UI tests:
   `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test CODE_SIGNING_ALLOWED=NO`
 - macOS test command:
   `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=macOS' test CODE_SIGN_IDENTITY=-`
 - Regenerate the Apple project after editing `apps/apple/project.yml` or target membership:
   `cd apps/apple && /opt/homebrew/bin/xcodegen generate --spec project.yml`
+- Check regeneration determinism by running the XcodeGen command twice and confirming `git diff -- apps/apple/CanadianHam.xcodeproj` is empty.
 - Commit both `apps/apple/project.yml` and the generated `apps/apple/CanadianHam.xcodeproj` so Xcode can open the project without XcodeGen.

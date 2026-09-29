@@ -74,6 +74,7 @@ Needs:
 | DEC-APPLE-001 | Apple app is SwiftUI multiplatform for iOS, iPadOS, and macOS first. | Native offline UX, shared SwiftUI code, and no watchOS/visionOS/tvOS scope. |
 | DEC-APPLE-002 | Use SwiftData for local progress. | Native local persistence with no remote service. |
 | DEC-APPLE-003 | No third-party SDKs, no networking code, and no iCloud sync in v1. | Minimizes privacy risk and supports App Store Data Not Collected. iCloud sync may be reconsidered later only with a privacy review. |
+| DEC-APPLE-004 | Minimum Apple OS versions are iOS/iPadOS 18.0 and macOS 15.0. | Matches the first SwiftUI multiplatform Apple slice and keeps the initial offline app focused on currently supported Apple platforms. |
 | DEC-BILINGUAL-001 | Schema stores English and French from day one. UI ships English first; French UI comes in P6 using official ISED French question text. | Avoids schema migration later and prevents unofficial translations of ISED questions. |
 | DEC-BUILD-001 | Builds and tests use `xbuild`; never call `xcodebuild` directly. | Required by AGENTS.md to serialize builds and clean up simulators. |
 
@@ -482,4 +483,4 @@ Coverage check requirement:
 - Locate or confirm absence of French 2025 Basic reference material.
 - Verify the official Basic exam time limit, if any.
 - ISED permission status: requested scope drafted, pending; not yet sent or granted as of the 2026-09-28 owner decision. Fill in the reference number, date, scope, and explicit app-data/reference-PDF bundling coverage in T-007 before public release.
-- Decide minimum supported OS/browser versions during implementation planning.
+- Decide minimum supported browser versions during implementation planning.

@@ -35,6 +35,20 @@
                ReferencedContainer = "container:CanadianHam.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CDDB75A6A5E6A9C073EF59E5"
+               BuildableName = "CanadianHamUITests.xctest"
+               BlueprintName = "CanadianHamUITests"
+               ReferencedContainer = "container:CanadianHam.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -61,6 +75,17 @@
                BlueprintIdentifier = "A562E6607979BCEA78F1DCF9"
                BuildableName = "CanadianHamTests.xctest"
                BlueprintName = "CanadianHamTests"
+               ReferencedContainer = "container:CanadianHam.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CDDB75A6A5E6A9C073EF59E5"
+               BuildableName = "CanadianHamUITests.xctest"
+               BlueprintName = "CanadianHamUITests"
                ReferencedContainer = "container:CanadianHam.xcodeproj">
             </BuildableReference>
          </TestableReference>

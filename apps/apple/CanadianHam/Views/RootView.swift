@@ -52,19 +52,11 @@ struct RootView: View {
                 }
             }
             .navigationTitle("Canadian Ham")
+            .toolbar {
+                languageToolbarItem
+            }
         } detail: {
             detailView(for: bank)
-        }
-        .toolbar {
-            ToolbarItem(placement: .automatic) {
-                Picker("Question language", selection: $language) {
-                    ForEach(BankLanguage.allCases) { language in
-                        Text(language.displayName).tag(language)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .accessibilityLabel("Question language")
-            }
         }
     }
 
@@ -73,7 +65,7 @@ struct RootView: View {
         switch selection {
         case .category(let categoryId):
             if let category = bank.categories.first(where: { $0.id == categoryId }) {
-                PracticeView(bank: bank, category: category, language: language)
+                PracticeView(bank: bank, category: category, language: $language)
                     .id(category.id)
             } else {
                 ContentUnavailableView("Category not found", systemImage: "questionmark.folder")
@@ -98,6 +90,19 @@ struct RootView: View {
             selection = loadedBank.categories.first.map { .category($0.id) }
         } catch {
             loadError = error.localizedDescription
+        }
+    }
+
+    private var languageToolbarItem: some ToolbarContent {
+        ToolbarItem(placement: .automatic) {
+            Picker("Question language", selection: $language) {
+                ForEach(BankLanguage.allCases) { language in
+                    Text(language.displayName).tag(language)
+                }
+            }
+            .pickerStyle(.segmented)
+            .accessibilityLabel("Question language")
+            .accessibilityIdentifier("question-language-picker")
         }
     }
 

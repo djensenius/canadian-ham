@@ -1,9 +1,12 @@
+import Accessibility
 import SwiftUI
 
 struct PracticeView: View {
     let bank: QuestionBank
     let category: BankCategory
-    let language: BankLanguage
+    @Binding var language: BankLanguage
+
+    @ScaledMetric(relativeTo: .headline) private var answerLetterMinWidth = 32
 
     @State private var currentQuestion: BankQuestion?
     @State private var shuffledAnswers: [ShuffledAnswer] = []
@@ -46,6 +49,9 @@ struct PracticeView: View {
             .frame(maxWidth: 860, alignment: .leading)
         }
         .navigationTitle(category.name.text(for: language))
+        .toolbar {
+            languageToolbarItem
+        }
         .onAppear {
             if currentQuestion == nil {
                 loadNextQuestion()
@@ -103,7 +109,7 @@ struct PracticeView: View {
             HStack(alignment: .firstTextBaseline, spacing: 12) {
                 Text(label)
                     .font(.headline.monospaced())
-                    .frame(width: 32, alignment: .center)
+                    .frame(minWidth: answerLetterMinWidth, minHeight: answerLetterMinWidth, alignment: .center)
                     .padding(6)
                     .background(.thinMaterial, in: Circle())
 
@@ -133,6 +139,7 @@ struct PracticeView: View {
         .buttonStyle(.plain)
         .disabled(isAnswered)
         .accessibilityLabel(answerAccessibilityLabel(label: label, answerText: answerText, shuffledAnswer: shuffledAnswer, isSelected: isSelected))
+        .accessibilityIdentifier("answer-\(label)-button")
     }
 
     @ViewBuilder
@@ -159,6 +166,19 @@ struct PracticeView: View {
         }
     }
 
+    private var languageToolbarItem: some ToolbarContent {
+        ToolbarItem(placement: .automatic) {
+            Picker("Question language", selection: $language) {
+                ForEach(BankLanguage.allCases) { language in
+                    Text(language.displayName).tag(language)
+                }
+            }
+            .pickerStyle(.segmented)
+            .accessibilityLabel("Question language")
+            .accessibilityIdentifier("question-language-picker")
+        }
+    }
+
     private var controls: some View {
         HStack {
             Button("Next question") {
@@ -182,6 +202,7 @@ struct PracticeView: View {
         if answer.isCorrect {
             correctCount += 1
         }
+        AccessibilityNotification.Announcement(feedbackAnnouncement(for: answer)).post()
     }
 
     private func loadNextQuestion() {
@@ -210,6 +231,18 @@ struct PracticeView: View {
         if shuffledAnswer.isCorrect { return Color.green.opacity(0.18) }
         if isSelected { return Color.red.opacity(0.18) }
         return Color.secondary.opacity(0.08)
+    }
+
+    private func feedbackAnnouncement(for answer: ShuffledAnswer) -> String {
+        if answer.isCorrect {
+            return "Correct"
+        }
+
+        if let correctAnswer {
+            return "Incorrect. Correct answer: \(correctAnswer.answer.text.text(for: language))"
+        }
+
+        return "Incorrect"
     }
 
     private func answerAccessibilityLabel(
