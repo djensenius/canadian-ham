@@ -172,26 +172,57 @@ final class ProgressStoreTests: XCTestCase {
         preferences.theme = .dark
         try store.updatePreferences(preferences)
 
-        let invalidLessonProgress = ArchivedJSON(storage: [
-            "lessonId": .string("L-005-01"),
-            "readAt": .string("2026-01-02T03:30:00.000Z"),
-            "readCount": .string("not-a-number")
-        ])
-        let invalid = ProgressExportV1(
+        let replacement = ProgressExportV1(
             schema: "canadian-ham.progress-export",
             version: 1,
             exportedAt: "2026-01-02T05:04:05.000Z",
             bankId: bank.manifest.bankId,
             questionProgress: [],
             examAttempts: [],
-            lessonProgress: [invalidLessonProgress],
+            lessonProgress: [],
             lessonQuizAttempts: [],
             preferences: ExportedPreferences(practiceMode: "immediate", examTimerEnabled: false, theme: "system")
         )
 
-        XCTAssertThrowsError(try store.importData(invalid, bank: bank))
+        store.failNextImportAfterDeleteForTesting = true
+        XCTAssertThrowsError(try store.importData(replacement, bank: bank))
         XCTAssertEqual(try store.questionProgressRecords(), [originalRecord])
         XCTAssertEqual(store.preferences.theme, .dark)
+    }
+
+    func testLessonQuizAttemptSaveRollsBackAttemptAndProgressOnFailure() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let store = try ProgressStoreService.inMemoryForTests()
+        let originalRecord = try applyAnswer(existing: nil, update: AnswerUpdate(
+            questionId: "B-005-001-001",
+            bankId: bank.manifest.bankId,
+            isCorrect: true,
+            now: "2026-01-02T03:04:05.000Z"
+        ))
+        try store.saveQuestionProgress([originalRecord])
+        let updatedRecord = try applyAnswer(existing: originalRecord, update: AnswerUpdate(
+            questionId: "B-005-001-001",
+            bankId: bank.manifest.bankId,
+            isCorrect: false,
+            now: "2026-01-02T03:05:05.000Z"
+        ))
+        let attempt = LessonQuizAttempt(
+            id: "lesson-quiz-rollback",
+            quizId: "QZ-L-005-01-A",
+            lessonId: "L-005-01",
+            submittedAt: "2026-01-02T03:05:05.000Z",
+            correct: 0,
+            total: 1,
+            percent: 0,
+            officialQuestionIds: ["B-005-001-001"],
+            incorrectOfficialQuestionIds: ["B-005-001-001"],
+            incorrectConceptCheckIds: []
+        )
+
+        store.failNextLessonQuizSaveForTesting = true
+        XCTAssertThrowsError(try store.saveLessonQuizAttempt(attempt, questionProgress: [updatedRecord]))
+        XCTAssertEqual(try store.lessonQuizAttempts(), [])
+        XCTAssertEqual(try store.questionProgressRecords(), [originalRecord])
     }
 
     func testImportValidationRejectsUnknownIdsBadTimestampsBadBoxAndDuplicateSubmittedAt() throws {

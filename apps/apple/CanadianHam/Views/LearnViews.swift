@@ -48,109 +48,46 @@ struct LearnView: View {
     @State private var lessonProgress: [LessonProgressRecord] = []
     @State private var errorMessage: String?
     @State private var referenceSheet: ReferenceSheetKind?
-    @State private var path: [LearnRoute]
-
-    init(library: ContentLibrary, bank: QuestionBank, progressStore: ProgressStoreService, language: BankLanguage, revision: Int, onDataChanged: @escaping () -> Void) {
-        self.library = library
-        self.bank = bank
-        self.progressStore = progressStore
-        self.language = language
-        self.revision = revision
-        self.onDataChanged = onDataChanged
-        let initialLesson = AppLaunchArguments.value(after: "-CanadianHamInitialLessonID")
-        _path = State(initialValue: initialLesson.map { [.lesson($0)] } ?? [])
-    }
 
     var body: some View {
-        NavigationStack(path: $path) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                        Text("Structured lessons")
-                            .font(DesignTokens.FontScale.caption.weight(.semibold))
-                            .foregroundStyle(DesignTokens.Colors.inkMuted)
-                        Text("Learn")
-                            .font(DesignTokens.FontScale.headline.weight(.bold))
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                            .accessibilityAddTraits(.isHeader)
-                        Text("Study the eight modules in order. Lessons are currently authored in English, matching the web app; official practice questions still use the language picker.")
-                            .font(DesignTokens.FontScale.body)
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                        HStack {
-                            ReferenceSheetButton(kind: .study, selectedSheet: $referenceSheet)
-                            ReferenceSheetButton(kind: .exam, selectedSheet: $referenceSheet)
-                        }
-                    }
-                    .paperCard()
-
-                    if let errorMessage {
-                        MessagePanel(title: "Learn progress unavailable", message: errorMessage, kind: .warning)
-                    }
-
-                    if showSimpleLearnForUITests {
-                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                            ForEach(library.modules, id: \.id) { module in
-                                VStack(alignment: .leading) {
-                                    Text("Module \(module.order) · \(module.categoryId)")
-                                        .font(.body)
-                                    Text(module.title.en)
-                                        .font(.headline)
-                                    Text("\((module.lessonIds.compactMap { library.lessonsById[$0] }).count) lessons")
-                                        .font(.body)
-                                }
-                            }
-                        }
-                    } else {
-                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 260), spacing: DesignTokens.Spacing.md)], spacing: DesignTokens.Spacing.md) {
-                            ForEach(library.modules, id: \.id) { module in
-                                moduleCard(module)
-                            }
-                        }
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    Text("Structured lessons")
+                        .font(DesignTokens.FontScale.caption.weight(.semibold))
+                        .foregroundStyle(DesignTokens.Colors.inkMuted)
+                    Text("Learn")
+                        .font(DesignTokens.FontScale.headline.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityAddTraits(.isHeader)
+                    Text("Study the eight modules in order. Lessons are currently authored in English, matching the web app; official practice questions still use the language picker.")
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                    HStack {
+                        ReferenceSheetButton(kind: .study, selectedSheet: $referenceSheet)
+                        ReferenceSheetButton(kind: .exam, selectedSheet: $referenceSheet)
                     }
                 }
-                .pagePadding()
-            }
-            .background(DesignTokens.Colors.paper)
-            .navigationTitle("Learn")
-            .navigationDestination(for: LearnRoute.self) { route in
-                switch route {
-                case .module(let id):
-                    if let module = library.modulesById[id] {
-                        ModuleLessonListView(module: module, library: library, lessonProgress: lessonProgress)
-                    } else {
-                        ContentUnavailableView("Module not found", systemImage: "book.closed")
-                    }
-                case .lesson(let id):
-                    if let lesson = library.lessonsById[id] {
-                        LessonReaderView(
-                            lesson: lesson,
-                            library: library,
-                            bank: bank,
-                            progressStore: progressStore,
-                            language: language,
-                            onDataChanged: {
-                                refreshProgress()
-                                onDataChanged()
-                            }
-                        )
-                    } else {
-                        ContentUnavailableView("Lesson not found", systemImage: "book.closed")
+                .paperCard()
+
+                if let errorMessage {
+                    MessagePanel(title: "Learn progress unavailable", message: errorMessage, kind: .warning)
+                }
+
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    ForEach(library.modules, id: \.id) { module in
+                        moduleCard(module)
                     }
                 }
             }
+            .pagePadding()
         }
+        .background(DesignTokens.Colors.paper)
+        .navigationTitle("Learn")
         .sheet(item: $referenceSheet) { sheet in
             ReferenceSheetViewer(kind: sheet)
         }
         .task(id: revision) { refreshProgress() }
-    }
-
-    private var showSimpleLearnForUITests: Bool {
-#if DEBUG
-        ProcessInfo.processInfo.arguments.contains("-CanadianHamUITestSimpleLearnList")
-#else
-        false
-#endif
     }
 
     private func moduleCard(_ module: LessonModule) -> some View {
@@ -159,35 +96,28 @@ struct LearnView: View {
         let readCount = lessons.filter { read.contains($0.id) }.count
         return VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Text("Module \(module.order) · \(module.categoryId)")
-                .font(DesignTokens.FontScale.caption.weight(.semibold))
+                .font(.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
             Text(module.title.en)
-                .font(DesignTokens.FontScale.title.weight(.bold))
+                .font(.headline)
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
             Text(module.status == .outline ? "Outline available" : "Draft lessons available")
-                .font(DesignTokens.FontScale.body)
+                .font(.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
             Text("\(readCount) of \(lessons.count) lessons marked read")
-                .font(DesignTokens.FontScale.caption)
+                .font(.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
-            HStack {
-                NavigationLink(value: LearnRoute.module(module.id)) {
-                    Text("Open module")
-                        .font(DesignTokens.FontScale.body.weight(.semibold))
-                }
-                .buttonStyle(.bordered)
-                .tint(DesignTokens.Colors.ink)
-                if let first = lessons.first {
-                    NavigationLink(value: LearnRoute.lesson(first.id)) {
-                        Text("Start module")
-                            .font(DesignTokens.FontScale.body.weight(.semibold))
-                    }
-                    .buttonStyle(.bordered)
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                NavigationLink("Open module", value: LearnRoute.module(module.id))
                     .tint(DesignTokens.Colors.ink)
+                if let first = lessons.first {
+                    NavigationLink("Start module", value: LearnRoute.lesson(first.id))
+                        .tint(DesignTokens.Colors.ink)
                 }
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .paperCard()
     }
 
@@ -201,9 +131,46 @@ struct LearnView: View {
     }
 }
 
-private enum LearnRoute: Hashable {
+enum LearnRoute: Hashable {
     case module(String)
     case lesson(String)
+}
+
+struct LearnRouteDestinationView: View {
+    let route: LearnRoute
+    let library: ContentLibrary
+    let bank: QuestionBank
+    @ObservedObject var progressStore: ProgressStoreService
+    let language: BankLanguage
+    let onDataChanged: () -> Void
+
+    var body: some View {
+        switch route {
+        case .module(let id):
+            if let module = library.modulesById[id] {
+                ModuleLessonListView(module: module, library: library, lessonProgress: tryProgressRecords())
+            } else {
+                ContentUnavailableView("Module not found", systemImage: "book.closed")
+            }
+        case .lesson(let id):
+            if let lesson = library.lessonsById[id] {
+                LessonReaderView(
+                    lesson: lesson,
+                    library: library,
+                    bank: bank,
+                    progressStore: progressStore,
+                    language: language,
+                    onDataChanged: onDataChanged
+                )
+            } else {
+                ContentUnavailableView("Lesson not found", systemImage: "book.closed")
+            }
+        }
+    }
+
+    private func tryProgressRecords() -> [LessonProgressRecord] {
+        (try? progressStore.lessonProgressRecords()) ?? []
+    }
 }
 
 private struct ModuleLessonListView: View {
@@ -289,6 +256,7 @@ private struct LessonReaderView: View {
                     Text(lesson.title.en)
                         .font(DesignTokens.FontScale.headline.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
+                        .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
                         .accessibilityIdentifier("lesson-reader-title")
                     if let lessonProgress {
@@ -307,10 +275,6 @@ private struct LessonReaderView: View {
                     MessagePanel(title: "Lesson progress unavailable", message: errorMessage, kind: .warning)
                 }
 
-                if showQuizFirstForUITests {
-                    quizzes
-                }
-
                 if lesson.status == .outline {
                     OutlineLessonView(lesson: lesson, library: library)
                 } else {
@@ -320,31 +284,43 @@ private struct LessonReaderView: View {
                     .paperCard()
                 }
 
-                HStack {
-                    Button("Mark lesson read") { markRead() }
-                        .buttonStyle(.bordered)
-                        .tint(DesignTokens.Colors.ink)
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                    Button { markRead() } label: {
+                        lessonActionLabel("Mark lesson read")
+                    }
+                    .buttonStyle(.plain)
                     if let previous = neighbor(offset: -1) {
-                        NavigationLink("Previous: \(previous.title.en)", value: LearnRoute.lesson(previous.id))
-                            .buttonStyle(.bordered)
-                            .tint(DesignTokens.Colors.ink)
+                        NavigationLink(value: LearnRoute.lesson(previous.id)) {
+                            lessonActionLabel("Previous: \(previous.title.en)")
+                        }
+                        .buttonStyle(.plain)
                     }
                     if let next = neighbor(offset: 1) {
-                        NavigationLink("Next: \(next.title.en)", value: LearnRoute.lesson(next.id))
-                            .buttonStyle(.bordered)
-                            .tint(DesignTokens.Colors.ink)
+                        NavigationLink(value: LearnRoute.lesson(next.id)) {
+                            lessonActionLabel("Next: \(next.title.en)")
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
 
-                if !showQuizFirstForUITests {
-                    quizzes
-                }
+                quizzes
             }
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
-        .navigationTitle(lesson.title.en)
+        .navigationTitle("Lesson")
         .task { refresh() }
+    }
+
+    private func lessonActionLabel(_ text: String) -> some View {
+        Text(text)
+            .font(.body.weight(.semibold))
+            .foregroundStyle(DesignTokens.Colors.ink)
+            .padding(.horizontal, DesignTokens.Spacing.lg)
+            .padding(.vertical, DesignTokens.Spacing.md)
+            .frame(minHeight: 56, alignment: .leading)
+            .background(DesignTokens.Colors.paperInset, in: Capsule())
+            .overlay(Capsule().strokeBorder(DesignTokens.Colors.ink, lineWidth: 1))
     }
 
     private var quizzes: some View {
@@ -363,14 +339,6 @@ private struct LessonReaderView: View {
                 }
             )
         }
-    }
-
-    private var showQuizFirstForUITests: Bool {
-#if DEBUG
-        ProcessInfo.processInfo.arguments.contains("-CanadianHamUITestShowLessonQuizFirst")
-#else
-        false
-#endif
     }
 
     private func refresh() {
@@ -464,13 +432,13 @@ private struct LessonMarkdownView: View {
         switch block {
         case .heading(let level, let text):
             if !(level == 1 && title != nil && plainString(text) == title) {
-                Text(text)
+                Text(strippingLinks(from: text))
                     .font(level <= 2 ? DesignTokens.FontScale.title.weight(.bold) : DesignTokens.FontScale.bodyLarge.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
             }
         case .paragraph(let text):
-            Text(text)
+            Text(strippingLinks(from: text))
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .textSelection(.enabled)
@@ -481,7 +449,7 @@ private struct LessonMarkdownView: View {
                         Text(ordered ? "\(index + 1)." : "•")
                             .font(DesignTokens.FontScale.body.weight(.semibold))
                             .foregroundStyle(DesignTokens.Colors.ink)
-                        Text(item)
+                        Text(strippingLinks(from: item))
                             .font(DesignTokens.FontScale.body)
                             .foregroundStyle(DesignTokens.Colors.ink)
                             .textSelection(.enabled)
@@ -516,12 +484,21 @@ private struct LessonMarkdownView: View {
             .accessibilityElement(children: .combine)
             .accessibilityLabel("Illustration brief. \(brief.altText). \(brief.description)")
         case .blockquote(let text):
-            Text(text)
+            Text(strippingLinks(from: text))
                 .font(DesignTokens.FontScale.body.italic())
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .padding(DesignTokens.Spacing.md)
                 .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         }
+    }
+
+    private func strippingLinks(from value: AttributedString) -> AttributedString {
+        var copy = value
+        let ranges = copy.runs.map(\.range)
+        for range in ranges {
+            copy[range].link = nil
+        }
+        return copy
     }
 
     private func plainString(_ value: AttributedString) -> String {
@@ -572,24 +549,50 @@ private struct LessonQuizView: View {
     let attempts: [LessonQuizAttempt]
     let onSaved: () -> Void
 
-    @State private var seed: String = AppLaunchArguments.value(after: "-CanadianHamLessonQuizSeed") ?? "lesson-quiz/\(UUID().uuidString)"
+    @State private var seed: String
     @State private var items: [LessonQuizRuntimeItem] = []
     @State private var currentIndex = 0
     @State private var selectedByItemId: [String: Int] = [:]
     @State private var submittedAttemptID: String?
     @State private var errorMessage: String?
 
+    init(
+        quiz: LessonQuiz,
+        lesson: Lesson,
+        bank: QuestionBank,
+        library: ContentLibrary,
+        language: BankLanguage,
+        progressStore: ProgressStoreService,
+        attempts: [LessonQuizAttempt],
+        onSaved: @escaping () -> Void
+    ) {
+        self.quiz = quiz
+        self.lesson = lesson
+        self.bank = bank
+        self.library = library
+        self.language = language
+        self.progressStore = progressStore
+        self.attempts = attempts
+        self.onSaved = onSaved
+        _seed = State(initialValue: Self.initialSeed())
+    }
+
+    private static func initialSeed() -> String {
+#if DEBUG
+        AppLaunchArguments.value(after: "-CanadianHamLessonQuizSeed") ?? "lesson-quiz/\(UUID().uuidString)"
+#else
+        "lesson-quiz/\(UUID().uuidString)"
+#endif
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Text("Lesson quiz")
-                        .font(DesignTokens.FontScale.caption.weight(.semibold))
-                        .foregroundStyle(DesignTokens.Colors.inkMuted)
                     Text(quiz.id)
                         .font(DesignTokens.FontScale.title.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
-                        .accessibilityAddTraits(.isHeader)
+                        .accessibilityHidden(true)
                     Text("\(items.count) questions: official bank questions update Leitner progress; concept checks do not.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
@@ -648,6 +651,7 @@ private struct LessonQuizView: View {
             }
         }
         .paperCard()
+        .accessibilityIdentifier("lesson-quiz-card")
         .task { if items.isEmpty { restart(keepSeed: true) } }
     }
 
@@ -832,10 +836,10 @@ private struct ConceptCheckQuestionView: View {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                     Text(isCorrect ? "Correct" : "Incorrect")
                         .font(DesignTokens.FontScale.body.weight(.bold))
-                        .foregroundStyle(isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
+                        .foregroundStyle(DesignTokens.Colors.ink)
                     Text(localized(check.explanation.text(for: language), language: language))
                         .font(DesignTokens.FontScale.body)
-                        .foregroundStyle(isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
+                        .foregroundStyle(DesignTokens.Colors.ink)
                 }
                 .padding(DesignTokens.Spacing.lg)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -919,14 +923,14 @@ struct ExplanationPanelView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
                 if let parsed {
-                    Text(parsed.correctAnswerParagraph)
+                    Text(localized(parsed.correctAnswerParagraph, language: language))
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .textSelection(.enabled)
                     if !parsed.distractorNotes.isEmpty {
                         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                             ForEach(parsed.distractorNotes, id: \.sourceIndex) { note in
-                                Text("\(label(for: note.sourceIndex)): \(note.note)")
+                                Text(localized("\(label(for: note.sourceIndex)): \(note.note)", language: language))
                                     .font(DesignTokens.FontScale.caption)
                                     .foregroundStyle(DesignTokens.Colors.ink)
                                     .textSelection(.enabled)
@@ -934,7 +938,7 @@ struct ExplanationPanelView: View {
                         }
                     }
                 } else {
-                    Text(explanation.body.text(for: language))
+                    Text(localized(explanation.body.text(for: language), language: language))
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .textSelection(.enabled)
@@ -972,8 +976,12 @@ struct ExplanationPanelView: View {
     @ViewBuilder
     private func citationView(_ citation: ExplanationCitation) -> some View {
         if citation.type == "lesson", let id = citation.id {
-            Text(id)
-                .font(DesignTokens.FontScale.caption)
+            NavigationLink(value: LearnRoute.lesson(id)) {
+                Text(id)
+                    .font(DesignTokens.FontScale.caption)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Open lesson \(id)")
         } else if citation.url == rbr4CitationURL, let url = URL(string: rbr4CitationURL) {
             Link(citation.id ?? "RBR-4", destination: url)
                 .font(DesignTokens.FontScale.caption)
@@ -1006,18 +1014,14 @@ struct ReferenceSheetViewer: View {
     var body: some View {
         NavigationStack {
             Group {
-                if simpleReferenceViewerForUITests {
-                    Text("Bundled offline PDF viewer for \(kind.title).")
-                        .font(.body)
-                        .padding()
-                } else if let url = ReferenceSheetLocator.url(for: kind) {
+                if let url = ReferenceSheetLocator.url(for: kind) {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                         Text("Bundled offline PDF: \(kind.title)")
                             .font(DesignTokens.FontScale.body)
                             .foregroundStyle(DesignTokens.Colors.ink)
                             .padding(.horizontal, DesignTokens.Spacing.md)
                         PDFKitView(url: url)
-                            .accessibilityHidden(true)
+                            .accessibilityIdentifier("reference-pdf-view")
                     }
                 } else {
                     ContentUnavailableView("Reference sheet unavailable", systemImage: "doc.richtext", description: Text("The bundled PDF could not be found."))
@@ -1029,19 +1033,20 @@ struct ReferenceSheetViewer: View {
 #endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Done") { dismiss() }
-                        .accessibilityIdentifier("reference-viewer-done-button")
+                    Button { dismiss() } label: {
+                        Text("Done")
+                            .font(.body.weight(.semibold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .padding(.horizontal, DesignTokens.Spacing.lg)
+                            .padding(.vertical, DesignTokens.Spacing.sm)
+                            .background(DesignTokens.Colors.paperInset, in: Capsule())
+                            .overlay(Capsule().strokeBorder(DesignTokens.Colors.ink, lineWidth: 1))
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("reference-viewer-done-button")
                 }
             }
         }
-    }
-
-    private var simpleReferenceViewerForUITests: Bool {
-#if DEBUG
-        ProcessInfo.processInfo.arguments.contains("-CanadianHamUITestSimpleReferenceViewer")
-#else
-        false
-#endif
     }
 }
 
@@ -1063,15 +1068,27 @@ private struct PDFKitView: UIViewRepresentable {
 
     func makeUIView(context: Context) -> PDFView {
         let view = PDFView()
+        view.accessibilityIdentifier = "reference-pdf-view"
         view.autoScales = true
+        view.minScaleFactor = 0.5
+        view.maxScaleFactor = 5.0
         view.displayMode = .singlePageContinuous
         view.document = PDFDocument(url: url)
+        tagPDFAccessibility(in: view)
         return view
     }
 
     func updateUIView(_ uiView: PDFView, context: Context) {
         if uiView.document?.documentURL != url {
             uiView.document = PDFDocument(url: url)
+        }
+        tagPDFAccessibility(in: uiView)
+    }
+
+    private func tagPDFAccessibility(in view: UIView) {
+        view.accessibilityIdentifier = "reference-pdf-view"
+        for subview in view.subviews {
+            tagPDFAccessibility(in: subview)
         }
     }
 }
@@ -1081,15 +1098,27 @@ private struct PDFKitView: NSViewRepresentable {
 
     func makeNSView(context: Context) -> PDFView {
         let view = PDFView()
+        view.setAccessibilityIdentifier("reference-pdf-view")
         view.autoScales = true
+        view.minScaleFactor = 0.5
+        view.maxScaleFactor = 5.0
         view.displayMode = .singlePageContinuous
         view.document = PDFDocument(url: url)
+        tagPDFAccessibility(in: view)
         return view
     }
 
     func updateNSView(_ nsView: PDFView, context: Context) {
         if nsView.document?.documentURL != url {
             nsView.document = PDFDocument(url: url)
+        }
+        tagPDFAccessibility(in: nsView)
+    }
+
+    private func tagPDFAccessibility(in view: NSView) {
+        view.setAccessibilityIdentifier("reference-pdf-view")
+        for subview in view.subviews {
+            tagPDFAccessibility(in: subview)
         }
     }
 }

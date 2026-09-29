@@ -657,17 +657,15 @@ struct MockExamView: View {
             }
 
             HStack {
-                Button("Previous") { if currentIndex > 0 { currentIndex -= 1 } }
+                Button("Previous") { currentIndex = max(0, currentIndex - 1) }
                     .buttonStyle(.bordered)
                     .tint(DesignTokens.Colors.ink)
-                    .allowsHitTesting(currentIndex > 0)
-                    .accessibilityLabel(currentIndex == 0 ? "Previous, unavailable on the first question" : "Previous")
+                    .disabled(currentIndex == 0)
                     .accessibilityIdentifier("mock-previous-button")
-                Button("Next") { if currentIndex + 1 < generatedItems.count { currentIndex += 1 } }
+                Button("Next") { currentIndex = min(generatedItems.count - 1, currentIndex + 1) }
                     .buttonStyle(.bordered)
                     .tint(DesignTokens.Colors.ink)
-                    .allowsHitTesting(currentIndex + 1 < generatedItems.count)
-                    .accessibilityLabel(currentIndex + 1 >= generatedItems.count ? "Next, unavailable on the last question" : "Next")
+                    .disabled(currentIndex + 1 >= generatedItems.count)
                     .accessibilityIdentifier("mock-next-button")
                 tokenButton(flagged.contains(question.id) ? "Flagged for review" : "Flag for review") { toggleFlag(question.id) }
             }

@@ -25,6 +25,7 @@ struct RootView: View {
     @State private var selection: SidebarSelection = .home
     @State private var language: BankLanguage = .english
     @State private var dataRevision = 0
+    @State private var navigationPath: [LearnRoute] = []
 
     var body: some View {
         Group {
@@ -72,10 +73,13 @@ struct RootView: View {
     private func appContent(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
 #if os(iOS)
         if effectiveHorizontalSizeClass == .compact {
-            NavigationStack {
+            NavigationStack(path: $navigationPath) {
                 detailView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
                     .background(DesignTokens.Colors.paper)
                     .toolbar { languageToolbarItem(progressStore: progressStore) }
+                    .navigationDestination(for: LearnRoute.self) { route in
+                        learnDestination(route, bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+                    }
             }
             .toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
@@ -161,8 +165,13 @@ struct RootView: View {
             .navigationTitle("Canadian Ham")
             .toolbar { languageToolbarItem(progressStore: progressStore) }
         } detail: {
-            detailView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
-                .background(DesignTokens.Colors.paper)
+            NavigationStack(path: $navigationPath) {
+                detailView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+                    .background(DesignTokens.Colors.paper)
+                    .navigationDestination(for: LearnRoute.self) { route in
+                        learnDestination(route, bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+                    }
+            }
         }
         .navigationSplitViewStyle(.balanced)
 #if os(iOS)
@@ -178,6 +187,24 @@ struct RootView: View {
         }
         .onChange(of: progressStore.preferences.language) { _, next in
             language = next
+        }
+        .onChange(of: selection) { _, next in
+            if next != .learn {
+                navigationPath.removeAll()
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func learnDestination(_ route: LearnRoute, bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
+        LearnRouteDestinationView(
+            route: route,
+            library: contentLibrary,
+            bank: bank,
+            progressStore: progressStore,
+            language: language
+        ) {
+            dataRevision += 1
         }
     }
 
@@ -315,9 +342,14 @@ struct RootView: View {
 #endif
 
     private func applyLaunchNavigation(bank: QuestionBank) {
-        if AppLaunchArguments.value(after: "-CanadianHamInitialLessonID") != nil {
+#if DEBUG
+        if let initialLessonID = AppLaunchArguments.value(after: "-CanadianHamInitialLessonID") {
             selection = .learn
+            if navigationPath != [.lesson(initialLessonID)] {
+                navigationPath = [.lesson(initialLessonID)]
+            }
         }
+#endif
         if let screen = AppLaunchArguments.value(after: "-CanadianHamInitialScreen") {
             switch screen {
             case "home": selection = .home

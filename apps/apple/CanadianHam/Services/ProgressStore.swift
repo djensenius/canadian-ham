@@ -279,6 +279,21 @@ enum ProgressStoreError: LocalizedError, Equatable {
     }
 }
 
+#if DEBUG
+enum ProgressStoreInjectedFailure: Error, Equatable {
+    case importAfterDelete
+    case lessonQuizSave
+}
+#endif
+
+private struct ProgressStoreSnapshot {
+    let questionProgress: [QuestionProgressRecord]
+    let examAttempts: [StoredExamAttempt]
+    let preferences: ApplePreferences
+    let archivedLessonProgressData: Data
+    let archivedLessonQuizAttemptsData: Data
+}
+
 @MainActor
 final class ProgressStoreService: ObservableObject {
     @Published private(set) var preferences: ApplePreferences = .default
@@ -287,6 +302,10 @@ final class ProgressStoreService: ObservableObject {
     private let context: ModelContext
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
+#if DEBUG
+    var failNextImportAfterDeleteForTesting = false
+    var failNextLessonQuizSaveForTesting = false
+#endif
 
     init(container: ModelContainer) throws {
         self.container = container
@@ -370,13 +389,25 @@ final class ProgressStoreService: ObservableObject {
     }
 
     func saveLessonQuizAttempt(_ attempt: LessonQuizAttempt, questionProgress: [QuestionProgressRecord]) throws {
-        let entity = try preferencesEntity(createIfMissing: true)
-        entity.archivedLessonQuizAttemptsData = try encoder.encode((try lessonQuizAttempts() + [attempt]).sorted { $0.submittedAt < $1.submittedAt })
-        for record in questionProgress {
-            try upsertQuestionProgress(record)
+        do {
+            let entity = try preferencesEntity(createIfMissing: true, saveIfCreated: false)
+            let attempts = try decoder.decode([LessonQuizAttempt].self, from: entity.archivedLessonQuizAttemptsData)
+            entity.archivedLessonQuizAttemptsData = try encoder.encode((attempts + [attempt]).sorted { $0.submittedAt < $1.submittedAt })
+            for record in questionProgress {
+                try upsertQuestionProgress(record)
+            }
+#if DEBUG
+            if failNextLessonQuizSaveForTesting {
+                failNextLessonQuizSaveForTesting = false
+                throw ProgressStoreInjectedFailure.lessonQuizSave
+            }
+#endif
+            try context.save()
+            objectWillChange.send()
+        } catch {
+            context.rollback()
+            throw error
         }
-        try context.save()
-        objectWillChange.send()
     }
 
     func saveQuestionProgress(_ records: [QuestionProgressRecord]) throws {
@@ -464,11 +495,17 @@ final class ProgressStoreService: ObservableObject {
             throw ProgressStoreError.validationFailed(errors)
         }
 
-        let previousPreferences = preferences
+        let previousSnapshot = try snapshotForRollback()
         do {
             try context.delete(model: QuestionProgressEntity.self)
             try context.delete(model: ExamAttemptEntity.self)
             try context.delete(model: PreferencesEntity.self)
+#if DEBUG
+            if failNextImportAfterDeleteForTesting {
+                failNextImportAfterDeleteForTesting = false
+                throw ProgressStoreInjectedFailure.importAfterDelete
+            }
+#endif
             for record in data.questionProgress {
                 try upsertQuestionProgress(record)
             }
@@ -497,7 +534,7 @@ final class ProgressStoreService: ObservableObject {
             objectWillChange.send()
         } catch {
             context.rollback()
-            preferences = previousPreferences
+            try restore(previousSnapshot)
             throw error
         }
     }
@@ -608,7 +645,7 @@ final class ProgressStoreService: ObservableObject {
         return try context.fetch(descriptor).first
     }
 
-    private func preferencesEntity(createIfMissing: Bool) throws -> PreferencesEntity {
+    private func preferencesEntity(createIfMissing: Bool, saveIfCreated: Bool = true) throws -> PreferencesEntity {
         let defaultKey = PreferencesEntity.defaultKey
         var descriptor = FetchDescriptor<PreferencesEntity>(predicate: #Predicate { $0.key == defaultKey })
         descriptor.fetchLimit = 1
@@ -623,7 +660,9 @@ final class ProgressStoreService: ObservableObject {
         )
         if createIfMissing {
             context.insert(entity)
-            try context.save()
+            if saveIfCreated {
+                try context.save()
+            }
         }
         return entity
     }
@@ -648,6 +687,40 @@ final class ProgressStoreService: ObservableObject {
             submittedAt: attempt.submittedAt,
             payloadData: data
         ))
+    }
+
+    private func snapshotForRollback() throws -> ProgressStoreSnapshot {
+        let entity = try preferencesEntity(createIfMissing: true)
+        return ProgressStoreSnapshot(
+            questionProgress: try questionProgressRecords(),
+            examAttempts: try examAttempts(),
+            preferences: preferences,
+            archivedLessonProgressData: entity.archivedLessonProgressData,
+            archivedLessonQuizAttemptsData: entity.archivedLessonQuizAttemptsData
+        )
+    }
+
+    private func restore(_ snapshot: ProgressStoreSnapshot) throws {
+        try context.delete(model: QuestionProgressEntity.self)
+        try context.delete(model: ExamAttemptEntity.self)
+        try context.delete(model: PreferencesEntity.self)
+        let entity = PreferencesEntity(
+            practiceMode: snapshot.preferences.practiceMode.rawValue,
+            examTimerEnabled: snapshot.preferences.examTimerEnabled,
+            language: snapshot.preferences.language.rawValue,
+            theme: snapshot.preferences.theme.rawValue
+        )
+        entity.archivedLessonProgressData = snapshot.archivedLessonProgressData
+        entity.archivedLessonQuizAttemptsData = snapshot.archivedLessonQuizAttemptsData
+        context.insert(entity)
+        for record in snapshot.questionProgress {
+            try upsertQuestionProgress(record)
+        }
+        for attempt in snapshot.examAttempts {
+            try saveExamAttemptWithoutSave(attempt)
+        }
+        try context.save()
+        preferences = snapshot.preferences
     }
 
     private func questionProgressRecord(from entity: QuestionProgressEntity) throws -> QuestionProgressRecord {

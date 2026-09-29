@@ -97,6 +97,16 @@ The mock exam timer is optional and off by default.
 - Avoid simultaneous feedback panels, modal prompts, and unrelated recommendations.
 - Use plain language and consistent labels across web and Apple.
 
+## Owner-visible accessibility exceptions
+
+### Fixed-layout ISED reference PDF; pinch-zoom provided
+
+- **Owner:** Canadian Ham Apple app owner.
+- **Scope:** Bundled ISED Basic 2025 reference-sheet PDFs shown in the in-app reference viewer.
+- **Reason:** The source PDFs are fixed-layout government reference documents. PDFKit exposes the page content and supports pinch-zoom, but the text and page graphics do not reflow for Dynamic Type.
+- **Audit evidence:** On 2026-09-29, the real iOS reference viewer audit on `iPhone 17 Pro` reported a contrast issue inside the PDF page content: `Contrast failed for SwiftUI.AccessibilityNode`; the element screenshot was the fixed-layout ISED/Canada page mark inside the PDF, not app chrome. Earlier app-chrome contrast for the viewer Done button was fixed rather than ignored.
+- **Allowed automated-test handling:** Only the reference-viewer audit may ignore Dynamic Type or contrast issues whose failing element is the PDF page view identified as `reference-pdf-view`. All app chrome and all other audit types must fail.
+
 ## Automated checks
 
 ### Web
