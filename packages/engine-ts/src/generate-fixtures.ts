@@ -1,6 +1,7 @@
+import { realpathSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import {
   RNG_ALGORITHM,
   applyAnswer,
@@ -32,34 +33,36 @@ interface QuestionJson {
   readonly subsectionId: string;
 }
 
-const checkMode = process.argv.includes("--check");
-const fixtures = await buildFixtures();
-let hasDrift = false;
+async function main(): Promise<void> {
+  const checkMode = process.argv.includes("--check");
+  const fixtures = await buildFixtures();
+  let hasDrift = false;
 
-for (const [relativePath, value] of fixtures) {
-  const targetPath = join(repoRoot, relativePath);
-  const next = stableJson(value);
-  if (checkMode) {
-    let current = "";
-    try {
-      current = await readFile(targetPath, "utf8");
-    } catch (error) {
-      throw new Error(`fixture is missing: ${relativePath}`, { cause: error });
+  for (const [relativePath, value] of fixtures) {
+    const targetPath = join(repoRoot, relativePath);
+    const next = stableJson(value);
+    if (checkMode) {
+      let current = "";
+      try {
+        current = await readFile(targetPath, "utf8");
+      } catch (error) {
+        throw new Error(`fixture is missing: ${relativePath}`, { cause: error });
+      }
+      if (current !== next) {
+        hasDrift = true;
+        console.error(`fixture drift: ${relativePath}`);
+      }
+    } else {
+      await writeFile(targetPath, next, "utf8");
+      console.log(`wrote ${relativePath}`);
     }
-    if (current !== next) {
-      hasDrift = true;
-      console.error(`fixture drift: ${relativePath}`);
-    }
-  } else {
-    await writeFile(targetPath, next, "utf8");
-    console.log(`wrote ${relativePath}`);
   }
-}
 
-if (hasDrift) {
-  process.exitCode = 1;
-} else if (checkMode) {
-  console.log("fixtures are up to date");
+  if (hasDrift) {
+    process.exitCode = 1;
+  } else if (checkMode) {
+    console.log("fixtures are up to date");
+  }
 }
 
 async function buildFixtures(): Promise<Map<string, unknown>> {
@@ -471,4 +474,23 @@ function slug(value: string): string {
 
 function stableJson(value: unknown): string {
   return `${JSON.stringify(value, null, 2)}\n`;
+}
+
+function isMainModule(): boolean {
+  const metaWithMain = import.meta as ImportMeta & { readonly main?: unknown };
+  if ("main" in metaWithMain) {
+    return metaWithMain.main === true;
+  }
+  if (process.argv[1] === undefined) {
+    return false;
+  }
+  try {
+    return import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href;
+  } catch {
+    return false;
+  }
+}
+
+if (isMainModule()) {
+  await main();
 }

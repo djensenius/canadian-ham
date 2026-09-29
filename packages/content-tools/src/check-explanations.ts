@@ -2,6 +2,8 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { isMainModule } from "./cli.ts";
+
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const DEFAULT_EXPLANATION_ROOT = path.join(REPO_ROOT, "content/explanations");
 const DEFAULT_LESSON_ROOT = path.join(REPO_ROOT, "content/lessons");
@@ -242,7 +244,7 @@ function validateCitationUrl(url: string, citationPath: string, issues: string[]
     issues.push(`${citationPath}: citation url must be an absolute https URL on ised-isde.canada.ca or www.ised-isde.canada.ca`);
     return;
   }
-  if (parsedUrl.protocol !== "https:" || !ALLOWED_CITATION_URL_HOSTS.has(parsedUrl.host)) {
+  if (parsedUrl.protocol !== "https:" || parsedUrl.username !== "" || parsedUrl.password !== "" || !ALLOWED_CITATION_URL_HOSTS.has(parsedUrl.host)) {
     issues.push(`${citationPath}: citation url must be an absolute https URL on ised-isde.canada.ca or www.ised-isde.canada.ca`);
   }
 }
@@ -743,7 +745,7 @@ async function main(): Promise<void> {
   }
 }
 
-if (fileURLToPath(import.meta.url) === process.argv[1]) {
+if (isMainModule(import.meta)) {
   main().catch((error: unknown) => {
     if (error instanceof ExplanationCheckError) {
       for (const issue of error.report.issues) {

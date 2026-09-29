@@ -1,7 +1,8 @@
-import { realpathSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
+
+import { isMainModule } from "./cli.ts";
 
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const DEFAULT_LESSON_ROOT = path.join(REPO_ROOT, "content/lessons");
@@ -475,21 +476,7 @@ function parseCliArgs(args: string[]): LessonCoverageOptions {
   return options;
 }
 
-function isMainModule(): boolean {
-  if ("main" in import.meta) {
-    return import.meta.main === true;
-  }
-  if (process.argv[1] === undefined) {
-    return false;
-  }
-  try {
-    return import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href;
-  } catch {
-    return false;
-  }
-}
-
-if (isMainModule()) {
+if (isMainModule(import.meta)) {
   try {
     const report = await checkLessonCoverage(parseCliArgs(process.argv.slice(2)));
     console.log(report.summaryLines.join("\n"));

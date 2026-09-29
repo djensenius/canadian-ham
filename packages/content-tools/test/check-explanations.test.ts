@@ -143,6 +143,8 @@ test("explanation check rejects citation urls that are not https urls on allowed
   const invalidUrls = [
     "http://ised-isde.canada.ca/site/fixture-source",
     "https://example.com/fixture-source",
+    "https://user@ised-isde.canada.ca/site/fixture-source",
+    "https://user:pass@www.ised-isde.canada.ca/site/fixture-source",
     "javascript:alert(1)",
     "not-a-url",
   ];
@@ -165,6 +167,24 @@ test("explanation check rejects citation urls that are not https urls on allowed
       );
     });
   }
+});
+
+test("explanation check rejects empty citation url strings when present", async () => {
+  await withFixture("empty-citation-url", async (root) => {
+    await writeBaseFixture(root, {
+      explanationRecord: explanation({
+        citations: [
+          { type: "lesson", id: "L-005-01", url: "" },
+          { type: "question", id: "B-005-001-001" },
+        ],
+      }),
+    });
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof ExplanationCheckError && error.report.issues.some((issue) => issue.includes("citation url must be a non-empty string when present")),
+    );
+  });
 });
 
 test("explanation check rejects schema failures", async () => {

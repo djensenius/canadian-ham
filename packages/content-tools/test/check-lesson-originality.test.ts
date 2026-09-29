@@ -1,10 +1,14 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { spawnSync } from "node:child_process";
+import { mkdir, mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 
 import { checkLessonOriginality, LessonOriginalityError } from "../src/check-lesson-originality.ts";
+
+const CHECK_SCRIPT = fileURLToPath(new URL("../src/check-lesson-originality.ts", import.meta.url));
 
 type FixtureQuestion = {
   id: string;
@@ -72,6 +76,21 @@ async function runCheck(root: string) {
     allowlistPath: path.join(root, "content/lessons/originality-allowlist.json"),
   });
 }
+
+test("originality check runs when invoked through a symlink", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "canadian-ham-originality-cli-"));
+  try {
+    const linkedScript = path.join(root, "check-lesson-originality.ts");
+    await symlink(CHECK_SCRIPT, linkedScript);
+
+    const result = spawnSync(process.execPath, [linkedScript, path.join(root, "missing-lessons")], { encoding: "utf8" });
+
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /check-lesson-originality:/);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
 
 test("originality check passes original numeric examples", async () => {
   await withFixture("valid", async (root) => {

@@ -1,6 +1,7 @@
 import { fileURLToPath } from "node:url";
 
 import { checkGeneratedFiles, writeGeneratedFiles } from "./basic-importer.ts";
+import { isMainModule } from "./cli.ts";
 
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 
@@ -21,8 +22,10 @@ async function main(): Promise<void> {
   }
 }
 
-main().catch((error: unknown) => {
-  const message = error instanceof Error ? error.message : String(error);
-  console.error(`import-basic: ${message}`);
-  process.exitCode = 1;
-});
+if (isMainModule(import.meta)) {
+  main().catch((error: unknown) => {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`import-basic: ${message}`);
+    process.exitCode = 1;
+  });
+}
