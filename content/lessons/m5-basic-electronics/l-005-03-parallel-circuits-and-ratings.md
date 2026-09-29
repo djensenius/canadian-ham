@@ -150,7 +150,7 @@ That is safely above an 8 W test level if the parts are built and cooled correct
 1. Eight equal resistors of value R are in parallel. The total is R / 8.
 2. Four 16 ohm resistors in series across 9 V give Rt = 64 ohms, I = 9 / 64 = 0.14 A, and P is about 1.3 W.
 3. A 13.8 V cooling fan rated 18 W draws I = P / E = 18 / 13.8, or about 1.3 A.
-4. A pair of 150 ohm resistors in parallel gives 75 ohms. If each has the same wattage rating as a single 75 ohm resistor, the pair can share heat and increase total wattage.
+4. A temporary test load uses several identical resistors on a heat sink. Before increasing the test level, what should the builder verify? Confirm that current is sharing evenly and that each part remains within its own heat rating; the network is only safe when every part and the cooling method can handle the load.
 
 ## Radio connection
 

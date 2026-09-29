@@ -56,41 +56,41 @@
     {
       "id": "QZ-L-007-01-A-C2",
       "prompt": {
-        "en": "A club writes, 'Our HF backup worked last month, so this afternoon's route no longer needs a band plan or fallback.' What is the best correction?",
+        "en": "A shoreline station can cover nearby checkpoints by ground wave on a lower HF band. If the same route is moved much higher in frequency, what should the planner expect?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Repeat the same band without listening, because one success fixes the ionosphere for that route.",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "Remove all HF options from the plan, because changing conditions make every sky-wave path unusable.",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "Use last month's result as a starting clue, but check conditions and keep an alternate band or relay ready.",
+            "en": "Ground-wave coverage becomes less useful as frequency rises, so use the lower band or choose another path.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "Keep only a power increase in reserve, because power is the main control for which path appears.",
+            "en": "The surface-guided part should extend farther, because higher frequency tends to follow terrain more closely.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Mostly the antenna length changes; the ground-wave distance changes little with frequency.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The path is likely to become an F2-region hop once it is above the lower HF band.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "A previous contact is useful evidence, not a guarantee. Propagation planning still needs a current check and a fallback such as another band, relay, time, or antenna plan.",
+        "en": "Ground wave is the part of the signal guided by and affected by the Earth's surface. It is most useful at lower frequencies; moving higher can shorten the useful surface path and may require a different band or propagation mode.",
         "fr": null
       }
     },
