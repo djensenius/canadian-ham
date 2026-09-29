@@ -6,6 +6,10 @@ private enum SidebarSelection: Hashable {
 }
 
 struct RootView: View {
+#if os(iOS)
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+#endif
+
     @State private var bank: QuestionBank?
     @State private var loadError: String?
     @State private var selection: SidebarSelection?
@@ -21,9 +25,14 @@ struct RootView: View {
                     systemImage: "exclamationmark.triangle",
                     description: Text(loadError)
                 )
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .background(DesignTokens.Colors.paper)
             } else {
                 ProgressView("Loading question bank…")
                     .controlSize(.large)
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(DesignTokens.Colors.paper)
             }
         }
         .task {
@@ -35,37 +44,61 @@ struct RootView: View {
     private func appContent(for bank: QuestionBank) -> some View {
         NavigationSplitView {
             List(selection: $selection) {
-                Section("Practice categories") {
+                Section {
                     ForEach(bank.categories) { category in
                         NavigationLink(value: SidebarSelection.category(category.id)) {
                             CategoryRow(category: category, language: language)
                         }
+                        .listRowBackground(DesignTokens.Colors.paperElevated)
                         .accessibilityLabel(categoryAccessibilityLabel(category))
                     }
+                } header: {
+                    Text("Practice categories")
+                        .font(DesignTokens.FontScale.title.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .textCase(nil)
+                        .accessibilityAddTraits(.isHeader)
                 }
+                .headerProminence(.increased)
 
-                Section("Information") {
+                Section {
                     NavigationLink(value: SidebarSelection.about) {
                         Label("About", systemImage: "info.circle")
+                            .font(DesignTokens.FontScale.body.weight(.semibold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
                     }
-                    .accessibilityLabel("About canadian-ham")
+                    .listRowBackground(DesignTokens.Colors.paperElevated)
+                    .accessibilityLabel("About Canadian Ham")
+                } header: {
+                    Text("Information")
+                        .font(DesignTokens.FontScale.title.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .textCase(nil)
+                        .accessibilityAddTraits(.isHeader)
+                }
+                .headerProminence(.increased)
+            }
+            .listStyle(.sidebar)
+            .scrollContentBackground(.hidden)
+            .background(DesignTokens.Colors.paper)
+            .navigationTitle("Canadian Ham")
+            .toolbar {
+                if showsSidebarLanguagePicker {
+                    languageToolbarItem
                 }
             }
-            .navigationTitle("Canadian Ham")
         } detail: {
             detailView(for: bank)
+                .background(DesignTokens.Colors.paper)
         }
-        .toolbar {
-            ToolbarItem(placement: .automatic) {
-                Picker("Question language", selection: $language) {
-                    ForEach(BankLanguage.allCases) { language in
-                        Text(language.displayName).tag(language)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .accessibilityLabel("Question language")
-            }
-        }
+        .navigationSplitViewStyle(.balanced)
+#if os(iOS)
+        .toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+#endif
+#if os(macOS)
+        .frame(minWidth: 920, minHeight: 640)
+#endif
     }
 
     @ViewBuilder
@@ -73,10 +106,16 @@ struct RootView: View {
         switch selection {
         case .category(let categoryId):
             if let category = bank.categories.first(where: { $0.id == categoryId }) {
-                PracticeView(bank: bank, category: category, language: language)
-                    .id(category.id)
+                PracticeView(
+                    bank: bank,
+                    category: category,
+                    showsLanguagePicker: showsPracticeLanguagePicker,
+                    language: $language
+                )
+                .id(category.id)
             } else {
                 ContentUnavailableView("Category not found", systemImage: "questionmark.folder")
+                    .foregroundStyle(DesignTokens.Colors.ink)
             }
         case .about:
             AboutView(bank: bank)
@@ -86,6 +125,7 @@ struct RootView: View {
                 systemImage: "list.bullet.rectangle",
                 description: Text("Select a category to answer a random question from that part of the Basic bank.")
             )
+            .foregroundStyle(DesignTokens.Colors.ink)
         }
     }
 
@@ -95,14 +135,40 @@ struct RootView: View {
         do {
             let loadedBank = try QuestionBankStore.load()
             bank = loadedBank
-            selection = loadedBank.categories.first.map { .category($0.id) }
+            if let requestedCategoryID = AppLaunchArguments.value(after: "-CanadianHamInitialCategoryID"),
+               loadedBank.categories.contains(where: { $0.id == requestedCategoryID }) {
+                selection = .category(requestedCategoryID)
+            } else {
+                selection = loadedBank.categories.first.map { .category($0.id) }
+            }
         } catch {
             loadError = error.localizedDescription
         }
     }
 
+#if os(macOS)
+    private var showsSidebarLanguagePicker: Bool { true }
+    private var showsPracticeLanguagePicker: Bool { false }
+#else
+    private var showsSidebarLanguagePicker: Bool { true }
+    private var showsPracticeLanguagePicker: Bool { horizontalSizeClass == .compact }
+#endif
+
+    private var languageToolbarItem: some ToolbarContent {
+        ToolbarItem(placement: .automatic) {
+            Picker("Question language", selection: $language) {
+                ForEach(BankLanguage.allCases) { language in
+                    Text(language.displayName).tag(language)
+                }
+            }
+            .pickerStyle(.segmented)
+            .accessibilityLabel("Question language")
+            .accessibilityIdentifier("question-language-picker")
+        }
+    }
+
     private func categoryAccessibilityLabel(_ category: BankCategory) -> String {
-        "\(category.name.text(for: language)), \(category.questionCount) questions"
+        "\(category.name.text(for: language)), \(category.questionCount) questions, \(category.subsectionCount) subsections"
     }
 }
 
@@ -111,13 +177,14 @@ private struct CategoryRow: View {
     let language: BankLanguage
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             Text(category.name.text(for: language))
-                .font(.headline)
+                .font(DesignTokens.FontScale.body.weight(.semibold))
+                .foregroundStyle(DesignTokens.Colors.ink)
             Text("\(category.questionCount) questions • \(category.subsectionCount) subsections")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .font(DesignTokens.FontScale.caption)
+                .foregroundStyle(DesignTokens.Colors.inkMuted)
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, DesignTokens.Spacing.xs)
     }
 }

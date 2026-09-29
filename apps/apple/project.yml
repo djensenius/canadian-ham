@@ -6,6 +6,9 @@ options:
     macOS: "15.0"
   developmentLanguage: en
   createIntermediateGroups: true
+packages:
+  CanadianHamEngine:
+    path: ../../packages/engine-swift
 settings:
   base:
     CURRENT_PROJECT_VERSION: 1
@@ -15,6 +18,8 @@ settings:
     IPHONEOS_DEPLOYMENT_TARGET: "18.0"
     MACOSX_DEPLOYMENT_TARGET: "15.0"
     TARGETED_DEVICE_FAMILY: "1,2"
+    SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+    SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
     CODE_SIGN_STYLE: Automatic
     ENABLE_USER_SCRIPT_SANDBOXING: YES
 targets:
@@ -27,15 +32,22 @@ targets:
       - path: ../../content/generated/basic-2025-07-15/questions.json
         type: file
         buildPhase: resources
+        createIntermediateGroups: false
       - path: ../../content/generated/basic-2025-07-15/subsections.json
         type: file
         buildPhase: resources
+        createIntermediateGroups: false
       - path: ../../content/generated/basic-2025-07-15/categories.json
         type: file
         buildPhase: resources
+        createIntermediateGroups: false
       - path: ../../content/generated/basic-2025-07-15/manifest.json
         type: file
         buildPhase: resources
+        createIntermediateGroups: false
+    dependencies:
+      - package: CanadianHamEngine
+        product: CanadianHamEngine
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.djensenius.CanadianHam
@@ -45,6 +57,8 @@ targets:
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.education
         CODE_SIGN_ENTITLEMENTS[sdk=macosx*]: CanadianHam/Resources/CanadianHam.macOS.entitlements
         CODE_SIGN_ENTITLEMENTS[sdk=iphone*]: ""
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+        SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
   CanadianHamTests:
     type: bundle.unit-test
     platform: auto
@@ -53,31 +67,61 @@ targets:
       - path: CanadianHamTests
       - path: CanadianHam/Models/QuestionBankModels.swift
       - path: CanadianHam/Services/QuestionBankStore.swift
-      - path: CanadianHam/Practice/TempShuffle.swift
+      - path: CanadianHam/Practice/EngineShuffle.swift
       - path: ../../content/generated/basic-2025-07-15/questions.json
         type: file
         buildPhase: resources
+        createIntermediateGroups: false
       - path: ../../content/generated/basic-2025-07-15/subsections.json
         type: file
         buildPhase: resources
+        createIntermediateGroups: false
       - path: ../../content/generated/basic-2025-07-15/categories.json
         type: file
         buildPhase: resources
+        createIntermediateGroups: false
       - path: ../../content/generated/basic-2025-07-15/manifest.json
         type: file
         buildPhase: resources
+        createIntermediateGroups: false
+    dependencies:
+      - package: CanadianHamEngine
+        product: CanadianHamEngine
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.djensenius.CanadianHamTests
         PRODUCT_NAME: CanadianHamTests
         GENERATE_INFOPLIST_FILE: YES
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+        SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
+  CanadianHamUITests:
+    type: bundle.ui-testing
+    platform: auto
+    supportedDestinations: [iOS]
+    sources:
+      - path: CanadianHamUITests
+      - path: ../../content/generated/basic-2025-07-15/questions.json
+        type: file
+        buildPhase: resources
+        createIntermediateGroups: false
+    dependencies:
+      - target: CanadianHam
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.djensenius.CanadianHamUITests
+        PRODUCT_NAME: CanadianHamUITests
+        GENERATE_INFOPLIST_FILE: YES
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+        SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
 schemes:
   CanadianHam:
     build:
       targets:
         CanadianHam: all
         CanadianHamTests: [test]
+        CanadianHamUITests: [test]
     test:
       gatherCoverageData: false
       targets:
         - CanadianHamTests
+        - CanadianHamUITests
