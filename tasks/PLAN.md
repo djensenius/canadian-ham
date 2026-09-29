@@ -82,7 +82,9 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-414 | P4 | done | worker | T-404 | Module 3 (Station Assembly, Practice and Safety, B-003) lessons, quizzes, and all 199 explanations (three lanes). |
 | T-415 | P4 | done | worker | T-404 | Remaining B-005 explanations (005..013, 98 questions). |
 | T-416 | P4 | done | worker | T-404 | Module 2 (Operating Procedures, B-002) lessons, quizzes, and all 99 explanations. |
-| T-417 | P4 | in progress | worker | T-404 | Module 1 (Regulations and Policies, B-001) lessons, quizzes, and all 199 explanations (three lanes). |
+| T-417 | P4 | done | worker | T-404 | Module 1 (Regulations and Policies, B-001) lessons, quizzes, and all 199 explanations (three lanes). |
+| T-318 | P3 | done | worker | T-417 | Allow exact official ISED citation link in the URL audit; external citation links are user-activated only. Follow-ups: realpath-safe CLI guard in audit script; https-only citation URLs in content checker/CitationLink. |
+| T-418 | P4 | todo | worker | T-404 | Content follow-ups: M5 lesson gaps (dB over S9, HF 3-30 MHz limits, mains sine wave), rework L-005-03 Try-it 4 and L-005-04 Try-it 1; M3 Try-it overlapping B-008; M7 C2/C3 similarity note. |
 | T-501 | P5 | done | worker | T-206 | Scaffold SwiftUI multiplatform Apple project for iOS, iPadOS, and macOS; verify build with `xbuild`. |
 | T-501b | P5 | in progress | worker | T-501 | Apple slice polish from review: EN/FR picker on compact iPhone, UI test, strong shuffle test, VoiceOver announcement, scaled answer letter, no visionOS availability, deterministic project generation, minimum-OS decision recorded. |
 | T-513 | P5 | todo | worker | T-501b,T-206 | Native visionOS app target (visionOS 2.0+): window-based practice flow, glass materials, hover effects, ornaments for EN/FR; shared SwiftUI code where sensible; builds/tests via xbuild on the visionOS simulator. |
