@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-010-006",
+  "questionId": "B-006-010-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-010-006.\n\nWhy the correct answer is right: Downward-sloping radials raise the feed point impedance closer to common 50-ohm coax.\n\nPer-choice notes:\n- sourceIndex 0: \"It brings the feed point impedance closer to 50 ohms\": Correct. Downward-sloping radials raise the feed point impedance closer to common 50-ohm coax.\n- sourceIndex 1: \"It increases the radiation angle\": Small coax at high frequency mainly causes excessive attenuation; heating can result, but loss is the primary adverse consequence.\n- sourceIndex 2: \"It brings the feed point impedance closer to 300 ohms\": Downward sloping radials are used to bring the feed point closer to common 50-ohm coax impedance.\n- sourceIndex 3: \"It lowers the radiation angle\": Small coax at high frequency mainly causes excessive attenuation; heating can result, but loss is the primary adverse consequence.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-010-006"
+    }
+  ],
+  "licenseClass": "original"
+}

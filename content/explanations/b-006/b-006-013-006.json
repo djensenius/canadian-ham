@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-013-006",
+  "questionId": "B-006-013-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-013-006.\n\nWhy the correct answer is right: Quads have more wire and support structure exposed to wind and ice, so weather damage is a major concern.\n\nPer-choice notes:\n- sourceIndex 0: \"More susceptible to weather damage\": Correct. Quads have more wire and support structure exposed to wind and ice, so weather damage is a major concern.\n- sourceIndex 1: \"Requires a more heavy-duty mast or tower\": The distinctive disadvantage listed here is weather exposure of the loop-and-spreader structure.\n- sourceIndex 2: \"Lower gain\": SWR is a match indication, not antenna gain; below 1.5:1 is generally a usable match.\n- sourceIndex 3: \"Requires matching to the transmission line\": The distinctive disadvantage listed here is weather exposure of the loop-and-spreader structure.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-013-006"
+    }
+  ],
+  "licenseClass": "original"
+}

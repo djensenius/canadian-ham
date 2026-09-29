@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-010-011",
+  "questionId": "B-006-010-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-010-011.\n\nWhy the correct answer is right: Radials at the base provide an RF return system and reduce ground losses.\n\nPer-choice notes:\n- sourceIndex 0: \"Install a wire ground system (radials) at the antenna base\": Correct. Radials at the base provide an RF return system and reduce ground losses.\n- sourceIndex 1: \"Use an insulator with a higher breakdown voltage\": A radial ground system reduces earth return losses at a ground-mounted vertical.\n- sourceIndex 2: \"Improve the impedance match at the base\": A radial ground system reduces earth return losses at a ground-mounted vertical.\n- sourceIndex 3: \"Raise the antenna one eighth of a wavelength\": A radial ground system reduces earth return losses at a ground-mounted vertical.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-010-011"
+    }
+  ],
+  "licenseClass": "original"
+}

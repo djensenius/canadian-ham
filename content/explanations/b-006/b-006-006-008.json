@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-006-008",
+  "questionId": "B-006-006-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-006-008.\n\nWhy the correct answer is right: To minimize line losses, perform the match where the transmission line meets the antenna.\n\nPer-choice notes:\n- sourceIndex 0: \"At the junction between the transmission line and antenna\": Correct. To minimize line losses, perform the match where the transmission line meets the antenna.\n- sourceIndex 1: \"At the junction between the transmitter and the transmission line\": Matching at the radio may protect the radio, but matching at the antenna-feedline junction minimizes line loss.\n- sourceIndex 2: \"Anywhere along the transmission line\": Matching at the radio may protect the radio, but matching at the antenna-feedline junction minimizes line loss.\n- sourceIndex 3: \"At a quarter wavelength from the transmitter\": Matching at the radio may protect the radio, but matching at the antenna-feedline junction minimizes line loss.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-006-008"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-002-009",
+  "questionId": "B-006-002-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-002-009.\n\nWhy the correct answer is right: Balanced line uses two parallel conductors carrying equal and opposite RF currents.\n\nPer-choice notes:\n- sourceIndex 0: \"is made of two parallel wires\": Correct. Balanced line uses two parallel conductors carrying equal and opposite RF currents.\n- sourceIndex 1: \"has one conductor inside the other\": This does not match the principle tested here: Feedline construction and balance determine whether coax, window line, open-wire line, or a balun is the right concept.\n- sourceIndex 2: \"carries RF current on one wire only\": This does not match the principle tested here: Feedline construction and balance determine whether coax, window line, open-wire line, or a balun is the right concept.\n- sourceIndex 3: \"is made of one conductor only\": This does not match the principle tested here: Feedline construction and balance determine whether coax, window line, open-wire line, or a balun is the right concept.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-002-009"
+    }
+  ],
+  "licenseClass": "original"
+}

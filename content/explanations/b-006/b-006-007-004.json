@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-007-004",
+  "questionId": "B-006-007-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-007-004.\n\nWhy the correct answer is right: A vertical half-wave element radiates vertical polarization.\n\nPer-choice notes:\n- sourceIndex 0: \"Vertical\": Correct. A vertical half-wave element radiates vertical polarization.\n- sourceIndex 1: \"Circular\": The listed polarization must match the element orientation described in the question.\n- sourceIndex 2: \"Horizontal\": The listed polarization must match the element orientation described in the question.\n- sourceIndex 3: \"Elliptical\": The listed polarization must match the element orientation described in the question.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-03"
+    },
+    {
+      "type": "question",
+      "id": "B-006-007-004"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-006-010",
+  "questionId": "B-006-006-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-006-010.\n\nWhy the correct answer is right: Tuners help solid-state transceivers deliver rated power by presenting an acceptable load.\n\nPer-choice notes:\n- sourceIndex 0: \"It enables the transceivers to deliver rated power to a mismatched antenna system\": Correct. Tuners help solid-state transceivers deliver rated power by presenting an acceptable load.\n- sourceIndex 1: \"It reduces losses in the line to the antenna\": A loading coil is mainly there to tune out capacitive reactance in a short antenna.\n- sourceIndex 2: \"It reduces common-mode noise pickup\": Those can occur in some stations, but the main high-SWR penalty is extra line loss.\n- sourceIndex 3: \"It absorbs the reflected energy from a mismatched antenna system\": SMA is common on handheld gear, not the larger HF coax case unless the question specifically names that use.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-006-010"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-004-002",
+  "questionId": "B-006-004-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-004-002.\n\nWhy the correct answer is right: Open-wire line has low loss and can tolerate high SWR with less heating when installed properly.\n\nPer-choice notes:\n- sourceIndex 0: \"It can be operated at high SWR without excessive loss\": Correct. Open-wire line has low loss and can tolerate high SWR with less heating when installed properly.\n- sourceIndex 1: \"It can be located near metal objects without problems\": This describes a different installation property; open-wire advantage is its low loss when installed properly.\n- sourceIndex 2: \"It has low impedance, which facilitates matching to a transceiver\": This describes a different installation property; open-wire advantage is its low loss when installed properly.\n- sourceIndex 3: \"It does not radiate RF energy, which could cause interference to nearby equipment\": This describes a different installation property; open-wire advantage is its low loss when installed properly.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-004-002"
+    }
+  ],
+  "licenseClass": "original"
+}

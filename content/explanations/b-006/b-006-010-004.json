@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-010-004",
+  "questionId": "B-006-010-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-010-004.\n\nWhy the correct answer is right: A five-eighths-wavelength vertical has more useful gain than a quarter-wave vertical for VHF/UHF mobile work.\n\nPer-choice notes:\n- sourceIndex 0: \"Because it has more gain\": Correct. A five-eighths-wavelength vertical has more useful gain than a quarter-wave vertical for VHF/UHF mobile work.\n- sourceIndex 1: \"Because it has a high radiation angle\": Small coax at high frequency mainly causes excessive attenuation; heating can result, but loss is the primary adverse consequence.\n- sourceIndex 2: \"Because it does not require impedance matching\": The VHF/UHF mobile advantage is useful gain, not automatic matching or power handling.\n- sourceIndex 3: \"Because it can handle more power\": That may be a desirable trait, but the question is about practical usability across many installations.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-010-004"
+    }
+  ],
+  "licenseClass": "original"
+}

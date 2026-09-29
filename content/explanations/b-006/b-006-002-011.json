@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-002-011",
+  "questionId": "B-006-002-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-002-011.\n\nWhy the correct answer is right: Two conductors held apart mostly by air and spreaders is open-wire line.\n\nPer-choice notes:\n- sourceIndex 0: \"Open-wire line\": Correct. Two conductors held apart mostly by air and spreaders is open-wire line.\n- sourceIndex 1: \"Coaxial cable\": Coax is a shielded unbalanced feedline; it is only correct when the question is asking for that construction or practical route.\n- sourceIndex 2: \"Twin-lead\": That is a balanced two-conductor line, so it does not fit questions about shielded coax or open-air spreaders.\n- sourceIndex 3: \"Twisted pair\": This does not match the principle tested here: Feedline construction and balance determine whether coax, window line, open-wire line, or a balun is the right concept.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-002-011"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-011-009",
+  "questionId": "B-006-011-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-011-009.\n\nWhy the correct answer is right: Larger-diameter elements tend to increase Yagi bandwidth.\n\nPer-choice notes:\n- sourceIndex 0: \"Increase the diameter of the elements\": Correct. Larger-diameter elements tend to increase Yagi bandwidth.\n- sourceIndex 1: \"Decrease the element spacing\": Front-to-back ratio is a pattern-power comparison, not a dimension ratio.\n- sourceIndex 2: \"Install loading coils in the elements\": That device may solve a different problem, but it does not remove unnecessary feedline attenuation from excess cable length.\n- sourceIndex 3: \"Use tapered elements\": Larger element diameter is the expected bandwidth-improvement principle here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-011-009"
+    }
+  ],
+  "licenseClass": "original"
+}

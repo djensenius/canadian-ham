@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-009-011",
+  "questionId": "B-006-009-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-009-011.\n\nWhy the correct answer is right: A half-wave dipole is about 2.1 dB over isotropic, so 4.1 dBi - 2.1 dB = 2.0 dB over a dipole.\n\nPer-choice notes:\n- sourceIndex 0: \"2.0 dB\": Correct. Subtract the 2.1 dB dipole reference from 4.1 dBi to get about 2.0 dB.\n- sourceIndex 1: \"4.1 dB\": This repeats the dBi value without changing reference to a dipole.\n- sourceIndex 2: \"3.0 dB\": This subtracts the wrong reference amount.\n- sourceIndex 3: \"1.1 dB\": This is too small; 4.1 minus 2.1 is 2.0.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-009-011"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-001-009",
+  "questionId": "B-006-001-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-001-009.\n\nWhy the correct answer is right: When a line is mismatched, the input impedance is transformed by the line and therefore depends on line length as well as load impedance.\n\nPer-choice notes:\n- sourceIndex 0: \"A value of impedance influenced by line length\": Correct. When a line is mismatched, the input impedance is transformed by the line and therefore depends on line length as well as load impedance.\n- sourceIndex 1: \"An infinite impedance\": The main effect being tested is polarization change, not a guaranteed large impedance change.\n- sourceIndex 2: \"A zero impedance\": The main effect being tested is polarization change, not a guaranteed large impedance change.\n- sourceIndex 3: \"An impedance nearly equal to the characteristic impedance\": The main effect being tested is polarization change, not a guaranteed large impedance change.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-001-009"
+    }
+  ],
+  "licenseClass": "original"
+}

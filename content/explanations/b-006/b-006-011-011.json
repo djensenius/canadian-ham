@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-011-011",
+  "questionId": "B-006-011-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-011-011.\n\nWhy the correct answer is right: Stacking two identical antennas ideally adds about 3 dB. 10 dBi + 3 dB = 13 dBi before real-world losses.\n\nPer-choice notes:\n- sourceIndex 0: \"13 dBi\": Correct. Add about 3 dB to 10 dBi for two identical stacked antennas: 13 dBi.\n- sourceIndex 1: \"7 dBi\": This subtracts 3 dB instead of adding the stacking gain.\n- sourceIndex 2: \"20 dBi\": This doubles the dBi number arithmetically; decibels are logarithmic, so doubling power is about +3 dB.\n- sourceIndex 3: \"10 dBi\": This ignores the ideal stacking gain.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-011-011"
+    }
+  ],
+  "licenseClass": "original"
+}

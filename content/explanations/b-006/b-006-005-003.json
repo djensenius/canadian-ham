@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-005-003",
+  "questionId": "B-006-005-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-005-003.\n\nWhy the correct answer is right: Jumping or erratic readings usually suggest an intermittent connection in the antenna system.\n\nPer-choice notes:\n- sourceIndex 0: \"Intermittent connection in the antenna system\": Correct. Jumping or erratic readings usually suggest an intermittent connection in the antenna system.\n- sourceIndex 1: \"Transmitting into the wrong antenna\": Those may be station problems, but erratic meter movement most strongly suggests an intermittent antenna-system connection.\n- sourceIndex 2: \"Interference from electrical power lines\": Those may be station problems, but erratic meter movement most strongly suggests an intermittent antenna-system connection.\n- sourceIndex 3: \"Lack of a balun at the antenna feed point\": That device may solve a different problem, but it does not remove unnecessary feedline attenuation from excess cable length.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-005-003"
+    }
+  ],
+  "licenseClass": "original"
+}

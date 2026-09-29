@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-008-003",
+  "questionId": "B-006-008-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-008-003.\n\nWhy the correct answer is right: Use λ(m) = 300 / f(MHz). For 25 MHz, 300 / 25 = 12 m.\n\nPer-choice notes:\n- sourceIndex 0: \"12 metres\": Correct. 300 divided by 25 equals 12.\n- sourceIndex 1: \"19 metres\": This does not result from dividing 300 by 25.\n- sourceIndex 2: \"39 metres\": This is much longer than the wavelength calculated from 300 / 25.\n- sourceIndex 3: \"6 metres\": This is half of the correct wavelength for 25 MHz.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-03"
+    },
+    {
+      "type": "question",
+      "id": "B-006-008-003"
+    }
+  ],
+  "licenseClass": "original"
+}

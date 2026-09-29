@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-004-003",
+  "questionId": "B-006-004-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-004-003.\n\nWhy the correct answer is right: Removing unnecessary cable length reduces attenuation; coiling spare cable does not remove its loss.\n\nPer-choice notes:\n- sourceIndex 0: \"Shorten the excess cable\": Correct. Removing unnecessary cable length reduces attenuation; coiling spare cable does not remove its loss.\n- sourceIndex 1: \"Install a balun at the antenna feed point\": That device may solve a different problem, but it does not remove unnecessary feedline attenuation from excess cable length.\n- sourceIndex 2: \"Roll the excess cable into a coil\": That device may solve a different problem, but it does not remove unnecessary feedline attenuation from excess cable length.\n- sourceIndex 3: \"Install a low-pass filter at the transceiver\": That device may solve a different problem, but it does not remove unnecessary feedline attenuation from excess cable length.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-004-003"
+    }
+  ],
+  "licenseClass": "original"
+}

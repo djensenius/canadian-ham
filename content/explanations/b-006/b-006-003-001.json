@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-003-001",
+  "questionId": "B-006-003-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-003-001.\n\nWhy the correct answer is right: Coax is the least affected of these choices near metal because its shield confines much of the RF field.\n\nPer-choice notes:\n- sourceIndex 0: \"Coaxial cable\": Correct. Coax is the least affected of these choices near metal because its shield confines much of the RF field.\n- sourceIndex 1: \"Twin-lead\": That is a balanced two-conductor line, so it does not fit questions about shielded coax or open-air spreaders.\n- sourceIndex 2: \"Open-wire line\": Open-wire line is a balanced low-loss line, but it is not the shielded or plastic-embedded construction named here.\n- sourceIndex 3: \"Window line\": That is a balanced two-conductor line, so it does not fit questions about shielded coax or open-air spreaders.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-003-001"
+    }
+  ],
+  "licenseClass": "original"
+}

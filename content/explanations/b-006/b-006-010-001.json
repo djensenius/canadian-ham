@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-010-001",
+  "questionId": "B-006-010-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-010-001.\n\nWhy the correct answer is right: The exam-style quarter-wave estimate for HF verticals uses length in metres ≈ 71.3 / frequency in MHz.\n\nPer-choice notes:\n- sourceIndex 0: \"Divide 71.3 by the operating frequency in MHz\": Correct. 71.3 divided by frequency in MHz is the quarter-wave vertical estimate used here.\n- sourceIndex 1: \"Divide 468 by the operating frequency in MHz\": 468/f is a feet-based half-wave dipole shortcut, not the metre quarter-wave estimate.\n- sourceIndex 2: \"Divide 300 by the operating frequency in MHz\": 300/f gives full free-space wavelength in metres, not the shortened quarter-wave antenna length.\n- sourceIndex 3: \"Divide 143 by the operating frequency in MHz\": 143/f gives an approximate half-wave length in metres, not a quarter-wave length.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-010-001"
+    }
+  ],
+  "licenseClass": "original"
+}

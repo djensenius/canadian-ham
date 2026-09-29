@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-002-002",
+  "questionId": "B-006-002-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-002-002.\n\nWhy the correct answer is right: Two parallel conductors held in insulating plastic is the window-line or twin-lead style of balanced feedline.\n\nPer-choice notes:\n- sourceIndex 0: \"Window line\": Correct. Two parallel conductors held in insulating plastic is the window-line or twin-lead style of balanced feedline.\n- sourceIndex 1: \"Coaxial cable\": Coax is a shielded unbalanced feedline; it is only correct when the question is asking for that construction or practical route.\n- sourceIndex 2: \"Waveguide\": A waveguide is a different RF structure and is not the ordinary two-conductor feedline described here.\n- sourceIndex 3: \"Open-wire line\": Open-wire line is a balanced low-loss line, but it is not the shielded or plastic-embedded construction named here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-002-002"
+    }
+  ],
+  "licenseClass": "original"
+}

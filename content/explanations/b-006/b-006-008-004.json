@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-008-004",
+  "questionId": "B-006-008-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-008-004.\n\nWhy the correct answer is right: The Basic approximation for RF energy in free space is the speed of light, about 300 000 kilometres per second.\n\nPer-choice notes:\n- sourceIndex 0: \"300 000 kilometres per second\": Correct. 300 000 km/s is the standard rounded speed used for radio waves in free space.\n- sourceIndex 1: \"200 000 kilometres per second\": This is below the accepted rounded free-space value.\n- sourceIndex 2: \"150 000 kilometres per second\": This is about half the accepted rounded value.\n- sourceIndex 3: \"186 000 kilometres per second\": This is the familiar miles-per-second value, not kilometres per second.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-03"
+    },
+    {
+      "type": "question",
+      "id": "B-006-008-004"
+    }
+  ],
+  "licenseClass": "original"
+}

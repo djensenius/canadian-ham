@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-005-002",
+  "questionId": "B-006-005-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-005-002.\n\nWhy the correct answer is right: An SWR below 1.5:1 is generally a fairly good match for typical amateur equipment.\n\nPer-choice notes:\n- sourceIndex 0: \"A fairly good impedance match\": Correct. An SWR below 1.5:1 is generally a fairly good match for typical amateur equipment.\n- sourceIndex 1: \"An impedance match that is too low\": SWR is a match indication, not antenna gain; below 1.5:1 is generally a usable match.\n- sourceIndex 2: \"A serious impedance mismatch, something may be wrong with the antenna system\": SMA is common on handheld gear, not the larger HF coax case unless the question specifically names that use.\n- sourceIndex 3: \"An antenna gain of 1.5\": SWR is a match indication, not antenna gain; below 1.5:1 is generally a usable match.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-005-002"
+    }
+  ],
+  "licenseClass": "original"
+}

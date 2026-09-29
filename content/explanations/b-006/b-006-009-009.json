@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-009-009",
+  "questionId": "B-006-009-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-009-009.\n\nWhy the correct answer is right: A half-wave dipole radiates strongest broadside to the wire in free space.\n\nPer-choice notes:\n- sourceIndex 0: \"Maximum radiation broadside from the antenna\": Correct. A half-wave dipole radiates strongest broadside to the wire in free space.\n- sourceIndex 1: \"Maximum radiation from the ends of the antenna\": Small coax at high frequency mainly causes excessive attenuation; heating can result, but loss is the primary adverse consequence.\n- sourceIndex 2: \"Omnidirectional radiation pattern\": Small coax at high frequency mainly causes excessive attenuation; heating can result, but loss is the primary adverse consequence.\n- sourceIndex 3: \"Hemispherical radiation pattern\": Small coax at high frequency mainly causes excessive attenuation; heating can result, but loss is the primary adverse consequence.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-009-009"
+    }
+  ],
+  "licenseClass": "original"
+}

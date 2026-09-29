@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-002-010",
+  "questionId": "B-006-002-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-002-010.\n\nWhy the correct answer is right: A balun is used between an unbalanced tuner output and balanced window line.\n\nPer-choice notes:\n- sourceIndex 0: \"Balun\": Correct. A balun is used between an unbalanced tuner output and balanced window line.\n- sourceIndex 1: \"Transmission line stub\": Those can be matching tools in some designs, but the balanced-line transition calls for a balun in this context.\n- sourceIndex 2: \"Quarter-wave transformer\": Those can be matching tools in some designs, but the balanced-line transition calls for a balun in this context.\n- sourceIndex 3: \"Autotransformer\": Those can be matching tools in some designs, but the balanced-line transition calls for a balun in this context.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-002-010"
+    }
+  ],
+  "licenseClass": "original"
+}

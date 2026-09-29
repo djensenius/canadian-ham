@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-001-004",
+  "questionId": "B-006-001-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-001-004.\n\nWhy the correct answer is right: Coaxial characteristic impedance depends on the ratio between conductor diameters and the dielectric, so different-size cables can share the same impedance when the ratio is designed appropriately.\n\nPer-choice notes:\n- sourceIndex 0: \"Their characteristic impedance depends on the ratio of conductor diameters\": Correct. Coaxial characteristic impedance depends on the ratio between conductor diameters and the dielectric, so different-size cables can share the same impedance when the ratio is designed appropriately.\n- sourceIndex 1: \"Characteristic impedance is independent of line diameter\": The resonance move follows length: longer lowers frequency and shorter raises it.\n- sourceIndex 2: \"Characteristic impedance is set by the choice of conducting material\": The main effect being tested is polarization change, not a guaranteed large impedance change.\n- sourceIndex 3: \"Their characteristic impedance depends on operating frequency\": This can affect loss or the impedance seen during a mismatch, but it is not the construction parameter being asked for.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-001-004"
+    }
+  ],
+  "licenseClass": "original"
+}

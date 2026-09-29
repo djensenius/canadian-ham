@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-010-003",
+  "questionId": "B-006-010-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-010-003.\n\nWhy the correct answer is right: For a half wavelength at 223 MHz, use about 150 / 223 metres. That is 0.6726 m, or about 67 cm.\n\nPer-choice notes:\n- sourceIndex 0: \"67 cm\": Correct. 150 / 223 m is 0.6726 m, which rounds to 67 cm.\n- sourceIndex 1: \"32 cm\": This is closer to a quarter-wave value, not a half-wave value.\n- sourceIndex 2: \"105 cm\": This is much longer than the 150/f half-wave estimate.\n- sourceIndex 3: \"135 cm\": This is close to a full wavelength, not a half wavelength.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-010-003"
+    }
+  ],
+  "licenseClass": "original"
+}

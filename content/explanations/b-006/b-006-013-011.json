@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-013-011",
+  "questionId": "B-006-013-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-013-011.\n\nWhy the correct answer is right: A delta loop has an overall conductor length of about one wavelength.\n\nPer-choice notes:\n- sourceIndex 0: \"One wavelength\": Correct. A delta loop has an overall conductor length of about one wavelength.\n- sourceIndex 1: \"One quarter of a wavelength\": Front-to-back ratio is a pattern-power comparison, not a dimension ratio.\n- sourceIndex 2: \"Two wavelengths\": Front-to-back ratio is a pattern-power comparison, not a dimension ratio.\n- sourceIndex 3: \"One half of a wavelength\": For purely resistive maximum power transfer, equal source and load impedances are required.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-013-011"
+    }
+  ],
+  "licenseClass": "original"
+}

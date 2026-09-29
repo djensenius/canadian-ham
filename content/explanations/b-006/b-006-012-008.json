@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-012-008",
+  "questionId": "B-006-012-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-012-008.\n\nWhy the correct answer is right: Trap antennas can cover multiple bands with one structure.\n\nPer-choice notes:\n- sourceIndex 0: \"It may be used for multi-band operation\": Correct. Trap antennas can cover multiple bands with one structure.\n- sourceIndex 1: \"It has high directivity at the higher frequencies\": This does not match the principle tested here: Dipoles, random wires, EFHW antennas, and trap antennas differ in pattern, feed impedance, and station RF behaviour.\n- sourceIndex 2: \"It has high gain\": SWR is a match indication, not antenna gain; below 1.5:1 is generally a usable match.\n- sourceIndex 3: \"It minimizes harmonic radiation\": Small coax at high frequency mainly causes excessive attenuation; heating can result, but loss is the primary adverse consequence.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-012-008"
+    }
+  ],
+  "licenseClass": "original"
+}

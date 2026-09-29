@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-012-007",
+  "questionId": "B-006-012-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-012-007.\n\nWhy the correct answer is right: Traps can allow harmonic-related radiation more readily than a simple single-band antenna design.\n\nPer-choice notes:\n- sourceIndex 0: \"It may radiate harmonics more readily\": Correct. Traps can allow harmonic-related radiation more readily than a simple single-band antenna design.\n- sourceIndex 1: \"It is too sharply directional at lower frequencies\": Traps are used for multiband operation, but they can add harmonic and loss tradeoffs.\n- sourceIndex 2: \"It picks up more noise than a simple dipole\": Those are different performance topics; feed-point matching reduces high-SWR feedline loss.\n- sourceIndex 3: \"It can only be used for one band\": Traps are used for multiband operation, but they can add harmonic and loss tradeoffs.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-012-007"
+    }
+  ],
+  "licenseClass": "original"
+}

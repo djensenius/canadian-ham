@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-013-003",
+  "questionId": "B-006-013-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-013-003.\n\nWhy the correct answer is right: A quad driven loop is about one wavelength around. Use 306 / 21.4 = 14.30 m.\n\nPer-choice notes:\n- sourceIndex 0: \"14.30 metres\": Correct. 306 divided by 21.4 rounds to 14.30 metres.\n- sourceIndex 1: \"7.01 metres\": This is about half the loop perimeter, not the one-wavelength driven element.\n- sourceIndex 2: \"10.93 metres\": This is too short for the 306/f loop estimate.\n- sourceIndex 3: \"3.57 metres\": This is about a quarter of the loop perimeter, not the total driven element length.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-013-003"
+    }
+  ],
+  "licenseClass": "original"
+}

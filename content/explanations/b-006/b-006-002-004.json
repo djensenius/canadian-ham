@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-002-004",
+  "questionId": "B-006-002-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-002-004.\n\nWhy the correct answer is right: A balun connects balanced and unbalanced parts of an antenna system; it is not primarily a gain device.\n\nPer-choice notes:\n- sourceIndex 0: \"Connect balanced and unbalanced systems\": Correct. A balun connects balanced and unbalanced parts of an antenna system; it is not primarily a gain device.\n- sourceIndex 1: \"Increase antenna gain\": A balun does not create antenna gain; it handles a balanced-to-unbalanced transition.\n- sourceIndex 2: \"Shunt common-mode current to ground\": Those words point toward current control or matching, but the basic balun purpose is the balanced/unbalanced transition.\n- sourceIndex 3: \"Balance antenna impedance\": Those words point toward current control or matching, but the basic balun purpose is the balanced/unbalanced transition.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-002-004"
+    }
+  ],
+  "licenseClass": "original"
+}

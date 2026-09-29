@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-011-002",
+  "questionId": "B-006-011-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-011-002.\n\nWhy the correct answer is right: The driven element is approximately a half wave, so use 143 / 14.0 = 10.21 m.\n\nPer-choice notes:\n- sourceIndex 0: \"10.21 metres\": Correct. 143 divided by 14.0 is 10.21 metres.\n- sourceIndex 1: \"5.09 metres\": This is about half the driven-element length, closer to a quarter-wave value.\n- sourceIndex 2: \"10.71 metres\": This uses a longer free-space half-wave estimate rather than the practical 143/f value.\n- sourceIndex 3: \"21.43 metres\": This is about a full wavelength, not the half-wave driven element.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-011-002"
+    }
+  ],
+  "licenseClass": "original"
+}

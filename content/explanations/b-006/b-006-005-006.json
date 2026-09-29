@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-005-006",
+  "questionId": "B-006-005-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-005-006.\n\nWhy the correct answer is right: An antenna analyzer lets you observe SWR or impedance over frequency while adjusting antenna length.\n\nPer-choice notes:\n- sourceIndex 0: \"Antenna analyzer\": Correct. An antenna analyzer lets you observe SWR or impedance over frequency while adjusting antenna length.\n- sourceIndex 1: \"Multimeter\": That instrument measures another electrical quantity, not antenna-system resonance and SWR versus frequency.\n- sourceIndex 2: \"Capacitance meter\": That instrument measures another electrical quantity, not antenna-system resonance and SWR versus frequency.\n- sourceIndex 3: \"Frequency meter\": This can affect loss or the impedance seen during a mismatch, but it is not the construction parameter being asked for.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-005-006"
+    }
+  ],
+  "licenseClass": "original"
+}

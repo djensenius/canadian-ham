@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-011-008",
+  "questionId": "B-006-011-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-011-008.\n\nWhy the correct answer is right: Front-to-back ratio compares forward radiation with radiation in the opposite direction.\n\nPer-choice notes:\n- sourceIndex 0: \"The ratio of the power radiated in the forward direction to the power radiated in the opposite direction\": Correct. Front-to-back ratio compares forward radiation with radiation in the opposite direction.\n- sourceIndex 1: \"The ratio of the power radiated by the director element, to the power radiated by the reflector element\": Those may be Yagi design features, but traps are what enable multiband element behaviour here.\n- sourceIndex 2: \"The ratio of the length of the director element, to the length of the reflector element\": Those may be Yagi design features, but traps are what enable multiband element behaviour here.\n- sourceIndex 3: \"The ratio of the driven element-to-director spacing, to the driven element-to-reflector spacing\": Those may be Yagi design features, but traps are what enable multiband element behaviour here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-011-008"
+    }
+  ],
+  "licenseClass": "original"
+}

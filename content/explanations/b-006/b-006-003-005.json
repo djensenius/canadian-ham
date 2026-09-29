@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-003-005",
+  "questionId": "B-006-003-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-003-005.\n\nWhy the correct answer is right: Modern handheld antennas commonly use SMA connectors because they are small and threaded.\n\nPer-choice notes:\n- sourceIndex 0: \"An SMA connector\": Correct. Modern handheld antennas commonly use SMA connectors because they are small and threaded.\n- sourceIndex 1: \"A PL-259 connector\": PL-259 is common on many HF coax runs, but not on the small handheld antenna connection named here.\n- sourceIndex 2: \"An F-type connector\": That connector is common in other electronics but is not the usual amateur-radio choice for this equipment case.\n- sourceIndex 3: \"An RCA connector\": That connector is common in other electronics but is not the usual amateur-radio choice for this equipment case.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-003-005"
+    }
+  ],
+  "licenseClass": "original"
+}

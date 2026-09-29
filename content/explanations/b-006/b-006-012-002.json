@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-012-002",
+  "questionId": "B-006-012-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-012-002.\n\nWhy the correct answer is right: A random wire can bring RF current back into the station if matching and return paths are not controlled.\n\nPer-choice notes:\n- sourceIndex 0: \"You may experience RF feedback in your station\": Correct. A random wire can bring RF current back into the station if matching and return paths are not controlled.\n- sourceIndex 1: \"It usually produces vertically polarized radiation\": Small coax at high frequency mainly causes excessive attenuation; heating can result, but loss is the primary adverse consequence.\n- sourceIndex 2: \"It must be longer than 1 wavelength\": The resonance move follows length: longer lowers frequency and shorter raises it.\n- sourceIndex 3: \"It must be installed in a straight line, without bends\": A free-space dipole is strongest broadside to the wire.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-012-002"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-007-002",
+  "questionId": "B-006-007-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-007-002.\n\nWhy the correct answer is right: Vertical polarization means the electric field is perpendicular to the earth.\n\nPer-choice notes:\n- sourceIndex 0: \"The electric lines of force of a radio wave are perpendicular to the Earth's surface\": Correct. Vertical polarization means the electric field is perpendicular to the earth.\n- sourceIndex 1: \"The magnetic lines of force of a radio wave are perpendicular to the Earth's surface\": Polarization is named from the electric field orientation relative to the earth.\n- sourceIndex 2: \"The electric and magnetic lines of force of a radio wave are parallel to the Earth's surface\": Polarization is named from the electric field orientation relative to the earth.\n- sourceIndex 3: \"The electric lines of force of a radio wave are parallel to the Earth's surface\": Polarization is named from the electric field orientation relative to the earth.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-03"
+    },
+    {
+      "type": "question",
+      "id": "B-006-007-002"
+    }
+  ],
+  "licenseClass": "original"
+}

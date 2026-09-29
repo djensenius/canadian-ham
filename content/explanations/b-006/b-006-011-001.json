@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-011-001",
+  "questionId": "B-006-011-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-011-001.\n\nWhy the correct answer is right: Element traps let one Yagi element act at different electrical lengths on multiple bands.\n\nPer-choice notes:\n- sourceIndex 0: \"Element traps\": Correct. Element traps let one Yagi element act at different electrical lengths on multiple bands.\n- sourceIndex 1: \"Large diameter elements\": The resonance move follows length: longer lowers frequency and shorter raises it.\n- sourceIndex 2: \"Multiple reflector elements\": Those may be Yagi design features, but traps are what enable multiband element behaviour here.\n- sourceIndex 3: \"T-match feed circuit\": Those may be Yagi design features, but traps are what enable multiband element behaviour here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-011-001"
+    }
+  ],
+  "licenseClass": "original"
+}

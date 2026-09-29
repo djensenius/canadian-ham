@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-005-009",
+  "questionId": "B-006-005-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-005-009.\n\nWhy the correct answer is right: An SWR meter senses forward and reflected voltage waves to determine the ratio.\n\nPer-choice notes:\n- sourceIndex 0: \"Forward and reflected voltage\": Correct. An SWR meter senses forward and reflected voltage waves to determine the ratio.\n- sourceIndex 1: \"Radiated RF energy\": An SWR meter samples forward and reflected waves, not pattern, heat, or shield current directly.\n- sourceIndex 2: \"Conductor temperature\": An SWR meter samples forward and reflected waves, not pattern, heat, or shield current directly.\n- sourceIndex 3: \"Common-mode current\": Those can occur in some stations, but the main high-SWR penalty is extra line loss.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-005-009"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-003-008",
+  "questionId": "B-006-003-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-003-008.\n\nWhy the correct answer is right: Clean, tight connectors keep contact resistance low and reduce intermittent or lossy joints.\n\nPer-choice notes:\n- sourceIndex 0: \"To help keep their contact resistance at a minimum\": Correct. Clean, tight connectors keep contact resistance low and reduce intermittent or lossy joints.\n- sourceIndex 1: \"To minimize dielectric losses\": Those are separate concerns; clean, tight connectors primarily reduce contact resistance and intermittents.\n- sourceIndex 2: \"To maintain lightning protection\": Those are separate concerns; clean, tight connectors primarily reduce contact resistance and intermittents.\n- sourceIndex 3: \"To prevent static electricity buildup\": Those are separate concerns; clean, tight connectors primarily reduce contact resistance and intermittents.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-003-008"
+    }
+  ],
+  "licenseClass": "original"
+}

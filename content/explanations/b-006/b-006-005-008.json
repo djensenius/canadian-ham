@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-005-008",
+  "questionId": "B-006-005-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-005-008.\n\nWhy the correct answer is right: Standing waves indicate reflected energy, so less RF is transferred efficiently to the antenna.\n\nPer-choice notes:\n- sourceIndex 0: \"reduced transfer of RF energy to the antenna\": Correct. Standing waves indicate reflected energy, so less RF is transferred efficiently to the antenna.\n- sourceIndex 1: \"perfect impedance match between transmitter and transmission line\": A radial ground system reduces earth return losses at a ground-mounted vertical.\n- sourceIndex 2: \"maximum transfer of energy to the antenna from the transmitter\": This does not match the principle tested here: SWR describes the match by comparing forward and reflected waves at the measurement point; faults and loss can affect the reading.\n- sourceIndex 3: \"lack of radiation from the transmission line\": Small coax at high frequency mainly causes excessive attenuation; heating can result, but loss is the primary adverse consequence.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-005-008"
+    }
+  ],
+  "licenseClass": "original"
+}

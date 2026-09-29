@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-002-001",
+  "questionId": "B-006-002-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-002-001.\n\nWhy the correct answer is right: A centre conductor surrounded by insulation and a shield is the defining construction of coaxial cable.\n\nPer-choice notes:\n- sourceIndex 0: \"Coaxial cable\": Correct. A centre conductor surrounded by insulation and a shield is the defining construction of coaxial cable.\n- sourceIndex 1: \"Window line\": That is a balanced two-conductor line, so it does not fit questions about shielded coax or open-air spreaders.\n- sourceIndex 2: \"Open-wire line\": Open-wire line is a balanced low-loss line, but it is not the shielded or plastic-embedded construction named here.\n- sourceIndex 3: \"Waveguide\": A waveguide is a different RF structure and is not the ordinary two-conductor feedline described here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-002-001"
+    }
+  ],
+  "licenseClass": "original"
+}

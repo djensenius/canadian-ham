@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-004-006",
+  "questionId": "B-006-004-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-004-006.\n\nWhy the correct answer is right: RG-213 is commonly fitted with a PL-259 for many HF station connections.\n\nPer-choice notes:\n- sourceIndex 0: \"Less RF power is radiated from the antenna\": Correct. RG-213 is commonly fitted with a PL-259 for many HF station connections.\n- sourceIndex 1: \"More RF power is radiated from the antenna\": This does not match the principle tested here: Feedline loss rises with length, frequency, and unsuitable cable choice; low-loss line wastes less RF as heat.\n- sourceIndex 2: \"SWR at the antenna increases\": This does not match the principle tested here: Feedline loss rises with length, frequency, and unsuitable cable choice; low-loss line wastes less RF as heat.\n- sourceIndex 3: \"SWR at the antenna decreases\": For the same cable, adding length or frequency generally increases loss, not the reverse.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-004-006"
+    }
+  ],
+  "licenseClass": "original"
+}

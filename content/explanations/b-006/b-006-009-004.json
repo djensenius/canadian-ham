@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-009-004",
+  "questionId": "B-006-009-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-009-004.\n\nWhy the correct answer is right: A longer parasitic element acts as a reflector, increasing radiation away from it and toward the driven element.\n\nPer-choice notes:\n- sourceIndex 0: \"From the new element towards the dipole\": Correct. A longer parasitic element acts as a reflector, increasing radiation away from it and toward the driven element.\n- sourceIndex 1: \"From the dipole towards the new element\": An isotropic radiator is an idealized point reference, not a buildable wire antenna or load.\n- sourceIndex 2: \"In both directions at right angles to the elements\": Bandwidth is frequency range, not a physical angle or length ratio.\n- sourceIndex 3: \"In both directions parallel to the elements\": Polarization is named from the electric field orientation relative to the earth.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-009-004"
+    }
+  ],
+  "licenseClass": "original"
+}

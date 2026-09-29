@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-002-007",
+  "questionId": "B-006-002-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-002-007.\n\nWhy the correct answer is right: A balun is the standard device for connecting an unbalanced feedline to a balanced antenna.\n\nPer-choice notes:\n- sourceIndex 0: \"A balun\": Correct. A balun is the standard device for connecting an unbalanced feedline to a balanced antenna.\n- sourceIndex 1: \"A triaxial transformer\": This does not match the principle tested here: Feedline construction and balance determine whether coax, window line, open-wire line, or a balun is the right concept.\n- sourceIndex 2: \"A wave trap\": A parasitic element is not directly fed; it is coupled by fields from the driven element.\n- sourceIndex 3: \"A loading coil\": That device may solve a different problem, but it does not remove unnecessary feedline attenuation from excess cable length.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-002-007"
+    }
+  ],
+  "licenseClass": "original"
+}

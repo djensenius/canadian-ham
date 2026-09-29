@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-001-006",
+  "questionId": "B-006-001-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-001-006.\n\nWhy the correct answer is right: For a purely resistive matched load, the load resistance should equal the line characteristic impedance. A 50-ohm line is matched by a 50-ohm resistive load.\n\nPer-choice notes:\n- sourceIndex 0: \"50 ohms\": Correct. Equal resistance and line impedance gives the matched resistive termination.\n- sourceIndex 1: \"25 ohms\": This is half of the line impedance, so it would create a mismatch.\n- sourceIndex 2: \"100 ohms\": This is twice the line impedance, so it would create a mismatch.\n- sourceIndex 3: \"200 ohms\": This is four times the line impedance, not a matched termination.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-001-006"
+    }
+  ],
+  "licenseClass": "original"
+}

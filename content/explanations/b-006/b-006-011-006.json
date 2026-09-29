@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-011-006",
+  "questionId": "B-006-011-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-011-006.\n\nWhy the correct answer is right: Increased spacing can improve gain in the Basic-bank Yagi context.\n\nPer-choice notes:\n- sourceIndex 0: \"Higher gain\": Correct. Increased spacing can improve gain in the Basic-bank Yagi context.\n- sourceIndex 1: \"Better front-to-back ratio\": Those are antenna performance properties, but a basic analyzer reports impedance/SWR information over frequency.\n- sourceIndex 2: \"Lower feed point impedance\": The main effect being tested is polarization change, not a guaranteed large impedance change.\n- sourceIndex 3: \"Wider bandwidth\": Those are different performance topics; feed-point matching reduces high-SWR feedline loss.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-011-006"
+    }
+  ],
+  "licenseClass": "original"
+}

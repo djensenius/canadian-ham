@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-011-007",
+  "questionId": "B-006-011-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-011-007.\n\nWhy the correct answer is right: On upper HF, element lengths become short enough for practical rotatable high-gain antennas.\n\nPer-choice notes:\n- sourceIndex 0: \"Rotatable high-gain antennas become feasible due to shorter element lengths\": Correct. On upper HF, element lengths become short enough for practical rotatable high-gain antennas.\n- sourceIndex 1: \"Excellent omnidirectional coverage in the horizontal plane\": The listed polarization must match the element orientation described in the question.\n- sourceIndex 2: \"Their wide bandwidth provides a good match over an entire band\": Those are different performance topics; feed-point matching reduces high-SWR feedline loss.\n- sourceIndex 3: \"Their high angle of radiation facilitates long-range communications\": Small coax at high frequency mainly causes excessive attenuation; heating can result, but loss is the primary adverse consequence.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-011-007"
+    }
+  ],
+  "licenseClass": "original"
+}

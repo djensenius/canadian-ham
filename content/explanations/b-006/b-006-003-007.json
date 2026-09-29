@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-003-007",
+  "questionId": "B-006-003-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-003-007.\n\nWhy the correct answer is right: BNC connectors are common on low-power gear and test equipment because they connect quickly and reliably.\n\nPer-choice notes:\n- sourceIndex 0: \"BNC\": Correct. BNC connectors are common on low-power gear and test equipment because they connect quickly and reliably.\n- sourceIndex 1: \"N\": This connector name is real, but it does not match the specific use or weather-resistance point being asked.\n- sourceIndex 2: \"UHF\": This connector name is real, but it does not match the specific use or weather-resistance point being asked.\n- sourceIndex 3: \"RCA\": That connector is common in other electronics but is not the usual amateur-radio choice for this equipment case.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-003-007"
+    }
+  ],
+  "licenseClass": "original"
+}

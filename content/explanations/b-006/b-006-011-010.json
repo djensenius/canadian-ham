@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-011-010",
+  "questionId": "B-006-011-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-011-010.\n\nWhy the correct answer is right: For a three-element Yagi, about 0.20 wavelength spacing is the accepted compromise value in this Basic-bank context.\n\nPer-choice notes:\n- sourceIndex 0: \"0.20\": Correct. 0.20 wavelength is the compromise spacing expected here.\n- sourceIndex 1: \"0.10\": This is tighter than the compromise value and changes the pattern tradeoffs.\n- sourceIndex 2: \"0.50\": This is much wider than the expected compromise for a compact three-element Yagi.\n- sourceIndex 3: \"0.75\": This is far wider than the expected compromise spacing.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-011-010"
+    }
+  ],
+  "licenseClass": "original"
+}

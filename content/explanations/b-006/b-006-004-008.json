@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-004-008",
+  "questionId": "B-006-004-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-004-008.\n\nWhy the correct answer is right: Cable loss is stated as decibels per unit length so different cable lengths and frequencies can be compared.\n\nPer-choice notes:\n- sourceIndex 0: \"Decibel per unit length\": Correct. Cable loss is stated as decibels per unit length so different cable lengths and frequencies can be compared.\n- sourceIndex 1: \"Ohms per MHz\": This does not match the principle tested here: Feedline loss rises with length, frequency, and unsuitable cable choice; low-loss line wastes less RF as heat.\n- sourceIndex 2: \"Decibel per MHz\": This does not match the principle tested here: Feedline loss rises with length, frequency, and unsuitable cable choice; low-loss line wastes less RF as heat.\n- sourceIndex 3: \"Ohms per metre\": This does not match the principle tested here: Feedline loss rises with length, frequency, and unsuitable cable choice; low-loss line wastes less RF as heat.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-004-008"
+    }
+  ],
+  "licenseClass": "original"
+}

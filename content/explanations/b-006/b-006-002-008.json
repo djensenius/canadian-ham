@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-002-008",
+  "questionId": "B-006-002-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-002-008.\n\nWhy the correct answer is right: Coax is unbalanced and window line is balanced, so a balun is the appropriate transition device.\n\nPer-choice notes:\n- sourceIndex 0: \"A balun\": Correct. Coax is unbalanced and window line is balanced, so a balun is the appropriate transition device.\n- sourceIndex 1: \"A surge suppressor\": This does not match the principle tested here: Feedline construction and balance determine whether coax, window line, open-wire line, or a balun is the right concept.\n- sourceIndex 2: \"A phasing harness\": This does not match the principle tested here: Feedline construction and balance determine whether coax, window line, open-wire line, or a balun is the right concept.\n- sourceIndex 3: \"A tuning stub\": This does not match the principle tested here: Feedline construction and balance determine whether coax, window line, open-wire line, or a balun is the right concept.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-002-008"
+    }
+  ],
+  "licenseClass": "original"
+}

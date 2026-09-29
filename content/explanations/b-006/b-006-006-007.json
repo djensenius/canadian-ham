@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-006-007",
+  "questionId": "B-006-006-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-006-007.\n\nWhy the correct answer is right: RF transformers can be designed for useful impedance transformation over a wide bandwidth.\n\nPer-choice notes:\n- sourceIndex 0: \"It can be designed to do so over a wide bandwidth\": Correct. RF transformers can be designed for useful impedance transformation over a wide bandwidth.\n- sourceIndex 1: \"It supports larger power than reactive components\": A transformer can have those design considerations, but its RF matching advantage here is broadband impedance transformation.\n- sourceIndex 2: \"It provides constant voltage to the load\": A transformer can have those design considerations, but its RF matching advantage here is broadband impedance transformation.\n- sourceIndex 3: \"It isolates the source from reflections\": A transformer can have those design considerations, but its RF matching advantage here is broadband impedance transformation.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-006-007"
+    }
+  ],
+  "licenseClass": "original"
+}

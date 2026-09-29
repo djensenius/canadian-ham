@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-013-008",
+  "questionId": "B-006-013-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-013-008.\n\nWhy the correct answer is right: Moving the feed point from a horizontal side to a vertical side changes the loop polarization.\n\nPer-choice notes:\n- sourceIndex 0: \"It will change the antenna polarization from horizontal to vertical\": Correct. Moving the feed point from a horizontal side to a vertical side changes the loop polarization.\n- sourceIndex 1: \"It will change the antenna polarization from vertical to horizontal\": The listed polarization must match the element orientation described in the question.\n- sourceIndex 2: \"It will significantly decrease the antenna feed point impedance\": The main effect being tested is polarization change, not a guaranteed large impedance change.\n- sourceIndex 3: \"It will significantly increase the antenna feed point impedance\": The main effect being tested is polarization change, not a guaranteed large impedance change.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-013-008"
+    }
+  ],
+  "licenseClass": "original"
+}

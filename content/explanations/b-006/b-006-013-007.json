@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-013-007",
+  "questionId": "B-006-013-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-013-007.\n\nWhy the correct answer is right: For the described delta loop, feeding the centre of the bottom element gives horizontal polarization.\n\nPer-choice notes:\n- sourceIndex 0: \"In the centre of the bottom element\": Correct. For the described delta loop, feeding the centre of the bottom element gives horizontal polarization.\n- sourceIndex 1: \"In the centre of a side element\": For the stated horizontal-polarization setup, the bottom-centre feed point is the expected placement.\n- sourceIndex 2: \"At a junction of the bottom element and a side element\": For the stated horizontal-polarization setup, the bottom-centre feed point is the expected placement.\n- sourceIndex 3: \"On a side element, one quarter wavelength from the top\": Matching at the radio may protect the radio, but matching at the antenna-feedline junction minimizes line loss.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-013-007"
+    }
+  ],
+  "licenseClass": "original"
+}

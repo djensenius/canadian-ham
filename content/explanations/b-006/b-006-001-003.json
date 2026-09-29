@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-001-003",
+  "questionId": "B-006-001-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-001-003.\n\nWhy the correct answer is right: A uniform transmission line keeps the same characteristic impedance when shortened because the conductor spacing, diameters, and dielectric are unchanged. The 52-ohm value therefore remains 52 ohms.\n\nPer-choice notes:\n- sourceIndex 0: \"52 ohms\": Correct. Cutting length from this uniform line does not halve, double, or quarter its characteristic impedance.\n- sourceIndex 1: \"26 ohms\": This halves the number as though impedance were proportional to remaining length; characteristic impedance is not calculated that way.\n- sourceIndex 2: \"104 ohms\": This doubles the number as though the removed length changed the line geometry; it did not.\n- sourceIndex 3: \"13 ohms\": This quarters the value and is not related to the construction of the remaining cable.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-001-003"
+    }
+  ],
+  "licenseClass": "original"
+}

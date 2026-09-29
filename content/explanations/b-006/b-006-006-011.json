@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-006-011",
+  "questionId": "B-006-006-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-006-011.\n\nWhy the correct answer is right: Impedance transformation ratio is load impedance divided by line impedance: 300 ohms / 50 ohms = 6, so the needed ratio is 6:1.\n\nPer-choice notes:\n- sourceIndex 0: \"6:1\": Correct. 300 divided by 50 equals 6, so the impedance transformation is 6:1.\n- sourceIndex 1: \"2:1\": A 2:1 ratio would transform 50 ohms to 100 ohms, not close to 300 ohms.\n- sourceIndex 2: \"4:1\": A 4:1 ratio would transform 50 ohms to 200 ohms, still short of 300 ohms.\n- sourceIndex 3: \"9:1\": A 9:1 ratio would transform 50 ohms to 450 ohms, too high for this load.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-006-011"
+    }
+  ],
+  "licenseClass": "original"
+}

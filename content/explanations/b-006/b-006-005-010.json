@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-005-010",
+  "questionId": "B-006-005-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-005-010.\n\nWhy the correct answer is right: An antenna analyzer can show antenna-system SWR across a range of frequencies.\n\nPer-choice notes:\n- sourceIndex 0: \"SWR of the antenna system over a range of frequencies\": Correct. An antenna analyzer can show antenna-system SWR across a range of frequencies.\n- sourceIndex 1: \"Radiation pattern of the antenna\": Small coax at high frequency mainly causes excessive attenuation; heating can result, but loss is the primary adverse consequence.\n- sourceIndex 2: \"Gain of the antenna\": SWR is a match indication, not antenna gain; below 1.5:1 is generally a usable match.\n- sourceIndex 3: \"Front-to-back ratio of the antenna\": Those are antenna performance properties, but a basic analyzer reports impedance/SWR information over frequency.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-005-010"
+    }
+  ],
+  "licenseClass": "original"
+}

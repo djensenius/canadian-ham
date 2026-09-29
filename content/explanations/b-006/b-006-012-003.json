@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-012-003",
+  "questionId": "B-006-012-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-012-003.\n\nWhy the correct answer is right: The free-space three-dimensional pattern is doughnut-shaped around the wire.\n\nPer-choice notes:\n- sourceIndex 0: \"A torus (donut shape) around the antenna\": Correct. The free-space three-dimensional pattern is doughnut-shaped around the wire.\n- sourceIndex 1: \"A major lobe off each end of the antenna\": This does not match the principle tested here: Dipoles, random wires, EFHW antennas, and trap antennas differ in pattern, feed impedance, and station RF behaviour.\n- sourceIndex 2: \"Spherical (equal radiation in all directions)\": Small coax at high frequency mainly causes excessive attenuation; heating can result, but loss is the primary adverse consequence.\n- sourceIndex 3: \"Major lobes at 45-degree angles to the antenna\": Bandwidth is frequency range, not a physical angle or length ratio.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-012-003"
+    }
+  ],
+  "licenseClass": "original"
+}

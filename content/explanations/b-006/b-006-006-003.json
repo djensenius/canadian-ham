@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-006-003",
+  "questionId": "B-006-006-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-006-003.\n\nWhy the correct answer is right: An EFHW feed point has high impedance, so a transformer is commonly used to match it to 50-ohm coax.\n\nPer-choice notes:\n- sourceIndex 0: \"A transformer\": Correct. An EFHW feed point has high impedance, so a transformer is commonly used to match it to 50-ohm coax.\n- sourceIndex 1: \"A quarter-wave stub\": Those may be used in antenna systems, but a high-to-low impedance match for coax calls for a transformer here.\n- sourceIndex 2: \"A counterpoise\": That item can be part of an RF return or grounding system, but it is not the feedline between radio and antenna.\n- sourceIndex 3: \"A good ground on the coax shield\": Those may be used in antenna systems, but a high-to-low impedance match for coax calls for a transformer here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-006-003"
+    }
+  ],
+  "licenseClass": "original"
+}

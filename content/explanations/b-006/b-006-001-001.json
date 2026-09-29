@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-001-001",
+  "questionId": "B-006-001-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-001-001.\n\nWhy the correct answer is right: Transmission-line behaviour depends on the line construction, dielectric, characteristic impedance, and whether the load matches the line. The correct choice, \"A transmission line\", is the option that matches this principle.\n\nPer-choice notes:\n- sourceIndex 0: \"A transmission line\": Correct. Transmission-line behaviour depends on the line construction, dielectric, characteristic impedance, and whether the load matches the line. The correct choice, \"A transmission line\", is the option that matches this principle.\n- sourceIndex 1: \"A counterpoise wire\": That item can be part of an RF return or grounding system, but it is not the feedline between radio and antenna.\n- sourceIndex 2: \"A ground wire\": That item can be part of an RF return or grounding system, but it is not the feedline between radio and antenna.\n- sourceIndex 3: \"A radial wire\": That item can be part of an RF return or grounding system, but it is not the feedline between radio and antenna.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-001-001"
+    }
+  ],
+  "licenseClass": "original"
+}

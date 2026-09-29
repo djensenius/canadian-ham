@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-002-006",
+  "questionId": "B-006-002-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-002-006.\n\nWhy the correct answer is right: A line is unbalanced when one conductor is treated as ground or shield instead of both conductors being equal and opposite.\n\nPer-choice notes:\n- sourceIndex 0: \"One conductor is connected to ground\": Correct. A line is unbalanced when one conductor is treated as ground or shield instead of both conductors being equal and opposite.\n- sourceIndex 1: \"The conductors are twisted together\": This does not match the principle tested here: Feedline construction and balance determine whether coax, window line, open-wire line, or a balun is the right concept.\n- sourceIndex 2: \"One conductor has a poor connection at the antenna\": This does not match the principle tested here: Feedline construction and balance determine whether coax, window line, open-wire line, or a balun is the right concept.\n- sourceIndex 3: \"The conductors have deteriorated insulation\": This does not match the principle tested here: Feedline construction and balance determine whether coax, window line, open-wire line, or a balun is the right concept.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-002-006"
+    }
+  ],
+  "licenseClass": "original"
+}

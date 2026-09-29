@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-006-006",
+  "questionId": "B-006-006-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-006-006.\n\nWhy the correct answer is right: A tuner uses inductive and capacitive reactance to transform the impedance seen by the transmitter.\n\nPer-choice notes:\n- sourceIndex 0: \"By adding capacitive or inductive reactance\": Correct. A tuner uses inductive and capacitive reactance to transform the impedance seen by the transmitter.\n- sourceIndex 1: \"By diverting reflections to a dummy load\": A tuner transforms impedance with reactance; it does not dump reflections or physically retune the antenna element.\n- sourceIndex 2: \"By increasing the conductance of the transmission line\": A tuner transforms impedance with reactance; it does not dump reflections or physically retune the antenna element.\n- sourceIndex 3: \"By adjusting the resonant frequency of the antenna\": This can affect loss or the impedance seen during a mismatch, but it is not the construction parameter being asked for.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-006-006"
+    }
+  ],
+  "licenseClass": "original"
+}

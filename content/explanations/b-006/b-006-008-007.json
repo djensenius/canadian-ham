@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-008-007",
+  "questionId": "B-006-008-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-008-007.\n\nWhy the correct answer is right: In free space, radio waves travel at the speed of light; the Basic approximation treats that speed as constant for these purposes.\n\nPer-choice notes:\n- sourceIndex 0: \"is the same as the speed of light\": Correct. In free space, radio waves travel at the speed of light; the Basic approximation treats that speed as constant for these purposes.\n- sourceIndex 1: \"is constant\": This does not match the principle tested here: Wavelength, resonance, loading, and traps all connect physical antenna length with operating frequency.\n- sourceIndex 2: \"is less than half the speed of light\": For purely resistive maximum power transfer, equal source and load impedances are required.\n- sourceIndex 3: \"varies depending on the frequency\": This can affect loss or the impedance seen during a mismatch, but it is not the construction parameter being asked for.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-03"
+    },
+    {
+      "type": "question",
+      "id": "B-006-008-007"
+    }
+  ],
+  "licenseClass": "original"
+}

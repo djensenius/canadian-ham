@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-006-002",
+  "questionId": "B-006-006-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-006-002.\n\nWhy the correct answer is right: An antenna tuner transforms impedance so the transceiver can work into a mismatched antenna system.\n\nPer-choice notes:\n- sourceIndex 0: \"It matches a transceiver to a mismatched antenna system\": Correct. An antenna tuner transforms impedance so the transceiver can work into a mismatched antenna system.\n- sourceIndex 1: \"It helps a receiver automatically tune in stations that are far away\": Those functions belong to receiver tuning or switching, not impedance matching.\n- sourceIndex 2: \"It switches an antenna system to a transmitter when sending, and to a receiver when listening\": Those functions belong to receiver tuning or switching, not impedance matching.\n- sourceIndex 3: \"It switches multiple transceivers to a common transmission line and antenna\": Those functions belong to receiver tuning or switching, not impedance matching.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-006-002"
+    }
+  ],
+  "licenseClass": "original"
+}

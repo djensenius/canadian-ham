@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-010-009",
+  "questionId": "B-006-010-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-010-009.\n\nWhy the correct answer is right: A very short mobile HF vertical needs series inductance to resonate on a much lower-frequency band.\n\nPer-choice notes:\n- sourceIndex 0: \"Install an inductor in series with the antenna\": Correct. A very short mobile HF vertical needs series inductance to resonate on a much lower-frequency band.\n- sourceIndex 1: \"Use a solid radiating element instead of tubing\": A very short HF mobile antenna needs added inductance, not a series capacitor or simple construction change.\n- sourceIndex 2: \"Install a capacitor in series with the antenna\": A very short HF mobile antenna needs added inductance, not a series capacitor or simple construction change.\n- sourceIndex 3: \"Connect the transmission line shield to the vehicle's chassis\": A very short HF mobile antenna needs added inductance, not a series capacitor or simple construction change.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-010-009"
+    }
+  ],
+  "licenseClass": "original"
+}

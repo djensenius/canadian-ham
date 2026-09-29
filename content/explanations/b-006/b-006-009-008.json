@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-009-008",
+  "questionId": "B-006-009-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-009-008.\n\nWhy the correct answer is right: Antenna bandwidth is the useful frequency range, not a physical angle or length ratio.\n\nPer-choice notes:\n- sourceIndex 0: \"The frequency range over which the antenna may be expected to perform well\": Correct. Antenna bandwidth is the useful frequency range, not a physical angle or length ratio.\n- sourceIndex 1: \"Antenna length divided by the number of elements\": Bandwidth is frequency range, not a physical angle or length ratio.\n- sourceIndex 2: \"The angle between the half-power radiation points\": Small coax at high frequency mainly causes excessive attenuation; heating can result, but loss is the primary adverse consequence.\n- sourceIndex 3: \"The angle formed between two imaginary lines drawn through the ends of the elements\": Bandwidth is frequency range, not a physical angle or length ratio.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-009-008"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-005-011",
+  "questionId": "B-006-005-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-005-011.\n\nWhy the correct answer is right: Line loss attenuates reflected energy on its return trip, making the station-end SWR reading look lower.\n\nPer-choice notes:\n- sourceIndex 0: \"It decreases the SWR, because reflected energy is attenuated\": Correct. Line loss attenuates reflected energy on its return trip, making the station-end SWR reading look lower.\n- sourceIndex 1: \"It decreases the SWR, because less power reaches the antenna\": For the same cable, adding length or frequency generally increases loss, not the reverse.\n- sourceIndex 2: \"It has no effect, because SWR compares voltages\": This does not match the principle tested here: SWR describes the match by comparing forward and reflected waves at the measurement point; faults and loss can affect the reading.\n- sourceIndex 3: \"It has no effect, because forward and reflected power are both affected\": This does not match the principle tested here: SWR describes the match by comparing forward and reflected waves at the measurement point; faults and loss can affect the reading.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-005-011"
+    }
+  ],
+  "licenseClass": "original"
+}

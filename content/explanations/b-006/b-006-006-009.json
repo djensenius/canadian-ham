@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-006-009",
+  "questionId": "B-006-006-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-006-009.\n\nWhy the correct answer is right: If the antenna is matched to the line, changing line length does not create the match.\n\nPer-choice notes:\n- sourceIndex 0: \"will have no effect on the matching\": Correct. If the antenna is matched to the line, changing line length does not create the match.\n- sourceIndex 1: \"must be a full wavelength long\": A correctly matched line does not need a special length to preserve the match.\n- sourceIndex 2: \"must be an odd number of quarter-wavelengths\": A correctly matched line does not need a special length to preserve the match.\n- sourceIndex 3: \"must be an even number of half-wavelengths\": For purely resistive maximum power transfer, equal source and load impedances are required.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-006-009"
+    }
+  ],
+  "licenseClass": "original"
+}

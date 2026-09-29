@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-012-009",
+  "questionId": "B-006-012-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-012-009.\n\nWhy the correct answer is right: Use L(m) = 143 / f(MHz). 143 / 3.75 = 38.13 m when rounded to two decimals.\n\nPer-choice notes:\n- sourceIndex 0: \"38.13 metres\": Correct. 143 divided by 3.75 rounds to 38.13 metres.\n- sourceIndex 1: \"40.00 metres\": This is a rougher wavelength-band estimate, not the 143/f dipole result.\n- sourceIndex 2: \"62.40 metres\": This does not match the practical half-wave formula for the stated frequency.\n- sourceIndex 3: \"80.00 metres\": This is closer to a full band-name wavelength idea than to a half-wave dipole length.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-012-009"
+    }
+  ],
+  "licenseClass": "original"
+}

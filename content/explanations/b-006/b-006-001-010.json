@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-001-010",
+  "questionId": "B-006-001-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-001-010.\n\nWhy the correct answer is right: For open-wire line, spacing between conductor centres and conductor diameter set the characteristic impedance.\n\nPer-choice notes:\n- sourceIndex 0: \"The distance between the centres of the conductors and the diameter of the conductors\": Correct. For open-wire line, spacing between conductor centres and conductor diameter set the characteristic impedance.\n- sourceIndex 1: \"The distance between the centres of the conductors and the length of the line\": This can affect loss or the impedance seen during a mismatch, but it is not the construction parameter being asked for.\n- sourceIndex 2: \"The radius of the conductors and the frequency of the signal\": This can affect loss or the impedance seen during a mismatch, but it is not the construction parameter being asked for.\n- sourceIndex 3: \"The frequency of the signal and the length of the line\": This can affect loss or the impedance seen during a mismatch, but it is not the construction parameter being asked for.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-001-010"
+    }
+  ],
+  "licenseClass": "original"
+}

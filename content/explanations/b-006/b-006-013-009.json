@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-013-009",
+  "questionId": "B-006-013-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-013-009.\n\nWhy the correct answer is right: Use the full-wave loop estimate L(m) = 306 / f(MHz). 306 / 7.15 = 42.80 m.\n\nPer-choice notes:\n- sourceIndex 0: \"42.80 metres\": Correct. 306 divided by 7.15 rounds to 42.80 metres.\n- sourceIndex 1: \"41.96 metres\": This comes from 300 / 7.15, the free-space wavelength shortcut, not the practical loop formula used here.\n- sourceIndex 2: \"10.49 metres\": This is about a quarter-wave length, not the full loop perimeter.\n- sourceIndex 3: \"20.00 metres\": This is less than half the required loop perimeter.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-013-009"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-003-003",
+  "questionId": "B-006-003-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-003-003.\n\nWhy the correct answer is right: Coax is widely used because it is practical in many routes and equipment interfaces, even when it is not always the lowest-loss choice.\n\nPer-choice notes:\n- sourceIndex 0: \"More usable in a wide variety of settings\": Correct. Coax is widely used because it is practical in many routes and equipment interfaces, even when it is not always the lowest-loss choice.\n- sourceIndex 1: \"Less loss\": That may be a desirable trait, but the question is about practical usability across many installations.\n- sourceIndex 2: \"More power handling capability\": That may be a desirable trait, but the question is about practical usability across many installations.\n- sourceIndex 3: \"Less expensive\": That may be a desirable trait, but the question is about practical usability across many installations.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-003-003"
+    }
+  ],
+  "licenseClass": "original"
+}

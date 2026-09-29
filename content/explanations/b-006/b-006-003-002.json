@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-003-002",
+  "questionId": "B-006-003-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-003-002.\n\nWhy the correct answer is right: Solid dielectric better resists centre-conductor movement when coax is bent around ferrite, reducing short-circuit risk.\n\nPer-choice notes:\n- sourceIndex 0: \"Less risk of a short due to centre conductor movement\": Correct. Solid dielectric better resists centre-conductor movement when coax is bent around ferrite, reducing short-circuit risk.\n- sourceIndex 1: \"Less impedance inserted in the signal path\": The main effect being tested is polarization change, not a guaranteed large impedance change.\n- sourceIndex 2: \"More flexible and easier to handle\": This does not match the principle tested here: Practical feedline choices depend on shielding, weather, connectors, dielectric, and the route through the station.\n- sourceIndex 3: \"More impedance to common-mode current\": Those can occur in some stations, but the main high-SWR penalty is extra line loss.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-003-002"
+    }
+  ],
+  "licenseClass": "original"
+}

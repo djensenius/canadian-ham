@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-004-005",
+  "questionId": "B-006-004-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-004-005.\n\nWhy the correct answer is right: Transmission-line loss usually rises as operating frequency increases.\n\nPer-choice notes:\n- sourceIndex 0: \"Signal loss increases with increasing frequency\": Correct. Transmission-line loss usually rises as operating frequency increases.\n- sourceIndex 1: \"Signal loss increases with decreasing frequency\": This can affect loss or the impedance seen during a mismatch, but it is not the construction parameter being asked for.\n- sourceIndex 2: \"Signal loss increases as the square of frequency\": This can affect loss or the impedance seen during a mismatch, but it is not the construction parameter being asked for.\n- sourceIndex 3: \"Signal loss is the same for any frequency\": This can affect loss or the impedance seen during a mismatch, but it is not the construction parameter being asked for.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-004-005"
+    }
+  ],
+  "licenseClass": "original"
+}

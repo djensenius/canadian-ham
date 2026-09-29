@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-009-006",
+  "questionId": "B-006-009-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-009-006.\n\nWhy the correct answer is right: A half-wave dipole in free space is the common reference that has about 2.1 dB gain over an isotropic radiator.\n\nPer-choice notes:\n- sourceIndex 0: \"2.1 dB\": Correct. The accepted rounded dipole-over-isotropic value is 2.1 dB.\n- sourceIndex 1: \"1.5 dB\": This is lower than the accepted rounded value.\n- sourceIndex 2: \"3.0 dB\": This rounds too high for a simple half-wave dipole over isotropic.\n- sourceIndex 3: \"1.0 dB\": This is too low for the standard dipole reference value.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-009-006"
+    }
+  ],
+  "licenseClass": "original"
+}

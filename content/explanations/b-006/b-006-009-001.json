@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-009-001",
+  "questionId": "B-006-009-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-009-001.\n\nWhy the correct answer is right: A parasitic element is energized by coupling from the driven element, not by direct feedline connection.\n\nPer-choice notes:\n- sourceIndex 0: \"By induction or radiation from a driven element\": Correct. A parasitic element is energized by coupling from the driven element, not by direct feedline connection.\n- sourceIndex 1: \"By direct connection to a driven element\": A parasitic element is not directly fed; it is coupled by fields from the driven element.\n- sourceIndex 2: \"By direct connection to the transmission line\": A parasitic element is not directly fed; it is coupled by fields from the driven element.\n- sourceIndex 3: \"By inductive coupling from a wave trap\": A parasitic element is not directly fed; it is coupled by fields from the driven element.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-009-001"
+    }
+  ],
+  "licenseClass": "original"
+}

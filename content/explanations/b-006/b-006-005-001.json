@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-005-001",
+  "questionId": "B-006-005-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-005-001.\n\nWhy the correct answer is right: A 1:1 SWR indicates the best impedance match at the measurement point, with no reflected wave in the ideal case.\n\nPer-choice notes:\n- sourceIndex 0: \"The best impedance match has been attained\": Correct. A 1:1 SWR indicates the best impedance match at the measurement point, with no reflected wave in the ideal case.\n- sourceIndex 1: \"Reflected power equals forward power\": A 1:1 reading indicates a match at the meter; it does not by itself demand extra matching hardware.\n- sourceIndex 2: \"An impedance transformer is needed at the antenna feed point\": A 1:1 reading indicates a match at the meter; it does not by itself demand extra matching hardware.\n- sourceIndex 3: \"An antenna tuner is needed at the transmitter\": A 1:1 reading indicates a match at the meter; it does not by itself demand extra matching hardware.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-005-001"
+    }
+  ],
+  "licenseClass": "original"
+}

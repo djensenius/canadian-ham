@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-006-001",
+  "questionId": "B-006-006-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-006-001.\n\nWhy the correct answer is right: Modern solid-state transmitters protect themselves by reducing output when they see excessive mismatch at their output.\n\nPer-choice notes:\n- sourceIndex 0: \"Excessive impedance mismatch between transceiver and transmission line\": Correct. Modern solid-state transmitters protect themselves by reducing output when they see excessive mismatch at their output.\n- sourceIndex 1: \"Transmitting to a balanced antenna with an unbalanced transmission line\": This does not match the principle tested here: Matching networks, transformers, and tuners transform impedance so power transfer and transmitter protection are improved.\n- sourceIndex 2: \"Open circuit in lightning surge protector ground connection\": Those are separate concerns; clean, tight connectors primarily reduce contact resistance and intermittents.\n- sourceIndex 3: \"Excessive antenna element movement in high winds\": This does not match the principle tested here: Matching networks, transformers, and tuners transform impedance so power transfer and transmitter protection are improved.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-006-001"
+    }
+  ],
+  "licenseClass": "original"
+}

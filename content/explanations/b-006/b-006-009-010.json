@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-009-010",
+  "questionId": "B-006-009-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-009-010.\n\nWhy the correct answer is right: The i in dBi identifies an isotropic radiator as the reference.\n\nPer-choice notes:\n- sourceIndex 0: \"isotropic\": Correct. The i in dBi identifies an isotropic radiator as the reference.\n- sourceIndex 1: \"integral\": In dBi, the reference is isotropic.\n- sourceIndex 2: \"ionospheric\": In dBi, the reference is isotropic.\n- sourceIndex 3: \"interpolated\": In dBi, the reference is isotropic.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-009-010"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-011-003",
+  "questionId": "B-006-011-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-011-003.\n\nWhy the correct answer is right: Start with a half-wave value: 143 / 21.1 = 6.78 m. A director is slightly shorter; 0.95 x 6.78 = 6.44 m.\n\nPer-choice notes:\n- sourceIndex 0: \"6.44 metres\": Correct. A director is shorter than the driven element; 0.95 x (143 / 21.1) rounds to 6.44 metres.\n- sourceIndex 1: \"7.11 metres\": This is longer than the half-wave driven value, so it fits a reflector idea better than a director.\n- sourceIndex 2: \"3.38 metres\": This is about a quarter-wave value, not a Yagi director length.\n- sourceIndex 3: \"3.55 metres\": This is still around a quarter-wave length, not the slightly-shorter-than-half-wave director.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-011-003"
+    }
+  ],
+  "licenseClass": "original"
+}

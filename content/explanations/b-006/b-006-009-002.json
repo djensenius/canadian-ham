@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-009-002",
+  "questionId": "B-006-009-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-009-002.\n\nWhy the correct answer is right: Adding parasitic elements reshapes the pattern and increases directivity.\n\nPer-choice notes:\n- sourceIndex 0: \"By adding one or more parasitic elements\": Correct. Adding parasitic elements reshapes the pattern and increases directivity.\n- sourceIndex 1: \"By using a radiating element with a larger diameter\": The resonance move follows length: longer lowers frequency and shorter raises it.\n- sourceIndex 2: \"By adding traps to the radiating element\": Those alter other characteristics, but parasitic elements are what increase dipole directivity here.\n- sourceIndex 3: \"By lengthening the radiating element\": Those alter other characteristics, but parasitic elements are what increase dipole directivity here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-009-002"
+    }
+  ],
+  "licenseClass": "original"
+}

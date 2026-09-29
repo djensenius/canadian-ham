@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-012-005",
+  "questionId": "B-006-012-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-012-005.\n\nWhy the correct answer is right: A half-wave dipole radiates strongest broadside to the wire in free space.\n\nPer-choice notes:\n- sourceIndex 0: \"Radiates mostly to the East and West\": Correct. A half-wave dipole radiates strongest broadside to the wire in free space.\n- sourceIndex 1: \"Radiates mostly to the South and North\": This does not match the principle tested here: Dipoles, random wires, EFHW antennas, and trap antennas differ in pattern, feed impedance, and station RF behaviour.\n- sourceIndex 2: \"Radiates mostly to the South\": This does not match the principle tested here: Dipoles, random wires, EFHW antennas, and trap antennas differ in pattern, feed impedance, and station RF behaviour.\n- sourceIndex 3: \"Radiates equally in all directions\": This does not match the principle tested here: Dipoles, random wires, EFHW antennas, and trap antennas differ in pattern, feed impedance, and station RF behaviour.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-012-005"
+    }
+  ],
+  "licenseClass": "original"
+}

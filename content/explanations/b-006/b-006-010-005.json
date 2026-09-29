@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-010-005",
+  "questionId": "B-006-010-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-010-005.\n\nWhy the correct answer is right: A roof-mounted quarter-wave vertical is approximately omnidirectional in the horizontal plane.\n\nPer-choice notes:\n- sourceIndex 0: \"It goes out equally well in all horizontal directions\": Correct. A roof-mounted quarter-wave vertical is approximately omnidirectional in the horizontal plane.\n- sourceIndex 1: \"Most of it goes vertically straight-up\": The listed polarization must match the element orientation described in the question.\n- sourceIndex 2: \"Most of it goes equally in two opposite directions\": A quarter-wave vertical on a good vehicle roof is roughly omnidirectional around the horizon.\n- sourceIndex 3: \"Most of it goes in one direction\": A quarter-wave vertical on a good vehicle roof is roughly omnidirectional around the horizon.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-010-005"
+    }
+  ],
+  "licenseClass": "original"
+}

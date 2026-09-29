@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-005-004",
+  "questionId": "B-006-005-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-005-004.\n\nWhy the correct answer is right: An open or short circuit creates a severe mismatch and can produce high SWR.\n\nPer-choice notes:\n- sourceIndex 0: \"An open or short circuit in the antenna system\": Correct. An open or short circuit creates a severe mismatch and can produce high SWR.\n- sourceIndex 1: \"Grounding the shield of the coaxial cable at the building entrance\": Coax is a shielded unbalanced feedline; it is only correct when the question is asking for that construction or practical route.\n- sourceIndex 2: \"Using a very long transmission line\": Those choices do not normally create the severe mismatch caused by an open or short circuit.\n- sourceIndex 3: \"Replacing RG-213 coaxial cable with RG-58\": Coax is a shielded unbalanced feedline; it is only correct when the question is asking for that construction or practical route.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-005-004"
+    }
+  ],
+  "licenseClass": "original"
+}

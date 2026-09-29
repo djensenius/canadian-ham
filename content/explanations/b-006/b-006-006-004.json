@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-006-004",
+  "questionId": "B-006-006-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-006-004.\n\nWhy the correct answer is right: For purely resistive source and load impedances, maximum power transfer occurs when the values are equal.\n\nPer-choice notes:\n- sourceIndex 0: \"Load impedance equal to the source impedance\": Correct. For purely resistive source and load impedances, maximum power transfer occurs when the values are equal.\n- sourceIndex 1: \"Load impedance equal to half of the source impedance\": For purely resistive maximum power transfer, equal source and load impedances are required.\n- sourceIndex 2: \"Load impedance equal to twice the source impedance\": For purely resistive maximum power transfer, equal source and load impedances are required.\n- sourceIndex 3: \"Load impedance equal to the square root of source impedance\": For purely resistive maximum power transfer, equal source and load impedances are required.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-006-004"
+    }
+  ],
+  "licenseClass": "original"
+}

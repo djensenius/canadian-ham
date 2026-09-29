@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-004-004",
+  "questionId": "B-006-004-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-004-004.\n\nWhy the correct answer is right: For the same cable and frequency, more line length means more signal loss.\n\nPer-choice notes:\n- sourceIndex 0: \"Signal loss increases as the length increases\": Correct. For the same cable and frequency, more line length means more signal loss.\n- sourceIndex 1: \"Signal loss decreases as the length increases\": For the same cable, adding length or frequency generally increases loss, not the reverse.\n- sourceIndex 2: \"Signal loss is the least when the length is the same as the signal's wavelength\": For the same cable, adding length or frequency generally increases loss, not the reverse.\n- sourceIndex 3: \"Signal loss is the same for any length of transmission line\": For the same cable, adding length or frequency generally increases loss, not the reverse.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-004-004"
+    }
+  ],
+  "licenseClass": "original"
+}

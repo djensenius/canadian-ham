@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-004-001",
+  "questionId": "B-006-004-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-004-001.\n\nWhy the correct answer is right: Small RG-58 has excessive loss at UHF compared with better low-loss cable choices.\n\nPer-choice notes:\n- sourceIndex 0: \"Excess RF loss in the transmission line\": Correct. Small RG-58 has excessive loss at UHF compared with better low-loss cable choices.\n- sourceIndex 1: \"Excess reflections at the antenna feed point\": Small coax at high frequency mainly causes excessive attenuation; heating can result, but loss is the primary adverse consequence.\n- sourceIndex 2: \"Excess RF radiation from the transmission line\": Small coax at high frequency mainly causes excessive attenuation; heating can result, but loss is the primary adverse consequence.\n- sourceIndex 3: \"Excess transmission line heating\": Small coax at high frequency mainly causes excessive attenuation; heating can result, but loss is the primary adverse consequence.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-004-001"
+    }
+  ],
+  "licenseClass": "original"
+}

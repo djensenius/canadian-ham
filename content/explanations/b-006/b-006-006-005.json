@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-006-005",
+  "questionId": "B-006-006-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-006-005.\n\nWhy the correct answer is right: Matching at the feed point reduces high-SWR operation on the main feedline and can reduce feedline loss.\n\nPer-choice notes:\n- sourceIndex 0: \"Less transmission line loss\": Correct. Matching at the feed point reduces high-SWR operation on the main feedline and can reduce feedline loss.\n- sourceIndex 1: \"More harmonic suppression\": Those are different performance topics; feed-point matching reduces high-SWR feedline loss.\n- sourceIndex 2: \"Less atmospheric noise pickup\": Those are different performance topics; feed-point matching reduces high-SWR feedline loss.\n- sourceIndex 3: \"More usable bandwidth\": Those are different performance topics; feed-point matching reduces high-SWR feedline loss.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-006-005"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-010-007",
+  "questionId": "B-006-010-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-010-007.\n\nWhy the correct answer is right: Downward-sloping quarter-wave radials are the matching arrangement expected for an elevated quarter-wave vertical.\n\nPer-choice notes:\n- sourceIndex 0: \"Downward sloping quarter-wave radials\": Correct. Downward-sloping quarter-wave radials are the matching arrangement expected for an elevated quarter-wave vertical.\n- sourceIndex 1: \"Horizontal quarter-wave radials\": That item can be part of an RF return or grounding system, but it is not the feedline between radio and antenna.\n- sourceIndex 2: \"Horizontal half-wave radials\": That item can be part of an RF return or grounding system, but it is not the feedline between radio and antenna.\n- sourceIndex 3: \"Upward sloping half-wave radials\": That item can be part of an RF return or grounding system, but it is not the feedline between radio and antenna.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-010-007"
+    }
+  ],
+  "licenseClass": "original"
+}

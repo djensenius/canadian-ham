@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-004-010",
+  "questionId": "B-006-004-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-004-010.\n\nWhy the correct answer is right: Internal conductor and dielectric losses increase with frequency, raising transmission-line loss.\n\nPer-choice notes:\n- sourceIndex 0: \"Loss increases, due to internal line losses\": Correct. Internal conductor and dielectric losses increase with frequency, raising transmission-line loss.\n- sourceIndex 1: \"Loss increases, due to increased wave velocity\": This does not match the principle tested here: Feedline loss rises with length, frequency, and unsuitable cable choice; low-loss line wastes less RF as heat.\n- sourceIndex 2: \"Loss decreases, due to skin effect\": For the same cable, adding length or frequency generally increases loss, not the reverse.\n- sourceIndex 3: \"Loss decreases, due to decreased SWR\": For the same cable, adding length or frequency generally increases loss, not the reverse.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-004-010"
+    }
+  ],
+  "licenseClass": "original"
+}
