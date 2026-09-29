@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-016-003",
+  "questionId": "B-003-016-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-016-003.\n\nWhy the correct answer is right: A storage battery is a rechargeable battery: electrical energy can be put back into it by a suitable charger after discharge.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"low leakage battery\": Low leakage describes a cell that loses charge slowly or is less prone to electrolyte leakage; it does not mean the cell can be repeatedly recharged.\n- sourceIndex 2: \"memory battery\": Memory battery is not the general class name for a rechargeable station battery; it can also be confused with small backup cells used to preserve settings.\n- sourceIndex 3: \"primary battery\": A primary battery is intended for single discharge and replacement, so it is the opposite of the rechargeable battery being described.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-016-003"
+    }
+  ],
+  "licenseClass": "original"
+}

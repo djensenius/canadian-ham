@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-019-004",
+  "questionId": "B-003-019-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-019-004.\n\nWhy the correct answer is right: Copper-clad steel gives a ground rod a conductive, corrosion-resistant copper surface with the mechanical strength of steel for driving into earth.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Hard plastic\": Hard plastic is an insulator, so it would not make an effective electrode for carrying fault or surge current into earth.\n- sourceIndex 2: \"Iron or steel\": Bare iron or steel can be mechanically strong, but it corrodes more readily and lacks the conductive copper surface of a proper copper-clad rod.\n- sourceIndex 3: \"Fibreglass\": Fibreglass is a structural insulating material, not a conductive ground electrode material.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-019-004"
+    }
+  ],
+  "licenseClass": "original"
+}

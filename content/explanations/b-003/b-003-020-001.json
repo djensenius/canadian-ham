@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-020-001",
+  "questionId": "B-003-020-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-020-001.\n\nWhy the correct answer is right: Grounding unused antenna and rotator cables gives static and surge energy a safer outside path, reducing the chance of lightning damage inside the station.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To lock the antenna system in one position\": Electrical grounding does not mechanically lock a rotator or antenna; it is a surge and static control practice.\n- sourceIndex 2: \"To avoid radio frequency interference\": RFI control may use bonding and filtering, but grounding idle outside cables for storms is mainly about lightning protection.\n- sourceIndex 3: \"To prevent unauthorized persons from using the station\": Cable grounding does not control microphones, power switches, or operator access, so it is not an authorization measure.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-020-001"
+    }
+  ],
+  "licenseClass": "original"
+}

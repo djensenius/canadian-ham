@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-011-002",
+  "questionId": "B-003-011-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-011-002.\n\nWhy the correct answer is right: Steady supply voltage reduces the load-related pulling that can move a keyed transmitter oscillator and create chirp.\n\nPer-choice notes:\n- sourceIndex 0: \"Keep the power supply voltages very steady under varying loads\": This is the correct choice because steady supply voltage reduces the load-related pulling that can move a keyed transmitter oscillator and create chirp.\n- sourceIndex 1: \"Add a key click filter\": This is a near-miss because it shifts attention from Keep the power supply voltages very steady under varying loads. In CW quality, AM sidebands, transmitter efficiency, and oscillator stability, key clicks are abrupt keying-edge products, not the frequency or mode concept in this item.\n- sourceIndex 2: \"Keep the oscillator impedance very steady under the transmit load\": This answer would fit a different fault than Keep the power supply voltages very steady under varying loads. In CW quality, AM sidebands, transmitter efficiency, and oscillator stability, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Add a low-pass filter\": This option confuses another station topic with Keep the power supply voltages very steady under varying loads. In CW quality, AM sidebands, transmitter efficiency, and oscillator stability, a low-pass filter reduces harmonics but does not fix every transmitter-quality fault.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-05"
+    },
+    {
+      "type": "question",
+      "id": "B-003-011-002"
+    }
+  ],
+  "licenseClass": "original"
+}

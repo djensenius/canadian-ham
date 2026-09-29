@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-017-001",
+  "questionId": "B-003-017-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-017-001.\n\nWhy the correct answer is right: In a simple supply, poor filtering or regulation can let ripple pull the oscillator or transmitter voltage during keying, producing CW chirp.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Key clicks\": Key clicks come from excessively abrupt keying edges or poor shaping, not from the supply-voltage variation that shifts CW frequency.\n- sourceIndex 2: \"Harmonics\": Harmonics are unwanted signals at integer multiples of the transmit frequency; they are controlled by transmitter linearity and filtering, not by ripple chirp.\n- sourceIndex 3: \"Overmodulation\": Overmodulation is an audio or modulation-level problem in voice modes, while the question asks about a CW transmitter powered by a simple supply.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-017-001"
+    }
+  ],
+  "licenseClass": "original"
+}

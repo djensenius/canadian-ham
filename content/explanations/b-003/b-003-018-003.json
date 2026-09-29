@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-018-003",
+  "questionId": "B-003-018-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-018-003.\n\nWhy the correct answer is right: A vehicle starter battery is low voltage, but it can deliver extremely high short-circuit current that can heat tools, melt conductors, or start a fire.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"None, given its low voltage\": Low voltage reduces shock risk under normal dry-skin conditions, but it does not remove the short-circuit and burn hazard.\n- sourceIndex 2: \"High electromagnetic fields\": The ordinary hazard from a starter battery is fault current in conductors, not harmful electromagnetic fields around the battery.\n- sourceIndex 3: \"Possibility of electric shock\": Electric shock is not the usual primary hazard of a 12 V starter battery; the danger is the very high current available into a short.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-018-003"
+    }
+  ],
+  "licenseClass": "original"
+}

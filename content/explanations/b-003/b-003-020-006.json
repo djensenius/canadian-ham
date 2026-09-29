@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-020-006",
+  "questionId": "B-003-020-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-020-006.\n\nWhy the correct answer is right: A horizontal wire antenna should be high enough that nobody on the ground can touch any energized part, especially during transmission.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Above high-voltage electrical lines\": Installing an antenna over power lines is extremely dangerous; contact or flashover can be lethal during installation or failure.\n- sourceIndex 2: \"Just high enough so you can easily reach it for adjustments or repairs\": Easy reach means people can also touch it while RF is present, which defeats the safety requirement.\n- sourceIndex 3: \"As close to the ground as possible\": Low placement increases the chance that people contact the wire or enter strong near fields.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-020-006"
+    }
+  ],
+  "licenseClass": "original"
+}

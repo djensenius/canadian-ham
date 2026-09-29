@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-021-011",
+  "questionId": "B-003-021-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-021-011.\n\nWhy the correct answer is right: Keeping the ends and centre of a dipole high reduces the chance that people touch energized conductors or stand in strong near fields.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Near or over moist ground so RF energy will be radiated away from the ground\": Moist ground does not carry RF energy safely away from people, and low placement can make contact easier.\n- sourceIndex 2: \"As close to the transmitter as possible so RF energy will be concentrated near the transmitter\": Concentrating RF near the transmitter usually means concentrating it near the operator, which is the opposite of RF safety.\n- sourceIndex 3: \"Close to the ground so simple adjustments can be easily made without climbing a ladder\": Easy adjustment is not worth the contact hazard created when people can reach the dipole.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-021-011"
+    }
+  ],
+  "licenseClass": "original"
+}

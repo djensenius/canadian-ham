@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-019-009",
+  "questionId": "B-003-019-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-019-009.\n\nWhy the correct answer is right: An insulated shorting stick with an inline resistor keeps the operator away from the charge and limits discharge current to reduce arcs and damage.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Use a long screwdriver with an insulated handle\": A screwdriver provides essentially no current limiting, so a charged capacitor can arc violently and damage parts or burn the worker.\n- sourceIndex 2: \"Use an insulated wire with alligator clips on each end\": A plain clip lead also lacks a series resistor, causing an uncontrolled surge current and possible arc when it touches the capacitor.\n- sourceIndex 3: \"Allow time for bleeder resistors to discharge the capacitors\": Bleeders can fail or take longer than expected; waiting alone is not a verified safe discharge method before work.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-019-009"
+    }
+  ],
+  "licenseClass": "original"
+}

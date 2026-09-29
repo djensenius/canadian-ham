@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-018-007",
+  "questionId": "B-003-018-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-018-007.\n\nWhy the correct answer is right: About 30 volts is commonly treated as the lower boundary where shock hazard precautions become important, especially with wet skin or good contact.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"100\": One hundred volts is hazardous, but it is not the lowest voltage among the listed values that is usually treated as dangerous.\n- sourceIndex 2: \"240\": Two hundred forty volts is clearly hazardous mains voltage; choosing it misses lower voltages that can still require precautions.\n- sourceIndex 3: \"347\": Three hundred forty-seven volts is a dangerous high building-system voltage, not the lowest commonly cited hazard threshold.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-018-007"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-016-004",
+  "questionId": "B-003-016-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-016-004.\n\nWhy the correct answer is right: A lithium-ion battery converts stored chemical energy into electrical energy, so it is a source of electromotive force.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Germanium diode\": A germanium diode is a semiconductor junction that conducts more easily in one direction; it does not create EMF by itself.\n- sourceIndex 2: \"P-channel FET\": A P-channel FET is a controlled semiconductor device used for switching or amplification, not a chemical source of voltage.\n- sourceIndex 3: \"Metal-film resistor\": A metal-film resistor dissipates energy and sets current or voltage in a circuit; it is a load or circuit element, not an EMF source.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-016-004"
+    }
+  ],
+  "licenseClass": "original"
+}

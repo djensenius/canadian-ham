@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-011-008",
+  "questionId": "B-003-011-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-011-008.\n\nWhy the correct answer is right: Standard AM contains the carrier plus both an upper and a lower sideband.\n\nPer-choice notes:\n- sourceIndex 0: \"Carrier and two sidebands\": This is the correct choice because standard AM contains the carrier plus both an upper and a lower sideband.\n- sourceIndex 1: \"Two sidebands\": This is a near-miss because it shifts attention from Carrier and two sidebands. In CW quality, AM sidebands, transmitter efficiency, and oscillator stability, sideband terminology is being applied to the wrong stage or bandwidth relationship.\n- sourceIndex 2: \"One sideband\": This answer would fit a different fault than Carrier and two sidebands. In CW quality, AM sidebands, transmitter efficiency, and oscillator stability, sideband terminology is being applied to the wrong stage or bandwidth relationship.\n- sourceIndex 3: \"Carrier and one sideband\": This option confuses another station topic with Carrier and two sidebands. In CW quality, AM sidebands, transmitter efficiency, and oscillator stability, carrier terminology is being applied to the wrong modulation condition here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-05"
+    },
+    {
+      "type": "question",
+      "id": "B-003-011-008"
+    }
+  ],
+  "licenseClass": "original"
+}

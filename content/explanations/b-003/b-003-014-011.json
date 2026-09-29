@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-014-011",
+  "questionId": "B-003-014-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-014-011.\n\nWhy the correct answer is right: A dynamic microphone uses a moving coil and magnet arrangement, the same basic electromechanical idea used in a loudspeaker.\n\nPer-choice notes:\n- sourceIndex 0: \"Dynamic\": This is the correct choice because a dynamic microphone uses a moving coil and magnet arrangement, the same basic electromechanical idea used in a loudspeaker.\n- sourceIndex 1: \"Crystal\": This is a near-miss because it shifts attention from Dynamic. In operator controls, keyers, microphones, VOX, speech processing, and receiver noise tools, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"Condenser\": This answer would fit a different fault than Dynamic. In operator controls, keyers, microphones, VOX, speech processing, and receiver noise tools, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Electret\": This option confuses another station topic with Dynamic. In operator controls, keyers, microphones, VOX, speech processing, and receiver noise tools, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-06"
+    },
+    {
+      "type": "question",
+      "id": "B-003-014-011"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-015-004",
+  "questionId": "B-003-015-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-015-004.\n\nWhy the correct answer is right: A packet network links packet-radio stations so data can be forwarded beyond a single direct path.\n\nPer-choice notes:\n- sourceIndex 0: \"A way of connecting packet-radio stations so data can be sent over long distances\": This is the correct choice because a packet network links packet-radio stations so data can be forwarded beyond a single direct path.\n- sourceIndex 1: \"A way of connecting terminal-node controllers by telephone so data can be sent over long distances\": This is a near-miss because it shifts attention from A way of connecting packet-radio stations so data can be sent over long distances. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"The connections on terminal-node controllers\": This answer would fit a different fault than A way of connecting packet-radio stations so data can be sent over long distances. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"The programming in a terminal-node controller that rejects other callers if a station is already connected\": This option confuses another station topic with A way of connecting packet-radio stations so data can be sent over long distances. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-06"
+    },
+    {
+      "type": "question",
+      "id": "B-003-015-004"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-016-009",
+  "questionId": "B-003-016-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-016-009.\n\nWhy the correct answer is right: In parallel, matched batteries keep the same voltage while their ampere-hour capacities add. Two 12 V, 20 Ah batteries in parallel make 12 V at 40 Ah.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"6 volts, 80 ampere-hours\": Parallel connection does not halve the voltage, and there is no rule here that quadruples the ampere-hour rating.\n- sourceIndex 2: \"24 volts, 20 ampere-hours\": This is the series result for two matched 12 V batteries, not the result of a parallel connection.\n- sourceIndex 3: \"24 volts, 40 ampere-hours\": This incorrectly adds both voltage and capacity; with two matched batteries, series adds voltage and parallel adds ampere-hours.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-016-009"
+    }
+  ],
+  "licenseClass": "original"
+}

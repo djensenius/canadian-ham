@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-003-06-A",
+  "lessonId": "L-003-06",
+  "officialQuestionIds": [
+    "B-003-014-001",
+    "B-003-014-003",
+    "B-003-014-005",
+    "B-003-014-008",
+    "B-003-014-011",
+    "B-003-015-002",
+    "B-003-015-003",
+    "B-003-015-011"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-003-06-A-C1",
+      "prompt": { "en": "A station's VOX starts transmitting when a fan turns on across the room. Which adjustment area best matches the symptom?", "fr": null },
+      "choices": [
+        { "text": { "en": "The receiver noise blanker threshold", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The antenna rotator calibration", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The VOX sensitivity and delay settings", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The packet network route list", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "VOX keys from detected audio, so accidental transmit from room noise calls for VOX sensitivity and timing adjustments.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-06-A-C2",
+      "prompt": { "en": "A digital-mode signal decodes locally but shows extra side traces on a nearby waterfall display. What is the clean-signal fix?", "fr": null },
+      "choices": [
+        { "text": { "en": "Raise computer audio until ALC is always active", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Reduce sound-card/interface drive and recheck for splatter", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Switch the receiver to a wider filter", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Add more receive DSP noise reduction", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Extra traces beside the wanted digital signal are an overdrive clue; backing down transmit audio is the right first correction.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-06-A-C3",
+      "prompt": { "en": "A packet station hears a frame that requests forwarding through its callsign alias. What block-level action describes digipeater operation?", "fr": null },
+      "choices": [
+        { "text": { "en": "Convert the packet to analog FM speech", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Reject all frames unless connected to the internet", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Compress the audio for higher average SSB power", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Retransmit the marked digital frame", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "A digipeater is a digital relay: it forwards packets marked for retransmission, rather than changing them into analog voice.", "fr": null }
+    }
+  ]
+}

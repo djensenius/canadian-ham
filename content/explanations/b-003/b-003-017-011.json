@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-017-011",
+  "questionId": "B-003-017-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-017-011.\n\nWhy the correct answer is right: A loud low-frequency hum on the transmitted signal often points to power-supply ripple or poor filtering feeding hum into the transmitter stages.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The variable-frequency oscillator\": VFO trouble is more likely to cause frequency drift or instability than a strong mains-frequency hum on the transmitted audio or carrier.\n- sourceIndex 2: \"The driver circuit\": A driver fault can affect drive level or distortion, but the first suspect for low-frequency hum is the DC supply feeding the transmitter.\n- sourceIndex 3: \"The power amplifier circuit\": A PA fault can reduce output or create distortion, yet hum that appears with the supply points first to filtering and regulation before the PA itself.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-017-011"
+    }
+  ],
+  "licenseClass": "original"
+}

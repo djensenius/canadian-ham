@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-017-003",
+  "questionId": "B-003-017-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-017-003.\n\nWhy the correct answer is right: A 13.8 V supply must deliver the transceiver's required transmit current without sagging, so output current capability is the key selection specification.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Undervoltage protection\": Undervoltage protection can be useful, but it does not prove the supply can deliver the required current in the first place.\n- sourceIndex 2: \"Output connection compatibility\": Compatible connectors matter for installation, yet connector style is secondary to having enough rated current at the correct voltage.\n- sourceIndex 3: \"Voltage and current metering\": Meters help observe operation, but panel meters do not make an undersized supply capable of powering a transmitter.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-017-003"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-015-001",
+  "questionId": "B-003-015-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-015-001.\n\nWhy the correct answer is right: Voice, images, and other analog information can be sampled or encoded into digital data before transmission.\n\nPer-choice notes:\n- sourceIndex 0: \"Any analog information can be converted to digital data\": This is the correct choice because voice, images, and other analog information can be sampled or encoded into digital data before transmission.\n- sourceIndex 1: \"Digital protocols can fall back to analog as needed\": This is a near-miss because it shifts attention from Any analog information can be converted to digital data. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, analog conversion is a different idea from the digital-data function being tested.\n- sourceIndex 2: \"Digital signals are continuously variable signals\": This answer would fit a different fault than Any analog information can be converted to digital data. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Modern transceivers have the necessary high efficiency amplifiers\": This option confuses another station topic with Any analog information can be converted to digital data. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-06"
+    },
+    {
+      "type": "question",
+      "id": "B-003-015-001"
+    }
+  ],
+  "licenseClass": "original"
+}

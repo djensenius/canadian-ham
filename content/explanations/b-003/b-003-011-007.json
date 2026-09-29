@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-011-007",
+  "questionId": "B-003-011-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-011-007.\n\nWhy the correct answer is right: AM has upper and lower sidebands, so audio limited to 3 kHz occupies about 2 x 3 kHz = 6 kHz when clean.\n\nPer-choice notes:\n- sourceIndex 0: \"6 kHz\": This is the correct choice because AM has upper and lower sidebands, so audio limited to 3 kHz occupies about 2 x 3 kHz = 6 kHz when clean.\n- sourceIndex 1: \"3 kHz\": This counts only one sideband. AM has an upper and lower sideband, so the audio limit must be doubled.\n- sourceIndex 2: \"12 kHz\": This doubles the already doubled bandwidth. The trace is 2 x 3 kHz, not 4 x 3 kHz.\n- sourceIndex 3: \"9 kHz\": This adds one extra audio-frequency span instead of accounting for the two equal sidebands.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-05"
+    },
+    {
+      "type": "question",
+      "id": "B-003-011-007"
+    }
+  ],
+  "licenseClass": "original"
+}

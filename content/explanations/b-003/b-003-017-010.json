@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-017-010",
+  "questionId": "B-003-017-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-017-010.\n\nWhy the correct answer is right: The positive battery lead must be fused so a shorted or damaged cable cannot draw battery fault current long enough to overheat and start a fire.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To prevent interference to the vehicle's electronic systems\": A fuse does not filter alternator or electronics noise; interference control needs suppression, routing, and bonding.\n- sourceIndex 2: \"To reduce the voltage drop in the radio's DC supply\": A fuse is a protective device and may add a tiny resistance; voltage drop is reduced with shorter, heavier, cleanly connected conductors.\n- sourceIndex 3: \"To protect the radio from transient voltages\": Transient protection requires suitable suppressors or filtering. The fuse is there to open under excessive current.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-017-010"
+    }
+  ],
+  "licenseClass": "original"
+}

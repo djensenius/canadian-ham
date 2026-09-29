@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-013-009",
+  "questionId": "B-003-013-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-013-009.\n\nWhy the correct answer is right: Wide FM below 28 MHz would occupy too much bandwidth for the regulatory limits that apply there.\n\nPer-choice notes:\n- sourceIndex 0: \"The bandwidth would exceed limits in the regulations\": This is the correct choice because wide FM below 28 MHz would occupy too much bandwidth for the regulatory limits that apply there.\n- sourceIndex 1: \"The transmitter efficiency for this mode is low\": This is a near-miss because it shifts attention from The bandwidth would exceed limits in the regulations. In FM deviation, FM receiver behaviour, and local VHF/UHF voice practice, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"Harmonics could not be attenuated to practical levels\": This answer would fit a different fault than The bandwidth would exceed limits in the regulations. In FM deviation, FM receiver behaviour, and local VHF/UHF voice practice, harmonics are unwanted multiples of the transmit frequency, a different problem from the one being asked about.\n- sourceIndex 3: \"The frequency stability would not be adequate\": This option confuses another station topic with The bandwidth would exceed limits in the regulations. In FM deviation, FM receiver behaviour, and local VHF/UHF voice practice, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-05"
+    },
+    {
+      "type": "question",
+      "id": "B-003-013-009"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-011-009",
+  "questionId": "B-003-011-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-011-009.\n\nWhy the correct answer is right: Electrical and mechanical stability keep an oscillator from wandering as it warms, vibrates, or sees changing load conditions.\n\nPer-choice notes:\n- sourceIndex 0: \"drift in frequency over time\": This is the correct choice because electrical and mechanical stability keep an oscillator from wandering as it warms, vibrates, or sees changing load conditions.\n- sourceIndex 1: \"become overmodulated\": This is a near-miss because it shifts attention from drift in frequency over time. In CW quality, AM sidebands, transmitter efficiency, and oscillator stability, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"generate key clicks\": This answer would fit a different fault than drift in frequency over time. In CW quality, AM sidebands, transmitter efficiency, and oscillator stability, key clicks are abrupt keying-edge products, not the frequency or mode concept in this item.\n- sourceIndex 3: \"cause undue distortion\": This option confuses another station topic with drift in frequency over time. In CW quality, AM sidebands, transmitter efficiency, and oscillator stability, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-05"
+    },
+    {
+      "type": "question",
+      "id": "B-003-011-009"
+    }
+  ],
+  "licenseClass": "original"
+}

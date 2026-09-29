@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-019-006",
+  "questionId": "B-003-019-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-019-006.\n\nWhy the correct answer is right: The green safety conductor bonds to the chassis so a hot-to-chassis fault has a low-impedance path that helps operate protective devices.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To the white wire\": Neutral-to-ground bonding belongs at the service equipment as required by electrical code, not inside ordinary station power-supply wiring.\n- sourceIndex 2: \"To the \\\"hot\\\" side of the power switch\": Connecting the green safety wire to the hot conductor would energize the chassis path and create a lethal fault.\n- sourceIndex 3: \"To the fuse\": The fuse is in the current-carrying circuit; the safety grounding conductor must be bonded directly to exposed metal chassis.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-019-006"
+    }
+  ],
+  "licenseClass": "original"
+}

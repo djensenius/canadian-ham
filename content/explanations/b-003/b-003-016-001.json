@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-016-001",
+  "questionId": "B-003-016-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-016-001.\n\nWhy the correct answer is right: A standard automobile starter battery is a nominal 12-volt lead-acid battery. Its actual terminal voltage varies with charge and load, but the station-planning answer is 12 volts.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"16 volts\": Sixteen volts is too high for a normal 12-volt vehicle electrical system and would indicate an abnormal charging condition, not the usual starter battery rating.\n- sourceIndex 2: \"28 volts\": Twenty-eight volts is closer to a 24-volt system while charging; it is not the standard passenger-vehicle starter battery voltage.\n- sourceIndex 3: \"9 volts\": Nine volts suggests a small transistor-radio battery, not the lead-acid battery used to crank an automobile engine.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-016-001"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-020-005",
+  "questionId": "B-003-020-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-020-005.\n\nWhy the correct answer is right: Fall-arrest equipment is worn to limit injury in the event the worker slips or falls from the tower.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To bring any tools you might use up and down the tower safely\": Tools should be handled with proper tool lines or lanyards; that is not the purpose of personal fall arrest.\n- sourceIndex 2: \"To keep the tower from becoming unstable while you are working\": Tower stability depends on structure, base, guys, and loading, not on the worker's harness.\n- sourceIndex 3: \"To hold your tools so they don't fall and injure someone on the ground\": Tool retention is important, but fall-arrest gear is primarily for the climber's fall, not as a tool pouch.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-020-005"
+    }
+  ],
+  "licenseClass": "original"
+}

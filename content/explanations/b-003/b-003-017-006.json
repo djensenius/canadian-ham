@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-017-006",
+  "questionId": "B-003-017-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-017-006.\n\nWhy the correct answer is right: A switch-mode supply uses high-frequency switching and smaller magnetic components, so it can be much smaller and lighter than a comparable linear supply.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Lower risk of radio frequency noise\": Switch-mode supplies have a higher RF-noise risk because of their switching circuitry; a quiet installation may need filtering or a better supply.\n- sourceIndex 2: \"Different simultaneous output voltages\": Multiple outputs are possible in some supplies, but that is not the general station advantage being compared with a linear 13.8 V supply.\n- sourceIndex 3: \"Simpler to repair\": Switch-mode supplies are often more complex to troubleshoot than linear supplies, with high-frequency control circuits and safety-critical mains sections.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-017-006"
+    }
+  ],
+  "licenseClass": "original"
+}

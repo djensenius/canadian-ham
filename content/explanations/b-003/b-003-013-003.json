@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-013-003",
+  "questionId": "B-003-013-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-013-003.\n\nWhy the correct answer is right: Deviation is the term for the frequency swing away from the FM carrier centre caused by modulation.\n\nPer-choice notes:\n- sourceIndex 0: \"Deviation\": This is the correct choice because deviation is the term for the frequency swing away from the FM carrier centre caused by modulation.\n- sourceIndex 1: \"Spectrum spread\": This is a near-miss because it shifts attention from Deviation. In FM deviation, FM receiver behaviour, and local VHF/UHF voice practice, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"Shift\": This answer would fit a different fault than Deviation. In FM deviation, FM receiver behaviour, and local VHF/UHF voice practice, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Modulation index\": This option confuses another station topic with Deviation. In FM deviation, FM receiver behaviour, and local VHF/UHF voice practice, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-05"
+    },
+    {
+      "type": "question",
+      "id": "B-003-013-003"
+    }
+  ],
+  "licenseClass": "original"
+}

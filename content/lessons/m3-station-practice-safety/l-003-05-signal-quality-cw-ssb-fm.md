@@ -20,28 +20,130 @@ prerequisites:
 estimatedMinutes: 45
 quizIds:
   - QZ-L-003-05-A
-status: outline
+status: draft
 ---
+# Signal quality for CW, SSB, and FM
+
+A transmitter can be legal and still be a poor neighbour if its signal is hard to copy or spreads beyond the intended channel. Signal quality is the practical habit of using enough drive for readability, but not so much that the radio creates clicks, drift, splatter, or distorted audio.
+
+This lesson focuses on three everyday cases: keyed continuous wave (CW), single-sideband voice (SSB), and frequency-modulated voice (FM). The details differ, but the operating idea is the same: keep the radio stable, set levels conservatively, and ask for on-air reports when you change equipment.
+
 ## Learning objectives
 
-- Recognize CW chirp and how stable supply or oscillator design helps.
-- Adjust SSB drive, processing, and microphone gain for clean audio.
-- Explain FM deviation, squelch noise, and repeater audio levels.
+By the end of this lesson, you can:
 
-## Key concepts
+- describe chirp, key clicks, and oscillator drift in a CW signal;
+- explain why amplitude modulation has a carrier and sidebands;
+- set SSB microphone gain and speech processing without overdriving the transmitter;
+- use peak envelope power as the useful power idea for modulated voice; and
+- match FM deviation and microphone technique to the channel being used.
 
-- Poor stability or excessive gain creates hard-to-copy signals.
-- PEP describes the crest of a modulated RF envelope.
-- FM deviation must match the system being used.
+## Clean CW: stable carrier, shaped keying
 
-## Coverage
+CW usually sends Morse by turning an RF carrier on and off. A clean keyed signal has a steady frequency and keying edges that are not unnecessarily abrupt.
 
-- B-003-011 — CW transmitter quality and tuning (questions B-003-011-001 through B-003-011-011)
-- B-003-012 — SSB modulation and PEP (questions B-003-012-001 through B-003-012-011)
-- B-003-013 — FM deviation and receiver noise (questions B-003-013-001 through B-003-013-011)
+Chirp is a small frequency movement each time the transmitter is keyed. The operator at the far end hears the note slide instead of starting cleanly. Chirp often points to something changing inside the transmitter when the load changes, such as supply voltage sag or oscillator pulling. Good regulation, solid oscillator construction, and sound keying design help the carrier stay put.
 
-## Teaching notes
+Key clicks are different. They sound like sharp ticks around the signal and are caused by keying edges that are too abrupt. A key-click filter or proper shaping slows the edge enough to reduce splatter without making the Morse unreadable. A low-pass filter is valuable for harmonics, but it is not the same cure as keying-shape control.
 
-- Reference sheet: PEP and emission concepts apply.
-- Use audio samples only if self-created and local; no network dependency.
-- Link clean-signal practice to interference prevention.
+A variable-frequency oscillator lets a CW transmitter tune across a range rather than being limited to a few crystal frequencies. That flexibility is useful only if the oscillator is electrically and mechanically stable, so keep VFOs away from heat, loose hardware, and changing supply conditions.
+
+### Worked example: diagnosing two CW reports
+
+During a club practice net, one report says, "Your note slides for an instant at the start of each element." Another says, "I hear ticks a little above and below your signal."
+
+- The sliding note points to chirp, so first suspect supply regulation, oscillator loading, or mechanical stability.
+- The ticks point to key clicks, so first suspect keying edge shape or missing click filtering.
+- The remedies are not interchangeable: a harmonic low-pass filter will not make an unstable oscillator stop moving.
+
+## AM envelope and sidebands
+
+Amplitude modulation changes the RF envelope to carry information. When voice audio modulates a carrier, the transmitted energy includes the carrier plus two sidebands. The occupied bandwidth is approximately twice the highest audio frequency that is being transmitted.
+
+This is a useful way to estimate whether a signal is using more spectrum than expected. If the transmitter passes wider audio, the sidebands extend farther from the carrier. If the transmitter is distorted, the unwanted products can spread even farther.
+
+### Worked example: AM bandwidth estimate
+
+An original bench demonstration limits the audio tone range to 2.4 kHz before feeding an AM exciter.
+
+- AM has upper and lower sidebands.
+- Each sideband extends about 2.4 kHz from the carrier.
+- Approximate occupied bandwidth is 2 x 2.4 kHz = 4.8 kHz.
+
+That is an estimate for a clean signal. Distortion or overdrive can make the real occupied bandwidth worse.
+
+## SSB: linear amplification and level control
+
+Single sideband removes the carrier and one sideband, so most of the useful output is in the remaining sideband. Typical amateur SSB voice fits in a few kilohertz and depends on a linear RF power amplifier. A non-linear amplifier does not follow the voice envelope faithfully, so speech becomes distorted and unwanted products appear beside the signal.
+
+Peak envelope power, or PEP, is the RF power value tied to the highest point of a modulated voice envelope. The practical meaning is simple: SSB power rises on voice peaks, so the top of the envelope is the important limit.
+
+Microphone gain should be set so speech peaks stay within the radio manufacturer's ALC guidance. The ALC meter may move on peaks, but it should not be hammered to the end of its scale. Speech processing can improve intelligibility by raising average talk power, but too much processing makes audio harsh and wider than necessary.
+
+### Worked example: setting SSB audio without splatter
+
+A learner installs a new headset and checks the transmitter into a dummy load before calling CQ.
+
+- Start with the microphone gain lower than before.
+- Speak at a normal distance and watch the ALC indicator on syllable peaks.
+- Increase gain only until peaks reach the recommended range, then stop.
+- Add speech processing lightly and ask a nearby station for an audio-width report.
+
+The goal is not the loudest possible meter reading. The goal is clear speech that stays inside the intended bandwidth.
+
+### Worked example: sideband frequency direction
+
+In an original lower-sideband practice example, the suppressed carrier setting is 5 360 kHz and a single audio tone is 700 Hz.
+
+- Lower sideband means the RF energy appears below the carrier setting.
+- 700 Hz is 0.700 kHz.
+- Transmitted RF is 5 360 kHz - 0.700 kHz = 5 359.300 kHz.
+
+For upper sideband, the same tone would appear above the carrier setting instead.
+
+## FM: deviation, squelch, and capture effect
+
+FM carries audio by changing the carrier frequency around its assigned channel. The amount of swing from the centre frequency is deviation. Louder audio produces more deviation until the transmitter's limiter or audio stages run out of clean range.
+
+For repeaters and local channels, the transmitter deviation should match the system. Too little deviation sounds quiet at the far end. Too much deviation sounds loud, rough, or distorted, and can occupy more spectrum than the channel expects. Speaking very close to the microphone can cause the same problem even if the frequency is exactly right.
+
+An FM receiver often has high gain before the discriminator. With no usable signal present, that gain makes the speaker noise loud unless squelch mutes it. When multiple FM signals are present, the receiver tends to demodulate the strongest one; this is the capture effect.
+
+### Worked example: repeater audio report
+
+A repeater operator reports, "Your signal is full quieting, but your words are thin and quiet." The RF path is adequate, so increasing RF power is not the first fix. Check the transmitter's deviation setting, microphone gain, and microphone distance. If the report changes to "loud and rough," back off the audio level.
+
+## Try it
+
+1. A CW note moves slightly only while each element begins. Is the first suspicion chirp or key clicks? It is chirp, because the frequency is moving; key clicks are sharp wideband edges around the signal.
+2. Why does a clean AM voice signal need spectrum on both sides of the carrier? The changing envelope creates upper and lower sidebands, and both carry the audio information.
+3. An SSB ALC meter is pinned on every syllable. What should you do before making more contacts? Reduce microphone gain or processing until voice peaks stay in the recommended ALC range.
+4. A lower-sideband exciter is set to 3 925 kHz and is fed a 600 Hz tone in a bench test. Where is the RF tone? 600 Hz is 0.600 kHz, so the lower-sideband RF is 3 925 - 0.600 = 3 924.400 kHz.
+5. Your FM audio is reported as quiet through a repeater that otherwise hears you well. What setting or habit should you check first? Check deviation, microphone gain, and speaking distance before increasing RF power.
+
+## Radio connection
+
+Clean-signal practice is interference prevention. A few minutes spent setting CW keying, SSB ALC, or FM deviation can protect adjacent users from noise you never hear in your own speaker. When you change microphones, interfaces, power supplies, or audio settings, use a dummy load for initial checks and then ask for a specific signal-quality report.
+
+## Common mistakes
+
+- Treating chirp and key clicks as the same fault.
+- Assuming more microphone gain always improves readability.
+- Running speech processing so hard that the signal becomes wide and harsh.
+- Reading PEP as average DC input power rather than RF envelope peak power.
+- Using RF power to fix an FM audio-level problem.
+- Forgetting that a quiet FM receiver between signals is usually the squelch doing its job.
+
+## Illustration brief
+
+Alt text: Three small panels compare a clean CW carrier, an overdriven SSB voice envelope, and an FM carrier swinging too far from centre.
+
+Description: Draw an original three-panel teaching graphic. Panel one shows a CW carrier turning on smoothly and staying at one frequency, with a separate jagged edge labelled "click risk." Panel two shows an SSB envelope whose peaks stay below an ALC limit line, beside a clipped envelope marked "splatter." Panel three shows an FM centre line with modest deviation arrows and larger arrows labelled "overdeviation."
+
+## Summary
+
+- Chirp is frequency movement during keying; key clicks come from abrupt keying edges.
+- AM changes envelope amplitude and produces a carrier plus two sidebands.
+- SSB needs linear amplification and conservative microphone gain so voice peaks do not overdrive the transmitter.
+- PEP describes power at the crest of a modulated RF envelope.
+- FM audio level is controlled by deviation and microphone technique; too little sounds quiet, while too much sounds distorted and wide.

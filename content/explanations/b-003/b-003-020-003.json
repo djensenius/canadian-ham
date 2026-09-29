@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-020-003",
+  "questionId": "B-003-020-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-020-003.\n\nWhy the correct answer is right: Physically disconnecting equipment from both power lines and antenna cables is the most conservative way listed to reduce lightning damage risk.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Use heavy insulation on the wiring\": Lightning voltages can puncture ordinary insulation and jump gaps, so insulation alone is not dependable protection.\n- sourceIndex 2: \"Never turn off the equipment\": Leaving equipment on during lightning threat increases exposure to surges and is the opposite of conservative protection.\n- sourceIndex 3: \"Disconnect the ground system from all radios\": Removing the bonding or grounding system can leave equipment without the intended surge and fault-current path.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-020-003"
+    }
+  ],
+  "licenseClass": "original"
+}

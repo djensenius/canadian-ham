@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-014-008",
+  "questionId": "B-003-014-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-014-008.\n\nWhy the correct answer is right: A noise blanker detects short high-amplitude pulses and blanks them before they dominate the receiver audio.\n\nPer-choice notes:\n- sourceIndex 0: \"Noise blanker\": This is the correct choice because a noise blanker detects short high-amplitude pulses and blanks them before they dominate the receiver audio.\n- sourceIndex 1: \"Noise limiter\": This is a near-miss because it shifts attention from Noise blanker. In operator controls, keyers, microphones, VOX, speech processing, and receiver noise tools, noise control may be useful elsewhere, but this choice points to the wrong block or symptom.\n- sourceIndex 2: \"Automatic level control\": This answer would fit a different fault than Noise blanker. In operator controls, keyers, microphones, VOX, speech processing, and receiver noise tools, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Narrowband filter\": This option confuses another station topic with Noise blanker. In operator controls, keyers, microphones, VOX, speech processing, and receiver noise tools, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-06"
+    },
+    {
+      "type": "question",
+      "id": "B-003-014-008"
+    }
+  ],
+  "licenseClass": "original"
+}

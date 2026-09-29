@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-015-006",
+  "questionId": "B-003-015-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-015-006.\n\nWhy the correct answer is right: FT8 is designed for weak-signal work and can decode at a lower signal-to-noise ratio than the listed alternatives in the stated bandwidth.\n\nPer-choice notes:\n- sourceIndex 0: \"FT8\": This is the correct choice because FT8 is designed for weak-signal work and can decode at a lower signal-to-noise ratio than the listed alternatives in the stated bandwidth.\n- sourceIndex 1: \"PSK31\": This is a near-miss because it shifts attention from FT8. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"RTTY\": This answer would fit a different fault than FT8. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"CW\": This option confuses another station topic with FT8. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-06"
+    },
+    {
+      "type": "question",
+      "id": "B-003-015-006"
+    }
+  ],
+  "licenseClass": "original"
+}

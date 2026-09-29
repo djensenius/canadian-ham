@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-003-08-A",
+  "lessonId": "L-003-08",
+  "officialQuestionIds": [
+    "B-003-018-001",
+    "B-003-018-008",
+    "B-003-019-002",
+    "B-003-019-003",
+    "B-003-019-009",
+    "B-003-020-002",
+    "B-003-020-010",
+    "B-003-021-005"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-003-08-A-C1",
+      "prompt": { "en": "A trainee tapes a high-voltage supply cabinet interlock closed so the cover can stay open during a test, then plans to probe with both hands. What error must be stopped first?", "fr": null },
+      "choices": [
+        { "text": { "en": "An open cabinet automatically removes all shock risk, leaving only RF leakage to consider", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Defeating the interlock and using both hands removes important shock protections", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The only concern is whether the fuse voltage rating is printed on the holder", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Increasing the fuse current rating would make the open-cabinet test safer", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "A cabinet interlock is there to reduce contact with dangerous voltage when the cover is opened. It must not be defeated, and two-handed probing increases the chance of current crossing the chest.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-08-A-C2",
+      "prompt": { "en": "An indoor antenna test is moved from 1 m away from a marked keep-clear line to 2 m away in the same direction, with the same power and antenna. In the simple free-space model, what happens to power density at that line?", "fr": null },
+      "choices": [
+        { "text": { "en": "It falls to about one quarter", "fr": null }, "isCorrect": true },
+        { "text": { "en": "It falls to about one half", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It stays the same because frequency did not change", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It increases because the antenna is farther from the operator", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Power density follows the inverse-square relationship in the simple free-space model, so doubling distance reduces it to roughly 1/4.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-08-A-C3",
+      "prompt": { "en": "Which statement is NOT true for reducing RF exposure around indoor, UHF, or directional transmitting antennas?", "fr": null },
+      "choices": [
+        { "text": { "en": "Moving people farther from the energized antenna usually improves the safety margin", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Reducing power or transmission time can lower exposure", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A high-gain main beam should not be aimed into occupied nearby space", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A low SWR makes it safe for people to stand close to an energized UHF antenna", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "Low SWR helps the equipment but does not make close human exposure safe. Distance, power, time, antenna gain, beam direction, and access control still matter.", "fr": null }
+    }
+  ]
+}

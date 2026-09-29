@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-015-009",
+  "questionId": "B-003-015-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-015-009.\n\nWhy the correct answer is right: Packet systems can confirm delivery or report failure, which is valuable when emergency messages must be reliable.\n\nPer-choice notes:\n- sourceIndex 0: \"Reliable messaging (guaranteed delivery or notification of failure)\": This is the correct choice because packet systems can confirm delivery or report failure, which is valuable when emergency messages must be reliable.\n- sourceIndex 1: \"Packet functionality is included in most modern radios\": This is a near-miss because it shifts attention from Reliable messaging (guaranteed delivery or notification of failure). In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"Capable of simultaneous voice, image and data transmission\": This answer would fit a different fault than Reliable messaging (guaranteed delivery or notification of failure). In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Encrypted signals prevent eavesdropping\": This option confuses another station topic with Reliable messaging (guaranteed delivery or notification of failure). In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-06"
+    },
+    {
+      "type": "question",
+      "id": "B-003-015-009"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-012-005",
+  "questionId": "B-003-012-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-012-005.\n\nWhy the correct answer is right: SSB speech is carried by envelope variations, so a non-linear amplifier distorts those variations and makes the voice hard to understand.\n\nPer-choice notes:\n- sourceIndex 0: \"Voice is unintelligible when amplified by a non-linear amplifier\": This is the correct choice because SSB speech is carried by envelope variations, so a non-linear amplifier distorts those variations and makes the voice hard to understand.\n- sourceIndex 1: \"Hum and noise are reduced\": This is a near-miss because it shifts attention from Voice is unintelligible when amplified by a non-linear amplifier. In SSB microphone level, carrier suppression, sideband frequency, and peak envelope power, noise control may be useful elsewhere, but this choice points to the wrong block or symptom.\n- sourceIndex 2: \"Power demand on the power supply is regulated\": This answer would fit a different fault than Voice is unintelligible when amplified by a non-linear amplifier. In SSB microphone level, carrier suppression, sideband frequency, and peak envelope power, power alone is not the control or safety mechanism being tested in this item.\n- sourceIndex 3: \"Power output variations due to voice peaks are reduced\": This option confuses another station topic with Voice is unintelligible when amplified by a non-linear amplifier. In SSB microphone level, carrier suppression, sideband frequency, and peak envelope power, power alone is not the control or safety mechanism being tested in this item.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-05"
+    },
+    {
+      "type": "question",
+      "id": "B-003-012-005"
+    }
+  ],
+  "licenseClass": "original"
+}

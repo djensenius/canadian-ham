@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-018-009",
+  "questionId": "B-003-018-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-018-009.\n\nWhy the correct answer is right: De-energizing the source before contact prevents the rescuer from becoming part of the high-voltage circuit while trying to help.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Wrap the person in a blanket and pull him to a safe area\": A blanket is not a reliable high-voltage insulating rescue tool, and pulling can still expose the rescuer to dangerous current.\n- sourceIndex 2: \"Call an electrician\": Qualified help may be needed later, but this does not immediately make the scene safe or start emergency response.\n- sourceIndex 3: \"Remove the person by pulling an arm or a leg\": Touching a limb of someone still energized can conduct current through the rescuer.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-018-009"
+    }
+  ],
+  "licenseClass": "original"
+}

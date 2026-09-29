@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-017-007",
+  "questionId": "B-003-017-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-017-007.\n\nWhy the correct answer is right: Heavy-gauge DC leads have lower resistance, so they reduce voltage drop when a 100-watt transceiver draws high transmit current.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To prevent an electrical shock\": Low-voltage mobile wiring can be a fire hazard, but heavier wire is chosen mainly for voltage drop and current heating, not shock prevention.\n- sourceIndex 2: \"To avoid RF interference\": RF interference is addressed with bonding, routing, shielding, and chokes; simply using heavier DC wire is not the primary RFI cure.\n- sourceIndex 3: \"To minimize ripple\": Ripple is a power-supply filtering problem. Changing DC lead gauge does not replace proper supply filtering or regulation.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-017-007"
+    }
+  ],
+  "licenseClass": "original"
+}

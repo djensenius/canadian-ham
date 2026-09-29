@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-021-007",
+  "questionId": "B-003-021-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-021-007.\n\nWhy the correct answer is right: Eyes are especially vulnerable to RF heating because they do not dissipate heat as effectively as many blood-rich tissues.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Heart\": The heart is critical for electric shock concerns, but it is not the organ singled out as most likely to be damaged by RF heating.\n- sourceIndex 2: \"Liver\": The liver has substantial blood flow for heat removal compared with the eye, so it is not the best answer for RF heating vulnerability.\n- sourceIndex 3: \"Hands\": Hands can receive burns from contact with RF conductors, but the eye is the organ most often emphasized for RF heating sensitivity.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-021-007"
+    }
+  ],
+  "licenseClass": "original"
+}

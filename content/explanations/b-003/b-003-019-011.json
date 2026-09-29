@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-019-011",
+  "questionId": "B-003-019-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-019-011.\n\nWhy the correct answer is right: When a fuse opens, its voltage rating tells whether it can interrupt that circuit voltage without sustaining an arc across the opened element.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To prevent dielectric breakdown of the fuse holder\": Fuse holders need suitable insulation, but the fuse voltage rating specifically concerns safe interruption inside the fuse.\n- sourceIndex 2: \"To limit current leakage to ground while in operation\": A fuse is in series with the protected circuit and is not rated by leakage to ground during normal operation.\n- sourceIndex 3: \"To ensure voltage transients can be safely dissipated\": Surge suppressors dissipate transients; a fuse voltage rating is about interrupting current without arcing after the element melts.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-019-011"
+    }
+  ],
+  "licenseClass": "original"
+}

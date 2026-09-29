@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-018-005",
+  "questionId": "B-003-018-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-018-005.\n\nWhy the correct answer is right: Under dangerous conditions, current on the order of 20 mA through the body can be fatal, especially if it affects the heart.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"500 milliamperes\": Five hundred milliamperes is certainly dangerous, but it is far above the minimum current level named in the safety rule of thumb.\n- sourceIndex 2: \"1 ampere\": One ampere through the body is a severe and often fatal current; it is not the smallest value in the listed safety threshold.\n- sourceIndex 3: \"2 amperes\": Two amperes is much higher than the minimum fatal-current figure and would be an extreme shock condition.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-018-005"
+    }
+  ],
+  "licenseClass": "original"
+}

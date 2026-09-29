@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-019-005",
+  "questionId": "B-003-019-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-019-005.\n\nWhy the correct answer is right: Filter capacitors can retain dangerous stored energy after a supply is unplugged, so they must be safely discharged before work proceeds.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Bond the chassis to ground\": Chassis bonding is important, but it does not by itself remove the charge stored in high-voltage filter capacitors.\n- sourceIndex 2: \"Place the unit on an insulating mat\": An insulating mat can be part of a safe work area, yet the capacitors may still hold hazardous voltage inside the cabinet.\n- sourceIndex 3: \"Short the AC input leads together\": Shorting the AC input does not safely discharge the DC filter capacitors and can create a misleading or hazardous procedure.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-019-005"
+    }
+  ],
+  "licenseClass": "original"
+}

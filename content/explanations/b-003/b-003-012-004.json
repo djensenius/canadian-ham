@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-012-004",
+  "questionId": "B-003-012-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-012-004.\n\nWhy the correct answer is right: Amateur SSB voice normally uses a narrow voice bandwidth of only a few kilohertz, commonly between 2 kHz and 3 kHz.\n\nPer-choice notes:\n- sourceIndex 0: \"Between 2 kHz and 3 kHz\": This is the correct choice because amateur SSB voice normally uses a narrow voice bandwidth of only a few kilohertz, commonly between 2 kHz and 3 kHz.\n- sourceIndex 1: \"1 kHz\": This is a near-miss because it shifts attention from Between 2 kHz and 3 kHz. In SSB microphone level, carrier suppression, sideband frequency, and peak envelope power, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"2 kHz\": This answer would fit a different fault than Between 2 kHz and 3 kHz. In SSB microphone level, carrier suppression, sideband frequency, and peak envelope power, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Between 3 kHz and 6 kHz\": This option confuses another station topic with Between 2 kHz and 3 kHz. In SSB microphone level, carrier suppression, sideband frequency, and peak envelope power, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-05"
+    },
+    {
+      "type": "question",
+      "id": "B-003-012-004"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-003-07-A",
+  "lessonId": "L-003-07",
+  "officialQuestionIds": [
+    "B-003-016-003",
+    "B-003-016-006",
+    "B-003-016-007",
+    "B-003-016-009",
+    "B-003-016-011",
+    "B-003-017-003",
+    "B-003-017-005",
+    "B-003-017-011"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-003-07-A-C1",
+      "prompt": { "en": "A portable kit includes a loose lithium-based pack from another hobby. Before wiring it into the station, what plan is defensible?", "fr": null },
+      "choices": [
+        { "text": { "en": "Use only the charger, protection, and connection method specified for that pack", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Use a NiMH charger if the plug fits and the radio turns on", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Bypass the protection board so transmit current has a lower-resistance path", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Parallel it with an unmatched lithium pack using clip leads to add capacity", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Lithium-based packs need the charger, protection, and connection method intended for that chemistry and pack design. Connector fit, lower resistance, or improvised paralleling do not make the setup safe.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-07-A-C2",
+      "prompt": { "en": "The same battery and DC leads are used, but transmit current is twice the planned value. What should you predict at the radio input?", "fr": null },
+      "choices": [
+        { "text": { "en": "The input voltage rises because the battery capacity is being used faster", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Only AC ripple changes; DC lead resistance is unaffected by current", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The input voltage falls more because resistance drops more voltage at higher current", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The fuse current rating should be increased to hold the voltage steady", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Internal resistance and lead resistance cause voltage drop proportional to current, so a higher transmit current leaves less voltage at the radio. A larger fuse does not fix voltage drop.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-07-A-C3",
+      "prompt": { "en": "A compact switching supply is rated 30 A continuous for a 19 A transceiver, and the buyer plans to trust it without any station test. Which added check is still needed?", "fr": null },
+      "choices": [
+        { "text": { "en": "Confirm under load that the supply is not adding receiver hash or transmitted noise", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Measure only the no-load output voltage and stop if the meter shows nominal voltage", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Check only that the output plug fits, then skip transmit testing to avoid stressing it", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Listen only on receive and assume transmit will be clean if no hash is heard", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Current headroom is necessary, but it does not prove that the supply is quiet in the station under transmit load. No-load voltage, connector fit, and receive-only listening are useful checks, but they do not replace an under-load noise check.", "fr": null }
+    }
+  ]
+}
