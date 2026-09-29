@@ -2,6 +2,8 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { isMainModule } from "./cli.ts";
+
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const DEFAULT_LESSON_ROOT = path.join(REPO_ROOT, "content/lessons/m5-basic-electronics");
 const ALL_LESSON_ROOT = path.join(REPO_ROOT, "content/lessons");
@@ -530,7 +532,7 @@ async function main(): Promise<void> {
   }
 }
 
-if (fileURLToPath(import.meta.url) === process.argv[1]) {
+if (isMainModule(import.meta)) {
   main().catch((error: unknown) => {
     if (error instanceof LessonOriginalityError) {
       for (const issue of error.report.issues) {

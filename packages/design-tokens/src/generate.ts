@@ -1,6 +1,7 @@
+import { realpathSync } from "node:fs";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { contrastRows, type TokenSet } from "./token-utils.ts";
 
 interface Tokens extends TokenSet {
@@ -181,4 +182,21 @@ async function main(): Promise<void> {
   console.log(CHECK_MODE ? "Design token generated files and docs are current." : "Generated design token outputs and docs.");
 }
 
-await main();
+function isMainModule(): boolean {
+  const metaWithMain = import.meta as ImportMeta & { readonly main?: unknown };
+  if ("main" in metaWithMain) {
+    return metaWithMain.main === true;
+  }
+  if (process.argv[1] === undefined) {
+    return false;
+  }
+  try {
+    return import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href;
+  } catch {
+    return false;
+  }
+}
+
+if (isMainModule()) {
+  await main();
+}

@@ -2,6 +2,8 @@ import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { isMainModule } from "./cli.ts";
+
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const SKIPPED_DIRECTORIES = new Set([".git", "node_modules", "dist", "build", "coverage", ".pnpm-store"]);
 
@@ -231,7 +233,7 @@ async function main(): Promise<void> {
   console.log("Markdown relative links verified.");
 }
 
-if (fileURLToPath(import.meta.url) === process.argv[1]) {
+if (isMainModule(import.meta)) {
   main().catch((error: unknown) => {
     const message = error instanceof Error ? error.message : String(error);
     console.error(`check-links: ${message}`);
