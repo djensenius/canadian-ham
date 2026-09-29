@@ -83,12 +83,12 @@ describe("ProgressStore", () => {
   it("stores progress in IndexedDB and exports/imports a validated round trip", async () => {
     const first = createStore("roundtrip-a");
     await first.putQuestionProgress(record);
-    await first.putPreferences({ practiceMode: "review-later", examTimerEnabled: true });
+    await first.putPreferences({ practiceMode: "review-later", examTimerEnabled: true, theme: "dark" });
 
     const exported = await first.exportData("2026-01-02T04:00:00.000Z");
     assert.equal(exported.bankId, bankId);
     assert.deepEqual(exported.questionProgress, [record]);
-    assert.deepEqual(exported.preferences, { practiceMode: "review-later", examTimerEnabled: true });
+    assert.deepEqual(exported.preferences, { practiceMode: "review-later", examTimerEnabled: true, theme: "dark" });
 
     const validation = validateProgressImport(JSON.parse(JSON.stringify(exported)) as unknown);
     assert.equal(validation.ok, true);
@@ -97,7 +97,7 @@ describe("ProgressStore", () => {
     const second = createStore("roundtrip-b");
     await second.importData(validation.data!);
     assert.deepEqual(await second.getQuestionProgress(), [record]);
-    assert.deepEqual(await second.getPreferences(), { practiceMode: "review-later", examTimerEnabled: true });
+    assert.deepEqual(await second.getPreferences(), { practiceMode: "review-later", examTimerEnabled: true, theme: "dark" });
   });
 
   it("rejects invalid import data with clear errors", () => {
@@ -148,7 +148,7 @@ describe("ProgressStore", () => {
   it("resets all browser-local progress and preferences", async () => {
     const store = createStore("reset");
     await store.putQuestionProgress(record);
-    await store.putPreferences({ practiceMode: "review-later", examTimerEnabled: true });
+    await store.putPreferences({ practiceMode: "review-later", examTimerEnabled: true, theme: "light" });
 
     await store.resetAllData();
 

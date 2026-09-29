@@ -5,9 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'none'; connect-src 'self'; img-src 'self' data:; font-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'"
+      content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'none'; connect-src 'self'; img-src 'self' data:; font-src 'self'; script-src 'self' 'sha256-E77amc0CnFRHG8inr16ONddkqQaLnAfKqxm96My0KQs='; style-src 'self'"
     />
-    <title>canadian-ham</title>
+    <meta name="theme-color" content="#F6EEDC" />
+    <script>(()=>{const k="canadian-ham.theme-preference",c={light:"#F6EEDC",dark:"#201B16"};let t="system";try{const s=localStorage.getItem(k);if(s==="light"||s==="dark")t=s}catch{}const r=t==="dark"||t==="system"&&window.matchMedia?.("(prefers-color-scheme: dark)").matches?"dark":"light";if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;document.querySelector('meta[name="theme-color"]')?.setAttribute("content",c[r])})();</script>
+    <link rel="icon" href="%BASE_URL%favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="%BASE_URL%apple-touch-icon-180.png" />
+    <title>Canadian Ham</title>
   </head>
   <body>
     <div id="root"></div>

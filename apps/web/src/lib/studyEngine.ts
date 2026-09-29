@@ -11,7 +11,7 @@ import {
   type QuestionProgressRecord,
 } from "@canadian-ham/engine-ts";
 
-import { bankId, questions, questionsById, subsections, type Question } from "../data/bank";
+import { bankId, subsections, type Question } from "../data/bank";
 import type { ExamAttempt, ExamAttemptItem } from "./progressStore";
 
 export type PracticeScope =
@@ -27,6 +27,7 @@ export interface PracticeItem {
 }
 
 export interface PracticeSelectionInput {
+  readonly questions: readonly Question[];
   readonly scope: PracticeScope;
   readonly progress: readonly QuestionProgressRecord[];
   readonly latestExamItems?: readonly Pick<ExamAttemptItem, "questionId" | "subsectionId" | "selectedSourceIndex">[];
@@ -36,7 +37,7 @@ export interface PracticeSelectionInput {
 }
 
 export function buildPracticeItems(input: PracticeSelectionInput): readonly PracticeItem[] {
-  const eligible = eligibleQuestionsForScope(input.scope, input.progress, input.latestExamItems ?? [], input.now);
+  const eligible = eligibleQuestionsForScope(input.questions, input.scope, input.progress, input.latestExamItems ?? [], input.now);
   const progressByQuestionId = new Map(input.progress.map((record) => [record.questionId, record]));
   const due = new Set(dueQuestionIds(input.progress, input.now));
   const weak = new Set(weakSubsectionIds(input.progress, input.latestExamItems ?? []));
@@ -73,7 +74,7 @@ export function applyPracticeAnswer(
   return [...byQuestionId.values()].sort((a, b) => a.questionId.localeCompare(b.questionId));
 }
 
-export function createMockExam(seed: string): readonly GeneratedExamItem[] {
+export function createMockExam(seed: string, questions: readonly Question[]): readonly GeneratedExamItem[] {
   return generateExam({
     bankId,
     seed,
@@ -82,7 +83,7 @@ export function createMockExam(seed: string): readonly GeneratedExamItem[] {
   }).items;
 }
 
-export function generatedExamQuestion(item: Pick<GeneratedExamItem, "questionId">): Question {
+export function generatedExamQuestion(item: Pick<GeneratedExamItem, "questionId">, questionsById: ReadonlyMap<string, Question>): Question {
   const question = questionsById.get(item.questionId);
   if (question === undefined) {
     throw new Error(`Missing generated exam question ${item.questionId}`);
@@ -136,6 +137,7 @@ export function buildExamAttempt(input: {
 }
 
 function eligibleQuestionsForScope(
+  questions: readonly Question[],
   scope: PracticeScope,
   progress: readonly QuestionProgressRecord[],
   latestExamItems: readonly Pick<ExamAttemptItem, "questionId" | "subsectionId" | "selectedSourceIndex">[],
