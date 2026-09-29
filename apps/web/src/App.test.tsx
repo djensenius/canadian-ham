@@ -221,16 +221,40 @@ describe("App accessibility and flows", () => {
 
     await user.click(screen.getByRole("button", { name: "Start mock exam" }));
     await screen.findByText(/Question 1 of 100/);
-    const mapLink = screen.getByRole("link", { name: "Jump to question map" });
+    const originalScrollIntoView = HTMLElement.prototype.scrollIntoView;
+    const scrollIntoView = vi.fn();
+    Object.defineProperty(HTMLElement.prototype, "scrollIntoView", { configurable: true, value: scrollIntoView });
+    vi.stubGlobal("matchMedia", vi.fn((query: string) => ({
+      matches: query === "(prefers-reduced-motion: reduce)",
+      media: query,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: () => true,
+    })));
+    const mapButton = screen.getByRole("button", { name: "Jump to question map" });
     const navigator = screen.getByRole("navigation", { name: "Question navigator" });
     const questionPanel = document.querySelector(".question-panel");
     const actionRow = document.querySelector(".mock-exam--running > .action-row");
     assert.ok(questionPanel);
     assert.ok(actionRow);
-    assert.equal(mapLink.getAttribute("href"), "#question-map");
+    assert.equal(mapButton.tagName, "BUTTON");
     assert.equal(navigator.getAttribute("id"), "question-map");
     assert.ok(questionPanel.compareDocumentPosition(actionRow) & Node.DOCUMENT_POSITION_FOLLOWING);
     assert.ok(actionRow.compareDocumentPosition(navigator) & Node.DOCUMENT_POSITION_FOLLOWING);
+    assert.equal(window.location.hash, "#/mock");
+    await user.click(mapButton);
+    assert.ok(screen.getByText(/Question 1 of 100/));
+    assert.equal(document.activeElement, navigator);
+    assert.equal(window.location.hash, "#/mock");
+    assert.deepEqual(scrollIntoView.mock.calls[0]?.[0], { block: "start", behavior: "auto" });
+    if (originalScrollIntoView === undefined) {
+      delete (HTMLElement.prototype as Partial<HTMLElement>).scrollIntoView;
+    } else {
+      Object.defineProperty(HTMLElement.prototype, "scrollIntoView", { configurable: true, value: originalScrollIntoView });
+    }
     const firstChoice = screen.getAllByTestId("answer-choice")[0]!;
     firstChoice.focus();
     await user.keyboard("{Enter}");

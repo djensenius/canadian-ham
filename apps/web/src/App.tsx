@@ -944,6 +944,16 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
     }
   }
 
+  function jumpToQuestionMap(): void {
+    const navigator = document.getElementById("question-map");
+    if (navigator === null) {
+      return;
+    }
+    const prefersReducedMotion = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    navigator.focus();
+    navigator.scrollIntoView({ block: "start", behavior: prefersReducedMotion ? "auto" : "smooth" });
+  }
+
   return (
     <section className="card mock-exam mock-exam--running" aria-labelledby="mock-title">
       <h2 id="mock-title">Mock exam</h2>
@@ -970,7 +980,7 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
           <span className="sr-only" role="status" aria-live="polite">{timerAnnouncement}</span>
         </div>
       ) : <p className="timer-off-note">Timer off. No time pressure by default.</p>}
-      <a className="button secondary-button question-map-link" href="#question-map">Jump to question map</a>
+      <button className="secondary-button question-map-link" type="button" onClick={jumpToQuestionMap}>Jump to question map</button>
       <QuestionCard
         choicePermutation={item.choicePermutation}
         disabled={false}

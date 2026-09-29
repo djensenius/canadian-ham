@@ -818,8 +818,20 @@ input[type="checkbox"]:checked::after {
     grid-area: timer;
   }
 
+  /* At wide widths the navigator is already visible; keep this as a keyboard skip using the visually-hidden-focusable pattern. */
   .mock-exam--running > .question-map-link {
     grid-area: maplink;
+  }
+
+  .mock-exam--running > .question-map-link:not(:focus):not(:focus-visible) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .mock-exam--running > .question-panel {
