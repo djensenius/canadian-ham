@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-011-006",
+  "questionId": "B-001-011-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-011-006.\n\nWhy the correct answer is right: Disaster relief transmissions are allowed when normal communication systems are overloaded, damaged, or disrupted and essential needs must be met.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Never, only official emergency stations may transmit in a disaster\": The rule allows disaster-relief transmissions when normal systems are overloaded, damaged, or disrupted; it is broader than designated emergency stations only.\n- sourceIndex 2: \"When normal communication systems are working but are not convenient\": Inconvenient but working normal systems do not meet the overloaded, damaged, or disrupted condition.\n- sourceIndex 3: \"Only when the local emergency net is activated\": A local net activation may organize traffic, but the disaster-relief condition is the state of normal communication systems.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-011-006"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -258,7 +258,7 @@ Lesson files may store front matter as YAML in Markdown, but validation should p
 
 ### Lesson quiz files
 
-Lesson front matter `quizIds` refer to JSON files at `content/quizzes/{quizId}.json` with `{ id, lessonId, officialQuestionIds, conceptChecks }`, where each concept check stores localized prompt text, choices with exactly one `isCorrect: true`, and localized explanation text.
+Lesson front matter `quizIds` refer to JSON files at `content/quizzes/{quizId}.json` with `{ id, lessonId, officialQuestionIds, conceptChecks }`, where each concept check stores localized prompt text, choices with exactly one `isCorrect: true`, and localized explanation text. Concept checks are pedagogically optional: rule-based reference-style modules may use official-question-only lesson quizzes with `conceptChecks: []`, and the engine must render the resulting official items normally.
 
 ### Explanation
 

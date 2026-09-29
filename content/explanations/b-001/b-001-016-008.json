@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-016-008",
+  "questionId": "B-001-016-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-016-008.\n\nWhy the correct answer is right: Near a band edge, the entire occupied bandwidth must remain within the amateur band, not merely the displayed frequency.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Restrict operation to radiotelegraphy (CW) or digital modes\": Restricting to CW or digital modes is not the general band-edge precaution; any mode must fit its occupied bandwidth inside the band.\n- sourceIndex 2: \"Make sure that the emission mode is compatible with agreed band plans\": Band-plan compatibility is good operating practice, but the tested regulatory precaution is staying fully inside the band edge.\n- sourceIndex 3: \"Reduce transmitter power\": Reducing power does not by itself keep sidebands or occupied bandwidth from extending outside the band.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-016-008"
+    }
+  ],
+  "licenseClass": "original"
+}

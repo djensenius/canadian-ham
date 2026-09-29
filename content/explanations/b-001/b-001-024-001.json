@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-024-001",
+  "questionId": "B-001-024-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-024-001.\n\nWhy the correct answer is right: Health Canada publishes safety guidelines for maximum RF energy near the human body.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Canadian Standards Association\": CSA is a standards organization, while Health Canada publishes the RF-exposure guideline for the human body.\n- sourceIndex 2: \"Environment Canada\": Environment Canada may sound like a federal safety-related body, while Health Canada publishes the human RF-energy safety guidelines.\n- sourceIndex 3: \"National Research Council\": The National Research Council may sound technical, but Health Canada publishes the Safety Code 6 human-exposure guideline.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-06"
+    },
+    {
+      "type": "question",
+      "id": "B-001-024-001"
+    }
+  ],
+  "licenseClass": "original"
+}

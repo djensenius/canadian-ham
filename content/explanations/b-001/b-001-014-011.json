@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-014-011",
+  "questionId": "B-001-014-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-014-011.\n\nWhy the correct answer is right: Canadian amateur stations may provide third-party communications with any other amateur radio station.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"only with countries that have third-party traffic agreements with Canada\": This narrows the Canadian permission to a country-agreement condition instead of the broader any-amateur-station wording.\n- sourceIndex 2: \"on frequencies assigned to the Canadian Forces Affiliate Radio Service (CFARS)\": CFARS frequencies are not amateur-band permission for Canadian amateur third-party traffic.\n- sourceIndex 3: \"only in cases of emergencies or disaster relief\": Emergencies and disaster relief are not the only cases; the Canadian permission is broader for third-party communication with other amateur stations.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-014-011"
+    }
+  ],
+  "licenseClass": "original"
+}

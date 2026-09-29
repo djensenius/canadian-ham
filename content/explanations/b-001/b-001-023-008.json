@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-023-008",
+  "questionId": "B-001-023-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-023-008.\n\nWhy the correct answer is right: If the antenna-system proponent and a stakeholder other than the general public fail to reach agreement, ISED makes the final decision. That identifies the decision maker for this deadlock.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The decision is postponed until an agreement is reached\": The decision path goes through ISED rather than postponing forever.\n- sourceIndex 2: \"The decision is made by the local municipality\": Municipal processes can shape consultation, but this unresolved-stakeholder decision is assigned to ISED.\n- sourceIndex 3: \"The decision is made by a majority vote of residents within a radius of three times the antenna height\": A resident vote is separate from the ISED final-decision mechanism.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-06"
+    },
+    {
+      "type": "question",
+      "id": "B-001-023-008"
+    }
+  ],
+  "licenseClass": "original"
+}

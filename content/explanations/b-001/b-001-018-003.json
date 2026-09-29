@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-018-003",
+  "questionId": "B-001-018-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-018-003.\n\nWhy the correct answer is right: Basic-only holders may use repeaters down to an output frequency of 29.500 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"29.700 MHz\": 29.700 MHz is the top of the named low repeater-output segment, so using it as the lowest output frequency moves the lower edge upward.\n- sourceIndex 2: \"50 MHz\": 50 MHz is above the 29.500 MHz repeater-output threshold and would skip the lower 10-metre repeater segment.\n- sourceIndex 3: \"144 MHz\": 144 MHz is the bottom of the 2-metre band, while Basic-only repeater use begins at the 29.500 MHz output threshold.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-018-003"
+    }
+  ],
+  "licenseClass": "original"
+}

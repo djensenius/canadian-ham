@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-006-006",
+  "questionId": "B-001-006-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-006-006.\n\nWhy the correct answer is right: A radio that will be used in the land mobile service must be certified and licensed for that service.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The radio operator has a Restricted Operator's Certificate\": An operator certificate alone does not establish the radio's certification and service licence.\n- sourceIndex 2: \"The equipment has an RF power output of 2 watts or less\": Low RF power does not satisfy land-mobile certification and licensing.\n- sourceIndex 3: \"The equipment is used in remote areas north of 60 degrees latitude\": Remote location does not replace the required certification and licence.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-006-006"
+    }
+  ],
+  "licenseClass": "original"
+}

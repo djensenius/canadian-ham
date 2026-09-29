@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-010-003",
+  "questionId": "B-001-010-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-010-003.\n\nWhy the correct answer is right: Secondary status means amateur use is conditional: amateurs may use the band only while protecting primary users from interference.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Nothing special: all users of a frequency band have equal rights to operate\": Equal rights would describe co-primary or equal-status sharing; secondary status is specifically a lower-priority permission.\n- sourceIndex 2: \"Amateur radio operators are only allowed to use the frequency band during emergencies\": Emergency-only operation is not what secondary status means; the band can be used routinely if primary users are protected.\n- sourceIndex 3: \"Amateur radio operators can only use the band briefly for radio testing and adjustment purposes\": Brief testing is too narrow; secondary amateur operation can include normal amateur activity when it does not interfere with primary services.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-010-003"
+    }
+  ],
+  "licenseClass": "original"
+}

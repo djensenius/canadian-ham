@@ -115,6 +115,18 @@ test("quiz check accepts a valid lesson quiz file", async () => {
   });
 });
 
+test("quiz check accepts an official-only quiz with an empty conceptChecks array", async () => {
+  await withFixture("official-only", async (root) => {
+    await writeBaseFixture(root, quiz({ conceptChecks: [] }));
+
+    const report = await runCheck(root);
+
+    assert.equal(report.quizFileCount, 1);
+    assert.equal(report.officialQuestionCount, 1);
+    assert.equal(report.conceptCheckCount, 0);
+  });
+});
+
 test("quiz check rejects unknown lesson IDs", async () => {
   await withFixture("unknown-lesson", async (root) => {
     await writeBaseFixture(root, quiz({ lessonId: "L-MISSING-01" }));

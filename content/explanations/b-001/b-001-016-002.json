@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-016-002",
+  "questionId": "B-001-016-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-016-002.\n\nWhy the correct answer is right: For 28 MHz to 29.7 MHz, the maximum occupied bandwidth is 20 kHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"6 kHz\": 6 kHz is the general limit for many bands between 7 MHz and 25 MHz, not this 10-metre range.\n- sourceIndex 2: \"30 kHz\": 30 kHz applies to the 6-metre and 2-metre examples, not 28 MHz to 29.7 MHz.\n- sourceIndex 3: \"15 kHz\": 15 kHz is below the 20 kHz limit and is not the maximum for this 10-metre range.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-016-002"
+    }
+  ],
+  "licenseClass": "original"
+}

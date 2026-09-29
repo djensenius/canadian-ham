@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-021-003",
+  "questionId": "B-001-021-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-021-003.\n\nWhy the correct answer is right: In the stated offshore Florida situation, the limits applicable to United States amateur operators govern. The location-specific rule controls the scenario.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Those applicable to Canadian amateur radio operators\": The operator is Canadian, while the scenario's operating location uses United States amateur limits.\n- sourceIndex 2: \"Those applicable in International Telecommunication Union region 1\": Region 1 is associated with Europe and Africa, so it cannot describe the Florida offshore situation.\n- sourceIndex 3: \"Those applicable in International Telecommunication Union region 2\": A broad region label is too general for the offshore-Florida scenario; United States amateur limits govern.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-05"
+    },
+    {
+      "type": "question",
+      "id": "B-001-021-003"
+    }
+  ],
+  "licenseClass": "original"
+}

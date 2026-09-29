@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-021-008",
+  "questionId": "B-001-021-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-021-008.\n\nWhy the correct answer is right: Basic is the minimum qualification for a Canadian amateur operating in the United States. The CEPT arrangement has a different qualification requirement.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Basic with Honours\": Honours is more than the minimum for United States operation.\n- sourceIndex 2: \"Basic with Morse code\": The United States visiting arrangement uses Basic as enough; adding Morse would make the requirement stricter than the minimum.\n- sourceIndex 3: \"Advanced\": Advanced belongs to the CEPT arrangement; the United States arrangement uses Basic as the minimum level.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-05"
+    },
+    {
+      "type": "question",
+      "id": "B-001-021-008"
+    }
+  ],
+  "licenseClass": "original"
+}

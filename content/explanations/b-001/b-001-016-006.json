@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-016-006",
+  "questionId": "B-001-016-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-016-006.\n\nWhy the correct answer is right: The 10.100 MHz to 10.150 MHz band is the special band with a maximum allowed bandwidth below 6 kHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"18.068 MHz to 18.168 MHz\": This range falls within the broader 7 MHz to 25 MHz group whose general bandwidth limit is 6 kHz, not less than 6 kHz.\n- sourceIndex 2: \"24.890 MHz to 24.990 MHz\": This range is also inside the 7 MHz to 25 MHz group, so the general 6 kHz HF-group limit applies rather than the special below-6-kHz rule.\n- sourceIndex 3: \"1.800 MHz to 2.000 MHz\": This is the 160-metre band range, while the narrow-band exception is 10.100 MHz to 10.150 MHz.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-016-006"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-003-006",
+  "questionId": "B-001-003-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-003-006.\n\nWhy the correct answer is right: The false statement is warrantless non-consensual dwelling entry; dwelling entry by a radio inspector requires consent or a warrant.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Where entry is refused, and is necessary to perform their duties under the Radiocommunication Act, a radio inspector may obtain a warrant\": This is the proper next step when entry is refused and entry is needed for the inspector's duties.\n- sourceIndex 2: \"In executing a warrant, a radio inspector shall not use force, unless accompanied by a peace officer, and force is authorized\": This statement keeps the extra safeguards for force: a warrant context, a peace officer, and authorization for force.\n- sourceIndex 3: \"The person responsible for a dwelling entered by a radio inspector shall provide the inspector the requested information\": Once entry is lawful, the responsible person must provide the requested information; this is not the false dwelling-entry claim.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-003-006"
+    }
+  ],
+  "licenseClass": "original"
+}

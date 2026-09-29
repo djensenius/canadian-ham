@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-014-002",
+  "questionId": "B-001-014-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-014-002.\n\nWhy the correct answer is right: For foreign operators other than United States citizens, Canada requires a country agreement and the appropriate permit.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Amateur radio operators are automatically granted equivalent privileges in all member states of the International Telecommunication Union\": International Telecommunication Union membership alone does not automatically grant equivalent amateur privileges in Canada.\n- sourceIndex 2: \"Canada automatically grants privileges to visiting amateur radio operators\": Canada does not automatically grant visitor privileges without the agreement-and-permit condition.\n- sourceIndex 3: \"The foreign amateur radio operator must submit an application to Radio Amateurs of Canada (RAC)\": RAC is not the permit condition for visitor authority in Canada.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-014-002"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-008-005",
+  "questionId": "B-001-008-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-008-005.\n\nWhy the correct answer is right: Installing an amateur radio club station requires Basic and Advanced qualifications.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Basic, Advanced and Morse code\": Morse is not added to the minimum set for this club-station installation.\n- sourceIndex 2: \"Basic\": Basic alone is insufficient for installing the club station.\n- sourceIndex 3: \"Basic with Honours\": Honours is not the same as holding Advanced for this privilege.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-008-005"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-004-007",
+  "questionId": "B-001-004-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-004-007.\n\nWhy the correct answer is right: Candidates must have a valid address in Canada.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Be a Canadian citizen\": Basic eligibility requires a valid Canadian address; citizenship is separate from that address requirement.\n- sourceIndex 2: \"Be a Canadian citizen or permanent resident\": Permanent-resident status is not added to the address requirement.\n- sourceIndex 3: \"Be at least 14 years of age and a Canadian citizen or permanent resident\": This combines age and status requirements that are absent from the Basic eligibility rule.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-004-007"
+    }
+  ],
+  "licenseClass": "original"
+}

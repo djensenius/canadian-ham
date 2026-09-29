@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-020-002",
+  "questionId": "B-001-020-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-020-002.\n\nWhy the correct answer is right: The operator is responsible for keeping international amateur communication within amateur-radio purposes or personal remarks. That principle applies even when the contact is friendly and both stations are properly certified.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"commercial communications are brief\": Brevity does not make commercial traffic acceptable on amateur radio; the issue is the purpose of the communication.\n- sourceIndex 2: \"international communications are carried out within the power limitations of the foreign administration\": A station operating in Canada follows Canadian power limits, and the international-communication rule is about message content.\n- sourceIndex 3: \"third parties are charged a nominal sum for their messages\": Charging even a small amount points toward using amateur radio as a paid message service, which conflicts with the non-commercial character being tested.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-05"
+    },
+    {
+      "type": "question",
+      "id": "B-001-020-002"
+    }
+  ],
+  "licenseClass": "original"
+}

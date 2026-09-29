@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-009-004",
+  "questionId": "B-001-009-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-009-004.\n\nWhy the correct answer is right: The station owner may choose any qualified amateur radio operator as control operator.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Any person over 21 years of age with a Basic Qualification\": Age 21 is outside the control-operator qualification rule.\n- sourceIndex 2: \"Any person over 21 years of age with Basic and Morse code qualifications\": This adds both an age condition and Morse requirement not present in the rule.\n- sourceIndex 3: \"Any person over 21 years of age\": Age alone never makes someone a qualified amateur control operator.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-009-004"
+    }
+  ],
+  "licenseClass": "original"
+}

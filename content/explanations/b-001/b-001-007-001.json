@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-007-001",
+  "questionId": "B-001-007-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-007-001.\n\nWhy the correct answer is right: Business planning is the prohibited club-net topic because amateur communications are not for business activity.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Recreation planning\": Recreational planning is ordinary non-commercial conversation, not prohibited business traffic.\n- sourceIndex 2: \"Code practice planning\": Planning code practice fits amateur-radio study and practice.\n- sourceIndex 3: \"Emergency planning\": Emergency-planning discussion fits amateur service planning rather than business activity.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-007-001"
+    }
+  ],
+  "licenseClass": "original"
+}

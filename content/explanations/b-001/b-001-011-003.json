@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-011-003",
+  "questionId": "B-001-011-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-011-003.\n\nWhy the correct answer is right: An unanswered distress signal on an amateur band creates a narrow exception: the operator may respond and offer assistance even without normal privileges for that band.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"you may respond and offer assistance using international Morse code only\": The exception is not limited to international Morse code; the key fact is the unanswered distress signal.\n- sourceIndex 2: \"you may respond and offer assistance after obtaining permission from Innovation, Science and Economic Development Canada\": Requiring prior ISED permission would delay the immediate response that the unanswered distress exception permits.\n- sourceIndex 3: \"you may not respond nor offer assistance\": A complete refusal to answer would ignore the distress exception established for this situation.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-011-003"
+    }
+  ],
+  "licenseClass": "original"
+}

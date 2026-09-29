@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-013-010",
+  "questionId": "B-001-013-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-013-010.\n\nWhy the correct answer is right: A test transmission uses the same station identification rules as a radio contact.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Brief test transmissions need not be identified\": Briefness does not create an identification exemption for test transmissions.\n- sourceIndex 2: \"Identification shall be transmitted at five-minute intervals\": A special five-minute test interval is invented; tests use the normal contact identification framework rather than a separate test schedule.\n- sourceIndex 3: \"Identification is only needed on voice modes\": Identification is not limited to voice; the same rule applies to the test transmission as such.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-013-010"
+    }
+  ],
+  "licenseClass": "original"
+}

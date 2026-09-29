@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-014-010",
+  "questionId": "B-001-014-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-014-010.\n\nWhy the correct answer is right: For voice operation in Canada, an American amateur identifies with the call sign, mobile or portable qualifier, and the Canadian call sign prefix for the station location.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The name of the nearest Canadian community\": Nearest community may help listeners, but the voice visitor format asks for the Canadian prefix that matches the station location.\n- sourceIndex 2: \"The name of the province or territory where the station is located\": Province or territory alone does not supply the required Canadian call sign prefix for the voice identification.\n- sourceIndex 3: \"The transmitting frequency being used\": Frequency is useful operating information, but it is not part of the American visitor voice-identification format in Canada.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-014-010"
+    }
+  ],
+  "licenseClass": "original"
+}

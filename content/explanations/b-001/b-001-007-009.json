@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-007-009",
+  "questionId": "B-001-007-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-007-009.\n\nWhy the correct answer is right: Secret code transmission by an amateur station is not permitted.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"is permitted for contests\": Contest convenience does not authorize secret codes.\n- sourceIndex 2: \"must be approved by Innovation, Science and Economic Development Canada\": Amateur service rules require open meaning rather than a special approval path for secret codes.\n- sourceIndex 3: \"is permitted for third-party traffic\": Third-party handling does not make secret coding acceptable.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-007-009"
+    }
+  ],
+  "licenseClass": "original"
+}

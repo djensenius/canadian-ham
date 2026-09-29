@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-007-008",
+  "questionId": "B-001-007-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-007-008.\n\nWhy the correct answer is right: Turning down background audio helps prevent retransmitting music or other non-amateur signals through the microphone.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Turn up the volume of your transmitter\": More transmitter audio or power would make pickup more likely to be transmitted, not less.\n- sourceIndex 2: \"Speak closer to the microphone to increase your signal strength\": Speaking closer does not remove the non-amateur audio source in the room.\n- sourceIndex 3: \"Adjust your transceiver noise blanker\": A receiver noise blanker does not stop the microphone from picking up background audio.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-007-008"
+    }
+  ],
+  "licenseClass": "original"
+}

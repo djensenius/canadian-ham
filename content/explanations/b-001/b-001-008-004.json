@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-008-004",
+  "questionId": "B-001-008-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-008-004.\n\nWhy the correct answer is right: Installing a single-band voice repeater requires Basic and Advanced qualifications.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Basic and Morse code\": Morse is not the added qualification required for this repeater installation.\n- sourceIndex 2: \"Basic with Honours\": Honours does not replace Advanced for this station responsibility.\n- sourceIndex 3: \"Basic\": Basic alone is not enough for installing the repeater described.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-008-004"
+    }
+  ],
+  "licenseClass": "original"
+}

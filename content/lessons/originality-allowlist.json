@@ -53,5 +53,135 @@
     "lessonId": "L-002-04",
     "blockHeading": "Reference fact: map and bearing relationships",
     "reason": "Reviewed reference table: azimuthal-map and long-path bearing facts include standard terminology and the 180-degree relationship needed by the explanations."
+  },
+  {
+    "lessonId": "L-001-01",
+    "blockHeading": "Reference facts: Authority and source roles",
+    "reason": "Reviewed regulatory reference table: single source-role facts are established by official answers and kept in a labelled table rather than a practice prompt."
+  },
+  {
+    "lessonId": "L-001-01",
+    "blockHeading": "Reference facts: Certificate records, addresses, and call-sign fees",
+    "reason": "Reviewed regulatory reference table: exact validity, deadline, retention, and fee facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-01",
+    "blockHeading": "Reference facts: Offences, penalties, and process boundaries",
+    "reason": "Reviewed regulatory reference table: offence, penalty, and process-boundary facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-01",
+    "blockHeading": "Reference facts: Basic eligibility, qualifications, exams, and accommodations",
+    "reason": "Reviewed regulatory reference table: eligibility, qualification sequence, fee, and accommodation facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-02",
+    "blockHeading": "Reference facts: Work done for another person",
+    "reason": "Reviewed regulatory reference table: authorization requirements for work on another person's apparatus are established by official answers."
+  },
+  {
+    "lessonId": "L-001-02",
+    "blockHeading": "Reference facts: Amateur service boundaries",
+    "reason": "Reviewed regulatory reference table: service-boundary and equipment-certification facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-02",
+    "blockHeading": "Reference facts: Communications that fit amateur radio",
+    "reason": "Reviewed regulatory reference table: communication-purpose and encoding facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-02",
+    "blockHeading": "Reference facts: Station privileges and construction",
+    "reason": "Reviewed regulatory reference table: Basic and Basic-plus-Advanced station-privilege facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-02",
+    "blockHeading": "Reference facts: Control operator and station owner",
+    "reason": "Reviewed regulatory reference table: responsibility and supervision facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-03",
+    "blockHeading": "Reference facts: Interference and shared bands",
+    "reason": "Reviewed regulatory reference table: interference, secondary-service, and shared-band facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-03",
+    "blockHeading": "Reference facts: Emergency, disaster, and public-service communication",
+    "reason": "Reviewed regulatory reference table: emergency and relief-operation facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-03",
+    "blockHeading": "Reference facts: Privacy, payment, and message handling",
+    "reason": "Reviewed regulatory reference table: privacy and remuneration facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-03",
+    "blockHeading": "Reference facts: Station identification",
+    "reason": "Reviewed regulatory reference table: identification timing and language facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-03",
+    "blockHeading": "Reference facts: Third-party and visiting-operator communication",
+    "reason": "Reviewed regulatory reference table: third-party, visitor, and international permission facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-04",
+    "blockHeading": "Reference facts: Operator privileges and below-30-MHz access",
+    "reason": "Reviewed regulatory reference table: operator-privilege and below-30-MHz gate facts are established by official answers and docs/exam-facts.md."
+  },
+  {
+    "lessonId": "L-001-04",
+    "blockHeading": "Reference facts: HF band ranges",
+    "reason": "Reviewed regulatory reference table: HF band ranges are established by official answers and intentionally taught as exact facts."
+  },
+  {
+    "lessonId": "L-001-04",
+    "blockHeading": "Reference facts: Bandwidth and mode-fit cues",
+    "reason": "Reviewed regulatory reference table: bandwidth limits and mode-fit cues are established by official answers, with no unsupported mode-width expansion."
+  },
+  {
+    "lessonId": "L-001-04",
+    "blockHeading": "Reference facts: Power quantities and limits",
+    "reason": "Reviewed regulatory reference table: power values and quantities are established by official answers and docs/exam-facts.md."
+  },
+  {
+    "lessonId": "L-001-04",
+    "blockHeading": "Reference facts: Repeaters, automatic transmissions, stability, and modulation quality",
+    "reason": "Reviewed regulatory reference table: station-type, frequency-stability, measurement, and modulation-quality facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-05",
+    "blockHeading": "Reference facts: International message purpose and regulatory source",
+    "reason": "Reviewed regulatory reference table: international message-purpose, administration-objection, Morse, and ITU-source facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-05",
+    "blockHeading": "Reference facts: ITU regions and operating location",
+    "reason": "Reviewed regulatory reference table: ITU-region and operating-location facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-05",
+    "blockHeading": "Reference facts: United States and CEPT-style visits",
+    "reason": "Reviewed regulatory reference table: United States and CEPT qualification and voice-identification facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-06",
+    "blockHeading": "Reference facts: Antenna siting and public consultation",
+    "reason": "Reviewed regulatory reference table: antenna authority, process, exclusion, and consultation facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-06",
+    "blockHeading": "Reference facts: Safety Code 6 and RF exposure",
+    "reason": "Reviewed regulatory reference table: Safety Code 6, exposure-factor, and exposure-quantity facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-06",
+    "blockHeading": "Reference facts: EMCAB-2 interference criteria",
+    "reason": "Reviewed regulatory reference table: EMCAB-2 field-strength and equipment-category facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-06",
+    "blockHeading": "Summary",
+    "reason": "Reviewed summary rule: Safety Code 6 exposure-limit wording distinguishes limit quantities from transmitter power as an exposure factor."
   }
 ]

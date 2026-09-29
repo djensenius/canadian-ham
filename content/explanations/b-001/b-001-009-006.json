@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-009-006",
+  "questionId": "B-001-009-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-009-006.\n\nWhy the correct answer is right: During transmission, the control operator must be at the station's control point.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Anywhere in the same building as the transmitter\": The same building is not precise enough if the operator cannot control the station.\n- sourceIndex 2: \"At the station's entrance, to control entry to the room\": Controlling room entry is different from controlling the transmitter.\n- sourceIndex 3: \"Anywhere within 50 km of the station location\": A distance radius does not satisfy the control-point requirement.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-009-006"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-023-006",
+  "questionId": "B-001-023-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-023-006.\n\nWhy the correct answer is right: The default ISED process requires the proponent to address reasonable and relevant concerns that are submitted in writing within the public comment period. The answer narrows both the kind of concern and how it must be provided.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"all questions, comments and concerns raised\": The default process focuses on reasonable and relevant concerns provided within the comment period.\n- sourceIndex 2: \"comments reported in the media\": Media reports are separate from written public-comment submissions provided through the process.\n- sourceIndex 3: \"opposition to the project\": Mere opposition, without the reasonable and relevant written-concern framing, is broader than the requirement being tested.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-06"
+    },
+    {
+      "type": "question",
+      "id": "B-001-023-006"
+    }
+  ],
+  "licenseClass": "original"
+}

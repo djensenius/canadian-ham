@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-015-004",
+  "questionId": "B-001-015-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-015-004.\n\nWhy the correct answer is right: Certificate holders may operate radio-controlled models on all amateur bands above 30 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"if the control transmitter does not exceed 15 kHz of occupied bandwidth\": This invents a bandwidth condition instead of using the above-30-MHz band boundary for model control.\n- sourceIndex 2: \"on all amateur radio bands below 30 MHz\": Below-30-MHz bands are the opposite side of the boundary taught for model-control operation.\n- sourceIndex 3: \"if only pulse modulation is used\": The model-control permission turns on the above-30-MHz band boundary rather than a pulse-modulation condition.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-015-004"
+    }
+  ],
+  "licenseClass": "original"
+}

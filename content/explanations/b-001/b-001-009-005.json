@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-009-005",
+  "questionId": "B-001-009-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-009-005.\n\nWhy the correct answer is right: A control operator is required whenever the station is transmitting.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A control operator is not needed\": A transmitting station requires a control operator.\n- sourceIndex 2: \"Whenever the station receiver is operated\": Receiving alone is outside the control-operator trigger; transmitting is the trigger.\n- sourceIndex 3: \"Only when training another amateur radio operator\": Training is not the only time a control operator is needed; transmitting is the key condition.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-009-005"
+    }
+  ],
+  "licenseClass": "original"
+}

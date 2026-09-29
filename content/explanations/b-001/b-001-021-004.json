@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-021-004",
+  "questionId": "B-001-021-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-021-004.\n\nWhy the correct answer is right: Australia, Japan, and Southeast Asia are in ITU Region 3 for amateur-radio region references.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Region 1\": Region 1 applies to Europe and Africa, while Australia, Japan, and Southeast Asia are in Region 3.\n- sourceIndex 2: \"Region 2\": Region 2 applies to Canada, while Australia, Japan, and Southeast Asia are in Region 3.\n- sourceIndex 3: \"Region 4\": The ITU uses three regions in this lesson set; Region 4 is not an additional region for Australia, Japan, or Southeast Asia.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-05"
+    },
+    {
+      "type": "question",
+      "id": "B-001-021-004"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,25 @@
+{
+  "id": "EXP-B-001-011-007",
+  "questionId": "B-001-011-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-011-007.\n\nWhy the correct answer is right: For an amateur operator in distress, the ordinary transmitter power limitations do not apply.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"2250 watts PEP\": 2250 watts PEP is an Advanced SSB limit in ordinary operation, not the distress answer.\n- sourceIndex 2: \"750 watts carrier power\": 750 watts carrier power is not the distress rule and is not the Basic non-SSB carrier limit taught in L-001-04.\n- sourceIndex 3: \"1000 watts DC input\": 1000 watts DC input is an Advanced DC input limit for ordinary operation, not a distress cap.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-011-007"
+    }
+  ],
+  "licenseClass": "original"
+}

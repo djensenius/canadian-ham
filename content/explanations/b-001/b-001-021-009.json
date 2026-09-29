@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-021-009",
+  "questionId": "B-001-021-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-021-009.\n\nWhy the correct answer is right: For voice operation in the United States, the pattern starts with the Canadian call sign, then adds portable or mobile as appropriate, then adds the prefix for the US call area being visited. This distinguishes it from the CEPT prefix-first pattern.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Transmit the prefix for the US call area being visited, followed by \\\"portable\\\" or \\\"mobile\\\" as appropriate, followed by their Canadian call sign\": This puts the US call-area prefix first, which is not the order given for United States operation.\n- sourceIndex 2: \"Transmit their Canadian call sign\": The call sign alone omits the required portable or mobile wording and the US call-area prefix.\n- sourceIndex 3: \"Transmit their Canadian call sign, followed by the city and state where they are visiting\": The pattern uses portable or mobile wording and the US call-area prefix, not the city and state name.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-05"
+    },
+    {
+      "type": "question",
+      "id": "B-001-021-009"
+    }
+  ],
+  "licenseClass": "original"
+}

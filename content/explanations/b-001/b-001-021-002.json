@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-021-002",
+  "questionId": "B-001-021-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-021-002.\n\nWhy the correct answer is right: When the Canadian operator is operating a station in Florida, the applicable band limits are those for United States amateur operators. The operating location controls the answer, not the operator's home country alone.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Those applicable in International Telecommunication Union region 2\": Region 2 is too broad for this scenario; operation in Florida uses United States amateur limits.\n- sourceIndex 2: \"Those applicable in International Telecommunication Union region 3\": Florida is outside the Region 3 geography associated with Australia, Japan, and Southeast Asia, and operation in Florida uses United States amateur limits.\n- sourceIndex 3: \"Those applicable in International Telecommunication Union region 1\": Region 1 is not the applicable region for Florida, and the question requires the visited country's amateur limits.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-05"
+    },
+    {
+      "type": "question",
+      "id": "B-001-021-002"
+    }
+  ],
+  "licenseClass": "original"
+}

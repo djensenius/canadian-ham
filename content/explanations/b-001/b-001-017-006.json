@@ -1,0 +1,25 @@
+{
+  "id": "EXP-B-001-017-006",
+  "questionId": "B-001-017-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-017-006.\n\nWhy the correct answer is right: On 60 metres, the Advanced limit is 100 watts ERP expressed as PEP.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"250 watts\": This value comes from the Basic final-stage DC input rule, not the special 60-metre ERP PEP ceiling.\n- sourceIndex 2: \"560 watts\": The Basic single-sideband PEP ceiling does not override the special 60-metre ERP value.\n- sourceIndex 3: \"2250 watts\": 2250 watts is the Advanced SSB PEP maximum generally, but it is not the special 60-metre ERP limit.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-017-006"
+    },
+    {
+      "type": "rbr-4",
+      "url": "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service"
+    }
+  ],
+  "licenseClass": "original"
+}

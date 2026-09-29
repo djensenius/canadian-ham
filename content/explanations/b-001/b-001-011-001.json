@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-011-001",
+  "questionId": "B-001-011-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-011-001.\n\nWhy the correct answer is right: Ordinary amateur stations communicate with other amateur stations; that is the amateur-service communication boundary.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"with anyone who uses international Morse code\": Knowing Morse code does not make a non-amateur station an amateur station or open communication to anyone using that code.\n- sourceIndex 2: \"with non-amateur radio stations\": Non-amateur stations are outside the normal amateur-to-amateur communication rule.\n- sourceIndex 3: \"with any station involved in a real or simulated emergency\": Emergency involvement does not turn every station into a permitted amateur contact for this ordinary communication rule.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-011-001"
+    }
+  ],
+  "licenseClass": "original"
+}

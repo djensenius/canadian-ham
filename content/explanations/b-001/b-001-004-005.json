@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-004-005",
+  "questionId": "B-001-004-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-004-005.\n\nWhy the correct answer is right: The Morse qualification speed is 5 words per minute for both sending and receiving.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"12 wpm\": Twelve wpm is above the 5 wpm sending-and-receiving requirement for the Morse qualification.\n- sourceIndex 2: \"7 wpm\": Seven wpm is also above the stated requirement.\n- sourceIndex 3: \"15 wpm\": Fifteen wpm is higher still and is not the Morse qualification speed.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-004-005"
+    }
+  ],
+  "licenseClass": "original"
+}

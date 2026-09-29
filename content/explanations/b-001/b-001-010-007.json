@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-010-007",
+  "questionId": "B-001-010-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-010-007.\n\nWhy the correct answer is right: In the 430.0 MHz to 450.0 MHz range, amateur operation must protect other radio services from interference.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"7.0 MHz to 7.1 MHz\": The 7.0 MHz to 7.1 MHz span is part of the 40-metre HF range; the shared-service interference rule uses the 430.0 MHz to 450.0 MHz UHF range.\n- sourceIndex 2: \"144.0 MHz to 148.0 MHz\": This is the 2-metre amateur band used in bandwidth questions, but the interference-to-other-services example is the 430.0 MHz to 450.0 MHz range.\n- sourceIndex 3: \"14.0 MHz to 14.2 MHz\": This is within the 20-metre HF range; choosing it confuses a regular HF band segment with the 430.0 MHz to 450.0 MHz shared-service example.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-010-007"
+    }
+  ],
+  "licenseClass": "original"
+}

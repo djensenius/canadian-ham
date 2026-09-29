@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-008-001",
+  "questionId": "B-001-008-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-008-001.\n\nWhy the correct answer is right: Certificate holders may operate an amateur station anywhere in Canada, subject to their privileges and other rules.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Anywhere in Canada only during times of emergency\": Canadian certificate authority covers ordinary Canadian amateur operation subject to the operator's privileges.\n- sourceIndex 2: \"Only at the address shown on Innovation, Science and Economic Development Canada records\": The certificate address is a record duty, not a restriction to one operating location.\n- sourceIndex 3: \"Only within their province or territory\": Operation is not confined to the holder's province or territory.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-008-001"
+    }
+  ],
+  "licenseClass": "original"
+}

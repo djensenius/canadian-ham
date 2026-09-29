@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-005-005",
+  "questionId": "B-001-005-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-005-005.\n\nWhy the correct answer is right: Repairing an amateur transmitter for someone else requires both you and the other person to hold amateur certificates.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Only the other person must hold an Amateur Radio Operator Certificate\": The owner's certificate does not cover an uncertified repairer.\n- sourceIndex 2: \"Only you must hold an Amateur Radio Operator Certificate\": Your certificate does not create authority for an uncertified station owner.\n- sourceIndex 3: \"The other person must be enrolled in an amateur radio certification course\": Being in a course is not the same as holding the authorization.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-005-005"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-006-003",
+  "questionId": "B-001-006-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-006-003.\n\nWhy the correct answer is right: Using an amateur amplifier to boost a licence-exempt transmitter is not permitted.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"When emissions will be outside amateur radio frequency allocations\": Operating outside amateur allocations makes the idea worse, not permissible.\n- sourceIndex 2: \"Only for short test transmissions\": A short test does not authorize amplification of licence-exempt equipment.\n- sourceIndex 3: \"When other users will not be interfered with\": Lack of interference does not create permission for the prohibited amplifier use.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-006-003"
+    }
+  ],
+  "licenseClass": "original"
+}

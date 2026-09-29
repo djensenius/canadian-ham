@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-009-003",
+  "questionId": "B-001-009-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-009-003.\n\nWhy the correct answer is right: A station owner is responsible for station operation in accordance with the regulations.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"You must allow another amateur radio operator to operate your station upon request\": The owner may choose control operators; there is no duty to allow use on request.\n- sourceIndex 2: \"You must be present whenever the station is operated\": The owner need not always be physically present if a qualified control operator is responsible.\n- sourceIndex 3: \"You must notify Innovation, Science and Economic Development Canada if another amateur radio operator acts as the control operator\": The owner chooses a qualified control operator without notifying ISED for each control-operator change.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-009-003"
+    }
+  ],
+  "licenseClass": "original"
+}

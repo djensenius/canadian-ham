@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-023-009",
+  "questionId": "B-001-023-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-023-009.\n\nWhy the correct answer is right: The exempt height depends on the land-use authority or ISED. The safe exam principle is to check the applicable exemption for the installation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"10 metres\": This fixed height is separate from the applicable-exemption test.\n- sourceIndex 2: \"15 metres\": This number is another tempting fixed threshold, but the rule depends on the applicable exemption.\n- sourceIndex 3: \"21 metres\": A larger fixed number still misses the point that the exemption is set by the land-use authority or ISED.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-06"
+    },
+    {
+      "type": "question",
+      "id": "B-001-023-009"
+    }
+  ],
+  "licenseClass": "original"
+}

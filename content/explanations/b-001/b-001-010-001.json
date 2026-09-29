@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-010-001",
+  "questionId": "B-001-010-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-010-001.\n\nWhy the correct answer is right: The correct term is harmful interference because the transmission is being described by its effect on other communications: it disturbs their service instead of merely being unidentified or using a particular mode.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Interrupted CW\": Interrupted CW names a Morse-code signal that has been broken up; it describes a signal form, not the regulatory category for a disturbing transmission.\n- sourceIndex 2: \"Transponder signals\": Transponder signals are retransmitted or reply signals from equipment; a transponder can operate normally without disturbing another communication.\n- sourceIndex 3: \"Unidentified transmissions\": Unidentified transmissions lack station identification, but a missing call sign is a different problem from the interference effect being asked about.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-010-001"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-002-003",
+  "questionId": "B-001-002-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-002-003.\n\nWhy the correct answer is right: The address rule is to notify ISED within 30 days of a mailing-address change.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"you must notify Innovation, Science and Economic Development Canada within 14 days of operation at the new address\": This changes the deadline and ties it to operation at the new place; the certificate record duty uses the mailing-address change deadline.\n- sourceIndex 2: \"you must not operate until a change of address card is forwarded to Innovation, Science and Economic Development Canada\": The address-update duty requires notification within the stated period and is separate from waiting for a card.\n- sourceIndex 3: \"within the same province, you do not need to notify Innovation, Science and Economic Development Canada\": The duty is about the mailing address record, not only moves across provincial or territorial lines.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-002-003"
+    }
+  ],
+  "licenseClass": "original"
+}

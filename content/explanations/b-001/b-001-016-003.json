@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-016-003",
+  "questionId": "B-001-016-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-016-003.\n\nWhy the correct answer is right: Except for the one special narrow band, amateur bands between 7 MHz and 25 MHz use a 6 kHz allowed bandwidth.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"15 kHz\": 15 kHz falls between the 6 kHz HF-group limit and the 20 kHz 10-metre limit, so it does not match this HF group.\n- sourceIndex 2: \"20 kHz\": 20 kHz applies up in the 10-metre range, not to the 7 MHz through 25 MHz HF group being asked about.\n- sourceIndex 3: \"30 kHz\": 30 kHz is the VHF bandwidth limit for 6 metres and 2 metres, while this HF group uses 6 kHz.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-016-003"
+    }
+  ],
+  "licenseClass": "original"
+}

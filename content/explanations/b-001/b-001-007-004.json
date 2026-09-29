@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-007-004",
+  "questionId": "B-001-007-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-007-004.\n\nWhy the correct answer is right: The prohibited one-way communication is broadcasts intended for the general public.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Radio control commands to model craft\": Model-control commands are a permitted one-way use.\n- sourceIndex 2: \"Brief transmissions to make adjustments to the station\": Short adjustment transmissions are allowed, so this is not the prohibited case.\n- sourceIndex 3: \"Morse code practice\": Morse practice is a permitted one-way communication in the amateur service.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-007-004"
+    }
+  ],
+  "licenseClass": "original"
+}

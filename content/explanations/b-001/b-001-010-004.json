@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-010-004",
+  "questionId": "B-001-010-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-010-004.\n\nWhy the correct answer is right: Two amateur operators wanting the same frequency have equal amateur standing, so neither one gains priority merely from certificate level, power, or region.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The station operator with a lesser qualification must yield the frequency to an operator of higher qualification\": A higher qualification gives extra operating privileges in some areas, but it does not create ownership of a busy amateur frequency.\n- sourceIndex 2: \"The station operator with a lower power output must yield the frequency to the station with a higher power output\": Higher power is not a right-of-way signal; using more watts does not force a lower-power station to yield.\n- sourceIndex 3: \"Station operators in regions 1 and 3 of the International Telecommunication Union must yield the frequency to stations in region 2\": The International Telecommunication Union region in that answer choice does not create a priority rule between two amateurs who want the same frequency.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-010-004"
+    }
+  ],
+  "licenseClass": "original"
+}
