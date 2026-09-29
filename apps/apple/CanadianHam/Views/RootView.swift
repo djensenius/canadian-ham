@@ -26,6 +26,7 @@ struct RootView: View {
     @State private var language: BankLanguage = .english
     @State private var dataRevision = 0
     @State private var navigationPath: [LearnRoute] = []
+    @State private var didApplyLaunchNavigation = false
 
     var body: some View {
         Group {
@@ -85,7 +86,7 @@ struct RootView: View {
             .toolbarBackground(.visible, for: .navigationBar)
             .onAppear {
                 language = progressStore.preferences.language
-                applyLaunchNavigation(bank: bank)
+                applyLaunchNavigation(bank: bank, contentLibrary: contentLibrary)
             }
             .onChange(of: progressStore.preferences.language) { _, next in
                 language = next
@@ -183,7 +184,7 @@ struct RootView: View {
 #endif
         .onAppear {
             language = progressStore.preferences.language
-            applyLaunchNavigation(bank: bank)
+            applyLaunchNavigation(bank: bank, contentLibrary: contentLibrary)
         }
         .onChange(of: progressStore.preferences.language) { _, next in
             language = next
@@ -341,13 +342,17 @@ struct RootView: View {
     }
 #endif
 
-    private func applyLaunchNavigation(bank: QuestionBank) {
+    private func applyLaunchNavigation(bank: QuestionBank, contentLibrary: ContentLibrary) {
+        guard !didApplyLaunchNavigation else { return }
+        didApplyLaunchNavigation = true
 #if DEBUG
-        if let initialLessonID = AppLaunchArguments.value(after: "-CanadianHamInitialLessonID") {
+        if let initialQuizID = AppLaunchArguments.value(after: "-CanadianHamInitialLessonQuizID"),
+           let quiz = contentLibrary.quizzesById[initialQuizID] {
             selection = .learn
-            if navigationPath != [.lesson(initialLessonID)] {
-                navigationPath = [.lesson(initialLessonID)]
-            }
+            navigationPath = [.lesson(quiz.lessonId), .lessonQuiz(initialQuizID)]
+        } else if let initialLessonID = AppLaunchArguments.value(after: "-CanadianHamInitialLessonID") {
+            selection = .learn
+            navigationPath = [.lesson(initialLessonID)]
         }
 #endif
         if let screen = AppLaunchArguments.value(after: "-CanadianHamInitialScreen") {
