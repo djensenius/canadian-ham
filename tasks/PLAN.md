@@ -77,6 +77,12 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-409 | P4 | done | worker | T-404 | Module 6 (Feedlines and Antenna Systems, B-006) full lessons, quiz files, and explanations for every B-006 question, following the M5 conventions and checks. |
 | T-410 | P4 | done | worker | T-404 | Content lints: module-scoped check:quizzes and check-explanations (quoted choice text, no filler, no 3+ file duplicate notes, lesson citation covers subsection). |
 | T-411 | P4 | done | worker | T-410 | Template and concept-check overlap lints; stricter explanation format. |
+| T-412 | P4 | done | worker | T-404 | Module 7 (Propagation, B-007) lessons, quizzes, and all 87 explanations. |
+| T-413 | P4 | done | worker | T-404 | Module 8 (Interference, B-008) lessons, quizzes, and all 55 explanations. |
+| T-414 | P4 | in progress | worker | T-404 | Module 3 (Station Assembly, Practice and Safety, B-003) lessons, quizzes, and all 199 explanations (three lanes). |
+| T-415 | P4 | in progress | worker | T-404 | Remaining B-005 explanations (005..013, 98 questions). |
+| T-416 | P4 | in progress | worker | T-404 | Module 2 (Operating Procedures, B-002) lessons, quizzes, and all 99 explanations. |
+| T-417 | P4 | in progress | worker | T-404 | Module 1 (Regulations and Policies, B-001) lessons, quizzes, and all 199 explanations (three lanes). |
 | T-501 | P5 | done | worker | T-206 | Scaffold SwiftUI multiplatform Apple project for iOS, iPadOS, and macOS; verify build with `xbuild`. |
 | T-501b | P5 | in progress | worker | T-501 | Apple slice polish from review: EN/FR picker on compact iPhone, UI test, strong shuffle test, VoiceOver announcement, scaled answer letter, no visionOS availability, deterministic project generation, minimum-OS decision recorded. |
 | T-513 | P5 | todo | worker | T-501b,T-206 | Native visionOS app target (visionOS 2.0+): window-based practice flow, glass materials, hover effects, ornaments for EN/FR; shared SwiftUI code where sensible; builds/tests via xbuild on the visionOS simulator. |
