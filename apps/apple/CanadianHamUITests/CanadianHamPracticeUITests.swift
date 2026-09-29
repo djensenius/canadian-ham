@@ -359,7 +359,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         if #available(iOS 17.0, *) {
             var findings: [String] = []
             let auditTypes: XCUIAccessibilityAuditType = context.contains("practice")
-                ? [.elementDetection, .hitRegion, .sufficientElementDescription, .dynamicType, .textClipped, .trait]
+                ? XCUIAccessibilityAuditType.all.subtracting(XCUIAccessibilityAuditType(rawValue: 1))
                 : .all
             try app.performAccessibilityAudit(for: auditTypes) { issue in
                 findings.append(self.describe(issue))
