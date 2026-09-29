@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-004-004.\n\nWhy the correct answer is right: After Basic is issued, the bank allows additional qualifications to be examined in any order.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Morse code after passing the Advanced\": This invents an Advanced-before-Morse sequence.\n- sourceIndex 2: \"Morse code after passing the Basic with Honours\": Basic with Honours is not a gate for Morse in this item.\n- sourceIndex 3: \"Advanced after passing Morse code\": This reverses the invented sequence but still adds an order requirement the bank does not use.",
+    "en": "Question B-001-004-004.\n\nWhy the correct answer is right: After Basic is issued, additional qualifications may be examined in any order.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Morse code after passing the Advanced\": This invents an Advanced-before-Morse sequence.\n- sourceIndex 2: \"Morse code after passing the Basic with Honours\": Basic with Honours is a Basic-exam achievement level rather than a gate for Morse.\n- sourceIndex 3: \"Advanced after passing Morse code\": This reverses the invented sequence but still adds an unsupported order requirement.",
     "fr": null
   },
   "citations": [

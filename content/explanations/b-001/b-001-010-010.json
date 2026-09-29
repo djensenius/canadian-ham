@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-010-010.\n\nWhy the correct answer is right: The 902 MHz to 928 MHz band may be heavily occupied by licence-exempt devices.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"3.5 MHz to 4.0 MHz\": This is the 80-metre amateur band range, not the device-crowding example tied to licence-exempt operation.\n- sourceIndex 2: \"430 MHz to 450 MHz\": This range is tied to the separate rule that amateur operation must not interfere with other services; that is different from the 902 MHz to 928 MHz licence-exempt occupancy warning.\n- sourceIndex 3: \"135.7 kHz to 137.8 kHz\": This is the LF 2200-metre range, not the UHF range identified for heavy licence-exempt device occupancy.",
+    "en": "Question B-001-010-010.\n\nWhy the correct answer is right: The 902 MHz to 928 MHz band may be heavily occupied by licence-exempt devices.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"3.5 MHz to 4.0 MHz\": This is the 80-metre amateur band range, not the device-crowding example tied to licence-exempt operation.\n- sourceIndex 2: \"430 MHz to 450 MHz\": This range is tied to the separate rule that amateur operation must not interfere with other services; that is different from the 902 MHz to 928 MHz licence-exempt occupancy warning.\n- sourceIndex 3: \"135.7 kHz to 137.8 kHz\": This kHz-range LF choice is far below the UHF 902 MHz to 928 MHz range used for the licence-exempt device occupancy warning.",
     "fr": null
   },
   "citations": [

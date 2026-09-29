@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-024-005.\n\nWhy the correct answer is right: The official answer says a maximum safe antenna power for a hand-held VHF or UHF radio is not specified. That prevents the common shortcut of treating one handheld wattage as automatically safe in every situation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"5 watts\": The bank does not identify this power as a universal maximum safe output for a hand-held VHF or UHF radio.\n- sourceIndex 2: \"7 watts\": This is another fixed wattage, but the official answer says the maximum safe power is not specified.\n- sourceIndex 3: \"8 watts\": A larger handheld power number still invents a simple limit that the official answer does not provide.",
+    "en": "Question B-001-024-005.\n\nWhy the correct answer is right: Safety Code 6 does not specify a universal maximum safe antenna power for a hand-held VHF or UHF radio. RF exposure depends on multiple factors rather than one handheld wattage.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"5 watts\": Safety Code 6 does not provide a universal handheld safe-power number.\n- sourceIndex 2: \"7 watts\": This is another fixed wattage, while Safety Code 6 does not provide a universal handheld safe-power number.\n- sourceIndex 3: \"8 watts\": A larger handheld power number still invents a simple limit that the rule does not provide.",
     "fr": null
   },
   "citations": [

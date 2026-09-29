@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-004-002.\n\nWhy the correct answer is right: The Basic Qualification examination is the required exam before the certificate is issued.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A practical test\": The bank does not require a separate practical test for issuing the certificate.\n- sourceIndex 2: \"Morse code\": Morse is an additional qualification, not the prerequisite for the first certificate.\n- sourceIndex 3: \"Advanced Qualification\": Advanced is not the entry exam before the certificate is issued.",
+    "en": "Question B-001-004-002.\n\nWhy the correct answer is right: The Basic Qualification examination is the required exam before the certificate is issued.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A practical test\": Issuing the certificate requires the Basic Qualification examination rather than a separate practical test.\n- sourceIndex 2: \"Morse code\": Morse is an additional qualification, not the prerequisite for the first certificate.\n- sourceIndex 3: \"Advanced Qualification\": Advanced is not the entry exam before the certificate is issued.",
     "fr": null
   },
   "citations": [

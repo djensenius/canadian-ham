@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-021-001.\n\nWhy the correct answer is right: Canada is in ITU Region 2 for the purposes tested by the Basic question bank. That region fact helps when reading international band and operating references.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Region 4\": The region facts tested in this subsection place Canada, Europe and Africa, and Australia/Japan/Southeast Asia in Regions 2, 1, and 3 respectively; no correct answer places Canada in a fourth region.\n- sourceIndex 2: \"Region 3\": Region 3 is associated in the bank with Australia, Japan, and Southeast Asia, not Canada.\n- sourceIndex 3: \"Region 1\": Region 1 is associated in the bank with Europe and Africa, not Canada.",
+    "en": "Question B-001-021-001.\n\nWhy the correct answer is right: Canada is in ITU Region 2. That region fact helps when reading international band and operating references.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Region 4\": The region facts tested in this subsection place Canada, Europe and Africa, and Australia/Japan/Southeast Asia in Regions 2, 1, and 3 respectively; no correct answer places Canada in a fourth region.\n- sourceIndex 2: \"Region 3\": Region 3 is associated with Australia, Japan, and Southeast Asia, while Canada is in Region 2.\n- sourceIndex 3: \"Region 1\": Region 1 is associated with Europe and Africa, while Canada is in Region 2.",
     "fr": null
   },
   "citations": [

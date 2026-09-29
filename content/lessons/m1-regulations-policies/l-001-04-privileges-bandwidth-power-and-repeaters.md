@@ -34,7 +34,7 @@ By the end of this lesson, you can:
 
 - explain why privileges stay tied to the operator and call sign governing the transmission;
 - identify the extra gate for amateur frequencies below 30 MHz;
-- use the band, bandwidth, mode, power, repeater, frequency-stability, and modulation facts established by the current bank; and
+- use the band, bandwidth, mode, power, repeater, frequency-stability, and modulation facts in the reference tables; and
 - keep DC input, carrier power, PEP, ERP, and EIRP separate.
 
 ## Reference facts: Operator privileges and below-30-MHz access
@@ -48,7 +48,7 @@ By the end of this lesson, you can:
 | Basic-only repeater use | Holders with only Basic may use repeaters with output at 29.500 MHz and above. |
 | Lowest Basic-only repeater output segment | 29.500 MHz to 29.700 MHz. |
 
-## Reference facts: HF band ranges named in the bank
+## Reference facts: HF band ranges
 
 | Band name | Range established for this lesson |
 |---|---|
@@ -69,11 +69,11 @@ By the end of this lesson, you can:
 | 10.100 MHz to 10.150 MHz | Less than 6 kHz maximum bandwidth. |
 | 10.100 MHz to 10.150 MHz | Single sideband is prohibited. |
 | Transmitting near band edges | The entire occupied bandwidth must remain within the amateur band. |
-| CW / Morse radiotelegraphy | The wider bank identifies CW as narrower than SSB voice and FM voice. |
-| FT8 | The wider bank identifies FT8 as a narrow digital mode and many FT8 contacts as fitting in the space needed for one SSB transmission. |
-| SSB voice | The wider bank identifies usual SSB bandwidth as between 2 kHz and 3 kHz. |
-| FM voice | The wider bank identifies 5 kHz-deviation FM as occupying between 10 kHz and 20 kHz, and identifies FM below 28 MHz as exceeding regulatory bandwidth limits. |
-| Slow-scan television on 14.23 MHz | Not the prohibited combination in the B-001 mode-choice item. |
+| CW / Morse radiotelegraphy | Narrower than SSB voice and FM voice in the mode-width ordering. |
+| FT8 | A narrow digital mode, with many FT8 contacts fitting in the space needed for one SSB transmission. |
+| SSB voice | Usual SSB bandwidth is between 2 kHz and 3 kHz. |
+| FM voice | 5 kHz-deviation FM occupies between 10 kHz and 20 kHz; FM below 28 MHz exceeds regulatory bandwidth limits. |
+| Slow-scan television on 14.23 MHz | Fits the B-001 mode-choice item. |
 | Fast-scan television on 145 MHz | Prohibited combination in the B-001 mode-choice item. |
 | Fast-scan television on 14.23 MHz | Prohibited combination in the B-001 mode-choice item. |
 
@@ -87,7 +87,7 @@ By the end of this lesson, you can:
 | Basic, single-sideband peak envelope power | 560 W PEP. |
 | Basic and Morse, SSB on 3750 kHz | 560 W PEP. |
 | Basic with Honours, SSB on 7055 kHz | 560 W PEP. |
-| Basic emissions other than SSB when the operator does not hold Advanced | 190 W carrier power. |
+| Basic-only non-SSB emissions for an operator without Advanced | 190 W carrier power. |
 | Advanced, DC input to the final RF stage | 1000 W. |
 | Advanced, single-sideband peak envelope power | 2250 W PEP. |
 | Advanced on 60 metres | 100 W ERP expressed as PEP. |
@@ -108,11 +108,13 @@ By the end of this lesson, you can:
 
 Privilege rows are about the current control situation. A station can contain equipment for many bands and powers, and another person can have more qualifications, but the transmission still has to stay inside the privileges attached to the operator and call sign governing that operation.
 
-The below-30-MHz gate and the repeater exception must be learned together. Basic by itself covers amateur bands above 30 MHz. Below 30 MHz normally needs the additional Basic-with-Honours, Advanced, or Morse path, while the official repeater rows give a specific Basic-only repeater-output allowance beginning at 29.500 MHz. That repeater allowance is not a general below-30-MHz simplex privilege.
+The below-30-MHz gate and the repeater exception must be learned together. Basic by itself covers amateur bands above 30 MHz. Below 30 MHz normally needs the additional Basic-with-Honours, Advanced, or Morse path, while the repeater rows give a specific Basic-only repeater-output allowance beginning at 29.500 MHz. Keep that repeater allowance tied to repeater output.
 
-Bandwidth, mode, and band-edge rows all describe occupied spectrum. A frequency display or carrier point is not enough near an edge; the whole occupied signal must fit. The mode rows are cues for the official combination items and should not be expanded into unsupported width claims beyond the bank facts listed above.
+Bandwidth, mode, and band-edge rows all describe occupied spectrum. Near an edge, compare the entire occupied signal to the band boundary. The mode rows are cues for the combination items and should stay within the supported width facts listed above.
 
-Power rows attach a number to a measurement point and quantity. DC input, carrier power, PEP, ERP, and EIRP are different checks. The minimum-power rule does not replace the numeric ceilings, and the numeric ceilings do not replace RF-exposure or radiated-power limits.
+Power rows attach a number to a measurement point and quantity. DC input describes electrical power going into the final RF stage before RF conversion. Carrier power describes steady RF output for non-SSB emissions, while PEP captures the crest of an SSB voice envelope. ERP and EIRP move outward to radiated power by including antenna-system gain, with EIRP using an isotropic reference. Output-point checks are made before feedline or tuner effects, while ERP and EIRP account for radiated-system effects.
+
+The minimum-power rule and numeric ceilings work together with RF-exposure and radiated-power limits. Choose the measurement quantity first, then compare it at the correct point in the station.
 
 Repeater and signal-quality rows explain station behaviour after the frequency and power checks. Automatic retransmission defines a repeater. Brief unmodulated-carrier tests are narrow, and voice operation still needs frequency stability, reliable frequency measurement, and overmodulation control.
 
@@ -122,21 +124,11 @@ Privilege checks happen before RF leaves the antenna. Put them in the same menta
 
 On modern radios, the display frequency can hide the regulatory issue. Sidebands, occupied digital bandwidth, amplifier output, and repeater output frequency can all be the relevant value.
 
-## Common mistakes
-
-- Borrowing another operator's qualifications because that operator is nearby.
-- Treating installed station equipment as permission to use every stored setting.
-- Remembering a band name while forgetting the exact range established by the bank.
-- Keeping only the displayed frequency inside a band edge and ignoring occupied bandwidth.
-- Mixing DC input, carrier power, ERP, EIRP, and PEP as though they were the same measurement.
-- Treating a specific repeater-output allowance as a general below-30-MHz privilege.
-- Raising drive or microphone level when the relevant problem is signal quality.
-
 ## Summary
 
 - Operating privileges stay tied to the relevant operator and call sign qualifications.
-- Frequencies below 30 MHz require the additional Basic-with-Honours, Advanced, or Morse gate, except for the specific Basic-only repeater-output allowance established by the bank.
-- Learn the named HF band ranges, bandwidth limits, and mode-fit cues as exact study facts.
+- Frequencies below 30 MHz require the additional Basic-with-Honours, Advanced, or Morse gate, except for the specific Basic-only repeater-output allowance in the reference table.
+- Link frequency ranges, bandwidth limits, and mode-fit cues before transmitting.
 - Near a band edge, the entire occupied bandwidth must remain inside the amateur band.
 - Use the minimum legal power needed and apply the correct power quantity.
 - Repeaters automatically retransmit; frequency stability, frequency measurement, and voice overmodulation controls are part of compliant operation.

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-012-002.\n\nWhy the correct answer is right: Non-broadcast radiocommunications may be divulged or used when they are transmitted by an amateur radio station.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"if the other station is using digital means\": Digital means is not the permission condition; the service that transmitted the communication matters here.\n- sourceIndex 2: \"if transmitted in English or French\": English or French wording does not decide whether the communication may be divulged or used.\n- sourceIndex 3: \"during peacetime civil emergencies\": Peacetime emergency context is not the condition in this question; amateur-station origin is.",
+    "en": "Question B-001-012-002.\n\nWhy the correct answer is right: Non-broadcast radiocommunications may be divulged or used when they are transmitted by an amateur radio station.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"if the other station is using digital means\": Digital means is not the permission condition; the service that transmitted the communication matters here.\n- sourceIndex 2: \"if transmitted in English or French\": English or French wording does not decide whether the communication may be divulged or used.\n- sourceIndex 3: \"during peacetime civil emergencies\": Peacetime emergency context is separate from the privacy rule; amateur-station origin is the controlling condition.",
     "fr": null
   },
   "citations": [

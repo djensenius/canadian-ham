@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-007-011.\n\nWhy the correct answer is right: Business communications are not permitted in the amateur service.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"are permitted on some bands\": The prohibition is not band-dependent.\n- sourceIndex 2: \"are only permitted if they are for the safety of life or immediate protection of property\": There is no safety-of-life or property exception for business traffic in this item.\n- sourceIndex 3: \"are not prohibited by regulation\": This directly contradicts the bank's prohibition.",
+    "en": "Question B-001-007-011.\n\nWhy the correct answer is right: Business communications are not permitted in the amateur service.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"are permitted on some bands\": The prohibition is not band-dependent.\n- sourceIndex 2: \"are only permitted if they are for the safety of life or immediate protection of property\": The safety-of-life or property exception applies to emergency communication, while business traffic remains outside amateur service.\n- sourceIndex 3: \"are not prohibited by regulation\": This directly contradicts the business-traffic prohibition.",
     "fr": null
   },
   "citations": [

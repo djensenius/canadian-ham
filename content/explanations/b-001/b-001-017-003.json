@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-017-003.\n\nWhy the correct answer is right: The power is verified at the output of the transmitter or external amplifier, which is the compliance point for this power check.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"At the antenna feed point\": The antenna feed point includes feedline and tuner effects after the transmitter-output point, so it is too far downstream.\n- sourceIndex 2: \"At the power supply terminals\": Power supply terminals involve DC supply power, not the RF output point being limited.\n- sourceIndex 3: \"At the antenna tuner output\": The tuner output is after the transmitter or external amplifier and can be affected by matching losses, so it is not the check point in this item.",
+    "en": "Question B-001-017-003.\n\nWhy the correct answer is right: The power is verified at the output of the transmitter or external amplifier, which is the compliance point for this power check.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"At the antenna feed point\": The antenna feed point includes feedline and tuner effects after the transmitter-output point, so it is too far downstream.\n- sourceIndex 2: \"At the power supply terminals\": Power supply terminals involve DC supply power, not the RF output point being limited.\n- sourceIndex 3: \"At the antenna tuner output\": The tuner output is after the transmitter or external amplifier and can be affected by matching losses, so it is downstream from the required check point.",
     "fr": null
   },
   "citations": [

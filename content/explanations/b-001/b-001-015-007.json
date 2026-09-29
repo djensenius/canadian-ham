@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-015-007.\n\nWhy the correct answer is right: The 40-metre band range tested for Canada is 7.0 MHz to 7.3 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"6.5 MHz to 6.8 MHz\": This range is below the 7.0 MHz lower edge of the 40-metre band.\n- sourceIndex 2: \"6.0 MHz to 6.3 MHz\": This range is also below the 40-metre allocation named in the bank.\n- sourceIndex 3: \"7.7 MHz to 8.0 MHz\": This range lies above the 7.3 MHz upper edge of the 40-metre band.",
+    "en": "Question B-001-015-007.\n\nWhy the correct answer is right: The 40-metre band range tested for Canada is 7.0 MHz to 7.3 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"6.5 MHz to 6.8 MHz\": This range is below the 7.0 MHz lower edge of the 40-metre band.\n- sourceIndex 2: \"6.0 MHz to 6.3 MHz\": This range is also below the 7.0 MHz to 7.3 MHz 40-metre allocation.\n- sourceIndex 3: \"7.7 MHz to 8.0 MHz\": This range lies above the 7.3 MHz upper edge of the 40-metre band.",
     "fr": null
   },
   "citations": [

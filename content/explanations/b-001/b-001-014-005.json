@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-014-005.\n\nWhy the correct answer is right: A qualifying CEPT amateur licence holder receives Advanced operating privileges from ISED while operating in Canada.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Basic with Honours\": Basic with Honours is a Canadian Basic-exam achievement level, while the CEPT visitor fact in this item grants Advanced privileges.\n- sourceIndex 2: \"Basic and Morse code\": Basic plus Morse is a different qualification combination and is still not the Advanced visitor privilege named for CEPT operation in Canada.\n- sourceIndex 3: \"Basic\": Basic alone is the lowest of the listed privilege levels and would understate the Advanced privileges granted to a qualifying CEPT visitor.",
+    "en": "Question B-001-014-005.\n\nWhy the correct answer is right: A qualifying CEPT amateur licence holder receives Advanced operating privileges from ISED while operating in Canada.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Basic with Honours\": Basic with Honours is a Canadian Basic-exam achievement level, while qualifying CEPT visitors receive Advanced privileges.\n- sourceIndex 2: \"Basic and Morse code\": Basic plus Morse is a different qualification combination and is still not the Advanced visitor privilege named for CEPT operation in Canada.\n- sourceIndex 3: \"Basic\": Basic alone is the lowest of the listed privilege levels and would understate the Advanced privileges granted to a qualifying CEPT visitor.",
     "fr": null
   },
   "citations": [

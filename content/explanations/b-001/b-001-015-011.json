@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-015-011.\n\nWhy the correct answer is right: For radio control of models, the bank allows all amateur radio bands above 30 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"50 MHz to 54 MHz only\": Restricting model control to 50 MHz to 54 MHz leaves out other amateur bands above 30 MHz.\n- sourceIndex 2: \"All amateur radio bands\": All amateur bands would include below-30-MHz bands, but the model-control privilege is limited to the above-30-MHz side.\n- sourceIndex 3: \"50 MHz to 54 MHz, 144 MHz to 148 MHz, and 222 MHz to 225 MHz only\": These are only three VHF ranges; the rule is broader because it covers all amateur bands above 30 MHz.",
+    "en": "Question B-001-015-011.\n\nWhy the correct answer is right: For radio control of models, certificate holders may use amateur radio bands above 30 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"50 MHz to 54 MHz only\": Restricting model control to 50 MHz to 54 MHz leaves out other amateur bands above 30 MHz.\n- sourceIndex 2: \"All amateur radio bands\": All amateur bands would include below-30-MHz bands, but the model-control privilege is limited to the above-30-MHz side.\n- sourceIndex 3: \"50 MHz to 54 MHz, 144 MHz to 148 MHz, and 222 MHz to 225 MHz only\": These are only three VHF ranges; the rule is broader because it covers all amateur bands above 30 MHz.",
     "fr": null
   },
   "citations": [

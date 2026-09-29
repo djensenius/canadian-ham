@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-003-002.\n\nWhy the correct answer is right: A fake MAYDAY when there is no emergency is a false or fraudulent message.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"An encrypted message\": Encryption describes hidden content; the problem here is a false emergency claim.\n- sourceIndex 2: \"An emergency test transmission\": Calling it a test does not match the bank's term for a false distress word.\n- sourceIndex 3: \"A privileged communication\": Privilege is not the regulatory term for falsely claiming an emergency.",
+    "en": "Question B-001-003-002.\n\nWhy the correct answer is right: A fake MAYDAY when there is no emergency is a false or fraudulent message.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"An encrypted message\": Encryption describes hidden content; the problem here is a false emergency claim.\n- sourceIndex 2: \"An emergency test transmission\": Calling it a test still leaves the false distress word to be handled as a false or fraudulent message.\n- sourceIndex 3: \"A privileged communication\": Privilege is not the regulatory term for falsely claiming an emergency.",
     "fr": null
   },
   "citations": [

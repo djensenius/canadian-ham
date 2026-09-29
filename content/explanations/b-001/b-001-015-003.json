@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-015-003.\n\nWhy the correct answer is right: Below 30 MHz requires an extra gate beyond simply passing Basic: Basic with at least 80%, Advanced, or Morse.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"You must notify Innovation, Science and Economic Development Canada that you intend to operate on the HF bands\": Notifying ISED of an intent to use HF is not the qualification path named by the bank.\n- sourceIndex 2: \"You must pass a provincial communications examination\": A provincial communications examination is not part of the amateur below-30-MHz gate established here.\n- sourceIndex 3: \"You must attend a class to learn about HF communications\": Attending a class may help learning, but it does not replace the required examination achievement or qualification.",
+    "en": "Question B-001-015-003.\n\nWhy the correct answer is right: Below 30 MHz requires an extra gate beyond simply passing Basic: Basic with at least 80%, Advanced, or Morse.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"You must notify Innovation, Science and Economic Development Canada that you intend to operate on the HF bands\": Below-30-MHz access uses qualification paths such as Basic with Honours, Advanced, or Morse, rather than notice of intent to use HF.\n- sourceIndex 2: \"You must pass a provincial communications examination\": A provincial communications examination is not part of the amateur below-30-MHz gate established here.\n- sourceIndex 3: \"You must attend a class to learn about HF communications\": Attending a class may help learning, but it does not replace the required examination achievement or qualification.",
     "fr": null
   },
   "citations": [

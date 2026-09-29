@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-024-002.\n\nWhy the correct answer is right: Safety Code 6 gives limits for human exposure to RF energy. The exam point is human exposure, not band allocation, transmitter-power privileges, or aviation obstruction rules.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It lists all RF frequency allocations for interference protection\": Frequency allocations are a spectrum-management topic, not the purpose of Safety Code 6 in this item.\n- sourceIndex 2: \"It sets transmitter power limits for interference protection\": Interference power limits are not what this Health Canada exposure code is for.\n- sourceIndex 3: \"It sets antenna height limits for aircraft protection\": Antenna-height and aircraft-safety matters are separate from human RF exposure limits.",
+    "en": "Question B-001-024-002.\n\nWhy the correct answer is right: Safety Code 6 gives limits for human exposure to RF energy. The exam point is human exposure, not band allocation, transmitter-power privileges, or aviation obstruction rules.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It lists all RF frequency allocations for interference protection\": Frequency allocations are a spectrum-management topic, while Safety Code 6 addresses RF exposure limits for the human body.\n- sourceIndex 2: \"It sets transmitter power limits for interference protection\": Interference power limits are not what this Health Canada exposure code is for.\n- sourceIndex 3: \"It sets antenna height limits for aircraft protection\": Antenna-height and aircraft-safety matters are separate from human RF exposure limits.",
     "fr": null
   },
   "citations": [

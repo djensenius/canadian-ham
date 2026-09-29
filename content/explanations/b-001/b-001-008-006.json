@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-008-006.\n\nWhy the correct answer is right: Non-professionally designed and non-commercially manufactured transmitters or RF amplifiers require Basic and Advanced to install or operate.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Basic with Honours\": Honours does not provide the Advanced privilege required for this hardware category.\n- sourceIndex 2: \"Basic and Morse code\": Morse does not replace Advanced for this transmitter or amplifier situation.\n- sourceIndex 3: \"Basic, Advanced and Morse code\": Morse is not part of the minimum qualification set in the bank answer.",
+    "en": "Question B-001-008-006.\n\nWhy the correct answer is right: Non-professionally designed and non-commercially manufactured transmitters or RF amplifiers require Basic and Advanced to install or operate.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Basic with Honours\": Honours does not provide the Advanced privilege required for this hardware category.\n- sourceIndex 2: \"Basic and Morse code\": Morse does not replace Advanced for this transmitter or amplifier situation.\n- sourceIndex 3: \"Basic, Advanced and Morse code\": The minimum qualification set for this hardware category is Basic and Advanced.",
     "fr": null
   },
   "citations": [

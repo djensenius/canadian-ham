@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-007-007.\n\nWhy the correct answer is right: Abbreviations and procedural signals may be used when they are not secret.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"There are no restrictions\": There is a secrecy restriction; the rule is not unrestricted use.\n- sourceIndex 2: \"They are not permitted because they obscure the meaning of a message to government monitoring stations\": Non-secret procedural signals are permitted, so this answer is too broad.\n- sourceIndex 3: \"Only \\\"10 codes\\\" are permitted\": The bank does not limit permitted non-secret signals to 10-codes.",
+    "en": "Question B-001-007-007.\n\nWhy the correct answer is right: Abbreviations and procedural signals may be used when they are not secret.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"There are no restrictions\": There is a secrecy restriction; the rule is not unrestricted use.\n- sourceIndex 2: \"They are not permitted because they obscure the meaning of a message to government monitoring stations\": Non-secret procedural signals are permitted, so this answer is too broad.\n- sourceIndex 3: \"Only \\\"10 codes\\\" are permitted\": Permitted non-secret signals include more than 10-codes.",
     "fr": null
   },
   "citations": [

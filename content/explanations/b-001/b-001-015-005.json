@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-015-005.\n\nWhy the correct answer is right: The Canadian 80-metre amateur band range tested in the bank is 3.5 MHz to 4.0 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"3.0 MHz to 3.5 MHz\": 3.0 MHz to 3.5 MHz stops where the official range begins and omits the authorized upper portion.\n- sourceIndex 2: \"4.0 MHz to 4.5 MHz\": 4.0 MHz to 4.5 MHz starts above the official 80-metre range.\n- sourceIndex 3: \"4.5 MHz to 5.0 MHz\": 4.5 MHz to 5.0 MHz is outside the 80-metre range identified by the bank.",
+    "en": "Question B-001-015-005.\n\nWhy the correct answer is right: The Canadian 80-metre amateur band range is 3.5 MHz to 4.0 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"3.0 MHz to 3.5 MHz\": 3.0 MHz to 3.5 MHz stops where the 80-metre range begins and omits the authorized upper portion.\n- sourceIndex 2: \"4.0 MHz to 4.5 MHz\": 4.0 MHz to 4.5 MHz starts above the 80-metre range.\n- sourceIndex 3: \"4.5 MHz to 5.0 MHz\": 4.5 MHz to 5.0 MHz is outside the 3.5 MHz to 4.0 MHz 80-metre range.",
     "fr": null
   },
   "citations": [

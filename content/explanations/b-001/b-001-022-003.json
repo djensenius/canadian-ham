@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-022-003.\n\nWhy the correct answer is right: An accredited examiner may charge enough to recover the cost of administering an examination.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"$20 per qualification\": The bank does not set this fixed per-qualification fee for accredited examiners.\n- sourceIndex 2: \"No fee may be charged\": The bank allows cost recovery, so a no-fee rule is too absolute.\n- sourceIndex 3: \"$20 per examination sitting\": This invents a fixed sitting charge instead of cost recovery.",
+    "en": "Question B-001-022-003.\n\nWhy the correct answer is right: An accredited examiner may charge enough to recover the cost of administering an examination.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"$20 per qualification\": Accredited examiners may recover administration costs rather than charging a fixed per-qualification amount.\n- sourceIndex 2: \"No fee may be charged\": Accredited examiners may recover administration costs, so a no-fee rule is too absolute.\n- sourceIndex 3: \"$20 per examination sitting\": This invents a fixed sitting charge instead of cost recovery.",
     "fr": null
   },
   "citations": [

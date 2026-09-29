@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-024-009.\n\nWhy the correct answer is right: The official answer says no transmitters are exempt from the RF exposure regulation. Broadcast, portable, and low-power examples do not create a blanket exemption.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Broadcast transmitters\": Broadcast transmitters are not listed as exempt in the official answer.\n- sourceIndex 2: \"Portable transmitters\": Portability does not remove the RF exposure requirement; the bank explicitly avoids that exemption.\n- sourceIndex 3: \"Low power transmitters (less than 10 watts)\": A low-power threshold is not an exemption named by the official answer.",
+    "en": "Question B-001-024-009.\n\nWhy the correct answer is right: RF exposure regulation applies to all transmitter types. Broadcast, portable, and low-power examples do not create a blanket exemption.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Broadcast transmitters\": Broadcast transmitters remain subject to RF exposure regulation.\n- sourceIndex 2: \"Portable transmitters\": Portability does not remove the RF exposure requirement.\n- sourceIndex 3: \"Low power transmitters (less than 10 watts)\": A low-power threshold does not remove the RF exposure requirement.",
     "fr": null
   },
   "citations": [

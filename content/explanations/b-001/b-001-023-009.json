@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-023-009.\n\nWhy the correct answer is right: The official answer avoids a universal metre value and instead points to the tallest structure exempted by the land-use authority or ISED. The safe exam principle is to check the applicable exemption rather than memorize one height.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"10 metres\": The bank does not identify this as a universal height that avoids public consultation.\n- sourceIndex 2: \"15 metres\": This number is another tempting fixed threshold, but the official answer depends on the applicable exemption.\n- sourceIndex 3: \"21 metres\": A larger fixed number still misses the point that the exemption is set by the land-use authority or ISED.",
+    "en": "Question B-001-023-009.\n\nWhy the correct answer is right: The exempt height depends on the land-use authority or ISED. The safe exam principle is to check the applicable exemption for the installation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"10 metres\": This fixed height is separate from the applicable-exemption test.\n- sourceIndex 2: \"15 metres\": This number is another tempting fixed threshold, but the rule depends on the applicable exemption.\n- sourceIndex 3: \"21 metres\": A larger fixed number still misses the point that the exemption is set by the land-use authority or ISED.",
     "fr": null
   },
   "citations": [

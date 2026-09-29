@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-002-005.\n\nWhy the correct answer is right: When a radio inspector asks to see the certificate or a copy, the holder has 48 hours to comply.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"12\": Twelve hours would require same-day production, which is shorter than the inspection response period in the bank.\n- sourceIndex 2: \"24\": One day is a plausible guess, but this certificate-or-copy request allows 48 hours.\n- sourceIndex 3: \"72\": Three days gives an extra day beyond the inspection response period stated by the bank.",
+    "en": "Question B-001-002-005.\n\nWhy the correct answer is right: When a radio inspector asks to see the certificate or a copy, the holder has 48 hours to comply.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"12\": Twelve hours would require same-day production, which is shorter than the 48-hour inspection response period.\n- sourceIndex 2: \"24\": One day is a plausible guess, but this certificate-or-copy request allows 48 hours.\n- sourceIndex 3: \"72\": Three days gives an extra day beyond the 48-hour inspection response period.",
     "fr": null
   },
   "citations": [

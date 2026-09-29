@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-015-009.\n\nWhy the correct answer is right: The 15-metre amateur band range in the bank is 21.000 MHz to 21.450 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"18.068 MHz to 18.168 MHz\": This names a different HF allocation below the 15-metre range.\n- sourceIndex 2: \"14.000 MHz to 14.350 MHz\": This is the 20-metre range, not 15 metres.\n- sourceIndex 3: \"28.000 MHz to 29.700 MHz\": This is the 10-metre range, not 15 metres.",
+    "en": "Question B-001-015-009.\n\nWhy the correct answer is right: The 15-metre amateur band range is 21.000 MHz to 21.450 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"18.068 MHz to 18.168 MHz\": This names a different HF allocation below the 15-metre range.\n- sourceIndex 2: \"14.000 MHz to 14.350 MHz\": This is the 20-metre range, not 15 metres.\n- sourceIndex 3: \"28.000 MHz to 29.700 MHz\": This is the 10-metre range, not 15 metres.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-006-004.\n\nWhy the correct answer is right: The bank's answer is never: amateur radio equipment is not certified for operation outside amateur radio bands, with or without modification.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"When the control operator holds an Advanced Qualification\": Advanced amateur privileges do not certify amateur equipment for non-amateur bands.\n- sourceIndex 2: \"When the operator already owns licensed equipment for such frequencies\": Owning separate licensed equipment does not change the certification status of the amateur equipment named in the question.\n- sourceIndex 3: \"When transmissions are limited to licence-exempt frequencies\": Licence-exempt frequencies do not turn amateur equipment into compliant equipment for that service.",
+    "en": "Question B-001-006-004.\n\nWhy the correct answer is right: Amateur radio equipment is certified for operation on amateur radio bands, with or without modification.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"When the control operator holds an Advanced Qualification\": Advanced amateur privileges do not certify amateur equipment for non-amateur bands.\n- sourceIndex 2: \"When the operator already owns licensed equipment for such frequencies\": Owning separate licensed equipment does not change the certification status of the amateur equipment named in the question.\n- sourceIndex 3: \"When transmissions are limited to licence-exempt frequencies\": Licence-exempt frequencies do not turn amateur equipment into compliant equipment for that service.",
     "fr": null
   },
   "citations": [

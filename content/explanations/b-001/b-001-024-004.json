@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-024-004.\n\nWhy the correct answer is right: The exposure limit is lowest in the 48 MHz to 300 MHz range because the human body absorbs RF energy most in that range. Lower allowed exposure corresponds to greater absorption concern.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"There are more transmitters operating in this range\": The number of transmitters is not the reason given for the lower exposure limit.\n- sourceIndex 2: \"There are fewer transmitters operating in this range\": Fewer transmitters would not explain a more restrictive human-exposure limit in the official answer.\n- sourceIndex 3: \"Most transmissions in this range are for a longer time\": Transmission duration is not the official reason; body absorption is the reason being tested.",
+    "en": "Question B-001-024-004.\n\nWhy the correct answer is right: The exposure limit is lowest in the 48 MHz to 300 MHz range because the human body absorbs RF energy most in that range. Lower allowed exposure corresponds to greater absorption concern.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"There are more transmitters operating in this range\": The number of transmitters is not the reason given for the lower exposure limit.\n- sourceIndex 2: \"There are fewer transmitters operating in this range\": Fewer transmitters would not explain a more restrictive human-exposure limit; stronger human-body absorption does.\n- sourceIndex 3: \"Most transmissions in this range are for a longer time\": Transmission duration is separate from the reason for the lower limit; body absorption is the reason.",
     "fr": null
   },
   "citations": [
