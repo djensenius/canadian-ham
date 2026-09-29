@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-020-005",
+  "questionId": "B-001-020-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-020-005.\n\nWhy the correct answer is right: The International Telecommunication Union is the other regulatory source named by the official bank for Canadian amateur operators. This is a regulatory-authority fact, separate from community organizations or local governments.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Provincial or territorial government communications department\": Provincial or territorial communications departments are not the international radio-regulation body identified by this item.\n- sourceIndex 2: \"Radio Amateurs of Canada (RAC)\": RAC supports the amateur community, but this question asks who issues radio regulations that Canadian amateurs must comply with.\n- sourceIndex 3: \"International Amateur Radio Union\": The IARU represents amateur-radio interests internationally, but it is not the ITU regulatory source named in the official answer.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-05"
+    },
+    {
+      "type": "question",
+      "id": "B-001-020-005"
+    }
+  ],
+  "licenseClass": "original"
+}

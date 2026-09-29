@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-021-006",
+  "questionId": "B-001-021-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-021-006.\n\nWhy the correct answer is right: For the CEPT Amateur Radio Licence situation in the official bank, the Canadian qualification level required is Advanced. Basic, Basic with Honours, and Basic with Morse are not the qualification named for this CEPT arrangement.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Basic with Honours\": Honours is important for some Canadian privileges, but it is not the CEPT minimum qualification named by this question.\n- sourceIndex 2: \"Basic with Morse code\": Morse qualification is a separate credential, and this CEPT item identifies Advanced instead.\n- sourceIndex 3: \"Basic\": Basic is sufficient for the United States visiting item in this lesson, but not for the CEPT Amateur Radio Licence requirement asked here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-05"
+    },
+    {
+      "type": "question",
+      "id": "B-001-021-006"
+    }
+  ],
+  "licenseClass": "original"
+}

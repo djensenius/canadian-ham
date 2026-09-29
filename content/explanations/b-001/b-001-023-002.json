@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-023-002",
+  "questionId": "B-001-023-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-023-002.\n\nWhy the correct answer is right: The authority named by the official bank for antenna installations, including masts and towers, is the Minister of Innovation, Science and Industry. Municipal processes can matter, but they are not the ultimate authority named in this question.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The provincial or territorial Minister of Infrastructure\": A provincial or territorial infrastructure ministry is not the federal spectrum authority named for antenna installations, including masts and towers.\n- sourceIndex 2: \"The local municipal government\": A municipality may run a consultation process, but the official authority over antenna installations is not the municipality itself.\n- sourceIndex 3: \"The majority of neighbours within a distance of three times the proposed antenna height\": Neighbours can raise concerns through a process, but a neighbourhood majority is not the authority named for antenna installations.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-06"
+    },
+    {
+      "type": "question",
+      "id": "B-001-023-002"
+    }
+  ],
+  "licenseClass": "original"
+}

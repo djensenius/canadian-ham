@@ -118,5 +118,15 @@
     "lessonId": "L-001-04",
     "blockHeading": "Reference facts: station-type cues",
     "reason": "Reference fact table: station-type cues are drawn from official answer/distractor terms to explain B-001-018 station-role distinctions."
+  },
+  {
+    "lessonId": "L-001-05",
+    "blockHeading": "Reference facts",
+    "reason": "Reviewed regulatory reference table: single-rule ITU-region and Morse authorization facts are intentionally isolated from the multi-rule practice items required by the module policy."
+  },
+  {
+    "lessonId": "L-001-06",
+    "blockHeading": "Reference facts",
+    "reason": "Reviewed regulatory reference table: exact official names, OR wording, comment-period duration, exemption wording, RF frequency/effect facts, and EMCAB-2 criterion facts are intentionally preserved as single-rule anchors instead of being used as standalone practice items."
   }
 ]

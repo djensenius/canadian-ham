@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-025-004",
+  "questionId": "B-001-025-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-025-004.\n\nWhy the correct answer is right: The official bank classifies a garage door opener as radio-sensitive equipment for applying the EMCAB-2 field-strength criterion. That category is separate from associated home-entertainment equipment.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Associated equipment\": Associated equipment is the category used for certain home-entertainment devices, not for the garage door opener named here.\n- sourceIndex 2: \"Broadcast equipment\": A garage door opener is not broadcast receiving or transmitting equipment in the official category set.\n- sourceIndex 3: \"Low-immunity equipment\": Low immunity describes a possible condition of affected equipment, not the EMCAB-2 equipment category named for this item.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-06"
+    },
+    {
+      "type": "question",
+      "id": "B-001-025-004"
+    }
+  ],
+  "licenseClass": "original"
+}

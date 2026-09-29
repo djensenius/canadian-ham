@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-020-004",
+  "questionId": "B-001-020-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-020-004.\n\nWhy the correct answer is right: The international framework leaves Morse-code proficiency requirements to administrations. The exam point is not that Morse is universally required or universally forbidden, but that the administration decides whether it is part of authorization.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Administrations shall not make proficiency in Morse code a requirement\": This removes the administration's discretion, which is the opposite of the official answer's principle.\n- sourceIndex 2: \"Amateur radio operators must demonstrate proficiency in Morse code before using it on international communications\": The question is about authorization requirements set by administrations, not a special proof before every international Morse contact.\n- sourceIndex 3: \"Current regulations make no reference to proficiency in Morse code\": The official answer does reference Morse by assigning the requirement decision to administrations, so this choice goes too far.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-05"
+    },
+    {
+      "type": "question",
+      "id": "B-001-020-004"
+    }
+  ],
+  "licenseClass": "original"
+}
