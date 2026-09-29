@@ -12,11 +12,11 @@ lessonIds:
   - L-005-03
   - L-005-04
   - L-005-05
-status: outline
+status: draft
 ---
 # Basic Electronics and Theory
 
-Start with quantities, circuit relationships, AC behaviour, and measurements before applying them to radio hardware.
+Start with quantities, circuit relationships, AC behaviour, power, reactance, resonance, transformers, and measurements before applying them to radio hardware.
 
 ## Lessons
 

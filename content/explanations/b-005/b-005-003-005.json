@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-003-005",
+  "questionId": "B-005-003-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-003-005.\n\nWhy the correct answer is right: A short circuit is an unintended low-resistance path and can draw too much current.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A dead circuit\": A dead circuit is not the standard Basic term for the excessive-current fault.\n- sourceIndex 2: \"A closed circuit\": A closed circuit can be normal if the intended load is in place.\n- sourceIndex 3: \"An open circuit\": An open circuit stops current instead of drawing too much.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-02"
+    },
+    {
+      "type": "question",
+      "id": "B-005-003-005"
+    }
+  ],
+  "licenseClass": "original"
+}

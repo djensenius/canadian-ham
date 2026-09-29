@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-002-001",
+  "questionId": "B-005-002-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-002-001.\n\nWhy the correct answer is right: Gold, silver, and aluminum are all metals that conduct well.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Gold, silver and wood\": Wood is an insulator, so the group is not three conductors.\n- sourceIndex 2: \"Copper, aluminum and paper\": Paper is an insulator, so the group is not three conductors.\n- sourceIndex 3: \"Copper, gold and mica\": Mica is an insulator, so the group is not three conductors.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-01"
+    },
+    {
+      "type": "question",
+      "id": "B-005-002-001"
+    }
+  ],
+  "licenseClass": "original"
+}

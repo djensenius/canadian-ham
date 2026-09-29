@@ -1,0 +1,12 @@
+[
+  {
+    "lessonId": "L-005-04",
+    "blockHeading": "Decibels as power ratios",
+    "reason": "Reviewed principle table: Basic-level dB power-ratio shortcuts are standard facts, not a copied worked example. Numerals are intentionally preserved for clarity."
+  },
+  {
+    "lessonId": "L-005-05",
+    "blockHeading": "Resonance and tuned circuits",
+    "reason": "Reviewed principle definition: the series-RLC maximum-current statement is an accepted standard resonance fact needed for the lesson."
+  }
+]
