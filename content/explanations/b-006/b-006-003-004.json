@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-003-004.\n\nWhy the correct answer is right: RG-213 is commonly fitted with a PL-259 for many HF station connections.\n\nPer-choice notes:\n- sourceIndex 0: \"A PL-259 connector\": Correct. RG-213 is commonly fitted with a PL-259 for many HF station connections.\n- sourceIndex 1: \"An F-type connector\": That connector is common in other electronics but is not the usual amateur-radio choice for this equipment case.\n- sourceIndex 2: \"An SMA connector\": SMA is common on handheld gear, not the larger HF coax case unless the question specifically names that use.\n- sourceIndex 3: \"A BNC connector\": This connector name is real, but it does not match the specific use or weather-resistance point being asked.",
+    "en": "Question B-006-003-004.\n\nWhy the correct answer is right: RG-213 is a larger 50-ohm coax commonly used for HF station runs, and PL-259 connectors are commonly fitted for HF transceiver connections.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"An F-type connector\": F connectors are common on 75-ohm television and cable systems, not the usual RG-213-to-HF-transceiver connector.\n- sourceIndex 2: \"An SMA connector\": SMA connectors are small threaded connectors seen on handhelds and compact gear; they are not the normal connector for large RG-213 HF cable.\n- sourceIndex 3: \"A BNC connector\": BNC connectors are useful on test equipment and low-power gear, but PL-259 is the common answer for RG-213 on many HF transceivers.",
     "fr": null
   },
   "citations": [

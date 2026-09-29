@@ -92,11 +92,11 @@ A good feedline choice starts with the route, not with a catalogue page.
 
 ## Try it
 
-1. A fifty-ohm coax jumper is shortened from 9 m to 5 m. Its total loss changes, but its characteristic impedance remains fifty ohms.
-2. A window-line run is draped along a steel railing. Move it away from the metal or choose coax for that section.
-3. A handheld antenna connector feels stiff. Stop and realign the SMA threads instead of forcing it.
-4. A dipole is fed with coax and the shack microphone tingles during transmit. A feed-point balun or common-mode choke is a likely troubleshooting step.
-5. A wet garden route must lie close to soil for part of the run. Coax is the practical feedline for that section.
+1. A fifty-ohm coax jumper is shortened from 9 m to 5 m. What happens to its characteristic impedance? It remains fifty ohms because the cable geometry and dielectric did not change; only length-dependent loss is reduced.
+2. A window-line run is draped along a steel railing. What should you change? Move it away from the metal or choose coax for that section, because nearby conductors disturb balanced-line fields.
+3. A handheld antenna connector feels stiff. What is the safe next action? Stop and realign the SMA threads instead of forcing them, because cross-threading can damage the small connector.
+4. A dipole is fed with coax and the shack microphone tingles during transmit. What feed-point device should you suspect may be missing? A balun or common-mode choke is a likely troubleshooting step because the balanced antenna is meeting unbalanced coax.
+5. A wet garden route must lie close to soil for part of the run. Which feedline type is practical there? Coax is the practical choice because its shielded construction tolerates that route better than exposed balanced line.
 
 ## Radio connection
 

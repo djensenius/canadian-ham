@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-003-010.\n\nWhy the correct answer is right: Coaxial cable is generally the most suitable listed choice in icing because it is mechanically protected and less exposed than balanced line.\n\nPer-choice notes:\n- sourceIndex 0: \"Coaxial cable\": Correct. Coaxial cable is generally the most suitable listed choice in icing because it is mechanically protected and less exposed than balanced line.\n- sourceIndex 1: \"Open-wire line\": Open-wire line is a balanced low-loss line, but it is not the shielded or plastic-embedded construction named here.\n- sourceIndex 2: \"Window line\": That is a balanced two-conductor line, so it does not fit questions about shielded coax or open-air spreaders.\n- sourceIndex 3: \"Twin-lead\": That is a balanced two-conductor line, so it does not fit questions about shielded coax or open-air spreaders.",
+    "en": "Question B-006-003-010.\n\nWhy the correct answer is right: Coaxial cable is the most suitable choice in icing conditions because its fields are shielded inside the cable and its jacket can be mechanically protected. Ice on the outside is less likely to detune the line geometry than it would on balanced line.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Open-wire line\": Ice can bridge or load the exposed conductors and spreaders, changing spacing, balance, and loss.\n- sourceIndex 2: \"Window line\": Ice and water on the plastic web can upset the balanced fields and add loss.\n- sourceIndex 3: \"Twin-lead\": Twin-lead is also an exposed balanced line, so weather loading is a bigger problem than with coax.",
     "fr": null
   },
   "citations": [

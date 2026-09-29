@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-002-011.\n\nWhy the correct answer is right: Two conductors held apart mostly by air and spreaders is open-wire line.\n\nPer-choice notes:\n- sourceIndex 0: \"Open-wire line\": Correct. Two conductors held apart mostly by air and spreaders is open-wire line.\n- sourceIndex 1: \"Coaxial cable\": Coax is a shielded unbalanced feedline; it is only correct when the question is asking for that construction or practical route.\n- sourceIndex 2: \"Twin-lead\": That is a balanced two-conductor line, so it does not fit questions about shielded coax or open-air spreaders.\n- sourceIndex 3: \"Twisted pair\": This does not match the principle tested here: Feedline construction and balance determine whether coax, window line, open-wire line, or a balun is the right concept.",
+    "en": "Question B-006-002-011.\n\nWhy the correct answer is right: Open-wire line has two conductors held side by side at a fixed spacing by insulating spreaders. That construction leaves mostly air between and around the wires.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Coaxial cable\": Coaxial conductors are arranged one inside the other and are separated by dielectric, not by side-by-side spreaders.\n- sourceIndex 2: \"Twin-lead\": Twin-lead keeps its two conductors in a flat plastic strip, so spreaders are not the feature being described.\n- sourceIndex 3: \"Twisted pair\": Twisted-pair conductors repeatedly change position around each other instead of staying side by side a constant distance apart.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-003-001.\n\nWhy the correct answer is right: Coax is the least affected of these choices near metal because its shield confines much of the RF field.\n\nPer-choice notes:\n- sourceIndex 0: \"Coaxial cable\": Correct. Coax is the least affected of these choices near metal because its shield confines much of the RF field.\n- sourceIndex 1: \"Twin-lead\": That is a balanced two-conductor line, so it does not fit questions about shielded coax or open-air spreaders.\n- sourceIndex 2: \"Open-wire line\": Open-wire line is a balanced low-loss line, but it is not the shielded or plastic-embedded construction named here.\n- sourceIndex 3: \"Window line\": That is a balanced two-conductor line, so it does not fit questions about shielded coax or open-air spreaders.",
+    "en": "Question B-006-003-001.\n\nWhy the correct answer is right: Coaxial cable is shielded, so the RF fields are mostly contained between the centre conductor and the shield. That makes it far less sensitive to a nearby metal fence than balanced line.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Twin-lead\": Twin-lead has external fields around its parallel conductors, so running it along metal can change impedance and increase loss.\n- sourceIndex 2: \"Open-wire line\": Open-wire line works best in clear air; attaching it to a fence would seriously disturb the balanced fields.\n- sourceIndex 3: \"Window line\": Window line is balanced line, and a long metal object beside it can upset its balance and predictable impedance.",
     "fr": null
   },
   "citations": [

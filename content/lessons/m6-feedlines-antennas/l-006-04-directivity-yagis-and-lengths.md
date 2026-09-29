@@ -82,6 +82,8 @@ A reflector might be about 5 percent longer:
 
 Real Yagi dimensions are design-specific, but the relationships are the key: director shorter, reflector longer.
 
+The 143 / f half-wave estimate is the practical wire starting point used for these antenna-length problems. The free-space half-wave estimate, 150 / f, is useful for wave-size estimates and rough checking, but it does not include the shortening normally applied to a resonant wire element.
+
 ## Quarter-wave verticals and radials
 
 A quarter-wave vertical uses the ground, a vehicle body, or radial wires as the other half of the antenna system. A useful first-cut length is:
@@ -90,7 +92,7 @@ A quarter-wave vertical uses the ground, a vehicle body, or radial wires as the 
 quarter-wave length in metres ≈ 71.3 / f(MHz)
 ```
 
-Some reference material rounds the constant slightly; keep the formula style and units clear. Downward-sloping quarter-wave radials can bring an elevated vertical's feed point closer to a fifty-ohm coax match.
+Some reference material rounds the constant slightly; keep the formula style and units clear. The free-space quarter-wave value is 75 / f, half of the free-space half-wave estimate; 71.3 / f is the practical antenna starting estimate. Downward-sloping quarter-wave radials can bring an elevated vertical's feed point closer to a fifty-ohm coax match.
 
 ### Worked example: original vertical estimate
 
@@ -109,11 +111,11 @@ A five-eighths-wavelength VHF or UHF vertical can have more gain at useful low a
 
 ## Try it
 
-1. A Yagi's elements are horizontal, so its polarization is horizontal.
-2. A director is a little shorter than the driven element and is placed toward the desired forward direction.
-3. A reflector is a little longer than the driven element and sits behind it.
-4. A stacked pair of identical antennas ideally adds about 3 dB over a single antenna before real-world losses.
-5. A ground-mounted HF vertical needs a radial system to reduce ground loss.
+1. A Yagi's elements are horizontal. What polarization should you expect? Horizontal, because polarization follows the element orientation.
+2. Which parasitic element is a little shorter than the driven element and placed toward the desired signal direction? The director is shorter and sits in the forward direction.
+3. Which parasitic element is a little longer than the driven element and sits behind it? The reflector is longer and sits behind the driven element.
+4. A stacked pair of identical antennas is compared with one antenna before real-world losses. What ideal gain change is expected? About 3 dB, because the useful radiated power is roughly doubled.
+5. A quarter-wave vertical is planned for 25 MHz. Which practical starting length should you use? Use 71.3 / 25 = 2.85 m; 75 / 25 = 3.0 m is the free-space quarter-wave check.
 
 ## Radio connection
 
@@ -138,6 +140,6 @@ Description: Draw a brush-style top view. Label the rear element "reflector, sli
 - Gain describes concentration compared with a reference antenna.
 - A parasitic element is energized by nearby RF fields, not by a direct feedline connection.
 - Directors are slightly shorter; reflectors are slightly longer.
-- Use about 143 / f(MHz) for HF half-wave estimates and 71.3 / f(MHz) for quarter-wave estimates.
+- Use about 143 / f(MHz) for practical HF half-wave estimates and 71.3 / f(MHz) for practical quarter-wave estimates; 150 / f and 75 / f are free-space estimates.
 - Radials reduce ground losses and can help a vertical feed point approach common coax impedances.
 - Yagi design balances gain, bandwidth, front-to-back ratio, boom length, and mechanical strength.

@@ -88,11 +88,11 @@ A 4:1 impedance transformer would be the first idea to investigate for that simp
 
 ## Try it
 
-1. A 22 m feedline run is replaced with an 11 m run of the same coax at the same frequency. The dB loss is cut roughly in half.
-2. A meter reading jumps when the feedline is moved. Inspect connectors and conductor continuity before trimming the antenna.
-3. A tuner at the desk gives the transmitter a comfortable load, but the feedline is still hot. Consider matching closer to the antenna.
-4. A short VHF jumper uses thin coax. It may be fine as a jumper, but not as a long run to a roof antenna.
-5. A low SWR reading should be paired with common sense: cable type, cable length, and antenna behaviour still matter.
+1. A 22 m feedline run is replaced with an 11 m run of the same coax at the same frequency. What happens to dB loss? It is cut roughly in half because loss in dB accumulates with length.
+2. A meter reading jumps when the feedline is moved. What should you inspect before trimming the antenna? Check connectors and conductor continuity, because intermittent feedline faults can imitate antenna changes.
+3. A tuner at the desk gives the transmitter a comfortable load, but the feedline is still hot. Where might matching help more? Matching closer to the antenna can reduce high-SWR loss on the main feedline.
+4. A short VHF jumper uses thin coax. Why might the same cable be poor as a long roof run? At VHF and UHF, thin coax loss rises with frequency and becomes important over longer distances.
+5. A low SWR reading appears at the radio. What other evidence should you consider? Cable type, cable length, and antenna behaviour still matter because a lossy line can hide reflected power.
 
 ## Radio connection
 
