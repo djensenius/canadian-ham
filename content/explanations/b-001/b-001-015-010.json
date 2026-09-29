@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-015-010",
+  "questionId": "B-001-015-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-015-010.\n\nWhy the correct answer is right: The bank gives 28.000 MHz to 29.700 MHz as the Canadian 10-metre amateur band range.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"24.890 MHz to 24.990 MHz\": 24.890 MHz to 24.990 MHz is not the 10-metre range.\n- sourceIndex 2: \"21.000 MHz to 21.450 MHz\": 21.000 MHz to 21.450 MHz is the 15-metre range, not 10 metres.\n- sourceIndex 3: \"50.000 MHz to 54.000 MHz\": 50.000 MHz to 54.000 MHz is the 6-metre range rather than 10 metres.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-015-010"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-010-008",
+  "questionId": "B-001-010-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-010-008.\n\nWhy the correct answer is right: The 902 MHz to 928 MHz band is the one where amateur operations are not protected from interference by another service.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"144 MHz to 148 MHz\": The 144 MHz to 148 MHz band is not the unprotected-from-another-service band identified in this question.\n- sourceIndex 2: \"222 MHz to 225 MHz\": The 222 MHz to 225 MHz range is an amateur allocation choice, but the bank ties the reduced-protection example to a different band.\n- sourceIndex 3: \"50 MHz to 54 MHz\": The 50 MHz to 54 MHz band is not the band the bank ties to the not-protected statement.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-010-008"
+    }
+  ],
+  "licenseClass": "original"
+}

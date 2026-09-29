@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-011-004",
+  "questionId": "B-001-011-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-011-004.\n\nWhy the correct answer is right: Safety-of-life-and-property communications are the permitted broadcast-type exception in the amateur service.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"music that is picked up by your microphone\": Music picked up by a microphone is not the safety-related communication allowed by the rule.\n- sourceIndex 2: \"commercially recorded material\": Commercial recordings are broadcast-style content, not amateur emergency safety traffic.\n- sourceIndex 3: \"programming that originates from a broadcast undertaking\": Programming from a broadcast undertaking remains broadcast programming, not the narrow safety communication permitted here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-011-004"
+    }
+  ],
+  "licenseClass": "original"
+}

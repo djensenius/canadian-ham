@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-014-007",
+  "questionId": "B-001-014-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-014-007.\n\nWhy the correct answer is right: International third-party emergency or disaster-relief communication is allowed unless the foreign administration concerned specifically prohibits it.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"satellite communication can be originated in the disaster area\": Satellite availability from the disaster area is not the condition that blocks this communication.\n- sourceIndex 2: \"the foreign administration is in a declared state of war\": A declared state of war is not the specific prohibition condition named by the official answer.\n- sourceIndex 3: \"internet service is working well in the foreign country involved\": Working internet service does not by itself prohibit international third-party amateur disaster communication.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-014-007"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -8,5 +8,25 @@
     "lessonId": "L-005-05",
     "blockHeading": "Resonance and tuned circuits",
     "reason": "Reviewed principle definition: the series-RLC maximum-current statement is an accepted standard resonance fact needed for the lesson."
+  },
+  {
+    "lessonId": "L-001-04",
+    "blockHeading": "The below-30-MHz gate",
+    "reason": "Regulatory principle block: below-30-MHz qualification threshold values are established by official answers and RBR-4 facts."
+  },
+  {
+    "lessonId": "L-001-04",
+    "blockHeading": "HF band ranges named in the bank",
+    "reason": "Regulatory fact table: band ranges are established by official answers."
+  },
+  {
+    "lessonId": "L-001-04",
+    "blockHeading": "Bandwidth fact table",
+    "reason": "Regulatory fact table: bandwidth and mode-limit values are established by official answers."
+  },
+  {
+    "lessonId": "L-001-04",
+    "blockHeading": "Power limit fact table",
+    "reason": "Regulatory fact table: power values are established by official answers and RBR-4."
   }
 ]

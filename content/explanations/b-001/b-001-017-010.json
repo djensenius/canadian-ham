@@ -1,0 +1,25 @@
+{
+  "id": "EXP-B-001-017-010",
+  "questionId": "B-001-017-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-017-010.\n\nWhy the correct answer is right: Without Advanced Qualification, emissions other than SSB are limited to 190 watts carrier power.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"250 watts\": This is a DC-input figure for Basic stations, whereas the question asks carrier power for non-SSB emissions.\n- sourceIndex 2: \"560 watts\": That value applies to Basic single-sideband peak-envelope power, so it is the wrong measurement for other emissions.\n- sourceIndex 3: \"750 watts\": 750 watts is not the non-Advanced carrier-power limit in the official answer.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-017-010"
+    },
+    {
+      "type": "rbr-4",
+      "url": "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service"
+    }
+  ],
+  "licenseClass": "original"
+}

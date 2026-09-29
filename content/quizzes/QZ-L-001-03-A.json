@@ -1,0 +1,60 @@
+{
+  "id": "QZ-L-001-03-A",
+  "lessonId": "L-001-03",
+  "officialQuestionIds": [
+    "B-001-010-002",
+    "B-001-010-003",
+    "B-001-010-006",
+    "B-001-010-008",
+    "B-001-010-009",
+    "B-001-011-003",
+    "B-001-011-005",
+    "B-001-011-007",
+    "B-001-011-008",
+    "B-001-011-010",
+    "B-001-012-001",
+    "B-001-012-004",
+    "B-001-013-002",
+    "B-001-013-007",
+    "B-001-013-010",
+    "B-001-014-002",
+    "B-001-014-006",
+    "B-001-014-007",
+    "B-001-014-010"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-001-03-A-C1",
+      "prompt": { "en": "A club link is operating in a band where amateur stations must protect a primary service. The link begins to disturb a non-amateur user in that primary service. What is the best next step?", "fr": null },
+      "choices": [
+        { "text": { "en": "Keep transmitting until the primary user asks by call sign for the link to stop.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Pause or change the amateur operation so the primary service is no longer disturbed.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Increase power briefly so the amateur link finishes before the primary traffic returns.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Send a long test carrier to prove which station is causing the conflict.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Secondary amateur operation has to avoid interfering with the primary service. The practical response is to stop, move, or otherwise change the amateur operation rather than escalating the conflict.", "fr": null }
+    },
+    {
+      "id": "QZ-L-001-03-A-C2",
+      "prompt": { "en": "A station checklist for long practice contacts includes a clock beside the log. What mistake is that most directly meant to prevent?", "fr": null },
+      "choices": [
+        { "text": { "en": "Forgetting to identify while focused on the conversation or test", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Choosing English instead of French for the identification", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Using a call sign that starts with a Canadian prefix", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Ending a contact after both stations have identified", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The clock is an operating aid. It helps the operator remember the identification interval during a long contact or test instead of losing track of time.", "fr": null }
+    },
+    {
+      "id": "QZ-L-001-03-A-C3",
+      "prompt": { "en": "Which club policy would NOT help keep public-service practice traffic inside the lesson's privacy and non-commercial boundaries?", "fr": null },
+      "choices": [
+        { "text": { "en": "Use written prompts that keep exercise messages personal and non-commercial.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Tell operators before the exercise that message handling is unpaid volunteer work.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Designate a media spokesperson so radio operators do not turn received traffic into interviews.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Let operators accept small rewards if the message was handled accurately.", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "Small rewards still create compensation for message handling. The other policies are practical ways to keep the exercise personal, non-commercial, and away from improper disclosure.", "fr": null }
+    }
+  ]
+}

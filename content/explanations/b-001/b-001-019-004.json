@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-019-004",
+  "questionId": "B-001-019-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-019-004.\n\nWhy the correct answer is right: Amateur voice communications may use a maximum of 100% modulation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"75%\": 75% is below the permitted maximum and is not the regulatory limit in the bank.\n- sourceIndex 2: \"50%\": 50% is also below the allowed maximum modulation percentage.\n- sourceIndex 3: \"90%\": 90% is not the official maximum; the bank gives the full 100% value.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-019-004"
+    }
+  ],
+  "licenseClass": "original"
+}

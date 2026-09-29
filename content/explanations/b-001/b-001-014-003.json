@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-014-003",
+  "questionId": "B-001-014-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-014-003.\n\nWhy the correct answer is right: The bank states that Canada does not prohibit international third-party communications by Canadian amateur stations.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"if the amateur radio station has received written authorization from Innovation, Science and Economic Development Canada\": Written ISED authorization is not the condition given by the official answer.\n- sourceIndex 2: \"when it is permitted by the foreign country\": Foreign-country permission can matter in other third-party contexts, but this answer does not match the Canadian rule tested here.\n- sourceIndex 3: \"when prior remuneration has been received\": Prior remuneration is forbidden in amateur message handling and cannot authorize international third-party traffic.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-014-003"
+    }
+  ],
+  "licenseClass": "original"
+}

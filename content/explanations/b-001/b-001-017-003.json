@@ -1,0 +1,25 @@
+{
+  "id": "EXP-B-001-017-003",
+  "questionId": "B-001-017-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-017-003.\n\nWhy the correct answer is right: The power is verified at the output of the transmitter or external amplifier, which is the compliance point in the official answer.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"At the antenna feed point\": The antenna feed point includes feedline and tuner effects after the transmitter-output point, so it is not the verification point named here.\n- sourceIndex 2: \"At the power supply terminals\": Power supply terminals measure electrical supply input, not RF transmitter output.\n- sourceIndex 3: \"At the antenna tuner output\": The tuner output is downstream from the transmitter or amplifier output and is not the official measurement point.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-017-003"
+    },
+    {
+      "type": "rbr-4",
+      "url": "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,25 @@
+{
+  "id": "EXP-B-001-017-009",
+  "questionId": "B-001-017-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-017-009.\n\nWhy the correct answer is right: For Basic Qualification, the maximum DC input power to the transmitter final amplifier stage is 250 watts.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"1000 watts\": 1000 watts is the Advanced DC input limit, not Basic.\n- sourceIndex 2: \"750 watts\": 750 watts is not the Basic DC input value recorded in RBR-4 and the bank.\n- sourceIndex 3: \"560 watts\": That figure belongs to Basic single-sideband peak-envelope power, which is not the DC input quantity asked here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-017-009"
+    },
+    {
+      "type": "rbr-4",
+      "url": "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service"
+    }
+  ],
+  "licenseClass": "original"
+}

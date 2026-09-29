@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-016-004",
+  "questionId": "B-001-016-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-016-004.\n\nWhy the correct answer is right: The maximum bandwidth for 144 MHz to 148 MHz is 30 kHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"6 kHz\": 6 kHz is an HF bandwidth limit, not the 2-metre answer.\n- sourceIndex 2: \"20 kHz\": 20 kHz is used for the 28 MHz to 29.7 MHz range, not 144 MHz to 148 MHz.\n- sourceIndex 3: \"15 kHz\": 15 kHz is not the official maximum for the 2-metre range.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-016-004"
+    }
+  ],
+  "licenseClass": "original"
+}

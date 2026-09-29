@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-010-002",
+  "questionId": "B-001-010-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-010-002.\n\nWhy the correct answer is right: Deliberate interference is never acceptable, so the rule does not depend on who was first, how crowded the band is, or whether another operator appears to be breaking a rule.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Only if the station is operating illegally\": Suspected illegal operation does not give an amateur operator permission to jam or cover the station; enforcement is not done by creating another violation.\n- sourceIndex 2: \"Only if the station begins transmitting on a frequency you are using\": A station arriving on your frequency may be discourteous or mistaken, but that situation still does not authorize intentional interference.\n- sourceIndex 3: \"Only when you are operating within crowded band conditions\": Crowded band conditions call for coordination and patience, not deliberate disruption of another communication.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-010-002"
+    }
+  ],
+  "licenseClass": "original"
+}

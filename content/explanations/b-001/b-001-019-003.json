@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-019-003",
+  "questionId": "B-001-019-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-019-003.\n\nWhy the correct answer is right: The voice-transmission quality problem the station must prevent or indicate is overmodulation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Excessive compression\": Excessive compression can sound bad, but the bank names overmodulation as the required indicated or prevented problem.\n- sourceIndex 2: \"Inadequate pre-emphasis\": Inadequate pre-emphasis is an audio-response issue, not the unique voice-transmission problem named here.\n- sourceIndex 3: \"Inadequate audio filtering\": Inadequate audio filtering can affect quality, but the required indication or prevention target is overmodulation.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-019-003"
+    }
+  ],
+  "licenseClass": "original"
+}

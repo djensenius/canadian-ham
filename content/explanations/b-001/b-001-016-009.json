@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-016-009",
+  "questionId": "B-001-016-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-016-009.\n\nWhy the correct answer is right: Fast-scan television on 145 MHz is the prohibited combination because that occupied bandwidth does not fit the 2-metre limit.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"FT8 on 14.074 MHz\": FT8 on 14.074 MHz is not the prohibited combination in this question.\n- sourceIndex 2: \"Morse radiotelegraphy (CW) on 10.145 MHz\": CW on 10.145 MHz is compatible with the narrow-band context named in the choices.\n- sourceIndex 3: \"Fast-scan television (ATV) on 440 MHz\": Fast-scan television on 440 MHz is not the prohibited example selected by the bank.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-016-009"
+    }
+  ],
+  "licenseClass": "original"
+}

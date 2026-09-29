@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-013-007",
+  "questionId": "B-001-013-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-013-007.\n\nWhy the correct answer is right: Unidentified amateur transmissions are allowed only for controlling a model craft.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Only for brief tests not meant as messages\": Brief tests still follow the normal identification rule.\n- sourceIndex 2: \"Only if it does not interfere with others\": Not interfering with others is necessary for many operations, but it does not remove the identification requirement.\n- sourceIndex 3: \"Only for two-way or third-party communications\": Two-way or third-party communications require normal station accountability, so they are not unidentified exceptions.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-013-007"
+    }
+  ],
+  "licenseClass": "original"
+}

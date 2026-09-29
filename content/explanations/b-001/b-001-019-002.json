@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-019-002",
+  "questionId": "B-001-019-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-019-002.\n\nWhy the correct answer is right: SSB requires a means to prevent or indicate overmodulation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"CW\": CW does not have voice overmodulation in the same way as SSB speech transmission.\n- sourceIndex 2: \"RTTY\": RTTY is not the emission mode named for this overmodulation indication requirement.\n- sourceIndex 3: \"FM\": FM is not the mode singled out by this SSB overmodulation requirement.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-019-002"
+    }
+  ],
+  "licenseClass": "original"
+}

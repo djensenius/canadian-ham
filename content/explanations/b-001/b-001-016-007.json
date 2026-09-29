@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-016-007",
+  "questionId": "B-001-016-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-016-007.\n\nWhy the correct answer is right: Single sideband is prohibited in the 10.100 MHz to 10.150 MHz band.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"18.068 MHz to 18.168 MHz\": 18.068 MHz to 18.168 MHz is not the band where the bank prohibits SSB.\n- sourceIndex 2: \"24.890 MHz to 24.990 MHz\": 24.890 MHz to 24.990 MHz is not the official SSB-prohibited range.\n- sourceIndex 3: \"7.000 MHz to 7.300 MHz\": 7.000 MHz to 7.300 MHz is not the choice with the SSB prohibition in this question.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-016-007"
+    }
+  ],
+  "licenseClass": "original"
+}

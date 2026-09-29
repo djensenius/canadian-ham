@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-013-002",
+  "questionId": "B-001-013-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-013-002.\n\nWhy the correct answer is right: Identification is required at the beginning and end of a contact and at least every thirty minutes during it.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"At the beginning of a contact and at least every thirty minutes after that\": This omits the explicit end-of-contact identification requirement.\n- sourceIndex 2: \"At least once during each transmission\": Identifying once during each transmission is more frequent than the rule requires and misses the specific beginning/end/interval structure.\n- sourceIndex 3: \"At the beginning and end of each transmission\": Beginning and end of each transmission is not the interval-based contact rule taught by the bank.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-013-002"
+    }
+  ],
+  "licenseClass": "original"
+}

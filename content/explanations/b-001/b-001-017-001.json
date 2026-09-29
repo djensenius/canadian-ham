@@ -1,0 +1,25 @@
+{
+  "id": "EXP-B-001-017-001",
+  "questionId": "B-001-017-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-017-001.\n\nWhy the correct answer is right: Canadian amateur operators should use the minimum legal power needed to communicate.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"400 watts PEP output\": 400 watts PEP output is a fixed number, not the principle of using only the necessary legal power.\n- sourceIndex 2: \"560 watts DC input\": 560 watts DC input mixes the wrong power quantity with a number associated with Basic SSB PEP.\n- sourceIndex 3: \"560 watts PEP output\": 560 watts PEP output may be a Basic SSB ceiling, but the question asks what power to use at all times, not the maximum available.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-017-001"
+    },
+    {
+      "type": "rbr-4",
+      "url": "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-016-001",
+  "questionId": "B-001-016-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-016-001.\n\nWhy the correct answer is right: The maximum authorized bandwidth on both the 6-metre and 2-metre bands is 30 kHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"20 kHz\": 20 kHz is the limit the bank associates with a different range, not both 6 metres and 2 metres.\n- sourceIndex 2: \"6 kHz\": 6 kHz is too narrow for the 6-metre and 2-metre limit asked here.\n- sourceIndex 3: \"5 kHz\": 5 kHz is not the maximum bandwidth named for these two bands.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-016-001"
+    }
+  ],
+  "licenseClass": "original"
+}

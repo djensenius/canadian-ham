@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-010-007",
+  "questionId": "B-001-010-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-010-007.\n\nWhy the correct answer is right: The 430.0 MHz to 450.0 MHz range is the band named in the bank where amateur operation must not interfere with other services.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"7.0 MHz to 7.1 MHz\": The 7.0 MHz to 7.1 MHz range is an amateur HF range in the choices, but it is not the shared-band interference example tested here.\n- sourceIndex 2: \"144.0 MHz to 148.0 MHz\": The 144.0 MHz to 148.0 MHz band is not the option the bank uses for this must-not-interfere-to-other-services point.\n- sourceIndex 3: \"14.0 MHz to 14.2 MHz\": The 14.0 MHz to 14.2 MHz range is not the UHF shared-service example identified by the official answer.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-010-007"
+    }
+  ],
+  "licenseClass": "original"
+}

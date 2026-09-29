@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-014-008",
+  "questionId": "B-001-014-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-014-008.\n\nWhy the correct answer is right: Both non-certified persons are third parties because the communication is on behalf of people without amateur certification.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The foreign amateur radio operator and the other person at the foreign station\": The foreign amateur operator is certified, so grouping that operator as a third party misidentifies the role.\n- sourceIndex 2: \"The foreign amateur radio operator and both non-certified persons\": Including the foreign amateur operator with both non-certified persons adds a certified operator who is not the third party.\n- sourceIndex 3: \"The non-certified person at the Canadian station\": Only the Canadian-side non-certified person is incomplete because the foreign-side non-certified person also fits the third-party definition.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-014-008"
+    }
+  ],
+  "licenseClass": "original"
+}

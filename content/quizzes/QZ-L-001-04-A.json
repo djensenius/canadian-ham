@@ -1,0 +1,61 @@
+{
+  "id": "QZ-L-001-04-A",
+  "lessonId": "L-001-04",
+  "officialQuestionIds": [
+    "B-001-015-001",
+    "B-001-015-002",
+    "B-001-015-003",
+    "B-001-015-005",
+    "B-001-015-008",
+    "B-001-015-011",
+    "B-001-016-001",
+    "B-001-016-003",
+    "B-001-016-006",
+    "B-001-016-008",
+    "B-001-016-011",
+    "B-001-017-001",
+    "B-001-017-003",
+    "B-001-017-005",
+    "B-001-017-009",
+    "B-001-017-010",
+    "B-001-018-001",
+    "B-001-018-003",
+    "B-001-019-001",
+    "B-001-019-004"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-001-04-A-C1",
+      "prompt": { "en": "An operator measures 540 W PEP at the transmitter output and then notes that the feedline will lose some power before the antenna. What conclusion follows from the lesson's measurement-point discussion?", "fr": null },
+      "choices": [
+        { "text": { "en": "The feedline loss lets the operator raise transmitter output until antenna-end power reaches the limit.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The transmitter-output reading remains the compliance check; feedline loss is not extra permission.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Only the tuner output matters once a tuner is installed.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "PEP limits stop applying when the path includes coax loss.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The lesson separates the compliance measurement point from later antenna-system losses. Loss after the transmitter or amplifier does not create a larger transmitter-output allowance.", "fr": null }
+    },
+    {
+      "id": "QZ-L-001-04-A-C2",
+      "prompt": { "en": "A signal is too close to a band edge. Which action would NOT help keep the entire occupied bandwidth inside the amateur band?", "fr": null },
+      "choices": [
+        { "text": { "en": "Move the displayed frequency farther from the edge before transmitting.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Choose a narrower emission that still suits the contact.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Verify the occupied bandwidth rather than only the carrier display.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Increase transmitter power so the same wide signal finishes sooner.", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "Power does not make the occupied bandwidth fit inside the band. Frequency placement, emission width, and checking the whole occupied signal address the band-edge problem.", "fr": null }
+    },
+    {
+      "id": "QZ-L-001-04-A-C3",
+      "prompt": { "en": "A station setup sheet puts 'turn on amplifier' before 'confirm operator privileges.' What is the procedural error?", "fr": null },
+      "choices": [
+        { "text": { "en": "Privilege checks belong before equipment choices, because hardware does not decide what the operator may do.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Amplifiers should always be turned on before frequency, mode, and qualification are considered.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The order is harmless because a checklist cannot affect compliance.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The sheet should replace the privilege check with an antenna-length check.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The checklist should put the legal permission check before power and hardware setup. Equipment capability is not the same thing as operating privilege.", "fr": null }
+    }
+  ]
+}
