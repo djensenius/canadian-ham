@@ -14,25 +14,25 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-01-A-C1",
-      "prompt": { "en": "A harmonic monitor shows unwanted VHF energy on the jumper that leaves the final RF box and feeds the station accessory panel. Which placement keeps that energy out of the panel?", "fr": null },
+      "prompt": { "en": "A station is transmitting on 7 MHz and a 14 MHz harmonic is measured in the accessory rack. Which change would NOT help keep harmonic energy out of station wiring?", "fr": null },
       "choices": [
-        { "text": { "en": "At the final RF box output, before the SWR meter and tuner", "fr": null }, "isCorrect": true },
-        { "text": { "en": "After the tuner, so the tuner sees the harmonics first", "fr": null }, "isCorrect": false },
-        { "text": { "en": "After the antenna switch, so only the selected antenna is filtered", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Between the SWR meter and tuner, after the meter has sampled it", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Move the low-pass filter to the antenna side of the tuner so the accessories see the harmonic first", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Install the low-pass filter at the final RF output before the accessory rack", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Use a short jumper from the final RF output to the filter input", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Choose a filter whose cutoff passes 7 MHz but attenuates the 14 MHz harmonic", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "A low-pass filter should act before harmonics enter downstream station accessories; the final RF output is the first useful place in that path.", "fr": null }
+      "explanation": { "en": "Putting the filter after the tuner leaves more station wiring carrying the harmonic. The helpful changes all make the filter act earlier or make sure it rejects the harmonic frequency.", "fr": null }
     },
     {
       "id": "QZ-L-003-01-A-C2",
-      "prompt": { "en": "A service note says amplified microphone audio must now make an FM carrier deviate before the signal goes to a multiplier. Which transmitter block takes that audio and varies the oscillator?", "fr": null },
+      "prompt": { "en": "Spot the error in this FM-transmitter note: “The speech amplifier feeds audio to a multiplier; after the oscillator is tripled, the audio variations appear as FM at the output.”", "fr": null },
       "choices": [
-        { "text": { "en": "Speech amplifier", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Modulator", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Frequency multiplier", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Power amplifier", "fr": null }, "isCorrect": false }
+        { "text": { "en": "A multiplier erases any frequency deviation that was already present on the oscillator signal", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The power amplifier should lower the oscillator centre frequency before speech is applied", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The audio must vary the oscillator before multiplication; a multiplier cannot create voice deviation from audio it never receives", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The microphone should generate the RF carrier directly so the multiplier has voice-frequency input", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "The speech amplifier prepares the audio, but the modulator is the block that applies it to the oscillator as frequency deviation.", "fr": null }
+      "explanation": { "en": "In an FM chain the audio deviation is applied to the oscillator first. Later multiplier stages move that already frequency-varying RF signal to the needed carrier frequency.", "fr": null }
     },
     {
       "id": "QZ-L-003-01-A-C3",
@@ -40,8 +40,8 @@
       "choices": [
         { "text": { "en": "133.690 MHz", "fr": null }, "isCorrect": false },
         { "text": { "en": "144.390 MHz", "fr": null }, "isCorrect": false },
-        { "text": { "en": "155.090 MHz", "fr": null }, "isCorrect": true },
-        { "text": { "en": "165.790 MHz", "fr": null }, "isCorrect": false }
+        { "text": { "en": "165.790 MHz", "fr": null }, "isCorrect": false },
+        { "text": { "en": "155.090 MHz", "fr": null }, "isCorrect": true }
       ],
       "explanation": { "en": "With high-side injection, add the IF: 144.390 MHz + 10.700 MHz = 155.090 MHz.", "fr": null }
     }

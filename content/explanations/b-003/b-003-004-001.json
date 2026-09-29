@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-004-001.\n\nWhy the correct answer is right: In the basic CW transmitter diagram, the oscillator output is already at the carrier frequency that will be keyed and amplified for transmission.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"at the transmitted signal's power level\": The oscillator starts as a low-level source; output power is raised later by driver and final amplifier stages.\n- sourceIndex 2: \"at a submultiple of the operating frequency\": A submultiple would require multiplication, which is not the basic three-stage CW diagram being tested here.\n- sourceIndex 3: \"less stable than the transmitted signal\": The oscillator should be the most stable frequency source, not less stable than the final transmitted signal.",
+    "en": "Question B-003-004-001.\n\nWhy the correct answer is right: In the basic CW transmitter diagram, the oscillator output is already at the carrier frequency that will be keyed and amplified for transmission.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"at the transmitted signal's power level\": The oscillator starts as a low-level source; output power is raised later by driver and final amplifier stages.\n- sourceIndex 2: \"at a submultiple of the operating frequency\": A submultiple would need a frequency multiplier, but the simple oscillator-driver-amplifier chain sends oscillator frequency forward directly.\n- sourceIndex 3: \"less stable than the transmitted signal\": The oscillator should be the most stable frequency source, not less stable than the final transmitted signal.",
     "fr": null
   },
   "citations": [

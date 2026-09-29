@@ -53,19 +53,19 @@ transceiver -> external RF amplifier -> low-pass filter -> SWR meter -> tuner ->
 
 A low-pass filter passes the wanted HF signal while reducing energy at higher frequencies. Harmonics are higher-frequency multiples of the intended signal, so the filter belongs close to the output that can create or amplify those harmonics. Placing it later in the shack may leave an unnecessary length of cable carrying unwanted RF energy.
 
-An SWR meter samples forward and reflected power so you can judge how well the transmitter is matched to the antenna system. An antenna tuner does not magically make a poor antenna efficient; it transforms impedance so the transmitter or amplifier sees a safer load. An antenna switch chooses which antenna path, test load, or unused position is connected.
+An SWR meter samples forward and reflected power so you can judge how well the transmitter is matched to the antenna system. An antenna tuner does not magically make a poor antenna efficient; it transforms impedance so the transmitter or amplifier sees a safer load. Because antenna impedance changes with frequency, the tuner may need readjustment after a frequency change even though the cables have not moved. An antenna switch chooses which antenna path, test load, or unused position is connected.
 
 A dummy load is a non-radiating test load. It turns RF power into heat so you can tune or test without intentionally putting a signal on the air.
 
 ### Worked example: locating the filter
 
-A homebuilt 30 m exciter feeds a 120 W RF power module in a small rack. After that rack come a patch panel, an SWR meter, and a tuner. The filter question is not about which accessory is most convenient; it is about the first point after the last active RF source.
+A 20 m transceiver feeds a borrowed linear amplifier, then a short accessory tray with a power meter, a tuner, and a remote antenna switch. The filter question is not about which accessory is easiest to reach; it is about the first point after the last active RF source.
 
 ```text
-30 m exciter -> 120 W RF module -> low-pass filter -> patch panel -> SWR meter -> tuner
+20 m transceiver -> linear amplifier -> low-pass filter -> power meter -> tuner -> remote switch
 ```
 
-If the power module is bypassed for a low-power test, the exciter becomes the last active RF source for that test path. The same rule still applies: put the filter close to the output that is actually delivering RF to the rest of the station.
+If the amplifier is removed for a low-power test, the transceiver becomes the last active RF source for that path. The same rule still applies: put the filter close to the output that is actually delivering RF to the rest of the station.
 
 ## FM transmitter blocks
 
@@ -101,7 +101,7 @@ antenna -> RF amplifier -> mixer -> IF filter -> IF amplifier -> limiter -> disc
                          local oscillator
 ```
 
-The RF amplifier is the front-end block. It must add as little noise as practical because weak signals can be spoiled before later stages have a chance to help. The local oscillator sets the tune point. The mixer combines the incoming signal with the local oscillator signal to create the IF. The IF filter provides adjacent-channel selectivity. The IF amplifier supplies much of the gain before detection.
+The RF amplifier is the front-end block. It must add as little noise as practical because weak signals can be spoiled before later stages have a chance to help. The local oscillator sets the tune point. The mixer combines the incoming signal with the local oscillator signal to create the IF. The IF filter provides adjacent-channel selectivity. The IF amplifier supplies most of the gain before detection.
 
 For FM, the limiter removes unwanted amplitude variations. The discriminator recovers the original modulation from the frequency variations. The AF amplifier then raises the recovered audio to a useful level; volume and squelch are associated with this audio section in the block-level view.
 
@@ -119,13 +119,13 @@ The mixer output includes several products, but the IF stages are designed to ke
 
 ## Try it
 
-Question: A QRP exciter feeds a 120 W RF module, then a patch panel and tuner. A spectrum check finds the second harmonic on the patch-panel jumper. Where should the low-pass filter go?
+Question: A 14.2 MHz transmitter can also create energy at 28.4 MHz. Explain why the harmonic filter should act before a long accessory cable.
 
-Worked answer: Put the low-pass filter between the RF module output and the patch panel. The unwanted harmonic should be reduced before it reaches the station accessory wiring.
+Worked answer: The unwanted 28.4 MHz energy should be reduced before the cable carries it around the station. Filtering late may leave extra wiring radiating or coupling the harmonic.
 
-Question: In an FM transmitter, does the speech signal mainly vary the oscillator frequency or the final amplifier heat sink size?
+Question: After moving an HF contact from the low end of a band toward the high end, the reflected-power reading rises. Why might the tuner need attention?
 
-Worked answer: It varies the oscillator frequency through the modulator. The heat sink may be important in the power amplifier, but it is not the block that carries the voice information.
+Worked answer: The antenna system impedance can change with frequency. The tuner setting that transformed the load well at one frequency may need readjustment at another.
 
 Question: A superheterodyne receiver has a noisy first RF stage. Why can later audio gain not fully repair that problem?
 

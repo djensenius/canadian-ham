@@ -110,17 +110,17 @@ The voice information has not changed into a different message. The mixer has mo
 
 ## Try it
 
-Question: A CW transmitter's oscillator changes frequency when the antenna tuner is adjusted. Which block is missing or not doing enough work?
+Question: A CW oscillator is stable into a dummy load, but its note slides when the following RF stage warms up. Explain why a one-way buffer action matters.
 
-Worked answer: The buffer or driver isolation is the likely weak point. It should keep load changes in later stages from pulling the oscillator frequency.
+Worked answer: The warmer RF stage presents a changing load. Good buffer isolation keeps that load change from tugging the oscillator frequency.
 
-Question: In an SSB/CW receiver, a narrow IF filter makes a crowded band easier to copy. What receiver quality is that filter improving?
+Question: A receiver has both a 500 Hz IF filter and a 2.4 kHz IF filter. Predict which one will admit more nearby signals during a narrow CW contact, and why.
 
-Worked answer: It improves selectivity, because nearby signals are rejected before the detector and audio stages.
+Worked answer: The 2.4 kHz filter admits more nearby spectrum. The 500 Hz filter is narrower, so less off-frequency energy reaches the detector.
 
-Question: A product detector has IF energy but no BFO signal. What kind of problem should you expect?
+Question: A CW operator moves the BFO 400 Hz higher while leaving the IF signal selected. What changes at the speaker?
 
-Worked answer: SSB and CW recovery will fail or sound wrong because the detector needs the BFO reference to convert the IF information back to audio.
+Worked answer: The recovered tone pitch shifts by the BFO change. The product detector is comparing the IF energy with that local reference to make audio.
 
 Question: A filtered SSB signal at 9.001 MHz is mixed with a 12.500 MHz VFO using the sum output. What is the transmit frequency before final amplification?
 

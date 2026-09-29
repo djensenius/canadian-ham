@@ -52,7 +52,7 @@ Many interfaces also switch the radio between receive and transmit. They may use
 
 Isolation transformers are often included in the audio lines. They pass audio while breaking direct electrical paths that can carry hum, ground-loop current, or computer noise into the transmitted signal. Level controls or fixed pads keep the audio strong enough to decode but not so strong that it overdrives the radio.
 
-Some radios do not need a separate sound-card box because an audio codec is built into the transceiver. A USB connector by itself is not the whole explanation; the important internal block is the codec that converts between analog audio and digital samples.
+Some radios do not need a separate sound-card box because an audio codec is built into the transceiver. In that design, the connector is only the access point; the internal codec is the block that converts between analog audio and digital samples.
 
 ### Worked example: setting interface levels
 
@@ -70,7 +70,7 @@ AC mains -> transformer -> rectifier -> filter -> regulator -> DC output
 
 The transformer changes the AC voltage up or down as needed and provides isolation from the mains. The rectifier changes alternating current into pulsating direct current. The filter, usually involving large capacitors and sometimes inductors, smooths the pulses. The regulator holds the output voltage closer to a constant value as line voltage and load current vary.
 
-A regulator that drops voltage while carrying current dissipates heat. That is why the regulator stage commonly needs a heat sink. Rectifiers and transformers can also get warm in real equipment, but the block-level question about heat sinking points to the voltage regulator in a linear supply.
+A regulator that drops voltage while carrying current dissipates heat. That is why the regulator stage commonly needs a heat sink. Rectifiers and transformers can also get warm in real equipment, but the regulator is the series control stage deliberately turning excess voltage times current into heat.
 
 Overvoltage protection must monitor the regulated output, not an earlier point in the chain. The radio is connected to the output terminals, so that is where an unsafe voltage must be detected.
 
@@ -82,9 +82,9 @@ The numbers are approximate because real supplies include diode drops, ripple, a
 
 ### Worked example: ripple after filtering
 
-A 13.8 V bench supply has about 1.6 V peak-to-peak ripple at the rectifier output under load. After a larger filter capacitor is fitted, the ripple at the regulator input falls to about 0.35 V peak-to-peak. The filter has not regulated the final voltage; it has reduced the rise-and-fall component so the regulator has a steadier input to control.
+A training supply model exposes a rectifier-only test point before the smoothing capacitor and a filtered test point at the regulator input. Under the same load, the rectifier-only point shows a strongly rising and falling one-polarity waveform; the filtered point shows a much smaller ripple riding on DC, such as 0.35 V peak-to-peak. The filter has not regulated the final voltage; it has reduced the rise-and-fall component so the regulator has a steadier input to control.
 
-Never open or probe inside a mains-powered supply unless you are qualified to do that work with proper test equipment. Unplug the supply, verify stored charge is discharged, and remember that large capacitors can retain dangerous energy after power is removed.
+Never open or probe inside a mains-powered supply unless you are qualified to do that work with proper test equipment. Unplug the supply, use a proper resistor discharge tool or built-in bleeder path where the service procedure calls for it, and verify with a meter that stored charge is gone before handling the circuit. Do not short a filter capacitor with a screwdriver; large capacitors can retain dangerous energy after power is removed.
 
 ### Worked example: regulator heat
 
@@ -100,17 +100,17 @@ About ten watts of heat is enough to require serious heat sinking. The regulator
 
 ## Try it
 
-Question: A digital station decodes signals on receive but transmits a loud hum. Which interface feature should you inspect first?
+Question: A digital station is clean when the laptop runs on battery, but a hum appears when the charger is connected. Explain why audio isolation is worth checking.
 
-Worked answer: Inspect audio isolation and grounding. Isolation transformers help prevent ground-loop hum and computer noise from entering the transmit audio path.
+Worked answer: The charger can create a ground-loop path between computer and radio. Audio isolation breaks the direct path for that unwanted current while still passing the tones.
 
-Question: A radio has a USB data port and works with digital-mode software without an external sound box. What internal function must the radio provide?
+Question: A digital-mode transmit signal becomes wide after the computer playback slider is raised from 35 percent to 90 percent. Predict the better first adjustment.
 
-Worked answer: It needs an audio codec or equivalent conversion between analog audio and digital samples.
+Worked answer: Reduce the playback or interface drive level until the radio input is no longer overdriven. More RF power would not clean up distorted audio.
 
-Question: In a linear supply, where would a qualified technician expect a one-polarity waveform that still rises and falls strongly?
+Question: In a training model of a linear supply, the smoothing capacitor is disconnected from the rectifier output. Predict what happens to the regulator input waveform.
 
-Worked answer: After the rectifier and before the filter. The rectifier has made pulsating DC, but the filter has not yet smoothed it. Do not probe inside a mains supply unless you are trained for that hazard, the supply is made safe, and stored capacitor charge has been handled properly.
+Worked answer: The waveform rises and falls much more strongly because the rectifier is still making one-polarity pulses, but the filter is no longer smoothing them. Do not probe inside a mains supply unless you are trained for that hazard, the supply is made safe, and stored capacitor charge has been handled properly.
 
 Question: A regulator input is 20 V, the output is 13.5 V, and load current is 1.2 A. Estimate heat in the regulator.
 

@@ -14,36 +14,36 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-03-A-C1",
-      "prompt": { "en": "During a digital-mode test, the waterfall looks clean on receive but transmitted tones are badly overdriven and wide. Which first adjustment fits the interface problem?", "fr": null },
+      "prompt": { "en": "A digital-mode transmit signal is too wide because the radio data input is being overdriven. Which change would NOT help clean up the transmitted audio path?", "fr": null },
       "choices": [
-        { "text": { "en": "Reduce the computer playback or interface drive level", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Increase RF output power to hide the distortion", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Bypass the audio isolation transformer", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Raise the radio data-input gain for more ALC indication", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Lower the computer playback level feeding the interface", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Use the interface attenuator or level control to reduce drive", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Restore proper audio isolation if hum is being coupled into the line", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Increase RF output power so the distortion is hidden by a stronger signal", "fr": null }, "isCorrect": true }
       ],
-      "explanation": { "en": "Digital-mode interfaces must feed clean audio at a suitable level; excessive audio drive causes a wide, distorted transmitted signal before RF power or antenna matching can fix anything.", "fr": null }
+      "explanation": { "en": "More RF power makes a dirty signal stronger; it does not remove audio overdrive. The useful fixes reduce or clean up the audio feeding the transmitter.", "fr": null }
     },
     {
       "id": "QZ-L-003-03-A-C2",
       "prompt": { "en": "A linear regulator has 19 V at its input, 13.8 V at its output, and supplies 3 A. About how much heat must it dissipate?", "fr": null },
       "choices": [
+        { "text": { "en": "15.6 W", "fr": null }, "isCorrect": true },
         { "text": { "en": "5.2 W", "fr": null }, "isCorrect": false },
         { "text": { "en": "13.8 W", "fr": null }, "isCorrect": false },
-        { "text": { "en": "15.6 W", "fr": null }, "isCorrect": true },
         { "text": { "en": "57 W", "fr": null }, "isCorrect": false }
       ],
       "explanation": { "en": "The regulator drops 19 V - 13.8 V = 5.2 V; 5.2 V x 3 A = 15.6 W of heat.", "fr": null }
     },
     {
       "id": "QZ-L-003-03-A-C3",
-      "prompt": { "en": "A club member wants to check ripple inside an old mains-powered supply after it has been unplugged. Which plan is the safe starting point?", "fr": null },
+      "prompt": { "en": "Spot the error in this safety plan for a qualified technician preparing to troubleshoot ripple in a mains-powered linear supply.", "fr": null },
       "choices": [
-        { "text": { "en": "Confirm capacitors are discharged and use qualified service procedures", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Short the filter capacitor with a screwdriver before measuring", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Probe the live primary wiring to make the ripple easier to see", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Lift the safety ground so the oscilloscope trace is cleaner", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Unplug the supply and follow the service procedure before handling internal parts", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Verify stored capacitor voltage with a meter after the discharge step", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Short the main filter capacitor with a screwdriver so it discharges instantly", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Use a proper resistor discharge tool or built-in bleeder path where specified", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Power-supply capacitors can retain dangerous energy; internal checks require discharged capacitors, proper test gear, and someone qualified to work safely around mains equipment.", "fr": null }
+      "explanation": { "en": "A screwdriver short can cause a dangerous arc and damage parts. Safe service uses de-energizing, controlled discharge, verification, and qualified procedures.", "fr": null }
     }
   ]
 }

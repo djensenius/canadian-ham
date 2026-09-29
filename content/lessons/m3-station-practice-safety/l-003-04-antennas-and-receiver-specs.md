@@ -65,9 +65,9 @@ A receiver bandwidth that is too narrow can remove part of the information you a
 
 ## Receiver performance terms
 
-Sensitivity describes how small an RF input signal can be while still producing a specified signal-to-noise result. It is a weak-signal performance measurement for the RF input path, not a count of parts or a statement about how loud the speaker can play.
+Sensitivity describes how small an RF input signal can be while still producing a specified signal-to-noise result. It is a weak-signal performance measurement for the RF input path, usually stated against a signal-to-noise target.
 
-Selectivity describes how well the receiver separates the desired signal from nearby signals. IF filters usually provide most of this ability. For example, a 2.6 kHz filter is a common SSB voice choice, while a very narrow filter such as 350 Hz can help CW during interference.
+Selectivity describes how well the receiver separates the desired signal from nearby signals. IF filters usually provide most of this ability. For example, a few-kilohertz filter is a common SSB voice choice, while a few-hundred-hertz filter can help CW during interference.
 
 Dynamic range describes how well the receiver handles strong and weak signals at the same time without overload, blocking, or unwanted mixing products. It is the third major performance idea to keep beside sensitivity and selectivity.
 
@@ -109,13 +109,13 @@ The image is not the station you intended to hear. Front-end filtering helps rej
 
 ## Tuning accuracy for narrow modes
 
-SSB needs accurate tuning because there is no full carrier for the receiver to lock onto in the simple voice-recovery sense. A small tuning error shifts the recovered speech frequencies, so voices become high, low, or distorted instead of merely louder or softer. CW also uses narrow filters and careful tuning, but a small tuning offset mainly changes the pitch of the received tone; the operator can often retune for a comfortable note.
+SSB needs accurate tuning because there is no full carrier for the receiver to lock onto in the simple voice-recovery sense. A small tuning error shifts the recovered speech frequencies, so voices become high, low, or distorted instead of merely louder or softer. AM carries its own carrier for envelope detection, so modest receiver tuning error is usually less critical than with SSB voice. FM receivers recover audio from frequency deviation inside the receiver passband, so a small offset is not the same voice-spectrum shift problem. CW also uses narrow filters and careful tuning, but a small tuning offset mainly changes the pitch of the received tone; the operator can often retune for a comfortable note.
 
 ## Try it
 
-Question: In a small Yagi, which part does the coax feed, and which part mainly supports the elements?
+Question: A three-element Yagi is rebuilt on a nonconductive mast, but the element lengths and feedpoint stay the same. Explain why the main RF roles have not moved to the mast.
 
-Worked answer: The coax feeds the driven element. The boom mainly provides mechanical support.
+Worked answer: The radiating elements and feedpoint set the RF roles. The support structure holds them in position; changing the support material does not make it the fed radiating element.
 
 Question: Put these receiver filters with likely uses: 400 Hz, 2.8 kHz, and 7 kHz.
 

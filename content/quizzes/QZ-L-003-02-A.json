@@ -14,21 +14,21 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-02-A-C1",
-      "prompt": { "en": "A kit transmitter's crystal oscillator produces a clean 3.580 MHz signal, but the keyed RF stage that follows has a changing input load. What should the intervening driver stage emphasize?", "fr": null },
+      "prompt": { "en": "A CW exciter is rebuilt so the buffer has much better reverse isolation. When the following RF amplifier input load swings during keying, what should happen to oscillator pulling?", "fr": null },
       "choices": [
-        { "text": { "en": "Reverse isolation so the oscillator sees a steady load", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Key-click shaping in the keying waveform", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Low-pass filtering only at the antenna connector", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Frequency multiplication to a different amateur band", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Pulling should increase because reverse isolation adds extra RF output power", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Pulling should decrease because less of the load change reaches the oscillator", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Pulling should stay the same because buffers only shape key-click envelopes", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The oscillator should jump to a harmonic because isolation acts like a multiplier", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "The driver/buffer's isolation keeps load changes in the keyed RF stage from pulling the oscillator away from its set frequency.", "fr": null }
+      "explanation": { "en": "Better reverse isolation makes the buffer more one-way, so load changes in the RF amplifier are less able to tug the oscillator frequency.", "fr": null }
     },
     {
       "id": "QZ-L-003-02-A-C2",
       "prompt": { "en": "An SSB exciter has a filtered signal at 9.000 MHz and mixes it with a 5.250 MHz VFO using the sum product. What output frequency is produced before final amplification?", "fr": null },
       "choices": [
-        { "text": { "en": "3.750 MHz", "fr": null }, "isCorrect": false },
         { "text": { "en": "14.250 MHz", "fr": null }, "isCorrect": true },
+        { "text": { "en": "3.750 MHz", "fr": null }, "isCorrect": false },
         { "text": { "en": "9.525 MHz", "fr": null }, "isCorrect": false },
         { "text": { "en": "47.250 MHz", "fr": null }, "isCorrect": false }
       ],
@@ -36,14 +36,14 @@
     },
     {
       "id": "QZ-L-003-02-A-C3",
-      "prompt": { "en": "An SSB/CW receiver has a selected IF signal and a working AF amplifier, yet the product detector output is unintelligible. Which missing input at that detector would explain the symptom?", "fr": null },
+      "prompt": { "en": "Spot the error in this receiver troubleshooting note: “The selected IF signal is present, so turning up AF gain will let the product detector recover SSB even if its local reference is absent.”", "fr": null },
       "choices": [
-        { "text": { "en": "A local BFO reference close to the IF", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A wider IF filter ahead of the detector", "fr": null }, "isCorrect": false },
-        { "text": { "en": "More AF gain after the detector", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A different local-oscillator setting at the mixer", "fr": null }, "isCorrect": false }
+        { "text": { "en": "The antenna must be disconnected before any product detector can recover audio", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The sideband filter belongs after the speaker whenever AF gain is increased", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The local oscillator should be mixed with the AF output instead of with the incoming RF signal", "fr": null }, "isCorrect": false },
+        { "text": { "en": "AF gain after the detector cannot replace the local reference needed to mix the selected IF into audio", "fr": null }, "isCorrect": true }
       ],
-      "explanation": { "en": "The product detector needs a nearby local reference to translate the selected IF energy into audio; gain and antenna tuning cannot replace that reference.", "fr": null }
+      "explanation": { "en": "The product detector has to combine selected IF energy with a nearby reference before the AF amplifier can raise the recovered audio level.", "fr": null }
     }
   ]
 }
