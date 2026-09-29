@@ -4,6 +4,7 @@ import SwiftUI
 struct PracticeView: View {
     let bank: QuestionBank
     let category: BankCategory
+    let showsLanguagePicker: Bool
     @Binding var language: BankLanguage
 
     @ScaledMetric(relativeTo: .headline) private var answerLetterMinWidth = 32
@@ -36,7 +37,6 @@ struct PracticeView: View {
                     questionCard(currentQuestion)
                     answerList
                     feedback
-                    controls
                 } else {
                     ContentUnavailableView(
                         "No questions found",
@@ -48,9 +48,18 @@ struct PracticeView: View {
             .padding()
             .frame(maxWidth: 860, alignment: .leading)
         }
+        .safeAreaInset(edge: .bottom) {
+            controls
+                .padding(.horizontal)
+                .padding(.vertical, 10)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(.regularMaterial)
+        }
         .navigationTitle(category.name.text(for: language))
         .toolbar {
-            languageToolbarItem
+            if showsLanguagePicker {
+                languageToolbarItem
+            }
         }
         .onAppear {
             if currentQuestion == nil {
@@ -64,10 +73,13 @@ struct PracticeView: View {
             Text(category.name.text(for: language))
                 .font(.largeTitle.bold())
                 .dynamicTypeSize(...DynamicTypeSize.accessibility5)
+                .fixedSize(horizontal: false, vertical: true)
             Text("Random practice from \(category.questionCount) official Basic questions.")
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.primary)
+                .fixedSize(horizontal: false, vertical: true)
             Text("Session tally: \(correctCount) correct out of \(answeredCount) answered")
                 .font(.headline)
+                .fixedSize(horizontal: false, vertical: true)
                 .accessibilityLabel("Session tally, \(correctCount) correct out of \(answeredCount) answered")
         }
     }
@@ -75,11 +87,13 @@ struct PracticeView: View {
     private func questionCard(_ question: BankQuestion) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(question.id)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(.body.monospaced())
+                .foregroundStyle(.primary)
+                .fixedSize(horizontal: false, vertical: true)
                 .accessibilityLabel("Question identifier \(question.id)")
             Text(question.text.text(for: language))
                 .font(.title2.weight(.semibold))
+                .fixedSize(horizontal: false, vertical: true)
                 .textSelection(.enabled)
         }
         .padding()
@@ -108,26 +122,34 @@ struct PracticeView: View {
         } label: {
             HStack(alignment: .firstTextBaseline, spacing: 12) {
                 Text(label)
-                    .font(.headline.monospaced())
+                    .font(.headline.monospaced().bold())
+                    .foregroundStyle(.white)
                     .frame(minWidth: answerLetterMinWidth, minHeight: answerLetterMinWidth, alignment: .center)
                     .padding(6)
-                    .background(.thinMaterial, in: Circle())
+                    .background(.black, in: Circle())
+                    .accessibilityHidden(true)
 
                 Text(answerText)
+                    .foregroundStyle(.primary)
+                    .lineLimit(nil)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .layoutPriority(1)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 if isAnswered {
                     if shuffledAnswer.isCorrect {
                         Label("Correct answer", systemImage: "checkmark.circle.fill")
                             .labelStyle(.iconOnly)
-                            .foregroundStyle(.green)
+                            .foregroundStyle(.primary)
                     } else if isSelected {
                         Label("Your answer", systemImage: "xmark.circle.fill")
                             .labelStyle(.iconOnly)
-                            .foregroundStyle(.red)
+                            .foregroundStyle(.primary)
                     }
                 }
             }
+            .foregroundStyle(.primary)
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(answerBackground(for: shuffledAnswer, isSelected: isSelected), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
@@ -137,7 +159,7 @@ struct PracticeView: View {
             )
         }
         .buttonStyle(.plain)
-        .disabled(isAnswered)
+        .accessibilityHint(isAnswered ? "Question already answered; choose Next question to continue" : "Selects this answer")
         .accessibilityLabel(answerAccessibilityLabel(label: label, answerText: answerText, shuffledAnswer: shuffledAnswer, isSelected: isSelected))
         .accessibilityIdentifier("answer-\(label)-button")
     }
@@ -149,13 +171,14 @@ struct PracticeView: View {
                 if selectedAnswer.isCorrect {
                     Label("Correct", systemImage: "checkmark.circle.fill")
                         .font(.title3.bold())
-                        .foregroundStyle(.green)
+                        .foregroundStyle(.primary)
                 } else {
                     Label("Incorrect", systemImage: "xmark.circle.fill")
                         .font(.title3.bold())
-                        .foregroundStyle(.red)
+                        .foregroundStyle(.primary)
                     Text("Correct answer: \(correctAnswer.answer.text.text(for: language))")
                         .font(.headline)
+                        .fixedSize(horizontal: false, vertical: true)
                         .textSelection(.enabled)
                 }
             }
@@ -163,6 +186,8 @@ struct PracticeView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
             .accessibilityElement(children: .combine)
+            .accessibilityLabel(feedbackAccessibilityLabel(selectedAnswer: selectedAnswer, correctAnswer: correctAnswer))
+            .accessibilityIdentifier("answer-feedback")
         }
     }
 
@@ -180,17 +205,20 @@ struct PracticeView: View {
     }
 
     private var controls: some View {
-        HStack {
+        VStack(alignment: .leading, spacing: 8) {
             Button("Next question") {
                 loadNextQuestion()
             }
             .buttonStyle(.borderedProminent)
+            .tint(.primary)
             .disabled(selectedSourceIndex == nil)
             .accessibilityHint("Loads another random question from this category")
 
             if selectedSourceIndex == nil {
                 Text("Choose an answer to continue.")
-                    .foregroundStyle(.secondary)
+                    .font(.callout)
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
     }
@@ -227,10 +255,7 @@ struct PracticeView: View {
     }
 
     private func answerBackground(for shuffledAnswer: ShuffledAnswer, isSelected: Bool) -> Color {
-        guard selectedSourceIndex != nil else { return Color.secondary.opacity(0.08) }
-        if shuffledAnswer.isCorrect { return Color.green.opacity(0.18) }
-        if isSelected { return Color.red.opacity(0.18) }
-        return Color.secondary.opacity(0.08)
+        Color.clear
     }
 
     private func feedbackAnnouncement(for answer: ShuffledAnswer) -> String {
@@ -243,6 +268,14 @@ struct PracticeView: View {
         }
 
         return "Incorrect"
+    }
+
+    private func feedbackAccessibilityLabel(selectedAnswer: ShuffledAnswer, correctAnswer: ShuffledAnswer) -> String {
+        if selectedAnswer.isCorrect {
+            return "Correct"
+        }
+
+        return "Incorrect. Correct answer: \(correctAnswer.answer.text.text(for: language))"
     }
 
     private func answerAccessibilityLabel(

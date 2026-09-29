@@ -53,9 +53,6 @@ targets:
         CODE_SIGN_ENTITLEMENTS[sdk=iphone*]: ""
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
         SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
-      configs:
-        Debug:
-          CODE_SIGNING_ALLOWED: NO
   CanadianHamTests:
     type: bundle.unit-test
     platform: auto
@@ -88,9 +85,6 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
         SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
-      configs:
-        Debug:
-          CODE_SIGNING_ALLOWED: NO
   CanadianHamUITests:
     type: bundle.ui-testing
     platform: auto
@@ -106,9 +100,6 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
         SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
-      configs:
-        Debug:
-          CODE_SIGNING_ALLOWED: NO
 schemes:
   CanadianHam:
     build:

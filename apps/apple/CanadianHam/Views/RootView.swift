@@ -6,6 +6,10 @@ private enum SidebarSelection: Hashable {
 }
 
 struct RootView: View {
+#if os(iOS)
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+#endif
+
     @State private var bank: QuestionBank?
     @State private var loadError: String?
     @State private var selection: SidebarSelection?
@@ -35,25 +39,31 @@ struct RootView: View {
     private func appContent(for bank: QuestionBank) -> some View {
         NavigationSplitView {
             List(selection: $selection) {
-                Section("Practice categories") {
-                    ForEach(bank.categories) { category in
-                        NavigationLink(value: SidebarSelection.category(category.id)) {
-                            CategoryRow(category: category, language: language)
-                        }
-                        .accessibilityLabel(categoryAccessibilityLabel(category))
+                Text("Practice categories")
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+                    .accessibilityAddTraits(.isHeader)
+                ForEach(bank.categories) { category in
+                    NavigationLink(value: SidebarSelection.category(category.id)) {
+                        CategoryRow(category: category, language: language)
                     }
+                    .accessibilityLabel(categoryAccessibilityLabel(category))
                 }
 
-                Section("Information") {
-                    NavigationLink(value: SidebarSelection.about) {
-                        Label("About", systemImage: "info.circle")
-                    }
-                    .accessibilityLabel("About canadian-ham")
+                Text("Information")
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+                    .accessibilityAddTraits(.isHeader)
+                NavigationLink(value: SidebarSelection.about) {
+                    Label("About", systemImage: "info.circle")
                 }
+                .accessibilityLabel("About canadian-ham")
             }
             .navigationTitle("Canadian Ham")
             .toolbar {
-                languageToolbarItem
+                if showsSidebarLanguagePicker {
+                    languageToolbarItem
+                }
             }
         } detail: {
             detailView(for: bank)
@@ -65,8 +75,13 @@ struct RootView: View {
         switch selection {
         case .category(let categoryId):
             if let category = bank.categories.first(where: { $0.id == categoryId }) {
-                PracticeView(bank: bank, category: category, language: $language)
-                    .id(category.id)
+                PracticeView(
+                    bank: bank,
+                    category: category,
+                    showsLanguagePicker: showsPracticeLanguagePicker,
+                    language: $language
+                )
+                .id(category.id)
             } else {
                 ContentUnavailableView("Category not found", systemImage: "questionmark.folder")
             }
@@ -92,6 +107,14 @@ struct RootView: View {
             loadError = error.localizedDescription
         }
     }
+
+#if os(macOS)
+    private var showsSidebarLanguagePicker: Bool { false }
+    private var showsPracticeLanguagePicker: Bool { true }
+#else
+    private var showsSidebarLanguagePicker: Bool { horizontalSizeClass == .regular }
+    private var showsPracticeLanguagePicker: Bool { horizontalSizeClass != .regular }
+#endif
 
     private var languageToolbarItem: some ToolbarContent {
         ToolbarItem(placement: .automatic) {
@@ -119,9 +142,11 @@ private struct CategoryRow: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(category.name.text(for: language))
                 .font(.headline)
+                .fixedSize(horizontal: false, vertical: true)
             Text("\(category.questionCount) questions • \(category.subsectionCount) subsections")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.primary)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .padding(.vertical, 4)
     }
