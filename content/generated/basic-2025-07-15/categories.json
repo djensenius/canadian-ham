@@ -1,0 +1,106 @@
+[
+  {
+    "id": "B-001",
+    "bankId": "basic-2025-07-15",
+    "name": {
+      "en": "Regulations and Policies",
+      "fr": null
+    },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 199,
+    "subsectionCount": 25,
+    "examQuestionCount": 25,
+    "nameSource": "hand-maintained from verified ISED/RAC materials"
+  },
+  {
+    "id": "B-002",
+    "bankId": "basic-2025-07-15",
+    "name": {
+      "en": "Operating and Procedures",
+      "fr": null
+    },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 99,
+    "subsectionCount": 9,
+    "examQuestionCount": 9,
+    "nameSource": "hand-maintained from verified ISED/RAC materials"
+  },
+  {
+    "id": "B-003",
+    "bankId": "basic-2025-07-15",
+    "name": {
+      "en": "Station Assembly, Practice and Safety",
+      "fr": null
+    },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 199,
+    "subsectionCount": 21,
+    "examQuestionCount": 21,
+    "nameSource": "hand-maintained from verified ISED/RAC materials"
+  },
+  {
+    "id": "B-004",
+    "bankId": "basic-2025-07-15",
+    "name": {
+      "en": "Circuit Components",
+      "fr": null
+    },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 63,
+    "subsectionCount": 6,
+    "examQuestionCount": 6,
+    "nameSource": "hand-maintained from verified ISED/RAC materials"
+  },
+  {
+    "id": "B-005",
+    "bankId": "basic-2025-07-15",
+    "name": {
+      "en": "Basic Electronics and Theory",
+      "fr": null
+    },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 142,
+    "subsectionCount": 13,
+    "examQuestionCount": 13,
+    "nameSource": "hand-maintained from verified ISED/RAC materials"
+  },
+  {
+    "id": "B-006",
+    "bankId": "basic-2025-07-15",
+    "name": {
+      "en": "Feedlines and Antenna Systems",
+      "fr": null
+    },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 140,
+    "subsectionCount": 13,
+    "examQuestionCount": 13,
+    "nameSource": "hand-maintained from verified ISED/RAC materials"
+  },
+  {
+    "id": "B-007",
+    "bankId": "basic-2025-07-15",
+    "name": {
+      "en": "Radio Wave Propagation",
+      "fr": null
+    },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 87,
+    "subsectionCount": 8,
+    "examQuestionCount": 8,
+    "nameSource": "hand-maintained from verified ISED/RAC materials"
+  },
+  {
+    "id": "B-008",
+    "bankId": "basic-2025-07-15",
+    "name": {
+      "en": "Interference and Suppression",
+      "fr": null
+    },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 55,
+    "subsectionCount": 5,
+    "examQuestionCount": 5,
+    "nameSource": "hand-maintained from verified ISED/RAC materials"
+  }
+]

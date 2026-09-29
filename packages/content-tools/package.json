@@ -1,0 +1,8 @@
+{
+  "type": "module",
+  "scripts": {
+    "import:basic": "node src/import-basic.ts",
+    "import:basic:check": "node src/import-basic.ts --check",
+    "test": "node --test test/"
+  }
+}

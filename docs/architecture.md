@@ -86,17 +86,23 @@ Tooling decisions:
 
 Generated artifacts are committed under `content/generated/basic-2025-07-15/` and should include a source manifest so apps can display or log the active bank version without contacting a server.
 
-Example manifest:
+Example manifest (deterministic: no generated timestamps):
 
 ```json
 {
   "bankId": "basic-2025-07-15",
   "certificate": "canadian-amateur-basic",
+  "effectiveDate": "2025-07-15",
   "source": {
-    "delimitedTxtSha256": "34c7cd7967addfde648c566d0ecf25bf3d1e071c603b5101cfecc7bd0cbc284f",
-    "downloadedOn": "2026-09-28",
-    "effectiveOn": "2025-07-15",
-    "url": "https://apc-cap.ic.gc.ca/datafiles/amat_basic_quest.zip"
+    "path": "content/sources/ised/basic-2025-07-15/questions/amat_basic_quest_delim.txt",
+    "sha256": "34c7cd7967addfde648c566d0ecf25bf3d1e071c603b5101cfecc7bd0cbc284f",
+    "url": "https://apc-cap.ic.gc.ca/datafiles/amat_basic_quest.zip#amat_basic_quest_delim.txt",
+    "encoding": "UTF-8",
+    "lineEndings": "CRLF"
+  },
+  "importer": {
+    "name": "packages/content-tools/src/import-basic.ts",
+    "version": "1"
   },
   "counts": {
     "questions": 984,
@@ -172,6 +178,7 @@ Official ISED text is stored separately from original explanation content. Answe
     "en": "Regulations and Policies",
     "fr": null
   },
+  "frenchNameStatus": "pending verification",
   "questionCount": 199,
   "subsectionCount": 25,
   "examQuestionCount": 25,

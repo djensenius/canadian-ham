@@ -35,6 +35,7 @@ Do not infer permission scope beyond the written clearance. T-007 records the pe
 While the repository is private and no outside collaborators are added, the project may commit official ISED artifacts needed for development under `content/sources/ised/basic-2025-07-15/`:
 
 - the Basic 2025 delimited TXT;
+- `readme_basic.txt` and `lisezmoi_base.txt` from the Basic 2025 question-bank ZIP;
 - the Basic 2025 question-bank PDF;
 - the English Basic 2025 reference PDFs, either in the same directory or in a documented reference subfolder under that directory.
 

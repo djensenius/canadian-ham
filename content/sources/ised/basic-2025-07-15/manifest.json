@@ -25,7 +25,8 @@
       "sha256": "34c7cd7967addfde648c566d0ecf25bf3d1e071c603b5101cfecc7bd0cbc284f",
       "bytes": 517316,
       "retrievedAt": "2026-09-29",
-      "fetchedFresh": true
+      "fetchedFresh": true,
+      "encoding": "UTF-8, CRLF"
     },
     {
       "path": "questions/readme_basic.txt",
@@ -35,7 +36,8 @@
       "sha256": "5fa4a8c747fe72dc5a132be98550bad0fae583cadbf9a5903fc87b14abd566f8",
       "bytes": 303,
       "retrievedAt": "2026-09-29",
-      "fetchedFresh": true
+      "fetchedFresh": true,
+      "encoding": "detect"
     },
     {
       "path": "questions/lisezmoi_base.txt",
@@ -45,7 +47,8 @@
       "sha256": "e1dd7ad073df57a5347103fa6d9863280a381d758a7b28cfb06e6e9783c1245a",
       "bytes": 327,
       "retrievedAt": "2026-09-29",
-      "fetchedFresh": true
+      "fetchedFresh": true,
+      "encoding": "Windows-1252"
     },
     {
       "path": "amateur_basic_questions_en_2025-07-15.pdf",
@@ -55,7 +58,8 @@
       "sha256": "4e59b09f7711319091adfb729b138f6ad953f2c3d43108352155bfaa4f456ae4",
       "bytes": 312363,
       "retrievedAt": "2026-09-29",
-      "fetchedFresh": true
+      "fetchedFresh": true,
+      "encoding": "binary"
     },
     {
       "path": "reference/Reference Material for Amateur Radio Exam Basic EN 2025.pdf",
@@ -65,7 +69,8 @@
       "sha256": "e4e6a0ec35d9ccec2732b6c2a950b3ea721f826d44160b54b4e6298e86b93ae9",
       "bytes": 456683,
       "retrievedAt": "2026-09-29",
-      "fetchedFresh": true
+      "fetchedFresh": true,
+      "encoding": "binary"
     },
     {
       "path": "reference/Reference Material for Amateur Radio Training Basic EN 2025.pdf",
@@ -75,7 +80,8 @@
       "sha256": "2e0bf5e30a621852db0bf3c1e3954bbd60f906b19c531d97eab9b35c8f1a831e",
       "bytes": 539260,
       "retrievedAt": "2026-09-29",
-      "fetchedFresh": true
+      "fetchedFresh": true,
+      "encoding": "binary"
     }
   ]
 }
