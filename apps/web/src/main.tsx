@@ -1,8 +1,12 @@
-import { StrictMode } from "react";
+import { StrictMode, Suspense, lazy } from "react";
 import { createRoot } from "react-dom/client";
 
-import { App } from "./App";
 import "./styles.css";
+
+const App = lazy(async () => {
+  const module = await import("./App");
+  return { default: module.App };
+});
 
 const rootElement = document.getElementById("root");
 if (rootElement === null) {
@@ -11,6 +15,8 @@ if (rootElement === null) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <App />
+    <Suspense fallback={<main className="app-loading" aria-busy="true">Preparing the offline study desk…</main>}>
+      <App />
+    </Suspense>
   </StrictMode>,
 );

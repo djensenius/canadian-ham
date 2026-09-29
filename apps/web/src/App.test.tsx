@@ -1,26 +1,39 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
 import { IDBFactory } from "fake-indexeddb";
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
 
-import { App } from "./App";
-import { bankId, questions } from "./data/bank";
+import { App, AppErrorBoundary } from "./App";
+import { bankId, loadQuestions, loadQuestionsFromUrl, type Question } from "./data/bank";
 import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExportV1 } from "./lib/progressStore";
+import { applyThemePreference, readStoredThemePreference, THEME_COLORS, THEME_STORAGE_KEY } from "./lib/theme";
 import { buildExamAttempt, createMockExam } from "./lib/studyEngine";
 
 const fixedNow = "2026-01-02T03:04:05.000Z";
 let stores: ProgressStore[] = [];
+let testQuestions: readonly Question[] = [];
 
-beforeEach(() => {
+beforeEach(async () => {
   Object.defineProperty(globalThis, "indexedDB", { value: new IDBFactory(), configurable: true });
+  Object.defineProperty(window, "localStorage", { value: createMemoryStorage(), configurable: true });
   window.location.hash = "#/home";
+  window.localStorage.clear();
+  delete document.documentElement.dataset.theme;
+  document.documentElement.lang = "en";
+  document.head.querySelector('meta[name="theme-color"]')?.remove();
   stores = [];
+  testQuestions = await loadQuestions();
 });
 
 afterEach(async () => {
   cleanup();
+  vi.unstubAllGlobals();
   for (const store of stores) {
     await store.deleteDatabase();
   }
@@ -30,6 +43,40 @@ function createStore(name: string): ProgressStore {
   const store = new ProgressStore(name);
   stores.push(store);
   return store;
+}
+
+function createMemoryStorage(): Storage {
+  const values = new Map<string, string>();
+  return {
+    get length() {
+      return values.size;
+    },
+    clear: () => values.clear(),
+    getItem: (key: string) => values.get(key) ?? null,
+    key: (index: number) => [...values.keys()][index] ?? null,
+    removeItem: (key: string) => { values.delete(key); },
+    setItem: (key: string, value: string) => { values.set(key, value); },
+  };
+}
+
+function webIndexHtml(): string {
+  const moduleUrl = new URL(import.meta.url);
+  const modulePath = moduleUrl.protocol === "file:"
+    ? fileURLToPath(moduleUrl)
+    : join(process.cwd(), moduleUrl.pathname.replace(/^\/+/, ""));
+  return readFileSync(join(dirname(modulePath), "../index.html"), "utf8");
+}
+
+function extractInlineThemeScript(html: string): string {
+  const match = html.match(/<script>([\s\S]*?)<\/script>/);
+  assert.ok(match?.[1]);
+  return match[1];
+}
+
+function extractCsp(html: string): string {
+  const match = html.match(/<meta\s+http-equiv="Content-Security-Policy"\s+content="([^"]+)"/);
+  assert.ok(match?.[1]);
+  return match[1];
 }
 
 async function expectNoAxeViolations(container: Element): Promise<void> {
@@ -42,7 +89,7 @@ function allCorrectAttempt(seed: string, submittedAt: string): ExamAttempt {
 }
 
 function attemptWithCorrectCount(seed: string, submittedAt: string, correctCount: number): ExamAttempt {
-  const generatedItems = createMockExam(seed);
+  const generatedItems = createMockExam(seed, testQuestions);
   return buildExamAttempt({
     seed,
     startedAt: "2026-01-02T00:00:00.000Z",
@@ -100,7 +147,7 @@ describe("App accessibility and flows", () => {
     const needsReviewStore = createStore("needs-review-home");
     await needsReviewStore.putExamAttempt(readinessAttempt("needs-a", "2026-01-02T01:00:00.000Z", 85));
     await needsReviewStore.putExamAttempt(readinessAttempt("needs-b", "2026-01-03T01:00:00.000Z", 85));
-    for (const question of questions.slice(0, 5)) {
+    for (const question of testQuestions.slice(0, 5)) {
       await needsReviewStore.putQuestionProgress({
         questionId: question.id,
         bankId,
@@ -141,13 +188,29 @@ describe("App accessibility and flows", () => {
     await screen.findByText(/Question 1 of/);
     await expectNoAxeViolations(container);
 
+    const questionMeta = document.querySelector(".question-meta")?.textContent ?? "";
+    const questionId = questionMeta.match(/B-\d{3}-\d{3}-\d{3}/)?.[0];
+    const displayedQuestion = testQuestions.find((question) => question.id === questionId);
+    assert.ok(displayedQuestion);
+    const correctAnswerText = displayedQuestion.answers.find((answer) => answer.sourceIndex === 0)?.text.en;
+    assert.ok(correctAnswerText);
     const choices = screen.getAllByTestId("answer-choice");
-    fireEvent.click(choices[0]!);
+    const wrongChoice = choices.find((choice) => !(choice.textContent ?? "").includes(correctAnswerText));
+    assert.ok(wrongChoice);
+    fireEvent.click(wrongChoice);
     await screen.findByRole("status");
+    const correctChoice = document.querySelector(".answer-button.is-correct");
+    const incorrectChoice = document.querySelector(".answer-button.is-incorrect");
+    assert.ok(correctChoice);
+    assert.ok(incorrectChoice);
+    assert.equal(correctChoice.querySelector(".answer-state-icon")?.textContent, "✓");
+    assert.equal(correctChoice.querySelector(".answer-state-icon")?.getAttribute("aria-hidden"), "true");
+    assert.equal(incorrectChoice.querySelector(".answer-state-icon")?.textContent, "✕");
+    assert.equal(incorrectChoice.querySelector(".answer-state-icon")?.getAttribute("aria-hidden"), "true");
     await waitFor(async () => assert.equal((await store.getQuestionProgress()).length, 1));
   });
 
-  it("renders Mock exam, supports keyboard operation, and has no axe violations", async () => {
+  it("renders Mock exam with narrow DOM order, supports keyboard operation, and has no axe violations", async () => {
     window.location.hash = "#/mock";
     const store = createStore("mock");
     const user = userEvent.setup();
@@ -158,6 +221,40 @@ describe("App accessibility and flows", () => {
 
     await user.click(screen.getByRole("button", { name: "Start mock exam" }));
     await screen.findByText(/Question 1 of 100/);
+    const originalScrollIntoView = HTMLElement.prototype.scrollIntoView;
+    const scrollIntoView = vi.fn();
+    Object.defineProperty(HTMLElement.prototype, "scrollIntoView", { configurable: true, value: scrollIntoView });
+    vi.stubGlobal("matchMedia", vi.fn((query: string) => ({
+      matches: query === "(prefers-reduced-motion: reduce)",
+      media: query,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: () => true,
+    })));
+    const mapButton = screen.getByRole("button", { name: "Jump to question map" });
+    const navigator = screen.getByRole("navigation", { name: "Question navigator" });
+    const questionPanel = document.querySelector(".question-panel");
+    const actionRow = document.querySelector(".mock-exam--running > .action-row");
+    assert.ok(questionPanel);
+    assert.ok(actionRow);
+    assert.equal(mapButton.tagName, "BUTTON");
+    assert.equal(navigator.getAttribute("id"), "question-map");
+    assert.ok(questionPanel.compareDocumentPosition(actionRow) & Node.DOCUMENT_POSITION_FOLLOWING);
+    assert.ok(actionRow.compareDocumentPosition(navigator) & Node.DOCUMENT_POSITION_FOLLOWING);
+    assert.equal(window.location.hash, "#/mock");
+    await user.click(mapButton);
+    assert.ok(screen.getByText(/Question 1 of 100/));
+    assert.equal(document.activeElement, navigator);
+    assert.equal(window.location.hash, "#/mock");
+    assert.deepEqual(scrollIntoView.mock.calls[0]?.[0], { block: "start", behavior: "auto" });
+    if (originalScrollIntoView === undefined) {
+      delete (HTMLElement.prototype as Partial<HTMLElement>).scrollIntoView;
+    } else {
+      Object.defineProperty(HTMLElement.prototype, "scrollIntoView", { configurable: true, value: originalScrollIntoView });
+    }
     const firstChoice = screen.getAllByTestId("answer-choice")[0]!;
     firstChoice.focus();
     await user.keyboard("{Enter}");
@@ -172,6 +269,17 @@ describe("App accessibility and flows", () => {
     questionTwo.focus();
     await user.keyboard("{Enter}");
     assert.match(screen.getByLabelText("Mock exam progress").textContent ?? "", /Question 2 of 100/);
+    await expectNoAxeViolations(container);
+  });
+
+  it("renders Results with category breakdown and no axe violations", async () => {
+    window.location.hash = "#/results";
+    const store = createStore("results-axe");
+    await store.putExamAttempt(attemptWithCorrectCount("results-axe", "2026-01-02T01:00:00.000Z", 80));
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "results-seed"} />);
+
+    await screen.findByRole("heading", { name: "Mock exam results" });
+    assert.match(screen.getByText(/Basic with Honours ready/).textContent ?? "", /Basic with Honours/);
     await expectNoAxeViolations(container);
   });
 
@@ -212,6 +320,121 @@ describe("App accessibility and flows", () => {
     await user.click(screen.getByRole("button", { name: "Submit practice set" }));
     await screen.findByRole("heading", { name: "Practice set review" });
     assert.equal((await store.getQuestionProgress()).length, 10);
+  });
+
+  it("renders Settings theme controls and no axe violations", async () => {
+    window.location.hash = "#/settings";
+    const store = createStore("settings-axe");
+    const user = userEvent.setup();
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "settings-seed"} />);
+
+    await screen.findByRole("heading", { name: "Settings and local data" });
+    await expectNoAxeViolations(container);
+    await user.click(screen.getByLabelText("Dark"));
+    await waitFor(async () => {
+      assert.equal((await store.getPreferences()).theme, "dark");
+      assert.equal(document.documentElement.dataset.theme, "dark");
+    });
+    assert.equal(window.localStorage.getItem(THEME_STORAGE_KEY), "dark");
+  });
+
+  it("applies the mirrored stored theme before IndexedDB preferences load", async () => {
+    const themeColor = document.createElement("meta");
+    themeColor.setAttribute("name", "theme-color");
+    document.head.append(themeColor);
+    window.localStorage.setItem(THEME_STORAGE_KEY, "dark");
+
+    assert.equal(readStoredThemePreference(), "dark");
+    applyThemePreference(readStoredThemePreference());
+
+    assert.equal(document.documentElement.dataset.theme, "dark");
+    assert.equal(themeColor.getAttribute("content"), THEME_COLORS.dark);
+  });
+
+  it("keeps the inline theme script hash in the CSP and applies stored themes", () => {
+    const html = webIndexHtml();
+    const script = extractInlineThemeScript(html);
+    const csp = extractCsp(html);
+    const hash = createHash("sha256").update(script).digest("base64");
+    const runThemeScript = () => new Function("window", "document", "localStorage", script)(window, document, window.localStorage);
+    const themeColor = document.createElement("meta");
+    themeColor.setAttribute("name", "theme-color");
+    document.head.append(themeColor);
+
+    assert.ok(csp.includes(`'sha256-${hash}'`));
+    assert.doesNotMatch(csp, /script-src[^;]*'unsafe-inline'/);
+    assert.doesNotMatch(csp, /style-src[^;]*'unsafe-inline'/);
+
+    window.localStorage.setItem(THEME_STORAGE_KEY, "dark");
+    runThemeScript();
+    assert.equal(document.documentElement.dataset.theme, "dark");
+    assert.equal(themeColor.getAttribute("content"), THEME_COLORS.dark);
+
+    window.localStorage.setItem(THEME_STORAGE_KEY, "light");
+    runThemeScript();
+    assert.equal(document.documentElement.dataset.theme, "light");
+    assert.equal(themeColor.getAttribute("content"), THEME_COLORS.light);
+  });
+
+  it("preserves stored preferences and re-renders theme radios in recovery settings", async () => {
+    const store = createStore("error-boundary-theme");
+    const user = userEvent.setup();
+    await store.putPreferences({ ...defaultPreferences, practiceMode: "review-later", examTimerEnabled: true, theme: "light" });
+    function BrokenContent() {
+      throw new Error("corrupt local progress");
+      return null;
+    }
+
+    render(<AppErrorBoundary store={store} now={() => fixedNow}><BrokenContent /></AppErrorBoundary>);
+    await screen.findByText(/The app could not render saved progress/);
+    await user.click(screen.getByLabelText("Dark"));
+    await screen.findByText(/Theme preference saved: Dark/);
+
+    assert.deepEqual(await store.getPreferences(), { ...defaultPreferences, practiceMode: "review-later", examTimerEnabled: true, theme: "dark" });
+    assert.equal((screen.getByLabelText("Dark") as HTMLInputElement).checked, true);
+    assert.equal(document.documentElement.dataset.theme, "dark");
+  });
+
+  it("keeps the root language stable and marks only question content as French", async () => {
+    window.location.hash = "#/practice";
+    const store = createStore("language-scope");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "language-seed"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    await user.click(screen.getByLabelText("Français"));
+
+    assert.equal(screen.getByText("Français").getAttribute("lang"), "fr");
+    assert.equal(document.documentElement.lang, "en");
+    assert.ok(document.querySelector(".question-text[lang='fr-CA']"));
+  });
+
+  it("labels reference sheet links with new-tab hints and licensing notes", async () => {
+    const store = createStore("reference-links");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "reference-seed"} />);
+
+    const studyLink = await screen.findByRole("link", { name: "Study reference sheet (opens in new tab)" });
+    assert.match(studyLink.getAttribute("href") ?? "", /Reference.*Training.*Basic.*2025\.pdf/);
+    assert.equal(studyLink.getAttribute("target"), "_blank");
+    assert.match(studyLink.getAttribute("rel") ?? "", /noreferrer/);
+    assert.match(screen.getByLabelText("Study reference sheet attribution").textContent ?? "", /Private-development access only/);
+
+    await user.click(screen.getAllByRole("button", { name: "Mock exam" })[0]!);
+    const examLink = await screen.findByRole("link", { name: "Open exam reference sheet (opens in new tab)" });
+    assert.match(examLink.getAttribute("href") ?? "", /Reference.*Exam.*Basic.*2025\.pdf/);
+    assert.equal(examLink.getAttribute("target"), "_blank");
+    assert.match(examLink.getAttribute("rel") ?? "", /noreferrer/);
+    assert.match(screen.getByLabelText("Exam reference sheet attribution").textContent ?? "", /may be used while writing the exam/);
+  });
+
+  it("surfaces bundled question-bank fetch failures", async () => {
+    const fetchMock = vi.fn(async () => new Response("not found", { status: 503, statusText: "Service Unavailable" }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await assert.rejects(loadQuestionsFromUrl("/questions.json"), /503 Service Unavailable/);
+    assert.equal(fetchMock.mock.calls.length, 1);
   });
 
   it("surfaces Settings import/reset UI errors and confirmations with focus management", async () => {
