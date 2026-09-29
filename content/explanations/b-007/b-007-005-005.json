@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-005-005.\n\nWhy the correct answer is right: Beyond ground wave and ordinary line of sight, radio communication depends strongly on ionization and atmospheric conditions driven by solar radiation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The F2 region of the ionosphere\": The F2 region of the ionosphere is very important for HF DX, but the broader influence on all beyond-local paths is solar radiation.\n- sourceIndex 2: \"The F1 region of the ionosphere\": The F1 region of the ionosphere is only one sub-region and cannot explain all beyond-ground-wave or beyond-line-of-sight communication.\n- sourceIndex 3: \"Lunar tidal effects\": Lunar tidal effects are not the main driver of these radio propagation conditions.",
+    "en": "Question B-007-005-005.\n\nWhy the correct answer is right: Once a path depends on the ionosphere or other beyond-horizon mechanisms, solar radiation is the broad driver that changes ionization and therefore changes radio propagation conditions.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The F2 region of the ionosphere\": The F2 region supports many HF sky-wave paths, but it is only one region affected by the Sun, not the overall influence on all non-ground-wave communication.\n- sourceIndex 2: \"The F1 region of the ionosphere\": F1 behaviour can matter on some daylight paths, yet it is a layer within the solar-controlled ionosphere rather than the basic outside influence.\n- sourceIndex 3: \"Lunar tidal effects\": Lunar tides are not the main practical cause operators use to explain ordinary beyond-line-of-sight radio changes.",
     "fr": null
   },
   "citations": [
