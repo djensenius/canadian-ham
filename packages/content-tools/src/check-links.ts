@@ -46,31 +46,50 @@ function removeOptionalTitle(rawTarget: string): string {
   return whitespaceIndex === -1 ? trimmed : trimmed.slice(0, whitespaceIndex);
 }
 
-function lineNumberForOffset(text: string, offset: number): number {
-  let line = 1;
-  for (let index = 0; index < offset; index += 1) {
-    if (text.charCodeAt(index) === 10) {
-      line += 1;
-    }
+function markdownLines(text: string): Array<{ line: string; lineNumber: number }> {
+  const lines: Array<{ line: string; lineNumber: number }> = [];
+  let lineNumber = 1;
+  for (const line of text.split(/\r?\n/)) {
+    lines.push({ line, lineNumber });
+    lineNumber += 1;
   }
-  return line;
+  return lines;
 }
 
 function extractMarkdownLinks(file: string, text: string): MarkdownLink[] {
   const links: MarkdownLink[] = [];
   const inlineLinkPattern = /(?<!!)\[[^\]\n]+\]\(([^)\n]+)\)/g;
-  for (const match of text.matchAll(inlineLinkPattern)) {
-    const target = removeOptionalTitle(match[1] ?? "");
-    if (target.length > 0) {
-      links.push({ file, line: lineNumberForOffset(text, match.index ?? 0), target });
-    }
-  }
+  const referenceDefinitionPattern = /^ {0,3}\[([^\]\n]+)\]:\s*(\S+)/;
+  let fence: { marker: "`" | "~"; length: number } | null = null;
 
-  const referenceDefinitionPattern = /^ {0,3}\[[^\]\n]+\]:\s*(\S+)/gm;
-  for (const match of text.matchAll(referenceDefinitionPattern)) {
-    const target = removeOptionalTitle(match[1] ?? "");
-    if (target.length > 0) {
-      links.push({ file, line: lineNumberForOffset(text, match.index ?? 0), target });
+  for (const { line, lineNumber } of markdownLines(text)) {
+    const fenceMatch = line.match(/^ {0,3}(`{3,}|~{3,})/);
+    if (fence !== null) {
+      if (fenceMatch && fenceMatch[1]?.startsWith(fence.marker) && fenceMatch[1].length >= fence.length) {
+        fence = null;
+      }
+      continue;
+    }
+    if (fenceMatch) {
+      const marker = fenceMatch[1]!;
+      fence = { marker: marker[0] as "`" | "~", length: marker.length };
+      continue;
+    }
+
+    for (const match of line.matchAll(inlineLinkPattern)) {
+      const target = removeOptionalTitle(match[1] ?? "");
+      if (target.length > 0) {
+        links.push({ file, line: lineNumber, target });
+      }
+    }
+
+    const referenceMatch = line.match(referenceDefinitionPattern);
+    const label = referenceMatch?.[1] ?? "";
+    if (referenceMatch && !label.startsWith("^")) {
+      const target = removeOptionalTitle(referenceMatch[2] ?? "");
+      if (target.length > 0) {
+        links.push({ file, line: lineNumber, target });
+      }
     }
   }
 
@@ -85,7 +104,7 @@ function slugForHeadingText(headingText: string): string {
     .toLowerCase()
     .replace(/[^\p{Letter}\p{Number}\s-]/gu, "")
     .trim()
-    .replace(/\s+/g, "-");
+    .replace(/\s/g, "-");
 }
 
 function markdownAnchors(text: string): Set<string> {
@@ -145,14 +164,18 @@ async function validateLink(root: string, link: MarkdownLink): Promise<LinkIssue
   }
 
   const { pathPart, fragment } = splitTarget(link.target);
-  const sourceDirectory = path.dirname(path.join(root, link.file));
-  let targetPath: string;
+  const sourceFilePath = path.join(root, link.file);
+  const sourceDirectory = path.dirname(sourceFilePath);
+  let decodedPathPart: string;
+  let decodedFragment: string;
   try {
-    targetPath = path.resolve(sourceDirectory, decodeURIComponent(pathPart || "."));
+    decodedPathPart = decodeURIComponent(pathPart);
+    decodedFragment = decodeURIComponent(fragment);
   } catch {
     return { ...link, message: "target is not valid URI-encoded text" };
   }
 
+  const targetPath = pathPart.length === 0 ? sourceFilePath : path.resolve(sourceDirectory, decodedPathPart);
   const relativeTarget = path.relative(root, targetPath);
   if (relativeTarget.startsWith("..") || path.isAbsolute(relativeTarget)) {
     return { ...link, message: "relative link points outside the repository" };
@@ -172,7 +195,7 @@ async function validateLink(root: string, link: MarkdownLink): Promise<LinkIssue
 
   const targetText = await readFile(targetPath, "utf8");
   const anchors = markdownAnchors(targetText);
-  if (!anchors.has(decodeURIComponent(fragment))) {
+  if (!anchors.has(decodedFragment)) {
     return { ...link, message: `anchor does not exist: #${fragment}` };
   }
 
