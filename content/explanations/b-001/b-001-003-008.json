@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-003-008",
+  "questionId": "B-001-003-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-003-008.\n\nWhy the correct answer is right: For unlawful interference with or obstruction of radio communication, the bank gives a fine up to $5,000, imprisonment up to one year, or both.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A fine of $10 000\": This doubles the stated fine limit and does not reflect the fine-or-imprisonment-or-both structure.\n- sourceIndex 2: \"A prison term of two years\": This doubles the stated imprisonment limit and omits the fine alternative.\n- sourceIndex 3: \"A fine not exceeding $1 000\": This lowers the fine limit and omits imprisonment or both as possible penalties.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-003-008"
+    }
+  ],
+  "licenseClass": "original"
+}

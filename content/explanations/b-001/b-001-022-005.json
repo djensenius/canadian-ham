@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-022-005",
+  "questionId": "B-001-022-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-022-005.\n\nWhy the correct answer is right: The NOT-correct statement is that insufficient English or French can be solved by bringing an interpreter; the bank does not support interpreter accompaniment for that situation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A candidate who fails a written examination for lack of reading skills may be given an oral examination\": This changes the delivery mode to address reading-skill difficulty, so it is a supported oral-exam possibility.\n- sourceIndex 2: \"A candidate who fails a written examination due to not usually speaking English or French may be given an oral examination\": The bank treats oral delivery as possible here; that is different from adding an interpreter.\n- sourceIndex 3: \"An examiner may request medical evidence from a practising medical physician before accommodating testing\": Medical evidence may be requested before accommodation, so this true statement is not the exception.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-022-005"
+    }
+  ],
+  "licenseClass": "original"
+}

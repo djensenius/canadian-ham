@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-009-007",
+  "questionId": "B-001-009-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-009-007.\n\nWhy the correct answer is right: Unqualified family members cannot transmit alone because control operators need suitable amateur qualifications.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"They must not use your equipment without your permission\": Permission from the owner is not enough without operator qualification.\n- sourceIndex 2: \"They must first know how to use the right abbreviations and Q signals\": Operating vocabulary does not replace the required qualification.\n- sourceIndex 3: \"They must first know the right frequencies and emission modes for transmitting\": Technical knowledge of settings is not the same as being qualified as a control operator.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-009-007"
+    }
+  ],
+  "licenseClass": "original"
+}

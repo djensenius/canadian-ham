@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-009-009",
+  "questionId": "B-001-009-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-009-009.\n\nWhy the correct answer is right: A person without an amateur certificate may operate only under supervision and in the presence of a properly qualified person.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"When the person has been briefed over the telephone by a person holding appropriate qualifications\": A phone briefing lacks the required in-person supervision.\n- sourceIndex 2: \"When the person is actively enrolled in an amateur radio course\": Course enrolment does not equal qualified supervision at the station.\n- sourceIndex 3: \"When the person holds a valid licence in the land mobile or maritime services\": A licence in another service does not provide amateur-station operating authority.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-009-009"
+    }
+  ],
+  "licenseClass": "original"
+}

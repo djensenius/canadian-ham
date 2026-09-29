@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-001-001",
+  "questionId": "B-001-001-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-001-001.\n\nWhy the correct answer is right: The Radiocommunication Act is the broad statute that gives authority for Canadian radiocommunication regulation, including rules that affect amateur radio.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The Broadcasting Act\": Broadcasting is a different regulatory area; it is not the statute the bank identifies for radiocommunication regulations.\n- sourceIndex 2: \"The Standards for the Operation of Radio Stations in the Amateur Radio Service\": Those standards govern station operation, but they sit under authority granted elsewhere.\n- sourceIndex 3: \"The International Telecommunication Union's Radio Regulations\": This is not the Canadian authority named by the bank for making radiocommunication regulations.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-001-001"
+    }
+  ],
+  "licenseClass": "original"
+}

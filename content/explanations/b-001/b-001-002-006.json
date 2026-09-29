@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-002-006",
+  "questionId": "B-001-002-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-002-006.\n\nWhy the correct answer is right: A first Amateur Radio Operator Certificate is issued at no charge in the current bank.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"$32\": A first certificate is not a paid certificate transaction, so this amount adds a charge where the bank gives none.\n- sourceIndex 2: \"$10\": This invents a small administrative fee for the first certificate; the current-bank row is free.\n- sourceIndex 3: \"$24\": This also turns initial certificate issue into a paid service, which is the wrong fee context.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-002-006"
+    }
+  ],
+  "licenseClass": "original"
+}

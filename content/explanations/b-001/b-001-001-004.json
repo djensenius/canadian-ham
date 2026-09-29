@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-001-004",
+  "questionId": "B-001-001-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-001-004.\n\nWhy the correct answer is right: The Radiocommunication Regulations are the source the bank uses for the definition of the Canadian amateur radio service.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The Radiocommunication Act\": The Act gives broad authority, but the service definition is placed in the regulations.\n- sourceIndex 2: \"The Standards for the Operation of Radio Stations in the Amateur Radio Service\": The standards cover operation of amateur stations, not the core legal definition of the service.\n- sourceIndex 3: \"The Radio Systems Policies\": Radio Systems Policies are not the document named by the bank for defining the amateur radio service.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-001-004"
+    }
+  ],
+  "licenseClass": "original"
+}

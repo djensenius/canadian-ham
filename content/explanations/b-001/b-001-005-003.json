@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-005-003",
+  "questionId": "B-001-005-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-005-003.\n\nWhy the correct answer is right: For installing an amateur transmitter for someone else, both the installer and the other person must hold amateur certificates.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Only the other person must hold an Amateur Radio Operator Certificate\": The recipient's certificate alone does not authorize an uncertified installer to perform the amateur-transmitter work.\n- sourceIndex 2: \"Only you must hold an Amateur Radio Operator Certificate\": Your certificate alone does not provide the other person's station authorization.\n- sourceIndex 3: \"The other person must be enrolled in an amateur radio certification course\": Course enrolment is not the same as holding the certificate.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-005-003"
+    }
+  ],
+  "licenseClass": "original"
+}
