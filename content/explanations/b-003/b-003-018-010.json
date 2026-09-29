@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-018-010.\n\nWhy the correct answer is right: Before checking a mains-operated supply, first turn it off and unplug it so live mains power is removed from the work.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"short out the leads of the filter capacitor\": Shorting capacitors before de-energizing and using a controlled discharge method can create arcs, damage, and shock risk.\n- sourceIndex 2: \"check the action of the capacitor bleeder resistance\": Bleeder resistors are checked only after the unit is made safe enough to work on; they are not the first step before unplugging.\n- sourceIndex 3: \"remove and check the fuse from the power supply\": Pulling a fuse does not prove the unit is unplugged, and stored capacitor charge may remain after the fuse is removed.",
+    "en": "Question B-003-018-010.\n\nWhy the correct answer is right: Before checking a mains-operated supply, first turn it off and unplug it so live mains power is removed from the work.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"short out the leads of the filter capacitor\": Do not start by shorting a capacitor in an energized or not-yet-isolated supply; after unplugging, use a controlled discharge method to avoid arcs, damage, and shock risk.\n- sourceIndex 2: \"check the action of the capacitor bleeder resistance\": Bleeder resistors are checked only after the unit is made safe enough to work on; they are not the first step before unplugging.\n- sourceIndex 3: \"remove and check the fuse from the power supply\": Pulling a fuse does not prove the unit is unplugged, and stored capacitor charge may remain after the fuse is removed.",
     "fr": null
   },
   "citations": [

@@ -14,36 +14,36 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-07-A-C1",
-      "prompt": { "en": "A portable receiver can use alkaline AA cells or rechargeable NiMH AA cells. Which statement best explains why the operator chooses NiMH for regular practice sessions?", "fr": null },
+      "prompt": { "en": "A planning note says two matched 9 Ah packs in series give twice the voltage and 18 Ah. What error should you spot?", "fr": null },
       "choices": [
-        { "text": { "en": "NiMH cells can be recharged for repeated use", "fr": null }, "isCorrect": true },
-        { "text": { "en": "NiMH cells have a higher nominal voltage than alkaline cells", "fr": null }, "isCorrect": false },
-        { "text": { "en": "NiMH cells may be short-circuited safely during transport", "fr": null }, "isCorrect": false },
-        { "text": { "en": "NiMH cells never need proper recycling or disposal", "fr": null }, "isCorrect": false }
+        { "text": { "en": "The voltage would not add in a series string", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The ampere-hour capacity of one series string stays at 9 Ah", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Voltage can add only when both packs use lithium chemistry", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Polarity stops mattering once packs are wired in series", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Rechargeability is the advantage. NiMH cells are usually lower nominal voltage than alkaline cells and still require safe handling and disposal.", "fr": null }
+      "explanation": { "en": "Series wiring adds voltage, but one matched series string keeps the ampere-hour rating of one pack. Chemistry and polarity still matter.", "fr": null }
     },
     {
       "id": "QZ-L-003-07-A-C2",
-      "prompt": { "en": "During a field test, the battery voltage stays acceptable at the source, but the radio input falls below its limit only during high-current transmit peaks through a long cable. What should be checked first?", "fr": null },
+      "prompt": { "en": "The same battery and DC leads are used, but transmit current is twice the planned value. What should you predict at the radio input?", "fr": null },
       "choices": [
-        { "text": { "en": "Voltage drop in the positive and negative DC leads", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Whether AC ripple is coming from a bench supply", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Whether the fuse current rating should be increased", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Whether the DC leads are heavier than required", "fr": null }, "isCorrect": false }
+        { "text": { "en": "The input voltage rises because the battery capacity is being used faster", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Only AC ripple changes; DC lead resistance is unaffected by current", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The input voltage falls more because resistance drops more voltage at higher current", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The fuse current rating should be increased to hold the voltage steady", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "A high transmit current through long leads can drop voltage before it reaches the radio, so the round-trip DC lead length and wire gauge matter.", "fr": null }
+      "explanation": { "en": "Internal resistance and lead resistance cause voltage drop proportional to current, so a higher transmit current leaves less voltage at the radio. A larger fuse does not fix voltage drop.", "fr": null }
     },
     {
       "id": "QZ-L-003-07-A-C3",
-      "prompt": { "en": "A supply meets the current rating, but it produces a raspy signal heard in nearby receivers whenever it powers the station. Which comparison is most useful?", "fr": null },
+      "prompt": { "en": "A supply has enough current headroom, so the buyer skips any RF-noise check and assumes the station will be clean. What is the mistake?", "fr": null },
       "choices": [
-        { "text": { "en": "A linear supply may be quieter, although it is usually heavier and less efficient", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A linear supply is normally smaller and more efficient than a switching supply", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A switching supply has lower RF-noise risk because it switches rapidly", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A supply's current rating alone proves that it cannot create RF noise", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Extra current headroom proves the output voltage will be correct under every load", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A linear supply is automatically unsafe because it is less efficient", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A larger fuse current rating is the normal RF-noise filter", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Load rating and RF-noise behaviour are separate checks", "fr": null }, "isCorrect": true }
       ],
-      "explanation": { "en": "Switch-mode supplies can be excellent, but their switching action raises RF-noise risk; linear supplies are often quieter at the cost of size, weight, and efficiency.", "fr": null }
+      "explanation": { "en": "A supply can meet the current requirement and still be noisy. Load capacity, fuse protection, and RF-noise behaviour must be considered separately.", "fr": null }
     }
   ]
 }

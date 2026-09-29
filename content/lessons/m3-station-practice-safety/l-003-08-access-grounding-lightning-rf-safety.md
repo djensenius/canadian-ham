@@ -44,7 +44,7 @@ By the end of this lesson, you can:
 
 Station control begins with preventing unauthorized operation. At home, a key-operated switch or another positive power-control method is much stronger than a warning sign. In a vehicle, removing the microphone or control head can be more effective than simply turning the radio off because the radio is no longer ready to transmit.
 
-Electrical shock risk depends on the path through the body, current, voltage, time, and conditions such as wet skin. Very small currents through the chest can be fatal. Do not troubleshoot live mains-operated supplies unless you are qualified and equipped to do so. Before opening equipment, turn it off, unplug it, and understand that capacitors may still hold charge.
+Electrical shock risk depends on the path through the body, current, voltage, time, and conditions such as wet skin. Currents on the order of 20 mA can be fatal when the path includes the chest, because the heart can be driven into ventricular fibrillation. Voltages around 30 V and above are usually treated as hazardous to humans, especially in wet or conductive conditions. Do not troubleshoot live mains-operated supplies unless you are qualified and equipped to do so. Before opening equipment, turn it off, unplug it, and understand that capacitors may still hold charge. High-voltage supplies may include cabinet interlock switches that remove power when a cover is opened; never defeat an interlock, and never assume it has discharged stored energy.
 
 If someone is in contact with high voltage, do not become the second victim. De-energize the source if you can do so safely, call emergency help, and provide first aid only when it is safe and within your training.
 
@@ -62,7 +62,7 @@ The goal is to remove the ability to transmit, not merely to ask people not to t
 
 Grounding and bonding are related but not identical. Grounding connects equipment to earth or to the electrical safety grounding system as required. Bonding connects metal parts together so dangerous voltage differences are reduced. In a station, chassis ground terminals should meet at a single-point ground or bonding panel rather than wandering through long daisy chains.
 
-All ground electrodes on a property should be bonded together with heavy conductors according to established practice. Separate unbonded electrodes can rise to different voltages during a fault or lightning event, creating a dangerous path through station equipment.
+All ground electrodes on a property should be bonded together with heavy copper grounding conductors according to established practice. Separate unbonded electrodes can rise to different voltages during a fault or lightning event, creating a dangerous path through station equipment. A driven earth electrode is commonly copper-clad steel: the steel provides strength for driving, while the copper surface provides a corrosion-resistant conductive contact with the soil.
 
 RF grounding has an extra complication: a long wire that looks like a ground at DC can have high impedance at radio frequencies. A third-floor wire running down a building may not cure RF burns at the operating desk. The real fix may involve antenna balance, common-mode choking, a better bonding layout, or moving the antenna system.
 
@@ -91,7 +91,7 @@ A qualified repair mentor supervises a student inspecting an unplugged supply.
 - Confirm the power cord is unplugged and the unit cannot be accidentally energized.
 - Open the cabinet only after the safe work area is prepared.
 - Discharge filter capacitors with an insulated resistor tool and verify with a meter.
-- Use the one-hand rule for necessary measurements: keep one hand away from the equipment and your body so an accidental contact is less likely to put current across your chest.
+- Use the one-hand rule for necessary measurements: work with one hand and keep the other hand off the equipment, for example behind your back, so an accidental contact is less likely to put current across your chest.
 
 The first action inside is to make stored energy safe, not to start replacing parts.
 
@@ -135,11 +135,11 @@ Indoor antennas can work, but the safety margin comes from distance, lower power
 
 ## Try it
 
-1. A club station shares a room with visitors during an open house. What kind of control is stronger than a warning sign? Use a positive power or control lockout so visitors cannot energize and transmit with the station.
-2. A long station "ground" wire still allows RF burns on transmit. What does that suggest? The wire may have high RF impedance, so common-mode current and antenna balance should be checked.
-3. Why should a replacement fuse keep the specified ratings? A larger current rating may not open during a fault, and an inadequate voltage rating may not interrupt safely.
-4. A feedline enters through a basement wall and runs to the desk. Where should surge energy be diverted? At the outside entry panel bonded to the grounding system, before the cable continues indoors.
-5. How do you reduce RF exposure from a handheld radio? Hold the antenna separated from your head and from bystanders, and use only the power needed.
+1. A supply cover is opened and a cabinet interlock removes the input power. What unsafe assumption must you avoid? Do not assume the unit is harmless; filter capacitors can still hold charge, so stored energy must be discharged and verified safely.
+2. A temporary control circuit measures 48 V in a damp work area. How should it be treated? Treat it as hazardous because it is above the usual 30 V shock threshold, and wet conditions can lower body resistance.
+3. Why use heavy copper bonding conductors between station metalwork and the building grounding system instead of thin convenience jumpers? Low-impedance bonding helps keep exposed metal at nearly the same voltage during faults or surges.
+4. During tower work, a helper on the ground says the climber's harness is the only safety item that matters. What is missing from that plan? The ground helper also needs head protection and a clear drop zone because tools or hardware can fall.
+5. An indoor antenna test is upgraded from a low-power whip to a directional antenna. What parts of the RF-safety plan should change? Recheck power, distance, access control, and beam direction so the main lobe is not aimed into occupied space.
 
 ## Radio connection
 

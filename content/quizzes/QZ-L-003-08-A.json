@@ -14,14 +14,14 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-08-A-C1",
-      "prompt": { "en": "A replacement fuse has the specified current rating, but its voltage rating is lower than the equipment manual requires. What is the safety problem?", "fr": null },
+      "prompt": { "en": "A trainee tapes a high-voltage supply cabinet interlock closed so the cover can stay open during a test, then plans to probe with both hands. What error must be stopped first?", "fr": null },
       "choices": [
-        { "text": { "en": "The fuse may not interrupt the circuit safely and could sustain an arc", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The fuse will necessarily open during normal receive current", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The fuse will lower the equipment's normal supply voltage", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The fuse will act as a surge suppressor for lightning transients", "fr": null }, "isCorrect": false }
+        { "text": { "en": "An open cabinet automatically removes all shock risk, leaving only RF leakage to consider", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Defeating the interlock and using both hands removes important shock protections", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The only concern is whether the fuse voltage rating is printed on the holder", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Increasing the fuse current rating would make the open-cabinet test safer", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "A fuse needs both the correct current rating and a voltage rating high enough to interrupt the fault without maintaining an arc.", "fr": null }
+      "explanation": { "en": "A cabinet interlock is there to reduce contact with dangerous voltage when the cover is opened. It must not be defeated, and two-handed probing increases the chance of current crossing the chest.", "fr": null }
     },
     {
       "id": "QZ-L-003-08-A-C2",
@@ -36,14 +36,14 @@
     },
     {
       "id": "QZ-L-003-08-A-C3",
-      "prompt": { "en": "You plan to use an indoor transmitting antenna during a short low-power test. Which setup gives the best RF-safety margin?", "fr": null },
+      "prompt": { "en": "Which statement is NOT true for reducing RF exposure around indoor, UHF, or directional transmitting antennas?", "fr": null },
       "choices": [
-        { "text": { "en": "Place it beside the operating chair to shorten the coax", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Aim a high-gain beam through an occupied room", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Hang it where people can brush against the feed point", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Keep it as far as practical from occupied spaces and control access", "fr": null }, "isCorrect": true }
+        { "text": { "en": "Moving people farther from the energized antenna usually improves the safety margin", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Reducing power or transmission time can lower exposure", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A high-gain main beam should not be aimed into occupied nearby space", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A low SWR makes it safe for people to stand close to an energized UHF antenna", "fr": null }, "isCorrect": true }
       ],
-      "explanation": { "en": "Distance and access control are conservative RF-safety tools, especially for indoor antennas.", "fr": null }
+      "explanation": { "en": "Low SWR helps the equipment but does not make close human exposure safe. Distance, power, time, antenna gain, beam direction, and access control still matter.", "fr": null }
     }
   ]
 }

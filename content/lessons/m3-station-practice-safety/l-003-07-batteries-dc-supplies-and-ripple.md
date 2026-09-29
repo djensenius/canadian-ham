@@ -41,7 +41,7 @@ By the end of this lesson, you can:
 
 A battery is a source of electromotive force. One terminal is marked positive and the other is marked negative, so polarity matters when connecting radios, chargers, and accessories. A rechargeable battery is often called a storage battery because electrical energy can be put back into it during charging.
 
-Common station batteries include lead-acid, nickel-metal hydride (NiMH), and lithium-based packs. NiMH cells are often preferred over ordinary alkaline cells when rechargeability matters; that does not mean they have higher voltage. A NiMH cell is typically about 1.2 V nominal, lower than a fresh alkaline cell of the same size, and used cells still require proper recycling or disposal. Lithium-based packs are popular for portable operation because they can provide high capacity for their mass, but they require the charger, protection, and handling specified for that chemistry. Never short-circuit a battery. Even a low-voltage battery can supply very high current into a short.
+Common station batteries include lead-acid, nickel-metal hydride (NiMH), and lithium-based packs. A standard automobile starter battery is nominally 12 V, but its low voltage does not make it harmless because it can deliver very high fault current. NiMH cells are often preferred over ordinary alkaline cells when rechargeability matters; that does not mean they have higher voltage. A NiMH cell is typically about 1.2 V nominal, lower than a fresh alkaline cell of the same size, and used cells still require proper recycling or disposal. Lithium-based packs are popular for portable operation because they can provide high capacity for their mass, but they require the charger, protection, and handling specified for that chemistry. Never short-circuit a battery. Even a low-voltage battery can supply very high current into a short.
 
 A battery is not an ideal voltage source. It has internal resistance, so its terminal voltage drops when current is drawn. The drop becomes more obvious with high current, cold temperature, discharged state, small wiring, or a tired battery.
 
@@ -110,11 +110,11 @@ The exact table depends on wire size and current, so calculate with the data for
 
 ## Try it
 
-1. Why can a low-voltage vehicle battery still be dangerous? It can deliver very high short-circuit current, enough to heat wiring or tools.
-2. A handheld pack is labelled rechargeable. What general battery class is it? It is a storage battery because energy can be put back into it by charging.
+1. A nominal 12 V field battery reads 12.6 V at rest, then the radio resets during transmit. Explain two likely electrical causes. High transmit current can expose battery internal resistance and lead resistance, so the voltage at the radio can sag even though the resting voltage looked normal.
+2. A four-cell AA holder is changed from fresh alkaline cells to NiMH cells. What voltage change should you expect before checking the radio manual? The nominal pack voltage falls from about 6.0 V to about 4.8 V, so rechargeability does not imply higher voltage.
 3. Two matched 10.8 V, 7 Ah packs are placed in series for an approved equipment test. What is the result? Voltage adds to 21.6 V, while capacity remains 7 Ah.
 4. The same two packs are placed in parallel using a manufacturer-approved combiner. What is the result? Voltage remains 10.8 V, while capacity adds to 14 Ah.
-5. A transmitted hum appears only when using an old bench supply. Where should you look first? Look at the supply filtering and regulation because ripple can modulate the transmitter.
+5. A 2.0 m one-way DC run uses cable data of 0.04 V per metre at the planned current. Is the round-trip drop below a 0.20 V target? The round-trip length is 4.0 m, so the drop is 0.16 V and is below the target.
 
 ## Radio connection
 
