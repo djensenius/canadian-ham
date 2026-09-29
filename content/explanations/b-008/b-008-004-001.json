@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-004-001",
+  "questionId": "B-008-004-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-004-001.\n\nWhy the correct answer is right: Interference on only one or two TV channels when using a particular amateur band points to harmonic energy landing in those channel ranges.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Splatter due to overmodulation\": Splatter from overmodulation spreads near the transmitted signal, not usually onto only one or two harmonic-related TV channels.\n- sourceIndex 2: \"Television receiver front-end overload\": Receiver front-end overload tends to be broad and less tied to a single transmitting band-channel relationship.\n- sourceIndex 3: \"Parasitic oscillations from your transmitter\": Parasitic oscillations can cause odd interference, but the selective channel symptom with a band relationship is the classic harmonic clue.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-02"
+    },
+    {
+      "type": "question",
+      "id": "B-008-004-001"
+    }
+  ],
+  "licenseClass": "original"
+}

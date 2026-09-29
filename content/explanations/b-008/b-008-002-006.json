@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-002-006",
+  "questionId": "B-008-002-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-002-006.\n\nWhy the correct answer is right: Hearing the amateur transmission across the entire dial indicates the receiver or associated audio stages are rectifying a strong signal rather than tuning a normal broadcast-frequency signal.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"harmonics interference\": Harmonic interference would appear at particular harmonic-related frequencies, not uniformly across the broadcast receiver dial.\n- sourceIndex 2: \"poor image rejection\": Poor image rejection creates a false response at specific image-related tuning points, not across the entire dial.\n- sourceIndex 3: \"splatter from the transmitter\": Splatter from the transmitter spreads near the transmitted signal; it does not make a broadcast receiver hear the signal everywhere on its dial.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-01"
+    },
+    {
+      "type": "question",
+      "id": "B-008-002-006"
+    }
+  ],
+  "licenseClass": "original"
+}

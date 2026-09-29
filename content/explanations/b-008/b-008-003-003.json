@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-003-003",
+  "questionId": "B-008-003-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-003-003.\n\nWhy the correct answer is right: Signals transmitted outside the intended band are spurious emissions and must be corrected.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Side tones\": Side tones are local audio monitoring tones for the operator, not RF being transmitted outside the band.\n- sourceIndex 2: \"Transmitter chirping\": Chirping is a change in oscillator frequency during keying or operation. It describes an unstable wanted signal, not the general condition of transmitting unwanted outputs outside the band.\n- sourceIndex 3: \"Off-frequency emissions\": Off-frequency emissions sounds plausible, but the standard term for unwanted transmitter outputs outside the intended signal is spurious emissions.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-01"
+    },
+    {
+      "type": "question",
+      "id": "B-008-003-003"
+    }
+  ],
+  "licenseClass": "original"
+}

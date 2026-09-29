@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-004-009",
+  "questionId": "B-008-004-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-004-009.\n\nWhy the correct answer is right: Overdriven stages operate non-linearly and create stronger harmonic content that should have been kept low.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Use of a non-resonant antenna\": A non-resonant antenna creates mismatch and efficiency issues, but harmonics are generated in non-linear transmitter stages.\n- sourceIndex 2: \"Defective driver circuit\": A driver fault might cause many symptoms, but the harmonic-producing mechanism named in the question is excessive drive forcing stages out of linear operation.\n- sourceIndex 3: \"Internal antenna tuner malfunction\": An internal antenna tuner mismatch can affect loading, but it is not the primary mechanism that generates harmonics.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-02"
+    },
+    {
+      "type": "question",
+      "id": "B-008-004-009"
+    }
+  ],
+  "licenseClass": "original"
+}

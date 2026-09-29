@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-002-001",
+  "questionId": "B-008-002-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-002-001.\n\nWhy the correct answer is right: Ferrite-core coils add RF impedance to leads that are acting as antennas, reducing the HF current entering the home entertainment equipment.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Bypass resistors\": A resistor is not the usual bypass part for RF suppression here and would load the wanted circuit rather than choke RF pickup on leads.\n- sourceIndex 2: \"Metal oxide varistors\": A metal oxide varistor is for surge protection, not for adding RF impedance to entertainment-system leads.\n- sourceIndex 3: \"Bypass inductors\": A bypass part is meant to shunt unwanted RF away from a sensitive point, usually with capacitance. The ferrite-core coil in this question is a choke that adds series RF impedance on the lead, not a bypass inductor.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-01"
+    },
+    {
+      "type": "question",
+      "id": "B-008-002-001"
+    }
+  ],
+  "licenseClass": "original"
+}

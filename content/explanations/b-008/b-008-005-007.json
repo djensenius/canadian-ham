@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-005-007",
+  "questionId": "B-008-005-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-005-007.\n\nWhy the correct answer is right: A notch filter is designed to suppress one narrow interfering signal while leaving nearby desired frequencies as intact as possible.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"High-pass\": A high-pass filter would remove everything below its cut-off, which is too broad for one close interfering signal.\n- sourceIndex 2: \"Low-pass\": A low-pass filter would remove everything above its cut-off, again too broad if the interferer is close to the receive frequency.\n- sourceIndex 3: \"Band-reject\": A band-reject filter can remove a range, but a notch is the more precise choice for one very close strong signal.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-02"
+    },
+    {
+      "type": "question",
+      "id": "B-008-005-007"
+    }
+  ],
+  "licenseClass": "original"
+}

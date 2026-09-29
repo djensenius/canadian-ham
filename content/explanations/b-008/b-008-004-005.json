@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-004-005",
+  "questionId": "B-008-004-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-004-005.\n\nWhy the correct answer is right: The reported frequency is exactly three times the operating frequency, so the station was likely radiating a harmonic signal.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Your transmitter's power-supply filter choke is defective\": A power-supply filter choke problem would more likely introduce hum or poor filtering, not a precise integer multiple of the transmit frequency.\n- sourceIndex 2: \"You were sending CW too fast\": Sending CW too fast can affect readability or keying quality, but it does not create a precise frequency triple.\n- sourceIndex 3: \"Your transmitter's power-supply filter capacitor is defective\": A defective power-supply filter capacitor can cause ripple-related symptoms; it does not explain an exact harmonic relationship.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-02"
+    },
+    {
+      "type": "question",
+      "id": "B-008-004-005"
+    }
+  ],
+  "licenseClass": "original"
+}

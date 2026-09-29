@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-002-010",
+  "questionId": "B-008-002-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-002-010.\n\nWhy the correct answer is right: Wrapping the speaker lead through or around ferrite material forms a choke that impedes RF current on the lead.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"around a copper bar\": A copper bar is conductive but not ferrite; wrapping around it does not provide the lossy magnetic RF choking action needed.\n- sourceIndex 2: \"around an iron bar\": An iron bar is not the same as an appropriate RF ferrite core and may be ineffective at the troublesome radio frequency.\n- sourceIndex 3: \"around a wooden dowel\": A wooden dowel may make a neat coil form, but wood does not add RF choking impedance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-01"
+    },
+    {
+      "type": "question",
+      "id": "B-008-002-010"
+    }
+  ],
+  "licenseClass": "original"
+}

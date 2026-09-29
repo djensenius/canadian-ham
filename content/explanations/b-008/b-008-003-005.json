@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-003-005",
+  "questionId": "B-008-003-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-003-005.\n\nWhy the correct answer is right: Local RF key-click interference can be produced by the making and breaking of the circuit at the Morse key. That switching action is the clue in this question, separate from distant reports caused by the transmitted carrier's rise and decay times.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"frequency shifting caused by poor voltage regulation\": Frequency shifting from poor regulation is chirp, a change in oscillator frequency, not the local click energy from making and breaking the keying circuit.\n- sourceIndex 2: \"high frequency parasitic oscillations\": Parasitic oscillations are unwanted oscillations in a stage; this local key-click clue is tied to the key circuit's make-and-break action.\n- sourceIndex 3: \"poor wave-shaping caused by a defective filter capacitor\": A power-supply filter capacitor controls DC ripple, not the making and breaking at the Morse key. The local key-click problem in this question comes from the key circuit itself.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-01"
+    },
+    {
+      "type": "question",
+      "id": "B-008-003-005"
+    }
+  ],
+  "licenseClass": "original"
+}

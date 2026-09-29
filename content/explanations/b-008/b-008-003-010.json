@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-003-010",
+  "questionId": "B-008-003-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-003-010.\n\nWhy the correct answer is right: Unwanted positive feedback can feed energy from a stage output back to its input in phase, allowing the stage to oscillate parasitically.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Unwanted negative feedback\": Negative feedback usually stabilizes gain and reduces oscillation tendency, so it is not the cause named here.\n- sourceIndex 2: \"Oscillator drift\": Oscillator drift is a slow change in intended oscillator frequency, not the feedback mechanism that starts a parasitic oscillation.\n- sourceIndex 3: \"Power supply instability\": Power-supply instability can cause many symptoms, but the direct cause of a parasitic oscillation is unintended positive feedback.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-01"
+    },
+    {
+      "type": "question",
+      "id": "B-008-003-010"
+    }
+  ],
+  "licenseClass": "original"
+}

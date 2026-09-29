@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-003-004",
+  "questionId": "B-008-003-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-003-004.\n\nWhy the correct answer is right: Covers and shields are part of the RF containment and grounding design. Removing them can let unintended RF escape as spurious emissions.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It may transmit a weak signal\": A missing cover does not mainly imply low output power; it can make shielding and stability worse.\n- sourceIndex 2: \"It may draw excessive current\": Excessive current can occur in faults, but the interference concern from missing shielding is unwanted radiation.\n- sourceIndex 3: \"It may transmit a chirpy signal\": A chirpy signal is usually related to frequency or keying instability, not simply the absence of shielding covers.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-01"
+    },
+    {
+      "type": "question",
+      "id": "B-008-003-004"
+    }
+  ],
+  "licenseClass": "original"
+}

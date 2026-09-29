@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-008-01-A",
+  "lessonId": "L-008-01",
+  "officialQuestionIds": [
+    "B-008-001-001",
+    "B-008-001-004",
+    "B-008-001-006",
+    "B-008-001-011",
+    "B-008-002-001",
+    "B-008-002-005",
+    "B-008-002-011",
+    "B-008-003-005"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-008-01-A-C1",
+      "prompt": { "en": "A neighbour reports RF noise in a borrowed audio device. Which first response best matches the lesson's safety and permission guidance?", "fr": null },
+      "choices": [
+        { "text": { "en": "Schedule brief tests, write down the conditions, and try reversible external checks before any internal work.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Open the speaker immediately and solder suppression parts in place, because internal changes are the quickest reversible test.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Run full-power checks without warning so the neighbour can decide later whether the symptom changed.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Make permanent changes to the neighbour's wiring first so later tests have a stable baseline.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The lesson's process starts with consent, short scheduled tests, written observations, and reversible external steps. Internal or permanent changes need permission, qualifications, and a clear reason.", "fr": null }
+    },
+    {
+      "id": "QZ-L-008-01-A-C2",
+      "prompt": { "en": "During a scheduled troubleshooting session, a team changes transmitter power, antenna position, and the affected device's cable layout before the next trial. The symptom stops. What is the most careful conclusion?", "fr": null },
+      "choices": [
+        { "text": { "en": "Several variables changed at once, so the result supports more controlled testing rather than crediting one specific cure.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The transmitter was definitely producing spurious emissions because any improvement proves a transmitter fault.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The antenna position must be the only cure because it was part of the successful trial.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The affected device is proven immune now, so repeating the same conditions is unnecessary.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Bundled changes are useful for reducing the immediate symptom, but they do not identify which variable mattered. Change one condition at a time when assigning cause or choosing a lasting cure.", "fr": null }
+    },
+    {
+      "id": "QZ-L-008-01-A-C3",
+      "prompt": { "en": "A log note says, 'The noise happened during my transmission, so my transmitter is dirty and receiver-side checks are unnecessary.' What is the error in that note?", "fr": null },
+      "choices": [
+        { "text": { "en": "Timing is useful evidence, but it does not by itself separate a transmitter fault from a pickup or overload path in the affected equipment.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The note should assume receiver-side trouble only, because a legal amateur station can never produce unwanted energy.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The note should skip the log and replace transmitter stages first, because written observations slow down repairs.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The note should treat any single report as proof that all nearby receivers will show the same symptom.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The lesson separates evidence from blame. A symptom that follows transmitting deserves controlled tests, but the path may be a transmitter fault, receiver overload, audio pickup, or another coupling route.", "fr": null }
+    }
+  ]
+}
