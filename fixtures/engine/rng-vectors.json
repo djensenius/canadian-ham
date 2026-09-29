@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "kind": "rng-vectors",
+  "cases": [
+    {
+      "id": "rng-vector-fixture-seed-001",
+      "rng": {
+        "algorithm": "fnv1a64-pcg32-xsh-rr",
+        "seed": "fixture-seed-001"
+      },
+      "expectedOutput": {
+        "first8Uint32": [
+          3349296149,
+          2984901485,
+          227229724,
+          3559621342,
+          747151403,
+          1723737868,
+          1078516364,
+          1488100801
+        ]
+      }
+    },
+    {
+      "id": "rng-vector-empty-string",
+      "rng": {
+        "algorithm": "fnv1a64-pcg32-xsh-rr",
+        "seed": ""
+      },
+      "expectedOutput": {
+        "first8Uint32": [
+          2561640899,
+          4200309166,
+          954630110,
+          4222973886,
+          868603216,
+          2307564042,
+          2098805627,
+          2804532648
+        ]
+      }
+    },
+    {
+      "id": "rng-vector-canadian-ham-basic-2025",
+      "rng": {
+        "algorithm": "fnv1a64-pcg32-xsh-rr",
+        "seed": "Canadian ham — Basic 2025 🇨🇦"
+      },
+      "expectedOutput": {
+        "first8Uint32": [
+          1340241159,
+          3091326161,
+          3111142553,
+          2597013358,
+          3321119740,
+          4040797862,
+          861670251,
+          1196579510
+        ]
+      }
+    }
+  ]
+}

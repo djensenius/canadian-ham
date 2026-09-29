@@ -1,0 +1,550 @@
+import { dueCount, type CategoryBreakdownEntry, type QuestionProgressRecord } from "@canadian-ham/engine-ts";
+
+import { bankId, categories, knownQuestionIds, subsections } from "../data/bank";
+
+export type PracticeMode = "immediate" | "review-later";
+export type ReadinessPreference = "not-enough-data" | "needs-review" | "pass-ready" | "honours-ready";
+export type ThemePreference = "system" | "light" | "dark";
+
+export interface WebPreferences {
+  readonly practiceMode: PracticeMode;
+  readonly examTimerEnabled: boolean;
+  readonly theme: ThemePreference;
+}
+
+export interface ExamAttemptItem {
+  readonly position: number;
+  readonly questionId: string;
+  readonly subsectionId: string;
+  readonly categoryId: string;
+  readonly choicePermutation: readonly number[];
+  readonly selectedSourceIndex: number | null;
+  readonly isCorrect: boolean;
+  readonly flagged: boolean;
+}
+
+export interface ExamAttempt {
+  readonly id: string;
+  readonly bankId: string;
+  readonly mode: "mock-exam";
+  readonly seed: string;
+  readonly startedAt: string;
+  readonly submittedAt: string;
+  readonly timer: {
+    readonly enabled: boolean;
+    readonly secondsAllowed: number | null;
+    readonly secondsElapsed: number;
+  };
+  readonly items: readonly ExamAttemptItem[];
+  readonly score: {
+    readonly correct: number;
+    readonly total: number;
+    readonly percent: number;
+    readonly passed: boolean;
+    readonly honours: boolean;
+    readonly categoryBreakdown: readonly CategoryBreakdownEntry[];
+    readonly weakSubsectionIds: readonly string[];
+  };
+}
+
+export interface ProgressExportV1 {
+  readonly schema: "canadian-ham.progress-export";
+  readonly version: 1;
+  readonly exportedAt: string;
+  readonly bankId: string;
+  readonly questionProgress: readonly QuestionProgressRecord[];
+  readonly examAttempts: readonly ExamAttempt[];
+  readonly preferences: WebPreferences;
+}
+
+export interface ImportValidationResult {
+  readonly ok: boolean;
+  readonly errors: readonly string[];
+  readonly data?: ProgressExportV1;
+}
+
+export const defaultPreferences: WebPreferences = {
+  practiceMode: "immediate",
+  examTimerEnabled: false,
+  theme: "system",
+};
+
+const DB_VERSION = 2;
+const DEFAULT_DB_NAME = "canadian-ham-web-progress";
+const PREFERENCES_KEY = "preferences";
+
+interface StoredPreferenceRecord {
+  readonly key: string;
+  readonly value: WebPreferences;
+}
+
+export class ProgressStore {
+  #dbPromise: Promise<IDBDatabase> | null = null;
+
+  constructor(private readonly dbName = DEFAULT_DB_NAME) {}
+
+  async getQuestionProgress(): Promise<QuestionProgressRecord[]> {
+    return this.getAll<QuestionProgressRecord>("questionProgress");
+  }
+
+  async putQuestionProgress(record: QuestionProgressRecord): Promise<void> {
+    await this.put("questionProgress", record);
+  }
+
+  async putQuestionProgressMany(records: readonly QuestionProgressRecord[]): Promise<void> {
+    const db = await this.open();
+    await runTransaction(db, ["questionProgress"], "readwrite", (transaction) => {
+      const store = transaction.objectStore("questionProgress");
+      for (const record of records) {
+        store.put(record);
+      }
+    });
+  }
+
+  async getExamAttempts(): Promise<ExamAttempt[]> {
+    return this.getAll<ExamAttempt>("examAttempts");
+  }
+
+  async putExamAttempt(attempt: ExamAttempt): Promise<void> {
+    await this.put("examAttempts", attempt);
+  }
+
+  async getPreferences(): Promise<WebPreferences> {
+    const db = await this.open();
+    const record = await requestToPromise<StoredPreferenceRecord | undefined>(
+      db.transaction("preferences", "readonly").objectStore("preferences").get(PREFERENCES_KEY),
+    );
+    return { ...defaultPreferences, ...(record?.value ?? {}) };
+  }
+
+  async putPreferences(preferences: WebPreferences): Promise<void> {
+    await this.put("preferences", { key: PREFERENCES_KEY, value: preferences });
+  }
+
+  async exportData(exportedAt: string): Promise<ProgressExportV1> {
+    return {
+      schema: "canadian-ham.progress-export",
+      version: 1,
+      exportedAt,
+      bankId,
+      questionProgress: await this.getQuestionProgress(),
+      examAttempts: await this.getExamAttempts(),
+      preferences: await this.getPreferences(),
+    };
+  }
+
+  async importData(data: ProgressExportV1): Promise<void> {
+    const db = await this.open();
+    await runTransaction(db, ["questionProgress", "examAttempts", "preferences"], "readwrite", (transaction) => {
+      transaction.objectStore("questionProgress").clear();
+      transaction.objectStore("examAttempts").clear();
+      transaction.objectStore("preferences").clear();
+      const questionStore = transaction.objectStore("questionProgress");
+      const attemptStore = transaction.objectStore("examAttempts");
+      for (const record of data.questionProgress) {
+        questionStore.put(record);
+      }
+      for (const attempt of data.examAttempts) {
+        attemptStore.put(attempt);
+      }
+      transaction.objectStore("preferences").put({ key: PREFERENCES_KEY, value: { ...defaultPreferences, ...data.preferences } });
+    });
+  }
+
+  async resetAllData(): Promise<void> {
+    const db = await this.open();
+    await runTransaction(db, ["questionProgress", "examAttempts", "preferences"], "readwrite", (transaction) => {
+      transaction.objectStore("questionProgress").clear();
+      transaction.objectStore("examAttempts").clear();
+      transaction.objectStore("preferences").clear();
+    });
+  }
+
+  close(): void {
+    if (this.#dbPromise !== null) {
+      void this.#dbPromise.then((db) => db.close());
+      this.#dbPromise = null;
+    }
+  }
+
+  async deleteDatabase(): Promise<void> {
+    this.close();
+    await requestToPromise(indexedDB.deleteDatabase(this.dbName));
+  }
+
+  private async getAll<T>(storeName: string): Promise<T[]> {
+    const db = await this.open();
+    return requestToPromise<T[]>(db.transaction(storeName, "readonly").objectStore(storeName).getAll());
+  }
+
+  private async put(storeName: string, value: unknown): Promise<void> {
+    const db = await this.open();
+    await runTransaction(db, [storeName], "readwrite", (transaction) => {
+      transaction.objectStore(storeName).put(value);
+    });
+  }
+
+  private open(): Promise<IDBDatabase> {
+    this.#dbPromise ??= new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open(this.dbName, DB_VERSION);
+      request.onupgradeneeded = (event) => {
+        migrateDatabase(request.result, event.oldVersion, request.transaction);
+      };
+      request.onblocked = () => {
+        reject(new Error("Progress database upgrade is blocked by another open Canadian Ham tab. Close the other tab and try again."));
+      };
+      request.onerror = () => reject(request.error ?? new Error("Unable to open progress database"));
+      request.onsuccess = () => {
+        const db = request.result;
+        db.onversionchange = () => {
+          db.close();
+          this.#dbPromise = null;
+        };
+        resolve(db);
+      };
+    }).catch((error: unknown) => {
+      this.#dbPromise = null;
+      throw error;
+    });
+    return this.#dbPromise;
+  }
+}
+
+export const defaultProgressStore = new ProgressStore();
+
+export function serializeProgressExport(data: ProgressExportV1): string {
+  return `${JSON.stringify(data, null, 2)}\n`;
+}
+
+function migrateDatabase(db: IDBDatabase, oldVersion: number, transaction: IDBTransaction | null): void {
+  if (oldVersion < 1) {
+    if (!db.objectStoreNames.contains("questionProgress")) {
+      db.createObjectStore("questionProgress", { keyPath: "questionId" });
+    }
+    if (!db.objectStoreNames.contains("examAttempts")) {
+      const store = db.createObjectStore("examAttempts", { keyPath: "id" });
+      store.createIndex("submittedAt", "submittedAt", { unique: false });
+    }
+    if (!db.objectStoreNames.contains("preferences")) {
+      db.createObjectStore("preferences", { keyPath: "key" });
+    }
+  }
+
+  if (oldVersion < 2 && transaction !== null && db.objectStoreNames.contains("examAttempts")) {
+    const attemptStore = transaction.objectStore("examAttempts");
+    if (!attemptStore.indexNames.contains("submittedAt")) {
+      attemptStore.createIndex("submittedAt", "submittedAt", { unique: false });
+    }
+  }
+}
+
+export function validateProgressImport(raw: unknown): ImportValidationResult {
+  const errors: string[] = [];
+  if (!isRecord(raw)) {
+    return { ok: false, errors: ["Import file must be a JSON object."] };
+  }
+  if (raw.schema !== "canadian-ham.progress-export") {
+    errors.push("Import file schema is not canadian-ham.progress-export.");
+  }
+  if (raw.version !== 1) {
+    errors.push("Import file version must be 1.");
+  }
+  if (raw.bankId !== bankId) {
+    errors.push(`Import bankId must be ${bankId}.`);
+  }
+  if (typeof raw.exportedAt !== "string") {
+    errors.push("Import exportedAt must be a canonical UTC timestamp string.");
+  } else {
+    pushCanonicalTimestampError(errors, raw.exportedAt, "exportedAt");
+  }
+  if (!Array.isArray(raw.questionProgress)) {
+    errors.push("Import questionProgress must be an array.");
+  }
+  if (!Array.isArray(raw.examAttempts)) {
+    errors.push("Import examAttempts must be an array.");
+  }
+  if (!isPreferences(raw.preferences)) {
+    errors.push("Import preferences are invalid.");
+  }
+
+  const questionProgress = Array.isArray(raw.questionProgress) ? raw.questionProgress : [];
+  for (const [index, record] of questionProgress.entries()) {
+    errors.push(...validateQuestionProgressRecord(record, index));
+  }
+
+  const examAttempts = Array.isArray(raw.examAttempts) ? raw.examAttempts : [];
+  const submittedAtValues = new Set<string>();
+  for (const [index, attempt] of examAttempts.entries()) {
+    errors.push(...validateExamAttempt(attempt, index));
+    if (isRecord(attempt) && typeof attempt.submittedAt === "string") {
+      if (submittedAtValues.has(attempt.submittedAt)) {
+        errors.push(`Import examAttempts[${index}].submittedAt duplicates another exam attempt.`);
+      }
+      submittedAtValues.add(attempt.submittedAt);
+    }
+  }
+
+  if (errors.length > 0) {
+    return { ok: false, errors };
+  }
+
+  return {
+    ok: true,
+    errors: [],
+    data: {
+      schema: "canadian-ham.progress-export",
+      version: 1,
+      exportedAt: raw.exportedAt as string,
+      bankId,
+      questionProgress: questionProgress as QuestionProgressRecord[],
+      examAttempts: examAttempts as ExamAttempt[],
+      preferences: { ...defaultPreferences, ...(raw.preferences as WebPreferences) },
+    },
+  };
+}
+
+function requestToPromise<T>(request: IDBRequest<T>): Promise<T> {
+  return new Promise((resolve, reject) => {
+    request.onerror = () => reject(request.error ?? new Error("IndexedDB request failed"));
+    request.onsuccess = () => resolve(request.result);
+  });
+}
+
+function runTransaction(
+  db: IDBDatabase,
+  storeNames: string[],
+  mode: IDBTransactionMode,
+  work: (transaction: IDBTransaction) => void,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(storeNames, mode);
+    transaction.oncomplete = () => resolve();
+    transaction.onerror = () => reject(transaction.error ?? new Error("IndexedDB transaction failed"));
+    transaction.onabort = () => reject(transaction.error ?? new Error("IndexedDB transaction aborted"));
+    work(transaction);
+  });
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isPreferences(value: unknown): value is WebPreferences {
+  return isRecord(value)
+    && (value.practiceMode === "immediate" || value.practiceMode === "review-later")
+    && typeof value.examTimerEnabled === "boolean"
+    && (value.theme === undefined || value.theme === "system" || value.theme === "light" || value.theme === "dark");
+}
+
+function validateQuestionProgressRecord(value: unknown, index: number): string[] {
+  const prefix = `Import questionProgress[${index}]`;
+  const errors: string[] = [];
+  if (!isRecord(value)) {
+    return [`${prefix} must be an object.`];
+  }
+  if (typeof value.questionId !== "string" || !knownQuestionIds.has(value.questionId)) {
+    errors.push(`${prefix}.questionId must be a known question ID.`);
+  }
+  if (value.bankId !== bankId) {
+    errors.push(`${prefix}.bankId must be ${bankId}.`);
+  }
+  if (!isNonNegativeInteger(value.attempts)) {
+    errors.push(`${prefix}.attempts must be a non-negative integer.`);
+  }
+  if (!isNonNegativeInteger(value.correctAttempts)) {
+    errors.push(`${prefix}.correctAttempts must be a non-negative integer.`);
+  }
+  if (typeof value.lastAttemptedAt !== "string") {
+    errors.push(`${prefix}.lastAttemptedAt must be a canonical UTC timestamp string.`);
+  } else {
+    pushCanonicalTimestampError(errors, value.lastAttemptedAt, `${prefix}.lastAttemptedAt`);
+  }
+  if (value.lastResult !== "correct" && value.lastResult !== "incorrect") {
+    errors.push(`${prefix}.lastResult must be correct or incorrect.`);
+  }
+  if (!Array.isArray(value.recentResults) || !value.recentResults.every((result) => typeof result === "boolean") || value.recentResults.length > 5) {
+    errors.push(`${prefix}.recentResults must be an array of up to five booleans.`);
+  }
+  if (!isRecord(value.leitner)) {
+    errors.push(`${prefix}.leitner must be an object.`);
+  } else {
+    const box = value.leitner.box;
+    if (!Number.isInteger(box) || typeof box !== "number" || box < 0 || box > 5) {
+      errors.push(`${prefix}.leitner.box must be an integer between 0 and 5.`);
+    }
+    if (typeof value.leitner.dueAt !== "string") {
+      errors.push(`${prefix}.leitner.dueAt must be a canonical UTC timestamp string.`);
+    } else {
+      pushCanonicalTimestampError(errors, value.leitner.dueAt, `${prefix}.leitner.dueAt`);
+    }
+  }
+  return errors;
+}
+
+function validateExamAttempt(value: unknown, index: number): string[] {
+  const prefix = `Import examAttempts[${index}]`;
+  const errors: string[] = [];
+  if (!isRecord(value)) {
+    return [`${prefix} must be an object.`];
+  }
+  if (typeof value.id !== "string" || value.id.length === 0) {
+    errors.push(`${prefix}.id must be a non-empty string.`);
+  }
+  if (value.bankId !== bankId) {
+    errors.push(`${prefix}.bankId must be ${bankId}.`);
+  }
+  if (value.mode !== "mock-exam") {
+    errors.push(`${prefix}.mode must be mock-exam.`);
+  }
+  if (typeof value.seed !== "string") {
+    errors.push(`${prefix}.seed must be a string.`);
+  }
+  if (typeof value.startedAt !== "string") {
+    errors.push(`${prefix}.startedAt must be a canonical UTC timestamp string.`);
+  } else {
+    pushCanonicalTimestampError(errors, value.startedAt, `${prefix}.startedAt`);
+  }
+  if (typeof value.submittedAt !== "string") {
+    errors.push(`${prefix}.submittedAt must be a canonical UTC timestamp string.`);
+  } else {
+    pushCanonicalTimestampError(errors, value.submittedAt, `${prefix}.submittedAt`);
+  }
+  errors.push(...validateTimer(value.timer, `${prefix}.timer`));
+  errors.push(...validateScore(value.score, `${prefix}.score`));
+  if (!Array.isArray(value.items)) {
+    errors.push(`${prefix}.items must be an array.`);
+  } else {
+    for (const [itemIndex, item] of value.items.entries()) {
+      errors.push(...validateExamAttemptItem(item, `${prefix}.items[${itemIndex}]`));
+    }
+  }
+  return errors;
+}
+
+function validateTimer(value: unknown, prefix: string): string[] {
+  if (!isRecord(value)) {
+    return [`${prefix} must be an object.`];
+  }
+  const errors: string[] = [];
+  if (typeof value.enabled !== "boolean") {
+    errors.push(`${prefix}.enabled must be boolean.`);
+  }
+  if (!(value.secondsAllowed === null || isNonNegativeFiniteNumber(value.secondsAllowed))) {
+    errors.push(`${prefix}.secondsAllowed must be null or a non-negative number.`);
+  }
+  if (!isNonNegativeFiniteNumber(value.secondsElapsed)) {
+    errors.push(`${prefix}.secondsElapsed must be a non-negative number.`);
+  }
+  return errors;
+}
+
+function validateScore(value: unknown, prefix: string): string[] {
+  if (!isRecord(value)) {
+    return [`${prefix} must be an object.`];
+  }
+  const errors: string[] = [];
+  if (!isNonNegativeInteger(value.correct)) {
+    errors.push(`${prefix}.correct must be a non-negative integer.`);
+  }
+  if (!isNonNegativeInteger(value.total)) {
+    errors.push(`${prefix}.total must be a non-negative integer.`);
+  }
+  if (!isNonNegativeFiniteNumber(value.percent)) {
+    errors.push(`${prefix}.percent must be a non-negative number.`);
+  }
+  if (typeof value.passed !== "boolean") {
+    errors.push(`${prefix}.passed must be boolean.`);
+  }
+  if (typeof value.honours !== "boolean") {
+    errors.push(`${prefix}.honours must be boolean.`);
+  }
+  if (!Array.isArray(value.categoryBreakdown)) {
+    errors.push(`${prefix}.categoryBreakdown must be an array.`);
+  } else {
+    for (const [index, entry] of value.categoryBreakdown.entries()) {
+      errors.push(...validateCategoryBreakdownEntry(entry, `${prefix}.categoryBreakdown[${index}]`));
+    }
+  }
+  if (!Array.isArray(value.weakSubsectionIds) || !value.weakSubsectionIds.every((id) => typeof id === "string" && knownSubsectionIds.has(id))) {
+    errors.push(`${prefix}.weakSubsectionIds must contain known subsection IDs.`);
+  }
+  return errors;
+}
+
+function validateCategoryBreakdownEntry(value: unknown, prefix: string): string[] {
+  if (!isRecord(value)) {
+    return [`${prefix} must be an object.`];
+  }
+  const errors: string[] = [];
+  if (typeof value.categoryId !== "string" || !knownCategoryIds.has(value.categoryId)) {
+    errors.push(`${prefix}.categoryId must be a known category ID.`);
+  }
+  if (!isNonNegativeInteger(value.correct)) {
+    errors.push(`${prefix}.correct must be a non-negative integer.`);
+  }
+  if (!isNonNegativeInteger(value.total)) {
+    errors.push(`${prefix}.total must be a non-negative integer.`);
+  }
+  if (!isNonNegativeFiniteNumber(value.percent)) {
+    errors.push(`${prefix}.percent must be a non-negative number.`);
+  }
+  return errors;
+}
+
+function validateExamAttemptItem(value: unknown, prefix: string): string[] {
+  if (!isRecord(value)) {
+    return [`${prefix} must be an object.`];
+  }
+  const errors: string[] = [];
+  const questionId = typeof value.questionId === "string" ? value.questionId : null;
+  const questionIsKnown = questionId !== null && knownQuestionIds.has(questionId);
+  if (!questionIsKnown) {
+    errors.push(`${prefix}.questionId must be a known question ID.`);
+  }
+  const position = value.position;
+  if (!Number.isInteger(position) || typeof position !== "number" || position < 1) {
+    errors.push(`${prefix}.position must be a positive integer.`);
+  }
+  const expectedSubsectionId = questionIsKnown ? questionId!.slice(0, 9) : null;
+  const expectedCategoryId = questionIsKnown ? questionId!.slice(0, 5) : null;
+  if (typeof value.subsectionId !== "string" || !knownSubsectionIds.has(value.subsectionId) || (expectedSubsectionId !== null && value.subsectionId !== expectedSubsectionId)) {
+    errors.push(`${prefix}.subsectionId must match the known question subsection.`);
+  }
+  if (typeof value.categoryId !== "string" || !knownCategoryIds.has(value.categoryId) || (expectedCategoryId !== null && value.categoryId !== expectedCategoryId)) {
+    errors.push(`${prefix}.categoryId must match the known question category.`);
+  }
+  if (!Array.isArray(value.choicePermutation) || value.choicePermutation.length !== 4 || !value.choicePermutation.every((entry) => Number.isInteger(entry) && entry >= 0 && entry <= 3) || new Set(value.choicePermutation).size !== 4) {
+    errors.push(`${prefix}.choicePermutation must be a permutation of 0, 1, 2, 3.`);
+  }
+  const selectedSourceIndex = value.selectedSourceIndex;
+  if (!(selectedSourceIndex === null || (Number.isInteger(selectedSourceIndex) && typeof selectedSourceIndex === "number" && selectedSourceIndex >= 0 && selectedSourceIndex <= 3))) {
+    errors.push(`${prefix}.selectedSourceIndex must be null or an answer source index between 0 and 3.`);
+  }
+  if (typeof value.isCorrect !== "boolean") {
+    errors.push(`${prefix}.isCorrect must be boolean.`);
+  }
+  if (typeof value.flagged !== "boolean") {
+    errors.push(`${prefix}.flagged must be boolean.`);
+  }
+  return errors;
+}
+
+function pushCanonicalTimestampError(errors: string[], value: string, fieldName: string): void {
+  try {
+    // Route import validation through the engine's canonical timestamp parser.
+    dueCount([{ questionId: "B-001-001-001", bankId, attempts: 0, correctAttempts: 0, lastAttemptedAt: value, lastResult: "incorrect", recentResults: [], leitner: { box: 0, dueAt: value } }], value);
+  } catch (error) {
+    errors.push(`${fieldName} must use canonical UTC timestamp format YYYY-MM-DDTHH:MM:SS.sssZ (${error instanceof Error ? error.message : String(error)}).`);
+  }
+}
+
+function isNonNegativeInteger(value: unknown): value is number {
+  return typeof value === "number" && Number.isInteger(value) && value >= 0;
+}
+
+function isNonNegativeFiniteNumber(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value) && value >= 0;
+}
+
+const knownCategoryIds = new Set(categories.map((category) => category.id));
+const knownSubsectionIds = new Set(subsections.map((subsection) => subsection.id));

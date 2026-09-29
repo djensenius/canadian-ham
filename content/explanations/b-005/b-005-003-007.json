@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-003-007",
+  "questionId": "B-005-003-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-003-007.\n\nWhy the correct answer is right: Power is found with P = I x E, so voltage and current are multiplied.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Inductance and capacitance\": Inductance and capacitance relate to tuned circuits, not direct power calculation.\n- sourceIndex 2: \"Voltage and inductance\": Voltage and inductance do not produce watts by direct multiplication.\n- sourceIndex 3: \"Resistance and capacitance\": Resistance and capacitance do not produce watts by direct multiplication.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-02"
+    },
+    {
+      "type": "question",
+      "id": "B-005-003-007"
+    }
+  ],
+  "licenseClass": "original"
+}

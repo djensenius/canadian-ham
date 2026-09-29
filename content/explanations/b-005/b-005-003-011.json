@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-003-011",
+  "questionId": "B-005-003-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-003-011.\n\nWhy the correct answer is right: A short circuit can draw very high current and blow a fuse immediately.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"An open circuit\": An open circuit would prevent current and normally would not blow the fuse immediately.\n- sourceIndex 2: \"A resonant circuit\": A resonant circuit is not the DC supply fault described.\n- sourceIndex 3: \"A closed circuit\": A normal closed circuit includes the intended load and should not immediately blow the fuse.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-02"
+    },
+    {
+      "type": "question",
+      "id": "B-005-003-011"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,19 @@
+{
+  "name": "@canadian-ham/engine-ts",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "node --test test/",
+    "generate-fixtures": "node src/generate-fixtures.ts",
+    "generate-fixtures:check": "node src/generate-fixtures.ts --check",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  }
+}

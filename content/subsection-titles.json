@@ -1,0 +1,802 @@
+[
+  {
+    "id": "B-001-001",
+    "title": {
+      "en": "Legal authorities and ISED roles",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-002",
+    "title": {
+      "en": "Certificate records and validity",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-003",
+    "title": {
+      "en": "Prohibited transmissions and penalties",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-004",
+    "title": {
+      "en": "Basic certificate eligibility",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-005",
+    "title": {
+      "en": "Installing equipment for others",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-006",
+    "title": {
+      "en": "Station scope and equipment limits",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-007",
+    "title": {
+      "en": "Permitted and prohibited communications",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-008",
+    "title": {
+      "en": "Station types and construction privileges",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-009",
+    "title": {
+      "en": "Station control and owner duties",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-010",
+    "title": {
+      "en": "Interference duties and service priority",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-011",
+    "title": {
+      "en": "Emergency communication authority",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-012",
+    "title": {
+      "en": "Message privacy and compensation",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-013",
+    "title": {
+      "en": "Call signs and station identification",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-014",
+    "title": {
+      "en": "Third-party and visiting operators",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-015",
+    "title": {
+      "en": "Operator qualifications and privileges",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-016",
+    "title": {
+      "en": "Authorized bandwidth by band",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-017",
+    "title": {
+      "en": "Power limits and PEP",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-018",
+    "title": {
+      "en": "Repeaters and automatic transmissions",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-019",
+    "title": {
+      "en": "Frequency stability and modulation quality",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-020",
+    "title": {
+      "en": "International communications rules",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-021",
+    "title": {
+      "en": "ITU regions and station location",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-022",
+    "title": {
+      "en": "Examiners, fees, and false statements",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-023",
+    "title": {
+      "en": "Antenna siting and public consultation",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-024",
+    "title": {
+      "en": "RF exposure and Safety Code 6",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-001-025",
+    "title": {
+      "en": "EMCAB-2 interference criteria",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-002-001",
+    "title": {
+      "en": "Repeater contacts and coordination",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-002-002",
+    "title": {
+      "en": "Voice identification and phonetics",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-002-003",
+    "title": {
+      "en": "Voice calling and simplex contacts",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-002-004",
+    "title": {
+      "en": "Listening first and power etiquette",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-002-005",
+    "title": {
+      "en": "Morse calling procedures",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-002-006",
+    "title": {
+      "en": "RST signal reports",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-002-007",
+    "title": {
+      "en": "Q signals and operating abbreviations",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-002-008",
+    "title": {
+      "en": "Distress, urgency, and safety traffic",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-002-009",
+    "title": {
+      "en": "Contact records, maps, and locators",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-001",
+    "title": {
+      "en": "Low-pass filters in HF stations",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-002",
+    "title": {
+      "en": "FM transmitter audio chain",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-003",
+    "title": {
+      "en": "Superheterodyne receiver stages",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-004",
+    "title": {
+      "en": "Basic CW transmitter stages",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-005",
+    "title": {
+      "en": "SSB and CW receiver functions",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-006",
+    "title": {
+      "en": "Single-sideband transmitter stages",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-007",
+    "title": {
+      "en": "Computer audio interfaces for digital modes",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-008",
+    "title": {
+      "en": "Linear power supply blocks",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-009",
+    "title": {
+      "en": "Yagi antenna parts",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-010",
+    "title": {
+      "en": "Receiver and emission specifications",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-011",
+    "title": {
+      "en": "CW transmitter quality and tuning",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-012",
+    "title": {
+      "en": "SSB modulation and PEP",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-013",
+    "title": {
+      "en": "FM deviation and receiver noise",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-014",
+    "title": {
+      "en": "Keyer and microphone adjustments",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-015",
+    "title": {
+      "en": "Digital voice, data, and packet relays",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-016",
+    "title": {
+      "en": "Batteries and DC sources",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-017",
+    "title": {
+      "en": "Power supply selection and ripple",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-018",
+    "title": {
+      "en": "Station access and mobile electrical hazards",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-019",
+    "title": {
+      "en": "Grounding, bonding, fuses, and shock protection",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-020",
+    "title": {
+      "en": "Lightning protection and cable grounding",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-003-021",
+    "title": {
+      "en": "UHF and microwave RF safety",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-004-001",
+    "title": {
+      "en": "Amplifier purpose and linearity",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-004-002",
+    "title": {
+      "en": "Diode uses and protection",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-004-003",
+    "title": {
+      "en": "Bipolar transistor basics",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-004-004",
+    "title": {
+      "en": "Field-effect transistor basics",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-004-005",
+    "title": {
+      "en": "Triode tube operation",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-004-006",
+    "title": {
+      "en": "Resistor colour codes and tolerance",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-005-001",
+    "title": {
+      "en": "Units, prefixes, and frequency conversion",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-005-002",
+    "title": {
+      "en": "Conductors, insulators, and current",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-005-003",
+    "title": {
+      "en": "Electrical power and energy use",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-005-004",
+    "title": {
+      "en": "Ohm’s law calculations",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-005-005",
+    "title": {
+      "en": "Parallel circuit relationships",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-005-006",
+    "title": {
+      "en": "Power ratings and DC input power",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-005-007",
+    "title": {
+      "en": "AC frequency and audio range",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-005-008",
+    "title": {
+      "en": "Decibels and power ratios",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-005-009",
+    "title": {
+      "en": "Series and parallel L-C values",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-005-010",
+    "title": {
+      "en": "Capacitive and inductive reactance",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-005-011",
+    "title": {
+      "en": "Transformer ratios and impedance",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-005-012",
+    "title": {
+      "en": "Resonance, bandwidth, and Q",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-005-013",
+    "title": {
+      "en": "Meters and circuit measurements",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-006-001",
+    "title": {
+      "en": "Transmission-line role and impedance",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-006-002",
+    "title": {
+      "en": "Coax, twin-lead, and open-wire line",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-006-003",
+    "title": {
+      "en": "Choosing feedline for the installation",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-006-004",
+    "title": {
+      "en": "Feedline losses and length choices",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-006-005",
+    "title": {
+      "en": "SWR readings and measurement faults",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-006-006",
+    "title": {
+      "en": "Matching networks and antenna tuners",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-006-007",
+    "title": {
+      "en": "Antenna polarization",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-006-008",
+    "title": {
+      "en": "Dipole tuning and wavelength",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-006-009",
+    "title": {
+      "en": "Parasitic elements and directivity",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-006-010",
+    "title": {
+      "en": "Quarter- and half-wave antenna lengths",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-006-011",
+    "title": {
+      "en": "Yagi dimensions and multiband traps",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-006-012",
+    "title": {
+      "en": "Dipole and random-wire patterns",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-006-013",
+    "title": {
+      "en": "Quad and loop antennas",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-007-001",
+    "title": {
+      "en": "Ground wave, sky wave, and NVIS paths",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-007-002",
+    "title": {
+      "en": "Ionospheric regions and ionization",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-007-003",
+    "title": {
+      "en": "Skip distance and hop length",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-007-004",
+    "title": {
+      "en": "Absorption, fading, and multipath",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-007-005",
+    "title": {
+      "en": "Sunspots and solar flux",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-007-006",
+    "title": {
+      "en": "MUF, critical frequency, and LUF",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-007-007",
+    "title": {
+      "en": "Six-metre and tropospheric propagation",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-007-008",
+    "title": {
+      "en": "Scatter and unusual propagation modes",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-008-001",
+    "title": {
+      "en": "Receiver overload diagnosis",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-008-002",
+    "title": {
+      "en": "Audio rectification and household cures",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-008-003",
+    "title": {
+      "en": "Intermodulation and spurious emissions",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-008-004",
+    "title": {
+      "en": "Harmonics and TV interference",
+      "fr": null
+    },
+    "status": "draft"
+  },
+  {
+    "id": "B-008-005",
+    "title": {
+      "en": "Filter types and cut-off behaviour",
+      "fr": null
+    },
+    "status": "draft"
+  }
+]

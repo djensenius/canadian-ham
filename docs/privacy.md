@@ -19,7 +19,7 @@ This document supports [requirements.md](requirements.md) and [architecture.md](
 
 ## Apple no-data design
 
-The Apple app is a fully offline SwiftUI multiplatform app for iOS, iPadOS, and macOS.
+The Apple app is a fully offline SwiftUI multiplatform app for iOS, iPadOS, macOS, visionOS, and tvOS.
 
 Allowed local data:
 

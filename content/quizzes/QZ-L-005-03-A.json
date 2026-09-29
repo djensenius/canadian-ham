@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-005-03-A",
+  "lessonId": "L-005-03",
+  "officialQuestionIds": [
+    "B-005-005-001",
+    "B-005-005-002",
+    "B-005-005-006",
+    "B-005-005-008",
+    "B-005-005-010",
+    "B-005-006-002",
+    "B-005-006-007",
+    "B-005-006-008"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-005-03-A-C1",
+      "prompt": { "en": "Four 18 ohm resistors are connected in series. What is the total resistance?", "fr": null },
+      "choices": [
+        { "text": { "en": "4.5 ohms", "fr": null }, "isCorrect": false },
+        { "text": { "en": "18 ohms", "fr": null }, "isCorrect": false },
+        { "text": { "en": "72 ohms", "fr": null }, "isCorrect": true },
+        { "text": { "en": "0.22 ohms", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Series resistances add directly: 18 + 18 + 18 + 18 = 72 ohms.", "fr": null }
+    },
+    {
+      "id": "QZ-L-005-03-A-C2",
+      "prompt": { "en": "Five equal 250 ohm resistors are in parallel. What is the total resistance?", "fr": null },
+      "choices": [
+        { "text": { "en": "1 250 ohms", "fr": null }, "isCorrect": false },
+        { "text": { "en": "250 ohms", "fr": null }, "isCorrect": false },
+        { "text": { "en": "125 ohms", "fr": null }, "isCorrect": false },
+        { "text": { "en": "50 ohms", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "Equal parallel resistors use Rt = R / branches, so 250 / 5 = 50 ohms.", "fr": null }
+    },
+    {
+      "id": "QZ-L-005-03-A-C3",
+      "prompt": { "en": "Why might a physically larger resistor be chosen with the same ohm value?", "fr": null },
+      "choices": [
+        { "text": { "en": "It can safely dissipate more heat if rated for more watts.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "It changes DC into AC.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It always has less resistance than marked.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It removes the need for a fuse.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The larger part may have a higher power rating while keeping the same resistance.", "fr": null }
+    }
+  ]
+}

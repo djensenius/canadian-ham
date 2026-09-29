@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-005-02-A",
+  "lessonId": "L-005-02",
+  "officialQuestionIds": [
+    "B-005-003-001",
+    "B-005-003-004",
+    "B-005-003-005",
+    "B-005-003-007",
+    "B-005-003-010",
+    "B-005-004-001",
+    "B-005-004-006",
+    "B-005-004-010"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-005-02-A-C1",
+      "prompt": { "en": "A 13.8 V circuit draws 1.5 A. What power is being used?", "fr": null },
+      "choices": [
+        { "text": { "en": "9.2 W", "fr": null }, "isCorrect": false },
+        { "text": { "en": "20.7 W", "fr": null }, "isCorrect": true },
+        { "text": { "en": "15.3 W", "fr": null }, "isCorrect": false },
+        { "text": { "en": "0.11 W", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "P = I x E, so 1.5 x 13.8 = 20.7 W.", "fr": null }
+    },
+    {
+      "id": "QZ-L-005-02-A-C2",
+      "prompt": { "en": "A learner calculates resistance from 7.5 V and 0.015 A. Which setup is correct?", "fr": null },
+      "choices": [
+        { "text": { "en": "R = 7.5 x 0.015", "fr": null }, "isCorrect": false },
+        { "text": { "en": "R = 0.015 / 7.5", "fr": null }, "isCorrect": false },
+        { "text": { "en": "R = 7.5 / 0.015", "fr": null }, "isCorrect": true },
+        { "text": { "en": "R = 7.5 + 0.015", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The reference-sheet form is R = E / I.", "fr": null }
+    },
+    {
+      "id": "QZ-L-005-02-A-C3",
+      "prompt": { "en": "Which fault is most likely to blow a fuse right away?", "fr": null },
+      "choices": [
+        { "text": { "en": "A switch that is open and stops all current.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A meter connected with correct polarity.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A load that is disconnected from both wires.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "An unintended very low-resistance path.", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "A short circuit can draw excessive current until protection opens the circuit.", "fr": null }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-002-010",
+  "questionId": "B-005-002-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-002-010.\n\nWhy the correct answer is right: For a conductor, resistance changes with temperature.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"voltage\": Changing applied voltage can change current, but it is not the material property named here.\n- sourceIndex 2: \"current\": Changing current can heat a conductor, but current itself is not the direct property answer.\n- sourceIndex 3: \"humidity\": Humidity may affect some insulating surfaces, but it is not the basic conductor-resistance factor asked here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-01"
+    },
+    {
+      "type": "question",
+      "id": "B-005-002-010"
+    }
+  ],
+  "licenseClass": "original"
+}
