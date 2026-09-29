@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-001-004",
+  "questionId": "B-007-001-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-001-004.\n\nWhy the correct answer is right: The lower atmosphere bends VHF and higher signals slightly downward under normal conditions. That tropospheric refraction lets the radio horizon reach a little farther than the optical horizon.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Ionization in the troposphere\": The normal troposphere is not acting like an ionized radio layer; refractive-index change is the reason for the small horizon extension.\n- sourceIndex 2: \"Diffraction caused by soil conductivity\": Soil conductivity affects ground-wave loss, especially at lower frequencies, but it is not what extends the VHF radio horizon.\n- sourceIndex 3: \"Refraction in the D-region\": The D region is ionospheric and is known mainly for lower-HF absorption, not ordinary VHF horizon bending.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-001-004"
+    }
+  ],
+  "licenseClass": "original"
+}

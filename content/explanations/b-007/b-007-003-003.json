@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-003-003",
+  "questionId": "B-007-003-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-003-003.\n\nWhy the correct answer is right: The E region is lower than F2, so the ground distance for a single-hop return is shorter. About 2000 km is the normal upper scale for an E-region hop.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"300 km\": This is too short for the expected maximum E-region single-hop distance.\n- sourceIndex 2: \"4000 km\": Four thousand kilometres belongs to the longer F2 hop scale, not the lower E region.\n- sourceIndex 3: \"1000 km\": A contact at this distance may be possible, but it is not the normal maximum value for the E-region hop being tested.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-003-003"
+    }
+  ],
+  "licenseClass": "original"
+}

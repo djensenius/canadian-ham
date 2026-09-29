@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-002-010",
+  "questionId": "B-007-002-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-002-010.\n\nWhy the correct answer is right: In daylight the F region is commonly described as F1 and F2. At night those subdivisions become less distinct or merge.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"D1 and D2\": The D region is not normally taught as a D1/D2 daytime pair for amateur HF planning.\n- sourceIndex 2: \"E1 and E2\": E may become patchy, but E1 and E2 are not the standard daytime sub-regions in this material.\n- sourceIndex 3: \"B1 and B2\": B1 and B2 are not recognized ionospheric regions for Basic propagation questions.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-002-010"
+    }
+  ],
+  "licenseClass": "original"
+}

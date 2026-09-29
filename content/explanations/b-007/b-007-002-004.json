@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-002-004",
+  "questionId": "B-007-002-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-002-004.\n\nWhy the correct answer is right: The D region is low and, in daylight, tends to absorb lower-HF energy instead of returning it usefully. That makes it the least helpful region for long-distance radio-wave propagation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The F2 region\": F2 is high and is the main region behind the longest ordinary HF paths.\n- sourceIndex 2: \"The F1 region\": F1 is part of the daytime F region and can participate in refraction; it is not the main daylight absorption problem.\n- sourceIndex 3: \"The E region\": E can refract some signals and can produce sporadic-E openings, so it is not the least useful choice here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-002-004"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-008-004",
+  "questionId": "B-007-008-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-008-004.\n\nWhy the correct answer is right: HF scatter can arrive through several redirected paths. When those delayed and shifted components combine in the skip zone, the audio can sound smeared or distorted.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Auroral activity and changes in the Earth's magnetic field\": Aurora can make VHF signals raspy, but it is not the normal cause of HF scatter distortion in a skip zone.\n- sourceIndex 2: \"Propagation through ground waves that absorb much of the signal\": Ground waves do not put multiple HF sky paths into the skip zone; they are surface-following signals that die out with distance.\n- sourceIndex 3: \"The state of the E-region at the point of refraction\": Naming the E region misses the usual HF skip-zone mechanism: several F-region-related scattered paths can arrive with different delays and phases, so one region's state is not the source of the smeared audio.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-008-004"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,139 @@
+{
+  "id": "QZ-L-007-01-A",
+  "lessonId": "L-007-01",
+  "officialQuestionIds": [
+    "B-007-001-001",
+    "B-007-001-002",
+    "B-007-001-006",
+    "B-007-002-001",
+    "B-007-002-005",
+    "B-007-002-008",
+    "B-007-003-001",
+    "B-007-003-006"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-007-01-A-C1",
+      "prompt": {
+        "en": "A training diagram shows direct VHF, ground wave, NVIS, and low-angle sky-wave rays on the same page. What is the safest way to read the diagram?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "They are alternative path models to choose for the route; one contact does not have to use all of them in sequence.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "A signal must leave as ground wave, become NVIS, then finish as low-angle sky wave.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Any path drawn above the ground should be logged as ordinary line-of-sight VHF.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The labels show transmitter power levels rather than propagation paths.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "The sketch compares path models. A real contact uses the path or mix of paths that conditions support; the labels are not a required sequence or a power scale.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-007-01-A-C2",
+      "prompt": {
+        "en": "A club writes, 'Our HF backup worked last month, so this afternoon's route no longer needs a band plan or fallback.' What is the best correction?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Repeat the same band without listening, because one success fixes the ionosphere for that route.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Remove all HF options from the plan, because changing conditions make every sky-wave path unusable.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Use last month's result as a starting clue, but check conditions and keep an alternate band or relay ready.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Keep only a power increase in reserve, because power is the main control for which path appears.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "A previous contact is useful evidence, not a guarantee. Propagation planning still needs a current check and a fallback such as another band, relay, time, or antenna plan.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-007-01-A-C3",
+      "prompt": {
+        "en": "A route is about 6000 km. Use planning scales of about 2000 km for one E-region hop and 4000 km for one F2-region hop. Which plan is the first one with enough distance on paper?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "One E-region hop",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Two E-region hops",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "One F2-region hop",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Two F2-region hops",
+            "fr": null
+          },
+          "isCorrect": true
+        }
+      ],
+      "explanation": {
+        "en": "One E hop is about 2000 km, two E hops about 4000 km, and one F2 hop about 4000 km. Two F2-scale hops provide enough planning distance for a 6000 km route, if conditions support them.",
+        "fr": null
+      }
+    }
+  ]
+}

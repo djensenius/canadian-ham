@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-005-011",
+  "questionId": "B-007-005-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-005-011.\n\nWhy the correct answer is right: The solar cycle changes sunspot activity, solar flux, and ionization over years. Those changes are the main reason HF bands improve and decline cyclically.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Magnetic pole drift cycle\": Movement of Earth's magnetic poles is slow and is not the operating cycle behind recurring HF propagation highs and lows.\n- sourceIndex 2: \"Jet stream cycle\": Jet streams are lower-atmosphere weather patterns, so they do not drive ionospheric HF refraction cycles.\n- sourceIndex 3: \"Auroral cycle\": Auroras can affect particular high-latitude paths, but they are a result of space-weather activity rather than the broad HF cycle itself.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-005-011"
+    }
+  ],
+  "licenseClass": "original"
+}

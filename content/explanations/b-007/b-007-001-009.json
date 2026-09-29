@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-001-009",
+  "questionId": "B-007-001-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-001-009.\n\nWhy the correct answer is right: A sky wave goes from the transmitter up to the ionosphere and returns to Earth after refraction. That path is the classic HF skip route.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Direct wave\": A direct wave travels between antennas without going up to the ionosphere and back.\n- sourceIndex 2: \"Scattered wave\": Scattering sends small portions of energy in other directions; it is not the simple ionosphere-and-back path.\n- sourceIndex 3: \"Plane wave\": Plane wave describes a wavefront shape, not a propagation route involving the ionosphere.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-001-009"
+    }
+  ],
+  "licenseClass": "original"
+}

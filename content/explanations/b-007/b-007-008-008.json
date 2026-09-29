@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-008-008",
+  "questionId": "B-007-008-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-008-008.\n\nWhy the correct answer is right: Tropospheric scatter comes from small changes in the lower atmosphere's refractive properties. Those irregularities redirect a small amount of VHF or UHF energy past the radio horizon.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Ionized patches in the troposphere\": The troposphere is not normally an ionized radio-reflecting layer; its scatter effect comes from neutral-air refractive variations.\n- sourceIndex 2: \"Increased daytime ionization of the D region\": The D region is in the ionosphere and mainly affects lower HF absorption, not VHF/UHF tropospheric scatter.\n- sourceIndex 3: \"Local cloud cover\": Clouds alone are not the mechanism; the useful factor is small-scale refractive variation in the lower atmosphere.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-008-008"
+    }
+  ],
+  "licenseClass": "original"
+}

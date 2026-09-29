@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-007-004",
+  "questionId": "B-007-007-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-007-004.\n\nWhy the correct answer is right: A tropospheric wave is the portion of a transmitted wave kept near Earth's surface by bending in the lower atmosphere. The name points to the troposphere, where this bending occurs.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Scattered wave\": A scattered wave is energy redirected in many directions, not specifically a surface-hugging ray bent by the troposphere.\n- sourceIndex 2: \"Ground wave\": Ground wave follows the surface by diffraction and ground interaction, which is different from atmospheric bending.\n- sourceIndex 3: \"Ionospheric wave\": Ionospheric waves involve the upper atmosphere, not the lower-atmosphere path close to Earth's surface.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-007-004"
+    }
+  ],
+  "licenseClass": "original"
+}

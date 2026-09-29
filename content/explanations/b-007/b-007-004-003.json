@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-004-003",
+  "questionId": "B-007-004-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-004-003.\n\nWhy the correct answer is right: Multiple paths can bring the same transmission to the receiver with different phases. As those components add and cancel, the received strength rises and falls as fading.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Wavering\": Wavering is not the standard propagation term for phase-related changes in received signal strength.\n- sourceIndex 2: \"Absorption\": Absorption is energy loss in a medium; it does not specifically describe cancellation between multiple arriving paths.\n- sourceIndex 3: \"Intermodulation\": Intermodulation is nonlinear mixing in equipment, not a propagation effect caused by separate path phases.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-004-003"
+    }
+  ],
+  "licenseClass": "original"
+}

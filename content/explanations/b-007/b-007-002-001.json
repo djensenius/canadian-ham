@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-002-001",
+  "questionId": "B-007-002-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-002-001.\n\nWhy the correct answer is right: The ionosphere forms when energetic radiation from the Sun removes electrons from atoms and molecules high in the atmosphere. That solar-driven ionization creates the regions that affect radio waves.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Lightning ionizing the outer atmosphere\": Lightning is local and brief; it cannot maintain the broad, daily ionospheric regions used for radio propagation.\n- sourceIndex 2: \"Release of fluorocarbons into the atmosphere\": Fluorocarbons are an atmospheric chemistry concern, not the energy source that strips electrons in the outer atmosphere.\n- sourceIndex 3: \"Temperature changes ionizing the outer atmosphere\": Ordinary temperature changes do not supply the photon energy needed to create the ionosphere.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-002-001"
+    }
+  ],
+  "licenseClass": "original"
+}

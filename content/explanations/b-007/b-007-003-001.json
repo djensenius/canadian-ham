@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-003-001",
+  "questionId": "B-007-003-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-003-001.\n\nWhy the correct answer is right: The skip zone is the gap after ground-wave coverage has faded but before the first sky-wave return reaches the ground. Stations in that gap may hear little even though nearer and farther stations can communicate.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Shadow zone\": Shadow zone is not the standard amateur term for the gap between ground-wave range and sky-wave return.\n- sourceIndex 2: \"Scatter zone\": Scatter can sometimes put weak energy into gaps, but the named gap itself is not defined by scatter.\n- sourceIndex 3: \"Propagation zone\": Propagation zone is a broad phrase and does not identify the specific coverage gap being asked about.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-003-001"
+    }
+  ],
+  "licenseClass": "original"
+}

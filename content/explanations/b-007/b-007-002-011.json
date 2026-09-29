@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-002-011",
+  "questionId": "B-007-002-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-002-011.\n\nWhy the correct answer is right: The normal order from the Earth upward is D, then E, then F. Therefore the E region sits below the F region.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Below the D region\": D is already the lowest standard region, so E cannot be below it in the usual layer order.\n- sourceIndex 2: \"Above the C region\": C is not part of the D, E, F ionospheric model used here, so this is not the useful position description.\n- sourceIndex 3: \"Above the F region\": This puts E too high; F is above E.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-002-011"
+    }
+  ],
+  "licenseClass": "original"
+}

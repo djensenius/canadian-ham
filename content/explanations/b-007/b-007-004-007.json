@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-004-007",
+  "questionId": "B-007-004-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-004-007.\n\nWhy the correct answer is right: On HF sky-wave paths, ionospheric refraction can rotate or otherwise change the wave's polarization before it arrives. That makes the original transmit antenna polarization less decisive than it is on local VHF/UHF paths.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The polarization of ground waves and ionospheric waves continually varies\": Ground-wave polarization is not generally treated as continually varying in the same way; the HF reason is the ionospheric path.\n- sourceIndex 2: \"The refraction forces the wave's polarization to vertical\": The ionosphere may rotate polarization, but it does not force every refracted wave into a fixed vertical orientation.\n- sourceIndex 3: \"The polarization of ionospheric waves varies depending on the entry angle into the refracting region\": Entry angle alone is too narrow; the Basic point is that ionospheric refraction along the path changes polarization.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-004-007"
+    }
+  ],
+  "licenseClass": "original"
+}

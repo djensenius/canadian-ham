@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-002-006",
+  "questionId": "B-007-002-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-002-006.\n\nWhy the correct answer is right: Around midday the Sun is high on the daylight side, so solar radiation is strongest for ordinary daily ionization. That is when the ionosphere is generally most ionized.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Dawn\": Dawn follows a full night of recombination, so ionization is usually near its low point rather than its peak.\n- sourceIndex 2: \"Midnight\": At midnight there is no direct solar radiation on that region to maintain maximum ionization.\n- sourceIndex 3: \"Dusk\": Dusk comes after solar input has begun to fall, so it is not the usual daily maximum.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-002-006"
+    }
+  ],
+  "licenseClass": "original"
+}

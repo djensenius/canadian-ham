@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-007-010",
+  "questionId": "B-007-007-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-007-010.\n\nWhy the correct answer is right: Normal VHF tropospheric propagation can extend beyond the optical horizon because the lower atmosphere bends the wave slightly. A rough practical figure is about 800 km before enhanced modes such as ducting are counted.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"2400 km\": That distance would need a special propagation enhancement or multiple unusual conditions, not normal VHF tropospheric range.\n- sourceIndex 2: \"3200 km\": Three thousand two hundred kilometres is far beyond ordinary VHF tropospheric bending.\n- sourceIndex 3: \"1600 km\": Sixteen hundred kilometres is about twice the expected normal figure and points toward enhanced propagation rather than routine range.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-007-010"
+    }
+  ],
+  "licenseClass": "original"
+}

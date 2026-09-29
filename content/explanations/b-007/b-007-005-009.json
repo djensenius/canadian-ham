@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-005-009",
+  "questionId": "B-007-005-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-005-009.\n\nWhy the correct answer is right: The rise and fall of solar activity averages about 11 years, so operators expect HF conditions to trend through that long cycle rather than repeat every few months.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"3 years\": Three years is much too short for the average sunspot cycle.\n- sourceIndex 2: \"6 years\": Six years may feel like a long operating trend, but it is still only part of the usual solar-cycle length.\n- sourceIndex 3: \"1 year\": One year describes the seasons on Earth, not the Sun's activity cycle.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-005-009"
+    }
+  ],
+  "licenseClass": "original"
+}

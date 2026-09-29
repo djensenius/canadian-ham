@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-004-008",
+  "questionId": "B-007-004-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-004-008.\n\nWhy the correct answer is right: Selective fading happens when components of the same transmission arrive with different phases at the receiving station. Parts of a wider signal can then be strengthened or weakened unequally.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Small changes in directional antenna heading at the receiving station\": Turning an antenna may change level, but it is not the propagation cause of selective fading within the signal.\n- sourceIndex 2: \"Time differences between the receiving and transmitting stations\": Clock differences between stations are irrelevant; the issue is path delay and phase among received components.\n- sourceIndex 3: \"Large changes in the height of the ionosphere at the receiving station ordinarily occurring shortly before sunrise and sunset\": Sunrise and sunset layer changes can alter propagation, but selective fading is caused by multipath phase differences at the receiver.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-004-008"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-001-010",
+  "questionId": "B-007-001-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-001-010.\n\nWhy the correct answer is right: HF reception beyond 4000 km normally needs ionospheric refraction, often with more than a single hop. Surface and direct paths cannot usually span that distance at HF.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"ground wave\": Ground-wave energy is steadily attenuated by the surface and is not the usual mechanism for multi-thousand-kilometre HF reception.\n- sourceIndex 2: \"scattered wave\": Scatter may add weak signals in special cases, but ordinary long-distance HF depends mainly on ionospheric return.\n- sourceIndex 3: \"space wave\": Space wave is tied to direct and ground-reflected line-of-sight components, which are far too limited for this HF distance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-001-010"
+    }
+  ],
+  "licenseClass": "original"
+}

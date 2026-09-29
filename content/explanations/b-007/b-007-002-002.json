@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-002-002",
+  "questionId": "B-007-002-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-002-002.\n\nWhy the correct answer is right: Solar ultraviolet radiation has enough photon energy to ionize gases in the upper atmosphere. It is the main solar radiation type behind ordinary ionospheric formation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Microwave\": Microwave radiation is radio-frequency energy; it is useful as a solar activity indicator but is not the main ionizing radiation.\n- sourceIndex 2: \"Ionized particles\": Charged particles can disturb the ionosphere and produce auroral effects, but the question asks for the solar radiation chiefly responsible for ionization.\n- sourceIndex 3: \"Infrared\": Infrared radiation is associated with heat and has too little photon energy to be the principal ionizing source.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-002-002"
+    }
+  ],
+  "licenseClass": "original"
+}

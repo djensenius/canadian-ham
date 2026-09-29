@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-004-004",
+  "questionId": "B-007-004-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-004-004.\n\nWhy the correct answer is right: In an urban VHF setting, reflections from buildings, vehicles, and metal surfaces create several received paths. A small move can shift the handheld from a reinforcing spot to a cancellation spot.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Overhead power lines create a Faraday cage\": Power lines may add noise or obstruction, but they do not form the enclosing shield needed for a Faraday cage around the operator.\n- sourceIndex 2: \"Underground conduits change ground conductivity\": Ground conductivity is not the normal cause of sharp two-metre signal nulls over less than a metre.\n- sourceIndex 3: \"Passing vehicles absorb the radio signals\": Vehicles can reflect or block signals, but the severe position-sensitive fading is best explained by multipath cancellation.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-004-004"
+    }
+  ],
+  "licenseClass": "original"
+}

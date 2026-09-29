@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-007-007",
+  "questionId": "B-007-007-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-007-007.\n\nWhy the correct answer is right: In the northern hemisphere, auroral ionization is normally toward the polar region. Pointing a directional antenna north aims at the disturbed region that can scatter or reflect the signal.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"East\": East points along latitude rather than toward the usual auroral zone from a northern-hemisphere station.\n- sourceIndex 2: \"West\": West also misses the polar direction where the auroral curtain is most likely to help.\n- sourceIndex 3: \"South\": South points away from the northern auroral region for northern-hemisphere operators.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-007-007"
+    }
+  ],
+  "licenseClass": "original"
+}

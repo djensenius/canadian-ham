@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-001-008",
+  "questionId": "B-007-001-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-001-008.\n\nWhy the correct answer is right: Of the listed amateur bands, 160 metres has the lowest frequency and longest wavelength. Ground wave generally reaches farther at the lower frequency end of the comparison.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"40 metres\": This band can have useful HF propagation, but its higher frequency gives it less ground-wave reach than 160 metres.\n- sourceIndex 2: \"10 metres\": Ten metres is near the top of HF, where ordinary ground wave is much less effective than on the lowest band listed.\n- sourceIndex 3: \"6 metres\": Six metres is VHF; normal work there is dominated by line-of-sight and special openings rather than the best ground-wave distance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-001-008"
+    }
+  ],
+  "licenseClass": "original"
+}

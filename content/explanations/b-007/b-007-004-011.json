@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-004-011",
+  "questionId": "B-007-004-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-004-011.\n\nWhy the correct answer is right: Multiple paths can arrive with different delays and phases. Besides changing strength, those phase differences can distort the received signal's phase relationships.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Frequency shift\": A frequency shift moves the signal in frequency; ordinary multipath fading primarily changes amplitude and phase.\n- sourceIndex 2: \"Heterodyne squeal\": Heterodyne squeal comes from another carrier or oscillator beat, not from two propagation paths of the same signal.\n- sourceIndex 3: \"Higher noise floor\": A higher noise floor is added noise; multipath can degrade a signal even when the receiver noise has not risen.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-004-011"
+    }
+  ],
+  "licenseClass": "original"
+}

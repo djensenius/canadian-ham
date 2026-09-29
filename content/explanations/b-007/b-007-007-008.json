@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-007-008",
+  "questionId": "B-007-007-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-007-008.\n\nWhy the correct answer is right: Auroral radio propagation uses disturbed ionization at about E-region height. That is why it is grouped with other unusual VHF effects rather than ordinary high-F-region HF refraction.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"At F-region height\": The F region is higher and is associated with many HF sky-wave paths, not the usual auroral-scatter height.\n- sourceIndex 2: \"In the equatorial band\": Auroras are polar and high-latitude phenomena, not equatorial ones.\n- sourceIndex 3: \"At D-region height\": The D region is too low and is better known for absorption, so it is not the auroral propagation region.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-007-008"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,139 @@
+{
+  "id": "QZ-L-007-02-A",
+  "lessonId": "L-007-02",
+  "officialQuestionIds": [
+    "B-007-004-001",
+    "B-007-004-003",
+    "B-007-004-008",
+    "B-007-005-001",
+    "B-007-005-004",
+    "B-007-005-007",
+    "B-007-006-001",
+    "B-007-006-010"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-007-02-A-C1",
+      "prompt": {
+        "en": "A daytime forecast raises the LUF on a path from 4 MHz to 7 MHz while the MUF remains near 18 MHz. What should happen to a 5.3 MHz plan compared with a 14.2 MHz plan?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Both plans improve equally because a higher LUF makes every HF frequency more usable.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The 5.3 MHz plan moves from inside the old window to below the new lower edge, while 14.2 MHz remains inside.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "The 14.2 MHz plan fails first because D-region absorption is always worse at higher HF.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Both plans must move to 18 MHz because every usable choice equals the upper limit.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "Before the change, 5.3 MHz was above the 4 MHz LUF. After the LUF rises to 7 MHz, it is below the usable window. A 14.2 MHz signal remains between 7 and 18 MHz, so it is still a plausible path choice.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-007-02-A-C2",
+      "prompt": {
+        "en": "A forecast gives an afternoon MUF of 22 MHz for a path. If the operator uses an 85% OWF planning estimate, which target is closest?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "18.7 MHz",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "22.0 MHz",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "11.0 MHz",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "25.9 MHz",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "Multiplying 22 MHz by 0.85 gives 18.7 MHz. OWF is a practical choice below the MUF, not at or above it.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-007-02-A-C3",
+      "prompt": {
+        "en": "A forecast made before an exercise says solar flux is high and the path should support upper-HF bands. Which conclusion goes too far?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Higher HF bands are worth checking before moving lower.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Time of day, season, geomagnetic conditions, and path direction can still change the result.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The listed route is guaranteed all day, so receiver checks and fallback bands are unnecessary.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "If signals are absent, use on-air evidence and revise the plan.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "Solar-flux and MUF forecasts guide the first band to try; they do not guarantee a route. Operators still compare actual signals with the forecast and keep a fallback plan ready.",
+        "fr": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-003-009",
+  "questionId": "B-007-003-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-003-009.\n\nWhy the correct answer is right: Skip occurs when the ionosphere refracts an HF wave enough for it to return to Earth away from the transmitter. The bending through the ionized region creates the skip path.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Selective fading of local signals\": Selective fading is a receiver effect from multipath phase differences, not the cause of ionospheric skip.\n- sourceIndex 2: \"High gain antennas are being used\": Antenna gain may change strength and radiation pattern, but it does not by itself create the ionospheric refraction.\n- sourceIndex 3: \"Local cloud cover\": Ordinary clouds are weather phenomena and do not cause HF waves to skip from the ionosphere.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-003-009"
+    }
+  ],
+  "licenseClass": "original"
+}

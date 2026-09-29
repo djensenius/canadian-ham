@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-003-007",
+  "questionId": "B-007-003-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-003-007.\n\nWhy the correct answer is right: At the Earth's surface between two sky-wave hops, the wave is reflected upward. That surface reflection lets it head back toward the ionosphere for the next hop.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Refraction\": Refraction is the gradual bending that occurs in the ionosphere, not the surface action at the middle point.\n- sourceIndex 2: \"Diffraction\": Diffraction is bending around edges or obstacles and does not describe the ground bounce between hops.\n- sourceIndex 3: \"Scattering\": Scattering would redirect energy in many directions; the named middle-point mechanism is reflection.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-003-007"
+    }
+  ],
+  "licenseClass": "original"
+}

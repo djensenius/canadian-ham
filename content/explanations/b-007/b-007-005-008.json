@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-005-008",
+  "questionId": "B-007-005-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-005-008.\n\nWhy the correct answer is right: The Sun affects radio communication across the spectrum in different ways, from ionizing the upper atmosphere to creating noise and space-weather disturbances.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"the ionosphere\": The ionosphere is a medium changed by solar energy, and it does not affect every radio frequency in the same broad way.\n- sourceIndex 2: \"auroras\": Auroras are occasional high-latitude events, not the universal influence on all communication frequencies.\n- sourceIndex 3: \"meteor showers\": Meteor showers create short-lived paths on certain VHF ranges, so they are far narrower than a spectrum-wide influence.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-005-008"
+    }
+  ],
+  "licenseClass": "original"
+}

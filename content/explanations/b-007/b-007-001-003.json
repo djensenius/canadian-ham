@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-001-003",
+  "questionId": "B-007-001-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-001-003.\n\nWhy the correct answer is right: A sky wave leaves the transmitting area, is refracted in ionized upper-atmosphere regions, and returns to Earth. That ionospheric return is the feature named in the question.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Tropospheric propagation\": Tropospheric paths stay in the weather layer and do not describe a wave returned by the ionosphere.\n- sourceIndex 2: \"Ground-wave propagation\": Ground wave follows and loses energy to the Earth's surface rather than travelling up to an ionospheric region.\n- sourceIndex 3: \"Earth-Moon-Earth propagation\": EME relies on a weak reflection from the Moon, not on ionospheric refraction back to the ground.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-001-003"
+    }
+  ],
+  "licenseClass": "original"
+}

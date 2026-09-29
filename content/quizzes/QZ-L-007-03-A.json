@@ -1,0 +1,139 @@
+{
+  "id": "QZ-L-007-03-A",
+  "lessonId": "L-007-03",
+  "officialQuestionIds": [
+    "B-007-007-001",
+    "B-007-007-003",
+    "B-007-007-005",
+    "B-007-007-007",
+    "B-007-007-009",
+    "B-007-008-001",
+    "B-007-008-003",
+    "B-007-008-009"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-007-03-A-C1",
+      "prompt": {
+        "en": "Which two-metre emergency-coverage plan should be rejected rather than treated as a dependable primary path?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "A tested line-of-sight relay path with assigned operators and a fallback frequency.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "A repeater plan with simplex fallback and a recent coverage check.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "A plan that depends on future sporadic-E, auroral, or meteor openings appearing on schedule.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "A ridge-top temporary station that was checked from both served sites.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "Routine coverage should rest on tested ordinary paths and fallbacks. Unusual openings are useful opportunities, but they are not a schedulable primary service path.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-007-03-A-C2",
+      "prompt": {
+        "en": "A VHF event shifts from brief shower-related pings to a steadier path along a lake inversion. Which operating adjustment best fits the change?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Schedule long overs for the pings, because short reflections leave more time than inversion paths.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Treat the ping period as short contact windows, then use more normal exchange timing while the inversion path stays steady.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Log both as the same kind of ionospheric opening because the band is VHF.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Ignore timing once the first contact is made; both openings should last the same length.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "Meteor-related pings are brief, so timing must be concise. A duct or enhanced lower-atmosphere path can allow more normal exchanges while the weather structure persists, but it still may fade.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-007-03-A-C3",
+      "prompt": {
+        "en": "After an unusual contact, which report best separates observation from diagnosis?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "It was weak, so it was definitely ground wave and no other details matter.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "It was distant, so all future contacts on the band can be scheduled daily.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Log the band, direction, duration, signal character, and weather or sky clues, then mark the mode as suspected if the evidence is incomplete.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "If a signal is smeared, widen the transmitted signal before recording anything else.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "Good notes keep observations separate from certainty. Band, direction, duration, signal quality, and environmental clues help identify a mode later without turning a guess into a guarantee.",
+        "fr": null
+      }
+    }
+  ]
+}

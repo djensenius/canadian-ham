@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-005-003",
+  "questionId": "B-007-005-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-005-003.\n\nWhy the correct answer is right: Solar flux is the Sun's radio-frequency output measured at Earth. Operators use it as a practical gauge of solar activity that can support stronger ionization.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A measure of the tilt of the Earth's ionosphere on the side toward the sun\": Tilt or geometry of the ionosphere is not what the solar-flux measurement reports.\n- sourceIndex 2: \"The number of sunspots on the side of the sun facing the Earth\": That describes a sunspot count, while solar flux is a radio-energy measurement.\n- sourceIndex 3: \"The density of the sun's magnetic field\": Magnetic activity is related to solar behaviour, but flux in this context is measured radio-frequency emission, not magnetic-field density.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-005-003"
+    }
+  ],
+  "licenseClass": "original"
+}

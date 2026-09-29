@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-003-006",
+  "questionId": "B-007-003-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-003-006.\n\nWhy the correct answer is right: If the ionospheric region height stays the same, a steeper launch angle intersects the ground sooner after refraction. The skip distance therefore becomes shorter because of path geometry.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It decreases, due to the decrease in critical frequency\": The direction is right, but the reason is wrong; the question changed radiation angle, not critical frequency.\n- sourceIndex 2: \"It increases, due to the geometry of the signal path\": The geometry runs the other way, with a higher angle returning closer to the transmitter.\n- sourceIndex 3: \"It increases, due to the increase in critical frequency\": This gives the wrong direction and also introduces critical frequency, which is not the variable in the question.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-003-006"
+    }
+  ],
+  "licenseClass": "original"
+}

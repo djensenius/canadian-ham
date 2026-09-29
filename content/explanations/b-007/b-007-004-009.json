@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-004-009",
+  "questionId": "B-007-004-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-004-009.\n\nWhy the correct answer is right: A wide signal occupies more spectrum, so multipath can affect one portion differently from another. That makes selective fading more noticeable as transmitted bandwidth increases.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It is the same for both wide and narrow bandwidths\": Equal effect ignores that a wide signal gives the fading more frequency range to act on unevenly.\n- sourceIndex 2: \"Only the receiver bandwidth determines the selective fading effect\": Receiver filtering matters to what you hear, but the transmitted bandwidth and propagation path also determine how much of the signal can fade selectively.\n- sourceIndex 3: \"It is more pronounced at narrow bandwidths\": Narrow signals are less likely to show different fading across their occupied spectrum, so this reverses the usual effect.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-004-009"
+    }
+  ],
+  "licenseClass": "original"
+}

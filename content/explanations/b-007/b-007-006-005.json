@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-006-005",
+  "questionId": "B-007-006-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-006-005.\n\nWhy the correct answer is right: The 10-metre band is the amateur band around 28 MHz. Hearing 10-metre beacons from the target direction is practical evidence that the MUF may support that band on the desired path.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Listen for 20-metre beacon stations\": A 20-metre signal proves only that a much lower HF band is open, not that 28 MHz is supported.\n- sourceIndex 2: \"Listen for 31-metre broadcast stations\": The 31-metre broadcast band is near 9 MHz, far below the 28 MHz path being tested.\n- sourceIndex 3: \"Listen for WWVH time signals on 15 MHz\": A 15 MHz time signal is useful information, but it does not demonstrate that the MUF has reached the 10-metre band.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-006-005"
+    }
+  ],
+  "licenseClass": "original"
+}

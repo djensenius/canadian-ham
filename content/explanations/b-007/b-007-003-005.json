@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-003-005",
+  "questionId": "B-007-003-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-003-005.\n\nWhy the correct answer is right: A 5000 km HF route is longer than the normal F2 single-hop scale. The practical HF answer is to use more than one ionospheric hop if conditions support the path.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Sporadic \\\"E\\\"\": Sporadic E is a special E-region opening most associated with upper HF and low VHF, not the normal mechanism for this long HF route.\n- sourceIndex 2: \"Back scatter\": Back scatter can produce weak signals in unusual directions or gaps, but it is not the main method for a long overseas HF contact.\n- sourceIndex 3: \"Tropospheric scatter\": Tropospheric scatter is a VHF/UHF beyond-horizon mode and is not the likely propagation choice for a 5000 km HF path.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-003-005"
+    }
+  ],
+  "licenseClass": "original"
+}

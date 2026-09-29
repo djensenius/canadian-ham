@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-002-007",
+  "questionId": "B-007-002-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-002-007.\n\nWhy the correct answer is right: Just before dawn, the ionosphere has gone through the longest part of the night without fresh sunlight. Recombination has had time to reduce ionization to its usual daily minimum.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Just after noon\": Just after noon is close to the period of strongest daily solar ionization, not the minimum.\n- sourceIndex 2: \"Just after dusk\": After dusk the decay has only begun; the lowest point usually comes much later in the night.\n- sourceIndex 3: \"Shortly before midnight\": Before midnight is dark, but it is still earlier in the recombination period than the hours before sunrise.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-002-007"
+    }
+  ],
+  "licenseClass": "original"
+}

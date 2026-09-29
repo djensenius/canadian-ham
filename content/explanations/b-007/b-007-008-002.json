@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-008-002",
+  "questionId": "B-007-008-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-008-002.\n\nWhy the correct answer is right: Near the MUF, only marginal parts of the path may return energy. Scatter can send weak energy over several slightly different paths, so the received HF signal sounds distorted.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Ground wave\": Ground-wave reception is a near-surface mode and is not identified by being close to the ionospheric MUF.\n- sourceIndex 2: \"Line-of-sight\": Line-of-sight reception is a direct path and should not depend on the HF maximum usable frequency.\n- sourceIndex 3: \"Ducting\": Ducting points to a lower-atmosphere guided path, especially at VHF/UHF, rather than weak distorted HF near the MUF.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-008-002"
+    }
+  ],
+  "licenseClass": "original"
+}
