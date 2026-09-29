@@ -209,7 +209,14 @@ importers:
         specifier: ^5.9.0
         version: 5.9.3
 
-  packages/engine-ts: {}
+  packages/engine-ts:
+    devDependencies:
+      '@types/node':
+        specifier: ^24.0.0
+        version: 24.19.0
+      typescript:
+        specifier: ^5.9.0
+        version: 5.9.3
 
 packages:
 

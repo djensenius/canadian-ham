@@ -1,4 +1,5 @@
 import { categoryIdFromQuestionId, subsectionIdFromQuestionId } from "./exam.ts";
+import { compareOrdinal } from "./ordinal.ts";
 
 export interface ScoreInputItem {
   readonly questionId: string;
@@ -78,8 +79,4 @@ export function percentFor(correct: number, total: number): number {
     return 0;
   }
   return (correct / total) * 100;
-}
-
-function compareOrdinal(a: string, b: string): number {
-  return a < b ? -1 : a > b ? 1 : 0;
 }

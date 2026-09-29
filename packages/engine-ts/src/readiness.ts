@@ -1,3 +1,4 @@
+import { compareOrdinal } from "./ordinal.ts";
 import { percentFor, type CategoryBreakdownEntry } from "./scoring.ts";
 import { parseCanonicalUtcTimestamp, requireCanonicalUtcTimestamp } from "./timestamps.ts";
 
@@ -123,8 +124,4 @@ function aggregateWeakCategories(attempts: readonly ReadinessExamAttempt[]): str
 
 function scorePercent(attempt: ReadinessExamAttempt): number {
   return attempt.score.percent ?? percentFor(attempt.score.correct, attempt.score.total);
-}
-
-function compareOrdinal(a: string, b: string): number {
-  return a < b ? -1 : a > b ? 1 : 0;
 }

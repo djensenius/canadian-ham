@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { applyAnswer, computeReadiness, generateExam } from "../src/index.ts";
+import { compareOrdinal } from "../src/ordinal.ts";
 
 const oneSubsection = [{ id: "B-001-001", questionIds: ["B-001-001-001"] }];
 
@@ -33,4 +34,13 @@ test("engine timestamp inputs require canonical millisecond UTC format", () => {
     () => applyAnswer(null, { questionId: "B-006-004-001", bankId: "basic-2025-07-15", isCorrect: true, now: "2026-01-02T00:00:00Z" }),
     /update\.now must use canonical UTC timestamp format YYYY-MM-DDTHH:MM:SS\.sssZ/,
   );
+});
+
+test("ordinal sorting compares UTF-8 bytes instead of UTF-16 code units", () => {
+  const nonBmp = "\u{10000}";
+  const privateUseBmp = "\uE000";
+
+  assert.equal(nonBmp < privateUseBmp, true, "JavaScript's native string comparison uses UTF-16 order for this pair");
+  assert.equal(compareOrdinal(privateUseBmp, nonBmp), -1);
+  assert.deepEqual([nonBmp, privateUseBmp].toSorted(compareOrdinal), [privateUseBmp, nonBmp]);
 });

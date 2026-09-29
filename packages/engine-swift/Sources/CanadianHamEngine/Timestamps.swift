@@ -45,10 +45,13 @@ public enum CanonicalTimestamp {
             + Int64(millisecond)
     }
 
-    public static func string(fromEpochMilliseconds epochMilliseconds: Int64) -> String {
+    public static func string(fromEpochMilliseconds epochMilliseconds: Int64) throws -> String {
         let days = floorDiv(epochMilliseconds, millisecondsPerDay)
         let dayMilliseconds = epochMilliseconds - days * millisecondsPerDay
         let civil = civilFromDays(days)
+        guard (0...9_999).contains(civil.year) else {
+            throw timestampYearOutOfRange(civil.year)
+        }
         let hour = dayMilliseconds / 3_600_000
         let minute = (dayMilliseconds % 3_600_000) / 60_000
         let second = (dayMilliseconds % 60_000) / 1_000
@@ -58,7 +61,7 @@ public enum CanonicalTimestamp {
 
     public static func addSeconds(_ value: String, seconds: Int, fieldName: String = "timestamp") throws -> String {
         let epoch = try epochMilliseconds(value, fieldName: fieldName)
-        return string(fromEpochMilliseconds: epoch + Int64(seconds) * millisecondsPerSecond)
+        return try string(fromEpochMilliseconds: epoch + Int64(seconds) * millisecondsPerSecond)
     }
 }
 
@@ -72,6 +75,10 @@ private let asciiNine: UInt8 = 57
 
 private func timestampError(_ fieldName: String) -> EngineError {
     EngineError("\(fieldName) must use canonical UTC timestamp format YYYY-MM-DDTHH:MM:SS.sssZ")
+}
+
+private func timestampYearOutOfRange(_ year: Int64) -> EngineError {
+    EngineError("timestamp year \(year) is outside supported canonical UTC range 0000...9999")
 }
 
 private func digits(_ bytes: [UInt8], _ range: Range<Int>, fieldName: String) throws -> Int {

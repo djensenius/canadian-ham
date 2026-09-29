@@ -33,6 +33,18 @@ public struct QuestionProgressRecord: Codable, Equatable, Sendable {
     public let leitner: LeitnerState
     public let notes: String?
 
+    private enum CodingKeys: String, CodingKey {
+        case questionId
+        case bankId
+        case attempts
+        case correctAttempts
+        case lastAttemptedAt
+        case lastResult
+        case recentResults
+        case leitner
+        case notes
+    }
+
     public init(
         questionId: String,
         bankId: String,
@@ -53,6 +65,23 @@ public struct QuestionProgressRecord: Codable, Equatable, Sendable {
         self.recentResults = recentResults
         self.leitner = leitner
         self.notes = notes
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(questionId, forKey: .questionId)
+        try container.encode(bankId, forKey: .bankId)
+        try container.encode(attempts, forKey: .attempts)
+        try container.encode(correctAttempts, forKey: .correctAttempts)
+        try container.encode(lastAttemptedAt, forKey: .lastAttemptedAt)
+        try container.encode(lastResult, forKey: .lastResult)
+        try container.encode(recentResults, forKey: .recentResults)
+        try container.encode(leitner, forKey: .leitner)
+        if let notes {
+            try container.encode(notes, forKey: .notes)
+        } else {
+            try container.encodeNil(forKey: .notes)
+        }
     }
 }
 
@@ -85,10 +114,16 @@ public struct LatestExamResultItem: Codable, Equatable, Sendable {
 public func applyAnswer(existing: QuestionProgressRecord?, update: AnswerUpdate) throws -> QuestionProgressRecord {
     try CanonicalTimestamp.require(update.now, fieldName: "update.now")
     let previousBox = existing?.leitner.box ?? 0
+    guard (0...5).contains(previousBox) else {
+        throw EngineError("leitner.box out of range: \(previousBox)")
+    }
     let nextBox = update.isCorrect ? min(previousBox + 1, 5) : 0
     let dueAt: String
     if update.isCorrect {
-        dueAt = try CanonicalTimestamp.addSeconds(update.now, seconds: leitnerIntervalsByBox[nextBox]!, fieldName: "update.now")
+        guard let interval = leitnerIntervalsByBox[nextBox] else {
+            throw EngineError("leitner.box out of range: \(nextBox)")
+        }
+        dueAt = try CanonicalTimestamp.addSeconds(update.now, seconds: interval, fieldName: "update.now")
     } else {
         dueAt = update.now
     }

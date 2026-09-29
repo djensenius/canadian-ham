@@ -36,6 +36,7 @@ Shared exactness rules:
 - Timestamps must use canonical UTC millisecond format `YYYY-MM-DDTHH:MM:SS.sssZ` (for example, `2026-01-02T00:00:00.000Z`). Outputs use that format and runners compare timestamp strings exactly.
 - Percent values are IEEE-754 doubles computed as `(correct / total) * 100` in that order; if `total === 0`, percent is `0`. Fixture comparisons are exact.
 - Output ordering: `incorrectQuestionIds` preserve input item order; `weakSubsectionIds`, `dueQuestionIds`, `categoryBreakdown`, and Leitner sequence `records` are sorted by ordinal ID.
+- Ordinal ID sorting compares raw UTF-8 bytes lexicographically. Implementations must not use locale-aware collation or JavaScript's native UTF-16 string comparison for fixture ordering.
 
 ### Engine fixture files and pinned rules
 
