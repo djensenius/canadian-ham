@@ -1,16 +1,48 @@
-# apps/apple
+# Canadian Ham Apple app
 
-Purpose: future SwiftUI multiplatform Apple app for iPhone, iPad, and Mac.
+SwiftUI multiplatform first slice for iPhone, iPad, and Mac. The app is generated with XcodeGen and the generated `CanadianHam.xcodeproj` is committed so Xcode can open it directly.
 
-Belongs here:
+## Structure
 
-- Apple app project files, SwiftUI views, app resources, entitlements, and app tests once scaffolded.
-- Local-only progress storage integration and offline reference viewer app code.
+- `project.yml` — XcodeGen project specification and the source of truth for targets, resources, settings, and schemes.
+- `CanadianHam.xcodeproj` — generated Xcode project committed for direct opening.
+- `CanadianHam/` — app sources.
+  - `Models/` — decodable question-bank models matching `content/generated/basic-2025-07-15/*.json`.
+  - `Services/` — bundled JSON loading.
+  - `Practice/TempShuffle.swift` — temporary answer shuffler for this slice; replace with `packages/engine-swift` when the shared engine is ready.
+  - `Views/` — SwiftUI category list, practice, and about views.
+  - `Resources/` — privacy manifest and macOS sandbox entitlements.
+- `CanadianHamTests/` — unit tests for bundled content decoding and answer shuffling.
 
-Must not go here:
+The generated Basic 2025 question-bank files are referenced from `project.yml` at `../../content/generated/basic-2025-07-15/` and are copied into app/test bundles by the build; they are not duplicated under `apps/apple/`.
 
-- Networking code, third-party SDKs, analytics, iCloud sync, or push notification support in v1.
-- Verbatim ISED source artifacts; source files belong under [`../../content/sources/ised/`](../../content/sources/ised/).
-- Shared Swift engine package code; use [`../../packages/engine-swift/`](../../packages/engine-swift/).
+## Open and regenerate
 
-Relevant docs: [`../../docs/architecture.md`](../../docs/architecture.md), [`../../docs/privacy.md`](../../docs/privacy.md), [`../../docs/content-licensing.md`](../../docs/content-licensing.md). Use `xbuild`, never `xcodebuild`, for Apple builds and tests.
+Open `apps/apple/CanadianHam.xcodeproj` in Xcode.
+
+Regenerate after editing `project.yml` or changing target membership:
+
+```sh
+cd apps/apple
+/opt/homebrew/bin/xcodegen generate --spec project.yml
+```
+
+Commit both `project.yml` and the regenerated `CanadianHam.xcodeproj`.
+
+## Build and test
+
+Use `xbuild`, never direct `xcodebuild`. `xcode-select` points at CommandLineTools on this machine, so include the `DEVELOPER_DIR` prefix.
+
+```sh
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test CODE_SIGNING_ALLOWED=NO
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=macOS' test CODE_SIGN_IDENTITY=-
+```
+
+Scheme: `CanadianHam`.
+
+## Privacy posture
+
+- Fully offline runtime: no networking code, no analytics, no telemetry, no remote fonts/CDNs, no third-party SDKs, no iCloud/CloudKit.
+- The macOS app sandbox entitlement is enabled and does not include client or server network entitlements.
+- `PrivacyInfo.xcprivacy` declares tracking disabled, no tracking domains, and no collected data types.
+- The app bundles generated content as local resources. Source URLs in the generated manifest are attribution/provenance strings, not runtime requests.
