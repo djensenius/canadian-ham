@@ -156,12 +156,17 @@ async function findMarkdownFiles(root: string, current = root): Promise<string[]
   return files.sort();
 }
 
-async function loadLessons(lessonRoot: string): Promise<Map<string, LessonRecord>> {
+async function loadLessons(lessonRoot: string, issues: string[]): Promise<Map<string, LessonRecord>> {
   const lessons = new Map<string, LessonRecord>();
   for (const filePath of await findMarkdownFiles(lessonRoot)) {
     const markdown = await readFile(filePath, "utf8");
     const lesson = parseLessonFrontMatter(markdown, filePath);
     if (lesson !== null) {
+      const previousLesson = lessons.get(lesson.id);
+      if (previousLesson !== undefined) {
+        issues.push(`${filePath}: duplicate lesson id ${lesson.id}; first seen in ${previousLesson.filePath}`);
+        continue;
+      }
       lessons.set(lesson.id, lesson);
     }
   }
@@ -301,9 +306,9 @@ export async function checkQuizzes(options: QuizCheckOptions = {}): Promise<Quiz
   const lessonRoot = options.lessonRoot ?? DEFAULT_LESSON_ROOT;
   const questionsPath = options.questionsPath ?? DEFAULT_QUESTION_PATH;
   const quizRoot = options.quizRoot ?? DEFAULT_QUIZ_ROOT;
-  const lessons = await loadLessons(lessonRoot);
-  const questions = await loadQuestions(questionsPath);
   const issues: string[] = [];
+  const lessons = await loadLessons(lessonRoot, issues);
+  const questions = await loadQuestions(questionsPath);
   const quizIdsReferencedByLessons = new Map<string, string[]>();
   for (const lesson of lessons.values()) {
     for (const quizId of lesson.quizIds) {
@@ -324,12 +329,14 @@ export async function checkQuizzes(options: QuizCheckOptions = {}): Promise<Quiz
   let officialQuestionCount = 0;
   let conceptCheckCount = 0;
   const seenQuizIds = new Map<string, string>();
+  const seenQuizFileBasenames = new Set<string>();
   const seenConceptCheckIds = new Map<string, string>();
   const seenOfficialQuestionIds = new Map<string, string>();
 
   for (const { filePath, quiz: rawQuiz } of await readQuizFiles(quizRoot)) {
     quizFileCount += 1;
     const basenameId = path.basename(filePath, ".json");
+    seenQuizFileBasenames.add(basenameId);
     const quiz = validateQuizShape(rawQuiz, filePath, issues);
     if (quiz === null) {
       continue;
@@ -354,28 +361,30 @@ export async function checkQuizzes(options: QuizCheckOptions = {}): Promise<Quiz
     const lesson = lessons.get(quiz.lessonId);
     if (lesson === undefined) {
       issues.push(`${filePath}: unknown lessonId ${quiz.lessonId}`);
-    } else {
-      const expectedLessonIds = quizIdsReferencedByLessons.get(quiz.id) ?? [];
-      if (expectedLessonIds.length === 0) {
-        issues.push(`${filePath}: quiz id ${quiz.id} is not referenced by any lesson front matter`);
-      } else if (!expectedLessonIds.includes(quiz.lessonId)) {
-        issues.push(`${filePath}: quiz id ${quiz.id} is referenced by ${[...new Set(expectedLessonIds)].join(", ")}, not ${quiz.lessonId}`);
+    }
+
+    const expectedLessonIds = quizIdsReferencedByLessons.get(quiz.id) ?? [];
+    if (expectedLessonIds.length === 0) {
+      issues.push(`${filePath}: quiz id ${quiz.id} is not referenced by any lesson front matter`);
+    } else if (!expectedLessonIds.includes(quiz.lessonId)) {
+      issues.push(`${filePath}: quiz id ${quiz.id} is referenced by ${[...new Set(expectedLessonIds)].join(", ")}, not ${quiz.lessonId}`);
+    }
+
+    const uniqueOfficialQuestionIds = [...new Set(quiz.officialQuestionIds)];
+    for (const questionId of uniqueOfficialQuestionIds) {
+      const previousQuestionFile = seenOfficialQuestionIds.get(questionId);
+      if (previousQuestionFile !== undefined) {
+        issues.push(`${filePath}: duplicate official question id ${questionId}; first seen in ${previousQuestionFile}`);
+      } else {
+        seenOfficialQuestionIds.set(questionId, filePath);
       }
-      for (const questionId of quiz.officialQuestionIds) {
-        const previousQuestionFile = seenOfficialQuestionIds.get(questionId);
-        if (previousQuestionFile !== undefined) {
-          issues.push(`${filePath}: duplicate official question id ${questionId}; first seen in ${previousQuestionFile}`);
-        } else {
-          seenOfficialQuestionIds.set(questionId, filePath);
-        }
-        const question = questions.get(questionId);
-        if (question === undefined) {
-          issues.push(`${filePath}: unknown official question id ${questionId}`);
-          continue;
-        }
-        if (!lesson.covers.includes(question.subsectionId)) {
-          issues.push(`${filePath}: ${questionId} belongs to ${question.subsectionId}, which is not covered by ${quiz.lessonId}`);
-        }
+      const question = questions.get(questionId);
+      if (question === undefined) {
+        issues.push(`${filePath}: unknown official question id ${questionId}`);
+        continue;
+      }
+      if (lesson !== undefined && !lesson.covers.includes(question.subsectionId)) {
+        issues.push(`${filePath}: ${questionId} belongs to ${question.subsectionId}, which is not covered by ${quiz.lessonId}`);
       }
     }
 
@@ -393,7 +402,7 @@ export async function checkQuizzes(options: QuizCheckOptions = {}): Promise<Quiz
   }
 
   for (const [quizId, lessonIds] of quizIdsReferencedByLessons) {
-    if (!seenQuizIds.has(quizId)) {
+    if (!seenQuizIds.has(quizId) && !seenQuizFileBasenames.has(quizId)) {
       issues.push(`missing quiz file for ${quizId} referenced by ${[...new Set(lessonIds)].join(", ")}`);
     }
   }

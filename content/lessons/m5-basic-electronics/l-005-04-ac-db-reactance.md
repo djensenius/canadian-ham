@@ -36,7 +36,7 @@ By the end of this lesson, you can:
 
 - define frequency, wavelength, phase, sine wave, and harmonic;
 - identify audio and HF frequency ranges as general radio concepts;
-- use 3 dB, 6 dB, 9 dB, 10 dB, and 30 dB power-ratio shortcuts;
+- use common decibel power-ratio shortcuts;
 - combine equal capacitors and inductors in simple series or parallel circuits;
 - explain the construction factors for coils and capacitors; and
 - predict how inductors and capacitors behave as AC frequency changes.
@@ -47,11 +47,11 @@ Frequency is the number of complete cycles per second. The unit is hertz. A 400 
 
 Most humans can hear roughly 20 Hz to 20 000 Hz. That is why this range is called audio frequency. Radio frequencies are much higher. For example, a signal around 14 MHz is in the HF range.
 
-Wavelength is the distance a signal travels during one complete cycle. As frequency increases, wavelength decreases. As wavelength gets shorter, frequency is higher.
+Wavelength is the distance a signal travels during a complete cycle. As frequency increases, wavelength decreases. As wavelength gets shorter, frequency is higher.
 
-Phase describes timing between waveforms. Two AC signals may have the same frequency but not start their cycles at the same instant; that timing difference is phase.
+Phase describes timing between waveforms. A pair of AC signals may have the same frequency but not start their cycles at the same instant; that timing difference is phase.
 
-A sine wave is the smooth waveform associated with ideal AC. A harmonic is a signal at an integer multiple of a fundamental frequency. If a fundamental is 1.5 kHz, then 3 kHz is the second harmonic.
+A sine wave is the smooth waveform associated with ideal AC. A harmonic is a signal at an integer multiple of a fundamental frequency, so harmonic signals sit above the fundamental at regular frequency intervals.
 
 ## Decibels as power ratios
 
@@ -59,38 +59,38 @@ The decibel compares two levels. For Basic-level estimating, use practical power
 
 | dB change | Power ratio |
 |---:|---:|
-| +3 dB | roughly double power |
-| -3 dB | roughly halve power |
-| +6 dB | multiply power by four |
-| -6 dB | divide power by four |
-| +9 dB | multiply power by eight |
-| +10 dB | multiply power by ten |
-| -10 dB | divide power by ten |
-| -30 dB | divide power by one thousand |
+| +3 dB | roughly 2x power |
+| -3 dB | roughly 1/2 power |
+| +6 dB | roughly 4x power |
+| -6 dB | roughly 1/4 power |
+| +9 dB | roughly 8x power |
+| +10 dB | roughly 10x power |
+| -10 dB | roughly 1/10 power |
+| -30 dB | roughly 1/1000 power |
 
 ### Worked example: gain
 
-A 3 W handheld feeds a 7 dB gain amplifier. A 7 dB power increase can be estimated as +10 dB followed by -3 dB.
+A 4 W handheld feeds a 7 dB gain amplifier. A 7 dB power increase is roughly a fivefold power change.
 
-- +10 dB multiplies by 10: 3 W becomes 30 W.
-- -3 dB cuts that approximately in half: 30 W becomes about 15 W.
+- Estimate the ratio as about 5:1.
+- 4 W x 5 gives about 20 W.
 
-The output is about 15 W.
+The output is about 20 W.
 
 ### Worked example: feedline loss
 
-A transmitter is 40 W and the line loss is 3 dB.
+A transmitter is 30 W and the line loss is 5 dB.
 
-- A 3 dB loss roughly halves power.
-- Half of 40 W is 20 W.
+- A 5 dB loss leaves a bit less than a third of the original power.
+- Use about 9 W as a quick estimate.
 
-About 20 W reaches the antenna.
+About 9 W reaches the antenna.
 
 ### Worked example: large power reduction
 
-If a station needs a 20 dB reduction for a close-range test, the power must be cut by a factor of one hundred. A reduction from 25 W to 0.25 W is two ten-decibel steps.
+If a station needs a large reduction for a close-range test, combine standard attenuator steps rather than guessing. For example, an attenuator that leaves one-fifth of the power followed by one that leaves one-quarter gives one-twentieth of the starting power.
 
-For a 30 dB reduction, divide by 1000. A 250 W signal reduced by 30 dB becomes 0.25 W.
+A 24 W signal through that pair of attenuators is reduced to about 1.2 W.
 
 ## Inductors and capacitors in combinations
 
@@ -107,16 +107,16 @@ Notice that capacitors are opposite to resistors for series and parallel totals.
 
 ### Worked examples
 
-- Two equal inductors in series make twice the inductance of one.
-- Two equal inductors in parallel make half the inductance of one.
-- Two equal capacitors in series make half the capacitance of one.
-- Two equal capacitors in parallel make twice the capacitance of one.
+- A matched pair of inductors in series has the sum of both inductances.
+- A matched pair of inductors in parallel has less inductance than either part alone.
+- A matched pair of capacitors in series has less capacitance than either part alone.
+- A matched pair of capacitors in parallel has the sum of both capacitances.
 
-So two 7 mH chokes in series make 14 mH. Two 18 mH inductors in parallel make 9 mH. Two 33 µF capacitors in series make 16.5 µF. Two 47 µF capacitors in parallel make 94 µF.
+So a pair of 7 mH chokes in series make 14 mH. A pair of 18 mH inductors in parallel make 9 mH. A pair of 33 µF capacitors in series make 16.5 µF. A pair of 47 µF capacitors in parallel make 94 µF.
 
 ## What sets inductance and capacitance?
 
-For an air-core coil, inductance depends mainly on coil diameter, coil length, and number of turns. A larger or longer coil, or more turns, changes the magnetic field and therefore the inductance.
+For an air-core coil, inductance depends mainly on the coil's size, its winding count, and its shape. Changing the diameter, length, or turn count changes the magnetic field and therefore the inductance.
 
 For a simple air-spaced capacitor, capacitance depends on plate area and spacing. Larger facing plate area gives more capacitance. More spacing gives less capacitance.
 
@@ -130,13 +130,13 @@ Inductive reactance increases as frequency increases. This is why an RF choke ca
 
 Capacitive reactance decreases as frequency increases. This is why a bypass capacitor can provide an easy path for unwanted RF while having little effect on audio when chosen correctly.
 
-Impedance is the combined effect of resistance and reactance in an AC circuit. It is also the ratio of AC voltage to AC current.
+Impedance is the combined effect of resistance and reactance in an AC circuit. You can find it by comparing AC voltage with AC current.
 
 ## Try it
 
-1. What does 400 Hz mean? Four hundred complete cycles each second.
-2. If power doubles, what is the dB change? About +3 dB.
-3. If transmitter power goes from 4 W to 40 W, the power ratio is 10, so the gain is 10 dB.
+1. What does 400 Hz mean? A waveform completes 400 cycles each second.
+2. If a signal level rises by about 7 dB, what rough power ratio can you use? About five times.
+3. If transmitter power goes from 7 W to 21 W, what happened to the power? It became three times larger.
 4. If frequency increases, what happens to inductive reactance? It increases.
 5. If frequency increases, what happens to capacitive reactance? It decreases.
 
@@ -147,7 +147,7 @@ Every tuned receiver and transmitter uses these ideas. A band change changes fre
 ## Common mistakes
 
 - Thinking dB is an absolute watt value. A decibel is a ratio between two levels.
-- Forgetting that +3 dB is approximately double power, while +10 dB is ten times power.
+- Forgetting that small positive dB changes multiply power, while negative dB changes reduce it.
 - Treating inductors and capacitors as if their reactance stayed constant with frequency.
 - Mixing up capacitor series and parallel rules.
 - Ignoring electrolytic capacitor polarity.
@@ -157,14 +157,14 @@ Every tuned receiver and transmitter uses these ideas. A band change changes fre
 
 Alt text: A split diagram showing a sine wave with one cycle marked and a frequency-reactance comparison for inductors and capacitors.
 
-Description: Draw a smooth sine wave with one full cycle bracketed and labelled "one cycle." Beside it, draw two simple line graphs: inductive reactance rising as frequency rises, and capacitive reactance falling as frequency rises. Use distinct line styles, not colour alone, so the meaning survives grayscale rendering.
+Description: Draw a smooth sine wave with a full cycle bracketed and labelled "cycle." Beside it, draw paired line graphs: inductive reactance rising as frequency rises, and capacitive reactance falling as frequency rises. Use distinct line styles, not colour alone, so the meaning survives grayscale rendering.
 
 ## Summary
 
 - Frequency is cycles per second; wavelength gets shorter as frequency increases.
 - Phase is timing difference between AC waveforms.
 - Harmonics are integer multiples of a fundamental frequency.
-- Decibels compare levels; three decibels is about a doubling or halving in power, and ten decibels is a ten-to-one power ratio.
+- Decibels compare levels; positive values mean a power increase and negative values mean a power reduction.
 - Inductors add in series; capacitors add in parallel.
 - Inductive reactance increases with frequency; capacitive reactance decreases with frequency.
 - Impedance combines resistance and reactance in AC circuits.

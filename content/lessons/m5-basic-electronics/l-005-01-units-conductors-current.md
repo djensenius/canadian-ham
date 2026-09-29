@@ -45,18 +45,18 @@ A prefix tells you how many base units are being counted. In Basic exam electron
 | giga | G | 1 000 000 000 times the base unit | 4 GHz = 4 000 MHz |
 | mega | M | 1 000 000 times the base unit | 7 MHz = 7 000 kHz |
 | kilo | k | 1 000 times the base unit | 2.5 kHz = 2 500 Hz |
-| base unit | none | one whole unit | ampere is the base current unit |
-| milli | m | one thousandth | 0.25 A = 250 mA |
-| micro | µ | one millionth | 4 mH = 4 000 µH |
-| pico | p | one trillionth | 0.47 µF = 470 000 pF |
+| base unit | none | a whole unit | ampere is the base current unit |
+| milli | m | a thousandth | 0.37 A = 370 mA |
+| micro | µ | a millionth | 4 mH = 4 000 µH |
+| pico | p | a trillionth | 0.47 µF = 470 000 pF |
 
 When you change from a large unit to a smaller unit, the number gets larger. When you change from a small unit to a larger unit, the number gets smaller.
 
 ### Worked example: MHz to kHz
 
-A frequency is 14.230 MHz. Mega is one step larger than kilo, and each step here is a factor of 1 000.
+A frequency is 14.230 MHz. Mega is the next larger prefix above kilo, and each step here is a factor of 1 000.
 
-- Mega to kilo is one prefix step, so multiply the MHz value by 1 000.
+- Mega to kilo is a single prefix step, so multiply the MHz value by 1 000.
 - 14.230 MHz = 14.230 x 1 000 kHz.
 - 14.230 x 1 000 = 14 230.
 
@@ -64,9 +64,9 @@ So 14.230 MHz is 14 230 kHz.
 
 ### Worked example: mA to A
 
-A receiver accessory draws 450 mA. Milli means one thousandth of an ampere.
+A receiver accessory draws 450 mA. Milli means a thousandth of an ampere.
 
-- Milli means one thousandth of the base unit.
+- Milli is a thousandth of the base unit.
 - To convert milliamperes to amperes, divide by 1 000.
 - 450 mA / 1 000 = 0.45 A.
 
@@ -76,7 +76,7 @@ So 450 mA is 0.45 amperes.
 
 A small bypass capacitor is marked 470 000 pF. Pico is much smaller than micro.
 
-- A microfarad contains one million picofarads.
+- A microfarad contains a million picofarads.
 - 470 000 pF is 0.47 of that amount, so it is 0.47 µF.
 
 This is a good reminder that capacitor values may look huge in picofarads but ordinary in microfarads.
@@ -91,7 +91,7 @@ A semiconductor is between those two behaviours. Silicon is the everyday semicon
 
 ## Current, resistance, and conductance
 
-Current is the flow of electric charge in a circuit. The symbol for current is I, and the unit is the ampere, abbreviated A.
+Current is charge moving through a complete circuit path. The symbol for current is I, and the unit is the ampere, abbreviated A.
 
 Resistance is opposition to current flow. Its symbol is R, and its unit is the ohm. Low resistance means current can flow easily. High resistance means current has a harder path.
 
@@ -109,10 +109,10 @@ Temperature can change the resistance of a conductor. In many metal conductors, 
 
 Do these in your head before checking the answer.
 
-1. A trail radio beacon produces 750 mW. Since milli means one thousandth, 750 mW is 0.75 W.
+1. A trail radio beacon produces 750 mW. Since milli means a thousandth, 750 mW is 0.75 W.
 2. A resistor is marked 4.7 kilohms. Kilo means 1 000, so 4.7 kilohms is 4 700 ohms.
 3. A frequency is 21 375 kHz. Divide by 1 000 to get megahertz: 21.375 MHz.
-4. A current is 0.18 A. One ampere is 1 000 mA, so 0.18 A is 180 mA.
+4. A current is 0.18 A. An ampere is 1 000 mA, so 0.18 A is 180 mA.
 5. A supply is 13.8 V. Each volt is 1 000 mV, so 13.8 V is 13 800 mV.
 
 ## Radio connection
@@ -142,4 +142,4 @@ Description: Draw a simple ink-brush ladder with labelled steps: G, M, k, base, 
 - Current is moving electric charge, measured in amperes.
 - Resistance opposes current; conductance is its inverse.
 - Conductors such as copper allow current flow; insulators such as glass, air, and porcelain resist it.
-- DC polarity matters because many circuits are designed for one direction of connection.
+- DC polarity matters because many circuits are designed for a specific direction of connection.

@@ -117,7 +117,7 @@ A voltmeter is placed across the part being measured. It should look like a high
 
 An ammeter is placed in series so the circuit current flows through it. It should look like a low resistance so it does not create a large extra voltage drop.
 
-Accuracy describes an instrument's ability to display values that are true to reality.
+Accuracy tells how close a meter reading is to the actual value being measured.
 
 ## Try it
 
@@ -146,7 +146,7 @@ Good operators measure before guessing. A wrong meter connection can blow a mete
 
 Alt text: Three small sketches: a transformer with primary and secondary coils, a parallel LC tuned circuit, and correct meter placements.
 
-Description: Draw an original three-panel ink-brush figure. Panel 1 shows two coils on a core with arrows for changing magnetic flux. Panel 2 shows an inductor and capacitor in parallel labelled "parallel tuned circuit: high impedance at resonance." Panel 3 shows a voltmeter across a load and an ammeter in series with the load. Use labels and line patterns rather than colour alone.
+Description: Draw an original multi-panel ink-brush figure. The left panel shows paired coils on a core with arrows for changing magnetic flux. The centre panel shows an inductor and capacitor in parallel labelled "parallel tuned circuit: high impedance at resonance." The right panel shows a voltmeter across a load and an ammeter in series with the load. Use labels and line patterns rather than colour alone.
 
 ## Summary
 

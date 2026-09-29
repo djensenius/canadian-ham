@@ -189,6 +189,52 @@ test("quiz check accepts non-empty French localized text", async () => {
   });
 });
 
+test("quiz check rejects empty French localized text", async () => {
+  await withFixture("empty-french-text", async (root) => {
+    await writeBaseFixture(root, quiz({
+      conceptChecks: [
+        {
+          id: "QZ-L-TEST-01-A-C1",
+          prompt: { en: "What is checked?", fr: "" },
+          choices: [
+            { text: { en: "Correct", fr: null }, isCorrect: true },
+            { text: { en: "Wrong", fr: null }, isCorrect: false },
+          ],
+          explanation: { en: "One choice is correct.", fr: null },
+        },
+      ],
+    }));
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof QuizCheckError && error.report.issues.some((issue) => issue.includes("prompt must have non-empty en text")),
+    );
+  });
+});
+
+test("quiz check rejects missing French localized text", async () => {
+  await withFixture("missing-french-text", async (root) => {
+    await writeBaseFixture(root, quiz({
+      conceptChecks: [
+        {
+          id: "QZ-L-TEST-01-A-C1",
+          prompt: { en: "What is checked?" },
+          choices: [
+            { text: { en: "Correct", fr: null }, isCorrect: true },
+            { text: { en: "Wrong", fr: null }, isCorrect: false },
+          ],
+          explanation: { en: "One choice is correct.", fr: null },
+        },
+      ],
+    }));
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof QuizCheckError && error.report.issues.some((issue) => issue.includes("prompt must have non-empty en text")),
+    );
+  });
+});
+
 test("quiz check rejects missing quiz files referenced by lesson front matter", async () => {
   await withFixture("missing-quiz-file", async (root) => {
     await writeFile(path.join(root, "content/lessons/module/l-test-01.md"), lessonMarkdown(), "utf8");
@@ -245,13 +291,19 @@ test("quiz check rejects duplicate concept-check IDs", async () => {
   });
 });
 
-test("quiz check rejects duplicate official question IDs", async () => {
+test("quiz check rejects duplicate official question IDs once per quiz", async () => {
   await withFixture("duplicate-official-question", async (root) => {
     await writeBaseFixture(root, quiz({ officialQuestionIds: ["B-005-001-001", "B-005-001-001"] }));
 
     await assert.rejects(
       () => runCheck(root),
-      (error: unknown) => error instanceof QuizCheckError && error.report.issues.some((issue) => issue.includes("duplicate official question id")),
+      (error: unknown) => {
+        if (!(error instanceof QuizCheckError)) {
+          return false;
+        }
+        const duplicateIssues = error.report.issues.filter((issue) => issue.includes("duplicate official question id B-005-001-001"));
+        return duplicateIssues.length === 1;
+      },
     );
   });
 });
@@ -276,6 +328,46 @@ test("quiz check rejects orphan quiz files that no lesson references", async () 
     await assert.rejects(
       () => runCheck(root),
       (error: unknown) => error instanceof QuizCheckError && error.report.issues.some((issue) => issue.includes("not referenced by any lesson front matter")),
+    );
+  });
+});
+
+test("quiz check does not also report missing quiz file when a referenced quiz has shape failures", async () => {
+  await withFixture("shape-failure-not-missing", async (root) => {
+    await writeFile(path.join(root, "content/lessons/module/l-test-01.md"), lessonMarkdown(), "utf8");
+    await writeFile(path.join(root, "content/generated/basic-2025-07-15/questions.json"), questionsJson(), "utf8");
+    await writeFile(path.join(root, "content/quizzes/QZ-L-TEST-01-A.json"), "[]\n", "utf8");
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof QuizCheckError
+        && error.report.issues.some((issue) => issue.includes("quiz file must contain a JSON object"))
+        && !error.report.issues.some((issue) => issue.includes("missing quiz file")),
+    );
+  });
+});
+
+test("quiz check validates unknown official IDs even when lessonId is unknown", async () => {
+  await withFixture("unknown-official-with-unknown-lesson", async (root) => {
+    await writeBaseFixture(root, quiz({ lessonId: "L-MISSING-01", officialQuestionIds: ["B-005-999-001"] }));
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof QuizCheckError
+        && error.report.issues.some((issue) => issue.includes("unknown lessonId"))
+        && error.report.issues.some((issue) => issue.includes("unknown official question id B-005-999-001")),
+    );
+  });
+});
+
+test("quiz check rejects duplicate lesson IDs", async () => {
+  await withFixture("duplicate-lesson-id", async (root) => {
+    await writeBaseFixture(root);
+    await writeFile(path.join(root, "content/lessons/module/l-test-duplicate.md"), lessonMarkdown({ quizIds: [] }), "utf8");
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof QuizCheckError && error.report.issues.some((issue) => issue.includes("duplicate lesson id L-TEST-01")),
     );
   });
 });

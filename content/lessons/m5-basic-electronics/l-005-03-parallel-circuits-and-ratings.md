@@ -45,14 +45,14 @@ Rt = R1 + R2 + R3 ... + Rn
 
 Rt means total resistance. For resistors in series, add the values.
 
-### Worked example: five equal series resistors
+### Worked example: seven equal series resistors
 
-Five 12 ohm resistors are connected in series.
+Seven 13 ohm resistors are connected in series.
 
-- Rt = 12 + 12 + 12 + 12 + 12.
-- Rt = 60 ohms.
+- Rt = 13 + 13 + 13 + 13 + 13 + 13 + 13.
+- Rt = 91 ohms.
 
-The total resistance is greater than any one resistor because each resistor adds more opposition to the same current path.
+The total resistance is greater than any single resistor because each resistor adds more opposition to the same current path.
 
 ### Worked example: building a nearby series value
 
@@ -110,7 +110,7 @@ This shortcut only works because all four values are equal.
 
 ## Current sharing in parallel
 
-Each branch current depends on that branch resistance. Suppose one branch across 12 V draws 60 mA while another branch across the same 12 V draws 20 mA. Ohm’s law gives 200 ohms for the higher-current branch and 600 ohms for the lower-current branch.
+Each branch current depends on that branch resistance. Suppose a branch across 14 V draws 70 mA while another branch across the same supply draws 35 mA. Ohm’s law gives 200 ohms for the higher-current branch and 400 ohms for the lower-current branch.
 
 That is just Ohm’s law again: I = E / R. With the same E, lower R gives higher I.
 
@@ -138,19 +138,19 @@ That is why applying too much voltage to a resistor can overheat it quickly.
 
 ### Worked example: dummy load from parallel resistors
 
-A 50 ohm dummy load can be made from five 250 ohm resistors in parallel:
+A temporary 72 ohm test load can be made from three 216 ohm resistors in parallel:
 
-- Rt = 250 / 5 = 50 ohms.
-- If each resistor is rated at 3 W and power shares evenly, total rating is 5 x 3 W = 15 W.
+- Rt = 216 / 3 = 72 ohms.
+- If each resistor is rated at 4 W and power shares evenly, total rating is 3 x 4 W = 12 W.
 
-That is safely above 10 W, so the combination can dissipate 10 W if built correctly.
+That is safely above an 8 W test level if the parts are built and cooled correctly.
 
 ## Try it
 
 1. Eight equal resistors of value R are in parallel. The total is R / 8.
-2. Three 15 ohm resistors in series across 9 V give Rt = 45 ohms, I = 9 / 45 = 0.2 A, and P = 0.2 x 9 = 1.8 W.
+2. Four 16 ohm resistors in series across 9 V give Rt = 64 ohms, I = 9 / 64 = 0.14 A, and P is about 1.3 W.
 3. A 13.8 V cooling fan rated 18 W draws I = P / E = 18 / 13.8, or about 1.3 A.
-4. Two 150 ohm resistors in parallel give 75 ohms. If each has the same wattage rating as a single 75 ohm resistor, the pair can share heat and increase total wattage.
+4. A pair of 150 ohm resistors in parallel gives 75 ohms. If each has the same wattage rating as a single 75 ohm resistor, the pair can share heat and increase total wattage.
 
 ## Radio connection
 
@@ -168,9 +168,9 @@ Power supply sizing is another station skill. A radio that needs several amperes
 
 ## Illustration brief
 
-Alt text: Two resistor sketches: a single series path and a three-branch parallel path, with current arrows labelled.
+Alt text: Resistor sketches showing a single series path and a multi-branch parallel path, with current arrows labelled.
 
-Description: Draw a battery on the left. The top sketch has three resistors in one line with one current arrow. The bottom sketch has three parallel branches, each with its own arrow, joining back together. Add a small note: "Series resistance adds; parallel branch currents add."
+Description: Draw a battery on the left. The top sketch has several resistors in a single line with a shared current arrow. The bottom sketch has parallel branches, each with its own arrow, joining back together. Add a small note: "Series resistance adds; parallel branch currents add."
 
 ## Summary
 
