@@ -14,36 +14,36 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-06-A-C1",
-      "prompt": { "en": "A station's VOX starts transmitting when a fan turns on across the room. Which adjustment area best matches the symptom?", "fr": null },
+      "prompt": { "en": "A hands-free station does not key from room noise, but the first syllable of each reply is missing before transmit starts. Which control area is the best first check?", "fr": null },
       "choices": [
-        { "text": { "en": "The receiver noise blanker threshold", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The antenna rotator calibration", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The VOX sensitivity and delay settings", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The packet network route list", "fr": null }, "isCorrect": false }
+        { "text": { "en": "VOX sensitivity and timing for earlier voice-operated switching", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Lower VOX sensitivity so only louder speech can key the transmitter", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Lengthening only the VOX release delay after speech stops", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Maximum speech processing to raise average SSB power", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "VOX keys from detected audio, so accidental transmit from room noise calls for VOX sensitivity and timing adjustments.", "fr": null }
+      "explanation": { "en": "Clipped first syllables point to VOX start sensitivity or timing; release delay and speech processing do not make transmit start sooner.", "fr": null }
     },
     {
       "id": "QZ-L-003-06-A-C2",
-      "prompt": { "en": "A digital-mode signal decodes locally but shows extra side traces on a nearby waterfall display. What is the clean-signal fix?", "fr": null },
+      "prompt": { "en": "An emergency packet link must either deliver a shelter supply list correctly or report that it failed. Which feature provides that reliability?", "fr": null },
       "choices": [
-        { "text": { "en": "Raise computer audio until ALC is always active", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Reduce sound-card/interface drive and recheck for splatter", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Switch the receiver to a wider filter", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Add more receive DSP noise reduction", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Automatic repeat requests for damaged or missing frames", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Turning off acknowledgements so messages move faster", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Adding speech compression to the packet audio", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Forwarding every packet to an internet gateway", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Extra traces beside the wanted digital signal are an overdrive clue; backing down transmit audio is the right first correction.", "fr": null }
+      "explanation": { "en": "ARQ-style repeat requests let a packet system correct bad frames or report failure instead of silently losing the message.", "fr": null }
     },
     {
       "id": "QZ-L-003-06-A-C3",
-      "prompt": { "en": "A packet station hears a frame that requests forwarding through its callsign alias. What block-level action describes digipeater operation?", "fr": null },
+      "prompt": { "en": "On a busy digital HF segment, many FT8 traces fit inside the space one SSB voice signal would use. What property makes that possible?", "fr": null },
       "choices": [
-        { "text": { "en": "Convert the packet to analog FM speech", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Reject all frames unless connected to the internet", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Compress the audio for higher average SSB power", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Retransmit the marked digital frame", "fr": null }, "isCorrect": true }
+        { "text": { "en": "Each FT8 signal occupies a very narrow bandwidth", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Every FT8 station transmits on exactly the same audio tone", "fr": null }, "isCorrect": false },
+        { "text": { "en": "FT8 uses the same 2 kHz to 3 kHz audio width as SSB voice", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Receiver DSP removes all overlap between wide digital signals", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "A digipeater is a digital relay: it forwards packets marked for retransmission, rather than changing them into analog voice.", "fr": null }
+      "explanation": { "en": "FT8 contacts can be packed closely because each individual signal is narrow; they are not full-width SSB voice signals.", "fr": null }
     }
   ]
 }

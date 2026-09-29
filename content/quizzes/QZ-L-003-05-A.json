@@ -14,14 +14,14 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-05-A-C1",
-      "prompt": { "en": "A CW signal has a steady pitch but produces sharp ticks on nearby receiver frequencies whenever the key is pressed. What should be investigated first?", "fr": null },
+      "prompt": { "en": "After replacing a crystal oscillator with a VFO in a small CW transmitter, what operating habit best protects signal quality during a net?", "fr": null },
       "choices": [
-        { "text": { "en": "Keying waveform shaping or a key-click filter", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A higher RF power setting", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Changing from a VFO to a crystal only", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A lower speaker volume at the receiving station", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Let the oscillator stabilize and check that the transmit frequency stays put", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Make the keying edges as abrupt as possible for stronger dits", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Rely on the harmonic low-pass filter to stop oscillator drift", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Change Morse speed whenever the VFO tuning range is changed", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Sharp nearby ticks are a keying-edge problem, so shaping or click filtering is the first area to check.", "fr": null }
+      "explanation": { "en": "A VFO adds tuning flexibility, but CW quality still depends on oscillator stability; filters and keying speed do not cure drift.", "fr": null }
     },
     {
       "id": "QZ-L-003-05-A-C2",
@@ -36,14 +36,14 @@
     },
     {
       "id": "QZ-L-003-05-A-C3",
-      "prompt": { "en": "Several repeater users say your FM signal is strong but your voice sounds rough after you moved the microphone closer. What is the best first correction?", "fr": null },
+      "prompt": { "en": "A club plans a voice contact on a band below 28 MHz and considers using wide FM because it sounds good on VHF. What is the reason to choose a narrower voice mode instead?", "fr": null },
       "choices": [
-        { "text": { "en": "Increase transmitter output power", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Change antenna polarization", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Back away from the microphone or reduce transmit audio", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Open the receiver squelch farther", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Wide FM would occupy too much bandwidth for that part of the spectrum", "fr": null }, "isCorrect": true },
+        { "text": { "en": "FM transmitters cannot use stable oscillators below 28 MHz", "fr": null }, "isCorrect": false },
+        { "text": { "en": "FM final amplifiers always waste more heat than SSB amplifiers", "fr": null }, "isCorrect": false },
+        { "text": { "en": "FM sidebands cannot be filtered for harmonics on HF", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "A strong FM signal with rough audio after close talking points to overdeviation or excessive microphone audio, not RF path weakness.", "fr": null }
+      "explanation": { "en": "The limiting issue is occupied bandwidth: wide voice FM needs more spectrum than is permitted below 28 MHz.", "fr": null }
     }
   ]
 }

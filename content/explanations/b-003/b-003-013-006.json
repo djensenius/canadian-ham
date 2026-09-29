@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-013-006.\n\nWhy the correct answer is right: With 5 kHz deviation, Carson-style practical bandwidth estimates put the signal in the 10 kHz to 20 kHz range, not below the deviation itself.\n\nPer-choice notes:\n- sourceIndex 0: \"Between 10 kHz and 20 kHz\": This is the correct choice because with 5 kHz deviation, Carson-style practical bandwidth estimates put the signal in the 10 kHz to 20 kHz range, not below the deviation itself.\n- sourceIndex 1: \"Less than 5 kHz\": This is smaller than the deviation itself, so it cannot represent the occupied bandwidth of a deviating FM signal.\n- sourceIndex 2: \"Between 5 kHz and 10 kHz\": This leaves too little room for both sides of the frequency swing plus modulation sidebands.\n- sourceIndex 3: \"Greater than 20 kHz\": This is wider than the approximate range expected for the stated deviation in the Basic exam context.",
+    "en": "Question B-003-013-006.\n\nWhy the correct answer is right: A 5 kHz deviation voice FM signal occupies more than the deviation alone; the expected amateur answer is roughly between 10 kHz and 20 kHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Less than 5 kHz\": The bandwidth cannot be less than the peak frequency swing because the carrier moves several kilohertz each way and audio sidebands are present.\n- sourceIndex 2: \"Between 5 kHz and 10 kHz\": This is still too narrow for a 5 kHz-deviation voice signal once both sides of the swing and audio are allowed for.\n- sourceIndex 3: \"Greater than 20 kHz\": That is wider than the usual estimate for a properly adjusted 5 kHz-deviation amateur FM signal.",
     "fr": null
   },
   "citations": [
