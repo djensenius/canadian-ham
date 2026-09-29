@@ -68,4 +68,40 @@ final class QuestionBankTests: XCTestCase {
             XCTAssertEqual(drawn.categoryId, category.id)
         }
     }
+
+    func testRealBundleKnownLessonIdsCoverAllBundledLessonQuizzes() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+
+        XCTAssertEqual(bank.knownLessonIds.count, 36)
+        XCTAssertTrue(bank.knownLessonIds.contains("L-005-01"))
+    }
+
+    func testKnownLessonIdsComeFromSubsectionLessonMappingsWithoutQuizzes() {
+        let bank = QuestionBank(
+            questions: [],
+            categories: [],
+            subsections: [
+                BankSubsection(
+                    id: "B-TEST-001",
+                    bankId: "test-bank",
+                    categoryId: "B-TEST",
+                    questionIds: [],
+                    questionCount: 0,
+                    lessonIds: ["L-WITHOUT-QUIZ"],
+                    title: LocalizedText(en: "Synthetic subsection", fr: nil)
+                )
+            ],
+            manifest: BankManifest(
+                bankId: "test-bank",
+                certificate: "Basic",
+                effectiveDate: "2026-01-01",
+                source: BankManifest.Source(path: "synthetic", sha256: "", url: "", encoding: "utf-8", lineEndings: "lf"),
+                importer: BankManifest.Importer(name: "synthetic", version: "test"),
+                counts: BankManifest.Counts(questions: 0, categories: 0, subsections: 1)
+            ),
+            lessonQuizzes: []
+        )
+
+        XCTAssertEqual(bank.knownLessonIds, Set(["L-WITHOUT-QUIZ"]))
+    }
 }

@@ -52,6 +52,10 @@ targets:
         type: file
         buildPhase: resources
         createIntermediateGroups: false
+      - path: ../../content/quizzes
+        type: folder
+        buildPhase: resources
+        createIntermediateGroups: false
     dependencies:
       - package: CanadianHamEngine
         product: CanadianHamEngine
@@ -76,6 +80,9 @@ targets:
       - path: CanadianHamTests
       - path: CanadianHam/Models/QuestionBankModels.swift
       - path: CanadianHam/Services/QuestionBankStore.swift
+      - path: CanadianHam/Services/ProgressStore.swift
+      - path: CanadianHam/Services/AppleStudyEngine.swift
+      - path: CanadianHam/Models/ProgressModels.swift
       - path: CanadianHam/Practice/EngineShuffle.swift
       - path: ../../content/generated/basic-2025-07-15/questions.json
         type: file
@@ -91,6 +98,10 @@ targets:
         createIntermediateGroups: false
       - path: ../../content/generated/basic-2025-07-15/manifest.json
         type: file
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/quizzes
+        type: folder
         buildPhase: resources
         createIntermediateGroups: false
     dependencies:
