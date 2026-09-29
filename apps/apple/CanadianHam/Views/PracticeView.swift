@@ -7,6 +7,7 @@ struct PracticeView: View {
     let showsLanguagePicker: Bool
     @Binding var language: BankLanguage
 
+    @Environment(\.colorScheme) private var colorScheme
     @ScaledMetric(relativeTo: .headline) private var answerLetterMinWidth = 32
 
     @State private var currentQuestion: BankQuestion?
@@ -36,7 +37,6 @@ struct PracticeView: View {
                 if let currentQuestion {
                     questionCard(currentQuestion)
                     answerList
-                    feedback
                 } else {
                     ContentUnavailableView(
                         "No questions found",
@@ -49,11 +49,14 @@ struct PracticeView: View {
             .frame(maxWidth: 860, alignment: .leading)
         }
         .safeAreaInset(edge: .bottom) {
-            controls
-                .padding(.horizontal)
-                .padding(.vertical, 10)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(.regularMaterial)
+            VStack(alignment: .leading, spacing: 10) {
+                feedback
+                controls
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 10)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(.regularMaterial)
         }
         .navigationTitle(category.name.text(for: language))
         .toolbar {
@@ -104,7 +107,8 @@ struct PracticeView: View {
     private var answerList: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Answers")
-                .font(.headline)
+                .font(.title3.bold())
+                .foregroundStyle(.primary)
             ForEach(shuffledAnswers) { shuffledAnswer in
                 answerButton(for: shuffledAnswer)
             }
@@ -127,15 +131,19 @@ struct PracticeView: View {
                     .frame(minWidth: answerLetterMinWidth, minHeight: answerLetterMinWidth, alignment: .center)
                     .padding(6)
                     .background(.black, in: Circle())
+                    .accessibilityIdentifier("answer-\(label)-letter-chip")
                     .accessibilityHidden(true)
 
                 Text(answerText)
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(.black)
                     .lineLimit(nil)
                     .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
+                    .padding(4)
+                    .background(.white, in: RoundedRectangle(cornerRadius: 6, style: .continuous))
                     .layoutPriority(1)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .accessibilityHidden(true)
 
                 if isAnswered {
                     if shuffledAnswer.isCorrect {
@@ -150,6 +158,7 @@ struct PracticeView: View {
                 }
             }
             .foregroundStyle(.primary)
+            .accessibilityElement(children: .ignore)
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(answerBackground(for: shuffledAnswer, isSelected: isSelected), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
@@ -169,26 +178,45 @@ struct PracticeView: View {
         if let selectedAnswer, let correctAnswer {
             VStack(alignment: .leading, spacing: 10) {
                 if selectedAnswer.isCorrect {
-                    Label("Correct", systemImage: "checkmark.circle.fill")
-                        .font(.title3.bold())
-                        .foregroundStyle(.primary)
+                    HStack(spacing: 8) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .accessibilityHidden(true)
+                        Text("Correct")
+                            .accessibilityIdentifier("answer-feedback")
+                    }
+                    .font(.title3.bold())
+                    .foregroundStyle(.primary)
                 } else {
-                    Label("Incorrect", systemImage: "xmark.circle.fill")
-                        .font(.title3.bold())
-                        .foregroundStyle(.primary)
+                    HStack(spacing: 8) {
+                        Image(systemName: "xmark.circle.fill")
+                            .accessibilityHidden(true)
+                        Text("Incorrect")
+                            .accessibilityIdentifier("answer-feedback")
+                    }
+                    .font(.title3.bold())
+                    .foregroundStyle(.primary)
                     Text("Correct answer: \(correctAnswer.answer.text.text(for: language))")
                         .font(.headline)
+                        .foregroundStyle(.black)
                         .fixedSize(horizontal: false, vertical: true)
+                        .padding(4)
+                        .background(.white, in: RoundedRectangle(cornerRadius: 6, style: .continuous))
                         .textSelection(.enabled)
+                        .accessibilityHidden(true)
                 }
             }
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-            .accessibilityElement(children: .combine)
-            .accessibilityLabel(feedbackAccessibilityLabel(selectedAnswer: selectedAnswer, correctAnswer: correctAnswer))
-            .accessibilityIdentifier("answer-feedback")
+            .background(feedbackBackground, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
         }
+    }
+
+    private var feedbackBackground: Color {
+#if os(iOS)
+        Color(uiColor: .secondarySystemBackground)
+#else
+        Color(nsColor: .controlBackgroundColor)
+#endif
     }
 
     private var languageToolbarItem: some ToolbarContent {
@@ -206,12 +234,20 @@ struct PracticeView: View {
 
     private var controls: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Button("Next question") {
+            Button {
                 loadNextQuestion()
+            } label: {
+                Text("Next question")
+                    .font(.headline)
+                    .foregroundStyle(prominentButtonForeground)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .frame(minHeight: 44)
+                    .background(prominentButtonBackground, in: Capsule())
             }
-            .buttonStyle(.borderedProminent)
-            .tint(.primary)
+            .buttonStyle(.plain)
             .disabled(selectedSourceIndex == nil)
+            .opacity(selectedSourceIndex == nil ? 0.5 : 1)
             .accessibilityHint("Loads another random question from this category")
 
             if selectedSourceIndex == nil {
@@ -242,7 +278,12 @@ struct PracticeView: View {
         }
 
         var generator = SystemRandomNumberGenerator()
-        let question = categoryQuestions.randomElement(using: &generator) ?? categoryQuestions[0]
+        let question: BankQuestion
+        if ProcessInfo.processInfo.arguments.contains("-CanadianHamUITestsUseFirstQuestion") {
+            question = categoryQuestions[0]
+        } else {
+            question = categoryQuestions.randomElement(using: &generator) ?? categoryQuestions[0]
+        }
         currentQuestion = question
         shuffledAnswers = TempShuffle.shuffledAnswers(for: question, using: &generator)
         selectedSourceIndex = nil
@@ -254,8 +295,28 @@ struct PracticeView: View {
         return letters[index]
     }
 
+    private var prominentButtonBackground: Color {
+        colorScheme == .dark ? .white : .black
+    }
+
+    private var prominentButtonForeground: Color {
+        colorScheme == .dark ? .black : .white
+    }
+
     private func answerBackground(for shuffledAnswer: ShuffledAnswer, isSelected: Bool) -> Color {
-        Color.clear
+        guard selectedSourceIndex != nil else {
+            return Color.secondary.opacity(0.08)
+        }
+
+        if shuffledAnswer.isCorrect {
+            return Color.green.opacity(0.18)
+        }
+
+        if isSelected {
+            return Color.red.opacity(0.18)
+        }
+
+        return Color.secondary.opacity(0.08)
     }
 
     private func feedbackAnnouncement(for answer: ShuffledAnswer) -> String {
@@ -268,14 +329,6 @@ struct PracticeView: View {
         }
 
         return "Incorrect"
-    }
-
-    private func feedbackAccessibilityLabel(selectedAnswer: ShuffledAnswer, correctAnswer: ShuffledAnswer) -> String {
-        if selectedAnswer.isCorrect {
-            return "Correct"
-        }
-
-        return "Incorrect. Correct answer: \(correctAnswer.answer.text.text(for: language))"
     }
 
     private func answerAccessibilityLabel(

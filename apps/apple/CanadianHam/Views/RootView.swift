@@ -39,25 +39,35 @@ struct RootView: View {
     private func appContent(for bank: QuestionBank) -> some View {
         NavigationSplitView {
             List(selection: $selection) {
-                Text("Practice categories")
-                    .font(.headline)
-                    .foregroundStyle(.primary)
-                    .accessibilityAddTraits(.isHeader)
-                ForEach(bank.categories) { category in
-                    NavigationLink(value: SidebarSelection.category(category.id)) {
-                        CategoryRow(category: category, language: language)
+                Section {
+                    ForEach(bank.categories) { category in
+                        NavigationLink(value: SidebarSelection.category(category.id)) {
+                            CategoryRow(category: category, language: language)
+                        }
+                        .accessibilityLabel(categoryAccessibilityLabel(category))
                     }
-                    .accessibilityLabel(categoryAccessibilityLabel(category))
+                } header: {
+                    Text("Practice categories")
+                        .font(.title3.bold())
+                        .foregroundStyle(.primary)
+                        .textCase(nil)
+                        .accessibilityAddTraits(.isHeader)
                 }
+                .headerProminence(.increased)
 
-                Text("Information")
-                    .font(.headline)
-                    .foregroundStyle(.primary)
-                    .accessibilityAddTraits(.isHeader)
-                NavigationLink(value: SidebarSelection.about) {
-                    Label("About", systemImage: "info.circle")
+                Section {
+                    NavigationLink(value: SidebarSelection.about) {
+                        Label("About", systemImage: "info.circle")
+                    }
+                    .accessibilityLabel("About canadian-ham")
+                } header: {
+                    Text("Information")
+                        .font(.title3.bold())
+                        .foregroundStyle(.primary)
+                        .textCase(nil)
+                        .accessibilityAddTraits(.isHeader)
                 }
-                .accessibilityLabel("About canadian-ham")
+                .headerProminence(.increased)
             }
             .navigationTitle("Canadian Ham")
             .toolbar {
@@ -112,8 +122,8 @@ struct RootView: View {
     private var showsSidebarLanguagePicker: Bool { false }
     private var showsPracticeLanguagePicker: Bool { true }
 #else
-    private var showsSidebarLanguagePicker: Bool { horizontalSizeClass == .regular }
-    private var showsPracticeLanguagePicker: Bool { horizontalSizeClass != .regular }
+    private var showsSidebarLanguagePicker: Bool { horizontalSizeClass == .compact }
+    private var showsPracticeLanguagePicker: Bool { true }
 #endif
 
     private var languageToolbarItem: some ToolbarContent {
