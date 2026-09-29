@@ -19,6 +19,23 @@ Any audit issue fails the test. The default regression does not collect screensh
 
 The fast audit intentionally avoids the prior two-pass scrolled/occlusion workflow. If `performAccessibilityAudit()` reports a real issue in the default test, fix the UI rather than excluding the finding.
 
+## Root cause of the T-516 audit flake
+
+In the scrolled pass, elements sat under the navigation/status bars. `performAccessibilityAudit()` scrolled the `ScrollView` about 188 pt to reveal them, so contrast was sampled on other elements in mid-scroll or shifted positions. The reported frames matched the pre-audit records +188 pt, and the fully visible `answers-title` and answer C/D elements failed. The default audit now runs only at scroll offset 0, in a fixed answered state, where no element is under the bars.
+
+## Test timings
+
+Before timings are from the coordinator run on main at merge `88ff987`. After timings are from coordinator runs 1-3 on `4c004e9`, using the default full iOS suite; all three after runs passed.
+
+| Test | Before | After runs 1 / 2 / 3 |
+| --- | ---: | ---: |
+| Accessibility audit | 254.9 s (flaky) | 57 / 51 / 56 s |
+| French practice | 19.8 s | 25.3 / 24.6 / 24.4 s |
+| Language picker | 30.2 s | 35.8 / 38.2 / 31.8 s |
+| Longest answer | 27.2 s | 33.9 / 31.4 / 30.2 s |
+| Largest text flow | 62.6 s | 80.7 / 79.6 / 62.5 s |
+| Unit tests | < 1 s | < 2 s |
+
 ## Opt-in diagnostic harness
 
 The heavier T-516 evidence harness is kept as an opt-in diagnostic and is skipped by default:
@@ -47,4 +64,4 @@ Occluded element frames or mismatched audit-reported/recorded frames are refused
 
 ## Historical T-516 evidence
 
-The committed `apps/apple/docs/a11y-evidence/` files are historical T-516 diagnostic evidence. T-516b did not refresh them because the diagnostic harness was not run for a new evidence update.
+The committed `apps/apple/docs/a11y-evidence/` files are historical T-516 diagnostic evidence. T-516b did not refresh them because the opt-in diagnostic harness was not re-run after the redirect, so this evidence should be verified before relying on it.
