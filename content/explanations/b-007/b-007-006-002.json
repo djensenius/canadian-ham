@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-006-002.\n\nWhy the correct answer is right: MUF changes as solar radiation changes the amount and height distribution of ionization along a path. Stronger useful ionization can support higher frequencies; weaker ionization lowers the limit.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The temperature of the ionosphere\": Temperature is not the planning quantity that sets whether an HF wave refracts back to Earth.\n- sourceIndex 2: \"The speed of the winds in the upper atmosphere\": Upper-atmosphere winds may move irregularities, but the MUF is governed mainly by electron density from solar radiation.\n- sourceIndex 3: \"The type of weather just below the ionosphere\": Ordinary weather below the ionosphere affects tropospheric paths more than HF sky-wave MUF.",
+    "en": "Question B-007-006-002.\n\nWhy the correct answer is right: MUF changes as solar radiation changes the amount and height distribution of ionization along a path. Stronger useful ionization can support higher frequencies; weaker ionization lowers the limit.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The temperature of the ionosphere\": Temperature alone does not set the electron density needed to refract an HF wave back to Earth; solar-driven ionization does.\n- sourceIndex 2: \"The speed of the winds in the upper atmosphere\": Upper-atmosphere winds may move irregularities, but the MUF is governed mainly by electron density from solar radiation.\n- sourceIndex 3: \"The type of weather just below the ionosphere\": Ordinary weather below the ionosphere affects tropospheric paths more than HF sky-wave MUF.",
     "fr": null
   },
   "citations": [

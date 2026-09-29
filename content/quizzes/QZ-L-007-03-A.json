@@ -15,123 +15,123 @@
     {
       "id": "QZ-L-007-03-A-C1",
       "prompt": {
-        "en": "Which change would NOT make a planned two-metre path beyond the normal range scale more credible?",
+        "en": "Which two-metre emergency-coverage plan should be rejected rather than treated as a dependable primary path?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Putting the antennas higher with a clearer horizon",
+            "en": "A tested line-of-sight relay path with assigned operators and a fallback frequency.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Finding stable lower-atmosphere layering along the route",
+            "en": "A repeater plan with simplex fallback and a recent coverage check.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Budgeting for weak redirected energy rather than a clean local path",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "Treating rare ionospheric openings as guaranteed daily infrastructure",
+            "en": "A plan that depends on future sporadic-E, auroral, or meteor openings appearing on schedule.",
             "fr": null
           },
           "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "A ridge-top temporary station that was checked from both served sites.",
+            "fr": null
+          },
+          "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "Height, lower-atmosphere enhancement, and scatter link budgets can all help explain difficult VHF paths. Rare ionospheric openings are not dependable daily infrastructure for a routine service.",
+        "en": "Routine coverage should rest on tested ordinary paths and fallbacks. Unusual openings are useful opportunities, but they are not a schedulable primary service path.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-007-03-A-C2",
       "prompt": {
-        "en": "A VHF event changes from second-long reflected bursts during a shower to a steadier path along a weather boundary. What operating prediction follows?",
+        "en": "A VHF event shifts from brief shower-related pings to a steadier path along a lake inversion. Which operating adjustment best fits the change?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Use long overs during the burst period, then shorten messages only after the path becomes steady",
+            "en": "Schedule long overs for the pings, because short reflections leave more time than inversion paths.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Keep burst-period messages highly structured, but allow more normal exchanges during the steadier path",
+            "en": "Treat the ping period as short contact windows, then use more normal exchange timing while the inversion path stays steady.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "Switch to lower HF for both events because VHF timing no longer matters",
+            "en": "Log both as the same kind of ionospheric opening because the band is VHF.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Assume both paths will remain open for the same length of time once the first contact is made",
+            "en": "Ignore timing once the first contact is made; both openings should last the same length.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "Brief reflected bursts reward short structured exchanges. A steadier lower-atmosphere path can support more normal contact timing while the enhancement lasts, but it still should not be treated as permanent coverage.",
+        "en": "Meteor-related pings are brief, so timing must be concise. A duct or enhanced lower-atmosphere path can allow more normal exchanges while the weather structure persists, but it still may fade.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-007-03-A-C3",
       "prompt": {
-        "en": "An operator investigating a weak, smeared HF signal near the path MUF writes, 'Use a wider signal and aim a UHF dish at storm clouds, because lower-atmosphere water vapour is the main HF skip-gap mechanism.' What is the main error?",
+        "en": "After an unusual contact, which report best separates observation from diagnosis?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "The note should use a lower antenna because all smeared signals are local ground-wave signals",
+            "en": "It was weak, so it was definitely ground wave and no other details matter.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "The note should blame ordinary line-of-sight blockage instead of any redirected energy",
+            "en": "It was distant, so all future contacts on the band can be scheduled daily.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "The note mixes a VHF/UHF lower-atmosphere mechanism with HF skip-gap multipath, and wider signals may make distortion worse",
+            "en": "Log the band, direction, duration, signal character, and weather or sky clues, then mark the mode as suspected if the evidence is incomplete.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "The note should raise the frequency above the MUF so the signal bends more strongly",
+            "en": "If a signal is smeared, widen the transmitted signal before recording anything else.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "HF skip-gap reception is about small amounts of energy arriving over mixed sky-wave paths near the usable limit. A wider signal can suffer more selective distortion, and UHF weather-related redirection is a different planning problem.",
+        "en": "Good notes keep observations separate from certainty. Band, direction, duration, signal quality, and environmental clues help identify a mode later without turning a guess into a guarantee.",
         "fr": null
       }
     }

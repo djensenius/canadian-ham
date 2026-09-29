@@ -15,82 +15,82 @@
     {
       "id": "QZ-L-007-01-A-C1",
       "prompt": {
-        "en": "Under the same ionospheric height, rank these HF launch angles by first-return distance from shortest to longest: steep, medium, and shallow.",
+        "en": "A training diagram shows direct VHF, ground wave, NVIS, and low-angle sky-wave rays on the same page. What is the safest way to read the diagram?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Steep, then medium, then shallow",
+            "en": "They are alternative path models to choose for the route; one contact does not have to use all of them in sequence.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "Shallow, then medium, then steep",
+            "en": "A signal must leave as ground wave, become NVIS, then finish as low-angle sky wave.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Medium, then shallow, then steep",
+            "en": "Any path drawn above the ground should be logged as ordinary line-of-sight VHF.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "All three return at the same distance if transmitter power is unchanged",
+            "en": "The labels show transmitter power levels rather than propagation paths.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "For a similar refracting height, steeper rays return sooner and shallower rays travel farther before their first return. Power does not set that geometry.",
+        "en": "The sketch compares path models. A real contact uses the path or mix of paths that conditions support; the labels are not a required sequence or a power scale.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-007-01-A-C2",
       "prompt": {
-        "en": "A field note says: 'Nearby surface coverage ends at 60 km, the first returning HF reports begin near 450 km, so increasing power will close the uncovered gap by shortening the return distance.' Which part is the error?",
+        "en": "A club writes, 'Our HF backup worked last month, so this afternoon's route no longer needs a band plan or fallback.' What is the best correction?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "The uncovered gap cannot exist once surface coverage fades",
+            "en": "Repeat the same band without listening, because one success fixes the ionosphere for that route.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "The distant reports must be surface coverage because they are beyond 60 km",
+            "en": "Remove all HF options from the plan, because changing conditions make every sky-wave path unusable.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Power may improve strength, but it does not shorten the first-return geometry",
+            "en": "Use last month's result as a starting clue, but check conditions and keep an alternate band or relay ready.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "Adding power raises the D region enough to return the signal sooner",
+            "en": "Keep only a power increase in reserve, because power is the main control for which path appears.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "The gap is a path-geometry problem between the fading surface wave and the first returning sky wave. More power may make a returned signal stronger, but it does not move the first return point inward.",
+        "en": "A previous contact is useful evidence, not a guarantee. Propagation planning still needs a current check and a fallback such as another band, relay, time, or antenna plan.",
         "fr": null
       }
     },

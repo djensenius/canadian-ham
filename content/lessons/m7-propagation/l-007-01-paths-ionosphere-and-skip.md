@@ -93,7 +93,7 @@ A field station is choosing how to report expected coverage to a served agency. 
 2. An HF net wants regional coverage over rough terrain rather than an overseas contact. What radiation-angle tradeoff should the antenna system favour? Favour higher-angle radiation when conditions suit it, because the goal is closer regional return rather than the farthest first hop.
 3. In a layer diagram, a wave passes the D region and bends back from a much higher region. What practical concern belongs to the lower layer? Daylight absorption in the lower ionosphere can weaken the signal before it reaches the useful refracting region.
 4. A route map shows reliable reports close to the transmitter and again much farther out, but very few in the middle. What planning step should net control take? Plan an alternate band, relay, or antenna angle for the middle area instead of assuming extra power will fill the geometry gap.
-5. A pair of temporary HF antennas use the same band and layer height. The first launches most energy at a steep angle; the other favours flatter takeoff angles. Predict the change in first-return distance. The flatter-angle pattern pushes the first useful return farther away, while the steeper pattern favours closer regional coverage.
+5. A trainee draws an HF sky-wave path as a sharp bounce from a shiny ceiling above Earth. What wording should the caption use instead? Show it as gradual refraction through an ionized region; "skip" describes where the signal returns, not a metal-like reflection.
 
 ## Radio connection
 
