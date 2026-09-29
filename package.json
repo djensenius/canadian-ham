@@ -7,7 +7,7 @@
     "test": "pnpm --filter @canadian-ham/content-tools test && pnpm --filter @canadian-ham/web test",
     "import:check": "pnpm --filter @canadian-ham/content-tools import:basic:check",
     "check:links": "node packages/content-tools/src/check-links.ts",
-    "typecheck": "pnpm --filter @canadian-ham/web typecheck && cd apps/web && pnpm exec tsc --noEmit --allowImportingTsExtensions --resolveJsonModule --module NodeNext --moduleResolution NodeNext --target ES2023 --lib ES2023 --types node ../../packages/content-tools/src/*.ts ../../packages/content-tools/test/*.ts",
+    "typecheck": "pnpm -r typecheck",
     "build:web": "pnpm --filter @canadian-ham/web build"
   }
 }

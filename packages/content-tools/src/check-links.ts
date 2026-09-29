@@ -63,9 +63,9 @@ function extractMarkdownLinks(file: string, text: string): MarkdownLink[] {
   let fence: { marker: "`" | "~"; length: number } | null = null;
 
   for (const { line, lineNumber } of markdownLines(text)) {
-    const fenceMatch = line.match(/^ {0,3}(`{3,}|~{3,})/);
+    const fenceMatch = line.match(/^ {0,3}(`{3,}|~{3,})(.*)$/);
     if (fence !== null) {
-      if (fenceMatch && fenceMatch[1]?.startsWith(fence.marker) && fenceMatch[1].length >= fence.length) {
+      if (fenceMatch && fenceMatch[1]?.startsWith(fence.marker) && fenceMatch[1].length >= fence.length && fenceMatch[2]?.trim() === "") {
         fence = null;
       }
       continue;

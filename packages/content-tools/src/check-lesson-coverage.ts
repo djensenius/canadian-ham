@@ -74,6 +74,10 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+function isStringNullRecord(value: unknown): value is Record<string, string | null> {
+  return isRecord(value) && Object.values(value).every((entry) => typeof entry === "string" || entry === null);
+}
+
 function parseScalar(raw: string, filePath: string, lineNumber: number): string | number | null | string[] {
   const value = raw.trim();
   if (value === "") {
@@ -141,16 +145,17 @@ function parseFrontMatter(markdown: string, filePath: string): FrontMatter {
 
     const objectItem = line.match(/^  ([A-Za-z][A-Za-z0-9]*): (.*)$/);
     if (objectItem) {
-      if (currentKey === null || !isRecord(data[currentKey])) {
+      const currentValue = currentKey === null ? undefined : data[currentKey];
+      if (!isStringNullRecord(currentValue)) {
         throw new Error(`${filePath}:${lineNumber}: object entry is not under an object key`);
       }
-      const objectValue = data[currentKey] as Record<string, string | null>;
+      const objectValue = currentValue;
       const nestedKey = objectItem[1]!;
       if (Object.prototype.hasOwnProperty.call(objectValue, nestedKey)) {
         throw new Error(`${filePath}:${lineNumber}: duplicate nested key ${nestedKey}`);
       }
       const scalar = parseScalar(objectItem[2]!, filePath, lineNumber);
-      if (typeof scalar !== "string" && scalar !== null) {
+      if (typeof scalar === "number" || Array.isArray(scalar)) {
         throw new Error(`${filePath}:${lineNumber}: object values must be strings or null`);
       }
       objectValue[nestedKey] = scalar;
@@ -470,7 +475,21 @@ function parseCliArgs(args: string[]): LessonCoverageOptions {
   return options;
 }
 
-if (process.argv[1] !== undefined && import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href) {
+function isMainModule(): boolean {
+  if ("main" in import.meta) {
+    return import.meta.main === true;
+  }
+  if (process.argv[1] === undefined) {
+    return false;
+  }
+  try {
+    return import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href;
+  } catch {
+    return false;
+  }
+}
+
+if (isMainModule()) {
   try {
     const report = await checkLessonCoverage(parseCliArgs(process.argv.slice(2)));
     console.log(report.summaryLines.join("\n"));
