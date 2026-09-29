@@ -1,5 +1,0 @@
-Screen: category-list-dark
-
-Screen frame: x: 0.0, y: 0.0, width: 402.0, height: 874.0
-
-No accessibility audit issues reported.

@@ -1,0 +1,12 @@
+Screen: category-list
+Appearance: dark
+Pass: top
+Iteration: 2026-09-29T091631-663Z-4C04B90B
+Question ID: n/a
+Window frame: x: 0.0, y: 0.0, width: 402.0, height: 874.0
+Navigation bar frame: x: 0.0, y: 62.00000000000002, width: 402.0, height: 105.99999999999997
+Status bar frame: x: 0.0, y: 0.0, width: 402.0, height: 62.00000000000002
+Rule: every audited element of interest must be fully below navigationBar.maxY/statusBar.maxY within the window or entirely off-screen/under the bars before performAccessibilityAudit().
+Practice categories header: fully-visible-below-bars; identifier=; label=Practice categories; frame=x: 16.0, y: 168.0, width: 370.0, height: 46.33333333333334; navBar.maxY=168.0; statusBar.maxY=62.00000000000002
+First category title: fully-visible-below-bars; identifier=; label=Regulations and Policies; frame=x: 32.0, y: 233.33333333333334, width: 193.0, height: 20.333333333333314; navBar.maxY=168.0; statusBar.maxY=62.00000000000002
+First category count: missing (required: false)

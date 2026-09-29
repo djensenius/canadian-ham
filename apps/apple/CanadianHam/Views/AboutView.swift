@@ -9,7 +9,6 @@ struct AboutView: View {
                 Text("About Canadian Ham")
                     .font(DesignTokens.FontScale.headline.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
-                    .fixedSize(horizontal: false, vertical: true)
 
                 paperSection("Bank") {
                     Text("Active bank: \(bank.manifest.bankId)")
@@ -52,7 +51,6 @@ struct AboutView: View {
             }
             .font(DesignTokens.FontScale.body)
             .foregroundStyle(DesignTokens.Colors.ink)
-            .fixedSize(horizontal: false, vertical: true)
         }
         .padding(DesignTokens.Spacing.lg)
         .frame(maxWidth: .infinity, alignment: .leading)

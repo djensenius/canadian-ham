@@ -1,0 +1,30 @@
+Screen: answered-practice
+
+Appearance: dark
+
+Pass: scrolled
+
+Iteration: 2026-09-29T091012-803Z-A2F8F23E
+
+Question ID: B-001-001-004
+
+Screen frame: x: 0.0, y: 0.0, width: 402.0, height: 874.0
+
+Navigation bar frame: x: 0.0, y: 61.99999999999998, width: 402.0, height: 54.000000000000036
+
+Status bar frame: x: 0.0, y: 0.0, width: 402.0, height: 61.99999999999998
+
+Issue 1:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+auditTypeName: contrast
+element.identifier: question-identifier
+element.label: B-001-001-004
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 40.0, y: 204.6057942708333, width: 136.66666666666666, height: 20.333333333333314
+compactDescription: Contrast failed
+exclusion.kind: measured-allow-list
+exclusion.isExcluded: true
+exclusion.reason: Excluded by measured contrast tuple with ratio 10.00:1.
+exclusion.proof: Temporary bootstrap ratio; regenerated evidence table records the exact text/background cluster measurement.
+
+Occluded-by-bar findings: none

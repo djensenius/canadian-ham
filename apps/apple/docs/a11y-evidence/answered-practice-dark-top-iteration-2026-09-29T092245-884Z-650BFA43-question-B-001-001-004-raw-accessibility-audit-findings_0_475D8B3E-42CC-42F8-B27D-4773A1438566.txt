@@ -1,0 +1,19 @@
+Screen: answered-practice
+
+Appearance: dark
+
+Pass: top
+
+Iteration: 2026-09-29T092245-884Z-650BFA43
+
+Question ID: B-001-001-004
+
+Screen frame: x: 0.0, y: 0.0, width: 402.0, height: 874.0
+
+Navigation bar frame: x: 0.0, y: 62.0, width: 402.0, height: 106.0
+
+Status bar frame: x: 0.0, y: 0.0, width: 402.0, height: 62.0
+
+No accessibility audit issues reported.
+
+Occluded-by-bar findings: none

@@ -2,6 +2,9 @@ import XCTest
 
 @MainActor
 final class CanadianHamPracticeUITests: XCTestCase {
+    private let auditIterationID = CanadianHamPracticeUITests.makeAuditIterationID()
+    private var visibleAuditCoverage: [AuditCoverageKey: [AuditPass: Set<AuditElementKey>]] = [:]
+
     override func setUpWithError() throws {
         continueAfterFailure = false
     }
@@ -55,10 +58,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCUIDevice.shared.appearance = .light
         defer { XCUIDevice.shared.appearance = .light }
 
-        try auditCategoryListAndAnsweredPracticeScreen(named: "light")
+        try auditCategoryListAndAnsweredPracticeScreen(appearance: .light)
 
         XCUIDevice.shared.appearance = .dark
-        try auditCategoryListAndAnsweredPracticeScreen(named: "dark")
+        try auditCategoryListAndAnsweredPracticeScreen(appearance: .dark)
 
         XCUIDevice.shared.appearance = .light
     }
@@ -86,38 +89,108 @@ final class CanadianHamPracticeUITests: XCTestCase {
         waitForElementToDisappear(feedback, timeout: 5, message: "Answer feedback should disappear after advancing at the largest accessibility text size")
     }
 
-    private func auditCategoryListAndAnsweredPracticeScreen(named appearanceName: String) throws {
+    func testLongestAnswerWrapsAtLargestAccessibilityTextSize() throws {
+        XCUIDevice.shared.appearance = .light
+        let longestAnswer = try longestEnglishAnswerInBank()
         let app = configuredApp()
+        app.launchArguments += [
+            "-CanadianHamInitialCategoryID", longestAnswer.categoryId,
+            "-CanadianHamPracticeQuestionID", longestAnswer.questionId,
+            "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"
+        ]
+        app.launch()
+
+        navigateToPracticeIfNeeded(in: app)
+        let answerText = app.staticTexts.matching(NSPredicate(format: "label == %@", longestAnswer.answerText)).firstMatch
+        XCTAssertTrue(
+            answerText.waitForExistence(timeout: 10),
+            "Expected longest bundled answer to render for \(longestAnswer.questionId)"
+        )
+        scrollUntilPartiallyVisible(answerText, in: app, maxSwipes: 20)
+        XCTAssertTrue(
+            isPartiallyVisibleBelowNavigationBar(answerText, in: app),
+            "Longest answer should have a visible, scrollable text frame below the navigation bar at the largest Dynamic Type size. Frame: \(frameDescription(answerText.frame))"
+        )
+        XCTAssertGreaterThan(
+            answerText.frame.height,
+            200,
+            "Longest answer should expose its full multi-line text height at the largest Dynamic Type size rather than clipping to one line"
+        )
+    }
+
+    private func auditCategoryListAndAnsweredPracticeScreen(appearance: AuditAppearance) throws {
+        let app = configuredApp()
+        app.launchArguments += [
+            "-CanadianHamInitialCategoryID", "B-001",
+            "-CanadianHamPracticeQuestionID", auditPracticeQuestionID
+        ]
         app.launch()
         defer { app.terminate() }
 
         navigateToCategoryListIfNeeded(in: app)
-        let firstCategory = app.staticTexts["Regulations and Policies"].firstMatch
-        XCTAssertTrue(firstCategory.waitForExistence(timeout: 5), "Category list should exist before the accessibility audit")
-        scrollElementToVisibleMiddle(firstCategory, in: app)
-        XCTAssertTrue(
-            isFullyVisible(firstCategory, in: app, requiresHittable: true),
-            "First category should be fully visible below the navigation bar before auditing"
+        try auditScreenInTwoPasses(
+            app: app,
+            screen: .categoryList,
+            appearance: appearance,
+            questionID: nil,
+            prepare: { pass in
+                prepareCategoryList(pass: pass, in: app)
+            },
+            interests: { pass in
+                categoryListAuditInterests(pass: pass, in: app)
+            }
         )
-        captureScreenEvidence(named: "category-list-\(appearanceName)-accessibility-audit")
-        try captureAccessibilityAudit(on: app, screenName: "category-list-\(appearanceName)")
 
         navigateToPracticeIfNeeded(in: app)
+        let questionID = currentQuestionID(in: app) ?? auditPracticeQuestionID
         answerFirstVisibleQuestion(in: app)
         _ = waitForAnswerFeedback(in: app)
-        let auditedAnswer = app.descendants(matching: .any)["answer-C-button"].firstMatch
-        scrollElementToVisibleMiddle(auditedAnswer, in: app)
-        XCTAssertTrue(
-            isFullyVisible(auditedAnswer, in: app, requiresHittable: true),
-            "The audited answer row should be fully visible below the navigation bar before auditing"
+        try auditScreenInTwoPasses(
+            app: app,
+            screen: .answeredPractice,
+            appearance: appearance,
+            questionID: questionID,
+            prepare: { pass in
+                prepareAnsweredPractice(pass: pass, in: app)
+            },
+            interests: { pass in
+                answeredPracticeAuditInterests(pass: pass, in: app)
+            }
         )
-        captureScreenEvidence(named: "answered-practice-\(appearanceName)-accessibility-audit")
-        try captureAccessibilityAudit(on: app, screenName: "answered-practice-\(appearanceName)")
+    }
+
+    private func auditScreenInTwoPasses(
+        app: XCUIApplication,
+        screen: AuditScreen,
+        appearance: AuditAppearance,
+        questionID: String?,
+        prepare: (AuditPass) -> Void,
+        interests: (AuditPass) -> [AuditInterest]
+    ) throws {
+        let passes: [AuditPass] = [.top, .scrolled]
+
+        for pass in passes {
+            prepare(pass)
+            let context = AuditContext(screen: screen, appearance: appearance, pass: pass, questionID: questionID, iterationID: auditIterationID)
+            let records = verifyAuditElementPositions(interests(pass), context: context, in: app)
+            recordVisibleAuditCoverage(records, context: context)
+        }
+
+        for pass in passes {
+            prepare(pass)
+            let context = AuditContext(screen: screen, appearance: appearance, pass: pass, questionID: questionID, iterationID: auditIterationID)
+            let records = verifyAuditElementPositions(interests(pass), context: context, in: app)
+            recordVisibleAuditCoverage(records, context: context)
+            captureScreenEvidence(named: "\(context.evidenceStem)-accessibility-audit")
+            try captureAccessibilityAudit(on: app, context: context)
+        }
     }
 
     private func configuredApp() -> XCUIApplication {
         XCUIApplication()
     }
+
+    private var auditPracticeQuestionID: String { "B-001-001-004" }
 
     private func navigateToPracticeIfNeeded(in app: XCUIApplication) {
         if app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10) {
@@ -151,6 +224,88 @@ final class CanadianHamPracticeUITests: XCTestCase {
         )
     }
 
+    private func prepareCategoryList(pass: AuditPass, in app: XCUIApplication) {
+        switch pass {
+        case .top:
+            scrollToTop(in: app)
+            XCTAssertTrue(app.staticTexts["Practice categories"].firstMatch.waitForExistence(timeout: 5))
+        case .scrolled:
+            let lastCategory = app.staticTexts["Interference and Suppression"].firstMatch
+            scrollElementToVisibleMiddle(lastCategory, in: app, maxSwipes: 14)
+            XCTAssertTrue(isFullyVisible(lastCategory, in: app, requiresHittable: false), "Last category should be visible for the scrolled category-list pass")
+        }
+    }
+
+    private func prepareAnsweredPractice(pass: AuditPass, in app: XCUIApplication) {
+        switch pass {
+        case .top:
+            scrollToTop(in: app)
+            let title = app.descendants(matching: .any)["practice-category-title"].firstMatch
+            XCTAssertTrue(title.waitForExistence(timeout: 5), "Practice title should exist before the top audit pass")
+            XCTAssertTrue(isFullyVisible(title, in: app, requiresHittable: false), "Practice title should start below the navigation bar at scroll position 0")
+        case .scrolled:
+            let nextQuestionButton = app.buttons["Next question"].firstMatch
+            XCTAssertTrue(nextQuestionButton.waitForExistence(timeout: 5), "Next question button should exist before the scrolled audit pass")
+            scrollUntilHittable(nextQuestionButton, in: app, maxSwipes: 8)
+            app.scrollViews.firstMatch.swipeUp()
+            waitBriefly()
+            app.scrollViews.firstMatch.swipeUp()
+            waitBriefly()
+            XCTAssertTrue(isFullyVisible(nextQuestionButton, in: app, requiresHittable: true), "Next question button should be visible for the scrolled audit pass")
+        }
+    }
+
+    private func categoryListAuditInterests(pass: AuditPass, in app: XCUIApplication) -> [AuditInterest] {
+        switch pass {
+        case .top:
+            return [
+                AuditInterest(name: "Practice categories header", element: app.staticTexts["Practice categories"].firstMatch),
+                AuditInterest(name: "First category title", element: app.staticTexts["Regulations and Policies"].firstMatch),
+                AuditInterest(name: "First category count", element: app.staticTexts["199 questions • 26 subsections"].firstMatch, required: false)
+            ]
+        case .scrolled:
+            return [
+                AuditInterest(name: "Last category title", element: app.staticTexts["Interference and Suppression"].firstMatch),
+                AuditInterest(name: "Last category count", element: app.staticTexts["62 questions • 10 subsections"].firstMatch, required: false)
+            ]
+        }
+    }
+
+    private func answeredPracticeAuditInterests(pass: AuditPass, in app: XCUIApplication) -> [AuditInterest] {
+        let any = app.descendants(matching: .any)
+        switch pass {
+        case .top:
+            return [
+                AuditInterest(name: "Practice category title", element: any["practice-category-title"].firstMatch),
+                AuditInterest(name: "Practice category summary", element: any["practice-category-summary"].firstMatch),
+                AuditInterest(name: "Practice session tally", element: any["practice-session-tally"].firstMatch),
+                AuditInterest(name: "Question identifier", element: any["question-identifier"].firstMatch),
+                AuditInterest(name: "Question stem", element: any["question-stem"].firstMatch),
+                AuditInterest(name: "Answers heading", element: any["answers-title"].firstMatch),
+                AuditInterest(name: "Answer A", element: any["answer-A-button"].firstMatch),
+                AuditInterest(name: "Answer A text", element: any["answer-A-text"].firstMatch),
+                AuditInterest(name: "Answer A chip", element: any["answer-A-chip"].firstMatch),
+                AuditInterest(name: "Answer B", element: any["answer-B-button"].firstMatch),
+                AuditInterest(name: "Answer B text", element: any["answer-B-text"].firstMatch),
+                AuditInterest(name: "Answer B chip", element: any["answer-B-chip"].firstMatch)
+            ]
+        case .scrolled:
+            return [
+                AuditInterest(name: "Answer C", element: any["answer-C-button"].firstMatch),
+                AuditInterest(name: "Answer C text", element: any["answer-C-text"].firstMatch),
+                AuditInterest(name: "Answer C chip", element: any["answer-C-chip"].firstMatch),
+                AuditInterest(name: "Answer D", element: any["answer-D-button"].firstMatch),
+                AuditInterest(name: "Answer D text", element: any["answer-D-text"].firstMatch),
+                AuditInterest(name: "Answer D chip", element: any["answer-D-chip"].firstMatch),
+                AuditInterest(name: "Answer feedback", element: any["answer-feedback"].firstMatch),
+                AuditInterest(name: "Answer feedback title", element: any["answer-feedback-title"].firstMatch),
+                AuditInterest(name: "Answer feedback correct answer", element: any["answer-feedback-correct-answer"].firstMatch, required: false),
+                AuditInterest(name: "Answer feedback source", element: any["answer-feedback-source"].firstMatch),
+                AuditInterest(name: "Next question", element: app.buttons["Next question"].firstMatch)
+            ]
+        }
+    }
+
     private func answerFirstVisibleQuestion(in app: XCUIApplication) {
         let firstAnswerButton = app.descendants(matching: .any)["answer-A-button"].firstMatch
         XCTAssertTrue(firstAnswerButton.waitForExistence(timeout: 10), "An answer button should be reachable")
@@ -176,11 +331,36 @@ final class CanadianHamPracticeUITests: XCTestCase {
         return feedback
     }
 
+    private func currentQuestionID(in app: XCUIApplication) -> String? {
+        let questionIdentifier = app.descendants(matching: .any)["question-identifier"].firstMatch
+        guard questionIdentifier.waitForExistence(timeout: 2) else { return nil }
+        return questionIdentifier.label.isEmpty ? nil : questionIdentifier.label
+    }
+
     private func scrollUntilHittable(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
         for _ in 0..<maxSwipes where !isFullyVisible(element, in: app, requiresHittable: true) {
             app.scrollViews.firstMatch.swipeUp()
             waitBriefly()
         }
+    }
+
+    private func scrollUntilPartiallyVisible(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
+        let scrollView = app.scrollViews.firstMatch
+        guard scrollView.waitForExistence(timeout: 1) else { return }
+        for _ in 0..<maxSwipes where !isPartiallyVisibleBelowNavigationBar(element, in: app) {
+            let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+            if element.frame.maxY <= visibleFrame.minY {
+                scrollView.swipeDown()
+            } else {
+                scrollView.swipeUp()
+            }
+            waitBriefly()
+        }
+    }
+
+    private func isPartiallyVisibleBelowNavigationBar(_ element: XCUIElement, in app: XCUIApplication) -> Bool {
+        guard element.exists else { return false }
+        return element.frame.intersects(visibleFrameExcludingNavigationBar(in: app))
     }
 
     private func scrollElementToVisibleMiddle(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 16) {
@@ -193,7 +373,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         for _ in 0..<maxSwipes {
             let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
             let elementFrame = element.frame
-            let isFullyInsideVisibleFrame = elementFrame.minY > visibleFrame.minY && elementFrame.maxY < visibleFrame.maxY
+            let isFullyInsideVisibleFrame = elementFrame.minY >= visibleFrame.minY && elementFrame.maxY <= visibleFrame.maxY
             let isNearMiddle = abs(elementFrame.midY - visibleFrame.midY) <= 180
 
             if isFullyInsideVisibleFrame && isNearMiddle {
@@ -209,31 +389,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
         }
     }
 
-    private func waitForHittableAndStable(_ element: XCUIElement, in app: XCUIApplication, timeout: TimeInterval) -> Bool {
-        let deadline = Date().addingTimeInterval(timeout)
-        var previousFrame = CGRect.null
-        var stableSamples = 0
-
-        while Date() < deadline {
-            if isFullyVisible(element, in: app, requiresHittable: true) {
-                let frame = element.frame
-                if frame.equalTo(previousFrame) {
-                    stableSamples += 1
-                    if stableSamples >= 2 {
-                        return true
-                    }
-                } else {
-                    stableSamples = 0
-                    previousFrame = frame
-                }
-            } else {
-                stableSamples = 0
-                previousFrame = .null
-            }
+    private func scrollToTop(in app: XCUIApplication) {
+        let scrollTarget = app.scrollViews.firstMatch.exists ? app.scrollViews.firstMatch : app
+        for _ in 0..<8 {
+            scrollTarget.swipeDown()
             waitBriefly()
         }
-
-        return false
     }
 
     private func isFullyVisible(_ element: XCUIElement, in app: XCUIApplication, requiresHittable: Bool) -> Bool {
@@ -244,9 +405,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     private func visibleFrameExcludingNavigationBar(in app: XCUIApplication) -> CGRect {
         let windowFrame = app.windows.firstMatch.frame
-        let navBar = app.navigationBars.firstMatch
-        let navBarMaxY = navBar.exists ? navBar.frame.maxY : windowFrame.minY
-        let topInset = navBarMaxY + 16
+        let bars = barFrames(in: app)
+        let topInset = bars.protectedMaxY + 1
         let bottomInset = windowFrame.maxY - 16
         return CGRect(
             x: windowFrame.minX + 16,
@@ -283,17 +443,30 @@ final class CanadianHamPracticeUITests: XCTestCase {
     private func captureScreenEvidence(named name: String) -> XCUIScreenshot {
         let screenshot = XCUIScreen.main.screenshot()
         let attachment = XCTAttachment(screenshot: screenshot)
-        attachment.name = name
+        attachment.name = sanitizedEvidenceName(name)
         attachment.lifetime = .keepAlways
         add(attachment)
-        exportEvidence(screenshot.pngRepresentation, filename: "\(name).png")
+        exportEvidence(screenshot.pngRepresentation, filename: "\(sanitizedEvidenceName(name)).png")
         return screenshot
     }
 
-    private func attachAuditFindings(_ findings: [String], screenName: String, error: Error?, screenFrame: CGRect) {
+    private func attachAuditFindings(
+        _ findings: [String],
+        occludedFindings: [String],
+        context: AuditContext,
+        error: Error?,
+        app: XCUIApplication
+    ) {
+        let bars = barFrames(in: app)
         var lines = [
-            "Screen: \(screenName)",
-            "Screen frame: \(frameDescription(screenFrame))"
+            "Screen: \(context.screen.rawValue)",
+            "Appearance: \(context.appearance.rawValue)",
+            "Pass: \(context.pass.rawValue)",
+            "Iteration: \(context.iterationID)",
+            "Question ID: \(context.questionID ?? "n/a")",
+            "Screen frame: \(frameDescription(app.windows.firstMatch.frame))",
+            "Navigation bar frame: \(frameDescription(bars.navigationBarFrame))",
+            "Status bar frame: \(frameDescription(bars.statusBarFrame))"
         ]
         if let error {
             lines.append("Audit error: \(error)")
@@ -305,94 +478,105 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 "Issue \(index + 1):\n\(finding)"
             })
         }
+        if occludedFindings.isEmpty {
+            lines.append("Occluded-by-bar findings: none")
+        } else {
+            lines.append("Occluded-by-bar findings:\n\(occludedFindings.joined(separator: "\n\n"))")
+        }
 
         let rawFindings = lines.joined(separator: "\n\n")
         let attachment = XCTAttachment(string: rawFindings)
-        attachment.name = "\(screenName)-raw-accessibility-audit-findings"
+        attachment.name = "\(context.evidenceStem)-raw-accessibility-audit-findings"
         attachment.lifetime = .keepAlways
         add(attachment)
-        exportEvidence(Data(rawFindings.utf8), filename: "\(screenName)-raw-accessibility-audit-findings.txt")
+        exportEvidence(Data(rawFindings.utf8), filename: "\(context.evidenceStem)-raw-accessibility-audit-findings.txt")
     }
 
-    private func captureAccessibilityAudit(on app: XCUIApplication, screenName: String) throws {
+    private func attachPositionLog(_ log: String, context: AuditContext) {
+        let attachment = XCTAttachment(string: log)
+        attachment.name = "\(context.evidenceStem)-audit-position-log"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        exportEvidence(Data(log.utf8), filename: "\(context.evidenceStem)-audit-position-log.txt")
+    }
+
+    private func captureAccessibilityAudit(on app: XCUIApplication, context: AuditContext) throws {
         if #available(iOS 17.0, *) {
             var findings: [String] = []
-            var capturedIssueScreenshot = false
+            var occludedFindings: [String] = []
             var auditError: Error?
             defer {
-                attachAuditFindings(findings, screenName: screenName, error: auditError, screenFrame: app.windows.firstMatch.frame)
+                attachAuditFindings(findings, occludedFindings: occludedFindings, context: context, error: auditError, app: app)
             }
             do {
                 try app.performAccessibilityAudit { issue in
-                    let description = self.describe(issue)
+                    let exclusion = self.exclusionDecision(for: issue, context: context, app: app)
+                    let description = self.describe(issue, exclusion: exclusion)
                     findings.append(description)
-                    if !capturedIssueScreenshot {
-                        self.captureScreenEvidence(named: "\(screenName)-accessibility-audit")
-                        capturedIssueScreenshot = true
+                    if exclusion.kind == .occludedByBar {
+                        occludedFindings.append(description)
                     }
-                    return self.shouldExclude(issue, screenName: screenName)
+                    return exclusion.isExcluded
                 }
             } catch {
                 auditError = error
                 throw error
             }
         } else {
-            let rawFindings = "Screen: \(screenName)\nScreen frame: \(frameDescription(app.windows.firstMatch.frame))\nperformAccessibilityAudit is unavailable before iOS 17."
+            let rawFindings = "Screen: \(context.screen.rawValue)\nAppearance: \(context.appearance.rawValue)\nPass: \(context.pass.rawValue)\nIteration: \(context.iterationID)\nScreen frame: \(frameDescription(app.windows.firstMatch.frame))\nperformAccessibilityAudit is unavailable before iOS 17."
             let attachment = XCTAttachment(string: rawFindings)
-            attachment.name = "\(screenName)-raw-accessibility-audit-findings"
+            attachment.name = "\(context.evidenceStem)-raw-accessibility-audit-findings"
             attachment.lifetime = .keepAlways
             add(attachment)
-            exportEvidence(Data(rawFindings.utf8), filename: "\(screenName)-raw-accessibility-audit-findings.txt")
+            exportEvidence(Data(rawFindings.utf8), filename: "\(context.evidenceStem)-raw-accessibility-audit-findings.txt")
         }
     }
 
     @available(iOS 17.0, *)
-    private func shouldExclude(_ issue: XCUIAccessibilityAuditIssue, screenName: String) -> Bool {
-        let auditType = String(describing: issue.auditType)
+    private func exclusionDecision(for issue: XCUIAccessibilityAuditIssue, context: AuditContext, app: XCUIApplication) -> AuditExclusionDecision {
         let identifier = issue.element?.identifier ?? ""
-
-        if auditType == "XCUIAccessibilityAuditType(rawValue: 1)" {
-            return contrastFalsePositiveIdentifiers.contains(identifier)
+        if let element = issue.element {
+            let occlusion = occlusionProof(for: element.frame, in: app)
+            if occlusion.isOccluded {
+                let coveredInOtherPass = isCoveredFullyVisibleInOtherPass(element: element, context: context)
+                return AuditExclusionDecision(
+                    isExcluded: coveredInOtherPass,
+                    kind: .occludedByBar,
+                    reason: coveredInOtherPass ? "Excluded because the same element is fully visible in the other \(context.screen.rawValue) pass." : "Not excluded because no other pass audited the same element while fully visible.",
+                    proof: occlusion.description
+                )
+            }
         }
 
-        if auditType == "XCUIAccessibilityAuditType(rawValue: 131072)" {
-            return textClippingFalsePositiveIdentifiers.contains(identifier)
+        if let allowed = allowedAuditFindings.first(where: { allowed in
+            allowed.screen == context.screen
+                && allowed.appearance == context.appearance
+                && allowed.identifier == identifier
+                && allowed.auditType == issue.auditType
+        }) {
+            return AuditExclusionDecision(
+                isExcluded: true,
+                kind: .measuredAllowList,
+                reason: "Excluded by measured \(allowed.auditTypeName) tuple with ratio \(String(format: "%.2f", allowed.measuredRatio)):1.",
+                proof: allowed.evidence
+            )
         }
 
-        return false
+        return AuditExclusionDecision(isExcluded: false, kind: .none, reason: "No occlusion coverage or measured allow-list tuple.", proof: "")
     }
 
-    private var contrastFalsePositiveIdentifiers: Set<String> {
-        var identifiers: Set<String> = [
-            "practice-category-title",
-            "practice-category-summary",
-            "practice-session-tally",
-            "question-identifier",
-            "question-stem",
-            "answers-title",
-            "answer-feedback-title",
-            "answer-feedback-correct-answer",
-            "answer-feedback-source"
+    @available(iOS 17.0, *)
+    private var allowedAuditFindings: [AllowedAuditFinding] {
+        [
+            AllowedAuditFinding(
+                screen: .answeredPractice,
+                appearance: .dark,
+                identifier: "question-identifier",
+                auditType: .contrast,
+                measuredRatio: 10.82,
+                evidence: "Measured in the exported three-iteration audit evidence from text/background clusters #FCD8CC / #3C241E inside the element frame; frame does not intersect the navigation or status bars."
+            )
         ]
-        for label in ["A", "B", "C", "D"] {
-            identifiers.insert("answer-\(label)-chip")
-            identifiers.insert("answer-\(label)-text")
-            identifiers.insert("answer-\(label)-status")
-        }
-        return identifiers
-    }
-
-    private var textClippingFalsePositiveIdentifiers: Set<String> {
-        var identifiers: Set<String> = [
-            "question-stem",
-            "answer-feedback-title",
-            "answer-feedback-correct-answer",
-            "answer-feedback-source"
-        ]
-        for label in ["A", "B", "C", "D"] {
-            identifiers.insert("answer-\(label)-text")
-        }
-        return identifiers
     }
 
     private func exportEvidence(
@@ -404,21 +588,25 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let directory = evidenceDirectoryURL()
         do {
             try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-            try data.write(to: directory.appendingPathComponent(filename), options: .atomic)
+            try data.write(to: directory.appendingPathComponent(sanitizedEvidenceName(filename)), options: .atomic)
         } catch {
             XCTFail("Failed to export accessibility evidence \(filename): \(error)", file: file, line: line)
         }
     }
 
     private func evidenceDirectoryURL() -> URL {
-        URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .appendingPathComponent("docs/a11y-evidence", isDirectory: true)
+        URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+            .appendingPathComponent("CanadianHamA11yEvidence", isDirectory: true)
+            .appendingPathComponent(auditIterationID, isDirectory: true)
+    }
+
+    private func sanitizedEvidenceName(_ name: String) -> String {
+        let allowedCharacters = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-_."))
+        return String(name.unicodeScalars.map { allowedCharacters.contains($0) ? Character($0) : "-" })
     }
 
     @available(iOS 17.0, *)
-    private func describe(_ issue: XCUIAccessibilityAuditIssue) -> String {
+    private func describe(_ issue: XCUIAccessibilityAuditIssue, exclusion: AuditExclusionDecision) -> String {
         let element = issue.element
         let identifier = element?.identifier ?? ""
         let label = element?.label ?? ""
@@ -426,21 +614,148 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let frame = element.map { frameDescription($0.frame) } ?? "nil"
         return """
         auditType: \(issue.auditType)
+        auditTypeName: \(auditTypeName(issue.auditType))
         element.identifier: \(identifier)
         element.label: \(label)
         element.elementType: \(elementType)
         element.frame: \(frame)
         compactDescription: \(issue.compactDescription)
+        exclusion.kind: \(exclusion.kind.rawValue)
+        exclusion.isExcluded: \(exclusion.isExcluded)
+        exclusion.reason: \(exclusion.reason)
+        exclusion.proof: \(exclusion.proof)
         """
     }
 
-    private func bundledFrenchQuestionTexts(forCategoryID categoryID: String) throws -> Set<String> {
-        let url = try XCTUnwrap(
-            Bundle(for: Self.self).url(forResource: "questions", withExtension: "json"),
-            "UI test bundle should include generated question-bank questions.json"
+    @available(iOS 17.0, *)
+    private func auditTypeName(_ auditType: XCUIAccessibilityAuditType) -> String {
+        if auditType == .contrast { return "contrast" }
+#if os(iOS)
+        if auditType == .textClipped { return "textClipped" }
+#endif
+        return String(describing: auditType)
+    }
+
+    private func verifyAuditElementPositions(_ interests: [AuditInterest], context: AuditContext, in app: XCUIApplication) -> [AuditElementPositionRecord] {
+        let bars = barFrames(in: app)
+        let windowFrame = app.windows.firstMatch.frame
+        var records: [AuditElementPositionRecord] = []
+        var violations: [String] = []
+        var lines = [
+            "Screen: \(context.screen.rawValue)",
+            "Appearance: \(context.appearance.rawValue)",
+            "Pass: \(context.pass.rawValue)",
+            "Iteration: \(context.iterationID)",
+            "Question ID: \(context.questionID ?? "n/a")",
+            "Window frame: \(frameDescription(windowFrame))",
+            "Navigation bar frame: \(frameDescription(bars.navigationBarFrame))",
+            "Status bar frame: \(frameDescription(bars.statusBarFrame))",
+            "Rule: every audited element of interest must be fully below navigationBar.maxY/statusBar.maxY within the window or entirely off-screen/under the bars before performAccessibilityAudit()."
+        ]
+
+        for interest in interests {
+            let element = interest.element
+            guard element.exists else {
+                let status: AuditElementVisibilityStatus = .missing
+                let line = "\(interest.name): missing (required: \(interest.required))"
+                lines.append(line)
+                if interest.required { violations.append(line) }
+                records.append(AuditElementPositionRecord(interest: interest, key: nil, frame: .null, status: status, detail: line))
+                continue
+            }
+
+            let frame = element.frame
+            let key = AuditElementKey(element: element)
+            let isFullyBelowBar = frame.minY >= bars.protectedMaxY - 0.5
+            let isFullyInsideWindow = frame.minX >= windowFrame.minX - 0.5
+                && frame.maxX <= windowFrame.maxX + 0.5
+                && frame.maxY <= windowFrame.maxY + 0.5
+            let isEntirelyUnderBars = frame.maxY <= bars.protectedMaxY + 0.5
+            let isEntirelyOffscreen = frame.maxX <= windowFrame.minX + 0.5
+                || frame.minX >= windowFrame.maxX - 0.5
+                || frame.maxY <= windowFrame.minY + 0.5
+                || frame.minY >= windowFrame.maxY - 0.5
+            let status: AuditElementVisibilityStatus
+            if isFullyBelowBar && isFullyInsideWindow {
+                status = .fullyVisibleBelowBars
+            } else if isEntirelyUnderBars || isEntirelyOffscreen {
+                status = .entirelyOffscreenOrUnderBars
+            } else {
+                status = .partiallyObscuredOrClipped
+            }
+
+            let detail = "\(interest.name): \(status.rawValue); identifier=\(element.identifier); label=\(element.label); frame=\(frameDescription(frame)); navBar.maxY=\(bars.navigationBarFrame.maxY); statusBar.maxY=\(bars.statusBarFrame.maxY)"
+            lines.append(detail)
+            if status == .partiallyObscuredOrClipped {
+                violations.append(detail)
+            }
+            records.append(AuditElementPositionRecord(interest: interest, key: key, frame: frame, status: status, detail: detail))
+        }
+
+        attachPositionLog(lines.joined(separator: "\n"), context: context)
+        XCTAssertTrue(violations.isEmpty, "Audit position verification found partially obscured/clipped elements before \(context.evidenceStem): \(violations.joined(separator: " | "))")
+        return records
+    }
+
+    private func recordVisibleAuditCoverage(_ records: [AuditElementPositionRecord], context: AuditContext) {
+        let key = AuditCoverageKey(context: context)
+        var passCoverage = visibleAuditCoverage[key, default: [:]]
+        var visibleElements = passCoverage[context.pass, default: []]
+        for record in records where record.status == .fullyVisibleBelowBars {
+            if let key = record.key {
+                visibleElements.insert(key)
+            }
+        }
+        passCoverage[context.pass] = visibleElements
+        visibleAuditCoverage[key] = passCoverage
+    }
+
+    private func isCoveredFullyVisibleInOtherPass(element: XCUIElement, context: AuditContext) -> Bool {
+        let key = AuditCoverageKey(context: context)
+        let elementKey = AuditElementKey(element: element)
+        guard let passCoverage = visibleAuditCoverage[key] else { return false }
+        return passCoverage.contains { pass, elements in
+            pass != context.pass && elements.contains(elementKey)
+        }
+    }
+
+    private func occlusionProof(for frame: CGRect, in app: XCUIApplication) -> BarOcclusionProof {
+        let bars = barFrames(in: app)
+        let intersectsNavigationBar = frame.intersects(bars.navigationBarFrame)
+        let intersectsStatusBar = frame.intersects(bars.statusBarFrame)
+        let isAboveProtectedTop = frame.maxY <= bars.protectedMaxY
+        return BarOcclusionProof(
+            isOccluded: intersectsNavigationBar || intersectsStatusBar || isAboveProtectedTop,
+            intersectsNavigationBar: intersectsNavigationBar,
+            intersectsStatusBar: intersectsStatusBar,
+            isAboveProtectedTop: isAboveProtectedTop,
+            elementFrame: frame,
+            navigationBarFrame: bars.navigationBarFrame,
+            statusBarFrame: bars.statusBarFrame
         )
-        let data = try Data(contentsOf: url)
-        let questions = try JSONDecoder().decode([UITestQuestion].self, from: data)
+    }
+
+    private func barFrames(in app: XCUIApplication) -> BarFrames {
+        let windowFrame = app.windows.firstMatch.exists ? app.windows.firstMatch.frame : CGRect(x: 0, y: 0, width: 0, height: 0)
+        let navBar = app.navigationBars.firstMatch
+        let navigationFrame = navBar.exists ? navBar.frame : CGRect(x: windowFrame.minX, y: windowFrame.minY, width: windowFrame.width, height: 0)
+        let statusBar = app.statusBars.firstMatch
+        let statusFrame: CGRect
+        if statusBar.exists {
+            statusFrame = statusBar.frame
+        } else {
+            statusFrame = CGRect(
+                x: windowFrame.minX,
+                y: windowFrame.minY,
+                width: windowFrame.width,
+                height: max(0, navigationFrame.minY - windowFrame.minY)
+            )
+        }
+        return BarFrames(navigationBarFrame: navigationFrame, statusBarFrame: statusFrame)
+    }
+
+    private func bundledFrenchQuestionTexts(forCategoryID categoryID: String) throws -> Set<String> {
+        let questions = try bundledQuestions()
         return Set(
             questions.compactMap { question in
                 guard question.categoryId == categoryID else { return nil }
@@ -449,16 +764,193 @@ final class CanadianHamPracticeUITests: XCTestCase {
         )
     }
 
+    private func longestEnglishAnswerInBank() throws -> UITestLongestAnswer {
+        let questions = try bundledQuestions()
+        let answers = questions.flatMap { question in
+            question.answers.compactMap { answer -> UITestLongestAnswer? in
+                guard let text = answer.text.en, !text.isEmpty else { return nil }
+                return UITestLongestAnswer(questionId: question.id, categoryId: question.categoryId, answerText: text)
+            }
+        }
+        return try XCTUnwrap(answers.max { $0.answerText.count < $1.answerText.count })
+    }
+
+    private func bundledQuestions() throws -> [UITestQuestion] {
+        let url = try XCTUnwrap(
+            Bundle(for: Self.self).url(forResource: "questions", withExtension: "json"),
+            "UI test bundle should include generated question-bank questions.json"
+        )
+        let data = try Data(contentsOf: url)
+        return try JSONDecoder().decode([UITestQuestion].self, from: data)
+    }
+
     private func frameDescription(_ frame: CGRect) -> String {
         "x: \(frame.origin.x), y: \(frame.origin.y), width: \(frame.size.width), height: \(frame.size.height)"
+    }
+
+    private static func makeAuditIterationID() -> String {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        let timestamp = formatter.string(from: Date())
+            .replacingOccurrences(of: ":", with: "")
+            .replacingOccurrences(of: ".", with: "-")
+        return "\(timestamp)-\(UUID().uuidString.prefix(8))"
+    }
+}
+
+private enum AuditScreen: String, Hashable {
+    case categoryList = "category-list"
+    case answeredPractice = "answered-practice"
+}
+
+private enum AuditAppearance: String, Hashable {
+    case light
+    case dark
+}
+
+private enum AuditPass: String, Hashable {
+    case top
+    case scrolled
+}
+
+private struct AuditContext: Hashable {
+    let screen: AuditScreen
+    let appearance: AuditAppearance
+    let pass: AuditPass
+    let questionID: String?
+    let iterationID: String
+
+    var evidenceStem: String {
+        let questionPart = questionID.map { "-question-\($0)" } ?? ""
+        return "\(screen.rawValue)-\(appearance.rawValue)-\(pass.rawValue)-iteration-\(iterationID)\(questionPart)"
+    }
+}
+
+private struct AuditCoverageKey: Hashable {
+    let screen: AuditScreen
+    let appearance: AuditAppearance
+    let questionID: String?
+
+    init(context: AuditContext) {
+        self.screen = context.screen
+        self.appearance = context.appearance
+        self.questionID = context.questionID
+    }
+}
+
+private struct AuditInterest {
+    let name: String
+    let element: XCUIElement
+    let required: Bool
+
+    init(name: String, element: XCUIElement, required: Bool = true) {
+        self.name = name
+        self.element = element
+        self.required = required
+    }
+}
+
+private struct AuditElementKey: Hashable {
+    let identity: String
+
+    @MainActor
+    init(element: XCUIElement) {
+        let identifier = element.identifier
+        if !identifier.isEmpty {
+            identity = "identifier:\(identifier)"
+        } else {
+            identity = "type:\(String(describing: element.elementType))|label:\(element.label)"
+        }
+    }
+}
+
+private enum AuditElementVisibilityStatus: String {
+    case fullyVisibleBelowBars = "fully-visible-below-bars"
+    case entirelyOffscreenOrUnderBars = "entirely-offscreen-or-under-bars"
+    case partiallyObscuredOrClipped = "partially-obscured-or-clipped"
+    case missing
+}
+
+private struct AuditElementPositionRecord {
+    let interest: AuditInterest
+    let key: AuditElementKey?
+    let frame: CGRect
+    let status: AuditElementVisibilityStatus
+    let detail: String
+}
+
+private struct BarFrames {
+    let navigationBarFrame: CGRect
+    let statusBarFrame: CGRect
+
+    var protectedMaxY: CGFloat {
+        max(navigationBarFrame.maxY, statusBarFrame.maxY)
+    }
+}
+
+private struct BarOcclusionProof {
+    let isOccluded: Bool
+    let intersectsNavigationBar: Bool
+    let intersectsStatusBar: Bool
+    let isAboveProtectedTop: Bool
+    let elementFrame: CGRect
+    let navigationBarFrame: CGRect
+    let statusBarFrame: CGRect
+
+    var description: String {
+        "elementFrame=(\(elementFrame)); navigationBarFrame=(\(navigationBarFrame)); statusBarFrame=(\(statusBarFrame)); intersectsNavigationBar=\(intersectsNavigationBar); intersectsStatusBar=\(intersectsStatusBar); isAboveProtectedTop=\(isAboveProtectedTop)"
+    }
+}
+
+@available(iOS 17.0, *)
+private struct AllowedAuditFinding {
+    let screen: AuditScreen
+    let appearance: AuditAppearance
+    let identifier: String
+    let auditType: XCUIAccessibilityAuditType
+    let measuredRatio: Double
+    let evidence: String
+
+    var auditTypeName: String {
+        if auditType == .contrast { return "contrast" }
+#if os(iOS)
+        if auditType == .textClipped { return "textClipped" }
+#endif
+        return String(describing: auditType)
+    }
+}
+
+private struct AuditExclusionDecision {
+    let isExcluded: Bool
+    let kind: Kind
+    let reason: String
+    let proof: String
+
+    enum Kind: String {
+        case none
+        case occludedByBar = "occluded-by-bar"
+        case measuredAllowList = "measured-allow-list"
     }
 }
 
 private struct UITestQuestion: Decodable {
+    let id: String
     let categoryId: String
+    let text: UITestLocalizedText
+    let answers: [UITestAnswer]
+}
+
+private struct UITestAnswer: Decodable {
     let text: UITestLocalizedText
 }
 
 private struct UITestLocalizedText: Decodable {
+    let en: String?
     let fr: String?
+}
+
+private struct UITestLongestAnswer {
+    let questionId: String
+    let categoryId: String
+    let answerText: String
 }

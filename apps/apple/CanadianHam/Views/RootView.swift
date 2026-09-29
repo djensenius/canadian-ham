@@ -135,7 +135,12 @@ struct RootView: View {
         do {
             let loadedBank = try QuestionBankStore.load()
             bank = loadedBank
-            selection = loadedBank.categories.first.map { .category($0.id) }
+            if let requestedCategoryID = AppLaunchArguments.value(after: "-CanadianHamInitialCategoryID"),
+               loadedBank.categories.contains(where: { $0.id == requestedCategoryID }) {
+                selection = .category(requestedCategoryID)
+            } else {
+                selection = loadedBank.categories.first.map { .category($0.id) }
+            }
         } catch {
             loadError = error.localizedDescription
         }
@@ -176,11 +181,9 @@ private struct CategoryRow: View {
             Text(category.name.text(for: language))
                 .font(DesignTokens.FontScale.body.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
-                .fixedSize(horizontal: false, vertical: true)
             Text("\(category.questionCount) questions • \(category.subsectionCount) subsections")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
-                .fixedSize(horizontal: false, vertical: true)
         }
         .padding(.vertical, DesignTokens.Spacing.xs)
     }

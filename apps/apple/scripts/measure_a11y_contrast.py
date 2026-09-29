@@ -3,8 +3,9 @@
 
 The script intentionally uses only the Python standard library plus the macOS
 `sips` command to convert PNG screenshots to BMP files that stdlib code can
-sample. Raw finding files must include XCTest element frames in points and a
-screen frame line; the UI tests export both to apps/apple/docs/a11y-evidence.
+sample. Raw finding files must include XCTest element frames in points, the
+screen frame, and the navigation/status bar frames emitted by the UI tests.
+Occluded element frames are refused instead of measured.
 """
 
 from __future__ import annotations
@@ -12,7 +13,6 @@ from __future__ import annotations
 import argparse
 import collections
 import math
-import os
 import re
 import struct
 import subprocess
@@ -36,10 +36,35 @@ class Rect:
     width: float
     height: float
 
+    @property
+    def min_x(self) -> float:
+        return self.x
+
+    @property
+    def max_x(self) -> float:
+        return self.x + self.width
+
+    @property
+    def min_y(self) -> float:
+        return self.y
+
+    @property
+    def max_y(self) -> float:
+        return self.y + self.height
+
+    def intersects(self, other: "Rect") -> bool:
+        if self.width <= 0 or self.height <= 0 or other.width <= 0 or other.height <= 0:
+            return False
+        return self.min_x < other.max_x and self.max_x > other.min_x and self.min_y < other.max_y and self.max_y > other.min_y
+
 
 @dataclass(frozen=True)
 class Finding:
     screen: str
+    appearance: str
+    audit_pass: str
+    iteration: str
+    question_id: str
     issue: str
     audit_type_raw: str
     identifier: str
@@ -48,6 +73,8 @@ class Finding:
     frame: Rect
     compact_description: str
     screen_frame: Rect
+    navigation_bar_frame: Rect
+    status_bar_frame: Rect
     raw_file: Path
     screenshot_file: Path
 
@@ -72,6 +99,10 @@ class BMPImage:
         return red, green, blue
 
 
+class OccludedFrameError(ValueError):
+    pass
+
+
 def parse_rect(text: str) -> Rect:
     match = FRAME_RE.search(text)
     if not match:
@@ -84,15 +115,31 @@ def parse_rect(text: str) -> Rect:
     )
 
 
+def header_value(text: str, key: str, default: str = "") -> str:
+    match = re.search(rf"^{re.escape(key)}: (?P<value>.+)$", text, re.MULTILINE)
+    return match.group("value") if match else default
+
+
+def header_rect(text: str, key: str, fallback: Rect) -> Rect:
+    value = header_value(text, key)
+    return parse_rect(value) if value else fallback
+
+
 def parse_findings(raw_file: Path) -> list[Finding]:
     text = raw_file.read_text(encoding="utf-8")
-    screen_match = re.search(r"^Screen: (?P<screen>.+)$", text, re.MULTILINE)
-    screen = screen_match.group("screen") if screen_match else raw_file.name.removesuffix("-raw-accessibility-audit-findings.txt")
-    screen_frame_match = re.search(r"^Screen frame: (?P<frame>.+)$", text, re.MULTILINE)
-    if not screen_frame_match:
+    screen = header_value(text, "Screen", raw_file.name.removesuffix("-raw-accessibility-audit-findings.txt"))
+    appearance = header_value(text, "Appearance", "unknown")
+    audit_pass = header_value(text, "Pass", "unknown")
+    iteration = header_value(text, "Iteration", "unknown")
+    question_id = header_value(text, "Question ID", "n/a")
+    screen_frame = header_rect(text, "Screen frame", Rect(0, 0, 0, 0))
+    if screen_frame.width == 0 or screen_frame.height == 0:
         raise ValueError(f"Missing Screen frame line in {raw_file}")
-    screen_frame = parse_rect(screen_frame_match.group("frame"))
-    screenshot_file = raw_file.with_name(raw_file.name.replace("-raw-accessibility-audit-findings.txt", "-accessibility-audit.png"))
+    navigation_bar_frame = header_rect(text, "Navigation bar frame", Rect(0, 0, 0, 0))
+    status_bar_frame = header_rect(text, "Status bar frame", Rect(0, 0, 0, 0))
+    evidence_prefix = raw_file.name.split("-raw-accessibility-audit-findings", 1)[0]
+    screenshot_candidates = sorted(raw_file.parent.glob(f"{evidence_prefix}*.png"))
+    screenshot_file = screenshot_candidates[0] if screenshot_candidates else raw_file.with_name(f"{evidence_prefix}.png")
 
     findings: list[Finding] = []
     for block in re.split(r"\n\nIssue ", text):
@@ -115,6 +162,10 @@ def parse_findings(raw_file: Path) -> list[Finding]:
         findings.append(
             Finding(
                 screen=screen,
+                appearance=appearance,
+                audit_pass=audit_pass,
+                iteration=iteration,
+                question_id=question_id,
                 issue=issue_heading,
                 audit_type_raw=audit_type_raw,
                 identifier=values.get("element.identifier", ""),
@@ -123,6 +174,8 @@ def parse_findings(raw_file: Path) -> list[Finding]:
                 frame=parse_rect(values.get("element.frame", "")),
                 compact_description=values.get("compactDescription", ""),
                 screen_frame=screen_frame,
+                navigation_bar_frame=navigation_bar_frame,
+                status_bar_frame=status_bar_frame,
                 raw_file=raw_file,
                 screenshot_file=screenshot_file,
             )
@@ -182,7 +235,7 @@ def contrast_ratio(color_a: tuple[int, int, int], color_b: tuple[int, int, int])
     return (lighter + 0.05) / (darker + 0.05)
 
 
-def quantize(rgb: tuple[int, int, int], step: int = 8) -> tuple[int, int, int]:
+def quantize(rgb: tuple[int, int, int], step: int = 6) -> tuple[int, int, int]:
     return tuple(min(255, int(round(channel / step) * step)) for channel in rgb)  # type: ignore[return-value]
 
 
@@ -193,7 +246,16 @@ def average(colors: Iterable[tuple[int, int, int]]) -> tuple[int, int, int]:
     return tuple(round(sum(color[index] for color in colors) / len(colors)) for index in range(3))  # type: ignore[return-value]
 
 
+def ensure_not_occluded(finding: Finding) -> None:
+    if finding.frame.intersects(finding.navigation_bar_frame) or finding.frame.intersects(finding.status_bar_frame):
+        raise OccludedFrameError(
+            "refused: element frame intersects navigation/status bar "
+            f"(element={finding.frame}, navigation={finding.navigation_bar_frame}, status={finding.status_bar_frame})"
+        )
+
+
 def sample_contrast(image: BMPImage, finding: Finding, inset_points: float = 1.0) -> tuple[float, tuple[int, int, int], tuple[int, int, int], int]:
+    ensure_not_occluded(finding)
     scale_x = image.width / finding.screen_frame.width
     scale_y = image.height / finding.screen_frame.height
     min_x = math.floor((finding.frame.x + inset_points) * scale_x)
@@ -216,20 +278,30 @@ def sample_contrast(image: BMPImage, finding: Finding, inset_points: float = 1.0
     if not counts:
         return 1.0, (0, 0, 0), (0, 0, 0), 0
 
-    # Use the darkest and lightest populated clusters in the element frame.
-    clusters = list(counts.items())
-    darkest_cluster = min(clusters, key=lambda item: relative_luminance(item[0]))[0]
-    lightest_cluster = max(clusters, key=lambda item: relative_luminance(item[0]))[0]
+    background_cluster, background_count = counts.most_common(1)[0]
+    minimum_text_pixels = max(3, int(sample_count * 0.0005))
+    candidates = [
+        (cluster, count)
+        for cluster, count in counts.items()
+        if cluster != background_cluster and count >= minimum_text_pixels
+    ]
+    if not candidates:
+        return 1.0, background_cluster, background_cluster, sample_count
 
-    darkest_colors = [color for color in counts.elements() if color == darkest_cluster]
-    lightest_colors = [color for color in counts.elements() if color == lightest_cluster]
-    darkest = average(darkest_colors) or darkest_cluster
-    lightest = average(lightest_colors) or lightest_cluster
-    return contrast_ratio(darkest, lightest), darkest, lightest, sample_count
+    # The background cluster is the dominant cluster inside the element frame.
+    # The text cluster is the non-background cluster with the strongest measured
+    # contrast against that background, avoiding global darkest/lightest pixels
+    # outside the element and refusing bar-overlapped frames above.
+    text_cluster, _ = max(candidates, key=lambda item: contrast_ratio(item[0], background_cluster))
+    text_colors = [color for color in counts.elements() if color == text_cluster]
+    background_colors = [color for color in counts.elements() if color == background_cluster]
+    text = average(text_colors) or text_cluster
+    background = average(background_colors) or background_cluster
+    return contrast_ratio(text, background), text, background, sample_count
 
 
 def measure(evidence_dir: Path) -> str:
-    raw_files = sorted(evidence_dir.glob("*-raw-accessibility-audit-findings.txt"))
+    raw_files = sorted(evidence_dir.glob("*-raw-accessibility-audit-findings*.txt"))
     all_findings: list[Finding] = []
     for raw_file in raw_files:
         all_findings.extend(parse_findings(raw_file))
@@ -242,23 +314,32 @@ def measure(evidence_dir: Path) -> str:
         by_screenshot[finding.screenshot_file].append(finding)
 
     rows = [
-        "| Screen | Issue | Identifier | Label | Frame (pt) | Measured ratio | Sampled colours | Samples |",
-        "|---|---|---|---|---|---:|---|---:|",
+        "| Screen | Appearance | Pass | Iteration | Question | Issue | Identifier | Label | Frame (pt) | Measured ratio | Text/background clusters | Samples |",
+        "|---|---|---|---|---|---|---|---|---|---:|---|---:|",
     ]
     with tempfile.TemporaryDirectory() as tmpdir:
         tmp_path = Path(tmpdir)
         for screenshot, findings in sorted(by_screenshot.items()):
+            if not screenshot.exists():
+                raise FileNotFoundError(f"Missing screenshot for {findings[0].raw_file}: {screenshot}")
             bmp_path = tmp_path / f"{screenshot.stem}.bmp"
             convert_png_to_bmp(screenshot, bmp_path)
             image = read_bmp(bmp_path)
             for finding in findings:
-                ratio, dark, light, samples = sample_contrast(image, finding)
                 frame = f"x={finding.frame.x:.1f}, y={finding.frame.y:.1f}, w={finding.frame.width:.1f}, h={finding.frame.height:.1f}"
-                colors = f"#{dark[0]:02X}{dark[1]:02X}{dark[2]:02X} / #{light[0]:02X}{light[1]:02X}{light[2]:02X}"
                 label = finding.label.replace("|", "\\|")
                 identifier = finding.identifier or "—"
+                try:
+                    ratio, text_color, background, samples = sample_contrast(image, finding)
+                    colors = f"#{text_color[0]:02X}{text_color[1]:02X}{text_color[2]:02X} / #{background[0]:02X}{background[1]:02X}{background[2]:02X}"
+                    ratio_text = f"{ratio:.2f}:1"
+                    samples_text = str(samples)
+                except OccludedFrameError as error:
+                    colors = str(error).replace("|", "\\|")
+                    ratio_text = "REFUSED"
+                    samples_text = "0"
                 rows.append(
-                    f"| {finding.screen} | {finding.issue} | {identifier} | {label} | {frame} | {ratio:.2f}:1 | {colors} | {samples} |"
+                    f"| {finding.screen} | {finding.appearance} | {finding.audit_pass} | {finding.iteration} | {finding.question_id} | {finding.issue} | {identifier} | {label} | {frame} | {ratio_text} | {colors} | {samples_text} |"
                 )
     return "\n".join(rows)
 
