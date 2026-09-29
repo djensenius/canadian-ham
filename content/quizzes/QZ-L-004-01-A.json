@@ -56,41 +56,41 @@
     {
       "id": "QZ-L-004-01-A-C2",
       "prompt": {
-        "en": "Why should a signal amplifier used for communications stay reasonably linear?",
+        "en": "An SSB transmitter audio stage is overdriven until voice peaks are clipped before modulation. What on-air problem is most likely?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "So it turns DC directly into light",
+            "en": "A cleaner, narrower transmitted signal",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "So the output waveform keeps the intended shape instead of creating distortion",
+            "en": "Distortion products that can sound harsh and create adjacent-channel splatter",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "So the cathode and anode trade names",
+            "en": "Automatic cancellation of all harmonics",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "So its gain is always zero",
+            "en": "Less occupied bandwidth because all peaks are flattened",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "Linearity means the stage changes signal level without unwanted changes to the waveform shape.",
+        "en": "Clipping is non-linear operation: it changes the audio waveform and produces distortion products that can spread the transmitted signal.",
         "fr": null
       }
     },
@@ -103,14 +103,14 @@
       "choices": [
         {
           "text": {
-            "en": "Voltage multiplication by the LED material",
+            "en": "Voltage regulation by a Zener diode",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Audio oscillation",
+            "en": "Light emission from an LED",
             "fr": null
           },
           "isCorrect": false
@@ -124,7 +124,7 @@
         },
         {
           "text": {
-            "en": "Positive feedback",
+            "en": "Reverse-polarity protection at a DC input",
             "fr": null
           },
           "isCorrect": false

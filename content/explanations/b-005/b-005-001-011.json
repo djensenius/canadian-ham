@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-001-011.\n\nWhy the correct answer is right: One millihenry is 1 000 microhenries. 10 000 microhenries divided by 1 000 is 10 mH.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"100 millihenries\": This is ten times too large.\n- sourceIndex 2: \"1 millihenry\": This is ten times too small.\n- sourceIndex 3: \"1000 millihenries\": This is one hundred times too large.",
+    "en": "Question B-005-001-011.\n\nWhy the correct answer is right: One millihenry is 1 000 microhenries. 10 000 microhenries divided by 1 000 is 10 mH.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"100 millihenries\": That result uses the wrong microhenry-to-millihenry scale, effectively moving 10 000 uH to 100 mH instead of 10 mH.\n- sourceIndex 2: \"1 millihenry\": This is ten times too small.\n- sourceIndex 3: \"1000 millihenries\": This is one hundred times too large.",
     "fr": null
   },
   "citations": [

@@ -56,82 +56,82 @@
     {
       "id": "QZ-L-004-03-A-C2",
       "prompt": {
-        "en": "What does a smaller resistor tolerance percentage mean?",
+        "en": "You measure a 1 kohm resistor as 1 080 ohms. Which marked part could still be within its tolerance?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "The resistor has no ohmic value",
+            "en": "A 1 kohm +/-1% part only",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "The resistor must be physically larger",
+            "en": "Both a 1 kohm +/-1% part and a 1 kohm +/-10% part",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "The allowed spread around the nominal value is narrower",
+            "en": "A 1 kohm +/-10% part only",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "The multiplier band is ignored",
+            "en": "Neither part, because 1 080 ohms is outside both ranges",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "Higher precision means less permitted variation from the nominal resistance.",
+        "en": "A 1 kohm +/-1% resistor may range from 990 to 1 010 ohms, while +/-10% allows 900 to 1 100 ohms; 1 080 ohms fits only the wider tolerance.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-004-03-A-C3",
       "prompt": {
-        "en": "Two resistors have the same first two value bands, but one has a multiplier that is one step larger. What changes?",
+        "en": "A 330 ohm resistor uses orange, orange, brown for its first three bands. Which multiplier colour would make the same first two digits into 3.3 kohms?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Only the tolerance can change",
+            "en": "Brown",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "The nominal resistance changes by a factor of ten",
+            "en": "Red",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "The component stops being a resistor",
+            "en": "Orange",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "The colour code no longer uses digits",
+            "en": "Gold",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "The multiplier band scales the same two value digits, so one multiplier step changes the nominal value by ten times.",
+        "en": "Orange-orange gives the digits 33. Red is the x 100 multiplier, so 33 x 100 = 3 300 ohms, or 3.3 kohms.",
         "fr": null
       }
     }

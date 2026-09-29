@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-005-003.\n\nWhy the correct answer is right: Both triode tubes and transistors are active devices capable of signal amplification.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"have electrons drifting through a vacuum\": Electrons drifting through a vacuum describes tubes, not semiconductor transistors.\n- sourceIndex 2: \"dissipate heat when not conducting\": Heat dissipation can occur in many parts, but it is not the distinguishing shared feature asked for here.\n- sourceIndex 3: \"use heat to cause electron movement\": A heated cathode applies to many tubes, not to ordinary transistors.",
+    "en": "Question B-004-005-003.\n\nWhy the correct answer is right: Both triode tubes and transistors are active devices capable of signal amplification.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"have electrons drifting through a vacuum\": Electrons drifting through a vacuum describes tubes, not semiconductor transistors.\n- sourceIndex 2: \"dissipate heat when not conducting\": A cut-off device has little or no controlled current path, and a transistor has no heater like a tube. Heat loss is not the shared active-device feature being tested.\n- sourceIndex 3: \"use heat to cause electron movement\": A heated cathode applies to many tubes, not to ordinary transistors.",
     "fr": null
   },
   "citations": [

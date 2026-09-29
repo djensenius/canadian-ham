@@ -69,21 +69,21 @@
         },
         {
           "text": {
-            "en": "The plate voltage becomes the highest positive voltage",
+            "en": "The channel widens and drain current increases",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "The emitter arrow changes from out to in",
+            "en": "Drain current stays fixed because the gate is insulated from control",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "The tolerance band becomes the multiplier band",
+            "en": "The source and drain must swap terminal names",
             "fr": null
           },
           "isCorrect": false
@@ -103,21 +103,21 @@
       "choices": [
         {
           "text": {
-            "en": "The cathode changes into a source terminal",
+            "en": "The grid is only a shield and cannot affect plate current",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "The plate acts as a tolerance band",
+            "en": "The plate current is controlled only by heater brightness",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "The tube envelope provides the signal gain by itself",
+            "en": "A more negative grid always increases plate current",
             "fr": null
           },
           "isCorrect": false
