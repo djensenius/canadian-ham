@@ -245,10 +245,13 @@ private struct LessonReaderView: View {
     @State private var lessonProgress: LessonProgressRecord?
     @State private var quizAttempts: [LessonQuizAttempt] = []
     @State private var errorMessage: String?
+    @State private var quizPinnedBelowActions = false
+    @AccessibilityFocusState private var focusedQuizID: String?
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     Text("\(lesson.id) · \(lesson.estimatedMinutes) min · \(lesson.covers.joined(separator: ", "))")
                         .font(DesignTokens.FontScale.caption.weight(.semibold))
@@ -275,6 +278,48 @@ private struct LessonReaderView: View {
                     MessagePanel(title: "Lesson progress unavailable", message: errorMessage, kind: .warning)
                 }
 
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                        Button { markRead() } label: {
+                            lessonActionLabel("Mark lesson read")
+                        }
+                        .buttonStyle(.plain)
+                        if let firstQuizID = lesson.quizIds.first {
+                            Button {
+                                quizPinnedBelowActions = true
+                                proxy.scrollTo(lessonQuizAnchorID(firstQuizID), anchor: .top)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                    proxy.scrollTo(lessonQuizAnchorID(firstQuizID), anchor: .top)
+                                    focusedQuizID = firstQuizID
+                                }
+                            } label: {
+                                Text("Go to quiz")
+                                    .font(DesignTokens.FontScale.body.weight(.semibold))
+                                    .frame(minHeight: 44)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(DesignTokens.Colors.accent)
+                            .accessibilityLabel("Go to lesson quiz")
+                            .accessibilityHint("Moves to the lesson quiz section")
+                            .accessibilityIdentifier("go-to-lesson-quiz-button")
+                        }
+                        if let previous = neighbor(offset: -1) {
+                            NavigationLink(value: LearnRoute.lesson(previous.id)) {
+                                lessonActionLabel("Previous: \(previous.title.en)")
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        if let next = neighbor(offset: 1) {
+                            NavigationLink(value: LearnRoute.lesson(next.id)) {
+                                lessonActionLabel("Next: \(next.title.en)")
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+
+                    if quizPinnedBelowActions {
+                        quizzes
+                    }
+
                 if lesson.status == .outline {
                     OutlineLessonView(lesson: lesson, library: library)
                 } else {
@@ -284,28 +329,12 @@ private struct LessonReaderView: View {
                     .paperCard()
                 }
 
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Button { markRead() } label: {
-                        lessonActionLabel("Mark lesson read")
-                    }
-                    .buttonStyle(.plain)
-                    if let previous = neighbor(offset: -1) {
-                        NavigationLink(value: LearnRoute.lesson(previous.id)) {
-                            lessonActionLabel("Previous: \(previous.title.en)")
-                        }
-                        .buttonStyle(.plain)
-                    }
-                    if let next = neighbor(offset: 1) {
-                        NavigationLink(value: LearnRoute.lesson(next.id)) {
-                            lessonActionLabel("Next: \(next.title.en)")
-                        }
-                        .buttonStyle(.plain)
+                    if !quizPinnedBelowActions {
+                        quizzes
                     }
                 }
-
-                quizzes
+                .pagePadding()
             }
-            .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Lesson")
@@ -325,20 +354,31 @@ private struct LessonReaderView: View {
 
     private var quizzes: some View {
         ForEach(lesson.quizIds.compactMap { library.quizzesById[$0] }, id: \.id) { quiz in
-            LessonQuizView(
-                quiz: quiz,
-                lesson: lesson,
-                bank: bank,
-                library: library,
-                language: language,
-                progressStore: progressStore,
-                attempts: quizAttempts.filter { $0.quizId == quiz.id },
-                onSaved: {
-                    refresh()
-                    onDataChanged()
-                }
-            )
+            VStack(spacing: 0) {
+                Color.clear
+                    .frame(height: 1)
+                    .id(lessonQuizAnchorID(quiz.id))
+                LessonQuizView(
+                    quiz: quiz,
+                    lesson: lesson,
+                    bank: bank,
+                    library: library,
+                    language: language,
+                    progressStore: progressStore,
+                    attempts: quizAttempts.filter { $0.quizId == quiz.id },
+                    focusedQuizID: $focusedQuizID,
+                    scrollAnchorID: lessonQuizAnchorID(quiz.id),
+                    onSaved: {
+                        refresh()
+                        onDataChanged()
+                    }
+                )
+            }
         }
+    }
+
+    private func lessonQuizAnchorID(_ quizID: String) -> String {
+        "lesson-quiz-anchor-\(quizID)"
     }
 
     private func refresh() {
@@ -441,7 +481,6 @@ private struct LessonMarkdownView: View {
             Text(strippingLinks(from: text))
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
-                .textSelection(.enabled)
         case .list(let ordered, let items):
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 ForEach(Array(items.enumerated()), id: \.offset) { index, item in
@@ -452,7 +491,6 @@ private struct LessonMarkdownView: View {
                         Text(strippingLinks(from: item))
                             .font(DesignTokens.FontScale.body)
                             .foregroundStyle(DesignTokens.Colors.ink)
-                            .textSelection(.enabled)
                     }
                 }
             }
@@ -547,6 +585,8 @@ private struct LessonQuizView: View {
     let language: BankLanguage
     @ObservedObject var progressStore: ProgressStoreService
     let attempts: [LessonQuizAttempt]
+    let focusedQuizID: AccessibilityFocusState<String?>.Binding
+    let scrollAnchorID: String
     let onSaved: () -> Void
 
     @State private var seed: String
@@ -564,6 +604,8 @@ private struct LessonQuizView: View {
         language: BankLanguage,
         progressStore: ProgressStoreService,
         attempts: [LessonQuizAttempt],
+        focusedQuizID: AccessibilityFocusState<String?>.Binding,
+        scrollAnchorID: String,
         onSaved: @escaping () -> Void
     ) {
         self.quiz = quiz
@@ -573,6 +615,8 @@ private struct LessonQuizView: View {
         self.language = language
         self.progressStore = progressStore
         self.attempts = attempts
+        self.focusedQuizID = focusedQuizID
+        self.scrollAnchorID = scrollAnchorID
         self.onSaved = onSaved
         _seed = State(initialValue: Self.initialSeed())
     }
@@ -589,10 +633,14 @@ private struct LessonQuizView: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                    Text("Lesson quiz")
+                        .font(DesignTokens.FontScale.caption.weight(.semibold))
+                        .foregroundStyle(DesignTokens.Colors.inkMuted)
                     Text(quiz.id)
                         .font(DesignTokens.FontScale.title.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
-                        .accessibilityHidden(true)
+                        .accessibilityAddTraits(.isHeader)
+                        .accessibilityFocused(focusedQuizID, equals: quiz.id)
                     Text("\(items.count) questions: official bank questions update Leitner progress; concept checks do not.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
@@ -617,6 +665,7 @@ private struct LessonQuizView: View {
                 Text("Question \(currentIndex + 1) of \(items.count)")
                     .font(DesignTokens.FontScale.body.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.ink)
+                    .id(scrollAnchorID)
                 LessonQuizQuestionView(
                     item: item,
                     bank: bank,
