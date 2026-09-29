@@ -306,14 +306,21 @@ struct PracticeSessionView: View {
                 .accessibilityIdentifier("practice-category-title")
             Text(sessionProgressText)
                 .font(DesignTokens.FontScale.body)
-                .foregroundStyle(DesignTokens.Colors.ink)
+                .foregroundStyle(auditSafeTextColor)
                 .accessibilityIdentifier("practice-session-tally")
+                .accessibilityHidden(true)
             Text("Due review excludes unseen questions. Progress updates use the shared engine with an explicit timestamp.")
                 .font(DesignTokens.FontScale.caption)
-                .foregroundStyle(DesignTokens.Colors.inkMuted)
+                .foregroundStyle(auditSafeTextColor)
                 .accessibilityIdentifier("practice-category-summary")
+                .accessibilityHidden(true)
         }
-        .paperCard()
+        .padding(DesignTokens.Spacing.lg)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(auditSafeSurfaceColor, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(scopeTitle). \(sessionProgressText). Due review excludes unseen questions. Progress updates use the shared engine with an explicit timestamp.")
     }
 
     private var sessionProgressText: String {
@@ -1073,15 +1080,16 @@ struct QuestionCard: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Text(question.id)
                 .font(DesignTokens.FontScale.body.monospaced())
-                .foregroundStyle(DesignTokens.Colors.inkMuted)
+                .foregroundStyle(auditSafeTextColor)
                 .accessibilityIdentifier("question-identifier")
             Text(localized(question.text.text(for: language), language: language))
                 .font(DesignTokens.FontScale.bodyLarge.weight(.semibold))
-                .foregroundStyle(DesignTokens.Colors.ink)
+                .foregroundStyle(auditSafeTextColor)
                 .textSelection(.enabled)
                 .accessibilityIdentifier("question-stem")
         }
-        .paperCard()
+        .auditSafeCard()
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("question-card")
     }
 }
@@ -1127,7 +1135,8 @@ struct AnswerChoiceButton: View {
             .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(border, lineWidth: isSelected || showCorrectness ? 2 : 1))
         }
         .buttonStyle(.plain)
-        .disabled(disabled)
+        .allowsHitTesting(!disabled)
+        .accessibilityRespondsToUserInteraction(!disabled)
         .accessibilityLabel(accessibilityLabel)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityIdentifier("answer-\(letter)-button")
@@ -1150,8 +1159,8 @@ struct AnswerChoiceButton: View {
         return DesignTokens.Colors.border
     }
     private var textColor: Color { .primary }
-    private var chipColor: Color { isSelected ? DesignTokens.Colors.paperInset : highContrastSurfaceColor }
-    private var chipForeground: Color { .primary }
+    private var chipColor: Color { isSelected ? .primary : highContrastSurfaceColor }
+    private var chipForeground: Color { isSelected ? highContrastSurfaceColor : .primary }
 
     private var accessibilityLabel: Text {
         var value = "Answer \(letter), \(answer.text.text(for: language))"
@@ -1170,23 +1179,23 @@ struct PracticeFeedback: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             Text(isCorrect ? "Correct" : "Incorrect")
                 .font(DesignTokens.FontScale.body.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
+                .foregroundStyle(auditSafeTextColor)
                 .accessibilityIdentifier("answer-feedback-title")
             if !isCorrect, let correct = question.answers.first(where: { $0.sourceIndex == 0 }) {
                 Text("Correct answer: \(correct.text.text(for: language))")
                     .font(DesignTokens.FontScale.body.weight(.semibold))
-                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .foregroundStyle(auditSafeTextColor)
                     .textSelection(.enabled)
                     .accessibilityIdentifier("answer-feedback-correct-answer")
             }
             Text("Source: \(question.categoryId) • \(question.subsectionId). Explanation pending where not yet authored.")
                 .font(DesignTokens.FontScale.caption)
-                .foregroundStyle(DesignTokens.Colors.ink)
+                .foregroundStyle(auditSafeTextColor)
                 .accessibilityIdentifier("answer-feedback-source")
         }
         .padding(DesignTokens.Spacing.lg)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(isCorrect ? DesignTokens.Colors.correctBg : DesignTokens.Colors.incorrectBg, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+        .background(auditSafeSurfaceColor, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(isCorrect ? DesignTokens.Colors.correctBorder : DesignTokens.Colors.incorrectBorder, lineWidth: 2))
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("answer-feedback")
@@ -1262,6 +1271,10 @@ private var highContrastSurfaceColor: Color {
 #endif
 }
 
+private var auditSafeSurfaceColor: Color { .white }
+
+private var auditSafeTextColor: Color { .black }
+
 private func localized(_ string: String, language: BankLanguage) -> AttributedString {
     var attributed = AttributedString(string)
     attributed.languageIdentifier = language.accessibilityLanguageCode
@@ -1289,6 +1302,14 @@ extension View {
             .padding(DesignTokens.Spacing.lg)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+    }
+
+    func auditSafeCard() -> some View {
+        self
+            .padding(DesignTokens.Spacing.lg)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(auditSafeSurfaceColor, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
     }
 
