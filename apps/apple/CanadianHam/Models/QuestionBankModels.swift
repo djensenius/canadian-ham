@@ -157,7 +157,7 @@ struct QuestionBank: Sendable {
         self.subsectionsByCategory = Dictionary(grouping: subsections, by: \.categoryId)
         self.subsectionsById = Dictionary(uniqueKeysWithValues: subsections.map { ($0.id, $0) })
         self.lessonQuizzesById = Dictionary(uniqueKeysWithValues: lessonQuizzes.map { ($0.id, $0) })
-        self.knownLessonIds = Set(lessonQuizzes.map(\.lessonId))
+        self.knownLessonIds = Set(subsections.flatMap(\.lessonIds))
     }
 
     func questions(in category: BankCategory) -> [BankQuestion] {

@@ -334,6 +334,7 @@ final class ProgressStoreService: ObservableObject {
 
     func saveExamAttempt(_ attempt: StoredExamAttempt) throws {
         let data = try encoder.encode(attempt)
+        // Web exports may regenerate local IDs; submittedAt is canonical and import validation forbids duplicates.
         if let existing = try examAttemptEntity(id: attempt.id) ?? examAttemptEntity(submittedAt: attempt.submittedAt) {
             existing.id = attempt.id
             existing.bankId = attempt.bankId

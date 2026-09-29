@@ -1,37 +1,34 @@
 # Apple accessibility audit findings
 
-T-503/T-504/T-505/T-506/T-512 expanded the default Apple UI surface from the first category-practice slice to the progress/practice/mock/settings slice. The default iOS UI suite now runs deterministic `performAccessibilityAudit()` checks with no allow-list for these top-level screens in both light and dark appearances:
+T-503/T-504/T-505/T-506/T-512 expanded the default Apple UI surface from the first category-practice slice to the progress/practice/mock/settings slice. The default iOS UI suite now runs deterministic default `performAccessibilityAudit()` checks with no allow-list in both light and dark appearances for these screens and states:
 
 1. Home/readiness;
-2. Practice hub;
-3. Mock exam start;
-4. Settings;
-5. About.
+2. Practice hub, unanswered practice, answered practice, and practice review;
+3. Mock exam start, question navigator/timer, answered/flagged navigator state, and results;
+4. Learn placeholder;
+5. Settings;
+6. About;
+7. Store recovery.
 
-The tests launch each audited screen directly with fixed launch arguments and reset local SwiftData files on launch, so audit state does not depend on scrolling history, prior progress, imported files, or random seeds. Any audit issue fails the test; fixes should be made in UI rather than allow-listed.
+The tests launch each audited screen directly with fixed launch arguments and reset local SwiftData files on launch, so audit state does not depend on prior progress, imported files, or random seeds. Any audit issue fails the test; fixes should be made in UI rather than allow-listed.
 
 ## Current default audit
 
 - Tests:
-  - `CanadianHamPracticeUITests.testAccessibilityAuditNewScreensLight`
-  - `CanadianHamPracticeUITests.testAccessibilityAuditNewScreensDark`
-- Launch state: `-CanadianHamResetDataOnLaunch` plus a fixed `-CanadianHamInitialScreen` value per screen.
+  - `CanadianHamPracticeUITests.testAccessibilityAuditCoreScreensLight`
+  - `CanadianHamPracticeUITests.testAccessibilityAuditCoreScreensDark`
+  - `CanadianHamPracticeUITests.testAccessibilityAuditPracticeSessionLight`
+  - `CanadianHamPracticeUITests.testAccessibilityAuditPracticeSessionDark`
+  - `CanadianHamPracticeUITests.testAccessibilityAuditMockExamFlowLight`
+  - `CanadianHamPracticeUITests.testAccessibilityAuditMockExamFlowDark`
+- Launch state: `-CanadianHamResetDataOnLaunch` plus fixed launch arguments per audited screen/state.
 - Appearances: light and dark.
 - Allow-list: none.
 - Expected default evidence output: none beyond normal XCTest pass/fail output.
 
 ## Timing notes
 
-The latest worker validation on iPhone 17 Pro simulator reported these XCTest durations in the full default iOS suite:
-
-| Test | Duration |
-| --- | ---: |
-| `testAccessibilityAuditNewScreensDark` | 56.550 s |
-| `testAccessibilityAuditNewScreensLight` | 54.505 s |
-| `testMockExamHappyPathWithDeterministicSeed` | 28.797 s |
-| `testPracticeImmediateFeedback` | 12.606 s |
-| `testSettingsResetConfirmation` | 13.983 s |
-| Unit tests | 0.981 s total |
+Keep timing notes in the task/review report for the exact commit under review. Do not treat historical XCTest durations as refreshed evidence after UI or audit-surface changes.
 
 ## Historical T-516 note
 

@@ -17,7 +17,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let frenchSegment = languagePicker.buttons["Français"].firstMatch
         XCTAssertTrue(frenchSegment.waitForExistence(timeout: 2), "French segment should be available")
         frenchSegment.tap()
-        waitForSelected(frenchSegment, description: "Français segment should be selected after tapping it")
+        waitBriefly()
 
         let frenchQuestionTexts = try bundledFrenchQuestionTexts(forCategoryID: "B-001")
         let frenchQuestionPredicate = NSPredicate(format: "label IN %@", Array(frenchQuestionTexts))
@@ -51,13 +51,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
         XCTAssertTrue(app.descendants(matching: .any)["question-identifier"].firstMatch.waitForExistence(timeout: 10))
-        XCTAssertEqual(app.descendants(matching: .any)["question-identifier"].firstMatch.label, "B-001-002-002")
+        assertQuestion(app, showsQuestionID: "B-001-002-002")
 
         answerFirstVisibleAnswer(in: app)
         _ = waitForAnswerFeedback(in: app)
         waitBriefly(1.0)
 
-        XCTAssertEqual(app.descendants(matching: .any)["question-identifier"].firstMatch.label, "B-001-002-002", "Saving progress must not reload the practice session")
+        assertQuestion(app, showsQuestionID: "B-001-002-002", message: "Saving progress must not reload the practice session")
         XCTAssertTrue(app.buttons["Next question"].firstMatch.exists, "Immediate feedback controls should remain after saving progress")
         XCTAssertTrue(app.descendants(matching: .any)["answer-feedback"].firstMatch.exists, "Feedback should remain after saving progress")
     }
@@ -304,29 +304,53 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
         try performAudit(on: app, context: "\(appearance.rawValue) unanswered practice")
 
-        answerFirstVisibleAnswer(in: app)
+        answerKnownCorrectLifeAnswerIfPresent(in: app)
         _ = waitForAnswerFeedback(in: app)
-        app.scrollViews.firstMatch.swipeUp()
-        app.scrollViews.firstMatch.swipeUp()
-        waitBriefly()
         try performAudit(on: app, context: "\(appearance.rawValue) answered practice")
         app.terminate()
+
+        let reviewApp = launchApp(arguments: [
+            "-CanadianHamInitialCategoryID", "B-001",
+            "-CanadianHamPracticeQuestionID", "B-001-002-002",
+            "-CanadianHamPracticeMode", "review-later",
+            "-CanadianHamPracticeLimit", "1"
+        ])
+        XCTAssertTrue(reviewApp.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
+        answerFirstVisibleAnswer(in: reviewApp)
+        scrollAndTap("Submit for review", in: reviewApp)
+        XCTAssertTrue(reviewApp.staticTexts["Practice review"].waitForExistence(timeout: 10))
+        try performAudit(on: reviewApp, context: "\(appearance.rawValue) practice review")
+        reviewApp.terminate()
     }
 
     private func auditMockExamFlow(appearance: AuditAppearance) throws {
+        let timerApp = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamMockExamSeed", "ui-a11y-mock-exam-timer",
+            "-CanadianHamExamTimerEnabled", "true",
+            "-CanadianHamMockExamQuestionID", "B-001-002-002",
+            "-CanadianHamMockExamLimit", "1"
+        ])
+        openMockExamStart(in: timerApp)
+        XCTAssertTrue(timerApp.staticTexts["mock-exam-seed"].waitForExistence(timeout: 10))
+        XCTAssertTrue(timerApp.staticTexts["Question navigator"].waitForExistence(timeout: 5))
+        try performAudit(on: timerApp, context: "\(appearance.rawValue) mock exam question navigator timer")
+        timerApp.terminate()
+
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "mock",
-            "-CanadianHamMockExamSeed", "ui-a11y-mock-exam",
-            "-CanadianHamExamTimerEnabled", "true",
+            "-CanadianHamMockExamSeed", "ui-a11y-mock-exam-answered-flagged",
             "-CanadianHamMockExamQuestionID", "B-001-002-002",
             "-CanadianHamMockExamLimit", "1"
         ])
         openMockExamStart(in: app)
         XCTAssertTrue(app.staticTexts["mock-exam-seed"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.staticTexts["Question navigator"].waitForExistence(timeout: 5))
-        try performAudit(on: app, context: "\(appearance.rawValue) mock exam question navigator timer")
-
         answerKnownCorrectLifeAnswerIfPresent(in: app)
+        scrollAndTap("Flag for review", in: app)
+        waitBriefly()
+        XCTAssertTrue(app.buttons["Flagged for review"].firstMatch.waitForExistence(timeout: 5), "Mock exam should expose the flagged state before auditing")
+        try performAudit(on: app, context: "\(appearance.rawValue) mock exam question navigator answered flagged")
+
         scrollAndTap("Submit exam", in: app)
         submitMockExamAlert(in: app)
         assertMockExamResultVisible(in: app)
@@ -357,15 +381,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     private func performAudit(on app: XCUIApplication, context: String) throws {
         if #available(iOS 17.0, *) {
-            var findings: [String] = []
-            let auditTypes: XCUIAccessibilityAuditType = context.contains("practice")
-                ? XCUIAccessibilityAuditType.all.subtracting(XCUIAccessibilityAuditType(rawValue: 1))
-                : .all
-            try app.performAccessibilityAudit(for: auditTypes) { issue in
-                findings.append(self.describe(issue))
-                return true
-            }
-            XCTAssertTrue(findings.isEmpty, "Accessibility audit reported issues for \(context): \(findings.joined(separator: " | "))")
+            try app.performAccessibilityAudit()
         } else {
             throw XCTSkip("performAccessibilityAudit is unavailable before iOS 17 for \(context).")
         }
@@ -376,7 +392,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
             var findings: [String] = []
             do {
                 try app.performAccessibilityAudit { issue in
-                    guard !self.shouldIgnoreAuditIssue(issue, context: context) else { return false }
                     findings.append(self.describe(issue))
                     return true
                 }
@@ -389,11 +404,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
         } else {
             attachRawAuditFindings(["performAccessibilityAudit is unavailable before iOS 17."], context: context, error: nil)
         }
-    }
-
-    @available(iOS 17.0, *)
-    private func shouldIgnoreAuditIssue(_ issue: XCUIAccessibilityAuditIssue, context: String) -> Bool {
-        context.contains("practice") && issue.auditType.rawValue == 1
     }
 
     @available(iOS 17.0, *)
@@ -540,13 +550,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertEqual(languagePickers.count, 1, "Exactly one question language picker should be visible on \(context)")
     }
 
-    private func waitForSelected(_ element: XCUIElement, description: String, timeout: TimeInterval = 5, file: StaticString = #filePath, line: UInt = #line) {
-        let predicate = NSPredicate(format: "isSelected == true")
-        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
-        let result = XCTWaiter.wait(for: [expectation], timeout: timeout)
-        XCTAssertEqual(result, .completed, description, file: file, line: line)
-    }
-
     private func anyVisibleLabel(in app: XCUIApplication, contains needle: String) -> Bool {
         let predicate = NSPredicate(format: "label CONTAINS[c] %@", needle)
         return app.staticTexts.matching(predicate).firstMatch.exists
@@ -611,12 +614,34 @@ final class CanadianHamPracticeUITests: XCTestCase {
         RunLoop.current.run(until: Date().addingTimeInterval(seconds))
     }
 
+    private func assertQuestion(_ app: XCUIApplication, showsQuestionID questionID: String, message: String? = nil, file: StaticString = #filePath, line: UInt = #line) {
+        let identifier = app.descendants(matching: .any)["question-identifier"].firstMatch
+        XCTAssertEqual(identifier.label, questionID, message ?? "Practice should show the forced question ID", file: file, line: line)
+
+        do {
+            let expectedText = try bundledEnglishQuestionText(forQuestionID: questionID)
+            let stem = app.descendants(matching: .any)["question-stem"].firstMatch
+            XCTAssertTrue(stem.waitForExistence(timeout: 5), "Question stem should be visible for \(questionID)", file: file, line: line)
+            XCTAssertEqual(stem.label, expectedText, message ?? "Practice should show the forced question stem", file: file, line: line)
+        } catch {
+            XCTFail("Failed to load bundled expected question text for \(questionID): \(error)", file: file, line: line)
+        }
+    }
+
     private func bundledFrenchQuestionTexts(forCategoryID categoryID: String) throws -> Set<String> {
         let questions = try bundledQuestions()
         return Set(questions.compactMap { question in
             guard question.categoryId == categoryID else { return nil }
             return question.text.fr
         })
+    }
+
+    private func bundledEnglishQuestionText(forQuestionID questionID: String) throws -> String {
+        let question = try XCTUnwrap(
+            try bundledQuestions().first { $0.id == questionID },
+            "UI test bundle should include \(questionID)"
+        )
+        return try XCTUnwrap(question.text.en, "\(questionID) should include English text")
     }
 
     private func longestEnglishAnswerInBank() throws -> UITestLongestAnswer {

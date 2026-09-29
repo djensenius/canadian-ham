@@ -55,11 +55,11 @@ Current implemented flows for iPhone, iPad, and Mac:
 
 ## Accessibility audit tests
 
-The default iOS UI suite includes deterministic accessibility regressions that run `performAccessibilityAudit()` with no allow-list in light and dark appearances for the new top-level screens:
+The default iOS UI suite includes deterministic accessibility regressions that run the default `performAccessibilityAudit()` with no allow-list in light and dark appearances for the covered screens and states:
 
 - Home/readiness;
-- Practice hub and practice session;
-- Mock exam start, question navigator/timer, and results;
+- Practice hub, unanswered practice, answered practice, and practice review;
+- Mock exam start, question navigator/timer, answered/flagged navigator state, and results;
 - Learn placeholder;
 - Settings;
 - About;

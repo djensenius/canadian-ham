@@ -96,7 +96,6 @@ struct RootView: View {
                     Text("Study")
                         .textCase(nil)
                         .accessibilityAddTraits(.isHeader)
-                        .accessibilityIdentifier("root-sidebar")
                 }
 
                 Section {
@@ -189,8 +188,7 @@ struct RootView: View {
                 bank: bank,
                 progressStore: progressStore,
                 scope: scope,
-                language: $language,
-                revision: dataRevision
+                language: $language
             ) {
                 dataRevision += 1
             }
