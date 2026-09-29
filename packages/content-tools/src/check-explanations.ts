@@ -15,6 +15,7 @@ const TEMPLATE_GRAM_SIZE = 6;
 const TEMPLATE_DIFFERENT_QUESTION_LIMIT = 4;
 const DISTRACTOR_NOTE_HEADER = "Why the distractors are wrong:";
 const DEFAULT_TEMPLATE_ALLOWLIST_PATH = path.join(REPO_ROOT, "packages/content-tools/explanation-template-allowlist.json");
+const ALLOWED_CITATION_URL_HOSTS = new Set(["ised-isde.canada.ca", "www.ised-isde.canada.ca"]);
 
 const GENERIC_NOTE_PHRASES = [
   "does not match the principle tested here",
@@ -233,6 +234,19 @@ async function loadQuestions(questionsPath: string): Promise<Map<string, Questio
   return questions;
 }
 
+function validateCitationUrl(url: string, citationPath: string, issues: string[]): void {
+  let parsedUrl: URL;
+  try {
+    parsedUrl = new URL(url);
+  } catch {
+    issues.push(`${citationPath}: citation url must be an absolute https URL on ised-isde.canada.ca or www.ised-isde.canada.ca`);
+    return;
+  }
+  if (parsedUrl.protocol !== "https:" || !ALLOWED_CITATION_URL_HOSTS.has(parsedUrl.host)) {
+    issues.push(`${citationPath}: citation url must be an absolute https URL on ised-isde.canada.ca or www.ised-isde.canada.ca`);
+  }
+}
+
 function validateCitation(value: unknown, citationPath: string, issues: string[]): CitationRecord | null {
   if (!isRecord(value)) {
     issues.push(`${citationPath}: citation must be an object`);
@@ -245,8 +259,14 @@ function validateCitation(value: unknown, citationPath: string, issues: string[]
   if ((value.type === "lesson" || value.type === "question") && !isNonEmptyString(value.id)) {
     issues.push(`${citationPath}: ${value.type} citation id must be a non-empty string`);
   }
+  if (value.url !== undefined && !isNonEmptyString(value.url)) {
+    issues.push(`${citationPath}: citation url must be a non-empty string when present`);
+  }
   if (value.type === "rbr-4" && !isNonEmptyString(value.url)) {
     issues.push(`${citationPath}: rbr-4 citation url must be a non-empty string`);
+  }
+  if (isNonEmptyString(value.url)) {
+    validateCitationUrl(value.url, citationPath, issues);
   }
   return {
     type: value.type,

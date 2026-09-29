@@ -1262,7 +1262,7 @@ function PracticeReview({ session, language }: { readonly session: PracticeSessi
   );
 }
 
-function ExplanationPanel({ explanation, language, choicePermutation }: { readonly explanation: Explanation | null; readonly language: Language; readonly choicePermutation?: readonly number[] }) {
+export function ExplanationPanel({ explanation, language, choicePermutation }: { readonly explanation: Explanation | null; readonly language: Language; readonly choicePermutation?: readonly number[] }) {
   if (explanation === null) {
     return <p className="explanation-panel explanation-panel--missing">No project explanation is bundled for this question yet.</p>;
   }
@@ -1288,6 +1288,14 @@ function ExplanationPanel({ explanation, language, choicePermutation }: { readon
   );
 }
 
+function isHttpsUrl(rawUrl: string): boolean {
+  try {
+    return new URL(rawUrl).protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export function CitationLink({ citation }: { readonly citation: Explanation["citations"][number] }) {
   if (citation.type === "lesson" && citation.id !== undefined) {
     const lesson = lessonsById.get(citation.id);
@@ -1295,7 +1303,7 @@ export function CitationLink({ citation }: { readonly citation: Explanation["cit
       return <a href={`#/learn/${lesson.moduleId}/${lesson.id}`}>{citation.id}</a>;
     }
   }
-  if (citation.url !== undefined) {
+  if (citation.url !== undefined && isHttpsUrl(citation.url)) {
     return (
       <a href={citation.url} target="_blank" rel="noopener noreferrer">
         {citation.id ?? citation.type} <span className="external-site-hint">(external site)</span> <span className="new-tab-hint">(opens in new tab)</span>

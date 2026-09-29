@@ -1,3 +1,4 @@
+import { realpathSync } from "node:fs";
 import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -110,8 +111,8 @@ export async function auditDistUrls(distDir = DIST_DIR): Promise<UrlFinding[]> {
   return findings;
 }
 
-async function main(): Promise<void> {
-  const findings = await auditDistUrls();
+async function main(distDirArg = process.argv[2]): Promise<void> {
+  const findings = await auditDistUrls(distDirArg === undefined ? DIST_DIR : path.resolve(distDirArg));
   if (findings.length > 0) {
     for (const finding of findings) {
       console.error(`${finding.file}:${finding.line}: unexpected URL ${finding.url}`);
@@ -123,7 +124,14 @@ async function main(): Promise<void> {
 }
 
 function isDirectCliInvocation(): boolean {
-  return process.argv[1] !== undefined && path.resolve(process.argv[1]) === MODULE_PATH;
+  if (process.argv[1] === undefined) {
+    return false;
+  }
+  try {
+    return realpathSync(path.resolve(process.argv[1])) === realpathSync(MODULE_PATH);
+  } catch {
+    return false;
+  }
 }
 
 if (isDirectCliInvocation()) {

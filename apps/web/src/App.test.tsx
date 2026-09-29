@@ -3,13 +3,13 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
 import { IDBFactory } from "fake-indexeddb";
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
 
-import { App, AppErrorBoundary, CitationLink } from "./App";
+import { App, AppErrorBoundary, CitationLink, ExplanationPanel } from "./App";
 import { bankId, loadQuestions, loadQuestionsFromUrl, type Question } from "./data/bank";
 import { explanationForQuestion, parseChoiceNotes } from "./data/explanations";
 import { lessonQuizzesById, buildLessonQuizItems } from "./data/quizzes";
@@ -671,7 +671,7 @@ describe("App accessibility and flows", () => {
     assert.match(screen.getByLabelText("Exam reference sheet attribution").textContent ?? "", /may be used while writing the exam/);
   });
 
-  it("renders official-source citations as user-activated external links without preloading or fetching them", () => {
+  it("renders the B-001-017-009 explanation panel citation as a user-activated external link without preloading or fetching it", () => {
     const fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
     const explanation = explanationForQuestion("B-001-017-009");
@@ -679,14 +679,24 @@ describe("App accessibility and flows", () => {
     const citation = explanation.citations.find((candidate) => candidate.url !== undefined);
     assert.ok(citation?.url);
 
-    render(<CitationLink citation={citation} />);
+    render(<ExplanationPanel explanation={explanation} language="en" />);
 
-    const citationLink = screen.getByRole("link", { name: `${citation.id ?? citation.type} (external site) (opens in new tab)` });
+    const panel = screen.getByRole("region", { name: "Explanation for B-001-017-009" });
+    const citationLink = within(panel).getByRole("link", { name: `${citation.id ?? citation.type} (external site) (opens in new tab)` });
     assert.equal(citationLink.getAttribute("href"), citation.url);
     assert.equal(citationLink.getAttribute("target"), "_blank");
     assert.equal(citationLink.getAttribute("rel"), "noopener noreferrer");
+    assert.ok(within(citationLink).getByText("(external site)"));
+    assert.ok(within(citationLink).getByText("(opens in new tab)"));
     assert.equal(document.querySelector(`link[href="${citation.url}"][rel~="preload"], link[href="${citation.url}"][rel~="prefetch"]`), null);
     assert.equal(fetchMock.mock.calls.length, 0);
+  });
+
+  it("renders non-https citation urls as plain text", () => {
+    render(<CitationLink citation={{ type: "rbr-4", url: "javascript:alert(1)" }} />);
+
+    assert.equal(screen.getByText("rbr-4").textContent, "rbr-4");
+    assert.equal(screen.queryByRole("link", { name: /rbr-4/ }), null);
   });
 
   it("surfaces bundled question-bank fetch failures", async () => {
