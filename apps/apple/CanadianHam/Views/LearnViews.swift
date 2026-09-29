@@ -368,7 +368,8 @@ private struct LessonReaderView: View {
                     .tint(DesignTokens.Colors.accent)
             }
             .paperCard()
-            .accessibilityIdentifier("lesson-quiz-card")
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("lesson-quiz-summary-\(quiz.id)")
         }
     }
 
@@ -732,6 +733,7 @@ private struct LessonQuizView: View {
             }
         }
         .paperCard()
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("lesson-quiz-card")
         .task { if items.isEmpty { restart(keepSeed: true) } }
     }
