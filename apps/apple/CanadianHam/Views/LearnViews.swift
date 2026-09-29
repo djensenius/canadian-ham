@@ -711,10 +711,10 @@ private struct LessonQuizView: View {
                 }
                 HStack {
                     Button("Previous") { currentIndex = max(0, currentIndex - 1) }
-                        .buttonStyle(.bordered)
+                        .buttonStyle(AccessibleSecondaryButtonStyle())
                         .disabled(currentIndex == 0)
                     Button("Next") { currentIndex = min(items.count - 1, currentIndex + 1) }
-                        .buttonStyle(.bordered)
+                        .buttonStyle(AccessibleSecondaryButtonStyle())
                         .disabled(currentIndex + 1 >= items.count)
                     Button("Submit lesson quiz") { submit() }
                         .buttonStyle(.borderedProminent)
