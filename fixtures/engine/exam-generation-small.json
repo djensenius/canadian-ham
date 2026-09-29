@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "kind": "exam-generation",
+  "id": "exam-generation-small-fixture-001",
+  "bankId": "basic-2025-07-15",
+  "rng": {
+    "algorithm": "fnv1a64-pcg32-xsh-rr",
+    "seed": "fixture-seed-001"
+  },
+  "input": {
+    "subsections": [
+      {
+        "id": "B-001-001",
+        "questionIds": [
+          "B-001-001-004",
+          "B-001-001-003",
+          "B-001-001-002",
+          "B-001-001-001"
+        ]
+      },
+      {
+        "id": "B-001-002",
+        "questionIds": [
+          "B-001-002-004",
+          "B-001-002-003",
+          "B-001-002-002",
+          "B-001-002-001"
+        ]
+      },
+      {
+        "id": "B-002-001",
+        "questionIds": [
+          "B-002-001-004",
+          "B-002-001-003",
+          "B-002-001-002",
+          "B-002-001-001"
+        ]
+      }
+    ],
+    "answerSourceIndexes": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  "expectedOutput": {
+    "items": [
+      {
+        "position": 1,
+        "questionId": "B-001-001-002",
+        "subsectionId": "B-001-001",
+        "categoryId": "B-001",
+        "choicePermutation": [
+          3,
+          1,
+          2,
+          0
+        ]
+      },
+      {
+        "position": 2,
+        "questionId": "B-002-001-001",
+        "subsectionId": "B-002-001",
+        "categoryId": "B-002",
+        "choicePermutation": [
+          3,
+          1,
+          0,
+          2
+        ]
+      },
+      {
+        "position": 3,
+        "questionId": "B-001-002-002",
+        "subsectionId": "B-001-002",
+        "categoryId": "B-001",
+        "choicePermutation": [
+          3,
+          0,
+          1,
+          2
+        ]
+      }
+    ],
+    "examQuestionCount": 3,
+    "oneQuestionPerInputSubsection": true,
+    "choicePermutationDefinition": "choicePermutation[displayIndex] = sourceIndex; sourceIndex 0 is the correct answer",
+    "categoryCounts": {
+      "B-001": 2,
+      "B-002": 1
+    }
+  }
+}
