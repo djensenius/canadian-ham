@@ -104,8 +104,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let app = launchApp(arguments: ["-CanadianHamInitialScreen", "mock"])
         XCTAssertTrue(app.staticTexts["Mock exam"].waitForExistence(timeout: 10))
         scrollAndTap("Exam reference sheet", in: app)
-        XCTAssertTrue(app.navigationBars["Exam reference sheet"].waitForExistence(timeout: 10))
-        app.buttons["reference-viewer-done-button"].firstMatch.tap()
+        let done = app.buttons["Done"].firstMatch
+        XCTAssertTrue(done.waitForExistence(timeout: 10), "Quick Look should open the bundled exam reference PDF")
+        done.tap()
         XCTAssertTrue(app.staticTexts["Mock exam"].waitForExistence(timeout: 5))
     }
 
@@ -425,10 +426,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
         app = launchApp(arguments: ["-CanadianHamInitialScreen", "mock"])
         XCTAssertTrue(app.staticTexts["Mock exam"].waitForExistence(timeout: 10))
-        scrollAndTap("Exam reference sheet", in: app)
-        XCTAssertTrue(app.navigationBars["Exam reference sheet"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.descendants(matching: .any)["reference-pdf-view"].firstMatch.waitForExistence(timeout: 10))
-        try performReferenceViewerAudit(on: app, context: "\(appearance.rawValue) reference viewer")
+        try performAudit(on: app, context: "\(appearance.rawValue) reference sheet controls")
         app.terminate()
     }
 
@@ -498,45 +496,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
         } else {
             throw XCTSkip("performAccessibilityAudit is unavailable before iOS 17 for \(context).")
         }
-    }
-
-    private func performReferenceViewerAudit(on app: XCUIApplication, context: String) throws {
-        if #available(iOS 17.0, *) {
-            var findings: [String] = []
-            var ignoredFindings: [String] = []
-            do {
-                try app.performAccessibilityAudit { issue in
-                    let description = self.describe(issue)
-                    findings.append(description)
-                    if self.isAllowedReferencePDFIssue(issue, in: app) {
-                        ignoredFindings.append(description)
-                        return true
-                    }
-                    return false
-                }
-            } catch {
-                attachRawAuditFindings(findings, context: context, error: error)
-                throw error
-            }
-            attachRawAuditFindings(
-                findings.isEmpty ? ["No accessibility audit issues reported."] : findings,
-                context: context,
-                error: nil
-            )
-            XCTAssertEqual(findings.count, ignoredFindings.count, "Reference viewer audit should ignore only fixed-layout PDF page Dynamic Type or contrast issues. Findings: \(findings.joined(separator: " | "))")
-        } else {
-            throw XCTSkip("performAccessibilityAudit is unavailable before iOS 17 for \(context).")
-        }
-    }
-
-    @available(iOS 17.0, *)
-    private func isAllowedReferencePDFIssue(_ issue: XCUIAccessibilityAuditIssue, in app: XCUIApplication) -> Bool {
-        let dynamicType = XCUIAccessibilityAuditType(rawValue: 1 << 16)
-        guard issue.auditType == dynamicType || issue.auditType == .contrast else { return false }
-        if issue.element?.identifier == "reference-pdf-view" { return true }
-        guard let issueFrame = issue.element?.frame, app.descendants(matching: .any)["reference-pdf-view"].firstMatch.exists else { return false }
-        let pdfFrame = app.descendants(matching: .any)["reference-pdf-view"].firstMatch.frame
-        return pdfFrame.contains(CGPoint(x: issueFrame.midX, y: issueFrame.midY))
     }
 
     private func captureAccessibilityAudit(on app: XCUIApplication, context: String) throws {

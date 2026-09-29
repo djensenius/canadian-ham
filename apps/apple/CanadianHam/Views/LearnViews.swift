@@ -1,6 +1,5 @@
 import CanadianHamContent
 import CanadianHamEngine
-import PDFKit
 import SwiftUI
 
 private let rbr4CitationURL = "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service"
@@ -47,7 +46,7 @@ struct LearnView: View {
 
     @State private var lessonProgress: [LessonProgressRecord] = []
     @State private var errorMessage: String?
-    @State private var referenceSheet: ReferenceSheetKind?
+    @State private var referenceSheetURL: URL?
 
     var body: some View {
         ScrollView {
@@ -64,8 +63,8 @@ struct LearnView: View {
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                     HStack {
-                        ReferenceSheetButton(kind: .study, selectedSheet: $referenceSheet)
-                        ReferenceSheetButton(kind: .exam, selectedSheet: $referenceSheet)
+                        ReferenceSheetButton(kind: .study, previewURL: $referenceSheetURL)
+                        ReferenceSheetButton(kind: .exam, previewURL: $referenceSheetURL)
                     }
                 }
                 .paperCard()
@@ -84,9 +83,7 @@ struct LearnView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Learn")
-        .sheet(item: $referenceSheet) { sheet in
-            ReferenceSheetViewer(kind: sheet)
-        }
+        .quickLookPreview($referenceSheetURL)
         .task(id: revision) { refreshProgress() }
     }
 
@@ -1090,59 +1087,16 @@ struct ExplanationPanelView: View {
 
 struct ReferenceSheetButton: View {
     let kind: ReferenceSheetKind
-    @Binding var selectedSheet: ReferenceSheetKind?
+    @Binding var previewURL: URL?
 
     var body: some View {
-        Button { selectedSheet = kind } label: {
+        Button { previewURL = ReferenceSheetLocator.url(for: kind) } label: {
             Text(kind.title)
                 .font(DesignTokens.FontScale.body.weight(.semibold))
         }
         .buttonStyle(.bordered)
             .tint(DesignTokens.Colors.ink)
-            .accessibilityHint("Opens the bundled PDF in an offline viewer")
-    }
-}
-
-struct ReferenceSheetViewer: View {
-    let kind: ReferenceSheetKind
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        NavigationStack {
-            Group {
-                if let url = ReferenceSheetLocator.url(for: kind) {
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                        Text("Bundled offline PDF: \(kind.title)")
-                            .font(DesignTokens.FontScale.body)
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                            .padding(.horizontal, DesignTokens.Spacing.md)
-                        PDFKitView(url: url)
-                            .accessibilityIdentifier("reference-pdf-view")
-                    }
-                } else {
-                    ContentUnavailableView("Reference sheet unavailable", systemImage: "doc.richtext", description: Text("The bundled PDF could not be found."))
-                }
-            }
-            .navigationTitle(kind.title)
-#if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
-#endif
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button { dismiss() } label: {
-                        Text("Done")
-                            .font(.body.weight(.semibold))
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                            .padding(.horizontal, DesignTokens.Spacing.lg)
-                            .padding(.vertical, DesignTokens.Spacing.sm)
-                            .background(DesignTokens.Colors.paperInset, in: Capsule())
-                            .overlay(Capsule().strokeBorder(DesignTokens.Colors.ink, lineWidth: 1))
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityIdentifier("reference-viewer-done-button")
-                }
-            }
-        }
+            .accessibilityHint("Opens the bundled PDF in Quick Look")
     }
 }
 
@@ -1157,68 +1111,6 @@ enum ReferenceSheetLocator {
         return candidates.first { FileManager.default.fileExists(atPath: $0.path(percentEncoded: false)) }
     }
 }
-
-#if os(iOS)
-private struct PDFKitView: UIViewRepresentable {
-    let url: URL
-
-    func makeUIView(context: Context) -> PDFView {
-        let view = PDFView()
-        view.accessibilityIdentifier = "reference-pdf-view"
-        view.autoScales = true
-        view.minScaleFactor = 0.5
-        view.maxScaleFactor = 5.0
-        view.displayMode = .singlePageContinuous
-        view.document = PDFDocument(url: url)
-        tagPDFAccessibility(in: view)
-        return view
-    }
-
-    func updateUIView(_ uiView: PDFView, context: Context) {
-        if uiView.document?.documentURL != url {
-            uiView.document = PDFDocument(url: url)
-        }
-        tagPDFAccessibility(in: uiView)
-    }
-
-    private func tagPDFAccessibility(in view: UIView) {
-        view.accessibilityIdentifier = "reference-pdf-view"
-        for subview in view.subviews {
-            tagPDFAccessibility(in: subview)
-        }
-    }
-}
-#elseif os(macOS)
-private struct PDFKitView: NSViewRepresentable {
-    let url: URL
-
-    func makeNSView(context: Context) -> PDFView {
-        let view = PDFView()
-        view.setAccessibilityIdentifier("reference-pdf-view")
-        view.autoScales = true
-        view.minScaleFactor = 0.5
-        view.maxScaleFactor = 5.0
-        view.displayMode = .singlePageContinuous
-        view.document = PDFDocument(url: url)
-        tagPDFAccessibility(in: view)
-        return view
-    }
-
-    func updateNSView(_ nsView: PDFView, context: Context) {
-        if nsView.document?.documentURL != url {
-            nsView.document = PDFDocument(url: url)
-        }
-        tagPDFAccessibility(in: nsView)
-    }
-
-    private func tagPDFAccessibility(in view: NSView) {
-        view.setAccessibilityIdentifier("reference-pdf-view")
-        for subview in view.subviews {
-            tagPDFAccessibility(in: subview)
-        }
-    }
-}
-#endif
 
 private func localized(_ string: String, language: BankLanguage) -> AttributedString {
     var attributed = AttributedString(string)
