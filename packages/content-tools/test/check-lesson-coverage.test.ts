@@ -324,6 +324,26 @@ test("coverage fails when a module lessonIds entry belongs to another module", a
   });
 });
 
+test("coverage fails when a lesson moduleId does not match its ID prefix", async () => {
+  await withFixture("lesson-module-prefix", async (root) => {
+    await writeFixture(root, ({ lessons }) => {
+      lessons.get("L-001-01")!.moduleId = "M2";
+    });
+
+    await assertCoverageError(root, (error) => error.report.malformedFiles.some((file) => /lesson moduleId M2 must match lesson id prefix M1/.test(file.message)));
+  });
+});
+
+test("coverage fails when a module categoryId does not match its ID", async () => {
+  await withFixture("module-category-prefix", async (root) => {
+    await writeFixture(root, ({ modules }) => {
+      modules.get("M1")!.categoryId = "B-002";
+    });
+
+    await assertCoverageError(root, (error) => error.report.malformedFiles.some((file) => /module categoryId B-002 must match M1 as B-001/.test(file.message)));
+  });
+});
+
 test("coverage fails when a lesson moduleId does not refer to an existing module", async () => {
   await withFixture("lesson-unknown-module", async (root) => {
     await writeFixture(root, ({ modules }) => {

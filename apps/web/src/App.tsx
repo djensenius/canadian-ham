@@ -233,12 +233,12 @@ function Practice({
         </span>
       </div>
 
-      <article className="question-panel" lang={language}>
+      <article className="question-panel">
         <p className="question-meta">
           {presentation.question.id} · {presentation.question.categoryId} · {presentation.question.subsectionId}
         </p>
         <h2 id="practice-title" ref={questionHeadingRef} tabIndex={-1}>Practice question</h2>
-        <p className="question-text">{presentation.question.text[language]}</p>
+        <p className="question-text" lang={language}>{presentation.question.text[language]}</p>
 
         <div className="answers" role="group" aria-label="Answer choices">
           {presentation.shuffledAnswers.answers.map((answer, displayIndex) => {
@@ -259,7 +259,7 @@ function Practice({
                 onClick={() => onAnswer(displayIndex)}
               >
                 <span className="answer-label">{String.fromCharCode(65 + displayIndex)}</span>
-                <span>{answer.text[language]}</span>
+                <span lang={language}>{answer.text[language]}</span>
                 {feedback !== null && correct ? <strong>Correct answer</strong> : null}
                 {feedback !== null && selected && !correct ? <strong>Your answer</strong> : null}
               </button>
@@ -273,11 +273,11 @@ function Practice({
           <p>Choose an answer to see immediate feedback.</p>
         ) : feedback.isCorrect ? (
           <p>
-            Correct. The correct answer is: <strong>{correctAnswer.text[language]}</strong>
+            Correct. The correct answer is: <strong lang={language}>{correctAnswer.text[language]}</strong>
           </p>
         ) : (
           <p>
-            Incorrect. The correct answer is: <strong>{correctAnswer.text[language]}</strong>
+            Incorrect. The correct answer is: <strong lang={language}>{correctAnswer.text[language]}</strong>
           </p>
         )}
       </div>

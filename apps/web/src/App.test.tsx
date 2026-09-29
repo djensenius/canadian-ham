@@ -12,11 +12,15 @@ describe("Practice", () => {
 
     const heading = screen.getByRole("heading", { name: "Practice question" });
     assert.match(heading.textContent ?? "", /Practice question/);
-    assert.equal(heading.closest("article")?.getAttribute("lang"), "en");
+    assert.equal(heading.closest("article")?.hasAttribute("lang"), false);
+    assert.equal(document.querySelector(".question-text")?.getAttribute("lang"), "en");
 
     fireEvent.click(screen.getByLabelText("Français"));
-    assert.equal(heading.closest("article")?.getAttribute("lang"), "fr");
+    assert.equal(heading.closest("article")?.hasAttribute("lang"), false);
+    assert.equal(document.querySelector(".question-text")?.getAttribute("lang"), "fr");
+    assert.ok(screen.getAllByTestId("answer-choice").every((choice) => choice.querySelectorAll("span")[1]?.getAttribute("lang") === "fr"));
     fireEvent.click(screen.getByLabelText("English"));
+    assert.equal(document.querySelector(".question-text")?.getAttribute("lang"), "en");
 
     const choices = screen.getAllByTestId("answer-choice");
     assert.equal(choices.length, 4);
@@ -27,6 +31,7 @@ describe("Practice", () => {
     assert.match(feedback, /Incorrect\./);
     assert.match(feedback, /The correct answer is:/);
     assert.match(feedback, /The Radiocommunication Act/);
+    assert.equal(screen.getByRole("status").querySelector("strong")?.getAttribute("lang"), "en");
     assert.match(screen.getByLabelText("Session tally").textContent ?? "", /Score: 0 correct \/ 1 answered/);
 
     const nextButton = screen.getByRole("button", { name: "Next question" });

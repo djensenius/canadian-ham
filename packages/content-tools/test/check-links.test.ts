@@ -62,6 +62,16 @@ test("checkMarkdownLinks ignores links inside fenced code blocks", async () => {
   });
 });
 
+test("checkMarkdownLinks only closes fenced code blocks on a bare fence line", async () => {
+  await withTempRepo(async (root) => {
+    await writeFile(root + "/README.md", "```md\n[Ignored](ignored.md)\n```js\n[Still ignored](still-ignored.md)\n```\n[Missing](missing.md)\n", "utf8");
+
+    const issues = await checkMarkdownLinks(root);
+    assert.equal(issues.length, 1);
+    assert.equal(issues[0]?.target, "missing.md");
+  });
+});
+
 test("checkMarkdownLinks does not treat footnote definitions as link definitions", async () => {
   await withTempRepo(async (root) => {
     await writeFile(path.join(root, "README.md"), "A note.[^1]\n\n[^1]: text that is not a link target\n", "utf8");
