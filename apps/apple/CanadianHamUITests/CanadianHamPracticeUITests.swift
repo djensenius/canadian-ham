@@ -420,10 +420,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
         waitForLessonQuizScreen(in: app)
         answerFirstVisibleQuizAnswer(in: app)
         XCTAssertTrue(app.descendants(matching: .any)["lesson-quiz-feedback"].firstMatch.waitForExistence(timeout: 5) || app.descendants(matching: .any)["answer-feedback"].firstMatch.waitForExistence(timeout: 1))
-        app.scrollViews.firstMatch.swipeUp()
-        waitBriefly(0.1)
-        app.scrollViews.firstMatch.swipeUp()
-        waitBriefly(0.1)
         try performAudit(on: app, context: "\(appearance.rawValue) lesson quiz answered")
         app.terminate()
 
@@ -464,6 +460,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         scrollAndTap("Flag for review", in: app)
         waitBriefly()
         XCTAssertTrue(app.buttons["Flagged for review"].firstMatch.waitForExistence(timeout: 5), "Mock exam should expose the flagged state before auditing")
+        app.scrollViews.firstMatch.swipeUp()
+        waitBriefly()
         try performAudit(on: app, context: "\(appearance.rawValue) mock exam question navigator answered flagged")
 
         scrollAndTap("Submit exam", in: app)
