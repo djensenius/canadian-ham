@@ -60,19 +60,34 @@ final class CanadianHamPracticeUITests: XCTestCase {
     func testLessonQuizResultPersistsAfterRelaunch() throws {
         XCUIDevice.shared.appearance = .light
         var app = launchApp(arguments: [
-            "-CanadianHamInitialLessonID", "L-006-03",
+            "-CanadianHamInitialLessonQuizID", "QZ-L-006-03-A",
             "-CanadianHamLessonQuizLimit", "1",
             "-CanadianHamLessonQuizSeed", "ui-lesson-quiz-persist"
         ])
-        goToLessonQuiz(in: app)
-        XCTAssertTrue(app.descendants(matching: .any)["lesson-quiz-card"].firstMatch.waitForExistence(timeout: 10))
+        waitForLessonQuizScreen(in: app)
         completeVisibleLessonQuiz(in: app, expectedCount: 1)
         XCTAssertTrue(app.descendants(matching: .any)["lesson-quiz-latest-score"].firstMatch.waitForExistence(timeout: 10))
         app.terminate()
 
-        app = launchApp(arguments: ["-CanadianHamInitialLessonID", "L-006-03"], resetData: false)
-        goToLessonQuiz(in: app)
+        app = launchApp(arguments: ["-CanadianHamInitialLessonQuizID", "QZ-L-006-03-A"], resetData: false)
+        waitForLessonQuizScreen(in: app)
         XCTAssertTrue(app.descendants(matching: .any)["lesson-quiz-latest-score"].firstMatch.waitForExistence(timeout: 10), "Saved lesson quiz score should persist after relaunch")
+    }
+
+    func testLearnUserNavigationOpensLessonQuiz() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "learn"])
+        XCTAssertTrue(app.staticTexts["Learn"].firstMatch.waitForExistence(timeout: 10))
+
+        tap("Open module", in: app)
+        XCTAssertTrue(app.staticTexts["Basic Electronics and Theory"].firstMatch.waitForExistence(timeout: 10))
+
+        let firstLesson = app.staticTexts["Units, conductors, and current"].firstMatch
+        XCTAssertTrue(firstLesson.waitForExistence(timeout: 10), "First module should expose its first lesson")
+        firstLesson.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
+
+        goToLessonQuiz(in: app)
     }
 
     func testExplanationAppearsAfterAnsweringInPractice() throws {
@@ -401,9 +416,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try performAudit(on: app, context: "\(appearance.rawValue) lesson reader top")
         app.terminate()
 
-        app = launchApp(arguments: ["-CanadianHamInitialLessonID", "L-006-03", "-CanadianHamLessonQuizLimit", "1", "-CanadianHamLessonQuizSeed", "ui-a11y-lesson-quiz"])
-        goToLessonQuiz(in: app)
-        XCTAssertTrue(app.descendants(matching: .any)["lesson-quiz-card"].firstMatch.waitForExistence(timeout: 10))
+        app = launchApp(arguments: ["-CanadianHamInitialLessonQuizID", "QZ-L-006-03-A", "-CanadianHamLessonQuizLimit", "1", "-CanadianHamLessonQuizSeed", "ui-a11y-lesson-quiz"])
+        waitForLessonQuizScreen(in: app)
         answerFirstVisibleQuizAnswer(in: app)
         XCTAssertTrue(app.descendants(matching: .any)["lesson-quiz-feedback"].firstMatch.waitForExistence(timeout: 5) || app.descendants(matching: .any)["answer-feedback"].firstMatch.waitForExistence(timeout: 1))
         app.scrollViews.firstMatch.swipeUp()
@@ -690,7 +704,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         for _ in 0..<12 {
             for id in identifiers {
                 let button = app.descendants(matching: .any)[id].firstMatch
-                if button.exists && button.isEnabled {
+                if button.exists && button.isEnabled && button.isHittable {
                     button.tap()
                     return
                 }
@@ -784,16 +798,16 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func goToLessonQuiz(in app: XCUIApplication) {
-        let quizCard = app.descendants(matching: .any)["lesson-quiz-card"].firstMatch
-        if quizCard.exists, quizCard.isHittable {
-            return
-        }
         let button = app.buttons["Go to quiz"].firstMatch
         XCTAssertTrue(button.waitForExistence(timeout: 10), "Lesson reader should expose a Go to quiz button")
         scrollUntilHittable(button, in: app, maxSwipes: 6)
         XCTAssertTrue(button.isHittable, "Go to quiz button should be hittable")
         button.tap()
-        XCTAssertTrue(quizCard.waitForExistence(timeout: 5), "Expected real lesson quiz after tapping Go to quiz")
+        waitForLessonQuizScreen(in: app)
+    }
+
+    private func waitForLessonQuizScreen(in app: XCUIApplication) {
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-quiz-card"].firstMatch.waitForExistence(timeout: 10), "Expected the real lesson quiz screen")
     }
 
     private func waitForElementToDisappear(_ element: XCUIElement, timeout: TimeInterval, message: String, file: StaticString = #filePath, line: UInt = #line) {
