@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-012-010",
+  "questionId": "B-005-012-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-012-010.\n\nWhy the correct answer is right: At resonance, inductive and capacitive reactance have equal size and opposite sign. Equal-and-opposite reactances are the balance condition for the tuned circuit.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"inductive reactance is the only opposition in the circuit\": With only inductive reactance, there is no capacitive reactance to balance.\n- sourceIndex 2: \"the circuit contains no resistance\": Resonance is not defined by the absence of resistance.\n- sourceIndex 3: \"resistance is equal to the reactance\": Resistance equalling reactance is not the LC cancellation condition.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-012-010"
+    }
+  ],
+  "licenseClass": "original"
+}

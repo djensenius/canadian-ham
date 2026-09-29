@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-009-008",
+  "questionId": "B-005-009-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-009-008.\n\nWhy the correct answer is right: Series inductances add directly, so 12 millihenries + 12 millihenries = 24 millihenries.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"6 millihenries\": Six millihenries is half of one choke, which would come from two equal 12 mH inductors in parallel.\n- sourceIndex 2: \"48 millihenries\": Forty-eight millihenries is four times one choke, but only two chokes are being added.\n- sourceIndex 3: \"3 millihenries\": Three millihenries is one-quarter of one choke and does not follow from a two-part series sum.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-009-008"
+    }
+  ],
+  "licenseClass": "original"
+}

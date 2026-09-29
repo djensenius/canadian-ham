@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-010-009",
+  "questionId": "B-005-010-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-010-009.\n\nWhy the correct answer is right: At audio frequencies, a suitably chosen RF bypass capacitor has high reactance, so it does not significantly shunt wanted audio signal.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Low reactance at radio frequencies\": Low RF reactance explains why RF can be bypassed, but it does not explain why the audio circuit is little affected.\n- sourceIndex 2: \"High reactance at radio frequencies\": High RF reactance would make the part a poor RF bypass capacitor.\n- sourceIndex 3: \"Low reactance at audio frequencies\": Low audio reactance would load or short the audio signal, so the audio circuit would be affected.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-010-009"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-010-003",
+  "questionId": "B-005-010-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-010-003.\n\nWhy the correct answer is right: Capacitive reactance is inversely related to frequency. As frequency goes down, XC goes up.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"applied voltage increases\": Voltage level does not appear in the ideal capacitive-reactance formula.\n- sourceIndex 2: \"applied voltage decreases\": Lower applied voltage changes signal level, not the capacitor's reactance.\n- sourceIndex 3: \"frequency increases\": Increasing frequency makes capacitive reactance decrease, the opposite direction.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-010-003"
+    }
+  ],
+  "licenseClass": "original"
+}

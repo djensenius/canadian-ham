@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-012-008",
+  "questionId": "B-005-012-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-012-008.\n\nWhy the correct answer is right: The ideal resonant frequency depends on the inductor and capacitor values. Adding a resistor changes loss or sharpness, but it does not change those L and C values.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"increase the area of plates in the capacitor\": Larger plate area increases capacitance, so the resonant frequency would change.\n- sourceIndex 2: \"insert Mylar sheets between the plates of the capacitor\": Changing the dielectric changes capacitance, so the tuning point moves.\n- sourceIndex 3: \"wind more turns on the coil\": More turns increase inductance, which changes the resonant frequency.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-012-008"
+    }
+  ],
+  "licenseClass": "original"
+}

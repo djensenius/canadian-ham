@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-011-010",
+  "questionId": "B-005-011-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-011-010.\n\nWhy the correct answer is right: Steel is a ferromagnetic material that can retain magnetization, so it is suitable for a permanent magnet in this Basic-level comparison.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"copper\": Copper is useful as a conductor, but it does not retain strong permanent magnetization.\n- sourceIndex 2: \"aluminum\": Aluminum is not the usual ferromagnetic material used to hold a permanent magnetic field.\n- sourceIndex 3: \"brass\": Brass is a copper-zinc alloy and is not chosen to make a permanent magnet.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-011-010"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-009-001",
+  "questionId": "B-005-009-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-009-001.\n\nWhy the correct answer is right: Ideal inductors in series add directly. Two equal inductances therefore total L + L, which is 2L, or twice the value of one inductor.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Half the value of one inductor\": Half is the result for two equal ideal inductors in parallel, not for a series string.\n- sourceIndex 2: \"The value of one inductor times 4\": Multiplying one value by four would require four equal inductors in series, not two.\n- sourceIndex 3: \"The value of one inductor divided by 4\": Dividing by four would be the equal-part parallel shortcut for four matching inductors, not a two-part series connection.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-009-001"
+    }
+  ],
+  "licenseClass": "original"
+}

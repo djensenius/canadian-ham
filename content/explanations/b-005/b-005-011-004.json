@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-011-004",
+  "questionId": "B-005-011-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-011-004.\n\nWhy the correct answer is right: Voltage follows turns ratio. The secondary has 500 / 250 = 2 times the primary turns, so 120 V x 2 = 240 V.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"480 V\": This applies a factor of four; the actual turns ratio is two to one.\n- sourceIndex 2: \"620 V\": This does not match the 500/250 ratio and is not produced by multiplying 120 V by 2.\n- sourceIndex 3: \"60 V\": Sixty volts uses the inverse ratio, as if the secondary had half as many turns as the primary.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-011-004"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-013-010",
+  "questionId": "B-005-013-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-013-010.\n\nWhy the correct answer is right: Accuracy describes how close an instrument reading is to the true value. A meter that displays values true to reality is accurate.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Precision\": Precision is about repeatability or fine distinction, not necessarily closeness to the true value.\n- sourceIndex 2: \"Resolution\": Resolution is the smallest display step or readable change, not truthfulness of the reading.\n- sourceIndex 3: \"Stability\": Stability means the reading or instrument behaviour does not drift much, but a stable reading can still be inaccurate.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-013-010"
+    }
+  ],
+  "licenseClass": "original"
+}

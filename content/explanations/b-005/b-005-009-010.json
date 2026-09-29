@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-009-010",
+  "questionId": "B-005-009-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-009-010.\n\nWhy the correct answer is right: Two equal capacitors in series total half of one capacitor. Half of 20 microfarads is 10 microfarads.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"40 microfarads\": Forty microfarads is the direct sum for parallel capacitors, not the series combination.\n- sourceIndex 2: \"80 microfarads\": Eighty microfarads would mean four times one capacitor; series connection cannot produce that increase.\n- sourceIndex 3: \"5 microfarads\": Five microfarads is one-quarter of one value, which would fit four equal capacitors in series, not two.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-009-010"
+    }
+  ],
+  "licenseClass": "original"
+}

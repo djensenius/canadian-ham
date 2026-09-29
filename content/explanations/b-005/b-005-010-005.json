@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-010-005",
+  "questionId": "B-005-010-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-010-005.\n\nWhy the correct answer is right: In an AC circuit, impedance is the ratio of AC voltage to AC current. It includes resistance and any reactance in the circuit.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Resistance\": Resistance is only the non-reactive part and does not cover capacitive or inductive effects.\n- sourceIndex 2: \"Reactance\": Reactance is frequency-dependent opposition alone; impedance is the combined voltage-current ratio.\n- sourceIndex 3: \"Conductance\": Conductance describes ease of current flow, so it is the inverse idea rather than the voltage-to-current opposition.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-010-005"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-010-007",
+  "questionId": "B-005-010-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-010-007.\n\nWhy the correct answer is right: A ferrite-cored coil can present high reactance at radio frequencies. That high RF opposition helps reduce the unwanted radio-frequency current.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Low reactance at radio frequencies\": Low RF reactance would let the offending radio signal pass instead of impeding it.\n- sourceIndex 2: \"Low reactance at audio frequencies\": Audio-frequency behaviour does not explain why the coil mitigates an unwanted RF signal.\n- sourceIndex 3: \"High reactance at audio frequencies\": High audio reactance might disturb wanted audio, but the interference-control property here is high opposition at RF.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-010-007"
+    }
+  ],
+  "licenseClass": "original"
+}

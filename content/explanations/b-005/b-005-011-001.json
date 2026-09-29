@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-011-001",
+  "questionId": "B-005-011-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-011-001.\n\nWhy the correct answer is right: Neglecting losses, primary input power is 250 W. Use I = P / E: 250 W / 120 V = 2.083 A, which rounds to about 2.1 A.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"0.48 amperes\": This is close to 120 / 250, which reverses the power-current calculation.\n- sourceIndex 2: \"1.4 amperes\": This would correspond to only about 168 W at 120 V, not 250 W.\n- sourceIndex 3: \"3.1 amperes\": This would draw about 372 W from a 120 V primary, too high for the stated load.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-011-001"
+    }
+  ],
+  "licenseClass": "original"
+}

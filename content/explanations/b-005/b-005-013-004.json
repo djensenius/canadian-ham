@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-013-004",
+  "questionId": "B-005-013-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-013-004.\n\nWhy the correct answer is right: Current is measured with an ammeter. Final power amplifier current is therefore checked with an ammeter in the appropriate current path.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"An ohmmeter\": An ohmmeter measures resistance and is not used on an operating current path.\n- sourceIndex 2: \"A wattmeter\": A wattmeter measures power, not the final amplifier current itself.\n- sourceIndex 3: \"A voltmeter\": A voltmeter measures potential difference across points rather than current through the amplifier path.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-013-004"
+    }
+  ],
+  "licenseClass": "original"
+}

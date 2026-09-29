@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-009-009",
+  "questionId": "B-005-009-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-009-009.\n\nWhy the correct answer is right: Two equal ideal inductors in parallel give half of one value. Half of 20 millihenries is 10 millihenries.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"40 millihenries\": Forty millihenries is 20 + 20, the series result rather than the parallel result.\n- sourceIndex 2: \"80 millihenries\": Eighty millihenries multiplies one inductor by four, which has no basis in a two-inductor parallel pair.\n- sourceIndex 3: \"5 millihenries\": Five millihenries would be one-quarter of 20 mH, as if four equal inductors were paralleled.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-009-009"
+    }
+  ],
+  "licenseClass": "original"
+}

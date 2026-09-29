@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-013-002",
+  "questionId": "B-005-013-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-013-002.\n\nWhy the correct answer is right: An ammeter must carry the circuit current being measured. It is inserted in series so the same current flows through the meter and the circuit path.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"In quadrature with the circuit\": A 90-degree phase word does not describe the physical connection for current measurement.\n- sourceIndex 2: \"In phase with the circuit\": Being in phase is not a wiring method for placing an ammeter in the current path.\n- sourceIndex 3: \"In parallel with the circuit\": A parallel ammeter connection can shunt the circuit and is not the normal way to measure current.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-013-002"
+    }
+  ],
+  "licenseClass": "original"
+}

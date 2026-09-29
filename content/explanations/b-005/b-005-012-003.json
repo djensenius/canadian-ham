@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-012-003",
+  "questionId": "B-005-012-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-012-003.\n\nWhy the correct answer is right: The resonant frequency is one centre frequency, but the circuit has useful response over a surrounding frequency range. That range is bandwidth.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Quality factor\": Quality factor describes sharpness as a ratio, not the actual range of frequencies.\n- sourceIndex 2: \"Shape factor\": Shape factor compares filter widths at specified response points; it is not the general name for the resonant range.\n- sourceIndex 3: \"Response curve\": A response curve is a graph of behaviour versus frequency, not the range itself.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-012-003"
+    }
+  ],
+  "licenseClass": "original"
+}

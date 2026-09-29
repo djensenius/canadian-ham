@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-012-007",
+  "questionId": "B-005-012-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-012-007.\n\nWhy the correct answer is right: A series resonant circuit has low impedance at resonance, so current can become large for the applied source.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"high impedance\": High impedance is the parallel-resonance result, not the series case.\n- sourceIndex 2: \"low mutual inductance\": Mutual inductance is about magnetic coupling between coils and does not describe series-resonant impedance.\n- sourceIndex 3: \"high mutual inductance\": Coil-to-coil coupling is not the reason a series LC path has low impedance at resonance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-012-007"
+    }
+  ],
+  "licenseClass": "original"
+}

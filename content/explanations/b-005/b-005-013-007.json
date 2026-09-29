@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-013-007",
+  "questionId": "B-005-013-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-013-007.\n\nWhy the correct answer is right: An RF wattmeter is designed to measure radio-frequency power in the transmitter output line directly.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Wavemeter\": A wavemeter is associated with frequency or wavelength indication, not direct transmitter output power.\n- sourceIndex 2: \"Field-strength meter\": A field-strength meter samples radiated field near an antenna; it does not directly measure power at the transmitter output.\n- sourceIndex 3: \"Ammeter\": An ammeter measures current, and power would still require voltage or RF line calibration information.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-013-007"
+    }
+  ],
+  "licenseClass": "original"
+}

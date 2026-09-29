@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-010-006",
+  "questionId": "B-005-010-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-010-006.\n\nWhy the correct answer is right: Inductive reactance is proportional to frequency. Increasing frequency gives the inductor more opposition to changing current.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A decrease in frequency\": Lower frequency reduces inductive reactance, moving the wrong way.\n- sourceIndex 2: \"An increase in current\": A larger current may increase heating or magnetic stress, but ideal reactance is not set by current magnitude.\n- sourceIndex 3: \"An increase in voltage\": Raising voltage changes circuit levels; the reactance change in the formula comes from frequency or inductance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-010-006"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-010-004",
+  "questionId": "B-005-010-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-010-004.\n\nWhy the correct answer is right: Impedance is the total AC opposition that includes resistance and reactance together. It is the practical AC version of voltage-current opposition.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Reluctance\": Reluctance describes opposition in a magnetic path, not electrical opposition from resistance plus reactance.\n- sourceIndex 2: \"Admittance\": Admittance is the reciprocal idea: how easily AC can flow, not the opposition itself.\n- sourceIndex 3: \"Conductance\": Conductance is the reciprocal of resistance for ordinary conduction, not combined AC opposition.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-010-004"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-011-007",
+  "questionId": "B-005-011-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-011-007.\n\nWhy the correct answer is right: With losses neglected, the secondary receives 10 W. Current is I = P / E = 10 W / 5 V = 2 A.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"0.5 amperes\": At 5 V, 0.5 A would provide only 2.5 W, not 10 W.\n- sourceIndex 2: \"1 ampere\": One ampere at 5 V is 5 W, half of the stated primary power.\n- sourceIndex 3: \"5 amperes\": Five amperes at 5 V would require 25 W, too much for a 10 W ideal input.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-05"
+    },
+    {
+      "type": "question",
+      "id": "B-005-011-007"
+    }
+  ],
+  "licenseClass": "original"
+}
