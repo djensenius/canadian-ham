@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-009-002",
+  "questionId": "B-006-009-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-009-002.\n\nWhy the correct answer is right: A half-wave dipole becomes more directive when one or more nearby parasitic elements are added. Those elements re-radiate with the driven element, reinforcing radiation in some directions and reducing it in others as in a Yagi.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"By using a radiating element with a larger diameter\": Larger diameter mainly changes bandwidth and mechanical strength; it does not by itself form the directional pattern created by parasitic elements.\n- sourceIndex 2: \"By adding traps to the radiating element\": Traps divide an element electrically for multiband operation. They do not add a reflector or director to concentrate the dipole pattern.\n- sourceIndex 3: \"By lengthening the radiating element\": Changing the driven element length mostly detunes the dipole. Directional gain comes from interaction with additional elements, not from making one dipole arm longer.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-009-002"
+    }
+  ],
+  "licenseClass": "original"
+}

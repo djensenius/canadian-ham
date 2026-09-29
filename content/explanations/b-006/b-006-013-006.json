@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-013-006",
+  "questionId": "B-006-013-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-013-006.\n\nWhy the correct answer is right: Compared with a Yagi of similar element count and boom length, a quad has larger loop frames and more wire area exposed to wind, ice, and mechanical stress, making weather damage a major disadvantage.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Requires a more heavy-duty mast or tower\": A stronger support may sometimes be chosen, but the named disadvantage is the loop structure being more vulnerable to weather damage.\n- sourceIndex 2: \"Lower gain\": A quad does not generally lose gain compared with an equivalent Yagi; quads are often chosen because their gain can be competitive.\n- sourceIndex 3: \"Requires matching to the transmission line\": Many antennas, including Yagis, may need matching. Needing a match is not the distinguishing disadvantage of a quad in this comparison.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-013-006"
+    }
+  ],
+  "licenseClass": "original"
+}

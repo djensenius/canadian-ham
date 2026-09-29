@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-002-003",
+  "questionId": "B-006-002-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-002-003.\n\nWhy the correct answer is right: Open-wire line uses two separate conductors kept a constant distance apart by insulating rods or spreaders. The large air spacing is part of its low-loss balanced-line behaviour.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Coaxial cable\": Coaxial cable is built as nested conductors with dielectric between centre and shield, not as two wires on spreaders.\n- sourceIndex 2: \"Window line\": Window line has its spacing maintained by a continuous or windowed plastic web, not by separate rods in open air.\n- sourceIndex 3: \"Twisted pair\": Twisted pair conductors wrap around each other along the run, so it is not the spreader-supported open-wire construction.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-002-003"
+    }
+  ],
+  "licenseClass": "original"
+}

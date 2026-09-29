@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-001-001",
+  "questionId": "B-006-001-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-001-001.\n\nWhy the correct answer is right: The transmission line is the RF path between the transceiver and the antenna feed point. It carries energy to the antenna on transmit and carries received signals back to the receiver.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A counterpoise wire\": A counterpoise can provide an RF return for some antenna systems, but it is not the line that carries the signal between the radio and the antenna feed point.\n- sourceIndex 2: \"A ground wire\": A station ground or bonding conductor is for safety and RF reference control; it is not the normal signal path from the transceiver to the antenna.\n- sourceIndex 3: \"A radial wire\": A radial is part of a vertical antenna's ground or counterpoise system, not the feedline connecting the equipment to the antenna.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-001-001"
+    }
+  ],
+  "licenseClass": "original"
+}

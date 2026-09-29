@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-008-010",
+  "questionId": "B-006-008-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-008-010.\n\nWhy the correct answer is right: A trap is a parallel resonant circuit made from a coil and capacitor, used in an antenna element so different portions of the antenna operate on different bands.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A large wire-wound resistor\": A resistor dissipates RF power as heat; it is not a resonant circuit that isolates or connects antenna sections by frequency.\n- sourceIndex 2: \"A coil wrapped around a ferrite rod\": A coil on ferrite is an inductor or choke by itself; without the parallel capacitor it is not the resonant trap described here.\n- sourceIndex 3: \"A hollow metal can\": A hollow metal can might be part of a cavity or shield, but it is not the coil-and-capacitor parallel circuit used as a wire-antenna trap.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-03"
+    },
+    {
+      "type": "question",
+      "id": "B-006-008-010"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-006-02-A",
+  "lessonId": "L-006-02",
+  "officialQuestionIds": [
+    "B-006-004-001",
+    "B-006-004-003",
+    "B-006-004-009",
+    "B-006-005-001",
+    "B-006-005-005",
+    "B-006-005-011",
+    "B-006-006-002",
+    "B-006-006-011"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-006-02-A-C1",
+      "prompt": { "en": "A coax run is doubled in length using the same cable at the same frequency. What happens to loss stated in dB?", "fr": null },
+      "choices": [
+        { "text": { "en": "It is cut in half.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It stays exactly the same.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It approximately doubles.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "It becomes zero if the SWR is low.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "For the same cable and frequency, dB loss accumulates with length.", "fr": null }
+    },
+    {
+      "id": "QZ-L-006-02-A-C2",
+      "prompt": { "en": "What is a tuner at the radio mainly doing when it lets a solid-state transmitter run at rated power?", "fr": null },
+      "choices": [
+        { "text": { "en": "Changing the ionosphere above the antenna", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Making a poor feedline lossless", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Measuring the antenna pattern", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Transforming impedance so the transmitter sees a suitable load", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "A tuner is an impedance-matching network; it does not change the actual radiation pattern or remove all feedline loss.", "fr": null }
+    },
+    {
+      "id": "QZ-L-006-02-A-C3",
+      "prompt": { "en": "Why can a lossy feedline make an SWR reading at the desk look better than the antenna feed point really is?", "fr": null },
+      "choices": [
+        { "text": { "en": "The reflected wave is attenuated on its trip back to the meter.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The antenna stops radiating when the line is lossy.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The feedline changes every antenna into a dummy load.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The SWR meter reads polarization instead of voltage waves.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Loss reduces both forward and reflected energy; the return trip especially can hide the size of the mismatch from a station-end meter.", "fr": null }
+    }
+  ]
+}

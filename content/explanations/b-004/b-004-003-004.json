@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-003-004",
+  "questionId": "B-004-003-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-003-004.\n\nWhy the correct answer is right: Producing a larger version of a low-level input signal is amplification.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Detection\": Detection recovers information from a modulated signal; it is not simply making a signal larger.\n- sourceIndex 2: \"Modulation\": Modulation places information onto a carrier, not the described increase in level.\n- sourceIndex 3: \"Rectification\": Rectification changes AC to DC or pulsating DC, not low-level input to higher-level output.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-02"
+    },
+    {
+      "type": "question",
+      "id": "B-004-003-004"
+    }
+  ],
+  "licenseClass": "original"
+}

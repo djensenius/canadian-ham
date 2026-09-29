@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-011-004",
+  "questionId": "B-006-011-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-011-004.\n\nWhy the correct answer is right: A Yagi reflector is slightly longer than the driven element. The driven length is 143 / 28.1 = 5.09 m, and about 105% of that is 5.34 m.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"10.68 metres\": This is 300 / 28.1 = 10.68 m, a full free-space wavelength. A reflector is only slightly longer than a half-wave element.\n- sourceIndex 2: \"2.54 metres\": This is 71.3 / 28.1 = 2.54 m, the practical quarter-wave length. A reflector is not a quarter-wave element.\n- sourceIndex 3: \"2.67 metres\": This is 75 / 28.1 = 2.67 m, the free-space quarter-wave estimate. The reflector should be just longer than a half-wave element.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-011-004"
+    }
+  ],
+  "licenseClass": "original"
+}

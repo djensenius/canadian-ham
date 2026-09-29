@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-004-006",
+  "questionId": "B-006-004-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-004-006.\n\nWhy the correct answer is right: RG-58 is smaller and usually lossier than RG-213 for the same frequency and length. With the same transmitter power, more power is lost in the RG-58 feedline, so less RF power reaches the antenna to be radiated.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"More RF power is radiated from the antenna\": Switching to the lossier cable cannot increase radiated power when transmitter output and antenna are unchanged.\n- sourceIndex 2: \"SWR at the antenna increases\": The antenna feed-point SWR is set by the antenna impedance compared with the line impedance, not by the cable being RG-213 or RG-58 if both are nominal 50-ohm coax.\n- sourceIndex 3: \"SWR at the antenna decreases\": A lossier line can make a station-end SWR meter look different, but it does not improve the actual mismatch at the antenna feed point.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-004-006"
+    }
+  ],
+  "licenseClass": "original"
+}

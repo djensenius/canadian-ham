@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-006-04-A",
+  "lessonId": "L-006-04",
+  "officialQuestionIds": [
+    "B-006-009-001",
+    "B-006-009-006",
+    "B-006-009-011",
+    "B-006-010-001",
+    "B-006-010-002",
+    "B-006-010-009",
+    "B-006-011-001",
+    "B-006-011-011"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-006-04-A-C1",
+      "prompt": { "en": "A Yagi element is not connected to the feedline but is coupled by nearby RF fields. What is it called?", "fr": null },
+      "choices": [
+        { "text": { "en": "A parasitic element", "fr": null }, "isCorrect": true },
+        { "text": { "en": "A lightning arrester", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A coax shield", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A dummy load", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "A parasitic element is energized by coupling from the driven element rather than direct feedline connection.", "fr": null }
+    },
+    {
+      "id": "QZ-L-006-04-A-C2",
+      "prompt": { "en": "A vertical antenna is being estimated for 25 MHz using 71.3 / f(MHz). Which value is closest?", "fr": null },
+      "choices": [
+        { "text": { "en": "11.9 m", "fr": null }, "isCorrect": false },
+        { "text": { "en": "2.85 m", "fr": null }, "isCorrect": true },
+        { "text": { "en": "5.72 m", "fr": null }, "isCorrect": false },
+        { "text": { "en": "0.35 m", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "71.3 divided by 25 is about 2.85 metres for a quarter-wave estimate.", "fr": null }
+    },
+    {
+      "id": "QZ-L-006-04-A-C3",
+      "prompt": { "en": "Why do two stacked identical antennas ideally add about 3 dB over one antenna?", "fr": null },
+      "choices": [
+        { "text": { "en": "Because stacking changes metres into megahertz", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Because it removes the need for feedline", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Because the array concentrates roughly twice the power in useful directions", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Because each connector adds 3 dB of gain", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "A doubling of effective radiated power in the desired direction corresponds to about 3 dB before real-world losses.", "fr": null }
+    }
+  ]
+}

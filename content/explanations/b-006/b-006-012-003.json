@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-012-003",
+  "questionId": "B-006-012-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-012-003.\n\nWhy the correct answer is right: A free-space half-wave dipole has a doughnut-shaped three-dimensional pattern: maximum radiation around the sides of the wire and nulls off the ends.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A major lobe off each end of the antenna\": The ends of a half-wave dipole are the null directions. The major radiation is broadside to the wire.\n- sourceIndex 2: \"Spherical (equal radiation in all directions)\": A spherical pattern is isotropic. A real half-wave dipole has directional maxima and nulls, so it is not equal in all directions.\n- sourceIndex 3: \"Major lobes at 45-degree angles to the antenna\": Forty-five-degree lobes are not the free-space half-wave dipole pattern. The strongest radiation is broadside, at right angles to the wire.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-012-003"
+    }
+  ],
+  "licenseClass": "original"
+}

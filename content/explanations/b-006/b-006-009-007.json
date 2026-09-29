@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-009-007",
+  "questionId": "B-006-009-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-009-007.\n\nWhy the correct answer is right: Antenna gain compares how strong the antenna's radiation is in a specified direction with the radiation from a reference antenna fed with the same power.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The ratio of the signal in the forward direction to the signal in the back direction\": That is front-to-back ratio, a comparison between two directions of the same antenna pattern, not gain against a reference antenna.\n- sourceIndex 2: \"The ratio of the power radiated by an antenna compared to the transmitter power\": That describes radiation efficiency or losses. Gain also includes how the radiated power is concentrated in direction compared with a reference.\n- sourceIndex 3: \"The power amplifier gain minus the transmission line losses\": That is a station power-chain calculation. Antenna gain is a property of the antenna pattern relative to a reference radiator.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-009-007"
+    }
+  ],
+  "licenseClass": "original"
+}

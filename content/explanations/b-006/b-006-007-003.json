@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-007-003",
+  "questionId": "B-006-007-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-007-003.\n\nWhy the correct answer is right: A Yagi’s polarization follows the orientation of its driven element. If the elements are parallel to the Earth’s surface, the electric field is horizontal.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Elliptical\": Elliptical polarization requires a changing field made from unequal or phase-shifted components; simply mounting straight Yagi elements horizontally does not create it.\n- sourceIndex 2: \"Vertical\": Vertical polarization would require the elements, especially the driven element, to be mounted vertically rather than parallel to the Earth’s surface.\n- sourceIndex 3: \"Circular\": Circular polarization requires two perpendicular field components with a 90-degree phase relationship; a standard horizontally mounted Yagi does not provide that.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-03"
+    },
+    {
+      "type": "question",
+      "id": "B-006-007-003"
+    }
+  ],
+  "licenseClass": "original"
+}

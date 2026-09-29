@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-011-011",
+  "questionId": "B-006-011-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-011-011.\n\nWhy the correct answer is right: Stacking two identical antennas ideally doubles the power density in the main lobe, which is a 3 dB increase. Starting from 10 dBi, 10 + 3 = 13 dBi.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"7 dBi\": This subtracts 3 dB from the single-antenna gain, as if stacking caused a half-power loss. Proper stacking adds about 3 dB.\n- sourceIndex 2: \"20 dBi\": This doubles the dBi number arithmetically, but decibels are logarithmic. Doubling the number of antennas gives about +3 dB, not 10 dB more.\n- sourceIndex 3: \"10 dBi\": This ignores the array gain from stacking. Two properly stacked identical Yagis should be about 3 dB above one of them.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-011-011"
+    }
+  ],
+  "licenseClass": "original"
+}

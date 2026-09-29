@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-005-004",
+  "questionId": "B-004-005-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-005-004.\n\nWhy the correct answer is right: The plate of a vacuum tube is operated at the highest positive voltage to attract electrons from the cathode.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Collector\": Collector is a transistor terminal, not a vacuum-tube electrode.\n- sourceIndex 2: \"Cathode\": The cathode emits electrons and is not the highest positive electrode.\n- sourceIndex 3: \"Grid\": The grid controls electron flow and is not normally the highest positive electrode.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-02"
+    },
+    {
+      "type": "question",
+      "id": "B-004-005-004"
+    }
+  ],
+  "licenseClass": "original"
+}

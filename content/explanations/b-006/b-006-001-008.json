@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-001-008",
+  "questionId": "B-006-001-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-001-008.\n\nWhy the correct answer is right: Open-wire impedance is set by the conductor diameter and the spacing between the conductors. Larger spacing or thinner conductors changes the field geometry and therefore the characteristic impedance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Length of the line\": Length changes the amount of loss and the electrical phase delay, but it is not the missing cross-section dimension in the impedance formula.\n- sourceIndex 2: \"Height above ground\": Height can affect the installed antenna system and balance, yet the line's nominal impedance is defined by the two-wire geometry itself.\n- sourceIndex 3: \"Distance to metal structures\": Nearby metal can disturb a balanced line in use, but it is not the design dimension paired with conductor diameter for characteristic impedance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-001-008"
+    }
+  ],
+  "licenseClass": "original"
+}

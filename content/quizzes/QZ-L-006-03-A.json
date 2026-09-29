@@ -1,0 +1,48 @@
+{
+  "id": "QZ-L-006-03-A",
+  "lessonId": "L-006-03",
+  "officialQuestionIds": [
+    "B-006-007-001",
+    "B-006-007-003",
+    "B-006-007-008",
+    "B-006-008-001",
+    "B-006-008-003",
+    "B-006-008-006",
+    "B-006-008-010"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-006-03-A-C1",
+      "prompt": { "en": "A local VHF station uses a vertical whip. Which receiving antenna orientation is usually the better first choice?", "fr": null },
+      "choices": [
+        { "text": { "en": "Horizontal, because it rejects all ground-wave signals", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Vertical, because the polarizations match", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Any orientation, because polarization only applies to feedlines", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Circular, because all whips are circularly polarized", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "For local VHF/UHF paths, matching polarization usually improves received signal strength.", "fr": null }
+    },
+    {
+      "id": "QZ-L-006-03-A-C2",
+      "prompt": { "en": "A wire antenna resonates below the frequency you want. What adjustment moves resonance upward?", "fr": null },
+      "choices": [
+        { "text": { "en": "Add more wire to both ends", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Bury the feedline deeper", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Make the radiating wire a little shorter", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Replace the end insulators with longer rope", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Shorter antennas resonate higher; longer antennas resonate lower.", "fr": null }
+    },
+    {
+      "id": "QZ-L-006-03-A-C3",
+      "prompt": { "en": "Using λ = 300 / f(MHz), what is the free-space wavelength of a 60 MHz signal?", "fr": null },
+      "choices": [
+        { "text": { "en": "18 m", "fr": null }, "isCorrect": false },
+        { "text": { "en": "10 m", "fr": null }, "isCorrect": false },
+        { "text": { "en": "0.5 m", "fr": null }, "isCorrect": false },
+        { "text": { "en": "5 m", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "300 divided by 60 is 5, so the wavelength is about 5 metres.", "fr": null }
+    }
+  ]
+}

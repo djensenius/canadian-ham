@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-004-011",
+  "questionId": "B-004-004-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-004-011.\n\nWhy the correct answer is right: The FET channel runs between the source and drain; the gate controls that channel.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Source and gate\": The gate is the control terminal, not a channel end paired with source.\n- sourceIndex 2: \"Gate and drain\": The gate controls the channel and is not one of the two channel ends.\n- sourceIndex 3: \"Source and base\": Base is a bipolar transistor terminal and is not part of a FET channel pair.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-02"
+    },
+    {
+      "type": "question",
+      "id": "B-004-004-011"
+    }
+  ],
+  "licenseClass": "original"
+}

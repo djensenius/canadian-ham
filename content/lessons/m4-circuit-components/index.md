@@ -10,7 +10,7 @@ lessonIds:
   - L-004-01
   - L-004-02
   - L-004-03
-status: outline
+status: draft
 ---
 # Circuit Components
 

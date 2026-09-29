@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-006-002",
+  "questionId": "B-004-006-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-006-002.\n\nWhy the correct answer is right: The first three bands give the nominal resistance value: two significant digits and a multiplier.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The resistance material\": The colour code does not identify the resistor material in this Basic-level use.\n- sourceIndex 2: \"The power rating in watts\": Power rating is a separate heat rating and is not encoded by the first three colour bands.\n- sourceIndex 3: \"The resistance tolerance in percent\": Tolerance is shown by the tolerance band, not by the first three value bands.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-03"
+    },
+    {
+      "type": "question",
+      "id": "B-004-006-002"
+    }
+  ],
+  "licenseClass": "original"
+}

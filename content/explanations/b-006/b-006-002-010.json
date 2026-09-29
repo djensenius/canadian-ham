@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-002-010",
+  "questionId": "B-006-002-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-002-010.\n\nWhy the correct answer is right: Window line is balanced, while a tuner without a balanced output presents an unbalanced connection. A balun between the tuner and the line provides the needed transition.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Transmission line stub\": A stub is a tuned length of line for impedance transformation or filtering at particular frequencies, not the basic balanced-output substitute.\n- sourceIndex 2: \"Quarter-wave transformer\": A quarter-wave transformer can match two impedances when its length and impedance are chosen correctly, but it does not inherently provide balanced terminals.\n- sourceIndex 3: \"Autotransformer\": An autotransformer may transform impedance with a shared winding, but the missing function here is balanced-to-unbalanced conversion.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-002-010"
+    }
+  ],
+  "licenseClass": "original"
+}

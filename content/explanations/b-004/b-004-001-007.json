@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-001-007",
+  "questionId": "B-004-001-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-001-007.\n\nWhy the correct answer is right: Gain is the standard term for the increase in signal level through an amplifier.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"attenuation\": Attenuation means reduction, the opposite of gain.\n- sourceIndex 2: \"amplitude\": Amplitude is signal size itself, not the ratio or increase provided by a stage.\n- sourceIndex 3: \"modulation\": Modulation is putting information on a carrier; it is not the increase in level.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-01"
+    },
+    {
+      "type": "question",
+      "id": "B-004-001-007"
+    }
+  ],
+  "licenseClass": "original"
+}

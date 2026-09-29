@@ -45,15 +45,36 @@ node packages/content-tools/src/check-lesson-coverage.ts
 
 The checker parses lesson front matter, compares lesson `covers` entries with `content/generated/basic-2025-07-15/subsections.json`, fails on missing or unknown subsection IDs, fails on malformed lesson/module front matter, and reports duplicate subsection coverage for review.
 
-## Quiz check scope
+## Quiz check
 
-Until lessons outside M5 are authored, the package script deliberately checks only M5 quiz files and M5 lesson front matter:
+Run the strict full-repository quiz check from the repository root:
 
 ```sh
 pnpm --dir packages/content-tools check:quizzes
 ```
 
-That script passes `content/lessons/m5-basic-electronics` as the lesson root. Running `check-quizzes.ts` with no scoped lesson root still reports missing quiz files for outline-only lessons in other modules; those reports are expected until those modules have lesson bodies and quizzes.
+To check only one module's authored quizzes while other modules are still in progress, pass that module's lesson root to the module script. For example:
+
+```sh
+pnpm --dir packages/content-tools check:quizzes:module ../../content/lessons/m4-circuit-components
+```
+
+A module-scoped run checks the quiz files referenced by lessons under that root and reports orphan quiz files only for that module's `QZ-L-00N-*` prefix.
+
+## Explanation check
+
+Run the zero-dependency explanation checker from the repository root:
+
+```sh
+pnpm --dir packages/content-tools check:explanations
+```
+
+The checker also supports category and module filters for focused content work, for example:
+
+```sh
+node packages/content-tools/src/check-explanations.ts --module M5
+node packages/content-tools/src/check-explanations.ts --category B-005
+```
 
 ## Lesson originality check
 

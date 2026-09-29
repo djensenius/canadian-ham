@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-007-010",
+  "questionId": "B-006-007-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-007-010.\n\nWhy the correct answer is right: Ground-wave propagation normally preserves the wave’s vertical polarization, so a vertically polarized transmitted ground wave arrives vertically polarized.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Oblique\": Oblique polarization would require a tilted or mixed field component; ordinary ground-wave travel does not change the originally vertical field into that.\n- sourceIndex 2: \"Horizontal\": Horizontal polarization would be cross-polarized from the transmitted vertical wave; ground-wave propagation is not a 90-degree polarization rotator.\n- sourceIndex 3: \"Circular\": Circular polarization requires two perpendicular components with the proper phase relationship, which is not produced simply by ground-wave travel.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-03"
+    },
+    {
+      "type": "question",
+      "id": "B-006-007-010"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-002-007",
+  "questionId": "B-006-002-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-002-007.\n\nWhy the correct answer is right: A balun is the device used when a balanced antenna is fed by an unbalanced line such as coax. It provides the balanced-to-unbalanced transition and may also help control common-mode current.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A triaxial transformer\": Triaxial cable has an extra conductor layer, but this is not the standard amateur device for feeding a balanced antenna from coax.\n- sourceIndex 2: \"A wave trap\": A trap is a tuned circuit used to isolate or include parts of an antenna on different bands, not to change balance at the feed point.\n- sourceIndex 3: \"A loading coil\": A loading coil adds inductance to make a short antenna electrically longer; it does not convert unbalanced feed to balanced feed.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-002-007"
+    }
+  ],
+  "licenseClass": "original"
+}

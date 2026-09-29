@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-008-009",
+  "questionId": "B-006-008-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-008-009.\n\nWhy the correct answer is right: Lower resonant frequency requires greater electrical length, so lengthening the antenna moves its resonance downward.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"shorten it\": Shortening the antenna raises its resonant frequency, so it would move the tuning in the wrong direction.\n- sourceIndex 2: \"use smaller diameter wire\": Thinner wire tends to raise resonance slightly and narrow bandwidth, so it moves opposite to the desired lower resonant frequency; lengthening is the proper adjustment.\n- sourceIndex 3: \"lengthen the transmission line\": Changing transmission-line length can change the impedance seen at the shack, but it does not change the antenna element’s actual resonant frequency.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-03"
+    },
+    {
+      "type": "question",
+      "id": "B-006-008-009"
+    }
+  ],
+  "licenseClass": "original"
+}

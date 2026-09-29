@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-001-004",
+  "questionId": "B-006-001-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-001-004.\n\nWhy the correct answer is right: In coax, characteristic impedance depends mainly on the dielectric and on the ratio between the shield's inside diameter and the centre conductor diameter. Two cables of different absolute size can share the same ratio and therefore have the same nominal impedance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Characteristic impedance is independent of line diameter\": Absolute diameter alone is not enough, but the diameters still matter through their ratio; it is not independent of the cable geometry.\n- sourceIndex 2: \"Characteristic impedance is set by the choice of conducting material\": Copper, aluminum, or plated conductors affect resistance, corrosion, and loss more than the nominal coax impedance.\n- sourceIndex 3: \"Their characteristic impedance depends on operating frequency\": Ordinary coax is sold with a nominal impedance because geometry and dielectric set it; changing frequency does not explain two different-size cables both being 50 ohms.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-001-004"
+    }
+  ],
+  "licenseClass": "original"
+}

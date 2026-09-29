@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-001-007",
+  "questionId": "B-006-001-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-001-007.\n\nWhy the correct answer is right: Velocity factor is mainly set by the dielectric because RF travels more slowly in insulating material than in free space. Foam, polyethylene, and other dielectrics have different permittivity, so the wave speed in the cable changes.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Center conductor material\": The conductor material affects resistance and loss, but copper versus plated copper is not the main reason waves travel at a different fraction of light speed.\n- sourceIndex 2: \"Size and spacing of the conductors\": Size and spacing are central to characteristic impedance. Coax velocity factor depends mainly on the dielectric’s permittivity, not on this geometry.\n- sourceIndex 3: \"Use of a solid or braided shield\": Shield construction affects flexibility, leakage, and handling, while the insulation around the centre conductor is what mostly sets velocity factor.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-001-007"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-002-009",
+  "questionId": "B-006-002-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-002-009.\n\nWhy the correct answer is right: A balanced transmission line uses two parallel conductors carrying equal and opposite RF currents. Neither conductor is intended to be the grounded shield around the other.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"has one conductor inside the other\": One conductor inside another describes coaxial cable, which is normally unbalanced.\n- sourceIndex 2: \"carries RF current on one wire only\": RF current needs a return path; a one-wire-only description leaves out the equal opposite current of a balanced line.\n- sourceIndex 3: \"is made of one conductor only\": A single conductor is not a complete transmission line for carrying RF energy between source and load.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-002-009"
+    }
+  ],
+  "licenseClass": "original"
+}

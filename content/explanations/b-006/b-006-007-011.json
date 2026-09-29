@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-007-011",
+  "questionId": "B-006-007-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-007-011.\n\nWhy the correct answer is right: A vertical receiving antenna is polarization-matched to a vertically polarized wave, so it receives more of the available field than a horizontal antenna does.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"at lower strength\": Lower strength is what you would expect from the cross-polarized horizontal antenna, not from the vertical antenna matched to the incoming field.\n- sourceIndex 2: \"at about the same strength\": Equal strength ignores polarization mismatch; horizontal and vertical antennas do not couple equally to a vertically polarized wave under normal conditions.\n- sourceIndex 3: \"at a strength depending on the height above ground\": Height affects signal strength and pattern, but the comparison being tested is polarization match: vertical beats horizontal for a vertical wave.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-03"
+    },
+    {
+      "type": "question",
+      "id": "B-006-007-011"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-002-002",
+  "questionId": "B-004-002-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-002-002.\n\nWhy the correct answer is right: Using a diode to recover information from a transmitted signal is detection.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"regeneration\": Regeneration is a feedback technique, not the general name for recovering information with a diode.\n- sourceIndex 2: \"conversion\": Conversion usually means changing frequency, not extracting the information itself.\n- sourceIndex 3: \"biasing\": Biasing sets an operating point; it is not the information-recovery process.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-01"
+    },
+    {
+      "type": "question",
+      "id": "B-004-002-002"
+    }
+  ],
+  "licenseClass": "original"
+}

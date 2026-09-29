@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-002-005",
+  "questionId": "B-006-002-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-002-005.\n\nWhy the correct answer is right: The balanced-to-unbalanced transition occurs where unbalanced coax meets the balanced dipole feed point. Installing the balun there helps the two dipole halves carry equal and opposite currents.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Between the transmitter and the coaxial cable\": The transmitter output and the coax are both unbalanced, so this location does not address the dipole feed-point transition.\n- sourceIndex 2: \"Between the antenna and the ground\": A dipole is not normally fed by inserting a balun between one antenna terminal and ground.\n- sourceIndex 3: \"Between the coaxial cable and the ground\": Connecting the balun as a coax-to-ground device misses the two dipole terminals and can create an unintended RF path.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-002-005"
+    }
+  ],
+  "licenseClass": "original"
+}

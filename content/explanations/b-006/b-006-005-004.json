@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-005-004",
+  "questionId": "B-006-005-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-005-004.\n\nWhy the correct answer is right: An open or short circuit is an extreme impedance error. Either condition reflects most of the RF energy, so the SWR can become very high.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Grounding the shield of the coaxial cable at the building entrance\": Bonding the coax shield at the building entrance is a normal grounding and lightning-safety practice; by itself it does not create an antenna-feed impedance mismatch.\n- sourceIndex 2: \"Using a very long transmission line\": A very long lossy line often hides a mismatch by attenuating the reflected wave on its return trip, so it can make the station-end SWR look lower rather than higher.\n- sourceIndex 3: \"Replacing RG-213 coaxial cable with RG-58\": RG-58 and RG-213 are both commonly 50-ohm coax types; replacing RG-213 with RG-58 may increase loss and power-heating concerns, but the cable swap alone is not a high-SWR cause.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-005-004"
+    }
+  ],
+  "licenseClass": "original"
+}

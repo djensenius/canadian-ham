@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-003-007",
+  "questionId": "B-004-003-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-003-007.\n\nWhy the correct answer is right: The two basic bipolar transistor polarities are NPN and PNP.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Diode and triode\": Diode and triode describe different two-electrode or three-electrode device categories, not bipolar transistor polarities.\n- sourceIndex 2: \"Varicap and varistor\": Varicap and varistor are voltage-dependent components, not bipolar transistor types.\n- sourceIndex 3: \"P channel and N channel\": P channel and N channel describe FET channel types, not bipolar transistor types.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-02"
+    },
+    {
+      "type": "question",
+      "id": "B-004-003-007"
+    }
+  ],
+  "licenseClass": "original"
+}

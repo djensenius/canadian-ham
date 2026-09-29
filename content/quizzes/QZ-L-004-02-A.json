@@ -1,0 +1,139 @@
+{
+  "id": "QZ-L-004-02-A",
+  "lessonId": "L-004-02",
+  "officialQuestionIds": [
+    "B-004-003-003",
+    "B-004-003-005",
+    "B-004-003-009",
+    "B-004-003-011",
+    "B-004-004-002",
+    "B-004-004-003",
+    "B-004-004-006",
+    "B-004-005-006"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-004-02-A-C1",
+      "prompt": {
+        "en": "You are checking an NPN transistor symbol before replacing the part. Which terminal carries the arrow that tells you the device polarity?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Collector",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Base",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Emitter",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Gate",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "The emitter is the bipolar-transistor terminal with the schematic arrow; its direction helps distinguish NPN from PNP.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-004-02-A-C2",
+      "prompt": {
+        "en": "A JFET gate is changed from -1 V bias to -3 V bias relative to its source. What happens in the Basic-level channel model?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "The channel narrows and drain current decreases",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "The channel widens and drain current increases",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Drain current stays fixed because the gate is insulated from control",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The source and drain must swap terminal names",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "Increasing reverse bias on a junction FET gate narrows the channel, so the controlled drain current is reduced.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-004-02-A-C3",
+      "prompt": {
+        "en": "In a tube RF amplifier, making the grid more negative reduces the current drawn by the plate circuit. What principle is being applied?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "The grid is only a shield and cannot affect plate current",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The plate current is controlled only by heater brightness",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "A more negative grid always increases plate current",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "A small grid voltage controls a larger plate current",
+            "fr": null
+          },
+          "isCorrect": true
+        }
+      ],
+      "explanation": {
+        "en": "A triode amplifies because grid-voltage changes control the electron stream and therefore the larger plate current.",
+        "fr": null
+      }
+    }
+  ]
+}

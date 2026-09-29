@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-009-009",
+  "questionId": "B-006-009-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-009-009.\n\nWhy the correct answer is right: In free space a half-wave dipole has maximum radiation broadside to the wire and nulls off the wire ends, giving a doughnut-shaped three-dimensional pattern around the antenna.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Maximum radiation from the ends of the antenna\": The wire ends are where the dipole has nulls, not maxima. Confusing end-fire radiation with broadside radiation reverses the basic dipole pattern.\n- sourceIndex 2: \"Omnidirectional radiation pattern\": A dipole is not equal in all three-dimensional directions; it has strong broadside radiation and weak radiation off the ends.\n- sourceIndex 3: \"Hemispherical radiation pattern\": A hemisphere would put energy over one half-space. A free-space dipole pattern is a torus around the wire, with two end nulls.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-009-009"
+    }
+  ],
+  "licenseClass": "original"
+}

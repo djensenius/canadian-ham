@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-007-005",
+  "questionId": "B-006-007-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-007-005.\n\nWhy the correct answer is right: Antenna polarization is defined by the direction of the radiated electric field compared with the Earth’s surface.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"the orientation of the electric field relative to the transmission line\": The feed-line direction does not define the free-space wave polarization; the radiating element’s electric field orientation does.\n- sourceIndex 2: \"the orientation of the magnetic field relative to the Earth's surface\": The magnetic field is perpendicular to the electric field, but polarization is named from the electric field rather than the magnetic field.\n- sourceIndex 3: \"the orientation of the electric field relative to the magnetic field\": The electric and magnetic fields are always perpendicular to each other in a plane wave, so their relationship does not distinguish horizontal from vertical polarization.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-03"
+    },
+    {
+      "type": "question",
+      "id": "B-006-007-005"
+    }
+  ],
+  "licenseClass": "original"
+}

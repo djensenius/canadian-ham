@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-006-01-A",
+  "lessonId": "L-006-01",
+  "officialQuestionIds": [
+    "B-006-001-001",
+    "B-006-001-003",
+    "B-006-001-007",
+    "B-006-002-004",
+    "B-006-002-007",
+    "B-006-003-004",
+    "B-006-003-006",
+    "B-006-003-010"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-006-01-A-C1",
+      "prompt": { "en": "A 50-ohm coax jumper is cut shorter for a portable setup. What stays the same about that cable type?", "fr": null },
+      "choices": [
+        { "text": { "en": "Its characteristic impedance", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Its total attenuation", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Its weatherproofing at the connectors", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Its exact resonant frequency", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Cutting a uniform cable shorter reduces length-dependent effects such as loss, but it does not change the cable geometry that sets characteristic impedance.", "fr": null }
+    },
+    {
+      "id": "QZ-L-006-01-A-C2",
+      "prompt": { "en": "Why is open-wire line usually kept away from metal gutters and railings?", "fr": null },
+      "choices": [
+        { "text": { "en": "Metal nearby automatically improves its balance.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It needs a clear route so its balanced fields remain predictable.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "It becomes coaxial cable when it touches metal.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It cannot carry HF signals through air.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Balanced line depends on the geometry and surrounding fields; nearby conductors can upset the balance and impedance.", "fr": null }
+    },
+    {
+      "id": "QZ-L-006-01-A-C3",
+      "prompt": { "en": "A dipole is fed with coax. Where is the balanced-to-unbalanced transition normally handled?", "fr": null },
+      "choices": [
+        { "text": { "en": "At the microphone connector", "fr": null }, "isCorrect": false },
+        { "text": { "en": "At the wall outlet", "fr": null }, "isCorrect": false },
+        { "text": { "en": "At the antenna feed point with a suitable balun or choke arrangement", "fr": null }, "isCorrect": true },
+        { "text": { "en": "By adding extra coax length anywhere in the run", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The feed point is where the balanced antenna meets the unbalanced coax, so that is the natural place to handle the transition.", "fr": null }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-002-011",
+  "questionId": "B-006-002-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-002-011.\n\nWhy the correct answer is right: Open-wire line has two conductors held side by side at a fixed spacing by insulating spreaders. That construction leaves mostly air between and around the wires.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Coaxial cable\": Coaxial conductors are arranged one inside the other and are separated by dielectric, not by side-by-side spreaders.\n- sourceIndex 2: \"Twin-lead\": Twin-lead keeps its two conductors in a flat plastic strip, so spreaders are not the feature being described.\n- sourceIndex 3: \"Twisted pair\": Twisted-pair conductors repeatedly change position around each other instead of staying side by side a constant distance apart.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-002-011"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-001-002",
+  "questionId": "B-006-001-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-001-002.\n\nWhy the correct answer is right: Characteristic impedance comes from the transmission line's geometry and insulation: conductor sizes, spacing or diameter ratio, and dielectric. Those construction details set the voltage-to-current relationship of a wave travelling on the line.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"length of the line\": Changing length changes total loss and electrical phase, but a uniform cable keeps the same characteristic impedance per metre.\n- sourceIndex 2: \"frequency at which the line is operated\": Frequency changes wavelength on the line and usually changes loss, but it is not the construction parameter that sets the line's nominal impedance.\n- sourceIndex 3: \"load placed at the end of the line\": The load can create reflections and make the input impedance vary, but it does not redefine the line's own characteristic impedance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-001-002"
+    }
+  ],
+  "licenseClass": "original"
+}

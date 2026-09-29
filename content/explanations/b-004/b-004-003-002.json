@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-003-002",
+  "questionId": "B-004-003-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-003-002.\n\nWhy the correct answer is right: The transistor is the basic semiconductor component family used for amplification.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Varactor\": A varactor is a voltage-variable capacitance diode, not the basic amplifying component.\n- sourceIndex 2: \"P-N junction\": A P-N junction is a structure within devices; by itself it is not the basic amplifying component named here.\n- sourceIndex 3: \"Diode\": A diode has one junction and rectifies or detects, but it is not normally the amplifying device.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-02"
+    },
+    {
+      "type": "question",
+      "id": "B-004-003-002"
+    }
+  ],
+  "licenseClass": "original"
+}

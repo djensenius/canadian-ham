@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-001-010",
+  "questionId": "B-004-001-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-001-010.\n\nWhy the correct answer is right: Amplifier efficiency compares useful output power with the DC input power supplied to the amplifier.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Current gain\": Current gain compares currents, not output power to DC input power.\n- sourceIndex 2: \"Dynamic range\": Dynamic range describes the span between small usable signals and overload, not power-conversion ratio.\n- sourceIndex 3: \"Loss factor\": Loss factor points to energy lost or dissipated in a part or material. The amplifier figure of merit for useful RF output divided by DC input is efficiency.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-01"
+    },
+    {
+      "type": "question",
+      "id": "B-004-001-010"
+    }
+  ],
+  "licenseClass": "original"
+}

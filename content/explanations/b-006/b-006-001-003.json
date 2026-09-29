@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-001-003",
+  "questionId": "B-006-001-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-001-003.\n\nWhy the correct answer is right: Cutting a uniform transmission line shorter does not change its conductor geometry or dielectric, so a 52-ohm line remains a 52-ohm line. The shorter piece has less length-dependent loss, not a different characteristic impedance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"26 ohms\": This wrongly scales impedance in direct proportion to the remaining length: 52 x (10 / 20) = 26. Characteristic impedance does not halve when the cable length is halved.\n- sourceIndex 2: \"104 ohms\": This wrongly doubles 52 ohms as though removing half the cable doubled the line impedance. The geometry of the remaining piece is unchanged.\n- sourceIndex 3: \"13 ohms\": This is 52 x (10 / 20)^2 = 13, a squared length-scaling error. Cable length is not used that way for characteristic impedance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-001-003"
+    }
+  ],
+  "licenseClass": "original"
+}

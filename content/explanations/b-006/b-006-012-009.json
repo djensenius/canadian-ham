@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-012-009",
+  "questionId": "B-006-012-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-012-009.\n\nWhy the correct answer is right: Use the practical half-wave dipole formula 143/f. At 3.75 MHz, 143 / 3.75 = 38.13 metres.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"40.00 metres\": This is 150 / 3.75 = 40.00 m, the free-space half-wave estimate. The practical dipole formula uses 143/f.\n- sourceIndex 2: \"62.40 metres\": This is 234 / 3.75 = 62.40 if the imperial dipole-leg constant is wrongly treated as metres. The correct metric total length is 143/f.\n- sourceIndex 3: \"80.00 metres\": This is 300 / 3.75 = 80.00 m, the free-space full wavelength. The question asks for a half-wave dipole length.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-012-009"
+    }
+  ],
+  "licenseClass": "original"
+}

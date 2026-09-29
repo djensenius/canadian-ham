@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-013-008",
+  "questionId": "B-006-013-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-013-008.\n\nWhy the correct answer is right: In a quad loop, feeding a side parallel to the ground favours horizontal polarization, while feeding a side perpendicular to the ground favours vertical polarization. Moving the feed that way changes horizontal to vertical polarization.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It will change the antenna polarization from vertical to horizontal\": This is the direction reversed. The move described is from a horizontal side to a vertical side, so the polarization changes from horizontal to vertical.\n- sourceIndex 2: \"It will significantly decrease the antenna feed point impedance\": The square loop is symmetrical, so feeding the centre of one side or an equivalent adjacent side gives about the same feed impedance. The major change from this move is polarization, not a large impedance decrease.\n- sourceIndex 3: \"It will significantly increase the antenna feed point impedance\": The square loop symmetry means the comparable side feed points have about the same impedance. Moving from a horizontal side to a vertical side mainly changes the polarization, not the feed impedance by a large amount.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-013-008"
+    }
+  ],
+  "licenseClass": "original"
+}

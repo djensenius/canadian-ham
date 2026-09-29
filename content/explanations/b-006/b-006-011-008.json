@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-011-008",
+  "questionId": "B-006-011-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-011-008.\n\nWhy the correct answer is right: Front-to-back ratio compares power radiated in the antenna's forward direction with power radiated in the opposite, back direction. It is a directional pattern ratio.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The ratio of the power radiated by the director element, to the power radiated by the reflector element\": Yagi elements are not evaluated by separately measuring director power against reflector power; the ratio refers to the whole antenna pattern forward and backward.\n- sourceIndex 2: \"The ratio of the length of the director element, to the length of the reflector element\": Element lengths help create the pattern, but front-to-back ratio is measured in radiated power directions, not physical length ratio.\n- sourceIndex 3: \"The ratio of the driven element-to-director spacing, to the driven element-to-reflector spacing\": Spacing is a design variable. The front-to-back result is the forward lobe power compared with the rear lobe power.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-011-008"
+    }
+  ],
+  "licenseClass": "original"
+}

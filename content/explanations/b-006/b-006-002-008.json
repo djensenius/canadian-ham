@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-002-008",
+  "questionId": "B-006-002-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-002-008.\n\nWhy the correct answer is right: Coaxial cable is unbalanced and window line is balanced, so the transition calls for a balun. The balun is the interface between those two feedline types.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A surge suppressor\": A surge suppressor is for lightning or transient protection and does not provide the required balanced-to-unbalanced feed conversion.\n- sourceIndex 2: \"A phasing harness\": A phasing harness sets phase and power division for arrays, which is a different job from joining coax to balanced line.\n- sourceIndex 3: \"A tuning stub\": A stub can transform impedance at selected frequencies, but it is not the general device named for coax-to-window-line balance conversion.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-002-008"
+    }
+  ],
+  "licenseClass": "original"
+}

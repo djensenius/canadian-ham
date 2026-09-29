@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-004-004",
+  "questionId": "B-006-004-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-004-004.\n\nWhy the correct answer is right: For the same cable and frequency, every additional metre adds some attenuation. Therefore total signal loss increases as the transmission line gets longer.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Signal loss decreases as the length increases\": This reverses the physical trend; a longer lossy path cannot have less total attenuation just because it is longer.\n- sourceIndex 2: \"Signal loss is the least when the length is the same as the signal's wavelength\": A wavelength-long line may repeat some impedance conditions, but it still has the loss of its full physical length.\n- sourceIndex 3: \"Signal loss is the same for any length of transmission line\": Equal cable type and frequency do not make a 5 m run lose the same power as a 50 m run.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-004-004"
+    }
+  ],
+  "licenseClass": "original"
+}

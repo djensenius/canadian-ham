@@ -1,0 +1,139 @@
+{
+  "id": "QZ-L-004-01-A",
+  "lessonId": "L-004-01",
+  "officialQuestionIds": [
+    "B-004-001-001",
+    "B-004-001-002",
+    "B-004-001-005",
+    "B-004-001-007",
+    "B-004-001-011",
+    "B-004-002-001",
+    "B-004-002-003",
+    "B-004-002-006"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-004-01-A-C1",
+      "prompt": {
+        "en": "A 7 MHz signal enters a receiver stage and leaves at the same frequency with the same modulation, but at a larger voltage. What did the stage do?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Amplified the RF signal without changing it to audio",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Detected audio from the carrier",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Protected the battery from reverse polarity",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Changed the resistor tolerance",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "Amplification raises signal level while preserving the wanted waveform; a 7 MHz signal is still RF when it leaves at 7 MHz.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-004-01-A-C2",
+      "prompt": {
+        "en": "An SSB transmitter audio stage is overdriven until voice peaks are clipped before modulation. What on-air problem is most likely?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "A cleaner, narrower transmitted signal",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Distortion products that can sound harsh and create adjacent-channel splatter",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Automatic cancellation of all harmonics",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Less occupied bandwidth because all peaks are flattened",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "Clipping is non-linear operation: it changes the audio waveform and produces distortion products that can spread the transmitted signal.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-004-01-A-C3",
+      "prompt": {
+        "en": "A power supply uses four diodes before a filter capacitor so both halves of the AC waveform feed the same DC polarity. Which diode job is this?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Voltage regulation by a Zener diode",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Light emission from an LED",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Rectification",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Reverse-polarity protection at a DC input",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "A rectifier uses diode one-way action to turn alternating current into current of one polarity before filtering.",
+        "fr": null
+      }
+    }
+  ]
+}
