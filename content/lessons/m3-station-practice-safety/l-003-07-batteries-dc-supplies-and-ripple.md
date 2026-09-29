@@ -110,7 +110,7 @@ The exact table depends on wire size and current, so calculate with the data for
 
 ## Try it
 
-1. A nominal 12 V field battery reads 12.6 V at rest, then the radio resets during transmit. Explain two likely electrical causes. High transmit current can expose battery internal resistance and lead resistance, so the voltage at the radio can sag even though the resting voltage looked normal.
+1. A radio needs at least 11.8 V at its input during transmit. The field battery is 12.4 V under the planned transmit load, and the round-trip lead resistance is 0.035 Ω at 8 A. Will the radio see enough voltage? The lead drop is `8 A x 0.035 Ω = 0.28 V`, so the radio sees about 12.12 V and clears the 11.8 V minimum by about 0.32 V.
 2. A four-cell AA holder is changed from fresh alkaline cells to NiMH cells. What voltage change should you expect before checking the radio manual? The nominal pack voltage falls from about 6.0 V to about 4.8 V, so rechargeability does not imply higher voltage.
 3. Two matched 10.8 V, 7 Ah packs are placed in series for an approved equipment test. What is the result? Voltage adds to 21.6 V, while capacity remains 7 Ah.
 4. The same two packs are placed in parallel using a manufacturer-approved combiner. What is the result? Voltage remains 10.8 V, while capacity adds to 14 Ah.

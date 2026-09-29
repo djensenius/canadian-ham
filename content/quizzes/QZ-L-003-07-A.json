@@ -14,14 +14,14 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-07-A-C1",
-      "prompt": { "en": "A planning note says two matched 9 Ah packs in series give twice the voltage and 18 Ah. What error should you spot?", "fr": null },
+      "prompt": { "en": "A portable kit includes a loose lithium-based pack from another hobby. Before wiring it into the station, what plan is defensible?", "fr": null },
       "choices": [
-        { "text": { "en": "The voltage would not add in a series string", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The ampere-hour capacity of one series string stays at 9 Ah", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Voltage can add only when both packs use lithium chemistry", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Polarity stops mattering once packs are wired in series", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Use only the charger, protection, and connection method specified for that pack", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Use a NiMH charger if the plug fits and the radio turns on", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Bypass the protection board so transmit current has a lower-resistance path", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Parallel it with an unmatched lithium pack using clip leads to add capacity", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Series wiring adds voltage, but one matched series string keeps the ampere-hour rating of one pack. Chemistry and polarity still matter.", "fr": null }
+      "explanation": { "en": "Lithium-based packs need the charger, protection, and connection method intended for that chemistry and pack design. Connector fit, lower resistance, or improvised paralleling do not make the setup safe.", "fr": null }
     },
     {
       "id": "QZ-L-003-07-A-C2",
@@ -36,14 +36,14 @@
     },
     {
       "id": "QZ-L-003-07-A-C3",
-      "prompt": { "en": "A supply has enough current headroom, so the buyer skips any RF-noise check and assumes the station will be clean. What is the mistake?", "fr": null },
+      "prompt": { "en": "A compact switching supply is rated 30 A continuous for a 19 A transceiver, and the buyer plans to trust it without any station test. Which added check is still needed?", "fr": null },
       "choices": [
-        { "text": { "en": "Extra current headroom proves the output voltage will be correct under every load", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A linear supply is automatically unsafe because it is less efficient", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A larger fuse current rating is the normal RF-noise filter", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Load rating and RF-noise behaviour are separate checks", "fr": null }, "isCorrect": true }
+        { "text": { "en": "Confirm under load that the supply is not adding receiver hash or transmitted noise", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Fit a larger fuse so any switching noise has more current headroom", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Use smaller DC leads because an efficient supply does not need low lead resistance", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Ignore the radio's voltage requirement because the current rating is higher than 19 A", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "A supply can meet the current requirement and still be noisy. Load capacity, fuse protection, and RF-noise behaviour must be considered separately.", "fr": null }
+      "explanation": { "en": "Current headroom is necessary, but it does not prove that the supply is quiet in the station. Fuses, lead size, and voltage matching still have their own safety and performance jobs.", "fr": null }
     }
   ]
 }
