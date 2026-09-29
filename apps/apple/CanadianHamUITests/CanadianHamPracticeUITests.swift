@@ -122,7 +122,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let app = configuredApp()
         app.launchArguments += [
             "-CanadianHamInitialCategoryID", "B-001",
-            "-CanadianHamPracticeQuestionID", auditPracticeQuestionID
+            "-CanadianHamPracticeQuestionID", auditPracticeQuestionID,
+            "-CanadianHamA11yAuditExtraBottomMargin"
         ]
         app.launch()
         defer { app.terminate() }
@@ -251,10 +252,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
             let nextQuestionButton = app.buttons["Next question"].firstMatch
             XCTAssertTrue(nextQuestionButton.waitForExistence(timeout: 5), "Next question button should exist before the scrolled audit pass")
             scrollUntilHittable(nextQuestionButton, in: app, maxSwipes: 8)
-            app.scrollViews.firstMatch.swipeUp()
-            waitBriefly()
-            app.scrollViews.firstMatch.swipeUp()
-            waitBriefly()
+            for _ in 0..<3 {
+                app.scrollViews.firstMatch.swipeUp()
+                waitBriefly()
+            }
+            let answerC = app.descendants(matching: .any)["answer-C-button"].firstMatch
+            XCTAssertTrue(isFullyVisible(answerC, in: app, requiresHittable: false), "Answer C should be fully visible for the scrolled audit pass")
             XCTAssertTrue(isFullyVisible(nextQuestionButton, in: app, requiresHittable: true), "Next question button should be visible for the scrolled audit pass")
         }
     }
@@ -298,13 +301,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
             ]
         case .scrolled:
             namesEnforcedInPass = [
-                "Answers heading",
-                "Answer A",
-                "Answer A text",
-                "Answer A chip",
-                "Answer B",
-                "Answer B text",
-                "Answer B chip",
                 "Answer C",
                 "Answer C text",
                 "Answer C chip",
