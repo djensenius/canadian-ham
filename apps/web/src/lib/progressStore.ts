@@ -541,11 +541,24 @@ function validateLessonQuizAttempt(value: unknown, index: number): string[] {
   if (typeof value.correct === "number" && typeof value.total === "number" && value.correct > value.total) {
     errors.push(`${prefix}.correct must not exceed total.`);
   }
+  if (isNonNegativeInteger(value.correct) && isPositiveInteger(value.total) && isNonNegativeFiniteNumber(value.percent)) {
+    const expectedPercent = (value.correct / value.total) * 100;
+    if (Math.abs(value.percent - expectedPercent) > 1e-9) {
+      errors.push(`${prefix}.percent must match correct divided by total.`);
+    }
+  }
   if (!isKnownQuestionIdArray(value.officialQuestionIds)) {
     errors.push(`${prefix}.officialQuestionIds must contain known question IDs.`);
+  } else if (quiz !== undefined && !value.officialQuestionIds.every((id) => quiz.officialQuestionIds.includes(id))) {
+    errors.push(`${prefix}.officialQuestionIds must belong to the lesson quiz.`);
   }
   if (!isKnownQuestionIdArray(value.incorrectOfficialQuestionIds)) {
     errors.push(`${prefix}.incorrectOfficialQuestionIds must contain known question IDs.`);
+  } else if (Array.isArray(value.officialQuestionIds) && value.officialQuestionIds.every((id) => typeof id === "string")) {
+    const officialQuestionIds = new Set(value.officialQuestionIds);
+    if (!value.incorrectOfficialQuestionIds.every((id) => officialQuestionIds.has(id))) {
+      errors.push(`${prefix}.incorrectOfficialQuestionIds must be a subset of officialQuestionIds.`);
+    }
   }
   if (!Array.isArray(value.incorrectConceptCheckIds) || !value.incorrectConceptCheckIds.every((id) => typeof id === "string" && (quiz === undefined || quiz.conceptChecks.some((conceptCheck) => conceptCheck.id === id)))) {
     errors.push(`${prefix}.incorrectConceptCheckIds must contain known concept check IDs for the quiz.`);

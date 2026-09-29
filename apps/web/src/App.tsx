@@ -5,7 +5,7 @@ import {
   type QuestionProgressRecord,
   type ReadinessResult,
 } from "@canadian-ham/engine-ts";
-import { Component, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { Component, useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
 
 import { LanguageToggle } from "./components/LanguageToggle";
 import { MarkdownContent } from "./components/MarkdownContent";
@@ -913,13 +913,20 @@ function LessonQuizView({ quiz, lesson, language, bankQuestionsById, progress, a
   );
 }
 
-function LessonQuizQuestion({ item, language, questionsById, selectedSourceOrChoiceIndex, showCorrectness, onChoose }: { readonly item: LessonQuizItem; readonly language: Language; readonly questionsById: ReadonlyMap<string, Question>; readonly selectedSourceOrChoiceIndex: number | undefined; readonly showCorrectness: boolean; readonly onChoose: (displayIndex: number) => void }) {
-  const feedbackRef = useRef<HTMLDivElement>(null);
+function useFocusOnAnswerChosen(answerableId: string, showCorrectness: boolean, feedbackRef: RefObject<HTMLElement | null>): void {
+  const previous = useRef({ answerableId, showCorrectness });
   useEffect(() => {
-    if (showCorrectness) {
+    const answerWasJustChosen = previous.current.answerableId === answerableId && !previous.current.showCorrectness && showCorrectness;
+    previous.current = { answerableId, showCorrectness };
+    if (answerWasJustChosen) {
       feedbackRef.current?.focus();
     }
-  }, [showCorrectness, item.id]);
+  }, [answerableId, showCorrectness, feedbackRef]);
+}
+
+function LessonQuizQuestion({ item, language, questionsById, selectedSourceOrChoiceIndex, showCorrectness, onChoose }: { readonly item: LessonQuizItem; readonly language: Language; readonly questionsById: ReadonlyMap<string, Question>; readonly selectedSourceOrChoiceIndex: number | undefined; readonly showCorrectness: boolean; readonly onChoose: (displayIndex: number) => void }) {
+  const feedbackRef = useRef<HTMLParagraphElement>(null);
+  useFocusOnAnswerChosen(item.id, showCorrectness, feedbackRef);
 
   if (item.type === "official") {
     const question = questionsById.get(item.questionId);
@@ -930,8 +937,8 @@ function LessonQuizQuestion({ item, language, questionsById, selectedSourceOrCho
       <>
         <QuestionCard choicePermutation={item.choicePermutation} disabled={showCorrectness} headingLevel={4} language={language} onChoose={onChoose} question={question} selectedSourceIndex={selectedSourceOrChoiceIndex} showCorrectness={showCorrectness} />
         {showCorrectness ? (
-          <div className="feedback" role="status" ref={feedbackRef} tabIndex={-1}>
-            <p>{selectedSourceOrChoiceIndex === 0 ? "Correct." : "Incorrect."}</p>
+          <div className="feedback">
+            <p role="status" ref={feedbackRef} tabIndex={-1}>{selectedSourceOrChoiceIndex === 0 ? "Correct." : "Incorrect."}</p>
             <ExplanationPanel explanation={explanationForQuestion(question.id)} language={language} choicePermutation={item.choicePermutation} />
           </div>
         ) : null}
@@ -942,12 +949,8 @@ function LessonQuizQuestion({ item, language, questionsById, selectedSourceOrCho
 }
 
 function ConceptCheckCard({ conceptCheck, choicePermutation, selectedChoiceIndex, showCorrectness, disabled, language, onChoose }: { readonly conceptCheck: ConceptCheck; readonly choicePermutation: readonly number[]; readonly selectedChoiceIndex: number | undefined; readonly showCorrectness: boolean; readonly disabled: boolean; readonly language: Language; readonly onChoose: (displayIndex: number) => void }) {
-  const feedbackRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (showCorrectness) {
-      feedbackRef.current?.focus();
-    }
-  }, [showCorrectness, conceptCheck.id]);
+  const feedbackRef = useRef<HTMLParagraphElement>(null);
+  useFocusOnAnswerChosen(conceptCheck.id, showCorrectness, feedbackRef);
   const selectedChoice = selectedChoiceIndex === undefined ? undefined : conceptCheck.choices[selectedChoiceIndex];
   const prompt = conceptCheck.prompt[language] ?? conceptCheck.prompt.en;
   const promptLanguage = conceptCheck.prompt[language] === null ? "en" : language;
@@ -973,8 +976,9 @@ function ConceptCheckCard({ conceptCheck, choicePermutation, selectedChoiceIndex
         })}
       </div>
       {showCorrectness ? (
-        <div className="feedback" role="status" ref={feedbackRef} tabIndex={-1}>
-          <p lang={languageTag(conceptCheck.explanation[language] === null ? "en" : language)}>{selectedChoice?.isCorrect ? "Correct." : "Incorrect."} {conceptCheck.explanation[language] ?? conceptCheck.explanation.en}</p>
+        <div className="feedback">
+          <p role="status" ref={feedbackRef} tabIndex={-1}>{selectedChoice?.isCorrect ? "Correct." : "Incorrect."}</p>
+          <p lang={languageTag(conceptCheck.explanation[language] === null ? "en" : language)}>{conceptCheck.explanation[language] ?? conceptCheck.explanation.en}</p>
         </div>
       ) : null}
     </article>

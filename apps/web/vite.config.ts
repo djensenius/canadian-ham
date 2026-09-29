@@ -1,10 +1,10 @@
-import { createHash } from "node:crypto";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import { defineConfig } from "vitest/config";
 import type { Plugin } from "vite";
 
 import { createPrecacheManifest, createServiceWorkerSource, createWebAppManifest } from "./src/lib/pwa";
+import { computePwaVersion } from "./src/lib/pwaVersion";
 
 function allowDevInlineStyles(): Plugin {
   return {
@@ -31,29 +31,34 @@ function canadianHamPwa(): Plugin {
     configResolved(config) {
       root = config.root;
     },
-    generateBundle(_options, bundle) {
-      const emittedEntries = Object.values(bundle)
-        .filter((entry) => entry.fileName !== "sw.js" && entry.fileName !== "manifest.webmanifest")
-        .map((entry) => ({ fileName: entry.fileName, source: bundleEntrySource(entry) }));
-      const precacheEntries = createPrecacheManifest(emittedEntries.map((entry) => entry.fileName));
-      const versionHash = createHash("sha256");
-      for (const entry of [...emittedEntries, ...publicAssetEntries(root)].sort((a, b) => a.fileName.localeCompare(b.fileName))) {
-        versionHash.update(entry.fileName);
-        versionHash.update("\0");
-        versionHash.update(entry.source);
-        versionHash.update("\0");
-      }
-      const version = versionHash.digest("hex").slice(0, 16);
-      this.emitFile({
-        type: "asset",
-        fileName: "manifest.webmanifest",
-        source: `${JSON.stringify(createWebAppManifest(), null, 2)}\n`,
-      });
-      this.emitFile({
-        type: "asset",
-        fileName: "sw.js",
-        source: createServiceWorkerSource(precacheEntries, version),
-      });
+    generateBundle: {
+      order: "post",
+      handler(_options, bundle) {
+        const emittedEntries = Object.values(bundle)
+          .filter((entry) => entry.fileName !== "sw.js" && entry.fileName !== "manifest.webmanifest")
+          .map((entry) => ({ fileName: entry.fileName, source: bundleEntrySource(entry) }));
+        const indexEntry = emittedEntries.find((entry) => entry.fileName === "index.html");
+        const bundleFiles = emittedEntries.filter((entry) => entry.fileName !== "index.html");
+        const publicFiles = publicAssetEntries(root);
+        const manifestJson = `${JSON.stringify(createWebAppManifest(), null, 2)}\n`;
+        const precacheEntries = createPrecacheManifest(emittedEntries.map((entry) => entry.fileName));
+        const version = computePwaVersion({
+          bundleFiles,
+          indexHtml: indexEntry?.source ?? readFileSync(join(root, "index.html")),
+          manifestJson,
+          publicFiles,
+        });
+        this.emitFile({
+          type: "asset",
+          fileName: "manifest.webmanifest",
+          source: manifestJson,
+        });
+        this.emitFile({
+          type: "asset",
+          fileName: "sw.js",
+          source: createServiceWorkerSource(precacheEntries, version),
+        });
+      },
     },
   };
 }

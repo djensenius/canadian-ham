@@ -36,6 +36,7 @@ beforeEach(async () => {
 afterEach(async () => {
   cleanup();
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
   for (const store of stores) {
     await store.deleteDatabase();
   }
@@ -153,8 +154,38 @@ function assertChoiceNoteMapping(quizId: string): void {
   assert.fail(`No shuffled official item found for ${quizId}.`);
 }
 
+function shuffledOfficialItemWithChoiceNotes(quizId: string): { readonly seed: string; readonly nowValue: number; readonly itemIndex: number; readonly item: Extract<ReturnType<typeof buildLessonQuizItems>[number], { readonly type: "official" }> } {
+  const quiz = lessonQuizzesById.get(quizId);
+  assert.ok(quiz);
+  for (let nowValue = 1; nowValue < 500; nowValue += 1) {
+    const seed = `${quizId}:${nowValue.toString(36)}`;
+    const items = buildLessonQuizItems(quiz, seed);
+    const itemIndex = items.findIndex((item) => {
+      if (item.type !== "official" || !item.choicePermutation.some((sourceIndex, displayIndex) => sourceIndex !== displayIndex)) {
+        return false;
+      }
+      const explanation = explanationForQuestion(item.questionId);
+      return explanation !== null && parseChoiceNotes(explanation, "en").length > 0;
+    });
+    const item = items[itemIndex];
+    if (item?.type === "official") {
+      return { seed, nowValue, itemIndex, item };
+    }
+  }
+  assert.fail(`No shuffled official item with notes found for ${quizId}.`);
+}
+
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+async function chooseFirstLessonQuizOption(user: ReturnType<typeof userEvent.setup>): Promise<void> {
+  const choices = screen.queryAllByTestId("lesson-quiz-choice");
+  if (choices.length > 0) {
+    await user.click(choices[0]!);
+    return;
+  }
+  await user.click(screen.getAllByTestId("answer-choice")[0]!);
 }
 
 function progressExport(): ProgressExportV1 {
@@ -304,6 +335,56 @@ describe("App accessibility and flows", () => {
   it("maps shuffled explanation notes to displayed choices for real M4 and M6 questions", () => {
     assertChoiceNoteMapping("QZ-L-004-01-A");
     assertChoiceNoteMapping("QZ-L-006-01-A");
+  });
+
+  it("renders displayed choice note labels according to the shuffled button letters", async () => {
+    const target = shuffledOfficialItemWithChoiceNotes("QZ-L-004-01-A");
+    const explanation = explanationForQuestion(target.item.questionId);
+    assert.ok(explanation);
+    window.location.hash = "#/learn/M4/L-004-01";
+    const store = createStore("rendered-note-mapping");
+    const user = userEvent.setup();
+    vi.spyOn(Date, "now").mockReturnValue(target.nowValue);
+    render(<App store={store} now={() => fixedNow} seedFactory={() => target.seed} />);
+
+    await screen.findByRole("heading", { name: "QZ-L-004-01-A" });
+    for (let index = 0; index < target.itemIndex; index += 1) {
+      await user.click(screen.getByRole("button", { name: "Next" }));
+    }
+
+    const buttons = screen.getAllByTestId("answer-choice");
+    const renderedLetters = buttons.map((button) => button.querySelector(".answer-label")?.textContent ?? "");
+    await user.click(buttons[0]!);
+    await screen.findByRole("status");
+
+    for (const note of parseChoiceNotes(explanation, "en")) {
+      const displayIndex = target.item.choicePermutation.findIndex((sourceIndex) => sourceIndex === note.sourceIndex);
+      assert.ok(displayIndex >= 0);
+      const renderedLetter = renderedLetters[displayIndex];
+      assert.ok(renderedLetter);
+      assert.equal(screen.getAllByText((_content, element) => element?.tagName === "STRONG" && element.textContent === `Displayed choice ${renderedLetter}:`).length, 1);
+    }
+  });
+
+  it("keeps focus on lesson quiz navigation when revisiting answered items", async () => {
+    window.location.hash = "#/learn/M5/L-005-01";
+    const store = createStore("lesson-quiz-revisit-focus");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "lesson-quiz-seed"} />);
+
+    await screen.findByRole("heading", { name: "QZ-L-005-01-A" });
+    await chooseFirstLessonQuizOption(user);
+    assert.equal(document.activeElement, await screen.findByRole("status"));
+
+    await user.click(screen.getByRole("button", { name: "Next" }));
+    await chooseFirstLessonQuizOption(user);
+    assert.equal(document.activeElement, await screen.findByRole("status"));
+
+    await user.click(screen.getByRole("button", { name: "Previous" }));
+    const next = screen.getByRole("button", { name: "Next" });
+    await user.click(next);
+
+    assert.equal(document.activeElement, next);
   });
 
   it("renders lesson quizzes with official explanations and stores attempts without concept Leitner updates", async () => {

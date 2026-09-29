@@ -170,6 +170,7 @@ describe("ProgressStore", () => {
       lessonQuizAttempts: [
         { ...lessonQuizAttempt, quizId: "QZ-NOPE", lessonId: "L-005-02", submittedAt: "2026-01-02T03:45:00Z", percent: Number.NaN, incorrectConceptCheckIds: [] },
         { ...lessonQuizAttempt, id: "lesson-quiz-bad-concept", incorrectConceptCheckIds: ["missing"] },
+        { ...lessonQuizAttempt, id: "lesson-quiz-bad-subsets", correct: 1, total: 2, percent: 40, officialQuestionIds: ["B-001-001-001"], incorrectOfficialQuestionIds: ["B-005-001-001"], incorrectConceptCheckIds: [] },
       ],
     }));
 
@@ -184,6 +185,9 @@ describe("ProgressStore", () => {
     assert.match(errors, /lessonQuizAttempts\[0\]\.quizId/);
     assert.match(errors, /lessonQuizAttempts\[0\]\.percent/);
     assert.match(errors, /incorrectConceptCheckIds/);
+    assert.match(errors, /percent must match correct divided by total/);
+    assert.match(errors, /officialQuestionIds must belong to the lesson quiz/);
+    assert.match(errors, /incorrectOfficialQuestionIds must be a subset of officialQuestionIds/);
     assert.match(errors, /leitner\.box/);
   });
 

@@ -22,15 +22,19 @@ describe("MarkdownContent parser", () => {
 
   it("always advances on pathological block delimiters", () => {
     const markdown = ["# ", "* item", "+ item", "- ", "#", "| a | b |", "| --- | --- |", "| c | d |", "2 * 3 remains math"].join("\n");
-    const startedAt = performance.now();
     const blocks = parseMarkdownBlocks(markdown);
 
-    assert.ok(performance.now() - startedAt < 50);
     assert.ok(blocks.length > 0);
     assert.ok(blocks.some((block) => block.type === "unordered-list"));
     assert.ok(blocks.some((block) => block.type === "table"));
     assert.ok(blocks.some((block) => block.type === "paragraph" && block.text.includes("2 * 3")));
-  }, 100);
+  });
+
+  it("preserves underscores in formula-like text", () => {
+    const blocks = parseMarkdownBlocks("R_1 and X_L stay formula-like, while _emphasis_ is plain text.");
+
+    assert.deepEqual(blocks, [{ type: "paragraph", text: "R_1 and X_L stay formula-like, while emphasis is plain text." }]);
+  });
 
   it("stops an illustration brief after its description", () => {
     const blocks = parseMarkdownBlocks("## Illustration brief\n\nAlt text: Meter\n\nDescription: Draw a meter.\n\nThis paragraph stays separate.");

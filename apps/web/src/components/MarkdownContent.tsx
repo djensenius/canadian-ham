@@ -66,9 +66,11 @@ export function parseMarkdownBlocks(markdown: string, title?: string): MarkdownB
   let index = 0;
 
   while (index < lines.length) {
+    const previousIndex = index;
     const line = lines[index] ?? "";
     if (line.trim() === "") {
       index += 1;
+      assertParserProgress(previousIndex, index);
       continue;
     }
 
@@ -78,18 +80,21 @@ export function parseMarkdownBlocks(markdown: string, title?: string): MarkdownB
       const depth = heading[1]!.length;
       if (text.length === 0) {
         index += 1;
+        assertParserProgress(previousIndex, index);
         continue;
       }
       if (/^illustration brief$/i.test(text)) {
         const { block, nextIndex } = parseIllustration(lines, index + 1);
         blocks.push(block);
         index = nextIndex;
+        assertParserProgress(previousIndex, index);
         continue;
       }
       if (!(depth === 1 && title !== undefined && text === title)) {
         blocks.push({ type: "heading", depth: Math.max(depth, 2), text });
       }
       index += 1;
+      assertParserProgress(previousIndex, index);
       continue;
     }
 
@@ -97,6 +102,7 @@ export function parseMarkdownBlocks(markdown: string, title?: string): MarkdownB
       const { block, nextIndex } = parseTable(lines, index);
       blocks.push(block);
       index = nextIndex;
+      assertParserProgress(previousIndex, index);
       continue;
     }
 
@@ -107,6 +113,7 @@ export function parseMarkdownBlocks(markdown: string, title?: string): MarkdownB
         index += 1;
       }
       blocks.push({ type: "unordered-list", items });
+      assertParserProgress(previousIndex, index);
       continue;
     }
 
@@ -117,6 +124,7 @@ export function parseMarkdownBlocks(markdown: string, title?: string): MarkdownB
         index += 1;
       }
       blocks.push({ type: "ordered-list", items });
+      assertParserProgress(previousIndex, index);
       continue;
     }
 
@@ -131,12 +139,20 @@ export function parseMarkdownBlocks(markdown: string, title?: string): MarkdownB
     }
     if (paragraphLines.length === 0) {
       index += 1;
+      assertParserProgress(previousIndex, index);
       continue;
     }
     blocks.push({ type: "paragraph", text: stripInlineMarkdown(paragraphLines.join(" ")) });
+    assertParserProgress(previousIndex, index);
   }
 
   return blocks;
+}
+
+function assertParserProgress(previousIndex: number, nextIndex: number): void {
+  if (nextIndex <= previousIndex) {
+    throw new Error(`Markdown parser failed to advance at line ${previousIndex + 1}.`);
+  }
 }
 
 function parseIllustration(lines: readonly string[], startIndex: number): { readonly block: MarkdownBlock; readonly nextIndex: number } {
@@ -189,6 +205,6 @@ function stripInlineMarkdown(value: string): string {
     .replace(/\*\*([^*]+)\*\*/g, "$1")
     .replace(/__([^_]+)__/g, "$1")
     .replace(/\*([^\s*](?:[^*]*[^\s*])?)\*/g, "$1")
-    .replace(/_([^\s_](?:[^_]*[^\s_])?)_/g, "$1")
+    .replace(/(^|[^\w])_([^\s_](?:[^\s_]*[^\s_])?)_(?=$|[^\w])/g, "$1$2")
     .replace(/\\([\\`*_[\]{}()#+\-.!|])/g, "$1");
 }
