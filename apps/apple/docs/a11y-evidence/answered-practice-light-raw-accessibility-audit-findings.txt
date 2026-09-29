@@ -1,65 +1,35 @@
 Screen: answered-practice-light
 
+Screen frame: x: 0.0, y: 0.0, width: 402.0, height: 874.0
+
 Issue 1:
-auditType: XCUIAccessibilityAuditType(rawValue: 131072)
-element.identifier: 
-element.label: Question identifier B-001-006-005
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier: practice-category-summary
+element.label: Random practice from 199 official Basic questions.
 element.elementType: XCUIElementType(rawValue: 48)
-element.frame: x: 40.0, y: 118.63623046874989, width: 136.66666666666666, height: 20.333333333333314
-compactDescription: Text clipped
+element.frame: x: 40.0, y: 38.93912760416666, width: 261.3333333333333, height: 42.33333333333334
+compactDescription: Contrast failed
 
 Issue 2:
-auditType: XCUIAccessibilityAuditType(rawValue: 131072)
-element.identifier: 
-element.label: except for the amplification of the output power of licence-exempt radio apparatus operating outside authorized amateur radio service allocations
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier: practice-session-tally
+element.label: Session tally: 0 correct out of 1 answered
 element.elementType: XCUIElementType(rawValue: 48)
-element.frame: x: 94.0, y: 630.3637695312498, width: 261.3333333333333, height: 108.3333333333336
-compactDescription: Text clipped
+element.frame: x: 40.0, y: 89.2724609375, width: 236.66666666666663, height: 42.333333333333314
+compactDescription: Contrast failed
 
 Issue 3:
 auditType: XCUIAccessibilityAuditType(rawValue: 1)
-element.identifier: 
-element.label: Question identifier B-001-006-005
+element.identifier: question-stem
+element.label: Unless an operator holds an Amateur Radio Operator Certificate with Advanced Qualification, what is the maximum carrier power that an amateur radio station may use on emissions other than SSB?
 element.elementType: XCUIElementType(rawValue: 48)
-element.frame: x: 40.0, y: 118.63623046874989, width: 136.66666666666666, height: 20.333333333333314
+element.frame: x: 24.0, y: 204.0, width: 354.0, height: 206.0
 compactDescription: Contrast failed
 
 Issue 4:
 auditType: XCUIAccessibilityAuditType(rawValue: 1)
-element.identifier: 
-element.label: A
+element.identifier: answer-D-text
+element.label: 750 watts
 element.elementType: XCUIElementType(rawValue: 48)
-element.frame: x: 40.0, y: 369.3333333333333, width: 42.0, height: 42.0
+element.frame: x: 94.0, y: 748.3942057291666, width: 75.33333333333331, height: 20.333333333333485
 compactDescription: Contrast failed
-
-Issue 5:
-auditType: XCUIAccessibilityAuditType(rawValue: 1)
-element.identifier: 
-element.label: on aeronautical, marine or land mobile frequencies
-element.elementType: XCUIElementType(rawValue: 48)
-element.frame: x: 94.0, y: 369.3028971354165, width: 238.33333333333331, height: 42.333333333333314
-compactDescription: Contrast failed
-
-Issue 6:
-auditType: XCUIAccessibilityAuditType(rawValue: 1)
-element.identifier: 
-element.label: only if the apparatus is maintained to the performance standards set by Innovation, Science and Economic Development Canada regulations and policies
-element.elementType: XCUIElementType(rawValue: 48)
-element.frame: x: 94.0, y: 478.0304361979166, width: 264.6666666666667, height: 108.33333333333343
-compactDescription: Contrast failed
-
-Issue 7:
-auditType: XCUIAccessibilityAuditType(rawValue: 1)
-element.identifier: 
-element.label: C
-element.elementType: XCUIElementType(rawValue: 48)
-element.frame: x: 40.0, y: 630.3333333333333, width: 42.0, height: 42.0
-compactDescription: Contrast nearly passed
-
-Issue 8:
-auditType: XCUIAccessibilityAuditType(rawValue: 1)
-element.identifier: 
-element.label: except for the amplification of the output power of licence-exempt radio apparatus operating outside authorized amateur radio service allocations
-element.elementType: XCUIElementType(rawValue: 48)
-element.frame: x: 94.0, y: 630.3637695312498, width: 261.3333333333333, height: 108.3333333333336
-compactDescription: Contrast nearly passed

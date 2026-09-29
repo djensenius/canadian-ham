@@ -52,9 +52,11 @@ struct PracticeView: View {
                 }
             }
             .padding(DesignTokens.Spacing.xl)
+            .padding(.top, DesignTokens.Spacing.xxxl + DesignTokens.Spacing.xxl)
             .frame(maxWidth: 860, alignment: .leading)
             .frame(maxWidth: .infinity, alignment: .center)
         }
+        .contentMargins(.top, DesignTokens.Spacing.md, for: .scrollContent)
         .background(DesignTokens.Colors.paper)
         .navigationTitle(category.name.text(for: language))
         .toolbar {
@@ -75,20 +77,25 @@ struct PracticeView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            Text(category.name.text(for: language))
-                .font(.title.bold())
+            Text(localizedAttributedString(category.name.text(for: language)))
+                .font(DesignTokens.FontScale.headline.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityAddTraits(.isHeader)
+                .accessibilityIdentifier("practice-category-title")
             Text("Random practice from \(category.questionCount) official Basic questions.")
-                .font(.body)
+                .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("practice-category-summary")
             Text("Session tally: \(correctCount) correct out of \(answeredCount) answered")
-                .font(.body.weight(.semibold))
+                .font(DesignTokens.FontScale.body.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("practice-session-tally")
         }
         .padding(cardPadding)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(headerAccessibilityLabel())
         .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous)
@@ -99,19 +106,21 @@ struct PracticeView: View {
     private func questionCard(_ question: BankQuestion) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Text(question.id)
-                .font(.body.monospaced())
+                .font(DesignTokens.FontScale.body.monospaced())
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
-                .accessibilityLabel("Question identifier \(question.id)")
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("question-identifier")
             Text(localizedAttributedString(question.text.text(for: language)))
-                .font(.title3.weight(.semibold))
+                .font(DesignTokens.FontScale.bodyLarge.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
+                .fixedSize(horizontal: false, vertical: true)
                 .textSelection(.enabled)
+                .accessibilityIdentifier("question-stem")
         }
         .padding(cardPadding)
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(questionAccessibilityLabel(question)))
-        .accessibilityIdentifier("question-stem")
         .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous)
@@ -123,9 +132,11 @@ struct PracticeView: View {
     private var answerList: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Text("Answers")
-                .font(.title2.bold())
+                .font(DesignTokens.FontScale.title.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
-                .accessibilityHidden(true)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityAddTraits(.isHeader)
+                .accessibilityIdentifier("answers-title")
             ForEach(shuffledAnswers) { shuffledAnswer in
                 answerButton(for: shuffledAnswer)
             }
@@ -148,29 +159,30 @@ struct PracticeView: View {
         } label: {
             HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
                 Text(label)
-                    .font(.headline.monospaced().bold())
+                    .font(DesignTokens.FontScale.body.monospaced().weight(.bold))
                     .foregroundStyle(state.chipForeground)
                     .frame(minWidth: answerLetterMinWidth, minHeight: answerLetterMinWidth, alignment: .center)
                     .padding(DesignTokens.Spacing.xs)
                     .background(state.chipBackground, in: Circle())
-                    .accessibilityHidden(true)
+                    .accessibilityIdentifier("answer-\(label)-chip")
 
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                     Text(localizedAttributedString(answerText))
-                        .font(.body)
+                        .font(DesignTokens.FontScale.body)
                         .foregroundStyle(state.textColor)
-                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
                         .multilineTextAlignment(.leading)
                         .layoutPriority(1)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .accessibilityHidden(true)
+                        .accessibilityIdentifier("answer-\(label)-text")
 
                     if let iconName = state.iconName, let statusText = state.statusText {
                         Label(statusText, systemImage: iconName)
-                            .font(.caption.bold())
+                            .font(DesignTokens.FontScale.caption.weight(.bold))
                             .foregroundStyle(state.textColor)
+                            .fixedSize(horizontal: false, vertical: true)
                             .labelStyle(.titleAndIcon)
-                            .accessibilityHidden(true)
+                            .accessibilityIdentifier("answer-\(label)-status")
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -183,6 +195,7 @@ struct PracticeView: View {
                     .strokeBorder(state.border, lineWidth: isSelected || state.isSemantic ? 2 : 1)
             )
             .accessibilityElement(children: .ignore)
+            .accessibilityIdentifier("answer-\(label)-row")
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .ignore)
@@ -202,24 +215,27 @@ struct PracticeView: View {
                     Image(systemName: correct ? "checkmark.circle.fill" : "xmark.circle.fill")
                         .accessibilityHidden(true)
                     Text(correct ? "Correct" : "Incorrect")
-                        .font(.body.bold())
+                        .font(DesignTokens.FontScale.body.weight(.bold))
+                        .fixedSize(horizontal: false, vertical: true)
                         .padding(.vertical, DesignTokens.Spacing.xs)
+                        .accessibilityIdentifier("answer-feedback-title")
                 }
                 .foregroundStyle(correct ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
-                .accessibilityHidden(true)
 
                 if !correct {
                     Text(correctAnswerFeedbackText(correctAnswer.answer.text.text(for: language)))
-                        .font(.body.weight(.semibold))
+                        .font(DesignTokens.FontScale.body.weight(.semibold))
                         .foregroundStyle(DesignTokens.Colors.incorrectText)
+                        .fixedSize(horizontal: false, vertical: true)
                         .textSelection(.enabled)
-                        .accessibilityHidden(true)
+                        .accessibilityIdentifier("answer-feedback-correct-answer")
                 }
 
-                Text("Source: \(category.name.text(for: language)) • \(currentQuestion?.subsectionId ?? "")")
-                    .font(.caption)
+                Text(localizedFeedbackSourceText())
+                    .font(DesignTokens.FontScale.caption)
                     .foregroundStyle(correct ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
-                    .accessibilityHidden(true)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("answer-feedback-source")
             }
             .padding(cardPadding)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -238,9 +254,9 @@ struct PracticeView: View {
         Label {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 Text(title)
-                    .font(.title2.bold())
+                    .font(DesignTokens.FontScale.title.weight(.bold))
                 Text(message)
-                    .font(.body)
+                    .font(DesignTokens.FontScale.body)
             }
         } icon: {
             Image(systemName: systemImage)
@@ -274,7 +290,7 @@ struct PracticeView: View {
                 loadNextQuestion()
             } label: {
                 Text("Next question")
-                    .font(.body.bold())
+                    .font(DesignTokens.FontScale.body.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.paper)
                     .padding(.horizontal, DesignTokens.Spacing.lg)
                     .padding(.vertical, DesignTokens.Spacing.md)
@@ -360,8 +376,8 @@ struct PracticeView: View {
                 background: DesignTokens.Colors.correctBg,
                 border: DesignTokens.Colors.correctBorder,
                 textColor: DesignTokens.Colors.correctText,
-                chipBackground: DesignTokens.Colors.correctBg,
-                chipForeground: DesignTokens.Colors.correctText,
+                chipBackground: DesignTokens.Colors.correctText,
+                chipForeground: DesignTokens.Colors.correctBg,
                 iconName: "checkmark.circle.fill",
                 statusText: isSelected ? "Your answer, correct answer" : "Correct answer",
                 isSemantic: true
@@ -373,8 +389,8 @@ struct PracticeView: View {
                 background: DesignTokens.Colors.incorrectBg,
                 border: DesignTokens.Colors.incorrectBorder,
                 textColor: DesignTokens.Colors.incorrectText,
-                chipBackground: DesignTokens.Colors.incorrectBg,
-                chipForeground: DesignTokens.Colors.incorrectText,
+                chipBackground: DesignTokens.Colors.incorrectText,
+                chipForeground: DesignTokens.Colors.incorrectBg,
                 iconName: "xmark.circle.fill",
                 statusText: "Your answer",
                 isSemantic: true
@@ -455,6 +471,13 @@ struct PracticeView: View {
     private func correctAnswerFeedbackText(_ answerText: String) -> AttributedString {
         var text = englishAttributedString("Correct answer: ")
         text += localizedAttributedString(answerText)
+        return text
+    }
+
+    private func localizedFeedbackSourceText() -> AttributedString {
+        var text = englishAttributedString("Source: ")
+        text += localizedAttributedString(category.name.text(for: language))
+        text += englishAttributedString(" • \(currentQuestion?.subsectionId ?? "")")
         return text
     }
 

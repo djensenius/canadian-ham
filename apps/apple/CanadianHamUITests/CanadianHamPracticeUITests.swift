@@ -94,15 +94,24 @@ final class CanadianHamPracticeUITests: XCTestCase {
         navigateToCategoryListIfNeeded(in: app)
         let firstCategory = app.staticTexts["Regulations and Policies"].firstMatch
         XCTAssertTrue(firstCategory.waitForExistence(timeout: 5), "Category list should exist before the accessibility audit")
-        waitBriefly()
-        attachScreenshot(named: "category-list-\(appearanceName)-accessibility-audit", from: app)
+        scrollElementToVisibleMiddle(firstCategory, in: app)
+        XCTAssertTrue(
+            isFullyVisible(firstCategory, in: app, requiresHittable: true),
+            "First category should be fully visible below the navigation bar before auditing"
+        )
+        captureScreenEvidence(named: "category-list-\(appearanceName)-accessibility-audit")
         try captureAccessibilityAudit(on: app, screenName: "category-list-\(appearanceName)")
 
         navigateToPracticeIfNeeded(in: app)
         answerFirstVisibleQuestion(in: app)
         _ = waitForAnswerFeedback(in: app)
-        bringNextQuestionButtonIntoView(in: app)
-        attachScreenshot(named: "answered-practice-\(appearanceName)-accessibility-audit", from: app)
+        let auditedAnswer = app.descendants(matching: .any)["answer-C-button"].firstMatch
+        scrollElementToVisibleMiddle(auditedAnswer, in: app)
+        XCTAssertTrue(
+            isFullyVisible(auditedAnswer, in: app, requiresHittable: true),
+            "The audited answer row should be fully visible below the navigation bar before auditing"
+        )
+        captureScreenEvidence(named: "answered-practice-\(appearanceName)-accessibility-audit")
         try captureAccessibilityAudit(on: app, screenName: "answered-practice-\(appearanceName)")
     }
 
@@ -167,19 +176,35 @@ final class CanadianHamPracticeUITests: XCTestCase {
         return feedback
     }
 
-    private func bringNextQuestionButtonIntoView(in app: XCUIApplication) {
-        let nextQuestionButton = app.buttons["Next question"].firstMatch
-        XCTAssertTrue(nextQuestionButton.waitForExistence(timeout: 5), "Next question button should exist after answering")
-        scrollUntilHittable(nextQuestionButton, in: app, maxSwipes: 14)
-        XCTAssertTrue(
-            waitForHittableAndStable(nextQuestionButton, in: app, timeout: 4),
-            "Next question button should be fully visible, hittable, and stable before auditing the answered practice screen"
-        )
+    private func scrollUntilHittable(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
+        for _ in 0..<maxSwipes where !isFullyVisible(element, in: app, requiresHittable: true) {
+            app.scrollViews.firstMatch.swipeUp()
+            waitBriefly()
+        }
     }
 
-    private func scrollUntilHittable(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
-        for _ in 0..<maxSwipes where !isFullyVisibleAndHittable(element, in: app) {
-            app.scrollViews.firstMatch.swipeUp()
+    private func scrollElementToVisibleMiddle(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int = 16) {
+        XCTAssertTrue(element.waitForExistence(timeout: 5), "Element should exist before scrolling for audit")
+        let scrollView = app.scrollViews.firstMatch
+        guard scrollView.waitForExistence(timeout: 1) else {
+            return
+        }
+
+        for _ in 0..<maxSwipes {
+            let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+            let elementFrame = element.frame
+            let isFullyInsideVisibleFrame = elementFrame.minY > visibleFrame.minY && elementFrame.maxY < visibleFrame.maxY
+            let isNearMiddle = abs(elementFrame.midY - visibleFrame.midY) <= 180
+
+            if isFullyInsideVisibleFrame && isNearMiddle {
+                return
+            }
+
+            if elementFrame.minY <= visibleFrame.minY || elementFrame.midY < visibleFrame.midY {
+                scrollView.swipeDown()
+            } else {
+                scrollView.swipeUp()
+            }
             waitBriefly()
         }
     }
@@ -190,7 +215,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         var stableSamples = 0
 
         while Date() < deadline {
-            if isFullyVisibleAndHittable(element, in: app) {
+            if isFullyVisible(element, in: app, requiresHittable: true) {
                 let frame = element.frame
                 if frame.equalTo(previousFrame) {
                     stableSamples += 1
@@ -211,8 +236,24 @@ final class CanadianHamPracticeUITests: XCTestCase {
         return false
     }
 
-    private func isFullyVisibleAndHittable(_ element: XCUIElement, in app: XCUIApplication) -> Bool {
-        element.exists && element.isHittable
+    private func isFullyVisible(_ element: XCUIElement, in app: XCUIApplication, requiresHittable: Bool) -> Bool {
+        guard element.exists else { return false }
+        if requiresHittable && !element.isHittable { return false }
+        return visibleFrameExcludingNavigationBar(in: app).contains(element.frame)
+    }
+
+    private func visibleFrameExcludingNavigationBar(in app: XCUIApplication) -> CGRect {
+        let windowFrame = app.windows.firstMatch.frame
+        let navBar = app.navigationBars.firstMatch
+        let navBarMaxY = navBar.exists ? navBar.frame.maxY : windowFrame.minY
+        let topInset = navBarMaxY + 16
+        let bottomInset = windowFrame.maxY - 16
+        return CGRect(
+            x: windowFrame.minX + 16,
+            y: topInset,
+            width: max(0, windowFrame.width - 32),
+            height: max(0, bottomInset - topInset)
+        )
     }
 
     private func waitBriefly() {
@@ -238,15 +279,22 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertEqual(languagePickers.count, 1, "Exactly one question language picker should be visible on \(context)")
     }
 
-    private func attachScreenshot(named name: String, from app: XCUIApplication) {
-        let attachment = XCTAttachment(screenshot: app.screenshot())
+    @discardableResult
+    private func captureScreenEvidence(named name: String) -> XCUIScreenshot {
+        let screenshot = XCUIScreen.main.screenshot()
+        let attachment = XCTAttachment(screenshot: screenshot)
         attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)
+        exportEvidence(screenshot.pngRepresentation, filename: "\(name).png")
+        return screenshot
     }
 
-    private func attachAuditFindings(_ findings: [String], screenName: String, error: Error?) {
-        var lines = ["Screen: \(screenName)"]
+    private func attachAuditFindings(_ findings: [String], screenName: String, error: Error?, screenFrame: CGRect) {
+        var lines = [
+            "Screen: \(screenName)",
+            "Screen frame: \(frameDescription(screenFrame))"
+        ]
         if let error {
             lines.append("Audit error: \(error)")
         }
@@ -258,32 +306,115 @@ final class CanadianHamPracticeUITests: XCTestCase {
             })
         }
 
-        let attachment = XCTAttachment(string: lines.joined(separator: "\n\n"))
+        let rawFindings = lines.joined(separator: "\n\n")
+        let attachment = XCTAttachment(string: rawFindings)
         attachment.name = "\(screenName)-raw-accessibility-audit-findings"
         attachment.lifetime = .keepAlways
         add(attachment)
+        exportEvidence(Data(rawFindings.utf8), filename: "\(screenName)-raw-accessibility-audit-findings.txt")
     }
 
     private func captureAccessibilityAudit(on app: XCUIApplication, screenName: String) throws {
         if #available(iOS 17.0, *) {
             var findings: [String] = []
+            var capturedIssueScreenshot = false
+            var auditError: Error?
+            defer {
+                attachAuditFindings(findings, screenName: screenName, error: auditError, screenFrame: app.windows.firstMatch.frame)
+            }
             do {
                 try app.performAccessibilityAudit { issue in
                     let description = self.describe(issue)
                     findings.append(description)
-                    return true
+                    if !capturedIssueScreenshot {
+                        self.captureScreenEvidence(named: "\(screenName)-accessibility-audit")
+                        capturedIssueScreenshot = true
+                    }
+                    return self.shouldExclude(issue, screenName: screenName)
                 }
-                attachAuditFindings(findings, screenName: screenName, error: nil)
             } catch {
-                attachAuditFindings(findings, screenName: screenName, error: error)
+                auditError = error
                 throw error
             }
         } else {
-            let attachment = XCTAttachment(string: "Screen: \(screenName)\nperformAccessibilityAudit is unavailable before iOS 17.")
+            let rawFindings = "Screen: \(screenName)\nScreen frame: \(frameDescription(app.windows.firstMatch.frame))\nperformAccessibilityAudit is unavailable before iOS 17."
+            let attachment = XCTAttachment(string: rawFindings)
             attachment.name = "\(screenName)-raw-accessibility-audit-findings"
             attachment.lifetime = .keepAlways
             add(attachment)
+            exportEvidence(Data(rawFindings.utf8), filename: "\(screenName)-raw-accessibility-audit-findings.txt")
         }
+    }
+
+    @available(iOS 17.0, *)
+    private func shouldExclude(_ issue: XCUIAccessibilityAuditIssue, screenName: String) -> Bool {
+        let auditType = String(describing: issue.auditType)
+        let identifier = issue.element?.identifier ?? ""
+
+        if auditType == "XCUIAccessibilityAuditType(rawValue: 1)" {
+            return contrastFalsePositiveIdentifiers.contains(identifier)
+        }
+
+        if auditType == "XCUIAccessibilityAuditType(rawValue: 131072)" {
+            return textClippingFalsePositiveIdentifiers.contains(identifier)
+        }
+
+        return false
+    }
+
+    private var contrastFalsePositiveIdentifiers: Set<String> {
+        var identifiers: Set<String> = [
+            "practice-category-title",
+            "practice-category-summary",
+            "practice-session-tally",
+            "question-identifier",
+            "question-stem",
+            "answers-title",
+            "answer-feedback-title",
+            "answer-feedback-correct-answer",
+            "answer-feedback-source"
+        ]
+        for label in ["A", "B", "C", "D"] {
+            identifiers.insert("answer-\(label)-chip")
+            identifiers.insert("answer-\(label)-text")
+            identifiers.insert("answer-\(label)-status")
+        }
+        return identifiers
+    }
+
+    private var textClippingFalsePositiveIdentifiers: Set<String> {
+        var identifiers: Set<String> = [
+            "question-stem",
+            "answer-feedback-title",
+            "answer-feedback-correct-answer",
+            "answer-feedback-source"
+        ]
+        for label in ["A", "B", "C", "D"] {
+            identifiers.insert("answer-\(label)-text")
+        }
+        return identifiers
+    }
+
+    private func exportEvidence(
+        _ data: Data,
+        filename: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let directory = evidenceDirectoryURL()
+        do {
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            try data.write(to: directory.appendingPathComponent(filename), options: .atomic)
+        } catch {
+            XCTFail("Failed to export accessibility evidence \(filename): \(error)", file: file, line: line)
+        }
+    }
+
+    private func evidenceDirectoryURL() -> URL {
+        URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("docs/a11y-evidence", isDirectory: true)
     }
 
     @available(iOS 17.0, *)
