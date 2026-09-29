@@ -3,7 +3,7 @@
 T-516b changes make the default Apple accessibility audit deterministic and fast. The default UI suite now runs a regression audit with `performAccessibilityAudit()` and no allow-list in light and dark appearances for these states:
 
 1. category list;
-2. unanswered practice on fixed question `B-004-005-008` (`Circuit Components`);
+2. unanswered practice on fixed question `B-001-002-002` (`Regulations and Policies`);
 3. answered practice for the same fixed question after selecting the correct answer.
 
 Any audit issue fails the test. The default regression does not collect screenshots, position logs, raw finding attachments, handler screenshots, occlusion records, or measured allow-list evidence.
@@ -11,7 +11,7 @@ Any audit issue fails the test. The default regression does not collect screensh
 ## Current default audit
 
 - Test: `CanadianHamPracticeUITests.testAccessibilityAuditCategoryListUnansweredAndAnsweredPracticeScreens`
-- Fixed practice question: `B-004-005-008`
+- Fixed practice question: `B-001-002-002`
 - Appearances: light and dark
 - Audit states per appearance: category list, unanswered practice, answered practice
 - Allow-list: none

@@ -46,7 +46,7 @@ Scheme: `CanadianHam`.
 The default iOS UI suite includes a fast deterministic accessibility regression that runs `performAccessibilityAudit()` with no allow-list in light and dark appearances for:
 
 - the category list;
-- an unanswered fixed practice question (`B-004-005-008`);
+- an unanswered fixed practice question (`B-001-002-002`);
 - the same practice question after answering it correctly.
 
 The heavier T-516 diagnostic harness (screenshots, position logs, and raw audit findings for the two-pass audit) is skipped by default. Run it only when collecting accessibility evidence:

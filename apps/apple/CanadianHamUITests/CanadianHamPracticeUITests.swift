@@ -146,11 +146,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Practice categories"].firstMatch.waitForExistence(timeout: 10), "Category list should render before the category-list audit")
         try performFastAccessibilityAudit(on: app, context: "\(appearance.rawValue) category list")
 
-        let category = app.staticTexts["Circuit Components"].firstMatch
+        let category = app.staticTexts["Regulations and Policies"].firstMatch
         XCTAssertTrue(category.waitForExistence(timeout: 5), "Fast audit category should be visible on the category list")
         category.tap()
 
-        XCTAssertTrue(app.staticTexts["What is inside the envelope of a triode tube?"].firstMatch.waitForExistence(timeout: 10), "Fast audit question should render before the unanswered practice audit")
+        XCTAssertTrue(app.staticTexts["An Amateur Radio Operator Certificate is valid for:"].firstMatch.waitForExistence(timeout: 10), "Fast audit question should render before the unanswered practice audit")
         try performFastAccessibilityAudit(on: app, context: "\(appearance.rawValue) unanswered practice")
 
         answerFastAuditQuestionCorrectly(in: app)
@@ -167,7 +167,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func answerFastAuditQuestionCorrectly(in app: XCUIApplication) {
-        let correctAnswer = app.staticTexts["A vacuum"].firstMatch
+        let correctAnswer = app.staticTexts["life"].firstMatch
         XCTAssertTrue(correctAnswer.waitForExistence(timeout: 5), "Known correct answer should be visible in the fast audit question")
         correctAnswer.tap()
     }
@@ -250,7 +250,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private var auditPracticeQuestionID: String { "B-001-001-004" }
-    private var fastAuditPracticeQuestionID: String { "B-004-005-008" }
+    private var fastAuditPracticeQuestionID: String { "B-001-002-002" }
 
     private func navigateToPracticeIfNeeded(in app: XCUIApplication) {
         if app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10) {
