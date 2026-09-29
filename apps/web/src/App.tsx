@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { LanguageToggle } from "./components/LanguageToggle";
 import { allQuestionCount, categories, questionsForScope } from "./data/bank";
@@ -29,17 +29,20 @@ interface AppProps {
   readonly random?: () => number;
 }
 
-function pickQuestion(scopeId: string, random: () => number): Question {
+function pickQuestion(scopeId: string, random: () => number, excludeQuestionId?: string): Question {
   const scopedQuestions = questionsForScope(scopeId);
   if (scopedQuestions.length === 0) {
     throw new Error(`No questions available for scope ${scopeId}`);
   }
-  const selectedIndex = Math.floor(random() * scopedQuestions.length);
-  return scopedQuestions[selectedIndex]!;
+  const eligibleQuestions = scopedQuestions.length > 1
+    ? scopedQuestions.filter((question) => question.id !== excludeQuestionId)
+    : scopedQuestions;
+  const selectedIndex = Math.floor(random() * eligibleQuestions.length);
+  return eligibleQuestions[selectedIndex]!;
 }
 
-function createPresentation(scopeId: string, random: () => number): PracticePresentation {
-  const question = pickQuestion(scopeId, random);
+function createPresentation(scopeId: string, random: () => number, excludeQuestionId?: string): PracticePresentation {
+  const question = pickQuestion(scopeId, random, excludeQuestionId);
   return {
     question,
     shuffledAnswers: shuffleAnswers(question.answers, random),
@@ -88,7 +91,7 @@ export function App({ initialView = "home", initialScopeId = "all", random = Mat
   }
 
   function nextQuestion(): void {
-    setPresentation(createPresentation(scopeId, random));
+    setPresentation((currentPresentation) => createPresentation(scopeId, random, currentPresentation.question.id));
     setFeedback(null);
   }
 
@@ -181,6 +184,28 @@ function Practice({
   tally,
 }: PracticeProps) {
   const correctAnswer = presentation.shuffledAnswers.answers[presentation.shuffledAnswers.correctDisplayIndex]!;
+  const questionHeadingRef = useRef<HTMLHeadingElement>(null);
+  const nextButtonRef = useRef<HTMLButtonElement>(null);
+  const shouldFocusQuestionAfterNext = useRef(false);
+  const hasFeedback = feedback !== null;
+
+  useEffect(() => {
+    if (hasFeedback) {
+      nextButtonRef.current?.focus();
+    }
+  }, [hasFeedback]);
+
+  useEffect(() => {
+    if (shouldFocusQuestionAfterNext.current) {
+      shouldFocusQuestionAfterNext.current = false;
+      questionHeadingRef.current?.focus();
+    }
+  }, [presentation.question.id]);
+
+  function handleNext(): void {
+    shouldFocusQuestionAfterNext.current = true;
+    onNext();
+  }
 
   return (
     <section className="card practice" aria-labelledby="practice-title">
@@ -208,11 +233,11 @@ function Practice({
         </span>
       </div>
 
-      <article className="question-panel">
+      <article className="question-panel" lang={language}>
         <p className="question-meta">
           {presentation.question.id} · {presentation.question.categoryId} · {presentation.question.subsectionId}
         </p>
-        <h2 id="practice-title">Practice question</h2>
+        <h2 id="practice-title" ref={questionHeadingRef} tabIndex={-1}>Practice question</h2>
         <p className="question-text">{presentation.question.text[language]}</p>
 
         <div className="answers" role="group" aria-label="Answer choices">
@@ -257,7 +282,7 @@ function Practice({
         )}
       </div>
 
-      <button className="next-button" disabled={feedback === null} type="button" onClick={onNext}>
+      <button className="next-button" disabled={feedback === null} ref={nextButtonRef} type="button" onClick={handleNext}>
         Next question
       </button>
     </section>
