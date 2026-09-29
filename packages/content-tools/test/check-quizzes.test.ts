@@ -47,8 +47,24 @@ status: draft
 
 function questionsJson(): string {
   return `${JSON.stringify([
-    { id: "B-005-001-001", subsectionId: "B-005-001" },
-    { id: "B-005-002-001", subsectionId: "B-005-002" },
+    {
+      id: "B-005-001-001",
+      subsectionId: "B-005-001",
+      text: { en: "Which fixture value should be selected for the calibration step?", fr: null },
+      answers: [
+        { isCorrect: true, text: { en: "Use the calibrated reference value", fr: null } },
+        { isCorrect: false, text: { en: "Use an unrelated guess", fr: null } },
+      ],
+    },
+    {
+      id: "B-005-002-001",
+      subsectionId: "B-005-002",
+      text: { en: "Which outside fixture value belongs to another subsection?", fr: null },
+      answers: [
+        { isCorrect: true, text: { en: "Use the other subsection value", fr: null } },
+        { isCorrect: false, text: { en: "Use the first subsection value", fr: null } },
+      ],
+    },
   ], null, 2)}\n`;
 }
 
@@ -117,6 +133,57 @@ test("quiz check rejects official questions outside the lesson coverage", async 
     await assert.rejects(
       () => runCheck(root),
       (error: unknown) => error instanceof QuizCheckError && error.report.issues.some((issue) => issue.includes("not covered")),
+    );
+  });
+});
+
+test("quiz check rejects concept checks that overlap official questions in the same quiz", async () => {
+  await withFixture("official-overlap", async (root) => {
+    await writeBaseFixture(root, quiz({
+      conceptChecks: [
+        {
+          id: "QZ-L-TEST-01-A-C1",
+          prompt: { en: "Which fixture value should be selected for the calibration step?", fr: null },
+          choices: [
+            { text: { en: "Use the calibrated reference value", fr: null }, isCorrect: true },
+            { text: { en: "Use an unrelated guess", fr: null }, isCorrect: false },
+          ],
+          explanation: { en: "The concept check restates the fixture official item.", fr: null },
+        },
+      ],
+    }));
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof QuizCheckError && error.report.issues.some((issue) => issue.includes("CONCEPT-CHECK OVERLAP") && issue.includes("official question B-005-001-001")),
+    );
+  });
+});
+
+test("quiz check rejects concept checks that overlap lesson Try-it lines", async () => {
+  await withFixture("try-it-overlap", async (root) => {
+    await writeBaseFixture(root, quiz({
+      conceptChecks: [
+        {
+          id: "QZ-L-TEST-01-A-C1",
+          prompt: { en: "What is checked?", fr: null },
+          choices: [
+            { text: { en: "Correct", fr: null }, isCorrect: true },
+            { text: { en: "Wrong", fr: null }, isCorrect: false },
+          ],
+          explanation: { en: "One choice is correct.", fr: null },
+        },
+      ],
+    }));
+    await writeFile(
+      path.join(root, "content/lessons/module/l-test-01.md"),
+      `${lessonMarkdown()}\n## Try it\n\n1. What is checked? Correct\n`,
+      "utf8",
+    );
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof QuizCheckError && error.report.issues.some((issue) => issue.includes("CONCEPT-CHECK OVERLAP") && issue.includes("Try-it line 1")),
     );
   });
 });

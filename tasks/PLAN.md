@@ -61,10 +61,10 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-306 | P3 | done | worker | T-304,T-208 | Implement weak-area and due-review practice using local progress, `recentResults`, and Leitner state. |
 | T-307 | P3 | done | worker | T-303,T-302,T-205 | Implement mock exam generation, review, scoring, pass/honours display, category breakdown, optional timer default off, unanswered-as-incorrect scoring, and progress updates. |
 | T-308 | P3 | done | worker | T-307,T-101 | Add reference sheet access in web mock exam mode with reference assets bundled for private development; label it as exam reference material, keep it available offline when cached, and keep public release gated by T-007. |
-| T-309 | P3 | in progress | worker | T-302 | Render available platform-neutral lessons on web with metadata, body content, previous/next navigation, and module overview. |
-| T-310 | P3 | in progress | worker | T-304,T-309 | Implement web built-in lesson quizzes with official-bank and concept-check items, shuffled official answers, local scores, and retry history. |
+| T-309 | P3 | done | worker | T-302 | Render available platform-neutral lessons on web with metadata, body content, previous/next navigation, and module overview. |
+| T-310 | P3 | done | worker | T-304,T-309 | Implement web built-in lesson quizzes with official-bank and concept-check items, shuffled official answers, local scores, and retry history. |
 | T-311 | P3 | done | worker | T-303,T-307,T-208 | Implement web readiness guidance for weak categories/subsections and due items using the shared readiness fixtures for REQ-LESSON-003. |
-| T-312 | P3 | in progress | worker | T-305,T-306,T-307,T-308,T-309,T-310,T-311 | Add PWA service worker caching app shell, bundled content, lessons, fixtures needed at runtime, and reference assets allowed for the current private-development or release stage; show offline readiness status. |
+| T-312 | P3 | done | worker | T-305,T-306,T-307,T-308,T-309,T-310,T-311 | Add PWA service worker caching app shell, bundled content, lessons, fixtures needed at runtime, and reference assets allowed for the current private-development or release stage; show offline readiness status. |
 | T-313 | P3 | todo | worker | T-312 | Add web privacy audit test confirming no third-party requests in normal flows and document host log/CSP configuration. |
 | T-401 | P4 | done | worker | T-102 | Create lesson directory structure and module index for eight categories. |
 | T-402 | P4 | done | worker | T-401 | Add lesson outline front matter mapping all 100 subsections to lesson IDs; no full lesson prose required. |
@@ -76,6 +76,7 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-408 | P4 | done | worker | T-404 | Module 4 (Circuit Components, B-004) full lessons, quiz files, and explanations for every B-004 question, following the M5 conventions and checks. |
 | T-409 | P4 | done | worker | T-404 | Module 6 (Feedlines and Antenna Systems, B-006) full lessons, quiz files, and explanations for every B-006 question, following the M5 conventions and checks. |
 | T-410 | P4 | done | worker | T-404 | Content lints: module-scoped check:quizzes and check-explanations (quoted choice text, no filler, no 3+ file duplicate notes, lesson citation covers subsection). |
+| T-411 | P4 | done | worker | T-410 | Template and concept-check overlap lints; stricter explanation format. |
 | T-501 | P5 | done | worker | T-206 | Scaffold SwiftUI multiplatform Apple project for iOS, iPadOS, and macOS; verify build with `xbuild`. |
 | T-501b | P5 | in progress | worker | T-501 | Apple slice polish from review: EN/FR picker on compact iPhone, UI test, strong shuffle test, VoiceOver announcement, scaled answer letter, no visionOS availability, deterministic project generation, minimum-OS decision recorded. |
 | T-513 | P5 | todo | worker | T-501b,T-206 | Native visionOS app target (visionOS 2.0+): window-based practice flow, glass materials, hover effects, ornaments for EN/FR; shared SwiftUI code where sensible; builds/tests via xbuild on the visionOS simulator. |

@@ -1,6 +1,8 @@
 import { dueCount, type CategoryBreakdownEntry, type QuestionProgressRecord } from "@canadian-ham/engine-ts";
 
 import { bankId, categories, knownQuestionIds, subsections } from "../data/bank";
+import { lessonsById } from "../data/lessons";
+import { lessonQuizzesById } from "../data/quizzes";
 
 export type PracticeMode = "immediate" | "review-later";
 export type ReadinessPreference = "not-enough-data" | "needs-review" | "pass-ready" | "honours-ready";
@@ -47,6 +49,25 @@ export interface ExamAttempt {
   };
 }
 
+export interface LessonProgressRecord {
+  readonly lessonId: string;
+  readonly readAt: string;
+  readonly readCount: number;
+}
+
+export interface LessonQuizAttempt {
+  readonly id: string;
+  readonly quizId: string;
+  readonly lessonId: string;
+  readonly submittedAt: string;
+  readonly correct: number;
+  readonly total: number;
+  readonly percent: number;
+  readonly officialQuestionIds: readonly string[];
+  readonly incorrectOfficialQuestionIds: readonly string[];
+  readonly incorrectConceptCheckIds: readonly string[];
+}
+
 export interface ProgressExportV1 {
   readonly schema: "canadian-ham.progress-export";
   readonly version: 1;
@@ -54,6 +75,8 @@ export interface ProgressExportV1 {
   readonly bankId: string;
   readonly questionProgress: readonly QuestionProgressRecord[];
   readonly examAttempts: readonly ExamAttempt[];
+  readonly lessonProgress?: readonly LessonProgressRecord[];
+  readonly lessonQuizAttempts?: readonly LessonQuizAttempt[];
   readonly preferences: WebPreferences;
 }
 
@@ -69,7 +92,7 @@ export const defaultPreferences: WebPreferences = {
   theme: "system",
 };
 
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 const DEFAULT_DB_NAME = "canadian-ham-web-progress";
 const PREFERENCES_KEY = "preferences";
 
@@ -109,6 +132,33 @@ export class ProgressStore {
     await this.put("examAttempts", attempt);
   }
 
+  async getLessonProgress(): Promise<LessonProgressRecord[]> {
+    return this.getAll<LessonProgressRecord>("lessonProgress");
+  }
+
+  async putLessonProgress(record: LessonProgressRecord): Promise<void> {
+    await this.put("lessonProgress", record);
+  }
+
+  async getLessonQuizAttempts(): Promise<LessonQuizAttempt[]> {
+    return this.getAll<LessonQuizAttempt>("lessonQuizAttempts");
+  }
+
+  async putLessonQuizAttempt(attempt: LessonQuizAttempt): Promise<void> {
+    await this.put("lessonQuizAttempts", attempt);
+  }
+
+  async putLessonQuizAttemptWithQuestionProgress(attempt: LessonQuizAttempt, records: readonly QuestionProgressRecord[]): Promise<void> {
+    const db = await this.open();
+    await runTransaction(db, ["lessonQuizAttempts", "questionProgress"], "readwrite", (transaction) => {
+      transaction.objectStore("lessonQuizAttempts").put(attempt);
+      const questionStore = transaction.objectStore("questionProgress");
+      for (const record of records) {
+        questionStore.put(record);
+      }
+    });
+  }
+
   async getPreferences(): Promise<WebPreferences> {
     const db = await this.open();
     const record = await requestToPromise<StoredPreferenceRecord | undefined>(
@@ -129,23 +179,35 @@ export class ProgressStore {
       bankId,
       questionProgress: await this.getQuestionProgress(),
       examAttempts: await this.getExamAttempts(),
+      lessonProgress: await this.getLessonProgress(),
+      lessonQuizAttempts: await this.getLessonQuizAttempts(),
       preferences: await this.getPreferences(),
     };
   }
 
   async importData(data: ProgressExportV1): Promise<void> {
     const db = await this.open();
-    await runTransaction(db, ["questionProgress", "examAttempts", "preferences"], "readwrite", (transaction) => {
+    await runTransaction(db, ["questionProgress", "examAttempts", "lessonProgress", "lessonQuizAttempts", "preferences"], "readwrite", (transaction) => {
       transaction.objectStore("questionProgress").clear();
       transaction.objectStore("examAttempts").clear();
+      transaction.objectStore("lessonProgress").clear();
+      transaction.objectStore("lessonQuizAttempts").clear();
       transaction.objectStore("preferences").clear();
       const questionStore = transaction.objectStore("questionProgress");
       const attemptStore = transaction.objectStore("examAttempts");
+      const lessonStore = transaction.objectStore("lessonProgress");
+      const quizAttemptStore = transaction.objectStore("lessonQuizAttempts");
       for (const record of data.questionProgress) {
         questionStore.put(record);
       }
       for (const attempt of data.examAttempts) {
         attemptStore.put(attempt);
+      }
+      for (const record of data.lessonProgress ?? []) {
+        lessonStore.put(record);
+      }
+      for (const attempt of data.lessonQuizAttempts ?? []) {
+        quizAttemptStore.put(attempt);
       }
       transaction.objectStore("preferences").put({ key: PREFERENCES_KEY, value: { ...defaultPreferences, ...data.preferences } });
     });
@@ -153,9 +215,11 @@ export class ProgressStore {
 
   async resetAllData(): Promise<void> {
     const db = await this.open();
-    await runTransaction(db, ["questionProgress", "examAttempts", "preferences"], "readwrite", (transaction) => {
+    await runTransaction(db, ["questionProgress", "examAttempts", "lessonProgress", "lessonQuizAttempts", "preferences"], "readwrite", (transaction) => {
       transaction.objectStore("questionProgress").clear();
       transaction.objectStore("examAttempts").clear();
+      transaction.objectStore("lessonProgress").clear();
+      transaction.objectStore("lessonQuizAttempts").clear();
       transaction.objectStore("preferences").clear();
     });
   }
@@ -236,6 +300,17 @@ function migrateDatabase(db: IDBDatabase, oldVersion: number, transaction: IDBTr
       attemptStore.createIndex("submittedAt", "submittedAt", { unique: false });
     }
   }
+
+  if (oldVersion < 3) {
+    if (!db.objectStoreNames.contains("lessonProgress")) {
+      db.createObjectStore("lessonProgress", { keyPath: "lessonId" });
+    }
+    if (!db.objectStoreNames.contains("lessonQuizAttempts")) {
+      const store = db.createObjectStore("lessonQuizAttempts", { keyPath: "id" });
+      store.createIndex("submittedAt", "submittedAt", { unique: false });
+      store.createIndex("lessonId", "lessonId", { unique: false });
+    }
+  }
 }
 
 export function validateProgressImport(raw: unknown): ImportValidationResult {
@@ -263,6 +338,12 @@ export function validateProgressImport(raw: unknown): ImportValidationResult {
   if (!Array.isArray(raw.examAttempts)) {
     errors.push("Import examAttempts must be an array.");
   }
+  if (raw.lessonProgress !== undefined && !Array.isArray(raw.lessonProgress)) {
+    errors.push("Import lessonProgress must be an array when present.");
+  }
+  if (raw.lessonQuizAttempts !== undefined && !Array.isArray(raw.lessonQuizAttempts)) {
+    errors.push("Import lessonQuizAttempts must be an array when present.");
+  }
   if (!isPreferences(raw.preferences)) {
     errors.push("Import preferences are invalid.");
   }
@@ -284,6 +365,30 @@ export function validateProgressImport(raw: unknown): ImportValidationResult {
     }
   }
 
+  const lessonProgress = Array.isArray(raw.lessonProgress) ? raw.lessonProgress : [];
+  const lessonProgressIds = new Set<string>();
+  for (const [index, record] of lessonProgress.entries()) {
+    errors.push(...validateLessonProgressRecord(record, index));
+    if (isRecord(record) && typeof record.lessonId === "string") {
+      if (lessonProgressIds.has(record.lessonId)) {
+        errors.push(`Import lessonProgress[${index}].lessonId duplicates another lesson progress record.`);
+      }
+      lessonProgressIds.add(record.lessonId);
+    }
+  }
+
+  const lessonQuizAttempts = Array.isArray(raw.lessonQuizAttempts) ? raw.lessonQuizAttempts : [];
+  const lessonQuizAttemptIds = new Set<string>();
+  for (const [index, attempt] of lessonQuizAttempts.entries()) {
+    errors.push(...validateLessonQuizAttempt(attempt, index));
+    if (isRecord(attempt) && typeof attempt.id === "string") {
+      if (lessonQuizAttemptIds.has(attempt.id)) {
+        errors.push(`Import lessonQuizAttempts[${index}].id duplicates another lesson quiz attempt.`);
+      }
+      lessonQuizAttemptIds.add(attempt.id);
+    }
+  }
+
   if (errors.length > 0) {
     return { ok: false, errors };
   }
@@ -298,6 +403,8 @@ export function validateProgressImport(raw: unknown): ImportValidationResult {
       bankId,
       questionProgress: questionProgress as QuestionProgressRecord[],
       examAttempts: examAttempts as ExamAttempt[],
+      lessonProgress: lessonProgress as LessonProgressRecord[],
+      lessonQuizAttempts: lessonQuizAttempts as LessonQuizAttempt[],
       preferences: { ...defaultPreferences, ...(raw.preferences as WebPreferences) },
     },
   };
@@ -379,6 +486,88 @@ function validateQuestionProgressRecord(value: unknown, index: number): string[]
     }
   }
   return errors;
+}
+
+function validateLessonProgressRecord(value: unknown, index: number): string[] {
+  const prefix = `Import lessonProgress[${index}]`;
+  const errors: string[] = [];
+  if (!isRecord(value)) {
+    return [`${prefix} must be an object.`];
+  }
+  if (typeof value.lessonId !== "string" || !lessonsById.has(value.lessonId)) {
+    errors.push(`${prefix}.lessonId must be a known lesson ID.`);
+  }
+  if (typeof value.readAt !== "string") {
+    errors.push(`${prefix}.readAt must be a canonical UTC timestamp string.`);
+  } else {
+    pushCanonicalTimestampError(errors, value.readAt, `${prefix}.readAt`);
+  }
+  if (!isPositiveInteger(value.readCount)) {
+    errors.push(`${prefix}.readCount must be a positive integer.`);
+  }
+  return errors;
+}
+
+function validateLessonQuizAttempt(value: unknown, index: number): string[] {
+  const prefix = `Import lessonQuizAttempts[${index}]`;
+  const errors: string[] = [];
+  if (!isRecord(value)) {
+    return [`${prefix} must be an object.`];
+  }
+  const quiz = typeof value.quizId === "string" ? lessonQuizzesById.get(value.quizId) : undefined;
+  if (typeof value.id !== "string" || value.id.length === 0) {
+    errors.push(`${prefix}.id must be a non-empty string.`);
+  }
+  if (quiz === undefined) {
+    errors.push(`${prefix}.quizId must be a known lesson quiz ID.`);
+  }
+  if (typeof value.lessonId !== "string" || !lessonsById.has(value.lessonId) || (quiz !== undefined && value.lessonId !== quiz.lessonId)) {
+    errors.push(`${prefix}.lessonId must match the known lesson quiz.`);
+  }
+  if (typeof value.submittedAt !== "string") {
+    errors.push(`${prefix}.submittedAt must be a canonical UTC timestamp string.`);
+  } else {
+    pushCanonicalTimestampError(errors, value.submittedAt, `${prefix}.submittedAt`);
+  }
+  if (!isNonNegativeInteger(value.correct)) {
+    errors.push(`${prefix}.correct must be a non-negative integer.`);
+  }
+  if (!isPositiveInteger(value.total)) {
+    errors.push(`${prefix}.total must be a positive integer.`);
+  }
+  if (!isNonNegativeFiniteNumber(value.percent) || (typeof value.percent === "number" && value.percent > 100)) {
+    errors.push(`${prefix}.percent must be a number between 0 and 100.`);
+  }
+  if (typeof value.correct === "number" && typeof value.total === "number" && value.correct > value.total) {
+    errors.push(`${prefix}.correct must not exceed total.`);
+  }
+  if (isNonNegativeInteger(value.correct) && isPositiveInteger(value.total) && isNonNegativeFiniteNumber(value.percent)) {
+    const expectedPercent = (value.correct / value.total) * 100;
+    if (Math.abs(value.percent - expectedPercent) > 1e-9) {
+      errors.push(`${prefix}.percent must match correct divided by total.`);
+    }
+  }
+  if (!isKnownQuestionIdArray(value.officialQuestionIds)) {
+    errors.push(`${prefix}.officialQuestionIds must contain known question IDs.`);
+  } else if (quiz !== undefined && !value.officialQuestionIds.every((id) => quiz.officialQuestionIds.includes(id))) {
+    errors.push(`${prefix}.officialQuestionIds must belong to the lesson quiz.`);
+  }
+  if (!isKnownQuestionIdArray(value.incorrectOfficialQuestionIds)) {
+    errors.push(`${prefix}.incorrectOfficialQuestionIds must contain known question IDs.`);
+  } else if (Array.isArray(value.officialQuestionIds) && value.officialQuestionIds.every((id) => typeof id === "string")) {
+    const officialQuestionIds = new Set(value.officialQuestionIds);
+    if (!value.incorrectOfficialQuestionIds.every((id) => officialQuestionIds.has(id))) {
+      errors.push(`${prefix}.incorrectOfficialQuestionIds must be a subset of officialQuestionIds.`);
+    }
+  }
+  if (!Array.isArray(value.incorrectConceptCheckIds) || !value.incorrectConceptCheckIds.every((id) => typeof id === "string" && (quiz === undefined || quiz.conceptChecks.some((conceptCheck) => conceptCheck.id === id)))) {
+    errors.push(`${prefix}.incorrectConceptCheckIds must contain known concept check IDs for the quiz.`);
+  }
+  return errors;
+}
+
+function isKnownQuestionIdArray(value: unknown): value is readonly string[] {
+  return Array.isArray(value) && value.every((id) => typeof id === "string" && knownQuestionIds.has(id));
 }
 
 function validateExamAttempt(value: unknown, index: number): string[] {
@@ -540,6 +729,10 @@ function pushCanonicalTimestampError(errors: string[], value: string, fieldName:
 
 function isNonNegativeInteger(value: unknown): value is number {
   return typeof value === "number" && Number.isInteger(value) && value >= 0;
+}
+
+function isPositiveInteger(value: unknown): value is number {
+  return typeof value === "number" && Number.isInteger(value) && value > 0;
 }
 
 function isNonNegativeFiniteNumber(value: unknown): value is number {
