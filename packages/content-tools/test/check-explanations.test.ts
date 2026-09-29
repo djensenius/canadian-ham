@@ -118,6 +118,55 @@ test("explanation check accepts valid schema, exact choice quotes, short prefixe
   });
 });
 
+const validIsedCitationUrl = "https://www.ised-isde.canada.ca/site/fixture-source";
+
+test("explanation check accepts https citation urls on allowed ISED hosts", async () => {
+  await withFixture("valid-citation-url", async (root) => {
+    await writeBaseFixture(root, {
+      explanationRecord: explanation({
+        citations: [
+          { type: "lesson", id: "L-005-01" },
+          { type: "question", id: "B-005-001-001" },
+          { type: "rbr-4", url: validIsedCitationUrl },
+        ],
+      }),
+    });
+
+    const report = await runCheck(root);
+
+    assert.equal(report.explanationFileCount, 1);
+    assert.equal(report.explanationQuestionCount, 1);
+  });
+});
+
+test("explanation check rejects citation urls that are not https urls on allowed ISED hosts", async () => {
+  const invalidUrls = [
+    "http://ised-isde.canada.ca/site/fixture-source",
+    "https://example.com/fixture-source",
+    "javascript:alert(1)",
+    "not-a-url",
+  ];
+
+  for (const [index, url] of invalidUrls.entries()) {
+    await withFixture(`bad-citation-url-${index}`, async (root) => {
+      await writeBaseFixture(root, {
+        explanationRecord: explanation({
+          citations: [
+            { type: "lesson", id: "L-005-01" },
+            { type: "question", id: "B-005-001-001" },
+            { type: "rbr-4", url },
+          ],
+        }),
+      });
+
+      await assert.rejects(
+        () => runCheck(root),
+        (error: unknown) => error instanceof ExplanationCheckError && error.report.issues.some((issue) => issue.includes("citation url must be an absolute https URL on ised-isde.canada.ca or www.ised-isde.canada.ca")),
+      );
+    });
+  }
+});
+
 test("explanation check rejects schema failures", async () => {
   await withFixture("schema", async (root) => {
     await writeBaseFixture(root, { explanationRecord: { ...explanation(), body: { en: "", fr: null } } });
