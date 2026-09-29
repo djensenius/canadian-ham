@@ -208,6 +208,24 @@ Official ISED text is stored separately from original explanation content. Answe
 }
 ```
 
+### Module front matter
+
+Module `index.md` files store the ordering and lesson list for each curriculum module. Validation requires `order` values 1 through 8 to be unique across modules.
+
+```json
+{
+  "id": "M1",
+  "categoryId": "B-001",
+  "order": 1,
+  "title": {
+    "en": "Regulations and Policies",
+    "fr": null
+  },
+  "lessonIds": ["L-001-01", "L-001-02", "L-001-03", "L-001-04"],
+  "status": "outline"
+}
+```
+
 ### Lesson front matter
 
 Lesson files may store front matter as YAML in Markdown, but validation should parse it into this JSON shape.
@@ -220,7 +238,6 @@ Lesson files may store front matter as YAML in Markdown, but validation should p
     "fr": null
   },
   "moduleId": "M1",
-  "order": 3,
   "categoryIds": ["B-001"],
   "covers": [
     "B-001-011",

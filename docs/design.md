@@ -56,8 +56,9 @@ Correct, incorrect, and warning states must never rely on colour alone. Pair all
 
 ## Contrast table
 
-The design-token test computes these WCAG 2.2 ratios for every declared foreground/background pair. Body text requires at least 4.5:1; large text and UI boundaries/focus rings require at least 3:1.
+The design-token test computes these WCAG 2.2 ratios for every declared foreground/background pair. Body text requires at least 4.5:1; large text and UI boundaries/focus rings require at least 3:1. The table below is generated from `packages/design-tokens/tokens.json`; run `node packages/design-tokens/src/generate.ts` after token changes.
 
+<!-- contrast-table:start -->
 | Pair | Theme | Kind | Foreground | Background | Ratio | Min |
 |---|---|---|---|---|---:|---:|
 | light-body | light | body | ink #1F1A14 | paper #F6EEDC | 14.95 | 4.5 |
@@ -66,26 +67,47 @@ The design-token test computes these WCAG 2.2 ratios for every declared foregrou
 | light-border | light | ui | border #8C7656 | paper #F6EEDC | 3.76 | 3.0 |
 | light-focus | light | ui | focus #8F2E1D | paper #F6EEDC | 7.06 | 3.0 |
 | light-card-body | light | body | ink #1F1A14 | paperElevated #FFF8EA | 16.34 | 4.5 |
+| light-card-muted | light | body | inkMuted #5E5347 | paperElevated #FFF8EA | 7.08 | 4.5 |
 | light-card-border | light | ui | border #8C7656 | paperElevated #FFF8EA | 4.10 | 3.0 |
+| light-card-focus | light | ui | focus #8F2E1D | paperElevated #FFF8EA | 7.71 | 3.0 |
+| light-inset-body | light | body | ink #1F1A14 | paperInset #EFE3CB | 13.58 | 4.5 |
+| light-inset-border | light | ui | border #8C7656 | paperInset #EFE3CB | 3.41 | 3.0 |
+| light-inset-accent | light | body | accent #A53A2A | paperInset #EFE3CB | 5.10 | 4.5 |
+| light-inset-focus | light | ui | focus #8F2E1D | paperInset #EFE3CB | 6.41 | 3.0 |
+| light-primary-button-text | light | body | paper #F6EEDC | accent #A53A2A | 5.61 | 4.5 |
 | light-correct-text | light | body | correctText #284C2B | correctBg #E8F1DD | 8.36 | 4.5 |
 | light-correct-border | light | ui | correctBorder #5D8A48 | correctBg #E8F1DD | 3.48 | 3.0 |
+| light-correct-focus | light | ui | focus #8F2E1D | correctBg #E8F1DD | 7.01 | 3.0 |
 | light-incorrect-text | light | body | incorrectText #7F241B | incorrectBg #F4E2DE | 7.73 | 4.5 |
 | light-incorrect-border | light | ui | incorrectBorder #B64A3B | incorrectBg #F4E2DE | 4.16 | 3.0 |
+| light-incorrect-focus | light | ui | focus #8F2E1D | incorrectBg #F4E2DE | 6.51 | 3.0 |
 | light-warning-text | light | body | warningText #6B4B00 | warningBg #F8E7B4 | 6.49 | 4.5 |
 | light-warning-border | light | ui | warningBorder #9B6A00 | warningBg #F8E7B4 | 3.83 | 3.0 |
+| light-warning-focus | light | ui | focus #8F2E1D | warningBg #F8E7B4 | 6.63 | 3.0 |
 | dark-body | dark | body | ink #F3E8D2 | paper #201B16 | 14.05 | 4.5 |
 | dark-muted | dark | body | inkMuted #CBBDA4 | paper #201B16 | 9.23 | 4.5 |
 | dark-accent-link | dark | body | accent #FF8A70 | paper #201B16 | 7.42 | 4.5 |
 | dark-border | dark | ui | border #8A7759 | paper #201B16 | 3.95 | 3.0 |
 | dark-focus | dark | ui | focus #FFB36B | paper #201B16 | 9.69 | 3.0 |
 | dark-card-body | dark | body | ink #F3E8D2 | paperElevated #2A241D | 12.63 | 4.5 |
+| dark-card-muted | dark | body | inkMuted #CBBDA4 | paperElevated #2A241D | 8.30 | 4.5 |
 | dark-card-border | dark | ui | border #8A7759 | paperElevated #2A241D | 3.55 | 3.0 |
+| dark-card-focus | dark | ui | focus #FFB36B | paperElevated #2A241D | 8.70 | 3.0 |
+| dark-inset-body | dark | body | ink #F3E8D2 | paperInset #181410 | 15.08 | 4.5 |
+| dark-inset-border | dark | ui | border #8A7759 | paperInset #181410 | 4.24 | 3.0 |
+| dark-inset-accent | dark | body | accent #FF8A70 | paperInset #181410 | 7.96 | 4.5 |
+| dark-inset-focus | dark | ui | focus #FFB36B | paperInset #181410 | 10.39 | 3.0 |
+| dark-primary-button-text | dark | body | paper #201B16 | accent #FF8A70 | 7.42 | 4.5 |
 | dark-correct-text | dark | body | correctText #DDF2D7 | correctBg #1F3323 | 11.41 | 4.5 |
 | dark-correct-border | dark | ui | correctBorder #76B16B | correctBg #1F3323 | 5.32 | 3.0 |
+| dark-correct-focus | dark | ui | focus #FFB36B | correctBg #1F3323 | 7.66 | 3.0 |
 | dark-incorrect-text | dark | body | incorrectText #FFD7CF | incorrectBg #3A211E | 11.21 | 4.5 |
 | dark-incorrect-border | dark | ui | incorrectBorder #E27966 | incorrectBg #3A211E | 5.06 | 3.0 |
+| dark-incorrect-focus | dark | ui | focus #FFB36B | incorrectBg #3A211E | 8.41 | 3.0 |
 | dark-warning-text | dark | body | warningText #FFE3A3 | warningBg #342B16 | 11.16 | 4.5 |
 | dark-warning-border | dark | ui | warningBorder #D3A13D | warningBg #342B16 | 5.94 | 3.0 |
+| dark-warning-focus | dark | ui | focus #FFB36B | warningBg #342B16 | 7.92 | 3.0 |
+<!-- contrast-table:end -->
 
 ## Typography
 
@@ -194,7 +216,7 @@ Motion should be gentle and useful: brief card reveals, progress transitions, fo
 
 ### Exam timer
 
-- Timer is optional/off by default until the official time limit is verified.
+- Timer is optional/off by default.
 - If enabled, display remaining time as text and announce threshold changes politely.
 - Timer can be paused/extended as specified in accessibility requirements.
 

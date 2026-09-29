@@ -159,7 +159,8 @@ The system shall render lessons from platform-neutral Markdown and JSON front ma
 
 Acceptance criteria:
 
-- A lesson has stable ID, title, language, module, required module `order`, covered subsections, prerequisites, estimated minutes, and quiz references.
+- A lesson has stable ID, title, language, module ID, covered subsections, prerequisites, estimated minutes, and quiz references.
+- Module front matter has stable ID, category ID, required unique `order` (1-8), title, lesson IDs, and status.
 - Web and Apple apps can render the same lesson body and metadata.
 - Lesson navigation supports previous, next, and module overview.
 
@@ -267,7 +268,7 @@ Acceptance criteria:
 
 #### REQ-EXAM-003: Exam timer
 
-Mock exams shall have an optional timer that defaults off until the real exam time limit is verified.
+Mock exams shall have an optional timer that defaults off.
 
 Acceptance criteria:
 
@@ -367,9 +368,11 @@ The Apple app shall include a native visionOS 2.0+ window app in v1.
 
 Acceptance criteria:
 
-- Practice, lesson, mock exam, progress, settings, and reference flows work offline in a native visionOS window.
+- Practice flow works offline in a native visionOS window.
+- English/French question display, about/attribution information, and privacy/no-data messaging are available in the visionOS app.
 - Layout follows [design.md](design.md) for warm paper surfaces within visionOS glass/material conventions, comfortable depth, ornaments where useful, and hover/focus effects that do not obscure text.
 - Accessibility follows the Definition of Done in [accessibility.md](accessibility.md).
+- Later parity SHOULD bring lessons, mock exams, progress dashboards, settings depth, and reference viewers to visionOS after the basic v1 window app is accepted.
 
 #### REQ-APPLE-006: Basic tvOS app
 
@@ -377,9 +380,11 @@ The Apple app shall include a native tvOS 18.0+ app in v1.
 
 Acceptance criteria:
 
-- Practice, lesson, mock exam, progress, settings, and reference flows work offline using focus-engine navigation.
+- Practice flow works offline using tvOS focus-engine navigation.
+- English/French question display, about/attribution information, and privacy/no-data messaging are available in the tvOS app.
 - Layout follows [design.md](design.md) for a 10-foot UI: large type, clear focus, generous spacing, and overscan-safe margins.
 - Accessibility follows the Definition of Done in [accessibility.md](accessibility.md).
+- Later parity SHOULD bring lessons, mock exams, progress dashboards, settings depth, and reference viewers to tvOS after the basic v1 focus-engine app is accepted.
 
 #### REQ-APPLE-007: Layered app icons
 
@@ -487,7 +492,7 @@ Acceptance criteria:
 
 ## Curriculum outline
 
-Every one of the 100 subsections must map to at least one lesson. Lesson front matter includes a required module `order` field so apps can sort modules and lessons consistently. The first outline uses subsection ranges until official subsection names are imported or authored.
+Every one of the 100 subsections must map to at least one lesson. Module front matter includes a required unique `order` field so apps can sort modules and lessons consistently. The first outline uses subsection ranges until official subsection names are imported or authored.
 
 | Module | Category | Planned lessons | Required subsection coverage |
 |---|---|---|---|

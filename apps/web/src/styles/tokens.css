@@ -98,6 +98,7 @@
   --ch-color-warning-text: #6B4B00;
   --ch-color-warning-bg: #F8E7B4;
   --ch-color-warning-border: #9B6A00;
+  color-scheme: light;
 }
 
 [data-theme="dark"] {
@@ -119,6 +120,7 @@
   --ch-color-warning-text: #FFE3A3;
   --ch-color-warning-bg: #342B16;
   --ch-color-warning-border: #D3A13D;
+  color-scheme: dark;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -71,7 +71,7 @@ A UI change is done only when all applicable items are true:
 
 ## Timed exams
 
-The mock exam timer is optional and off by default until the official time limit is verified.
+The mock exam timer is optional and off by default.
 
 - A user can pause or extend the timer.
 - Timer state is visible as text, not colour alone.

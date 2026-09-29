@@ -50,6 +50,9 @@ export function contrastRows(tokens: TokenSet): readonly {
   readonly ratio: number;
   readonly minimum: number;
 }[] {
+  if (tokens.contrastPairs.length === 0) {
+    throw new Error("At least one contrast pair must be declared.");
+  }
   return tokens.contrastPairs.map((pair) => {
     const theme = tokens.themes[pair.theme];
     if (theme === undefined) {

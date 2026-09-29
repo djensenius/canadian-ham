@@ -1,16 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <style>
     .paper { fill: #f6eedc; }
-    .ink { fill: #1f1a14; }
-    .seal { fill: #a53a2a; }
+    .ink { fill: #000; }
     @media (prefers-color-scheme: dark) {
       .paper { fill: #201b16; }
       .ink { fill: #f3e8d2; }
-      .seal { fill: #ff8a70; }
     }
   </style>
   <rect width="64" height="64" rx="14" class="paper"/>
-  <path class="ink" d="M29 12 C31 11 34 12 35 14 L39 51 C40 54 36 55 35 52 L32 25 L24 51 C22 55 18 53 20 49 L28 14 C28 13 28 12 29 12 Z"/>
-  <path class="ink" d="M39 15 C49 20 55 28 56 39 C56 41 54 42 52 41 C51 34 46 28 37 23 C35 22 35 20 36 18 C37 16 38 15 39 15 Z"/>
-  <rect x="43" y="43" width="12" height="12" rx="3" class="seal"/>
+  <path class="ink" d="M22 49 C24 39 26 28 30 12 C32 8 36 9 35 14 C32 29 30 40 29 51 C28 56 20 55 22 49 Z"/>
+  <path class="ink" d="M16 50 C24 45 35 45 44 49 C48 51 46 55 42 54 C33 51 25 51 18 54 C14 55 12 52 16 50 Z"/>
+  <path class="ink" d="M38 18 C47 22 53 30 55 41 C56 46 49 47 48 42 C47 34 42 28 34 25 C30 23 33 16 38 18 Z"/>
+  <path class="ink" d="M39 29 C44 32 47 36 48 42 C48 46 42 47 41 43 C40 39 37 36 34 35 C30 33 34 27 39 29 Z" opacity="0.92"/>
 </svg>

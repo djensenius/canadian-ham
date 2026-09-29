@@ -1,6 +1,3 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
-  <g transform="translate(680 650) rotate(-6)">
-    <rect x="0" y="0" width="156" height="156" rx="26" fill="#a53a2a" opacity="0.96"/>
-    <path d="M78 24 L88 58 L105 44 L101 68 L130 63 L108 84 L132 101 L100 102 L104 130 L82 109 L69 139 L63 106 L35 121 L50 92 L24 84 L54 72 L42 48 L67 60 Z" fill="#f6eedc" opacity="0.94"/>
-  </g>
+<!-- seal intentionally omitted: the maple mark did not remain legible at 60 px -->
 </svg>
