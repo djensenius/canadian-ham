@@ -669,7 +669,10 @@ struct MockExamView: View {
                 .disabled(currentIndex + 1 >= generatedItems.count)
                 .buttonStyle(AccessibleSecondaryButtonStyle())
                 .accessibilityIdentifier("mock-next-button")
-                tokenButton(flagged.contains(question.id) ? "Flagged for review" : "Flag for review") { toggleFlag(question.id) }
+                Button { toggleFlag(question.id) } label: {
+                    AccessibleSecondaryButtonLabel(title: flagged.contains(question.id) ? "Flagged for review" : "Flag for review", isDisabled: false)
+                }
+                .buttonStyle(AccessibleSecondaryButtonStyle())
             }
 
             navigator

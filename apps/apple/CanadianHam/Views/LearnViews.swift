@@ -965,8 +965,16 @@ private struct ConceptChoiceButton: View {
                     Text(localized(choice.text.text(for: language), language: language))
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
-                    if showCorrectness && choice.isCorrect { Label("Correct answer", systemImage: "checkmark.circle.fill") }
-                    if showCorrectness && selected && !choice.isCorrect { Label("Your answer, incorrect", systemImage: "xmark.circle.fill") }
+                    if showCorrectness && choice.isCorrect {
+                        Label("Correct answer", systemImage: "checkmark.circle.fill")
+                            .font(DesignTokens.FontScale.caption.weight(.bold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                    }
+                    if showCorrectness && selected && !choice.isCorrect {
+                        Label("Your answer, incorrect", systemImage: "xmark.circle.fill")
+                            .font(DesignTokens.FontScale.caption.weight(.bold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                    }
                 }
             }
             .padding(DesignTokens.Spacing.lg)
