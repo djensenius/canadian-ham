@@ -22,13 +22,16 @@ input {
 
 button,
 select,
-input[type="radio"] {
+input[type="radio"],
+input[type="checkbox"] {
   cursor: pointer;
 }
 
 button:focus-visible,
 select:focus-visible,
-input:focus-visible {
+input:focus-visible,
+main:focus-visible,
+[tabindex="-1"]:focus-visible {
   outline: 3px solid #1d4ed8;
   outline-offset: 3px;
 }
@@ -43,6 +46,7 @@ input:focus-visible {
 
 .site-header,
 .site-footer,
+.top-nav,
 .card {
   width: min(1100px, 100%);
   margin: 0 auto;
@@ -57,6 +61,43 @@ input:focus-visible {
   padding: 1.25rem 0.5rem 0;
 }
 
+.top-nav,
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.top-nav {
+  padding: 0 0.5rem;
+}
+
+.top-nav button,
+.action-row button,
+.card > button,
+.confirm-panel button,
+.settings button,
+.mock-exam button,
+.practice button {
+  border: 0;
+  border-radius: 999px;
+  background: #1d4ed8;
+  color: #fff;
+  font-weight: 800;
+  padding: 0.65rem 1rem;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+button.danger,
+.danger {
+  background: #b91c1c;
+}
+
 .eyebrow {
   margin: 0 0 0.25rem;
   color: #44546f;
@@ -68,6 +109,7 @@ input:focus-visible {
 
 h1,
 h2,
+h3,
 p {
   margin-top: 0;
 }
@@ -77,7 +119,8 @@ h1 {
   font-size: clamp(2rem, 5vw, 3.25rem);
 }
 
-.language-toggle {
+.language-toggle,
+.segmented-control {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
@@ -88,12 +131,16 @@ h1 {
   background: #fff;
 }
 
-.language-toggle legend {
+.language-toggle legend,
+.segmented-control legend {
   padding: 0 0.25rem;
   font-weight: 700;
 }
 
-.language-toggle label {
+.language-toggle label,
+.segmented-control label,
+.mock-exam label,
+.file-control {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -105,6 +152,21 @@ h1 {
   border-radius: 1rem;
   background: #fff;
   box-shadow: 0 12px 30px rgb(23 32 51 / 8%);
+}
+
+.readiness-panel,
+.confirm-panel,
+.review-panel,
+.reference-placeholder,
+.timer-panel,
+.empty-state {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.75rem;
+  background: #f8fbff;
 }
 
 .category-grid {
@@ -147,7 +209,10 @@ h1 {
   background: #eef6ff;
 }
 
-.practice {
+.practice,
+.mock-exam,
+.results,
+.settings {
   display: grid;
   gap: 1.25rem;
 }
@@ -161,42 +226,22 @@ h1 {
   gap: 1rem;
 }
 
-.practice-topline label {
+.practice-topline label,
+.mock-exam label:not(.file-control),
+.settings label {
   display: grid;
   gap: 0.35rem;
   font-weight: 700;
 }
 
-select {
+select,
+input[type="text"],
+input:not([type]) {
   max-width: 100%;
   padding: 0.55rem 0.7rem;
   border: 1px solid #aebbd0;
   border-radius: 0.5rem;
   background: #fff;
-}
-
-.secondary,
-.next-button {
-  border: 0;
-  border-radius: 999px;
-  background: #1d4ed8;
-  color: #fff;
-  font-weight: 800;
-}
-
-.secondary {
-  padding: 0.55rem 0.9rem;
-  background: #334155;
-}
-
-.next-button {
-  justify-self: start;
-  padding: 0.8rem 1.25rem;
-}
-
-.next-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.45;
 }
 
 .session-summary {
@@ -246,6 +291,11 @@ select {
   background: #f8fbff;
 }
 
+.answer-button[aria-pressed="true"] {
+  border-color: #1d4ed8;
+  box-shadow: inset 0 0 0 2px #1d4ed8;
+}
+
 .answer-button:disabled {
   cursor: default;
 }
@@ -287,6 +337,32 @@ select {
   margin: 0;
 }
 
+.question-navigator {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(3.75rem, 1fr));
+  gap: 0.4rem;
+  max-height: 18rem;
+  overflow: auto;
+  padding: 0.75rem;
+  border: 1px solid #d8e0ec;
+  border-radius: 0.75rem;
+}
+
+.question-navigator button {
+  border-radius: 0.5rem;
+  padding: 0.45rem;
+  background: #334155;
+}
+
+.question-navigator button.current {
+  background: #0f766e;
+}
+
+.review-panel li,
+.confirm-panel li {
+  margin-bottom: 0.75rem;
+}
+
 .site-footer {
   margin-top: auto;
   padding: 1rem 0.5rem 0;
@@ -296,4 +372,22 @@ select {
 
 .site-footer p {
   margin-bottom: 0.75rem;
+}
+
+@media (max-width: 360px) {
+  .app-shell {
+    padding: 0.5rem;
+  }
+
+  .card {
+    border-radius: 0.5rem;
+  }
+
+  .answer-button {
+    grid-template-columns: 1fr;
+  }
+
+  .answer-button strong {
+    grid-column: 1;
+  }
 }
