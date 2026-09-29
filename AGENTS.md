@@ -30,5 +30,6 @@
 - Monorepo layout planned as `content/`, `apps/web/`, `apps/apple/`, `packages/`, `fixtures/`, `docs/`, and `tasks/`.
 - Active question bank is only ISED Basic 2025-07-15; delimited TXT SHA-256 `34c7cd7967addfde648c566d0ecf25bf3d1e071c603b5101cfecc7bd0cbc284f`.
 - Preserve ISED EN/FR question text verbatim; original lessons/explanations stay separate from official data.
+- The repo is private until ISED permission is recorded (T-007). Never make it public, deploy, or distribute builds before then; see `docs/content-licensing.md`.
 - Apple app must work fully offline and collect no data; no networking code, third-party SDKs, analytics, or iCloud sync in v1.
 - Use `xbuild` for Apple builds/tests; never call `xcodebuild` directly.

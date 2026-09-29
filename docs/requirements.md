@@ -148,6 +148,7 @@ Acceptance criteria:
 - Content metadata distinguishes the labelled training version from the unlabelled exam version.
 - Lessons can link to relevant formulas or block diagrams without requiring figure-based questions.
 - French reference material remains an open-question placeholder until located.
+- Private-development bundling follows the [interim private-development policy](content-licensing.md#interim-private-development-policy); public release follows the [public-release gate](content-licensing.md#public-release-gate).
 
 ### Lesson experience
 
@@ -281,7 +282,7 @@ Acceptance criteria:
 
 - The app labels the sheet as exam reference material.
 - The app does not imply affiliation with ISED.
-- The reference sheet is available offline in the Apple app and PWA offline cache when licensing permits bundling.
+- The reference sheet is available offline in private-development Apple app bundles and PWA offline caches; public availability is blocked until the [public-release gate](content-licensing.md#public-release-gate) is complete.
 
 ### Web app
 
@@ -303,7 +304,7 @@ Acceptance criteria:
 
 - Core app shell and bundled content load offline after first successful visit.
 - Mock exam and practice work offline.
-- Reference material availability offline is tested if bundled.
+- Reference material availability offline is tested if bundled for private development or public release.
 - A visible status indicates whether content is ready for offline use.
 
 #### REQ-WEB-003: Browser-local progress
@@ -334,7 +335,7 @@ The Apple app shall work fully offline after installation.
 
 Acceptance criteria:
 
-- All questions, lessons, explanations, fixtures needed at runtime, and bundled reference assets are included in the app bundle.
+- All questions, lessons, explanations, fixtures needed at runtime, and reference assets allowed for the current private-development or release stage are included in the app bundle.
 - First launch succeeds in airplane mode.
 - Lessons, practice, mock exams, progress, import/export, reset, and reference viewing do not require networking.
 
@@ -419,7 +420,7 @@ Acceptance criteria:
 
 - Apple app must be fully functional offline immediately after installation.
 - Web app must be able to function as an offline PWA after initial load and cache.
-- Bank, lessons, explanations, and reference sheets must have deterministic bundled versions.
+- Bank, lessons, explanations, and reference sheets must have deterministic bundled versions for private development; release bundles must pass the [public-release gate](content-licensing.md#public-release-gate).
 
 ### Accessibility
 
@@ -480,5 +481,5 @@ Coverage check requirement:
 - Verify official French category names.
 - Locate or confirm absence of French 2025 Basic reference material.
 - Verify the official Basic exam time limit, if any.
-- Fill in the ISED copyright permission reference number and date.
+- ISED permission status: requested scope drafted, pending; not yet sent or granted as of the 2026-09-28 owner decision. Fill in the reference number, date, scope, and explicit app-data/reference-PDF bundling coverage in T-007 before public release.
 - Decide minimum supported OS/browser versions during implementation planning.

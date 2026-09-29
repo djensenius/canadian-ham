@@ -2,7 +2,9 @@
 
 This document defines how `canadian-ham` separates official ISED data from original project content and how it records permission, attribution, and disclaimers.
 
-The owner states that written Crown copyright clearance from ISED has been granted and covers the 2025 Basic question bank TXT and PDF. The project must still record permission reference number, date, and scope before vendoring those files or release.
+The ISED permission request has been drafted but not yet sent or granted. The requested scope covers the Basic 2025 question-bank TXT and PDF, the Basic 2025 English reference PDFs, the Advanced question bank, commercial use, future revisions, and structured app-data formats with shuffled choices. Written permission is pending; no permission has been granted or recorded yet.
+
+Until written permission is recorded, the GitHub repository `djensenius/canadian-ham` remains private. ISED's published terms allow reproduction for personal, non-commercial purposes without permission, including the [general terms and conditions](https://ised-isde.canada.ca/site/ised/en/terms-and-conditions) and [copyright written permission guidance](https://www.ised-isde.canada.ca/site/ised/en/copyright-written-permission). The owner has approved committing official ISED source artifacts for private, non-distributed development under the interim policy below. Public exposure or distribution does not fit that interim rationale and is blocked by the [public-release gate](#public-release-gate).
 
 Related documents:
 
@@ -18,24 +20,50 @@ Record the written permission here when available in project records.
 | Field | Value |
 |---|---|
 | Permission holder | Owner / project maintainer |
+| Request status | Drafted (2026-09-28 owner decision); sent: pending; granted: pending |
 | ISED reference number | Pending: fill in permission reference number |
 | Permission date | Pending: fill in permission date |
 | Permission scope | Pending: paste concise scope from written permission |
-| Covered source artifacts | 2025 Basic question bank delimited TXT; 2025 Basic question bank PDF; 2025 English Basic reference material, if included in permission scope |
+| Covered source artifacts | Pending scope: request includes 2025 Basic question bank delimited TXT; 2025 Basic question bank PDF; 2025 English Basic reference PDFs; Advanced question bank; commercial use; future revisions; structured app-data format with shuffled choices |
 | Storage location for permission evidence | Pending: private owner records; do not commit private correspondence unless approved |
-| Release review status | Blocked until reference number/date/scope are recorded |
+| Release review status | Blocked until reference number/date/scope are recorded and the scope explicitly covers the release artifacts |
 
-Do not infer permission scope beyond the written clearance. Once T-007 records the reference number/date/scope for the question-bank permission, T-101 may commit the covered question-bank TXT and PDF under `content/sources/ised/basic-2025-07-15/`; importer and CI jobs run against the committed TXT. URL-plus-checksum-only handling applies only to artifacts outside the recorded scope; do not vendor or bundle those artifacts until clarified.
+Do not infer permission scope beyond the written clearance. T-007 records the permission reference number, date, scope, and explicit confirmation that the scope covers bundling verbatim question text as app data and bundling the reference PDFs. Until then, vendoring is allowed only for private, non-distributed development under the [interim private-development policy](#interim-private-development-policy); publication and distribution remain blocked by the [public-release gate](#public-release-gate).
+
+## Interim private-development policy
+
+While the repository is private and no outside collaborators are added, the project may commit official ISED artifacts needed for development under `content/sources/ised/basic-2025-07-15/`:
+
+- the Basic 2025 delimited TXT;
+- the Basic 2025 question-bank PDF;
+- the English Basic 2025 reference PDFs, either in the same directory or in a documented reference subfolder under that directory.
+
+These files must be stored verbatim, with SHA-256 checksums recorded in the source manifest, and with the attribution and disclaimer in this document kept in place. The files must not be edited, reformatted, or mixed into original lesson or explanation content. This policy does not allow making the repository public, deploying the web app publicly, distributing Apple builds, adding outside collaborators, or any other redistribution.
+
+## Public-release gate
+
+All of the following actions are blocked until T-007 records written ISED permission with the reference number, date, scope, and explicit confirmation that the scope covers both bundling verbatim question text as app data and bundling the reference PDFs:
+
+- making the GitHub repository public or adding outside collaborators;
+- deploying the web app anywhere publicly reachable;
+- TestFlight external testing or App Store submission;
+- any other redistribution of ISED artifacts, normalized ISED data, or app bundles containing them.
+
+Before any public exposure, the release review must verify that the repository history and release artifacts contain no ISED material outside the recorded permission scope.
+
+If permission is refused or narrower than requested, the ISED artifacts must be removed from repository history before the repository is made public. Recommended contingency: use `git filter-repo` to purge already-committed out-of-scope ISED files from this repository history, then keep any still-needed out-of-scope official source files in a separate private repository or private submodule that is never included in public release history. Because the files are already expected in this private repository for development, history filtering is the required cleanup path for this repo; a separate private source repository is the safer pattern for future out-of-scope artifacts.
 
 ## Attribution text
 
-Use this attribution near question-bank and reference-material acknowledgements, adjusted only after legal/owner review:
+Use this attribution near question-bank and reference-material acknowledgements after T-007 records permission, adjusted only after legal/owner review:
 
 > Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank and related reference material, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page.
 
-Short form for app settings or about page:
+Short form for app settings or about page after T-007 records permission:
 
 > ISED Basic question-bank material reproduced with permission. Original lessons and explanations are by the canadian-ham project.
+
+During private development before T-007 is complete, internal documentation and manifests must not claim that written permission has been granted.
 
 ## Disclaimer
 
@@ -49,12 +77,12 @@ The repository must keep ISED source data separate from original project content
 
 | Content class | Location | Rules |
 |---|---|---|
-| ISED official source artifacts | `content/sources/ised/basic-2025-07-15/` | Store the covered question-bank TXT and PDF verbatim with checksums after T-007 records the permission reference/date/scope. Do not edit. Importer and CI jobs run against the committed TXT. For artifacts outside the recorded scope, store only URL and checksum metadata. |
-| Normalized ISED question data | `content/normalized/basic-2025-07-15/` | Generated from official source. Preserve text verbatim. Include source manifest. |
+| ISED official source artifacts | `content/sources/ised/basic-2025-07-15/` | Store the Basic 2025 TXT, Basic 2025 question-bank PDF, and English reference PDFs verbatim with checksums under the interim private-development policy while the repository remains private. Do not edit. Importer and CI jobs run against the committed TXT. Public release requires T-007 permission scope to cover the included artifacts. |
+| Normalized ISED question data | `content/normalized/basic-2025-07-15/` | Generated from official source. Preserve text verbatim. Include source manifest. Private development may use it; public release requires T-007 permission scope to cover bundling verbatim question text as app data. |
 | Category metadata | `content/categories.json` | Hand-maintained. English names from verified ISED/RAC materials. French names pending official verification. |
 | Original lessons | `content/lessons/` | Original writing by project. May cite ISED question IDs and RBR-4. Must not copy RAC/Coax study-guide text. |
 | Original explanations | `content/explanations/` | Original writing by project. Separate from ISED records. Must not copy third-party study guides. |
-| Reference material metadata/assets | `content/reference/` | Include only artifacts covered by permission and tracked checksums. |
+| Reference material metadata/assets | `content/reference/` | Private development may use the English reference PDFs under the interim policy. Public release requires T-007 permission scope to cover bundling the PDFs. Keep tracked checksums. |
 
 ## Verbatim ISED question text
 
@@ -68,7 +96,7 @@ Rules:
 - Use the official ISED French question and answer text from the delimited file.
 - If French source text is missing in a future bank, block the import or mark the bank as not ready.
 
-UI may wrap, style, and shuffle answers, but it must not alter official wording.
+UI may wrap, style, and shuffle answers, but it must not alter official wording. Public release of structured app-data formats with verbatim question text and shuffled choices requires T-007 permission scope to cover that use.
 
 ## Original lessons and explanations
 
@@ -107,7 +135,8 @@ Rules:
 
 - Label the training version as study aid material.
 - Label the unlabelled exam version as reference material that may be used while writing the exam.
-- Bundle only if permission scope covers bundling.
+- Private development may bundle these PDFs while the repository remains private and undistributed under the [interim private-development policy](#interim-private-development-policy).
+- Public release may bundle these PDFs only if T-007 permission scope covers bundling them in the relevant app or release artifact.
 - Keep checksums in the source manifest.
 - Do not recreate ISED diagrams unless permission scope explicitly allows derivative formats.
 - If a native viewer renders PDF pages, it must not send the PDF to a remote service.
@@ -118,17 +147,20 @@ When ISED updates the bank:
 
 1. Follow the re-verification procedure in [exam-facts.md](exam-facts.md).
 2. Create a new versioned source directory rather than overwriting the active bank.
-3. Confirm permission scope covers the new source version.
+3. Confirm private-development handling or written permission scope covers the new source version before committing it.
 4. Run importer validation and fixture updates in a dedicated worker branch.
 5. Review all changed official text as source updates, not project edits.
 6. Update app-visible bank version.
 7. Keep legacy bank support out of scope unless separately approved.
+8. Complete the [public-release gate](#public-release-gate) before any public exposure or distribution.
 
 ## Release checklist
 
 Before any public release:
 
 - Permission reference number, date, and scope are recorded above.
+- Permission scope explicitly covers bundling verbatim question text as app data.
+- Permission scope explicitly covers bundling the reference PDFs in release artifacts.
 - Attribution text appears in web and Apple about/settings surfaces.
 - Disclaimer appears in web and Apple about/settings surfaces.
 - Source URLs and checksums are recorded.
@@ -142,6 +174,7 @@ Before any public release:
 
 - Fill in ISED permission reference number.
 - Fill in ISED permission date.
+- Confirm whether permission explicitly covers bundling verbatim question text as app data, including structured formats with shuffled choices.
 - Confirm whether permission explicitly covers bundling the English reference PDFs in both web and Apple apps.
 - Verify official French category names before displaying French category headings.
 - Locate French 2025 Basic reference material or document its absence in release notes.

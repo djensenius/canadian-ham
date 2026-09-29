@@ -45,7 +45,7 @@ canadian-ham/
 Notes:
 
 - The layout separates ISED data from original lessons and explanations.
-- `content/sources/ised/basic-2025-07-15/` contains the official question-bank TXT and PDF, plus checksum files, after T-007 records the permission reference/date/scope that the owner states covers those question-bank artifacts. Artifacts outside the recorded scope are represented only by URL and checksum metadata.
+- `content/sources/ised/basic-2025-07-15/` contains the official Basic 2025 TXT, question-bank PDF, English reference PDFs, and checksum files for private development while the repository stays private; public exposure and distribution are gated by the [content licensing public-release gate](content-licensing.md#public-release-gate).
 - `content/normalized/` contains generated app-ready JSON only after the importer is implemented and reviewed.
 - Shared fixtures in `fixtures/` are the contract between TypeScript and Swift engines.
 
@@ -62,7 +62,7 @@ Notes:
 
 ### Pipeline stages
 
-1. Vendor the official question-bank TXT and PDF under `content/sources/ised/basic-2025-07-15/` after T-007 records the permission reference/date/scope that the owner states covers those artifacts. For artifacts outside the recorded scope, record only URL plus checksum metadata.
+1. Vendor the official Basic 2025 TXT, question-bank PDF, and English reference PDFs under `content/sources/ised/basic-2025-07-15/` for private development under the [interim private-development policy](content-licensing.md#interim-private-development-policy); public exposure and distribution remain gated by the [public-release gate](content-licensing.md#public-release-gate).
 2. Record SHA-256 checksums in a manifest and fail import on any checksum mismatch.
 3. Parse the committed delimited TXT in importer and CI runs with strict format checks: trim header names only, preserve field values exactly, and reject quoted fields or embedded newlines.
 4. Normalize records into JSON with stable IDs and language-keyed text.
@@ -568,7 +568,7 @@ Web app components:
 Apple app components:
 
 - SwiftUI multiplatform target for iOS, iPadOS, and macOS.
-- Bundled normalized content and reference material.
+- Bundled normalized content and reference material for private development; release bundles must satisfy the [public-release gate](content-licensing.md#public-release-gate).
 - Native Swift engine matching fixtures.
 - SwiftData local progress models.
 - File import/export for progress JSON.
@@ -648,4 +648,4 @@ print duplicate coverage for author review
 - Decide whether generated normalized JSON is committed or generated during app builds.
 - Decide exact JSON Schema tooling after package manager selection.
 - Decide minimum supported Apple OS versions and browser versions.
-- Confirm bundling rules for reference PDFs after permission record is filed.
+- Confirm T-007 permission scope covers public bundling of verbatim question text as app data and reference PDFs before publication or distribution.
