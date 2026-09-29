@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-003-010.\n\nWhy the correct answer is right: In a bipolar transistor switch, drive applied to the base controls whether the device is on or off.\n\nChoice notes:\n- sourceIndex 0: \"Base\": This controls the switching state of a bipolar transistor.\n- sourceIndex 1: \"Emitter\": The emitter is part of the controlled current path, not the control terminal.\n- sourceIndex 2: \"Collector\": The collector is part of the controlled current path, not the terminal that receives the drive signal.\n- sourceIndex 3: \"Gate\": Gate is the control terminal for a FET, not for a bipolar transistor.",
+    "en": "Question B-004-003-010.\n\nWhy the correct answer is right: In a bipolar transistor switch, drive applied to the base controls whether the device is on or off.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Emitter\": The emitter is part of the controlled current path, not the control terminal.\n- sourceIndex 2: \"Collector\": The collector is part of the controlled current path, not the terminal that receives the drive signal.\n- sourceIndex 3: \"Gate\": Gate is the control terminal for a FET, not for a bipolar transistor.",
     "fr": null
   },
   "citations": [

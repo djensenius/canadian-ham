@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-002-006.\n\nWhy the correct answer is right: A single diode passes only one polarity of an applied AC waveform, producing pulsating direct current at the output side.\n\nChoice notes:\n- sourceIndex 0: \"Pulsating direct current\": This is the expected half-wave rectifier output before filtering.\n- sourceIndex 1: \"No signal\": There is output during the conducting half-cycles, so no signal is not generally correct.\n- sourceIndex 2: \"Steady direct current\": A single diode alone does not make perfectly steady DC; filtering would be needed to smooth the pulses.\n- sourceIndex 3: \"Pulsating alternating current\": The current pulses are one direction, so calling them alternating current misses the rectifier action.",
+    "en": "Question B-004-002-006.\n\nWhy the correct answer is right: A single diode passes only one polarity of an applied AC waveform, producing pulsating direct current at the output side.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"No signal\": There is output during the conducting half-cycles, so no signal is not generally correct.\n- sourceIndex 2: \"Steady direct current\": A single diode alone does not make perfectly steady DC; filtering would be needed to smooth the pulses.\n- sourceIndex 3: \"Pulsating alternating current\": The current pulses are one direction, so calling them alternating current misses the rectifier action.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-001-002.\n\nWhy the correct answer is right: A non-linear amplifier does not preserve waveform shape, so the output contains distortion and unwanted products.\n\nChoice notes:\n- sourceIndex 0: \"become distorted\": This is the expected result of non-linear operation.\n- sourceIndex 1: \"be reduced to zero\": A non-linear amplifier can still produce output; the problem is waveform error, not necessarily zero output.\n- sourceIndex 2: \"cause oscillations\": Oscillation is usually associated with excessive feedback or instability, not simply any non-linearity.\n- sourceIndex 3: \"overload the power supply\": Power-supply overload is possible in some faults, but it is not the signal-effect described by non-linearity.",
+    "en": "Question B-004-001-002.\n\nWhy the correct answer is right: A non-linear amplifier does not preserve waveform shape, so the output contains distortion and unwanted products.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"be reduced to zero\": A non-linear amplifier can still produce output; the problem is waveform error, not necessarily zero output.\n- sourceIndex 2: \"cause oscillations\": Oscillation is usually associated with excessive feedback or instability, not simply any non-linearity.\n- sourceIndex 3: \"overload the power supply\": Power-supply overload is possible in some faults, but it is not the signal-effect described by non-linearity.",
     "fr": null
   },
   "citations": [

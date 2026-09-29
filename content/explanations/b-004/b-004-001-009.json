@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-001-009.\n\nWhy the correct answer is right: A positive gain label in decibels indicates a stage that increases signal level, so it is an amplifier.\n\nChoice notes:\n- sourceIndex 0: \"amplifier\": A gain value indicates amplification.\n- sourceIndex 1: \"attenuator\": An attenuator is normally described by loss or negative gain, not by a positive gain label.\n- sourceIndex 2: \"oscillator\": An oscillator is identified by its generated frequency or output, not by gain alone.\n- sourceIndex 3: \"audio fader\": An audio fader is a level control and usually reduces signal level rather than providing gain.",
+    "en": "Question B-004-001-009.\n\nWhy the correct answer is right: A positive gain label in decibels indicates a stage that increases signal level, so it is an amplifier.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"attenuator\": An attenuator is normally described by loss or negative gain, not by a positive gain label.\n- sourceIndex 2: \"oscillator\": An oscillator is identified by its generated frequency or output, not by gain alone.\n- sourceIndex 3: \"audio fader\": An audio fader is a level control and usually reduces signal level rather than providing gain.",
     "fr": null
   },
   "citations": [

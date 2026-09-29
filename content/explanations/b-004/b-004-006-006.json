@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-006-006.\n\nWhy the correct answer is right: Highest precision means the smallest tolerance percentage, so 0.1% is the most precise listed value.\n\nChoice notes:\n- sourceIndex 0: \"0.1%\": This is the smallest percentage in the list, so it is highest precision. Numeric check: 0.1% < 5% < 10% < 20%.\n- sourceIndex 1: \"5%\": This is less precise than 0.1%. Numeric check: 5% is fifty times larger than 0.1%.\n- sourceIndex 2: \"10%\": This allows a wider variation than 0.1% or 5%. Numeric check: 10% is one tenth of the nominal value.\n- sourceIndex 3: \"20%\": This is the widest tolerance listed here, not the highest precision. Numeric check: 20% is larger than 10%, 5%, and 0.1%.",
+    "en": "Question B-004-006-006.\n\nWhy the correct answer is right: Highest precision means the smallest tolerance percentage, so 0.1% is the most precise listed value.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"5%\": This is less precise than 0.1%. Numeric check: 5% is fifty times larger than 0.1%.\n- sourceIndex 2: \"10%\": This allows a wider variation than 0.1% or 5%. Numeric check: 10% is one tenth of the nominal value.\n- sourceIndex 3: \"20%\": This is the widest tolerance listed here, not the highest precision. Numeric check: 20% is larger than 10%, 5%, and 0.1%.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-004-010.\n\nWhy the correct answer is right: The FET drain corresponds most closely to the bipolar transistor collector as the output-side current terminal.\n\nChoice notes:\n- sourceIndex 0: \"Collector\": This is the matching bipolar terminal for the FET drain.\n- sourceIndex 1: \"Base\": The base corresponds to the FET gate, not the drain.\n- sourceIndex 2: \"Source\": Source is a FET terminal, not a bipolar transistor electrode.\n- sourceIndex 3: \"Emitter\": The emitter corresponds more closely to the FET source.",
+    "en": "Question B-004-004-010.\n\nWhy the correct answer is right: The FET drain corresponds most closely to the bipolar transistor collector as the output-side current terminal.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Base\": The base corresponds to the FET gate, not the drain.\n- sourceIndex 2: \"Source\": Source is a FET terminal, not a bipolar transistor electrode.\n- sourceIndex 3: \"Emitter\": The emitter corresponds more closely to the FET source.",
     "fr": null
   },
   "citations": [

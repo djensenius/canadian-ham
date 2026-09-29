@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-005-001.\n\nWhy the correct answer is right: A triode vacuum tube may be chosen where the circuit must handle high RF power or high voltages.\n\nChoice notes:\n- sourceIndex 0: \"It may be able to handle higher power\": This is a practical reason tubes still appear in some circuits.\n- sourceIndex 1: \"It uses less current\": Tube circuits often require heater current and may not use less current overall.\n- sourceIndex 2: \"It is much smaller\": Tubes are generally larger than semiconductor transistors.\n- sourceIndex 3: \"It uses lower voltages\": Tube circuits commonly require higher, not lower, operating voltages.",
+    "en": "Question B-004-005-001.\n\nWhy the correct answer is right: A triode vacuum tube may be chosen where the circuit must handle high RF power or high voltages.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It uses less current\": Tube circuits often require heater current and may not use less current overall.\n- sourceIndex 2: \"It is much smaller\": Tubes are generally larger than semiconductor transistors.\n- sourceIndex 3: \"It uses lower voltages\": Tube circuits commonly require higher, not lower, operating voltages.",
     "fr": null
   },
   "citations": [

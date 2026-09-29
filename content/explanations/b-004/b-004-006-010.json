@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-006-010.\n\nWhy the correct answer is right: The values 120 ohms and 1200 ohms have the same first two digits; the multiplier band changes the factor of ten.\n\nChoice notes:\n- sourceIndex 0: \"Third\": This band is the multiplier, so it distinguishes the factor-of-ten difference.\n- sourceIndex 1: \"First\": The first digit is the same in both nominal values.\n- sourceIndex 2: \"Second\": The second digit is also the same in both nominal values.\n- sourceIndex 3: \"Fourth\": The fourth band is tolerance and does not make a nominal value ten times larger.",
+    "en": "Question B-004-006-010.\n\nWhy the correct answer is right: The values 120 ohms and 1200 ohms have the same first two digits; the multiplier band changes the factor of ten.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"First\": The first digit is the same in both nominal values.\n- sourceIndex 2: \"Second\": The second digit is also the same in both nominal values.\n- sourceIndex 3: \"Fourth\": The fourth band is tolerance and does not make a nominal value ten times larger.",
     "fr": null
   },
   "citations": [

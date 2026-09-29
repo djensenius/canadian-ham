@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-004-007.\n\nWhy the correct answer is right: The gate is the control electrode in a field-effect transistor.\n\nChoice notes:\n- sourceIndex 0: \"Gate\": This is the FET control terminal.\n- sourceIndex 1: \"Source\": The source is a channel terminal, not the control terminal.\n- sourceIndex 2: \"Drain\": The drain is a channel terminal, not the control terminal.\n- sourceIndex 3: \"Base\": The base is the control terminal of a bipolar transistor, not a FET.",
+    "en": "Question B-004-004-007.\n\nWhy the correct answer is right: The gate is the control electrode in a field-effect transistor.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Source\": The source is a channel terminal, not the control terminal.\n- sourceIndex 2: \"Drain\": The drain is a channel terminal, not the control terminal.\n- sourceIndex 3: \"Base\": The base is the control terminal of a bipolar transistor, not a FET.",
     "fr": null
   },
   "citations": [

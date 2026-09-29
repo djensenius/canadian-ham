@@ -45,7 +45,7 @@ The increase is called gain. Gain may describe voltage, current, or power, depen
 
 An RF amplifier works with radio-frequency signals. In a receiver, it can raise a weak antenna signal before later stages select and process it. In a transmitter, later RF stages can raise a clean drive signal toward the power needed at the antenna connector.
 
-An audio amplifier works with sound-frequency signals after a microphone, detector, or audio processing stage. Human speech occupies a modest audio band compared with RF, so an audio stage is designed for voice clarity rather than for a radio carrier frequency.
+An audio amplifier works with sound-frequency signals after a microphone, detector, or audio processing stage. Human speech occupies a modest audio band compared with RF. For communications work, the important speech information is commonly treated as roughly 300 Hz to 3 000 Hz, so an audio stage is designed for voice clarity in that range rather than for a radio carrier frequency.
 
 ### Worked example: following a signal through a receiver
 
@@ -103,15 +103,15 @@ That protection has trade-offs, such as a voltage drop across the diode, but the
 
 A Zener diode is designed to operate in reverse breakdown at a specified voltage. Used with a current-limiting resistor, it can hold a point in a circuit near a chosen voltage. That makes it useful for simple voltage regulation or voltage reference duties.
 
-A light-emitting diode, or LED, emits light when forward current flows through it. The colour depends on the semiconductor material and construction, not on paint inside the package. LEDs are common on radios as power, transmit, receive, and status indicators.
+A light-emitting diode, or LED, emits light when forward current flows through it. The colour depends mainly on the semiconductor material and device construction, not on the colour you see from the outside of the package. LEDs are common on radios as power, transmit, receive, and status indicators.
 
 Diode ratings matter. A real diode has a maximum forward current, a reverse-voltage rating, heat limits, and switching-speed limits. For this lesson, focus first on recognizing what the diode is being asked to do.
 
 ## Try it
 
-1. A receiver block is before the mixer and handles the incoming tuned RF signal. Name its likely job before checking: RF amplification.
-2. A microphone signal is too small for the modulator input. The useful block is an audio amplifier, because the signal represents sound rather than RF.
-3. A diode in a supply path passes current with correct battery polarity and blocks it with reversed leads. That is reverse-polarity protection.
+1. A receiver preselector already chose the station, but the signal is still too small for the mixer. The next block should raise the RF level without changing the station's frequency.
+2. A speech processor receives a few millivolts from a headset mic and must feed a modulator input. Choose an audio gain stage because the information is still sound-frequency speech.
+3. A battery-powered accessory includes a series diode and now measures about one diode drop less at its circuit board. Explain the trade-off: the diode can block a reversed battery, but it also drops some voltage during normal operation.
 4. A waveform leaving an amplifier has clipped peaks. That is a warning sign of non-linearity and distortion.
 5. A small diode circuit changes a sine-like AC waveform into pulses all in one direction. That action is rectification.
 

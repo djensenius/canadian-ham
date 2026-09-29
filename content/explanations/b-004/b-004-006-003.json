@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-006-003.\n\nWhy the correct answer is right: The fourth band gives the tolerance, stated as a percentage variation around the nominal resistance.\n\nChoice notes:\n- sourceIndex 0: \"The resistance tolerance in percent\": This is the meaning of the fourth band.\n- sourceIndex 1: \"The value of the resistor in ohms\": The value in ohms comes from the value and multiplier bands before the tolerance band.\n- sourceIndex 2: \"The power rating in watts\": Wattage is a power rating and is not what the fourth colour band indicates.\n- sourceIndex 3: \"The resistance material\": Resistance material is not the fourth-band meaning in this code.",
+    "en": "Question B-004-006-003.\n\nWhy the correct answer is right: The fourth band gives the tolerance, stated as a percentage variation around the nominal resistance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The value of the resistor in ohms\": The value in ohms comes from the value and multiplier bands before the tolerance band.\n- sourceIndex 2: \"The power rating in watts\": Wattage is a power rating and is not what the fourth colour band indicates.\n- sourceIndex 3: \"The resistance material\": Resistance material is not the fourth-band meaning in this code.",
     "fr": null
   },
   "citations": [

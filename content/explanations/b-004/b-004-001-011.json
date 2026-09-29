@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-001-011.\n\nWhy the correct answer is right: Too much positive feedback reinforces the stage output back into the input until the amplifier can oscillate.\n\nChoice notes:\n- sourceIndex 0: \"Oscillations appear\": This is the expected instability caused by excessive positive feedback.\n- sourceIndex 1: \"Distortion is minimized\": Positive feedback taken too far increases instability; it does not minimize distortion in this context.\n- sourceIndex 2: \"Frequency response is flattened\": Flattening frequency response is associated with careful feedback design, not excessive positive feedback.\n- sourceIndex 3: \"Voltage gain is reduced\": Gain may change in a misbehaving stage, but oscillation is the characteristic result asked for here.",
+    "en": "Question B-004-001-011.\n\nWhy the correct answer is right: Too much positive feedback reinforces the stage output back into the input until the amplifier can oscillate.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Distortion is minimized\": Positive feedback taken too far increases instability; it does not minimize distortion in this context.\n- sourceIndex 2: \"Frequency response is flattened\": Flattening frequency response is associated with careful feedback design, not excessive positive feedback.\n- sourceIndex 3: \"Voltage gain is reduced\": Gain may change in a misbehaving stage, but oscillation is the characteristic result asked for here.",
     "fr": null
   },
   "citations": [

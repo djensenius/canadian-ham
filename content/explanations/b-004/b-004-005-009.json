@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-005-009.\n\nWhy the correct answer is right: A tube with a cathode, one grid, and a plate has three active electrodes, so it is a triode.\n\nChoice notes:\n- sourceIndex 0: \"Triode\": This is the name for that three-electrode vacuum tube.\n- sourceIndex 1: \"Diode\": A diode has two electrodes, not a cathode plus grid plus plate.\n- sourceIndex 2: \"Tetrode\": A tetrode has an additional grid beyond a triode.\n- sourceIndex 3: \"Pentode\": A pentode has still more grid structure than a triode.",
+    "en": "Question B-004-005-009.\n\nWhy the correct answer is right: A tube with a cathode, one grid, and a plate has three active electrodes, so it is a triode.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Diode\": A diode has two electrodes, not a cathode plus grid plus plate.\n- sourceIndex 2: \"Tetrode\": A tetrode has an additional grid beyond a triode.\n- sourceIndex 3: \"Pentode\": A pentode has still more grid structure than a triode.",
     "fr": null
   },
   "citations": [

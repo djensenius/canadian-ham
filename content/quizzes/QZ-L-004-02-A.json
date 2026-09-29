@@ -14,36 +14,126 @@
   "conceptChecks": [
     {
       "id": "QZ-L-004-02-A-C1",
-      "prompt": { "en": "Which set of terminal names belongs to a bipolar transistor?", "fr": null },
+      "prompt": {
+        "en": "You are checking an NPN transistor symbol before replacing the part. Which terminal carries the arrow that tells you the device polarity?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Gate, drain, and source", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Cathode, grid, and plate", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Collector, base, and emitter", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Anode, cathode, and shield", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Collector",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Base",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Emitter",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Gate",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "Bipolar transistors use collector, base, and emitter terminal names.", "fr": null }
+      "explanation": {
+        "en": "The emitter is the bipolar-transistor terminal with the schematic arrow; its direction helps distinguish NPN from PNP.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-004-02-A-C2",
-      "prompt": { "en": "Why is a FET input often useful when sampling a tuned circuit?", "fr": null },
+      "prompt": {
+        "en": "A JFET gate is changed from -1 V bias to -3 V bias relative to its source. What happens in the Basic-level channel model?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "The gate normally draws very little current, so the input can be high impedance", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The source is always a light emitter", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The drain is a tolerance band", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The gate must be heated like a tube cathode", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The channel narrows and drain current decreases",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "The plate voltage becomes the highest positive voltage",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The emitter arrow changes from out to in",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The tolerance band becomes the multiplier band",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "A FET gate is treated as a high-impedance control terminal, so it can avoid heavily loading the preceding circuit.", "fr": null }
+      "explanation": {
+        "en": "Increasing reverse bias on a junction FET gate narrows the channel, so the controlled drain current is reduced.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-004-02-A-C3",
-      "prompt": { "en": "In a triode tube, which terminal is the control element?", "fr": null },
+      "prompt": {
+        "en": "In a tube RF amplifier, making the grid more negative reduces the current drawn by the plate circuit. What principle is being applied?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Plate", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Cathode", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Envelope", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Grid", "fr": null }, "isCorrect": true }
+        {
+          "text": {
+            "en": "The cathode changes into a source terminal",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The plate acts as a tolerance band",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The tube envelope provides the signal gain by itself",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "A small grid voltage controls a larger plate current",
+            "fr": null
+          },
+          "isCorrect": true
+        }
       ],
-      "explanation": { "en": "The grid sits between cathode and plate and controls the electron stream in a triode.", "fr": null }
+      "explanation": {
+        "en": "A triode amplifies because grid-voltage changes control the electron stream and therefore the larger plate current.",
+        "fr": null
+      }
     }
   ]
 }

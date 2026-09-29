@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-005-006.\n\nWhy the correct answer is right: The grid is the control element in a vacuum triode.\n\nChoice notes:\n- sourceIndex 0: \"Grid\": This electrode controls the electron stream between cathode and plate.\n- sourceIndex 1: \"Emitter\": Emitter is a bipolar transistor terminal, not a vacuum-tube control element.\n- sourceIndex 2: \"Cathode\": The cathode emits electrons but is not the control element.\n- sourceIndex 3: \"Plate\": The plate attracts electrons and is part of the output path, not the control element.",
+    "en": "Question B-004-005-006.\n\nWhy the correct answer is right: The grid is the control element in a vacuum triode.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Emitter\": Emitter is a bipolar transistor terminal, not a vacuum-tube control element.\n- sourceIndex 2: \"Cathode\": The cathode emits electrons but is not the control element.\n- sourceIndex 3: \"Plate\": The plate attracts electrons and is part of the output path, not the control element.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-002-010.\n\nWhy the correct answer is right: A diode conducts in its normal direction when it is forward biased.\n\nChoice notes:\n- sourceIndex 0: \"forward biased\": This is the bias condition for ordinary diode conduction.\n- sourceIndex 1: \"close coupled\": Close coupling is a mechanical or RF-coupling idea, not a diode bias condition.\n- sourceIndex 2: \"enhanced\": Enhanced is a term used with some FET operation, not the basic diode conduction condition.\n- sourceIndex 3: \"reverse biased\": Reverse bias normally blocks a diode except for leakage or special breakdown operation.",
+    "en": "Question B-004-002-010.\n\nWhy the correct answer is right: A diode conducts in its normal direction when it is forward biased.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"close coupled\": Close coupling is a mechanical or RF-coupling idea, not a diode bias condition.\n- sourceIndex 2: \"enhanced\": Enhanced is a term used with some FET operation, not the basic diode conduction condition.\n- sourceIndex 3: \"reverse biased\": Reverse bias normally blocks a diode except for leakage or special breakdown operation.",
     "fr": null
   },
   "citations": [

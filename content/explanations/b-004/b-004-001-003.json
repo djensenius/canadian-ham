@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-001-003.\n\nWhy the correct answer is right: Signals arriving from an antenna are radio-frequency signals, so the stage that raises their level is an RF amplifier.\n\nChoice notes:\n- sourceIndex 0: \"an RF amplifier\": This raises weak radio-frequency signals before later receiver stages process them.\n- sourceIndex 1: \"an RF oscillator\": An RF oscillator generates an RF signal; it does not amplify the received antenna signal.\n- sourceIndex 2: \"an audio oscillator\": An audio oscillator generates an audio tone, which is a different job and frequency range.\n- sourceIndex 3: \"an audio amplifier\": An audio amplifier handles recovered or microphone audio, not the weak RF directly from the antenna.",
+    "en": "Question B-004-001-003.\n\nWhy the correct answer is right: Signals arriving from an antenna are radio-frequency signals, so the stage that raises their level is an RF amplifier.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"an RF oscillator\": An RF oscillator generates an RF signal; it does not amplify the received antenna signal.\n- sourceIndex 2: \"an audio oscillator\": An audio oscillator generates an audio tone, which is a different job and frequency range.\n- sourceIndex 3: \"an audio amplifier\": An audio amplifier handles recovered or microphone audio, not the weak RF directly from the antenna.",
     "fr": null
   },
   "citations": [

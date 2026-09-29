@@ -118,11 +118,11 @@ The materials are completely different, but the control analogy helps with exam-
 
 ## Try it
 
-1. You see terminals labelled base, collector, and emitter. Identify the device family: bipolar transistor.
-2. A schematic symbol has a gate connected near a channel between source and drain. Identify the control terminal: gate.
+1. An NPN symbol in a driver circuit has its emitter arrow pointing away from the base. Use the arrow to confirm the part family and polarity before replacing it.
+2. A sensor node must watch a tuned circuit without drawing much current from it. Choose a FET input stage and explain that the gate is the light-loading control terminal.
 3. A circuit drives a transistor fully on and fully off to operate a relay. Name the role: electronic switch.
-4. A tube schematic shows the simplest three-electrode amplifier tube: an emitting element, one control mesh, and a collecting plate. Name the tube: triode.
-5. A design needs very little input current from the preceding tuned circuit. Choose the likely transistor family: FET.
+4. A high-power RF stage uses a hot glass device whose grid voltage changes the current drawn by the plate. Explain which element is doing the controlling and why high voltage caution matters.
+5. A circuit was biased for an N-channel FET, but the parts drawer has only a P-channel device. Do not assume it is a drop-in substitute; the channel type and bias polarity matter.
 
 ## Radio connection
 

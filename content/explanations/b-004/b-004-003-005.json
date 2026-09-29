@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-003-005.\n\nWhy the correct answer is right: PNP and NPN transistor circuits use opposite polarities, so one cannot normally replace the other without changing the circuit.\n\nChoice notes:\n- sourceIndex 0: \"The polarities are reversed\": This is the practical reason the substitution fails.\n- sourceIndex 1: \"The current gain would be too low\": Current gain may vary among parts, but the fundamental PNP/NPN obstacle is polarity.\n- sourceIndex 2: \"The electrodes are labelled differently\": The electrode names remain collector, base, and emitter for both types.\n- sourceIndex 3: \"The frequency response would be limited\": Frequency response may matter for part selection, but it is not the basic reason PNP and NPN are not interchangeable.",
+    "en": "Question B-004-003-005.\n\nWhy the correct answer is right: PNP and NPN transistor circuits use opposite polarities, so one cannot normally replace the other without changing the circuit.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The current gain would be too low\": Current gain may vary among parts, but the fundamental PNP/NPN obstacle is polarity.\n- sourceIndex 2: \"The electrodes are labelled differently\": The electrode names remain collector, base, and emitter for both types.\n- sourceIndex 3: \"The frequency response would be limited\": Frequency response may matter for part selection, but it is not the basic reason PNP and NPN are not interchangeable.",
     "fr": null
   },
   "citations": [

@@ -14,36 +14,126 @@
   "conceptChecks": [
     {
       "id": "QZ-L-004-01-A-C1",
-      "prompt": { "en": "A receiver stage raises a tiny signal from the antenna before later tuning and detection stages use it. What kind of stage is this?", "fr": null },
+      "prompt": {
+        "en": "A 7 MHz signal enters a receiver stage and leaves at the same frequency with the same modulation, but at a larger voltage. What did the stage do?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "An RF amplifier", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A loudspeaker filter", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A reverse-polarity diode", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A meter shunt", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Amplified the RF signal without changing it to audio",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Detected audio from the carrier",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Protected the battery from reverse polarity",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Changed the resistor tolerance",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "An RF amplifier raises a radio-frequency signal while keeping it at RF for later receiver stages.", "fr": null }
+      "explanation": {
+        "en": "Amplification raises signal level while preserving the wanted waveform; a 7 MHz signal is still RF when it leaves at 7 MHz.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-004-01-A-C2",
-      "prompt": { "en": "Why should a signal amplifier used for communications stay reasonably linear?", "fr": null },
+      "prompt": {
+        "en": "Why should a signal amplifier used for communications stay reasonably linear?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "So it turns DC directly into light", "fr": null }, "isCorrect": false },
-        { "text": { "en": "So the output waveform keeps the intended shape instead of creating distortion", "fr": null }, "isCorrect": true },
-        { "text": { "en": "So the cathode and anode trade names", "fr": null }, "isCorrect": false },
-        { "text": { "en": "So its gain is always zero", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "So it turns DC directly into light",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "So the output waveform keeps the intended shape instead of creating distortion",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "So the cathode and anode trade names",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "So its gain is always zero",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "Linearity means the stage changes signal level without unwanted changes to the waveform shape.", "fr": null }
+      "explanation": {
+        "en": "Linearity means the stage changes signal level without unwanted changes to the waveform shape.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-004-01-A-C3",
-      "prompt": { "en": "A diode in a small supply passes current with correct polarity but blocks when the leads are swapped. Which diode behaviour is being used?", "fr": null },
+      "prompt": {
+        "en": "A power supply uses four diodes before a filter capacitor so both halves of the AC waveform feed the same DC polarity. Which diode job is this?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "It stores audio power", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It multiplies frequency", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It conducts mainly in one direction", "fr": null }, "isCorrect": true },
-        { "text": { "en": "It has no voltage drop", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Voltage multiplication by the LED material",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Audio oscillation",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Rectification",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Positive feedback",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "Reverse-polarity protection depends on a diode conducting one way and blocking the other way.", "fr": null }
+      "explanation": {
+        "en": "A rectifier uses diode one-way action to turn alternating current into current of one polarity before filtering.",
+        "fr": null
+      }
     }
   ]
 }

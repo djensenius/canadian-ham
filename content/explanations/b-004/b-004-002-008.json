@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-002-008.\n\nWhy the correct answer is right: A light-emitting diode is a semiconductor diode whose emitted colour depends on its material and construction.\n\nChoice notes:\n- sourceIndex 0: \"A light-emitting diode\": An LED is the semiconductor device that emits light of different colours.\n- sourceIndex 1: \"A fluorescent bulb\": A fluorescent bulb is not a semiconductor diode.\n- sourceIndex 2: \"A neon bulb\": A neon bulb is a gas-discharge device, not a semiconductor diode.\n- sourceIndex 3: \"A vacuum diode\": A vacuum diode is a tube device and is not the colour-emitting semiconductor named here.",
+    "en": "Question B-004-002-008.\n\nWhy the correct answer is right: A light-emitting diode is a semiconductor diode whose emitted colour depends on its material and construction.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A fluorescent bulb\": A fluorescent bulb is not a semiconductor diode.\n- sourceIndex 2: \"A neon bulb\": A neon bulb is a gas-discharge device, not a semiconductor diode.\n- sourceIndex 3: \"A vacuum diode\": A vacuum diode is a tube device and is not the colour-emitting semiconductor named here.",
     "fr": null
   },
   "citations": [

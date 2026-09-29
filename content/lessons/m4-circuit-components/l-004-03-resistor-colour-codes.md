@@ -64,6 +64,8 @@ Think of the first two bands as making a two-digit number. Then multiply that nu
 | gold | — | x 0.1 | ±5% |
 | silver | — | x 0.01 | ±10% |
 
+If a resistor has no separate tolerance band, treat the tolerance as ±20%.
+
 This table is a reference aid. Real exam reference material may provide a colour-code table, and real bench work often uses a meter to confirm the part.
 
 ## Worked examples
@@ -157,13 +159,13 @@ If two resistors have the same multiplier and the same first digit but different
 
 ### Worked example: same digits, different multiplier
 
-A resistor marked brown red brown has value digits 1 and 2, with multiplier x 10:
+A resistor marked yellow violet brown has value digits 4 and 7, with multiplier x 10:
 
-12 x 10 = 120 ohms.
+47 x 10 = 470 ohms.
 
-A resistor marked brown red red has the same value digits, but multiplier x 100:
+A resistor marked yellow violet red has the same value digits, but multiplier x 100:
 
-12 x 100 = 1 200 ohms.
+47 x 100 = 4 700 ohms.
 
 Only the multiplier band changed, so the nominal resistance changed by a factor of ten.
 
