@@ -27,7 +27,7 @@ status: draft
 
 Canadian amateur radio is a technical hobby, but it is also an authorized radio service. Your certificate, call sign, station records, and on-air conduct all sit inside a legal framework. The exam expects you to know the main pieces of that framework and to avoid filling gaps with guesses from other radio services or older memories.
 
-This lesson keeps the wording practical: know which source does which job, keep the records ISED expects, treat distress and false messages seriously, and separate exam-office fees from examiner cost recovery.
+This lesson separates two kinds of study material. **Reference facts** tables hold single current-bank facts that you should memorize accurately. **Worked examples** and **Try it** items combine two or more bank rules into a new decision, so practise them as rule-mapping exercises rather than as one-line recalls.
 
 ## Learning objectives
 
@@ -39,30 +39,29 @@ By the end of this lesson, you can:
 - state the Basic-entry rules that the current bank establishes, including age, address, and qualification sequence; and
 - keep examination fees and accommodation rules in their proper context without inventing extra conditions.
 
-## The rule stack
+## Reference facts: Authority and source roles
 
-Think of the rules as a stack rather than as one long document.
-
-| Source or record | What this lesson uses it for |
+| Source or record | Current-bank fact |
 |---|---|
-| Radiocommunication Act | Broad authority for Canadian radiocommunication rules, authority to publish amateur-station standards, and the offences-and-penalties source named in the bank. |
+| Radiocommunication Act | Authority to make Canadian radiocommunication regulations; authority to publish amateur-station operating standards; offences-and-penalties source for radiocommunications. |
 | Radiocommunication Regulations | Definition of the Canadian amateur radio service. |
-| Innovation, Science and Economic Development Canada (ISED) | Administration of the Radiocommunication Act for these bank items. |
+| Innovation, Science and Economic Development Canada (ISED) | Department responsible for administering the Radiocommunication Act. |
 | ISED operating standards | Day-to-day operating standards for amateur stations. |
 | Certificate and call sign | The holder's qualifications and station identity while operating. |
 
-The bank also uses the Broadcasting Act and the International Telecommunication Union's Radio Regulations as plausible distractors in this subsection. For this lesson, do not assign those distractors a Canadian amateur-radio role that the bank does not give them.
+Other document names may appear as choices in the official bank. Use only the role that the current bank establishes for the item being asked.
 
-### Worked example: sorting a source card
+### Worked example: split the quick-start sheet
 
-A learner writes one card for each job: "broad authority," "service definition," "department administering the Act," and "individual operating identity." Before adding document names, they sort the cards by job. That prevents a common study error: choosing a familiar title before deciding whether the question is about authority, a definition, administration, standards, or the operator's own record.
+A club quick-start sheet tries to solve every paperwork question with one line: "Use the regulator's name for the service definition, and keep the certificate in the club's shared binder." The new decision is to split the sheet into two checks. The source check needs the document that defines the amateur service and the department that administers the Act; the record check needs the holder's certificate retained with the station/address record, not merely filed with a club convenience copy.
 
-## Certificate records and address duties
+## Reference facts: Certificate records and address duties
 
 An Amateur Radio Operator Certificate is not a yearly permit; the current bank establishes lifetime validity. Record duties still continue.
 
 | Duty or service | Current-bank fact |
 |---|---|
+| Certificate validity | Life. |
 | Certificate retention | The bank gives both retention cues: at the station, and at the address provided to ISED. |
 | Inspector request | If a radio inspector asks to see the certificate, or a copy of it, the holder has 48 hours to comply. |
 | Mailing-address change | ISED must be informed within 30 days of a mailing-address change. |
@@ -72,11 +71,11 @@ An Amateur Radio Operator Certificate is not a yearly permit; the current bank e
 
 Keep the rows separate. The copy language belongs to the inspector-production rule, not to the retention rule. The 30-day mailing-address rule is an ISED record duty, not a club-roster or examiner-contact duty.
 
-### Worked example: correcting a certificate checklist
+### Worked example: two clocks on one calendar
 
-A moving checklist says, "Update the mailing address sometime this season; keep a scan of the certificate on the station laptop." A better checklist separates the duties: send the ISED mailing-address update within 30 days, retain the certificate at the station/address on record, and remember that a certificate or copy can be produced within 48 hours if an inspector asks to see it. The fix is a cleaner rule map, not a new unofficial paperwork system.
+An operator moves on April 3, then receives an inspector's certificate request on April 20. The certificate does not need renewal just because time has passed, but two separate clocks now matter. The address update must be handled inside the 30-day mailing-address window, and the inspector request needs a certificate-or-copy response inside the 48-hour window. The decision is to put two dated tasks on the calendar instead of treating "valid for life" as "no records to manage."
 
-## False information, distress, and penalties
+## Reference facts: False information, distress, and penalties
 
 Amateur radio relies on trust. False information, false distress traffic, and unlawful interference or obstruction can waste resources and put people at risk. The current bank ties these offences to the Radiocommunication Act.
 
@@ -87,27 +86,34 @@ Amateur radio relies on trust. False information, false distress traffic, and un
 | Transmitting false information | Never permitted. |
 | Transmitting a false or fraudulent distress signal or message | Fine up to $5,000, prison term up to one year, or both. |
 | Interfering with or obstructing radio communication without lawful cause | Fine up to $5,000, prison term up to one year, or both. |
+| Dwelling entry by inspector | The bank rejects warrantless, non-consensual entry into a dwelling. |
+| Certificate suspension | The bank rejects suspension with no notice or opportunity to make representations. |
 
-There are also enforcement rules for inspection and suspension. The bank establishes that a dwelling is not simply entered without consent or a warrant, and that certificate suspension is not a no-notice shortcut. The common thread is due process: the rules give authority, but they also set boundaries.
+The common thread is due process and truthful operation: the rules give authority, but they also set boundaries.
 
-### Worked example: editing a drill script
+### Worked example: reject the unsafe drill card
 
-A planner drafts a simulated emergency exercise and leaves a blank for a dramatic opening phrase. The safe edit is to label the traffic as exercise traffic before anyone transmits and to avoid any wording that states or implies a real distress event. The procedure should not depend on a later explanation to repair a false transmission.
+A practice card tells operators to announce a fictional emergency as if it were real, then move the exercise outside the amateur allocation to "keep the net quiet." That card fails two independent checks before anyone transmits: the message would falsely present an emergency, and the channel plan leaves the amateur bands. Because the penalty rows attach serious consequences to false distress traffic and out-of-band transmissions, the new decision is to rewrite both the script and the channel plan, not to rely on a later explanation.
 
-## Basic entry, additional qualifications, and other services
+## Reference facts: Basic entry, additional qualifications, and other services
 
-The current bank establishes several entry principles for the Basic certificate:
+| Topic | Current-bank fact |
+|---|---|
+| Basic age | There is no age limit for Basic. |
+| Candidate address | A valid address in Canada is required. |
+| First amateur exam sequence | The Basic examination must be passed before amateur operator certification is issued. |
+| Later amateur qualifications | After Basic is issued, additional qualifications may be pursued in any order. |
+| Morse qualification | 5 words per minute sending and receiving. |
+| Other radio services | Even an amateur certificate with Advanced qualification does not itself authorize operation in another radio service. |
+| Named bridge credential | The Canadian Radiocommunication Operator General Certificate Maritime (RGMC) can lead to amateur certification. |
 
-- there is no age limit for Basic;
-- a candidate needs a valid address in Canada;
-- the Basic examination must be passed before amateur operator certification is issued;
-- after Basic is issued, additional qualifications may be pursued in any order;
-- Morse qualification requires 5 words per minute sending and receiving; and
-- even an amateur certificate with Advanced qualification does not by itself authorize operation in another radio service.
+Do not generalize the named bridge credential to restricted maritime, maritime-commercial, or aeronautical certificates. The correct principle is narrow: use the credential named by the bank, not a category that merely sounds similar.
 
-One related bridge exists in the bank: the named Canadian Radiocommunication Operator General Certificate Maritime (RGMC) can lead to amateur certification. Do not generalize that to restricted maritime, maritime-commercial, or aeronautical certificates. The correct principle is narrow: use the credential named by the bank, not a category that merely sounds similar.
+### Worked example: separate the candidate path from the service boundary
 
-## Examination fees and accommodations
+A youth candidate with a Canadian mailing address wants to write Basic, then choose later qualifications in a convenient order. The same person also asks whether Advanced would let them operate a non-amateur station at an event. The new decision has two parts: do not add an age barrier to the Basic path, keep the Canadian-address and Basic-first requirements, and do not use any amateur qualification as permission for a different radio service.
+
+## Reference facts: Examination fees and accommodations
 
 The Basic exam can be administered through an ISED office or through an accredited examiner. The current bank separates those situations:
 
@@ -125,17 +131,17 @@ The Basic exam can be administered through an ISED office or through an accredit
 
 Do not collapse these rows. In particular, the bank distinguishes an oral-examination possibility from interpreter accompaniment; it does not say that insufficient English or French is solved by bringing an interpreter.
 
-### Worked example: separating accommodation notes
+### Worked example: exam intake without fee or accommodation drift
 
-A study group writes two notes: "oral delivery may be used in some stated situations" and "an interpreter may accompany a candidate who lacks English or French." Only the first note fits the current-bank accommodation pattern. The second note imports an option that the bank marks as not correct.
+An exam intake email bundles three requests: an ISED office session, an accredited-examiner session next month, and a disability-related delivery change. The new decision is to make three columns before replying. The ISED office row should not inherit the accredited examiner's cost-recovery row, the accommodation row may change delivery without dropping required portions, and the language-support note must not turn the oral-exam possibility into interpreter accompaniment.
 
 ## Try it
 
-1. Question: A laminated wallet card has four blanks: "authority," "definition," "administrator," and "operator identity." What should the learner fill in before memorizing document names? Answer: Fill in the job of each blank first: Act for broad authority, Regulations for the amateur-service definition, ISED for administration, and the certificate/call sign for the operator's identity.
-2. Question: An operator changes apartments and uses a mail-forwarding service while unpacking. Which regulatory deadline still needs a calendar entry? Answer: The ISED mailing-address update must be sent within 30 days; private mail forwarding does not replace the ISED record.
-3. Question: A tabletop exercise script uses coloured cards for simulated incidents. What edit keeps the radio wording safe before anyone presses push-to-talk? Answer: Mark the traffic as exercise or simulated traffic and remove any wording that would state or imply a real distress message.
-4. Question: A spreadsheet mixes first-certificate issue, address-prefix replacement, voluntary call-sign change, ISED office exams, and accredited-examiner sessions in one fee column. How should it be repaired? Answer: Split the rows by service, because the bank gives different fee treatment for those different contexts.
-5. Question: An accessibility email asks whether an oral examination and an interpreter are the same accommodation. How should the reply frame it? Answer: They are not the same; the bank supports oral-examination possibilities in stated situations, while interpreter accompaniment for insufficient English or French is the NOT-correct idea.
+1. Question: A study card says, "One legal source handles every authority question, and the certificate can live anywhere if a scan exists." What two-part repair should you make? Answer: Keep the authority/definition jobs separate, then keep the certificate-retention duty as its own station-record task instead of replacing it with an arbitrary scan.
+2. Question: A move planner has a mailing-address change, an inspector response, and a voluntary vanity-style call-sign request on the same checklist. What does the planner need to separate? Answer: Put the address update and inspector response on their different clocks, and do not mix the paid voluntary call-sign-change row with the deadline rows.
+3. Question: A drill coordinator proposes a harmless false location report on a non-amateur channel to test whether people are listening. What is the new decision? Answer: Reject both parts before transmitting: the false report is not allowed, and leaving the amateur-band boundary creates a separate prohibited-transmission problem with penalty exposure.
+4. Question: A candidate has a Canadian address, wants to write Basic, and asks whether later amateur qualifications can also unlock an unrelated event-radio service. How should the path be framed? Answer: Basic comes first for the amateur certificate, later amateur qualifications can be scheduled after that without a fixed order, and none of those amateur credentials supplies the unrelated service authority.
+5. Question: A registration form has one box for "exam fee" and one box for "special testing," and it copies the same answer into every situation. What should be changed? Answer: Split ISED-office exams from accredited-examiner cost recovery, and split supported delivery accommodations from unsupported shortcuts such as skipping exam portions or treating interpreter accompaniment as the answer.
 
 ## Radio connection
 

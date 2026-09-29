@@ -40,123 +40,123 @@
     {
       "id": "QZ-L-001-01-A-C1",
       "prompt": {
-        "en": "Spot the error in this study-table row: 'Retain the certificate or a copy at the station; if an inspector asks, produce the original within 48 hours.' Which correction best fixes the row?",
+        "en": "On May 10, an operator realizes that an April 18 mailing-address change was never reported. That same morning, an inspector asks for the certificate record. Which response plan applies the two different clocks without inventing a renewal step?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Keep the certificate retention rule separate from the inspector-production rule: the copy wording belongs to the inspector request, and the 48-hour response may use the certificate or a copy.",
+            "en": "Send the address update before the address-change window closes, answer the inspector request on its shorter clock, and leave certificate renewal out of the plan.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "Replace both duties with a reminder to keep the certificate on your person whenever you operate away from home.",
+            "en": "Renew the certificate first, then wait for the address update because inspection requests pause record duties.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Leave the copy-at-station wording, but change 48 hours to one week so the inspection row is less strict.",
+            "en": "Treat the address update and inspector request as one identical deadline because both mention certificate records.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Delete the retention row entirely because a lifetime certificate has no continuing record duties.",
+            "en": "Ignore the address record if the station can still be reached by forwarded mail.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "The lesson keeps two nearby facts from being blended: certificate retention is a station/address duty, while the certificate-or-copy wording and the 48-hour clock belong to an inspector request.",
+        "en": "Rules combined: B-001-002-002, B-001-002-003, B-001-002-005. Lifetime certificate validity does not remove record duties; the address update and inspector production rules have different timing.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-001-01-A-C2",
       "prompt": {
-        "en": "Which accommodation note is NOT true as a summary of the lesson?",
+        "en": "A registration note says: 'ISED office sitting today, disability-related delivery request, and later qualification plans after Basic.' Which edit keeps all three rules in their lanes?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "An oral delivery may be used in stated situations instead of assuming every candidate must use the same written format.",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "A Morse sending accommodation can use spoken Morse-code sounds when the bank's stated condition applies.",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "Medical evidence may be requested before an accommodation is provided.",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "Interpreter accompaniment is the supported fix when a candidate has insufficient English or French.",
+            "en": "Do not add an exam-office charge, keep required examination portions in the accommodated delivery, and schedule later amateur qualifications only after Basic is issued.",
             "fr": null
           },
           "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Apply the accredited-examiner cost row to the office sitting because both are examinations.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Use the delivery request as permission to remove a required section from the examination.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Let later qualifications be written before the Basic path is complete if accommodation notes are present.",
+            "fr": null
+          },
+          "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "The other notes preserve true accommodation rows from the lesson. The interpreter note is the exception: the lesson separates an oral-examination possibility from interpreter accompaniment.",
+        "en": "Rules combined: B-001-022-002, B-001-022-004, B-001-004-002, B-001-004-004. The fee setting, accommodation limits, and qualification sequence are separate rows that all have to pass.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-001-01-A-C3",
       "prompt": {
-        "en": "A fee spreadsheet uses one formula: 'If it mentions certificates, call signs, or exams, enter Free.' What problem will this create?",
+        "en": "An Advanced-qualified amateur drafts an event plan that would use a non-amateur service channel and include a deliberately false situation report as a training cue. What should a reviewer decide?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "It will hide the paid voluntary call-sign-change row and blur accredited-examiner cost recovery with no-charge ISED office exams.",
+            "en": "Reject the plan because the amateur qualification does not supply the other service authority, and the knowingly false traffic is a separate problem.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "It will make first-certificate issue look paid even though the lesson places that row in the no-charge group.",
+            "en": "Approve the plan if the operator holds Advanced, because that makes service boundaries and message truthfulness optional during drills.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "It will correctly combine every fee row because all certificate-related services use one price rule.",
+            "en": "Approve the channel if the false report is brief and corrected later in the net.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "It will affect only accommodation notes and leave call-sign rows unchanged.",
+            "en": "Fix only the channel list; false training traffic is outside the radio rules once everyone knows it is practice.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "Fee rows have to remain tied to the exact service. A universal formula would predict the wrong result for voluntary call-sign changes and would mix the two examination settings.",
+        "en": "Rules combined: B-001-004-006, B-001-003-001, B-001-003-007. Advanced amateur authority stays inside the amateur service, and false traffic is not cured by being part of an exercise.",
         "fr": null
       }
     }

@@ -38,5 +38,55 @@
     "lessonId": "L-001-02",
     "blockHeading": "Station types and construction privileges",
     "reason": "Reviewed regulatory fact table: station-type and qualification rows intentionally preserve current-bank facts, including beacon one-way communications."
+  },
+  {
+    "lessonId": "L-001-01",
+    "blockHeading": "Reference facts: Authority and source roles",
+    "reason": "Reviewed regulatory reference table: single source-role facts are current-bank facts intentionally labelled for memorization, not practice prompts."
+  },
+  {
+    "lessonId": "L-001-01",
+    "blockHeading": "Reference facts: Certificate records and address duties",
+    "reason": "Reviewed regulatory reference table: exact deadlines, retention locations, lifetime validity, and fee amounts are required current-bank facts."
+  },
+  {
+    "lessonId": "L-001-01",
+    "blockHeading": "Reference facts: False information, distress, and penalties",
+    "reason": "Reviewed regulatory reference table: offence, due-process, and penalty wording is required current-bank content and not a copied practice scenario."
+  },
+  {
+    "lessonId": "L-001-01",
+    "blockHeading": "Reference facts: Basic entry, additional qualifications, and other services",
+    "reason": "Reviewed regulatory reference table: Basic-entry, qualification-sequence, Morse-speed, other-service, and named-credential facts are required current-bank facts."
+  },
+  {
+    "lessonId": "L-001-01",
+    "blockHeading": "Reference facts: Examination fees and accommodations",
+    "reason": "Reviewed regulatory reference table: fee, examiner-qualification, and accommodation facts are required current-bank facts kept out of Try-it prompts."
+  },
+  {
+    "lessonId": "L-001-02",
+    "blockHeading": "Reference facts: Work done for another person",
+    "reason": "Reviewed regulatory reference table: two-sided authorization facts for work on another person's apparatus are required current-bank facts."
+  },
+  {
+    "lessonId": "L-001-02",
+    "blockHeading": "Reference facts: Amateur service is not every radio service",
+    "reason": "Reviewed regulatory reference table: service-boundary and equipment-certification facts are required current-bank facts."
+  },
+  {
+    "lessonId": "L-001-02",
+    "blockHeading": "Reference facts: Communications that fit amateur radio",
+    "reason": "Reviewed regulatory reference table: permitted and prohibited communication examples are required current-bank facts, not practice prompts."
+  },
+  {
+    "lessonId": "L-001-02",
+    "blockHeading": "Reference facts: Station types and construction privileges",
+    "reason": "Reviewed regulatory reference table: station-type and qualification minimums are required current-bank facts, including the one-way station case."
+  },
+  {
+    "lessonId": "L-001-02",
+    "blockHeading": "Reference facts: Control operator and station owner",
+    "reason": "Reviewed regulatory reference table: responsibility, control-point, and supervised-operation facts are required current-bank facts."
   }
 ]

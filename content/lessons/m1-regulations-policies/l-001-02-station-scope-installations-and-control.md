@@ -28,7 +28,7 @@ status: draft
 
 A station is more than a box on a desk. It includes the person who is allowed to transmit, the owner who makes the station available, the equipment's intended radio service, and the communications being carried. Canadian amateur privileges are generous inside the amateur service, but they do not turn amateur equipment into a general-purpose radio authorization.
 
-This lesson organizes the rules around three questions: who is authorized, what service is the equipment being used in, and who is in control while the station transmits?
+This lesson uses **Reference facts** tables for single current-bank rules. The worked examples and Try-it questions combine two or more rules into a new decision about a realistic station plan.
 
 ## Learning objectives
 
@@ -40,40 +40,45 @@ By the end of this lesson, you can:
 - compare station privileges that require only Basic with those that require Basic and Advanced; and
 - explain the shared responsibilities of station owner, control operator, supervised guest, and unqualified person.
 
-## Work done for another person
+## Reference facts: Work done for another person
 
-When you install, repair, modify, reprogram, or place amateur transmitting equipment in service for someone else, ask two questions.
+When you install, repair, modify, reprogram, or place amateur transmitting equipment in service for someone else, ask both about the person doing the work and about the person receiving the apparatus or station service.
 
-1. Are you authorized for the amateur work you are doing?
-2. Is the other person authorized for the apparatus or amateur station involved?
+| Work situation | Current-bank fact |
+|---|---|
+| Advanced holder installing, placing in operation, modifying, or repairing radio apparatus for another person | The other person must hold an authorization for the apparatus. |
+| Reprogramming a land-mobile transmitter for another person's two-metre amateur use | The other person must hold an Amateur Radio Operator Certificate. |
+| Installing an amateur radio transmitter for another person | Both people must hold Amateur Radio Operator Certificates. |
+| Basic and Morse holder installing another person's amateur station | The other person must hold a valid Amateur Radio Operator Certificate. |
+| Repairing an amateur radio transmitter for another person | Both people must hold Amateur Radio Operator Certificates. |
+| Placing an amateur radio transmitter in service for another person | Both people must hold Amateur Radio Operator Certificates. |
 
-The current bank repeatedly points to both sides, not just the technician side. If you are helping another certificate holder, the work can fit the amateur-service framework. If the other person has no amateur authorization for the station, your own certificate does not magically supply authorization to that person.
+Advanced qualification appears in one bank item for broader radio-apparatus work on behalf of someone who already holds the relevant authorization. Do not use that point to erase the other person's authorization requirement.
 
-Advanced qualification appears in one bank item for broader radio-apparatus work on behalf of someone who already holds the relevant authorization. Do not use that point to erase the other person's authorization requirement. The person receiving the work still needs the proper authorization for the apparatus.
+### Worked example: service tag plus channel tag
 
-### Worked example: service tag before soldering
+A repair bench tag lists the helper's amateur qualification, the recipient's name, and a second channel group for event staff. The new decision is not simply "repair approved." First, the tag must show two-sided authorization for the amateur apparatus or station work. Second, if the staff channel belongs to another radio service, the amateur certificate does not supply that service's equipment approval or licence.
 
-A repair bench tag has spaces for "person doing the work," "person receiving the apparatus," and "radio service involved." Filling only the technician line is not enough. The tag should show that the work is amateur work within the helper's privileges and that the recipient is authorized for that amateur apparatus or station use. The tag is a study tool, not a new regulatory form.
-
-## Amateur service is not every radio service
+## Reference facts: Amateur service is not every radio service
 
 An amateur station may communicate with stations operated under similar authorizations. That is narrower than "anything on a nearby frequency" and narrower than "anything the radio can be programmed to reach."
 
-Several boundaries follow from that idea:
+| Boundary | Current-bank fact |
+|---|---|
+| Low-power amateur station | Still must be under supervision of a certificate holder with a call sign. |
+| Amateur station communications | With stations operated under similar authorizations. |
+| Amplifying a licence-exempt transmitter with amateur equipment | Not permitted. |
+| Using amateur equipment to transmit outside amateur bands | Never permitted; amateur equipment is not certified for operation outside amateur bands. |
+| Amateur-authorized apparatus in other services | Not authorized for aeronautical, marine, or land-mobile frequencies by the amateur authorization. |
+| VHF/UHF FM radio also programmed for land-mobile service | Permissible only if the radio is certified and licensed for land-mobile use. |
 
-- Low power does not remove the need for amateur supervision and authorization.
-- A licence-exempt transmitter's output may not be boosted with an amateur amplifier.
-- Amateur gear cannot be used as a shortcut for transmitting beyond amateur allocations; the current bank gives a "never" answer for that out-of-band use.
-- A radio that can also cover land-mobile channels needs the certification and licence for that other service before it is used there.
-- Amateur authorization does not itself authorize aeronautical, marine, or land-mobile operation.
+### Worked example: one handheld, two services
 
-### Worked example: event-radio channel list
+A volunteer has one handheld and two channel groups: amateur repeater memories and a separate staff group. Before transmitting, the operator must identify which service the selected channel belongs to. Low power does not remove amateur supervision; amateur memories must stay within amateur authority; and a staff-service channel needs that service's equipment and licence requirements met instead of borrowing amateur authority.
 
-A volunteer has one handheld and two channel groups in the programming file: amateur repeater memories and a separate event-staff group. Before transmitting, the operator must identify which radio service the selected channel belongs to. If the channel is not amateur operation, the amateur certificate and call sign do not supply the other service's equipment approval or licence.
+## Reference facts: Communications that fit amateur radio
 
-## Communications that fit amateur radio
-
-The current bank marks several permitted and prohibited communications. Use the bank's examples; do not expand them into an uncited purpose statement.
+Use the bank's examples; do not expand them into an uncited purpose statement.
 
 | Communication example | Current-bank treatment |
 |---|---|
@@ -88,17 +93,17 @@ The current bank marks several permitted and prohibited communications. Use the 
 
 A call sign does not make a secret, commercial, or broadcast message acceptable. Publishing a digital technique solves the secrecy problem only; the traffic still has to avoid the other prohibited categories.
 
-### Worked example: message-content filter
+### Worked example: open format, closed content check
 
-A data group posts a clear description of its packet fields before an on-air test. That handles the open-encoding issue. If the same packets carry store inventory or invoice traffic, a different boundary is crossed: publishing the format does not make business communications acceptable on amateur radio.
+A data group publishes its packet-field description before an on-air test. During a rehearsal, a background stream is audible and the sample payload includes store inventory. The new decision is to pass only the openness check: the published format handles the secrecy side, but the message content and microphone pickup still fail separate amateur-communication boundaries.
 
-## Station types and construction privileges
+## Reference facts: Station types and construction privileges
 
 The bank uses several station and equipment examples to separate Basic from Basic and Advanced privileges.
 
-| Station or equipment situation | Current-bank minimum qualification |
+| Station or equipment situation | Current-bank minimum or treatment |
 |---|---|
-| Operating an amateur station in Canada | Amateur Radio Operator Certificate holders may operate anywhere in Canada, subject to their privileges and the other rules in this course. |
+| Operating an amateur station in Canada | Certificate holders may operate anywhere in Canada, subject to their privileges and the other rules in this course. |
 | Assembling commercially available transmitter kits of professional design | Basic. |
 | Operating cross-band repeaters | Basic. |
 | Beacon station one-way communications | A beacon station may transmit one-way communications. |
@@ -107,31 +112,41 @@ The bank uses several station and equipment examples to separate Basic from Basi
 | Installing or operating a transmitter or RF amplifier that is neither professionally designed nor commercially manufactured for amateur use | Basic and Advanced. |
 | Remotely operating a transmitter while changing frequency, emission mode, or output power | Basic and Advanced. |
 
-The pattern is useful: factory-designed beginner kit assembly and cross-band repeater operation are treated differently from less-standard transmitting hardware, a club station, a voice repeater installation, or remote transmitter control. The beacon row also matters because one-way beacon transmissions are not the same as broadcasting to the general public.
+The pattern is useful: factory-designed beginner kit assembly and cross-band repeater operation are treated differently from less-standard transmitting hardware, a club station, a voice repeater installation, or remote transmitter control. The beacon row also matters because one-way beacon transmissions are not the same as broadcasts to the general public.
 
-### Worked example: privilege board
+### Worked example: build-day task board
 
-A club training board uses removable cards rather than a slogan. "Commercial kit assembly" and "cross-band repeater operation" go under Basic; "club station installation," "single-band voice repeater installation," and "remote transmitter control with frequency, mode, or power changes" go under Basic and Advanced. Moving the cards by exact situation prevents the misleading shortcut that Advanced is only about one thing.
+A club build day includes kit assembly, a voice repeater installation, a club-station cabinet, and a remote-control demo that changes transmitter settings. The new decision is to assign tasks by exact bank situation: the kit task is not the same as the repeater, club-station, or remote-control tasks, and any demo description still cannot become a public broadcast.
 
-## Control operator and station owner
+## Reference facts: Control operator and station owner
 
 Whenever an amateur station transmits, a control operator is required at the station's control point. The station owner is also responsible for the station's operation. If you transmit from someone else's station, responsibility is shared: you are responsible for your own operation, and the owner remains responsible for the station.
 
-The owner may choose any qualified amateur operator as control operator. Qualification matters more than age in these bank items. A person with no amateur certificate can transmit only when an appropriately qualified holder is physically present and supervising. A remote briefing, course enrolment, or a licence from another radio service does not substitute for that supervised presence.
+| Control situation | Current-bank fact |
+|---|---|
+| Responsibility for station operation | Both the control operator and the station owner. |
+| Transmitting from another amateur station | Both the visiting transmitter and the station owner are responsible. |
+| Station owner responsibility | Operation of the station in accordance with the regulations. |
+| Choice of control operator | Any qualified amateur radio operator chosen by the station owner. |
+| Need for a control operator | Whenever the station is transmitting. |
+| Control-operator location during transmission | At the station's control point. |
+| Unqualified family member alone with equipment | Not allowed to transmit as control operator without suitable amateur qualifications. |
+| Owner allowing another person to operate | May allow operation under supervision and in the presence of a certificate holder. |
+| Person without an amateur certificate | May operate only under supervision and in the presence of a person holding appropriate qualifications. |
 
-This is why a family member, guest, student, or visitor can participate safely when the qualified person is actually supervising, but cannot be left alone to transmit.
+A remote briefing, course enrolment, or licence from another radio service does not substitute for the required amateur supervision and presence.
 
-### Worked example: museum microphone queue
+### Worked example: demonstration microphone pause
 
-At a museum display, a certified operator stands at the control point and invites one visitor at a time to speak a short greeting. The operator watches the controls and can stop the transmission. If the operator steps away to manage the queue at the doorway, the plan no longer has the same control-point supervision, even if the visitor was briefed moments earlier.
+At a public display, a certified operator lets a visitor speak a short greeting while the operator watches the controls. If the operator steps across the room to answer a question, the plan changes. The owner and control operator still carry responsibility, the transmitting station still needs a control operator at the control point, and the visitor's permission depends on supervised presence. The new decision is to pause the microphone until the qualified person is back in position.
 
 ## Try it
 
-1. Question: A swap-meet repair tag lists the helper's certificate class but leaves the recipient line blank. What should be added before treating the job as amateur-service work? Answer: Add the recipient's authorization for the apparatus or amateur-station use involved, along with the service being worked on.
-2. Question: A parade committee wants the same handheld used on an amateur net and on a separate staff channel. What decision has to happen before anyone transmits on the staff channel? Answer: Decide whether the staff channel is a different radio service and, if it is, confirm that service's equipment certification and licence instead of relying on amateur authority.
-3. Question: A packet experiment is fully documented on a web page, but the sample messages carry vendor order totals. Which rule boundary remains? Answer: Publication removes the secret-encoding problem, but business traffic is still not acceptable amateur communication.
-4. Question: A hilltop device sends short one-way signal reports to help operators judge coverage. What label keeps this from being confused with a public broadcast? Answer: Treat it as a beacon-station reference case; one-way beacon transmissions are distinct from broadcasts intended for the general public.
-5. Question: At a museum display, a visitor holds the microphone while the certificate holder walks to the doorway to answer questions. What changed? Answer: The qualified person is no longer at the control point supervising the transmission, so the demonstration plan must be adjusted before the visitor transmits.
+1. Question: A volunteer repair table checks only the helper's amateur certificate, then asks to test a customer's staff-service channel. What two missing checks should be added? Answer: Confirm the recipient side for the amateur transmitter work, and treat the staff-service channel as needing its own equipment/licence conditions rather than amateur authority.
+2. Question: A low-power tracker uses a licence-exempt transmitter, an added amateur amplifier, and a fallback channel outside amateur allocations. What decision follows? Answer: Low power does not erase amateur supervision, the licence-exempt transmitter cannot be boosted with amateur equipment, and the fallback channel cannot be approved as amateur operation.
+3. Question: A new telemetry format is published, but the field values are coded to hide their meaning and the sample traffic supports a sale. Which parts still fail? Answer: Publication helps only the open-format side; hidden meaning and business traffic remain separate problems.
+4. Question: A hilltop status signal is one-way, then the sponsor asks to add a public sales announcement. What boundary should the team draw? Answer: Keep any permitted one-way station-status use separate from traffic aimed at the public or serving business content.
+5. Question: During a school demo, the owner signs a permission card and leaves an unlicensed student at the microphone while the qualified operator helps across the room. What must change before transmitting? Answer: Written permission is not enough; the qualified person must be present and supervising from the control position, with the owner/control responsibilities still intact.
 
 ## Radio connection
 
