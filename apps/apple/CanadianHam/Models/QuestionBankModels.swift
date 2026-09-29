@@ -14,6 +14,15 @@ enum BankLanguage: String, CaseIterable, Identifiable, Sendable {
             "Français"
         }
     }
+
+    var accessibilityLanguageCode: String {
+        switch self {
+        case .english:
+            "en-CA"
+        case .french:
+            "fr-CA"
+        }
+    }
 }
 
 struct LocalizedText: Decodable, Hashable, Sendable {

@@ -1,3 +1,4 @@
+import CanadianHamEngine
 import Foundation
 
 struct ShuffledAnswer: Hashable, Identifiable, Sendable {
@@ -9,15 +10,16 @@ struct ShuffledAnswer: Hashable, Identifiable, Sendable {
     var isCorrect: Bool { answer.isCorrect }
 }
 
-enum TempShuffle {
-    /// Temporary answer shuffler for the first usable Apple slice.
-    /// Replace with packages/engine-swift once the shared Swift engine is available.
-    static func shuffledAnswers<RNG: RandomNumberGenerator>(
-        for question: BankQuestion,
-        using generator: inout RNG
-    ) -> [ShuffledAnswer] {
-        question.answers
-            .shuffled(using: &generator)
+enum AppleQuestionShuffle {
+    static func randomQuestion(from questions: [BankQuestion], seed: String) throws -> BankQuestion? {
+        guard !questions.isEmpty else { return nil }
+        var rng = Pcg32(seed: seed)
+        return try CanadianHamEngine.shuffled(questions, rng: &rng).first
+    }
+
+    static func shuffledAnswers(for question: BankQuestion, seed: String) throws -> [ShuffledAnswer] {
+        var rng = Pcg32(seed: seed)
+        return try CanadianHamEngine.shuffled(question.answers, rng: &rng)
             .enumerated()
             .map { offset, answer in
                 ShuffledAnswer(answer: answer, displayIndex: offset)

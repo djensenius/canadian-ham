@@ -13,15 +13,15 @@ final class QuestionBankTests: XCTestCase {
         XCTAssertEqual(bank.manifest.counts.categories, 8)
     }
 
-    func testTempShufflePreservesAnswerInvariantsForEveryBundledQuestion() throws {
+    func testEngineShufflePreservesAnswerInvariantsForEveryBundledQuestion() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
-        let seeds: [UInt64] = [
-            0x0000_0000_0000_0001,
-            0x1234_5678_9abc_def0,
-            0x0fed_cba9_8765_4321,
-            0xcafe_f00d_dead_beef,
-            0xfeed_face_c001_d00d,
-            0xffff_ffff_ffff_ffc5
+        let seeds = [
+            "apple-engine-shuffle-1",
+            "apple-engine-shuffle-2",
+            "apple-engine-shuffle-3",
+            "apple-engine-shuffle-4",
+            "apple-engine-shuffle-5",
+            "apple-engine-shuffle-6"
         ]
 
         for question in bank.questions {
@@ -34,11 +34,10 @@ final class QuestionBankTests: XCTestCase {
             var sawPermutation = false
 
             for seed in seeds {
-                var generator = StableRandomNumberGenerator(seed: seed)
-                let shuffledAnswers = TempShuffle.shuffledAnswers(for: question, using: &generator)
+                let shuffledAnswers = try AppleQuestionShuffle.shuffledAnswers(for: question, seed: "\(seed)/\(question.id)")
                 let shuffledSourceIndexes = shuffledAnswers.map(\.sourceIndex)
                 let correctAnswer = try XCTUnwrap(
-                    TempShuffle.correctAnswer(in: shuffledAnswers),
+                    AppleQuestionShuffle.correctAnswer(in: shuffledAnswers),
                     "Question \(question.id), seed \(seed), must keep one correct answer"
                 )
 
@@ -53,20 +52,20 @@ final class QuestionBankTests: XCTestCase {
                 }
             }
 
-            XCTAssertTrue(sawPermutation, "Question \(question.id) should be permuted by at least one deterministic seed")
+            XCTAssertTrue(sawPermutation, "Question \(question.id) should be permuted by at least one deterministic engine seed")
         }
     }
-}
 
-private struct StableRandomNumberGenerator: RandomNumberGenerator {
-    private var state: UInt64
+    func testEngineQuestionDrawKeepsQuestionInsideRequestedCategory() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
 
-    init(seed: UInt64) {
-        self.state = seed
-    }
-
-    mutating func next() -> UInt64 {
-        state = state &* 6_364_136_223_846_793_005 &+ 1
-        return state
+        for category in bank.categories {
+            let questions = bank.questions(in: category)
+            let drawn = try XCTUnwrap(
+                try AppleQuestionShuffle.randomQuestion(from: questions, seed: "category-draw/\(category.id)"),
+                "Category \(category.id) should draw a question"
+            )
+            XCTAssertEqual(drawn.categoryId, category.id)
+        }
     }
 }

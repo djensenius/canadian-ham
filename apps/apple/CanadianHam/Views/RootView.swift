@@ -25,9 +25,14 @@ struct RootView: View {
                     systemImage: "exclamationmark.triangle",
                     description: Text(loadError)
                 )
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .background(DesignTokens.Colors.paper)
             } else {
                 ProgressView("Loading question bank…")
                     .controlSize(.large)
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(DesignTokens.Colors.paper)
             }
         }
         .task {
@@ -44,12 +49,13 @@ struct RootView: View {
                         NavigationLink(value: SidebarSelection.category(category.id)) {
                             CategoryRow(category: category, language: language)
                         }
+                        .listRowBackground(DesignTokens.Colors.paperElevated)
                         .accessibilityLabel(categoryAccessibilityLabel(category))
                     }
                 } header: {
                     Text("Practice categories")
-                        .font(.title3.bold())
-                        .foregroundStyle(.primary)
+                        .font(DesignTokens.FontScale.title.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
                         .textCase(nil)
                         .accessibilityAddTraits(.isHeader)
                 }
@@ -58,17 +64,23 @@ struct RootView: View {
                 Section {
                     NavigationLink(value: SidebarSelection.about) {
                         Label("About", systemImage: "info.circle")
+                            .font(DesignTokens.FontScale.body.weight(.semibold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
                     }
-                    .accessibilityLabel("About canadian-ham")
+                    .listRowBackground(DesignTokens.Colors.paperElevated)
+                    .accessibilityLabel("About Canadian Ham")
                 } header: {
                     Text("Information")
-                        .font(.title3.bold())
-                        .foregroundStyle(.primary)
+                        .font(DesignTokens.FontScale.title.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
                         .textCase(nil)
                         .accessibilityAddTraits(.isHeader)
                 }
                 .headerProminence(.increased)
             }
+            .listStyle(.sidebar)
+            .scrollContentBackground(.hidden)
+            .background(DesignTokens.Colors.paper)
             .navigationTitle("Canadian Ham")
             .toolbar {
                 if showsSidebarLanguagePicker {
@@ -77,7 +89,12 @@ struct RootView: View {
             }
         } detail: {
             detailView(for: bank)
+                .background(DesignTokens.Colors.paper)
         }
+        .navigationSplitViewStyle(.balanced)
+#if os(macOS)
+        .frame(minWidth: 920, minHeight: 640)
+#endif
     }
 
     @ViewBuilder
@@ -94,6 +111,7 @@ struct RootView: View {
                 .id(category.id)
             } else {
                 ContentUnavailableView("Category not found", systemImage: "questionmark.folder")
+                    .foregroundStyle(DesignTokens.Colors.ink)
             }
         case .about:
             AboutView(bank: bank)
@@ -103,6 +121,7 @@ struct RootView: View {
                 systemImage: "list.bullet.rectangle",
                 description: Text("Select a category to answer a random question from that part of the Basic bank.")
             )
+            .foregroundStyle(DesignTokens.Colors.ink)
         }
     }
 
@@ -140,7 +159,7 @@ struct RootView: View {
     }
 
     private func categoryAccessibilityLabel(_ category: BankCategory) -> String {
-        "\(category.name.text(for: language)), \(category.questionCount) questions"
+        "\(category.name.text(for: language)), \(category.questionCount) questions, \(category.subsectionCount) subsections"
     }
 }
 
@@ -149,15 +168,16 @@ private struct CategoryRow: View {
     let language: BankLanguage
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             Text(category.name.text(for: language))
-                .font(.headline)
+                .font(DesignTokens.FontScale.body.weight(.semibold))
+                .foregroundStyle(DesignTokens.Colors.ink)
                 .fixedSize(horizontal: false, vertical: true)
             Text("\(category.questionCount) questions • \(category.subsectionCount) subsections")
-                .font(.subheadline)
-                .foregroundStyle(.primary)
+                .font(DesignTokens.FontScale.caption)
+                .foregroundStyle(DesignTokens.Colors.inkMuted)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, DesignTokens.Spacing.xs)
     }
 }

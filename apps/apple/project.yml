@@ -6,6 +6,9 @@ options:
     macOS: "15.0"
   developmentLanguage: en
   createIntermediateGroups: true
+packages:
+  CanadianHamEngine:
+    path: ../../packages/engine-swift
 settings:
   base:
     CURRENT_PROJECT_VERSION: 1
@@ -42,6 +45,9 @@ targets:
         type: file
         buildPhase: resources
         createIntermediateGroups: false
+    dependencies:
+      - package: CanadianHamEngine
+        product: CanadianHamEngine
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.djensenius.CanadianHam
@@ -61,7 +67,7 @@ targets:
       - path: CanadianHamTests
       - path: CanadianHam/Models/QuestionBankModels.swift
       - path: CanadianHam/Services/QuestionBankStore.swift
-      - path: CanadianHam/Practice/TempShuffle.swift
+      - path: CanadianHam/Practice/EngineShuffle.swift
       - path: ../../content/generated/basic-2025-07-15/questions.json
         type: file
         buildPhase: resources
@@ -78,6 +84,9 @@ targets:
         type: file
         buildPhase: resources
         createIntermediateGroups: false
+    dependencies:
+      - package: CanadianHamEngine
+        product: CanadianHamEngine
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.djensenius.CanadianHamTests
