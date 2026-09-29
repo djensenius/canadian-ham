@@ -210,7 +210,11 @@ struct StoredExamTimer: Codable, Equatable, Sendable {
         guard doubleValue.isFinite, doubleValue >= 0 else {
             throw DecodingError.dataCorruptedError(forKey: key, in: container, debugDescription: "Expected a non-negative finite number.")
         }
-        return Int(doubleValue.rounded())
+        let roundedValue = doubleValue.rounded()
+        guard let intValue = Int(exactly: roundedValue) else {
+            throw DecodingError.dataCorruptedError(forKey: key, in: container, debugDescription: "Expected a number within the supported integer range.")
+        }
+        return intValue
     }
 }
 
@@ -330,7 +334,8 @@ final class ProgressStoreService: ObservableObject {
 
     func saveExamAttempt(_ attempt: StoredExamAttempt) throws {
         let data = try encoder.encode(attempt)
-        if let existing = try examAttemptEntity(id: attempt.id) {
+        if let existing = try examAttemptEntity(id: attempt.id) ?? examAttemptEntity(submittedAt: attempt.submittedAt) {
+            existing.id = attempt.id
             existing.bankId = attempt.bankId
             existing.seed = attempt.seed
             existing.startedAt = attempt.startedAt
@@ -403,33 +408,42 @@ final class ProgressStoreService: ObservableObject {
             throw ProgressStoreError.validationFailed(errors)
         }
 
-        try context.delete(model: QuestionProgressEntity.self)
-        try context.delete(model: ExamAttemptEntity.self)
-        try context.delete(model: PreferencesEntity.self)
-        for record in data.questionProgress {
-            try upsertQuestionProgress(record)
+        let previousPreferences = preferences
+        do {
+            try context.delete(model: QuestionProgressEntity.self)
+            try context.delete(model: ExamAttemptEntity.self)
+            try context.delete(model: PreferencesEntity.self)
+            for record in data.questionProgress {
+                try upsertQuestionProgress(record)
+            }
+            for attempt in data.examAttempts {
+                try saveExamAttemptWithoutSave(attempt)
+            }
+            var nextPreferences = ApplePreferences.default
+            if let mode = ApplePreferences.PracticeMode(rawValue: data.preferences.practiceMode) {
+                nextPreferences.practiceMode = mode
+            }
+            nextPreferences.examTimerEnabled = data.preferences.examTimerEnabled
+            if let theme = ApplePreferences.Theme(rawValue: data.preferences.theme) {
+                nextPreferences.theme = theme
+            }
+            let entity = PreferencesEntity(
+                practiceMode: nextPreferences.practiceMode.rawValue,
+                examTimerEnabled: nextPreferences.examTimerEnabled,
+                language: nextPreferences.language.rawValue,
+                theme: nextPreferences.theme.rawValue
+            )
+            entity.archivedLessonProgressData = try encoder.encode(data.lessonProgress)
+            entity.archivedLessonQuizAttemptsData = try encoder.encode(data.lessonQuizAttempts)
+            context.insert(entity)
+            try context.save()
+            preferences = nextPreferences
+            objectWillChange.send()
+        } catch {
+            context.rollback()
+            preferences = previousPreferences
+            throw error
         }
-        for attempt in data.examAttempts {
-            try saveExamAttemptWithoutSave(attempt)
-        }
-        var nextPreferences = ApplePreferences.default
-        if let mode = ApplePreferences.PracticeMode(rawValue: data.preferences.practiceMode) {
-            nextPreferences.practiceMode = mode
-        }
-        nextPreferences.examTimerEnabled = data.preferences.examTimerEnabled
-        if let theme = ApplePreferences.Theme(rawValue: data.preferences.theme) {
-            nextPreferences.theme = theme
-        }
-        let entity = try preferencesEntity(createIfMissing: true)
-        entity.practiceMode = nextPreferences.practiceMode.rawValue
-        entity.examTimerEnabled = nextPreferences.examTimerEnabled
-        entity.language = nextPreferences.language.rawValue
-        entity.theme = nextPreferences.theme.rawValue
-        entity.archivedLessonProgressData = try encoder.encode(data.lessonProgress)
-        entity.archivedLessonQuizAttemptsData = try encoder.encode(data.lessonQuizAttempts)
-        preferences = nextPreferences
-        try context.save()
-        objectWillChange.send()
     }
 
     func validate(_ data: ProgressExportV1, bank: QuestionBank) -> [String] {
@@ -474,8 +488,14 @@ final class ProgressStoreService: ObservableObject {
             }
         }
 
-        validateLessonProgress(data.lessonProgress, errors: &errors)
-        validateLessonQuizAttempts(data.lessonQuizAttempts, errors: &errors)
+        validateLessonProgress(data.lessonProgress, knownLessonIds: bank.knownLessonIds, errors: &errors)
+        validateLessonQuizAttempts(
+            data.lessonQuizAttempts,
+            knownQuestionIds: knownQuestionIds,
+            knownLessonIds: bank.knownLessonIds,
+            lessonQuizzesById: bank.lessonQuizzesById,
+            errors: &errors
+        )
 
         if ApplePreferences.PracticeMode(rawValue: data.preferences.practiceMode) == nil {
             errors.append("Import preferences.practiceMode is invalid.")
@@ -522,6 +542,12 @@ final class ProgressStoreService: ObservableObject {
 
     private func examAttemptEntity(id: String) throws -> ExamAttemptEntity? {
         var descriptor = FetchDescriptor<ExamAttemptEntity>(predicate: #Predicate { $0.id == id })
+        descriptor.fetchLimit = 1
+        return try context.fetch(descriptor).first
+    }
+
+    private func examAttemptEntity(submittedAt: String) throws -> ExamAttemptEntity? {
+        var descriptor = FetchDescriptor<ExamAttemptEntity>(predicate: #Predicate { $0.submittedAt == submittedAt })
         descriptor.fetchLimit = 1
         return try context.fetch(descriptor).first
     }
@@ -613,13 +639,16 @@ private func validateScore(
     }
 }
 
-private func validateLessonProgress(_ records: [ArchivedJSON], errors: inout [String]) {
+private func validateLessonProgress(_ records: [ArchivedJSON], knownLessonIds: Set<String>, errors: inout [String]) {
     var lessonIds = Set<String>()
     for (index, record) in records.enumerated() {
         let prefix = "Import lessonProgress[\(index)]"
         guard let lessonId = record.storage["lessonId"]?.stringValue, !lessonId.isEmpty else {
             errors.append("\(prefix).lessonId must be a non-empty string.")
             continue
+        }
+        if !knownLessonIds.contains(lessonId) {
+            errors.append("\(prefix).lessonId must be a known lesson ID.")
         }
         if !lessonIds.insert(lessonId).inserted {
             errors.append("\(prefix).lessonId duplicates another lesson progress record.")
@@ -636,7 +665,13 @@ private func validateLessonProgress(_ records: [ArchivedJSON], errors: inout [St
     }
 }
 
-private func validateLessonQuizAttempts(_ attempts: [ArchivedJSON], errors: inout [String]) {
+private func validateLessonQuizAttempts(
+    _ attempts: [ArchivedJSON],
+    knownQuestionIds: Set<String>,
+    knownLessonIds: Set<String>,
+    lessonQuizzesById: [String: BankLessonQuiz],
+    errors: inout [String]
+) {
     var ids = Set<String>()
     for (index, attempt) in attempts.enumerated() {
         let prefix = "Import lessonQuizAttempts[\(index)]"
@@ -647,12 +682,26 @@ private func validateLessonQuizAttempts(_ attempts: [ArchivedJSON], errors: inou
         if !ids.insert(id).inserted {
             errors.append("\(prefix).id duplicates another lesson quiz attempt.")
         }
-        if attempt.storage["quizId"]?.nonEmptyStringValue == nil {
+
+        let quiz: BankLessonQuiz?
+        if let quizId = attempt.storage["quizId"]?.nonEmptyStringValue {
+            quiz = lessonQuizzesById[quizId]
+            if quiz == nil {
+                errors.append("\(prefix).quizId must be a known lesson quiz ID.")
+            }
+        } else {
+            quiz = nil
             errors.append("\(prefix).quizId must be a non-empty string.")
         }
-        if attempt.storage["lessonId"]?.nonEmptyStringValue == nil {
+
+        if let lessonId = attempt.storage["lessonId"]?.nonEmptyStringValue {
+            if !knownLessonIds.contains(lessonId) || (quiz != nil && lessonId != quiz?.lessonId) {
+                errors.append("\(prefix).lessonId must match the known lesson quiz.")
+            }
+        } else {
             errors.append("\(prefix).lessonId must be a non-empty string.")
         }
+
         if let submittedAt = attempt.storage["submittedAt"]?.stringValue {
             appendTimestampError(&errors, value: submittedAt, field: "\(prefix).submittedAt")
         } else {
@@ -675,17 +724,48 @@ private func validateLessonQuizAttempts(_ attempts: [ArchivedJSON], errors: inou
         } else {
             errors.append("\(prefix).percent must be a number between 0 and 100.")
         }
-        validateStringArray(attempt.storage["officialQuestionIds"], field: "\(prefix).officialQuestionIds", errors: &errors)
-        validateStringArray(attempt.storage["incorrectOfficialQuestionIds"], field: "\(prefix).incorrectOfficialQuestionIds", errors: &errors)
-        validateStringArray(attempt.storage["incorrectConceptCheckIds"], field: "\(prefix).incorrectConceptCheckIds", errors: &errors)
+
+        if let officialQuestionIds = stringArray(attempt.storage["officialQuestionIds"]) {
+            let quizQuestionIds = Set(quiz?.officialQuestionIds ?? [])
+            if !officialQuestionIds.allSatisfy(knownQuestionIds.contains) {
+                errors.append("\(prefix).officialQuestionIds must contain known question IDs.")
+            } else if quiz != nil && !officialQuestionIds.allSatisfy(quizQuestionIds.contains) {
+                errors.append("\(prefix).officialQuestionIds must belong to the lesson quiz.")
+            }
+
+            if let incorrectOfficialQuestionIds = stringArray(attempt.storage["incorrectOfficialQuestionIds"]) {
+                if !incorrectOfficialQuestionIds.allSatisfy(knownQuestionIds.contains) {
+                    errors.append("\(prefix).incorrectOfficialQuestionIds must contain known question IDs.")
+                } else {
+                    let officialSet = Set(officialQuestionIds)
+                    if !incorrectOfficialQuestionIds.allSatisfy(officialSet.contains) {
+                        errors.append("\(prefix).incorrectOfficialQuestionIds must be a subset of officialQuestionIds.")
+                    }
+                }
+            } else {
+                errors.append("\(prefix).incorrectOfficialQuestionIds must be an array of strings.")
+            }
+        } else {
+            errors.append("\(prefix).officialQuestionIds must be an array of strings.")
+            if stringArray(attempt.storage["incorrectOfficialQuestionIds"]) == nil {
+                errors.append("\(prefix).incorrectOfficialQuestionIds must be an array of strings.")
+            }
+        }
+
+        if let incorrectConceptCheckIds = stringArray(attempt.storage["incorrectConceptCheckIds"]) {
+            let conceptCheckIds = quiz?.conceptCheckIds ?? []
+            if quiz != nil && !incorrectConceptCheckIds.allSatisfy(conceptCheckIds.contains) {
+                errors.append("\(prefix).incorrectConceptCheckIds must contain known concept check IDs for the quiz.")
+            }
+        } else {
+            errors.append("\(prefix).incorrectConceptCheckIds must be an array of strings.")
+        }
     }
 }
 
-private func validateStringArray(_ value: JSONValue?, field: String, errors: inout [String]) {
-    guard case .array(let values) = value, values.allSatisfy({ $0.stringValue != nil }) else {
-        errors.append("\(field) must be an array of strings.")
-        return
-    }
+private func stringArray(_ value: JSONValue?) -> [String]? {
+    guard case .array(let values) = value else { return nil }
+    return values.allSatisfy { $0.stringValue != nil } ? values.compactMap(\.stringValue) : nil
 }
 
 private extension JSONValue {

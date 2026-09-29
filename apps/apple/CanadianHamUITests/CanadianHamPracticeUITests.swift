@@ -104,8 +104,28 @@ final class CanadianHamPracticeUITests: XCTestCase {
         defer { XCUIDevice.shared.orientation = .portrait }
 #endif
         let app = launchApp(arguments: [
+            "-CanadianHamForceRegularHorizontalSizeClass",
             "-CanadianHamInitialScreen", "mock",
             "-CanadianHamMockExamSeed", "ui-regular-result"
+        ])
+        XCTAssertTrue(app.descendants(matching: .any)["root-sidebar"].firstMatch.waitForExistence(timeout: 10), "Regular-width launch argument should force the split-view sidebar on iPhone simulators")
+        openMockExamStart(in: app)
+        XCTAssertTrue(app.staticTexts["mock-exam-seed"].waitForExistence(timeout: 10))
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "Question 1 of 100"), "Default mock exam should expose the full 100-question count")
+        scrollAndTap("Submit exam", in: app)
+        submitMockExamAlert(in: app)
+        assertMockExamResultVisible(in: app)
+        assertMockExamResultDetailsVisible(in: app)
+        waitBriefly(1.0)
+        assertMockExamResultVisible(in: app)
+    }
+
+    func testSettingsResetClearsSavedMockExamProgress() throws {
+        XCUIDevice.shared.appearance = .light
+        var app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamMockExamSeed", "ui-reset-progress",
+            "-CanadianHamMockExamLimit", "1"
         ])
         openMockExamStart(in: app)
         XCTAssertTrue(app.staticTexts["mock-exam-seed"].waitForExistence(timeout: 10))
@@ -113,8 +133,41 @@ final class CanadianHamPracticeUITests: XCTestCase {
         scrollAndTap("Submit exam", in: app)
         submitMockExamAlert(in: app)
         assertMockExamResultVisible(in: app)
-        waitBriefly(1.0)
-        assertMockExamResultVisible(in: app)
+        app.terminate()
+
+        app = launchApp(arguments: ["-CanadianHamInitialScreen", "settings"], resetData: false)
+        XCTAssertTrue(app.staticTexts["Settings"].firstMatch.waitForExistence(timeout: 10))
+        scrollAndTap("Reset all data", in: app)
+        confirmResetAlert(in: app)
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "All local progress was reset."), "Reset should show a success status")
+        app.terminate()
+
+        app = launchApp(arguments: ["-CanadianHamInitialScreen", "home"], resetData: false)
+        XCTAssertTrue(app.staticTexts["Ready for Basic with Honours?"].waitForExistence(timeout: 10))
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "Completed mock exams: 0"), "Reset should clear previously saved mock exam attempts")
+    }
+
+    func testSubsectionPracticeOpensFromHubAndShowsReviewScreen() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "practice",
+            "-CanadianHamPracticeMode", "review-later",
+            "-CanadianHamPracticeLimit", "1"
+        ])
+        XCTAssertTrue(app.staticTexts["Practice categories"].firstMatch.waitForExistence(timeout: 10))
+        let disclosure = app.buttons["Subsections"].firstMatch
+        XCTAssertTrue(disclosure.waitForExistence(timeout: 10), "Practice hub should expose subsection disclosure controls")
+        disclosure.tap()
+        let subsection = app.buttons["Practice subsection B-001-001, 4 questions"].firstMatch
+        XCTAssertTrue(subsection.waitForExistence(timeout: 5), "Opening a category disclosure should reveal subsection practice buttons")
+        subsection.tap()
+
+        XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "B-001-001"), "Subsection practice should open a subsection-scoped session")
+        answerFirstVisibleAnswer(in: app)
+        scrollAndTap("Submit for review", in: app)
+        XCTAssertTrue(app.staticTexts["Practice review"].waitForExistence(timeout: 10))
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "Correct answer:"), "Practice review should show answer feedback after a review-later subsection session is submitted")
     }
 
     func testPracticeFlowSupportsLargestAccessibilityTextSize() throws {
@@ -419,6 +472,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
         alert.buttons["Submit"].tap()
     }
 
+    private func confirmResetAlert(in app: XCUIApplication) {
+        let alert = app.alerts["Reset all local data?"].firstMatch
+        XCTAssertTrue(alert.waitForExistence(timeout: 5))
+        alert.buttons["Reset"].tap()
+    }
+
     private func assertMockExamResultVisible(in app: XCUIApplication) {
         XCTAssertTrue(
             app.staticTexts["Needs review"].waitForExistence(timeout: 10)
@@ -426,6 +485,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
             || app.staticTexts["Basic with Honours"].waitForExistence(timeout: 1),
             "Expected mock exam results to remain visible"
         )
+    }
+
+    private func assertMockExamResultDetailsVisible(in app: XCUIApplication) {
+        XCTAssertTrue(app.staticTexts["Category breakdown"].waitForExistence(timeout: 5), "Mock exam results should include category breakdown")
+        XCTAssertTrue(app.staticTexts["Wrong-answer review"].firstMatch.exists, "Mock exam results should include wrong-answer review")
     }
 
     private func answerKnownCorrectLifeAnswerIfPresent(in app: XCUIApplication) {

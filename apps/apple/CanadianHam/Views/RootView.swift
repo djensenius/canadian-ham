@@ -58,7 +58,7 @@ struct RootView: View {
     @ViewBuilder
     private func appContent(bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
 #if os(iOS)
-        if horizontalSizeClass == .compact {
+        if effectiveHorizontalSizeClass == .compact {
             NavigationStack {
                 detailView(bank: bank, progressStore: progressStore)
                     .background(DesignTokens.Colors.paper)
@@ -96,6 +96,7 @@ struct RootView: View {
                     Text("Study")
                         .textCase(nil)
                         .accessibilityAddTraits(.isHeader)
+                        .accessibilityIdentifier("root-sidebar")
                 }
 
                 Section {
@@ -144,6 +145,7 @@ struct RootView: View {
             .listStyle(.sidebar)
             .scrollContentBackground(.hidden)
             .background(DesignTokens.Colors.paper)
+            .accessibilityIdentifier("root-sidebar")
             .navigationTitle("Canadian Ham")
             .toolbar { languageToolbarItem(progressStore: progressStore) }
         } detail: {
@@ -204,6 +206,17 @@ struct RootView: View {
             AboutView(bank: bank)
         }
     }
+
+#if os(iOS)
+    private var effectiveHorizontalSizeClass: UserInterfaceSizeClass? {
+#if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-CanadianHamForceRegularHorizontalSizeClass") {
+            return .regular
+        }
+#endif
+        return horizontalSizeClass
+    }
+#endif
 
     private func loadBankIfNeeded() {
         guard bank == nil, bankLoadError == nil else { return }
@@ -278,6 +291,9 @@ struct RootView: View {
         }
         if ProcessInfo.processInfo.arguments.contains("-CanadianHamShowCategoryList") {
             selection = .practiceHub
+        } else if let requestedSubsectionID = AppLaunchArguments.value(after: "-CanadianHamInitialSubsectionID"),
+                  bank.subsectionsById[requestedSubsectionID] != nil {
+            selection = .practice(.subsection(requestedSubsectionID))
         } else if let requestedCategoryID = AppLaunchArguments.value(after: "-CanadianHamInitialCategoryID"),
                   bank.categories.contains(where: { $0.id == requestedCategoryID }) {
             selection = .practice(.category(requestedCategoryID))

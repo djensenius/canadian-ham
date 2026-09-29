@@ -82,6 +82,23 @@ struct BankSubsection: Decodable, Hashable, Identifiable, Sendable {
     let title: LocalizedText
 }
 
+struct BankConceptCheck: Decodable, Hashable, Identifiable, Sendable {
+    let id: String
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+    }
+}
+
+struct BankLessonQuiz: Decodable, Hashable, Identifiable, Sendable {
+    let id: String
+    let lessonId: String
+    let officialQuestionIds: [String]
+    let conceptChecks: [BankConceptCheck]
+
+    var conceptCheckIds: Set<String> { Set(conceptChecks.map(\.id)) }
+}
+
 struct BankManifest: Decodable, Hashable, Sendable {
     struct Source: Decodable, Hashable, Sendable {
         let path: String
@@ -115,25 +132,32 @@ struct QuestionBank: Sendable {
     let categories: [BankCategory]
     let subsections: [BankSubsection]
     let manifest: BankManifest
+    let lessonQuizzes: [BankLessonQuiz]
     let questionsByCategory: [String: [BankQuestion]]
     let questionsById: [String: BankQuestion]
     let subsectionsByCategory: [String: [BankSubsection]]
     let subsectionsById: [String: BankSubsection]
+    let lessonQuizzesById: [String: BankLessonQuiz]
+    let knownLessonIds: Set<String>
 
     init(
         questions: [BankQuestion],
         categories: [BankCategory],
         subsections: [BankSubsection],
-        manifest: BankManifest
+        manifest: BankManifest,
+        lessonQuizzes: [BankLessonQuiz] = []
     ) {
         self.questions = questions
         self.categories = categories
         self.subsections = subsections
         self.manifest = manifest
+        self.lessonQuizzes = lessonQuizzes
         self.questionsByCategory = Dictionary(grouping: questions, by: \.categoryId)
         self.questionsById = Dictionary(uniqueKeysWithValues: questions.map { ($0.id, $0) })
         self.subsectionsByCategory = Dictionary(grouping: subsections, by: \.categoryId)
         self.subsectionsById = Dictionary(uniqueKeysWithValues: subsections.map { ($0.id, $0) })
+        self.lessonQuizzesById = Dictionary(uniqueKeysWithValues: lessonQuizzes.map { ($0.id, $0) })
+        self.knownLessonIds = Set(lessonQuizzes.map(\.lessonId))
     }
 
     func questions(in category: BankCategory) -> [BankQuestion] {

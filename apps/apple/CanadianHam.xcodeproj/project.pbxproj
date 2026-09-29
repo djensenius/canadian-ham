@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00B831D959039736491B5A01 /* PracticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8C7D863EDBFCB83BF1BB73 /* PracticeView.swift */; };
 		02D2C3FC60500A28C043164F /* AppleStudyEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76177BE24F1B7915BB916C63 /* AppleStudyEngine.swift */; };
 		06F98767DA87C95EB04ABFEF /* CanadianHamEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 94C45D93BD1BF4DF19826B39 /* CanadianHamEngine */; };
 		11AF272441DB6AFFE7F934DC /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 641771DDA6C72AE924365999 /* manifest.json */; };
@@ -39,8 +38,10 @@
 		B7DB41FE2F0E756C08A1885F /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543DA6642D20EAF6FA88693D /* Tokens.swift */; };
 		B9D65B4D05709AA74DE896F0 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
 		CBC1FACE31E263275CCC7AE3 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
+		D080C0F1D7B4610720A60131 /* quizzes in Resources */ = {isa = PBXBuildFile; fileRef = 12C0D556E8CAD78F4C92C0C5 /* quizzes */; };
 		D7E320E0C9430271DF5C5CCE /* AppleStudyEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76177BE24F1B7915BB916C63 /* AppleStudyEngine.swift */; };
 		DA8494DE030F9968C7D5505E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */; };
+		DF41F72FF84F94AAB742C07A /* quizzes in Resources */ = {isa = PBXBuildFile; fileRef = 12C0D556E8CAD78F4C92C0C5 /* quizzes */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		0517B98CAB6282BC63A22BB5 /* QuestionBankTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionBankTests.swift; sourceTree = "<group>"; };
 		053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		073C44134E027E62BEC27FEC /* CanadianHamUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CanadianHamUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		12C0D556E8CAD78F4C92C0C5 /* quizzes */ = {isa = PBXFileReference; lastKnownFileType = folder; name = quizzes; path = ../../content/quizzes; sourceTree = SOURCE_ROOT; };
 		140A13D95FE054984DF26281 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		1DED9AA3F205BE249BD8DC23 /* ProgressStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStore.swift; sourceTree = "<group>"; };
 		31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionBankStore.swift; sourceTree = "<group>"; };
@@ -65,7 +67,6 @@
 		4EF15EA3BC012EB6FC4367D8 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		543DA6642D20EAF6FA88693D /* Tokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tokens.swift; sourceTree = "<group>"; };
 		5B61FF08B59BD2425E771B49 /* categories.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = categories.json; sourceTree = "<group>"; };
-		5D8C7D863EDBFCB83BF1BB73 /* PracticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeView.swift; sourceTree = "<group>"; };
 		641771DDA6C72AE924365999 /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = manifest.json; sourceTree = "<group>"; };
 		7036F3D3AAFB91C2998565A0 /* CanadianHamApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamApp.swift; sourceTree = "<group>"; };
 		73750B729415D5254CB490A4 /* subsections.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = subsections.json; sourceTree = "<group>"; };
@@ -108,6 +109,14 @@
 				DCAE5A136902875D58354C00 /* LaunchArguments.swift */,
 			);
 			path = Support;
+			sourceTree = "<group>";
+		};
+		07C99006E89433C7C25BC980 /* content */ = {
+			isa = PBXGroup;
+			children = (
+				12C0D556E8CAD78F4C92C0C5 /* quizzes */,
+			);
+			path = content;
 			sourceTree = "<group>";
 		};
 		341B6A9C6E9775EFC439F872 /* Products */ = {
@@ -183,11 +192,19 @@
 			isa = PBXGroup;
 			children = (
 				140A13D95FE054984DF26281 /* AboutView.swift */,
-				5D8C7D863EDBFCB83BF1BB73 /* PracticeView.swift */,
 				4EF15EA3BC012EB6FC4367D8 /* RootView.swift */,
 				0390C2BF7D07DEAD8A246557 /* StudyViews.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		7B560A7352AFDE9DF054E817 /* canadian-ham-applefeat */ = {
+			isa = PBXGroup;
+			children = (
+				07C99006E89433C7C25BC980 /* content */,
+			);
+			name = "canadian-ham-applefeat";
+			path = ../..;
 			sourceTree = "<group>";
 		};
 		92AC9D1337CAB361B9C569D0 /* basic-2025-07-15 */ = {
@@ -231,6 +248,7 @@
 			isa = PBXGroup;
 			children = (
 				92AC9D1337CAB361B9C569D0 /* basic-2025-07-15 */,
+				7B560A7352AFDE9DF054E817 /* canadian-ham-applefeat */,
 				422FFD741E4ECB957A502A3D /* CanadianHam */,
 				37E36FF1524FE1D4BAEBEF30 /* CanadianHamTests */,
 				409DCB4B19DC3887974F327F /* CanadianHamUITests */,
@@ -354,6 +372,7 @@
 				3570042246D47C705FC3807A /* categories.json in Resources */,
 				56297686DFF5FF6625A68B96 /* manifest.json in Resources */,
 				53AFCF2AAFF2212EA63976C9 /* questions.json in Resources */,
+				D080C0F1D7B4610720A60131 /* quizzes in Resources */,
 				65C653416A3A39692B571631 /* subsections.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -374,6 +393,7 @@
 				306D368114DE44A3C3C2B06E /* categories.json in Resources */,
 				11AF272441DB6AFFE7F934DC /* manifest.json in Resources */,
 				4E053E6B26ECB02C90C4C646 /* questions.json in Resources */,
+				DF41F72FF84F94AAB742C07A /* quizzes in Resources */,
 				787141F841B959AE48679C1F /* subsections.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -405,7 +425,6 @@
 				1C042178F4987890B4904111 /* CanadianHamApp.swift in Sources */,
 				7E2869C0EF3CD0A21C072580 /* EngineShuffle.swift in Sources */,
 				93A17F0A518F9EFA2B532E3A /* LaunchArguments.swift in Sources */,
-				00B831D959039736491B5A01 /* PracticeView.swift in Sources */,
 				3C5EF20558CB56EAB8005430 /* ProgressModels.swift in Sources */,
 				27736D9704E4F326B1A87197 /* ProgressStore.swift in Sources */,
 				2C8F5043E3CA9DA4C9220BCF /* QuestionBankModels.swift in Sources */,

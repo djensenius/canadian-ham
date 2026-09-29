@@ -94,7 +94,6 @@ struct HomeView: View {
             }
         }
         .paperCard()
-        .accessibilityElement(children: .combine)
         .accessibilityIdentifier("readiness-card")
     }
 
@@ -479,7 +478,14 @@ struct PracticeSessionView: View {
     }
 
     private func select(sourceIndex: Int, question: BankQuestion) {
-        guard selectedByQuestionId[question.id] == nil else { return }
+        if let previous = selectedByQuestionId[question.id] {
+            guard progressStore.preferences.practiceMode == .reviewLater else { return }
+            selectedByQuestionId[question.id] = sourceIndex
+            if previous == 0, sourceIndex != 0 { correctCount -= 1 }
+            if previous != 0, sourceIndex == 0 { correctCount += 1 }
+            AccessibilityNotification.Announcement("Selected answer updated").post()
+            return
+        }
         selectedByQuestionId[question.id] = sourceIndex
         answeredCount += 1
         if sourceIndex == 0 { correctCount += 1 }
@@ -675,12 +681,6 @@ struct MockExamView: View {
                 Button(timerRunning ? "Pause timer" : secondsElapsed == 0 ? "Start timer" : "Resume timer") {
                     timerRunning.toggle()
                     timerStatus = timerRunning ? "Timer running, \(secondsElapsed) seconds elapsed" : "Timer paused, \(secondsElapsed) seconds elapsed"
-                    AccessibilityNotification.Announcement(timerStatus).post()
-                }
-                .buttonStyle(.bordered)
-                .tint(DesignTokens.Colors.ink)
-                Button("Extend timer") {
-                    timerStatus = "Timer extension noted; no official time limit is verified"
                     AccessibilityNotification.Announcement(timerStatus).post()
                 }
                 .buttonStyle(.bordered)
@@ -1082,7 +1082,6 @@ struct QuestionCard: View {
                 .accessibilityIdentifier("question-stem")
         }
         .paperCard()
-        .accessibilityElement(children: .combine)
         .accessibilityIdentifier("question-card")
     }
 }
@@ -1128,14 +1127,15 @@ struct AnswerChoiceButton: View {
             .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(border, lineWidth: isSelected || showCorrectness ? 2 : 1))
         }
         .buttonStyle(.plain)
-        .allowsHitTesting(!disabled)
+        .disabled(disabled)
         .accessibilityLabel(accessibilityLabel)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityIdentifier("answer-\(letter)-button")
     }
 
     private var statusText: String? {
-        guard showCorrectness, selectedSourceIndex != nil else { return nil }
+        guard selectedSourceIndex != nil else { return nil }
+        guard showCorrectness else { return isSelected ? "Selected" : nil }
         if answer.sourceIndex == 0 { return isSelected ? "Your answer, correct answer" : "Correct answer" }
         if isSelected { return "Your answer, incorrect" }
         return nil
@@ -1150,7 +1150,7 @@ struct AnswerChoiceButton: View {
         return DesignTokens.Colors.border
     }
     private var textColor: Color { .primary }
-    private var chipColor: Color { highContrastSurfaceColor }
+    private var chipColor: Color { isSelected ? DesignTokens.Colors.paperInset : highContrastSurfaceColor }
     private var chipForeground: Color { .primary }
 
     private var accessibilityLabel: Text {

@@ -45,6 +45,9 @@ targets:
         type: file
         buildPhase: resources
         createIntermediateGroups: false
+      - path: ../../content/quizzes
+        type: folder
+        buildPhase: resources
     dependencies:
       - package: CanadianHamEngine
         product: CanadianHamEngine
@@ -87,6 +90,9 @@ targets:
         type: file
         buildPhase: resources
         createIntermediateGroups: false
+      - path: ../../content/quizzes
+        type: folder
+        buildPhase: resources
     dependencies:
       - package: CanadianHamEngine
         product: CanadianHamEngine

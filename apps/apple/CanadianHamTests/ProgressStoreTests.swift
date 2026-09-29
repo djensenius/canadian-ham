@@ -77,8 +77,9 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertTrue(try ProgressStoreService.inMemoryForTests().validate(decoded, bank: bank).isEmpty)
     }
 
-    func testImportValidationChecksLessonRecordShapeAndDuplicates() throws {
+    func testImportValidationChecksLessonRecordShapeKnownIdsAndDuplicates() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        XCTAssertFalse(bank.lessonQuizzes.isEmpty, "Unit-test bundle should include lesson quiz resources for import validation")
         let json = """
         {
           "schema": "canadian-ham.progress-export",
@@ -89,11 +90,14 @@ final class ProgressStoreTests: XCTestCase {
           "examAttempts": [],
           "lessonProgress": [
             { "lessonId": "L-005-01", "readAt": "2026-01-02T03:30:00.000Z", "readCount": 1 },
-            { "lessonId": "L-005-01", "readAt": "2026-01-02T03:30:00Z", "readCount": 0 }
+            { "lessonId": "L-005-01", "readAt": "2026-01-02T03:30:00Z", "readCount": 0 },
+            { "lessonId": "L-999-99", "readAt": "2026-01-02T03:30:00.000Z", "readCount": 1 }
           ],
           "lessonQuizAttempts": [
-            { "id": "quiz-1", "quizId": "QZ-L-005-01-A", "lessonId": "L-005-01", "submittedAt": "2026-01-02T03:45:00.000Z", "correct": 1, "total": 2, "percent": 50, "officialQuestionIds": [], "incorrectOfficialQuestionIds": [], "incorrectConceptCheckIds": [] },
-            { "id": "quiz-1", "quizId": "", "lessonId": "", "submittedAt": "2026-01-02T03:45:00Z", "correct": 3, "total": 2, "percent": 10, "officialQuestionIds": [], "incorrectOfficialQuestionIds": [], "incorrectConceptCheckIds": [] }
+            { "id": "quiz-1", "quizId": "QZ-L-005-01-A", "lessonId": "L-005-01", "submittedAt": "2026-01-02T03:45:00.000Z", "correct": 1, "total": 2, "percent": 50, "officialQuestionIds": ["B-005-001-001"], "incorrectOfficialQuestionIds": [], "incorrectConceptCheckIds": [] },
+            { "id": "quiz-1", "quizId": "", "lessonId": "", "submittedAt": "2026-01-02T03:45:00Z", "correct": 3, "total": 2, "percent": 10, "officialQuestionIds": [], "incorrectOfficialQuestionIds": [], "incorrectConceptCheckIds": [] },
+            { "id": "quiz-unknown", "quizId": "QZ-NOPE", "lessonId": "L-005-02", "submittedAt": "2026-01-02T03:45:00.000Z", "correct": 1, "total": 2, "percent": 50, "officialQuestionIds": ["B-999-999-999"], "incorrectOfficialQuestionIds": ["B-005-001-001"], "incorrectConceptCheckIds": ["missing"] },
+            { "id": "quiz-bad-subsets", "quizId": "QZ-L-005-01-A", "lessonId": "L-005-01", "submittedAt": "2026-01-02T03:46:00.000Z", "correct": 1, "total": 2, "percent": 50, "officialQuestionIds": ["B-001-001-001"], "incorrectOfficialQuestionIds": ["B-005-001-001"], "incorrectConceptCheckIds": [] }
           ],
           "preferences": { "practiceMode": "immediate", "examTimerEnabled": false, "theme": "system" }
         }
@@ -105,10 +109,24 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertTrue(errors.contains { $0.contains("lessonProgress[1].lessonId duplicates") })
         XCTAssertTrue(errors.contains { $0.contains("lessonProgress[1].readAt") && $0.contains("canonical UTC") })
         XCTAssertTrue(errors.contains { $0.contains("lessonProgress[1].readCount") })
+        XCTAssertTrue(errors.contains { $0.contains("lessonProgress[2].lessonId must be a known") })
         XCTAssertTrue(errors.contains { $0.contains("lessonQuizAttempts[1].id duplicates") })
         XCTAssertTrue(errors.contains { $0.contains("lessonQuizAttempts[1].quizId") })
         XCTAssertTrue(errors.contains { $0.contains("lessonQuizAttempts[1].correct must not exceed total") })
         XCTAssertTrue(errors.contains { $0.contains("lessonQuizAttempts[1].percent must match") })
+        XCTAssertTrue(errors.contains { $0.contains("lessonQuizAttempts[2].quizId must be a known") })
+        XCTAssertTrue(errors.contains { $0.contains("lessonQuizAttempts[2].officialQuestionIds must contain known") })
+        XCTAssertTrue(errors.contains { $0.contains("lessonQuizAttempts[3].officialQuestionIds must belong") })
+        XCTAssertTrue(errors.contains { $0.contains("lessonQuizAttempts[3].incorrectOfficialQuestionIds must be a subset") })
+    }
+
+    func testImportTimerDecodingRejectsHugeNumbersAndRoundsFractionalWebValues() throws {
+        let decoder = JSONDecoder()
+        let fractional = try decoder.decode(StoredExamTimer.self, from: Data(#"{"enabled":true,"secondsAllowed":12.2,"secondsElapsed":12.6}"#.utf8))
+        XCTAssertEqual(fractional.secondsAllowed, 12)
+        XCTAssertEqual(fractional.secondsElapsed, 13)
+
+        XCTAssertThrowsError(try decoder.decode(StoredExamTimer.self, from: Data(#"{"enabled":true,"secondsAllowed":null,"secondsElapsed":1e300}"#.utf8)))
     }
 
     func testImportValidationRejectsUnknownIdsBadTimestampsBadBoxAndDuplicateSubmittedAt() throws {
@@ -216,9 +234,25 @@ final class ReadinessAndScoringTests: XCTestCase {
             selectedByQuestionId: [:],
             flaggedQuestionIds: []
         )
+        let duplicateSubmitAttempt = AppleStudyEngine.buildExamAttempt(
+            bank: bank,
+            seed: "double-submit-second-tap",
+            startedAt: "2026-01-02T03:04:05.000Z",
+            submittedAt: "2026-01-02T04:04:05.000Z",
+            timerEnabled: false,
+            secondsElapsed: 1,
+            generatedItems: generated.items,
+            selectedByQuestionId: [:],
+            flaggedQuestionIds: []
+        )
+
         try store.saveExamAttempt(attempt)
         try store.saveExamAttempt(attempt)
-        XCTAssertEqual(try store.examAttempts().count, 1)
+        try store.saveExamAttempt(duplicateSubmitAttempt)
+        let attempts = try store.examAttempts()
+        XCTAssertEqual(attempts.count, 1)
+        XCTAssertEqual(attempts.first?.id, duplicateSubmitAttempt.id)
+        XCTAssertEqual(attempts.first?.timer.secondsElapsed, 1)
     }
 
     private func makeScoreItems(correct: Int, total: Int) -> [ScoreInputItem] {
