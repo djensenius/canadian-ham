@@ -44,3 +44,22 @@ node packages/content-tools/src/check-lesson-coverage.ts
 ```
 
 The checker parses lesson front matter, compares lesson `covers` entries with `content/generated/basic-2025-07-15/subsections.json`, fails on missing or unknown subsection IDs, fails on malformed lesson/module front matter, and reports duplicate subsection coverage for review.
+
+## Quiz check scope
+
+Until lessons outside M5 are authored, the package script deliberately checks only M5 quiz files and M5 lesson front matter:
+
+```sh
+pnpm --dir packages/content-tools check:quizzes
+```
+
+That script passes `content/lessons/m5-basic-electronics` as the lesson root. Running `check-quizzes.ts` with no scoped lesson root still reports missing quiz files for outline-only lessons in other modules; those reports are expected until those modules have lesson bodies and quizzes.
+
+## Lesson originality check
+
+`check:lesson-originality` is a heuristic guard for keeping original lessons separate from official ISED question text.
+
+- Numeric reuse is checked per heading block: the text under one `#`, `##`, or `###` heading up to the next `#`/`##`/`###` heading. Paragraphs, bullets, numbered items, and table rows in that block are checked together so worked examples cannot hide a copied question across separate list items.
+- Numeric matching is scoped by the lesson's `categoryIds`, not just the narrower `covers` list. Number words from one through twenty, plus `twice`, `double`, `half`, `hundred`, and `thousand`, are normalized on both the lesson and question sides. Numbers with attached unit suffixes such as `12V`, `500Ω`, and `1.5kHz` are treated as the numbers `12`, `500`, and `1.5`.
+- Near-verbatim wording is checked against the whole official bank. A heading block is flagged if it shares at least 5 word 5-grams with a question plus correct answer, shares at least 40% of that source record's 5-grams, or has a shared run of 8 or more consecutive words.
+- Reviewed principle blocks that intentionally use standard definitions or tables are listed in [`originality-allowlist.json`](originality-allowlist.json). Each entry names the lesson id, the exact heading block, and the review reason. The allow-list is for narrow owner-approved principles, not for copied worked examples.

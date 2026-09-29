@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-004-009",
+  "questionId": "B-005-004-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-004-009.\n\nWhy the correct answer is right: Convert 200 mA to 0.2 A, then E = I x R = 0.2 x 25 = 5 V.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"8 volts\": This is 8 / 5 = 1.6 times too high; 0.2 x 25 is 5 V.\n- sourceIndex 2: \"0.5 volts\": This is ten times too low.\n- sourceIndex 3: \"50 volts\": This is ten times too high.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-02"
+    },
+    {
+      "type": "question",
+      "id": "B-005-004-009"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -7,6 +7,10 @@
     "import:basic": "node src/import-basic.ts",
     "import:basic:check": "node src/import-basic.ts --check",
     "check:links": "node src/check-links.ts",
+    "check:coverage": "node src/check-lesson-coverage.ts",
+    "check:quizzes": "node src/check-quizzes.ts ../../content/lessons/m5-basic-electronics",
+    "check:lesson-originality": "node src/check-lesson-originality.ts ../../content/lessons/m5-basic-electronics",
+    "check:lesson-originality:all": "node src/check-lesson-originality.ts --all",
     "test": "node --test test/",
     "typecheck": "tsc --noEmit"
   },

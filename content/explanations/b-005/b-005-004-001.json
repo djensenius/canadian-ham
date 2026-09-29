@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-004-001",
+  "questionId": "B-005-004-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-004-001.\n\nWhy the correct answer is right: Use E = I x R. With 0.5 A and 2 ohms, E = 0.5 x 2 = 1.0 V.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"0.25 volts\": This is I / R (0.5 / 2), not E = I x R.\n- sourceIndex 2: \"2.5 volts\": This adds current and resistance as plain numbers (0.5 + 2), not E = I x R.\n- sourceIndex 3: \"1.5 volts\": This subtracts current from resistance as plain numbers (2 - 0.5), not E = I x R.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-02"
+    },
+    {
+      "type": "question",
+      "id": "B-005-004-001"
+    }
+  ],
+  "licenseClass": "original"
+}

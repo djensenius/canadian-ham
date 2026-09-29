@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-004-005",
+  "questionId": "B-005-004-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-004-005.\n\nWhy the correct answer is right: Use R = E / I. 12 V / 0.25 A = 48 ohms.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"3 ohms\": This is the product 12 x 0.25, which gives power in watts, not resistance.\n- sourceIndex 2: \"12 ohms\": This repeats the voltage number and ignores the current.\n- sourceIndex 3: \"0.25 ohms\": This repeats the current number and ignores the voltage-to-current ratio.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-02"
+    },
+    {
+      "type": "question",
+      "id": "B-005-004-005"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-002-004",
+  "questionId": "B-005-002-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-002-004.\n\nWhy the correct answer is right: Among the listed materials, copper is the best practical conductor.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Carbon\": Carbon is not as good a conductor as copper.\n- sourceIndex 2: \"Silicon\": Silicon is a semiconductor, not the best conductor in the list.\n- sourceIndex 3: \"Aluminum\": Aluminum conducts, but copper is the better conductor among these choices.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-01"
+    },
+    {
+      "type": "question",
+      "id": "B-005-002-004"
+    }
+  ],
+  "licenseClass": "original"
+}

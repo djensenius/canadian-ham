@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-005-04-A",
+  "lessonId": "L-005-04",
+  "officialQuestionIds": [
+    "B-005-007-001",
+    "B-005-007-005",
+    "B-005-007-009",
+    "B-005-008-003",
+    "B-005-008-009",
+    "B-005-009-003",
+    "B-005-009-011",
+    "B-005-010-001"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-005-04-A-C1",
+      "prompt": { "en": "A transmitter power is reduced from 120 W to 30 W. What is the approximate dB change?", "fr": null },
+      "choices": [
+        { "text": { "en": "+6 dB", "fr": null }, "isCorrect": false },
+        { "text": { "en": "-3 dB", "fr": null }, "isCorrect": false },
+        { "text": { "en": "+10 dB", "fr": null }, "isCorrect": false },
+        { "text": { "en": "-6 dB", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "120 W to 30 W divides power by 4, which is a 6 dB decrease.", "fr": null }
+    },
+    {
+      "id": "QZ-L-005-04-A-C2",
+      "prompt": { "en": "Two equal 33 µF capacitors are connected in series. What is the total capacitance?", "fr": null },
+      "choices": [
+        { "text": { "en": "16.5 µF", "fr": null }, "isCorrect": true },
+        { "text": { "en": "66 µF", "fr": null }, "isCorrect": false },
+        { "text": { "en": "33 µF", "fr": null }, "isCorrect": false },
+        { "text": { "en": "1 089 µF", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Two equal capacitors in series have half the capacitance of one.", "fr": null }
+    },
+    {
+      "id": "QZ-L-005-04-A-C3",
+      "prompt": { "en": "Which part is useful when you want high opposition to RF but low opposition at low frequency?", "fr": null },
+      "choices": [
+        { "text": { "en": "A short piece of wire labelled as an insulator.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "An inductor used as an RF choke.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "A reversed electrolytic capacitor.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A voltmeter placed in series.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Inductive reactance increases with frequency, so a choke can impede RF.", "fr": null }
+    }
+  ]
+}

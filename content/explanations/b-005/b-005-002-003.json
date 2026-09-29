@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-002-003",
+  "questionId": "B-005-002-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-002-003.\n\nWhy the correct answer is right: The flow of electric charge is current.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Voltage\": Voltage is electrical potential difference, not charge flow.\n- sourceIndex 2: \"Resistance\": Resistance is opposition to current, not the flow itself.\n- sourceIndex 3: \"Capacitance\": Capacitance is the ability to store charge, not charge flow.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-01"
+    },
+    {
+      "type": "question",
+      "id": "B-005-002-003"
+    }
+  ],
+  "licenseClass": "original"
+}

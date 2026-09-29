@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-001-002",
+  "questionId": "B-005-001-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-001-002.\n\nWhy the correct answer is right: Milli means one thousandth. 3000 mA divided by 1 000 is 3 A.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"0.003 amperes\": This divides by 1 000 000, which is too many steps.\n- sourceIndex 2: \"0.3 amperes\": This is low by a factor of 10.\n- sourceIndex 3: \"0.03 amperes\": This is low by a factor of 100.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-01"
+    },
+    {
+      "type": "question",
+      "id": "B-005-001-002"
+    }
+  ],
+  "licenseClass": "original"
+}
