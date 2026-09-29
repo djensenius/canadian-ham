@@ -4,3 +4,6 @@
 content/sources/** binary
 content/sources/*.md -binary text eol=lf diff merge
 content/sources/ised/*.md -binary text eol=lf diff merge
+
+# Generated JSON must keep deterministic LF line endings across platforms.
+content/generated/** text eol=lf

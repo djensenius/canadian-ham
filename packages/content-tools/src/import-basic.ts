@@ -1,4 +1,8 @@
+import { fileURLToPath } from "node:url";
+
 import { checkGeneratedFiles, writeGeneratedFiles } from "./basic-importer.ts";
+
+const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
@@ -8,8 +12,8 @@ async function main(): Promise<void> {
   }
 
   const files = checkMode
-    ? await checkGeneratedFiles(process.cwd())
-    : await writeGeneratedFiles(process.cwd());
+    ? await checkGeneratedFiles(REPO_ROOT)
+    : await writeGeneratedFiles(REPO_ROOT);
 
   const verb = checkMode ? "verified" : "wrote";
   for (const file of files) {

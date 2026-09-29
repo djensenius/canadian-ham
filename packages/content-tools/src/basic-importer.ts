@@ -59,9 +59,15 @@ const POSITION_DEPENDENT_PATTERNS = [
   /all of these/i,
   /none of these/i,
   /both of the above/i,
-  /answers? [A-D]/i,
-  /\b[A-D] (?:and|or) [A-D]\b/i,
-  /choices? [A-D]/i,
+  /\b[Aa]nswers? [A-D]\b/,
+  /\b[A-D] (?:and|or) [A-D]\b/,
+  /\b[Cc]hoices? [A-D]\b/,
+  /[Tt]outes ces réponses/,
+  /[Aa]ucune de ces réponses/,
+  /[Tt]outes les réponses ci-dessus/,
+  /[Aa]ucune des réponses ci-dessus/,
+  /\b[Rr]éponses? [A-D]\b/,
+  /\b[A-D] (?:et|ou) [A-D]\b/,
 ];
 
 export interface SourceRow {
@@ -175,7 +181,9 @@ interface SourceManifestFile {
   readonly path: string;
   readonly sourceUrl?: string;
   readonly sha256: string;
+  readonly bytes?: number;
   readonly encoding?: string | null;
+  readonly lineEndings?: string | null;
 }
 
 interface SourceManifest {
@@ -189,6 +197,7 @@ export interface PositionDependentIssue {
   readonly language: "en" | "fr";
   readonly text: string;
   readonly pattern: string;
+  readonly patternFlags: string;
 }
 
 interface ValidationMetrics {
@@ -250,10 +259,13 @@ function looksLikeCsvWrapper(field: string): boolean {
   return !field.slice(1, -1).includes("\"");
 }
 
-function assertNoCsvQuoteWrappers(fields: readonly string[], lineNumber: number): void {
+function assertNoUnsupportedCsvQuotes(fields: readonly string[], lineNumber: number): void {
   for (const [fieldIndex, field] of fields.entries()) {
+    if (field.includes("\"\"")) {
+      fail(`line ${lineNumber}, field ${fieldIndex + 1}: field contains doubled double quotes; this looks like CSV quote escaping, which this format does not use. Verify against the official ISED file before changing the importer.`);
+    }
     if (looksLikeCsvWrapper(field)) {
-      fail(`line ${lineNumber}, field ${fieldIndex + 1}: quoted CSV fields are not supported; quote characters must be preserved as data`);
+      fail(`line ${lineNumber}, field ${fieldIndex + 1}: field is wrapped entirely in double quotes; this looks like CSV quoting, which this format does not use. Verify against the official ISED file before changing the importer.`);
     }
   }
 }
@@ -298,7 +310,7 @@ export function parseDelimitedQuestionBank(bytes: Uint8Array, label = SOURCE_TXT
     if (fields.length !== EXPECTED_HEADERS.length) {
       fail(`${label}: line ${lineNumber} expected ${EXPECTED_HEADERS.length} fields, found ${fields.length}`);
     }
-    assertNoCsvQuoteWrappers(fields, lineNumber);
+    assertNoUnsupportedCsvQuotes(fields, lineNumber);
     rows.push({ lineNumber, sourceOrder: lineIndex, fields });
   }
 
@@ -353,6 +365,7 @@ export function findPositionDependentAnswerIssues(questions: readonly Question[]
               language,
               text,
               pattern: pattern.source,
+              patternFlags: pattern.flags,
             });
           }
         }
@@ -568,13 +581,13 @@ function validatePositionDependentLint(questions: readonly Question[]): void {
   const issues = findPositionDependentAnswerIssues(questions);
   if (issues.length > 0) {
     const formatted = issues
-      .map((issue) => `${issue.questionId} answer ${issue.sourceIndex} ${issue.language}: ${JSON.stringify(issue.text)} matched /${issue.pattern}/i`)
+      .map((issue) => `${issue.questionId} answer ${issue.sourceIndex} ${issue.language}: ${JSON.stringify(issue.text)} matched /${issue.pattern}/${issue.patternFlags}`)
       .join("\n");
     fail(`position-dependent answer lint found ${issues.length} issue(s):\n${formatted}`);
   }
 }
 
-function validateSourceManifest(sourceManifest: SourceManifest, sourceSha256: string): SourceManifestFile {
+function validateSourceManifest(sourceManifest: SourceManifest, sourceSha256: string, sourceByteCount: number): SourceManifestFile {
   const sourceRelativePath = "questions/amat_basic_quest_delim.txt";
   const sourceFile = sourceManifest.files.find((file) => file.path === sourceRelativePath);
   if (sourceFile === undefined) {
@@ -582,6 +595,15 @@ function validateSourceManifest(sourceManifest: SourceManifest, sourceSha256: st
   }
   if (sourceFile.sha256 !== sourceSha256) {
     fail(`${SOURCE_TXT_PATH}: SHA-256 mismatch against manifest.json; expected ${sourceFile.sha256}, found ${sourceSha256}`);
+  }
+  if (sourceFile.encoding !== "UTF-8") {
+    fail(`${SOURCE_MANIFEST_PATH}: ${sourceRelativePath} encoding expected UTF-8, found ${sourceFile.encoding ?? "missing"}`);
+  }
+  if (sourceFile.lineEndings !== "CRLF") {
+    fail(`${SOURCE_MANIFEST_PATH}: ${sourceRelativePath} lineEndings expected CRLF, found ${sourceFile.lineEndings ?? "missing"}`);
+  }
+  if (sourceFile.bytes !== sourceByteCount) {
+    fail(`${SOURCE_MANIFEST_PATH}: ${sourceRelativePath} bytes expected ${sourceByteCount}, found ${sourceFile.bytes ?? "missing"}`);
   }
   if (sourceManifest.bankEffectiveDate !== BANK_EFFECTIVE_DATE) {
     fail(`${SOURCE_MANIFEST_PATH}: expected bankEffectiveDate ${BANK_EFFECTIVE_DATE}, found ${sourceManifest.bankEffectiveDate ?? "missing"}`);
@@ -608,7 +630,7 @@ export async function importBasicQuestionBank(rootDir = process.cwd()): Promise<
   ]);
 
   const sourceManifest = JSON.parse(sourceManifestText) as SourceManifest;
-  const sourceFile = validateSourceManifest(sourceManifest, sourceSha256);
+  const sourceFile = validateSourceManifest(sourceManifest, sourceSha256, sourceBytes.byteLength);
   validateSha256Sums(sha256SumsText, sourceSha256);
 
   const [handCategoriesText, examFactsText] = await Promise.all([

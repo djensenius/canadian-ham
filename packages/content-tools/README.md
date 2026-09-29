@@ -35,7 +35,8 @@ JSON differs. It is intended for CI and reproducibility checks.
 
 Note on quote characters: the current official TXT contains literal quote
 characters at the start or end of some answer fields (for example quoted labels
-such as `"A"`). The importer preserves those characters as data and rejects only
-simple CSV-style wrapper fields; it does not unescape or trim field values.
+such as `"A"`). The importer preserves those characters as data and rejects
+wrapper-shaped CSV fields and doubled-quote CSV escapes; it does not unescape or
+trim field values.
 
 Relevant docs: [`../../docs/architecture.md`](../../docs/architecture.md), [`../../docs/exam-facts.md`](../../docs/exam-facts.md), [`../../docs/requirements.md`](../../docs/requirements.md).

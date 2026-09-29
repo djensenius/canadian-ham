@@ -71,7 +71,7 @@ Tooling decisions:
 
 1. Vendor the official Basic 2025 TXT, question-bank PDF, and English reference PDFs under `content/sources/ised/basic-2025-07-15/` for private development under the [interim private-development policy](content-licensing.md#interim-private-development-policy); public exposure and distribution remain gated by the [public-release gate](content-licensing.md#public-release-gate).
 2. Record SHA-256 checksums in a manifest and fail import on any checksum mismatch.
-3. Parse the committed delimited TXT in importer and CI runs with strict format checks: trim header names only, preserve field values exactly, and reject quoted fields or embedded newlines.
+3. Parse the committed delimited TXT in importer and CI runs with strict format checks: trim header names only, preserve field values exactly, reject wrapper-shaped CSV fields and doubled-quote CSV escapes, reject embedded newlines, and preserve quote characters that are part of official wording.
 4. Normalize records into JSON with stable IDs and language-keyed text under `content/generated/basic-2025-07-15/`.
 5. Derive categories and subsections from question IDs.
 6. Join hand-maintained category metadata.

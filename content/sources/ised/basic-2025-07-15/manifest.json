@@ -26,7 +26,8 @@
       "bytes": 517316,
       "retrievedAt": "2026-09-29",
       "fetchedFresh": true,
-      "encoding": "UTF-8, CRLF"
+      "encoding": "UTF-8",
+      "lineEndings": "CRLF"
     },
     {
       "path": "questions/readme_basic.txt",
@@ -37,7 +38,8 @@
       "bytes": 303,
       "retrievedAt": "2026-09-29",
       "fetchedFresh": true,
-      "encoding": "detect"
+      "encoding": "US-ASCII",
+      "lineEndings": "LF"
     },
     {
       "path": "questions/lisezmoi_base.txt",
@@ -48,7 +50,8 @@
       "bytes": 327,
       "retrievedAt": "2026-09-29",
       "fetchedFresh": true,
-      "encoding": "Windows-1252"
+      "encoding": "Windows-1252",
+      "lineEndings": "LF"
     },
     {
       "path": "amateur_basic_questions_en_2025-07-15.pdf",
@@ -59,7 +62,8 @@
       "bytes": 312363,
       "retrievedAt": "2026-09-29",
       "fetchedFresh": true,
-      "encoding": "binary"
+      "encoding": "binary",
+      "lineEndings": null
     },
     {
       "path": "reference/Reference Material for Amateur Radio Exam Basic EN 2025.pdf",
@@ -70,7 +74,8 @@
       "bytes": 456683,
       "retrievedAt": "2026-09-29",
       "fetchedFresh": true,
-      "encoding": "binary"
+      "encoding": "binary",
+      "lineEndings": null
     },
     {
       "path": "reference/Reference Material for Amateur Radio Training Basic EN 2025.pdf",
@@ -81,7 +86,8 @@
       "bytes": 539260,
       "retrievedAt": "2026-09-29",
       "fetchedFresh": true,
-      "encoding": "binary"
+      "encoding": "binary",
+      "lineEndings": null
     }
   ]
 }
