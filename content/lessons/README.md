@@ -61,6 +61,8 @@ pnpm --dir packages/content-tools check:quizzes:module ../../content/lessons/m4-
 
 A module-scoped run checks the quiz files referenced by lessons under that root and reports orphan quiz files only for that module's `QZ-L-00N-*` prefix.
 
+The quiz checker also runs a **CONCEPT-CHECK OVERLAP** lint. For each concept check, it compares the prompt plus correct choice with every official question plus correct answer in the same quiz, and with each line in that lesson's `## Try it` section. The heuristic uses content-word token Jaccard after stop-word removal plus shared content-word 5-grams. Current thresholds are documented in `packages/content-tools/src/check-quizzes.ts`: Jaccard `>= 0.88`, at least `4` shared 5-grams, or at least `1` shared 5-gram with Jaccard `>= 0.82`. The check is intentionally narrow: it catches restatements of the official bank or Try-it items, but it does not attempt a broad "off-topic distractor" judgment.
+
 ## Explanation check
 
 Run the zero-dependency explanation checker from the repository root:
@@ -75,6 +77,12 @@ The checker also supports category and module filters for focused content work, 
 node packages/content-tools/src/check-explanations.ts --module M5
 node packages/content-tools/src/check-explanations.ts --category B-005
 ```
+
+The explanation checker includes three distractor-note lints in addition to schema, citation, and `DUPLICATE-NOTE` checks:
+
+- Each explanation must use the `Why the distractors are wrong:` heading before per-choice notes.
+- The distractor list must not include `sourceIndex 0`, and it must include a note for every incorrect choice (`sourceIndex` 1-3 in the current Basic bank).
+- The **TEMPLATE** lint strips the quoted choice text, tokenizes each distractor note, and flags any word 6-gram that appears in distractor notes for at least 4 different questions within the same category. Allowed repeated technical phrases, if any, must be documented with reasons in [`../../packages/content-tools/explanation-template-allowlist.json`](../../packages/content-tools/explanation-template-allowlist.json).
 
 ## Lesson originality check
 

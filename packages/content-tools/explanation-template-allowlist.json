@@ -1,0 +1,24 @@
+{
+  "word6Grams": [
+    {
+      "categoryId": "B-005",
+      "phrase": "this is one hundred times too",
+      "reason": "Reviewed numeric-conversion distractor wording for SI-prefix errors; the repeated phrase identifies the same order-of-magnitude relationship, not a reusable explanation template."
+    },
+    {
+      "categoryId": "B-006",
+      "phrase": "m the free space half wave",
+      "reason": "Reviewed antenna-length distractors repeatedly contrast metre results with the free-space half-wave estimate; the phrase is a standard technical label adjacent to units."
+    },
+    {
+      "categoryId": "B-006",
+      "phrase": "the free space half wave estimate",
+      "reason": "Reviewed antenna-length distractors repeatedly contrast practical shortened formulas with the free-space half-wave estimate; this is allowed technical vocabulary."
+    },
+    {
+      "categoryId": "B-006",
+      "phrase": "parallel to the earth s surface",
+      "reason": "Reviewed polarization distractors use the standard description of horizontal electric-field orientation relative to Earth's surface."
+    }
+  ]
+}
