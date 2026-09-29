@@ -687,8 +687,7 @@ private struct LessonQuizView: View {
                 }
                 Spacer()
                 Button("Retry quiz") { restart() }
-                    .buttonStyle(.bordered)
-                    .tint(DesignTokens.Colors.ink)
+                    .buttonStyle(AccessibleSecondaryButtonStyle())
             }
 
             if let errorMessage {

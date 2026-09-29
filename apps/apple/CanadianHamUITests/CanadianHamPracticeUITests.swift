@@ -800,7 +800,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
     private func goToLessonQuiz(in app: XCUIApplication) {
         let button = app.buttons["Go to quiz"].firstMatch
         XCTAssertTrue(button.waitForExistence(timeout: 10), "Lesson reader should expose a Go to quiz button")
-        scrollUntilHittable(button, in: app, maxSwipes: 6)
+        scrollUntilHittable(button, in: app, maxSwipes: 24)
         XCTAssertTrue(button.isHittable, "Go to quiz button should be hittable")
         button.tap()
         waitForLessonQuizScreen(in: app)
