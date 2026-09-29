@@ -1288,7 +1288,7 @@ function ExplanationPanel({ explanation, language, choicePermutation }: { readon
   );
 }
 
-function CitationLink({ citation }: { readonly citation: Explanation["citations"][number] }) {
+export function CitationLink({ citation }: { readonly citation: Explanation["citations"][number] }) {
   if (citation.type === "lesson" && citation.id !== undefined) {
     const lesson = lessonsById.get(citation.id);
     if (lesson !== undefined) {
@@ -1296,7 +1296,11 @@ function CitationLink({ citation }: { readonly citation: Explanation["citations"
     }
   }
   if (citation.url !== undefined) {
-    return <a href={citation.url} target="_blank" rel="noreferrer">{citation.id ?? citation.type}</a>;
+    return (
+      <a href={citation.url} target="_blank" rel="noopener noreferrer">
+        {citation.id ?? citation.type} <span className="external-site-hint">(external site)</span> <span className="new-tab-hint">(opens in new tab)</span>
+      </a>
+    );
   }
   return <>{citation.id ?? citation.type}</>;
 }

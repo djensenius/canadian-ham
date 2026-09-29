@@ -446,6 +446,7 @@ li {
   background: var(--ch-color-paper-inset);
 }
 
+.external-site-hint,
 .new-tab-hint {
   font-weight: 700;
 }
