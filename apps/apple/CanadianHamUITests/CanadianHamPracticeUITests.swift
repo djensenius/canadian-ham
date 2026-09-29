@@ -356,21 +356,14 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func performAudit(on app: XCUIApplication, context: String) throws {
-        if context.contains("practice") {
-            return
-        }
         if #available(iOS 17.0, *) {
             var findings: [String] = []
-            do {
-                try app.performAccessibilityAudit { issue in
-                    guard !self.shouldIgnoreAuditIssue(issue, context: context) else { return false }
-                    findings.append(self.describe(issue))
-                    return true
-                }
-            } catch {
-                if !(findings.isEmpty && context.contains("practice")) {
-                    throw error
-                }
+            let auditTypes: XCUIAccessibilityAuditType = context.contains("practice")
+                ? [.elementDetection, .hitRegion, .sufficientElementDescription, .dynamicType, .textClipped, .trait]
+                : .all
+            try app.performAccessibilityAudit(for: auditTypes) { issue in
+                findings.append(self.describe(issue))
+                return true
             }
             XCTAssertTrue(findings.isEmpty, "Accessibility audit reported issues for \(context): \(findings.joined(separator: " | "))")
         } else {
