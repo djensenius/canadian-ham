@@ -1,4 +1,5 @@
 import { subsectionIdFromQuestionId } from "./exam.ts";
+import { parseCanonicalUtcTimestamp, requireCanonicalUtcTimestamp } from "./timestamps.ts";
 
 const SECONDS_PER_DAY = 86_400;
 const LEITNER_INTERVALS_BY_BOX: Record<number, number> = {
@@ -43,6 +44,7 @@ export function applyAnswer(
   existing: QuestionProgressRecord | null | undefined,
   update: AnswerUpdate,
 ): QuestionProgressRecord {
+  requireCanonicalUtcTimestamp(update.now, "update.now");
   const previousBox = existing?.leitner.box ?? 0;
   const nextBox = update.isCorrect ? Math.min(previousBox + 1, 5) : 0;
   const dueAt = update.isCorrect ? addUtcSeconds(update.now, LEITNER_INTERVALS_BY_BOX[nextBox]) : normalizeIso(update.now);
@@ -78,7 +80,7 @@ export function appendRecentResult(existing: readonly boolean[], newest: boolean
 }
 
 export function isDue(record: Pick<QuestionProgressRecord, "leitner">, now: string): boolean {
-  return Date.parse(record.leitner.dueAt) <= Date.parse(now);
+  return parseCanonicalUtcTimestamp(record.leitner.dueAt, "record.leitner.dueAt") <= parseCanonicalUtcTimestamp(now, "now");
 }
 
 export function dueQuestionIds(records: readonly QuestionProgressRecord[], now: string): string[] {

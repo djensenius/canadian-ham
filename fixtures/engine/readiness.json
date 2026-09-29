@@ -25,7 +25,7 @@
       "input": {
         "completedExams": [
           {
-            "submittedAt": "2026-01-03T00:00:00Z",
+            "submittedAt": "2026-01-03T00:00:00.000Z",
             "score": {
               "correct": 95,
               "total": 100,
@@ -89,7 +89,7 @@
         "state": "not-enough-data",
         "consideredExamCount": 1,
         "consideredSubmittedAt": [
-          "2026-01-03T00:00:00Z"
+          "2026-01-03T00:00:00.000Z"
         ],
         "reasons": [
           {
@@ -100,69 +100,11 @@
       }
     },
     {
-      "id": "readiness-last-three-aggregation-ignores-older-exam",
+      "id": "readiness-last-three-aggregation-ignores-older-exam-and-sorts-shuffled-input",
       "input": {
         "completedExams": [
           {
-            "submittedAt": "2026-01-05T00:00:00Z",
-            "score": {
-              "correct": 82,
-              "total": 100,
-              "percent": 82
-            },
-            "categoryBreakdown": [
-              {
-                "categoryId": "B-001",
-                "correct": 9,
-                "total": 10,
-                "percent": 90
-              },
-              {
-                "categoryId": "B-002",
-                "correct": 9,
-                "total": 10,
-                "percent": 90
-              },
-              {
-                "categoryId": "B-003",
-                "correct": 9,
-                "total": 10,
-                "percent": 90
-              },
-              {
-                "categoryId": "B-004",
-                "correct": 9,
-                "total": 10,
-                "percent": 90
-              },
-              {
-                "categoryId": "B-005",
-                "correct": 9,
-                "total": 10,
-                "percent": 90
-              },
-              {
-                "categoryId": "B-006",
-                "correct": 9,
-                "total": 10,
-                "percent": 90
-              },
-              {
-                "categoryId": "B-007",
-                "correct": 9,
-                "total": 10,
-                "percent": 90
-              },
-              {
-                "categoryId": "B-008",
-                "correct": 9,
-                "total": 10,
-                "percent": 90
-              }
-            ]
-          },
-          {
-            "submittedAt": "2026-01-04T00:00:00Z",
+            "submittedAt": "2026-01-04T00:00:00.000Z",
             "score": {
               "correct": 81,
               "total": 100,
@@ -220,7 +162,123 @@
             ]
           },
           {
-            "submittedAt": "2026-01-03T00:00:00Z",
+            "submittedAt": "2026-01-02T00:00:00.000Z",
+            "score": {
+              "correct": 40,
+              "total": 100,
+              "percent": 40
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 0,
+                "total": 10,
+                "percent": 0
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          },
+          {
+            "submittedAt": "2026-01-05T00:00:00.000Z",
+            "score": {
+              "correct": 82,
+              "total": 100,
+              "percent": 82
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          },
+          {
+            "submittedAt": "2026-01-03T00:00:00.000Z",
             "score": {
               "correct": 72,
               "total": 100,
@@ -276,64 +334,6 @@
                 "percent": 90
               }
             ]
-          },
-          {
-            "submittedAt": "2026-01-02T00:00:00Z",
-            "score": {
-              "correct": 40,
-              "total": 100,
-              "percent": 40
-            },
-            "categoryBreakdown": [
-              {
-                "categoryId": "B-001",
-                "correct": 1,
-                "total": 10,
-                "percent": 10
-              },
-              {
-                "categoryId": "B-002",
-                "correct": 9,
-                "total": 10,
-                "percent": 90
-              },
-              {
-                "categoryId": "B-003",
-                "correct": 9,
-                "total": 10,
-                "percent": 90
-              },
-              {
-                "categoryId": "B-004",
-                "correct": 9,
-                "total": 10,
-                "percent": 90
-              },
-              {
-                "categoryId": "B-005",
-                "correct": 9,
-                "total": 10,
-                "percent": 90
-              },
-              {
-                "categoryId": "B-006",
-                "correct": 9,
-                "total": 10,
-                "percent": 90
-              },
-              {
-                "categoryId": "B-007",
-                "correct": 9,
-                "total": 10,
-                "percent": 90
-              },
-              {
-                "categoryId": "B-008",
-                "correct": 9,
-                "total": 10,
-                "percent": 90
-              }
-            ]
           }
         ],
         "dueReviewCount": 0
@@ -342,9 +342,9 @@
         "state": "honours-ready",
         "consideredExamCount": 3,
         "consideredSubmittedAt": [
-          "2026-01-05T00:00:00Z",
-          "2026-01-04T00:00:00Z",
-          "2026-01-03T00:00:00Z"
+          "2026-01-05T00:00:00.000Z",
+          "2026-01-04T00:00:00.000Z",
+          "2026-01-03T00:00:00.000Z"
         ],
         "reasons": [
           {
@@ -360,7 +360,7 @@
       "input": {
         "completedExams": [
           {
-            "submittedAt": "2026-01-05T00:00:00Z",
+            "submittedAt": "2026-01-05T00:00:00.000Z",
             "score": {
               "correct": 95,
               "total": 100,
@@ -418,7 +418,7 @@
             ]
           },
           {
-            "submittedAt": "2026-01-04T00:00:00Z",
+            "submittedAt": "2026-01-04T00:00:00.000Z",
             "score": {
               "correct": 95,
               "total": 100,
@@ -482,8 +482,8 @@
         "state": "needs-review",
         "consideredExamCount": 2,
         "consideredSubmittedAt": [
-          "2026-01-05T00:00:00Z",
-          "2026-01-04T00:00:00Z"
+          "2026-01-05T00:00:00.000Z",
+          "2026-01-04T00:00:00.000Z"
         ],
         "reasons": [
           {
@@ -500,7 +500,7 @@
       "input": {
         "completedExams": [
           {
-            "submittedAt": "2026-01-05T00:00:00Z",
+            "submittedAt": "2026-01-05T00:00:00.000Z",
             "score": {
               "correct": 90,
               "total": 100,
@@ -558,7 +558,7 @@
             ]
           },
           {
-            "submittedAt": "2026-01-04T00:00:00Z",
+            "submittedAt": "2026-01-04T00:00:00.000Z",
             "score": {
               "correct": 88,
               "total": 100,
@@ -622,8 +622,8 @@
         "state": "needs-review",
         "consideredExamCount": 2,
         "consideredSubmittedAt": [
-          "2026-01-05T00:00:00Z",
-          "2026-01-04T00:00:00Z"
+          "2026-01-05T00:00:00.000Z",
+          "2026-01-04T00:00:00.000Z"
         ],
         "reasons": [
           {
@@ -634,11 +634,150 @@
       }
     },
     {
+      "id": "readiness-due-review-count-four-still-allows-honours-ready",
+      "input": {
+        "completedExams": [
+          {
+            "submittedAt": "2026-01-05T00:00:00.000Z",
+            "score": {
+              "correct": 90,
+              "total": 100,
+              "percent": 90
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          },
+          {
+            "submittedAt": "2026-01-04T00:00:00.000Z",
+            "score": {
+              "correct": 88,
+              "total": 100,
+              "percent": 88
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          }
+        ],
+        "dueReviewCount": 4
+      },
+      "expectedOutput": {
+        "state": "honours-ready",
+        "consideredExamCount": 2,
+        "consideredSubmittedAt": [
+          "2026-01-05T00:00:00.000Z",
+          "2026-01-04T00:00:00.000Z"
+        ],
+        "reasons": [
+          {
+            "type": "exam-threshold",
+            "threshold": 80,
+            "countAtOrAbove": 2
+          }
+        ]
+      }
+    },
+    {
       "id": "readiness-honours-ready-with-two-of-last-three-at-or-above-eighty",
       "input": {
         "completedExams": [
           {
-            "submittedAt": "2026-01-05T00:00:00Z",
+            "submittedAt": "2026-01-05T00:00:00.000Z",
             "score": {
               "correct": 83,
               "total": 100,
@@ -696,7 +835,7 @@
             ]
           },
           {
-            "submittedAt": "2026-01-04T00:00:00Z",
+            "submittedAt": "2026-01-04T00:00:00.000Z",
             "score": {
               "correct": 79,
               "total": 100,
@@ -754,7 +893,7 @@
             ]
           },
           {
-            "submittedAt": "2026-01-03T00:00:00Z",
+            "submittedAt": "2026-01-03T00:00:00.000Z",
             "score": {
               "correct": 80,
               "total": 100,
@@ -818,9 +957,9 @@
         "state": "honours-ready",
         "consideredExamCount": 3,
         "consideredSubmittedAt": [
-          "2026-01-05T00:00:00Z",
-          "2026-01-04T00:00:00Z",
-          "2026-01-03T00:00:00Z"
+          "2026-01-05T00:00:00.000Z",
+          "2026-01-04T00:00:00.000Z",
+          "2026-01-03T00:00:00.000Z"
         ],
         "reasons": [
           {
@@ -836,7 +975,7 @@
       "input": {
         "completedExams": [
           {
-            "submittedAt": "2026-01-05T00:00:00Z",
+            "submittedAt": "2026-01-05T00:00:00.000Z",
             "score": {
               "correct": 75,
               "total": 100,
@@ -894,7 +1033,7 @@
             ]
           },
           {
-            "submittedAt": "2026-01-04T00:00:00Z",
+            "submittedAt": "2026-01-04T00:00:00.000Z",
             "score": {
               "correct": 79,
               "total": 100,
@@ -952,7 +1091,7 @@
             ]
           },
           {
-            "submittedAt": "2026-01-03T00:00:00Z",
+            "submittedAt": "2026-01-03T00:00:00.000Z",
             "score": {
               "correct": 65,
               "total": 100,
@@ -1016,9 +1155,9 @@
         "state": "pass-ready",
         "consideredExamCount": 3,
         "consideredSubmittedAt": [
-          "2026-01-05T00:00:00Z",
-          "2026-01-04T00:00:00Z",
-          "2026-01-03T00:00:00Z"
+          "2026-01-05T00:00:00.000Z",
+          "2026-01-04T00:00:00.000Z",
+          "2026-01-03T00:00:00.000Z"
         ],
         "reasons": [
           {
@@ -1034,7 +1173,7 @@
       "input": {
         "completedExams": [
           {
-            "submittedAt": "2026-01-05T00:00:00Z",
+            "submittedAt": "2026-01-05T00:00:00.000Z",
             "score": {
               "correct": 69,
               "total": 100,
@@ -1092,7 +1231,7 @@
             ]
           },
           {
-            "submittedAt": "2026-01-04T00:00:00Z",
+            "submittedAt": "2026-01-04T00:00:00.000Z",
             "score": {
               "correct": 65,
               "total": 100,
@@ -1156,8 +1295,8 @@
         "state": "needs-review",
         "consideredExamCount": 2,
         "consideredSubmittedAt": [
-          "2026-01-05T00:00:00Z",
-          "2026-01-04T00:00:00Z"
+          "2026-01-05T00:00:00.000Z",
+          "2026-01-04T00:00:00.000Z"
         ],
         "reasons": []
       }

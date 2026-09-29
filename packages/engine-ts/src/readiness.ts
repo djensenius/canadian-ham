@@ -1,4 +1,5 @@
 import { percentFor, type CategoryBreakdownEntry } from "./scoring.ts";
+import { parseCanonicalUtcTimestamp, requireCanonicalUtcTimestamp } from "./timestamps.ts";
 
 export type ReadinessState = "not-enough-data" | "needs-review" | "pass-ready" | "honours-ready";
 
@@ -31,7 +32,10 @@ export type ReadinessReason =
   | { readonly type: "exam-threshold"; readonly threshold: 70 | 80; readonly countAtOrAbove: number };
 
 export function computeReadiness(input: ReadinessInput): ReadinessResult {
-  const completed = [...input.completedExams].toSorted((a, b) => Date.parse(b.submittedAt) - Date.parse(a.submittedAt));
+  assertUniqueSubmittedAt(input.completedExams);
+  const completed = [...input.completedExams].toSorted(
+    (a, b) => parseCanonicalUtcTimestamp(b.submittedAt, "submittedAt") - parseCanonicalUtcTimestamp(a.submittedAt, "submittedAt"),
+  );
   if (completed.length < 2) {
     return {
       state: "not-enough-data",
@@ -87,6 +91,17 @@ export function computeReadiness(input: ReadinessInput): ReadinessResult {
     consideredSubmittedAt: considered.map((attempt) => attempt.submittedAt),
     reasons: [],
   };
+}
+
+function assertUniqueSubmittedAt(attempts: readonly ReadinessExamAttempt[]): void {
+  const seen = new Set<string>();
+  for (const attempt of attempts) {
+    requireCanonicalUtcTimestamp(attempt.submittedAt, "submittedAt");
+    if (seen.has(attempt.submittedAt)) {
+      throw new Error(`completedExams must not contain duplicate submittedAt timestamp ${attempt.submittedAt}`);
+    }
+    seen.add(attempt.submittedAt);
+  }
 }
 
 function aggregateWeakCategories(attempts: readonly ReadinessExamAttempt[]): string[] {

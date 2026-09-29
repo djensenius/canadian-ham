@@ -58,8 +58,8 @@ export function buildSubsectionsFromQuestions(questions: readonly QuestionRecord
 
 export function generateExam(input: ExamGenerationInput): GeneratedExam {
   const answerSourceIndexes = input.answerSourceIndexes ?? [0, 1, 2, 3];
-  if (answerSourceIndexes.length !== 4 || new Set(answerSourceIndexes).size !== 4 || !answerSourceIndexes.includes(0)) {
-    throw new Error("answerSourceIndexes must contain four unique source indexes including correct source index 0");
+  if (!isCanonicalAnswerSourceIndexes(answerSourceIndexes)) {
+    throw new Error("answerSourceIndexes must be exactly [0,1,2,3]");
   }
 
   const sortedSubsections = [...input.subsections]
@@ -117,6 +117,10 @@ export function categoryCounts(items: readonly Pick<GeneratedExamItem, "category
     counts[item.categoryId] = (counts[item.categoryId] ?? 0) + 1;
   }
   return Object.fromEntries(Object.entries(counts).toSorted(([a], [b]) => compareOrdinal(a, b)));
+}
+
+function isCanonicalAnswerSourceIndexes(value: readonly number[]): value is readonly [0, 1, 2, 3] {
+  return value.length === 4 && value[0] === 0 && value[1] === 1 && value[2] === 2 && value[3] === 3;
 }
 
 function compareOrdinal(a: string, b: string): number {

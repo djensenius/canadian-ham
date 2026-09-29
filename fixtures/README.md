@@ -26,7 +26,26 @@ All engine fixtures are plain JSON and have:
 }
 ```
 
-Consumers must reject unknown `schemaVersion` or `kind` values. Fixtures deliberately use stable IDs, source indexes, timestamps, and counts rather than localized UI strings. `choicePermutation[displayIndex] = sourceIndex`; source index `0` is the correct answer.
+Consumers must reject unknown `schemaVersion` or `kind` values. The TypeScript engine fixture runner deliberately loads only `fixtures/engine/**/*.json`; sibling fixture folders such as `fixtures/importer/` belong to other tools. Fixtures deliberately use stable IDs, source indexes, timestamps, and counts rather than localized UI strings.
+
+Shared exactness rules:
+
+- `choicePermutation[displayIndex] = sourceIndex`; source index `0` is the correct answer.
+- `answerSourceIndexes` must be exactly `[0, 1, 2, 3]`; any other order or values are invalid.
+- `categoryId` is the first five characters of `questionId` when it is derived.
+- Timestamps must use canonical UTC millisecond format `YYYY-MM-DDTHH:MM:SS.sssZ` (for example, `2026-01-02T00:00:00.000Z`). Outputs use that format and runners compare timestamp strings exactly.
+- Percent values are IEEE-754 doubles computed as `(correct / total) * 100` in that order; if `total === 0`, percent is `0`. Fixture comparisons are exact.
+- Output ordering: `incorrectQuestionIds` preserve input item order; `weakSubsectionIds`, `dueQuestionIds`, `categoryBreakdown`, and Leitner sequence `records` are sorted by ordinal ID.
+
+### Engine fixture files and pinned rules
+
+- `engine/rng-vectors.json` pins FNV-1a 64 seed hashing, PCG32 initialization, and uint32 draw order for multiple seed strings.
+- `engine/exam-generation-small.json` pins subsection/question sorting, answerSourceIndexes `[0,1,2,3]`, exact RNG consumption order, item shuffle order, and choice permutations for a small synthetic exam.
+- `engine/exam-generation-full-bank-basic-2025-07-15.json` pins the same exam-generation rules against `content/generated/basic-2025-07-15/questions.json`, including 100 items, one item per subsection, and category counts `25/9/21/6/13/13/8/5`.
+- `engine/scoring.json` pins pass/honours thresholds, non-100 percentage thresholds for synthetic cases, unanswered-as-incorrect scoring, category breakdown sorting, `incorrectQuestionIds` input order, and exact percent values.
+- `engine/weak-subsections.json` pins recent-result append/truncate order, pooled subsection attempts across multiple question records, below-70 weakness, exactly-70 not weak, a single pooled attempt not weak, and latest-exam misses/unanswered items unioned into the weak subsection set.
+- `engine/leitner.json` pins canonical timestamp outputs, virtual box 0 first-answer handling, all promotion intervals (1, 3, 7, 14, and 30 days), box-5 cap, incorrect reset to immediate due, repeated-answer sequence ordering, due inclusivity, and ordinal sorting of due IDs/records.
+- `engine/readiness.json` pins readiness sorting by `submittedAt` descending even when input is shuffled, rejection semantics for duplicate timestamps (covered by engine tests), last-three exam aggregation, weak-category precedence, due-review threshold `>= 5` including the count-4 boundary, honours/pass thresholds, final `needs-review` with `reasons: []`, and `consideredSubmittedAt` repeating input timestamp strings unchanged after sorting.
 
 ### `rng-vectors`
 
@@ -38,13 +57,13 @@ Consumers must reject unknown `schemaVersion` or `kind` values. Fixtures deliber
     {
       "id": "rng-vector-fixture-seed-001",
       "rng": { "algorithm": "fnv1a64-pcg32-xsh-rr", "seed": "fixture-seed-001" },
-      "expectedOutput": { "first8Uint32": [0, 1, 2] }
+      "expectedOutput": { "first8Uint32": [3349296149, 2984901485, 227229724] }
     }
   ]
 }
 ```
 
-The seed string is encoded as UTF-8 with no normalization, hashed with FNV-1a 64-bit, and used as PCG32 `initstate`. `first8Uint32` contains decimal uint32 values in draw order.
+The seed string is encoded as UTF-8 with no normalization, hashed with FNV-1a 64-bit, and used as PCG32 `initstate`. `first8Uint32` contains decimal uint32 values in draw order; the canonical full vectors live in [`engine/rng-vectors.json`](engine/rng-vectors.json).
 
 ### `exam-generation`
 
@@ -81,7 +100,7 @@ The seed string is encoded as UTF-8 with no normalization, hashed with FNV-1a 64
 }
 ```
 
-Generation order is: sort subsections by ordinal ID, sort question IDs by ordinal ID, select one question per subsection with bounded RNG, shuffle selected items, then shuffle choices for each final item in display order. Full-bank fixtures include all 100 input subsections and exact expected IDs/order/permutations.
+Generation order is: sort subsections by ordinal ID, sort question IDs by ordinal ID, select one question per subsection with bounded RNG, shuffle selected items, then shuffle choices for each final item in display order. `requireFullMockExam` is optional and defaults to `false`. Full-bank fixtures include all 100 input subsections and exact expected IDs/order/permutations. Canonical exact outputs live in [`engine/exam-generation-small.json`](engine/exam-generation-small.json) and [`engine/exam-generation-full-bank-basic-2025-07-15.json`](engine/exam-generation-full-bank-basic-2025-07-15.json).
 
 ### `scoring`
 
@@ -119,7 +138,7 @@ Generation order is: sort subsections by ordinal ID, sort question IDs by ordina
 }
 ```
 
-`selectedSourceIndex: null` means unanswered and is scored incorrect. Percent is numeric, not localized text.
+`selectedSourceIndex: null` means unanswered and is scored incorrect. Percent is numeric, not localized text. For non-100 synthetic fixtures, pass and honours compare against percent (`>= 70` and `>= 80`) so the small cases remain meaningful.
 
 ### `weak-subsections`
 
@@ -147,7 +166,7 @@ Generation order is: sort subsections by ordinal ID, sort question IDs by ordina
 }
 ```
 
-`recentResults` is oldest to newest and keeps at most five booleans. Pooled subsection attempts count every boolean from every stored question record in that subsection. A subsection is weak when it has at least two pooled attempts and correctness below 70%, or when it was missed/unanswered in the latest mock exam.
+`recentResults` is oldest to newest and keeps at most five booleans. Progress-derived weakness pools every boolean from every stored question record in a subsection. A subsection is weak when it has at least two pooled attempts and correctness below 70%. Latest-exam misses and unanswered items are separately added to the same output set, so `weakSubsectionIds` is the sorted union of progress-derived weak subsections and latest-exam weak subsections.
 
 ### `leitner`
 
@@ -164,7 +183,7 @@ Generation order is: sort subsections by ordinal ID, sort question IDs by ordina
           "questionId": "B-006-004-001",
           "bankId": "basic-2025-07-15",
           "isCorrect": true,
-          "now": "2026-01-02T00:00:00Z"
+          "now": "2026-01-02T00:00:00.000Z"
         }
       },
       "expectedOutput": { "record": {} }
@@ -175,7 +194,7 @@ Generation order is: sort subsections by ordinal ID, sort question IDs by ordina
 }
 ```
 
-`now` is always an explicit input. Implementations must not read the wall clock while applying fixture updates. Due intervals are fixed UTC multiples of 86,400 seconds. Unseen questions have no record and are not due; the virtual box 0 state is used only when applying the first answer.
+`now` is always an explicit canonical timestamp input. Implementations must not read the wall clock while applying fixture updates. Due intervals are fixed UTC multiples of 86,400 seconds. Unseen questions have no record and are not due; the virtual box 0 state is used only when applying the first answer.
 
 ### `readiness`
 
@@ -198,7 +217,7 @@ Generation order is: sort subsections by ordinal ID, sort question IDs by ordina
 }
 ```
 
-Completed exams are sorted by `submittedAt` descending before evaluation. Only the most recent three are considered. Precedence is: fewer than two exams, weak category aggregate below 70%, due review count at least five, honours-ready, pass-ready, then needs-review.
+Completed exams may be supplied in any order and are sorted by `submittedAt` descending before evaluation. Duplicate `submittedAt` timestamps are rejected because ties are not defined. Only the most recent three are considered. Precedence is: fewer than two exams, weak category aggregate below 70%, due review count at least five, honours-ready, pass-ready, then needs-review. The final fallback `needs-review` has `reasons: []`.
 
 ## Ambiguities recorded for implementation
 

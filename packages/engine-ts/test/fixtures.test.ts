@@ -19,11 +19,11 @@ import {
 } from "../src/index.ts";
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "../../..");
-const fixturesRoot = join(repoRoot, "fixtures");
+const fixturesRoot = join(repoRoot, "fixtures/engine");
 
 const fixturePaths = await jsonFiles(fixturesRoot);
 
-test("every fixtures/**/*.json engine fixture matches the TypeScript engine", async (t) => {
+test("every fixtures/engine/**/*.json engine fixture matches the TypeScript engine", async (t) => {
   assert.ok(fixturePaths.length > 0, "expected at least one fixture JSON file");
   for (const fixturePath of fixturePaths) {
     const relativePath = fixturePath.slice(repoRoot.length + 1);

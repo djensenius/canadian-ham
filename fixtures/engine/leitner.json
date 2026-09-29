@@ -10,7 +10,7 @@
           "questionId": "B-006-004-001",
           "bankId": "basic-2025-07-15",
           "isCorrect": true,
-          "now": "2026-01-02T00:00:00Z"
+          "now": "2026-01-02T00:00:00.000Z"
         }
       },
       "expectedOutput": {
@@ -55,7 +55,7 @@
           "questionId": "B-006-004-007",
           "bankId": "basic-2025-07-15",
           "isCorrect": true,
-          "now": "2026-01-02T00:00:00Z"
+          "now": "2026-01-02T00:00:00.000Z"
         }
       },
       "expectedOutput": {
@@ -73,6 +73,156 @@
           "leitner": {
             "box": 2,
             "dueAt": "2026-01-05T00:00:00.000Z"
+          },
+          "notes": null
+        }
+      }
+    },
+    {
+      "id": "leitner-correct-promotes-box-two-to-three-with-seven-day-interval",
+      "input": {
+        "existing": {
+          "questionId": "B-006-004-012",
+          "bankId": "basic-2025-07-15",
+          "attempts": 2,
+          "correctAttempts": 2,
+          "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
+          "lastResult": "correct",
+          "recentResults": [
+            true,
+            true
+          ],
+          "leitner": {
+            "box": 2,
+            "dueAt": "2026-01-05T00:00:00.000Z"
+          },
+          "notes": null
+        },
+        "update": {
+          "questionId": "B-006-004-012",
+          "bankId": "basic-2025-07-15",
+          "isCorrect": true,
+          "now": "2026-01-02T00:00:00.000Z"
+        }
+      },
+      "expectedOutput": {
+        "record": {
+          "questionId": "B-006-004-012",
+          "bankId": "basic-2025-07-15",
+          "attempts": 3,
+          "correctAttempts": 3,
+          "lastAttemptedAt": "2026-01-02T00:00:00.000Z",
+          "lastResult": "correct",
+          "recentResults": [
+            true,
+            true,
+            true
+          ],
+          "leitner": {
+            "box": 3,
+            "dueAt": "2026-01-09T00:00:00.000Z"
+          },
+          "notes": null
+        }
+      }
+    },
+    {
+      "id": "leitner-correct-promotes-box-three-to-four-with-fourteen-day-interval",
+      "input": {
+        "existing": {
+          "questionId": "B-006-004-008",
+          "bankId": "basic-2025-07-15",
+          "attempts": 3,
+          "correctAttempts": 3,
+          "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
+          "lastResult": "correct",
+          "recentResults": [
+            true,
+            true,
+            true
+          ],
+          "leitner": {
+            "box": 3,
+            "dueAt": "2026-01-09T00:00:00.000Z"
+          },
+          "notes": null
+        },
+        "update": {
+          "questionId": "B-006-004-008",
+          "bankId": "basic-2025-07-15",
+          "isCorrect": true,
+          "now": "2026-01-02T00:00:00.000Z"
+        }
+      },
+      "expectedOutput": {
+        "record": {
+          "questionId": "B-006-004-008",
+          "bankId": "basic-2025-07-15",
+          "attempts": 4,
+          "correctAttempts": 4,
+          "lastAttemptedAt": "2026-01-02T00:00:00.000Z",
+          "lastResult": "correct",
+          "recentResults": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "leitner": {
+            "box": 4,
+            "dueAt": "2026-01-16T00:00:00.000Z"
+          },
+          "notes": null
+        }
+      }
+    },
+    {
+      "id": "leitner-correct-promotes-box-four-to-five-with-thirty-day-interval",
+      "input": {
+        "existing": {
+          "questionId": "B-006-004-013",
+          "bankId": "basic-2025-07-15",
+          "attempts": 4,
+          "correctAttempts": 4,
+          "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
+          "lastResult": "correct",
+          "recentResults": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "leitner": {
+            "box": 4,
+            "dueAt": "2026-01-16T00:00:00.000Z"
+          },
+          "notes": null
+        },
+        "update": {
+          "questionId": "B-006-004-013",
+          "bankId": "basic-2025-07-15",
+          "isCorrect": true,
+          "now": "2026-01-02T00:00:00.000Z"
+        }
+      },
+      "expectedOutput": {
+        "record": {
+          "questionId": "B-006-004-013",
+          "bankId": "basic-2025-07-15",
+          "attempts": 5,
+          "correctAttempts": 5,
+          "lastAttemptedAt": "2026-01-02T00:00:00.000Z",
+          "lastResult": "correct",
+          "recentResults": [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "leitner": {
+            "box": 5,
+            "dueAt": "2026-02-01T00:00:00.000Z"
           },
           "notes": null
         }
@@ -105,7 +255,7 @@
           "questionId": "B-006-004-009",
           "bankId": "basic-2025-07-15",
           "isCorrect": true,
-          "now": "2026-01-02T00:00:00Z"
+          "now": "2026-01-02T00:00:00.000Z"
         }
       },
       "expectedOutput": {
@@ -156,7 +306,7 @@
           "questionId": "B-006-004-008",
           "bankId": "basic-2025-07-15",
           "isCorrect": false,
-          "now": "2026-01-02T00:00:00Z"
+          "now": "2026-01-02T00:00:00.000Z"
         }
       },
       "expectedOutput": {
@@ -192,19 +342,19 @@
             "questionId": "B-006-004-010",
             "bankId": "basic-2025-07-15",
             "isCorrect": true,
-            "now": "2026-01-02T00:00:00Z"
+            "now": "2026-01-02T00:00:00.000Z"
           },
           {
             "questionId": "B-006-004-010",
             "bankId": "basic-2025-07-15",
             "isCorrect": false,
-            "now": "2026-01-02T01:00:00Z"
+            "now": "2026-01-02T01:00:00.000Z"
           },
           {
             "questionId": "B-006-004-011",
             "bankId": "basic-2025-07-15",
             "isCorrect": false,
-            "now": "2026-01-02T01:05:00Z"
+            "now": "2026-01-02T01:05:00.000Z"
           }
         ]
       },
@@ -252,7 +402,7 @@
       "id": "leitner-new-user-with-zero-progress-records-has-due-count-zero",
       "input": {
         "records": [],
-        "now": "2026-01-02T00:00:00Z"
+        "now": "2026-01-02T00:00:00.000Z"
       },
       "expectedOutput": {
         "dueQuestionIds": [],
@@ -312,7 +462,7 @@
             "notes": null
           }
         ],
-        "now": "2026-01-02T00:00:00Z"
+        "now": "2026-01-02T00:00:00.000Z"
       },
       "expectedOutput": {
         "dueQuestionIds": [

@@ -21,7 +21,6 @@ import {
 } from "./index.ts";
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "../../..");
-const fixturesDir = join(repoRoot, "fixtures/engine");
 const bankPath = "content/generated/basic-2025-07-15/questions.json";
 const bankId = "basic-2025-07-15";
 const fixtureSeed = "fixture-seed-001";
@@ -201,6 +200,12 @@ function buildWeakSubsectionsFixture(): unknown {
     { questionId: "B-001-006-001", subsectionId: "B-001-006", selectedSourceIndex: null },
     { questionId: "B-001-007-001", subsectionId: "B-001-007", selectedSourceIndex: 0 },
   ];
+  const pooledWeakRecords = [makeProgress("B-001-008-001", [false]), makeProgress("B-001-008-002", [true])];
+  const pooledExactlySeventyRecords = [
+    makeProgress("B-001-009-001", [true, true, true, true, true]),
+    makeProgress("B-001-009-002", [true, true, false, false, false]),
+  ];
+  const pooledSingleAttemptRecords = [makeProgress("B-001-010-001", [false])];
 
   return {
     schemaVersion: 1,
@@ -218,36 +223,32 @@ function buildWeakSubsectionsFixture(): unknown {
         input: { records, latestExamItems },
         expectedOutput: { weakSubsectionIds: weakSubsectionIds(records, latestExamItems) },
       },
+      {
+        id: "weak-subsections-pooled-records-below-seventy-are-weak",
+        input: { records: pooledWeakRecords, latestExamItems: [] },
+        expectedOutput: { weakSubsectionIds: weakSubsectionIds(pooledWeakRecords) },
+      },
+      {
+        id: "weak-subsections-pooled-records-at-exactly-seventy-are-not-weak",
+        input: { records: pooledExactlySeventyRecords, latestExamItems: [] },
+        expectedOutput: { weakSubsectionIds: weakSubsectionIds(pooledExactlySeventyRecords) },
+      },
+      {
+        id: "weak-subsections-pooled-single-attempt-is-not-weak",
+        input: { records: pooledSingleAttemptRecords, latestExamItems: [] },
+        expectedOutput: { weakSubsectionIds: weakSubsectionIds(pooledSingleAttemptRecords) },
+      },
     ],
   };
 }
 
 function buildLeitnerFixture(): unknown {
-  const now = "2026-01-02T00:00:00Z";
-  const existingBox1DueFuture = {
-    ...makeProgress("B-006-004-007", [true]),
-    attempts: 1,
-    correctAttempts: 1,
-    lastAttemptedAt: "2026-01-01T00:00:00.000Z",
-    lastResult: "correct" as const,
-    leitner: { box: 1, dueAt: "2026-01-10T00:00:00.000Z" },
-  };
-  const existingBox3 = {
-    ...makeProgress("B-006-004-008", [true, true, true]),
-    attempts: 3,
-    correctAttempts: 3,
-    lastAttemptedAt: "2026-01-01T00:00:00.000Z",
-    lastResult: "correct" as const,
-    leitner: { box: 3, dueAt: "2026-01-09T00:00:00.000Z" },
-  };
-  const existingBox5 = {
-    ...makeProgress("B-006-004-009", [true, true, true, true, true]),
-    attempts: 5,
-    correctAttempts: 5,
-    lastAttemptedAt: "2026-01-01T00:00:00.000Z",
-    lastResult: "correct" as const,
-    leitner: { box: 5, dueAt: "2026-01-20T00:00:00.000Z" },
-  };
+  const now = "2026-01-02T00:00:00.000Z";
+  const existingBox1DueFuture = makeLeitnerRecord("B-006-004-007", 1, "2026-01-10T00:00:00.000Z");
+  const existingBox2 = makeLeitnerRecord("B-006-004-012", 2, "2026-01-05T00:00:00.000Z");
+  const existingBox3 = makeLeitnerRecord("B-006-004-008", 3, "2026-01-09T00:00:00.000Z");
+  const existingBox4 = makeLeitnerRecord("B-006-004-013", 4, "2026-01-16T00:00:00.000Z");
+  const existingBox5 = makeLeitnerRecord("B-006-004-009", 5, "2026-01-20T00:00:00.000Z");
 
   const answerCases = [
     {
@@ -259,6 +260,21 @@ function buildLeitnerFixture(): unknown {
       id: "leitner-correct-before-due-still-promotes-and-uses-three-day-box-two-interval",
       input: { existing: existingBox1DueFuture, update: { questionId: "B-006-004-007", bankId, isCorrect: true, now } },
       expectedOutput: { record: applyAnswer(existingBox1DueFuture, { questionId: "B-006-004-007", bankId, isCorrect: true, now }) },
+    },
+    {
+      id: "leitner-correct-promotes-box-two-to-three-with-seven-day-interval",
+      input: { existing: existingBox2, update: { questionId: "B-006-004-012", bankId, isCorrect: true, now } },
+      expectedOutput: { record: applyAnswer(existingBox2, { questionId: "B-006-004-012", bankId, isCorrect: true, now }) },
+    },
+    {
+      id: "leitner-correct-promotes-box-three-to-four-with-fourteen-day-interval",
+      input: { existing: existingBox3, update: { questionId: "B-006-004-008", bankId, isCorrect: true, now } },
+      expectedOutput: { record: applyAnswer(existingBox3, { questionId: "B-006-004-008", bankId, isCorrect: true, now }) },
+    },
+    {
+      id: "leitner-correct-promotes-box-four-to-five-with-thirty-day-interval",
+      input: { existing: existingBox4, update: { questionId: "B-006-004-013", bankId, isCorrect: true, now } },
+      expectedOutput: { record: applyAnswer(existingBox4, { questionId: "B-006-004-013", bankId, isCorrect: true, now }) },
     },
     {
       id: "leitner-correct-caps-at-box-five-with-thirty-day-interval",
@@ -273,9 +289,9 @@ function buildLeitnerFixture(): unknown {
   ];
 
   const sequenceUpdates = [
-    { questionId: "B-006-004-010", bankId, isCorrect: true, now: "2026-01-02T00:00:00Z" },
-    { questionId: "B-006-004-010", bankId, isCorrect: false, now: "2026-01-02T01:00:00Z" },
-    { questionId: "B-006-004-011", bankId, isCorrect: false, now: "2026-01-02T01:05:00Z" },
+    { questionId: "B-006-004-010", bankId, isCorrect: true, now: "2026-01-02T00:00:00.000Z" },
+    { questionId: "B-006-004-010", bankId, isCorrect: false, now: "2026-01-02T01:00:00.000Z" },
+    { questionId: "B-006-004-011", bankId, isCorrect: false, now: "2026-01-02T01:05:00.000Z" },
   ];
   const dueRecords = [
     { ...makeProgress("B-006-004-001", [false]), leitner: { box: 0, dueAt: "2026-01-02T00:00:00.000Z" } },
@@ -312,43 +328,48 @@ function buildLeitnerFixture(): unknown {
 function buildReadinessFixture(): unknown {
   const cases = [
     makeReadinessCase("readiness-new-user-not-enough-data-and-due-count-zero", [], 0),
-    makeReadinessCase("readiness-one-exam-not-enough-data", [makeAttempt("2026-01-03T00:00:00Z", 95)], 0),
+    makeReadinessCase("readiness-one-exam-not-enough-data", [makeAttempt("2026-01-03T00:00:00.000Z", 95)], 0),
     makeReadinessCase(
-      "readiness-last-three-aggregation-ignores-older-exam",
+      "readiness-last-three-aggregation-ignores-older-exam-and-sorts-shuffled-input",
       [
-        makeAttempt("2026-01-05T00:00:00Z", 82),
-        makeAttempt("2026-01-04T00:00:00Z", 81),
-        makeAttempt("2026-01-03T00:00:00Z", 72),
-        makeAttempt("2026-01-02T00:00:00Z", 40, { "B-001": { correct: 1, total: 10 } }),
+        makeAttempt("2026-01-04T00:00:00.000Z", 81),
+        makeAttempt("2026-01-02T00:00:00.000Z", 40, { "B-001": { correct: 0, total: 10 } }),
+        makeAttempt("2026-01-05T00:00:00.000Z", 82),
+        makeAttempt("2026-01-03T00:00:00.000Z", 72),
       ],
       0,
     ),
     makeReadinessCase(
       "readiness-category-weakness-precedes-due-review",
       [
-        makeAttempt("2026-01-05T00:00:00Z", 95, { "B-003": { correct: 6, total: 10 } }),
-        makeAttempt("2026-01-04T00:00:00Z", 95, { "B-003": { correct: 7, total: 10 } }),
+        makeAttempt("2026-01-05T00:00:00.000Z", 95, { "B-003": { correct: 6, total: 10 } }),
+        makeAttempt("2026-01-04T00:00:00.000Z", 95, { "B-003": { correct: 7, total: 10 } }),
       ],
       5,
     ),
     makeReadinessCase(
       "readiness-due-review-precedes-pass-or-honours-ready",
-      [makeAttempt("2026-01-05T00:00:00Z", 90), makeAttempt("2026-01-04T00:00:00Z", 88)],
+      [makeAttempt("2026-01-05T00:00:00.000Z", 90), makeAttempt("2026-01-04T00:00:00.000Z", 88)],
       5,
     ),
     makeReadinessCase(
+      "readiness-due-review-count-four-still-allows-honours-ready",
+      [makeAttempt("2026-01-05T00:00:00.000Z", 90), makeAttempt("2026-01-04T00:00:00.000Z", 88)],
+      4,
+    ),
+    makeReadinessCase(
       "readiness-honours-ready-with-two-of-last-three-at-or-above-eighty",
-      [makeAttempt("2026-01-05T00:00:00Z", 83), makeAttempt("2026-01-04T00:00:00Z", 79), makeAttempt("2026-01-03T00:00:00Z", 80)],
+      [makeAttempt("2026-01-05T00:00:00.000Z", 83), makeAttempt("2026-01-04T00:00:00.000Z", 79), makeAttempt("2026-01-03T00:00:00.000Z", 80)],
       0,
     ),
     makeReadinessCase(
       "readiness-pass-ready-with-two-of-last-three-at-or-above-seventy",
-      [makeAttempt("2026-01-05T00:00:00Z", 75), makeAttempt("2026-01-04T00:00:00Z", 79), makeAttempt("2026-01-03T00:00:00Z", 65)],
+      [makeAttempt("2026-01-05T00:00:00.000Z", 75), makeAttempt("2026-01-04T00:00:00.000Z", 79), makeAttempt("2026-01-03T00:00:00.000Z", 65)],
       0,
     ),
     makeReadinessCase(
       "readiness-needs-review-when-exam-thresholds-not-met",
-      [makeAttempt("2026-01-05T00:00:00Z", 69), makeAttempt("2026-01-04T00:00:00Z", 65)],
+      [makeAttempt("2026-01-05T00:00:00.000Z", 69), makeAttempt("2026-01-04T00:00:00.000Z", 65)],
       0,
     ),
   ];
@@ -405,6 +426,18 @@ function makeProgress(questionId: string, recentResults: readonly boolean[]): Qu
   };
 }
 
+function makeLeitnerRecord(questionId: string, box: 1 | 2 | 3 | 4 | 5, dueAt: string): QuestionProgressRecord {
+  const recentResults = Array.from({ length: box }, () => true);
+  return {
+    ...makeProgress(questionId, recentResults),
+    attempts: box,
+    correctAttempts: box,
+    lastAttemptedAt: "2026-01-01T00:00:00.000Z",
+    lastResult: "correct",
+    leitner: { box, dueAt },
+  };
+}
+
 function makeAttempt(
   submittedAt: string,
   correct: number,
@@ -439,5 +472,3 @@ function slug(value: string): string {
 function stableJson(value: unknown): string {
   return `${JSON.stringify(value, null, 2)}\n`;
 }
-
-void fixturesDir;
