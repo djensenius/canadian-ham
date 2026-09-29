@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-009-001",
+  "questionId": "B-006-009-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-009-001.\n\nWhy the correct answer is right: A parasitic element has no feedline connection of its own. Current is induced in it by the electric and magnetic fields from the driven element, so it is energized by induction or radiation from that driven element.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"By direct connection to a driven element\": That would make it an electrically connected part of the driven antenna system; a parasitic element is deliberately not wired to the driven element.\n- sourceIndex 2: \"By direct connection to the transmission line\": An element connected to the feedline is a driven element. Parasitic directors and reflectors receive energy from nearby fields instead.\n- sourceIndex 3: \"By inductive coupling from a wave trap\": A trap is a resonant circuit used to isolate or load parts of an antenna on some bands; it is not the normal energy source for a parasitic element.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-009-001"
+    }
+  ],
+  "licenseClass": "original"
+}

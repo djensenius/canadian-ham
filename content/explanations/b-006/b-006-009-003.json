@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-009-003",
+  "questionId": "B-006-009-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-009-003.\n\nWhy the correct answer is right: A parasitic element that is slightly shorter than the driven half-wave element acts as a director. In a Yagi, radiation is strengthened from the driven dipole toward the director.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"From the new element towards the dipole\": That reverses the director action. Radiation toward the dipole from the new element would describe the effect of a reflector placed on the opposite side.\n- sourceIndex 2: \"In both directions at right angles to the elements\": A plain dipole has broadside maxima at right angles to the wire, but adding a shorter parasitic element changes the system into an end-fire beam toward that element.\n- sourceIndex 3: \"In both directions parallel to the elements\": The ends of a half-wave element are near the dipole nulls. A director increases radiation along the boom direction, not out from the wire ends.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-009-003"
+    }
+  ],
+  "licenseClass": "original"
+}

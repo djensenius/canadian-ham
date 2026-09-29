@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-009-004",
+  "questionId": "B-006-009-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-009-004.\n\nWhy the correct answer is right: A parasitic element that is slightly longer than the driven element acts as a reflector. The stronger lobe forms away from the reflector, so the increase is from the longer new element toward the dipole.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"From the dipole towards the new element\": That treats the longer element as though it were a director. Directors are slightly shorter; a longer parasitic element is the reflector side.\n- sourceIndex 2: \"In both directions at right angles to the elements\": Those are the broadside directions of an isolated dipole. With a reflector added, the pattern is no longer the equal two-sided dipole pattern.\n- sourceIndex 3: \"In both directions parallel to the elements\": Radiation off the ends of the wire elements is weak for a half-wave dipole. The Yagi beam direction is along the boom, not along the element wires.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-009-004"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-013-004",
+  "questionId": "B-006-013-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-013-004.\n\nWhy the correct answer is right: A quad driven element is about one wavelength around, using 306/f for the loop perimeter. At 14.3 MHz, 306 / 14.3 = 21.40 metres.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"10.49 metres\": This is 150 / 14.3 = 10.49 m, the free-space half-wave length. The quad loop needs the full-wave perimeter.\n- sourceIndex 2: \"16.36 metres\": This is 234 / 14.3 = 16.36 if 234/f, the quarter-wave or dipole-leg length in feet, is incorrectly used as a metre value. The correct loop formula is 306/f.\n- sourceIndex 3: \"5.35 metres\": This is 21.40 / 4 = 5.35 m, one side of a square quad. The question asks for the overall driven-element wire length.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-013-004"
+    }
+  ],
+  "licenseClass": "original"
+}

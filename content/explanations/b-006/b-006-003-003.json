@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-003-003",
+  "questionId": "B-006-003-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-003-003.\n\nWhy the correct answer is right: Coax is popular because it is practical in many real installations: it can run near equipment and supports, pass through walls, tolerate weather when properly jacketed, and connect directly to common radios.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Less loss\": Open-wire line often has lower loss than coax, so minimum loss alone does not explain why most stations still use coax.\n- sourceIndex 2: \"More power handling capability\": Some coax handles high power and some does not; balanced open-wire line can also handle substantial power.\n- sourceIndex 3: \"Less expensive\": Price varies by cable type and installation hardware, so cost is not the broad technical reason coax dominates amateur stations.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-003-003"
+    }
+  ],
+  "licenseClass": "original"
+}

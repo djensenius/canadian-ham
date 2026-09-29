@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-006-004",
+  "questionId": "B-006-006-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-006-004.\n\nWhy the correct answer is right: For purely resistive source and load impedances, the maximum-power-transfer theorem says the load resistance should equal the source resistance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Load impedance equal to half of the source impedance\": Half the source resistance is still a mismatch, so some available power remains in the source resistance instead of being delivered to the load.\n- sourceIndex 2: \"Load impedance equal to twice the source impedance\": Twice the source resistance is also a mismatch; equality, not a two-to-one ratio, is the maximum-power condition for purely resistive circuits.\n- sourceIndex 3: \"Load impedance equal to the square root of source impedance\": Taking a square root is not the maximum-power-transfer rule, and the square root of an impedance does not even have the same ohm units as the required load impedance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-006-004"
+    }
+  ],
+  "licenseClass": "original"
+}

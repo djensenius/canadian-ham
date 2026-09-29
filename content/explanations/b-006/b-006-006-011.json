@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-006-011",
+  "questionId": "B-006-006-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-006-011.\n\nWhy the correct answer is right: The folded dipole is about 300 ohms and the line is 50 ohms, so the needed impedance ratio is 300 / 50 = 6:1.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"2:1\": A 2:1 transformer would turn 50 ohms into only 100 ohms, leaving a 300-ohm folded dipole still mismatched by about 3:1.\n- sourceIndex 2: \"4:1\": A 4:1 transformer would turn 50 ohms into 200 ohms; that is a common ratio for some jobs, but it is not 300 / 50.\n- sourceIndex 3: \"9:1\": A 9:1 transformer would turn 50 ohms into 450 ohms, overshooting the approximately 300-ohm folded-dipole feed point.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-006-011"
+    }
+  ],
+  "licenseClass": "original"
+}

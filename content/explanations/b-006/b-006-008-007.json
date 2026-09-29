@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-008-007",
+  "questionId": "B-006-008-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-008-007.\n\nWhy the correct answer is right: In free space, radio waves are electromagnetic waves and travel at the speed of light. In materials such as coax dielectric they can be slower, but the Basic free-space reference is light speed.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"is constant\": This is too absolute: propagation speed changes with the medium, such as a coaxial cable velocity factor, so it is not simply one constant in every situation.\n- sourceIndex 2: \"is less than half the speed of light\": Free-space radio waves travel at light speed, not less than half of it; most ordinary feed-line velocity factors are also greater than one-half.\n- sourceIndex 3: \"varies depending on the frequency\": In free space the speed is essentially independent of radio frequency; wavelength changes with frequency because wavelength equals speed divided by frequency.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-03"
+    },
+    {
+      "type": "question",
+      "id": "B-006-008-007"
+    }
+  ],
+  "licenseClass": "original"
+}

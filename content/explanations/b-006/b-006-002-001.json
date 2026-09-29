@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-002-001",
+  "questionId": "B-006-002-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-002-001.\n\nWhy the correct answer is right: Coaxial cable has a centre conductor surrounded by dielectric insulation, with a conducting shield around that insulation. That one-conductor-inside-another construction is what makes it coaxial.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Window line\": Window line has two parallel conductors in a flat insulated strip, not a centre wire inside a shield.\n- sourceIndex 2: \"Open-wire line\": Open-wire line uses two conductors separated by air and spreaders, with no surrounding metal sleeve.\n- sourceIndex 3: \"Waveguide\": A waveguide is a hollow conducting structure for very high frequencies, not a flexible line with a centre conductor and braided shield.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-002-001"
+    }
+  ],
+  "licenseClass": "original"
+}

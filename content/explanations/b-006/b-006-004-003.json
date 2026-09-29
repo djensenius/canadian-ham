@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-004-003",
+  "questionId": "B-006-004-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-004-003.\n\nWhy the correct answer is right: Transmission-line loss accumulates with length, so using 60 m of RG-58 for a 15 m separation wastes power in unnecessary cable. Replacing it with a route close to the needed length reduces attenuation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Install a balun at the antenna feed point\": A balun addresses balanced-to-unbalanced current issues, but it does not remove the loss of 45 extra metres of small coax.\n- sourceIndex 2: \"Roll the excess cable into a coil\": Coiling leaves the same length of lossy cable in circuit and can introduce additional choking or heating effects.\n- sourceIndex 3: \"Install a low-pass filter at the transceiver\": A low-pass filter reduces harmonics; it does not recover fundamental RF power lost in an overlong feedline.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-004-003"
+    }
+  ],
+  "licenseClass": "original"
+}

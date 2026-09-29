@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-012-005",
+  "questionId": "B-006-012-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-012-005.\n\nWhy the correct answer is right: A horizontal half-wave dipole radiates broadside to the wire. If its ends point north and south, the broadside directions are east and west.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Radiates mostly to the South and North\": South and north are the directions off the wire ends, where a half-wave dipole has nulls rather than maximum radiation.\n- sourceIndex 2: \"Radiates mostly to the South\": A simple dipole pattern is not one-ended toward only south; off the south end is a null direction in this orientation.\n- sourceIndex 3: \"Radiates equally in all directions\": A horizontal half-wave dipole is not omnidirectional in free space. It has broadside maxima and end nulls.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-012-005"
+    }
+  ],
+  "licenseClass": "original"
+}

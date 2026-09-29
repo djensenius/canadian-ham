@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-008-004",
+  "questionId": "B-006-008-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-008-004.\n\nWhy the correct answer is right: Radio waves in free space travel at the speed of light, approximately 300 000 kilometres per second.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"200 000 kilometres per second\": This is about 0.67 times 300 000 km/s, resembling a coax velocity-factor value, but the question asks for propagation in free space.\n- sourceIndex 2: \"150 000 kilometres per second\": This is half of the correct free-space speed, 300 000 / 2 = 150 000 km/s; half-wavelength arithmetic should not be applied to wave speed.\n- sourceIndex 3: \"186 000 kilometres per second\": This is the speed of light expressed in miles per second; 186 000 miles/s is about 300 000 km/s, so labelling 186 000 as kilometres per second uses the wrong unit.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-03"
+    },
+    {
+      "type": "question",
+      "id": "B-006-008-004"
+    }
+  ],
+  "licenseClass": "original"
+}

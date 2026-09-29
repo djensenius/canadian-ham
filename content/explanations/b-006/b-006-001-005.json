@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-001-005",
+  "questionId": "B-006-001-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-001-005.\n\nWhy the correct answer is right: Coaxial cable has an outer jacket and shielded construction, so suitable outdoor coax can tolerate contact with soil for a distance when installed for that service. The shield keeps the RF fields mostly inside the cable.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"300-ohm window line\": Window line is a balanced line whose fields extend into the surrounding space, so wet soil and close contact with earth disturb it badly.\n- sourceIndex 2: \"600-ohm open-wire line\": Open-wire line depends on air spacing and clear surroundings; burying it removes the very geometry that makes it useful.\n- sourceIndex 3: \"75-ohm twin-lead\": Twin-lead is also balanced plastic line, and ground contact or moisture changes its impedance and loss rather than leaving it unaffected.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-001-005"
+    }
+  ],
+  "licenseClass": "original"
+}

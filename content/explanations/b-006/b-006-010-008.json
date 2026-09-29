@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-010-008",
+  "questionId": "B-006-010-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-010-008.\n\nWhy the correct answer is right: The base of a quarter-wave ground-plane antenna is intended to be fed as an unbalanced low-impedance antenna, and with suitable radials it is close to a 50-ohm coaxial match.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"300-ohm balanced transmission line\": This line has the wrong impedance and balance for the base of a typical ground-plane vertical; 300 ohms is far above the intended feed impedance.\n- sourceIndex 2: \"75-ohm balanced transmission line\": Although 75 ohms is closer than 300 ohms, it is still the wrong impedance and a balanced line for an unbalanced ground-plane feedpoint.\n- sourceIndex 3: \"75-ohm coaxial cable\": This has the unbalanced form but the impedance is 75 ohms, not the intended near-50-ohm match at the antenna base.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-010-008"
+    }
+  ],
+  "licenseClass": "original"
+}

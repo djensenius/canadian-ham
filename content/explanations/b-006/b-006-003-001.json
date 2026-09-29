@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-003-001",
+  "questionId": "B-006-003-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-003-001.\n\nWhy the correct answer is right: Coaxial cable is shielded, so the RF fields are mostly contained between the centre conductor and the shield. That makes it far less sensitive to a nearby metal fence than balanced line.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Twin-lead\": Twin-lead has external fields around its parallel conductors, so running it along metal can change impedance and increase loss.\n- sourceIndex 2: \"Open-wire line\": Open-wire line works best in clear air; attaching it to a fence would seriously disturb the balanced fields.\n- sourceIndex 3: \"Window line\": Window line is balanced line, and a long metal object beside it can upset its balance and predictable impedance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-003-001"
+    }
+  ],
+  "licenseClass": "original"
+}

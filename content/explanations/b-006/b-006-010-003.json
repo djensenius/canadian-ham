@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-010-003",
+  "questionId": "B-006-010-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-010-003.\n\nWhy the correct answer is right: For the bank's VHF half-wave estimate, 150/f gives 150 / 223 = 0.6726 m, or about 67 cm. The practical 143/f estimate gives about 64 cm, so 67 cm is the nearest listed choice and matches the free-space 150/f calculation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"32 cm\": This is 71.3 / 223 = 0.3197 m, or about 32 cm, a practical quarter-wave value rather than a half-wave value.\n- sourceIndex 2: \"105 cm\": This matches 234 / 223 = 1.049 m if the imperial dipole-leg constant 234 is misused as a metre constant. That is the wrong formula and unit system for this question.\n- sourceIndex 3: \"135 cm\": This is 300 / 223 = 1.345 m, about 135 cm, the free-space full wavelength. The question asks for a half wavelength.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-010-003"
+    }
+  ],
+  "licenseClass": "original"
+}

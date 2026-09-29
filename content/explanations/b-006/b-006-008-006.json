@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-008-006",
+  "questionId": "B-006-008-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-008-006.\n\nWhy the correct answer is right: Resonant frequency is inversely related to radiator length. Shortening the radiating element reduces electrical length and raises the resonant frequency.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"lowering the radiating element\": Changing height affects ground coupling, feed impedance, and radiation angle, but it is not the direct way to raise resonance by reducing electrical length.\n- sourceIndex 2: \"increasing the height of the radiating element\": Raising the element can change pattern and impedance; it does not substitute for shortening the radiator when the resonant frequency must be increased.\n- sourceIndex 3: \"lengthening the radiating element\": Lengthening the radiating element lowers resonant frequency, which is the opposite of the requested adjustment.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-03"
+    },
+    {
+      "type": "question",
+      "id": "B-006-008-006"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-011-007",
+  "questionId": "B-006-011-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-011-007.\n\nWhy the correct answer is right: On 20 through 10 metres the elements are short enough that a directional HF Yagi can be built and rotated practically, giving useful high gain on those bands.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Excellent omnidirectional coverage in the horizontal plane\": A Yagi is chosen because it is directional. Omnidirectional coverage would describe a vertical or other non-beam antenna, not the HF Yagi advantage.\n- sourceIndex 2: \"Their wide bandwidth provides a good match over an entire band\": Many Yagis have limited bandwidth, and multiband versions need traps or multiple elements. The feasibility comes from manageable element length.\n- sourceIndex 3: \"Their high angle of radiation facilitates long-range communications\": Long-range HF work usually benefits from useful lower-angle radiation. The reason these Yagis are common is practical size and gain, not a high-angle pattern.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-011-007"
+    }
+  ],
+  "licenseClass": "original"
+}

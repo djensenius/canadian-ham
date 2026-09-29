@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-011-006",
+  "questionId": "B-006-011-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-011-006.\n\nWhy the correct answer is right: Increasing Yagi element spacing, within the normal design range, can improve the array interaction and provide higher forward gain.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Better front-to-back ratio\": Front-to-back ratio is adjusted by the reflector, director tuning, and spacing details; wider spacing is not chiefly chosen for that advantage.\n- sourceIndex 2: \"Lower feed point impedance\": Element spacing can affect impedance, but lowering feedpoint impedance is not the major benefit asked for and may make matching harder.\n- sourceIndex 3: \"Wider bandwidth\": Yagi bandwidth is more strongly improved by element diameter and design choices. Increased spacing is taught here as a gain advantage.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-011-006"
+    }
+  ],
+  "licenseClass": "original"
+}

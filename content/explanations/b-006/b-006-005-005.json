@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-005-005",
+  "questionId": "B-006-005-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-005-005.\n\nWhy the correct answer is right: High SWR means reflected energy is travelling back and forth on the line. Each trip through a real line dissipates some power as heat, so the effective transmission-line loss increases.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Increased receive noise level\": Receive noise mainly comes from external sources and receiver/system noise; high SWR in the transmitting feed line is not the main reason a receiver hears more noise.\n- sourceIndex 2: \"Increased transmission line radiation\": Feed-line radiation is usually an imbalance or common-mode-current problem; standing waves can exist on a properly shielded coax without making it the main radiator.\n- sourceIndex 3: \"Increased common-mode current\": Common-mode current is caused by imbalance and inadequate choking, not by SWR alone, so it is not the principal adverse effect being tested here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-005-005"
+    }
+  ],
+  "licenseClass": "original"
+}

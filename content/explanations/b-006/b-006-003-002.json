@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-003-002",
+  "questionId": "B-006-003-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-003-002.\n\nWhy the correct answer is right: When coax is wound tightly on a ferrite core, foam dielectric can let the centre conductor shift under bending stress. Solid dielectric is preferred because it reduces the chance of conductor movement leading to a short.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Less impedance inserted in the signal path\": A common-mode choke is designed so normal differential signal current still has a path; the dielectric choice here is about mechanical reliability.\n- sourceIndex 2: \"More flexible and easier to handle\": Foam cable is often chosen for other properties, but tight winding can crush or move it, so flexibility is not the reason for preferring solid dielectric in this choke.\n- sourceIndex 3: \"More impedance to common-mode current\": The ferrite material, number of turns, and winding arrangement set the choke impedance; the solid dielectric is chosen to avoid internal conductor movement.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-003-002"
+    }
+  ],
+  "licenseClass": "original"
+}

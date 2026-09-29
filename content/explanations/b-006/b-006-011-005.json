@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-011-005",
+  "questionId": "B-006-011-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-011-005.\n\nWhy the correct answer is right: Adding directors and using a longer boom lets a Yagi concentrate more energy in the forward lobe, so forward gain increases.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Front-to-back ratio increases\": Front-to-back ratio can be affected by tuning and reflector design, but adding directors and boom length is primarily a way to increase forward gain.\n- sourceIndex 2: \"Beamwidth increases\": As a Yagi gains directivity, the main lobe generally becomes narrower. Increased beamwidth is the opposite of the usual higher-gain effect.\n- sourceIndex 3: \"Power handling capability increases\": Power handling depends on conductor size, traps, insulators, and matching hardware. More directors on a boom do not automatically raise the safe transmitter power.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-011-005"
+    }
+  ],
+  "licenseClass": "original"
+}

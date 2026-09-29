@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-013-011",
+  "questionId": "B-006-013-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-013-011.\n\nWhy the correct answer is right: A delta loop is a triangular loop antenna whose total perimeter is approximately one wavelength.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"One quarter of a wavelength\": A quarter wavelength describes a short vertical element, not the total wire around a delta loop.\n- sourceIndex 2: \"Two wavelengths\": Two wavelengths is twice the normal delta-loop perimeter and would not be the basic approximate overall length.\n- sourceIndex 3: \"One half of a wavelength\": A half wavelength is the length of a dipole. A delta loop uses a full-wave loop perimeter.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-013-011"
+    }
+  ],
+  "licenseClass": "original"
+}

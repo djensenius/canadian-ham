@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-001-011",
+  "questionId": "B-006-001-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-001-011.\n\nWhy the correct answer is right: Coaxial-line impedance depends mainly on dielectric material and the ratio of the shield's inside diameter to the inner conductor diameter. The ratio matters because the fields occupy the space between those two conductors.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The diameter of the shield and the length of the line\": Shield diameter alone is incomplete, and line length changes attenuation rather than the cable's characteristic impedance.\n- sourceIndex 2: \"The diameter of the shield and the frequency of the signal\": This omits the inner conductor diameter, so it cannot describe the diameter ratio that sets coax impedance.\n- sourceIndex 3: \"The frequency of the signal and the length of the line\": Those factors affect electrical length and loss, but they do not define the coax cross-section.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-001-011"
+    }
+  ],
+  "licenseClass": "original"
+}

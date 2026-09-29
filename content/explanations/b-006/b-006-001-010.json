@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-001-010",
+  "questionId": "B-006-001-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-001-010.\n\nWhy the correct answer is right: For open-wire line, the important geometry is the centre-to-centre conductor spacing compared with the conductor diameter. That ratio controls the electric and magnetic fields around the balanced pair.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The distance between the centres of the conductors and the length of the line\": This includes spacing but substitutes line length for conductor diameter; length does not set the nominal impedance of a uniform line.\n- sourceIndex 2: \"The radius of the conductors and the frequency of the signal\": Radius is related to diameter, but frequency is the wrong second factor; spacing between the wire centres is missing.\n- sourceIndex 3: \"The frequency of the signal and the length of the line\": Frequency and length describe electrical length and phase, not the physical cross-section that sets characteristic impedance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-001-010"
+    }
+  ],
+  "licenseClass": "original"
+}

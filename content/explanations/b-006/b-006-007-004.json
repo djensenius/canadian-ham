@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-007-004",
+  "questionId": "B-006-007-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-007-004.\n\nWhy the correct answer is right: A half-wave antenna’s electric field follows the element orientation, so an element perpendicular to the Earth’s surface produces vertical polarization.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Circular\": Circular polarization needs two orthogonal components in phase quadrature; a single straight half-wave element mounted vertically does not create that field.\n- sourceIndex 2: \"Horizontal\": Horizontal polarization would come from a half-wave element mounted parallel to the Earth’s surface, not perpendicular to it.\n- sourceIndex 3: \"Elliptical\": Elliptical polarization is not produced merely by making a single half-wave radiator vertical; it requires mixed components with unequal amplitudes or phases.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-03"
+    },
+    {
+      "type": "question",
+      "id": "B-006-007-004"
+    }
+  ],
+  "licenseClass": "original"
+}

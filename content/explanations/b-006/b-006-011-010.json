@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-011-010",
+  "questionId": "B-006-011-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-011-010.\n\nWhy the correct answer is right: For a three-element Yagi, about 0.20 wavelength spacing is a common compromise that balances forward gain with front-to-back ratio.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"0.10\": One tenth wavelength is close spacing; it tends to limit gain and makes the element interactions more critical than the usual compromise value.\n- sourceIndex 2: \"0.50\": A half wavelength is much wider than the common three-element compromise and can produce less controlled patterns or excessive boom length.\n- sourceIndex 3: \"0.75\": Three quarters wavelength is far beyond the normal compromise spacing for a compact three-element Yagi and would not balance gain and front-to-back ratio well.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-011-010"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-004-010",
+  "questionId": "B-006-004-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-004-010.\n\nWhy the correct answer is right: As operating frequency rises, practical transmission lines have more internal attenuation from conductor skin effect and dielectric loss. The result is greater feedline loss at the higher frequency.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Loss increases, due to increased wave velocity\": Wave velocity is mostly set by the dielectric and is not the reason attenuation rises with frequency.\n- sourceIndex 2: \"Loss decreases, due to skin effect\": Skin effect increases effective conductor resistance at higher frequency, so it increases loss rather than decreasing it.\n- sourceIndex 3: \"Loss decreases, due to decreased SWR\": Changing frequency does not automatically decrease SWR, and SWR is not the basic internal-loss mechanism named in the question.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-004-010"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,48 @@
+{
+  "id": "QZ-L-006-05-A",
+  "lessonId": "L-006-05",
+  "officialQuestionIds": [
+    "B-006-012-001",
+    "B-006-012-003",
+    "B-006-012-006",
+    "B-006-013-001",
+    "B-006-013-003",
+    "B-006-013-007",
+    "B-006-013-010"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-006-05-A-C1",
+      "prompt": { "en": "A dipole wire runs northeast-southwest in free space. Where is radiation strongest?", "fr": null },
+      "choices": [
+        { "text": { "en": "Mainly upward only", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Mainly off the wire ends", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Equally nowhere because a dipole does not radiate", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Broadside to the wire, northwest and southeast", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "A free-space half-wave dipole has maximum radiation broadside to the wire and nulls off the ends.", "fr": null }
+    },
+    {
+      "id": "QZ-L-006-05-A-C2",
+      "prompt": { "en": "A full-wave loop is estimated with 306 / f(MHz). About how much wire is needed at 12 MHz?", "fr": null },
+      "choices": [
+        { "text": { "en": "25.5 m", "fr": null }, "isCorrect": true },
+        { "text": { "en": "12.8 m", "fr": null }, "isCorrect": false },
+        { "text": { "en": "6.0 m", "fr": null }, "isCorrect": false },
+        { "text": { "en": "49.0 m", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "306 divided by 12 is 25.5, so the loop starts near 25.5 metres total wire.", "fr": null }
+    },
+    {
+      "id": "QZ-L-006-05-A-C3",
+      "prompt": { "en": "What is a likely station symptom when a poorly matched random-wire antenna brings RF back into the operating area?", "fr": null },
+      "choices": [
+        { "text": { "en": "The antenna becomes an isotropic point source", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The feedline changes into open-wire line", "fr": null }, "isCorrect": false },
+        { "text": { "en": "RF feedback, such as distorted transmitted audio", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The resonant frequency is guaranteed to stay fixed", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Uncontrolled RF return paths can put RF current into station equipment and cause feedback symptoms.", "fr": null }
+    }
+  ]
+}

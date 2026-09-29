@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-005-010",
+  "questionId": "B-006-005-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-005-010.\n\nWhy the correct answer is right: An antenna analyzer sweeps or checks frequencies and reports the antenna-system impedance and SWR, so it shows where the system is matched or mismatched across a frequency range.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Radiation pattern of the antenna\": Radiation pattern requires measuring field strength around the antenna or modelling the antenna geometry; a one-port analyzer at the feed line cannot map the pattern.\n- sourceIndex 2: \"Gain of the antenna\": Antenna gain requires comparison with a reference antenna or calibrated field measurements; an analyzer reading at the feed point does not directly give gain.\n- sourceIndex 3: \"Front-to-back ratio of the antenna\": Front-to-back ratio is found by comparing radiation in opposite directions, so it is a pattern measurement rather than an impedance-analyzer result.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-005-010"
+    }
+  ],
+  "licenseClass": "original"
+}

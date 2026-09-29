@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-010-011",
+  "questionId": "B-006-010-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-010-011.\n\nWhy the correct answer is right: A ground-mounted vertical uses the earth and its radial system as the return path. Adding wire radials at the base reduces ground resistance, so less transmitter power is lost as heat in the soil.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Use an insulator with a higher breakdown voltage\": Insulator voltage rating is a safety and construction limit. It does not reduce RF current lost in the ground around the antenna.\n- sourceIndex 2: \"Improve the impedance match at the base\": A better match can reduce reflected power, but it does not remove the ground resistance that dissipates RF power. Radials address that loss directly.\n- sourceIndex 3: \"Raise the antenna one eighth of a wavelength\": That would make it a different elevated installation problem. For a ground-mounted vertical, the standard way to reduce ground loss is a radial wire system.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-010-011"
+    }
+  ],
+  "licenseClass": "original"
+}

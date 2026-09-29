@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-004-009",
+  "questionId": "B-006-004-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-004-009.\n\nWhy the correct answer is right: With the same coax and frequency, loss is proportional to length in dB. Increasing from 20 m to 40 m doubles the length, so the loss doubles; a doubling is a 100% increase.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It would be increased by 50%\": This uses the final length as the denominator, 20 / 40 = 50%, instead of comparing the added 20 m with the original 20 m.\n- sourceIndex 2: \"It would be increased by 10%\": This is simply an incorrect percentage for the stated lengths; the correct computation is ((40 - 20) / 20) x 100 = 100%, not 10%.\n- sourceIndex 3: \"It would be increased by 20%\": This treats the added 20 metres as if it were a 20% increase. Percent increase must be compared with the original 20 m, so ((40 - 20) / 20) x 100 = 100%, not 20%.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-004-009"
+    }
+  ],
+  "licenseClass": "original"
+}

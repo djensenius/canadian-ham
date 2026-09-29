@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-012-001",
+  "questionId": "B-006-012-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-012-001.\n\nWhy the correct answer is right: A practical half-wave dipole length in metres is 143/f. For 28.150 MHz, 143 / 28.150 = 5.08 metres.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"5.33 metres\": This is 150 / 28.150 = 5.33 m, the free-space half-wave estimate. The practical dipole formula uses 143/f.\n- sourceIndex 2: \"10.66 metres\": This is 300 / 28.150 = 10.66 m, the free-space full wavelength. A half-wave dipole is about half that, with practical shortening.\n- sourceIndex 3: \"2.53 metres\": This is 71.3 / 28.150 = 2.53 m, a quarter-wave length. The total dipole length is a half wavelength, not one quarter.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-012-001"
+    }
+  ],
+  "licenseClass": "original"
+}

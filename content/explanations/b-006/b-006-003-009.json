@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-003-009",
+  "questionId": "B-006-003-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-003-009.\n\nWhy the correct answer is right: A solid outer conductor provides continuous shielding with no braid openings. That continuous metal barrier offers the best shielding of the listed coaxial outer-conductor types.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Aluminum foil\": Foil can give good coverage, but it is thin and not the strongest or best overall shield compared with a solid outer conductor.\n- sourceIndex 2: \"Single braided shield\": A single braid has small openings between strands, so some leakage is possible.\n- sourceIndex 3: \"Double braided shield\": Double braid improves on single braid, but it still is not as continuous as a solid shield.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-003-009"
+    }
+  ],
+  "licenseClass": "original"
+}

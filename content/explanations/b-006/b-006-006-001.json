@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-006-001",
+  "questionId": "B-006-006-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-006-001.\n\nWhy the correct answer is right: Modern solid-state transmitters protect their output devices by sensing a poor load or high SWR at the transceiver output and reducing RF power when the mismatch is excessive.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Transmitting to a balanced antenna with an unbalanced transmission line\": Feeding a balanced antenna with unbalanced line can cause imbalance or common-mode current, but automatic foldback is triggered by the impedance presented to the transceiver.\n- sourceIndex 2: \"Open circuit in lightning surge protector ground connection\": An open lightning-surge-protector ground is a safety and protection fault, not the RF load condition sensed by the transceiver power-control circuit.\n- sourceIndex 3: \"Excessive antenna element movement in high winds\": Antenna movement in wind may occasionally change tuning, but movement itself is not what the solid-state protection circuit detects.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-006-001"
+    }
+  ],
+  "licenseClass": "original"
+}

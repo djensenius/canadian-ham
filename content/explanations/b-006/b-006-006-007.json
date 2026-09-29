@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-006-007",
+  "questionId": "B-006-006-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-006-007.\n\nWhy the correct answer is right: An RF transformer can be wound with a turns ratio and core suited to the job, giving an impedance transformation that can remain useful over a relatively wide frequency range.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It supports larger power than reactive components\": Power handling depends on component size, core material, voltage, current, and cooling; reactive L-network components can also be built for high power.\n- sourceIndex 2: \"It provides constant voltage to the load\": A transformer changes voltage and current according to its turns ratio and load; it is not a voltage regulator that holds the load voltage constant.\n- sourceIndex 3: \"It isolates the source from reflections\": A transformer does not magically isolate the source from all reflections; reflections are reduced only when the transformer presents the correct transformed impedance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-02"
+    },
+    {
+      "type": "question",
+      "id": "B-006-006-007"
+    }
+  ],
+  "licenseClass": "original"
+}

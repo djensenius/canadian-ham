@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-012-008",
+  "questionId": "B-006-012-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-012-008.\n\nWhy the correct answer is right: A trap is a resonant circuit that can isolate or include different portions of an antenna on different bands. That lets one antenna be used for multiband operation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It has high directivity at the higher frequencies\": Traps change electrical length for bands; they do not by themselves create a beam or high-directivity pattern.\n- sourceIndex 2: \"It has high gain\": Gain depends on aperture, element arrangement, height, and losses. Adding traps is for multiband resonance, not automatic gain.\n- sourceIndex 3: \"It minimizes harmonic radiation\": The opposite concern can occur: traps may allow an antenna to radiate harmonics more readily. Their advantage is multiband use.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-05"
+    },
+    {
+      "type": "question",
+      "id": "B-006-012-008"
+    }
+  ],
+  "licenseClass": "original"
+}

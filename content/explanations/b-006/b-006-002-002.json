@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-002-002",
+  "questionId": "B-006-002-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-002-002.\n\nWhy the correct answer is right: Window line is a balanced line with two conductors held side by side in insulating material, often with openings or windows in the plastic web. The two-wire side-by-side construction is the key clue.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Coaxial cable\": Coax has one centre conductor inside a surrounding shield, so its conductors are concentric rather than side by side.\n- sourceIndex 2: \"Waveguide\": A waveguide carries RF inside a metal tube or cavity and does not use two embedded parallel wires.\n- sourceIndex 3: \"Open-wire line\": Open-wire line keeps the conductors apart with spreaders and mostly air, not embedded side by side in insulation.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-002-002"
+    }
+  ],
+  "licenseClass": "original"
+}

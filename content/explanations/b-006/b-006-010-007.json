@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-010-007",
+  "questionId": "B-006-010-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-010-007.\n\nWhy the correct answer is right: An elevated quarter-wave vertical is matched to 50-ohm coax by using quarter-wave radials that slope downward. The slope moves the feedpoint impedance close to the coax value.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Horizontal quarter-wave radials\": Horizontal quarter-wave radials leave the feedpoint closer to the lower ground-plane impedance, roughly in the 30-ohm range, instead of raising it toward 50 ohms.\n- sourceIndex 2: \"Horizontal half-wave radials\": The radial length is wrong for the quarter-wave ground-plane system, and keeping them horizontal does not provide the 50-ohm impedance shift.\n- sourceIndex 3: \"Upward sloping half-wave radials\": Both parts are wrong: half-wave radials are not the quarter-wave counterpoise called for, and upward slope would not give the desired 50-ohm match.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-04"
+    },
+    {
+      "type": "question",
+      "id": "B-006-010-007"
+    }
+  ],
+  "licenseClass": "original"
+}

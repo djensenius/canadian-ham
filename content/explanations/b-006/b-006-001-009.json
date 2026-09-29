@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-006-001-009",
+  "questionId": "B-006-001-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-006-001-009.\n\nWhy the correct answer is right: A mismatched load reflects energy, and the forward and reflected waves combine along the line. Because that combination changes with electrical length, the impedance seen at the input depends on the line length.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"An infinite impedance\": Infinite input impedance occurs only in special transformed cases, such as a particular open-circuit condition, not for every significant mismatch.\n- sourceIndex 2: \"A zero impedance\": A zero-ohm input would be another special transformed condition, not the general result of terminating a line with the wrong impedance.\n- sourceIndex 3: \"An impedance nearly equal to the characteristic impedance\": The input looks like the characteristic impedance only when the load is matched or under special line-length circumstances; a significant mismatch is not generally hidden.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-006-01"
+    },
+    {
+      "type": "question",
+      "id": "B-006-001-009"
+    }
+  ],
+  "licenseClass": "original"
+}
