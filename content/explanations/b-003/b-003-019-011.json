@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-019-011",
+  "questionId": "B-003-019-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-019-011.\n\nWhy the correct answer is right: When a fuse opens, it must interrupt the circuit voltage without maintaining an arc across the element.\n\nPer-choice notes:\n- sourceIndex 0: \"To specify the voltage that can be interrupted without arcing\": This is the correct choice because when a fuse opens, it must interrupt the circuit voltage without maintaining an arc across the element.\n- sourceIndex 1: \"To prevent dielectric breakdown of the fuse holder\": This is a near-miss because it shifts attention from To specify the voltage that can be interrupted without arcing. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, a fuse is overcurrent protection, but this answer puts it in the wrong place or gives it the wrong job.\n- sourceIndex 2: \"To limit current leakage to ground while in operation\": This answer would fit a different fault than To specify the voltage that can be interrupted without arcing. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, this confuses current capacity or current flow with the specific safety or operating effect being tested.\n- sourceIndex 3: \"To ensure voltage transients can be safely dissipated\": This option confuses another station topic with To specify the voltage that can be interrupted without arcing. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, this misreads the voltage relationship or protection rating involved in the question.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-019-011"
+    }
+  ],
+  "licenseClass": "original"
+}

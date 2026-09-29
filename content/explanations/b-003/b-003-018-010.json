@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-018-010",
+  "questionId": "B-003-018-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-018-010.\n\nWhy the correct answer is right: Turning off and unplugging removes the mains source before any inspection or fault check begins.\n\nPer-choice notes:\n- sourceIndex 0: \"turn off the power and unplug the power cord\": This is the correct choice because turning off and unplugging removes the mains source before any inspection or fault check begins.\n- sourceIndex 1: \"short out the leads of the filter capacitor\": This is a near-miss because it shifts attention from turn off the power and unplug the power cord. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, that component has a specific circuit role, but it is not the energy source or safety item being asked for.\n- sourceIndex 2: \"check the action of the capacitor bleeder resistance\": This answer would fit a different fault than turn off the power and unplug the power cord. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, that component has a specific circuit role, but it is not the energy source or safety item being asked for.\n- sourceIndex 3: \"remove and check the fuse from the power supply\": This option confuses another station topic with turn off the power and unplug the power cord. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, power alone is not the control or safety mechanism being tested in this item.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-018-010"
+    }
+  ],
+  "licenseClass": "original"
+}

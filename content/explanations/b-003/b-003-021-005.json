@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-021-005",
+  "questionId": "B-003-021-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-021-005.\n\nWhy the correct answer is right: The safest handheld habit is to keep the antenna away from your head and away from bystanders while transmitting.\n\nPer-choice notes:\n- sourceIndex 0: \"Away from your head and away from others\": This is the correct choice because the safest handheld habit is to keep the antenna away from your head and away from bystanders while transmitting.\n- sourceIndex 1: \"Pointed towards the station you are contacting\": This is a near-miss because it shifts attention from Away from your head and away from others. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"Pointed at the horizon\": This answer would fit a different fault than Away from your head and away from others. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Pointed down to bounce the signal off the ground\": This option confuses another station topic with Away from your head and away from others. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, grounding words can sound plausible, but this choice puts the ground connection in the wrong role for this question.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-021-005"
+    }
+  ],
+  "licenseClass": "original"
+}

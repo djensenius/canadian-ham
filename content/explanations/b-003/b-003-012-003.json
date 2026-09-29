@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-012-003",
+  "questionId": "B-003-012-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-012-003.\n\nWhy the correct answer is right: PEP is defined at the crest of the RF envelope, using the average power in one RF cycle at that crest.\n\nPer-choice notes:\n- sourceIndex 0: \"Peak envelope power\": This is the correct choice because PEP is defined at the crest of the RF envelope, using the average power in one RF cycle at that crest.\n- sourceIndex 1: \"RMS power\": This is a near-miss because it shifts attention from Peak envelope power. In SSB microphone level, carrier suppression, sideband frequency, and peak envelope power, power alone is not the control or safety mechanism being tested in this item.\n- sourceIndex 2: \"Average radio frequency power\": This answer would fit a different fault than Peak envelope power. In SSB microphone level, carrier suppression, sideband frequency, and peak envelope power, power alone is not the control or safety mechanism being tested in this item.\n- sourceIndex 3: \"Peak transmitter input power\": This option confuses another station topic with Peak envelope power. In SSB microphone level, carrier suppression, sideband frequency, and peak envelope power, power alone is not the control or safety mechanism being tested in this item.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-05"
+    },
+    {
+      "type": "question",
+      "id": "B-003-012-003"
+    }
+  ],
+  "licenseClass": "original"
+}

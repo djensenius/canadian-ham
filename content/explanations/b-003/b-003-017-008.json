@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-017-008",
+  "questionId": "B-003-017-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-017-008.\n\nWhy the correct answer is right: Canadian homes are nominally supplied with 120 V branch circuits and 240 V for larger loads.\n\nPer-choice notes:\n- sourceIndex 0: \"120 volts and 240 volts\": This is the correct choice because Canadian homes are nominally supplied with 120 V branch circuits and 240 V for larger loads.\n- sourceIndex 1: \"110 volts and 220 volts\": This is a near-miss because it shifts attention from 120 volts and 240 volts. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"100 volts and 200 volts\": This answer would fit a different fault than 120 volts and 240 volts. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"130 volts and 260 volts\": This option confuses another station topic with 120 volts and 240 volts. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-017-008"
+    }
+  ],
+  "licenseClass": "original"
+}

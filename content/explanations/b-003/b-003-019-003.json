@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-019-003",
+  "questionId": "B-003-019-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-019-003.\n\nWhy the correct answer is right: An oversized fuse may not open during a fault, allowing wiring or components to overheat and possibly burn.\n\nPer-choice notes:\n- sourceIndex 0: \"A fault may cause permanent damage, including a fire\": This is the correct choice because an oversized fuse may not open during a fault, allowing wiring or components to overheat and possibly burn.\n- sourceIndex 1: \"The fuse may open during normal operation\": This is a near-miss because it shifts attention from A fault may cause permanent damage, including a fire. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, a fuse is overcurrent protection, but this answer puts it in the wrong place or gives it the wrong job.\n- sourceIndex 2: \"Voltage delivered to the circuit would be limited\": This answer would fit a different fault than A fault may cause permanent damage, including a fire. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, this misreads the voltage relationship or protection rating involved in the question.\n- sourceIndex 3: \"A low current circuit may not function properly\": This option confuses another station topic with A fault may cause permanent damage, including a fire. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, this confuses current capacity or current flow with the specific safety or operating effect being tested.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-019-003"
+    }
+  ],
+  "licenseClass": "original"
+}

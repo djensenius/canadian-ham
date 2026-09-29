@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-018-001",
+  "questionId": "B-003-018-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-018-001.\n\nWhy the correct answer is right: A key-operated switch positively controls station power, making casual or unauthorized home operation much harder.\n\nPer-choice notes:\n- sourceIndex 0: \"Use a key-operated on/off switch in the main power line\": This is the correct choice because a key-operated switch positively controls station power, making casual or unauthorized home operation much harder.\n- sourceIndex 1: \"Use a carrier-operated relay in the main power line\": This is a near-miss because it shifts attention from Use a key-operated on/off switch in the main power line. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, power alone is not the control or safety mechanism being tested in this item.\n- sourceIndex 2: \"Put a \\\"Danger - High Voltage\\\" sign in the station\": This answer would fit a different fault than Use a key-operated on/off switch in the main power line. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, this misreads the voltage relationship or protection rating involved in the question.\n- sourceIndex 3: \"Put fuses in the main power line\": This option confuses another station topic with Use a key-operated on/off switch in the main power line. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, power alone is not the control or safety mechanism being tested in this item.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-018-001"
+    }
+  ],
+  "licenseClass": "original"
+}

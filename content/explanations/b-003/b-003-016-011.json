@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-016-011",
+  "questionId": "B-003-016-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-016-011.\n\nWhy the correct answer is right: Short-circuiting a lithium-ion battery can produce very high current, overheating, fire, or cell damage.\n\nPer-choice notes:\n- sourceIndex 0: \"short-circuited\": This is the correct choice because short-circuiting a lithium-ion battery can produce very high current, overheating, fire, or cell damage.\n- sourceIndex 1: \"recharged\": This is a near-miss because it shifts attention from short-circuited. In battery polarity, rechargeable cells, capacity, internal resistance, and safe battery handling, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"left disconnected\": This answer would fit a different fault than short-circuited. In battery polarity, rechargeable cells, capacity, internal resistance, and safe battery handling, disconnecting can be valuable in the right context, but this choice disconnects the wrong thing for the asked protection.\n- sourceIndex 3: \"left overnight at room temperature\": This option confuses another station topic with short-circuited. In battery polarity, rechargeable cells, capacity, internal resistance, and safe battery handling, a warning sign or room arrangement is not a positive control for the hazard in this item.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-016-011"
+    }
+  ],
+  "licenseClass": "original"
+}

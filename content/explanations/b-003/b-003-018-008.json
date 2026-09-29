@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-018-008",
+  "questionId": "B-003-018-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-018-008.\n\nWhy the correct answer is right: The safe response is to remove power first, get emergency help, and give first aid only when it is safe to approach.\n\nPer-choice notes:\n- sourceIndex 0: \"Turn off the power, call for emergency help and provide first aid if needed\": This is the correct choice because the safe response is to remove power first, get emergency help, and give first aid only when it is safe to approach.\n- sourceIndex 1: \"Wait for a few minutes to see if the person can get away from the high voltage on their own, then try to help\": This is a near-miss because it shifts attention from Turn off the power, call for emergency help and provide first aid if needed. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, this misreads the voltage relationship or protection rating involved in the question.\n- sourceIndex 2: \"Immediately drag the person away from the high voltage\": This answer would fit a different fault than Turn off the power, call for emergency help and provide first aid if needed. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, this misreads the voltage relationship or protection rating involved in the question.\n- sourceIndex 3: \"Run from the area so you won't be burned too\": This option confuses another station topic with Turn off the power, call for emergency help and provide first aid if needed. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-018-008"
+    }
+  ],
+  "licenseClass": "original"
+}

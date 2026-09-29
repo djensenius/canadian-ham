@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-020-010",
+  "questionId": "B-003-020-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-020-010.\n\nWhy the correct answer is right: Turning off the transmitter and disconnecting the feedline removes RF energy before antenna repair begins.\n\nPer-choice notes:\n- sourceIndex 0: \"Be sure to turn off the transmitter and disconnect the transmission line\": This is the correct choice because turning off the transmitter and disconnecting the feedline removes RF energy before antenna repair begins.\n- sourceIndex 1: \"Be sure the antenna structure is properly grounded\": This is a near-miss because it shifts attention from Be sure to turn off the transmitter and disconnect the transmission line. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, grounding words can sound plausible, but this choice puts the ground connection in the wrong role for this question.\n- sourceIndex 2: \"Plan the operation in the shortest possible time to minimize fatigue\": This answer would fit a different fault than Be sure to turn off the transmitter and disconnect the transmission line. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Ensure all masts to be installed are sufficiently light\": This option confuses another station topic with Be sure to turn off the transmitter and disconnect the transmission line. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-020-010"
+    }
+  ],
+  "licenseClass": "original"
+}

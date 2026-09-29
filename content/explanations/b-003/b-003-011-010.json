@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-011-010",
+  "questionId": "B-003-011-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-011-010.\n\nWhy the correct answer is right: The amplifier is not perfectly efficient; the unconverted input energy is dissipated as heat in the final stage and its heat sink.\n\nPer-choice notes:\n- sourceIndex 0: \"It has been dissipated as heat\": This is the correct choice because the amplifier is not perfectly efficient; the unconverted input energy is dissipated as heat in the final stage and its heat sink.\n- sourceIndex 1: \"It has been used to provide greater efficiency\": This is a near-miss because it shifts attention from It has been dissipated as heat. In CW quality, AM sidebands, transmitter efficiency, and oscillator stability, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"It has been used to provide negative feedback\": This answer would fit a different fault than It has been dissipated as heat. In CW quality, AM sidebands, transmitter efficiency, and oscillator stability, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"It has been used to provide positive feedback\": This option confuses another station topic with It has been dissipated as heat. In CW quality, AM sidebands, transmitter efficiency, and oscillator stability, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-05"
+    },
+    {
+      "type": "question",
+      "id": "B-003-011-010"
+    }
+  ],
+  "licenseClass": "original"
+}

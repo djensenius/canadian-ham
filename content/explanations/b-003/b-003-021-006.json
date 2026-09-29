@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-021-006",
+  "questionId": "B-003-021-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-021-006.\n\nWhy the correct answer is right: High RF exposure deposits energy in tissue as heat, which is the principal biological effect addressed here.\n\nPer-choice notes:\n- sourceIndex 0: \"It heats the tissue\": This is the correct choice because high RF exposure deposits energy in tissue as heat, which is the principal biological effect addressed here.\n- sourceIndex 1: \"It lowers blood pressure\": This is a near-miss because it shifts attention from It heats the tissue. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, reducing that quantity is not the mechanism that produces the correct effect here.\n- sourceIndex 2: \"It paralyzes the tissue\": This answer would fit a different fault than It heats the tissue. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"It restricts blood flow\": This option confuses another station topic with It heats the tissue. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-021-006"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-011-011",
+  "questionId": "B-003-011-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-011-011.\n\nWhy the correct answer is right: RF amplifiers convert only part of their DC input into RF output, and the remaining energy appears as heat in the amplifier.\n\nPer-choice notes:\n- sourceIndex 0: \"appears as heat\": This is the correct choice because RF amplifiers convert only part of their DC input into RF output, and the remaining energy appears as heat in the amplifier.\n- sourceIndex 1: \"is lost in the transmission line\": This is a near-miss because it shifts attention from appears as heat. In CW quality, AM sidebands, transmitter efficiency, and oscillator stability, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"is due to oscillations\": This answer would fit a different fault than appears as heat. In CW quality, AM sidebands, transmitter efficiency, and oscillator stability, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"radiates from the antenna\": This option confuses another station topic with appears as heat. In CW quality, AM sidebands, transmitter efficiency, and oscillator stability, antenna details matter in station design, but this choice does not address the tested hazard or function.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-05"
+    },
+    {
+      "type": "question",
+      "id": "B-003-011-011"
+    }
+  ],
+  "licenseClass": "original"
+}

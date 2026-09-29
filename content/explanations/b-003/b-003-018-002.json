@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-018-002",
+  "questionId": "B-003-018-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-018-002.\n\nWhy the correct answer is right: Removing the microphone takes away the usual transmit control, reducing the chance of unauthorized mobile use.\n\nPer-choice notes:\n- sourceIndex 0: \"Remove the microphone when you are not using it\": This is the correct choice because removing the microphone takes away the usual transmit control, reducing the chance of unauthorized mobile use.\n- sourceIndex 1: \"Tune the radio to an unused frequency when you are done using it\": This is a near-miss because it shifts attention from Remove the microphone when you are not using it. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"Turn the radio off when you are not using it\": This answer would fit a different fault than Remove the microphone when you are not using it. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Put a \\\"Do not touch\\\" sign on the radio\": This option confuses another station topic with Remove the microphone when you are not using it. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, a warning sign or room arrangement is not a positive control for the hazard in this item.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-018-002"
+    }
+  ],
+  "licenseClass": "original"
+}

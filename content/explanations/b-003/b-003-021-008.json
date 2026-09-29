@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-021-008",
+  "questionId": "B-003-021-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-021-008.\n\nWhy the correct answer is right: In free space the same radiated power spreads over the surface of a sphere, so power density follows an inverse-square pattern with distance.\n\nPer-choice notes:\n- sourceIndex 0: \"It decreases as the square of the distance\": This is the correct choice because in free space the same radiated power spreads over the surface of a sphere, so power density follows an inverse-square pattern with distance.\n- sourceIndex 1: \"It decreases linearly with the distance\": This is a near-miss because it shifts attention from It decreases as the square of the distance. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, reducing that quantity is not the mechanism that produces the correct effect here.\n- sourceIndex 2: \"It decreases in inverse proportion to the distance\": This answer would fit a different fault than It decreases as the square of the distance. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, reducing that quantity is not the mechanism that produces the correct effect here.\n- sourceIndex 3: \"It decreases at a rate depending on ground absorption\": This option confuses another station topic with It decreases as the square of the distance. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, reducing that quantity is not the mechanism that produces the correct effect here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-021-008"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-020-007",
+  "questionId": "B-003-020-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-020-007.\n\nWhy the correct answer is right: A hard hat protects a ground helper from tools or hardware dropped by the person on the tower.\n\nPer-choice notes:\n- sourceIndex 0: \"To protect your head from something dropped from the tower\": This is the correct choice because a hard hat protects a ground helper from tools or hardware dropped by the person on the tower.\n- sourceIndex 1: \"So you won't be hurt if the tower should accidentally fall\": This is a near-miss because it shifts attention from To protect your head from something dropped from the tower. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"To keep RF energy away from your head during antenna testing\": This answer would fit a different fault than To protect your head from something dropped from the tower. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, antenna details matter in station design, but this choice does not address the tested hazard or function.\n- sourceIndex 3: \"So someone passing by will know that work is being done on the tower and will stay away\": This option confuses another station topic with To protect your head from something dropped from the tower. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-020-007"
+    }
+  ],
+  "licenseClass": "original"
+}

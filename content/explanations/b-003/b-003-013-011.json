@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-013-011",
+  "questionId": "B-003-013-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-013-011.\n\nWhy the correct answer is right: Capture effect is the tendency of an FM receiver to lock onto and demodulate the strongest of multiple signals.\n\nPer-choice notes:\n- sourceIndex 0: \"Capture effect\": This is the correct choice because capture effect is the tendency of an FM receiver to lock onto and demodulate the strongest of multiple signals.\n- sourceIndex 1: \"Overpower effect\": This is a near-miss because it shifts attention from Capture effect. In FM deviation, FM receiver behaviour, and local VHF/UHF voice practice, power alone is not the control or safety mechanism being tested in this item.\n- sourceIndex 2: \"Interference effect\": This answer would fit a different fault than Capture effect. In FM deviation, FM receiver behaviour, and local VHF/UHF voice practice, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Surrender effect\": This option confuses another station topic with Capture effect. In FM deviation, FM receiver behaviour, and local VHF/UHF voice practice, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-05"
+    },
+    {
+      "type": "question",
+      "id": "B-003-013-011"
+    }
+  ],
+  "licenseClass": "original"
+}

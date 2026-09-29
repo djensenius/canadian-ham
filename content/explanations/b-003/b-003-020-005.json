@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-020-005",
+  "questionId": "B-003-020-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-020-005.\n\nWhy the correct answer is right: Fall-arrest gear is personal protective equipment meant to reduce fall injury, not to carry tools or support the tower.\n\nPer-choice notes:\n- sourceIndex 0: \"To limit injuries if you fall\": This is the correct choice because fall-arrest gear is personal protective equipment meant to reduce fall injury, not to carry tools or support the tower.\n- sourceIndex 1: \"To bring any tools you might use up and down the tower safely\": This is a near-miss because it shifts attention from To limit injuries if you fall. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"To keep the tower from becoming unstable while you are working\": This answer would fit a different fault than To limit injuries if you fall. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"To hold your tools so they don't fall and injure someone on the ground\": This option confuses another station topic with To limit injuries if you fall. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, grounding words can sound plausible, but this choice puts the ground connection in the wrong role for this question.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-020-005"
+    }
+  ],
+  "licenseClass": "original"
+}

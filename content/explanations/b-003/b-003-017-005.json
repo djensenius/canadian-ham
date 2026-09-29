@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-017-005",
+  "questionId": "B-003-017-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-017-005.\n\nWhy the correct answer is right: Placing the fuse near the battery protects the whole downstream wire run from a short to the vehicle body.\n\nPer-choice notes:\n- sourceIndex 0: \"To protect the entire circuit\": This is the correct choice because placing the fuse near the battery protects the whole downstream wire run from a short to the vehicle body.\n- sourceIndex 1: \"To reduce the voltage drop in the radio's DC supply\": This is a near-miss because it shifts attention from To protect the entire circuit. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, this misreads the voltage relationship or protection rating involved in the question.\n- sourceIndex 2: \"To prevent the vehicle's electronic systems causing noise\": This answer would fit a different fault than To protect the entire circuit. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, noise control may be useful elsewhere, but this choice points to the wrong block or symptom.\n- sourceIndex 3: \"To better absorb voltage transients\": This option confuses another station topic with To protect the entire circuit. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, this misreads the voltage relationship or protection rating involved in the question.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-017-005"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-017-009",
+  "questionId": "B-003-017-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-017-009.\n\nWhy the correct answer is right: The 3 m distance means a 6 m round-trip conductor path; #10 gives 6 x 0.07 V = 0.42 V, within the 0.5 V limit, while #12 gives 0.66 V.\n\nPer-choice notes:\n- sourceIndex 0: \"Number 10, 0.07 V per metre\": This is the correct choice because the 3 m distance means a 6 m round-trip conductor path; #10 gives 6 x 0.07 V = 0.42 V, within the 0.5 V limit, while #12 gives 0.66 V.\n- sourceIndex 1: \"Number 14, 0.19 V per metre\": Number 14 gives 6 x 0.19 V = 1.14 V for the round trip, far above the 0.5 V limit.\n- sourceIndex 2: \"Number 12, 0.11 V per metre\": Number 12 gives 6 x 0.11 V = 0.66 V, which still exceeds the 0.5 V limit.\n- sourceIndex 3: \"Number 8, 0.05 V per metre\": Number 8 gives 6 x 0.05 V = 0.30 V, but the question asks for the minimum wire gauge; number 10 is the smallest listed wire that meets the limit.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-017-009"
+    }
+  ],
+  "licenseClass": "original"
+}

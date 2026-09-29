@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-016-005",
+  "questionId": "B-003-016-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-016-005.\n\nWhy the correct answer is right: NiMH cells can be recharged many times, which is the practical advantage over ordinary alkaline cells.\n\nPer-choice notes:\n- sourceIndex 0: \"It can be repeatedly recharged\": This is the correct choice because NiMH cells can be recharged many times, which is the practical advantage over ordinary alkaline cells.\n- sourceIndex 1: \"It provides a higher voltage\": This is a near-miss because it shifts attention from It can be repeatedly recharged. In battery polarity, rechargeable cells, capacity, internal resistance, and safe battery handling, more of that quantity would not address the fault and can make a clean-signal problem worse.\n- sourceIndex 2: \"It can be discarded without precautions\": This answer would fit a different fault than It can be repeatedly recharged. In battery polarity, rechargeable cells, capacity, internal resistance, and safe battery handling, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"It contains a liquid electrolyte\": This option confuses another station topic with It can be repeatedly recharged. In battery polarity, rechargeable cells, capacity, internal resistance, and safe battery handling, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-016-005"
+    }
+  ],
+  "licenseClass": "original"
+}

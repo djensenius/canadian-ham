@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-020-009",
+  "questionId": "B-003-020-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-020-009.\n\nWhy the correct answer is right: Open-wire line can carry high RF voltage, so contact during transmission can burn the person touching it.\n\nPer-choice notes:\n- sourceIndex 0: \"Because high-voltage radio energy might burn the person\": This is the correct choice because open-wire line can carry high RF voltage, so contact during transmission can burn the person touching it.\n- sourceIndex 1: \"Because contact might break the transmission line\": This is a near-miss because it shifts attention from Because high-voltage radio energy might burn the person. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"Because contact might cause spurious emissions\": This answer would fit a different fault than Because high-voltage radio energy might burn the person. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Because contact might cause a short circuit and damage the transmitter\": This option confuses another station topic with Because high-voltage radio energy might burn the person. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-020-009"
+    }
+  ],
+  "licenseClass": "original"
+}

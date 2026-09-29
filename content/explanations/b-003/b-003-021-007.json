@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-021-007",
+  "questionId": "B-003-021-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-021-007.\n\nWhy the correct answer is right: Eyes are especially vulnerable to RF heating because they shed heat poorly compared with many other tissues.\n\nPer-choice notes:\n- sourceIndex 0: \"Eyes\": This is the correct choice because eyes are especially vulnerable to RF heating because they shed heat poorly compared with many other tissues.\n- sourceIndex 1: \"Heart\": This is a near-miss because it shifts attention from Eyes. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"Liver\": This answer would fit a different fault than Eyes. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Hands\": This option confuses another station topic with Eyes. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-021-007"
+    }
+  ],
+  "licenseClass": "original"
+}

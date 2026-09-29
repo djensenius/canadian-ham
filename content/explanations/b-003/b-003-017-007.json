@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-017-007",
+  "questionId": "B-003-017-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-017-007.\n\nWhy the correct answer is right: Heavy wire has lower resistance, reducing voltage drop during high transmit current.\n\nPer-choice notes:\n- sourceIndex 0: \"To minimize the voltage drop\": This is the correct choice because heavy wire has lower resistance, reducing voltage drop during high transmit current.\n- sourceIndex 1: \"To prevent an electrical shock\": This is a near-miss because it shifts attention from To minimize the voltage drop. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"To avoid RF interference\": This answer would fit a different fault than To minimize the voltage drop. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"To minimize ripple\": This option confuses another station topic with To minimize the voltage drop. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-017-007"
+    }
+  ],
+  "licenseClass": "original"
+}

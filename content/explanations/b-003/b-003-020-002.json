@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-020-002",
+  "questionId": "B-003-020-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-020-002.\n\nWhy the correct answer is right: A line surge protector works best at the outside entry near the grounding system so surge energy is diverted before entering the shack.\n\nPer-choice notes:\n- sourceIndex 0: \"Outside, as close to earth grounding as possible\": This is the correct choice because a line surge protector works best at the outside entry near the grounding system so surge energy is diverted before entering the shack.\n- sourceIndex 1: \"Close to the antenna\": This is a near-miss because it shifts attention from Outside, as close to earth grounding as possible. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, antenna details matter in station design, but this choice does not address the tested hazard or function.\n- sourceIndex 2: \"Behind the transceiver\": This answer would fit a different fault than Outside, as close to earth grounding as possible. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Anywhere on the line\": This option confuses another station topic with Outside, as close to earth grounding as possible. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-020-002"
+    }
+  ],
+  "licenseClass": "original"
+}

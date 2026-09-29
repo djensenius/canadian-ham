@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-017-006",
+  "questionId": "B-003-017-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-017-006.\n\nWhy the correct answer is right: Switch-mode supplies can be much smaller and lighter than linear supplies for the same output power.\n\nPer-choice notes:\n- sourceIndex 0: \"Reduced physical dimensions and weight\": This is the correct choice because switch-mode supplies can be much smaller and lighter than linear supplies for the same output power.\n- sourceIndex 1: \"Lower risk of radio frequency noise\": This is a near-miss because it shifts attention from Reduced physical dimensions and weight. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, reducing that quantity is not the mechanism that produces the correct effect here.\n- sourceIndex 2: \"Different simultaneous output voltages\": This answer would fit a different fault than Reduced physical dimensions and weight. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, this misreads the voltage relationship or protection rating involved in the question.\n- sourceIndex 3: \"Simpler to repair\": This option confuses another station topic with Reduced physical dimensions and weight. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-017-006"
+    }
+  ],
+  "licenseClass": "original"
+}

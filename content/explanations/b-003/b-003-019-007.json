@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-019-007",
+  "questionId": "B-003-019-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-019-007.\n\nWhy the correct answer is right: A long ground lead can be a high-impedance RF path, leaving RF voltage on the station chassis during transmission.\n\nPer-choice notes:\n- sourceIndex 0: \"The ground wire has high impedance on your operating frequency\": This is the correct choice because a long ground lead can be a high-impedance RF path, leaving RF voltage on the station chassis during transmission.\n- sourceIndex 1: \"The transmitting antenna is not the correct wavelength\": This is a near-miss because it shifts attention from The ground wire has high impedance on your operating frequency. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, antenna details matter in station design, but this choice does not address the tested hazard or function.\n- sourceIndex 2: \"The gauge of the ground wire used is insufficient\": This answer would fit a different fault than The ground wire has high impedance on your operating frequency. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, grounding words can sound plausible, but this choice puts the ground connection in the wrong role for this question.\n- sourceIndex 3: \"The ground connection of the wall outlet is defective\": This option confuses another station topic with The ground wire has high impedance on your operating frequency. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, grounding words can sound plausible, but this choice puts the ground connection in the wrong role for this question.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-019-007"
+    }
+  ],
+  "licenseClass": "original"
+}

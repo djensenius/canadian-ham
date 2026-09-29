@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-012-001",
+  "questionId": "B-003-012-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-012-001.\n\nWhy the correct answer is right: Excessive SSB microphone gain overdrives the audio and RF chain, making the signal wider and likely to bother nearby stations.\n\nPer-choice notes:\n- sourceIndex 0: \"It may interfere with other stations operating near its frequency\": This is the correct choice because excessive SSB microphone gain overdrives the audio and RF chain, making the signal wider and likely to bother nearby stations.\n- sourceIndex 1: \"It may cause harmonic interference on higher bands\": This is a near-miss because it shifts attention from It may interfere with other stations operating near its frequency. In SSB microphone level, carrier suppression, sideband frequency, and peak envelope power, harmonics are unwanted multiples of the transmit frequency, a different problem from the one being asked about.\n- sourceIndex 2: \"It may cause interference to other stations operating on lower bands\": This answer would fit a different fault than It may interfere with other stations operating near its frequency. In SSB microphone level, carrier suppression, sideband frequency, and peak envelope power, reducing that quantity is not the mechanism that produces the correct effect here.\n- sourceIndex 3: \"It may cause digital interference to computer equipment\": This option confuses another station topic with It may interfere with other stations operating near its frequency. In SSB microphone level, carrier suppression, sideband frequency, and peak envelope power, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-05"
+    },
+    {
+      "type": "question",
+      "id": "B-003-012-001"
+    }
+  ],
+  "licenseClass": "original"
+}

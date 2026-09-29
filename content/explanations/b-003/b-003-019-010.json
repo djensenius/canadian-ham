@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-019-010",
+  "questionId": "B-003-019-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-019-010.\n\nWhy the correct answer is right: Bonding the chassis to the AC safety ground prevents a fault from leaving the metal cabinet energized.\n\nPer-choice notes:\n- sourceIndex 0: \"Ensures the chassis does not become energized\": This is the correct choice because bonding the chassis to the AC safety ground prevents a fault from leaving the metal cabinet energized.\n- sourceIndex 1: \"Protects connected equipment from over voltage\": This is a near-miss because it shifts attention from Ensures the chassis does not become energized. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, this misreads the voltage relationship or protection rating involved in the question.\n- sourceIndex 2: \"Prevents damage to the AC supply circuit breaker\": This answer would fit a different fault than Ensures the chassis does not become energized. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Prevents the equipment fuse from blowing unnecessarily\": This option confuses another station topic with Ensures the chassis does not become energized. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, a fuse is overcurrent protection, but this answer puts it in the wrong place or gives it the wrong job.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-019-010"
+    }
+  ],
+  "licenseClass": "original"
+}

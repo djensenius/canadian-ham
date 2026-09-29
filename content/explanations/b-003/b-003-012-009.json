@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-012-009",
+  "questionId": "B-003-012-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-012-009.\n\nWhy the correct answer is right: A balanced modulator cancels the carrier while leaving the two sidebands available for later filtering or processing.\n\nPer-choice notes:\n- sourceIndex 0: \"suppress the carrier and pass the two sidebands\": This is the correct choice because a balanced modulator cancels the carrier while leaving the two sidebands available for later filtering or processing.\n- sourceIndex 1: \"make sure that the carrier and both sidebands are 180 degrees out of phase\": This is a near-miss because it shifts attention from suppress the carrier and pass the two sidebands. In SSB microphone level, carrier suppression, sideband frequency, and peak envelope power, carrier terminology is being applied to the wrong modulation condition here.\n- sourceIndex 2: \"ensure that the percentage of modulation is kept constant\": This answer would fit a different fault than suppress the carrier and pass the two sidebands. In SSB microphone level, carrier suppression, sideband frequency, and peak envelope power, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"suppress the carrier and pass one sideband\": This option confuses another station topic with suppress the carrier and pass the two sidebands. In SSB microphone level, carrier suppression, sideband frequency, and peak envelope power, carrier terminology is being applied to the wrong modulation condition here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-05"
+    },
+    {
+      "type": "question",
+      "id": "B-003-012-009"
+    }
+  ],
+  "licenseClass": "original"
+}

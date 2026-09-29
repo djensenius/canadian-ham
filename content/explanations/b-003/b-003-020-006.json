@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-020-006",
+  "questionId": "B-003-020-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-020-006.\n\nWhy the correct answer is right: A wire antenna should be high enough that people cannot touch it from the ground, especially while RF is present.\n\nPer-choice notes:\n- sourceIndex 0: \"High enough so that no one can touch any part of it from the ground\": This is the correct choice because a wire antenna should be high enough that people cannot touch it from the ground, especially while RF is present.\n- sourceIndex 1: \"Above high-voltage electrical lines\": This is a near-miss because it shifts attention from High enough so that no one can touch any part of it from the ground. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, this misreads the voltage relationship or protection rating involved in the question.\n- sourceIndex 2: \"Just high enough so you can easily reach it for adjustments or repairs\": This answer would fit a different fault than High enough so that no one can touch any part of it from the ground. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"As close to the ground as possible\": This option confuses another station topic with High enough so that no one can touch any part of it from the ground. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, grounding words can sound plausible, but this choice puts the ground connection in the wrong role for this question.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-020-006"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-021-003",
+  "questionId": "B-003-021-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-021-003.\n\nWhy the correct answer is right: Before shielding is removed, the amplifier must be made impossible to energize accidentally so RF leakage and high voltage are not exposed.\n\nPer-choice notes:\n- sourceIndex 0: \"Make sure the amplifier cannot accidentally be turned on\": This is the correct choice because before shielding is removed, the amplifier must be made impossible to energize accidentally so RF leakage and high voltage are not exposed.\n- sourceIndex 1: \"Make sure that RF leakage filters are connected\": This is a near-miss because it shifts attention from Make sure the amplifier cannot accidentally be turned on. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"Make sure the amplifier output connector is grounded\": This answer would fit a different fault than Make sure the amplifier cannot accidentally be turned on. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, grounding words can sound plausible, but this choice puts the ground connection in the wrong role for this question.\n- sourceIndex 3: \"Make sure all RF screens are in place at the amplifier output connector\": This option confuses another station topic with Make sure the amplifier cannot accidentally be turned on. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-021-003"
+    }
+  ],
+  "licenseClass": "original"
+}

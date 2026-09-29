@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-003-08-A",
+  "lessonId": "L-003-08",
+  "officialQuestionIds": [
+    "B-003-018-001",
+    "B-003-018-008",
+    "B-003-019-002",
+    "B-003-019-003",
+    "B-003-019-009",
+    "B-003-020-002",
+    "B-003-020-010",
+    "B-003-021-005"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-003-08-A-C1",
+      "prompt": { "en": "A station has separate unbonded ground rods for the tower and operating desk. What is the safety concern?", "fr": null },
+      "choices": [
+        { "text": { "en": "The rods can develop dangerous voltage differences during a fault or surge", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The transmitter will automatically change frequency", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The antenna polarization will become circular", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The receiver squelch will stop muting noise", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Bonding electrodes together reduces voltage differences that could otherwise put surge or fault current through station equipment.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-08-A-C2",
+      "prompt": { "en": "A desk radio's only lightning protector is mounted behind the transceiver after the cable has crossed the room. What improvement best matches the lesson?", "fr": null },
+      "choices": [
+        { "text": { "en": "Move the protector to the antenna feed point at the top of the mast", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Install the protector at the outside entry point and bond it there", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Remove the station bonding conductors", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Use a longer indoor coax loop before the radio", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Surge energy should be diverted at the entry and grounding point before it is routed through the operating position.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-08-A-C3",
+      "prompt": { "en": "You plan to use an indoor transmitting antenna during a short low-power test. Which setup gives the best RF-safety margin?", "fr": null },
+      "choices": [
+        { "text": { "en": "Place it beside the operating chair to shorten the coax", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Aim a high-gain beam through an occupied room", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Hang it where people can brush against the feed point", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Keep it as far as practical from occupied spaces and control access", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "Distance and access control are conservative RF-safety tools, especially for indoor antennas.", "fr": null }
+    }
+  ]
+}

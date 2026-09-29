@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-015-005",
+  "questionId": "B-003-015-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-015-005.\n\nWhy the correct answer is right: FT8 signals are very narrow, allowing many separate transmissions to fit inside the spectrum used by one SSB voice signal.\n\nPer-choice notes:\n- sourceIndex 0: \"Narrow bandwidth of an FT8 signal\": This is the correct choice because FT8 signals are very narrow, allowing many separate transmissions to fit inside the spectrum used by one SSB voice signal.\n- sourceIndex 1: \"Time interleaving of the transmissions\": This is a near-miss because it shifts attention from Narrow bandwidth of an FT8 signal. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"Formatting of the messages into packets\": This answer would fit a different fault than Narrow bandwidth of an FT8 signal. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Message structure with limited contact information\": This option confuses another station topic with Narrow bandwidth of an FT8 signal. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-06"
+    },
+    {
+      "type": "question",
+      "id": "B-003-015-005"
+    }
+  ],
+  "licenseClass": "original"
+}

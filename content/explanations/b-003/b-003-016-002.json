@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-016-002",
+  "questionId": "B-003-016-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-016-002.\n\nWhy the correct answer is right: A battery is polarized; its positive and negative terminals matter when connecting equipment.\n\nPer-choice notes:\n- sourceIndex 0: \"A battery\": This is the correct choice because a battery is polarized; its positive and negative terminals matter when connecting equipment.\n- sourceIndex 1: \"A potentiometer\": This is a near-miss because it shifts attention from A battery. In battery polarity, rechargeable cells, capacity, internal resistance, and safe battery handling, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"A fuse\": This answer would fit a different fault than A battery. In battery polarity, rechargeable cells, capacity, internal resistance, and safe battery handling, a fuse is overcurrent protection, but this answer puts it in the wrong place or gives it the wrong job.\n- sourceIndex 3: \"A resistor\": This option confuses another station topic with A battery. In battery polarity, rechargeable cells, capacity, internal resistance, and safe battery handling, that component has a specific circuit role, but it is not the energy source or safety item being asked for.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-016-002"
+    }
+  ],
+  "licenseClass": "original"
+}

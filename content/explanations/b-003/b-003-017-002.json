@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-017-002",
+  "questionId": "B-003-017-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-017-002.\n\nWhy the correct answer is right: A DC power supply is the station device that changes household AC into regulated low-voltage DC for radio equipment.\n\nPer-choice notes:\n- sourceIndex 0: \"Power supply\": This is the correct choice because a DC power supply is the station device that changes household AC into regulated low-voltage DC for radio equipment.\n- sourceIndex 1: \"Low-pass filter\": This is a near-miss because it shifts attention from Power supply. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, a low-pass filter reduces harmonics but does not fix every transmitter-quality fault.\n- sourceIndex 2: \"Inverter\": This answer would fit a different fault than Power supply. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Power conditioner\": This option confuses another station topic with Power supply. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, power alone is not the control or safety mechanism being tested in this item.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-017-002"
+    }
+  ],
+  "licenseClass": "original"
+}

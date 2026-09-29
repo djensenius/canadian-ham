@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-016-008",
+  "questionId": "B-003-016-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-016-008.\n\nWhy the correct answer is right: Drawing more than the specified current uses the available charge faster and usually reduces delivered capacity.\n\nPer-choice notes:\n- sourceIndex 0: \"The battery will discharge more rapidly than specified\": This is the correct choice because drawing more than the specified current uses the available charge faster and usually reduces delivered capacity.\n- sourceIndex 1: \"One or more cells may become short-circuited\": This is a near-miss because it shifts attention from The battery will discharge more rapidly than specified. In battery polarity, rechargeable cells, capacity, internal resistance, and safe battery handling, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"The battery will accept the subsequent charge in a shorter time\": This answer would fit a different fault than The battery will discharge more rapidly than specified. In battery polarity, rechargeable cells, capacity, internal resistance, and safe battery handling, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"The voltage delivered will be higher\": This option confuses another station topic with The battery will discharge more rapidly than specified. In battery polarity, rechargeable cells, capacity, internal resistance, and safe battery handling, more of that quantity would not address the fault and can make a clean-signal problem worse.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-016-008"
+    }
+  ],
+  "licenseClass": "original"
+}

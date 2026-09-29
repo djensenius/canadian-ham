@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-015-007",
+  "questionId": "B-003-015-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-015-007.\n\nWhy the correct answer is right: RTTY contacts need a few hundred hertz of centre-to-centre separation so the shifts and filters do not overlap excessively.\n\nPer-choice notes:\n- sourceIndex 0: \"250 Hz to 500 Hz\": This is the correct choice because RTTY contacts need a few hundred hertz of centre-to-centre separation so the shifts and filters do not overlap excessively.\n- sourceIndex 1: \"50 Hz to 100 Hz\": This is a near-miss because it shifts attention from 250 Hz to 500 Hz. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"3 kHz to 5 kHz\": This answer would fit a different fault than 250 Hz to 500 Hz. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"6 kHz to 10 kHz\": This option confuses another station topic with 250 Hz to 500 Hz. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-06"
+    },
+    {
+      "type": "question",
+      "id": "B-003-015-007"
+    }
+  ],
+  "licenseClass": "original"
+}

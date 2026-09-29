@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-013-002",
+  "questionId": "B-003-013-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-013-002.\n\nWhy the correct answer is right: A transmitter set for half the repeater deviation will sound quiet because the receiver sees less frequency swing for the same speech.\n\nPer-choice notes:\n- sourceIndex 0: \"Your audio will be low\": This is the correct choice because a transmitter set for half the repeater deviation will sound quiet because the receiver sees less frequency swing for the same speech.\n- sourceIndex 1: \"Your audio will be distorted\": This is a near-miss because it shifts attention from Your audio will be low. In FM deviation, FM receiver behaviour, and local VHF/UHF voice practice, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"Your range will be shorter\": This answer would fit a different fault than Your audio will be low. In FM deviation, FM receiver behaviour, and local VHF/UHF voice practice, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"The repeater will not respond\": This option confuses another station topic with Your audio will be low. In FM deviation, FM receiver behaviour, and local VHF/UHF voice practice, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-05"
+    },
+    {
+      "type": "question",
+      "id": "B-003-013-002"
+    }
+  ],
+  "licenseClass": "original"
+}

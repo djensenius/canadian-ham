@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-018-007",
+  "questionId": "B-003-018-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-018-007.\n\nWhy the correct answer is right: 30 V is the threshold used in this exam context for voltage normally treated as hazardous to people.\n\nPer-choice notes:\n- sourceIndex 0: \"30\": This is the correct choice because 30 V is the threshold used in this exam context for voltage normally treated as hazardous to people.\n- sourceIndex 1: \"100\": This is a higher voltage than the threshold used in the Basic safety question.\n- sourceIndex 2: \"240\": This is a mains-level value, but lower voltages can still be treated as hazardous in this safety context.\n- sourceIndex 3: \"347\": This industrial-level voltage is not the lowest threshold considered hazardous here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-018-007"
+    }
+  ],
+  "licenseClass": "original"
+}

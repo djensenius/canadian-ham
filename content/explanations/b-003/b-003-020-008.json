@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-020-008",
+  "questionId": "B-003-020-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-020-008.\n\nWhy the correct answer is right: Touching an energized transmitting antenna can produce RF burns because RF voltage and current can be present on the conductor.\n\nPer-choice notes:\n- sourceIndex 0: \"Touching the antenna might cause RF burns\": This is the correct choice because touching an energized transmitting antenna can produce RF burns because RF voltage and current can be present on the conductor.\n- sourceIndex 1: \"Touching the antenna might reflect the signal back to the transmitter and cause damage\": This is a near-miss because it shifts attention from Touching the antenna might cause RF burns. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, antenna details matter in station design, but this choice does not address the tested hazard or function.\n- sourceIndex 2: \"Touching the antenna might radiate harmonics\": This answer would fit a different fault than Touching the antenna might cause RF burns. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, harmonics are unwanted multiples of the transmit frequency, a different problem from the one being asked about.\n- sourceIndex 3: \"Touching the antenna might cause television interference\": This option confuses another station topic with Touching the antenna might cause RF burns. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, antenna details matter in station design, but this choice does not address the tested hazard or function.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-020-008"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-020-003",
+  "questionId": "B-003-020-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-020-003.\n\nWhy the correct answer is right: Physically disconnecting equipment from mains and antenna cables is the most conservative protection when lightning threatens.\n\nPer-choice notes:\n- sourceIndex 0: \"Disconnect all equipment from the power lines and antenna cables\": This is the correct choice because physically disconnecting equipment from mains and antenna cables is the most conservative protection when lightning threatens.\n- sourceIndex 1: \"Use heavy insulation on the wiring\": This is a near-miss because it shifts attention from Disconnect all equipment from the power lines and antenna cables. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"Never turn off the equipment\": This answer would fit a different fault than Disconnect all equipment from the power lines and antenna cables. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Disconnect the ground system from all radios\": This option confuses another station topic with Disconnect all equipment from the power lines and antenna cables. In lightning protection, tower work, antenna contact hazards, and safe antenna servicing, grounding words can sound plausible, but this choice puts the ground connection in the wrong role for this question.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-020-003"
+    }
+  ],
+  "licenseClass": "original"
+}

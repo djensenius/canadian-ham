@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-019-009",
+  "questionId": "B-003-019-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-019-009.\n\nWhy the correct answer is right: An insulated shorting stick with an inline resistor limits discharge current while protecting the worker from stored charge.\n\nPer-choice notes:\n- sourceIndex 0: \"Use an insulated shorting stick with an inline resistor\": This is the correct choice because an insulated shorting stick with an inline resistor limits discharge current while protecting the worker from stored charge.\n- sourceIndex 1: \"Use a long screwdriver with an insulated handle\": This is a near-miss because it shifts attention from Use an insulated shorting stick with an inline resistor. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"Use an insulated wire with alligator clips on each end\": This answer would fit a different fault than Use an insulated shorting stick with an inline resistor. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Allow time for bleeder resistors to discharge the capacitors\": This option confuses another station topic with Use an insulated shorting stick with an inline resistor. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, that component has a specific circuit role, but it is not the energy source or safety item being asked for.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-019-009"
+    }
+  ],
+  "licenseClass": "original"
+}

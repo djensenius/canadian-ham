@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-017-001",
+  "questionId": "B-003-017-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-017-001.\n\nWhy the correct answer is right: A simple supply with poor regulation or filtering can sag during keying, moving the oscillator or stages enough to create chirp.\n\nPer-choice notes:\n- sourceIndex 0: \"Chirp\": This is the correct choice because a simple supply with poor regulation or filtering can sag during keying, moving the oscillator or stages enough to create chirp.\n- sourceIndex 1: \"Key clicks\": This is a near-miss because it shifts attention from Chirp. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, key clicks are abrupt keying-edge products, not the frequency or mode concept in this item.\n- sourceIndex 2: \"Harmonics\": This answer would fit a different fault than Chirp. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, harmonics are unwanted multiples of the transmit frequency, a different problem from the one being asked about.\n- sourceIndex 3: \"Overmodulation\": This option confuses another station topic with Chirp. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-017-001"
+    }
+  ],
+  "licenseClass": "original"
+}

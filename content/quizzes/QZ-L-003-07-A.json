@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-003-07-A",
+  "lessonId": "L-003-07",
+  "officialQuestionIds": [
+    "B-003-016-003",
+    "B-003-016-006",
+    "B-003-016-007",
+    "B-003-016-009",
+    "B-003-016-011",
+    "B-003-017-003",
+    "B-003-017-005",
+    "B-003-017-011"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-003-07-A-C1",
+      "prompt": { "en": "Two matched 10.8 V, 6 Ah packs are connected in series using equipment designed for that pack set. What is the resulting pack rating?", "fr": null },
+      "choices": [
+        { "text": { "en": "10.8 V, 12 Ah", "fr": null }, "isCorrect": false },
+        { "text": { "en": "21.6 V, 12 Ah", "fr": null }, "isCorrect": false },
+        { "text": { "en": "21.6 V, 6 Ah", "fr": null }, "isCorrect": true },
+        { "text": { "en": "5.4 V, 24 Ah", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Series connection adds voltage while the ampere-hour rating stays that of one matched string.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-07-A-C2",
+      "prompt": { "en": "A radio resets only on transmit when powered through a long thin DC cable. Which cause best fits?", "fr": null },
+      "choices": [
+        { "text": { "en": "Voltage drop in the DC leads", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Too much receiver DSP noise reduction", "fr": null }, "isCorrect": false },
+        { "text": { "en": "An antenna that is too high", "fr": null }, "isCorrect": false },
+        { "text": { "en": "An overactive repeater squelch", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Transmit current is much higher than receive current, so undersized or long leads can drop enough voltage to reset the radio.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-07-A-C3",
+      "prompt": { "en": "A compact switching supply powers the radio but a buzz appears across several bands. What is the most relevant comparison with a linear supply?", "fr": null },
+      "choices": [
+        { "text": { "en": "Linear supplies are always too small for transmitters", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Switching supplies cannot provide DC", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Linear supplies generally weigh less", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A linear supply may have lower RF-noise risk", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "A good switch-mode supply can work well, but a linear supply is often chosen when RF noise risk is the deciding factor.", "fr": null }
+    }
+  ]
+}

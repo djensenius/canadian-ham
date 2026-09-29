@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-013-005",
+  "questionId": "B-003-013-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-013-005.\n\nWhy the correct answer is right: FM is useful locally on VHF/UHF because a sufficiently strong carrier gives quiet, readable audio even at modest signal levels.\n\nPer-choice notes:\n- sourceIndex 0: \"It provides a good signal-to-noise ratio at low RF signal levels\": This is the correct choice because FM is useful locally on VHF/UHF because a sufficiently strong carrier gives quiet, readable audio even at modest signal levels.\n- sourceIndex 1: \"The carrier is not detectable\": This is a near-miss because it shifts attention from It provides a good signal-to-noise ratio at low RF signal levels. In FM deviation, FM receiver behaviour, and local VHF/UHF voice practice, carrier terminology is being applied to the wrong modulation condition here.\n- sourceIndex 2: \"It is more resistant to distortion caused by reflected signals\": This answer would fit a different fault than It provides a good signal-to-noise ratio at low RF signal levels. In FM deviation, FM receiver behaviour, and local VHF/UHF voice practice, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Its RF carrier stays on frequency better than the AM modes\": This option confuses another station topic with It provides a good signal-to-noise ratio at low RF signal levels. In FM deviation, FM receiver behaviour, and local VHF/UHF voice practice, carrier terminology is being applied to the wrong modulation condition here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-05"
+    },
+    {
+      "type": "question",
+      "id": "B-003-013-005"
+    }
+  ],
+  "licenseClass": "original"
+}

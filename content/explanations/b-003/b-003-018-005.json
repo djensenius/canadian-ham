@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-018-005",
+  "questionId": "B-003-018-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-018-005.\n\nWhy the correct answer is right: Currents as low as 20 mA through the body can be fatal under the wrong conditions, especially through the chest.\n\nPer-choice notes:\n- sourceIndex 0: \"20 milliamperes\": This is the correct choice because currents as low as 20 mA through the body can be fatal under the wrong conditions, especially through the chest.\n- sourceIndex 1: \"500 milliamperes\": This is much higher than the small currents that can disrupt the heart and be fatal.\n- sourceIndex 2: \"1 ampere\": One ampere is far above the exam threshold; waiting for that much current would be dangerously wrong.\n- sourceIndex 3: \"2 amperes\": Two amperes is far above the hazardous-current level and would not be a safe minimum assumption.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-018-005"
+    }
+  ],
+  "licenseClass": "original"
+}

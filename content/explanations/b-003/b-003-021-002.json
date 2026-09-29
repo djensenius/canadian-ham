@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-021-002",
+  "questionId": "B-003-021-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-021-002.\n\nWhy the correct answer is right: A UHF transmitting antenna should be located so people cannot get near it during transmissions, maintaining separation from RF fields.\n\nPer-choice notes:\n- sourceIndex 0: \"Make sure the antenna will be in a place where no one can get near it when you are transmitting\": This is the correct choice because a UHF transmitting antenna should be located so people cannot get near it during transmissions, maintaining separation from RF fields.\n- sourceIndex 1: \"Make sure the antenna is near the ground to keep its RF energy pointing in the correct direction\": This is a near-miss because it shifts attention from Make sure the antenna will be in a place where no one can get near it when you are transmitting. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, grounding words can sound plausible, but this choice puts the ground connection in the wrong role for this question.\n- sourceIndex 2: \"Make sure you connect an RF leakage filter at the antenna feed point\": This answer would fit a different fault than Make sure the antenna will be in a place where no one can get near it when you are transmitting. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, antenna details matter in station design, but this choice does not address the tested hazard or function.\n- sourceIndex 3: \"Make sure that RF field screens are in place\": This option confuses another station topic with Make sure the antenna will be in a place where no one can get near it when you are transmitting. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-021-002"
+    }
+  ],
+  "licenseClass": "original"
+}

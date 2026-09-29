@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-019-008",
+  "questionId": "B-003-019-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-019-008.\n\nWhy the correct answer is right: A single-point ground avoids multiple uncontrolled chassis paths and makes bonding easier to inspect.\n\nPer-choice notes:\n- sourceIndex 0: \"To the station's single-point ground\": This is the correct choice because a single-point ground avoids multiple uncontrolled chassis paths and makes bonding easier to inspect.\n- sourceIndex 1: \"To separate ground electrodes\": This is a near-miss because it shifts attention from To the station's single-point ground. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, grounding words can sound plausible, but this choice puts the ground connection in the wrong role for this question.\n- sourceIndex 2: \"To the antenna system ground\": This answer would fit a different fault than To the station's single-point ground. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, grounding words can sound plausible, but this choice puts the ground connection in the wrong role for this question.\n- sourceIndex 3: \"To adjacent devices in a chain\": This option confuses another station topic with To the station's single-point ground. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-019-008"
+    }
+  ],
+  "licenseClass": "original"
+}

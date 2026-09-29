@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-021-011",
+  "questionId": "B-003-021-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-021-011.\n\nWhy the correct answer is right: Placing dipole ends and centre high reduces the chance that people touch energized high-voltage points or stand in strong near fields.\n\nPer-choice notes:\n- sourceIndex 0: \"As high as possible to prevent people from coming in contact with the antenna\": This is the correct choice because placing dipole ends and centre high reduces the chance that people touch energized high-voltage points or stand in strong near fields.\n- sourceIndex 1: \"Near or over moist ground so RF energy will be radiated away from the ground\": This is a near-miss because it shifts attention from As high as possible to prevent people from coming in contact with the antenna. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, grounding words can sound plausible, but this choice puts the ground connection in the wrong role for this question.\n- sourceIndex 2: \"As close to the transmitter as possible so RF energy will be concentrated near the transmitter\": This answer would fit a different fault than As high as possible to prevent people from coming in contact with the antenna. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Close to the ground so simple adjustments can be easily made without climbing a ladder\": This option confuses another station topic with As high as possible to prevent people from coming in contact with the antenna. In RF exposure controls for UHF, microwave, handheld, indoor, dipole, and high-gain antennas, grounding words can sound plausible, but this choice puts the ground connection in the wrong role for this question.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-021-011"
+    }
+  ],
+  "licenseClass": "original"
+}

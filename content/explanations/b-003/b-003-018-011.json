@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-018-011",
+  "questionId": "B-003-018-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-018-011.\n\nWhy the correct answer is right: Live power-supply troubleshooting exposes the worker to energized conductors and stored energy, so electric shock is the main risk.\n\nPer-choice notes:\n- sourceIndex 0: \"Electric shock\": This is the correct choice because live power-supply troubleshooting exposes the worker to energized conductors and stored energy, so electric shock is the main risk.\n- sourceIndex 1: \"Damaging connected equipment\": This is a near-miss because it shifts attention from Electric shock. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"Electromagnetic interference\": This answer would fit a different fault than Electric shock. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Blowing the fuse\": This option confuses another station topic with Electric shock. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, a fuse is overcurrent protection, but this answer puts it in the wrong place or gives it the wrong job.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-018-011"
+    }
+  ],
+  "licenseClass": "original"
+}

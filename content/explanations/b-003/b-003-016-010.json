@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-016-010",
+  "questionId": "B-003-016-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-016-010.\n\nWhy the correct answer is right: Series batteries add voltage while capacity stays the same, so two 12 V, 20 Ah batteries become 24 V, 20 Ah.\n\nPer-choice notes:\n- sourceIndex 0: \"24 volts, 20 ampere-hours\": This is the correct choice because series batteries add voltage while capacity stays the same, so two 12 V, 20 Ah batteries become 24 V, 20 Ah.\n- sourceIndex 1: \"24 volts, 40 ampere-hours\": This adds capacity as if the batteries were in parallel, but series keeps ampere-hours the same.\n- sourceIndex 2: \"12 volts, 40 ampere-hours\": This is the parallel result: voltage unchanged and capacity doubled.\n- sourceIndex 3: \"6 volts, 80 ampere-hours\": This would require a different converter or arrangement; two equal batteries in series do not halve voltage or quadruple capacity.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-016-010"
+    }
+  ],
+  "licenseClass": "original"
+}

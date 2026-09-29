@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-014-007",
+  "questionId": "B-003-014-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-014-007.\n\nWhy the correct answer is right: With peaks already at the clean limit, speech processing raises average output power by filling in quieter speech portions.\n\nPer-choice notes:\n- sourceIndex 0: \"Increase the average power\": This is the correct choice because with peaks already at the clean limit, speech processing raises average output power by filling in quieter speech portions.\n- sourceIndex 1: \"Increase the peak envelope power\": This is a near-miss because it shifts attention from Increase the average power. In operator controls, keyers, microphones, VOX, speech processing, and receiver noise tools, more of that quantity would not address the fault and can make a clean-signal problem worse.\n- sourceIndex 2: \"Decrease the average power\": This answer would fit a different fault than Increase the average power. In operator controls, keyers, microphones, VOX, speech processing, and receiver noise tools, reducing that quantity is not the mechanism that produces the correct effect here.\n- sourceIndex 3: \"Decrease the peak envelope power\": This option confuses another station topic with Increase the average power. In operator controls, keyers, microphones, VOX, speech processing, and receiver noise tools, reducing that quantity is not the mechanism that produces the correct effect here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-06"
+    },
+    {
+      "type": "question",
+      "id": "B-003-014-007"
+    }
+  ],
+  "licenseClass": "original"
+}

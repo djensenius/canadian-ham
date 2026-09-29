@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-016-003",
+  "questionId": "B-003-016-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-016-003.\n\nWhy the correct answer is right: A storage battery is rechargeable because electrical energy can be supplied to restore its charge.\n\nPer-choice notes:\n- sourceIndex 0: \"storage battery\": This is the correct choice because a storage battery is rechargeable because electrical energy can be supplied to restore its charge.\n- sourceIndex 1: \"low leakage battery\": This is a near-miss because it shifts attention from storage battery. In battery polarity, rechargeable cells, capacity, internal resistance, and safe battery handling, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"memory battery\": This answer would fit a different fault than storage battery. In battery polarity, rechargeable cells, capacity, internal resistance, and safe battery handling, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"primary battery\": This option confuses another station topic with storage battery. In battery polarity, rechargeable cells, capacity, internal resistance, and safe battery handling, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-016-003"
+    }
+  ],
+  "licenseClass": "original"
+}

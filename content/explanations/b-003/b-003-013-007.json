@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-013-007",
+  "questionId": "B-003-013-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-013-007.\n\nWhy the correct answer is right: Stronger audio causes a wider frequency swing in FM, so the carrier deviation becomes larger.\n\nPer-choice notes:\n- sourceIndex 0: \"By a larger deviation of the carrier frequency\": This is the correct choice because stronger audio causes a wider frequency swing in FM, so the carrier deviation becomes larger.\n- sourceIndex 1: \"By a larger amplitude of the carrier\": This is a near-miss because it shifts attention from By a larger deviation of the carrier frequency. In FM deviation, FM receiver behaviour, and local VHF/UHF voice practice, carrier terminology is being applied to the wrong modulation condition here.\n- sourceIndex 2: \"By a larger pulse width in the transmitted wave train\": This answer would fit a different fault than By a larger deviation of the carrier frequency. In FM deviation, FM receiver behaviour, and local VHF/UHF voice practice, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"By a larger peak envelope power\": This option confuses another station topic with By a larger deviation of the carrier frequency. In FM deviation, FM receiver behaviour, and local VHF/UHF voice practice, power alone is not the control or safety mechanism being tested in this item.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-05"
+    },
+    {
+      "type": "question",
+      "id": "B-003-013-007"
+    }
+  ],
+  "licenseClass": "original"
+}

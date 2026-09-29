@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-015-008",
+  "questionId": "B-003-015-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-015-008.\n\nWhy the correct answer is right: A clean signal report from a nearby station directly checks whether the audio drive is causing splatter.\n\nPer-choice notes:\n- sourceIndex 0: \"Ask a local station to confirm your signal is free of splatter\": This is the correct choice because a clean signal report from a nearby station directly checks whether the audio drive is causing splatter.\n- sourceIndex 1: \"Ensure your transmitter's audio compression is set to maximum\": This is a near-miss because it shifts attention from Ask a local station to confirm your signal is free of splatter. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"Verify that the automatic level control (ALC) is actively limiting every transmission\": This answer would fit a different fault than Ask a local station to confirm your signal is free of splatter. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Ask a local station to confirm your signal can be successfully decoded\": This option confuses another station topic with Ask a local station to confirm your signal is free of splatter. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-06"
+    },
+    {
+      "type": "question",
+      "id": "B-003-015-008"
+    }
+  ],
+  "licenseClass": "original"
+}

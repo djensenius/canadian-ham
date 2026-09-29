@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-017-010",
+  "questionId": "B-003-017-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-017-010.\n\nWhy the correct answer is right: A fused positive lead opens under overcurrent before the wire overheats and starts a fire.\n\nPer-choice notes:\n- sourceIndex 0: \"To prevent an overcurrent situation from starting a fire\": This is the correct choice because a fused positive lead opens under overcurrent before the wire overheats and starts a fire.\n- sourceIndex 1: \"To prevent interference to the vehicle's electronic systems\": This is a near-miss because it shifts attention from To prevent an overcurrent situation from starting a fire. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"To reduce the voltage drop in the radio's DC supply\": This answer would fit a different fault than To prevent an overcurrent situation from starting a fire. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, this misreads the voltage relationship or protection rating involved in the question.\n- sourceIndex 3: \"To protect the radio from transient voltages\": This option confuses another station topic with To prevent an overcurrent situation from starting a fire. In DC power supplies, mobile wiring, current capacity, fusing, voltage drop, and ripple, this misreads the voltage relationship or protection rating involved in the question.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-017-010"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-019-004",
+  "questionId": "B-003-019-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-019-004.\n\nWhy the correct answer is right: Copper-clad steel combines a conductive corrosion-resistant copper surface with the strength needed for a ground rod.\n\nPer-choice notes:\n- sourceIndex 0: \"Copper-clad steel\": This is the correct choice because copper-clad steel combines a conductive corrosion-resistant copper surface with the strength needed for a ground rod.\n- sourceIndex 1: \"Hard plastic\": This is a near-miss because it shifts attention from Copper-clad steel. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"Iron or steel\": This answer would fit a different fault than Copper-clad steel. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Fibreglass\": This option confuses another station topic with Copper-clad steel. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-019-004"
+    }
+  ],
+  "licenseClass": "original"
+}

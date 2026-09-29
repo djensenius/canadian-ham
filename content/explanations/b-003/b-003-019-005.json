@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-019-005",
+  "questionId": "B-003-019-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-019-005.\n\nWhy the correct answer is right: Filter capacitors can retain charge after power is removed, so discharging them is the first safety step once the cabinet is open.\n\nPer-choice notes:\n- sourceIndex 0: \"Discharge the filter capacitors\": This is the correct choice because filter capacitors can retain charge after power is removed, so discharging them is the first safety step once the cabinet is open.\n- sourceIndex 1: \"Bond the chassis to ground\": This is a near-miss because it shifts attention from Discharge the filter capacitors. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, grounding words can sound plausible, but this choice puts the ground connection in the wrong role for this question.\n- sourceIndex 2: \"Place the unit on an insulating mat\": This answer would fit a different fault than Discharge the filter capacitors. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Short the AC input leads together\": This option confuses another station topic with Discharge the filter capacitors. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-019-005"
+    }
+  ],
+  "licenseClass": "original"
+}

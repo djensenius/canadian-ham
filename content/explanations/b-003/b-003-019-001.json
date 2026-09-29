@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-019-001",
+  "questionId": "B-003-019-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-019-001.\n\nWhy the correct answer is right: Bonding all station equipment to ground helps keep exposed chassis at a safer potential and reduces shock risk.\n\nPer-choice notes:\n- sourceIndex 0: \"All station equipment\": This is the correct choice because bonding all station equipment to ground helps keep exposed chassis at a safer potential and reduces shock risk.\n- sourceIndex 1: \"The transmission line\": This is a near-miss because it shifts attention from All station equipment. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"The AC power line\": This answer would fit a different fault than All station equipment. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, power alone is not the control or safety mechanism being tested in this item.\n- sourceIndex 3: \"The power supply primary\": This option confuses another station topic with All station equipment. In station grounding, bonding, fuses, chassis safety ground, and stored capacitor energy, power alone is not the control or safety mechanism being tested in this item.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-019-001"
+    }
+  ],
+  "licenseClass": "original"
+}

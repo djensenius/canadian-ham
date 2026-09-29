@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-018-009",
+  "questionId": "B-003-018-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-018-009.\n\nWhy the correct answer is right: Touching the person before the source is de-energized can make the rescuer part of the circuit.\n\nPer-choice notes:\n- sourceIndex 0: \"De-energize the power source before touching the person\": This is the correct choice because touching the person before the source is de-energized can make the rescuer part of the circuit.\n- sourceIndex 1: \"Wrap the person in a blanket and pull him to a safe area\": This is a near-miss because it shifts attention from De-energize the power source before touching the person. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"Call an electrician\": This answer would fit a different fault than De-energize the power source before touching the person. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Remove the person by pulling an arm or a leg\": This option confuses another station topic with De-energize the power source before touching the person. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-018-009"
+    }
+  ],
+  "licenseClass": "original"
+}

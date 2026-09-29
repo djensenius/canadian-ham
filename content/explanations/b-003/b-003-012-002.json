@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-012-002",
+  "questionId": "B-003-012-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-012-002.\n\nWhy the correct answer is right: Too much speech processing flattens peaks and adds distortion products, which can create splatter near the intended SSB signal.\n\nPer-choice notes:\n- sourceIndex 0: \"It may cause audio distortion or splatter interference to other stations operating near its frequency\": This is the correct choice because too much speech processing flattens peaks and adds distortion products, which can create splatter near the intended SSB signal.\n- sourceIndex 1: \"It may cause digital interference to computer equipment\": This is a near-miss because it shifts attention from It may cause audio distortion or splatter interference to other stations operating near its frequency. In SSB microphone level, carrier suppression, sideband frequency, and peak envelope power, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"It may cause insufficient modulation of the carrier\": This answer would fit a different fault than It may cause audio distortion or splatter interference to other stations operating near its frequency. In SSB microphone level, carrier suppression, sideband frequency, and peak envelope power, carrier terminology is being applied to the wrong modulation condition here.\n- sourceIndex 3: \"It may cause interference to other stations operating on a higher frequency band\": This option confuses another station topic with It may cause audio distortion or splatter interference to other stations operating near its frequency. In SSB microphone level, carrier suppression, sideband frequency, and peak envelope power, more of that quantity would not address the fault and can make a clean-signal problem worse.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-05"
+    },
+    {
+      "type": "question",
+      "id": "B-003-012-002"
+    }
+  ],
+  "licenseClass": "original"
+}

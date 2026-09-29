@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-018-006",
+  "questionId": "B-003-018-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-018-006.\n\nWhy the correct answer is right: The heart can be driven into a fatal rhythm disturbance by very small currents through the body.\n\nPer-choice notes:\n- sourceIndex 0: \"The heart\": This is the correct choice because the heart can be driven into a fatal rhythm disturbance by very small currents through the body.\n- sourceIndex 1: \"The brain\": This is a near-miss because it shifts attention from The heart. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"The liver\": This answer would fit a different fault than The heart. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"The lungs\": This option confuses another station topic with The heart. In station access, shock hazards, high-voltage rescue, and safe de-energizing before work, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-08"
+    },
+    {
+      "type": "question",
+      "id": "B-003-018-006"
+    }
+  ],
+  "licenseClass": "original"
+}

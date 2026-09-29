@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-015-002",
+  "questionId": "B-003-015-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-015-002.\n\nWhy the correct answer is right: Digital data uses a finite set of agreed states or symbols, unlike analog data that varies continuously.\n\nPer-choice notes:\n- sourceIndex 0: \"Digital data is encoded as discrete pre-agreed values\": This is the correct choice because digital data uses a finite set of agreed states or symbols, unlike analog data that varies continuously.\n- sourceIndex 1: \"Digital data represents information as a continuously variable quantity\": This is a near-miss because it shifts attention from Digital data is encoded as discrete pre-agreed values. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 2: \"Digital data easily translates into digital signals\": This answer would fit a different fault than Digital data is encoded as discrete pre-agreed values. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.\n- sourceIndex 3: \"Digital data requires complex waveforms for transmission\": This option confuses another station topic with Digital data is encoded as discrete pre-agreed values. In digital information, packet forwarding, weak-signal modes, and sound-card drive level, it names a different cause, control, component, or safety action than the one required here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-06"
+    },
+    {
+      "type": "question",
+      "id": "B-003-015-002"
+    }
+  ],
+  "licenseClass": "original"
+}

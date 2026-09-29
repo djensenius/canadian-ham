@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-016-009",
+  "questionId": "B-003-016-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-016-009.\n\nWhy the correct answer is right: Parallel batteries keep the voltage the same and add capacity, so two 12 V, 20 Ah batteries become 12 V, 40 Ah.\n\nPer-choice notes:\n- sourceIndex 0: \"12 volts, 40 ampere-hours\": This is the correct choice because parallel batteries keep the voltage the same and add capacity, so two 12 V, 20 Ah batteries become 12 V, 40 Ah.\n- sourceIndex 1: \"6 volts, 80 ampere-hours\": This would require both lower voltage and quadrupled capacity, which is not how a simple parallel battery pair behaves.\n- sourceIndex 2: \"24 volts, 20 ampere-hours\": This is the series result for voltage with capacity unchanged, not the parallel result.\n- sourceIndex 3: \"24 volts, 40 ampere-hours\": This combines series voltage with parallel capacity; one connection cannot give both changes at once.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-07"
+    },
+    {
+      "type": "question",
+      "id": "B-003-016-009"
+    }
+  ],
+  "licenseClass": "original"
+}
