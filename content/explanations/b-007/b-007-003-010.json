@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-003-010.\n\nWhy the correct answer is right: A small angle above the ground makes a shallow path. For the same refracting region, that path returns at a greater distance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"polarization is vertical\": polarization is vertical can affect antennas and ground wave, but it does not set the greatest skip distance in this geometry question.\n- sourceIndex 2: \"ionosphere is most densely ionized\": ionosphere is most densely ionized may affect usable frequency, but the greatest skip distance here is tied to low radiation angle.\n- sourceIndex 3: \"signal given out is strongest\": signal given out is strongest affects received strength, not the geometric first-return distance.",
+    "en": "Question B-007-003-010.\n\nWhy the correct answer is right: A small angle above the ground makes a shallow sky-wave path. For a similar refracting height, that shallow path reaches the farthest first return point.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"polarization is vertical\": Polarization affects antenna matching and some propagation behaviour, but it does not set the longest skip distance in this geometry question.\n- sourceIndex 2: \"ionosphere is most densely ionized\": Dense ionization can affect usable frequencies; the greatest skip distance here is controlled by radiation angle.\n- sourceIndex 3: \"signal given out is strongest\": More power can improve signal strength, but it does not move the geometric first-return point outward.",
     "fr": null
   },
   "citations": [

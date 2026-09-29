@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-003-002.\n\nWhy the correct answer is right: The F2 region is the high region that provides the longest ordinary single-hop HF paths. The expected maximum one-hop scale is 4000 km.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"12 000 km\": 12 000 km is more like several hops combined, not one normal F2 hop.\n- sourceIndex 2: \"2 000 km\": 2 000 km is the usual scale for an E-region hop, so it is too short for the maximum F2 one-hop value.\n- sourceIndex 3: \"300 km\": 300 km is a short regional distance, not the maximum single-hop F2 distance.",
+    "en": "Question B-007-003-002.\n\nWhy the correct answer is right: The F2 region is high enough to support the longest ordinary single-hop HF paths. A planning upper limit of about 4 000 km fits that F2 hop scale.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"12 000 km\": That distance would require several hops or another path arrangement; it is too long for a normal single F2 hop.\n- sourceIndex 2: \"2 000 km\": This is the usual E-region hop scale, so it is too short for the F2 maximum.\n- sourceIndex 3: \"300 km\": Three hundred kilometres is a regional distance and far below the single-hop F2 planning limit.",
     "fr": null
   },
   "citations": [

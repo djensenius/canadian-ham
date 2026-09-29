@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-004-001.\n\nWhy the correct answer is right: In daylight the D region tends to absorb lower-frequency HF energy, reducing how much reaches higher refracting regions or returns usefully.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It bends the radio waves out into space\": It bends the radio waves out into space would be a refraction-through condition, but the D-region issue for lower HF is absorption.\n- sourceIndex 2: \"It refracts the radio waves back to Earth\": It refracts the radio waves back to Earth describes useful sky-wave return, which is mainly associated with higher regions.\n- sourceIndex 3: \"It distorts the waves\": It distorts the waves is too general; the tested D-region effect on lower daytime HF is absorption.",
+    "en": "Question B-007-004-001.\n\nWhy the correct answer is right: In daylight, the D region is the lower ionospheric region that absorbs lower-frequency HF energy. That loss can keep much of the signal from reaching or returning from higher regions.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It bends the radio waves out into space\": Passing through or escaping is a too-high-frequency problem; the D-region effect on lower daytime HF is absorption.\n- sourceIndex 2: \"It refracts the radio waves back to Earth\": Useful return to Earth is mainly associated with higher ionospheric regions, not the absorbing D region.\n- sourceIndex 3: \"It distorts the waves\": Distortion is not the tested D-region effect; the practical issue for lower HF is loss of energy in the region.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-001-007.\n\nWhy the correct answer is right: At lower HF in daylight, ground wave can provide comparatively local to regional coverage when sky-wave conditions may not fill that range.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Tropospheric ducting\": Tropospheric ducting is an enhanced VHF/UHF-style lower-atmosphere effect, not the ordinary lower-HF daytime mechanism in this distance range.\n- sourceIndex 2: \"Skip wave\": Skip wave would involve an ionospheric return; the stated lower-HF daytime local range is being credited to surface-guided energy.\n- sourceIndex 3: \"Space wave\": Space wave is a line-of-sight family of paths and does not explain this lower-HF surface-following coverage.",
+    "en": "Question B-007-001-007.\n\nWhy the correct answer is right: At lower HF, a surface-following component can cover nearby to regional distances in daylight even when low-angle sky-wave coverage is not filling that range. The 200 km scale fits ground-wave behaviour.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Tropospheric ducting\": Ducting is a VHF/UHF-style weather enhancement and is not the ordinary lower-HF daytime surface path.\n- sourceIndex 2: \"Skip wave\": A skip path returns from the ionosphere and may leave a skip zone; it is not the named mechanism for this local lower-HF coverage.\n- sourceIndex 3: \"Space wave\": Space-wave coverage is mainly direct and ground-reflected near line of sight, which does not explain lower-HF surface-guided range.",
     "fr": null
   },
   "citations": [

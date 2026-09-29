@@ -14,36 +14,36 @@
   "conceptChecks": [
     {
       "id": "QZ-L-007-03-A-C1",
-      "prompt": { "en": "After a calm night over a large lake, a two-metre station hears distant repeaters along the shoreline. Which explanation best fits the path?", "fr": null },
+      "prompt": { "en": "A two-metre station logs a 950 km contact during a calm evening with a sharp temperature change above the ground. Which explanation best fits the unusual range?", "fr": null },
       "choices": [
-        { "text": { "en": "Meteor trails are storing the signal all morning.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A lower-atmosphere duct is guiding the VHF signal.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The D region has become the main VHF reflector.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The transmitter power changed the solar flux.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Ordinary VHF line-of-sight with no atmospheric help", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Tropospheric ducting caused by a temperature inversion", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Sporadic E on the 160-metre band", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Faraday rotation making the path shorter", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Stable temperature and humidity layers can form tropospheric ducts, especially over water, carrying VHF farther than normal.", "fr": null }
+      "explanation": { "en": "The distance is beyond the normal VHF planning scale, and the stable temperature layering is a classic clue for ducting in the lower atmosphere.", "fr": null }
     },
     {
       "id": "QZ-L-007-03-A-C2",
-      "prompt": { "en": "A six-metre opening appears suddenly and then disappears after a short operating window. What makes that band a classic place to watch?", "fr": null },
+      "prompt": { "en": "During a short early-summer opening, a six-metre station hears many stations from one distant region while two metres stays local. Which cause is most plausible?", "fr": null },
       "choices": [
-        { "text": { "en": "It is immune to ionospheric changes.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It always uses ground wave for intercontinental paths.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It can be affected by patchy E-region ionization.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "It requires the F region to split at night.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Lower-HF ground wave extending to VHF", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A temporary E-layer opening affecting low VHF", "fr": null }, "isCorrect": true },
+        { "text": { "en": "D-region absorption improving six-metre refraction", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Tropospheric scatter becoming strongest only on HF", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Six metres is low enough in VHF that dense sporadic-E patches can sometimes refract it, producing sudden openings.", "fr": null }
+      "explanation": { "en": "Six metres is the VHF band most associated with sporadic-E style openings. A short regional opening on six but not two metres points toward an E-layer event.", "fr": null }
     },
     {
       "id": "QZ-L-007-03-A-C3",
-      "prompt": { "en": "A weak HF station is heard from inside a usual skip gap, and the audio sounds smeared. What should you suspect?", "fr": null },
+      "prompt": { "en": "A permanent UHF service link just beyond the radio horizon is weak but usable without a weather duct. Which mode should the engineer consider?", "fr": null },
       "choices": [
-        { "text": { "en": "A perfectly direct line-of-sight path", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A dummy load connected at the receiver", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Ordinary ground wave with no loss", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Scatter sending a small part of the energy into that area", "fr": null }, "isCorrect": true }
+        { "text": { "en": "Tropospheric scatter from small lower-atmosphere variations", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Meteor scatter with continuous hour-long reflections", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Sporadic E as a guaranteed daily VHF layer", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Ground wave as the dominant UHF long-distance path", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Scatter can redirect a small amount of energy into a skip-zone area, and the several path components can make the received signal weak and distorted.", "fr": null }
+      "explanation": { "en": "Tropospheric scatter can support weak beyond-horizon VHF/UHF paths by redirecting a small part of the signal in the lower atmosphere, even without a well-formed duct.", "fr": null }
     }
   ]
 }

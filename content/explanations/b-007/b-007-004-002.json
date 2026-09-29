@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-004-002.\n\nWhy the correct answer is right: Daytime D-region ionization absorbs low-frequency sky-wave energy, so distant stations on those low bands may disappear until the lower region weakens.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The presence of ionized clouds in the E region\": The presence of ionized clouds in the E region points to the wrong region and an imprecise mechanism.\n- sourceIndex 2: \"The splitting of the F region into two sub-regions\": The splitting of the F region into two sub-regions can affect HF propagation, but it is not the reason low-frequency distant stations vanish in daylight.\n- sourceIndex 3: \"The weather below the ionosphere\": The weather below the ionosphere can affect VHF/UHF tropospheric paths, not the main daytime loss of distant low-frequency sky wave.",
+    "en": "Question B-007-004-002.\n\nWhy the correct answer is right: Daytime D-region ionization absorbs low-frequency sky-wave energy. Distant 160-metre and AM broadcast signals often return after the lower region weakens at night.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The presence of ionized clouds in the E region\": E-region ionization is the wrong layer, and \"clouds\" is not the D-region absorption mechanism.\n- sourceIndex 2: \"The splitting of the F region into two sub-regions\": The F-region split affects higher ionospheric refraction; it does not explain daylight loss of low-frequency distant stations.\n- sourceIndex 3: \"The weather below the ionosphere\": Lower-atmosphere weather can matter for VHF/UHF paths, but it is not why low-frequency sky-wave signals vanish in daytime.",
     "fr": null
   },
   "citations": [

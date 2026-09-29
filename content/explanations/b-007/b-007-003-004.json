@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-003-004.\n\nWhy the correct answer is right: The skip zone is between the usable end of ground-wave coverage and the first place a refracted sky wave comes back to Earth.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"a zone of silence caused by lost sky waves\": a zone of silence caused by lost sky waves is vague and misses the two boundaries: ground-wave end and first sky-wave return.\n- sourceIndex 2: \"a zone between any two refracted waves\": a zone between any two refracted waves would describe a possible gap between hops, not the standard first skip zone definition.\n- sourceIndex 3: \"a zone between the antenna and the return of the first refracted wave\": a zone between the antenna and the return of the first refracted wave ignores that ground wave may cover the area nearest the antenna.",
+    "en": "Question B-007-003-004.\n\nWhy the correct answer is right: A skip zone begins where the ground wave no longer provides useful reception and ends at the first ionosphere-refracted return point. Those two boundaries define the gap.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"a zone of silence caused by lost sky waves\": This blames missing sky waves but leaves out the ground-wave boundary and the first return point that define the zone.\n- sourceIndex 2: \"a zone between any two refracted waves\": A gap between later hops is not the standard first skip-zone definition.\n- sourceIndex 3: \"a zone between the antenna and the return of the first refracted wave\": The area near the antenna can still have ground-wave coverage, so the zone does not begin at the antenna.",
     "fr": null
   },
   "citations": [

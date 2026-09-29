@@ -14,36 +14,36 @@
   "conceptChecks": [
     {
       "id": "QZ-L-007-02-A-C1",
-      "prompt": { "en": "A midday HF path on a low band is weak, while higher-band beacons from the same general direction are present. What is the best first adjustment?", "fr": null },
+      "prompt": { "en": "A summer daytime regional net on a low HF band is barely readable, while beacons on a higher HF band along the same route are strong. What is the best first propagation-based move?", "fr": null },
       "choices": [
-        { "text": { "en": "Switch sidebands before changing frequency", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Assume the antenna feedline is open", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Try a higher suitable HF band", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Wait for the visible horizon to move", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Move lower in frequency to increase D-region absorption", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Stay on the same band because daylight absorption is frequency-independent", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Try a higher suitable HF band that remains below the path MUF", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Use the critical frequency as if it were the LUF", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Daylight D-region absorption is often worse at lower HF, so a higher band may pass with less absorption while still being below the path MUF.", "fr": null }
+      "explanation": { "en": "Lower HF is often hit harder by daylight D-region absorption. A higher band can reduce that loss if it is still within the usable window for the path.", "fr": null }
     },
     {
       "id": "QZ-L-007-02-A-C2",
-      "prompt": { "en": "A forecast places a desired path's MUF below your planned band. What does that mean for that path?", "fr": null },
+      "prompt": { "en": "A forecast gives an afternoon MUF of 22 MHz for a path. If the operator uses an 85% OWF planning estimate, which target is closest?", "fr": null },
       "choices": [
-        { "text": { "en": "The planned band is likely too high to return on that ionospheric path.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The planned band is below the lowest usable frequency.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Adding microphone gain will raise the MUF.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The path must use tropospheric ducting instead of HF.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "18.7 MHz, because it is slightly below the MUF", "fr": null }, "isCorrect": true },
+        { "text": { "en": "22.0 MHz, because OWF is exactly the MUF", "fr": null }, "isCorrect": false },
+        { "text": { "en": "11.0 MHz, because OWF is always half the MUF", "fr": null }, "isCorrect": false },
+        { "text": { "en": "25.9 MHz, because OWF is above the MUF", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "MUF is the upper limit for a given path. A frequency above it is likely to pass through rather than return to the destination.", "fr": null }
+      "explanation": { "en": "Multiplying 22 MHz by 0.85 gives 18.7 MHz. OWF is a practical choice below the MUF, not at or above it.", "fr": null }
     },
     {
       "id": "QZ-L-007-02-A-C3",
-      "prompt": { "en": "A wide received signal becomes hollow and distorted, but nearby narrow signals remain easier to copy. Which effect fits best?", "fr": null },
+      "prompt": { "en": "A local two-metre path is very sensitive to antenna orientation, but a long HF sky-wave contact is not. What propagation fact best explains the difference?", "fr": null },
       "choices": [
-        { "text": { "en": "Perfect impedance matching", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Selective fading from multipath", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A shorter solar cycle", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Ground-wave diffraction only", "fr": null }, "isCorrect": false }
+        { "text": { "en": "HF ionospheric paths can rotate or change the wave polarization", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The D region forces all HF waves to remain horizontally polarized", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Selective fading changes the transmitter's modulation mode", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Solar flux measurements set the receiving antenna orientation", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Selective fading affects parts of a wider signal differently when multiple received components arrive with different phase relationships.", "fr": null }
+      "explanation": { "en": "On HF, refraction and Faraday rotation can change polarization before the signal reaches the receiver. Local VHF/UHF paths usually preserve the antenna-polarization mismatch more directly.", "fr": null }
     }
   ]
 }

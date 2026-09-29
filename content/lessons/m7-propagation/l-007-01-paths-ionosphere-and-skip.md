@@ -74,6 +74,8 @@ Skip distance is the distance from the transmitter to the closest point reached 
 
 Hop length is the distance covered by a single sky-wave return. After the wave reaches Earth, some energy may reflect from the surface and go up again for another hop. Long HF contacts often use multiple hops, especially when a single return is not enough to cover the route.
 
+As a planning scale, an E-region hop is shorter than an F2-region hop because E is lower. Typical upper limits are roughly 2000 km for an E-region single-hop return and roughly 4000 km for an F2-region single-hop return. A longer route may need additional hops or a different time or band.
+
 A pair of geometry ideas matter:
 
 - If the refracting region is higher, the first return point is farther away for the same launch angle.
@@ -81,17 +83,17 @@ A pair of geometry ideas matter:
 
 Accessible text formula: lower launch angle plus similar layer height means longer skip distance; higher launch angle plus similar layer height means shorter skip distance. That is a geometry statement, not a transmitter-power statement.
 
-### Worked example: comparing two launch angles
+### Worked example: comparing hop scales
 
-A portable dipole is first hung low over a field and sends much of its HF energy upward. The first strong return is regional. Later the same operator uses a higher support and a sloping end that favours lower-angle radiation. The more shallow path reaches farther before returning. The transmitter power did not create the change; the path angle did.
+A field station is choosing how to report expected coverage to a served agency. For a mid-distance check-in area, the operator treats an E-region return as a shorter single-hop path, on the order of 2000 km at most. For a farther route, the operator looks for an F2-region path, which can reach about twice that single-hop distance. The actual opening still depends on frequency, time, and ionization; the numbers are planning scales, not promises.
 
 ## Try it
 
-1. A club can work a repeater from both ends of a town, but simplex between two hand-held radios fails behind a hill. Which path limit are they seeing? They are seeing a mostly line-of-sight VHF limit; the hill blocks the direct path even though the repeater site has a better view.
+1. A club can work a repeater from both ends of a town, but simplex between a pair of hand-held radios fails behind a ridge between the streets. Which path limit are they seeing? They are seeing a mostly line-of-sight VHF limit; the ridge blocks the direct path even though the repeater site has a better view.
 2. An HF net wants regional coverage over rough terrain rather than an overseas contact. What radiation angle should the antenna system favour? A higher radiation angle supports NVIS-style regional coverage when the band conditions suit it.
 3. In a layer diagram, a wave passes the D region and bends back from a much higher region. What practical concern belongs to the lower layer? Daylight absorption in the lower ionosphere can weaken the signal before it reaches the useful refracting region.
-4. A sky-wave signal returns beyond nearby towns, leaving a gap after local coverage. What is that gap called? It is the skip zone, the area too far for the fading ground wave but too close for the first returning sky wave.
-5. If the same HF antenna changes from high-angle to lower-angle radiation, what happens to the first return point? It moves farther away because the shallower path intersects the refracting region and Earth at a longer distance.
+4. A rural HF station hears nearby ground-wave coverage fade out, then another town much farther away becomes strong. What should the operator look for between those areas? The operator should expect a coverage gap where the ground wave is gone but the returning sky wave has not arrived yet.
+5. A club compares a pair of temporary antennas on the same band: the first mostly covers nearby counties, while the second favours flatter takeoff angles. Which antenna is more suitable for a distant evening schedule? The flatter-angle antenna is the better candidate because that geometry pushes the first useful return farther away.
 
 ## Radio connection
 
@@ -120,4 +122,5 @@ Description: Draw a gentle curved Earth at the bottom with three stations. Show 
 - Sky wave is HF energy refracted by the ionosphere back toward Earth.
 - Solar radiation creates ionization; the D, E, F1, and F2 regions have different effects.
 - Skip distance is the first sky-wave return distance, and the skip zone is the uncovered gap before that return.
+- E-region single-hop paths are shorter than F2 single-hop paths; use about 2000 km and about 4000 km as planning scales.
 - Layer height and launch angle set skip geometry more directly than transmitter power does.

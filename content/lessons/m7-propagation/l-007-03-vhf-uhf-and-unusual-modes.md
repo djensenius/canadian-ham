@@ -49,11 +49,11 @@ A station hears no distant signals on six metres at lunch. Later in the afternoo
 
 ## Tropospheric bending, ducting, and scatter
 
-The troposphere is the lower atmosphere where weather happens. Normal refraction slightly extends the radio horizon. Stronger gradients in temperature, humidity, and pressure can bend VHF and UHF signals more than usual. A temperature inversion can form a duct, trapping part of the wave so it travels much farther than expected.
+The troposphere is the lower atmosphere where weather happens. Normal refraction slightly extends the radio horizon. Without an enhanced mode, VHF tropospheric communication is still limited; use roughly 800 km as the broad upper planning scale for normal VHF tropospheric range, not as a guaranteed daily path. Stronger gradients in temperature, humidity, and pressure can bend VHF and UHF signals more than usual. A temperature inversion can form a duct, trapping part of the wave so it travels much farther than expected.
 
-Tropospheric scatter is different from ducting. It uses small variations in lower-atmosphere properties to redirect a small amount of energy beyond the radio horizon. Signals are often weak, but the mode can explain contacts that are beyond ordinary line of sight without requiring an ionospheric opening.
+Tropospheric scatter is different from ducting. It uses small variations in lower-atmosphere density and water-vapour content to redirect a small amount of energy beyond the radio horizon. Signals are often weak, but the mode can explain contacts that are beyond ordinary line of sight without requiring an ionospheric opening.
 
-Accessible text formula: ordinary VHF range starts with antenna height and radio horizon; enhanced tropospheric propagation adds bending, ducting, or scatter when lower-atmosphere conditions help.
+Accessible text formula: ordinary VHF range starts with antenna height and radio horizon; enhanced tropospheric propagation adds bending, ducting, or scatter when lower-atmosphere conditions help. A path greatly beyond the normal scale is a clue to look for enhancement such as a duct.
 
 ### Worked example: lake-path ducting
 
@@ -87,8 +87,8 @@ Do not turn these clues into guarantees. The same station may need a higher ante
 
 1. A six-metre receiver is quiet all morning, then distant beacons from a single area appear for twenty minutes. What mode should you suspect first? Sporadic E is a strong candidate because six metres is especially known for sudden E-region openings.
 2. A VHF signal travels much farther than usual along a coastal path after a calm temperature inversion. What lower-atmosphere effect fits? Tropospheric ducting fits because an inversion can guide VHF energy.
-3. A VHF auroral signal is rough and voice is hard to understand. Which simple analog mode is more likely to remain readable? CW, because short keyed elements survive severe distortion better than voice FM.
-4. An HF signal from inside the usual skip gap is weak and smeared. What propagation type may be involved? Scatter, because a small part of the energy can be redirected into the skip zone over several paths.
+3. During a northern VHF opening, a club hears raspy signals but needs only short call-sign and grid exchanges. What operating style fits the clue? Use a narrow, simple mode and short messages that tolerate rapid flutter and distortion.
+4. A receiver near the edge of an HF opening hears a faint, rough signal from an area that is not on the normal direct sky-wave route. What clue points away from a clean ordinary hop? Weakness plus distortion suggests only a small portion of the wave is being redirected over mixed paths.
 5. A digital VHF contact completes in brief bursts during a meteor shower. What is reflecting or scattering the signal? Short-lived ionized meteor trails provide the temporary path.
 
 ## Radio connection
@@ -114,7 +114,7 @@ Description: Draw four labelled sketches on a single page. Panel A shows a six-m
 ## Summary
 
 - Sporadic E is patchy E-region ionization and is especially important on six metres.
-- Tropospheric bending slightly extends VHF/UHF range; ducting can extend it much farther along favourable weather layers.
+- Tropospheric bending slightly extends VHF/UHF range; ordinary VHF tropospheric range is roughly limited to an 800 km planning scale unless enhancement is present.
 - Tropospheric scatter redirects a small amount of VHF/UHF energy beyond the normal horizon.
 - Auroral propagation is often distorted; CW is usually more readable than analog voice FM.
 - Meteor scatter uses brief ionized trails and is most useful in lower VHF ranges.

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-004-010.\n\nWhy the correct answer is right: Those propagation effects can rotate or otherwise change a wave's polarization, which is why HF receive polarization may not match the transmitted one.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Increase the speed of propagation\": Increase the speed of propagation is not the effect; radio waves already travel near light speed in air, and these processes change direction or polarization.\n- sourceIndex 2: \"Increase the occupied bandwidth\": Increase the occupied bandwidth would be a modulation or distortion issue, not the normal result of refraction, reflection, or Faraday rotation.\n- sourceIndex 3: \"Change the wavelength\": Change the wavelength would require changing frequency or medium in a way not being tested; polarization is the key effect.",
+    "en": "Question B-007-004-010.\n\nWhy the correct answer is right: Refraction, reflection, and Faraday rotation can change the orientation of a radio wave's electric field. In operating terms, they can change the wave's polarization.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Increase the speed of propagation\": These effects change direction or polarization, not the basic propagation speed of a radio wave in the path.\n- sourceIndex 2: \"Increase the occupied bandwidth\": Bandwidth is set by the transmitted signal and modulation; reflection or Faraday rotation does not normally widen it.\n- sourceIndex 3: \"Change the wavelength\": Changing wavelength would require a frequency or medium relationship change beyond the effect being tested; polarization is the relevant property.",
     "fr": null
   },
   "citations": [
