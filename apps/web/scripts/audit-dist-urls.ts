@@ -12,6 +12,7 @@ const XML_NAMESPACE_URLS = new Set([
   "http://www.w3.org/2000/xmlns/",
   "http://www.w3.org/XML/1998/namespace",
 ]);
+const TEXT_EXTENSIONS = new Set([".css", ".html", ".js", ".json", ".map", ".svg", ".txt", ".webmanifest", ".xml"]);
 
 interface UrlFinding {
   readonly file: string;
@@ -63,6 +64,9 @@ async function auditDistUrls(distDir = DIST_DIR): Promise<UrlFinding[]> {
 
   const findings: UrlFinding[] = [];
   for (const filePath of await findDistFiles(distDir)) {
+    if (!TEXT_EXTENSIONS.has(path.extname(filePath))) {
+      continue;
+    }
     const text = await readFile(filePath, "utf8");
     for (const match of text.matchAll(URL_PATTERN)) {
       const rawUrl = match[0];

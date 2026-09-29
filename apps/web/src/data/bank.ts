@@ -1,6 +1,6 @@
 import categoriesJson from "../../../../content/generated/basic-2025-07-15/categories.json";
 import manifestJson from "../../../../content/generated/basic-2025-07-15/manifest.json";
-import questionsJson from "../../../../content/generated/basic-2025-07-15/questions.json";
+import questionsJsonUrl from "../../../../content/generated/basic-2025-07-15/questions.json?url";
 import subsectionsJson from "../../../../content/generated/basic-2025-07-15/subsections.json";
 import subsectionTitlesJson from "../../../../content/subsection-titles.json";
 
@@ -74,24 +74,34 @@ export interface BankManifest {
 }
 
 export const manifest = manifestJson as BankManifest;
-export const questions = questionsJson as readonly Question[];
 export const categories = categoriesJson as readonly Category[];
 export const subsections = subsectionsJson as readonly Subsection[];
 export const subsectionTitles = subsectionTitlesJson as readonly SubsectionTitle[];
 
-export const allQuestionCount = questions.length;
+export const allQuestionCount = manifest.counts.questions;
 export const bankId = manifest.bankId;
 
-export const questionsById = new Map(questions.map((question) => [question.id, question]));
 export const categoriesById = new Map(categories.map((category) => [category.id, category]));
 export const subsectionsById = new Map(subsections.map((subsection) => [subsection.id, subsection]));
 export const subsectionTitlesById = new Map(subsectionTitles.map((subsection) => [subsection.id, subsection]));
+export const knownQuestionIds = new Set(subsections.flatMap((subsection) => subsection.questionIds));
 
-export function questionsForCategory(categoryId: string): readonly Question[] {
+let questionsPromise: Promise<readonly Question[]> | null = null;
+
+export function loadQuestions(): Promise<readonly Question[]> {
+  questionsPromise ??= loadQuestionsFromAsset();
+  return questionsPromise;
+}
+
+export function questionsById(questions: readonly Question[]): ReadonlyMap<string, Question> {
+  return new Map(questions.map((question) => [question.id, question]));
+}
+
+export function questionsForCategory(questions: readonly Question[], categoryId: string): readonly Question[] {
   return questions.filter((question) => question.categoryId === categoryId);
 }
 
-export function questionsForSubsection(subsectionId: string): readonly Question[] {
+export function questionsForSubsection(questions: readonly Question[], subsectionId: string): readonly Question[] {
   return questions.filter((question) => question.subsectionId === subsectionId);
 }
 
@@ -101,4 +111,17 @@ export function subsectionTitle(subsectionId: string): string {
 
 export function categoryName(categoryId: string): string {
   return categoriesById.get(categoryId)?.name.en ?? categoryId;
+}
+
+async function loadQuestionsFromAsset(): Promise<readonly Question[]> {
+  if (import.meta.env.MODE === "test") {
+    const module = await import("../../../../content/generated/basic-2025-07-15/questions.json");
+    return module.default as readonly Question[];
+  }
+
+  const response = await fetch(questionsJsonUrl);
+  if (!response.ok) {
+    throw new Error(`Unable to load bundled question bank (${response.status} ${response.statusText}).`);
+  }
+  return await response.json() as readonly Question[];
 }

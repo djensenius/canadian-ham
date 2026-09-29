@@ -6,17 +6,21 @@ import { IDBFactory } from "fake-indexeddb";
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
 
 import { App } from "./App";
-import { bankId, questions } from "./data/bank";
+import { bankId, loadQuestions, type Question } from "./data/bank";
 import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExportV1 } from "./lib/progressStore";
 import { buildExamAttempt, createMockExam } from "./lib/studyEngine";
 
 const fixedNow = "2026-01-02T03:04:05.000Z";
 let stores: ProgressStore[] = [];
+let testQuestions: readonly Question[] = [];
 
-beforeEach(() => {
+beforeEach(async () => {
   Object.defineProperty(globalThis, "indexedDB", { value: new IDBFactory(), configurable: true });
   window.location.hash = "#/home";
+  delete document.documentElement.dataset.theme;
+  document.documentElement.lang = "en";
   stores = [];
+  testQuestions = await loadQuestions();
 });
 
 afterEach(async () => {
@@ -42,7 +46,7 @@ function allCorrectAttempt(seed: string, submittedAt: string): ExamAttempt {
 }
 
 function attemptWithCorrectCount(seed: string, submittedAt: string, correctCount: number): ExamAttempt {
-  const generatedItems = createMockExam(seed);
+  const generatedItems = createMockExam(seed, testQuestions);
   return buildExamAttempt({
     seed,
     startedAt: "2026-01-02T00:00:00.000Z",
@@ -100,7 +104,7 @@ describe("App accessibility and flows", () => {
     const needsReviewStore = createStore("needs-review-home");
     await needsReviewStore.putExamAttempt(readinessAttempt("needs-a", "2026-01-02T01:00:00.000Z", 85));
     await needsReviewStore.putExamAttempt(readinessAttempt("needs-b", "2026-01-03T01:00:00.000Z", 85));
-    for (const question of questions.slice(0, 5)) {
+    for (const question of testQuestions.slice(0, 5)) {
       await needsReviewStore.putQuestionProgress({
         questionId: question.id,
         bankId,
@@ -175,6 +179,17 @@ describe("App accessibility and flows", () => {
     await expectNoAxeViolations(container);
   });
 
+  it("renders Results with category breakdown and no axe violations", async () => {
+    window.location.hash = "#/results";
+    const store = createStore("results-axe");
+    await store.putExamAttempt(attemptWithCorrectCount("results-axe", "2026-01-02T01:00:00.000Z", 80));
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "results-seed"} />);
+
+    await screen.findByRole("heading", { name: "Mock exam results" });
+    assert.match(screen.getByText(/Basic with Honours ready/).textContent ?? "", /Basic with Honours/);
+    await expectNoAxeViolations(container);
+  });
+
   it("shows Results boundary messages at 69, 70, 79, and 80 percent", async () => {
     const cases = [
       { correct: 69, message: /Below pass threshold/ },
@@ -212,6 +227,19 @@ describe("App accessibility and flows", () => {
     await user.click(screen.getByRole("button", { name: "Submit practice set" }));
     await screen.findByRole("heading", { name: "Practice set review" });
     assert.equal((await store.getQuestionProgress()).length, 10);
+  });
+
+  it("renders Settings theme controls and no axe violations", async () => {
+    window.location.hash = "#/settings";
+    const store = createStore("settings-axe");
+    const user = userEvent.setup();
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "settings-seed"} />);
+
+    await screen.findByRole("heading", { name: "Settings and local data" });
+    await expectNoAxeViolations(container);
+    await user.click(screen.getByLabelText("Dark"));
+    await waitFor(async () => assert.equal((await store.getPreferences()).theme, "dark"));
+    assert.equal(document.documentElement.dataset.theme, "dark");
   });
 
   it("surfaces Settings import/reset UI errors and confirmations with focus management", async () => {

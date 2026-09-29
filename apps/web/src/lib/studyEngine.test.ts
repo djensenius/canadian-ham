@@ -1,11 +1,16 @@
 import assert from "node:assert/strict";
 import { scoreExam, type QuestionProgressRecord } from "@canadian-ham/engine-ts";
-import { describe, it } from "vitest";
+import { beforeAll, describe, it } from "vitest";
 
-import { bankId } from "../data/bank";
+import { bankId, loadQuestions, type Question } from "../data/bank";
 import { applyPracticeAnswer, buildExamAttempt, buildPracticeItems, createMockExam, examCategoryCounts } from "./studyEngine";
 
 const now = "2026-01-02T00:00:00.000Z";
+let testQuestions: readonly Question[] = [];
+
+beforeAll(async () => {
+  testQuestions = await loadQuestions();
+});
 
 function progressRecord(questionId: string, recentResults: readonly boolean[], dueAt = now): QuestionProgressRecord {
   return {
@@ -39,6 +44,7 @@ describe("web study engine integration", () => {
 
   it("builds due-review scope from due stored records only", () => {
     const items = buildPracticeItems({
+      questions: testQuestions,
       scope: { type: "due" },
       progress: [progressRecord("B-001-001-001", [false], now)],
       seed: "due-scope",
@@ -52,6 +58,7 @@ describe("web study engine integration", () => {
 
   it("builds weak-area scope from the engine weak-subsection rule", () => {
     const items = buildPracticeItems({
+      questions: testQuestions,
       scope: { type: "weak" },
       progress: [progressRecord("B-001-001-001", [false, true, false])],
       seed: "weak-scope",
@@ -64,7 +71,7 @@ describe("web study engine integration", () => {
   });
 
   it("generates a full mock exam with one question per subsection and verified category counts", () => {
-    const items = createMockExam("mock-fixture-seed");
+    const items = createMockExam("mock-fixture-seed", testQuestions);
 
     assert.equal(items.length, 100);
     assert.equal(new Set(items.map((item) => item.subsectionId)).size, 100);
@@ -73,7 +80,7 @@ describe("web study engine integration", () => {
   });
 
   it("scores unanswered exam questions as incorrect and respects pass/honours boundaries", () => {
-    const generated = createMockExam("score-seed");
+    const generated = createMockExam("score-seed", testQuestions);
     const unansweredAttempt = buildExamAttempt({
       seed: "score-seed",
       startedAt: now,
