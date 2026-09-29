@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-005-006",
+  "questionId": "B-007-005-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-005-006.\n\nWhy the correct answer is right: Daily ionospheric propagation is driven by electromagnetic radiation and particle effects from the Sun. Those inputs change ionization and absorption.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Solar wind\": Solar wind can disturb geomagnetic conditions, but the daily propagation influence named here is broader electromagnetic and particle radiation.\n- sourceIndex 2: \"Infrared radiation\": Infrared radiation mainly carries heat and is not the principal ionizing influence on HF propagation.\n- sourceIndex 3: \"Coronal mass ejections (CME)\": Coronal mass ejections (CME) are important events, but they are not the ordinary daily solar input that sets routine propagation.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-005-006"
+    }
+  ],
+  "licenseClass": "original"
+}

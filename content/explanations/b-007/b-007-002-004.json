@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-002-004",
+  "questionId": "B-007-002-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-002-004.\n\nWhy the correct answer is right: The D region is least useful for long-distance propagation because it tends to absorb lower HF energy during daylight rather than return it efficiently.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The F2 region\": The F2 region is high and is a major contributor to the longest HF paths, so it is not the least useful region.\n- sourceIndex 2: \"The F1 region\": The F1 region can take part in daytime ionospheric behaviour and is not the main absorption problem.\n- sourceIndex 3: \"The E region\": The E region can refract some signals and can create sporadic-E events; it is not the least useful region here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-002-004"
+    }
+  ],
+  "licenseClass": "original"
+}

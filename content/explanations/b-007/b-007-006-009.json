@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-006-009",
+  "questionId": "B-007-006-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-006-009.\n\nWhy the correct answer is right: The 80-metre band suffers strong daylight absorption, and summer daylight tends to make that low-band beyond-ground-wave path especially difficult.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Evening in winter\": Evening in winter is often one of the better times for lower-band HF because D-region absorption is reduced.\n- sourceIndex 2: \"Evening in summer\": Evening in summer removes the worst daylight absorption, so it is not generally the least effective choice.\n- sourceIndex 3: \"Daytime in winter\": Daytime in winter can still have absorption, but it is usually less severe than summer daytime for this low band.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-006-009"
+    }
+  ],
+  "licenseClass": "original"
+}

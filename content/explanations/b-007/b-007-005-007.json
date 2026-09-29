@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-005-007",
+  "questionId": "B-007-005-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-005-007.\n\nWhy the correct answer is right: High sunspot numbers can raise usable frequencies so upper HF and sometimes even slightly higher frequencies support long-distance paths.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"High frequency radio signals are absorbed\": High frequency radio signals are absorbed describes a disturbance or lower-region loss, not the usual high-sunspot improvement in upper-HF propagation.\n- sourceIndex 2: \"Frequencies up to 100 MHz or higher are normally usable for long-distance communication\": Frequencies up to 100 MHz or higher are normally usable for long-distance communication overstates the usual effect; that range is not normally available by ionospheric propagation.\n- sourceIndex 3: \"High frequency radio signals become weak and distorted\": High frequency radio signals become weak and distorted is not the general high-sunspot trend; many higher HF paths improve.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-005-007"
+    }
+  ],
+  "licenseClass": "original"
+}

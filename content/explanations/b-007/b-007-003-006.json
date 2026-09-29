@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-003-006",
+  "questionId": "B-007-003-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-003-006.\n\nWhy the correct answer is right: With the layer height held the same, a steeper upward path returns closer to the transmitter. The skip distance decreases for geometric reasons.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It decreases, due to the decrease in critical frequency\": It decreases, due to the decrease in critical frequency gives the right direction for the wrong reason; critical frequency is not what changed in this geometry question.\n- sourceIndex 2: \"It increases, due to the geometry of the signal path\": It increases, due to the geometry of the signal path reverses the geometry; higher angle makes the first return closer.\n- sourceIndex 3: \"It increases, due to the increase in critical frequency\": It increases, due to the increase in critical frequency changes both direction and cause incorrectly.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-003-006"
+    }
+  ],
+  "licenseClass": "original"
+}

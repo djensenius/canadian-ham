@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-005-003",
+  "questionId": "B-007-005-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-005-003.\n\nWhy the correct answer is right: Solar flux is the Sun's radio-frequency energy output as measured for propagation use. Operators use it as an indicator of solar activity.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A measure of the tilt of the Earth's ionosphere on the side toward the sun\": A measure of the tilt of the Earth's ionosphere on the side toward the sun is not a standard solar-flux definition.\n- sourceIndex 2: \"The number of sunspots on the side of the sun facing the Earth\": The number of sunspots on the side of the sun facing the Earth is the sunspot number idea, not solar flux.\n- sourceIndex 3: \"The density of the sun's magnetic field\": The density of the sun's magnetic field is a different physical quantity from measured solar radio flux.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-005-003"
+    }
+  ],
+  "licenseClass": "original"
+}

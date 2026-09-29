@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-008-008",
+  "questionId": "B-007-008-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-008-008.\n\nWhy the correct answer is right: Tropospheric scatter is possible because tiny irregularities in the lower atmosphere redirect a small part of a VHF/UHF signal beyond the radio horizon.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Ionized patches in the troposphere\": Ionized patches in the troposphere are not the mechanism; the troposphere is not an ionospheric layer.\n- sourceIndex 2: \"Increased daytime ionization of the D region\": Increased daytime ionization of the D region affects lower HF absorption, not VHF/UHF tropospheric scatter.\n- sourceIndex 3: \"Local cloud cover\": Local cloud cover by itself is not the cause; the important factors are small refractive-property variations.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-008-008"
+    }
+  ],
+  "licenseClass": "original"
+}

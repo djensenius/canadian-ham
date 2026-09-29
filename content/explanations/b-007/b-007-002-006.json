@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-002-006",
+  "questionId": "B-007-002-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-002-006.\n\nWhy the correct answer is right: Ionization is generally strongest around midday because solar radiation is then most direct on the daylight side of the path.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Dawn\": Dawn follows a night of recombination, so ionization is not at its maximum then.\n- sourceIndex 2: \"Midnight\": Midnight has no direct sunlight on that region, so ionization usually has decreased rather than peaked.\n- sourceIndex 3: \"Dusk\": Dusk comes after solar input is declining; it is not the normal daily maximum.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-002-006"
+    }
+  ],
+  "licenseClass": "original"
+}

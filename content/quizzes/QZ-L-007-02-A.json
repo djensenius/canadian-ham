@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-007-02-A",
+  "lessonId": "L-007-02",
+  "officialQuestionIds": [
+    "B-007-004-001",
+    "B-007-004-003",
+    "B-007-004-008",
+    "B-007-005-001",
+    "B-007-005-004",
+    "B-007-005-007",
+    "B-007-006-001",
+    "B-007-006-010"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-007-02-A-C1",
+      "prompt": { "en": "A midday HF path on a low band is weak, while higher-band beacons from the same general direction are present. What is the best first adjustment?", "fr": null },
+      "choices": [
+        { "text": { "en": "Switch sidebands before changing frequency", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Assume the antenna feedline is open", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Try a higher suitable HF band", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Wait for the visible horizon to move", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Daylight D-region absorption is often worse at lower HF, so a higher band may pass with less absorption while still being below the path MUF.", "fr": null }
+    },
+    {
+      "id": "QZ-L-007-02-A-C2",
+      "prompt": { "en": "A forecast places a desired path's MUF below your planned band. What does that mean for that path?", "fr": null },
+      "choices": [
+        { "text": { "en": "The planned band is likely too high to return on that ionospheric path.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The planned band is below the lowest usable frequency.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Adding microphone gain will raise the MUF.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The path must use tropospheric ducting instead of HF.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "MUF is the upper limit for a given path. A frequency above it is likely to pass through rather than return to the destination.", "fr": null }
+    },
+    {
+      "id": "QZ-L-007-02-A-C3",
+      "prompt": { "en": "A wide received signal becomes hollow and distorted, but nearby narrow signals remain easier to copy. Which effect fits best?", "fr": null },
+      "choices": [
+        { "text": { "en": "Perfect impedance matching", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Selective fading from multipath", "fr": null }, "isCorrect": true },
+        { "text": { "en": "A shorter solar cycle", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Ground-wave diffraction only", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Selective fading affects parts of a wider signal differently when multiple received components arrive with different phase relationships.", "fr": null }
+    }
+  ]
+}

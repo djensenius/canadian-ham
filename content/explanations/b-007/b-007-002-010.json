@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-002-010",
+  "questionId": "B-007-002-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-002-010.\n\nWhy the correct answer is right: Sunlit conditions split the F region into two sub-regions called F1 and F2. At night they tend to merge or become less distinct.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"D1 and D2\": D1 and D2 are not the standard daytime split used in Basic ionospheric propagation.\n- sourceIndex 2: \"E1 and E2\": E1 and E2 are not the usual pair of daytime sub-regions named in this material.\n- sourceIndex 3: \"B1 and B2\": B1 and B2 are not standard ionospheric regions for amateur propagation study.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-002-010"
+    }
+  ],
+  "licenseClass": "original"
+}

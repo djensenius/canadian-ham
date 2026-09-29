@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-001-006",
+  "questionId": "B-007-001-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-001-006.\n\nWhy the correct answer is right: The ground-wave portion is guided by and loses energy to the Earth's surface. Soil, terrain, and frequency therefore matter to that component.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Tropospheric wave\": Tropospheric wave is affected by lower-atmosphere bending, not directly by the ground surface as the defining feature.\n- sourceIndex 2: \"Ionospheric wave\": Ionospheric wave is affected by ionized upper-atmosphere regions rather than by travelling along the surface.\n- sourceIndex 3: \"Scattered wave\": Scattered wave names a redirection process; it is not the surface-following portion of a signal.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-001-006"
+    }
+  ],
+  "licenseClass": "original"
+}

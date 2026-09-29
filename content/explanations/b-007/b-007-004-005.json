@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-004-005",
+  "questionId": "B-007-004-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-004-005.\n\nWhy the correct answer is right: One-hop and two-hop components can arrive with changing phase and strength. Small ionospheric changes therefore produce received-signal variations.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Consistently weaker signals\": Consistently weaker signals ignores the changing addition and cancellation of multiple paths.\n- sourceIndex 2: \"Consistently stronger signals\": Consistently stronger signals is the opposite overstatement; multipath can strengthen or weaken at different moments.\n- sourceIndex 3: \"A shift in signal frequency\": A shift in signal frequency is not the main result of these small path changes; fading in strength is.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-004-005"
+    }
+  ],
+  "licenseClass": "original"
+}

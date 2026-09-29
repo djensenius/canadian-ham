@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-007-01-A",
+  "lessonId": "L-007-01",
+  "officialQuestionIds": [
+    "B-007-001-001",
+    "B-007-001-002",
+    "B-007-001-006",
+    "B-007-002-001",
+    "B-007-002-005",
+    "B-007-002-008",
+    "B-007-003-001",
+    "B-007-003-006"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-007-01-A-C1",
+      "prompt": { "en": "A mountain club can reach a hilltop repeater on VHF, but two valley stations cannot hear each other directly. Which propagation limit best explains the valley-to-valley problem?", "fr": null },
+      "choices": [
+        { "text": { "en": "The VHF path is mostly line-of-sight and the terrain blocks it.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The D region is absorbing all VHF ground wave.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The signal must wait for F2 multi-hop propagation.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The skip zone always begins at the transmitting antenna.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Ordinary VHF communication depends strongly on antenna height and clear paths. A repeater on high ground may see both stations even when they cannot see each other.", "fr": null }
+    },
+    {
+      "id": "QZ-L-007-01-A-C2",
+      "prompt": { "en": "An HF antenna is adjusted so more energy leaves at a steep upward angle. What coverage goal does that favour when the ionosphere supports it?", "fr": null },
+      "choices": [
+        { "text": { "en": "Only moonbounce contacts", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Regional NVIS-style coverage", "fr": null }, "isCorrect": true },
+        { "text": { "en": "A longer first skip distance than a low-angle signal", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Eliminating all D-region absorption", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "High-angle HF radiation is the idea behind NVIS: it returns relatively nearby compared with low-angle long-distance radiation.", "fr": null }
+    },
+    {
+      "id": "QZ-L-007-01-A-C3",
+      "prompt": { "en": "Two HF signals use the same ionospheric region. One leaves the antenna at a shallower angle. What happens to its first return point?", "fr": null },
+      "choices": [
+        { "text": { "en": "It becomes a ground wave instead of a sky wave.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It returns at the same distance because power sets skip distance.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It reaches farther away before returning.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "It stops being affected by ionization.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "With similar layer height, a shallower launch angle produces a longer geometric path before the wave returns to Earth.", "fr": null }
+    }
+  ]
+}

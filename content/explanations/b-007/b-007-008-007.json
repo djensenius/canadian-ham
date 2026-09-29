@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-008-007",
+  "questionId": "B-007-008-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-008-007.\n\nWhy the correct answer is right: Weak, distorted HF signals near the MUF are a classic clue that scatter is involved rather than a strong normal sky-wave path.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"When the sunspot cycle is at a minimum and D-region absorption is high\": When the sunspot cycle is at a minimum and D-region absorption is high combines broad conditions but does not specifically identify scatter.\n- sourceIndex 2: \"At night when propagation is poor\": At night when propagation is poor is too general; poor nighttime propagation can have many causes.\n- sourceIndex 3: \"When the F1 and F2 regions are combined\": When the F1 and F2 regions are combined describes nighttime layer behaviour, not the scatter clue.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-008-007"
+    }
+  ],
+  "licenseClass": "original"
+}

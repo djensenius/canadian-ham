@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-006-011",
+  "questionId": "B-007-006-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-006-011.\n\nWhy the correct answer is right: The lowest HF bands are most affected by daylight D-region absorption, especially in summer, so they are hardest beyond ground-wave range then.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"40 metres\": 40 metres can also be affected by daylight absorption, but it is generally less difficult than the two lowest listed bands.\n- sourceIndex 2: \"30 metres\": 30 metres is higher in frequency and usually less absorbed than 160 and 80 metres in summer daytime.\n- sourceIndex 3: \"20 metres\": 20 metres is often useful for daylight longer-distance communication and is not the most difficult choice here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-006-011"
+    }
+  ],
+  "licenseClass": "original"
+}

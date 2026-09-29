@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-007-003",
+  "questionId": "B-007-007-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-007-003.\n\nWhy the correct answer is right: A temperature inversion can create a refractive layer that traps or guides radio energy, producing tropospheric ducting.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Lightning between the transmitting and receiving stations\": Lightning between the transmitting and receiving stations may cause noise, but it does not create a tropospheric duct.\n- sourceIndex 2: \"An aurora to the north\": An aurora to the north is an ionospheric high-latitude mode, not a lower-atmosphere ducting cause.\n- sourceIndex 3: \"A very low-pressure area\": A very low-pressure area by itself is not the named cause; the key condition is an inversion layer.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-007-003"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-005-011",
+  "questionId": "B-007-005-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-005-011.\n\nWhy the correct answer is right: The solar cycle changes solar activity and therefore ionization over many years, producing cyclical changes in HF propagation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Magnetic pole drift cycle\": Magnetic pole drift cycle is not the major cycle that controls ordinary HF propagation changes.\n- sourceIndex 2: \"Jet stream cycle\": Jet stream cycle affects weather patterns in the lower atmosphere, not the main long-term HF ionization cycle.\n- sourceIndex 3: \"Auroral cycle\": Auroral cycle is not the standard cause; aurora is one effect of solar and geomagnetic activity.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-005-011"
+    }
+  ],
+  "licenseClass": "original"
+}

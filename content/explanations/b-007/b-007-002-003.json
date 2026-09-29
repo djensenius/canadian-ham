@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-002-003",
+  "questionId": "B-007-002-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-002-003.\n\nWhy the correct answer is right: The D region is the lowest commonly named ionospheric region, sitting below the E and F regions.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The E region\": The E region is above the D region, so it is not closest to Earth.\n- sourceIndex 2: \"The F region\": The F region is higher still and is important for long-distance HF, but it is not the lowest region.\n- sourceIndex 3: \"The A region\": The A region is not one of the standard amateur-radio ionospheric regions in this lesson.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-002-003"
+    }
+  ],
+  "licenseClass": "original"
+}

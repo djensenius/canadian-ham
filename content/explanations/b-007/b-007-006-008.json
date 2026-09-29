@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-006-008",
+  "questionId": "B-007-006-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-006-008.\n\nWhy the correct answer is right: More daily solar UV usually increases ionization, which raises the maximum usable frequency for many paths.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The atmospheric noise level decreases\": The atmospheric noise level decreases is not the usual direct result of increased UV radiation.\n- sourceIndex 2: \"Ground wave propagation decreases\": Ground wave propagation decreases is not the key daily UV effect; ground wave is mainly a surface-guided mode.\n- sourceIndex 3: \"Weather in the ionosphere changes\": Weather in the ionosphere changes is vague and misses the specific increase in MUF caused by greater ionization.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-006-008"
+    }
+  ],
+  "licenseClass": "original"
+}

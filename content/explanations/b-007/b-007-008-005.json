@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-008-005",
+  "questionId": "B-007-008-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-008-005.\n\nWhy the correct answer is right: Scatter is inefficient because only a small fraction of the transmitted energy is redirected toward the skip-zone receiver.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Propagation through ground waves absorbs most of the signal energy\": Propagation through ground waves absorbs most of the signal energy uses the wrong path; scatter signals are weak because little energy is scattered usefully.\n- sourceIndex 2: \"The F region of the ionosphere absorbs most of the signal energy\": The F region of the ionosphere absorbs most of the signal energy is not the usual reason; F-region refraction is generally useful rather than strongly absorptive.\n- sourceIndex 3: \"Auroral activity absorbs most of the signal energy\": Auroral activity absorbs most of the signal energy describes a different phenomenon and is not the ordinary HF scatter weakness.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-008-005"
+    }
+  ],
+  "licenseClass": "original"
+}

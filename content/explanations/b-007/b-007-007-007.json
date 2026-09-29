@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-007-007",
+  "questionId": "B-007-007-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-007-007.\n\nWhy the correct answer is right: In the northern hemisphere, auroral activity is generally toward the north, so pointing a directional antenna north takes best advantage of that region.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"East\": East is not the usual direction for northern-hemisphere auroral propagation unless a specific path geometry says otherwise.\n- sourceIndex 2: \"West\": West is not the primary auroral direction for a northern-hemisphere station.\n- sourceIndex 3: \"South\": South points away from the common northern auroral zone for northern-hemisphere operators.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-007-007"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-005-004",
+  "questionId": "B-007-005-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-005-004.\n\nWhy the correct answer is right: The solar-flux index is a standardized measure of solar radio activity at a specified frequency, useful as a propagation indicator.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Another name for the smoothed sunspot number (SSN)\": Another name for the smoothed sunspot number (SSN) confuses two different indices; they are related indicators but not the same measurement.\n- sourceIndex 2: \"A measure of solar activity that compares daily readings with results from the last six months\": A measure of solar activity that compares daily readings with results from the last six months describes a smoothing idea, not the solar-flux index definition.\n- sourceIndex 3: \"A measure of solar activity that is taken annually\": A measure of solar activity that is taken annually is wrong because solar flux is observed much more frequently than once per year.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-005-004"
+    }
+  ],
+  "licenseClass": "original"
+}

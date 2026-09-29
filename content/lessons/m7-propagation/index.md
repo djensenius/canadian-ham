@@ -10,7 +10,7 @@ lessonIds:
   - L-007-01
   - L-007-02
   - L-007-03
-status: outline
+status: draft
 ---
 # Radio Wave Propagation
 

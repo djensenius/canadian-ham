@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-008-010",
+  "questionId": "B-007-008-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-008-010.\n\nWhy the correct answer is right: Scattering redirects wave energy into many directions instead of one smooth refracted or reflected path.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The wave is gradually bent\": The wave is gradually bent describes refraction, not scattering.\n- sourceIndex 2: \"A portion of the wave abruptly changes direction\": A portion of the wave abruptly changes direction may sound close, but scattering is broader redirection in many directions rather than one simple abrupt turn.\n- sourceIndex 3: \"The wave is absorbed by the medium\": The wave is absorbed by the medium describes energy loss, not redirection.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-008-010"
+    }
+  ],
+  "licenseClass": "original"
+}

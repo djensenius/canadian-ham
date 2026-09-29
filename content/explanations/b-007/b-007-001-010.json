@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-001-010",
+  "questionId": "B-007-001-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-001-010.\n\nWhy the correct answer is right: Very long HF reception usually depends on ionospheric refraction, often with more than one hop. Ground or direct paths cannot normally span such distances at HF.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"ground wave\": ground wave is limited by surface losses and does not normally provide very long HF paths of this scale.\n- sourceIndex 2: \"scattered wave\": scattered wave can fill weak areas, but ordinary long-distance HF reception is mainly due to ionospheric refraction.\n- sourceIndex 3: \"space wave\": space wave is associated with direct and reflected line-of-sight components, not transcontinental or oceanic HF paths.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-001-010"
+    }
+  ],
+  "licenseClass": "original"
+}

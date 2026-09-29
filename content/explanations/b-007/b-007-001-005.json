@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-001-005",
+  "questionId": "B-007-001-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-001-005.\n\nWhy the correct answer is right: A sky wave is the same practical idea as an ionospheric wave: energy travels upward and is returned by ionized regions.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Tropospheric wave\": Tropospheric wave refers to propagation in the lower atmosphere, not to the usual sky-wave path.\n- sourceIndex 2: \"Scattered wave\": Scattered wave describes energy redirected in many directions; it is not the common name for sky wave.\n- sourceIndex 3: \"Space wave\": Space wave generally means direct and ground-reflected components near line of sight, not an ionospheric sky wave.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-001-005"
+    }
+  ],
+  "licenseClass": "original"
+}

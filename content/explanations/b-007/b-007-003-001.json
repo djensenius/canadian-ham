@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-003-001",
+  "questionId": "B-007-003-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-003-001.\n\nWhy the correct answer is right: The skip zone is the gap after ground-wave reception has faded but before the first returned sky wave reaches Earth.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Shadow zone\": Shadow zone is not the standard amateur propagation term for the gap between ground-wave and sky-wave coverage.\n- sourceIndex 2: \"Scatter zone\": Scatter zone would imply scattered energy, not the normal gap caused by geometry of ground wave and first sky-wave return.\n- sourceIndex 3: \"Propagation zone\": Propagation zone is too broad; it does not name the specific no-coverage gap.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-003-001"
+    }
+  ],
+  "licenseClass": "original"
+}

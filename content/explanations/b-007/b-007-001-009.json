@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-001-009",
+  "questionId": "B-007-001-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-001-009.\n\nWhy the correct answer is right: A sky wave leaves the transmitting antenna, is refracted in the ionosphere, and returns to Earth. That path is the classic HF skip path.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Direct wave\": Direct wave means the line-of-sight component between antennas, not a path up to the ionosphere and back.\n- sourceIndex 2: \"Scattered wave\": Scattered wave is redirected in many directions and may be weak or distorted; it is not the basic ionosphere-and-back path.\n- sourceIndex 3: \"Plane wave\": Plane wave describes a wavefront shape in an idealized region, not this propagation mechanism.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-001-009"
+    }
+  ],
+  "licenseClass": "original"
+}

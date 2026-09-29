@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-007-002",
+  "questionId": "B-007-007-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-007-002.\n\nWhy the correct answer is right: Tropospheric bending curves 2-metre waves slightly back toward Earth, extending communication beyond the simple optical horizon.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It causes them to travel shorter distances\": It causes them to travel shorter distances reverses the effect; bending generally extends range.\n- sourceIndex 2: \"It distorts the signal\": It distorts the signal is not the main Basic effect of tropospheric bending on 2 metres.\n- sourceIndex 3: \"It interferes with short-range communications\": It interferes with short-range communications is not the usual result; the effect mainly helps longer paths.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-007-002"
+    }
+  ],
+  "licenseClass": "original"
+}

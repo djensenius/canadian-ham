@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-007-006",
+  "questionId": "B-007-007-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-007-006.\n\nWhy the correct answer is right: Six metres sits low enough in VHF for sporadic-E patches to produce extended-distance openings more often than on higher VHF bands.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"160 metres\": 160 metres is a low HF/MF-edge band and is not where the amateur sporadic-E extended-distance effect is most often observed.\n- sourceIndex 2: \"20 metres\": 20 metres already uses ordinary HF ionospheric propagation, so sporadic E is not the notable extended-distance effect there.\n- sourceIndex 3: \"2 metres\": 2 metres can have rare E-layer events, but six metres is the classic and more commonly affected amateur band.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-007-006"
+    }
+  ],
+  "licenseClass": "original"
+}

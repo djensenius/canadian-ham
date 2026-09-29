@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-003-005",
+  "questionId": "B-007-003-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-003-005.\n\nWhy the correct answer is right: A path around 5000 km is longer than a single ordinary F2 hop, so multiple ionospheric hops are the likely HF solution.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Sporadic \\\"E\\\"\": Sporadic \"E\" is usually a VHF or lower-HF special opening and is not the normal answer for this long HF route.\n- sourceIndex 2: \"Back scatter\": Back scatter can fill in weak skip-zone signals, but it is not the primary method for a long overseas HF path.\n- sourceIndex 3: \"Tropospheric scatter\": Tropospheric scatter is a VHF/UHF beyond-horizon mode, not the likely HF mechanism for a trans-oceanic distance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-003-005"
+    }
+  ],
+  "licenseClass": "original"
+}

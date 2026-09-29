@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-001-008",
+  "questionId": "B-007-001-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-001-008.\n\nWhy the correct answer is right: Among those bands, the lowest frequency has the best ground-wave reach. A longer wavelength suffers less rapid ground-wave loss than the higher-frequency choices.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"40 metres\": 40 metres is lower HF, but it is higher in frequency than the lowest band listed and therefore has less ground-wave reach in this comparison.\n- sourceIndex 2: \"10 metres\": 10 metres is much higher in frequency, so it is not the band with the greatest ground-wave distance in the group.\n- sourceIndex 3: \"6 metres\": 6 metres is VHF; ordinary coverage there is dominated by line-of-sight and special openings rather than the greatest ground-wave range.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-001-008"
+    }
+  ],
+  "licenseClass": "original"
+}

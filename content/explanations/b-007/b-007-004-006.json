@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-004-006",
+  "questionId": "B-007-004-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-004-006.\n\nWhy the correct answer is right: A sudden ionospheric disturbance often increases absorption on sunlit HF paths, especially lower frequencies. Trying a higher band may get above some of that absorption.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Try the other sideband\": Try the other sideband changes the modulation placement around the carrier frequency, but it does not solve ionospheric absorption.\n- sourceIndex 2: \"Try a different antenna polarization\": Try a different antenna polarization is unlikely to fix a SID because the problem is absorption along the path.\n- sourceIndex 3: \"Try a different frequency shift\": Try a different frequency shift applies to repeater offsets or digital tuning details, not to restoring an absorbed HF path.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-004-006"
+    }
+  ],
+  "licenseClass": "original"
+}

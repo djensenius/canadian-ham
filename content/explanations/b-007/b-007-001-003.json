@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-001-003",
+  "questionId": "B-007-001-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-001-003.\n\nWhy the correct answer is right: A signal that returns from the ionosphere is a sky-wave path. The wave leaves the surface, is refracted in ionized regions, and comes back to Earth.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Tropospheric propagation\": Tropospheric propagation happens in the lower atmosphere; it is not the name for a wave returned by the ionosphere.\n- sourceIndex 2: \"Ground-wave propagation\": Ground-wave propagation follows the Earth's surface and is affected by ground losses, not by an ionospheric return.\n- sourceIndex 3: \"Earth-Moon-Earth propagation\": Earth-Moon-Earth propagation uses reflection from the Moon; it is a weak-signal VHF/UHF technique, not ordinary ionospheric return.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-001-003"
+    }
+  ],
+  "licenseClass": "original"
+}

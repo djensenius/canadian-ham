@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-005-010",
+  "questionId": "B-007-005-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-005-010.\n\nWhy the correct answer is right: HF refraction depends on ionization, and that ionization is driven by solar radiation. More suitable ionization can support higher HF paths.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"the power of the transmitted signal\": the power of the transmitted signal can affect readability, but it does not make the ionosphere refract a frequency it cannot support.\n- sourceIndex 2: \"the receiver sensitivity\": the receiver sensitivity helps hear weak signals, but it does not set the ionosphere's refracting ability.\n- sourceIndex 3: \"upper atmosphere weather conditions\": upper atmosphere weather conditions is too vague and points away from the key solar-radiation control of ionization.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-005-010"
+    }
+  ],
+  "licenseClass": "original"
+}

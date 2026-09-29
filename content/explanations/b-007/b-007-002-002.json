@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-002-002",
+  "questionId": "B-007-002-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-002-002.\n\nWhy the correct answer is right: Ultraviolet solar radiation has enough energy to ionize upper-atmosphere gases and is a major driver of ionospheric formation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Microwave\": Microwave energy from the Sun exists but is not the main ionizing radiation responsible for creating the ionosphere.\n- sourceIndex 2: \"Ionized particles\": Ionized particles can disturb the ionosphere, but the everyday creation of ionization is chiefly driven by solar ultraviolet radiation.\n- sourceIndex 3: \"Infrared\": Infrared radiation is associated with heat; it does not have enough photon energy to be the principal ionizing source.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-002-002"
+    }
+  ],
+  "licenseClass": "original"
+}

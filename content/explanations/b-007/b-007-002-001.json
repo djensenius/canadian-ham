@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-002-001",
+  "questionId": "B-007-002-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-002-001.\n\nWhy the correct answer is right: The ionosphere exists because energetic radiation from the Sun removes electrons from atoms and molecules high in the atmosphere.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Lightning ionizing the outer atmosphere\": Lightning ionizing the outer atmosphere is local and brief; it is not the broad daily source of ionospheric layers.\n- sourceIndex 2: \"Release of fluorocarbons into the atmosphere\": Release of fluorocarbons into the atmosphere is an environmental chemistry issue, not the source of radio-useful ionization.\n- sourceIndex 3: \"Temperature changes ionizing the outer atmosphere\": Temperature changes ionizing the outer atmosphere is not the mechanism; ionization requires energetic radiation, especially from the Sun.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-002-001"
+    }
+  ],
+  "licenseClass": "original"
+}

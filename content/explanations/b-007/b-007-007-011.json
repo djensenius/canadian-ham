@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-007-011",
+  "questionId": "B-007-007-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-007-011.\n\nWhy the correct answer is right: A VHF path beyond the normal range scale generally needs an enhanced mode; tropospheric ducting can guide the signal over that distance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Faraday rotation\": Faraday rotation changes polarization and is associated with ionospheric effects, not the mechanism for this long VHF range.\n- sourceIndex 2: \"D-region refraction\": D-region refraction is not a useful VHF long-range mechanism and the D region mostly causes lower-HF absorption.\n- sourceIndex 3: \"Ionospheric refraction\": Ionospheric refraction can affect some VHF in special cases, but the named effect for this distance is tropospheric ducting.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-007-011"
+    }
+  ],
+  "licenseClass": "original"
+}

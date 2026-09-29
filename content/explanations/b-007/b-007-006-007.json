@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-006-007",
+  "questionId": "B-007-006-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-006-007.\n\nWhy the correct answer is right: The 20-metre band is one of the reliable daytime long-distance HF bands and can support worldwide paths at many phases of the solar cycle.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Only at the minimum point of the solar cycle\": Only at the minimum point of the solar cycle is too restrictive; 20 metres is not limited to solar minimum.\n- sourceIndex 2: \"Only at the maximum point of the solar cycle\": Only at the maximum point of the solar cycle is also too restrictive; 20 metres often works outside maximum.\n- sourceIndex 3: \"At the beginning of the solar cycle\": At the beginning of the solar cycle names an arbitrary phase rather than the band's broad usefulness.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-006-007"
+    }
+  ],
+  "licenseClass": "original"
+}

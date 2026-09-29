@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-004-007",
+  "questionId": "B-007-004-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-004-007.\n\nWhy the correct answer is right: HF waves refracted by the ionosphere can have their polarization rotated or changed, so the original transmit polarization is less decisive at the receiver.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The polarization of ground waves and ionospheric waves continually varies\": The polarization of ground waves and ionospheric waves continually varies overstates ground-wave behaviour and misses ionospheric refraction as the reason.\n- sourceIndex 2: \"The refraction forces the wave's polarization to vertical\": The refraction forces the wave's polarization to vertical is false; the ionosphere can rotate polarization rather than forcing one fixed orientation.\n- sourceIndex 3: \"The polarization of ionospheric waves varies depending on the entry angle into the refracting region\": The polarization of ionospheric waves varies depending on the entry angle into the refracting region is too narrow; the key Basic principle is that ionospheric refraction changes polarization.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-004-007"
+    }
+  ],
+  "licenseClass": "original"
+}

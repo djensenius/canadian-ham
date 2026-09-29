@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-002-011",
+  "questionId": "B-007-002-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-002-011.\n\nWhy the correct answer is right: The E region is above D and below the F region. That position lets it take part in both ordinary E-layer effects and sporadic-E events.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Below the D region\": Below the D region reverses the order; D is the closest of the standard regions to Earth.\n- sourceIndex 2: \"Above the C region\": Above the C region uses a region that is not part of the standard D, E, F amateur-radio model.\n- sourceIndex 3: \"Above the F region\": Above the F region is too high; the F region sits above E.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-002-011"
+    }
+  ],
+  "licenseClass": "original"
+}

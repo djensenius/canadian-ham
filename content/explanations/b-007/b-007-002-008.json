@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-002-008",
+  "questionId": "B-007-002-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-002-008.\n\nWhy the correct answer is right: F2 is highest, so a refracted wave can cover a longer ground distance before returning. That geometry makes it central to the longest ordinary HF paths.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Because it exists only at night\": Because it exists only at night is false; F2 is especially named as the upper daytime F sub-region and remains important in many conditions.\n- sourceIndex 2: \"Because it is the lowest ionospheric region\": Because it is the lowest ionospheric region reverses the layer order; the D region is lowest.\n- sourceIndex 3: \"Because it does not absorb radio waves as much as other ionospheric regions\": Because it does not absorb radio waves as much as other ionospheric regions mentions a helpful trait, but the longest-distance reason tested is its high altitude.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-002-008"
+    }
+  ],
+  "licenseClass": "original"
+}

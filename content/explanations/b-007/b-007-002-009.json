@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-002-009",
+  "questionId": "B-007-002-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-002-009.\n\nWhy the correct answer is right: During daylight the D region absorbs lower-frequency HF energy strongly. That limits daytime usefulness of the lowest HF bands for longer paths.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Because of signal scattering\": Because of signal scattering would point to redirected weak signals, not the main daylight limitation on these low bands.\n- sourceIndex 2: \"Because of E region ionization\": Because of E region ionization is not the main loss mechanism; the E region can sometimes refract signals.\n- sourceIndex 3: \"Because of E region absorption\": Because of E region absorption names the wrong layer; the D region is the principal daytime absorber in this context.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-002-009"
+    }
+  ],
+  "licenseClass": "original"
+}

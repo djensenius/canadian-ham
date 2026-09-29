@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-006-005",
+  "questionId": "B-007-006-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-006-005.\n\nWhy the correct answer is right: The 10-metre band is the amateur band near 28 MHz, so hearing beacons there is direct evidence that the desired high-HF path may be open.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Listen for 20-metre beacon stations\": Listen for 20-metre beacon stations checks a much lower band, so it does not prove that 28 MHz is supported.\n- sourceIndex 2: \"Listen for 31-metre broadcast stations\": Listen for 31-metre broadcast stations checks a lower shortwave broadcast range rather than the target 10-metre path.\n- sourceIndex 3: \"Listen for WWVH time signals on 15 MHz\": Listen for WWVH time signals on 15 MHz tests a lower frequency and a different path clue, not whether 28 MHz to Europe is open.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-006-005"
+    }
+  ],
+  "licenseClass": "original"
+}

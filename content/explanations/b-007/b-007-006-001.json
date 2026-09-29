@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-006-001",
+  "questionId": "B-007-006-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-006-001.\n\nWhy the correct answer is right: Critical frequency is the highest frequency an ionospheric region returns for a vertical-incidence test at that time.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Maximum usable frequency\": Maximum usable frequency is path-specific for communication between two points, not the vertical-probing limit of one region.\n- sourceIndex 2: \"Optimum working frequency\": Optimum working frequency is a practical operating choice below the MUF, not the vertical-incidence measurement.\n- sourceIndex 3: \"Doppler frequency\": Doppler frequency relates to frequency shift from motion or changing path length, not to the ionosphere's vertical return limit.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-006-001"
+    }
+  ],
+  "licenseClass": "original"
+}

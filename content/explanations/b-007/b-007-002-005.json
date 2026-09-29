@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-002-005",
+  "questionId": "B-007-002-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-002-005.\n\nWhy the correct answer is right: In daylight the F region commonly separates into F1 and F2. The higher F2 region is especially important for long HF paths.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The E region\": The E region can become patchy or support sporadic-E events, but it is not the region named for the F1/F2 daytime split.\n- sourceIndex 2: \"The D region\": The D region appears mainly in daylight and absorbs energy, but it is not described as splitting into two radio sub-regions.\n- sourceIndex 3: \"The G region\": The G region is not part of the standard D, E, F ionospheric model used for Basic propagation questions.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-002-005"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-001-004",
+  "questionId": "B-007-001-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-001-004.\n\nWhy the correct answer is right: VHF and higher signals are bent slightly by normal changes in the troposphere. That refraction lets the radio horizon extend a little beyond what the eye can see.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Ionization in the troposphere\": Ionization in the troposphere is not the normal cause; the troposphere affects VHF mainly through refractive-index changes, not ionized layers.\n- sourceIndex 2: \"Diffraction caused by soil conductivity\": Diffraction caused by soil conductivity is not the usual radio-horizon extension mechanism at VHF and above.\n- sourceIndex 3: \"Refraction in the D-region\": Refraction in the D-region belongs to the ionosphere and is not responsible for the normal VHF radio horizon.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-001-004"
+    }
+  ],
+  "licenseClass": "original"
+}

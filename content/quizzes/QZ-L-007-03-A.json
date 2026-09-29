@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-007-03-A",
+  "lessonId": "L-007-03",
+  "officialQuestionIds": [
+    "B-007-007-001",
+    "B-007-007-003",
+    "B-007-007-005",
+    "B-007-007-007",
+    "B-007-007-009",
+    "B-007-008-001",
+    "B-007-008-003",
+    "B-007-008-009"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-007-03-A-C1",
+      "prompt": { "en": "After a calm night over a large lake, a two-metre station hears distant repeaters along the shoreline. Which explanation best fits the path?", "fr": null },
+      "choices": [
+        { "text": { "en": "Meteor trails are storing the signal all morning.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A lower-atmosphere duct is guiding the VHF signal.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The D region has become the main VHF reflector.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The transmitter power changed the solar flux.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Stable temperature and humidity layers can form tropospheric ducts, especially over water, carrying VHF farther than normal.", "fr": null }
+    },
+    {
+      "id": "QZ-L-007-03-A-C2",
+      "prompt": { "en": "A six-metre opening appears suddenly and then disappears after a short operating window. What makes that band a classic place to watch?", "fr": null },
+      "choices": [
+        { "text": { "en": "It is immune to ionospheric changes.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It always uses ground wave for intercontinental paths.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It can be affected by patchy E-region ionization.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "It requires the F region to split at night.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Six metres is low enough in VHF that dense sporadic-E patches can sometimes refract it, producing sudden openings.", "fr": null }
+    },
+    {
+      "id": "QZ-L-007-03-A-C3",
+      "prompt": { "en": "A weak HF station is heard from inside a usual skip gap, and the audio sounds smeared. What should you suspect?", "fr": null },
+      "choices": [
+        { "text": { "en": "A perfectly direct line-of-sight path", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A dummy load connected at the receiver", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Ordinary ground wave with no loss", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Scatter sending a small part of the energy into that area", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "Scatter can redirect a small amount of energy into a skip-zone area, and the several path components can make the received signal weak and distorted.", "fr": null }
+    }
+  ]
+}

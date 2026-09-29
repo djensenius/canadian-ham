@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-008-011",
+  "questionId": "B-007-008-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-008-011.\n\nWhy the correct answer is right: Meteor scatter works best in the lower VHF range; 30 MHz to 100 MHz covers the most effective range named here.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"10 MHz to 30 MHz\": 10 MHz to 30 MHz is HF through the lower edge of VHF and is generally below the most effective meteor-scatter range.\n- sourceIndex 2: \"3 MHz to 10 MHz\": 3 MHz to 10 MHz is much too low and is dominated by ordinary HF ionospheric propagation.\n- sourceIndex 3: \"100 MHz to 150 MHz\": 100 MHz to 150 MHz is higher VHF where meteor trails are usually less effective for extended-range communication.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-008-011"
+    }
+  ],
+  "licenseClass": "original"
+}

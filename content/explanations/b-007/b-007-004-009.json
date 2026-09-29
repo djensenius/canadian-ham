@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-004-009",
+  "questionId": "B-007-004-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-004-009.\n\nWhy the correct answer is right: A wider signal occupies more frequency range, so different portions can fade differently. That makes selective fading more noticeable on wide bandwidths.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It is the same for both wide and narrow bandwidths\": It is the same for both wide and narrow bandwidths ignores that a wider signal gives fading more spectrum to affect unevenly.\n- sourceIndex 2: \"Only the receiver bandwidth determines the selective fading effect\": Only the receiver bandwidth determines the selective fading effect overlooks the transmitted signal bandwidth and propagation path.\n- sourceIndex 3: \"It is more pronounced at narrow bandwidths\": It is more pronounced at narrow bandwidths reverses the usual effect; narrow signals are less likely to show frequency-selective distortion.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-004-009"
+    }
+  ],
+  "licenseClass": "original"
+}

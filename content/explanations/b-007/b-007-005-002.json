@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-005-002",
+  "questionId": "B-007-005-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-005-002.\n\nWhy the correct answer is right: The average sunspot cycle is about 11 years from one similar phase to the next.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"17 years\": 17 years is too long for the average sunspot cycle used in amateur propagation study.\n- sourceIndex 2: \"5 years\": 5 years is roughly part of a rise or fall, not the average full cycle.\n- sourceIndex 3: \"7 years\": 7 years is shorter than the accepted average cycle length.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-005-002"
+    }
+  ],
+  "licenseClass": "original"
+}

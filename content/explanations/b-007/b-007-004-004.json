@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-004-004",
+  "questionId": "B-007-004-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-004-004.\n\nWhy the correct answer is right: In a city, reflected VHF signals can arrive by several routes. Moving a small distance can shift from a spot where paths add to one where they cancel.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Overhead power lines create a Faraday cage\": Overhead power lines create a Faraday cage is not a good explanation; power lines may cause noise, but not a room-sized cage over the street.\n- sourceIndex 2: \"Underground conduits change ground conductivity\": Underground conduits change ground conductivity is not the usual cause of sharp VHF handheld nulls.\n- sourceIndex 3: \"Passing vehicles absorb the radio signals\": Passing vehicles absorb the radio signals may contribute momentarily, but the severe position-sensitive pattern is classic multipath cancellation.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-004-004"
+    }
+  ],
+  "licenseClass": "original"
+}

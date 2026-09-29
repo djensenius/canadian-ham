@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-008-002",
+  "questionId": "B-007-008-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-008-002.\n\nWhy the correct answer is right: Near the maximum usable frequency, weak distorted signals often indicate scatter: a small amount of energy is being redirected over several paths.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Ground wave\": Ground wave would be surface-following and is not the likely explanation for weak distorted signals near the MUF.\n- sourceIndex 2: \"Line-of-sight\": Line-of-sight is usually cleaner and local; it does not fit a weak distorted HF signal near the usable-frequency limit.\n- sourceIndex 3: \"Ducting\": Ducting points to lower-atmosphere VHF/UHF enhancement rather than HF scatter near MUF.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-008-002"
+    }
+  ],
+  "licenseClass": "original"
+}

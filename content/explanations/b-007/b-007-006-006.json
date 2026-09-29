@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-006-006",
+  "questionId": "B-007-006-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-006-006.\n\nWhy the correct answer is right: Frequencies below the path MUF are generally within the range the ionosphere can refract back toward Earth, subject to absorption and signal strength.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"They are changed to a frequency above the MUF\": They are changed to a frequency above the MUF is false; the ionosphere does not convert the transmitted frequency this way.\n- sourceIndex 2: \"They are completely absorbed by the ionosphere\": They are completely absorbed by the ionosphere may happen below the LUF or during disturbed conditions, but it is not the usual meaning of below MUF.\n- sourceIndex 3: \"They pass through the ionosphere\": They pass through the ionosphere describes frequencies above the usable limit, not those below MUF.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-006-006"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-006-010",
+  "questionId": "B-007-006-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-006-010.\n\nWhy the correct answer is right: The optimum working frequency is chosen below the MUF to allow margin as the ionosphere changes. Operating exactly at the limit is risky.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"double the MUF\": double the MUF would be above the maximum usable frequency and normally would not return on that path.\n- sourceIndex 2: \"half the MUF\": half the MUF may be usable sometimes, but it is not the usual definition of optimum working frequency.\n- sourceIndex 3: \"slightly higher\": slightly higher would put the operating frequency above the MUF, which defeats the purpose of the term.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-006-010"
+    }
+  ],
+  "licenseClass": "original"
+}

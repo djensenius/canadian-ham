@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-007-010",
+  "questionId": "B-007-007-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-007-010.\n\nWhy the correct answer is right: Without special enhancements, the normal VHF tropospheric range scale is about 800 km in this question bank.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"2400 km\": 2400 km is far beyond normal unenhanced VHF tropospheric range and would require unusual propagation.\n- sourceIndex 2: \"3200 km\": 3200 km is even farther beyond ordinary VHF tropospheric expectations.\n- sourceIndex 3: \"1600 km\": 1600 km is double the expected unenhanced range and points toward enhanced conditions rather than normal propagation.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-007-010"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-007-005",
+  "questionId": "B-007-007-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-007-005.\n\nWhy the correct answer is right: Sporadic E consists of localized dense ionization patches near E-region height. Those patches can support sudden openings.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Occasional duct formation in the E region\": Occasional duct formation in the E region confuses ionospheric ionization with tropospheric ducting.\n- sourceIndex 2: \"Variations in E-region height caused by sunspot variations\": Variations in E-region height caused by sunspot variations is not the key feature; density patches are.\n- sourceIndex 3: \"A brief decrease in VHF signals caused by sunspot variations\": A brief decrease in VHF signals caused by sunspot variations describes a fade, not the sporadic-E condition.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-007-005"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-003-011",
+  "questionId": "B-007-003-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-003-011.\n\nWhy the correct answer is right: A higher refracting region places the bending point farther above Earth, so the same general path intersects the ground farther away.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It increases, due to the increase in critical frequency\": It increases, due to the increase in critical frequency gives the right direction for the wrong reason; the question specifies region height.\n- sourceIndex 2: \"It decreases, due to the geometry of the signal path\": It decreases, due to the geometry of the signal path reverses the geometry; a higher layer lengthens the path.\n- sourceIndex 3: \"It decreases, due to the increase in critical frequency\": It decreases, due to the increase in critical frequency has both the direction and the stated cause wrong for this height change.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-003-011"
+    }
+  ],
+  "licenseClass": "original"
+}

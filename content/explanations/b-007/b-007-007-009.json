@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-007-009",
+  "questionId": "B-007-007-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-007-009.\n\nWhy the correct answer is right: Auroral paths can badly distort audio, but simple on-off keyed CW elements can still be recognized through rough propagation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"CW, because it resists fading\": CW, because it resists fading names the right emission but the wrong reason; CW is favoured mainly because it remains readable when distorted.\n- sourceIndex 2: \"FM, because it is readable even when distorted\": FM, because it is readable even when distorted is wrong because FM voice usually suffers badly on auroral paths.\n- sourceIndex 3: \"FM, because it resists fading\": FM, because it resists fading is wrong both in mode choice and in the stated reason for auroral reliability.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-007-009"
+    }
+  ],
+  "licenseClass": "original"
+}

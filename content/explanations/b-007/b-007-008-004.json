@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-008-004",
+  "questionId": "B-007-008-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-008-004.\n\nWhy the correct answer is right: HF scatter reaches the receiver by several weak redirected paths. Those different paths smear phase and timing, making the signal sound distorted.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Auroral activity and changes in the Earth's magnetic field\": Auroral activity and changes in the Earth's magnetic field can distort auroral signals, but this question asks about HF scatter sound.\n- sourceIndex 2: \"Propagation through ground waves that absorb much of the signal\": Propagation through ground waves that absorb much of the signal names the wrong mode; scatter is not ordinary ground-wave absorption.\n- sourceIndex 3: \"The state of the E-region at the point of refraction\": The state of the E-region at the point of refraction is not the main reason HF scatter sounds distorted.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-008-004"
+    }
+  ],
+  "licenseClass": "original"
+}

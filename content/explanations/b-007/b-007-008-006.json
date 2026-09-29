@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-008-006",
+  "questionId": "B-007-008-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-008-006.\n\nWhy the correct answer is right: Scatter can put a weak HF signal into the gap beyond ground wave but short of the normal sky-wave return.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Short-path skip\": Short-path skip would still require the normal sky-wave geometry to return at that distance, which is the problem in the described gap.\n- sourceIndex 2: \"Sporadic-E skip\": Sporadic-E skip is associated mostly with six metres and some VHF/lower-HF events, not the general weak HF skip-zone signal here.\n- sourceIndex 3: \"Tropospheric scatter\": Tropospheric scatter is a VHF/UHF mode involving lower-atmosphere variations, not the HF mode named in the question.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-008-006"
+    }
+  ],
+  "licenseClass": "original"
+}

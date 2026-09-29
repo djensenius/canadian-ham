@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-003-008",
+  "questionId": "B-007-003-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-003-008.\n\nWhy the correct answer is right: Skip distance is the nearest ground distance reached by the first ionospheric return for that signal path.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"maximum distance reached by a signal after one reflection by the ionosphere\": maximum distance reached by a signal after one reflection by the ionosphere describes hop-length limit, not the nearest return point.\n- sourceIndex 2: \"minimum distance reached by a ground-wave signal\": minimum distance reached by a ground-wave signal mixes in the wrong propagation mode; skip distance is a sky-wave term.\n- sourceIndex 3: \"maximum distance a signal will travel by both a ground wave and reflected wave\": maximum distance a signal will travel by both a ground wave and reflected wave combines unrelated limits instead of naming the first sky-wave return.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-003-008"
+    }
+  ],
+  "licenseClass": "original"
+}

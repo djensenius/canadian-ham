@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-008-009",
+  "questionId": "B-007-008-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-008-009.\n\nWhy the correct answer is right: Meteor trails are especially useful around the lower VHF range, and six metres is the amateur band in the choices that fits best.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"40 metres\": 40 metres is HF and normally uses ionospheric propagation, not meteor scatter as its most effective mode.\n- sourceIndex 2: \"15 metres\": 15 metres is also HF and is not the classic meteor-scatter band.\n- sourceIndex 3: \"160 metres\": 160 metres is far too low in frequency for the most effective amateur meteor-scatter operation.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-008-009"
+    }
+  ],
+  "licenseClass": "original"
+}

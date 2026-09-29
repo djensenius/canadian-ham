@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-007-004",
+  "questionId": "B-007-007-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-007-004.\n\nWhy the correct answer is right: A tropospheric wave is the portion guided close to Earth by bending in the lower atmosphere.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Scattered wave\": Scattered wave is energy redirected in many directions; it is not specifically the bent lower-atmosphere surface-hugging portion.\n- sourceIndex 2: \"Ground wave\": Ground wave is guided by the Earth's surface itself, not by atmospheric bending.\n- sourceIndex 3: \"Ionospheric wave\": Ionospheric wave involves upper-atmosphere refraction, not the tropospheric path near the surface.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-03"
+    },
+    {
+      "type": "question",
+      "id": "B-007-007-004"
+    }
+  ],
+  "licenseClass": "original"
+}

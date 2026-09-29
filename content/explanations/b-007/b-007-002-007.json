@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-002-007",
+  "questionId": "B-007-002-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-002-007.\n\nWhy the correct answer is right: After a full night without sunlight, recombination has had the longest time to reduce ionization. That makes the period just before dawn the usual daily minimum.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Just after noon\": Just after noon is near the daily solar-radiation maximum, not the ionization minimum.\n- sourceIndex 2: \"Just after dusk\": Just after dusk is early in the nighttime decay; ionization has not usually reached its lowest point yet.\n- sourceIndex 3: \"Shortly before midnight\": Shortly before midnight is dark, but it is not as late in the recombination period as the time before sunrise.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-002-007"
+    }
+  ],
+  "licenseClass": "original"
+}

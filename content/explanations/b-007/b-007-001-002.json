@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-001-002",
+  "questionId": "B-007-001-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-001-002.\n\nWhy the correct answer is right: NVIS uses a steep HF radiation path so the signal returns over a regional area. That makes it useful for medium-range links, including routes where hills or valleys make VHF paths unreliable.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Multi-hop HF worldwide communications\": Multi-hop HF worldwide communications use low-angle paths and repeated returns; that is the opposite coverage goal from NVIS.\n- sourceIndex 2: \"Regional communications above the critical frequency\": Regional communications above the critical frequency confuses terms: a near-vertical signal above the relevant critical frequency would tend to pass through instead of returning.\n- sourceIndex 3: \"Continent-wide communications\": Continent-wide communications describes a much longer path than the regional coverage for which NVIS is chosen.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-01"
+    },
+    {
+      "type": "question",
+      "id": "B-007-001-002"
+    }
+  ],
+  "licenseClass": "original"
+}

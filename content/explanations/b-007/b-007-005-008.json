@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-007-005-008",
+  "questionId": "B-007-005-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-007-005-008.\n\nWhy the correct answer is right: The Sun is the broad energy source behind ionization, solar disturbances, and many propagation changes across the spectrum.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"the ionosphere\": the ionosphere affects many HF paths, but it is itself driven by the Sun and does not explain the whole spectrum.\n- sourceIndex 2: \"auroras\": auroras affect particular high-latitude paths and modes, not all communication frequencies throughout the spectrum.\n- sourceIndex 3: \"meteor showers\": meteor showers create brief scatter opportunities, not a varying influence across all communication frequencies.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-007-02"
+    },
+    {
+      "type": "question",
+      "id": "B-007-005-008"
+    }
+  ],
+  "licenseClass": "original"
+}
