@@ -533,13 +533,20 @@ private struct VisionFeedbackPanel: View {
 
     var body: some View {
         HStack(spacing: DesignTokens.Spacing.lg) {
-            Label(resultText, systemImage: selectedAnswer.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
-                .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                .foregroundStyle(selectedAnswer.isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
-            Text(sourceText)
-                .font(DesignTokens.FontScale.body.weight(.semibold))
-                .foregroundStyle(selectedAnswer.isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
+            HStack(spacing: DesignTokens.Spacing.lg) {
+                Label(resultText, systemImage: selectedAnswer.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
+                    .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                    .foregroundStyle(selectedAnswer.isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
+                Text(sourceText)
+                    .font(DesignTokens.FontScale.body.weight(.semibold))
+                    .foregroundStyle(selectedAnswer.isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
+            }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text(accessibilityLabel))
+            .accessibilityIdentifier("answer-feedback")
+
             Spacer()
+
             Button("Next question", action: onNext)
                 .buttonStyle(.borderedProminent)
                 .font(DesignTokens.FontScale.body.weight(.bold))
@@ -553,9 +560,6 @@ private struct VisionFeedbackPanel: View {
                 .strokeBorder(selectedAnswer.isCorrect ? DesignTokens.Colors.correctBorder : DesignTokens.Colors.incorrectBorder, lineWidth: 2)
         )
         .glassBackgroundEffect()
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(accessibilityLabel))
-        .accessibilityIdentifier("answer-feedback")
     }
 
     private var resultText: String { selectedAnswer.isCorrect ? "Correct" : "Incorrect" }

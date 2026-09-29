@@ -38,16 +38,26 @@ final class CanadianHamTVUITests: XCTestCase {
         pressUntil(feedback, exists: true, remote: remote, buttons: [.down, .down, .select, .down, .select, .down, .select, .down, .select])
         XCTAssertTrue(feedback.exists, "Feedback should appear after selecting an answer with the remote")
 
-        let nextQuestion = app.buttons["Next question"].firstMatch
+        let nextQuestion = app.buttons["next-question-button"].firstMatch
         XCTAssertTrue(nextQuestion.waitForExistence(timeout: 5), "Next question button should exist")
+        assertNextQuestionIsSeparateButton(nextQuestion, feedback: feedback)
+
         pressUntil(feedback, exists: false, remote: remote, buttons: [.down, .down, .select, .down, .select, .down, .select])
         XCTAssertFalse(feedback.exists, "Feedback should disappear after advancing to the next question with the remote")
+        XCTAssertTrue(
+            app.descendants(matching: .any)["tv-practice-screen"].firstMatch.exists,
+            "Advancing with Next question should keep the app on the practice screen"
+        )
+        let reenabledAnswer = app.buttons["answer-A-button"].firstMatch
+        XCTAssertTrue(reenabledAnswer.waitForExistence(timeout: 5), "A new answer should be visible after advancing")
+        XCTAssertTrue(reenabledAnswer.isEnabled, "Answers should be re-enabled after advancing to the next question")
     }
 
     func testRemoteMenuReturnsPracticeAndAboutToCategoryGrid() throws {
         for screen in [PlatformAuditScreen.practice, .about] {
             let app = configuredApp(screen: screen, appearance: "light")
             app.launch()
+            addTeardownBlock { app.terminate() }
             XCTAssertTrue(screen.waitElement(in: app).waitForExistence(timeout: 15), "Expected \(screen.rawValue) before pressing Menu")
 
             XCUIRemote.shared.press(.menu)
@@ -117,6 +127,21 @@ final class CanadianHamTVUITests: XCTestCase {
         }
     }
 
+    private func assertNextQuestionIsSeparateButton(
+        _ nextQuestion: XCUIElement,
+        feedback: XCUIElement,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        XCTAssertEqual(nextQuestion.elementType, .button, "Next question should be exposed as its own button element", file: file, line: line)
+        XCTAssertFalse(
+            feedback.descendants(matching: .button)["next-question-button"].exists,
+            "Next question must not be nested inside the ignored feedback accessibility element",
+            file: file,
+            line: line
+        )
+    }
+
     private func pressUntil(
         _ element: XCUIElement,
         exists expectedExistence: Bool,
@@ -131,19 +156,6 @@ final class CanadianHamTVUITests: XCTestCase {
             RunLoop.current.run(until: Date().addingTimeInterval(0.3))
         }
         XCTAssertEqual(element.exists, expectedExistence, file: file, line: line)
-    }
-
-    private func waitForElementToDisappear(
-        _ element: XCUIElement,
-        timeout: TimeInterval,
-        message: String,
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) {
-        let predicate = NSPredicate(format: "exists == false")
-        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
-        let result = XCTWaiter.wait(for: [expectation], timeout: timeout)
-        XCTAssertEqual(result, .completed, message, file: file, line: line)
     }
 
     private static let fixedFrenchQuestionText = "Le certificat d'opérateur radioamateur est valide pour:"

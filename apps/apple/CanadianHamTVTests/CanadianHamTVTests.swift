@@ -24,4 +24,29 @@ final class CanadianHamTVTests: XCTestCase {
         XCTAssertEqual(Set(answers.map(\.sourceIndex)), Set(question.answers.map(\.sourceIndex)))
         XCTAssertEqual(answers.filter(\.isCorrect).count, 1)
     }
+
+    func testTVPracticeSeedsVaryAcrossSessionIDs() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let category = try XCTUnwrap(bank.categories.first { $0.id == "B-001" })
+        let questions = bank.questions(in: category)
+        let sessionIDs = (0..<6).map { "tvos-session-\($0)" }
+
+        let questionIDs = try Set(sessionIDs.compactMap { sessionID in
+            try AppleQuestionShuffle.randomQuestion(
+                from: questions,
+                seed: "tvos-practice/\(category.id)/0/\(sessionID)"
+            )?.id
+        })
+        let firstQuestion = try XCTUnwrap(questions.first)
+        let answerOrders = try Set(sessionIDs.map { sessionID in
+            try AppleQuestionShuffle.shuffledAnswers(
+                for: firstQuestion,
+                seed: "tvos-answers/\(firstQuestion.id)/0/\(sessionID)"
+            )
+            .map(\.sourceIndex)
+        })
+
+        XCTAssertGreaterThan(questionIDs.count, 1, "Practice question seeds should vary when the per-session launch ID changes")
+        XCTAssertGreaterThan(answerOrders.count, 1, "Answer shuffle seeds should vary when the per-session launch ID changes")
+    }
 }

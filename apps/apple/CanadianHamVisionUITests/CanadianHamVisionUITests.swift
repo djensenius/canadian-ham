@@ -38,19 +38,34 @@ final class CanadianHamVisionUITests: XCTestCase {
         let feedback = app.descendants(matching: .any)["answer-feedback"].firstMatch
         XCTAssertTrue(feedback.waitForExistence(timeout: 5), "Feedback should appear after selecting an answer")
 
-        let nextQuestion = app.buttons["Next question"].firstMatch
+        let nextQuestion = app.buttons["next-question-button"].firstMatch
         XCTAssertTrue(nextQuestion.waitForExistence(timeout: 5), "Next question button should exist")
+        assertNextQuestionIsSeparateButton(nextQuestion, feedback: feedback)
         scrollUntilHittable(nextQuestion, in: app, maxSwipes: 8)
         nextQuestion.tap()
         waitForElementToDisappear(feedback, timeout: 5, message: "Feedback should disappear after advancing to the next question")
     }
 
     func testLongestQuestionSupportsLargestDynamicType() throws {
+        let defaultApp = configuredApp(
+            screen: .practice,
+            appearance: "light",
+            categoryID: Self.longestQuestionCategoryID,
+            questionID: Self.longestQuestionID,
+            language: Self.longestQuestionLanguage
+        )
+        defaultApp.launch()
+        let defaultQuestion = defaultApp.staticTexts.matching(NSPredicate(format: "label == %@", Self.longestQuestionText)).firstMatch
+        XCTAssertTrue(defaultQuestion.waitForExistence(timeout: 15), "Expected the longest bundled question to render at the default Dynamic Type size")
+        let defaultQuestionHeight = defaultQuestion.frame.height
+        defaultApp.terminate()
+
         let app = configuredApp(
             screen: .practice,
             appearance: "light",
             categoryID: Self.longestQuestionCategoryID,
-            questionID: Self.longestQuestionID
+            questionID: Self.longestQuestionID,
+            language: Self.longestQuestionLanguage
         )
         app.launchArguments += [
             "-UIPreferredContentSizeCategoryName",
@@ -60,15 +75,20 @@ final class CanadianHamVisionUITests: XCTestCase {
         defer { app.terminate() }
 
         let question = app.staticTexts.matching(NSPredicate(format: "label == %@", Self.longestQuestionText)).firstMatch
-        XCTAssertTrue(question.waitForExistence(timeout: 15), "Expected the longest bundled English question to render")
+        XCTAssertTrue(question.waitForExistence(timeout: 15), "Expected the longest bundled question to render at the largest Dynamic Type size")
         XCTAssertEqual(question.label, Self.longestQuestionText, "Longest question text should not be truncated in the accessibility tree")
-        XCTAssertGreaterThan(question.frame.height, 90, "Longest question should occupy a multi-line frame at the largest Dynamic Type size")
+        XCTAssertGreaterThan(
+            question.frame.height,
+            defaultQuestionHeight * 2.4,
+            "Largest Dynamic Type should make the full longest-question text much taller than the default rendering"
+        )
 
         answerFirstVisibleQuestion(in: app)
         let feedback = app.descendants(matching: .any)["answer-feedback"].firstMatch
         XCTAssertTrue(feedback.waitForExistence(timeout: 5), "Feedback should remain reachable at the largest Dynamic Type size")
-        let nextQuestion = app.buttons["Next question"].firstMatch
+        let nextQuestion = app.buttons["next-question-button"].firstMatch
         XCTAssertTrue(nextQuestion.waitForExistence(timeout: 5), "Next question should exist at the largest Dynamic Type size")
+        assertNextQuestionIsSeparateButton(nextQuestion, feedback: feedback)
         scrollUntilHittable(nextQuestion, in: app, maxSwipes: 12)
         XCTAssertTrue(nextQuestion.isHittable, "Next question should be reachable by scrolling at the largest Dynamic Type size")
     }
@@ -101,7 +121,8 @@ final class CanadianHamVisionUITests: XCTestCase {
         appearance: String,
         categoryID: String = "B-001",
         questionID: String = "B-001-002-002",
-        answeredSourceIndex: Int? = nil
+        answeredSourceIndex: Int? = nil,
+        language: String? = nil
     ) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = [
@@ -113,6 +134,9 @@ final class CanadianHamVisionUITests: XCTestCase {
         if let answeredSourceIndex {
             app.launchArguments += ["-CanadianHamPlatformAnsweredSourceIndex", "\(answeredSourceIndex)"]
         }
+        if let language {
+            app.launchArguments += ["-CanadianHamLanguage", language]
+        }
         return app
     }
 
@@ -122,6 +146,21 @@ final class CanadianHamVisionUITests: XCTestCase {
         } else {
             throw XCTSkip("performAccessibilityAudit is unavailable for \(context).")
         }
+    }
+
+    private func assertNextQuestionIsSeparateButton(
+        _ nextQuestion: XCUIElement,
+        feedback: XCUIElement,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        XCTAssertEqual(nextQuestion.elementType, .button, "Next question should be exposed as its own button element", file: file, line: line)
+        XCTAssertFalse(
+            feedback.descendants(matching: .button)["next-question-button"].exists,
+            "Next question must not be nested inside the ignored feedback accessibility element",
+            file: file,
+            line: line
+        )
     }
 
     private func answerFirstVisibleQuestion(in app: XCUIApplication) {
@@ -176,7 +215,14 @@ final class CanadianHamVisionUITests: XCTestCase {
     private static let fixedFrenchQuestionText = "Le certificat d'opérateur radioamateur est valide pour:"
     private static let longestQuestionID = "B-002-006-007"
     private static let longestQuestionCategoryID = "B-002"
-    private static let longestQuestionText = "Your receiver's S-meter is calibrated to a standard of 6 dB per S-unit per a recommendation by the International Amateur Radio Union (IARU). The S-meter shows S9 when receiving a station transmitting with 100 watts. Neglecting propagation changes, what transmitter power would cause your receiver's S-meter to read S8?"
+    private static let longestQuestionEnglishText = "Your receiver's S-meter is calibrated to a standard of 6 dB per S-unit per a recommendation by the International Amateur Radio Union (IARU). The S-meter shows S9 when receiving a station transmitting with 100 watts. Neglecting propagation changes, what transmitter power would cause your receiver's S-meter to read S8?"
+    private static let longestQuestionFrenchText = "Le S-mètre sur votre récepteur est étalonné selon une recommandation de l'Union internationale des radioamateurs (IARU), soit 6 dB par unité S. Une station utilisant 100 watts est reçue à S9. Sans changement à la propagation, quelle puissance à l'émetteur réduirait l'indication de votre S-mètre à S8?"
+    private static var longestQuestionText: String {
+        longestQuestionEnglishText.count >= longestQuestionFrenchText.count ? longestQuestionEnglishText : longestQuestionFrenchText
+    }
+    private static var longestQuestionLanguage: String {
+        longestQuestionEnglishText.count >= longestQuestionFrenchText.count ? "en" : "fr"
+    }
 }
 
 private enum PlatformAuditScreen: String {
