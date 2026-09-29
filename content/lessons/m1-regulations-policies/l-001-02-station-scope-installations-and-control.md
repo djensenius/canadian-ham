@@ -51,11 +51,9 @@ The current bank repeatedly points to both sides, not just the technician side. 
 
 Advanced qualification appears in one bank item for broader radio-apparatus work on behalf of someone who already holds the relevant authorization. Do not use that point to erase the other person's authorization requirement. The person receiving the work still needs the proper authorization for the apparatus.
 
-### Worked example: club loaner setup
+### Worked example: service tag before soldering
 
-A club lends a compact VHF station to a newly certified member. Another member checks the power lead, programs amateur memories, and verifies that the antenna connection is safe. The reason this can be a normal club-help activity is that the recipient has an amateur certificate for the station use, and the helper is not trying to create authority for an uncertified user.
-
-If the same hardware were being prepared for a person with no amateur certificate, the answer would change. The equipment may be technically identical, but the authorization side is different.
+A repair bench tag has spaces for "person doing the work," "person receiving the apparatus," and "radio service involved." Filling only the technician line is not enough. The tag should show that the work is amateur work within the helper's privileges and that the recipient is authorized for that amateur apparatus or station use. The tag is a study tool, not a new regulatory form.
 
 ## Amateur service is not every radio service
 
@@ -65,61 +63,75 @@ Several boundaries follow from that idea:
 
 - Low power does not remove the need for amateur supervision and authorization.
 - A licence-exempt transmitter's output may not be boosted with an amateur amplifier.
-- Amateur equipment is not used outside amateur bands merely because it can be tuned or modified.
+- Amateur gear cannot be used as a shortcut for transmitting beyond amateur allocations; the current bank gives a "never" answer for that out-of-band use.
 - A radio that can also cover land-mobile channels needs the certification and licence for that other service before it is used there.
 - Amateur authorization does not itself authorize aeronautical, marine, or land-mobile operation.
 
-### Worked example: dual-use-looking handheld
+### Worked example: event-radio channel list
 
-A handheld can store many frequencies, and a programming cable can make the menu look flexible. The regulatory question is not, "Can the memory be typed into the radio?" The question is, "Is this operation inside the amateur service, or is the radio certified and licensed for the other service?" If the answer is the other service, amateur authority alone is not enough.
+A volunteer has one handheld and two channel groups in the programming file: amateur repeater memories and a separate event-staff group. Before transmitting, the operator must identify which radio service the selected channel belongs to. If the channel is not amateur operation, the amateur certificate and call sign do not supply the other service's equipment approval or licence.
 
 ## Communications that fit amateur radio
 
-Amateur radio is for self-training, intercommunication, and technical investigation within the amateur service. The current bank marks several boundaries around that purpose.
+The current bank marks several permitted and prohibited communications. Use the bank's examples; do not expand them into an uncited purpose statement.
 
-Allowed examples in the bank include non-secret Q codes and other non-secret procedural signals, Morse practice, brief transmissions for station adjustment, model-control commands, and communications with similarly authorized stations.
+| Communication example | Current-bank treatment |
+|---|---|
+| Recreation planning, code-practice planning, or emergency planning on a club net | Not the prohibited topic in the bank item. |
+| Business planning or business communications | Prohibited. |
+| Broadcasts intended for the general public | Not permitted. |
+| Radio-control commands to model craft, brief transmissions to adjust the station, and Morse code practice | Permitted one-way examples in the bank item. |
+| Q codes, abbreviations, and procedural signals | Permitted when the signals or codes are not secret. |
+| New digital encoding technique | Must be published in the public domain before use on amateur bands. |
+| Secret code, unpublished encoding, programming from a broadcasting undertaking, or commercially recorded material | Not permitted. |
+| Background music or non-amateur audio reaching the microphone | Turn down the background audio rather than retransmitting it. |
 
-Prohibited examples include business communications, broadcasting to the general public, retransmitting programming or commercially recorded material, and obscuring meaning with a secret code or unpublished encoding technique. A new digital method must be publicly documented before it can be used on amateur bands. A call sign does not make a secret or commercial message acceptable.
+A call sign does not make a secret, commercial, or broadcast message acceptable. Publishing a digital technique solves the secrecy problem only; the traffic still has to avoid the other prohibited categories.
 
-Background audio is a practical version of the same principle. If music or another non-amateur source is being picked up by the microphone, the station should reduce that source rather than transmit it along with the amateur message.
+### Worked example: message-content filter
 
-### Worked example: open protocol checklist
-
-A group creates a simple text mode for an experiment. Before using it on amateur bands, they publish enough information for others to understand the encoding. They also keep the traffic non-commercial and identify normally. The point is not to hide the method; the point is to experiment openly inside the amateur service.
+A data group posts a clear description of its packet fields before an on-air test. That handles the open-encoding issue. If the same packets carry store inventory or invoice traffic, a different boundary is crossed: publishing the format does not make business communications acceptable on amateur radio.
 
 ## Station types and construction privileges
 
 The bank uses several station and equipment examples to separate Basic from Basic and Advanced privileges.
 
-A Basic qualification is enough, according to the current bank, for assembling commercially available transmitter kits of professional design and for operating cross-band repeaters. It also supports operating an amateur station in Canada, subject to the operator's privileges and the other rules in this course.
+| Station or equipment situation | Current-bank minimum qualification |
+|---|---|
+| Operating an amateur station in Canada | Amateur Radio Operator Certificate holders may operate anywhere in Canada, subject to their privileges and the other rules in this course. |
+| Assembling commercially available transmitter kits of professional design | Basic. |
+| Operating cross-band repeaters | Basic. |
+| Beacon station one-way communications | A beacon station may transmit one-way communications. |
+| Installing a single-band voice repeater | Basic and Advanced. |
+| Installing an amateur radio club station | Basic and Advanced. |
+| Installing or operating a transmitter or RF amplifier that is neither professionally designed nor commercially manufactured for amateur use | Basic and Advanced. |
+| Remotely operating a transmitter while changing frequency, emission mode, or output power | Basic and Advanced. |
 
-Basic and Advanced are required in the bank for installing certain station types and for more demanding transmitter situations, including club stations, single-band voice repeaters, remote-controlled transmitters with control of frequency, emission mode, or power, and transmitters or RF amplifiers that are neither professionally designed nor commercially manufactured for amateur use.
+The pattern is useful: factory-designed beginner kit assembly and cross-band repeater operation are treated differently from less-standard transmitting hardware, a club station, a voice repeater installation, or remote transmitter control. The beacon row also matters because one-way beacon transmissions are not the same as broadcasting to the general public.
 
-The pattern is useful: factory-designed beginner kit assembly is treated differently from creating or operating less-standard transmitting hardware, a club station, or remote transmitter control.
+### Worked example: privilege board
 
-### Worked example: privilege matrix
-
-A learner draws two columns: "Basic is enough in the bank" and "Basic plus Advanced in the bank." They place a commercial transmitter kit in the first column and a club-station installation in the second. That matrix is safer than memorizing a vague slogan such as "Advanced is only about power," because the bank uses Advanced for several station responsibilities.
+A club training board uses removable cards rather than a slogan. "Commercial kit assembly" and "cross-band repeater operation" go under Basic; "club station installation," "single-band voice repeater installation," and "remote transmitter control with frequency, mode, or power changes" go under Basic and Advanced. Moving the cards by exact situation prevents the misleading shortcut that Advanced is only about one thing.
 
 ## Control operator and station owner
 
 Whenever an amateur station transmits, a control operator is required at the station's control point. The station owner is also responsible for the station's operation. If you transmit from someone else's station, responsibility is shared: you are responsible for your own operation, and the owner remains responsible for the station.
 
-The owner may choose any qualified amateur operator as control operator. Qualification matters more than age in these bank items. A person with no amateur certificate can transmit only when an appropriately qualified holder is physically present and supervising. A telephone briefing, course enrolment, or a licence from another radio service does not substitute for that supervised presence.
+The owner may choose any qualified amateur operator as control operator. Qualification matters more than age in these bank items. A person with no amateur certificate can transmit only when an appropriately qualified holder is physically present and supervising. A remote briefing, course enrolment, or a licence from another radio service does not substitute for that supervised presence.
 
-This is why a family member, guest, student, or club visitor can participate safely when the qualified person is actually supervising, but cannot be left alone to transmit.
+This is why a family member, guest, student, or visitor can participate safely when the qualified person is actually supervising, but cannot be left alone to transmit.
 
-### Worked example: guest microphone handoff
+### Worked example: museum microphone queue
 
-At a public demonstration, a certified operator sits at the control point and invites a visitor to speak a short greeting. The operator explains what to say, watches the controls, and remains able to stop the transmission. That is different from unlocking the room, leaving a note, and asking the visitor to call later. The first case has supervised presence; the second does not.
+At a museum display, a certified operator stands at the control point and invites one visitor at a time to speak a short greeting. The operator watches the controls and can stop the transmission. If the operator steps away to manage the queue at the doorway, the plan no longer has the same control-point supervision, even if the visitor was briefed moments earlier.
 
 ## Try it
 
-1. Question: A workshop checklist records only the helper's qualification before work starts on another person's station. What second record should the checklist prompt for? Answer: It should also confirm the recipient's authority for that amateur-station use, so the checklist does not confuse technical skill with operating authorization.
-2. Question: A memory channel in a mobile radio can be programmed outside amateur allocations. What two checks decide whether it may be used there? Answer: It must be operation under the other service's certification and licence; amateur authority alone does not make the channel lawful.
-3. Question: A data experiment uses a new code table that only the project team can read. What change moves the method toward amateur use? Answer: Publish the encoding so the meaning is not hidden, and keep the traffic within amateur-purpose limits.
-4. Question: A study chart labels Advanced as "only about higher transmitter power." Why is that label misleading for this lesson? Answer: The current bank also uses Basic and Advanced for several station-responsibility cases, so the chart should show a privilege matrix rather than a single power-only rule.
-5. Question: A station owner asks a noncertified neighbour to call a net while the owner listens by phone from another building. What is missing? Answer: The qualified supervision must be in the presence of the unqualified operator, with a control operator able to control the transmitting station.
+1. Question: A swap-meet repair tag lists the helper's certificate class but leaves the recipient line blank. What should be added before treating the job as amateur-service work? Answer: Add the recipient's authorization for the apparatus or amateur-station use involved, along with the service being worked on.
+2. Question: A parade committee wants the same handheld used on an amateur net and on a separate staff channel. What decision has to happen before anyone transmits on the staff channel? Answer: Decide whether the staff channel is a different radio service and, if it is, confirm that service's equipment certification and licence instead of relying on amateur authority.
+3. Question: A packet experiment is fully documented on a web page, but the sample messages carry vendor order totals. Which rule boundary remains? Answer: Publication removes the secret-encoding problem, but business traffic is still not acceptable amateur communication.
+4. Question: A hilltop device sends short one-way signal reports to help operators judge coverage. What label keeps this from being confused with a public broadcast? Answer: Treat it as a beacon-station reference case; one-way beacon transmissions are distinct from broadcasts intended for the general public.
+5. Question: At a museum display, a visitor holds the microphone while the certificate holder walks to the doorway to answer questions. What changed? Answer: The qualified person is no longer at the control point supervising the transmission, so the demonstration plan must be adjusted before the visitor transmits.
 
 ## Radio connection
 
@@ -133,9 +145,10 @@ Good station control is also good engineering practice. The person who can stop 
 - Assuming a programmable radio may be used anywhere it can tune.
 - Treating licence-exempt equipment as though amateur power amplifiers may be added.
 - Thinking a call sign makes business, broadcast, music, or secret traffic acceptable.
+- Forgetting that a beacon station may make one-way transmissions while broadcasts intended for the general public remain prohibited.
 - Using "Advanced" as a vague label instead of matching it to the specific station privilege in the bank.
 - Believing the station owner can transfer all responsibility with a log entry or permission note.
-- Allowing an unqualified person to transmit alone because they are enrolled in a course, related to the owner, or briefed by phone.
+- Allowing an unqualified person to transmit alone because they are enrolled in a course, related to the owner, or briefed remotely.
 
 ## Illustration brief
 
@@ -148,7 +161,8 @@ Description: Draw a four-step flow: "Who is authorized?" then "Which radio servi
 - Work on another person's amateur transmitter depends on both your role and the other person's authorization.
 - Amateur authority does not convert licence-exempt, land-mobile, marine, or aeronautical operation into amateur operation.
 - Amateur communications must avoid business traffic, public broadcasting, secret meaning, and retransmitted non-amateur audio.
-- Open, non-secret procedural signals and published digital methods fit the amateur-service principle.
+- Open, non-secret procedural signals and published digital methods fit the amateur-service principle only when the message content also fits.
 - The current bank treats some privileges as Basic-only and others as Basic plus Advanced; do not replace that matrix with a slogan.
+- A beacon station may transmit one-way communications, but that does not authorize broadcasts to the general public.
 - A transmitting amateur station needs a control operator at the control point, and the station owner remains responsible for station operation.
 - Unqualified people may participate only with qualified supervision and presence.

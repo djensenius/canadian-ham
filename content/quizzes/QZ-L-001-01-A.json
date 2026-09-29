@@ -40,123 +40,123 @@
     {
       "id": "QZ-L-001-01-A-C1",
       "prompt": {
-        "en": "A learner builds a source map before reviewing station duties. Which ordering is the most defensible from broad authority toward individual operating records?",
+        "en": "Spot the error in this study-table row: 'Retain the certificate or a copy at the station; if an inspector asks, produce the original within 48 hours.' Which correction best fixes the row?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Certificate folder, department name, service definition, broad statute",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "Broad statute, regulations that define the service, ISED station standards, certificate and call-sign records",
+            "en": "Keep the certificate retention rule separate from the inspector-production rule: the copy wording belongs to the inspector request, and the 48-hour response may use the certificate or a copy.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "Club handbook, call-sign preference, examiner invoice, broad statute",
+            "en": "Replace both duties with a reminder to keep the certificate on your person whenever you operate away from home.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Exam accommodation note, station log, service definition, department name",
+            "en": "Leave the copy-at-station wording, but change 48 hours to one week so the inspection row is less strict.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Delete the retention row entirely because a lifetime certificate has no continuing record duties.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "The lesson groups sources from general legal authority to operating standards and finally to the individual certificate and call-sign records that identify the operator.",
+        "en": "The lesson keeps two nearby facts from being blended: certificate retention is a station/address duty, while the certificate-or-copy wording and the 48-hour clock belong to an inspector request.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-001-01-A-C2",
       "prompt": {
-        "en": "Which study habit would NOT help keep current fee rules accurate?",
+        "en": "Which accommodation note is NOT true as a summary of the lesson?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Separating an ISED office exam from an accredited examiner's cost recovery",
+            "en": "An oral delivery may be used in stated situations instead of assuming every candidate must use the same written format.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Checking whether a call-sign action is address-related or voluntary",
+            "en": "A Morse sending accommodation can use spoken Morse-code sounds when the bank's stated condition applies.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Using the current bank rather than a remembered club-story amount",
+            "en": "Medical evidence may be requested before an accommodation is provided.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Combining every certificate, call-sign, and exam situation into one universal price rule",
+            "en": "Interpreter accompaniment is the supported fix when a candidate has insufficient English or French.",
             "fr": null
           },
           "isCorrect": true
         }
       ],
       "explanation": {
-        "en": "The bank treats different services differently. A single universal price rule would blur first certificates, address-related prefix replacement, voluntary call-sign changes, ISED office exams, and examiner cost recovery.",
+        "en": "The other notes preserve true accommodation rows from the lesson. The interpreter note is the exception: the lesson separates an oral-examination possibility from interpreter accompaniment.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-001-01-A-C3",
       "prompt": {
-        "en": "A drill planner says, 'We can use a fake emergency word if we immediately explain that it was a scenario.' What is the error in that procedure?",
+        "en": "A fee spreadsheet uses one formula: 'If it mentions certificates, call signs, or exams, enter Free.' What problem will this create?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "A later explanation does not change the nature of transmitting false emergency information.",
+            "en": "It will hide the paid voluntary call-sign-change row and blur accredited-examiner cost recovery with no-charge ISED office exams.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "Practice traffic is forbidden even when no emergency word is used.",
+            "en": "It will make first-certificate issue look paid even though the lesson places that row in the no-charge group.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Only club officers are allowed to label an exercise as practice traffic.",
+            "en": "It will correctly combine every fee row because all certificate-related services use one price rule.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "False wording becomes acceptable whenever a net control station is listening.",
+            "en": "It will affect only accommodation notes and leave call-sign rows unchanged.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "The safe procedure is to identify exercise traffic without sending a false distress or false emergency claim in the first place.",
+        "en": "Fee rows have to remain tied to the exact service. A universal formula would predict the wrong result for voluntary call-sign changes and would mix the two examination settings.",
         "fr": null
       }
     }

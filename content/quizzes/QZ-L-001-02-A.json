@@ -47,123 +47,123 @@
     {
       "id": "QZ-L-001-02-A-C1",
       "prompt": {
-        "en": "A helper is preparing a transmitter for someone else. Which question would NOT help decide whether the work fits the amateur-service authorization pattern?",
+        "en": "A training lead ranks the checks for a radio session that may involve another person's apparatus, a non-amateur channel, and a guest speaker. Which sequence is the best study order?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Is the recipient authorized for the amateur apparatus or station use involved?",
+            "en": "Choose the most convenient channel, then decide afterward which service and supervision rules applied.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Is the helper staying within privileges held for the work being done?",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "Is the planned operation inside the amateur service rather than another radio service?",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "Does the equipment look modern enough that user authorization can be ignored?",
+            "en": "Verify the people and apparatus authorization, identify the radio service, check that the message content fits, then confirm control-point supervision.",
             "fr": null
           },
           "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Start with the visitor's script, then treat the owner log as a substitute for service authorization.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Confirm the antenna works, then skip the content and control checks if the transmission will be brief.",
+            "fr": null
+          },
+          "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "Appearance or age of equipment does not replace the authorization checks. The useful questions are about the helper's privileges, the other person's authorization, and the radio service being used.",
+        "en": "The lesson's decision tree moves from authorization, to service boundary, to message purpose, to station control. Convenience, brevity, or log entries do not replace those checks.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-001-02-A-C2",
       "prompt": {
-        "en": "A programmable radio has amateur memories and a few memories for a non-amateur service. Which procedure best avoids the common error?",
+        "en": "A one-way transmission is planned. Which two-step question best avoids confusing a beacon case with a prohibited broadcast?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Treat every stored memory as amateur operation because the same operator owns the radio.",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "Use the amateur certificate for all memories as long as the antenna and power supply are unchanged.",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "Before transmitting, identify which radio service the memory belongs to and confirm the authorization required for that service.",
+            "en": "First ask whether the station is being treated as a beacon reference case; then ask whether the message is instead aimed at the general public.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "Transmit first at low power, then decide afterward which service was being used.",
+            "en": "First ask whether the audio is loud enough; then assume any one-way signal is public broadcasting.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "First ask whether a call sign will be sent; then ignore the station type and intended audience.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "First ask whether the equipment is portable; then approve the transmission if the antenna is temporary.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "A radio's memory list can cross service boundaries. The operator must decide the service and authorization before transmitting, not after the fact.",
+        "en": "The lesson teaches both rows together: beacon one-way transmissions are recognized, but broadcasts intended for the general public remain prohibited.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-001-02-A-C3",
       "prompt": {
-        "en": "A club demonstration wants visitors to speak briefly. Which plan is the defensible one?",
+        "en": "A team publishes every detail of a new packet format, then uses it to pass sponsor order totals during an amateur test. What should a reviewer predict?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Leave a written script and let visitors transmit alone if the room is unlocked by a certificate holder.",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "Have a qualified operator present at the control point, supervising and able to stop the transmission.",
+            "en": "The open format handles the secrecy concern, but the business-content boundary still has to be fixed.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "Ask visitors to enroll in a course before the event, then let them transmit without supervision.",
+            "en": "Publishing the format automatically makes any message content acceptable.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Let the station owner transfer all responsibility to guests by entering their names in a log.",
+            "en": "Business content becomes acceptable if the packet is shorter than a voice message.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The only possible problem is that Q codes were not included in the packet header.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "The lesson's control model keeps a qualified person at the control point and present with the unqualified participant. Permission notes, course enrolment, or log entries do not replace that supervision.",
+        "en": "This is a two-rule prediction: public documentation addresses the encoding rule, while sponsor order totals still point to the separate business-communications rule.",
         "fr": null
       }
     }

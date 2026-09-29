@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-022-004.\n\nWhy the correct answer is right: ISED office qualification examinations are no charge in the current bank.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"$20 per visit, regardless of the number of qualification examinations\": The bank does not use a per-visit ISED office fee.\n- sourceIndex 2: \"$20 per qualification\": No per-qualification office charge is stated by the current bank.\n- sourceIndex 3: \"$5 per qualification examination\": The five-dollar amount is the false fee idea tested elsewhere, not the correct office rule.",
+    "en": "Question B-001-022-004.\n\nWhy the correct answer is right: Amateur Radio Operator Certificate qualification examinations at an ISED office are no charge in the current bank.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"$20 per visit, regardless of the number of qualification examinations\": ISED office exams are not charged by visit.\n- sourceIndex 2: \"$20 per qualification\": ISED office exams are not charged by qualification.\n- sourceIndex 3: \"$5 per qualification examination\": ISED office exams have no charge, so a five-dollar per-qualification fee is still a fee where the bank gives none.",
     "fr": null
   },
   "citations": [

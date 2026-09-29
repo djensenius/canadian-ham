@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-002-002.\n\nWhy the correct answer is right: The current bank establishes that an Amateur Radio Operator Certificate is valid for life, while other record duties still continue.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"five years\": A five-year term would make it a renewable certificate, which is not the bank's rule.\n- sourceIndex 2: \"three years\": Three years invents an expiry period not used for this certificate.\n- sourceIndex 3: \"one year\": A yearly term confuses the certificate with permissions that expire annually in some other contexts.",
+    "en": "Question B-001-002-002.\n\nWhy the correct answer is right: An Amateur Radio Operator Certificate is valid for life, while address, retention, and inspection duties still continue.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"five years\": A five-year term would make the certificate expire and require renewal, which is not the rule in the current bank.\n- sourceIndex 2: \"three years\": Three years invents a renewal cycle for a certificate that the bank treats as lifetime.\n- sourceIndex 3: \"one year\": A yearly term confuses certificate validity with ongoing record duties; the certificate itself is not annual.",
     "fr": null
   },
   "citations": [

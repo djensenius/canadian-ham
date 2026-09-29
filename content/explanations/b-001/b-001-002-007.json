@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-002-007.\n\nWhy the correct answer is right: The certificate should be retained at the address provided to ISED, matching the station record principle taught in the lesson.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"retained in a safety deposit box\": A bank box may be secure, but it is not the address provided to the regulator.\n- sourceIndex 2: \"retained on the holder's person\": Keeping it in a wallet misses the address-based record requirement.\n- sourceIndex 3: \"retained in the holder's vehicle\": A vehicle is not the official certificate-retention address unless it is the station address of record, which this answer does not say.",
+    "en": "Question B-001-002-007.\n\nWhy the correct answer is right: The certificate should be retained at the address provided to ISED, matching the address-based station record duty taught in the lesson.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"retained in a safety deposit box\": A safety deposit box may be secure, but it is not the address provided to the regulator for this certificate record.\n- sourceIndex 2: \"retained on the holder's person\": Carrying it in a wallet misses the address-based retention rule.\n- sourceIndex 3: \"retained in the holder's vehicle\": A vehicle is not the required retention place for the certificate record in this item.",
     "fr": null
   },
   "citations": [

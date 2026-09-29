@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-004-005.\n\nWhy the correct answer is right: The Morse qualification speed in the current bank is 5 words per minute.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"12 wpm\": Twelve wpm is faster than the speed named for this qualification.\n- sourceIndex 2: \"7 wpm\": Seven wpm is not the bank's Morse speed.\n- sourceIndex 3: \"15 wpm\": Fifteen wpm adds a higher requirement not used by the current bank.",
+    "en": "Question B-001-004-005.\n\nWhy the correct answer is right: The Morse qualification speed in the current bank is 5 words per minute for sending and receiving.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"12 wpm\": Twelve wpm would impose a much faster Morse test than the current Basic-bank requirement.\n- sourceIndex 2: \"7 wpm\": Seven wpm is a modest increase, but the bank does not add those two extra words per minute.\n- sourceIndex 3: \"15 wpm\": Fifteen wpm is a higher legacy-sounding speed, not the current-bank qualification speed.",
     "fr": null
   },
   "citations": [

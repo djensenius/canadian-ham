@@ -8,5 +8,35 @@
     "lessonId": "L-005-05",
     "blockHeading": "Resonance and tuned circuits",
     "reason": "Reviewed principle definition: the series-RLC maximum-current statement is an accepted standard resonance fact needed for the lesson."
+  },
+  {
+    "lessonId": "L-001-01",
+    "blockHeading": "Certificate records and address duties",
+    "reason": "Reviewed regulatory fact table: exact deadlines and fee amounts are required current-bank facts, not copied examples."
+  },
+  {
+    "lessonId": "L-001-01",
+    "blockHeading": "False information, distress, and penalties",
+    "reason": "Reviewed regulatory fact table: exact offence and penalty wording is required current-bank content and keeps the lesson grounded."
+  },
+  {
+    "lessonId": "L-001-01",
+    "blockHeading": "Basic entry, additional qualifications, and other services",
+    "reason": "Reviewed regulatory facts: the Morse speed, sequence rule, address rule, and named credential are current-bank facts needed for coverage."
+  },
+  {
+    "lessonId": "L-001-01",
+    "blockHeading": "Examination fees and accommodations",
+    "reason": "Reviewed regulatory fact table: fee, examiner-qualification, and accommodation rows intentionally preserve current-bank facts."
+  },
+  {
+    "lessonId": "L-001-02",
+    "blockHeading": "Communications that fit amateur radio",
+    "reason": "Reviewed regulatory fact table: allowed and prohibited communication examples are current-bank facts needed for accurate coverage."
+  },
+  {
+    "lessonId": "L-001-02",
+    "blockHeading": "Station types and construction privileges",
+    "reason": "Reviewed regulatory fact table: station-type and qualification rows intentionally preserve current-bank facts, including beacon one-way communications."
   }
 ]
