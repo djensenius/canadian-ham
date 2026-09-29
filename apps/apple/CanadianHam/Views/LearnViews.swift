@@ -1,5 +1,6 @@
 import CanadianHamContent
 import CanadianHamEngine
+import QuickLook
 import SwiftUI
 
 private let rbr4CitationURL = "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service"

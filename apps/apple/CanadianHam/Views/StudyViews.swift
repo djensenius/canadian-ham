@@ -1,6 +1,7 @@
 import Accessibility
 import CanadianHamEngine
 import Combine
+import QuickLook
 import SwiftUI
 import UniformTypeIdentifiers
 
