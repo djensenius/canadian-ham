@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-001-008.\n\nWhy the correct answer is right: In the station order used here, the SWR meter follows the low-pass filter so it reads the match after the transmitter output has been filtered.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The last stage of RF amplification\": The last RF amplification stage is upstream of the low-pass filter; the meter is not inserted immediately after that stage in this layout.\n- sourceIndex 2: \"The antenna tuner\": Putting the meter after the tuner would measure a different point and would not show the transmitter-side match in the illustrated chain.\n- sourceIndex 3: \"The antenna switch\": The antenna switch is downstream; placing the meter after it would move the match reading away from the transmitter accessory sequence.",
+    "en": "Question B-003-001-008.\n\nWhy the correct answer is right: The SWR meter is placed after the low-pass filter so reflected-power readings are taken on the transmitter side of the matching network.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The last stage of RF amplification\": The low-pass filter belongs between the final RF stage and the meter, so the meter is not the first item after the amplifier or transceiver output.\n- sourceIndex 2: \"The antenna tuner\": After the tuner, the meter would see the transformed antenna side rather than the transmitter-side match the operator is adjusting for.\n- sourceIndex 3: \"The antenna switch\": The switch selects an antenna path farther downstream; measuring there would not put the meter in the standard position before matching and switching accessories.",
     "fr": null
   },
   "citations": [

@@ -14,14 +14,14 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-03-A-C1",
-      "prompt": { "en": "A laptop decodes received tones through a radio's audio output. What conversion must happen before software can process those tones?", "fr": null },
+      "prompt": { "en": "During a digital-mode test, the waterfall looks clean on receive but transmitted tones are badly overdriven and wide. Which first adjustment fits the interface problem?", "fr": null },
       "choices": [
-        { "text": { "en": "RF power must be stepped up to the antenna voltage.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Analog audio must be sampled into digital data.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The antenna impedance must be tuned by the sound card.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The regulator must turn DC into pulsating AC.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Reduce the computer playback or interface drive level", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Increase RF output power to hide the distortion", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Bypass the audio isolation transformer", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Raise the radio data-input gain for more ALC indication", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "The radio has already converted RF to audio; the computer interface must convert that analog audio into digital samples.", "fr": null }
+      "explanation": { "en": "Digital-mode interfaces must feed clean audio at a suitable level; excessive audio drive causes a wide, distorted transmitted signal before RF power or antenna matching can fix anything.", "fr": null }
     },
     {
       "id": "QZ-L-003-03-A-C2",
@@ -36,14 +36,14 @@
     },
     {
       "id": "QZ-L-003-03-A-C3",
-      "prompt": { "en": "A bench supply's output rises dangerously when a fault occurs after the filter capacitor. Where should an overvoltage circuit sense the problem?", "fr": null },
+      "prompt": { "en": "A club member wants to check ripple inside an old mains-powered supply after it has been unplugged. Which plan is the safe starting point?", "fr": null },
       "choices": [
-        { "text": { "en": "At the AC mains plug only", "fr": null }, "isCorrect": false },
-        { "text": { "en": "At the transformer primary only", "fr": null }, "isCorrect": false },
-        { "text": { "en": "At the rectifier's AC input only", "fr": null }, "isCorrect": false },
-        { "text": { "en": "At the regulated DC output terminals", "fr": null }, "isCorrect": true }
+        { "text": { "en": "Confirm capacitors are discharged and use qualified service procedures", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Short the filter capacitor with a screwdriver before measuring", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Probe the live primary wiring to make the ripple easier to see", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Lift the safety ground so the oscilloscope trace is cleaner", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "The radio is connected to the supply output, so protection should monitor the regulated output voltage actually being delivered.", "fr": null }
+      "explanation": { "en": "Power-supply capacitors can retain dangerous energy; internal checks require discharged capacitors, proper test gear, and someone qualified to work safely around mains equipment.", "fr": null }
     }
   ]
 }

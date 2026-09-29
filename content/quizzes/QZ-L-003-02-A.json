@@ -14,14 +14,14 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-02-A-C1",
-      "prompt": { "en": "A CW transmitter's output note shifts when the final amplifier loading is adjusted. Which added or improved stage best addresses the cause?", "fr": null },
+      "prompt": { "en": "A kit transmitter's crystal oscillator produces a clean 3.580 MHz signal, but the keyed RF stage that follows has a changing input load. What should the intervening driver stage emphasize?", "fr": null },
       "choices": [
-        { "text": { "en": "A wider microphone preamplifier", "fr": null }, "isCorrect": false },
-        { "text": { "en": "An audio band-pass filter after the speaker", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A buffer or driver between oscillator and power amplifier", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A dummy load in series with the key", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Reverse isolation so the oscillator sees a steady load", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Key-click shaping in the keying waveform", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Low-pass filtering only at the antenna connector", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Frequency multiplication to a different amateur band", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "The buffer isolates the oscillator from changing loads so the oscillator frequency is less likely to be pulled.", "fr": null }
+      "explanation": { "en": "The driver/buffer's isolation keeps load changes in the keyed RF stage from pulling the oscillator away from its set frequency.", "fr": null }
     },
     {
       "id": "QZ-L-003-02-A-C2",
@@ -36,14 +36,14 @@
     },
     {
       "id": "QZ-L-003-02-A-C3",
-      "prompt": { "en": "A receiver copies SSB poorly until a BFO signal is restored near the product detector. Why did that help?", "fr": null },
+      "prompt": { "en": "An SSB/CW receiver has a selected IF signal and a working AF amplifier, yet the product detector output is unintelligible. Which missing input at that detector would explain the symptom?", "fr": null },
       "choices": [
-        { "text": { "en": "It replaced the antenna's polarization pattern.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It made the IF filter wider than the whole band.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It changed the transmitter's final amplifier bias.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It supplied the reference needed to recover audio from the IF signal.", "fr": null }, "isCorrect": true }
+        { "text": { "en": "A local BFO reference close to the IF", "fr": null }, "isCorrect": true },
+        { "text": { "en": "A wider IF filter ahead of the detector", "fr": null }, "isCorrect": false },
+        { "text": { "en": "More AF gain after the detector", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A different local-oscillator setting at the mixer", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "SSB and CW reception use a product detector with a local BFO reference to turn IF energy back into audio.", "fr": null }
+      "explanation": { "en": "The product detector needs a nearby local reference to translate the selected IF energy into audio; gain and antenna tuning cannot replace that reference.", "fr": null }
     }
   ]
 }

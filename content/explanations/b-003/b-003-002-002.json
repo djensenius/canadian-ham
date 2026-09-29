@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-002-002.\n\nWhy the correct answer is right: A microphone transduces changing air pressure from speech into an electrical audio signal.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"is quieter than AM or SSB microphones\": Quietness compared with other microphones is not the defining transmitter-block function being tested.\n- sourceIndex 2: \"has a different tone than other microphones\": Tone quality can vary among microphones, but the block-diagram job is conversion from sound pressure to electrical audio.\n- sourceIndex 3: \"has a wider frequency range than other microphones\": Bandwidth differences among microphones are design details; all of these voice microphones serve the same basic transducer role.",
+    "en": "Question B-003-002-002.\n\nWhy the correct answer is right: A microphone transduces changing air pressure from speech into an electrical audio signal.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"is quieter than AM or SSB microphones\": Relative acoustic noise is not what makes an FM microphone work; the transmitter needs the microphone to turn speech pressure into audio voltage.\n- sourceIndex 2: \"has a different tone than other microphones\": Tone colour is a quality difference, not the basic transducer action needed at the first audio block.\n- sourceIndex 3: \"has a wider frequency range than other microphones\": A wider audio response may change fidelity, but FM, AM, and SSB microphones all serve by converting speech sound into an electrical audio signal.",
     "fr": null
   },
   "citations": [

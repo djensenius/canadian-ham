@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-004-004.\n\nWhy the correct answer is right: The key changes the carrier amplitude between on and off states, producing Morse elements in the RF envelope.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It switches the oscillator on and off\": Switching the oscillator directly is not the block-level answer here; the key controls the carrier amplitude presented to the output chain.\n- sourceIndex 2: \"It reduces key clicks\": Reducing key clicks requires shaping, not simply the key's basic control function.\n- sourceIndex 3: \"It reduces key chirps\": Reducing chirp requires stable oscillator and supply design; it is not the key's direct job.",
+    "en": "Question B-003-004-004.\n\nWhy the correct answer is right: The key changes the carrier amplitude between on and off states, producing Morse elements in the RF envelope.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It switches the oscillator on and off\": Turning the oscillator itself on and off would invite start-up drift and chirp; the basic three-stage view keeps the RF source stable while the key controls carrier amplitude.\n- sourceIndex 2: \"It reduces key clicks\": Reducing key clicks requires shaping, not simply the key's basic control function.\n- sourceIndex 3: \"It reduces key chirps\": Reducing chirp requires stable oscillator and supply design; it is not the key's direct job.",
     "fr": null
   },
   "citations": [

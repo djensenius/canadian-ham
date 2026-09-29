@@ -65,15 +65,15 @@ A receiver bandwidth that is too narrow can remove part of the information you a
 
 ## Receiver performance terms
 
-Sensitivity describes how small an RF input signal can be while still producing a specified signal-to-noise result. It is not the audio output power, and it is not merely the number of RF amplifier stages.
+Sensitivity describes how small an RF input signal can be while still producing a specified signal-to-noise result. It is a weak-signal performance measurement for the RF input path, not a count of parts or a statement about how loud the speaker can play.
 
-Selectivity describes how well the receiver separates the desired signal from nearby signals. IF filters usually provide most of this ability. For example, a 2.4 kHz filter is a common SSB voice choice, while a very narrow filter such as 250 Hz can help CW during interference.
+Selectivity describes how well the receiver separates the desired signal from nearby signals. IF filters usually provide most of this ability. For example, a 2.6 kHz filter is a common SSB voice choice, while a very narrow filter such as 350 Hz can help CW during interference.
 
 Dynamic range describes how well the receiver handles strong and weak signals at the same time without overload, blocking, or unwanted mixing products. It is the third major performance idea to keep beside sensitivity and selectivity.
 
 Automatic gain control, or AGC, reduces the change in audio volume when signal strength changes a lot. It does not replace filtering, and it does not make the receiver infinitely sensitive.
 
-A waterfall display, or spectrogram, shows frequency on one axis and signal strength by brightness or colour over time. The two signal parameters being presented to the user are frequency and amplitude.
+A waterfall display, or spectrogram, lets the operator see where signals sit across the tuned spectrum and how strong they appear by brightness or colour as time scrolls.
 
 ### Worked example: filter choice
 
@@ -109,7 +109,7 @@ The image is not the station you intended to hear. Front-end filtering helps rej
 
 ## Tuning accuracy for narrow modes
 
-SSB needs accurate tuning because there is no full carrier for the receiver to lock onto in the simple voice-recovery sense. A small tuning error shifts the recovered audio pitch and can make speech sound unnatural. CW also uses narrow filters and careful tuning, but the Basic question focus in this group highlights SSB accuracy within a small frequency error.
+SSB needs accurate tuning because there is no full carrier for the receiver to lock onto in the simple voice-recovery sense. A small tuning error shifts the recovered speech frequencies, so voices become high, low, or distorted instead of merely louder or softer. CW also uses narrow filters and careful tuning, but a small tuning offset mainly changes the pitch of the received tone; the operator can often retune for a comfortable note.
 
 ## Try it
 
@@ -117,9 +117,9 @@ Question: In a small Yagi, which part does the coax feed, and which part mainly 
 
 Worked answer: The coax feeds the driven element. The boom mainly provides mechanical support.
 
-Question: Put these receiver filters with likely uses: 250 Hz, 2.4 kHz, and 6 kHz.
+Question: Put these receiver filters with likely uses: 400 Hz, 2.8 kHz, and 7 kHz.
 
-Worked answer: 250 Hz fits narrow CW work, 2.4 kHz fits SSB voice, and 6 kHz is wider than needed for those two examples.
+Worked answer: 400 Hz fits narrow CW work, 2.8 kHz fits SSB voice, and 7 kHz is wider than needed for those two examples.
 
 Question: A receiver uses a 10.7 MHz IF and tunes a 52.0 MHz signal with the oscillator above the signal. What is the oscillator frequency?
 
@@ -145,7 +145,7 @@ When you turn a Yagi, you change the direction where the antenna is most sensiti
 
 Alt text: A labelled Yagi antenna appears beside a receiver display and filter choices, with an image-frequency marker shown above the desired signal.
 
-Description: Draw a three-element Yagi from above. Label the boom, longer reflector, driven element with feedline, and shorter director. Beside it, draw a small waterfall display with bright vertical streaks labelled frequency and amplitude. Add a number-line example showing desired signal, local oscillator, and image separated by the IF spacing.
+Description: Draw a three-element Yagi from above. Label the boom, longer reflector, driven element with feedline, and shorter director. Beside it, draw a small waterfall display with a frequency scale and brighter streaks for stronger signals. Add a number-line example showing desired signal, local oscillator, and image separated by the IF spacing.
 
 ## Summary
 

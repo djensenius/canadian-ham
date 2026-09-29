@@ -14,25 +14,25 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-01-A-C1",
-      "prompt": { "en": "A club adds a high-power HF amplifier between the transceiver and the rest of the station accessories. Where should the low-pass filter move?", "fr": null },
+      "prompt": { "en": "A harmonic monitor shows unwanted VHF energy on the jumper that leaves the final RF box and feeds the station accessory panel. Which placement keeps that energy out of the panel?", "fr": null },
       "choices": [
-        { "text": { "en": "Immediately after the amplifier output", "fr": null }, "isCorrect": true },
-        { "text": { "en": "After the antenna switch so it filters every antenna", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Before the transceiver microphone input", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Across the SWR meter's indicator terminals", "fr": null }, "isCorrect": false }
+        { "text": { "en": "At the final RF box output, before the SWR meter and tuner", "fr": null }, "isCorrect": true },
+        { "text": { "en": "After the tuner, so the tuner sees the harmonics first", "fr": null }, "isCorrect": false },
+        { "text": { "en": "After the antenna switch, so only the selected antenna is filtered", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Between the SWR meter and tuner, after the meter has sampled it", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "The amplifier becomes the final RF source, so harmonics should be reduced before that output feeds the rest of the accessory chain.", "fr": null }
+      "explanation": { "en": "A low-pass filter should act before harmonics enter downstream station accessories; the final RF output is the first useful place in that path.", "fr": null }
     },
     {
       "id": "QZ-L-003-01-A-C2",
-      "prompt": { "en": "In a training FM transmitter, a voice signal changes the oscillator frequency slightly. Which block is doing that job?", "fr": null },
+      "prompt": { "en": "A service note says amplified microphone audio must now make an FM carrier deviate before the signal goes to a multiplier. Which transmitter block takes that audio and varies the oscillator?", "fr": null },
       "choices": [
-        { "text": { "en": "The dummy load", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The modulator", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The antenna switch", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The AF volume control", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Speech amplifier", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Modulator", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Frequency multiplier", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Power amplifier", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "FM carries the message as frequency variation, and the modulator applies that variation to the oscillator.", "fr": null }
+      "explanation": { "en": "The speech amplifier prepares the audio, but the modulator is the block that applies it to the oscillator as frequency deviation.", "fr": null }
     },
     {
       "id": "QZ-L-003-01-A-C3",

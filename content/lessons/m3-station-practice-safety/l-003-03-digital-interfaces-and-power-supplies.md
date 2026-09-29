@@ -80,6 +80,12 @@ A bench supply uses a transformer to reduce 120 V AC mains to 18 V AC at its sec
 
 The numbers are approximate because real supplies include diode drops, ripple, and load changes. The sequence of jobs is what matters for the block diagram.
 
+### Worked example: ripple after filtering
+
+A 13.8 V bench supply has about 1.6 V peak-to-peak ripple at the rectifier output under load. After a larger filter capacitor is fitted, the ripple at the regulator input falls to about 0.35 V peak-to-peak. The filter has not regulated the final voltage; it has reduced the rise-and-fall component so the regulator has a steadier input to control.
+
+Never open or probe inside a mains-powered supply unless you are qualified to do that work with proper test equipment. Unplug the supply, verify stored charge is discharged, and remember that large capacitors can retain dangerous energy after power is removed.
+
 ### Worked example: regulator heat
 
 A regulator has 18 V DC at its input, supplies 13.8 V DC at its output, and carries 2.5 A to a receiver and accessories.
@@ -102,9 +108,9 @@ Question: A radio has a USB data port and works with digital-mode software witho
 
 Worked answer: It needs an audio codec or equivalent conversion between analog audio and digital samples.
 
-Question: In a linear supply, where would you look for a waveform that has one polarity but still rises and falls strongly?
+Question: In a linear supply, where would a qualified technician expect a one-polarity waveform that still rises and falls strongly?
 
-Worked answer: Look after the rectifier and before the filter. The rectifier has made pulsating DC, but the filter has not yet smoothed it.
+Worked answer: After the rectifier and before the filter. The rectifier has made pulsating DC, but the filter has not yet smoothed it. Do not probe inside a mains supply unless you are trained for that hazard, the supply is made safe, and stored capacitor charge has been handled properly.
 
 Question: A regulator input is 20 V, the output is 13.5 V, and load current is 1.2 A. Estimate heat in the regulator.
 

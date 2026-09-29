@@ -25,25 +25,25 @@
     },
     {
       "id": "QZ-L-003-04-A-C2",
-      "prompt": { "en": "A high-side superheterodyne receiver uses a 455 kHz IF to receive 7.250 MHz. What local oscillator frequency is needed?", "fr": null },
+      "prompt": { "en": "A weak signal is readable until a nearby contest station overloads the receiver front end. Which receiver specification best describes the ability to handle both signals at once?", "fr": null },
       "choices": [
-        { "text": { "en": "7.705 MHz", "fr": null }, "isCorrect": true },
-        { "text": { "en": "6.795 MHz", "fr": null }, "isCorrect": false },
-        { "text": { "en": "7.250 MHz", "fr": null }, "isCorrect": false },
-        { "text": { "en": "8.160 MHz", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Sensitivity", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Selectivity", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Dynamic range", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Audio output power", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Convert 455 kHz to 0.455 MHz, then add it: 7.250 MHz + 0.455 MHz = 7.705 MHz.", "fr": null }
+      "explanation": { "en": "Dynamic range is the receiver's ability to cope with very strong and weak signals at the same time without overload products hiding the weak one.", "fr": null }
     },
     {
       "id": "QZ-L-003-04-A-C3",
-      "prompt": { "en": "A receiver offers 250 Hz, 500 Hz, 2.4 kHz, and 6 kHz filters. A weak CW station is crowded by nearby signals. Which first choice best narrows the passband?", "fr": null },
+      "prompt": { "en": "During a slow-speed CW net, two callers are only a few hundred hertz apart. Your receiver offers 350 Hz, 700 Hz, 2.6 kHz, and 5 kHz filters. Which filter is the best first choice?", "fr": null },
       "choices": [
-        { "text": { "en": "6 kHz", "fr": null }, "isCorrect": false },
-        { "text": { "en": "2.4 kHz", "fr": null }, "isCorrect": false },
-        { "text": { "en": "250 Hz", "fr": null }, "isCorrect": true },
-        { "text": { "en": "All filters pass exactly the same information", "fr": null }, "isCorrect": false }
+        { "text": { "en": "5 kHz", "fr": null }, "isCorrect": false },
+        { "text": { "en": "2.6 kHz", "fr": null }, "isCorrect": false },
+        { "text": { "en": "350 Hz", "fr": null }, "isCorrect": true },
+        { "text": { "en": "700 Hz", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "For interference-limited CW, the narrow 250 Hz filter rejects the most nearby spectrum while still passing the tone.", "fr": null }
+      "explanation": { "en": "Crowded CW benefits from the narrowest suitable passband; 350 Hz rejects more nearby spectrum than the wider filters listed.", "fr": null }
     }
   ]
 }

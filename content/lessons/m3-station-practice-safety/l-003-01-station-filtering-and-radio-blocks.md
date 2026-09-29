@@ -59,19 +59,13 @@ A dummy load is a non-radiating test load. It turns RF power into heat so you ca
 
 ### Worked example: locating the filter
 
-A portable operator uses a 75 W HF transceiver, a tuner, two antennas, and no external amplifier. The transceiver output is the last active RF stage, so the low-pass filter goes immediately after that output.
+A homebuilt 30 m exciter feeds a 120 W RF power module in a small rack. After that rack come a patch panel, an SWR meter, and a tuner. The filter question is not about which accessory is most convenient; it is about the first point after the last active RF source.
 
 ```text
-75 W transceiver -> low-pass filter -> SWR meter -> tuner -> antenna switch
+30 m exciter -> 120 W RF module -> low-pass filter -> patch panel -> SWR meter -> tuner
 ```
 
-The same operator later adds a 400 W external amplifier. Now the amplifier output is the last high-power RF source, so the filter moves after the amplifier.
-
-```text
-transceiver -> 400 W amplifier -> low-pass filter -> SWR meter -> tuner -> antenna switch
-```
-
-The rule did not change. Put the filter close to the stage that delivers the station's final RF output.
+If the power module is bypassed for a low-power test, the exciter becomes the last active RF source for that test path. The same rule still applies: put the filter close to the output that is actually delivering RF to the rest of the station.
 
 ## FM transmitter blocks
 
@@ -125,9 +119,9 @@ The mixer output includes several products, but the IF stages are designed to ke
 
 ## Try it
 
-Question: A 100 W HF transceiver feeds a low-pass filter, then an SWR meter, then a tuner. What changes when a separate 600 W amplifier is added between the transceiver and accessories?
+Question: A QRP exciter feeds a 120 W RF module, then a patch panel and tuner. A spectrum check finds the second harmonic on the patch-panel jumper. Where should the low-pass filter go?
 
-Worked answer: The low-pass filter should be placed after the 600 W amplifier, because that amplifier is now the final high-power RF stage whose harmonics must be reduced before the signal goes farther.
+Worked answer: Put the low-pass filter between the RF module output and the patch panel. The unwanted harmonic should be reduced before it reaches the station accessory wiring.
 
 Question: In an FM transmitter, does the speech signal mainly vary the oscillator frequency or the final amplifier heat sink size?
 

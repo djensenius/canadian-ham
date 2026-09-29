@@ -70,7 +70,7 @@ antenna -> RF amplifier -> mixer -> IF filter -> IF amplifier -> product detecto
 
 The antenna converts the radio wave into a tiny current. The RF amplifier improves sensitivity when it adds useful gain without adding too much noise. The mixer and local oscillator convert the selected RF signal to IF. The IF filter gives most of the receiver's selectivity by keeping the desired narrow slice and rejecting nearby signals.
 
-The IF amplifier provides much of the gain. The product detector needs a beat frequency oscillator, or BFO, so it can recover the missing carrier information used to turn SSB or CW back into audio. The AF amplifier raises the recovered audio level for headphones or a speaker. An audio band-pass filter may be placed in the AF chain to make CW tones easier to copy.
+The IF amplifier provides most of the receiver gain after the desired signal has been converted and selected. The product detector needs a beat frequency oscillator, or BFO, so it can recover the missing carrier information used to turn SSB or CW back into audio. The AF amplifier raises the recovered audio level for headphones or a speaker. An audio band-pass filter may be placed in the AF chain to make CW tones easier to copy.
 
 ### Worked example: product detection idea
 
@@ -147,7 +147,7 @@ Description: Draw three stacked brush diagrams. The CW row has oscillator, buffe
 ## Summary
 
 - A basic CW transmitter creates a stable RF carrier, buffers it, amplifies it, and keys it on and off.
-- Receiver selectivity mainly comes from IF filtering; receiver gain is shared, with major gain in RF and IF stages.
+- Receiver selectivity mainly comes from IF filtering; in the SSB/CW block diagram, the IF amplifier provides most receiver gain while the RF amplifier mainly protects weak-signal sensitivity.
 - A product detector and BFO recover SSB and CW audio from the IF signal.
 - An SSB transmitter uses a speech amplifier, balanced modulator, sideband filter, mixer, VFO, and final amplifier in sequence.
 - Mixing creates sum and difference products; filters choose the product the radio needs.
