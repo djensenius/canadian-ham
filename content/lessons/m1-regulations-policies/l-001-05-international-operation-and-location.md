@@ -53,11 +53,20 @@ The reasoning is not about whether the message is short or friendly. It is about
 
 Canadian amateurs follow Canadian law and regulations. The official question bank also points to the International Telecommunication Union as a source of radio regulations that matter to Canadian amateur operation. RAC and the International Amateur Radio Union are important organizations for the amateur community, but the exam fact here is about regulatory authority, not club support.
 
-Morse code is another example of authority. The international rule framework leaves the decision about Morse-code proficiency to administrations. Do not turn that into a universal "always required" or "never mentioned" rule; the point is that the administration sets the requirement for authorization.
+Morse code is another example of authority. The international rule framework leaves the authorization decision about Morse-code proficiency to administrations. Do not turn that into a universal "always required" or "never mentioned" rule; the point is that the administration sets the requirement.
 
 ## ITU regions are a map, not a complete permission slip
 
-The ITU divides the world into regions used in radio regulation. For exam purposes, Canada is in Region 2, Europe and Africa are in Region 1, and Australia, Japan, and Southeast Asia are in Region 3. There is no Region 4 answer for these questions.
+The ITU divides the world into regions used in radio regulation. The single region facts used in this lesson are collected in the reference table below so they stay separate from the multi-rule practice items. Use the rows as map-reading anchors, not as a complete permission slip for a particular country or station location.
+
+### Reference facts
+
+| Topic | Official fact to preserve |
+|---|---|
+| Canada | Canada is in ITU Region 2. |
+| Europe and Africa | Europe and Africa are in ITU Region 1. |
+| Australia, Japan, and Southeast Asia | Australia, Japan, and Southeast Asia are in ITU Region 3. |
+| Morse-code authorization | The administration decides whether Morse-code proficiency is required for authorization. |
 
 Region knowledge helps you read band plans and international references. It does not replace the rules of the country or territory where you are operating. A Canadian operator in another country is not automatically using the Canadian band limits just because the operator's certificate is Canadian.
 
@@ -96,11 +105,11 @@ This checklist is deliberately broader than a single exam answer. It helps you c
 
 ## Try it
 
-1. A visiting operator plans to join a technical net and also relay a customer's invoice total. Which part belongs on amateur radio? The technical net discussion belongs; the invoice traffic does not, because amateur international traffic is limited to amateur purposes or personal remarks.
-2. A travel note says only "same ITU region as home." What extra question should you ask? Ask which country's or arrangement's rules apply at the operating location; a region label is not a complete authorization.
-3. A study sheet says the international Morse-code requirement is the same in every administration. What should be corrected? The international framework leaves that authorization requirement to administrations, so do not turn it into a universal yes-or-no rule.
-4. A club member says a community organization can expand the radio regulations for a special event. What should you check instead? Check the regulatory source named for the rule; a club or community group cannot expand the radio regulations.
-5. A mobile station will cross a border later in the day. When should the operator review band limits and identification style? Before transmitting from the new location, because the applicable limits and identification format can change with operating location.
+1. A cross-border schedule combines an antenna-experiment chat, a sponsor's order confirmation, and a note that one administration has objected to this class of communication. What should the control operator decide before calling? Keep only the amateur-purpose chat and do not proceed with the objected communication; message purpose and administration permission both have to pass.
+2. A trip planner labels a coastal Florida operating stop "same ITU region as Canada" and leaves the band-limit row unchanged from home. What correction should be made? The region note is only a map aid; the operating-location row still has to point to the United States rule set for that stop.
+3. A CEPT planning card says "Morse rule: same everywhere" and "Canadian Basic is enough for this arrangement." Which two rows need repair? The Morse row should say the administration sets the authorization requirement, and the CEPT qualification row should use the Canadian Advanced level named by the bank.
+4. A United States visit card has the right qualification row but copies the CEPT voice-identification order. What is the new decision? Keep the United States minimum-qualification row, but change the spoken identification row so it starts with the Canadian call sign and adds the portable/mobile and US area information for the visit.
+5. A participating-country visit plan has a personal greeting for the net, the right qualification level, and the United States identification pattern. Which part is wrong? The greeting can fit the international-message rule and the qualification row can stay, but the voice identification needs the CEPT-style order with the visited prefix before the Canadian call sign.
 
 ## Radio connection
 
@@ -127,6 +136,6 @@ Description: Draw a desk with a small radio, a passport-style notebook, and a ma
 - International amateur communication stays within amateur-purpose or personal messages.
 - Another administration's objection matters; communication is not automatic just because both operators are certified.
 - Canadian operators must consider ITU radio regulations as well as Canadian requirements.
-- Canada is in Region 2, while the exam also associates Europe and Africa with Region 1 and Australia, Japan, and Southeast Asia with Region 3.
+- Use the reference table for the single ITU-region and Morse-code facts, then apply the operating-location rules for the actual trip.
 - For foreign operation, the operating location and applicable reciprocal arrangement control band limits and identification style.
 - Keep the United States and CEPT identification patterns separate in memory, then verify current official sources before a real trip.

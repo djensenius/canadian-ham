@@ -10,8 +10,13 @@
     "reason": "Reviewed principle definition: the series-RLC maximum-current statement is an accepted standard resonance fact needed for the lesson."
   },
   {
+    "lessonId": "L-001-05",
+    "blockHeading": "Reference facts",
+    "reason": "Reviewed regulatory reference table: single-rule ITU-region and Morse authorization facts are intentionally isolated from the multi-rule practice items required by the module policy."
+  },
+  {
     "lessonId": "L-001-06",
-    "blockHeading": "Regulatory fact table",
-    "reason": "Reviewed regulatory fact table: exact official names, OR wording, and comment-period duration are required to close review gaps without paraphrasing these exam facts into less accurate wording."
+    "blockHeading": "Reference facts",
+    "reason": "Reviewed regulatory reference table: exact official names, OR wording, comment-period duration, exemption wording, RF frequency/effect facts, and EMCAB-2 criterion facts are intentionally preserved as single-rule anchors instead of being used as standalone practice items."
   }
 ]

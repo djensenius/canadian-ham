@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-024-007.\n\nWhy the correct answer is right: The other established adverse health effect named by the official bank, especially below 10 MHz, is nerve stimulation. The first effect in the question is energy absorption; this item asks for the second named effect.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Nausea\": Nausea may sound like a health complaint, but the bank names nerve stimulation as the second established effect, especially below 10 MHz.\n- sourceIndex 2: \"Numbness\": Numbness may sound nerve-related, but the official term in this item is nerve stimulation.\n- sourceIndex 3: \"Skin redness\": Skin redness is not the below-10-MHz effect named by the bank; the named effect is nerve stimulation.",
+    "en": "Question B-001-024-007.\n\nWhy the correct answer is right: The other established adverse health effect named by the official bank, especially below 10 MHz, is nerve stimulation. The first effect in the question is energy absorption; this item asks for the second named effect.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Nausea\": Nausea may sound like a health complaint, but the bank names nerve stimulation as the second established effect, especially below 10 MHz.\n- sourceIndex 2: \"Numbness\": Numbness may sound nerve-related, but the official term in this item is nerve stimulation.\n- sourceIndex 3: \"Skin redness\": Skin redness is a surface symptom, while this item asks for the second established effect paired with energy absorption, especially below 10 MHz; the named effect is nerve stimulation.",
     "fr": null
   },
   "citations": [

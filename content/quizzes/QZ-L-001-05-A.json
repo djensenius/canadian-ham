@@ -21,123 +21,123 @@
     {
       "id": "QZ-L-001-05-A-C1",
       "prompt": {
-        "en": "A study note is being turned into a real-trip checklist. Which line should be removed before the checklist is used on the air?",
+        "en": "A United States visit checklist has the right destination but copied the participating-country voice-ID order. Which repair keeps both rows consistent with the lesson?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Re-check current official sources for the destination before transmitting",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "Use the study lesson itself as the source record for destination authorization when it matches the exam bank",
+            "en": "Use the United States visit pattern: the Canadian Basic row can stay, and the spoken ID starts with the Canadian call sign before the travel wording and area designator",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "Record which source was used for the destination's authorization arrangement",
+            "en": "Leave the voice-ID row in the participating-country order because both arrangements are international",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Keep message-purpose checks separate from operating-authorization checks",
+            "en": "Erase the qualification row because the identification format alone decides whether the visit is allowed",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Use only a region label, because destination-specific identification is not part of the United States visit check",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "The lesson is an exam study aid. A real transmitting checklist should point to current official destination or reciprocal-arrangement sources, not to the lesson as legal authority.",
+        "en": "The United States visit rules in the lesson combine a qualification row with a distinct voice-identification pattern. Do not copy the CEPT order into that checklist.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-001-05-A-C2",
       "prompt": {
-        "en": "A script passes the personal-message check, then an administration's published objection is found. What should you predict?",
+        "en": "A CEPT participating-country card is being checked before travel. Which combined change fixes the two most important travel rows?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "The contact may still have to stop because message purpose and administration permission are separate checks",
+            "en": "Use the CEPT qualification level named in the lesson and put the visited-country prefix before the Canadian call sign in voice identification",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "The contact is automatically allowed because personal remarks override administration objections",
+            "en": "Use the United States identification order whenever the operator is outside Canada",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "The objection matters only if a club has voted to adopt it",
+            "en": "Skip the qualification row if the operator has already memorized the ITU region for the destination",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "The operator can ignore the objection if both stations exchange signal reports",
+            "en": "Treat the message-purpose row as proof that the destination arrangement has been satisfied",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "International communication has more than one gate: the traffic must fit the amateur service, and administrations involved can still affect whether the communication is allowed.",
+        "en": "For CEPT-style visits, the lesson keeps the qualification requirement and the voice-ID order as separate checks. A correct travel card has to satisfy both.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-001-05-A-C3",
       "prompt": {
-        "en": "Which ITU-region flash-card statement is NOT true for this lesson?",
+        "en": "A net script contains a sponsor delivery item and cites a club handout as the rule source for international traffic. What should the control operator change?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Canada is in Region 2",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "Europe and Africa are in Region 1",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "Australia, Japan, and Southeast Asia are in Region 3",
-            "fr": null
-          },
-          "isCorrect": false
-        },
-        {
-          "text": {
-            "en": "Region 4 is another ITU region to memorize for the Basic bank",
+            "en": "Remove the non-amateur traffic and rely on the regulatory source identified by the lesson rather than a community handout",
             "fr": null
           },
           "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Keep the delivery item if the handout says the contact will be short",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Leave the script unchanged because station certificates make all international messages equivalent",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Change only the source citation, because message purpose is unrelated to international operation",
+            "fr": null
+          },
+          "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "The Basic-bank region facts used in this lesson are Regions 1, 2, and 3; Region 4 is a distractor, not another region card to memorize.",
+        "en": "International operation combines the content rule with the regulatory-source rule. A club document can help study, but it does not replace the rule source named by the bank.",
         "fr": null
       }
     }

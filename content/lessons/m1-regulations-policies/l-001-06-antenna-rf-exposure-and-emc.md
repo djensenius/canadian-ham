@@ -22,7 +22,7 @@ quizIds:
   - QZ-L-001-06-A
 status: draft
 ---
-# Antenna consultation, RF exposure, and EMC
+# Antenna consultation, exposure limits, and EMC
 
 Antenna projects are visible, RF fields are invisible, and interference complaints can become emotional. The exam groups these topics together because a responsible station owner has to think beyond the radio room: neighbours, land-use authorities, people near antennas, and affected electronic equipment all matter.
 
@@ -54,15 +54,19 @@ The important reasoning is the order: first find whether an applicable local pro
 
 The official answers do not give one universal antenna height that always avoids consultation. Instead, they point to exclusions defined by ISED and to exclusions in a municipal process. In the municipality case, either applicable exclusion path can be enough. That means a responsible operator checks the applicable process rather than memorizing a single number or turning the OR into an AND.
 
-For ISED's public consultation process, the bank identifies written notice, addressing relevant concerns, and giving the public an opportunity to respond regarding measures for reasonable and relevant concerns. In the default-process item, written reasonable-and-relevant concerns must arrive during the stated public-comment window. The bank also distinguishes those process elements from public meetings, which are not identified as a required element in the official answer set.
+For ISED's public consultation process, the bank identifies written notice, addressing relevant concerns, and giving the public an opportunity to respond regarding measures for reasonable and relevant concerns. In the default-process item, written concerns that are both timely and relevant are the ones identified by the official bank. The bank also distinguishes those process elements from public meetings, which are not identified as a required element in the official answer set.
 
-### Regulatory fact table
+### Reference facts
 
 | Topic | Official fact to preserve |
 |---|---|
-| Municipal antenna-process exclusions | Public consultation might not be required when the system is excluded by the municipal process OR the provisions of Client Procedures Circular CPC-2-0-03. |
+| Municipal antenna-process exclusions | Public consultation might not be required when the system is excluded by the municipal process OR by the provisions of Client Procedures Circular CPC-2-0-03. |
 | ISED default-process concerns | The proponent must address reasonable and relevant concerns provided in writing within the 30-day public comment period. |
 | RF exposure guideline name | Safety Code 6 is the Health Canada guideline that gives RF exposure limits for the human body. |
+| RF exposure exemptions | No transmitter type is exempt from RF exposure regulation in the official answer set. |
+| Greatest RF-energy risk range | The 48 MHz to 300 MHz range is identified with the strongest RF-energy absorption by the human body. |
+| Low-frequency adverse effect | Below 10 MHz, nerve stimulation is the other established adverse effect named by the bank. |
+| EMCAB-2 cause criterion | The cause decision uses field strength at the affected premises compared with ISED's specified immunity criterion. |
 
 Use this table only as an exam-fact anchor. It is not a substitute for checking current official procedures before a real project.
 
@@ -70,7 +74,7 @@ If a proponent and a non-public stakeholder cannot agree, the official answer pl
 
 ## RF exposure basics
 
-Health Canada is the organization named by the official bank for guidelines on maximum RF energy near the human body. The named Health Canada code in the fact table gives limits for people exposed to RF energy. It does not list amateur frequency allocations, set transmitter power for interference control, or set antenna heights for aircraft safety.
+Health Canada is the organization named by the official bank for guidelines on maximum RF energy near the human body. The exposure code named in the reference table gives limits for people exposed to RF energy. It does not list amateur frequency allocations, set transmitter power for interference control, or set antenna heights for aircraft safety.
 
 A conservative station habit is to avoid searching for a single magic output power. The official answers say the maximum safe antenna power for a hand-held VHF or UHF radio is not specified, and that no transmitter type is exempt from the RF exposure rules. Even portable and low-power equipment should be treated seriously.
 
@@ -98,11 +102,11 @@ Equipment category also matters. The bank identifies home-entertainment devices 
 
 ## Try it
 
-1. A proposed support looks ordinary to the builder, but neighbours may have concerns. What is the first process question? Ask which land-use or ISED consultation path applies before installing or modifying the system.
-2. A local process says an exclusion applies, while a general web comment says "all towers need consultation." What should the operator do? Check the actual applicable process and ISED procedure; exclusions can change whether public consultation is required.
-3. A workshop transceiver is small enough to carry in one hand, so the owner assumes its low profile alone removes RF exposure obligations. What is wrong with that shortcut? The official bank does not make a transmitter exempt just because it is portable or low power.
-4. A relevant written comment arrives during the default-process comment period, while a later news clipping makes a vague objection. Which one fits the response duty described by the bank? The timely written relevant concern fits; the media item and vague opposition do not by themselves match that duty.
-5. A neighbour's label printer misbehaves only during transmissions, but the station owner checks only transmitter output power. What key EMCAB-2 item is missing? The field strength at the affected premises must be compared with the specified immunity criterion.
+1. A visible support project has no local approval process, and a non-public stakeholder still disagrees after discussion. What decision path should the file show? Do not build first; use the ISED default consultation path for the missing local process, and recognize ISED as the final decision maker for that unresolved stakeholder dispute.
+2. A municipality's process excludes an installation, but a checklist says the CPC exclusion must also match and asks for a universal maximum height. What should be corrected? Do not turn the exclusion rule into an AND test, and do not invent a fixed height; the relevant question is whether the applicable local or ISED exclusion covers the system.
+3. An RF-exposure worksheet for people near an antenna records only transmitter output and leaves distance, gain, frequency, and exposure quantities blank. What two checks are missing? The review needs the exposure factors and the Health Canada exposure-code quantities identified by the bank, not just watts from the transmitter.
+4. A public demonstration includes a station in the range tied to strongest body absorption beside visitors and another station in the low-frequency nerve-stimulation case near an equipment table. What conservative note belongs on the plan? Treat the public area as the stricter exposure situation, remember the body-absorption range, and keep the nerve-stimulation fact separate from the energy-absorption fact.
+5. A complaint file has one affected item in the home-entertainment associated-equipment category and another item in the radio-sensitive category. The log records only that both problems start during transmissions. What is still needed before assigning cause? Match each item to the proper equipment category and compare the field strength at the affected premises with the ISED immunity criterion.
 
 ## Radio connection
 
@@ -129,7 +133,7 @@ Description: Draw three panels. Panel one shows a house, a mast, a neighbour, an
 
 - Antenna installation and modification can involve ISED procedures, local land-use processes, exclusions, and responsible handling of community concerns.
 - The Minister of Innovation, Science and Industry is the authority named for antenna installations, while a local process can determine how consultation takes place.
-- Health Canada is named for RF exposure guidelines, and the official bank ties those guidelines to limits for human exposure.
+- Health Canada is named for RF exposure guidelines, and the official bank ties the named exposure code to limits for human exposure.
 - The official exposure factors include antenna gain, distance, transmitter power, and frequency; no transmitter type is treated as exempt in the bank.
 - The exposure rules are about exposure quantities, not merely watts into an antenna.
 - EMCAB-2 cause decisions use field strength at the affected premises relative to ISED immunity criteria, plus the relevant equipment category.
