@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-005-010",
+  "questionId": "B-003-005-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-005-010.\n\nWhy the correct answer is right: An audio band-pass filter belongs in the AF amplifier/audio chain because it shapes recovered audio frequencies such as CW tones.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"IF amplifier\": The IF amplifier works at the intermediate frequency, not at recovered audio frequencies.\n- sourceIndex 2: \"IF filter\": The IF filter selects radio-frequency bandwidth before detection, not the audio band after detection.\n- sourceIndex 3: \"Limiter\": A limiter is an FM IF block and is not where an SSB/CW audio tone filter would normally be placed.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-02"
+    },
+    {
+      "type": "question",
+      "id": "B-003-005-010"
+    }
+  ],
+  "licenseClass": "original"
+}

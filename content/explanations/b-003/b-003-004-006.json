@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-004-006",
+  "questionId": "B-003-004-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-004-006.\n\nWhy the correct answer is right: The key makes Morse by turning the RF carrier on and off.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It switches the carrier between two frequencies\": Switching between two RF frequencies would be frequency-shift keying, not basic on-off CW keying.\n- sourceIndex 2: \"It switches the transmitted tone on and off\": The transmitted RF carrier is keyed; an audio sidetone may be heard locally but is not what is sent as the RF signal.\n- sourceIndex 3: \"It makes and breaks the antenna connection\": The antenna connection should remain a stable RF path; Morse is not formed by repeatedly breaking the antenna lead.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-02"
+    },
+    {
+      "type": "question",
+      "id": "B-003-004-006"
+    }
+  ],
+  "licenseClass": "original"
+}

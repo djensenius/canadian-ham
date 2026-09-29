@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-003-003",
+  "questionId": "B-003-003-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-003-003.\n\nWhy the correct answer is right: The mixer converts different received RF frequencies to the same intermediate frequency so later detection and filtering can be fixed-frequency designs.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Limiter\": A limiter controls amplitude variation in FM but does not translate the signal to the IF.\n- sourceIndex 2: \"IF filter\": The IF filter selects a narrow band after conversion; it does not perform the frequency translation.\n- sourceIndex 3: \"Discriminator\": A discriminator recovers FM audio after IF processing, not the conversion to a common IF.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-01"
+    },
+    {
+      "type": "question",
+      "id": "B-003-003-003"
+    }
+  ],
+  "licenseClass": "original"
+}

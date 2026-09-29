@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-001-005",
+  "questionId": "B-003-001-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-001-005.\n\nWhy the correct answer is right: An antenna switch routes the station output to one selected antenna path or to a dummy load for testing.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To adjust the antenna operating frequency\": Changing operating frequency is done by the transmitter controls, VFO, or band selection, not by an RF path switch.\n- sourceIndex 2: \"To adjust the impedance of the antenna system\": Impedance transformation is the tuner's job; the switch only selects which port is connected.\n- sourceIndex 3: \"To select the orientation of the antenna\": A switch may choose among antennas, but it does not rotate or electrically steer an antenna's physical orientation.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-01"
+    },
+    {
+      "type": "question",
+      "id": "B-003-001-005"
+    }
+  ],
+  "licenseClass": "original"
+}

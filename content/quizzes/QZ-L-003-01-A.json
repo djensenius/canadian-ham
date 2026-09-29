@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-003-01-A",
+  "lessonId": "L-003-01",
+  "officialQuestionIds": [
+    "B-003-001-001",
+    "B-003-001-003",
+    "B-003-001-004",
+    "B-003-001-006",
+    "B-003-002-001",
+    "B-003-002-006",
+    "B-003-003-003",
+    "B-003-003-007"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-003-01-A-C1",
+      "prompt": { "en": "A club adds a high-power HF amplifier between the transceiver and the rest of the station accessories. Where should the low-pass filter move?", "fr": null },
+      "choices": [
+        { "text": { "en": "Immediately after the amplifier output", "fr": null }, "isCorrect": true },
+        { "text": { "en": "After the antenna switch so it filters every antenna", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Before the transceiver microphone input", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Across the SWR meter's indicator terminals", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The amplifier becomes the final RF source, so harmonics should be reduced before that output feeds the rest of the accessory chain.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-01-A-C2",
+      "prompt": { "en": "In a training FM transmitter, a voice signal changes the oscillator frequency slightly. Which block is doing that job?", "fr": null },
+      "choices": [
+        { "text": { "en": "The dummy load", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The modulator", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The antenna switch", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The AF volume control", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "FM carries the message as frequency variation, and the modulator applies that variation to the oscillator.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-01-A-C3",
+      "prompt": { "en": "A receiver uses a 10.700 MHz IF and a local oscillator above a 144.390 MHz signal. What local oscillator frequency should you expect?", "fr": null },
+      "choices": [
+        { "text": { "en": "133.690 MHz", "fr": null }, "isCorrect": false },
+        { "text": { "en": "144.390 MHz", "fr": null }, "isCorrect": false },
+        { "text": { "en": "155.090 MHz", "fr": null }, "isCorrect": true },
+        { "text": { "en": "165.790 MHz", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "With high-side injection, add the IF: 144.390 MHz + 10.700 MHz = 155.090 MHz.", "fr": null }
+    }
+  ]
+}

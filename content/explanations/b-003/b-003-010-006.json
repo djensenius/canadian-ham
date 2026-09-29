@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-010-006",
+  "questionId": "B-003-010-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-010-006.\n\nWhy the correct answer is right: With the local oscillator above the signal, add the IF: 3.540 MHz + 0.455 MHz = 3.995 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"4.450 MHz\": 4.450 MHz adds about 0.910 MHz, which is twice the IF, so it confuses the image spacing with the oscillator frequency.\n- sourceIndex 2: \"4.905 MHz\": 4.905 MHz is 1.365 MHz above the signal, equal to three times 455 kHz, not the one-IF local oscillator offset.\n- sourceIndex 3: \"13.540 MHz\": 13.540 MHz adds 10 MHz and ignores the stated 455 kHz intermediate frequency.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-04"
+    },
+    {
+      "type": "question",
+      "id": "B-003-010-006"
+    }
+  ],
+  "licenseClass": "original"
+}

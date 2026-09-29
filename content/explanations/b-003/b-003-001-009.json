@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-001-009",
+  "questionId": "B-003-001-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-001-009.\n\nWhy the correct answer is right: A solid-state final amplifier usually expects a reasonable load, so the antenna tuner may need readjustment as frequency changes alter antenna impedance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Low-pass filter\": The low-pass filter is chosen for the band or design and is not the normal tuning control adjusted with every frequency change.\n- sourceIndex 2: \"SWR meter\": An SWR meter can show that the match changed, but it is not adjusted to correct the match.\n- sourceIndex 3: \"Dummy load\": A dummy load is used for testing; changing operating frequency on an antenna system calls for matching, not adjusting the dummy load.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-01"
+    },
+    {
+      "type": "question",
+      "id": "B-003-001-009"
+    }
+  ],
+  "licenseClass": "original"
+}

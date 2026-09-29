@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-006-004",
+  "questionId": "B-003-006-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-006-004.\n\nWhy the correct answer is right: The sideband filter is near the fixed RF oscillator or IF generation frequency where the balanced modulator output is first created.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"At the VFO frequency\": The VFO is used later to translate the filtered SSB signal, not as the filter centre in the usual phasing of this block diagram.\n- sourceIndex 2: \"Near the operating frequency\": The operating frequency is reached after mixing; the sideband filter acts before that translation.\n- sourceIndex 3: \"At audio frequencies\": The filter is selecting RF sideband energy, not ordinary audio frequencies.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-02"
+    },
+    {
+      "type": "question",
+      "id": "B-003-006-004"
+    }
+  ],
+  "licenseClass": "original"
+}

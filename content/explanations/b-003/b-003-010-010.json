@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-010-010",
+  "questionId": "B-003-010-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-010-010.\n\nWhy the correct answer is right: With heavy interference while copying CW, the 250 Hz filter gives the narrowest passband listed and rejects the most nearby signals.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"500 Hz\": 500 Hz can be useful for CW, but it is not as selective as 250 Hz in this set when interference is severe.\n- sourceIndex 2: \"2.4 kHz\": 2.4 kHz is an SSB-width filter and passes far more adjacent interference than necessary for CW.\n- sourceIndex 3: \"6 kHz\": 6 kHz is much too wide for interference-limited CW copying.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-04"
+    },
+    {
+      "type": "question",
+      "id": "B-003-010-010"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-005-005",
+  "questionId": "B-003-005-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-005-005.\n\nWhy the correct answer is right: The IF filter provides most receiver selectivity by passing the desired IF bandwidth and rejecting nearby converted signals.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"For SSB reception, select the desired sideband\": Selecting a sideband can be related to filtering, but the broader tested purpose of the IF filter in this receiver block is selectivity.\n- sourceIndex 2: \"Suppress spurious signals from the IF amplifier\": Spurious-signal suppression from an IF amplifier is not the main reason for the IF filter; it selects the wanted signal bandwidth.\n- sourceIndex 3: \"Reject RF from the product detector, passing only audio\": Rejecting RF from the product detector confuses IF filtering with post-detection audio filtering.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-02"
+    },
+    {
+      "type": "question",
+      "id": "B-003-005-005"
+    }
+  ],
+  "licenseClass": "original"
+}

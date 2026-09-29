@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-005-003",
+  "questionId": "B-003-005-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-005-003.\n\nWhy the correct answer is right: The mixer combines the incoming RF signal with the local oscillator so the desired signal appears at the intermediate frequency.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Convert the beat frequency oscillator signal to audio\": The BFO is used near the product detector for audio recovery, not converted to audio by the main RF mixer.\n- sourceIndex 2: \"Provide USB and LSB signals for sideband selection\": Sideband selection comes from filters and receiver tuning, not from the mixer creating separate USB and LSB outputs by itself.\n- sourceIndex 3: \"Remove the carrier from the received signal\": Carrier removal is a transmitter balanced-modulator idea or a received-signal condition, not the mixer's receiver purpose.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-02"
+    },
+    {
+      "type": "question",
+      "id": "B-003-005-003"
+    }
+  ],
+  "licenseClass": "original"
+}

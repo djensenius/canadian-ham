@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-010-005",
+  "questionId": "B-003-010-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-010-005.\n\nWhy the correct answer is right: SSB must be tuned accurately because small frequency errors shift the recovered voice audio and make speech sound unnatural.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"AM\": AM contains a carrier and is generally less demanding for small voice tuning errors in this comparison.\n- sourceIndex 2: \"FM\": FM receivers tolerate small tuning offsets differently because information is in frequency deviation around a channel.\n- sourceIndex 3: \"CW\": CW also benefits from careful tuning, but this question's close voice-tuning requirement points to SSB.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-04"
+    },
+    {
+      "type": "question",
+      "id": "B-003-010-005"
+    }
+  ],
+  "licenseClass": "original"
+}

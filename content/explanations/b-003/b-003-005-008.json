@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-005-008",
+  "questionId": "B-003-005-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-005-008.\n\nWhy the correct answer is right: The BFO supplies a local reference that mixes with the IF in the product detector so SSB or CW information becomes audio.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It is mixed with the incoming signal to produce the intermediate frequency\": Mixing with the incoming RF to make IF is the local oscillator's job earlier in the receiver.\n- sourceIndex 2: \"It drives the automatic gain control circuit to maintain a constant audio level\": AGC uses detected signal information to control gain; the BFO is not an AGC drive source.\n- sourceIndex 3: \"It is fed to the receiver input to provide band edge markers\": Feeding markers into the receiver input is not the role of the beat frequency oscillator.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-02"
+    },
+    {
+      "type": "question",
+      "id": "B-003-005-008"
+    }
+  ],
+  "licenseClass": "original"
+}

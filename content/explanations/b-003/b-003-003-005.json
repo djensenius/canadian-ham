@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-003-005",
+  "questionId": "B-003-003-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-003-005.\n\nWhy the correct answer is right: The IF filter provides adjacent-channel selectivity by passing the wanted IF bandwidth and rejecting nearby converted signals.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Mixer\": The mixer translates frequencies and can create several products; it is not the main adjacent-channel rejection filter.\n- sourceIndex 2: \"Limiter\": The limiter removes amplitude changes in FM, not nearby-channel energy by bandwidth selection.\n- sourceIndex 3: \"Product detector\": A product detector recovers modulation for SSB/CW; adjacent-channel rejection should happen before or around the IF filter.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-01"
+    },
+    {
+      "type": "question",
+      "id": "B-003-003-005"
+    }
+  ],
+  "licenseClass": "original"
+}

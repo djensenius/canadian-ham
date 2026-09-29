@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-008-006",
+  "questionId": "B-003-008-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-008-006.\n\nWhy the correct answer is right: A voltage regulator in a linear supply often dissipates heat equal to voltage drop times load current, so it commonly needs a heat sink.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Transformer\": A transformer can get warm, but the block normally singled out for heat sinking in this supply diagram is the regulator.\n- sourceIndex 2: \"Rectifier\": Rectifiers may be mounted to dissipate heat in real supplies, but the typical stage identified for a heat sink here is the voltage regulator.\n- sourceIndex 3: \"Filter\": The filter stores and smooths energy; it is not the usual heat-sink stage in this block question.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-03"
+    },
+    {
+      "type": "question",
+      "id": "B-003-008-006"
+    }
+  ],
+  "licenseClass": "original"
+}

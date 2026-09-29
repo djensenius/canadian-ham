@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-003-04-A",
+  "lessonId": "L-003-04",
+  "officialQuestionIds": [
+    "B-003-009-001",
+    "B-003-009-002",
+    "B-003-009-004",
+    "B-003-010-001",
+    "B-003-010-002",
+    "B-003-010-006",
+    "B-003-010-009",
+    "B-003-010-010"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-003-04-A-C1",
+      "prompt": { "en": "A Yagi sketch shows coax connected to the middle element, a longer element behind it, and a shorter element in front. What is the front shorter element?", "fr": null },
+      "choices": [
+        { "text": { "en": "The boom", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The reflector", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The driven element", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The director", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "In a simple Yagi, the director is the shorter parasitic element toward the forward direction.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-04-A-C2",
+      "prompt": { "en": "A high-side superheterodyne receiver uses a 455 kHz IF to receive 7.250 MHz. What local oscillator frequency is needed?", "fr": null },
+      "choices": [
+        { "text": { "en": "7.705 MHz", "fr": null }, "isCorrect": true },
+        { "text": { "en": "6.795 MHz", "fr": null }, "isCorrect": false },
+        { "text": { "en": "7.250 MHz", "fr": null }, "isCorrect": false },
+        { "text": { "en": "8.160 MHz", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Convert 455 kHz to 0.455 MHz, then add it: 7.250 MHz + 0.455 MHz = 7.705 MHz.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-04-A-C3",
+      "prompt": { "en": "A receiver offers 250 Hz, 500 Hz, 2.4 kHz, and 6 kHz filters. A weak CW station is crowded by nearby signals. Which first choice best narrows the passband?", "fr": null },
+      "choices": [
+        { "text": { "en": "6 kHz", "fr": null }, "isCorrect": false },
+        { "text": { "en": "2.4 kHz", "fr": null }, "isCorrect": false },
+        { "text": { "en": "250 Hz", "fr": null }, "isCorrect": true },
+        { "text": { "en": "All filters pass exactly the same information", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "For interference-limited CW, the narrow 250 Hz filter rejects the most nearby spectrum while still passing the tone.", "fr": null }
+    }
+  ]
+}

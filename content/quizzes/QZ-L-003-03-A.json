@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-003-03-A",
+  "lessonId": "L-003-03",
+  "officialQuestionIds": [
+    "B-003-007-001",
+    "B-003-007-002",
+    "B-003-007-003",
+    "B-003-007-005",
+    "B-003-007-006",
+    "B-003-008-001",
+    "B-003-008-003",
+    "B-003-008-005"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-003-03-A-C1",
+      "prompt": { "en": "A laptop decodes received tones through a radio's audio output. What conversion must happen before software can process those tones?", "fr": null },
+      "choices": [
+        { "text": { "en": "RF power must be stepped up to the antenna voltage.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Analog audio must be sampled into digital data.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The antenna impedance must be tuned by the sound card.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The regulator must turn DC into pulsating AC.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The radio has already converted RF to audio; the computer interface must convert that analog audio into digital samples.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-03-A-C2",
+      "prompt": { "en": "A linear regulator has 19 V at its input, 13.8 V at its output, and supplies 3 A. About how much heat must it dissipate?", "fr": null },
+      "choices": [
+        { "text": { "en": "5.2 W", "fr": null }, "isCorrect": false },
+        { "text": { "en": "13.8 W", "fr": null }, "isCorrect": false },
+        { "text": { "en": "15.6 W", "fr": null }, "isCorrect": true },
+        { "text": { "en": "57 W", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The regulator drops 19 V - 13.8 V = 5.2 V; 5.2 V x 3 A = 15.6 W of heat.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-03-A-C3",
+      "prompt": { "en": "A bench supply's output rises dangerously when a fault occurs after the filter capacitor. Where should an overvoltage circuit sense the problem?", "fr": null },
+      "choices": [
+        { "text": { "en": "At the AC mains plug only", "fr": null }, "isCorrect": false },
+        { "text": { "en": "At the transformer primary only", "fr": null }, "isCorrect": false },
+        { "text": { "en": "At the rectifier's AC input only", "fr": null }, "isCorrect": false },
+        { "text": { "en": "At the regulated DC output terminals", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "The radio is connected to the supply output, so protection should monitor the regulated output voltage actually being delivered.", "fr": null }
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-003-02-A",
+  "lessonId": "L-003-02",
+  "officialQuestionIds": [
+    "B-003-004-001",
+    "B-003-004-003",
+    "B-003-004-006",
+    "B-003-005-003",
+    "B-003-005-005",
+    "B-003-005-008",
+    "B-003-006-003",
+    "B-003-006-006"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-003-02-A-C1",
+      "prompt": { "en": "A CW transmitter's output note shifts when the final amplifier loading is adjusted. Which added or improved stage best addresses the cause?", "fr": null },
+      "choices": [
+        { "text": { "en": "A wider microphone preamplifier", "fr": null }, "isCorrect": false },
+        { "text": { "en": "An audio band-pass filter after the speaker", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A buffer or driver between oscillator and power amplifier", "fr": null }, "isCorrect": true },
+        { "text": { "en": "A dummy load in series with the key", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The buffer isolates the oscillator from changing loads so the oscillator frequency is less likely to be pulled.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-02-A-C2",
+      "prompt": { "en": "An SSB exciter has a filtered signal at 9.000 MHz and mixes it with a 5.250 MHz VFO using the sum product. What output frequency is produced before final amplification?", "fr": null },
+      "choices": [
+        { "text": { "en": "3.750 MHz", "fr": null }, "isCorrect": false },
+        { "text": { "en": "14.250 MHz", "fr": null }, "isCorrect": true },
+        { "text": { "en": "9.525 MHz", "fr": null }, "isCorrect": false },
+        { "text": { "en": "47.250 MHz", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "For the sum product, add the two frequencies: 9.000 MHz + 5.250 MHz = 14.250 MHz.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-02-A-C3",
+      "prompt": { "en": "A receiver copies SSB poorly until a BFO signal is restored near the product detector. Why did that help?", "fr": null },
+      "choices": [
+        { "text": { "en": "It replaced the antenna's polarization pattern.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It made the IF filter wider than the whole band.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It changed the transmitter's final amplifier bias.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It supplied the reference needed to recover audio from the IF signal.", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "SSB and CW reception use a product detector with a local BFO reference to turn IF energy back into audio.", "fr": null }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-003-008",
+  "questionId": "B-003-003-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-003-008.\n\nWhy the correct answer is right: The discriminator recovers the original audio information from the frequency variations of the FM carrier.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Select narrowband or wideband FM reception\": Mode bandwidth selection is done by filters or receiver settings, not by the discriminator itself.\n- sourceIndex 2: \"Remove amplitude modulation from the received signal\": Removing amplitude variation is the limiter's role before FM detection.\n- sourceIndex 3: \"Provide most of the receiver's selectivity\": Receiver selectivity is chiefly provided by filters, especially IF filtering, rather than by the discriminator.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-01"
+    },
+    {
+      "type": "question",
+      "id": "B-003-003-008"
+    }
+  ],
+  "licenseClass": "original"
+}

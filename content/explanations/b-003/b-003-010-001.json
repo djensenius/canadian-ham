@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-010-001",
+  "questionId": "B-003-010-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-010-001.\n\nWhy the correct answer is right: CW occupies the least bandwidth, SSB voice is wider, and FM voice is widest among the listed modes.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"CW, FM voice and SSB voice\": This puts FM voice before SSB voice even though FM voice normally occupies more bandwidth.\n- sourceIndex 2: \"FM voice, SSB voice and CW\": This reverses the order by starting with the widest mode and ending with the narrowest.\n- sourceIndex 3: \"SSB voice, CW and FM voice\": This incorrectly places SSB voice narrower than CW; CW is the narrowest of the three.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-04"
+    },
+    {
+      "type": "question",
+      "id": "B-003-010-001"
+    }
+  ],
+  "licenseClass": "original"
+}

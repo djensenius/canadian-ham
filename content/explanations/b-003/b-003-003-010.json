@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-003-010",
+  "questionId": "B-003-003-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-003-010.\n\nWhy the correct answer is right: In this block-level FM receiver view, squelch mutes or enables recovered audio, so it is associated with the AF amplifier/audio section.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Limiter\": The limiter prepares a constant-amplitude IF signal for the discriminator, not the user mute gate for quiet audio.\n- sourceIndex 2: \"IF amplifier\": The IF amplifier supplies gain before detection; squelch acts on whether audio is heard.\n- sourceIndex 3: \"Product detector\": A product detector is for SSB/CW recovery and is not the FM receiver squelch block.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-01"
+    },
+    {
+      "type": "question",
+      "id": "B-003-003-010"
+    }
+  ],
+  "licenseClass": "original"
+}
