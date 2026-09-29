@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-002-005",
+  "questionId": "B-002-002-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-002-005.\n\nWhy the correct answer is right: Delta is the ITU phonetic word for the letter D.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Dog\": Dog is a plain word for D, but it is not the international radiotelephony word.\n- sourceIndex 2: \"Denmark\": Denmark is a place name, not the ITU standard for this letter.\n- sourceIndex 3: \"David\": David is a common name and could be misunderstood as improvised spelling rather than standard procedure.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-002-005"
+    }
+  ],
+  "licenseClass": "original"
+}

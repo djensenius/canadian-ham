@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-001-007",
+  "questionId": "B-002-001-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-001-007.\n\nWhy the correct answer is right: A short pause leaves room for another station, including one with priority traffic, to identify before the next over begins.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To check the SWR of the repeater\": SWR cannot be checked by pausing on a repeater; that is a station measurement made with appropriate equipment.\n- sourceIndex 2: \"To reach for pencil and paper for third-party communications\": Fetching pencil and paper may be useful for notes, but the operating reason for the pause is to let others access the channel.\n- sourceIndex 3: \"To give the repeater time to respond\": Repeaters respond quickly; the pause is mainly for human access, not for the machine to “catch up.”",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-001-007"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-004-001",
+  "questionId": "B-002-004-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-004-001.\n\nWhy the correct answer is right: Listening before transmitting protects contacts already in progress and prevents you from doubling with stations you did not know were there.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Check your antenna for resonance at the selected frequency\": Antenna resonance matters to station setup, but it is not the first shared-channel action before every transmission.\n- sourceIndex 2: \"Make sure the SWR on your transmission line is high enough\": High SWR is not desirable, and checking it is not a substitute for listening to the frequency.\n- sourceIndex 3: \"Increase power to ensure someone will hear you\": Increasing power before listening can make interference worse rather than prevent it.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-004-001"
+    }
+  ],
+  "licenseClass": "original"
+}

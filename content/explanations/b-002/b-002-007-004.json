@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-007-004",
+  "questionId": "B-002-007-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-007-004.\n\nWhy the correct answer is right: QSY means change frequency.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Use more power\": Using more power is not QSY; that would be a different operating request.\n- sourceIndex 2: \"Send faster\": Sending faster is not the meaning of QSY.\n- sourceIndex 3: \"Send more slowly\": Sending more slowly is QRS, not QSY.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-007-004"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-008-008",
+  "questionId": "B-002-008-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-008-008.\n\nWhy the correct answer is right: For portable HF emergency setup, a dipole or vertical is practical because it can be carried and erected comparatively simply.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A parabolic dish\": A parabolic dish is not a general portable HF antenna choice.\n- sourceIndex 2: \"A three-element Yagi\": A three-element Yagi is larger and more complex than the simple portable HF options expected.\n- sourceIndex 3: \"A three-element quad\": A three-element quad is also bulky and not the bank’s practical emergency-portable choice.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-03"
+    },
+    {
+      "type": "question",
+      "id": "B-002-008-008"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-004-010",
+  "questionId": "B-002-004-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-004-010.\n\nWhy the correct answer is right: A band plan is a voluntary division of amateur spectrum so incompatible modes and activities are less likely to interfere.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A schedule of operating restrictions within a band prescribed by Innovation, Science and Economic Development Canada\": The tested idea is voluntary operating organization, not an ISED schedule of restrictions.\n- sourceIndex 2: \"A plan devised by a club for the effective use of a frequency band during a contest\": A single club contest plan may be useful, but it is not the general meaning of a band plan.\n- sourceIndex 3: \"A schedule of additional band allocations for recommendation to the International Telecommunication Union\": International allocation recommendations are separate from amateur operators’ voluntary band-use planning.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-004-010"
+    }
+  ],
+  "licenseClass": "original"
+}

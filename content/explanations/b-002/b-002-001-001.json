@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-001-001",
+  "questionId": "B-002-001-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-001-001.\n\nWhy the correct answer is right: A repeater call to a known station should identify the station being called and then identify your own station. That gives the intended operator and everyone listening the two call signs needed to follow the contact.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Say the other operator's name, then your call sign three times\": A personal name is less reliable than the call sign, and repeating your own call three times wastes repeater time without naming the station clearly.\n- sourceIndex 2: \"Say, \\\"breaker, breaker\\\"\": That CB-style phrase is not normal amateur repeater procedure and gives no useful call-sign identification.\n- sourceIndex 3: \"Say the call sign of the station you want to contact three times\": Repeating only the desired call sign three times still leaves your own station unidentified until later.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-001-001"
+    }
+  ],
+  "licenseClass": "original"
+}

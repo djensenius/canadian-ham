@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-004-002",
+  "questionId": "B-002-004-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-004-002.\n\nWhy the correct answer is right: If your signal is already extremely strong and easy to copy, reduce power to the minimum needed for reliable communication.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Turn on your speech processor\": A speech processor changes audio density; it is not the courtesy adjustment for an already excellent signal.\n- sourceIndex 2: \"Bypass your antenna tuner\": Bypassing a tuner does not address unnecessary transmitted power.\n- sourceIndex 3: \"None, continue with your contact\": Continuing unchanged ignores the operating principle of using only as much power as needed.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-004-002"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-008-005",
+  "questionId": "B-002-008-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-008-005.\n\nWhy the correct answer is right: On a busy repeater in distress, break in between transmissions and give your call sign and situation so others can act.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Say \\\"EMERGENCY\\\" three times\": Repeating “EMERGENCY” alone omits station identification and the actual situation.\n- sourceIndex 2: \"Say \\\"SOS,\\\" then your call sign\": Saying SOS followed by a call sign is not the taught voice repeater break-in procedure.\n- sourceIndex 3: \"Say \\\"HELP\\\" as many times as it takes to get someone to answer\": Repeating HELP many times creates confusion and delays the specific facts helpers need.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-03"
+    },
+    {
+      "type": "question",
+      "id": "B-002-008-005"
+    }
+  ],
+  "licenseClass": "original"
+}

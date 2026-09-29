@@ -1,0 +1,142 @@
+{
+  "id": "QZ-L-002-03-A",
+  "lessonId": "L-002-03",
+  "officialQuestionIds": [
+    "B-002-008-001",
+    "B-002-008-002",
+    "B-002-008-003",
+    "B-002-008-004",
+    "B-002-008-005",
+    "B-002-008-006",
+    "B-002-008-007",
+    "B-002-008-008",
+    "B-002-008-009",
+    "B-002-008-010",
+    "B-002-008-011"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-002-03-A-C1",
+      "prompt": {
+        "en": "Which action would NOT reduce confusion while several stations are helping with priority traffic?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Use plain language for names, places, and requested help.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Read back critical details before relaying them onward.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Keep routine comments off the channel until the priority traffic is handled.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Replace ordinary words with unexplained abbreviations so the exchange sounds more official.",
+            "fr": null
+          },
+          "isCorrect": true
+        }
+      ],
+      "explanation": {
+        "en": "Priority traffic needs accuracy more than style. Plain language, read-backs, and quiet routine stations reduce confusion; unexplained abbreviations add risk.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-03-A-C2",
+      "prompt": {
+        "en": "Which preparation would NOT help maintain communication with a handheld radio during an extended outage?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Charge spare battery packs before storm season.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Label a known-good charging cable and keep it with the radio.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Practice changing batteries without losing the current channel setting.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Store the only spare battery empty so it is fresh when the emergency starts.",
+            "fr": null
+          },
+          "isCorrect": true
+        }
+      ],
+      "explanation": {
+        "en": "A dead spare is not a reserve. Readiness depends on usable stored energy and a simple way to keep the handheld operating.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-03-A-C3",
+      "prompt": {
+        "en": "During a distress relay, an operator says, “I will write the location after the contact from memory.” What is the error?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Critical details should be written as they are received, then read back or relayed carefully.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Distress traffic should never include locations over amateur radio.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The operator should leave the frequency immediately after hearing the first distress word.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Only the signal report matters once a distress station is acknowledged.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "Emergency communication is vulnerable to memory errors. Times, locations, call signs, and needed assistance should be captured accurately while the exchange is happening.",
+        "fr": null
+      }
+    }
+  ]
+}

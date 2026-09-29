@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-004-007",
+  "questionId": "B-002-004-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-004-007.\n\nWhy the correct answer is right: If a scheduled net is about to begin where you are already talking, courtesy is to move your contact to a different frequency.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Increase your power output to ensure that all net participants can hear you\": Increasing power to compete with the net would worsen interference.\n- sourceIndex 2: \"Transmit as long as possible on the frequency so that no other stations may use it\": Transmitting as long as possible to hold the frequency is intentionally obstructive.\n- sourceIndex 3: \"Turn off your radio\": Turning off the radio is not required; simply move if you can do so courteously.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-004-007"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-006-006",
+  "questionId": "B-002-006-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-006-006.\n\nWhy the correct answer is right: Through a repeater, report how the distant station’s signal and audio sound after being repeated, because that is what you actually hear from that station.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Your S-meter reading on the repeater output frequency\": Your S-meter on the repeater output mostly reports the repeater transmitter reaching you, not the distant station’s audio quality.\n- sourceIndex 2: \"Your S-meter reading on the repeater input frequency\": The input frequency may help a simplex test, but it is not the requested report through the repeater.\n- sourceIndex 3: \"The readability and strength of the repeater signal\": Reporting only the repeater signal ignores the quality of the station being relayed.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-006-006"
+    }
+  ],
+  "licenseClass": "original"
+}

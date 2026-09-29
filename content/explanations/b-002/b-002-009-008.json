@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-009-008",
+  "questionId": "B-002-009-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-009-008.\n\nWhy the correct answer is right: An azimuthal world map centred on your station is most useful for showing the bearing from you to any location.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To allow computing the radiation angle to any location\": Radiation angle is an antenna and propagation matter, not what this map primarily computes.\n- sourceIndex 2: \"To associate distances with optimal ionospheric region\": Matching distance to an ionospheric region is not the main function identified here.\n- sourceIndex 3: \"To show the azimuth to meteor showers throughout the year\": Meteor-shower azimuths are specialized and not the general amateur use being tested.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-04"
+    },
+    {
+      "type": "question",
+      "id": "B-002-009-008"
+    }
+  ],
+  "licenseClass": "original"
+}

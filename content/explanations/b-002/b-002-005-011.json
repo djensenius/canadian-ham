@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-005-011",
+  "questionId": "B-002-005-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-005-011.\n\nWhy the correct answer is right: In Morse, R means all received.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"End of message\": End of message is a separate procedural signal, not R.\n- sourceIndex 2: \"Called station only reply\": Called-station-only reply is not the meaning assigned to R.\n- sourceIndex 3: \"Repeat all\": Repeat all asks for retransmission; R says the material was copied.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-005-011"
+    }
+  ],
+  "licenseClass": "original"
+}

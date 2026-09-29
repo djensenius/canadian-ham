@@ -1,0 +1,142 @@
+{
+  "id": "QZ-L-002-04-A",
+  "lessonId": "L-002-04",
+  "officialQuestionIds": [
+    "B-002-009-001",
+    "B-002-009-002",
+    "B-002-009-003",
+    "B-002-009-004",
+    "B-002-009-005",
+    "B-002-009-006",
+    "B-002-009-007",
+    "B-002-009-008",
+    "B-002-009-009",
+    "B-002-009-010",
+    "B-002-009-011"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-002-04-A-C1",
+      "prompt": {
+        "en": "Two stations confirm a contact near midnight, one in Atlantic Canada and one in British Columbia. Which log habit best prevents later date confusion?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Record the UTC date as well as the UTC time for the contact.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Use only the local date of the operator who sent the louder signal.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Omit the date if both stations remember the band.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Let each station choose any date because confirmations do not compare dates.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "UTC works best when the date and time travel together. Near local midnight, the same contact may fall on different local dates for different operators.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-04-A-C2",
+      "prompt": {
+        "en": "Which statement is NOT true about useful contact records and confirmations?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "A confirmation should identify enough contact details to match both stations’ records.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Log notes can help compare a later interference complaint with your actual operating times.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Web-based systems can serve a confirmation role for many operators.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "A friendly card with no contact details proves a radio contact just as well as a complete confirmation.",
+            "fr": null
+          },
+          "isCorrect": true
+        }
+      ],
+      "explanation": {
+        "en": "A confirmation is valuable because it ties the proof to a specific contact. Missing date, time, band, or station details makes the proof weak.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-04-A-C3",
+      "prompt": {
+        "en": "After trying a long-path opening, an operator writes only “beam turned around” in the log. What would improve the note?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Record the actual bearing used and mark it as the long-path trial.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Erase the short-path bearing because only the successful direction matters.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Replace the bearing with the UTC offset, because time zones define antenna direction.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Write the signal report only; antenna direction never helps future planning.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "A useful operating note records the direction that was tested and why. That makes the log helpful when the same path or season appears again.",
+        "fr": null
+      }
+    }
+  ]
+}

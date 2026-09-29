@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-008-001",
+  "questionId": "B-002-008-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-008-001.\n\nWhy the correct answer is right: SOS or MAYDAY is reserved for a life-threatening distress situation in the Basic-bank principle.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Never\": “Never” is wrong because genuine life-threatening distress is specifically allowed.\n- sourceIndex 2: \"Only at specific times (at 15 and 30 minutes after the hour)\": There is no scheduled quarter-hour window for distress calling in the bank fact.\n- sourceIndex 3: \"Only in case of a severe weather watch\": A severe weather watch alone is not the same as a life-threatening distress situation.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-03"
+    },
+    {
+      "type": "question",
+      "id": "B-002-008-001"
+    }
+  ],
+  "licenseClass": "original"
+}

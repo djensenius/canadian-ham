@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-002-011",
+  "questionId": "B-002-002-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-002-011.\n\nWhy the correct answer is right: Romeo is the ITU phonetic word for R.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Roger\": Roger is an operating word meaning received in some contexts; it is not the spelling word for R.\n- sourceIndex 2: \"Radio\": Radio begins with R, but the ITU list assigns Romeo.\n- sourceIndex 3: \"Romania\": Romania is a country name and is not the phonetic alphabet entry.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-002-011"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-005-002",
+  "questionId": "B-002-005-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-005-002.\n\nWhy the correct answer is right: A routine Morse answer identifies the station being answered, sends DE, and then gives your own call sign, each with enough repetition to copy.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Send your call sign four times\": Sending only your own call four times does not clearly name the CQ station you are answering.\n- sourceIndex 2: \"Send the other station's call sign once, followed by the word \\\"DE,\\\" followed by your call sign four times\": One called-station call and four of yours is not the balanced answer pattern taught here.\n- sourceIndex 3: \"Send your call sign followed by your name, station location and a signal report\": Name, location, and report belong later in the contact, after the stations have established contact.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-005-002"
+    }
+  ],
+  "licenseClass": "original"
+}

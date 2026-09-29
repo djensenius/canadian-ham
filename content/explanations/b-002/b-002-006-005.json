@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-006-005",
+  "questionId": "B-002-006-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-006-005.\n\nWhy the correct answer is right: “5 9 plus 20 dB” means perfect readability with strength 20 dB above the S9 reference.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The bandwidth of your signal is 20 decibels above linearity\": Bandwidth is measured in hertz, not “decibels above linearity” in an RS report.\n- sourceIndex 2: \"Repeat your transmission on a frequency 20 kHz higher\": The report does not tell the other station to move 20 kHz higher.\n- sourceIndex 3: \"Your signal strength has increased by a factor of 100\": A 20 dB increase corresponds to a power ratio of 100, but the phrase is an S-meter report above S9, not a statement that power increased.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-006-005"
+    }
+  ],
+  "licenseClass": "original"
+}

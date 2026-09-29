@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-008-004",
+  "questionId": "B-002-008-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-008-004.\n\nWhy the correct answer is right: In Morse code, SOS is the distress signal taught by the Basic bank.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"CQD\": CQD is historic and not the correct answer in this question bank.\n- sourceIndex 2: \"QRRR\": QRRR is not the Basic-bank Morse distress signal.\n- sourceIndex 3: \"MAYDAY\": MAYDAY is the voice distress word, not the Morse signal requested.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-03"
+    },
+    {
+      "type": "question",
+      "id": "B-002-008-004"
+    }
+  ],
+  "licenseClass": "original"
+}

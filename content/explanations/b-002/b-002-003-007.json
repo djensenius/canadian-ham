@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-003-007",
+  "questionId": "B-002-003-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-003-007.\n\nWhy the correct answer is right: If you can hear the other station on the repeater input frequency, that suggests the direct path may work for simplex.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"By asking a third station to confirm it receives you both\": A third station’s opinion may help socially, but it does not directly test whether you receive the other station.\n- sourceIndex 2: \"By checking if you can clearly receive a more distant repeater\": Hearing a distant repeater tests another path, not your direct path to the station in conversation.\n- sourceIndex 3: \"By asking the other station to move 10 kHz away to test the path\": Moving 10 kHz away is not the taught test and could create a poor channel choice.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-003-007"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -11,11 +11,11 @@ lessonIds:
   - L-002-02
   - L-002-03
   - L-002-04
-status: outline
+status: draft
 ---
 # Operating and Procedures
 
-Teach practical on-air behaviour after the station and interference foundations are in place.
+Teach practical on-air behaviour after the station and interference foundations are in place. Module 2 focuses on courteous operating, clear identification, message priority, and the records and maps that make contacts useful after the signal fades.
 
 ## Lessons
 

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-003-004",
+  "questionId": "B-002-003-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-003-004.\n\nWhy the correct answer is right: If the stations can communicate reliably without the repeater, simplex is courteous because it frees the shared repeater for others.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"When the most reliable communications are needed\": The most reliable path might be a repeater; the question asks when direct communication is adequate.\n- sourceIndex 2: \"When an emergency telephone call is needed\": Amateur simplex is not chosen because an emergency telephone call is needed.\n- sourceIndex 3: \"When you are travelling and need some local information\": Travel information is a possible repeater conversation, not a reason that makes simplex the better technical choice.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-003-004"
+    }
+  ],
+  "licenseClass": "original"
+}

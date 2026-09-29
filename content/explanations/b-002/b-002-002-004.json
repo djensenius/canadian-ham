@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-002-004",
+  "questionId": "B-002-002-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-002-004.\n\nWhy the correct answer is right: The ITU word for B is Bravo, a standard word chosen to be understood internationally.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Brazil\": Brazil is a country name beginning with B, not the phonetic word in the ITU list.\n- sourceIndex 2: \"Borneo\": Borneo may be memorable, but it is not the standard code word for the letter.\n- sourceIndex 3: \"Baker\": Baker belongs to older spelling alphabets and is not the ITU answer.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-002-004"
+    }
+  ],
+  "licenseClass": "original"
+}

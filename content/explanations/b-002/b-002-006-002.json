@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-006-002",
+  "questionId": "B-002-006-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-006-002.\n\nWhy the correct answer is right: RST stands for readability, signal strength, and tone.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Recovery, signal strength, tempo\": Recovery is not the R in RST, and tempo is not the T.\n- sourceIndex 2: \"Recovery, signal speed, tone\": This expands two of the three letters incorrectly; speed is not the S term.\n- sourceIndex 3: \"Readability, signal speed, tempo\": Readability is right, but signal speed and tempo are not the remaining parts of RST.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-006-002"
+    }
+  ],
+  "licenseClass": "original"
+}

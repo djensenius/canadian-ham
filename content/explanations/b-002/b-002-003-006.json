@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-003-006",
+  "questionId": "B-002-003-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-003-006.\n\nWhy the correct answer is right: A VHF/UHF simplex choice should avoid repeater inputs; otherwise your direct contact may interfere with repeater users you cannot hear.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Some frequencies cannot accommodate simplex operation\": Many VHF/UHF frequencies can support simplex when band plans permit; the trap is choosing an input channel.\n- sourceIndex 2: \"Implanted medical devices share the same spectrum\": Implanted medical devices are not the reason for careful amateur simplex-channel selection here.\n- sourceIndex 3: \"Some frequencies are designated for narrow band FM and others for wideband FM\": FM deviation practices may differ, but the Basic question is about avoiding local repeater inputs.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-003-006"
+    }
+  ],
+  "licenseClass": "original"
+}

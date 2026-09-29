@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-002-006",
+  "questionId": "B-002-002-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-002-006.\n\nWhy the correct answer is right: Echo is the ITU phonetic word for E.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Easy\": Easy is an older-style or informal spelling word and not the current ITU form.\n- sourceIndex 2: \"Edward\": Edward may be used informally, but it is not the required standard word.\n- sourceIndex 3: \"England\": England starts with E, yet country names are not substituted for the ITU alphabet.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-002-006"
+    }
+  ],
+  "licenseClass": "original"
+}

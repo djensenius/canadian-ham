@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-007-010",
+  "questionId": "B-002-007-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-007-010.\n\nWhy the correct answer is right: QRZ? asks “Who is calling me?”\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"QRK?\": QRK? is not the Basic-bank answer for identifying the caller.\n- sourceIndex 2: \"QRP?\": QRP? concerns low power in other contexts, not who is calling.\n- sourceIndex 3: \"QRM?\": QRM? asks about interference, not caller identity.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-007-010"
+    }
+  ],
+  "licenseClass": "original"
+}

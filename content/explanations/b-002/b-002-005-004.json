@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-005-004",
+  "questionId": "B-002-005-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-005-004.\n\nWhy the correct answer is right: CQ is the general call meaning you are calling any station that hears you.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Call on the quarter-hour\": It is not a schedule for quarter-hour calling.\n- sourceIndex 2: \"An antenna is being tested\": Testing an antenna should be identified as a test, not disguised as CQ.\n- sourceIndex 3: \"The frequency is in use\": A frequency-in-use warning is handled by other procedure such as listening or QRL?, not by CQ.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-005-004"
+    }
+  ],
+  "licenseClass": "original"
+}

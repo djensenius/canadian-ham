@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-006-001",
+  "questionId": "B-002-006-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-006-001.\n\nWhy the correct answer is right: RST reports describe how the signal is received at your station: readability, strength, and tone where tone applies.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Transmitter power\": Transmitter power may influence a report, but RST is not a wattage statement.\n- sourceIndex 2: \"Sunspot activity\": Sunspot activity affects propagation generally; it is not what an individual RST report describes.\n- sourceIndex 3: \"Ionospheric conditions\": Ionospheric conditions may explain changes, but RST is the received signal report itself.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-006-001"
+    }
+  ],
+  "licenseClass": "original"
+}

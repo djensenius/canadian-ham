@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-003-011",
+  "questionId": "B-002-003-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-003-011.\n\nWhy the correct answer is right: A directed voice call should name the desired station first, then say “this is” and identify yourself.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"\\\"CQ, CQ, CQ\\\" followed by the call sign of the desired station\": CQ is for calling any station, so it is not the preferred opening for a specific station.\n- sourceIndex 2: \"Your call sign, followed by \\\"calling\\\" and the call sign of the desired station\": Starting with your own call and then “calling” is less clear than naming the desired station first.\n- sourceIndex 3: \"Your call sign repeated twice, the word \\\"for\\\" and the call sign of the desired station\": Repeating your call with “for” is not the taught concise format for a directed voice call.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-003-011"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,164 @@
+{
+  "id": "QZ-L-002-02-A",
+  "lessonId": "L-002-02",
+  "officialQuestionIds": [
+    "B-002-005-001",
+    "B-002-005-002",
+    "B-002-005-003",
+    "B-002-005-004",
+    "B-002-005-005",
+    "B-002-005-006",
+    "B-002-005-007",
+    "B-002-005-008",
+    "B-002-005-009",
+    "B-002-005-010",
+    "B-002-005-011",
+    "B-002-006-001",
+    "B-002-006-002",
+    "B-002-006-003",
+    "B-002-006-004",
+    "B-002-006-005",
+    "B-002-006-006",
+    "B-002-006-007",
+    "B-002-006-008",
+    "B-002-006-009",
+    "B-002-006-010",
+    "B-002-006-011",
+    "B-002-007-001",
+    "B-002-007-002",
+    "B-002-007-003",
+    "B-002-007-004",
+    "B-002-007-005",
+    "B-002-007-006",
+    "B-002-007-007",
+    "B-002-007-008",
+    "B-002-007-009",
+    "B-002-007-010",
+    "B-002-007-011"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-002-02-A-C1",
+      "prompt": {
+        "en": "A voice signal is loud on the meter but clipped and hard to understand. Which report habit best separates the observations?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Give a strong strength number but describe the readability problem instead of pretending loud means clear.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Always give the highest readability whenever the S-meter is high.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Add a tone digit because distorted voice must be reported like keyed Morse.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Report only transmitter power because reception reports are about watts.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "Readability and strength are separate parts of a report. A loud signal can still be difficult to copy if the audio is poor.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-02-A-C2",
+      "prompt": {
+        "en": "Which statement is NOT true about the Q signals taught in this lesson?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Adding a question mark can turn a Q signal into a request rather than a statement.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "QRN points to static-type trouble rather than another station deliberately occupying the channel.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "QSY can be used when stations agree to move frequency.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The question mark is decorative and never changes the job of a Q signal.",
+            "fr": null
+          },
+          "isCorrect": true
+        }
+      ],
+      "explanation": {
+        "en": "In operating practice, the question form matters. For example, a busy-frequency check is different from simply stating a condition.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-002-02-A-C3",
+      "prompt": {
+        "en": "An S-meter rises one unit during a period of obvious fading, and the distant operator says their transmitter power did not change. What conclusion best fits the lesson?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Do not calculate transmitter power from that jump; the path changed, so the simple power comparison is not controlled.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "The transmitter power must have quadrupled even though the operator reports no change.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The tone digit of the RST report must improve whenever fading raises the meter.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The receiver should report QRN because any meter movement is static.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "The S-unit power relationship is a simplified comparison when other conditions remain steady. Fading changes the path, so the meter movement is not proof of a transmitter-power change.",
+        "fr": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-003-008",
+  "questionId": "B-002-003-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-003-008.\n\nWhy the correct answer is right: Using simplex on a repeater frequency risks interfering with the repeater system or its users, so move to another appropriate frequency.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Because the repeater's output power may overload your receiver\": Receiver overload from a repeater output is not the main courtesy issue in the question.\n- sourceIndex 2: \"Because there are more repeater operators than simplex operators\": The number of repeater users versus simplex users is irrelevant; interference to the shared system is the problem.\n- sourceIndex 3: \"Because changing the repeater's frequency requires the authorization of Innovation, Science and Economic Development Canada\": Changing a repeater’s assigned frequency is a coordination matter, but you are not being asked to retune the repeater.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-003-008"
+    }
+  ],
+  "licenseClass": "original"
+}

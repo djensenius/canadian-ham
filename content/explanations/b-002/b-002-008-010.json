@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-008-010",
+  "questionId": "B-002-008-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-008-010.\n\nWhy the correct answer is right: A distress message has higher priority than an emergency message in the Basic-bank ordering.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"no other messages\": The bank does place distress before at least some other messages, so “no other messages” is wrong.\n- sourceIndex 2: \"a government priority message\": A government priority message is not the comparison established by this Basic question.\n- sourceIndex 3: \"a safety message\": Safety messages are lower than distress too, but the specific correct comparison here is emergency message.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-03"
+    },
+    {
+      "type": "question",
+      "id": "B-002-008-010"
+    }
+  ],
+  "licenseClass": "original"
+}

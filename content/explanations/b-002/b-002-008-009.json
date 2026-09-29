@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-008-009",
+  "questionId": "B-002-008-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-008-009.\n\nWhy the correct answer is right: If a distressed station breaks in, acknowledge it and find out its location and what assistance is needed.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Continue your communication because you were on frequency first\": Being on frequency first does not outrank distress traffic.\n- sourceIndex 2: \"Change to a different frequency so the station in distress may have a clear channel to call for assistance\": Leaving the frequency may abandon the station that needs help instead of gathering essential details.\n- sourceIndex 3: \"Immediately cease all transmissions because stations in distress have emergency rights to the frequency\": All routine traffic should clear, but immediately ceasing without acknowledgement may leave the distress station unsupported.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-03"
+    },
+    {
+      "type": "question",
+      "id": "B-002-008-009"
+    }
+  ],
+  "licenseClass": "original"
+}

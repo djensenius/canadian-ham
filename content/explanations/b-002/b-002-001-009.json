@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-001-009",
+  "questionId": "B-002-001-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-001-009.\n\nWhy the correct answer is right: To join politely, wait for a break and give your call sign. The ongoing stations can then acknowledge you without being covered.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Wait for the end of a transmission and start calling the desired party\": Immediately calling a desired party after another over can collide with the existing group and does not simply request entry.\n- sourceIndex 2: \"Shout \\\"break, break!\\\" to show that you're eager to join the conversation\": Shouting “break, break” suggests urgency and is not the normal way to join a casual repeater conversation.\n- sourceIndex 3: \"Increase power to override whoever is talking\": Overriding with power is poor operating practice and can block the very conversation you want to enter.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-001-009"
+    }
+  ],
+  "licenseClass": "original"
+}

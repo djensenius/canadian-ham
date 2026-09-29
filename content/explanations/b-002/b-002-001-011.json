@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-001-011",
+  "questionId": "B-002-001-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-001-011.\n\nWhy the correct answer is right: For two-metre FM repeater operation, the Basic bank uses a 600 kHz standard offset between the transmit and receive frequencies.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"800 kHz\": 800 kHz is not the standard two-metre repeater split taught by the Canadian Basic bank.\n- sourceIndex 2: \"1000 kHz\": 1000 kHz is a full megahertz and does not match the two-metre FM offset in this material.\n- sourceIndex 3: \"400 kHz\": 400 kHz is too small for the standard two-metre repeater offset being tested.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-001-011"
+    }
+  ],
+  "licenseClass": "original"
+}

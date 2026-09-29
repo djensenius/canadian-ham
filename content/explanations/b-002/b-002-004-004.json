@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-004-004",
+  "questionId": "B-002-004-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-004-004.\n\nWhy the correct answer is right: A dummy load lets the transmitter be tested for a long period while absorbing RF instead of radiating it on the air.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Choose an unoccupied frequency\": An unoccupied frequency still radiates test energy and may become occupied or be heard elsewhere.\n- sourceIndex 2: \"Use a non-resonant antenna\": A non-resonant antenna is a poor load and still can radiate unwanted energy.\n- sourceIndex 3: \"Use a resonant antenna\": A resonant antenna radiates efficiently, which is the opposite of minimizing interference during a test.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-004-004"
+    }
+  ],
+  "licenseClass": "original"
+}

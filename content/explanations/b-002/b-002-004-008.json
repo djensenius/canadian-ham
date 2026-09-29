@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-004-008",
+  "questionId": "B-002-004-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-004-008.\n\nWhy the correct answer is right: If propagation changes and same-frequency interference increases, moving frequency is the practical cooperative response.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Tell the interfering stations to change frequency, since you were there first\": Being first does not give a permanent claim when propagation brings stations together.\n- sourceIndex 2: \"Report the interference to your Section Manager at Radio Amateurs of Canada (RAC)\": A Section Manager report is not the immediate operating fix for ordinary changing propagation.\n- sourceIndex 3: \"Increase your output power\": More power can spread the conflict and does not solve the shared-frequency problem.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-004-008"
+    }
+  ],
+  "licenseClass": "original"
+}

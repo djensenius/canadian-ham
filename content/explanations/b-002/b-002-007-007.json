@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-007-007",
+  "questionId": "B-002-007-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-007-007.\n\nWhy the correct answer is right: QRM means interference from other signals or man-made interference affecting reception.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"I am troubled by static\": Static trouble is QRN, not QRM.\n- sourceIndex 2: \"Your signals are fading\": Fading is QSB, not QRM.\n- sourceIndex 3: \"I am busy\": Being busy is QRL rather than QRM.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-007-007"
+    }
+  ],
+  "licenseClass": "original"
+}

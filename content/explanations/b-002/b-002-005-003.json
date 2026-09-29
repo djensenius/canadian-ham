@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-005-003",
+  "questionId": "B-002-005-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-005-003.\n\nWhy the correct answer is right: Send CQ at a speed you can reliably receive, because the reply may come back at about the speed you used.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"At the customary speed for the band\": A customary band speed may be too fast or too slow for your actual copying ability.\n- sourceIndex 2: \"At the highest speed your keyer will operate\": The keyer’s maximum speed is irrelevant if you cannot copy the answer.\n- sourceIndex 3: \"At the highest speed at which you can control the keyer\": Control of the keyer does not guarantee receiving skill; receiving reliability sets the sensible calling speed.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-005-003"
+    }
+  ],
+  "licenseClass": "original"
+}
