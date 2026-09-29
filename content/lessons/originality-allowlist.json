@@ -41,13 +41,13 @@
   },
   {
     "lessonId": "L-002-03",
-    "blockHeading": "Reference fact: distress terms in this lesson",
-    "reason": "Reviewed reference table: distress and urgent terms are official Basic operating facts summarized without adding scenarios, practice items, or an unverified priority ladder."
+    "blockHeading": "Reference fact: priority terms in this lesson",
+    "reason": "Reviewed reference table: distress, urgent, emergency, and safety terms are official Basic operating facts summarized without adding scenarios, practice items, or an unverified priority ladder."
   },
   {
     "lessonId": "L-002-04",
     "blockHeading": "Reference fact: grid locator code length",
-    "reason": "Reviewed official grid-locator length fact. The 4- or 6-character wording is intentionally preserved in a labelled reference fact because the numeric locator length is the fact being taught."
+    "reason": "Reviewed reference table: the 4- or 6-character Maidenhead locator length is intentionally preserved in a labelled reference table because the numeric locator length is the fact being taught."
   },
   {
     "lessonId": "L-002-04",

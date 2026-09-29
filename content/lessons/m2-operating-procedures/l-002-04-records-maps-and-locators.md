@@ -22,7 +22,7 @@ status: draft
 ---
 # Records, maps, and locators
 
-Operating does not end when the microphone is released. Contact records help you confirm communication, remember conditions, chase awards, respond to interference questions, and plan future contacts. Maps and locators turn a call sign exchange into a sense of direction and distance.
+Operating continues after the microphone is released. Contact records help you confirm communication, remember conditions, chase awards, respond to interference questions, and plan future contacts. Maps and locators turn a call sign exchange into a sense of direction and distance.
 
 This lesson covers QSL cards and web confirmations, logbook usefulness, grid squares, azimuthal maps, long path, UTC, and time/frequency standard stations.
 
@@ -31,7 +31,7 @@ This lesson covers QSL cards and web confirmations, logbook usefulness, grid squ
 By the end of this lesson, you can:
 
 - describe what a QSL card proves and how web-based logs can serve a similar confirming role;
-- keep useful contact notes without claiming that a logbook is a regulatory requirement;
+- describe useful contact notes and the Canadian regulatory status of amateur station logs;
 - explain what a Maidenhead grid square communicates in a VHF contest;
 - use an azimuthal map to find bearings from your own location;
 - understand why long-path direction is opposite short-path direction; and
@@ -41,25 +41,27 @@ By the end of this lesson, you can:
 
 A QSL card is written proof that two amateur stations communicated. Modern operators may also confirm contacts through web-based logging systems. Either way, the confirmation is about the contact: stations, date, time, band or frequency, mode, and often signal report or location.
 
-A personal station logbook is useful even when it is not a regulatory requirement. It can support award applications, preserve memories, help match confirmations, and help investigate neighbour interference complaints by showing when you were actually transmitting.
+Canadian regulations make amateur station logbooks optional. Operators keep personal logs because they support award applications, preserve memories, help match confirmations, and help investigate neighbour interference complaints by showing when the station was transmitting.
 
 Useful log details include UTC date and time, call sign, band or frequency, mode, signal report, location information, and brief station notes. A complete note is more valuable than a memory reconstructed later.
 
 ## Grid locators
 
-In VHF contesting and many digital tools, a station may ask for your grid square. A grid square is compact enough to send quickly while still giving useful geographic information.
+In VHF contesting and many digital tools, a station may ask for your grid square. A grid square communicates location compactly enough to send quickly while still giving useful geographic information.
 
 ### Reference fact: grid locator code length
 
-The location code is a 4- or 6-character Maidenhead-style locator.
+| Locator system | Code length used here |
+|---|---|
+| Maidenhead-style grid locator | 4 or 6 characters. |
 
-You do not need to calculate a grid square by hand for the Basic exam. You should recognize what information is being requested: a location code, not an antenna direction, contact count, or station height.
+Grid locators pair well with VHF and UHF operation because small changes in position can matter to line-of-sight and weak-signal paths.
 
 ## Bearings, azimuthal maps, and long path
 
 An azimuthal map is centred on a chosen location. When it is centred on your station, directions radiating from the centre show bearings from your station to other places. That makes it useful for aiming directional antennas or simply understanding where signals are coming from.
 
-There are often two great-circle directions between places: the short path and the long path. The long-path heading is 180 degrees from the short-path heading. If a desired signal is not heard on the expected short-path bearing, the opposite direction can be worth checking.
+There are often two great-circle directions between places: the short path and the long path. The long-path heading is 180 degrees from the short-path heading. When the expected short-path bearing is weak, the reciprocal direction can be worth checking.
 
 ### Reference fact: map and bearing relationships
 
@@ -75,7 +77,7 @@ Amateur schedules, log entries, and confirmations commonly use UTC so operators 
 
 A time zone labelled UTC minus 6 hours is six hours behind UTC. To convert a UTC schedule to that local time, subtract six hours and adjust the local date if the subtraction crosses midnight. Logs and confirmations should keep the UTC date and time together so both stations compare the same contact record.
 
-Stations CHU, WWV, and WWVH are useful as standard references for frequency and time. They are not signal-report services, band-condition forecasts, or amateur bulletin channels.
+Stations CHU, WWV, and WWVH provide standard frequency and time references.
 
 ## How these procedures fit together
 
@@ -87,16 +89,6 @@ Logs and maps make operating cumulative. A single contact becomes part of a patt
 
 Grid locators are especially useful at VHF and UHF because small changes in position can matter. UTC is equally important on HF because contacts may cross date lines and time zones.
 
-## Common mistakes
-
-- Calling a QSL card just a friendly postcard instead of proof of communication.
-- Claiming a logbook is a regulatory requirement in this lesson's scope.
-- Confusing a grid square with an antenna bearing or elevation.
-- Using a pole-centred map when the task is to find bearings from your own station.
-- Forgetting that long path is opposite the short-path heading.
-- Logging only local time and later being unable to match another station's UTC confirmation.
-- Treating CHU, WWV, or WWVH as signal-report or propagation-forecast services instead of standards.
-
 ## Illustration brief
 
 Alt text: A station log beside an azimuthal map centred on the operator, with a grid locator label.
@@ -105,10 +97,7 @@ Description: Draw a notebook page with columns for UTC, call sign, band, mode, r
 
 ## Summary
 
-- A QSL card or web-based log confirmation provides proof of communication between stations.
-- A logbook is useful for awards, memories, confirmation matching, and interference follow-up, but it is not a regulatory requirement in this lesson's scope.
-- A grid square is a compact Maidenhead-style location code.
-- An azimuthal map centred on your location shows bearings from your station.
-- Long path is 180 degrees from the short-path heading.
-- UTC is measured from the Greenwich meridian; local time conversion applies your zone offset.
-- CHU, WWV, and WWVH provide standard frequency and time references.
+- Confirmations, station logs, and UTC make contacts easier to verify across operators and time zones.
+- Canadian regulations make amateur station logbooks optional, while practical operating gives them many uses.
+- Grid locators, azimuthal maps, and long-path bearings connect location with direction.
+- Time and frequency standard stations support accurate operating records and receiver checks.

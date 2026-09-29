@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-009-007.\n\nWhy the correct answer is right: The NOT-correct statement is that a logbook is a regulatory requirement; personal logs have practical value, but this Basic content treats them as useful rather than mandatory.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A logbook is important for recording contacts for operating awards\": Award tracking is a real practical reason to keep contact records.\n- sourceIndex 2: \"A well-kept logbook preserves your fondest amateur radio memories for years\": Memories are a legitimate personal value of a logbook.\n- sourceIndex 3: \"A logbook is important for handling neighbour interference complaints\": Time, frequency, and mode records can help compare your transmissions with a reported problem.",
+    "en": "Question B-002-009-007.\n\nWhy the correct answer is right: Canadian regulations make amateur station logbooks optional; the regulatory-requirement statement is false, while personal logs remain useful operating records.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A logbook is important for recording contacts for operating awards\": Award tracking is a real practical reason to keep contact records.\n- sourceIndex 2: \"A well-kept logbook preserves your fondest amateur radio memories for years\": Memories are a legitimate personal value of a logbook.\n- sourceIndex 3: \"A logbook is important for handling neighbour interference complaints\": Time, frequency, and mode records can help compare your transmissions with a reported problem.",
     "fr": null
   },
   "citations": [

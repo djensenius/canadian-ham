@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-005-008.\n\nWhy the correct answer is right: The term 73 is the customary amateur shorthand for best regards.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Long distance\": Long distance is DX, not 73.\n- sourceIndex 2: \"Love and kisses\": Love and kisses is not the meaning of 73 in amateur procedure.\n- sourceIndex 3: \"Go ahead\": Go ahead is an invitation to transmit, not a closing courtesy.",
+    "en": "Question B-002-005-008.\n\nWhy the correct answer is right: The term 73 is the customary amateur shorthand for best regards.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Long distance\": Long distance is DX, not 73.\n- sourceIndex 2: \"Love and kisses\": Love and kisses is traditionally 88 in amateur shorthand; 73 means best regards.\n- sourceIndex 3: \"Go ahead\": Go ahead invites another station to transmit; 73 is a closing courtesy.",
     "fr": null
   },
   "citations": [
