@@ -35,14 +35,14 @@
         },
         {
           "text": {
-            "en": "The AM voice bandwidth should be cut in half because the carrier is steadier",
+            "en": "The oscillator should lose its tuning range because better stability turns a VFO into fixed crystal channels",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "The harmonic output should rise because stable oscillators do not need low-pass filtering",
+            "en": "Harmonic suppression should improve automatically, so the low-pass filter becomes unnecessary",
             "fr": null
           },
           "isCorrect": false
@@ -83,7 +83,7 @@
         },
         {
           "text": {
-            "en": "Ask a nearby station whether the transmitted audio is clean, not just loud",
+            "en": "Lower the audio drive so limiting only occurs within the manufacturer's recommended range",
             "fr": null
           },
           "isCorrect": false
@@ -97,41 +97,41 @@
     {
       "id": "QZ-L-003-05-A-C3",
       "prompt": {
-        "en": "A band-plan note says an 80 m voice slot should stay near 3 kHz, while a 10 m channel can accept a many-kilohertz FM signal. A 2.5 kHz-deviation FM signal with 3 kHz audio estimates to about 11 kHz by 2 x (deviation + audio). Which plan fits both slots?",
+        "en": "A band-plan note says an 80 m voice slot should stay near 3 kHz, while a 10 m channel can accept a many-kilohertz FM signal. A station plans 3.0 kHz peak deviation with 2.7 kHz audio. Using Carson's rule first, which plan fits both slots?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Put the 11 kHz FM signal in the 80 m slot and use SSB on 10 m",
+            "en": "Put the FM signal in the 80 m slot because the 3.0 kHz deviation number is close to the slot width",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Use SSB for the 80 m slot and reserve that FM setup for the 10 m channel",
+            "en": "Use SSB for the 80 m slot and reserve that FM setup for the 10 m channel because the estimate is about 11.4 kHz",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "Use the same FM setup in both slots because deviation is less than 3 kHz",
+            "en": "Use the same FM setup in both slots because 2 x 3.0 kHz leaves the audio out of the estimate",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Turn down the FM microphone until the occupied bandwidth is exactly 3 kHz",
+            "en": "Turn down the FM microphone and ignore the audio-frequency term once reports sound clear",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "The two-step check is bandwidth first, then band choice: a many-kilohertz FM voice signal does not fit a narrow HF voice slot, while SSB does.",
+        "en": "The two-step check is bandwidth first, then band choice: 2 x (3.0 + 2.7) is about 11.4 kHz, so that FM voice signal does not fit a narrow HF voice slot, while SSB does.",
         "fr": null
       }
     }

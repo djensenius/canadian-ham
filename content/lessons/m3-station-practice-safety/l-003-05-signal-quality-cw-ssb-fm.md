@@ -118,7 +118,7 @@ For repeaters and local channels, the transmitter deviation should match the sys
 
 Text formula: FM bandwidth by Carson's rule ≈ 2 × (peak deviation + highest audio frequency).
 
-For example, 2.5 kHz deviation with 3 kHz audio estimates to about 2 × (2.5 + 3) = 11 kHz. Higher deviation produces a still wider channel by the same formula. Below 28 MHz, amateur voice channels are planned around narrower modes such as SSB; reserve wide FM for band segments where a many-kilohertz channel is allowed. Speaking very close to the microphone can cause overdeviation even if the frequency is exactly right.
+For example, 2.5 kHz deviation with 3 kHz audio estimates to about 2 × (2.5 + 3) = 11 kHz. Higher deviation produces a still wider channel by the same formula. Canadian occupied-bandwidth limits below 28 MHz leave only a few kilohertz for voice operation, so an FM voice signal estimated at about 11 to 16 kHz does not fit that plan; reserve wide FM for band segments where a many-kilohertz channel is allowed. Speaking very close to the microphone can cause overdeviation even if the frequency is exactly right.
 
 An FM receiver often has high gain before the discriminator. With no usable signal present, that gain makes the speaker noise loud unless squelch mutes it. FM is popular for local VHF/UHF work because, above threshold, it can provide good signal-to-noise performance at modest received signal levels. When multiple FM signals are present, the receiver tends to demodulate the strongest one; this is the capture effect.
 
@@ -128,11 +128,11 @@ A repeater operator reports, "Your signal is full quieting, but your words are t
 
 ## Try it
 
-1. A CW note moves slightly only while each element begins. Is the first suspicion chirp or key clicks? It is chirp, because the frequency is moving; key clicks are sharp wideband edges around the signal.
+1. After you secure a loose VFO board and improve cooling airflow, a five-minute CW practice signal no longer creeps upward in pitch. Why is that a stability repair rather than a keying-edge repair? The change reduced oscillator movement over time; keying-edge shaping would be checked separately for clicks around the signal.
 2. Why does a clean AM voice signal need spectrum on both sides of the carrier? The changing envelope creates upper and lower sidebands, and both carry the audio information.
-3. An SSB ALC meter is pinned on every syllable. What should you do before making more contacts? Reduce microphone gain or processing until voice peaks stay in the recommended ALC range.
+3. A student wants to keep increasing SSB speech processing after reports say the signal is already readable and clean. Why is "more average talk power" not automatically better? Extra processing can make the audio harsh or wider than necessary, so keep it modest and inside the clean peak limit.
 4. A lower-sideband exciter is set to 3 925 kHz and is fed a 600 Hz tone in a bench test. Where is the RF tone? 600 Hz is 0.600 kHz, so the lower-sideband RF is 3 925 - 0.600 = 3 924.400 kHz.
-5. Your FM audio is reported as quiet through a repeater that otherwise hears you well. What setting or habit should you check first? Check deviation, microphone gain, and speaking distance before increasing RF power.
+5. Before joining an FM net with a borrowed hand microphone, why make a short local audio check at normal speaking distance? A different microphone can change deviation and audio level even when the RF path is fine, so set the audio before assuming more power is needed.
 
 ## Radio connection
 

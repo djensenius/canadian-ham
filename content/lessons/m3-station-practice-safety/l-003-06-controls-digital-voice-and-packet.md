@@ -41,7 +41,7 @@ A straight key depends entirely on the operator's hand for timing. An electronic
 
 A microphone is also a station control, not just an accessory. Before using a different microphone, adjust microphone gain and check the transmitted audio. A dynamic microphone uses a coil and magnet principle similar to a small loudspeaker in reverse. Crystal microphones use a piezoelectric element; condenser and electret microphones are capacitor-style elements that may need bias voltage and different gain. Swapping microphone types without checking levels can overdrive the transmitter.
 
-VOX, or voice-operated transmit switching, keys the transmitter when speech is detected. It is convenient for hands-free operating, but it must be adjusted so room noise does not trigger the transmitter and so syllables are not clipped at the start. Do not confuse VOX with oscillator terms: a VFO is a variable frequency oscillator, a VXO is a variable crystal oscillator, and a VCO is a voltage-controlled oscillator.
+VOX, or voice-operated transmit switching, keys the transmitter when speech is detected. It is convenient for hands-free operating, but it must be adjusted so room noise does not trigger the transmitter and so syllables are not clipped at the start. Some radios also provide anti-VOX or anti-trip settings that keep speaker audio or room noise from holding the transmitter on. Do not confuse VOX with oscillator terms: a VFO is a variable frequency oscillator, a VXO is a variable crystal oscillator, and a VCO is a voltage-controlled oscillator.
 
 A transceiver's transmit/receive switching lets one antenna serve both jobs. In receive, the antenna is connected to the receiver input; in transmit, it is connected to the transmitter output while the receiver is protected from transmit power.
 
@@ -108,10 +108,10 @@ A decoded message does not prove the transmitted signal was spectrally clean.
 ## Try it
 
 1. You double your keyer speed before you can space characters steadily. Why might copy get worse even though the keyer makes uniform elements? The keyer controls dit and dah lengths, but the operator still has to leave readable character and word spacing.
-2. A headset triggers transmit whenever the desk fan starts. Which control area should you revisit? VOX sensitivity and delay, because room noise is falsely keying the transmitter.
+2. Your VOX holds the transmitter on for several seconds after each sentence in a quiet room. Which control area should you revisit? VOX release timing or anti-trip behaviour, because hands-free switching should return to receive when speech ends.
 3. A mobile receiver hears sharp clicking bursts from a nearby motor. Is DSP noise reduction or a noise blanker the better first experiment? Try the noise blanker first because the problem is short impulse noise.
 4. Why can a digital radio system send pictures as well as typed text? Pictures can be converted into digital values and sent as data symbols.
-5. A data link detects a checksum failure but has no repeat-request step. Explain why the receiving software should not simply display the damaged frame as if it were valid. Detection only proves the copy is suspect; without a clean repeat, the safe result is to reject it and show a failure.
+5. During a club packet exercise, a station receives duplicate frames through a digipeater after one path is delayed. Why should the software use sequence or frame checks instead of displaying every copy? Packet systems need to recognize which data is valid and current before presenting a message to the operator.
 
 ## Radio connection
 

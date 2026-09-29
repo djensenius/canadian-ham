@@ -35,7 +35,7 @@
         },
         {
           "text": {
-            "en": "Monitor test transmissions into a dummy load before relying on hands-free operation",
+            "en": "Use a closer directional headset microphone so speech is stronger than nearby fan noise",
             "fr": null
           },
           "isCorrect": false
@@ -62,7 +62,7 @@
       "choices": [
         {
           "text": {
-            "en": "Link A is preferable because skipping acknowledgements prevents all message loss",
+            "en": "Link A is preferable because fewer repeats are faster even if a bad frame is kept",
             "fr": null
           },
           "isCorrect": false
@@ -83,7 +83,7 @@
         },
         {
           "text": {
-            "en": "Link B works by turning the form into analog FM audio between retries",
+            "en": "Link B is worse because retries erase the receiver's ability to detect errors",
             "fr": null
           },
           "isCorrect": false
@@ -103,14 +103,14 @@
       "choices": [
         {
           "text": {
-            "en": "About 4 traces",
+            "en": "About 23 traces",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "About 10 traces",
+            "en": "About 50 traces",
             "fr": null
           },
           "isCorrect": false
@@ -124,7 +124,7 @@
         },
         {
           "text": {
-            "en": "About 2,500 traces",
+            "en": "About 2,300 traces",
             "fr": null
           },
           "isCorrect": false
