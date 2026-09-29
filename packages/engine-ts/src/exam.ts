@@ -1,3 +1,4 @@
+import { compareOrdinal } from "./ordinal.ts";
 import { Pcg32, RNG_ALGORITHM, shuffled } from "./rng.ts";
 
 export interface ExamSubsectionInput {
@@ -121,8 +122,4 @@ export function categoryCounts(items: readonly Pick<GeneratedExamItem, "category
 
 function isCanonicalAnswerSourceIndexes(value: readonly number[]): value is readonly [0, 1, 2, 3] {
   return value.length === 4 && value[0] === 0 && value[1] === 1 && value[2] === 2 && value[3] === 3;
-}
-
-function compareOrdinal(a: string, b: string): number {
-  return a < b ? -1 : a > b ? 1 : 0;
 }

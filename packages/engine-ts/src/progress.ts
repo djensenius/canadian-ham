@@ -1,4 +1,5 @@
 import { subsectionIdFromQuestionId } from "./exam.ts";
+import { compareOrdinal } from "./ordinal.ts";
 import { parseCanonicalUtcTimestamp, requireCanonicalUtcTimestamp } from "./timestamps.ts";
 
 const SECONDS_PER_DAY = 86_400;
@@ -133,8 +134,4 @@ function addUtcSeconds(iso: string, seconds: number): string {
 
 function normalizeIso(iso: string): string {
   return new Date(Date.parse(iso)).toISOString();
-}
-
-function compareOrdinal(a: string, b: string): number {
-  return a < b ? -1 : a > b ? 1 : 0;
 }
