@@ -77,6 +77,35 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertTrue(try ProgressStoreService.inMemoryForTests().validate(decoded, bank: bank).isEmpty)
     }
 
+    func testImportsRealisticWebExportWithKnownLessonProgressAndQuizAttempt() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let json = """
+        {
+          "schema": "canadian-ham.progress-export",
+          "version": 1,
+          "exportedAt": "2026-01-02T05:04:05.000Z",
+          "bankId": "\(bank.manifest.bankId)",
+          "questionProgress": [],
+          "examAttempts": [],
+          "lessonProgress": [
+            { "lessonId": "L-005-01", "readAt": "2026-01-02T03:30:00.000Z", "readCount": 2 }
+          ],
+          "lessonQuizAttempts": [
+            { "id": "lesson-quiz-1", "quizId": "QZ-L-005-01-A", "lessonId": "L-005-01", "submittedAt": "2026-01-02T03:45:00.000Z", "correct": 9, "total": 11, "percent": 81.81818181818183, "officialQuestionIds": ["B-005-001-001"], "incorrectOfficialQuestionIds": [], "incorrectConceptCheckIds": ["QZ-L-005-01-A-C1"] }
+          ],
+          "preferences": { "practiceMode": "immediate", "examTimerEnabled": false, "theme": "system" }
+        }
+        """
+        let decoded = try JSONDecoder().decode(ProgressExportV1.self, from: Data(json.utf8))
+        let store = try ProgressStoreService.inMemoryForTests()
+
+        XCTAssertTrue(store.validate(decoded, bank: bank).isEmpty)
+        XCTAssertNoThrow(try store.importData(decoded, bank: bank))
+        let exported = try store.exportData(bank: bank, exportedAt: "2026-01-02T06:04:05.000Z")
+        XCTAssertEqual(exported.lessonProgress, decoded.lessonProgress)
+        XCTAssertEqual(exported.lessonQuizAttempts, decoded.lessonQuizAttempts)
+    }
+
     func testImportValidationChecksLessonRecordShapeKnownIdsAndDuplicates() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         XCTAssertFalse(bank.lessonQuizzes.isEmpty, "Unit-test bundle should include lesson quiz resources for import validation")

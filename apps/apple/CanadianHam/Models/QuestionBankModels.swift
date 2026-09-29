@@ -157,7 +157,10 @@ struct QuestionBank: Sendable {
         self.subsectionsByCategory = Dictionary(grouping: subsections, by: \.categoryId)
         self.subsectionsById = Dictionary(uniqueKeysWithValues: subsections.map { ($0.id, $0) })
         self.lessonQuizzesById = Dictionary(uniqueKeysWithValues: lessonQuizzes.map { ($0.id, $0) })
-        self.knownLessonIds = Set(subsections.flatMap(\.lessonIds))
+        let lessonIdsFromQuizzes = lessonQuizzes.map(\.lessonId).filter { !$0.isEmpty }
+        let lessonIdsFromSubsections = subsections.flatMap(\.lessonIds).filter { !$0.isEmpty }
+        // TODO: Replace this compatibility derivation in the upcoming lessons lane with the full lesson list from packages/content-swift ContentLibrary.
+        self.knownLessonIds = Set(lessonIdsFromQuizzes).union(lessonIdsFromSubsections)
     }
 
     func questions(in category: BankCategory) -> [BankQuestion] {

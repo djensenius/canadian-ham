@@ -69,6 +69,13 @@ final class QuestionBankTests: XCTestCase {
         }
     }
 
+    func testRealBundleKnownLessonIdsCoverAllBundledLessonQuizzes() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+
+        XCTAssertEqual(bank.knownLessonIds.count, 36)
+        XCTAssertTrue(bank.knownLessonIds.contains("L-005-01"))
+    }
+
     func testKnownLessonIdsComeFromSubsectionLessonMappingsWithoutQuizzes() {
         let bank = QuestionBank(
             questions: [],
