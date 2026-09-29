@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-001-001",
+  "questionId": "B-004-001-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-001-001.\n\nWhy the correct answer is right: An amplifier is the circuit block whose job is to increase signal amplitude by using power-supply energy.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Modulator\": A modulator places information onto a carrier; it is not the general term for raising amplitude.\n- sourceIndex 2: \"Oscillator\": An oscillator generates a repeating signal instead of simply increasing an applied signal.\n- sourceIndex 3: \"Multiplier\": A multiplier changes frequency or arithmetic value in other contexts; it is not the usual circuit name for increasing signal amplitude.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-01"
+    },
+    {
+      "type": "question",
+      "id": "B-004-001-001"
+    }
+  ],
+  "licenseClass": "original"
+}

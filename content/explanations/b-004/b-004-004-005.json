@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-004-005",
+  "questionId": "B-004-004-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-004-005.\n\nWhy the correct answer is right: In FET terminology, charge carriers leave the channel at the drain.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Collector\": Collector is the comparable bipolar transistor output terminal, not the FET terminal name.\n- sourceIndex 2: \"Source\": The source is the channel entry terminal in the Basic-level description.\n- sourceIndex 3: \"Gate\": The gate controls the channel but is not the channel exit terminal.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-02"
+    },
+    {
+      "type": "question",
+      "id": "B-004-004-005"
+    }
+  ],
+  "licenseClass": "original"
+}

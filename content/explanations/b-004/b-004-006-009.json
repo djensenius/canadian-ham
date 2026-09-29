@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-006-009",
+  "questionId": "B-004-006-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-006-009.\n\nWhy the correct answer is right: Temperature coefficient specifies fractional resistance change per degree of temperature.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Tolerance\": Tolerance describes manufacturing variation around the nominal value, not change per degree.\n- sourceIndex 2: \"Power rating\": Power rating describes heat dissipation capability, not fractional change per degree.\n- sourceIndex 3: \"Ohmic value\": Ohmic value is the nominal resistance, not the temperature-change rating.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-03"
+    },
+    {
+      "type": "question",
+      "id": "B-004-006-009"
+    }
+  ],
+  "licenseClass": "original"
+}

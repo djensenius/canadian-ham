@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-006-001",
+  "questionId": "B-004-006-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-006-001.\n\nWhy the correct answer is right: In the common resistor colour code, the tolerance is shown by the fourth band, usually separated from the value bands.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Third\": The third band is the multiplier in the common four-band code.\n- sourceIndex 2: \"Second\": The second band is the second significant digit.\n- sourceIndex 3: \"First\": The first band is the first significant digit.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-03"
+    },
+    {
+      "type": "question",
+      "id": "B-004-006-001"
+    }
+  ],
+  "licenseClass": "original"
+}

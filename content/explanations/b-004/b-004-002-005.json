@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-002-005",
+  "questionId": "B-004-002-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-002-005.\n\nWhy the correct answer is right: A semiconductor diode has two electrodes named anode and cathode.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"gate and source\": Gate and source are FET terminal names.\n- sourceIndex 2: \"collector and base\": Collector and base are bipolar transistor terminal names, not diode electrode names.\n- sourceIndex 3: \"cathode and drain\": Cathode is a diode terminal, but drain is a FET terminal, so the pair is mismatched.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-01"
+    },
+    {
+      "type": "question",
+      "id": "B-004-002-005"
+    }
+  ],
+  "licenseClass": "original"
+}

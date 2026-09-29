@@ -1,0 +1,139 @@
+{
+  "id": "QZ-L-004-03-A",
+  "lessonId": "L-004-03",
+  "officialQuestionIds": [
+    "B-004-006-001",
+    "B-004-006-002",
+    "B-004-006-003",
+    "B-004-006-004",
+    "B-004-006-006",
+    "B-004-006-007",
+    "B-004-006-010",
+    "B-004-006-011"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-004-03-A-C1",
+      "prompt": {
+        "en": "A resistor reads grey, red, brown, gold. What nominal value do the first three bands give?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "82 ohms",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "820 ohms",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "8 200 ohms",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "92 ohms",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "Grey and red form 82, and brown is the x 10 multiplier, so the nominal value is 82 x 10 = 820 ohms.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-004-03-A-C2",
+      "prompt": {
+        "en": "You measure a 1 kohm resistor as 1 080 ohms. Which marked part could still be within its tolerance?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "A 1 kohm +/-1% part only",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Both a 1 kohm +/-1% part and a 1 kohm +/-10% part",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "A 1 kohm +/-10% part only",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Neither part, because 1 080 ohms is outside both ranges",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "A 1 kohm +/-1% resistor may range from 990 to 1 010 ohms, while +/-10% allows 900 to 1 100 ohms; 1 080 ohms fits only the wider tolerance.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-004-03-A-C3",
+      "prompt": {
+        "en": "A 330 ohm resistor uses orange, orange, brown for its first three bands. Which multiplier colour would make the same first two digits into 3.3 kohms?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Brown",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Red",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Orange",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Gold",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "Orange-orange gives the digits 33. Red is the x 100 multiplier, so 33 x 100 = 3 300 ohms, or 3.3 kohms.",
+        "fr": null
+      }
+    }
+  ]
+}

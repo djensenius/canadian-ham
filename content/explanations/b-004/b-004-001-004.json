@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-001-004",
+  "questionId": "B-004-001-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-001-004.\n\nWhy the correct answer is right: A microphone produces an audio-frequency signal, so the correct stage for increasing it is an audio amplifier.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"an RF oscillator\": An RF oscillator creates a radio-frequency signal instead of raising microphone audio.\n- sourceIndex 2: \"an RF amplifier\": An RF amplifier works at radio frequencies, not directly on the microphone audio signal.\n- sourceIndex 3: \"an audio oscillator\": An audio oscillator creates a tone; it is not the stage used to raise an existing microphone signal.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-01"
+    },
+    {
+      "type": "question",
+      "id": "B-004-001-004"
+    }
+  ],
+  "licenseClass": "original"
+}

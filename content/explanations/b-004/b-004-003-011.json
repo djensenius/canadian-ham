@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-003-011",
+  "questionId": "B-004-003-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-003-011.\n\nWhy the correct answer is right: Driving a transistor between saturation and cut-off makes it act as an on/off switch.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"An inverter\": An inverter may be built from a switching transistor in logic, but the direct behaviour described is switching.\n- sourceIndex 2: \"An amplifier\": Linear amplification uses the active region, not alternate saturation and cut-off.\n- sourceIndex 3: \"A timer\": A timer requires additional timing components or circuitry; the transistor action alone is switching.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-02"
+    },
+    {
+      "type": "question",
+      "id": "B-004-003-011"
+    }
+  ],
+  "licenseClass": "original"
+}
