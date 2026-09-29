@@ -54,7 +54,23 @@ final class CanadianHamPracticeUITests: XCTestCase {
         assertSingleLanguagePicker(in: app, context: "practice")
     }
 
-    func testAccessibilityAuditCategoryListAndAnsweredPracticeScreen() throws {
+    func testAccessibilityAuditCategoryListUnansweredAndAnsweredPracticeScreens() throws {
+        XCUIDevice.shared.appearance = .light
+        defer { XCUIDevice.shared.appearance = .light }
+
+        try auditFastPracticeFlow(appearance: .light)
+
+        XCUIDevice.shared.appearance = .dark
+        try auditFastPracticeFlow(appearance: .dark)
+
+        XCUIDevice.shared.appearance = .light
+    }
+
+    func testA11yDiagnosticsEvidenceHarness() throws {
+        guard ProcessInfo.processInfo.environment["CANADIAN_HAM_RUN_A11Y_DIAGNOSTICS"] == "1" else {
+            throw XCTSkip("Set CANADIAN_HAM_RUN_A11Y_DIAGNOSTICS=1 to run the opt-in accessibility evidence/position-log diagnostic harness.")
+        }
+
         XCUIDevice.shared.appearance = .light
         defer { XCUIDevice.shared.appearance = .light }
 
@@ -116,6 +132,44 @@ final class CanadianHamPracticeUITests: XCTestCase {
             200,
             "Longest answer should expose its full multi-line text height at the largest Dynamic Type size rather than clipping to one line"
         )
+    }
+
+    private func auditFastPracticeFlow(appearance: AuditAppearance) throws {
+        let app = configuredApp()
+        app.launchArguments += [
+            "-CanadianHamShowCategoryList",
+            "-CanadianHamPracticeQuestionID", fastAuditPracticeQuestionID
+        ]
+        app.launch()
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.staticTexts["Practice categories"].firstMatch.waitForExistence(timeout: 10), "Category list should render before the category-list audit")
+        try performFastAccessibilityAudit(on: app, context: "\(appearance.rawValue) category list")
+
+        let category = app.staticTexts["Circuit Components"].firstMatch
+        XCTAssertTrue(category.waitForExistence(timeout: 5), "Fast audit category should be visible on the category list")
+        category.tap()
+
+        XCTAssertTrue(app.staticTexts["What is inside the envelope of a triode tube?"].firstMatch.waitForExistence(timeout: 10), "Fast audit question should render before the unanswered practice audit")
+        try performFastAccessibilityAudit(on: app, context: "\(appearance.rawValue) unanswered practice")
+
+        answerFastAuditQuestionCorrectly(in: app)
+        _ = waitForAnswerFeedback(in: app)
+        try performFastAccessibilityAudit(on: app, context: "\(appearance.rawValue) answered practice")
+    }
+
+    private func performFastAccessibilityAudit(on app: XCUIApplication, context: String) throws {
+        if #available(iOS 17.0, *) {
+            try app.performAccessibilityAudit()
+        } else {
+            throw XCTSkip("performAccessibilityAudit is unavailable before iOS 17 for \(context).")
+        }
+    }
+
+    private func answerFastAuditQuestionCorrectly(in app: XCUIApplication) {
+        let correctAnswer = app.staticTexts["A vacuum"].firstMatch
+        XCTAssertTrue(correctAnswer.waitForExistence(timeout: 5), "Known correct answer should be visible in the fast audit question")
+        correctAnswer.tap()
     }
 
     private func auditCategoryListAndAnsweredPracticeScreen(appearance: AuditAppearance) throws {
@@ -196,6 +250,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private var auditPracticeQuestionID: String { "B-001-001-004" }
+    private var fastAuditPracticeQuestionID: String { "B-004-005-008" }
 
     private func navigateToPracticeIfNeeded(in app: XCUIApplication) {
         if app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10) {

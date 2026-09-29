@@ -41,6 +41,24 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/ap
 
 Scheme: `CanadianHam`.
 
+## Accessibility audit tests
+
+The default iOS UI suite includes a fast deterministic accessibility regression that runs `performAccessibilityAudit()` with no allow-list in light and dark appearances for:
+
+- the category list;
+- an unanswered fixed practice question (`B-004-005-008`);
+- the same practice question after answering it correctly.
+
+The heavier T-516 diagnostic harness (screenshots, position logs, and raw audit findings for the two-pass audit) is skipped by default. Run it only when collecting accessibility evidence:
+
+```sh
+CANADIAN_HAM_RUN_A11Y_DIAGNOSTICS=1 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testA11yDiagnosticsEvidenceHarness test CODE_SIGNING_ALLOWED=NO
+apps/apple/scripts/export_a11y_evidence.sh /path/to/Test-CanadianHam-....xcresult
+apps/apple/scripts/measure_a11y_contrast.py apps/apple/docs/a11y-evidence
+```
+
+Do not commit refreshed `apps/apple/docs/a11y-evidence/` output unless the diagnostic was intentionally run for an evidence update.
+
 ## Privacy posture
 
 - Fully offline runtime: no networking code, no analytics, no telemetry, no remote fonts/CDNs, no third-party SDKs, no iCloud/CloudKit.
