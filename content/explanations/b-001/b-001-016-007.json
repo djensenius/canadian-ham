@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-016-007.\n\nWhy the correct answer is right: Single sideband is prohibited in the 10.100 MHz to 10.150 MHz band.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"18.068 MHz to 18.168 MHz\": 18.068 MHz to 18.168 MHz is not the band where the bank prohibits SSB.\n- sourceIndex 2: \"24.890 MHz to 24.990 MHz\": 24.890 MHz to 24.990 MHz is not the official SSB-prohibited range.\n- sourceIndex 3: \"7.000 MHz to 7.300 MHz\": 7.000 MHz to 7.300 MHz is not the choice with the SSB prohibition in this question.",
+    "en": "Question B-001-016-007.\n\nWhy the correct answer is right: Single sideband is prohibited in the 10.100 MHz to 10.150 MHz band.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"18.068 MHz to 18.168 MHz\": This range sits in the 7 MHz to 25 MHz group with a 6 kHz limit, rather than in the special 10.100 MHz to 10.150 MHz band where SSB is prohibited.\n- sourceIndex 2: \"24.890 MHz to 24.990 MHz\": This range is another 7 MHz to 25 MHz HF choice governed by the 6 kHz group limit, not by the special SSB-prohibited 10.100 MHz to 10.150 MHz rule.\n- sourceIndex 3: \"7.000 MHz to 7.300 MHz\": This is the 40-metre band; ordinary SSB voice is about 2 kHz to 3 kHz wide and fits within a 6 kHz HF limit, so it is not the special SSB-prohibited band.",
     "fr": null
   },
   "citations": [

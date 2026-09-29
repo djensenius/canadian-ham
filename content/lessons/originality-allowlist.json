@@ -16,17 +16,27 @@
   },
   {
     "lessonId": "L-001-04",
-    "blockHeading": "HF band ranges named in the bank",
-    "reason": "Regulatory fact table: band ranges are established by official answers."
+    "blockHeading": "Reference facts: HF band ranges named in the bank",
+    "reason": "Reference fact table: band ranges are established by official answers and are intentionally taught as single facts rather than Try-its."
   },
   {
     "lessonId": "L-001-04",
-    "blockHeading": "Bandwidth fact table",
-    "reason": "Regulatory fact table: bandwidth and mode-limit values are established by official answers."
+    "blockHeading": "Reference facts: bandwidth limits",
+    "reason": "Reference fact table: bandwidth and mode-limit values are established by official answers and are intentionally taught as single facts rather than Try-its."
   },
   {
     "lessonId": "L-001-04",
-    "blockHeading": "Power limit fact table",
-    "reason": "Regulatory fact table: power values are established by official answers and RBR-4."
+    "blockHeading": "Reference facts: power limits",
+    "reason": "Reference fact table: power values are established by official answers and RBR-4 and are intentionally taught as single facts rather than Try-its."
+  },
+  {
+    "lessonId": "L-001-04",
+    "blockHeading": "Reference facts: mode-fit cues from the bank",
+    "reason": "Reference fact table: mode-width cues are drawn from official B-001 and B-003 answers so B-001-016 explanations can reason about mode fit without copying a worked example."
+  },
+  {
+    "lessonId": "L-001-04",
+    "blockHeading": "Reference facts: station-type cues",
+    "reason": "Reference fact table: station-type cues are drawn from official answer/distractor terms to explain B-001-018 station-role distinctions."
   }
 ]

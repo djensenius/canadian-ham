@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-019-004.\n\nWhy the correct answer is right: Amateur voice communications may use a maximum of 100% modulation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"75%\": 75% is below the permitted maximum and is not the regulatory limit in the bank.\n- sourceIndex 2: \"50%\": 50% is also below the allowed maximum modulation percentage.\n- sourceIndex 3: \"90%\": 90% is not the official maximum; the bank gives the full 100% value.",
+    "en": "Question B-001-019-004.\n\nWhy the correct answer is right: Amateur voice communications may use a maximum of 100% modulation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"75%\": A 75% ceiling would incorrectly make the allowed 75-to-100% range unavailable; the bank sets the maximum at 100%.\n- sourceIndex 2: \"50%\": A 50% ceiling would be only half modulation and is far below the voice maximum in the bank.\n- sourceIndex 3: \"90%\": A 90% ceiling is close enough to be a tempting safety margin, but the regulatory maximum named by the bank is 100%.",
     "fr": null
   },
   "citations": [

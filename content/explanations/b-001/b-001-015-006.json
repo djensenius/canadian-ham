@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-015-006.\n\nWhy the correct answer is right: The 160-metre band range in the bank is 1.8 MHz to 2.0 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"1.5 MHz to 2.0 MHz\": 1.5 MHz to 2.0 MHz begins too low and includes spectrum not in the official answer.\n- sourceIndex 2: \"2.0 MHz to 2.25 MHz\": 2.0 MHz to 2.25 MHz starts at the upper edge instead of covering the 160-metre band.\n- sourceIndex 3: \"2.25 MHz to 2.5 MHz\": 2.25 MHz to 2.5 MHz is above the range the bank gives for 160 metres.",
+    "en": "Question B-001-015-006.\n\nWhy the correct answer is right: The 160-metre band range in the bank is 1.8 MHz to 2.0 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"1.5 MHz to 2.0 MHz\": This starts too low and includes spectrum below the 1.8 MHz lower edge.\n- sourceIndex 2: \"2.0 MHz to 2.25 MHz\": This starts at the upper edge instead of covering the 160-metre band.\n- sourceIndex 3: \"2.25 MHz to 2.5 MHz\": This entire range is above the 160-metre range the bank gives.",
     "fr": null
   },
   "citations": [

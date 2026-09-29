@@ -26,36 +26,36 @@
   "conceptChecks": [
     {
       "id": "QZ-L-001-04-A-C1",
-      "prompt": { "en": "An operator measures 540 W PEP at the transmitter output and then notes that the feedline will lose some power before the antenna. What conclusion follows from the lesson's measurement-point discussion?", "fr": null },
+      "prompt": { "en": "A Basic-only operator without honours is offered two ways to use 29.62 MHz: a repeater whose output is on 29.62 MHz, or a direct simplex contact on 29.62 MHz. What prediction follows from the lesson's two privilege rules?", "fr": null },
       "choices": [
-        { "text": { "en": "The feedline loss lets the operator raise transmitter output until antenna-end power reaches the limit.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The transmitter-output reading remains the compliance check; feedline loss is not extra permission.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Only the tuner output matters once a tuner is installed.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "PEP limits stop applying when the path includes coax loss.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Both are treated alike because every 29.62 MHz amateur transmission is above the Basic-only boundary.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The repeater-output case can fit the bank's Basic-only repeater exception, but the simplex contact still falls below the 30 MHz gate.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The simplex contact is allowed because it is not automatic, but the repeater is barred until the operator holds Advanced.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Neither case can ever fit Basic-only operation because 29.62 MHz is below 30 MHz.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "The lesson separates the compliance measurement point from later antenna-system losses. Loss after the transmitter or amplifier does not create a larger transmitter-output allowance.", "fr": null }
+      "explanation": { "en": "This is the repeater exception reconciled with the below-30-MHz gate. The bank names Basic-only use of repeaters starting at 29.500 MHz output, but that does not turn every below-30-MHz simplex contact into a Basic-only privilege.", "fr": null }
     },
     {
       "id": "QZ-L-001-04-A-C2",
-      "prompt": { "en": "A signal is too close to a band edge. Which action would NOT help keep the entire occupied bandwidth inside the amateur band?", "fr": null },
+      "prompt": { "en": "Rank these maximum bandwidth settings from narrowest regulatory limit to widest: 10.12 MHz, 14.2 MHz, 29.6 MHz, and 146 MHz.", "fr": null },
       "choices": [
-        { "text": { "en": "Move the displayed frequency farther from the edge before transmitting.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Choose a narrower emission that still suits the contact.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Verify the occupied bandwidth rather than only the carrier display.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Increase transmitter power so the same wide signal finishes sooner.", "fr": null }, "isCorrect": true }
+        { "text": { "en": "10.12 MHz, then 14.2 MHz, then 29.6 MHz, then 146 MHz", "fr": null }, "isCorrect": true },
+        { "text": { "en": "14.2 MHz, then 10.12 MHz, then 146 MHz, then 29.6 MHz", "fr": null }, "isCorrect": false },
+        { "text": { "en": "29.6 MHz, then 14.2 MHz, then 10.12 MHz, then 146 MHz", "fr": null }, "isCorrect": false },
+        { "text": { "en": "146 MHz, then 29.6 MHz, then 14.2 MHz, then 10.12 MHz", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Power does not make the occupied bandwidth fit inside the band. Frequency placement, emission width, and checking the whole occupied signal address the band-edge problem.", "fr": null }
+      "explanation": { "en": "The special 10.100 MHz to 10.150 MHz band is less than 6 kHz, the 7 MHz to 25 MHz group such as 14.2 MHz uses 6 kHz, 29.6 MHz is in the 20 kHz 10-metre range, and 146 MHz is in the 30 kHz 2-metre range.", "fr": null }
     },
     {
       "id": "QZ-L-001-04-A-C3",
-      "prompt": { "en": "A station setup sheet puts 'turn on amplifier' before 'confirm operator privileges.' What is the procedural error?", "fr": null },
+      "prompt": { "en": "Spot the error in this SSB troubleshooting note: 'The PEP meter is below the Basic limit, so a distorted voice report cannot be a regulatory problem; raise microphone gain until the other station hears you.'", "fr": null },
       "choices": [
-        { "text": { "en": "Privilege checks belong before equipment choices, because hardware does not decide what the operator may do.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Amplifiers should always be turned on before frequency, mode, and qualification are considered.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The order is harmless because a checklist cannot affect compliance.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The sheet should replace the privilege check with an antenna-length check.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "The note treats the PEP limit as if it replaces the separate overmodulation control and 100% voice-modulation ceiling.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The note should say that SSB has no peak-envelope power limit at all.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The note should solve distorted voice reports by switching to an unmodulated carrier for the contact.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The note's only error is that Basic stations must always use Advanced SSB power limits.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "The checklist should put the legal permission check before power and hardware setup. Equipment capability is not the same thing as operating privilege.", "fr": null }
+      "explanation": { "en": "Power and modulation quality are separate checks. Staying under the SSB PEP limit does not waive the requirement for means to prevent or indicate overmodulation or the 100% voice-modulation maximum.", "fr": null }
     }
   ]
 }

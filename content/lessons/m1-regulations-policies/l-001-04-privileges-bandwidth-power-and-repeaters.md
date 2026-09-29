@@ -47,9 +47,9 @@ The controlling qualification matters. Extra certificates do not rub off from th
 
 The beginner-safe rule is simple: operate inside the privileges that apply to the current control situation. If that check feels unclear, stop and sort out the control operator and call sign before RF leaves the station.
 
-### Worked example: club station handoff
+### Worked example: station label versus operating authority
 
-A club has a station with an amplifier and several antennas. A Basic-only operator takes the microphone while an Advanced operator sits nearby. The safe privilege check is still the Basic operator's certificate and the call sign being used. The station's hardware does not upgrade the operator.
+A transceiver memory is labelled "high-power HF," but the operator at the controls has only the privileges that apply to that operator and call sign. The label is useful for station organization; it does not decide whether the operator may use the frequency, emission, or power setting.
 
 ## The below-30-MHz gate
 
@@ -57,7 +57,9 @@ The bank and exam-facts record establish a specific extra gate for amateur frequ
 
 Basic qualification by itself supports all amateur bands above 30 MHz. The bank also establishes that radio-controlled models may be operated on all amateur bands above 30 MHz.
 
-## HF band ranges named in the bank
+The repeater facts below add a narrow, bank-tested exception to the simple boundary: holders of only a Basic Qualification may use repeaters whose output is 29.500 MHz and above, with the bank naming 29.500 MHz to 29.700 MHz as the lowest output segment. Treat that as a repeater-output rule, not as a general permission for every below-30-MHz contact.
+
+## Reference facts: HF band ranges named in the bank
 
 The official bank asks for several Canadian HF band ranges. Learn them as ranges, not as vague band names:
 
@@ -72,13 +74,13 @@ The official bank asks for several Canadian HF band ranges. Learn them as ranges
 
 ### Worked example: privilege before band choice
 
-An operator with Basic only wants to join a voice net below the VHF range. The first planning question is not antenna length or microphone gain. It is whether the operator has the required below-30-MHz authorization. If not, choose an above-30-MHz amateur path that fits the operator's certificate.
+An operator with Basic only wants a plan for a weekend contact and is choosing between a VHF simplex channel and an HF voice frequency. The first planning question is not antenna length or microphone gain. It is whether the operator has the required below-30-MHz authorization for the HF option; otherwise, the plan must stay with an above-30-MHz amateur path or another privilege the bank specifically permits.
 
 ## Bandwidth limits and band edges
 
 Bandwidth limits control how much spectrum one transmission occupies.
 
-### Bandwidth fact table
+### Reference facts: bandwidth limits
 
 | Frequency range or band | Maximum bandwidth fact from the bank |
 |---|---|
@@ -87,21 +89,34 @@ Bandwidth limits control how much spectrum one transmission occupies.
 | Amateur bands between 7 MHz and 25 MHz, except the special narrow band named below | 6 kHz |
 | 10.100 MHz to 10.150 MHz | less than 6 kHz; single sideband is prohibited |
 
+### Reference facts: mode-fit cues from the bank
+
+The B-001 bandwidth questions rely on mode-width cues that the wider question bank also teaches:
+
+| Mode or signal | Bank-supported cue for this lesson |
+|---|---|
+| CW / Morse radiotelegraphy | Narrower than SSB voice and FM voice; CW fits narrow-band examples in B-001-016. |
+| FT8 | Narrow digital bandwidth; the bank says many FT8 contacts fit in the space needed for one SSB transmission. |
+| SSB voice | Usual bandwidth is between 2 kHz and 3 kHz; the 10.100 MHz to 10.150 MHz band is a special case where SSB is prohibited. |
+| FM voice | A 5 kHz-deviation FM signal occupies between 10 kHz and 20 kHz, and the bank says FM below 28 MHz would exceed regulatory bandwidth limits. |
+| Slow-scan television (SSTV) | The bank treats SSTV on 14.23 MHz as not prohibited in the B-001 mode-choice item. |
+| Fast-scan television (ATV) | The bank treats fast-scan ATV as too wide for 145 MHz and for 14.23 MHz, but not as prohibited by the same item on 440 MHz. |
+
 ### Band-edge and mode planning
 
 When transmitting near a band edge, leave enough room for the whole signal shape. Do not place only the carrier or display frequency inside the edge and let sidebands or occupied data energy spill outside.
 
-The bank gives examples of mode-and-frequency combinations that do not fit their limits. The lesson principle is broader: check both the frequency and the occupied bandwidth before transmitting.
+The bank gives examples of mode-and-frequency combinations that do and do not fit their limits. The lesson principle is broader: check both the frequency and the occupied bandwidth before transmitting.
 
-### Worked example: planning a digital signal near an edge
+### Worked example: upper-edge arithmetic
 
-A narrow data signal is planned near a band boundary. The operator leaves guard space so the whole occupied signal remains inside the band, then verifies the emission setting before transmitting. Moving closer to the edge might look tidy on the frequency display, but the occupied signal, not just the displayed number, must fit.
+A 2.4 kHz-wide SSB signal is being planned near the top of the 20-metre range. If the operator's displayed frequency would put part of that occupied signal above 14.350 MHz, the contact needs a lower setting or a different plan. The displayed number is not enough; the full occupied signal has to fit.
 
 ## Power quantities and limits
 
 Use the minimum legal power necessary to communicate. After you choose a power that also satisfies RF-exposure and radiated-power constraints, check the RF output point of the transmitter or external amplifier rather than a later point in the antenna system.
 
-### Power limit fact table
+### Reference facts: power limits
 
 | Qualification context | Limit established for this lesson |
 |---|---|
@@ -115,13 +130,22 @@ Use the minimum legal power necessary to communicate. After you choose a power t
 
 The important study habit is to keep the power quantity attached to the rule. DC input, carrier power, PEP, ERP, and EIRP are not interchangeable labels.
 
-### Worked example: choosing the measurement point
+### Worked example: switching modes changes the power quantity
 
-A station has a transceiver, then an external amplifier, then a tuner. For the regulatory transmitter-power check taught here, the operator reads the RF power before the tuner and feedline can change the number with losses or matching effects.
+A station log shows one entry for SSB peak-envelope power and another for a non-SSB carrier-power setting. The operator cannot reuse the SSB PEP number as though it were the carrier-power limit for a different emission. The rule being applied decides which power quantity is being checked.
 
 ## Repeaters and automatic transmissions
 
-A repeater station listens to one station and retransmits what it hears for other stations. The bank establishes that holders of only a Basic Qualification may use repeaters with output at 29.500 MHz and above, with the lowest named output segment being 29.500 MHz to 29.700 MHz.
+A repeater station listens to one station and automatically retransmits what it hears for other stations. The bank establishes that holders of only a Basic Qualification may use repeaters with output at 29.500 MHz and above, with the lowest named output segment being 29.500 MHz to 29.700 MHz.
+
+### Reference facts: station-type cues
+
+| Station type named in the bank | Cue used in this lesson |
+|---|---|
+| Repeater station | Automatically retransmits signals from other stations. |
+| Beacon station | The bank elsewhere identifies a beacon station as a type that may transmit one-way communications; that is different from retransmitting other stations. |
+| Remote-control station | The name points to station control from a control point; it is not the station type the bank defines by automatic retransmission. |
+| Satellite control station | The name points to controlling satellite functions; it is not the general automatic-retransmission station in the B-001-018 item. |
 
 An unmodulated carrier is a narrow testing tool, not a way to reserve a channel. The bank limits that kind of carrier to brief tests below the 30 MHz boundary.
 
@@ -131,17 +155,17 @@ Canadian regulations require amateur frequency stability equivalent to crystal c
 
 For voice quality, the station must have means to prevent or indicate overmodulation for SSB, and amateur voice communications have a maximum modulation percentage of 100%. Treat overmodulation as both a technical problem and a compliance problem because it can spread energy and make speech less readable.
 
-### Worked example: SSB audio check
+### Worked example: clean audio before more drive
 
-An operator receives reports that an SSB signal sounds harsh during voice peaks. The next step is not to add more drive. The operator checks the audio-drive setting and overmodulation indication so the signal stays within the required quality limit.
+An SSB signal report says the speech peaks sound distorted. The next step is not to add more microphone gain just because the contact is weak. The operator checks the overmodulation indication or prevention method and keeps voice modulation within the required limit.
 
 ## Try it
 
-1. A Basic-only operator is invited to use an Advanced operator's station under the Basic operator's call sign. Which privilege set applies? The Basic operator's own privileges apply; the station and helper do not add certificate qualifications.
-2. A new operator passed Basic but did not reach the honours mark and has not passed Advanced or Morse. What should the operator do before planning contacts below the 30 MHz boundary? Choose above-30-MHz operation for now, or earn one of the required qualifications first.
-3. A signal display is set just inside a band edge, but the occupied signal extends beyond the edge. Is that acceptable? No. The entire occupied bandwidth must stay inside the amateur band.
-4. An SSB station with Basic privileges is adjusted from 480 W PEP to 575 W PEP. What changed? It moved from within the Basic SSB PEP limit to above that limit, so the operator must reduce power.
-5. A repeater automatically retransmits other stations and has an output just above 29.5 MHz. Why is that output detail important for a Basic-only operator? The bank names 29.500 MHz, and the 29.500 MHz to 29.700 MHz segment, as the low end of repeaters that Basic-only holders may use.
+1. A Basic-only operator with no honours is choosing between a 52 MHz simplex contact, a 14.2 MHz simplex contact, and a repeater whose output is 29.62 MHz. Which choices need more qualification, and which one uses the repeater exception? The 52 MHz contact fits Basic by itself, the 14.2 MHz simplex contact needs the below-30-MHz gate, and the 29.62 MHz repeater output can fit the Basic-only repeater rule.
+2. A voice-width signal is being placed near the upper edge of one HF band from the reference table by an operator who knows the displayed frequency is inside the band. What must the frequency plan prove before transmitting? The plan must combine that table edge with the band-edge rule: the entire occupied signal, not only the display frequency, must remain inside the band.
+3. A mid-HF mode choice comes down to ordinary SSB, FT8, or fast-scan ATV. How do the mode-width and HF bandwidth facts decide the plan? SSB and FT8 are narrow enough for the HF context taught here, while fast-scan ATV is treated by the bank as too wide for that HF-width group.
+4. An SSB station with Basic privileges is adjusted from 480 W PEP to 575 W PEP after the operator remembers to use minimum legal power. What changed? The setting moved from within the Basic SSB PEP limit to above that limit, and the minimum-power principle points in the same direction: reduce power rather than keep the higher setting.
+5. A net wants to hold a below-30-MHz channel by transmitting an unmodulated carrier until the meeting starts, and the frequency is close to other activity. Which two checks reject the plan? An unmodulated carrier is only for brief tests below 30 MHz, and any test transmission must avoid interfering with amateur or other services.
 
 ## Radio connection
 
@@ -168,8 +192,8 @@ Description: Draw a horizontal station chain from operator certificate to transc
 
 - Operating privileges stay tied to the relevant operator and call sign qualifications.
 - Frequencies below 30 MHz require the additional Basic-with-Honours, Advanced, or Morse gate; Basic alone covers amateur bands above that boundary.
-- Learn the bank's named HF band ranges and bandwidth limits as exact study facts.
+- Basic-only repeater use has the bank's specific 29.500 MHz-and-above output exception; do not turn it into a general below-30-MHz privilege.
+- Learn the bank's named HF band ranges, bandwidth limits, and mode-width cues as exact study facts.
 - Near a band edge, the entire occupied bandwidth must remain inside the amateur band.
 - Use the minimum legal power needed, and apply the correct Basic or Advanced power quantity.
-- Repeaters automatically retransmit; Basic-only holders may use repeaters starting at the bank's named low output segment.
-- Frequency stability, frequency measurement, and voice overmodulation controls are part of compliant station operation.
+- Repeaters automatically retransmit; frequency stability, frequency measurement, and voice overmodulation controls are part of compliant station operation.

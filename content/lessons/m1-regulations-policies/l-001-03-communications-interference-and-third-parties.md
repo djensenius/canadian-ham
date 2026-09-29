@@ -47,9 +47,9 @@ A harmful interference problem is one that seriously degrades, blocks, or repeat
 
 Deliberately interfering with another amateur station is not acceptable. Crowded conditions, a suspected rule breach, or someone arriving on a frequency you were using do not turn deliberate interference into a remedy. If a harmful-interference finding is made by the Minister of Innovation, Science and Industry, the station can be ordered to stop operating or to change how it operates.
 
-### Worked example: crowded net frequency
+### Worked example: two groups on one activity frequency
 
-A local voice net and a digital practice group both want the same clear spot for an evening exercise. The first useful step is not to cover the other signal. The operators listen, coordinate, move if necessary, and keep their transmissions from becoming the interference event they are trying to avoid.
+At a community event, a route-support team and an equipment-practice team discover they are trying to use the same clear channel. The compliant habit is to pause, listen, coordinate, and pick an arrangement that does not turn either team's transmission into harmful interference. More power or a longer transmission would only make the shared problem worse.
 
 ## Primary and secondary service thinking
 
@@ -57,9 +57,9 @@ Some bands are shared with other radio services. When the amateur service is sec
 
 The 902 MHz to 928 MHz range may also be heavily occupied by licence-exempt devices. That does not make those devices amateur stations, and it does not guarantee a quiet amateur path. It is a reminder to choose equipment, antennas, and expectations for a shared environment.
 
-### Worked example: shared-band repeater experiment
+### Worked example: planning a noisy shared-band path
 
-A club tests a short-range link in a shared UHF environment. During setup, they hear a strong non-amateur signal occupying the same part of the band. The compliant plan is to pause, retune, reduce the problem, or choose another arrangement so the amateur test does not interfere with the other service.
+A telemetry practice link in the 902 MHz to 928 MHz range works in the morning and becomes unreliable near several licence-exempt devices in the afternoon. The lesson is not that the other devices have become amateur stations. It is that this range is a poor place to assume protection from outside interference, so the club plans a fallback path instead of treating the noise as an enforceable amateur priority.
 
 ## Test transmissions
 
@@ -73,11 +73,11 @@ Ordinary amateur stations communicate with other amateur stations. Disaster and 
 
 The emergency exceptions are tied to immediate need. A distressed operator may use whatever radio method is necessary, and a station that hears an unanswered distress call on an amateur band may answer even if the band would normally be outside that operator's privileges. If your own station is part of the distress response, a transmission that would otherwise be interference can be justified for that emergency work. The usual power ceilings do not restrict a station that is itself in distress.
 
-Amateur broadcasting is generally not the service's purpose, but safety traffic about people or property is allowed. During a disaster, an amateur station may send the traffic needed for relief when ordinary communication systems cannot carry the load or are broken. Operators outside the relief net protect it by staying clear of the net frequency area unless they have needed traffic.
+Amateur broadcasting is generally not the service's purpose, but safety traffic about people or property is allowed. During a disaster, an amateur station may send the traffic needed for relief when ordinary communication systems cannot carry the load or are broken. Operators outside the relief net protect it by keeping routine transmissions away from the net frequency area unless they have needed traffic.
 
-### Worked example: keeping the relief channel usable
+### Worked example: sorting emergency need from convenience
 
-A neighbourhood group hears a formal relief net coordinating supplies after a windstorm. One operator has no traffic for the net but wants to check a new microphone. The correct operating habit is to stay off that frequency area for the test. The net's value depends on leaving room for stations with essential messages.
+After an ice storm, a neighbourhood check-in group can still pass routine social updates by ordinary means, but one shelter's communication path for welfare and property-protection messages has failed. The amateur station keeps the routine chatter out of the relief channel and uses amateur allocations for the needed shelter traffic. The emergency facts make room for essential communication; they do not make every convenient message an exception.
 
 ## Public-service messages, privacy, and payment
 
@@ -85,9 +85,9 @@ The bank allows amateur support for recognized public-service agencies in normal
 
 For privacy, the bank separates amateur transmissions from other non-broadcast radiocommunications. Amateur-station transmissions can be divulged or used. For other non-broadcast traffic, passing the contents to a media organization as an answer to questions is the prohibited case. The bank contrasts that with allowed purposes such as preventing harm, protecting property, court evidence, and national defence or security.
 
-### Worked example: community-agency exercise
+### Worked example: public-service drill script
 
-A food bank asks a radio club to practise passing shelter-supply counts during an exercise. The club can support recognized public-service practice, but operators must keep the work non-commercial. They should not accept a fee for handling the traffic, and they should avoid turning received non-amateur content into media commentary.
+A recognized agency asks a radio club to practise passing short shelter-status messages. The club keeps the exercise non-commercial, declines anything of value for the message handling, and writes the script so operators do not turn overheard non-amateur information into media answers. That keeps the public-service permission, the payment rule, and the privacy boundary pointing in the same direction.
 
 ## Call signs and identification
 
@@ -95,29 +95,31 @@ A Canadian amateur call sign normally starts with VA, VE, VO, or VY. To identify
 
 The same identification rules apply to test transmissions and radio contacts. Unidentified amateur communications are allowed only to control a model craft.
 
-### Worked example: a long technical contact
+### Worked example: test-bench timing card
 
-Two operators spend an evening comparing antenna changes. They identify as they begin, again before any 30-minute interval expires, and again when they finish. They do not need to read legal names or equipment lists to identify; the required station identifier is the call sign.
+A station bench has a timing card beside the transmitter for repeated short antenna checks. The card says to identify with the station call sign when the test sequence starts, before any half-hour interval can pass during continuing tests, and when the sequence is finished. The card is there because "test" changes the purpose of the transmission, not the identification duty.
 
 ## Third-party and visiting-operator communication
 
-A third party is a non-certified person for whom amateur traffic is being handled. In Canada, the content must be personal and non-commercial. The bank also teaches a broad Canadian permission: a Canadian amateur station can handle third-party traffic with another amateur station, including international traffic, unless a specific foreign-administration rule blocks the emergency or disaster-relief case.
+A third party is a non-certified person for whom amateur traffic is being handled. In Canada, the content must be personal and non-commercial. The bank also teaches that Canadian amateur stations may provide third-party communications with any other amateur radio station.
 
-For ordinary international amateur communication, another country can stop the contact type by placing an objection through the International Telecommunication Union process. Visiting operators use agreement and permit rules. For visitors other than United States citizens, the bank requires both a country arrangement with Canada and the proper permit. A CEPT amateur licence holder receives Advanced-level privileges from ISED while operating here.
+For international third-party emergency or disaster-relief communication, the bank gives a narrower stop condition: it is expressly permitted unless the foreign administration concerned specifically prohibits it. For ordinary international amateur communication, another country can stop the contact type by placing an objection through the International Telecommunication Union process.
+
+Visiting operators use agreement and permit rules. For visitors other than United States citizens, the bank requires both a country arrangement with Canada and the proper permit. A CEPT amateur licence holder receives Advanced-level privileges from ISED while operating here.
 
 United States-issued call sign holders operating in Canada must give their Canadian operating location by city and province at least once during a contact. In voice mode, they also use the mobile or portable qualifier and the Canadian prefix that matches the station's location.
 
-### Worked example: visitor at your station
+### Worked example: supervised family greeting
 
-A non-certified friend may speak over your station while you continue supervising the communication. If an amateur station outside Canada joins the contact, the supervising Canadian operator stays responsible for the station and the third-party limits; the answer is not to disappear from control of the communication.
+A certified Canadian operator lets a non-certified relative speak a short personal greeting over the station. The operator stays in control, keeps the message non-commercial, and remains ready to handle the contact if another amateur station joins. Supervision and content limits are what make the third-party situation work.
 
 ## Try it
 
-1. A club's training transmitter is being adjusted on a quiet evening, and a nearby public-service net begins on an adjacent frequency. What should the trainee do? Stop or change the test before it becomes a problem, because tests are allowed only when they do not interfere with amateur or other services.
-2. A relay team hears a weak distress call on an amateur band that one volunteer is not normally allowed to use. May that volunteer answer? Yes, if the distress call is unanswered; the bank establishes that the operator may respond and offer assistance in that situation.
-3. A shelter exercise asks a radio operator to accept a gift card for each message delivered. What is the regulatory problem? Amateur message handling must stay non-commercial; the bank establishes no payment or remuneration for exchanging messages.
-4. A two-hour antenna-comparison contact begins at 1900 local time. What identification rhythm keeps the station accountable? Give the station call sign at the start, at intervals no longer than 30 minutes, and at the end.
-5. A United States operator using voice while travelling in Canada gives a call sign but omits Canadian location information. What should be added? The operator must include the required Canadian location/prefix information established by the bank, including city and province at least once during the contact.
+1. A club wants a 431.2 MHz practice link at the fairground and also has a backup data link in the 902 MHz to 928 MHz range. A non-amateur telemetry user is present near the first link, and licence-exempt devices are busy near the backup path. What two planning decisions follow? Protect the other service by moving or changing the 431.2 MHz operation if needed, and treat the 902 MHz to 928 MHz backup as a possibly crowded, unprotected path rather than a guaranteed clear channel.
+2. Your portable station is directly involved in getting help for an injured hiker, and a casual contact is already using the frequency. The rescue message will run long enough to require accountability. What two checks guide the transmission? The distress involvement can justify the necessary emergency interruption, and the station still needs normal call-sign identification during the communication.
+3. A recognized agency asks operators to pass exercise shelter messages, and the event organizer offers free booth space to every operator who relays visitor traffic. Which parts can stay, and which part must be refused? Public-service exercise traffic can be handled, but the booth-space benefit tied to exchanging messages must be refused because message handling remains unpaid.
+4. A series of equipment checks runs from 0910 to 0948 with short transmissions throughout, and another amateur asks whether tests are exempt from station identification. How should the operator plan the sequence? First ensure the tests will not interfere; then use the station call sign as in a contact: identify at the start, again before a 30-minute interval passes, and at the end.
+5. A non-certified Scout asks to send a personal greeting through your station, then a sponsor asks to add a coupon code to the same message. Which part crosses the line, and who stays responsible? The personal greeting can fit supervised third-party communication, the coupon code makes the traffic commercial, and the certified operator must keep control of the station use.
 
 ## Radio connection
 

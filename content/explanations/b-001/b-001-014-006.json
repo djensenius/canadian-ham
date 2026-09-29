@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-014-006.\n\nWhy the correct answer is right: Permitted third-party communications in the Canadian amateur service are personal and non-commercial.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Only communications where the third party is in a country approved by Innovation, Science and Economic Development Canada\": The bank does not limit permissible third-party communication to countries approved by ISED.\n- sourceIndex 2: \"Only communications conducted entirely within Canada\": Entirely within Canada is too narrow and does not address the personal, non-commercial requirement.\n- sourceIndex 3: \"Only communications routed through a digital network\": Routing through a digital network is a technology choice, not the rule for permissible third-party content.",
+    "en": "Question B-001-014-006.\n\nWhy the correct answer is right: Permitted third-party communications in the Canadian amateur service are personal and non-commercial.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Only communications where the third party is in a country approved by Innovation, Science and Economic Development Canada\": The third party's country is not the content test; the content must be personal and non-commercial.\n- sourceIndex 2: \"Only communications conducted entirely within Canada\": Entirely within Canada is too narrow and does not address the personal, non-commercial requirement.\n- sourceIndex 3: \"Only communications routed through a digital network\": Routing through a digital network is a technology choice, not the rule for permissible third-party content.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-011-009.\n\nWhy the correct answer is right: Recognized public service agency messages may be handled in peacetime, civil emergencies, and exercises.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"When data modes are used exclusively\": The permission is not restricted to data modes.\n- sourceIndex 2: \"When special authorization has been obtained from Innovation, Science and Economic Development Canada\": The bank does not require special ISED authorization for the recognized-agency message handling described.\n- sourceIndex 3: \"When operators have an Advanced Qualification\": Advanced Qualification is not the condition named for handling these public-service agency messages.",
+    "en": "Question B-001-011-009.\n\nWhy the correct answer is right: Recognized public service agency messages may be handled in peacetime, civil emergencies, and exercises.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"When data modes are used exclusively\": The permission is based on the recognized-agency context, not on using only data modes.\n- sourceIndex 2: \"When special authorization has been obtained from Innovation, Science and Economic Development Canada\": Special ISED authorization is not the trigger for this recognized-agency message-handling permission.\n- sourceIndex 3: \"When operators have an Advanced Qualification\": Advanced Qualification does not decide whether recognized public-service agency messages may be handled.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-018-004.\n\nWhy the correct answer is right: The lowest repeater output segment named for Basic-only holders is 29.500 MHz to 29.700 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"28.000 MHz to 29.700 MHz\": 28.000 MHz to 29.700 MHz is the whole 10-metre band range, not the allowed repeater-output segment.\n- sourceIndex 2: \"53 MHz to 54 MHz\": 53 MHz to 54 MHz is above the low 10-metre repeater segment and is not the official answer.\n- sourceIndex 3: \"145 MHz to 148 MHz\": 145 MHz to 148 MHz is a VHF repeater area, but it is not the lowest segment named by the bank.",
+    "en": "Question B-001-018-004.\n\nWhy the correct answer is right: The lowest repeater output segment named for Basic-only holders is 29.500 MHz to 29.700 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"28.000 MHz to 29.700 MHz\": This is the whole 10-metre band range, not the lower repeater-output segment carved out for Basic-only use.\n- sourceIndex 2: \"53 MHz to 54 MHz\": This segment is above the low 10-metre repeater-output segment, so it cannot be the lowest segment.\n- sourceIndex 3: \"145 MHz to 148 MHz\": This VHF segment is much higher than the 29.500 MHz to 29.700 MHz low repeater-output segment.",
     "fr": null
   },
   "citations": [

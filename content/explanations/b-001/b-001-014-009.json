@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-014-009.\n\nWhy the correct answer is right: A United States-issued call sign holder operating in Canada must indicate location by city and province at least once during a contact.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Current grid square\": Current grid square is useful operating information, but it is not the location statement required by the bank.\n- sourceIndex 2: \"Location and output power\": Location and output power does not match the required city-and-province information.\n- sourceIndex 3: \"City and state of residence\": City and state of residence can describe the operator's home, not the Canadian operating location required during the contact.",
+    "en": "Question B-001-014-009.\n\nWhy the correct answer is right: A United States-issued call sign holder operating in Canada must indicate location by city and province at least once during a contact.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Current grid square\": Current grid square is useful operating information, but it is not the required city-and-province location statement.\n- sourceIndex 2: \"Location and output power\": Adding output power changes the information set and still omits the city-and-province form required for the Canadian operating location.\n- sourceIndex 3: \"City and state of residence\": City and state of residence can describe the operator's home, not the Canadian operating location required during the contact.",
     "fr": null
   },
   "citations": [

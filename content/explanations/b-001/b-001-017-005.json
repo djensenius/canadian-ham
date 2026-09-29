@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-017-005.\n\nWhy the correct answer is right: Basic with Honours uses the Basic SSB PEP limit of 560 watts for this SSB operation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"1000 watts\": 1000 watts is an Advanced DC input limit, not the Basic-with-Honours SSB PEP limit.\n- sourceIndex 2: \"2250 watts\": 2250 watts is the Advanced SSB PEP limit, not the Basic-with-Honours value.\n- sourceIndex 3: \"200 watts\": 200 watts is not the Basic SSB peak-envelope limit recorded in the official answer.",
+    "en": "Question B-001-017-005.\n\nWhy the correct answer is right: Basic with Honours uses the Basic SSB PEP limit of 560 watts for this SSB operation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"1000 watts\": 1000 watts is an Advanced DC input limit, not the Basic-with-Honours SSB PEP limit.\n- sourceIndex 2: \"2250 watts\": 2250 watts is the Advanced SSB PEP limit, not the Basic-with-Honours value.\n- sourceIndex 3: \"200 watts\": 200 watts is a lower distractor value and is not the Basic SSB peak-envelope limit.",
     "fr": null
   },
   "citations": [

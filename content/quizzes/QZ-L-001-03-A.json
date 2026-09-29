@@ -25,36 +25,36 @@
   "conceptChecks": [
     {
       "id": "QZ-L-001-03-A-C1",
-      "prompt": { "en": "A club link is operating in a band where amateur stations must protect a primary service. The link begins to disturb a non-amateur user in that primary service. What is the best next step?", "fr": null },
+      "prompt": { "en": "Two club experiments are being planned: a 432 MHz link near a non-amateur user, and a 915 MHz link in a building full of licence-exempt devices. Which plan applies the two shared-band facts correctly?", "fr": null },
       "choices": [
-        { "text": { "en": "Keep transmitting until the primary user asks by call sign for the link to stop.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Pause or change the amateur operation so the primary service is no longer disturbed.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Increase power briefly so the amateur link finishes before the primary traffic returns.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Send a long test carrier to prove which station is causing the conflict.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Move or redesign the 432 MHz link if it disturbs the other service, and treat the 915 MHz link as a path that may receive unprotected interference.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Keep the 432 MHz link on the air unless the other user is amateur, and ask ISED to clear licence-exempt devices from 915 MHz.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Use the same rule for both links: amateur operation has priority because both frequencies are in amateur allocations.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Avoid 915 MHz only during emergencies, but use 432 MHz freely once the link has identified by call sign.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Secondary amateur operation has to avoid interfering with the primary service. The practical response is to stop, move, or otherwise change the amateur operation rather than escalating the conflict.", "fr": null }
+      "explanation": { "en": "The two-step distinction is the point: the 430.0 MHz to 450.0 MHz fact is a must-not-interfere rule for other services, while the 902 MHz to 928 MHz facts warn that amateur operation may be unprotected and crowded by licence-exempt devices.", "fr": null }
     },
     {
       "id": "QZ-L-001-03-A-C2",
-      "prompt": { "en": "A station checklist for long practice contacts includes a clock beside the log. What mistake is that most directly meant to prevent?", "fr": null },
+      "prompt": { "en": "Which statement is NOT true about using or divulging message content under the lesson's privacy boundary?", "fr": null },
       "choices": [
-        { "text": { "en": "Forgetting to identify while focused on the conversation or test", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Choosing English instead of French for the identification", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Using a call sign that starts with a Canadian prefix", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Ending a contact after both stations have identified", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Amateur-station transmissions are in the category the bank allows to be divulged or used.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Protecting property or preventing harm is treated differently from answering a reporter's questions.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Giving evidence in a criminal or civil court is one of the allowed purposes for other non-broadcast radiocommunication content.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A media interview automatically becomes an allowed purpose if the operator heard the traffic during a public-service exercise.", "fr": null }, "isCorrect": true }
       ],
-      "explanation": { "en": "The clock is an operating aid. It helps the operator remember the identification interval during a long contact or test instead of losing track of time.", "fr": null }
+      "explanation": { "en": "The first three statements match the bank's privacy distinctions. A media interview is the near miss: answering media questions is the prohibited purpose for other non-broadcast radiocommunications, and an exercise label does not change that boundary.", "fr": null }
     },
     {
       "id": "QZ-L-001-03-A-C3",
-      "prompt": { "en": "Which club policy would NOT help keep public-service practice traffic inside the lesson's privacy and non-commercial boundaries?", "fr": null },
+      "prompt": { "en": "Spot the error in this voice identification plan for a United States-issued call sign holder operating while travelling in Canada: 'give the call sign, say mobile or portable, add the Canadian prefix for the station location, and give only a grid square for location.'", "fr": null },
       "choices": [
-        { "text": { "en": "Use written prompts that keep exercise messages personal and non-commercial.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Tell operators before the exercise that message handling is unpaid volunteer work.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Designate a media spokesperson so radio operators do not turn received traffic into interviews.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Let operators accept small rewards if the message was handled accurately.", "fr": null }, "isCorrect": true }
+        { "text": { "en": "The plan uses a mobile or portable qualifier, but voice visitors should avoid those words.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The plan gives a Canadian prefix, but a United States-issued call sign holder must never add one.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The grid square does not replace the required city-and-province location statement at least once during the contact.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The plan includes the call sign, but visitors identify only with the province name while in Canada.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Small rewards still create compensation for message handling. The other policies are practical ways to keep the exercise personal, non-commercial, and away from improper disclosure.", "fr": null }
+      "explanation": { "en": "For voice operation, the call sign, mobile or portable qualifier, and Canadian prefix belong in the plan. The missing piece is location by city and province at least once during the contact; a grid square is not the same requirement.", "fr": null }
     }
   ]
 }

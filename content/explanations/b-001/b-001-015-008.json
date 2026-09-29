@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-015-008.\n\nWhy the correct answer is right: The Canadian 20-metre band range given in the bank is 14.000 MHz to 14.350 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"13.500 MHz to 14.000 MHz\": 13.500 MHz to 14.000 MHz ends at the lower edge and does not include the 20-metre band range.\n- sourceIndex 2: \"15.000 MHz to 15.750 MHz\": 15.000 MHz to 15.750 MHz is not the 20-metre band.\n- sourceIndex 3: \"16.350 MHz to 16.830 MHz\": 16.350 MHz to 16.830 MHz is outside the bank's 20-metre range.",
+    "en": "Question B-001-015-008.\n\nWhy the correct answer is right: The Canadian 20-metre band range given in the bank is 14.000 MHz to 14.350 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"13.500 MHz to 14.000 MHz\": This range stops where the 20-metre range begins and leaves out the 14.000 MHz to 14.350 MHz segment.\n- sourceIndex 2: \"15.000 MHz to 15.750 MHz\": This range is above the 20-metre band and does not overlap the bank's 14.000 MHz to 14.350 MHz range.\n- sourceIndex 3: \"16.350 MHz to 16.830 MHz\": This range is also above the 20-metre allocation named in the bank and cannot describe the 20-metre band.",
     "fr": null
   },
   "citations": [

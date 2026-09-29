@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-013-011.\n\nWhy the correct answer is right: Canadian amateur station call signs normally start with VA, VE, VO, or VY.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"GA, GE, MO or VQ\": GA, GE, MO, and VQ are not the normal Canadian amateur starting letters identified by the bank.\n- sourceIndex 2: \"A, K, N or W\": A, K, N, and W point to another national call-sign pattern, not the Canadian one tested here.\n- sourceIndex 3: \"EA, EI, RO or UY\": EA, EI, RO, and UY are not the Canadian prefix group established by the official answer.",
+    "en": "Question B-001-013-011.\n\nWhy the correct answer is right: Canadian amateur station call signs normally start with VA, VE, VO, or VY.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"GA, GE, MO or VQ\": These pairs do not match the VA, VE, VO, or VY Canadian amateur prefix group; similar-looking letters are not enough.\n- sourceIndex 2: \"A, K, N or W\": A, K, N, and W point to another national call-sign pattern, so this choice misidentifies Canadian amateur prefixes.\n- sourceIndex 3: \"EA, EI, RO or UY\": These prefixes are outside the VA/VE/VO/VY group and would lead the operator away from the Canadian call-sign pattern being tested.",
     "fr": null
   },
   "citations": [
