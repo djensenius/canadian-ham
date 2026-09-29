@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-007-007.\n\nWhy the correct answer is right: An isotropic radiator has equal radiation in every three-dimensional direction, represented by a sphere.\n\nPer-choice notes:\n- sourceIndex 0: \"A sphere\": Correct. An isotropic radiator has equal radiation in every three-dimensional direction, represented by a sphere.\n- sourceIndex 1: \"A torus (donut shape)\": Those are other pattern shapes; isotropic radiation is equal in every direction.\n- sourceIndex 2: \"A cardioid\": Those are other pattern shapes; isotropic radiation is equal in every direction.\n- sourceIndex 3: \"A hemisphere\": Those are other pattern shapes; isotropic radiation is equal in every direction.",
+    "en": "Question B-006-007-007.\n\nWhy the correct answer is right: Because an isotropic radiator sends equal power in every direction in free space, its three-dimensional radiation pattern is a sphere.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A torus (donut shape)\": A torus is the familiar doughnut-shaped pattern of a dipole, with nulls off the wire ends, not an isotropic pattern.\n- sourceIndex 2: \"A cardioid\": A cardioid has a favoured direction and a rear null, so it is directional rather than equal in all directions.\n- sourceIndex 3: \"A hemisphere\": A hemisphere covers only half of space; an isotropic free-space radiator covers all directions around the point source.",
     "fr": null
   },
   "citations": [

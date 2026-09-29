@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-008-009.\n\nWhy the correct answer is right: Lengthening an antenna lowers its resonant frequency.\n\nPer-choice notes:\n- sourceIndex 0: \"lengthen it\": Correct. Lengthening an antenna lowers its resonant frequency.\n- sourceIndex 1: \"shorten it\": This does not match the principle tested here: Wavelength, resonance, loading, and traps all connect physical antenna length with operating frequency.\n- sourceIndex 2: \"use smaller diameter wire\": SMA is common on handheld gear, not the larger HF coax case unless the question specifically names that use.\n- sourceIndex 3: \"lengthen the transmission line\": Front-to-back ratio is a pattern-power comparison, not a dimension ratio.",
+    "en": "Question B-006-008-009.\n\nWhy the correct answer is right: Lower resonant frequency requires greater electrical length, so lengthening the antenna moves its resonance downward.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"shorten it\": Shortening the antenna raises its resonant frequency, so it would move the tuning in the wrong direction.\n- sourceIndex 2: \"use smaller diameter wire\": Smaller diameter wire mainly affects bandwidth and minor end-effect tuning; it is not the proper adjustment for lowering resonant frequency.\n- sourceIndex 3: \"lengthen the transmission line\": Changing transmission-line length can change the impedance seen at the shack, but it does not change the antenna element’s actual resonant frequency.",
     "fr": null
   },
   "citations": [

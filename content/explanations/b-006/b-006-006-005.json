@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-006-005.\n\nWhy the correct answer is right: Matching at the feed point reduces high-SWR operation on the main feedline and can reduce feedline loss.\n\nPer-choice notes:\n- sourceIndex 0: \"Less transmission line loss\": Correct. Matching at the feed point reduces high-SWR operation on the main feedline and can reduce feedline loss.\n- sourceIndex 1: \"More harmonic suppression\": Those are different performance topics; feed-point matching reduces high-SWR feedline loss.\n- sourceIndex 2: \"Less atmospheric noise pickup\": Those are different performance topics; feed-point matching reduces high-SWR feedline loss.\n- sourceIndex 3: \"More usable bandwidth\": Those are different performance topics; feed-point matching reduces high-SWR feedline loss.",
+    "en": "Question B-006-006-005.\n\nWhy the correct answer is right: Putting the tuner at the antenna feed point makes the line operate closer to its matched condition, reducing standing waves on the line and therefore reducing line loss.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"More harmonic suppression\": A tuner is not a harmonic filter, and moving it from the shack to the antenna is not done primarily to suppress transmitter harmonics.\n- sourceIndex 2: \"Less atmospheric noise pickup\": Atmospheric noise is picked up by the antenna from the environment; tuner location does not meaningfully reduce that external noise source.\n- sourceIndex 3: \"More usable bandwidth\": A tuner can make operation possible over a range of frequencies, but locating it at the feed point does not inherently make the antenna itself wider bandwidth.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-008-001.\n\nWhy the correct answer is right: Lower resonant frequency requires a longer wire; higher resonant frequency requires a shorter wire.\n\nPer-choice notes:\n- sourceIndex 0: \"Make it longer\": Correct. Lower resonant frequency requires a longer wire; higher resonant frequency requires a shorter wire.\n- sourceIndex 1: \"Make it shorter\": The resonance move follows length: longer lowers frequency and shorter raises it.\n- sourceIndex 2: \"Install it as a sloper\": The resonance move follows length: longer lowers frequency and shorter raises it.\n- sourceIndex 3: \"Use smaller diameter wire\": SMA is common on handheld gear, not the larger HF coax case unless the question specifically names that use.",
+    "en": "Question B-006-008-001.\n\nWhy the correct answer is right: A wire antenna’s resonant frequency varies inversely with its electrical length. Moving from 3900 kHz down to 3600 kHz requires a longer electrical length.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Make it shorter\": Shortening a dipole raises its resonant frequency, which would move 3900 kHz farther upward rather than down to 3600 kHz.\n- sourceIndex 2: \"Install it as a sloper\": Installing the antenna as a sloper changes its geometry, pattern, and coupling to ground, but it is not the direct length change needed to lower resonance.\n- sourceIndex 3: \"Use smaller diameter wire\": Smaller wire mainly narrows bandwidth and slightly changes end effects; it is not the reliable way to lower resonance from 3900 kHz to 3600 kHz.",
     "fr": null
   },
   "citations": [
