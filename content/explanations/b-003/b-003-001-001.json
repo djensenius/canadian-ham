@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-001-001",
+  "questionId": "B-003-001-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-001-001.\n\nWhy the correct answer is right: The filter should be immediately after the transceiver because, without another RF amplifier, that output is the source of harmonics that must be reduced before the accessory chain carries them onward.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Between the SWR meter and the antenna tuner\": That point is already after one station accessory, so harmonic energy could still travel through earlier cable and gear before reaching the filter.\n- sourceIndex 2: \"Between the antenna tuner and the antenna switch\": Putting the filter after the tuner misses the chance to clean the transmitter output before it reaches the matching network and meter.\n- sourceIndex 3: \"As close as possible to the antenna switch output\": The antenna switch is too far downstream; the unwanted products should be reduced near the transmitter output, not at the selected antenna port.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-01"
+    },
+    {
+      "type": "question",
+      "id": "B-003-001-001"
+    }
+  ],
+  "licenseClass": "original"
+}

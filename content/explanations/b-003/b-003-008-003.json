@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-008-003",
+  "questionId": "B-003-008-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-008-003.\n\nWhy the correct answer is right: The rectifier converts alternating current into one-polarity pulsating direct current.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Ensure that the voltage stays constant when a heavy demand is placed on the supply\": Keeping output voltage constant with load changes is the regulator's job.\n- sourceIndex 2: \"Convert the AC mains voltage up or down as required and provide isolation\": Changing mains AC voltage and providing isolation is the transformer's job before the rectifier.\n- sourceIndex 3: \"Smooth out pulsating direct current\": Smoothing pulses is the filter's role after the rectifier has created pulsating DC.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-03"
+    },
+    {
+      "type": "question",
+      "id": "B-003-008-003"
+    }
+  ],
+  "licenseClass": "original"
+}

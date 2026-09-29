@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-001-002",
+  "questionId": "B-003-001-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-001-002.\n\nWhy the correct answer is right: With an external RF power amplifier installed, the amplifier output is the final high-power source, so the low-pass filter belongs right after it.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Between the SWR meter and the antenna tuner\": This position is after measurement and matching hardware, not right at the high-power amplifier output where harmonics should first be controlled.\n- sourceIndex 2: \"Between the antenna tuner and the antenna switch\": The tuner-to-switch location lets harmonic energy pass through earlier accessories and cable before the filter can act.\n- sourceIndex 3: \"As close as possible to the transceiver output\": The transceiver output is not the final RF output once an external amplifier follows it; filtering before the amplifier would not catch products from the amplifier.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-01"
+    },
+    {
+      "type": "question",
+      "id": "B-003-001-002"
+    }
+  ],
+  "licenseClass": "original"
+}

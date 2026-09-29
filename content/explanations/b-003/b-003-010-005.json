@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-010-005",
+  "questionId": "B-003-010-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-010-005.\n\nWhy the correct answer is right: SSB must be tuned accurately because a small frequency error shifts the recovered speech spectrum and makes voices sound unnatural or distorted.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"AM\": AM carries its own carrier, so ordinary envelope detection has a local reference in the received signal and modest tuning error is less critical than for SSB voice recovery.\n- sourceIndex 2: \"FM\": FM reception recovers audio from frequency deviation within the receiver passband; small tuning offsets are not the same speech-spectrum shift problem as mistuned SSB.\n- sourceIndex 3: \"CW\": A CW tuning error mainly changes the pitch of the received tone; it does not distort a voice spectrum the way mistuned SSB does.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-04"
+    },
+    {
+      "type": "question",
+      "id": "B-003-010-005"
+    }
+  ],
+  "licenseClass": "original"
+}

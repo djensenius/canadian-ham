@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-002-007",
+  "questionId": "B-003-002-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-002-007.\n\nWhy the correct answer is right: The power amplifier supplies the useful RF output power, so it is the stage that draws the largest electrical power in the simplified transmitter.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Frequency multiplier\": A frequency multiplier handles RF frequency multiplication, but it does not deliver the main output power to the antenna system.\n- sourceIndex 2: \"Oscillator\": The oscillator is a low-level source and should be stable rather than power-hungry.\n- sourceIndex 3: \"Speech amplifier\": The speech amplifier raises audio level; its power demand is small compared with the RF output stage.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-01"
+    },
+    {
+      "type": "question",
+      "id": "B-003-002-007"
+    }
+  ],
+  "licenseClass": "original"
+}

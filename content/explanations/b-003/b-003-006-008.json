@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-006-008",
+  "questionId": "B-003-006-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-006-008.\n\nWhy the correct answer is right: The final amplifier is the high-power output stage, so it is the normal place to include protection that responds to excessive reflected power or SWR.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Speech amplifier\": The speech amplifier handles low-level audio and is not exposed to antenna-system SWR.\n- sourceIndex 2: \"Variable frequency oscillator\": The VFO sets frequency and should not be the output-protection stage for antenna mismatch.\n- sourceIndex 3: \"Balanced modulator\": The balanced modulator is a low-level signal-generation block, not the high-power stage needing SWR protection.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-02"
+    },
+    {
+      "type": "question",
+      "id": "B-003-006-008"
+    }
+  ],
+  "licenseClass": "original"
+}

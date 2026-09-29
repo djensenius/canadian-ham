@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-008-005",
+  "questionId": "B-003-008-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-008-005.\n\nWhy the correct answer is right: The regulator keeps the DC output close to its set voltage even as load current changes within the supply's rating.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Convert the AC mains voltage up or down as required and provides isolation\": Changing AC voltage and isolating the mains are transformer functions before rectification; the regulator acts later on DC.\n- sourceIndex 2: \"Convert alternating current into direct current\": AC-to-DC conversion belongs to the rectifier stage, not the regulator.\n- sourceIndex 3: \"Absorb the power produced by the supply\": The regulator should supply power to the load while controlling voltage; it is not a dummy load absorbing all output.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-03"
+    },
+    {
+      "type": "question",
+      "id": "B-003-008-005"
+    }
+  ],
+  "licenseClass": "original"
+}

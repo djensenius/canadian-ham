@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-006-007",
+  "questionId": "B-003-006-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-006-007.\n\nWhy the correct answer is right: The variable frequency oscillator changes the mixer relationship, letting the operator adjust the transmitter's final frequency.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Antenna tuner\": An antenna tuner changes impedance match, not the transmitter's generated RF frequency.\n- sourceIndex 2: \"Sideband filter\": The sideband filter selects one sideband near a fixed frequency and is not the tuning control.\n- sourceIndex 3: \"Balanced modulator\": The balanced modulator creates sideband energy but does not provide the operator's final frequency adjustment.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-02"
+    },
+    {
+      "type": "question",
+      "id": "B-003-006-007"
+    }
+  ],
+  "licenseClass": "original"
+}

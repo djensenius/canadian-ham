@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-010-008",
+  "questionId": "B-003-010-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-010-008.\n\nWhy the correct answer is right: Along with sensitivity and selectivity, dynamic range describes how well the receiver copes with strong signals without losing weak-signal performance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Frequency range\": Frequency range tells what bands can be tuned, not the main quality measure paired with sensitivity and selectivity.\n- sourceIndex 2: \"Fidelity\": Fidelity describes audio quality, which is useful but not the third major communications-receiver performance indicator here.\n- sourceIndex 3: \"Volume range\": Volume range is an audio control matter, not a core RF performance specification.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-04"
+    },
+    {
+      "type": "question",
+      "id": "B-003-010-008"
+    }
+  ],
+  "licenseClass": "original"
+}

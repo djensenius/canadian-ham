@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-001-003",
+  "questionId": "B-003-001-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-001-003.\n\nWhy the correct answer is right: Low-pass filters in HF transmitter output circuits reduce harmonic energy above the desired operating frequency while passing the fundamental signal.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To reduce fundamental emission\": The fundamental is the intended transmission; reducing it would defeat the purpose of the transmitter output circuit.\n- sourceIndex 2: \"To reduce adjacent channel interference\": Adjacent-channel interference is mainly about signal bandwidth and selectivity, not the high-frequency harmonics targeted by a low-pass output filter.\n- sourceIndex 3: \"To reduce RF energy below a cut-off point\": A low-pass filter passes energy below its cutoff and reduces energy above it; this wording reverses the action.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-01"
+    },
+    {
+      "type": "question",
+      "id": "B-003-001-003"
+    }
+  ],
+  "licenseClass": "original"
+}

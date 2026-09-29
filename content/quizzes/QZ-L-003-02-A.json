@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-003-02-A",
+  "lessonId": "L-003-02",
+  "officialQuestionIds": [
+    "B-003-004-001",
+    "B-003-004-003",
+    "B-003-004-006",
+    "B-003-005-003",
+    "B-003-005-005",
+    "B-003-005-008",
+    "B-003-006-003",
+    "B-003-006-006"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-003-02-A-C1",
+      "prompt": { "en": "A signal tracer finds the selected IF signal at the product detector input of an SSB/CW receiver, but nothing reaches the speaker. Which diagnostic plan best uses the block diagram?", "fr": null },
+      "choices": [
+        { "text": { "en": "Start at the product detector, BFO, and audio path, because the selected IF signal has already arrived there", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Start by replacing the antenna, because a present IF signal proves the front end has failed", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Retune the final amplifier, because received audio is created by the transmitter output stage", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Bypass the IF filter first, because silence at the speaker means too much nearby spectrum is present", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "A selected IF signal at the detector input means the upstream receive path has already done much of its job. Silence points the troubleshooting to the product detector, BFO, AF amplifier, speaker, or their connections.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-02-A-C2",
+      "prompt": { "en": "An SSB exciter has a filtered signal at 9.000 MHz and a 5.250 MHz VFO. A following band-pass network accepts 14.0 to 14.35 MHz and rejects the lower HF band. Which mixer product should be kept?", "fr": null },
+      "choices": [
+        { "text": { "en": "14.250 MHz sum product; it lands in the accepted 20 m range", "fr": null }, "isCorrect": true },
+        { "text": { "en": "3.750 MHz difference product; it is the one inside the accepted range", "fr": null }, "isCorrect": false },
+        { "text": { "en": "9.000 MHz original filtered signal; mixing should leave the VFO unused", "fr": null }, "isCorrect": false },
+        { "text": { "en": "5.250 MHz VFO signal; the sideband information is no longer needed", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The mixer produces sum and difference products. The sum is 9.000 MHz + 5.250 MHz = 14.250 MHz, which is inside the stated 14.0 to 14.35 MHz pass range; the 3.750 MHz difference is rejected.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-02-A-C3",
+      "prompt": { "en": "A CW note slides upward during a dash, and an SSB training transmitter's VFO drifts 120 Hz upward after its sideband has been formed. Which prediction is most consistent with the block diagrams?", "fr": null },
+      "choices": [
+        { "text": { "en": "The CW pitch heard by others can slide, and the SSB signal moves 120 Hz higher while carrying the same voice information", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Only the CW pitch changes; the SSB RF output stays fixed because the sideband filter locks the channel", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The CW pitch is fixed by the key, and the SSB drift is removed by the microphone speech amplifier", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Both transmitters keep the same RF frequency; drift can only change recovered audio loudness", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Frequency drift changes the RF frequency being transmitted. In CW that can be heard as a sliding received tone; in the SSB transmitter the already-formed voice sideband is shifted slightly in RF frequency, not rewritten as a different message.", "fr": null }
+    }
+  ]
+}

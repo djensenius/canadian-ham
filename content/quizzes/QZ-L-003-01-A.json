@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-003-01-A",
+  "lessonId": "L-003-01",
+  "officialQuestionIds": [
+    "B-003-001-001",
+    "B-003-001-003",
+    "B-003-001-004",
+    "B-003-001-006",
+    "B-003-002-001",
+    "B-003-002-006",
+    "B-003-003-003",
+    "B-003-003-007"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-003-01-A-C1",
+      "prompt": { "en": "A 100 W dummy-load test is planned for several minutes, and the load's case is warming quickly. Which response would NOT be a valid way to protect the test setup?", "fr": null },
+      "choices": [
+        { "text": { "en": "Pause and check the dummy load's power and time rating before continuing", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Reduce transmitter power or shorten the test if the rating is being approached", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Keep increasing power because a warmer load proves the station is safer", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Allow cooling time between transmissions when the rating calls for it", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The unsafe response is treating heat as permission to increase power. A dummy load turns test RF into heat, so the operator should respect its power rating, time limit, and cooling needs.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-01-A-C2",
+      "prompt": { "en": "A block diagram labels a frequency multiplier as if microphone audio should be plugged into it directly. What is the best correction?", "fr": null },
+      "choices": [
+        { "text": { "en": "Drive the multiplier from the oscillator path; audio stays in the speech-amplifier and modulator path", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Drive the multiplier from the microphone path; RF can be added by the final amplifier", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Use the multiplier as the modulator; the oscillator should stay unvaried until after multiplication", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Drive the modulator only from the multiplier output; speech should be added after amplification", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The multiplier is an RF block. Microphone audio is raised by the speech amplifier and used by the modulator before the oscillator-path RF is multiplied.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-01-A-C3",
+      "prompt": { "en": "A receiver uses a 10.700 MHz IF and a high-side oscillator for a 144.390 MHz signal. Its injection filter passes only 154 to 156 MHz. Which conclusion is correct?", "fr": null },
+      "choices": [
+        { "text": { "en": "133.690 MHz, so it falls below the injection-filter range", "fr": null }, "isCorrect": false },
+        { "text": { "en": "144.390 MHz, because the oscillator stays on the received signal", "fr": null }, "isCorrect": false },
+        { "text": { "en": "165.790 MHz, because high side means adding the IF twice", "fr": null }, "isCorrect": false },
+        { "text": { "en": "155.090 MHz, so it falls inside the injection-filter range", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "High-side injection adds the IF: 144.390 MHz + 10.700 MHz = 155.090 MHz. That result is inside the stated 154 to 156 MHz injection-filter range.", "fr": null }
+    }
+  ]
+}

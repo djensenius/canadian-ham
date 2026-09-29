@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-003-03-A",
+  "lessonId": "L-003-03",
+  "officialQuestionIds": [
+    "B-003-007-001",
+    "B-003-007-002",
+    "B-003-007-003",
+    "B-003-007-005",
+    "B-003-007-006",
+    "B-003-008-001",
+    "B-003-008-003",
+    "B-003-008-005"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-003-03-A-C1",
+      "prompt": { "en": "A digital-mode program's input level meter shows clipping because the interface input is being overdriven, but the RF signal on the air is normal. Which change is most likely to help decoding?", "fr": null },
+      "choices": [
+        { "text": { "en": "Reduce the receiver-audio or interface input level before software samples it", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Raise the AF output further so the clipped waveform fills more of the sound-card range", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Adjust the push-to-talk control line because receive clipping is caused by transmit switching", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Change the transmit playback level because receive clipping is fixed on the transmit-audio path", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "This is receive-audio level trouble at the interface input. Reducing the audio before conversion keeps the samples from clipping; raising AF level makes clipping worse, PTT only switches transmit/receive, and transmit playback level is the opposite audio direction.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-03-A-C2",
+      "prompt": { "en": "A regulator has 19 V input, 13.8 V output, and 3 A load. The installed heat sink is rated for about 10 W in this exercise. What decision follows?", "fr": null },
+      "choices": [
+        { "text": { "en": "It must handle about 15.6 W, so the stated 10 W heat sink is not enough", "fr": null }, "isCorrect": true },
+        { "text": { "en": "It must handle about 5.2 W, so the 10 W heat sink has plenty of margin", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It must handle about 13.8 W, because only output voltage makes heat", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It must handle about 57 W, because input voltage is multiplied by load current", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The regulator drops 19 V - 13.8 V = 5.2 V. At 3 A that is 5.2 V x 3 A = 15.6 W, which exceeds the stated 10 W heat-sink capacity for this exercise.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-03-A-C3",
+      "prompt": { "en": "Spot the error in this safety plan for a qualified technician preparing to troubleshoot ripple in a mains-powered linear supply.", "fr": null },
+      "choices": [
+        { "text": { "en": "Unplug the supply and follow the service procedure before handling internal parts", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Verify stored capacitor voltage with a meter after the discharge step", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Short the main filter capacitor with a screwdriver so it discharges instantly", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Use a proper resistor discharge tool or built-in bleeder path where specified", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "A screwdriver short can cause a dangerous arc and damage parts. Safe service uses de-energizing, controlled discharge, verification, and qualified procedures.", "fr": null }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-004-005",
+  "questionId": "B-003-004-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-004-005.\n\nWhy the correct answer is right: The power amplifier raises the RF signal to the transmitter output power needed by the antenna system.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It removes CW chirps from the transmitted signal\": Chirp is a stability problem, not something removed by ordinary output power amplification.\n- sourceIndex 2: \"It multiplies the oscillator frequency to the operating frequency\": Frequency multiplication is a different transmitter block and is not the power amplifier's basic purpose here.\n- sourceIndex 3: \"It reduces distortion in the transmitted signal\": The final amplifier should be linear or appropriate to the mode, but its named job in this simple CW chain is power increase.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-02"
+    },
+    {
+      "type": "question",
+      "id": "B-003-004-005"
+    }
+  ],
+  "licenseClass": "original"
+}

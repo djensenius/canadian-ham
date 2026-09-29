@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-003-004",
+  "questionId": "B-003-003-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-003-004.\n\nWhy the correct answer is right: The local oscillator determines which incoming RF signal mixes to the IF, so it sets the receiver tuning point.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"RF amplifier\": The RF amplifier boosts a range near the tuned input, but it does not by itself set the superheterodyne conversion frequency.\n- sourceIndex 2: \"IF filter\": The IF filter is fixed around the intermediate frequency and cannot choose the original RF channel alone.\n- sourceIndex 3: \"Beat frequency oscillator\": The beat frequency oscillator is used for SSB/CW detection, not for setting the incoming RF tune point.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-01"
+    },
+    {
+      "type": "question",
+      "id": "B-003-003-004"
+    }
+  ],
+  "licenseClass": "original"
+}

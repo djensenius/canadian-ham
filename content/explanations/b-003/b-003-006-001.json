@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-006-001",
+  "questionId": "B-003-006-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-006-001.\n\nWhy the correct answer is right: The fixed RF oscillator supplies the carrier-frequency signal used by the balanced modulator to generate sidebands.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It directly drives the sideband filter\": The sideband filter receives the modulator output; the oscillator signal first belongs at the balanced modulator input.\n- sourceIndex 2: \"It drives the mixer\": The mixer that moves the SSB signal to the operating frequency is normally driven by the VFO, not the fixed RF oscillator in this block role.\n- sourceIndex 3: \"It balances the variable frequency oscillator\": A VFO is not balanced by the fixed oscillator; they serve different frequency-generation steps.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-02"
+    },
+    {
+      "type": "question",
+      "id": "B-003-006-001"
+    }
+  ],
+  "licenseClass": "original"
+}

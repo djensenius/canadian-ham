@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-010-009",
+  "questionId": "B-003-010-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-010-009.\n\nWhy the correct answer is right: A 2.4 kHz filter is wide enough for SSB voice while rejecting more adjacent noise than a much wider filter.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"250 Hz\": 250 Hz is a narrow CW filter and would cut too much voice information from SSB.\n- sourceIndex 2: \"6 kHz\": 6 kHz is wider than needed for typical SSB voice and would admit extra noise and adjacent signals.\n- sourceIndex 3: \"500 Hz\": 500 Hz is still far too narrow for natural SSB voice reception.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-04"
+    },
+    {
+      "type": "question",
+      "id": "B-003-010-009"
+    }
+  ],
+  "licenseClass": "original"
+}

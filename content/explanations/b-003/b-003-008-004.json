@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-008-004",
+  "questionId": "B-003-008-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-008-004.\n\nWhy the correct answer is right: The filter smooths the rectifier's pulsating DC so the regulator receives a steadier input.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Convert alternating current into direct current\": AC-to-DC conversion is done by the rectifier before filtering.\n- sourceIndex 2: \"Ensure that the voltage stays constant when a heavy demand is placed on the supply\": Maintaining a constant output under load changes is the regulator's role.\n- sourceIndex 3: \"Absorb the power produced by the supply\": A filter is not a load intended to absorb the supply's useful output power.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-03"
+    },
+    {
+      "type": "question",
+      "id": "B-003-008-004"
+    }
+  ],
+  "licenseClass": "original"
+}

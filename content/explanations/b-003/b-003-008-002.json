@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-008-002",
+  "questionId": "B-003-008-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-008-002.\n\nWhy the correct answer is right: The transformer changes the AC voltage to a useful level and provides isolation before rectification.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Convert alternating current into direct current\": Changing AC into DC is the rectifier's job, not the transformer's job.\n- sourceIndex 2: \"Smooth out the pulsating direct current\": Smoothing pulsating DC is done by the filter after rectification.\n- sourceIndex 3: \"Ensure that the voltage stays constant when a heavy demand is placed on the supply\": Holding voltage constant under changing load is the regulator's function.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-03"
+    },
+    {
+      "type": "question",
+      "id": "B-003-008-002"
+    }
+  ],
+  "licenseClass": "original"
+}

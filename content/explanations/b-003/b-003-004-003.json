@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-004-003",
+  "questionId": "B-003-004-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-004-003.\n\nWhy the correct answer is right: A driver/buffer isolates the oscillator from changing loads so later stages do not pull its frequency.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To shape the oscillator waveform to prevent key clicks\": Key-click shaping is handled by keying waveform design and filtering, not by the basic reason for adding the buffer after the oscillator.\n- sourceIndex 2: \"To filter out noise from the oscillator\": Noise filtering is not the primary block role of a driver/buffer in this CW chain.\n- sourceIndex 3: \"To filter out spurious emissions from the oscillator\": Spurious-emission filtering is handled by appropriate filters; the buffer's role is to isolate the oscillator from load changes.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-02"
+    },
+    {
+      "type": "question",
+      "id": "B-003-004-003"
+    }
+  ],
+  "licenseClass": "original"
+}

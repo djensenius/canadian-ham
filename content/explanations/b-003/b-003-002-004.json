@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-002-004",
+  "questionId": "B-003-002-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-002-004.\n\nWhy the correct answer is right: In this FM block diagram, the oscillator is frequency-modulated because the modulator directly changes its frequency.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It runs at much higher frequencies\": The distinguishing point is modulation method, not simply that the oscillator frequency is higher than in other transmitters.\n- sourceIndex 2: \"It has higher fidelity\": Audio fidelity is not what separates this oscillator from the oscillator blocks used for AM, CW, or SSB examples.\n- sourceIndex 3: \"The modulator changes its output amplitude\": Changing oscillator amplitude would be amplitude modulation; FM is produced by changing frequency.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-01"
+    },
+    {
+      "type": "question",
+      "id": "B-003-002-004"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-003-04-A",
+  "lessonId": "L-003-04",
+  "officialQuestionIds": [
+    "B-003-009-001",
+    "B-003-009-002",
+    "B-003-009-004",
+    "B-003-010-001",
+    "B-003-010-002",
+    "B-003-010-006",
+    "B-003-010-009",
+    "B-003-010-010"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-003-04-A-C1",
+      "prompt": { "en": "A three-element Yagi is pointed forward from left to right, and the feedline is attached to the centre element. Which rear-to-front order is consistent with that description?", "fr": null },
+      "choices": [
+        { "text": { "en": "Short director, fed driven element, long reflector", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Long reflector, fed driven element, short director", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Fed driven element, long reflector, short director", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Long director, fed driven element, short reflector", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "For a simple Yagi, the reflector is the longer rear element, the driven element is fed in the middle, and the shorter director is forward.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-04-A-C2",
+      "prompt": { "en": "Which statement is NOT true when comparing common receiver performance controls and specifications?", "fr": null },
+      "choices": [
+        { "text": { "en": "A weak-signal input number is meaningful only with a stated signal-to-noise target", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A narrow IF filter can reject nearby signals but may remove information if made too narrow", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Strong-signal overload behavior matters when weak and strong signals arrive together", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Turning on AGC replaces IF filtering, so nearby signals no longer need to be rejected", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "AGC reduces volume swings as signal strength changes; it does not widen or narrow the IF filter and cannot replace selectivity.", "fr": null }
+    },
+    {
+      "id": "QZ-L-003-04-A-C3",
+      "prompt": { "en": "A waterfall shows two nearby traces, but the receiver audio blends them into one rough sound. Which conclusion best connects the display to the receiver settings?", "fr": null },
+      "choices": [
+        { "text": { "en": "The display can reveal separate frequencies; the receiver still needs suitable selectivity to isolate one in the audio", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Increase the display contrast until one trace fades, because the receiver passband narrows with the screen setting", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Tune halfway between the traces, because the detector will separate them into two audio channels", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Use AGC to make both traces equal brightness, because equal levels replace the need for IF selectivity", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "A waterfall helps the operator see signal positions, but it is not the receiver's selectivity. Suitable filtering is still needed to separate close signals in the recovered audio.", "fr": null }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-003-010-002",
+  "questionId": "B-003-010-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-003-010-002.\n\nWhy the correct answer is right: Receiver sensitivity is specified as the RF input signal required to achieve a stated signal-to-noise result.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"audio output in watts\": Audio output power describes speaker-driving capability, not minimum usable RF input.\n- sourceIndex 2: \"bandwidth of the IF in kilohertz\": IF bandwidth is a selectivity/filter specification rather than a sensitivity figure.\n- sourceIndex 3: \"number of RF amplifiers\": Counting RF amplifiers does not state how small a signal the receiver can use for a given noise performance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-003-04"
+    },
+    {
+      "type": "question",
+      "id": "B-003-010-002"
+    }
+  ],
+  "licenseClass": "original"
+}
