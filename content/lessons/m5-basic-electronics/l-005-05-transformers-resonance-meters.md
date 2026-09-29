@@ -43,7 +43,7 @@ By the end of this lesson, you can:
 
 A transformer has windings coupled by a changing magnetic field. AC in the primary winding creates a changing magnetic field. That changing field induces voltage in the secondary winding.
 
-A stronger current in a conductor produces a stronger magnetic field around it. Maximum induced voltage in a coil occurs when current is changing at the greatest rate, not when it is simply sitting at a steady value.
+A stronger current in a conductor produces a stronger magnetic field around it. Induced voltage is strongest during the fastest current change, not while current is simply sitting at a steady value.
 
 Coupling between wires is strongest when they are close and parallel. Transformer cores and winding arrangements are designed to make coupling useful, but energy transfer is not perfect. Warm iron laminations show that some energy is being lost as heat.
 

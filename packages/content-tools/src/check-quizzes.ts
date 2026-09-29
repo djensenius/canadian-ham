@@ -75,7 +75,7 @@ function isNonEmptyString(value: unknown): value is string {
 }
 
 function hasLocalizedText(value: unknown): value is LocalizedText {
-  return isRecord(value) && isNonEmptyString(value.en) && value.fr === null;
+  return isRecord(value) && isNonEmptyString(value.en) && (value.fr === null || isNonEmptyString(value.fr));
 }
 
 function parseYamlString(raw: string): string {
@@ -218,10 +218,10 @@ function validateQuizShape(value: unknown, filePath: string, issues: string[]): 
       issues.push(`${checkPath}: id must be a non-empty string`);
     }
     if (!hasLocalizedText(check.prompt)) {
-      issues.push(`${checkPath}: prompt must have non-empty en text and fr:null`);
+      issues.push(`${checkPath}: prompt must have non-empty en text and fr:null or non-empty fr text`);
     }
     if (!hasLocalizedText(check.explanation)) {
-      issues.push(`${checkPath}: explanation must have non-empty en text and fr:null`);
+      issues.push(`${checkPath}: explanation must have non-empty en text and fr:null or non-empty fr text`);
     }
     if (!Array.isArray(check.choices) || check.choices.length < 2) {
       issues.push(`${checkPath}: choices must contain at least two choices`);
@@ -236,7 +236,7 @@ function validateQuizShape(value: unknown, filePath: string, issues: string[]): 
         continue;
       }
       if (!hasLocalizedText(choice.text)) {
-        issues.push(`${choicePath}: text must have non-empty en text and fr:null`);
+        issues.push(`${choicePath}: text must have non-empty en text and fr:null or non-empty fr text`);
       }
       if (typeof choice.isCorrect !== "boolean") {
         issues.push(`${choicePath}: isCorrect must be boolean`);
@@ -263,17 +263,38 @@ function validateQuizShape(value: unknown, filePath: string, issues: string[]): 
   };
 }
 
-async function readQuizFiles(quizRoot: string): Promise<Array<{ filePath: string; quiz: LessonQuiz | null }>> {
+async function readQuizFiles(quizRoot: string): Promise<Array<{ filePath: string; quiz: unknown }>> {
   const entries = await readdir(quizRoot, { withFileTypes: true });
-  const issues: Array<{ filePath: string; quiz: LessonQuiz | null }> = [];
+  const files: Array<{ filePath: string; quiz: unknown }> = [];
   for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
     if (!entry.isFile() || !entry.name.endsWith(".json")) {
       continue;
     }
     const filePath = path.join(quizRoot, entry.name);
-    issues.push({ filePath, quiz: JSON.parse(await readFile(filePath, "utf8")) as unknown as LessonQuiz });
+    files.push({ filePath, quiz: JSON.parse(await readFile(filePath, "utf8")) as unknown });
   }
-  return issues;
+  return files;
+}
+
+function addMapValue(map: Map<string, string[]>, key: string, value: string): void {
+  const existing = map.get(key);
+  if (existing === undefined) {
+    map.set(key, [value]);
+    return;
+  }
+  existing.push(value);
+}
+
+function duplicateValues(values: string[]): string[] {
+  const seen = new Set<string>();
+  const duplicates = new Set<string>();
+  for (const value of values) {
+    if (seen.has(value)) {
+      duplicates.add(value);
+    }
+    seen.add(value);
+  }
+  return [...duplicates].sort();
 }
 
 export async function checkQuizzes(options: QuizCheckOptions = {}): Promise<QuizCheckReport> {
@@ -283,17 +304,28 @@ export async function checkQuizzes(options: QuizCheckOptions = {}): Promise<Quiz
   const lessons = await loadLessons(lessonRoot);
   const questions = await loadQuestions(questionsPath);
   const issues: string[] = [];
-  const quizIdsReferencedByLessons = new Map<string, string>();
+  const quizIdsReferencedByLessons = new Map<string, string[]>();
   for (const lesson of lessons.values()) {
     for (const quizId of lesson.quizIds) {
-      quizIdsReferencedByLessons.set(quizId, lesson.id);
+      addMapValue(quizIdsReferencedByLessons, quizId, lesson.id);
+    }
+    for (const duplicateQuizId of duplicateValues(lesson.quizIds)) {
+      issues.push(`${lesson.filePath}: duplicate quizId ${duplicateQuizId}`);
+    }
+  }
+  for (const [quizId, lessonIds] of quizIdsReferencedByLessons) {
+    const uniqueLessonIds = [...new Set(lessonIds)];
+    if (uniqueLessonIds.length > 1) {
+      issues.push(`duplicate quizId ${quizId} is referenced by lessons ${uniqueLessonIds.join(", ")}`);
     }
   }
 
   let quizFileCount = 0;
   let officialQuestionCount = 0;
   let conceptCheckCount = 0;
-  const seenQuizIds = new Set<string>();
+  const seenQuizIds = new Map<string, string>();
+  const seenConceptCheckIds = new Map<string, string>();
+  const seenOfficialQuestionIds = new Map<string, string>();
 
   for (const { filePath, quiz: rawQuiz } of await readQuizFiles(quizRoot)) {
     quizFileCount += 1;
@@ -302,21 +334,40 @@ export async function checkQuizzes(options: QuizCheckOptions = {}): Promise<Quiz
     if (quiz === null) {
       continue;
     }
-    seenQuizIds.add(quiz.id);
+    const previousQuizFile = seenQuizIds.get(quiz.id);
+    if (previousQuizFile !== undefined) {
+      issues.push(`${filePath}: duplicate quiz id ${quiz.id}; first seen in ${previousQuizFile}`);
+    } else {
+      seenQuizIds.set(quiz.id, filePath);
+    }
     if (quiz.id !== basenameId) {
       issues.push(`${filePath}: id must match file name ${basenameId}`);
     }
+
+    for (const duplicateQuestionId of duplicateValues(quiz.officialQuestionIds)) {
+      issues.push(`${filePath}: duplicate official question id ${duplicateQuestionId}`);
+    }
+    for (const duplicateConceptCheckId of duplicateValues(quiz.conceptChecks.map((check) => check.id))) {
+      issues.push(`${filePath}: duplicate concept-check id ${duplicateConceptCheckId}`);
+    }
+
     const lesson = lessons.get(quiz.lessonId);
     if (lesson === undefined) {
       issues.push(`${filePath}: unknown lessonId ${quiz.lessonId}`);
     } else {
-      const expectedLessonId = quizIdsReferencedByLessons.get(quiz.id);
-      if (expectedLessonId === undefined) {
+      const expectedLessonIds = quizIdsReferencedByLessons.get(quiz.id) ?? [];
+      if (expectedLessonIds.length === 0) {
         issues.push(`${filePath}: quiz id ${quiz.id} is not referenced by any lesson front matter`);
-      } else if (expectedLessonId !== quiz.lessonId) {
-        issues.push(`${filePath}: quiz id ${quiz.id} is referenced by ${expectedLessonId}, not ${quiz.lessonId}`);
+      } else if (!expectedLessonIds.includes(quiz.lessonId)) {
+        issues.push(`${filePath}: quiz id ${quiz.id} is referenced by ${[...new Set(expectedLessonIds)].join(", ")}, not ${quiz.lessonId}`);
       }
       for (const questionId of quiz.officialQuestionIds) {
+        const previousQuestionFile = seenOfficialQuestionIds.get(questionId);
+        if (previousQuestionFile !== undefined) {
+          issues.push(`${filePath}: duplicate official question id ${questionId}; first seen in ${previousQuestionFile}`);
+        } else {
+          seenOfficialQuestionIds.set(questionId, filePath);
+        }
         const question = questions.get(questionId);
         if (question === undefined) {
           issues.push(`${filePath}: unknown official question id ${questionId}`);
@@ -327,8 +378,24 @@ export async function checkQuizzes(options: QuizCheckOptions = {}): Promise<Quiz
         }
       }
     }
+
+    for (const check of quiz.conceptChecks) {
+      const previousCheckFile = seenConceptCheckIds.get(check.id);
+      if (previousCheckFile !== undefined) {
+        issues.push(`${filePath}: duplicate concept-check id ${check.id}; first seen in ${previousCheckFile}`);
+      } else {
+        seenConceptCheckIds.set(check.id, filePath);
+      }
+    }
+
     officialQuestionCount += quiz.officialQuestionIds.length;
     conceptCheckCount += quiz.conceptChecks.length;
+  }
+
+  for (const [quizId, lessonIds] of quizIdsReferencedByLessons) {
+    if (!seenQuizIds.has(quizId)) {
+      issues.push(`missing quiz file for ${quizId} referenced by ${[...new Set(lessonIds)].join(", ")}`);
+    }
   }
 
   const summaryLines = [
@@ -343,8 +410,17 @@ export async function checkQuizzes(options: QuizCheckOptions = {}): Promise<Quiz
   return report;
 }
 
+function lessonRootFromArgs(args: string[]): string | undefined {
+  const rootArg = args.find((arg) => arg.startsWith("--lesson-root="));
+  if (rootArg !== undefined) {
+    return path.resolve(rootArg.slice("--lesson-root=".length));
+  }
+  const positional = args.find((arg) => !arg.startsWith("--"));
+  return positional === undefined ? undefined : path.resolve(positional);
+}
+
 async function main(): Promise<void> {
-  const report = await checkQuizzes();
+  const report = await checkQuizzes({ lessonRoot: lessonRootFromArgs(process.argv.slice(2)) });
   for (const line of report.summaryLines) {
     console.log(line);
   }

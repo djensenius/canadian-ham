@@ -35,7 +35,7 @@ This lesson connects four areas: AC words, decibel shortcuts, simple capacitor a
 By the end of this lesson, you can:
 
 - define frequency, wavelength, phase, sine wave, and harmonic;
-- identify audio and HF frequency ranges used in the question bank;
+- identify audio and HF frequency ranges as general radio concepts;
 - use 3 dB, 6 dB, 9 dB, 10 dB, and 30 dB power-ratio shortcuts;
 - combine equal capacitors and inductors in simple series or parallel circuits;
 - explain the construction factors for coils and capacitors; and
@@ -55,18 +55,18 @@ A sine wave is the smooth waveform associated with ideal AC. A harmonic is a sig
 
 ## Decibels as power ratios
 
-The decibel compares two levels. In these Basic questions, use practical power shortcuts:
+The decibel compares two levels. For Basic-level estimating, use practical power shortcuts:
 
 | dB change | Power ratio |
 |---:|---:|
-| +3 dB | multiply power by about 2 |
-| -3 dB | divide power by about 2 |
-| +6 dB | multiply power by 4 |
-| -6 dB | divide power by 4 |
-| +9 dB | multiply power by 8 |
-| +10 dB | multiply power by 10 |
-| -10 dB | divide power by 10 |
-| -30 dB | divide power by 1000 |
+| +3 dB | roughly double power |
+| -3 dB | roughly halve power |
+| +6 dB | multiply power by four |
+| -6 dB | divide power by four |
+| +9 dB | multiply power by eight |
+| +10 dB | multiply power by ten |
+| -10 dB | divide power by ten |
+| -30 dB | divide power by one thousand |
 
 ### Worked example: gain
 
@@ -81,14 +81,14 @@ The output is about 15 W.
 
 A transmitter is 40 W and the line loss is 3 dB.
 
-- A 3 dB loss divides power by about 2.
-- 40 W / 2 = 20 W.
+- A 3 dB loss roughly halves power.
+- Half of 40 W is 20 W.
 
 About 20 W reaches the antenna.
 
 ### Worked example: large power reduction
 
-If a station needs a 20 dB reduction for a close-range test, the power must be divided by 100. A reduction from 25 W to 0.25 W is two 10 dB steps.
+If a station needs a 20 dB reduction for a close-range test, the power must be cut by a factor of one hundred. A reduction from 25 W to 0.25 W is two ten-decibel steps.
 
 For a 30 dB reduction, divide by 1000. A 250 W signal reduced by 30 dB becomes 0.25 W.
 
@@ -164,7 +164,7 @@ Description: Draw a smooth sine wave with one full cycle bracketed and labelled 
 - Frequency is cycles per second; wavelength gets shorter as frequency increases.
 - Phase is timing difference between AC waveforms.
 - Harmonics are integer multiples of a fundamental frequency.
-- Decibels compare levels; 3 dB is about a factor of 2 in power, and 10 dB is a factor of 10.
+- Decibels compare levels; three decibels is about a doubling or halving in power, and ten decibels is a ten-to-one power ratio.
 - Inductors add in series; capacitors add in parallel.
 - Inductive reactance increases with frequency; capacitive reactance decreases with frequency.
 - Impedance combines resistance and reactance in AC circuits.

@@ -110,7 +110,7 @@ This shortcut only works because all four values are equal.
 
 ## Current sharing in parallel
 
-Each branch current depends on that branch resistance. If two branches have the same voltage across them and resistor A carries twice the current of resistor B, resistor A has half the resistance of resistor B.
+Each branch current depends on that branch resistance. Suppose one branch across 12 V draws 60 mA while another branch across the same 12 V draws 20 mA. Ohm’s law gives 200 ohms for the higher-current branch and 600 ohms for the lower-current branch.
 
 That is just Ohm’s law again: I = E / R. With the same E, lower R gives higher I.
 
@@ -118,7 +118,7 @@ That is just Ohm’s law again: I = E / R. With the same E, lower R gives higher
 
 A resistor wattage rating is about heat dissipation. A physically larger resistor of the same resistance can often dissipate more heat safely.
 
-If two 500 ohm, 1 W resistors share power properly, their total safe dissipation can be 2 W. This can happen in a series pair or a parallel pair when the circuit applies voltage in a way that shares the load evenly. The value and the wattage are separate ideas.
+If three 330 ohm, 0.5 W resistors share power properly, their total safe dissipation can be 1.5 W. This can happen when the circuit applies voltage in a way that shares the load evenly. The value and the wattage are separate ideas.
 
 ### Worked example: transformer power
 
@@ -130,9 +130,9 @@ A portable station load requires 13.8 V DC at 4 A.
 
 A transformer or supply must be rated for at least that power, and real designs normally add margin.
 
-### Worked example: voltage doubled, power changes four times
+### Principle: voltage doubled, power changes four times
 
-For a fixed resistance, doubling voltage doubles current because I = E / R. Power is P = I x E, so both current and voltage doubled together make four times the power.
+For any fixed resistance, doubling voltage doubles current because I = E / R. Power is P = I x E, so both current and voltage doubled together make four times the power.
 
 That is why applying too much voltage to a resistor can overheat it quickly.
 

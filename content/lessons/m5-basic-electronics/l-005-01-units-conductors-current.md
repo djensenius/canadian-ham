@@ -42,12 +42,12 @@ A prefix tells you how many base units are being counted. In Basic exam electron
 
 | Prefix | Symbol | Meaning | Example |
 |---|---:|---:|---|
-| giga | G | 1 000 000 000 times the base unit | 1 GHz = 1 000 MHz |
-| mega | M | 1 000 000 times the base unit | 1 MHz = 1 000 kHz |
-| kilo | k | 1 000 times the base unit | 2 kHz = 2 000 Hz |
-| base unit | none | 1 unit | 1 ampere = 1 A |
-| milli | m | one thousandth | 1 A = 1 000 mA |
-| micro | µ | one millionth | 1 mH = 1 000 µH |
+| giga | G | 1 000 000 000 times the base unit | 4 GHz = 4 000 MHz |
+| mega | M | 1 000 000 times the base unit | 7 MHz = 7 000 kHz |
+| kilo | k | 1 000 times the base unit | 2.5 kHz = 2 500 Hz |
+| base unit | none | one whole unit | ampere is the base current unit |
+| milli | m | one thousandth | 0.25 A = 250 mA |
+| micro | µ | one millionth | 4 mH = 4 000 µH |
 | pico | p | one trillionth | 0.47 µF = 470 000 pF |
 
 When you change from a large unit to a smaller unit, the number gets larger. When you change from a small unit to a larger unit, the number gets smaller.
@@ -56,7 +56,7 @@ When you change from a large unit to a smaller unit, the number gets larger. Whe
 
 A frequency is 14.230 MHz. Mega is one step larger than kilo, and each step here is a factor of 1 000.
 
-- 1 MHz = 1 000 kHz.
+- Mega to kilo is one prefix step, so multiply the MHz value by 1 000.
 - 14.230 MHz = 14.230 x 1 000 kHz.
 - 14.230 x 1 000 = 14 230.
 
@@ -66,7 +66,7 @@ So 14.230 MHz is 14 230 kHz.
 
 A receiver accessory draws 450 mA. Milli means one thousandth of an ampere.
 
-- 1 A = 1 000 mA.
+- Milli means one thousandth of the base unit.
 - To convert milliamperes to amperes, divide by 1 000.
 - 450 mA / 1 000 = 0.45 A.
 
@@ -109,7 +109,7 @@ Temperature can change the resistance of a conductor. In many metal conductors, 
 
 Do these in your head before checking the answer.
 
-1. A trail radio beacon produces 750 mW. Since 1 W = 1 000 mW, 750 mW is 0.75 W.
+1. A trail radio beacon produces 750 mW. Since milli means one thousandth, 750 mW is 0.75 W.
 2. A resistor is marked 4.7 kilohms. Kilo means 1 000, so 4.7 kilohms is 4 700 ohms.
 3. A frequency is 21 375 kHz. Divide by 1 000 to get megahertz: 21.375 MHz.
 4. A current is 0.18 A. One ampere is 1 000 mA, so 0.18 A is 180 mA.

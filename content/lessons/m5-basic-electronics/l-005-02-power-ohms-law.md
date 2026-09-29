@@ -39,7 +39,7 @@ By the end of this lesson, you can:
 
 ## Power: how fast energy is used
 
-Power is the rate at which electrical energy is used or converted. The unit of electrical power is the watt. A 100 W lamp uses electrical energy faster than a 40 W lamp. A hot resistor is often a sign that it is dissipating too much power as heat.
+Power is the rate at which electrical energy is used or converted. The unit of electrical power is the watt. A 75 W work light uses electrical energy faster than a 15 W night-light. A hot resistor is often a sign that it is dissipating too much power as heat.
 
 The power formula on the reference sheet is:
 
