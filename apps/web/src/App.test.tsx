@@ -179,6 +179,64 @@ describe("App accessibility and flows", () => {
     assert.match((await screen.findByText("Honours-ready")).textContent ?? "", /Honours-ready/);
   });
 
+  it("renders Learn and module pages in study order with no axe violations", async () => {
+    window.location.hash = "#/learn";
+    const store = createStore("learn");
+    const user = userEvent.setup();
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "learn-seed"} />);
+
+    await screen.findByRole("heading", { name: "Learn" });
+    const moduleEyebrows = [...container.querySelectorAll(".module-card .eyebrow")].map((element) => element.textContent ?? "");
+    assert.match(moduleEyebrows[0] ?? "", /Module 1 · B-005/);
+    await expectNoAxeViolations(container);
+
+    await user.click(screen.getAllByRole("button", { name: "Open module" })[0]!);
+    await screen.findByRole("heading", { name: "Basic Electronics and Theory" });
+    assert.match(screen.getAllByText(/L-005-01/).map((element) => element.textContent ?? "").join(" "), /30 min/);
+    await expectNoAxeViolations(container);
+  });
+
+  it("renders lesson Markdown, stores read progress, and has no axe violations", async () => {
+    window.location.hash = "#/learn/M5/L-005-01";
+    const store = createStore("lesson");
+    const user = userEvent.setup();
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "lesson-seed"} />);
+
+    await screen.findByRole("heading", { name: "Units, conductors, and current" });
+    assert.ok(screen.getByRole("img", { name: /horizontal metric-prefix ladder/i }));
+    assert.ok(container.querySelector("table th[scope='col']"));
+    await user.click(screen.getByRole("button", { name: "Mark lesson read" }));
+    await waitFor(async () => assert.equal((await store.getLessonProgress()).length, 1));
+    await expectNoAxeViolations(container);
+  });
+
+  it("renders lesson quizzes with official explanations and stores attempts without concept Leitner updates", async () => {
+    window.location.hash = "#/learn/M5/L-005-01";
+    const store = createStore("lesson-quiz");
+    const user = userEvent.setup();
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "lesson-quiz-seed"} />);
+
+    await screen.findByRole("heading", { name: "QZ-L-005-01-A" });
+    for (let index = 0; index < 11; index += 1) {
+      const choices = screen.queryAllByTestId("lesson-quiz-choice");
+      if (choices.length > 0) {
+        await user.click(choices[0]!);
+      } else {
+        await user.click(screen.getAllByTestId("answer-choice")[0]!);
+      }
+      const next = screen.getByRole("button", { name: "Next" });
+      if (!next.hasAttribute("disabled")) {
+        await user.click(next);
+      }
+    }
+    await user.click(screen.getByRole("button", { name: "Submit lesson quiz" }));
+    await waitFor(async () => assert.equal((await store.getLessonQuizAttempts()).length, 1));
+    const progress = await store.getQuestionProgress();
+    assert.ok(progress.length > 0);
+    assert.ok(progress.length <= 8);
+    await expectNoAxeViolations(container);
+  });
+
   it("renders Practice with immediate feedback, progress persistence, and no axe violations", async () => {
     window.location.hash = "#/practice";
     const store = createStore("practice");

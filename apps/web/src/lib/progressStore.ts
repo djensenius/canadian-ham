@@ -47,6 +47,25 @@ export interface ExamAttempt {
   };
 }
 
+export interface LessonProgressRecord {
+  readonly lessonId: string;
+  readonly readAt: string;
+  readonly readCount: number;
+}
+
+export interface LessonQuizAttempt {
+  readonly id: string;
+  readonly quizId: string;
+  readonly lessonId: string;
+  readonly submittedAt: string;
+  readonly correct: number;
+  readonly total: number;
+  readonly percent: number;
+  readonly officialQuestionIds: readonly string[];
+  readonly incorrectOfficialQuestionIds: readonly string[];
+  readonly incorrectConceptCheckIds: readonly string[];
+}
+
 export interface ProgressExportV1 {
   readonly schema: "canadian-ham.progress-export";
   readonly version: 1;
@@ -54,6 +73,8 @@ export interface ProgressExportV1 {
   readonly bankId: string;
   readonly questionProgress: readonly QuestionProgressRecord[];
   readonly examAttempts: readonly ExamAttempt[];
+  readonly lessonProgress?: readonly LessonProgressRecord[];
+  readonly lessonQuizAttempts?: readonly LessonQuizAttempt[];
   readonly preferences: WebPreferences;
 }
 
@@ -69,7 +90,7 @@ export const defaultPreferences: WebPreferences = {
   theme: "system",
 };
 
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 const DEFAULT_DB_NAME = "canadian-ham-web-progress";
 const PREFERENCES_KEY = "preferences";
 
@@ -109,6 +130,22 @@ export class ProgressStore {
     await this.put("examAttempts", attempt);
   }
 
+  async getLessonProgress(): Promise<LessonProgressRecord[]> {
+    return this.getAll<LessonProgressRecord>("lessonProgress");
+  }
+
+  async putLessonProgress(record: LessonProgressRecord): Promise<void> {
+    await this.put("lessonProgress", record);
+  }
+
+  async getLessonQuizAttempts(): Promise<LessonQuizAttempt[]> {
+    return this.getAll<LessonQuizAttempt>("lessonQuizAttempts");
+  }
+
+  async putLessonQuizAttempt(attempt: LessonQuizAttempt): Promise<void> {
+    await this.put("lessonQuizAttempts", attempt);
+  }
+
   async getPreferences(): Promise<WebPreferences> {
     const db = await this.open();
     const record = await requestToPromise<StoredPreferenceRecord | undefined>(
@@ -129,23 +166,35 @@ export class ProgressStore {
       bankId,
       questionProgress: await this.getQuestionProgress(),
       examAttempts: await this.getExamAttempts(),
+      lessonProgress: await this.getLessonProgress(),
+      lessonQuizAttempts: await this.getLessonQuizAttempts(),
       preferences: await this.getPreferences(),
     };
   }
 
   async importData(data: ProgressExportV1): Promise<void> {
     const db = await this.open();
-    await runTransaction(db, ["questionProgress", "examAttempts", "preferences"], "readwrite", (transaction) => {
+    await runTransaction(db, ["questionProgress", "examAttempts", "lessonProgress", "lessonQuizAttempts", "preferences"], "readwrite", (transaction) => {
       transaction.objectStore("questionProgress").clear();
       transaction.objectStore("examAttempts").clear();
+      transaction.objectStore("lessonProgress").clear();
+      transaction.objectStore("lessonQuizAttempts").clear();
       transaction.objectStore("preferences").clear();
       const questionStore = transaction.objectStore("questionProgress");
       const attemptStore = transaction.objectStore("examAttempts");
+      const lessonStore = transaction.objectStore("lessonProgress");
+      const quizAttemptStore = transaction.objectStore("lessonQuizAttempts");
       for (const record of data.questionProgress) {
         questionStore.put(record);
       }
       for (const attempt of data.examAttempts) {
         attemptStore.put(attempt);
+      }
+      for (const record of data.lessonProgress ?? []) {
+        lessonStore.put(record);
+      }
+      for (const attempt of data.lessonQuizAttempts ?? []) {
+        quizAttemptStore.put(attempt);
       }
       transaction.objectStore("preferences").put({ key: PREFERENCES_KEY, value: { ...defaultPreferences, ...data.preferences } });
     });
@@ -153,9 +202,11 @@ export class ProgressStore {
 
   async resetAllData(): Promise<void> {
     const db = await this.open();
-    await runTransaction(db, ["questionProgress", "examAttempts", "preferences"], "readwrite", (transaction) => {
+    await runTransaction(db, ["questionProgress", "examAttempts", "lessonProgress", "lessonQuizAttempts", "preferences"], "readwrite", (transaction) => {
       transaction.objectStore("questionProgress").clear();
       transaction.objectStore("examAttempts").clear();
+      transaction.objectStore("lessonProgress").clear();
+      transaction.objectStore("lessonQuizAttempts").clear();
       transaction.objectStore("preferences").clear();
     });
   }
@@ -234,6 +285,17 @@ function migrateDatabase(db: IDBDatabase, oldVersion: number, transaction: IDBTr
     const attemptStore = transaction.objectStore("examAttempts");
     if (!attemptStore.indexNames.contains("submittedAt")) {
       attemptStore.createIndex("submittedAt", "submittedAt", { unique: false });
+    }
+  }
+
+  if (oldVersion < 3) {
+    if (!db.objectStoreNames.contains("lessonProgress")) {
+      db.createObjectStore("lessonProgress", { keyPath: "lessonId" });
+    }
+    if (!db.objectStoreNames.contains("lessonQuizAttempts")) {
+      const store = db.createObjectStore("lessonQuizAttempts", { keyPath: "id" });
+      store.createIndex("submittedAt", "submittedAt", { unique: false });
+      store.createIndex("lessonId", "lessonId", { unique: false });
     }
   }
 }

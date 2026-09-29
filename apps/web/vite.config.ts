@@ -1,5 +1,8 @@
+import { createHash } from "node:crypto";
 import { defineConfig } from "vitest/config";
 import type { Plugin } from "vite";
+
+import { createPrecacheManifest, createServiceWorkerSource, createWebAppManifest } from "./src/lib/pwa";
 
 function allowDevInlineStyles(): Plugin {
   return {
@@ -19,9 +22,32 @@ function allowDevInlineStyles(): Plugin {
   };
 }
 
+function canadianHamPwa(): Plugin {
+  return {
+    name: "canadian-ham-pwa",
+    generateBundle(_options, bundle) {
+      const emittedFiles = Object.values(bundle)
+        .map((entry) => entry.fileName)
+        .filter((fileName) => fileName !== "sw.js" && fileName !== "manifest.webmanifest");
+      const precacheEntries = createPrecacheManifest(emittedFiles);
+      const version = createHash("sha256").update(precacheEntries.join("\n")).digest("hex").slice(0, 16);
+      this.emitFile({
+        type: "asset",
+        fileName: "manifest.webmanifest",
+        source: `${JSON.stringify(createWebAppManifest(), null, 2)}\n`,
+      });
+      this.emitFile({
+        type: "asset",
+        fileName: "sw.js",
+        source: createServiceWorkerSource(precacheEntries, version),
+      });
+    },
+  };
+}
+
 export default defineConfig({
   base: "./",
-  plugins: [allowDevInlineStyles()],
+  plugins: [allowDevInlineStyles(), canadianHamPwa()],
   test: {
     environment: "jsdom",
     globals: true,

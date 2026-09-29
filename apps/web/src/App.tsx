@@ -8,6 +8,8 @@ import {
 import { Component, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { LanguageToggle } from "./components/LanguageToggle";
+import { MarkdownContent } from "./components/MarkdownContent";
+import { PwaStatus } from "./components/PwaStatus";
 import examReferenceSheetUrl from "../../../content/sources/ised/basic-2025-07-15/reference/Reference Material for Amateur Radio Exam Basic EN 2025.pdf?url";
 import studyReferenceSheetUrl from "../../../content/sources/ised/basic-2025-07-15/reference/Reference Material for Amateur Radio Training Basic EN 2025.pdf?url";
 import {
@@ -24,12 +26,17 @@ import {
   type Language,
   type Question,
 } from "./data/bank";
+import { explanationForQuestion, mainExplanationText, parseChoiceNotes, type Explanation } from "./data/explanations";
+import { lessonNeighbors, lessonsById, lessonsByModuleId, modules, modulesById, type LessonMeta } from "./data/lessons";
+import { buildLessonQuizItems, lessonQuizzesById, type ConceptCheck, type LessonQuiz, type LessonQuizItem } from "./data/quizzes";
 import {
   defaultPreferences,
   defaultProgressStore,
   serializeProgressExport,
   validateProgressImport,
   type ExamAttempt,
+  type LessonProgressRecord,
+  type LessonQuizAttempt,
   type PracticeMode,
   type ProgressExportV1,
   type ProgressStore,
@@ -47,7 +54,7 @@ import {
   type PracticeScope,
 } from "./lib/studyEngine";
 
-type Route = "home" | "practice" | "mock" | "results" | "settings";
+type Route = "home" | "learn" | "module" | "lesson" | "practice" | "mock" | "results" | "settings";
 type View = Route;
 
 interface AppProps {
@@ -161,12 +168,24 @@ async function readRecoverablePreferences(store: ProgressStore): Promise<WebPref
 }
 
 function routeFromHash(fallback: Route): Route {
+  const segments = hashSegments();
+  if (segments[0] === "learn" && segments.length >= 3) {
+    return "lesson";
+  }
+  if (segments[0] === "learn" && segments.length >= 2) {
+    return "module";
+  }
+  const route = segments[0] ?? "";
+  return isRoute(route) ? route : fallback;
+}
+
+function hashSegments(): readonly string[] {
   const hash = globalThis.location?.hash.replace(/^#\/?/, "") ?? "";
-  return isRoute(hash) ? hash : fallback;
+  return hash.split("/").filter(Boolean);
 }
 
 function isRoute(value: string): value is Route {
-  return value === "home" || value === "practice" || value === "mock" || value === "results" || value === "settings";
+  return value === "home" || value === "learn" || value === "practice" || value === "mock" || value === "results" || value === "settings";
 }
 
 export function App(props: AppProps) {
@@ -197,6 +216,8 @@ function AppContent({
   const [bankQuestions, setBankQuestions] = useState<readonly Question[] | null>(null);
   const [progress, setProgress] = useState<readonly QuestionProgressRecord[]>([]);
   const [examAttempts, setExamAttempts] = useState<readonly ExamAttempt[]>([]);
+  const [lessonProgress, setLessonProgress] = useState<readonly LessonProgressRecord[]>([]);
+  const [lessonQuizAttempts, setLessonQuizAttempts] = useState<readonly LessonQuizAttempt[]>([]);
   const [preferences, setPreferencesState] = useState<WebPreferences>(() => ({ ...defaultPreferences, theme: readStoredThemePreference() }));
   const [practiceScope, setPracticeScope] = useState<PracticeScope>(() => scopeFromInitialId(initialScopeId));
   const [practiceSession, setPracticeSession] = useState<PracticeSession | null>(null);
@@ -210,14 +231,18 @@ function AppContent({
     let cancelled = false;
     async function loadProgress(): Promise<void> {
       try {
-        const [storedProgress, storedAttempts, storedPreferences] = await Promise.all([
+        const [storedProgress, storedAttempts, storedLessonProgress, storedQuizAttempts, storedPreferences] = await Promise.all([
           store.getQuestionProgress(),
           store.getExamAttempts(),
+          store.getLessonProgress(),
+          store.getLessonQuizAttempts(),
           store.getPreferences(),
         ]);
         if (!cancelled) {
           setProgress(storedProgress);
           setExamAttempts(storedAttempts);
+          setLessonProgress(storedLessonProgress);
+          setLessonQuizAttempts(storedQuizAttempts);
           setPreferencesState(storedPreferences);
           setAlertMessage("");
         }
@@ -288,12 +313,25 @@ function AppContent({
     [latestAttempt, progress],
   );
   const dueReviewCount = useMemo(() => dueCount(progress, now()), [now, progress]);
+  const routeSegments = hashSegments();
+  const currentModuleId = route === "module" || route === "lesson" ? routeSegments[1] : undefined;
+  const currentLessonId = route === "lesson" ? routeSegments[2] : undefined;
 
   function navigate(nextRoute: Route): void {
     setRoute(nextRoute);
     if (window.location.hash !== `#/${nextRoute}`) {
       window.location.hash = `/${nextRoute}`;
     }
+  }
+
+  function navigateToModule(moduleId: string): void {
+    setRoute("module");
+    window.location.hash = `/learn/${moduleId}`;
+  }
+
+  function navigateToLesson(moduleId: string, lessonId: string): void {
+    setRoute("lesson");
+    window.location.hash = `/learn/${moduleId}/${lessonId}`;
   }
 
   function startPractice(scope: PracticeScope = practiceScope, mode: PracticeMode = preferences.practiceMode): void {
@@ -346,6 +384,36 @@ function AppContent({
     }
   }
 
+  async function markLessonRead(lesson: LessonMeta): Promise<void> {
+    const existing = lessonProgress.find((record) => record.lessonId === lesson.id);
+    const nextRecord: LessonProgressRecord = {
+      lessonId: lesson.id,
+      readAt: now(),
+      readCount: (existing?.readCount ?? 0) + 1,
+    };
+    try {
+      await store.putLessonProgress(nextRecord);
+      setLessonProgress((current) => [...current.filter((record) => record.lessonId !== lesson.id), nextRecord].sort((a, b) => a.lessonId.localeCompare(b.lessonId)));
+      setAlertMessage("");
+    } catch (error) {
+      setAlertMessage(`Unable to save lesson progress locally: ${formatError(error)}`);
+      throw error;
+    }
+  }
+
+  async function commitLessonQuizAttempt(attempt: LessonQuizAttempt, nextProgress: readonly QuestionProgressRecord[]): Promise<void> {
+    try {
+      await store.putLessonQuizAttempt(attempt);
+      await store.putQuestionProgressMany(nextProgress);
+      setLessonQuizAttempts((current) => [...current, attempt].sort((a, b) => a.submittedAt.localeCompare(b.submittedAt)));
+      setProgress(nextProgress);
+      setAlertMessage("");
+    } catch (error) {
+      setAlertMessage(`Unable to save lesson quiz locally: ${formatError(error)}`);
+      throw error;
+    }
+  }
+
   async function handleExamSubmitted(attempt: ExamAttempt): Promise<void> {
     let nextProgress = progress;
     for (const item of attempt.items) {
@@ -376,11 +444,15 @@ function AppContent({
             <h1>Canadian Ham</h1>
           </div>
         </div>
-        <LanguageToggle language={language} onLanguageChange={setLanguage} />
+        <div className="header-actions">
+          <PwaStatus />
+          <LanguageToggle language={language} onLanguageChange={setLanguage} />
+        </div>
       </header>
 
       <nav className="top-nav" aria-label="Primary">
         <button type="button" aria-current={route === "home" ? "page" : undefined} onClick={() => navigate("home")}>Home</button>
+        <button type="button" aria-current={route === "learn" || route === "module" || route === "lesson" ? "page" : undefined} onClick={() => navigate("learn")}>Learn</button>
         <button type="button" aria-current={route === "practice" ? "page" : undefined} onClick={() => practiceSession === null ? startPractice(practiceScope) : navigate("practice")}>Practice</button>
         <button type="button" aria-current={route === "mock" ? "page" : undefined} onClick={() => navigate("mock")}>Mock exam</button>
         <button type="button" aria-current={route === "settings" ? "page" : undefined} onClick={() => navigate("settings")}>Settings</button>
@@ -396,6 +468,36 @@ function AppContent({
             onStartPractice={startPractice}
             readiness={readiness}
             weakSubsections={weakSubsections}
+          />
+        ) : null}
+        {route === "learn" ? (
+          <Learn
+            lessonProgress={lessonProgress}
+            onOpenLesson={navigateToLesson}
+            onOpenModule={navigateToModule}
+          />
+        ) : null}
+        {route === "module" ? (
+          <ModulePage
+            lessonProgress={lessonProgress}
+            moduleId={currentModuleId ?? ""}
+            onOpenLesson={navigateToLesson}
+          />
+        ) : null}
+        {route === "lesson" ? (
+          <LessonPage
+            attempts={lessonQuizAttempts}
+            bankQuestionsById={bankQuestionsById}
+            language={language}
+            lessonId={currentLessonId ?? ""}
+            lessonProgress={lessonProgress}
+            moduleId={currentModuleId ?? ""}
+            now={now}
+            onLessonRead={(lesson) => void markLessonRead(lesson)}
+            onOpenLesson={navigateToLesson}
+            onOpenModule={navigateToModule}
+            onQuizAttempt={(attempt, nextProgress) => void commitLessonQuizAttempt(attempt, nextProgress)}
+            progress={progress}
           />
         ) : null}
         {route === "practice" ? (
@@ -434,6 +536,8 @@ function AppContent({
             onProgressImported={(data) => {
               setProgress(data.questionProgress);
               setExamAttempts(data.examAttempts);
+              setLessonProgress(data.lessonProgress ?? []);
+              setLessonQuizAttempts(data.lessonQuizAttempts ?? []);
               setPreferencesState(data.preferences);
               setPracticeSession(null);
               setMockExam(null);
@@ -444,6 +548,8 @@ function AppContent({
             onReset={() => {
               setProgress([]);
               setExamAttempts([]);
+              setLessonProgress([]);
+              setLessonQuizAttempts([]);
               setPreferencesState(defaultPreferences);
               setPracticeScope({ type: "all" });
               setPracticeSession(null);
@@ -487,6 +593,7 @@ function Home({ readiness, weakSubsections, dueReviewCount, examAttempts, onStar
           </p>
           <div className="action-row">
             <button type="button" className="primary-button" onClick={() => onStartPractice({ type: "all" })}>Start practice</button>
+            <button type="button" className="secondary-button" onClick={() => onNavigate("learn")}>Learn</button>
             <button type="button" className="secondary-button" onClick={() => onNavigate("mock")}>Mock exam</button>
             <a className="button secondary-button" href={studyReferenceSheetUrl} target="_blank" rel="noreferrer">Study reference sheet <span className="new-tab-hint">(opens in new tab)</span></a>
           </div>
@@ -537,6 +644,299 @@ function Home({ readiness, weakSubsections, dueReviewCount, examAttempts, onStar
         ))}
       </div>
     </section>
+  );
+}
+
+interface LearnProps {
+  readonly lessonProgress: readonly LessonProgressRecord[];
+  readonly onOpenModule: (moduleId: string) => void;
+  readonly onOpenLesson: (moduleId: string, lessonId: string) => void;
+}
+
+function Learn({ lessonProgress, onOpenModule, onOpenLesson }: LearnProps) {
+  const readLessonIds = new Set(lessonProgress.map((record) => record.lessonId));
+  return (
+    <section className="card learn" aria-labelledby="learn-title">
+      <p className="eyebrow">Structured lessons</p>
+      <h2 id="learn-title">Learn</h2>
+      <p>Study the eight modules in the recommended order. Draft lessons include full reading pages and quizzes; outline lessons show objectives until authored.</p>
+      <div className="module-grid">
+        {modules.map((module) => {
+          const moduleLessons = lessonsByModuleId.get(module.id) ?? [];
+          const readCount = moduleLessons.filter((lesson) => readLessonIds.has(lesson.id)).length;
+          return (
+            <article className="module-card" key={module.id}>
+              <p className="eyebrow">Module {module.order} · {module.categoryId}</p>
+              <h3>{module.title.en}</h3>
+              <p>{module.status === "outline" ? "Outline available" : "Draft lessons available"}</p>
+              <p><strong>{readCount} of {moduleLessons.length}</strong> lessons marked read.</p>
+              <div className="action-row">
+                <button type="button" onClick={() => onOpenModule(module.id)}>Open module</button>
+                {moduleLessons[0] !== undefined ? <button type="button" className="secondary-button" onClick={() => onOpenLesson(module.id, moduleLessons[0]!.id)}>Start module</button> : null}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function ModulePage({ moduleId, lessonProgress, onOpenLesson }: { readonly moduleId: string; readonly lessonProgress: readonly LessonProgressRecord[]; readonly onOpenLesson: (moduleId: string, lessonId: string) => void }) {
+  const module = modulesById.get(moduleId) ?? modules[0]!;
+  const moduleLessons = lessonsByModuleId.get(module.id) ?? [];
+  const readLessonIds = new Set(lessonProgress.map((record) => record.lessonId));
+  return (
+    <section className="card module-page" aria-labelledby="module-title">
+      <p className="eyebrow">Module {module.order} · {module.categoryId}</p>
+      <h2 id="module-title">{module.title.en}</h2>
+      <MarkdownContent markdown={module.body} title={module.title.en} />
+      <div className="lesson-list" aria-label={`${module.title.en} lessons`}>
+        {moduleLessons.map((lesson) => (
+          <article className="lesson-row" key={lesson.id}>
+            <div>
+              <p className="eyebrow">{lesson.id} · {lesson.estimatedMinutes} min · {lesson.covers.join(", ")}</p>
+              <h3>{lesson.title.en}</h3>
+              <p>{lesson.status === "outline" ? "Coming soon" : "Ready to read"} · {readLessonIds.has(lesson.id) ? "Marked read" : "Not marked read"}</p>
+            </div>
+            <button type="button" onClick={() => onOpenLesson(module.id, lesson.id)}>{lesson.status === "outline" ? "Preview outline" : "Read lesson"}</button>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+interface LessonPageProps {
+  readonly moduleId: string;
+  readonly lessonId: string;
+  readonly language: Language;
+  readonly bankQuestionsById: ReadonlyMap<string, Question>;
+  readonly progress: readonly QuestionProgressRecord[];
+  readonly lessonProgress: readonly LessonProgressRecord[];
+  readonly attempts: readonly LessonQuizAttempt[];
+  readonly now: () => string;
+  readonly onLessonRead: (lesson: LessonMeta) => void;
+  readonly onOpenModule: (moduleId: string) => void;
+  readonly onOpenLesson: (moduleId: string, lessonId: string) => void;
+  readonly onQuizAttempt: (attempt: LessonQuizAttempt, nextProgress: readonly QuestionProgressRecord[]) => void;
+}
+
+function LessonPage({ moduleId, lessonId, language, bankQuestionsById, progress, lessonProgress, attempts, now, onLessonRead, onOpenModule, onOpenLesson, onQuizAttempt }: LessonPageProps) {
+  const lesson = lessonsById.get(lessonId);
+  const module = modulesById.get(moduleId) ?? (lesson !== undefined ? modulesById.get(lesson.moduleId) : undefined);
+  if (lesson === undefined || module === undefined) {
+    return (
+      <section className="card lesson-page" aria-labelledby="lesson-title">
+        <h2 id="lesson-title">Lesson not found</h2>
+        <p>The requested lesson route is not in the bundled curriculum.</p>
+      </section>
+    );
+  }
+  const neighbors = lessonNeighbors(lesson.id);
+  const readRecord = lessonProgress.find((record) => record.lessonId === lesson.id);
+  const lessonAttempts = attempts.filter((attempt) => attempt.lessonId === lesson.id);
+  return (
+    <section className="card lesson-page" aria-labelledby="lesson-title">
+      <aside className="lesson-sidebar" aria-label="Module navigation">
+        <button type="button" className="secondary-button" onClick={() => onOpenModule(module.id)}>Module overview</button>
+        <p className="eyebrow">{module.title.en}</p>
+        <ol>
+          {(lessonsByModuleId.get(module.id) ?? []).map((moduleLesson) => (
+            <li key={moduleLesson.id}>
+              <button type="button" aria-current={moduleLesson.id === lesson.id ? "page" : undefined} onClick={() => onOpenLesson(module.id, moduleLesson.id)}>{moduleLesson.title.en}</button>
+            </li>
+          ))}
+        </ol>
+      </aside>
+      <article className="lesson-article">
+        <p className="eyebrow">{lesson.id} · {lesson.estimatedMinutes} min · {lesson.covers.join(", ")}</p>
+        <h2 id="lesson-title">{lesson.title.en}</h2>
+        <p>{readRecord === undefined ? "Not marked read yet." : `Marked read ${readRecord.readCount} time${readRecord.readCount === 1 ? "" : "s"}.`}</p>
+        {lesson.status === "outline" ? (
+          <section className="coming-soon" aria-labelledby="coming-soon-title">
+            <h3 id="coming-soon-title">Coming soon</h3>
+            <p>This outline is bundled now so module order and objectives are visible offline while the full lesson is authored.</p>
+            <h4>Objectives</h4>
+            <ul>{lesson.objectives.map((objective) => <li key={objective}>{objective}</li>)}</ul>
+            <h4>Covered subsections</h4>
+            <ul>{lesson.covers.map((cover) => <li key={cover}>{cover}: {subsectionTitle(cover)}</li>)}</ul>
+          </section>
+        ) : (
+          <MarkdownContent markdown={lesson.body} title={lesson.title.en} />
+        )}
+        <div className="action-row lesson-actions">
+          <button type="button" onClick={() => onLessonRead(lesson)}>Mark lesson read</button>
+          {neighbors.previous !== null ? <button type="button" className="secondary-button" onClick={() => onOpenLesson(neighbors.previous!.moduleId, neighbors.previous!.id)}>Previous: {neighbors.previous.title.en}</button> : null}
+          {neighbors.next !== null ? <button type="button" className="secondary-button" onClick={() => onOpenLesson(neighbors.next!.moduleId, neighbors.next!.id)}>Next: {neighbors.next.title.en}</button> : null}
+        </div>
+        {lesson.quizIds.map((quizId) => {
+          const quiz = lessonQuizzesById.get(quizId);
+          return quiz === undefined ? (
+            <p className="reference-note" key={quizId}>Lesson quiz {quizId} is coming soon.</p>
+          ) : (
+            <LessonQuizView
+              attempts={lessonAttempts.filter((attempt) => attempt.quizId === quiz.id)}
+              bankQuestionsById={bankQuestionsById}
+              key={quiz.id}
+              language={language}
+              lesson={lesson}
+              now={now}
+              onQuizAttempt={onQuizAttempt}
+              progress={progress}
+              quiz={quiz}
+            />
+          );
+        })}
+      </article>
+    </section>
+  );
+}
+
+function LessonQuizView({ quiz, lesson, language, bankQuestionsById, progress, attempts, now, onQuizAttempt }: { readonly quiz: LessonQuiz; readonly lesson: LessonMeta; readonly language: Language; readonly bankQuestionsById: ReadonlyMap<string, Question>; readonly progress: readonly QuestionProgressRecord[]; readonly attempts: readonly LessonQuizAttempt[]; readonly now: () => string; readonly onQuizAttempt: (attempt: LessonQuizAttempt, nextProgress: readonly QuestionProgressRecord[]) => void }) {
+  const [seed, setSeed] = useState(() => `${quiz.id}:${Date.now().toString(36)}`);
+  const [items, setItems] = useState(() => buildLessonQuizItems(quiz, seed));
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedByItemId, setSelectedByItemId] = useState<ReadonlyMap<string, number>>(() => new Map());
+  const [submittedAttemptId, setSubmittedAttemptId] = useState<string | null>(null);
+  const currentItem = items[currentIndex];
+  const allAnswered = items.every((item) => selectedByItemId.has(item.id));
+  const latestAttempt = attempts[attempts.length - 1];
+
+  function restart(): void {
+    const nextSeed = `${quiz.id}:${Date.now().toString(36)}:${attempts.length + 1}`;
+    setSeed(nextSeed);
+    setItems(buildLessonQuizItems(quiz, nextSeed));
+    setCurrentIndex(0);
+    setSelectedByItemId(new Map());
+    setSubmittedAttemptId(null);
+  }
+
+  function selectCurrent(displayIndex: number): void {
+    if (currentItem === undefined || submittedAttemptId !== null || selectedByItemId.has(currentItem.id)) {
+      return;
+    }
+    const selected = new Map(selectedByItemId);
+    selected.set(currentItem.id, currentItem.choicePermutation[displayIndex]!);
+    setSelectedByItemId(selected);
+  }
+
+  function submitQuiz(): void {
+    let correct = 0;
+    let nextProgress = progress;
+    const officialQuestionIds: string[] = [];
+    const incorrectOfficialQuestionIds: string[] = [];
+    const incorrectConceptCheckIds: string[] = [];
+    const submittedAt = now();
+    for (const item of items) {
+      const selected = selectedByItemId.get(item.id);
+      if (item.type === "official") {
+        officialQuestionIds.push(item.questionId);
+        if (selected === 0) {
+          correct += 1;
+        } else {
+          incorrectOfficialQuestionIds.push(item.questionId);
+        }
+        if (selected !== undefined) {
+          nextProgress = applyPracticeAnswer(nextProgress, item.questionId, selected, submittedAt);
+        }
+      } else {
+        const isCorrect = selected !== undefined && item.conceptCheck.choices[selected]?.isCorrect === true;
+        if (isCorrect) {
+          correct += 1;
+        } else {
+          incorrectConceptCheckIds.push(item.conceptCheck.id);
+        }
+      }
+    }
+    const attempt: LessonQuizAttempt = {
+      id: `lesson-quiz-${submittedAt}-${quiz.id}-${seed}`,
+      quizId: quiz.id,
+      lessonId: lesson.id,
+      submittedAt,
+      correct,
+      total: items.length,
+      percent: items.length === 0 ? 0 : (correct / items.length) * 100,
+      officialQuestionIds,
+      incorrectOfficialQuestionIds,
+      incorrectConceptCheckIds,
+    };
+    setSubmittedAttemptId(attempt.id);
+    onQuizAttempt(attempt, nextProgress);
+  }
+
+  return (
+    <section className="lesson-quiz" aria-labelledby={`${quiz.id}-title`}>
+      <div className="lesson-quiz__header">
+        <div>
+          <p className="eyebrow">Lesson quiz</p>
+          <h3 id={`${quiz.id}-title`}>{quiz.id}</h3>
+          <p>{items.length} questions: official bank questions update Leitner progress; concept checks do not.</p>
+          {latestAttempt !== undefined ? <p>Latest score: <strong>{latestAttempt.correct} / {latestAttempt.total}</strong> ({latestAttempt.percent.toFixed(0)}%). Attempts saved: {attempts.length}.</p> : null}
+        </div>
+        <button type="button" className="secondary-button" onClick={restart}>Retry quiz</button>
+      </div>
+      {currentItem === undefined ? <p>No quiz items are bundled for this lesson yet.</p> : (
+        <>
+          <p>Question {currentIndex + 1} of {items.length}</p>
+          <LessonQuizQuestion item={currentItem} language={language} questionsById={bankQuestionsById} selectedSourceOrChoiceIndex={selectedByItemId.get(currentItem.id)} showCorrectness={selectedByItemId.has(currentItem.id)} onChoose={selectCurrent} />
+          <div className="action-row">
+            <button type="button" disabled={currentIndex === 0} onClick={() => setCurrentIndex(currentIndex - 1)}>Previous</button>
+            <button type="button" disabled={currentIndex >= items.length - 1} onClick={() => setCurrentIndex(currentIndex + 1)}>Next</button>
+            <button type="button" className="primary-button" disabled={!allAnswered || submittedAttemptId !== null} onClick={submitQuiz}>Submit lesson quiz</button>
+          </div>
+        </>
+      )}
+    </section>
+  );
+}
+
+function LessonQuizQuestion({ item, language, questionsById, selectedSourceOrChoiceIndex, showCorrectness, onChoose }: { readonly item: LessonQuizItem; readonly language: Language; readonly questionsById: ReadonlyMap<string, Question>; readonly selectedSourceOrChoiceIndex: number | undefined; readonly showCorrectness: boolean; readonly onChoose: (displayIndex: number) => void }) {
+  if (item.type === "official") {
+    const question = questionsById.get(item.questionId);
+    if (question === undefined) {
+      return <p role="status">Official question {item.questionId} is loading from the bundled bank.</p>;
+    }
+    return (
+      <>
+        <QuestionCard choicePermutation={item.choicePermutation} disabled={showCorrectness} language={language} onChoose={onChoose} question={question} selectedSourceIndex={selectedSourceOrChoiceIndex} showCorrectness={showCorrectness} />
+        {showCorrectness ? <ExplanationPanel explanation={explanationForQuestion(question.id)} language={language} choicePermutation={item.choicePermutation} /> : null}
+      </>
+    );
+  }
+  return <ConceptCheckCard conceptCheck={item.conceptCheck} choicePermutation={item.choicePermutation} disabled={showCorrectness} language={language} selectedChoiceIndex={selectedSourceOrChoiceIndex} showCorrectness={showCorrectness} onChoose={onChoose} />;
+}
+
+function ConceptCheckCard({ conceptCheck, choicePermutation, selectedChoiceIndex, showCorrectness, disabled, language, onChoose }: { readonly conceptCheck: ConceptCheck; readonly choicePermutation: readonly number[]; readonly selectedChoiceIndex: number | undefined; readonly showCorrectness: boolean; readonly disabled: boolean; readonly language: Language; readonly onChoose: (displayIndex: number) => void }) {
+  const selectedChoice = selectedChoiceIndex === undefined ? undefined : conceptCheck.choices[selectedChoiceIndex];
+  const prompt = conceptCheck.prompt[language] ?? conceptCheck.prompt.en;
+  return (
+    <article className="question-panel" aria-labelledby={`concept-${conceptCheck.id}`}>
+      <p className="question-meta">Concept check · {conceptCheck.id}</p>
+      <h4 id={`concept-${conceptCheck.id}`}>Question</h4>
+      <p className="question-text" lang={languageTag(language)}>{prompt}</p>
+      <div className="answers" role="group" aria-label="Answer choices">
+        {choicePermutation.map((choiceIndex, displayIndex) => {
+          const choice = conceptCheck.choices[choiceIndex]!;
+          const selected = selectedChoiceIndex === choiceIndex;
+          const correct = choice.isCorrect;
+          const className = ["answer-button", showCorrectness && correct ? "is-correct" : "", showCorrectness && selected && !correct ? "is-incorrect" : ""].filter(Boolean).join(" ");
+          return (
+            <button aria-pressed={selected} className={className} data-testid="lesson-quiz-choice" disabled={disabled} key={choice.text.en} type="button" onClick={() => onChoose(displayIndex)}>
+              <span className="answer-label">{String.fromCharCode(65 + displayIndex)}</span>
+              <span lang={languageTag(language)}>{choice.text[language] ?? choice.text.en}</span>
+              {showCorrectness && correct ? <strong>Correct answer</strong> : null}
+              {showCorrectness && selected && !correct ? <strong>Your answer</strong> : null}
+            </button>
+          );
+        })}
+      </div>
+      {showCorrectness ? (
+        <div className="feedback" role="status">
+          <p>{selectedChoice?.isCorrect ? "Correct." : "Incorrect."} {conceptCheck.explanation[language] ?? conceptCheck.explanation.en}</p>
+        </div>
+      ) : null}
+    </article>
   );
 }
 
@@ -721,7 +1121,7 @@ function Practice({
               showCorrectness={session.mode === "immediate" && isAnswered}
             />
             <div className="feedback" role="status" aria-live="polite" ref={feedbackRef} tabIndex={-1}>
-              {session.mode === "immediate" ? immediateFeedback(currentItem.question, selectedSourceIndex, language) : (
+              {session.mode === "immediate" ? immediateFeedback(currentItem.question, currentItem.choicePermutation, selectedSourceIndex, language) : (
                 <p>Review-later mode: answer all questions, then submit the set to see results.</p>
               )}
             </div>
@@ -805,11 +1205,37 @@ function PracticeReview({ session, language }: { readonly session: PracticeSessi
               <p lang={languageTag(language)}>{item.question.text[language]}</p>
               <p>Your answer: <span lang={languageTag(language)}>{selectedAnswer?.text[language] ?? "Unanswered"}</span></p>
               <p>Correct answer: <span lang={languageTag(language)}>{correctAnswer.text[language]}</span></p>
+              <ExplanationPanel explanation={explanationForQuestion(item.question.id)} language={language} choicePermutation={item.choicePermutation} />
               <p>{item.question.categoryId}; {subsectionTitle(item.question.subsectionId)}</p>
             </li>
           );
         })}
       </ol>
+    </section>
+  );
+}
+
+function ExplanationPanel({ explanation, language, choicePermutation }: { readonly explanation: Explanation | null; readonly language: Language; readonly choicePermutation?: readonly number[] }) {
+  if (explanation === null) {
+    return <p className="explanation-panel explanation-panel--missing">No project explanation is bundled for this question yet.</p>;
+  }
+  const choiceNotes = parseChoiceNotes(explanation, language);
+  return (
+    <section className="explanation-panel" aria-label={`Explanation for ${explanation.questionId}`}>
+      <h4>Explanation</h4>
+      {mainExplanationText(explanation, language).split(/\n\n+/).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+      {choiceNotes.length > 0 ? (
+        <ul>
+          {choiceNotes.map((note) => {
+            const displayIndex = choicePermutation?.findIndex((sourceIndex) => sourceIndex === note.sourceIndex);
+            const label = displayIndex === undefined || displayIndex < 0 ? `sourceIndex ${note.sourceIndex}` : `Displayed choice ${String.fromCharCode(65 + displayIndex)}`;
+            return <li key={note.sourceIndex}><strong>{label}:</strong> {note.note}</li>;
+          })}
+        </ul>
+      ) : null}
+      {explanation.citations.length > 0 ? (
+        <p className="question-meta">Citations: {explanation.citations.map((citation) => citation.id ?? citation.type).join(", ")}</p>
+      ) : null}
     </section>
   );
 }
@@ -1075,6 +1501,7 @@ function Results({ attempt, language, onStartPractice, questionsById }: { readon
                       <p lang={languageTag(language)}>{question.text[language]}</p>
                       <p>Your answer: <span lang={languageTag(language)}>{selected?.text[language] ?? "Unanswered"}</span></p>
                       <p>Correct answer: <span lang={languageTag(language)}>{correct?.text[language] ?? "Loading"}</span></p>
+                      <ExplanationPanel explanation={explanationForQuestion(question.id)} language={language} choicePermutation={item.choicePermutation} />
                     </>
                   )}
                 </li>
@@ -1219,7 +1646,7 @@ function Settings({ store, now, preferences, statusMessage, onProgressImported, 
       {confirmReset ? (
         <div className="confirm-panel" role="alertdialog" aria-labelledby="reset-title" aria-modal="false" ref={resetDialogRef} tabIndex={-1}>
           <h3 id="reset-title">Reset all local data?</h3>
-          <p>This deletes browser-local question progress, mock exam attempts, and preferences. Bundled content remains available offline.</p>
+          <p>This deletes browser-local question progress, lesson read status, lesson quiz attempts, mock exam attempts, and preferences. Bundled content remains available offline.</p>
           <button type="button" onClick={() => { setConfirmReset(false); window.setTimeout(() => resetButtonRef.current?.focus(), 0); }}>Cancel reset</button>
           <button type="button" className="danger" onClick={() => void resetAll()}>Confirm reset all data</button>
         </div>
@@ -1366,15 +1793,20 @@ function readinessCopy(readiness: ReadinessResult): string {
   return "Recent results do not yet meet the pass-ready rule.";
 }
 
-function immediateFeedback(question: Question, selectedSourceIndex: number | undefined, language: Language) {
+function immediateFeedback(question: Question, choicePermutation: readonly number[], selectedSourceIndex: number | undefined, language: Language) {
   if (selectedSourceIndex === undefined) {
     return <p>Choose an answer to see immediate feedback.</p>;
   }
   const correctAnswer = question.answers.find((answer) => answer.sourceIndex === 0)!;
-  return selectedSourceIndex === 0 ? (
-    <p>Correct. The correct answer is: <strong lang={languageTag(language)}>{correctAnswer.text[language]}</strong></p>
-  ) : (
-    <p>Incorrect. The correct answer is: <strong lang={languageTag(language)}>{correctAnswer.text[language]}</strong></p>
+  return (
+    <>
+      {selectedSourceIndex === 0 ? (
+        <p>Correct. The correct answer is: <strong lang={languageTag(language)}>{correctAnswer.text[language]}</strong></p>
+      ) : (
+        <p>Incorrect. The correct answer is: <strong lang={languageTag(language)}>{correctAnswer.text[language]}</strong></p>
+      )}
+      <ExplanationPanel explanation={explanationForQuestion(question.id)} language={language} choicePermutation={choicePermutation} />
+    </>
   );
 }
 
