@@ -38,6 +38,7 @@ type QuestionRecord = {
 
 type LessonRecord = {
   id: string;
+  moduleId: string | null;
   covers: string[];
   quizIds: string[];
   filePath: string;
@@ -136,6 +137,7 @@ function parseLessonFrontMatter(markdown: string, filePath: string): LessonRecor
   }
   return {
     id,
+    moduleId: parseFrontMatterString(frontMatter, "moduleId"),
     covers: parseFrontMatterArray(frontMatter, "covers"),
     quizIds: parseFrontMatterArray(frontMatter, "quizIds"),
     filePath,
@@ -281,6 +283,28 @@ async function readQuizFiles(quizRoot: string): Promise<Array<{ filePath: string
   return files;
 }
 
+function isModuleLessonRoot(lessonRoot: string): boolean {
+  return /^m\d+-/i.test(path.basename(path.resolve(lessonRoot)));
+}
+
+function moduleQuizPrefixFromLessonRoot(lessonRoot: string, lessons: Iterable<LessonRecord>): string | null {
+  const rootMatch = path.basename(path.resolve(lessonRoot)).match(/^m(\d+)-/i);
+  if (rootMatch !== null) {
+    return `QZ-L-${rootMatch[1]!.padStart(3, "0")}-`;
+  }
+  for (const lesson of lessons) {
+    const lessonMatch = lesson.id.match(/^L-(\d{3})-/);
+    if (lessonMatch !== null) {
+      return `QZ-L-${lessonMatch[1]}-`;
+    }
+    const moduleMatch = lesson.moduleId === null ? null : lesson.moduleId.match(/^M(\d+)$/i);
+    if (moduleMatch !== null) {
+      return `QZ-L-${moduleMatch[1]!.padStart(3, "0")}-`;
+    }
+  }
+  return null;
+}
+
 function addMapValue(map: Map<string, string[]>, key: string, value: string): void {
   const existing = map.get(key);
   if (existing === undefined) {
@@ -324,6 +348,8 @@ export async function checkQuizzes(options: QuizCheckOptions = {}): Promise<Quiz
       issues.push(`duplicate quizId ${quizId} is referenced by lessons ${uniqueLessonIds.join(", ")}`);
     }
   }
+  const scopedToModuleRoot = isModuleLessonRoot(lessonRoot);
+  const scopedQuizPrefix = scopedToModuleRoot ? moduleQuizPrefixFromLessonRoot(lessonRoot, lessons.values()) : null;
 
   let quizFileCount = 0;
   let officialQuestionCount = 0;
@@ -334,8 +360,11 @@ export async function checkQuizzes(options: QuizCheckOptions = {}): Promise<Quiz
   const seenOfficialQuestionIds = new Map<string, string>();
 
   for (const { filePath, quiz: rawQuiz } of await readQuizFiles(quizRoot)) {
-    quizFileCount += 1;
     const basenameId = path.basename(filePath, ".json");
+    if (scopedToModuleRoot && !quizIdsReferencedByLessons.has(basenameId) && (scopedQuizPrefix === null || !basenameId.startsWith(scopedQuizPrefix))) {
+      continue;
+    }
+    quizFileCount += 1;
     seenQuizFileBasenames.add(basenameId);
     const quiz = validateQuizShape(rawQuiz, filePath, issues);
     if (quiz === null) {
