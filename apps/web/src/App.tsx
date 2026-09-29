@@ -970,7 +970,23 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
           <span className="sr-only" role="status" aria-live="polite">{timerAnnouncement}</span>
         </div>
       ) : <p className="timer-off-note">Timer off. No time pressure by default.</p>}
-      <nav className="question-navigator" aria-label="Question navigator">
+      <a className="button secondary-button question-map-link" href="#question-map">Jump to question map</a>
+      <QuestionCard
+        choicePermutation={item.choicePermutation}
+        disabled={false}
+        language={language}
+        onChoose={choose}
+        question={question}
+        selectedSourceIndex={selectedSourceIndex}
+        showCorrectness={false}
+      />
+      <div className="action-row">
+        <button type="button" onClick={toggleFlag}>{exam.flaggedQuestionIds.has(question.id) ? "Remove flag" : "Flag for review"}</button>
+        <button type="button" disabled={exam.currentIndex === 0} onClick={() => onExamChange({ ...exam, currentIndex: exam.currentIndex - 1 })}>Previous</button>
+        <button type="button" disabled={exam.currentIndex >= exam.generatedItems.length - 1} onClick={() => onExamChange({ ...exam, currentIndex: exam.currentIndex + 1 })}>Next</button>
+        <button type="button" ref={submitButtonRef} onClick={() => onExamChange({ ...exam, confirmingSubmit: true })}>Submit exam</button>
+      </div>
+      <nav id="question-map" className="question-navigator" aria-label="Question navigator" tabIndex={-1}>
         {exam.generatedItems.map((candidate, index) => {
           const answered = exam.selectedByQuestionId.has(candidate.questionId);
           const flagged = exam.flaggedQuestionIds.has(candidate.questionId);
@@ -988,21 +1004,6 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
           );
         })}
       </nav>
-      <QuestionCard
-        choicePermutation={item.choicePermutation}
-        disabled={false}
-        language={language}
-        onChoose={choose}
-        question={question}
-        selectedSourceIndex={selectedSourceIndex}
-        showCorrectness={false}
-      />
-      <div className="action-row">
-        <button type="button" onClick={toggleFlag}>{exam.flaggedQuestionIds.has(question.id) ? "Remove flag" : "Flag for review"}</button>
-        <button type="button" disabled={exam.currentIndex === 0} onClick={() => onExamChange({ ...exam, currentIndex: exam.currentIndex - 1 })}>Previous</button>
-        <button type="button" disabled={exam.currentIndex >= exam.generatedItems.length - 1} onClick={() => onExamChange({ ...exam, currentIndex: exam.currentIndex + 1 })}>Next</button>
-        <button type="button" ref={submitButtonRef} onClick={() => onExamChange({ ...exam, confirmingSubmit: true })}>Submit exam</button>
-      </div>
       {exam.confirmingSubmit ? (
         <section className="confirm-panel" aria-labelledby="submit-confirm-title" role="alertdialog" aria-modal="false" ref={confirmRef} tabIndex={-1}>
           <h3 id="submit-confirm-title">Submit mock exam?</h3>

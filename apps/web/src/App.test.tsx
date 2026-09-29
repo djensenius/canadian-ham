@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
@@ -58,7 +60,11 @@ function createMemoryStorage(): Storage {
 }
 
 function webIndexHtml(): string {
-  return readFileSync("index.html", "utf8");
+  const moduleUrl = new URL(import.meta.url);
+  const modulePath = moduleUrl.protocol === "file:"
+    ? fileURLToPath(moduleUrl)
+    : join(process.cwd(), moduleUrl.pathname.replace(/^\/+/, ""));
+  return readFileSync(join(dirname(modulePath), "../index.html"), "utf8");
 }
 
 function extractInlineThemeScript(html: string): string {
@@ -204,7 +210,7 @@ describe("App accessibility and flows", () => {
     await waitFor(async () => assert.equal((await store.getQuestionProgress()).length, 1));
   });
 
-  it("renders Mock exam, supports keyboard operation, and has no axe violations", async () => {
+  it("renders Mock exam with narrow DOM order, supports keyboard operation, and has no axe violations", async () => {
     window.location.hash = "#/mock";
     const store = createStore("mock");
     const user = userEvent.setup();
@@ -215,10 +221,16 @@ describe("App accessibility and flows", () => {
 
     await user.click(screen.getByRole("button", { name: "Start mock exam" }));
     await screen.findByText(/Question 1 of 100/);
+    const mapLink = screen.getByRole("link", { name: "Jump to question map" });
     const navigator = screen.getByRole("navigation", { name: "Question navigator" });
     const questionPanel = document.querySelector(".question-panel");
+    const actionRow = document.querySelector(".mock-exam--running > .action-row");
     assert.ok(questionPanel);
-    assert.ok(navigator.compareDocumentPosition(questionPanel) & Node.DOCUMENT_POSITION_FOLLOWING);
+    assert.ok(actionRow);
+    assert.equal(mapLink.getAttribute("href"), "#question-map");
+    assert.equal(navigator.getAttribute("id"), "question-map");
+    assert.ok(questionPanel.compareDocumentPosition(actionRow) & Node.DOCUMENT_POSITION_FOLLOWING);
+    assert.ok(actionRow.compareDocumentPosition(navigator) & Node.DOCUMENT_POSITION_FOLLOWING);
     const firstChoice = screen.getAllByTestId("answer-choice")[0]!;
     firstChoice.focus();
     await user.keyboard("{Enter}");
@@ -315,22 +327,29 @@ describe("App accessibility and flows", () => {
     assert.equal(themeColor.getAttribute("content"), THEME_COLORS.dark);
   });
 
-  it("keeps the inline theme script hash in the CSP and applies stored dark theme", () => {
+  it("keeps the inline theme script hash in the CSP and applies stored themes", () => {
     const html = webIndexHtml();
     const script = extractInlineThemeScript(html);
     const csp = extractCsp(html);
     const hash = createHash("sha256").update(script).digest("base64");
+    const runThemeScript = () => new Function("window", "document", "localStorage", script)(window, document, window.localStorage);
     const themeColor = document.createElement("meta");
     themeColor.setAttribute("name", "theme-color");
     document.head.append(themeColor);
-    window.localStorage.setItem(THEME_STORAGE_KEY, "dark");
 
     assert.ok(csp.includes(`'sha256-${hash}'`));
+    assert.doesNotMatch(csp, /script-src[^;]*'unsafe-inline'/);
     assert.doesNotMatch(csp, /style-src[^;]*'unsafe-inline'/);
-    new Function("window", "document", "localStorage", script)(window, document, window.localStorage);
 
+    window.localStorage.setItem(THEME_STORAGE_KEY, "dark");
+    runThemeScript();
     assert.equal(document.documentElement.dataset.theme, "dark");
     assert.equal(themeColor.getAttribute("content"), THEME_COLORS.dark);
+
+    window.localStorage.setItem(THEME_STORAGE_KEY, "light");
+    runThemeScript();
+    assert.equal(document.documentElement.dataset.theme, "light");
+    assert.equal(themeColor.getAttribute("content"), THEME_COLORS.light);
   });
 
   it("preserves stored preferences and re-renders theme radios in recovery settings", async () => {

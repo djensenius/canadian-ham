@@ -441,7 +441,8 @@ li {
   color: var(--ch-color-ink);
 }
 
-.all-questions {
+.all-questions,
+.category-card.all-questions:hover:not(:disabled) {
   background: var(--ch-color-paper-inset);
 }
 
@@ -514,6 +515,7 @@ input[type="checkbox"] {
   width: 1.25rem;
   height: 1.25rem;
   margin: 0;
+  -webkit-appearance: none;
   appearance: none;
   border: 2px solid var(--ch-color-border);
   background: var(--ch-color-paper-inset);
@@ -549,6 +551,21 @@ input[type="checkbox"]::after {
 input[type="radio"]:checked::after,
 input[type="checkbox"]:checked::after {
   transform: scale(1);
+}
+
+@media (forced-colors: active) {
+  input[type="radio"],
+  input[type="checkbox"] {
+    border-color: CanvasText;
+    background: Canvas;
+    color: CanvasText;
+  }
+
+  input[type="radio"]::after,
+  input[type="checkbox"]::after {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
 }
 
 .session-summary {
@@ -696,6 +713,10 @@ input[type="checkbox"]:checked::after {
   margin: 0;
 }
 
+.question-map-link {
+  justify-self: start;
+}
+
 .question-navigator {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(3.75rem, 1fr));
@@ -773,6 +794,7 @@ input[type="checkbox"]:checked::after {
       "summary summary"
       "tools tools"
       "timer timer"
+      "maplink maplink"
       "navigator question"
       "navigator actions"
       "navigator confirm";
@@ -794,6 +816,10 @@ input[type="checkbox"]:checked::after {
   .mock-exam--running > .timer-panel,
   .mock-exam--running > .timer-off-note {
     grid-area: timer;
+  }
+
+  .mock-exam--running > .question-map-link {
+    grid-area: maplink;
   }
 
   .mock-exam--running > .question-panel {
