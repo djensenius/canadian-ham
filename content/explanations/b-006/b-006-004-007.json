@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-004-007.\n\nWhy the correct answer is right: Open-wire line is the lowest-loss option listed for HF when it can be installed correctly.\n\nPer-choice notes:\n- sourceIndex 0: \"open-wire line\": Correct. Open-wire line is the lowest-loss option listed for HF when it can be installed correctly.\n- sourceIndex 1: \"75-ohm twin-lead\": That is a balanced two-conductor line, so it does not fit questions about shielded coax or open-air spreaders.\n- sourceIndex 2: \"coaxial cable\": Coax is a shielded unbalanced feedline; it is only correct when the question is asking for that construction or practical route.\n- sourceIndex 3: \"300-ohm twin-lead\": That is a balanced two-conductor line, so it does not fit questions about shielded coax or open-air spreaders.",
+    "en": "Question B-006-004-007.\n\nWhy the correct answer is right: On HF, open-wire line has very low loss because much of its field is in air and conductor losses are small when it is installed clear of nearby objects. It is the lowest-loss option listed.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"75-ohm twin-lead\": Twin-lead has more dielectric around the conductors and is not the lowest-loss HF line in the list.\n- sourceIndex 2: \"coaxial cable\": Coax is convenient and shielded, but its dielectric and conductor losses are generally higher than well-installed open-wire line on HF.\n- sourceIndex 3: \"300-ohm twin-lead\": 300-ohm twin-lead can be useful, yet open-wire line with wider air spacing is the lower-loss choice here.",
     "fr": null
   },
   "citations": [

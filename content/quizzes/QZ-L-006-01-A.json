@@ -27,7 +27,7 @@
       "id": "QZ-L-006-01-A-C2",
       "prompt": { "en": "Why is open-wire line usually kept away from metal gutters and railings?", "fr": null },
       "choices": [
-        { "text": { "en": "Metal nearby can disturb the fields around the balanced line.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Metal nearby automatically improves its balance.", "fr": null }, "isCorrect": false },
         { "text": { "en": "It needs a clear route so its balanced fields remain predictable.", "fr": null }, "isCorrect": true },
         { "text": { "en": "It becomes coaxial cable when it touches metal.", "fr": null }, "isCorrect": false },
         { "text": { "en": "It cannot carry HF signals through air.", "fr": null }, "isCorrect": false }

@@ -37,7 +37,7 @@ By the end of this lesson, you can:
 
 ## Dipole patterns
 
-A half-wave dipole radiates strongest broadside to the wire and weakest off the ends. In three dimensions, the free-space pattern looks like a doughnut around the conductor. If the wire ends point north and south, the broadside directions are east and west.
+A half-wave dipole radiates strongest broadside to the wire and weakest off the ends. In three dimensions, the free-space pattern looks like a doughnut around the conductor. If a practice dipole is strung from the northeast corner of a yard toward the southwest corner, the broadside directions are northwest and southeast.
 
 Near real ground, the pattern changes with height, soil, and nearby objects. The broadside idea is still the starting point: do not expect strongest radiation straight out of the wire ends.
 
@@ -77,7 +77,7 @@ loop length in metres ≈ 306 / f(MHz)
 - loop length ≈ 12.44 m around the full square
 - each side is about 3.11 m before final adjustment
 
-The same total-wire idea applies to delta loops, but the shape is triangular instead of square.
+The same total-wire idea applies to delta loops, but the shape is triangular instead of square. Notice the formula distinction: 300 / f is the free-space wavelength estimate, while 306 / f is the practical full-wave loop starting estimate used for these wire-loop questions.
 
 ## Delta loops and polarization
 
@@ -96,11 +96,11 @@ If it is a square loop, each side starts near 7.58 m. The final shape may be irr
 
 ## Try it
 
-1. A dipole wire runs east-west. Its strongest free-space directions are north and south.
-2. A random wire causes audio distortion during transmit. Look for RF feedback, bonding, matching, and counterpoise issues.
-3. A one-wavelength square loop is cut for a higher frequency. Its total wire length becomes shorter.
-4. A quad has more structure in the wind than a straight-element beam, so mast strength matters.
-5. Moving a loop feed point can change polarization even when the same wire loop remains in place.
+1. A dipole wire runs east-west in free space. Where are its strongest directions? Broadside to the wire, so the strongest directions are north and south.
+2. A random wire causes audio distortion during transmit. What should you investigate? Look for RF feedback, bonding, matching, and counterpoise issues because RF may be returning through the operating position.
+3. A one-wavelength square loop is cut for a higher frequency. What happens to total wire length? It becomes shorter because wavelength and frequency move in opposite directions.
+4. A full-wave loop is planned for 15 MHz. Which estimate is the practical loop starting length? Use 306 / 15 = 20.4 m total wire; 300 / 15 = 20.0 m is the free-space wavelength estimate.
+5. The same triangular loop is fed at a different point. What antenna property can change? Polarization can change because feed-point location affects current distribution and the electric-field orientation.
 
 ## Radio connection
 
@@ -126,5 +126,5 @@ Description: Draw three ink-brush panels. First, show a straight dipole with a d
 - Random-wire and end-fed antennas can be useful but need careful matching and RF return paths.
 - Trap antennas can support multiband use, with added parts and possible tradeoffs.
 - Quad and delta-loop driven elements are approximately a full wavelength around the loop.
-- Use about 306 / f(MHz) for full-wave loop starting length.
+- Use about 306 / f(MHz) for practical full-wave loop starting length; 300 / f(MHz) is the free-space wavelength estimate.
 - Loop feed-point location influences polarization and impedance.

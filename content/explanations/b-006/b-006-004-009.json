@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-004-009.\n\nWhy the correct answer is right: With the same cable and frequency, dB loss is proportional to length. Going from 20 m to 40 m doubles the length, so the increase is 100%.\n\nPer-choice notes:\n- sourceIndex 0: \"It would be increased by 100%\": Correct. The new length is twice the original length, so the added loss is another full original amount: 100% more.\n- sourceIndex 1: \"It would be increased by 50%\": This would be a one-and-a-half-times length, not a doubling.\n- sourceIndex 2: \"It would be increased by 10%\": This is far too small for doubling the same lossy line.\n- sourceIndex 3: \"It would be increased by 20%\": This is far too small for doubling the same lossy line.",
+    "en": "Question B-006-004-009.\n\nWhy the correct answer is right: With the same coax and frequency, loss is proportional to length in dB. Increasing from 20 m to 40 m doubles the length, so the loss doubles; a doubling is a 100% increase.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It would be increased by 50%\": This uses the final length as the denominator, 20 / 40 = 50%, instead of comparing the added 20 m with the original 20 m.\n- sourceIndex 2: \"It would be increased by 10%\": This is simply an incorrect percentage for the stated lengths; the correct computation is ((40 - 20) / 20) x 100 = 100%, not 10%.\n- sourceIndex 3: \"It would be increased by 20%\": This is simply an incorrect percentage for the stated doubling; the correct computation is ((40 - 20) / 20) x 100 = 100%, not 20%.",
     "fr": null
   },
   "citations": [

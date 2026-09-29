@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-001-006.\n\nWhy the correct answer is right: For a purely resistive matched load, the load resistance should equal the line characteristic impedance. A 50-ohm line is matched by a 50-ohm resistive load.\n\nPer-choice notes:\n- sourceIndex 0: \"50 ohms\": Correct. Equal resistance and line impedance gives the matched resistive termination.\n- sourceIndex 1: \"25 ohms\": This is half of the line impedance, so it would create a mismatch.\n- sourceIndex 2: \"100 ohms\": This is twice the line impedance, so it would create a mismatch.\n- sourceIndex 3: \"200 ohms\": This is four times the line impedance, not a matched termination.",
+    "en": "Question B-006-001-006.\n\nWhy the correct answer is right: For a purely resistive load to absorb all the RF power arriving on a 50-ohm line, the load resistance must equal the line's characteristic impedance. A 50-ohm load gives the travelling wave no impedance step to reflect from.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"25 ohms\": This is half the line impedance, 50 / 2, so it would create a 2:1 resistance mismatch instead of absorbing all received RF energy.\n- sourceIndex 2: \"100 ohms\": This is double the line impedance, 50 x 2, which produces the same 2:1 mismatch ratio from the high side.\n- sourceIndex 3: \"200 ohms\": This is four times the line impedance, 50 x 4, so the mismatch is larger and more energy is reflected.",
     "fr": null
   },
   "citations": [

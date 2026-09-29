@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-003-007.\n\nWhy the correct answer is right: BNC connectors are common on low-power gear and test equipment because they connect quickly and reliably.\n\nPer-choice notes:\n- sourceIndex 0: \"BNC\": Correct. BNC connectors are common on low-power gear and test equipment because they connect quickly and reliably.\n- sourceIndex 1: \"N\": This connector name is real, but it does not match the specific use or weather-resistance point being asked.\n- sourceIndex 2: \"UHF\": This connector name is real, but it does not match the specific use or weather-resistance point being asked.\n- sourceIndex 3: \"RCA\": That connector is common in other electronics but is not the usual amateur-radio choice for this equipment case.",
+    "en": "Question B-006-003-007.\n\nWhy the correct answer is right: BNC connectors are quick-connect RF connectors commonly found on test instruments and some low-power transceivers. They are convenient for frequent connect and disconnect cycles.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"N\": Type N is more associated with rugged, weather-resistant VHF/UHF feedline connections than with small low-power bench hookups.\n- sourceIndex 2: \"UHF\": UHF connectors are common in HF stations, but they are bulkier and not the usual quick instrument connector.\n- sourceIndex 3: \"RCA\": RCA plugs are common for audio and accessory wiring and are not the standard RF connector for test instruments.",
     "fr": null
   },
   "citations": [

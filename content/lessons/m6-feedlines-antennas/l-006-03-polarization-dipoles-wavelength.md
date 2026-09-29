@@ -69,6 +69,12 @@ A signal is at 18.75 MHz. Estimate its wavelength:
 
 So the free-space wavelength is about 16 m.
 
+### Free-space estimates versus practical wire estimates
+
+The 300 / f formula is a free-space wavelength estimate. The related 150 / f and 75 / f values come from simple free-space fractions of that wave-size estimate. Those quick values are useful when you are estimating wave size in open space or checking the order of magnitude.
+
+Practical wire antennas are not exactly the same as bare fractions of a free-space wavelength. End effects, conductor diameter, insulation, and nearby objects make many HF wire antennas physically shorter than the free-space fraction. That is why the Basic-style starting formulas use about 143 / f for a dipole and 71.3 / f for a vertical element. If answer choices contain both pairs, ask whether the question is about a free-space wave estimate or a practical antenna cutting estimate.
+
 ## Dipole length and resonance
 
 A simple half-wave dipole is roughly 0.5 wavelength long, but practical wire antennas are shortened by end effects and nearby materials. The exam-style estimate for an HF dipole of that type is:
@@ -99,11 +105,11 @@ End insulators on a suspended wire mark where the antenna conductor ends electri
 
 ## Try it
 
-1. A vertical handheld whip and a vertical repeater antenna have matching polarization.
-2. A horizontal dipole is made slightly shorter. Its resonant frequency moves upward.
-3. A 60 MHz signal has a free-space wavelength of about 5 m because 300 / 60 = 5.
-4. A wire antenna resonates below your target frequency. Trim it only in small steps, because shortening raises resonance.
-5. A short mobile HF whip often needs series inductance to behave like a longer antenna.
+1. A vertical handheld whip is used with a vertical repeater antenna. Do their polarizations match? Yes. Both electric fields are vertical, which is normally best for local VHF/UHF work.
+2. A horizontal dipole is made slightly shorter. What happens to resonant frequency? It moves upward because shorter antennas resonate at higher frequencies.
+3. A 60 MHz signal is being estimated as a free-space wave. What wavelength should you use? λ = 300 / 60 = 5 m, so the free-space wavelength is about 5 m.
+4. A resonant wire dipole is planned for 14.2 MHz. Which first-cut formula is the practical antenna estimate: 150 / f or 143 / f? Use 143 / 14.2 = 10.07 m overall as a practical starting length; 150 / f is the free-space fraction estimate.
+5. A short mobile HF whip is far shorter than a quarter wavelength. What part helps it tune? A loading coil adds series inductance so the short whip behaves electrically longer.
 
 ## Radio connection
 
@@ -127,7 +133,7 @@ Description: Draw two small ink-brush scenes. In the first, a car whip has uprig
 
 - Polarization follows the electric-field orientation relative to the ground.
 - Straight antenna elements generally radiate with the element's orientation.
-- Use λ(m) = 300 / f(MHz) for free-space wavelength estimates.
-- Use about 143 / f(MHz) for a practical HF half-wave dipole starting length.
+- Use λ(m) = 300 / f(MHz) for free-space wavelength estimates; 150 / f and 75 / f are the free-space half-wave and quarter-wave estimates.
+- Use about 143 / f(MHz) for a practical HF half-wave dipole starting length and about 71.3 / f(MHz) for a practical quarter-wave starting length.
 - Lengthening lowers resonant frequency; shortening raises it.
 - Loading coils, traps, and end insulators all change how the antenna behaves electrically.
