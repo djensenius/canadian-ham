@@ -56,9 +56,9 @@ In the priority comparison used in this module, distress immediately precedes em
 
 ## Breaking into routine traffic
 
-If you are in distress on a repeater that is already busy, break in between transmissions. State your call sign and the situation. Give the essential information clearly, then answer follow-up questions from stations that can help. The operators already using the repeater need enough facts to understand that the routine conversation must stop and assistance is needed.
+If you are in distress on a repeater that is already busy, break in between transmissions. State your call sign and the situation. Give the essential information clearly, then answer follow-up questions from stations that can help. The operators already using the repeater need enough facts to give the distress station immediate access and start assistance.
 
-If you are one of the routine stations and you hear a distress break-in, acknowledge the distressed station. Determine location and what assistance may be needed. If direct assistance is beyond your station, notify the appropriate authorities and keep listening in case your station becomes useful.
+If you are one of the routine stations and you hear a distress break-in, acknowledge the distressed station. Find the location and assistance needed. If direct assistance is beyond your station, notify the appropriate authorities and keep listening in case your station becomes useful.
 
 A station unable to provide direct help still has a role. It can relay accurate information, contact the proper authority, and maintain watch for follow-up traffic. Staying engaged can preserve information that only your station heard.
 
@@ -80,7 +80,7 @@ The operating chain is: recognize whether the situation is life-threatening dist
 
 ## Radio connection
 
-A radio operator in an emergency is valuable because they can listen, classify the traffic carefully, and relay accurately. Calm procedure carries more value than raw transmitter power: clear the channel when distress requires it, collect the essential facts, pass them to someone who can help, and keep watch until released or no longer useful.
+A radio operator in an emergency is valuable because they can listen, classify the traffic carefully, and relay accurately. Calm procedure carries more value than raw transmitter power: give the distress station immediate access, acknowledge it, find the location and assistance needed, notify the authorities, and keep watch until released or no longer useful.
 
 Emergency readiness is also ordinary station maintenance. Charged batteries, a known-good portable antenna, and a way to operate without commercial AC power turn a hobby station into a communication resource when other systems are unavailable.
 
@@ -93,7 +93,7 @@ Description: Draw a note board beside a small repeater scene. At the top, show d
 ## Summary
 
 - Distress, urgency, and safety traffic are classified by the situation they carry.
-- Formal distress signals mark life-threatening traffic so routine traffic yields quickly.
+- Formal distress signals mark life-threatening traffic so the distress station gets immediate access.
 - The narrow priority comparison places distress directly before the emergency or urgency level.
 - A distress break-in needs identification, location, assistance details, authority notification, and continued listening.
 - Station readiness links alternate power, charged batteries, practical portable antennas, and clear written records.

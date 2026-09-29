@@ -39,7 +39,7 @@ By the end of this lesson, you can:
 
 ## Contact confirmations and logs
 
-A QSL card is written proof that two amateur stations communicated. Modern operators may also confirm contacts through web-based logging systems. Either way, the confirmation is about the contact: stations, date, time, band or frequency, mode, and often signal report or location.
+A QSL card is written proof that two amateur stations communicated. Modern operators may also confirm contacts through web-based logging systems. Either way, the confirmation lets both stations recognize the same completed contact.
 
 Canadian regulations make amateur station logbooks optional. Operators keep personal logs because they support award applications, preserve memories, help match confirmations, and help investigate neighbour interference complaints by showing when the station was transmitting.
 

@@ -42,13 +42,13 @@ By the end of this lesson, you can:
 
 A repeater receives on one frequency and retransmits on another. Portable and mobile stations often have small antennas, low height, and moving locations. A repeater at a better site can hear those stations and retransmit from a stronger location, increasing their practical local range.
 
-Because many operators share the same relay, repeater procedure is deliberately short. Listen before transmitting. Leave a clear pause after another station unkeys so new traffic can enter. Keep overs brief enough that other users, including emergency traffic, can get access. Join a conversation already under way by identifying with your call sign during a clear break after the previous transmission ends.
+Because many operators share the same relay, repeater procedure is deliberately short. Listen before transmitting. Leave a clear pause after another station unkeys so new traffic can enter. Keep overs brief enough that other users, including emergency traffic, can get access. Join a conversation already under way by identifying with your call sign during a clear break between transmissions.
 
 A time-out timer is a protection device. It interrupts transmissions that run too long, including a stuck microphone. Courteous operating leaves pauses and keeps overs brief before the controller has to act.
 
 ## Coordination, tones, and offsets
 
-Frequency coordination is the organized recommendation process used on VHF and UHF to reduce conflicts among neighbouring repeaters. It considers repeater channels, offset, coverage area, and local practice. A band plan is different: it is a voluntary division of an amateur band by compatible activities and modes.
+Frequency coordination is the organized recommendation process used on VHF and UHF to reduce conflicts among neighbouring repeaters. It considers repeater channels, offset, coverage area, and local practice.
 
 Many repeaters require a CTCSS tone. The tone is a low-frequency access signal sent with the user's transmission so the repeater receiver opens its audio path only for signals carrying the expected tone. Successful access depends on matching the repeater input frequency, offset direction, and tone.
 
@@ -102,13 +102,15 @@ For local communication, VHF and UHF are usually preferred over HF when they wil
 
 Two sideband conventions in this lesson are upper sideband on twenty metres and lower sideband around 3755 kHz. Operators use these conventions so signals line up as expected and have the expected audio orientation.
 
-Before transmitting on any frequency, listen carefully. Listening is the first shared-channel action because it protects contacts already in progress. If propagation changes and interference grows during a contact, moving to another clear frequency is more courteous than demanding that everyone else move.
+Before transmitting on any frequency, listen carefully. Listening is the first shared-channel action because it protects contacts already in progress. If propagation changes and interference grows during a contact, moving to another clear frequency is the courteous response.
 
 For lengthy transmitter tests, use a dummy load. A dummy load gives the transmitter a proper load and keeps test energy off the air by turning RF power into heat. For a brief antenna tuner adjustment before joining a sideband net on HF, tune at a nearby clear spot between three and five kilohertz from the active net channel, then return only when the net frequency is clear for use.
 
 Single-sideband voice signals need room. Allow approximately 3 kHz from a contact already in progress. Morse contacts use much less bandwidth and are covered in the next lesson with narrower spacing.
 
 ## Nets, power, and band plans
+
+A band plan is a voluntary division of an amateur band by compatible activities and modes.
 
 A net shares its scheduled frequency with current users. If the normal net frequency is occupied before the net begins, the net control station should ask politely whether the occupants can accommodate the net. When the occupants are unable to accommodate it, the net should move to a clear frequency. If you are already using a frequency and a scheduled net is about to begin, the courteous action is to move if you can.
 
