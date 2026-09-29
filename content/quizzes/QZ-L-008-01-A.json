@@ -14,36 +14,36 @@
   "conceptChecks": [
     {
       "id": "QZ-L-008-01-A-C1",
-      "prompt": { "en": "A volunteer wants to reduce RF pickup on a long audio lead before opening any equipment. Which proposed change would NOT help that coupling path?", "fr": null },
+      "prompt": { "en": "A neighbour reports RF noise in a borrowed audio device. Which first response best matches the lesson's safety and permission guidance?", "fr": null },
       "choices": [
-        { "text": { "en": "Add several ferrite turns on the audio lead close to the affected input.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Reroute the audio lead away from the antenna and transmitter cables.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Replace a two metre lead with a twelve metre spare lead coiled behind the mixer.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Clean or replace an oxidized plug that may act like a non-linear junction.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Schedule brief tests, write down the conditions, and try reversible external checks before any internal work.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Open the speaker immediately and solder suppression parts in place, because internal changes are the quickest reversible test.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Run full-power checks without warning so the neighbour can decide later whether the symptom changed.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Make permanent changes to the neighbour's wiring first so later tests have a stable baseline.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "A longer coiled lead usually gives RF more conductor to couple into the audio input. The other actions reduce pickup or remove a likely detection point.", "fr": null }
+      "explanation": { "en": "The lesson's process starts with consent, short scheduled tests, written observations, and reversible external steps. Internal or permanent changes need permission, qualifications, and a clear reason.", "fr": null }
     },
     {
       "id": "QZ-L-008-01-A-C2",
-      "prompt": { "en": "Two strong site carriers are at 150.9 MHz and 154.2 MHz. A receiver is bothered at 157.5 MHz only when both carriers are active. Which conclusion uses the arithmetic and placement correctly?", "fr": null },
+      "prompt": { "en": "During a scheduled troubleshooting session, a team changes transmitter power, antenna position, and the affected device's cable layout before the next trial. The symptom stops. What is the most careful conclusion?", "fr": null },
       "choices": [
-        { "text": { "en": "154.2 - 150.9 = 3.3 MHz, so the receiver audio volume control is the best first adjustment.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "2 x 154.2 - 150.9 = 157.5 MHz, so test filtering or attenuation before the receiver input.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "150.9 + 154.2 = 305.1 MHz, so any filter after the first mixer will prevent front-end overload.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "2 x 150.9 - 154.2 = 147.6 MHz, so a transmitter low-pass filter on the receiver feed line is the matching cure.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Several variables changed at once, so the result supports more controlled testing rather than crediting one specific cure.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The transmitter was definitely producing spurious emissions because any improvement proves a transmitter fault.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The antenna position must be the only cure because it was part of the successful trial.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The affected device is proven immune now, so repeating the same conditions is unnecessary.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "The third-order product 2 x 154.2 - 150.9 lands at 157.5 MHz. Reducing strong off-channel energy before the receiver input tests the suspected non-linear path.", "fr": null }
+      "explanation": { "en": "Bundled changes are useful for reducing the immediate symptom, but they do not identify which variable mattered. Change one condition at a time when assigning cause or choosing a lasting cure.", "fr": null }
     },
     {
       "id": "QZ-L-008-01-A-C3",
-      "prompt": { "en": "A maintenance note says local Morse key clicks should be fixed by replacing the power-supply filter capacitor because the clicks happen at the key. What is the error in that note?", "fr": null },
+      "prompt": { "en": "A log note says, 'The noise happened during my transmission, so my transmitter is dirty and receiver-side checks are unnecessary.' What is the error in that note?", "fr": null },
       "choices": [
-        { "text": { "en": "A filter capacitor controls supply ripple; local click energy is tied to the making and breaking of the key circuit.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The note should focus on voltage sag, because local key clicks are mainly slow chirp from oscillator drift.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The note should focus on parasitic oscillation, because local key clicks are always a self-oscillation above or below the carrier.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The note should focus on sending speed, because slower dots and dashes remove make-and-break RF without circuit changes.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Timing is useful evidence, but it does not by itself separate a transmitter fault from a pickup or overload path in the affected equipment.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The note should assume receiver-side trouble only, because a legal amateur station can never produce unwanted energy.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The note should skip the log and replace transmitter stages first, because written observations slow down repairs.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The note should treat any single report as proof that all nearby receivers will show the same symptom.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "For the local key-click clue, the make-and-break action in the key circuit is the issue. A power-supply filter capacitor is a ripple-control part, not the direct cure for that clue.", "fr": null }
+      "explanation": { "en": "The lesson separates evidence from blame. A symptom that follows transmitting deserves controlled tests, but the path may be a transmitter fault, receiver overload, audio pickup, or another coupling route.", "fr": null }
     }
   ]
 }

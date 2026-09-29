@@ -36,14 +36,14 @@
     },
     {
       "id": "QZ-L-008-02-A-C3",
-      "prompt": { "en": "A station is clean on a steady test tone, but loud voice peaks create rough energy a few kilohertz on both sides. If the operator raises microphone gain further, what should you predict?", "fr": null },
+      "prompt": { "en": "A planned receiver filter has its cutoff almost on top of the lowest wanted channel. Which prediction follows from the lesson's cutoff discussion?", "fr": null },
       "choices": [
-        { "text": { "en": "Nearby roughness should get worse; reducing the excessive audio drive should make the signal cleaner and narrower.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Only an exact integer-multiple output should change, while energy near the voice signal stays the same.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A single narrow rejection dip in the monitoring receiver should make the transmitted signal clean for everyone.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The symptom should vanish because more audio drive always improves SSB linearity on voice peaks.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Signals near the boundary may be partly attenuated, so leave margin and verify the response instead of treating the cutoff as a perfect wall.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Everything on the pass side of the listed cutoff is passed with no loss, and everything on the other side is removed completely.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Moving the cutoff closer to the wanted channel always improves reception because transition width is irrelevant.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A cutoff value tells only the connector impedance; it says nothing about the filter's frequency response.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Rough energy close to the SSB signal during loud syllables points to non-linear voice peaks. More microphone gain tends to worsen that; reducing drive is the cleaner direction.", "fr": null }
+      "explanation": { "en": "Real filters change from mostly passing to mostly attenuating over a transition range. A cutoff placed too close to a wanted channel may reduce that channel, so the response must be checked with margin.", "fr": null }
     }
   ]
 }

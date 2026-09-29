@@ -77,7 +77,7 @@ The first station should not immediately accuse the transmitter of generating ha
 
 At a sailing-club event, a VHF receiver monitoring a weak marine safety channel on 156.8 MHz hears a false tone only when two nearby service transmitters are active. One is at 151.4 MHz and the other is at 154.1 MHz. A technician notices that 2 x 154.1 - 151.4 = 156.8, so a third-order mixing product could land on the monitored channel if the receiver input is being driven non-linear.
 
-That points toward receiver intermodulation or overload. The cure is often more separation, less unnecessary gain, or a suitable filter or attenuation at the receiver input, not a repair to the beacon or to every nearby transmitter.
+That points toward receiver intermodulation or overload. The cure is often more separation, less unnecessary gain, or a suitable filter or attenuation at the receiver input, not a repair to the monitored channel or to every nearby transmitter.
 
 ## Filters at the affected receiver
 
