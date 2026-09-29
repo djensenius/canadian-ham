@@ -117,14 +117,14 @@
         },
         {
           "text": {
-            "en": "Use the same FM setup in both slots because 2 x 3.0 kHz leaves the audio out of the estimate",
+            "en": "Estimate about 5.7 kHz by adding deviation and audio but forgetting to double, then use FM in both slots",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Turn down the FM microphone and ignore the audio-frequency term once reports sound clear",
+            "en": "Use the FM setup in the 80 m slot after a clear audio report, without rechecking occupied bandwidth",
             "fr": null
           },
           "isCorrect": false

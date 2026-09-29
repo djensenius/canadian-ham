@@ -128,9 +128,9 @@ A repeater operator reports, "Your signal is full quieting, but your words are t
 
 ## Try it
 
-1. After you secure a loose VFO board and improve cooling airflow, a five-minute CW practice signal no longer creeps upward in pitch. Why is that a stability repair rather than a keying-edge repair? The change reduced oscillator movement over time; keying-edge shaping would be checked separately for clicks around the signal.
+1. An AM bench exciter is limited to 2.8 kHz highest audio before it reaches the modulator. What occupied bandwidth should you plan for? AM has two sidebands, so estimate 2 x 2.8 kHz = 5.6 kHz.
 2. Why does a clean AM voice signal need spectrum on both sides of the carrier? The changing envelope creates upper and lower sidebands, and both carry the audio information.
-3. A student wants to keep increasing SSB speech processing after reports say the signal is already readable and clean. Why is "more average talk power" not automatically better? Extra processing can make the audio harsh or wider than necessary, so keep it modest and inside the clean peak limit.
+3. A double-sideband suppressed-carrier stage is feeding a later SSB filter. What still has to happen before only one sideband is transmitted? The later filter or phasing stage must select one sideband; suppressing the carrier alone still leaves both sidebands.
 4. A lower-sideband exciter is set to 3 925 kHz and is fed a 600 Hz tone in a bench test. Where is the RF tone? 600 Hz is 0.600 kHz, so the lower-sideband RF is 3 925 - 0.600 = 3 924.400 kHz.
 5. Before joining an FM net with a borrowed hand microphone, why make a short local audio check at normal speaking distance? A different microphone can change deviation and audio level even when the RF path is fine, so set the audio before assuming more power is needed.
 

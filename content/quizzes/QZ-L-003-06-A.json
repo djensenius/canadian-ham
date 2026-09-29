@@ -28,7 +28,7 @@
         },
         {
           "text": {
-            "en": "Use timing or anti-trip controls so speech starts promptly but room noise does not hold transmit",
+            "en": "Move the fan away from or behind the microphone's pickup pattern",
             "fr": null
           },
           "isCorrect": false
@@ -49,7 +49,7 @@
         }
       ],
       "explanation": {
-        "en": "False trips and clipped starts are switching-threshold and timing problems. Speech processing changes audio density, not when transmit starts or stops.",
+        "en": "False trips and clipped starts are VOX trigger, timing, or acoustic-pickup problems. Moving the fan or improving the microphone pickup can change what trips VOX; speech processing changes audio density, not when transmit starts or stops.",
         "fr": null
       }
     },
