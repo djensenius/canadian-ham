@@ -604,7 +604,7 @@ private struct LessonQuizScreen: View {
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
-        .navigationTitle(lesson.title.en)
+        .navigationTitle("Lesson quiz")
         .task { refresh() }
     }
 

@@ -20,5 +20,6 @@ struct AccessibleSecondaryButtonStyle: ButtonStyle {
                     )
             }
             .opacity(configuration.isPressed ? 0.85 : 1)
+            .accessibilityRespondsToUserInteraction(isEnabled)
     }
 }
