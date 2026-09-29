@@ -12,6 +12,45 @@ let paper = "#F6EEDC"
 let paperWarm = "#FFF7E8"
 let ink = "#000000"
 
+let faviconStrokes: [(width: String, d: String)] = [
+    ("6.0", "M19 55 C20 44 23 33 27 23"),
+    ("2.2", "M35 18 C38 23 40 29 39 36"),
+    ("2.6", "M45 11 C49 19 50 29 48 42"),
+    ("3.0", "M56 5 C62 17 63 31 59 48")
+]
+
+func faviconPaths(attributes: String) -> String {
+    faviconStrokes
+        .map { "  <path \(attributes) stroke-width=\"\($0.width)\" d=\"\($0.d)\"/>" }
+        .joined(separator: "\n")
+}
+
+func adaptiveFaviconSVG() -> String {
+    """
+    <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\" width=\"64\" height=\"64\">
+      <style>
+        .paper { fill: #f6eedc; }
+        .ink { fill: none; stroke: #000; stroke-linecap: round; stroke-linejoin: round; }
+        @media (prefers-color-scheme: dark) {
+          .paper { fill: #201b16; }
+          .ink { stroke: #f3e8d2; }
+        }
+      </style>
+      <rect width=\"64\" height=\"64\" rx=\"14\" class=\"paper\"/>
+    \(faviconPaths(attributes: "class=\"ink\""))
+    </svg>
+    """
+}
+
+func lightFaviconSVG() -> String {
+    """
+    <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\" width=\"64\" height=\"64\">
+      <rect width=\"64\" height=\"64\" rx=\"14\" fill=\"#f6eedc\"/>
+    \(faviconPaths(attributes: "fill=\"none\" stroke=\"#000\" stroke-linecap=\"round\" stroke-linejoin=\"round\""))
+    </svg>
+    """
+}
+
 struct SizeSpec {
     let name: String
     let width: Int
@@ -252,23 +291,7 @@ func generateSourceSVGs() {
       \(brushElements(landscapeMast))
     """, width: 1400, height: 600)
 
-    let favicon = """
-    <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\">
-      <style>
-        .paper { fill: #f6eedc; }
-        .ink { fill: none; stroke: #000; stroke-linecap: round; stroke-linejoin: round; }
-        @media (prefers-color-scheme: dark) {
-          .paper { fill: #201b16; }
-          .ink { stroke: #f3e8d2; }
-        }
-      </style>
-      <rect width=\"64\" height=\"64\" rx=\"14\" class=\"paper\"/>
-      <path class=\"ink\" stroke-width=\"6.8\" d=\"M23 53 C24 43 26 32 30 22\"/>
-      <path class=\"ink\" stroke-width=\"3.0\" d=\"M39 17 C44 21 46 28 46 35\"/>
-      <path class=\"ink\" stroke-width=\"4.0\" d=\"M45 10 C52 17 55 27 54 39\"/>
-      <path class=\"ink\" stroke-width=\"4.8\" d=\"M51 5 C59 16 62 30 59 45\"/>
-    </svg>
-    """
+    let favicon = adaptiveFaviconSVG()
 
     writeText("background.svg", background)
     writeText("waves.svg", svgDocument(waveBody))
@@ -436,10 +459,13 @@ write("apple-touch-icon-180.png", width: 180, height: 180, opaque: true) { drawF
 write("pwa-icon-192.png", width: 192, height: 192, opaque: true) { drawFullIcon(in: $0) }
 write("pwa-icon-512.png", width: 512, height: 512, opaque: true) { drawFullIcon(in: $0) }
 
-let faviconImage = NSImage(contentsOf: exports.appendingPathComponent("favicon.svg"))!
-write("favicon-16.png", width: 16, height: 16, opaque: true) { draw(faviconImage, in: $0) }
-write("favicon-32.png", width: 32, height: 32, opaque: true) { draw(faviconImage, in: $0) }
-write("favicon-64.png", width: 64, height: 64, opaque: true) { draw(faviconImage, in: $0) }
+guard let faviconLightData = lightFaviconSVG().data(using: .utf8),
+      let faviconLightImage = NSImage(data: faviconLightData) else {
+    fatalError("Unable to load inline light favicon SVG")
+}
+write("favicon-16.png", width: 16, height: 16, opaque: true) { draw(faviconLightImage, in: $0) }
+write("favicon-32.png", width: 32, height: 32, opaque: true) { draw(faviconLightImage, in: $0) }
+write("favicon-64.png", width: 64, height: 64, opaque: true) { draw(faviconLightImage, in: $0) }
 
 let previewItems = [
     SizeSpec(name: "app-icon-1024.png", width: 160, height: 160),

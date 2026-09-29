@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <style>
     .paper { fill: #f6eedc; }
     .ink { fill: none; stroke: #000; stroke-linecap: round; stroke-linejoin: round; }
@@ -8,8 +8,8 @@
     }
   </style>
   <rect width="64" height="64" rx="14" class="paper"/>
-  <path class="ink" stroke-width="6.8" d="M23 53 C24 43 26 32 30 22"/>
-  <path class="ink" stroke-width="3.0" d="M39 17 C44 21 46 28 46 35"/>
-  <path class="ink" stroke-width="4.0" d="M45 10 C52 17 55 27 54 39"/>
-  <path class="ink" stroke-width="4.8" d="M51 5 C59 16 62 30 59 45"/>
+  <path class="ink" stroke-width="6.0" d="M19 55 C20 44 23 33 27 23"/>
+  <path class="ink" stroke-width="2.2" d="M35 18 C38 23 40 29 39 36"/>
+  <path class="ink" stroke-width="2.6" d="M45 11 C49 19 50 29 48 42"/>
+  <path class="ink" stroke-width="3.0" d="M56 5 C62 17 63 31 59 48"/>
 </svg>

@@ -32,7 +32,7 @@ From the repository root:
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcrun swift design/app-icon/render.swift
 ```
 
-The script is zero-dependency Swift using AppKit `NSImage` SVG rendering on macOS. It rewrites the SVG sources and PNG exports deterministically from fixed seeds.
+The script is zero-dependency Swift using AppKit `NSImage` SVG rendering on macOS. Favicon review PNGs render from an inline light-only SVG so the browser-facing `favicon.svg` can keep its `prefers-color-scheme` dark-mode support. It rewrites the SVG sources and PNG exports deterministically from fixed seeds.
 
 ## Exports
 
