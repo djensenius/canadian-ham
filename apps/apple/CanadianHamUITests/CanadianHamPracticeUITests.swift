@@ -147,7 +147,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try performFastAccessibilityAudit(on: app, context: "\(appearance.rawValue) category list")
 
         let category = app.staticTexts["Regulations and Policies"].firstMatch
-        XCTAssertTrue(category.waitForExistence(timeout: 5), "Fast audit category should be visible on the category list")
+        XCTAssertTrue(category.exists, "Fast audit category should be visible on the category list")
         category.tap()
 
         XCTAssertTrue(app.staticTexts["An Amateur Radio Operator Certificate is valid for:"].firstMatch.waitForExistence(timeout: 10), "Fast audit question should render before the unanswered practice audit")
@@ -168,7 +168,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     private func answerFastAuditQuestionCorrectly(in app: XCUIApplication) {
         let correctAnswer = app.staticTexts["life"].firstMatch
-        XCTAssertTrue(correctAnswer.waitForExistence(timeout: 5), "Known correct answer should be visible in the fast audit question")
+        XCTAssertTrue(correctAnswer.exists, "Known correct answer should be visible in the fast audit question")
         correctAnswer.tap()
     }
 
