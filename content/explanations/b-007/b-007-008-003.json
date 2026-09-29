@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-008-003.\n\nWhy the correct answer is right: Tropospheric scatter depends on small changes in lower-atmosphere density and water vapour that redirect a little VHF/UHF energy.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Tropospheric ducting\": Tropospheric ducting uses a trapping layer or inversion; it is not the scatter mechanism caused by many small variations.\n- sourceIndex 2: \"Ionospheric scatter\": Ionospheric scatter would involve upper-atmosphere ionization, not water-vapour and density changes in the troposphere.\n- sourceIndex 3: \"Sporadic-E\": Sporadic-E uses dense E-region patches and is not a lower-atmosphere water-vapour effect.",
+    "en": "Question B-007-008-003.\n\nWhy the correct answer is right: Tropospheric scatter uses small irregularities in the lower atmosphere, including changes in density and water-vapour content, to redirect a little VHF or UHF energy beyond the normal horizon.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Tropospheric ducting\": Ducting needs a more organized refractive layer or inversion that guides the wave, not just small random variations.\n- sourceIndex 2: \"Ionospheric scatter\": Ionospheric scatter involves the upper atmosphere and ionization, while water vapour is a tropospheric clue.\n- sourceIndex 3: \"Sporadic-E\": Sporadic E comes from dense ionized patches at E-region height, not humidity and density variations in the lower atmosphere.",
     "fr": null
   },
   "citations": [

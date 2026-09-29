@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-006-002.\n\nWhy the correct answer is right: MUF varies as solar radiation changes ionization along the path. Time of day, season, and solar activity all affect that radiation input.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The temperature of the ionosphere\": The temperature of the ionosphere is not the main control of MUF; electron density from ionization is the key.\n- sourceIndex 2: \"The speed of the winds in the upper atmosphere\": The speed of the winds in the upper atmosphere can move irregularities, but it is not the basic cause of MUF variation.\n- sourceIndex 3: \"The type of weather just below the ionosphere\": The type of weather just below the ionosphere belongs to the troposphere and does not set HF MUF.",
+    "en": "Question B-007-006-002.\n\nWhy the correct answer is right: MUF changes as solar radiation changes the amount and height distribution of ionization along a path. Stronger useful ionization can support higher frequencies; weaker ionization lowers the limit.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The temperature of the ionosphere\": Temperature is not the planning quantity that sets whether an HF wave refracts back to Earth.\n- sourceIndex 2: \"The speed of the winds in the upper atmosphere\": Upper-atmosphere winds may move irregularities, but the MUF is governed mainly by electron density from solar radiation.\n- sourceIndex 3: \"The type of weather just below the ionosphere\": Ordinary weather below the ionosphere affects tropospheric paths more than HF sky-wave MUF.",
     "fr": null
   },
   "citations": [

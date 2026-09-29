@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-007-009.\n\nWhy the correct answer is right: Auroral paths can badly distort audio, but simple on-off keyed CW elements can still be recognized through rough propagation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"CW, because it resists fading\": CW, because it resists fading names the right emission but the wrong reason; CW is favoured mainly because it remains readable when distorted.\n- sourceIndex 2: \"FM, because it is readable even when distorted\": FM, because it is readable even when distorted is wrong because FM voice usually suffers badly on auroral paths.\n- sourceIndex 3: \"FM, because it resists fading\": FM, because it resists fading is wrong both in mode choice and in the stated reason for auroral reliability.",
+    "en": "Question B-007-007-009.\n\nWhy the correct answer is right: Auroral paths can make analog signals raspy, fluttery, and spread out. CW's simple keyed carrier and narrow information content can remain readable when voice details are badly distorted.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"CW, because it resists fading\": CW is the right emission choice, but the reason here is wrong; auroral paths can still fade, and CW helps mainly because it tolerates distortion.\n- sourceIndex 2: \"FM, because it is readable even when distorted\": Analog FM voice tends to become hard to understand on rough auroral paths.\n- sourceIndex 3: \"FM, because it resists fading\": FM's capture behaviour does not solve the rapid distortion and flutter produced by auroral propagation.",
     "fr": null
   },
   "citations": [
