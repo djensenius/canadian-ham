@@ -18,4 +18,10 @@ pnpm --filter @canadian-ham/web audit:urls
 
 The Vite build uses a relative base (`./`) so the static output can be hosted from any path. Runtime assets must remain self-hosted; do not add analytics, telemetry, remote fonts, CDNs, third-party API calls, or other network-dependent app features.
 
+## Content Security Policy
+
+`index.html` is the production CSP source. Production keeps a strict `style-src 'self'` directive and does not allow `'unsafe-inline'`; the pre-paint theme script is allowed only by its `sha256-...` hash. Tests verify that the hash matches the inline script.
+
+Vite's development server injects imported CSS with inline `<style>` elements. `vite.config.ts` uses a `transformIndexHtml` hook with `apply: "serve"` to add `'unsafe-inline'` to `style-src` only while running `pnpm --filter @canadian-ham/web dev`. This dev-only CSP is not written to production builds.
+
 For web build checks, run `pnpm build:web` and then `pnpm --filter @canadian-ham/web audit:urls`. The URL audit scans `apps/web/dist` and allows only XML namespace URLs plus React production error-message strings under `https://react.dev/errors/`; those strings are never fetched by the app. Any other `http://` or `https://` URL in `dist` fails the audit.

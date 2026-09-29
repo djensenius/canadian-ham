@@ -1,13 +1,15 @@
 import { dueCount, type CategoryBreakdownEntry, type QuestionProgressRecord } from "@canadian-ham/engine-ts";
 
-import { bankId, categories, questionsById, subsections } from "../data/bank";
+import { bankId, categories, knownQuestionIds, subsections } from "../data/bank";
 
 export type PracticeMode = "immediate" | "review-later";
 export type ReadinessPreference = "not-enough-data" | "needs-review" | "pass-ready" | "honours-ready";
+export type ThemePreference = "system" | "light" | "dark";
 
 export interface WebPreferences {
   readonly practiceMode: PracticeMode;
   readonly examTimerEnabled: boolean;
+  readonly theme: ThemePreference;
 }
 
 export interface ExamAttemptItem {
@@ -64,6 +66,7 @@ export interface ImportValidationResult {
 export const defaultPreferences: WebPreferences = {
   practiceMode: "immediate",
   examTimerEnabled: false,
+  theme: "system",
 };
 
 const DB_VERSION = 2;
@@ -329,7 +332,8 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 function isPreferences(value: unknown): value is WebPreferences {
   return isRecord(value)
     && (value.practiceMode === "immediate" || value.practiceMode === "review-later")
-    && typeof value.examTimerEnabled === "boolean";
+    && typeof value.examTimerEnabled === "boolean"
+    && (value.theme === undefined || value.theme === "system" || value.theme === "light" || value.theme === "dark");
 }
 
 function validateQuestionProgressRecord(value: unknown, index: number): string[] {
@@ -338,7 +342,7 @@ function validateQuestionProgressRecord(value: unknown, index: number): string[]
   if (!isRecord(value)) {
     return [`${prefix} must be an object.`];
   }
-  if (typeof value.questionId !== "string" || !questionsById.has(value.questionId)) {
+  if (typeof value.questionId !== "string" || !knownQuestionIds.has(value.questionId)) {
     errors.push(`${prefix}.questionId must be a known question ID.`);
   }
   if (value.bankId !== bankId) {
@@ -492,18 +496,21 @@ function validateExamAttemptItem(value: unknown, prefix: string): string[] {
     return [`${prefix} must be an object.`];
   }
   const errors: string[] = [];
-  const question = typeof value.questionId === "string" ? questionsById.get(value.questionId) : undefined;
-  if (question === undefined) {
+  const questionId = typeof value.questionId === "string" ? value.questionId : null;
+  const questionIsKnown = questionId !== null && knownQuestionIds.has(questionId);
+  if (!questionIsKnown) {
     errors.push(`${prefix}.questionId must be a known question ID.`);
   }
   const position = value.position;
   if (!Number.isInteger(position) || typeof position !== "number" || position < 1) {
     errors.push(`${prefix}.position must be a positive integer.`);
   }
-  if (typeof value.subsectionId !== "string" || !knownSubsectionIds.has(value.subsectionId) || (question !== undefined && value.subsectionId !== question.subsectionId)) {
+  const expectedSubsectionId = questionIsKnown ? questionId!.slice(0, 9) : null;
+  const expectedCategoryId = questionIsKnown ? questionId!.slice(0, 5) : null;
+  if (typeof value.subsectionId !== "string" || !knownSubsectionIds.has(value.subsectionId) || (expectedSubsectionId !== null && value.subsectionId !== expectedSubsectionId)) {
     errors.push(`${prefix}.subsectionId must match the known question subsection.`);
   }
-  if (typeof value.categoryId !== "string" || !knownCategoryIds.has(value.categoryId) || (question !== undefined && value.categoryId !== question.categoryId)) {
+  if (typeof value.categoryId !== "string" || !knownCategoryIds.has(value.categoryId) || (expectedCategoryId !== null && value.categoryId !== expectedCategoryId)) {
     errors.push(`${prefix}.categoryId must match the known question category.`);
   }
   if (!Array.isArray(value.choicePermutation) || value.choicePermutation.length !== 4 || !value.choicePermutation.every((entry) => Number.isInteger(entry) && entry >= 0 && entry <= 3) || new Set(value.choicePermutation).size !== 4) {
