@@ -371,3 +371,48 @@ test("quiz check rejects duplicate lesson IDs", async () => {
     );
   });
 });
+
+test("quiz check scoped to a module ignores other modules' quiz files but keeps same-prefix orphan checks", async () => {
+  await withFixture("module-scope", async (root) => {
+    await mkdir(path.join(root, "content/lessons/m4-circuit-components"), { recursive: true });
+    await mkdir(path.join(root, "content/lessons/m5-basic-electronics"), { recursive: true });
+    await writeFile(path.join(root, "content/generated/basic-2025-07-15/questions.json"), questionsJson(), "utf8");
+    await writeFile(
+      path.join(root, "content/lessons/m4-circuit-components/l-004-01.md"),
+      lessonMarkdown({ id: "L-004-01", quizIds: ["QZ-L-004-01-A"] }),
+      "utf8",
+    );
+    await writeFile(
+      path.join(root, "content/lessons/m5-basic-electronics/l-005-01.md"),
+      lessonMarkdown({ id: "L-005-01", quizIds: ["QZ-L-005-01-A"] }),
+      "utf8",
+    );
+    await writeFile(
+      path.join(root, "content/quizzes/QZ-L-004-01-A.json"),
+      quiz({ id: "QZ-L-004-01-A", lessonId: "L-004-01" }),
+      "utf8",
+    );
+    await writeFile(
+      path.join(root, "content/quizzes/QZ-L-004-99-A.json"),
+      quiz({ id: "QZ-L-004-99-A", lessonId: "L-004-99" }),
+      "utf8",
+    );
+    await writeFile(
+      path.join(root, "content/quizzes/QZ-L-005-01-A.json"),
+      "[]\n",
+      "utf8",
+    );
+
+    await assert.rejects(
+      () => checkQuizzes({
+        lessonRoot: path.join(root, "content/lessons/m4-circuit-components"),
+        questionsPath: path.join(root, "content/generated/basic-2025-07-15/questions.json"),
+        quizRoot: path.join(root, "content/quizzes"),
+      }),
+      (error: unknown) => error instanceof QuizCheckError
+        && error.report.quizFileCount === 2
+        && error.report.issues.some((issue) => issue.includes("QZ-L-004-99-A.json") && issue.includes("not referenced"))
+        && !error.report.issues.some((issue) => issue.includes("QZ-L-005-01-A.json")),
+    );
+  });
+});
