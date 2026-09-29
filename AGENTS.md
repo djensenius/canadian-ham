@@ -42,6 +42,12 @@
   `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test CODE_SIGNING_ALLOWED=NO`
 - macOS test command (unit tests only; UI tests are iOS-only, and SDK/platform overrides keep the auto platform target on macOS while signing locally):
   `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=macOS,arch=arm64' -skip-testing:CanadianHamUITests test SDKROOT=macosx SUPPORTED_PLATFORMS=macosx CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES`
+- tvOS simulator test command:
+  `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamTV -destination 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation)' test CODE_SIGNING_ALLOWED=NO`
+- visionOS simulator test command:
+  `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamVision -destination 'platform=visionOS Simulator,name=Apple Vision Pro' test CODE_SIGNING_ALLOWED=NO`
+- visionOS generic simulator build fallback if the named simulator runtime is unavailable:
+  `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamVision -destination 'generic/platform=visionOS Simulator' build CODE_SIGNING_ALLOWED=NO`
 - Regenerate the Apple project after editing `apps/apple/project.yml` or target membership:
   `cd apps/apple && /opt/homebrew/bin/xcodegen generate --spec project.yml`
 - Check regeneration determinism by running the XcodeGen command twice and confirming `git diff -- apps/apple/CanadianHam.xcodeproj` is empty.
