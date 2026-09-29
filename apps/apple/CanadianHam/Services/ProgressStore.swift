@@ -51,12 +51,60 @@ struct ProgressExportV1: Codable, Equatable, Sendable {
     let lessonProgress: [ArchivedJSON]
     let lessonQuizAttempts: [ArchivedJSON]
     let preferences: ExportedPreferences
+
+    init(
+        schema: String,
+        version: Int,
+        exportedAt: String,
+        bankId: String,
+        questionProgress: [QuestionProgressRecord],
+        examAttempts: [StoredExamAttempt],
+        lessonProgress: [ArchivedJSON],
+        lessonQuizAttempts: [ArchivedJSON],
+        preferences: ExportedPreferences
+    ) {
+        self.schema = schema
+        self.version = version
+        self.exportedAt = exportedAt
+        self.bankId = bankId
+        self.questionProgress = questionProgress
+        self.examAttempts = examAttempts
+        self.lessonProgress = lessonProgress
+        self.lessonQuizAttempts = lessonQuizAttempts
+        self.preferences = preferences
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        schema = try container.decode(String.self, forKey: .schema)
+        version = try container.decode(Int.self, forKey: .version)
+        exportedAt = try container.decode(String.self, forKey: .exportedAt)
+        bankId = try container.decode(String.self, forKey: .bankId)
+        questionProgress = try container.decode([QuestionProgressRecord].self, forKey: .questionProgress)
+        examAttempts = try container.decode([StoredExamAttempt].self, forKey: .examAttempts)
+        lessonProgress = try container.decodeIfPresent([ArchivedJSON].self, forKey: .lessonProgress) ?? []
+        lessonQuizAttempts = try container.decodeIfPresent([ArchivedJSON].self, forKey: .lessonQuizAttempts) ?? []
+        preferences = try container.decode(ExportedPreferences.self, forKey: .preferences)
+    }
 }
 
 struct ExportedPreferences: Codable, Equatable, Sendable {
     let practiceMode: String
     let examTimerEnabled: Bool
     let theme: String
+
+    init(practiceMode: String, examTimerEnabled: Bool, theme: String = ApplePreferences.Theme.system.rawValue) {
+        self.practiceMode = practiceMode
+        self.examTimerEnabled = examTimerEnabled
+        self.theme = theme
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        practiceMode = try container.decode(String.self, forKey: .practiceMode)
+        examTimerEnabled = try container.decode(Bool.self, forKey: .examTimerEnabled)
+        theme = try container.decodeIfPresent(String.self, forKey: .theme) ?? ApplePreferences.Theme.system.rawValue
+    }
 }
 
 struct ArchivedJSON: Codable, Equatable, Sendable {
@@ -128,6 +176,42 @@ struct StoredExamTimer: Codable, Equatable, Sendable {
     let enabled: Bool
     let secondsAllowed: Int?
     let secondsElapsed: Int
+
+    private enum CodingKeys: String, CodingKey {
+        case enabled
+        case secondsAllowed
+        case secondsElapsed
+    }
+
+    init(enabled: Bool, secondsAllowed: Int?, secondsElapsed: Int) {
+        self.enabled = enabled
+        self.secondsAllowed = secondsAllowed
+        self.secondsElapsed = secondsElapsed
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        enabled = try container.decode(Bool.self, forKey: .enabled)
+        secondsAllowed = try Self.decodeOptionalNonNegativeIntegerCompatibleNumber(from: container, forKey: .secondsAllowed)
+        secondsElapsed = try Self.decodeNonNegativeIntegerCompatibleNumber(from: container, forKey: .secondsElapsed)
+    }
+
+    private static func decodeOptionalNonNegativeIntegerCompatibleNumber(from container: KeyedDecodingContainer<CodingKeys>, forKey key: CodingKeys) throws -> Int? {
+        if !container.contains(key) { return nil }
+        if try container.decodeNil(forKey: key) { return nil }
+        return try decodeNonNegativeIntegerCompatibleNumber(from: container, forKey: key)
+    }
+
+    private static func decodeNonNegativeIntegerCompatibleNumber(from container: KeyedDecodingContainer<CodingKeys>, forKey key: CodingKeys) throws -> Int {
+        if let intValue = try? container.decode(Int.self, forKey: key) {
+            return intValue
+        }
+        let doubleValue = try container.decode(Double.self, forKey: key)
+        guard doubleValue.isFinite, doubleValue >= 0 else {
+            throw DecodingError.dataCorruptedError(forKey: key, in: container, debugDescription: "Expected a non-negative finite number.")
+        }
+        return Int(doubleValue.rounded())
+    }
 }
 
 struct StoredExamScore: Codable, Equatable, Sendable {
@@ -188,8 +272,8 @@ final class ProgressStoreService: ObservableObject {
                 ExamAttemptEntity.self,
                 PreferencesEntity.self,
             ])
-            let configuration = ModelConfiguration(schema: schema, url: persistentStoreURL)
-            let container = try ModelContainer(for: schema, configurations: [configuration])
+            let configuration = ModelConfiguration(schema: schema, url: persistentStoreURL, cloudKitDatabase: .none)
+            let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
             return try ProgressStoreService(container: container)
         } catch {
             throw ProgressStoreError.openFailed(error.localizedDescription)
@@ -202,8 +286,8 @@ final class ProgressStoreService: ObservableObject {
             ExamAttemptEntity.self,
             PreferencesEntity.self,
         ])
-        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: schema, configurations: [configuration])
+        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+        let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
         return try ProgressStoreService(container: container)
     }
 
@@ -319,7 +403,9 @@ final class ProgressStoreService: ObservableObject {
             throw ProgressStoreError.validationFailed(errors)
         }
 
-        try resetAllData()
+        try context.delete(model: QuestionProgressEntity.self)
+        try context.delete(model: ExamAttemptEntity.self)
+        try context.delete(model: PreferencesEntity.self)
         for record in data.questionProgress {
             try upsertQuestionProgress(record)
         }
@@ -387,6 +473,9 @@ final class ProgressStoreService: ObservableObject {
                 validateAttemptItem(item, prefix: "\(prefix).items[\(itemIndex)]", knownQuestionIds: knownQuestionIds, knownCategoryIds: knownCategoryIds, knownSubsectionIds: knownSubsectionIds, errors: &errors)
             }
         }
+
+        validateLessonProgress(data.lessonProgress, errors: &errors)
+        validateLessonQuizAttempts(data.lessonQuizAttempts, errors: &errors)
 
         if ApplePreferences.PracticeMode(rawValue: data.preferences.practiceMode) == nil {
             errors.append("Import preferences.practiceMode is invalid.")
@@ -521,6 +610,98 @@ private func validateScore(
     }
     for id in score.weakSubsectionIds where !knownSubsectionIds.contains(id) {
         errors.append("\(prefix).weakSubsectionIds contains unknown subsection ID \(id).")
+    }
+}
+
+private func validateLessonProgress(_ records: [ArchivedJSON], errors: inout [String]) {
+    var lessonIds = Set<String>()
+    for (index, record) in records.enumerated() {
+        let prefix = "Import lessonProgress[\(index)]"
+        guard let lessonId = record.storage["lessonId"]?.stringValue, !lessonId.isEmpty else {
+            errors.append("\(prefix).lessonId must be a non-empty string.")
+            continue
+        }
+        if !lessonIds.insert(lessonId).inserted {
+            errors.append("\(prefix).lessonId duplicates another lesson progress record.")
+        }
+        if let readAt = record.storage["readAt"]?.stringValue {
+            appendTimestampError(&errors, value: readAt, field: "\(prefix).readAt")
+        } else {
+            errors.append("\(prefix).readAt must be a canonical UTC timestamp string.")
+        }
+        if let readCount = record.storage["readCount"]?.numberValue, readCount.rounded() == readCount, readCount > 0 {
+            continue
+        }
+        errors.append("\(prefix).readCount must be a positive integer.")
+    }
+}
+
+private func validateLessonQuizAttempts(_ attempts: [ArchivedJSON], errors: inout [String]) {
+    var ids = Set<String>()
+    for (index, attempt) in attempts.enumerated() {
+        let prefix = "Import lessonQuizAttempts[\(index)]"
+        guard let id = attempt.storage["id"]?.stringValue, !id.isEmpty else {
+            errors.append("\(prefix).id must be a non-empty string.")
+            continue
+        }
+        if !ids.insert(id).inserted {
+            errors.append("\(prefix).id duplicates another lesson quiz attempt.")
+        }
+        if attempt.storage["quizId"]?.nonEmptyStringValue == nil {
+            errors.append("\(prefix).quizId must be a non-empty string.")
+        }
+        if attempt.storage["lessonId"]?.nonEmptyStringValue == nil {
+            errors.append("\(prefix).lessonId must be a non-empty string.")
+        }
+        if let submittedAt = attempt.storage["submittedAt"]?.stringValue {
+            appendTimestampError(&errors, value: submittedAt, field: "\(prefix).submittedAt")
+        } else {
+            errors.append("\(prefix).submittedAt must be a canonical UTC timestamp string.")
+        }
+        guard let correct = attempt.storage["correct"]?.numberValue, correct.rounded() == correct, correct >= 0 else {
+            errors.append("\(prefix).correct must be a non-negative integer.")
+            continue
+        }
+        guard let total = attempt.storage["total"]?.numberValue, total.rounded() == total, total > 0 else {
+            errors.append("\(prefix).total must be a positive integer.")
+            continue
+        }
+        if correct > total { errors.append("\(prefix).correct must not exceed total.") }
+        if let percent = attempt.storage["percent"]?.numberValue, percent.isFinite, percent >= 0, percent <= 100 {
+            let expectedPercent = (correct / total) * 100
+            if abs(percent - expectedPercent) > 1e-9 {
+                errors.append("\(prefix).percent must match correct divided by total.")
+            }
+        } else {
+            errors.append("\(prefix).percent must be a number between 0 and 100.")
+        }
+        validateStringArray(attempt.storage["officialQuestionIds"], field: "\(prefix).officialQuestionIds", errors: &errors)
+        validateStringArray(attempt.storage["incorrectOfficialQuestionIds"], field: "\(prefix).incorrectOfficialQuestionIds", errors: &errors)
+        validateStringArray(attempt.storage["incorrectConceptCheckIds"], field: "\(prefix).incorrectConceptCheckIds", errors: &errors)
+    }
+}
+
+private func validateStringArray(_ value: JSONValue?, field: String, errors: inout [String]) {
+    guard case .array(let values) = value, values.allSatisfy({ $0.stringValue != nil }) else {
+        errors.append("\(field) must be an array of strings.")
+        return
+    }
+}
+
+private extension JSONValue {
+    var stringValue: String? {
+        if case .string(let value) = self { return value }
+        return nil
+    }
+
+    var nonEmptyStringValue: String? {
+        guard let value = stringValue, !value.isEmpty else { return nil }
+        return value
+    }
+
+    var numberValue: Double? {
+        if case .number(let value) = self { return value }
+        return nil
     }
 }
 

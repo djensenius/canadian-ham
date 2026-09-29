@@ -55,6 +55,62 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(importedStore.preferences, .default)
     }
 
+    func testDecodesWebLegacyExportWithOptionalLessonStoresAndTheme() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let json = """
+        {
+          "schema": "canadian-ham.progress-export",
+          "version": 1,
+          "exportedAt": "2026-01-02T05:04:05.000Z",
+          "bankId": "\(bank.manifest.bankId)",
+          "questionProgress": [],
+          "examAttempts": [],
+          "preferences": { "practiceMode": "immediate", "examTimerEnabled": false }
+        }
+        """
+
+        let decoded = try JSONDecoder().decode(ProgressExportV1.self, from: Data(json.utf8))
+
+        XCTAssertEqual(decoded.lessonProgress, [])
+        XCTAssertEqual(decoded.lessonQuizAttempts, [])
+        XCTAssertEqual(decoded.preferences.theme, "system")
+        XCTAssertTrue(try ProgressStoreService.inMemoryForTests().validate(decoded, bank: bank).isEmpty)
+    }
+
+    func testImportValidationChecksLessonRecordShapeAndDuplicates() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let json = """
+        {
+          "schema": "canadian-ham.progress-export",
+          "version": 1,
+          "exportedAt": "2026-01-02T05:04:05.000Z",
+          "bankId": "\(bank.manifest.bankId)",
+          "questionProgress": [],
+          "examAttempts": [],
+          "lessonProgress": [
+            { "lessonId": "L-005-01", "readAt": "2026-01-02T03:30:00.000Z", "readCount": 1 },
+            { "lessonId": "L-005-01", "readAt": "2026-01-02T03:30:00Z", "readCount": 0 }
+          ],
+          "lessonQuizAttempts": [
+            { "id": "quiz-1", "quizId": "QZ-L-005-01-A", "lessonId": "L-005-01", "submittedAt": "2026-01-02T03:45:00.000Z", "correct": 1, "total": 2, "percent": 50, "officialQuestionIds": [], "incorrectOfficialQuestionIds": [], "incorrectConceptCheckIds": [] },
+            { "id": "quiz-1", "quizId": "", "lessonId": "", "submittedAt": "2026-01-02T03:45:00Z", "correct": 3, "total": 2, "percent": 10, "officialQuestionIds": [], "incorrectOfficialQuestionIds": [], "incorrectConceptCheckIds": [] }
+          ],
+          "preferences": { "practiceMode": "immediate", "examTimerEnabled": false, "theme": "system" }
+        }
+        """
+        let decoded = try JSONDecoder().decode(ProgressExportV1.self, from: Data(json.utf8))
+
+        let errors = try ProgressStoreService.inMemoryForTests().validate(decoded, bank: bank)
+
+        XCTAssertTrue(errors.contains { $0.contains("lessonProgress[1].lessonId duplicates") })
+        XCTAssertTrue(errors.contains { $0.contains("lessonProgress[1].readAt") && $0.contains("canonical UTC") })
+        XCTAssertTrue(errors.contains { $0.contains("lessonProgress[1].readCount") })
+        XCTAssertTrue(errors.contains { $0.contains("lessonQuizAttempts[1].id duplicates") })
+        XCTAssertTrue(errors.contains { $0.contains("lessonQuizAttempts[1].quizId") })
+        XCTAssertTrue(errors.contains { $0.contains("lessonQuizAttempts[1].correct must not exceed total") })
+        XCTAssertTrue(errors.contains { $0.contains("lessonQuizAttempts[1].percent must match") })
+    }
+
     func testImportValidationRejectsUnknownIdsBadTimestampsBadBoxAndDuplicateSubmittedAt() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let store = try ProgressStoreService.inMemoryForTests()

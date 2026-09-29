@@ -4,6 +4,12 @@ import Combine
 import SwiftUI
 import UniformTypeIdentifiers
 
+#if os(macOS)
+import AppKit
+#else
+import UIKit
+#endif
+
 struct HomeView: View {
     let bank: QuestionBank
     @ObservedObject var progressStore: ProgressStoreService
@@ -183,20 +189,35 @@ struct PracticeHubView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 220), spacing: DesignTokens.Spacing.md)], spacing: DesignTokens.Spacing.md) {
-                    practiceButton("All questions", detail: "Draw from all 984 questions", systemImage: "tray.full", scope: .all)
+                    practiceButton("All questions", detail: "Draw from all \(bank.questions.count) questions", systemImage: "tray.full", scope: .all)
                     practiceButton("Weak areas", detail: "\(weak) weak subsections", systemImage: "exclamationmark.triangle", scope: .weak)
                     practiceButton("Due review", detail: "\(due) due questions; unseen excluded", systemImage: "calendar.badge.clock", scope: .due)
                 }
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    Text("Categories")
+                    Text("Practice categories")
                         .font(DesignTokens.FontScale.title.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
                     ForEach(bank.categories) { category in
-                        Button { startPractice(.category(category.id)) } label: {
-                            CategoryCard(category: category, language: language)
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                            Button { startPractice(.category(category.id)) } label: {
+                                CategoryCard(category: category, language: language)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Practice category \(category.name.text(for: language)), \(category.questionCount) questions")
+
+                            DisclosureGroup("Subsections") {
+                                ForEach(bank.subsectionsByCategory[category.id] ?? []) { subsection in
+                                    Button { startPractice(.subsection(subsection.id)) } label: {
+                                        SubsectionCard(subsection: subsection, title: bank.subsectionTitle(subsection, language: language))
+                                    }
+                                    .buttonStyle(.plain)
+                                    .accessibilityLabel("Practice subsection \(bank.subsectionTitle(subsection, language: language)), \(subsection.questionCount) questions")
+                                }
+                            }
+                            .font(DesignTokens.FontScale.body.weight(.semibold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
                         }
-                        .buttonStyle(.plain)
                     }
                 }
                 .paperCard()
@@ -274,7 +295,7 @@ struct PracticeSessionView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle(scopeTitle)
-        .task(id: "\(scope)-\(revision)") { loadSession() }
+        .task(id: scope) { loadSession() }
     }
 
     private var header: some View {
@@ -284,7 +305,7 @@ struct PracticeSessionView: View {
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
                 .accessibilityIdentifier("practice-category-title")
-            Text("Mode: \(progressStore.preferences.practiceMode.label). Session tally: \(correctCount) correct out of \(answeredCount) answered.")
+            Text(sessionProgressText)
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityIdentifier("practice-session-tally")
@@ -296,13 +317,26 @@ struct PracticeSessionView: View {
         .paperCard()
     }
 
+    private var sessionProgressText: String {
+        switch progressStore.preferences.practiceMode {
+        case .immediate:
+            "Mode: \(progressStore.preferences.practiceMode.label). Session tally: \(correctCount) correct out of \(answeredCount) answered."
+        case .reviewLater:
+            if reviewSubmitted {
+                "Mode: \(progressStore.preferences.practiceMode.label). Review complete: \(correctCount) correct out of \(answeredCount) answered."
+            } else {
+                "Mode: \(progressStore.preferences.practiceMode.label). Answered \(answeredCount) of \(items.count); results are hidden until review."
+            }
+        }
+    }
+
     private var scopeTitle: String {
         switch scope {
         case .all: "All questions"
         case .weak: "Weak areas"
         case .due: "Due review"
         case .category(let id): bank.categories.first { $0.id == id }?.name.text(for: language) ?? id
-        case .subsection(let id): "Subsection \(id)"
+        case .subsection(let id): bank.subsectionsById[id].map { bank.subsectionTitle($0, language: language) } ?? "Subsection \(id)"
         }
     }
 
@@ -332,6 +366,7 @@ struct PracticeSessionView: View {
                             displayIndex: displayIndex,
                             language: language,
                             selectedSourceIndex: selected,
+                            showCorrectness: selected != nil && progressStore.preferences.practiceMode == .immediate,
                             disabled: selected != nil && progressStore.preferences.practiceMode == .immediate
                         ) {
                             select(sourceIndex: sourceIndex, question: question)
@@ -344,14 +379,16 @@ struct PracticeSessionView: View {
                 Button(currentIndex + 1 == items.count ? "Finish session" : "Next question") {
                     advanceOrFinish()
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.bordered)
+                .tint(DesignTokens.Colors.ink)
                 .frame(minHeight: 44)
                 .accessibilityIdentifier("next-question-button")
             } else if progressStore.preferences.practiceMode == .reviewLater {
                 Button(currentIndex + 1 == items.count ? "Submit for review" : "Next question") {
                     advanceReviewLater()
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.bordered)
+                .tint(DesignTokens.Colors.ink)
                 .disabled(selected == nil)
                 .accessibilityHint(selected == nil ? "Choose an answer before continuing" : "Continues without feedback until review")
             }
@@ -396,7 +433,7 @@ struct PracticeSessionView: View {
                 latestExamItems: latest?.items ?? [],
                 seed: seed,
                 now: now,
-                limit: 10
+                limit: practiceLimit
             )
             if let forcedQuestionID = AppLaunchArguments.value(after: "-CanadianHamPracticeQuestionID"),
                let question = bank.question(id: forcedQuestionID),
@@ -405,6 +442,7 @@ struct PracticeSessionView: View {
                 let forced = PracticeQuestionItem(question: question, choicePermutation: forcedAnswers.map(\.sourceIndex))
                 loaded.removeAll { $0.question.id == forcedQuestionID }
                 loaded.insert(forced, at: 0)
+                loaded = Array(loaded.prefix(practiceLimit))
             }
             // Touch progress so Swift does not warn about the explicit engine-record load in this flow.
             progress.sort { $0.questionId < $1.questionId }
@@ -420,6 +458,15 @@ struct PracticeSessionView: View {
             errorMessage = error.localizedDescription
             items = []
         }
+    }
+
+    private var practiceLimit: Int {
+#if DEBUG
+        if let value = AppLaunchArguments.value(after: "-CanadianHamPracticeLimit"), let limit = Int(value), limit > 0 {
+            return limit
+        }
+#endif
+        return 10
     }
 
     private func scopeContains(_ question: BankQuestion) -> Bool {
@@ -526,7 +573,10 @@ struct MockExamView: View {
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Mock exam")
         .onReceive(timer) { _ in
-            if timerRunning { secondsElapsed += 1 }
+            if timerRunning {
+                secondsElapsed += 1
+                timerStatus = "Timer running, \(secondsElapsed) seconds elapsed"
+            }
         }
         .alert("Submit mock exam?", isPresented: $confirmingSubmit) {
             Button("Cancel", role: .cancel) {}
@@ -586,6 +636,7 @@ struct MockExamView: View {
                             displayIndex: displayIndex,
                             language: language,
                             selectedSourceIndex: selectedByQuestionId[question.id] ?? nil,
+                            showCorrectness: false,
                             disabled: false
                         ) {
                             selectedByQuestionId[question.id] = sourceIndex
@@ -627,11 +678,13 @@ struct MockExamView: View {
                     AccessibilityNotification.Announcement(timerStatus).post()
                 }
                 .buttonStyle(.bordered)
+                .tint(DesignTokens.Colors.ink)
                 Button("Extend timer") {
                     timerStatus = "Timer extension noted; no official time limit is verified"
                     AccessibilityNotification.Announcement(timerStatus).post()
                 }
                 .buttonStyle(.bordered)
+                .tint(DesignTokens.Colors.ink)
             }
         } else {
             Text("Timer off by default")
@@ -649,14 +702,22 @@ struct MockExamView: View {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 48), spacing: DesignTokens.Spacing.sm)], spacing: DesignTokens.Spacing.sm) {
                 ForEach(generatedItems.indices, id: \.self) { index in
                     let item = generatedItems[index]
-                    Button("\(index + 1)") { currentIndex = index }
+                    Button(navigatorLabel(for: index, item: item)) { currentIndex = index }
                         .buttonStyle(.bordered)
                         .tint(selectedByQuestionId[item.questionId] != nil ? DesignTokens.Colors.correctText : DesignTokens.Colors.inkMuted)
-                        .accessibilityLabel("Question \(index + 1), \(selectedByQuestionId[item.questionId] != nil ? "answered" : "unanswered")\(flagged.contains(item.questionId) ? ", flagged" : "")")
+                        .accessibilityLabel("Question \(index + 1), \(selectedByQuestionId[item.questionId] != nil ? "answered" : "unanswered")\(flagged.contains(item.questionId) ? ", flagged" : "")\(index == currentIndex ? ", current" : "")")
                 }
             }
         }
         .paperCard()
+    }
+
+    private func navigatorLabel(for index: Int, item: GeneratedExamItem) -> String {
+        var label = "\(index + 1)"
+        if index == currentIndex { label += " ●" }
+        if selectedByQuestionId[item.questionId] != nil { label += " ✓" }
+        if flagged.contains(item.questionId) { label += " ⚑" }
+        return label
     }
 
     private var submitConfirmationText: String {
@@ -709,6 +770,7 @@ struct MockExamView: View {
                                 .font(DesignTokens.FontScale.body.monospaced())
                             Text(question.text.text(for: language))
                                 .font(DesignTokens.FontScale.body)
+                                .foregroundStyle(DesignTokens.Colors.ink)
                             PracticeFeedback(question: question, selectedSourceIndex: item.selectedSourceIndex, language: language)
                         }
                         .paperCard()
@@ -716,7 +778,8 @@ struct MockExamView: View {
                 }
             }
             Button("Start another mock exam") { resetExam() }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.bordered)
+                .tint(DesignTokens.Colors.ink)
         }
     }
 
@@ -725,12 +788,26 @@ struct MockExamView: View {
             seed = AppLaunchArguments.value(after: "-CanadianHamMockExamSeed") ?? "mock-exam/\(UUID().uuidString)"
             startedAt = try AppleStudyEngine.canonicalNow()
             generatedItems = try AppleStudyEngine.generatedMockExam(bank: bank, seed: seed).items
+#if DEBUG
+            if let forcedQuestionID = AppLaunchArguments.value(after: "-CanadianHamMockExamQuestionID"), let question = bank.question(id: forcedQuestionID) {
+                let forcedAnswers = try AppleQuestionShuffle.shuffledAnswers(for: question, seed: "mock-answers/\(question.id)/ui-test")
+                let forced = GeneratedExamItem(position: 1, questionId: question.id, subsectionId: question.subsectionId, categoryId: question.categoryId, choicePermutation: forcedAnswers.map(\.sourceIndex))
+                generatedItems.removeAll { $0.questionId == question.id }
+                generatedItems.insert(forced, at: 0)
+                generatedItems = generatedItems.enumerated().map { index, item in
+                    GeneratedExamItem(position: index + 1, questionId: item.questionId, subsectionId: item.subsectionId, categoryId: item.categoryId, choicePermutation: item.choicePermutation)
+                }
+            }
+            if let value = AppLaunchArguments.value(after: "-CanadianHamMockExamLimit"), let limit = Int(value), limit > 0 {
+                generatedItems = Array(generatedItems.prefix(limit))
+            }
+#endif
             currentIndex = 0
             selectedByQuestionId = [:]
             flagged = []
             secondsElapsed = 0
-            timerRunning = false
-            timerStatus = progressStore.preferences.examTimerEnabled ? "Timer ready" : "Timer off"
+            timerRunning = progressStore.preferences.examTimerEnabled
+            timerStatus = progressStore.preferences.examTimerEnabled ? "Timer running, 0 seconds elapsed" : "Timer off"
             result = nil
             errorMessage = nil
         } catch {
@@ -739,7 +816,7 @@ struct MockExamView: View {
     }
 
     private func submitExam() {
-        guard !isSubmitting else { return }
+        guard result == nil, !isSubmitting else { return }
         isSubmitting = true
         defer { isSubmitting = false }
         do {
@@ -1015,12 +1092,12 @@ struct AnswerChoiceButton: View {
     let displayIndex: Int
     let language: BankLanguage
     let selectedSourceIndex: Int?
+    let showCorrectness: Bool
     let disabled: Bool
     let action: () -> Void
 
     private var letter: String { ["A", "B", "C", "D"][safe: displayIndex] ?? "\(displayIndex + 1)" }
     private var isSelected: Bool { selectedSourceIndex == answer.sourceIndex }
-    private var showResult: Bool { selectedSourceIndex != nil && disabled }
 
     var body: some View {
         Button(action: action) {
@@ -1048,43 +1125,33 @@ struct AnswerChoiceButton: View {
             .padding(DesignTokens.Spacing.lg)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(background, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(border, lineWidth: isSelected || showResult ? 2 : 1))
+            .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(border, lineWidth: isSelected || showCorrectness ? 2 : 1))
         }
         .buttonStyle(.plain)
-        .disabled(disabled)
+        .allowsHitTesting(!disabled)
         .accessibilityLabel(accessibilityLabel)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityIdentifier("answer-\(letter)-button")
     }
 
     private var statusText: String? {
-        guard selectedSourceIndex != nil else { return nil }
+        guard showCorrectness, selectedSourceIndex != nil else { return nil }
         if answer.sourceIndex == 0 { return isSelected ? "Your answer, correct answer" : "Correct answer" }
         if isSelected { return "Your answer, incorrect" }
         return nil
     }
 
     private var statusIcon: String { answer.sourceIndex == 0 ? "checkmark.circle.fill" : "xmark.circle.fill" }
-    private var background: Color {
-        guard selectedSourceIndex != nil else { return DesignTokens.Colors.paperElevated }
-        if answer.sourceIndex == 0 { return DesignTokens.Colors.correctBg }
-        if isSelected { return DesignTokens.Colors.incorrectBg }
-        return DesignTokens.Colors.paperInset
-    }
+    private var background: Color { highContrastSurfaceColor }
     private var border: Color {
-        guard selectedSourceIndex != nil else { return DesignTokens.Colors.border }
+        guard showCorrectness else { return isSelected ? DesignTokens.Colors.inkMuted : DesignTokens.Colors.border }
         if answer.sourceIndex == 0 { return DesignTokens.Colors.correctBorder }
         if isSelected { return DesignTokens.Colors.incorrectBorder }
         return DesignTokens.Colors.border
     }
-    private var textColor: Color {
-        guard selectedSourceIndex != nil else { return DesignTokens.Colors.ink }
-        if answer.sourceIndex == 0 { return DesignTokens.Colors.correctText }
-        if isSelected { return DesignTokens.Colors.incorrectText }
-        return DesignTokens.Colors.ink
-    }
-    private var chipColor: Color { selectedSourceIndex == nil ? DesignTokens.Colors.ink : textColor }
-    private var chipForeground: Color { selectedSourceIndex == nil ? DesignTokens.Colors.paperElevated : background }
+    private var textColor: Color { .primary }
+    private var chipColor: Color { highContrastSurfaceColor }
+    private var chipForeground: Color { .primary }
 
     private var accessibilityLabel: Text {
         var value = "Answer \(letter), \(answer.text.text(for: language))"
@@ -1103,18 +1170,18 @@ struct PracticeFeedback: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             Text(isCorrect ? "Correct" : "Incorrect")
                 .font(DesignTokens.FontScale.body.weight(.bold))
-                .foregroundStyle(isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
+                .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityIdentifier("answer-feedback-title")
             if !isCorrect, let correct = question.answers.first(where: { $0.sourceIndex == 0 }) {
                 Text("Correct answer: \(correct.text.text(for: language))")
                     .font(DesignTokens.FontScale.body.weight(.semibold))
-                    .foregroundStyle(DesignTokens.Colors.incorrectText)
+                    .foregroundStyle(DesignTokens.Colors.ink)
                     .textSelection(.enabled)
                     .accessibilityIdentifier("answer-feedback-correct-answer")
             }
             Text("Source: \(question.categoryId) • \(question.subsectionId). Explanation pending where not yet authored.")
                 .font(DesignTokens.FontScale.caption)
-                .foregroundStyle(isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
+                .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityIdentifier("answer-feedback-source")
         }
         .padding(DesignTokens.Spacing.lg)
@@ -1123,6 +1190,25 @@ struct PracticeFeedback: View {
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(isCorrect ? DesignTokens.Colors.correctBorder : DesignTokens.Colors.incorrectBorder, lineWidth: 2))
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("answer-feedback")
+    }
+}
+
+private struct SubsectionCard: View {
+    let subsection: BankSubsection
+    let title: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            Text(title)
+                .font(DesignTokens.FontScale.body.weight(.semibold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+            Text("\(subsection.questionCount) questions • \(subsection.id)")
+                .font(DesignTokens.FontScale.caption)
+                .foregroundStyle(DesignTokens.Colors.inkMuted)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .paperCard()
+        .padding(.leading, DesignTokens.Spacing.lg)
     }
 }
 
@@ -1166,6 +1252,14 @@ struct MessagePanel: View {
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(kind == .success ? DesignTokens.Colors.correctBorder : DesignTokens.Colors.warningBorder, lineWidth: 1))
         .accessibilityElement(children: .combine)
     }
+}
+
+private var highContrastSurfaceColor: Color {
+#if os(macOS)
+    Color(NSColor.textBackgroundColor)
+#else
+    Color(UIColor.systemBackground)
+#endif
 }
 
 private func localized(_ string: String, language: BankLanguage) -> AttributedString {

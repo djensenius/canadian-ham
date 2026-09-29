@@ -148,7 +148,6 @@ struct RootView: View {
             .toolbar { languageToolbarItem(progressStore: progressStore) }
         } detail: {
             detailView(bank: bank, progressStore: progressStore)
-                .id(detailIdentity)
                 .background(DesignTokens.Colors.paper)
         }
         .navigationSplitViewStyle(.balanced)
@@ -206,13 +205,6 @@ struct RootView: View {
         }
     }
 
-    private var detailIdentity: String {
-        switch selection {
-        case .practice(let scope): "practice-\(scope)"
-        default: "\(selection)-\(dataRevision)"
-        }
-    }
-
     private func loadBankIfNeeded() {
         guard bank == nil, bankLoadError == nil else { return }
         do {
@@ -229,10 +221,18 @@ struct RootView: View {
 
     private func reloadStore() {
         do {
+#if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("-CanadianHamForceStoreOpenError") {
+                throw ProgressStoreError.openFailed("Forced store open failure for UI testing.")
+            }
             if ProcessInfo.processInfo.arguments.contains("-CanadianHamResetDataOnLaunch") {
                 ProgressStoreService.resetPersistentStoreFiles()
             }
+#endif
             progressStore = try ProgressStoreService.open()
+#if DEBUG
+            applyPreferenceLaunchArguments()
+#endif
             progressStoreError = nil
             language = progressStore?.preferences.language ?? .english
         } catch {
@@ -240,6 +240,29 @@ struct RootView: View {
             progressStoreError = error.localizedDescription
         }
     }
+
+#if DEBUG
+    private func applyPreferenceLaunchArguments() {
+        guard let progressStore else { return }
+        var preferences = progressStore.preferences
+        var changed = false
+        if let rawMode = AppLaunchArguments.value(after: "-CanadianHamPracticeMode"), let mode = ApplePreferences.PracticeMode(rawValue: rawMode) {
+            preferences.practiceMode = mode
+            changed = true
+        }
+        if let rawTimer = AppLaunchArguments.value(after: "-CanadianHamExamTimerEnabled") {
+            preferences.examTimerEnabled = rawTimer == "true" || rawTimer == "1"
+            changed = true
+        }
+        if let rawTheme = AppLaunchArguments.value(after: "-CanadianHamTheme"), let theme = ApplePreferences.Theme(rawValue: rawTheme) {
+            preferences.theme = theme
+            changed = true
+        }
+        if changed {
+            try? progressStore.updatePreferences(preferences)
+        }
+    }
+#endif
 
     private func applyLaunchNavigation(bank: QuestionBank) {
         if let screen = AppLaunchArguments.value(after: "-CanadianHamInitialScreen") {
@@ -304,17 +327,30 @@ private struct StoreRecoveryView: View {
             Label("Local progress store unavailable", systemImage: "externaldrive.badge.exclamationmark")
                 .font(DesignTokens.FontScale.headline.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.warningText)
+                .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
             Text(message)
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
+                .fixedSize(horizontal: false, vertical: true)
             Text("Reset remains available so damaged local SwiftData files can be cleared. Bundled questions are not deleted.")
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
-            Button("Reset local data and retry", role: .destructive) {
+                .fixedSize(horizontal: false, vertical: true)
+            Button(role: .destructive) {
                 reset()
+            } label: {
+                Text("Reset local data and retry")
+                    .font(DesignTokens.FontScale.body.weight(.semibold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, DesignTokens.Spacing.lg)
+                    .padding(.vertical, DesignTokens.Spacing.md)
+                    .frame(minHeight: 56)
+                    .background(DesignTokens.Colors.paperElevated, in: Capsule())
+                    .overlay(Capsule().strokeBorder(DesignTokens.Colors.ink, lineWidth: 1))
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(.plain)
             .accessibilityHint("Deletes local progress and preferences, then attempts to reopen the store")
         }
         .padding(DesignTokens.Spacing.xl)
