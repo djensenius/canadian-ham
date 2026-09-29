@@ -61,17 +61,17 @@ The ITU divides the world into regions used in radio regulation. For exam purpos
 
 Region knowledge helps you read band plans and international references. It does not replace the rules of the country or territory where you are operating. A Canadian operator in another country is not automatically using the Canadian band limits just because the operator's certificate is Canadian.
 
-### Worked example: using a travel card
+### Worked example: building a departure worksheet
 
-Before a portable trip, Nina writes a travel card with three columns: "where the station will be," "which authorization applies there," and "how I must identify." At home, the first column points to Canadian operation. At a foreign stop, the second and third columns must be checked against the visited administration or the applicable reciprocal arrangement.
+Before a portable trip, Nina makes a departure worksheet with separate rows for message purpose, destination authority, bands and modes, and spoken identification. The worksheet does not answer those rows from memory; it points her back to the current official source for the place or reciprocal arrangement involved.
 
-The card is useful because it prevents a common mistake: starting with the operator's home certificate and forgetting to ask where the transmitter will actually be used.
+The worksheet is useful because it keeps different questions from being blended together. A qualification row does not answer the identification row, and a region row does not answer every bands-and-modes question for a particular destination.
 
 ## Visiting the United States
 
 The official answers establish two practical points for Canadian operators in the United States. First, Basic qualification is the minimum level named for operating there. Second, voice identification starts with the Canadian call sign, adds the suitable portable or mobile word, and then adds the US area designator for the place being visited.
 
-Also remember the location principle. The exam examples point to United States amateur limits for a Canadian station operating in Florida and for a station operating offshore from Florida in the stated case. Do not simplify this to "Region 2 is enough." The visited country's rules can be the controlling answer.
+Also remember the location principle. The applicable limits come from the operating situation and the visited administration, not just from the operator's home certificate or a broad region label. Do not simplify this to "Region 2 is enough." The visited country's rules can be the controlling answer.
 
 ## CEPT-style visits
 
@@ -98,8 +98,8 @@ This checklist is deliberately broader than a single exam answer. It helps you c
 
 1. A visiting operator plans to join a technical net and also relay a customer's invoice total. Which part belongs on amateur radio? The technical net discussion belongs; the invoice traffic does not, because amateur international traffic is limited to amateur purposes or personal remarks.
 2. A travel note says only "same ITU region as home." What extra question should you ask? Ask which country's or arrangement's rules apply at the operating location; a region label is not a complete authorization.
-3. A CEPT trip card begins with the Canadian call sign before the visited prefix. What is the likely error? It has mixed the CEPT voice-identification order with the United States visiting pattern.
-4. A club member says a community organization can approve any international traffic for a special event. What should you check instead? Check the regulatory sources and whether any administration has objected; a club or community group cannot expand the radio regulations.
+3. A study sheet says the international Morse-code requirement is the same in every administration. What should be corrected? The international framework leaves that authorization requirement to administrations, so do not turn it into a universal yes-or-no rule.
+4. A club member says a community organization can expand the radio regulations for a special event. What should you check instead? Check the regulatory source named for the rule; a club or community group cannot expand the radio regulations.
 5. A mobile station will cross a border later in the day. When should the operator review band limits and identification style? Before transmitting from the new location, because the applicable limits and identification format can change with operating location.
 
 ## Radio connection

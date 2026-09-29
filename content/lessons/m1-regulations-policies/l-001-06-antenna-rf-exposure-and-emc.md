@@ -52,15 +52,25 @@ The important reasoning is the order: first find whether an applicable local pro
 
 ## Exclusions and concerns
 
-The official answers do not give one universal antenna height that always avoids consultation. Instead, they point to exclusions defined by ISED, by the municipal process, or by both sets of provisions depending on the situation. That means a responsible operator checks the applicable process rather than memorizing a single number.
+The official answers do not give one universal antenna height that always avoids consultation. Instead, they point to exclusions defined by ISED and to exclusions in a municipal process. In the municipality case, either applicable exclusion path can be enough. That means a responsible operator checks the applicable process rather than memorizing a single number or turning the OR into an AND.
 
-For ISED's public consultation process, the bank identifies written notice, addressing relevant concerns, and giving the public an opportunity to respond regarding measures for reasonable and relevant concerns. It also distinguishes those process elements from public meetings, which are not identified as a required element in the official answer set.
+For ISED's public consultation process, the bank identifies written notice, addressing relevant concerns, and giving the public an opportunity to respond regarding measures for reasonable and relevant concerns. In the default-process item, written reasonable-and-relevant concerns must arrive during the stated public-comment window. The bank also distinguishes those process elements from public meetings, which are not identified as a required element in the official answer set.
+
+### Regulatory fact table
+
+| Topic | Official fact to preserve |
+|---|---|
+| Municipal antenna-process exclusions | Public consultation might not be required when the system is excluded by the municipal process OR the provisions of Client Procedures Circular CPC-2-0-03. |
+| ISED default-process concerns | The proponent must address reasonable and relevant concerns provided in writing within the 30-day public comment period. |
+| RF exposure guideline name | Safety Code 6 is the Health Canada guideline that gives RF exposure limits for the human body. |
+
+Use this table only as an exam-fact anchor. It is not a substitute for checking current official procedures before a real project.
 
 If a proponent and a non-public stakeholder cannot agree, the official answer places the final decision with ISED. That does not make courtesy optional; it identifies who resolves the deadlock described by the bank.
 
 ## RF exposure basics
 
-Health Canada is the organization named by the official bank for guidelines on maximum RF energy near the human body. The Health Canada exposure code gives limits for people exposed to RF energy. It does not list amateur frequency allocations, set transmitter power for interference control, or set antenna heights for aircraft safety.
+Health Canada is the organization named by the official bank for guidelines on maximum RF energy near the human body. The named Health Canada code in the fact table gives limits for people exposed to RF energy. It does not list amateur frequency allocations, set transmitter power for interference control, or set antenna heights for aircraft safety.
 
 A conservative station habit is to avoid searching for a single magic output power. The official answers say the maximum safe antenna power for a hand-held VHF or UHF radio is not specified, and that no transmitter type is exempt from the RF exposure rules. Even portable and low-power equipment should be treated seriously.
 
@@ -74,7 +84,7 @@ The exposure code is expressed in quantities such as electric field strength, ma
 
 ### Worked example: making a conservative station adjustment
 
-A VHF antenna on a temporary mast is moved from a patio edge to a higher support farther from the seating area, while the operator keeps the same transmitter and antenna. The station owner has not calculated a formal compliance boundary from that fact alone, but the change is in the safer direction for bystanders because distance is one of the exposure factors named by the official bank.
+A VHF antenna on a temporary mast is moved from beside a picnic table to a higher support farther from the seating area, while the operator keeps the same transmitter and antenna. The station owner has not calculated a formal compliance boundary from that fact alone, but the change is in the safer direction for bystanders because distance is one of the exposure factors named by the official bank.
 
 The careful conclusion is limited: increasing separation helps reduce concern, but it does not replace a proper RF exposure evaluation when one is required.
 
@@ -84,15 +94,15 @@ EMCAB-2 deals with electromagnetic compatibility complaints using field strength
 
 Notice what is not enough by itself. Transmitting within your power privileges does not settle the EMCAB-2 cause question. The fact that the problem starts and stops with your transmissions is useful troubleshooting information, but the exam criterion is the measured or assessed field strength relative to the specified immunity criterion.
 
-Equipment category also matters. The bank identifies home-entertainment devices that are not strictly radio apparatus as associated equipment, while a garage door opener is radio-sensitive equipment. Use those labels as exam facts and then work cooperatively in real troubleshooting.
+Equipment category also matters. The bank identifies home-entertainment devices that are not strictly radio apparatus as associated equipment, and it uses a separate radio-sensitive equipment category for another affected-device item. Use those labels as exam facts and then work cooperatively in real troubleshooting.
 
 ## Try it
 
 1. A proposed support looks ordinary to the builder, but neighbours may have concerns. What is the first process question? Ask which land-use or ISED consultation path applies before installing or modifying the system.
 2. A local process says an exclusion applies, while a general web comment says "all towers need consultation." What should the operator do? Check the actual applicable process and ISED procedure; exclusions can change whether public consultation is required.
-3. A handheld radio has a small wattage label, so the owner assumes RF exposure rules never apply. What is wrong with that shortcut? The official bank does not exempt hand-held or low-power transmitters from RF exposure requirements.
-4. A person can stand farther from the antenna after a mast is moved. If power, gain, and frequency stay the same, what is the direction of the exposure change? Greater distance is the safer direction because distance is one of the identified exposure factors.
-5. A neighbour's audio device acts up only during transmissions, but the station owner checks only transmitter output power. What key EMCAB-2 item is missing? The field strength at the affected premises must be compared with the specified immunity criterion.
+3. A workshop transceiver is small enough to carry in one hand, so the owner assumes its low profile alone removes RF exposure obligations. What is wrong with that shortcut? The official bank does not make a transmitter exempt just because it is portable or low power.
+4. A relevant written comment arrives during the default-process comment period, while a later news clipping makes a vague objection. Which one fits the response duty described by the bank? The timely written relevant concern fits; the media item and vague opposition do not by themselves match that duty.
+5. A neighbour's label printer misbehaves only during transmissions, but the station owner checks only transmitter output power. What key EMCAB-2 item is missing? The field strength at the affected premises must be compared with the specified immunity criterion.
 
 ## Radio connection
 
@@ -113,7 +123,7 @@ Good operators also document. Keep dates, contact names, notices, equipment sett
 
 Alt text: A station owner reviewing antenna, RF exposure, and interference checklists before transmitting.
 
-Description: Draw three panels. Panel one shows a house, a mast, a neighbour, and a folder labelled "consultation path." Panel two shows a person standing outside a marked antenna area with callouts for power, gain, distance, and frequency. Panel three shows a transmitter, a field-strength meter symbol at a neighbour's premises, and two labelled devices: home entertainment gear and a garage door opener. Keep all text original and avoid official question wording.
+Description: Draw three panels. Panel one shows a house, a mast, a neighbour, and a folder labelled "consultation path." Panel two shows a person standing outside a marked antenna area with callouts for power, gain, distance, and frequency. Panel three shows a transmitter, a field-strength meter symbol at a neighbour's premises, and two labelled devices: home entertainment gear and an affected control device. Keep all text original and avoid official question wording.
 
 ## Summary
 

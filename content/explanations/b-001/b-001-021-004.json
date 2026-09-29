@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-021-004.\n\nWhy the correct answer is right: The official bank places Australia, Japan, and Southeast Asia in ITU Region 3. Use that as a map fact for the exam.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Region 1\": Region 1 is the bank's answer for Europe and Africa, not for Australia, Japan, and Southeast Asia.\n- sourceIndex 2: \"Region 2\": Region 2 is the bank's answer for Canada, not for the places named in this item.\n- sourceIndex 3: \"Region 4\": Region 4 is not the ITU region used by the official answer set for these locations.",
+    "en": "Question B-001-021-004.\n\nWhy the correct answer is right: The official bank places Australia, Japan, and Southeast Asia in ITU Region 3. Use that as a map fact for the exam.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Region 1\": Region 1 is the bank's answer for Europe and Africa, not for Australia, Japan, and Southeast Asia.\n- sourceIndex 2: \"Region 2\": Region 2 is the bank's answer for Canada, not for the places named in this item.\n- sourceIndex 3: \"Region 4\": The ITU uses three regions in this lesson set; Region 4 is not an additional region for Australia, Japan, or Southeast Asia.",
     "fr": null
   },
   "citations": [

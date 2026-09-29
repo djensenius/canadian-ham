@@ -30,36 +30,126 @@
   "conceptChecks": [
     {
       "id": "QZ-L-001-06-A-C1",
-      "prompt": { "en": "An operator wants a cleaner antenna-project record. Which action would NOT help?", "fr": null },
+      "prompt": {
+        "en": "A project folder has one tab for the local process and one tab for CPC-2-0-03. What is the best two-step use of those tabs?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Keep dated copies of notices and responses", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Check whether a local process or exclusion applies before ordering tower parts", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Replace written concerns with memory-only notes after each conversation", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Record which consultation path was used for the project", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Check the local-process tab for municipal instructions, check the CPC tab as ISED antenna-siting material, then choose the process path from those sources",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Use the CPC tab only after the municipality has rejected every local exclusion",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Merge both tabs into one rule that requires a matching exclusion in both sources every time",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "File CPC-2-0-03 as a Health Canada RF exposure document instead of an antenna-siting procedure",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "A reliable record supports responsible consultation; relying only on memory makes it harder to show what was checked or answered.", "fr": null }
+      "explanation": {
+        "en": "The lesson separates municipal process material from ISED antenna-siting material. CPC-2-0-03 belongs with antenna consultation, not with Health Canada RF exposure or EMCAB-2 complaint handling.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-001-06-A-C2",
-      "prompt": { "en": "Power, gain, and frequency stay unchanged, but people are kept farther from the antenna. What change should you predict?", "fr": null },
+      "prompt": {
+        "en": "Which note about Safety Code 6 is NOT true?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Exposure concern moves in the safer direction because separation increased", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Exposure concern increases because distance is not relevant", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The antenna automatically becomes exempt from RF exposure rules", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The transmitter's output power must rise when people move away", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "It is the Health Canada exposure guideline named in this lesson",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "It deals with limits for people exposed to RF energy",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "It is the EMCAB-2 procedure for deciding interference complaints at affected premises",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "It is separate from the antenna-siting consultation path",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "Distance is one of the identified exposure factors, so increasing separation is a conservative improvement when the other named factors are unchanged.", "fr": null }
+      "explanation": {
+        "en": "Safety Code 6 is the RF exposure guideline. EMCAB-2 is the separate field-strength framework used for electromagnetic compatibility complaints.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-001-06-A-C3",
-      "prompt": { "en": "A station owner decides an EMC complaint only by checking that the transmitter is within the operator's power privilege. What procedure error should be spotted?", "fr": null },
+      "prompt": {
+        "en": "A troubleshooting sheet says, 'If the affected device is in a home, use the associated-equipment category and do not read the device type.' What error should you spot?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "The comparison should include the field strength at the affected premises against the applicable immunity criterion.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The transmitter privilege check proves the affected device is always at fault.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The complaint can be ignored if the problem stops between transmissions.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The equipment category matters only for antennas, not for electronic devices.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Associated equipment is not a catch-all for every household device; identify the equipment category before applying the criterion",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Associated equipment is never used for home-entertainment devices",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Equipment category matters only for antenna-siting consultation",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Once field strength is measured, the equipment category can always be ignored",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "EMCAB-2 reasoning turns on the field-strength criterion at the affected location, not merely the transmitter's legal power setting.", "fr": null }
+      "explanation": {
+        "en": "EMCAB-2 uses equipment categories as part of choosing the applicable field-strength criterion; the lesson does not make associated equipment a universal household label.",
+        "fr": null
+      }
     }
   ]
 }

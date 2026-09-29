@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-021-005.\n\nWhy the correct answer is right: The official bank places Europe and Africa in ITU Region 1. This is a geographic region fact, not a complete operating authorization by itself.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Region 2\": Region 2 is the bank's answer for Canada, so it does not match Europe and Africa in this item.\n- sourceIndex 2: \"Region 3\": Region 3 is associated with Australia, Japan, and Southeast Asia, not Europe and Africa.\n- sourceIndex 3: \"Region 4\": The official Basic bank does not use Region 4 as the correct region for the named areas.",
+    "en": "Question B-001-021-005.\n\nWhy the correct answer is right: The official bank places Europe and Africa in ITU Region 1. This is a geographic region fact, not a complete operating authorization by itself.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Region 2\": Region 2 is the bank's answer for Canada, so it does not match Europe and Africa in this item.\n- sourceIndex 2: \"Region 3\": Region 3 is associated with Australia, Japan, and Southeast Asia, not Europe and Africa.\n- sourceIndex 3: \"Region 4\": The ITU uses three regions in this lesson set; Region 4 is not an additional region for Europe or Africa.",
     "fr": null
   },
   "citations": [

@@ -8,5 +8,10 @@
     "lessonId": "L-005-05",
     "blockHeading": "Resonance and tuned circuits",
     "reason": "Reviewed principle definition: the series-RLC maximum-current statement is an accepted standard resonance fact needed for the lesson."
+  },
+  {
+    "lessonId": "L-001-06",
+    "blockHeading": "Regulatory fact table",
+    "reason": "Reviewed regulatory fact table: exact official names, OR wording, and comment-period duration are required to close review gaps without paraphrasing these exam facts into less accurate wording."
   }
 ]
