@@ -788,7 +788,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         if quizCard.exists, quizCard.isHittable {
             return
         }
-        let button = app.buttons["go-to-lesson-quiz-button"].firstMatch
+        let button = app.buttons["Go to quiz"].firstMatch
         XCTAssertTrue(button.waitForExistence(timeout: 10), "Lesson reader should expose a Go to quiz button")
         scrollUntilHittable(button, in: app, maxSwipes: 6)
         XCTAssertTrue(button.isHittable, "Go to quiz button should be hittable")

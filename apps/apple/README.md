@@ -51,6 +51,7 @@ Current implemented flows for iPhone, iPad, and Mac:
 - Practice scopes for all questions, categories, subsections, weak areas, and due review; due review excludes unseen questions.
 - Immediate-feedback and review-later preferences, with progress updates routed through `CanadianHamEngine.applyAnswer` using explicit canonical timestamps.
 - Learn modules M1–M8 with native lesson rendering, local read progress, lesson quizzes, authored explanations, and bundled PDF reference-sheet access.
+- Lesson quizzes open on a dedicated Apple quiz screen from the lesson action row and lesson quiz card as a platform adaptation of the web inline quiz.
 - Mock exam generation via `CanadianHamEngine.generateExam(requireFullMockExam: true)`, visible seed, question navigator, flag-for-review, submit confirmation, results, category breakdown, wrong-answer review, and bundled offline exam reference-sheet access.
 - Settings export/import/reset. Export JSON uses the web progress schema (`canadian-ham.progress-export`, version 1); import validates canonical timestamps, known question/lesson/quiz IDs, lesson-quiz question subsets, Leitner box range, and duplicate `submittedAt` values before replacement.
 
