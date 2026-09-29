@@ -57,37 +57,37 @@ Power is still P = I x E.
 
 ### Worked example: primary current
 
-A transformer primary is 120 V and supplies 250 W to a transmitter, neglecting losses.
+A transformer primary is 240 V and supplies 360 W to a bench supply, neglecting losses.
 
 - I = P / E.
-- I = 250 W / 120 V.
-- I = 2.08 A.
+- I = 360 W / 240 V.
+- I = 1.5 A.
 
-Rounded to a practical exam choice, that is about 2.1 A.
+The primary current is 1.5 A.
 
 ### Worked example: secondary current
 
-A transformer has a 120 V primary drawing 0.5 A and a 12 V secondary, with no losses.
+A transformer has a 240 V primary drawing 0.3 A and a 36 V secondary, with no losses.
 
-- Primary power P = I x E = 0.5 x 120 = 60 W.
-- Secondary current I = P / E = 60 / 12 = 5 A.
+- Primary power P = I x E = 0.3 x 240 = 72 W.
+- Secondary current I = P / E = 72 / 36 = 2 A.
 
 The lower-voltage side can supply more current when power is conserved.
 
 ### Worked example: turns ratio and voltage
 
-A transformer primary has 250 turns and the secondary has 500 turns. The secondary has twice as many turns as the primary.
+A transformer primary has 800 turns and the secondary has 120 turns. The secondary has 0.15 times as many turns as the primary.
 
-- Turns ratio secondary/primary = 500 / 250 = 2.
-- Secondary voltage = 120 V x 2 = 240 V.
+- Turns ratio secondary/primary = 120 / 800 = 0.15.
+- Secondary voltage = 240 V x 0.15 = 36 V.
 
-A step-up transformer increases voltage and decreases current in the ideal case.
+A step-down transformer decreases voltage and increases current in the ideal case.
 
 ### Worked example: current in a step-up transformer
 
-A 1:5 primary-to-secondary turns ratio steps voltage up by 5. If the secondary current is 50 mA, ideal primary current is 5 times larger:
+A 1:4 primary-to-secondary turns ratio steps voltage up by 4. If the secondary current is 75 mA, ideal primary current is 4 times larger:
 
-- Primary current = 50 mA x 5 = 250 mA.
+- Primary current = 75 mA x 4 = 300 mA.
 
 The current changes in the opposite direction to the voltage ratio when power is conserved.
 
@@ -121,7 +121,7 @@ Accuracy describes an instrument's ability to display values that are true to re
 
 ## Try it
 
-1. A transformer primary consumes 10 W. If the ideal secondary voltage is 5 V, I = P / E = 10 / 5 = 2 A.
+1. A transformer primary consumes 54 W. If the ideal secondary voltage is 18 V, I = P / E = 54 / 18 = 3 A.
 2. A parallel resonant circuit at resonance has high impedance.
 3. A series resonant circuit at resonance has low impedance and maximum current.
 4. To measure voltage across a resistor, connect the voltmeter in parallel with that resistor.
@@ -158,39 +158,3 @@ Description: Draw an original three-panel ink-brush figure. Panel 1 shows two co
 - Voltmeters connect in parallel and should appear as high resistance.
 - Ammeters connect in series and should appear as low resistance.
 - RF wattmeters directly measure transmitter output power.
-
-## Lesson quiz definition
-
-Quiz ID: QZ-L-005-05-A
-
-Official question IDs to present with shuffled answers:
-
-- B-005-011-001
-- B-005-011-004
-- B-005-011-008
-- B-005-012-001
-- B-005-012-006
-- B-005-012-011
-- B-005-013-001
-- B-005-013-007
-
-Original concept-check questions:
-
-1. Original: An ideal transformer has 100 primary turns and 300 secondary turns. If the primary is 10 V, what secondary voltage is expected?
-   - A. 30 V (correct)
-   - B. 3.3 V
-   - C. 10 V
-   - D. 300 V
-   - Explanation: The secondary has three times as many turns, so voltage is three times larger.
-2. Original: Which statement is true at resonance in a series RLC circuit?
-   - A. Current is at a maximum. (correct)
-   - B. The circuit must have infinite impedance.
-   - C. A capacitor is no longer part of the circuit.
-   - D. Frequency has no effect.
-   - Explanation: Series resonance gives low impedance at the resonant frequency, so current is highest.
-3. Original: You need to measure voltage across a load resistor. How should the voltmeter be connected?
-   - A. In parallel with the load. (correct)
-   - B. In series with the load as the only current path.
-   - C. Across an open switch far from the load.
-   - D. In parallel with the supply fuse only.
-   - Explanation: Voltage is measured across two points, so a voltmeter is placed in parallel with the part.

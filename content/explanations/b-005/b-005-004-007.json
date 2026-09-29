@@ -4,10 +4,14 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-004-007. Lesson link: L-005-02.\n\nWhy the correct answer is right: Use E = I x R. 0.44 A x 50 ohms = 22 V.\n\nWhy the distractors are wrong:\n- sourceIndex 1: This is ten times too high.\n- sourceIndex 2: This is ten times too low.\n- sourceIndex 3: This is one hundred times too low.",
+    "en": "Question B-005-004-007.\n\nWhy the correct answer is right: Use E = I x R. 0.44 A x 50 ohms = 22 V.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"222 volts\": This is 222 / 22 = 10.09 times too high, so it is just over ten times the correct voltage.\n- sourceIndex 2: \"2.2 volts\": This is ten times too low.\n- sourceIndex 3: \"0.22 volts\": This is one hundred times too low.",
     "fr": null
   },
   "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-02"
+    },
     {
       "type": "question",
       "id": "B-005-004-007"

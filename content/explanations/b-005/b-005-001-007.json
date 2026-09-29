@@ -4,10 +4,14 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-001-007. Lesson link: L-005-01.\n\nWhy the correct answer is right: Kilohertz to megahertz requires division by 1 000. 7040 / 1 000 = 7.040 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: This moves the decimal too far left and loses a factor of 10.\n- sourceIndex 2: This moves the decimal the wrong way for kHz to MHz.\n- sourceIndex 3: This is off by a factor of 100.",
+    "en": "Question B-005-001-007.\n\nWhy the correct answer is right: Kilohertz to megahertz requires division by 1 000. 7040 / 1 000 = 7.040 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"0.740 MHz\": This is not a valid kHz-to-MHz conversion; 0.740 / 7.040 = 0.105, so it is about 9.5 times too small and drops a digit.\n- sourceIndex 2: \"70.40 MHz\": This divides 7040 by 100 instead of 1 000, so it is 10 times too large.\n- sourceIndex 3: \"0.074 MHz\": This is not a valid kHz-to-MHz conversion; 0.074 / 7.040 = 0.0105, so it is about 95 times too small and drops a digit.",
     "fr": null
   },
   "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-01"
+    },
     {
       "type": "question",
       "id": "B-005-001-007"

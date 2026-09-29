@@ -4,10 +4,14 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-002-011. Lesson link: L-005-01.\n\nWhy the correct answer is right: In a DC circuit, polarity describes the positive and negative direction of the circuit.\n\nWhy the distractors are wrong:\n- sourceIndex 1: Polarization is used for wave or antenna orientation, not DC current direction.\n- sourceIndex 2: Directivity describes how an antenna favours directions.\n- sourceIndex 3: Phase describes timing in AC waveforms, not DC direction.",
+    "en": "Question B-005-002-011.\n\nWhy the correct answer is right: In a DC circuit, polarity describes the positive and negative direction of the circuit.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Polarization\": Polarization is used for wave or antenna orientation, not DC current direction.\n- sourceIndex 2: \"Directivity\": Directivity describes how an antenna favours directions.\n- sourceIndex 3: \"Phase\": Phase describes timing in AC waveforms, not DC direction.",
     "fr": null
   },
   "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-01"
+    },
     {
       "type": "question",
       "id": "B-005-002-011"

@@ -4,10 +4,14 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-003-004. Lesson link: L-005-02.\n\nWhy the correct answer is right: An open circuit breaks the path, so no current is drawn.\n\nWhy the distractors are wrong:\n- sourceIndex 1: A short circuit would draw excessive current, not no current.\n- sourceIndex 2: A reactive circuit is an AC behaviour description, not the fault that stops all DC current here.\n- sourceIndex 3: A closed circuit provides a complete path and can draw current.",
+    "en": "Question B-005-003-004.\n\nWhy the correct answer is right: An open circuit breaks the path, so no current is drawn.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A short circuit\": A short circuit would draw excessive current, not no current.\n- sourceIndex 2: \"A reactive circuit\": A reactive circuit is an AC behaviour description, not the fault that stops all DC current here.\n- sourceIndex 3: \"A closed circuit\": A closed circuit provides a complete path and can draw current.",
     "fr": null
   },
   "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-02"
+    },
     {
       "type": "question",
       "id": "B-005-003-004"

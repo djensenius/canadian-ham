@@ -237,9 +237,13 @@ Lesson files may store front matter as YAML in Markdown, but validation should p
 }
 ```
 
+### Lesson quiz files
+
+Lesson front matter `quizIds` refer to JSON files at `content/quizzes/{quizId}.json` with `{ id, lessonId, officialQuestionIds, conceptChecks }`, where each concept check stores localized prompt text, choices with exactly one `isCorrect: true`, and localized explanation text.
+
 ### Explanation
 
-Explanations are original project content and must not copy study-guide prose.
+Explanations are original project content and must not copy study-guide prose. Per-choice notes in explanation bodies are keyed by official answer `sourceIndex` and start with the choice's quoted short value so shuffled review screens can label them unambiguously.
 
 ```json
 {

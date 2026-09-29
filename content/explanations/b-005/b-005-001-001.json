@@ -4,10 +4,14 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-001-001. Lesson link: L-005-01.\n\nWhy the correct answer is right: Mega to kilo is a factor of 1 000, so 3.525 MHz becomes 3 525 kHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: This moves the decimal only one place, not three.\n- sourceIndex 2: This converts as though the target were hertz while still labelling the result kHz.\n- sourceIndex 3: This moves the decimal two places, not three.",
+    "en": "Question B-005-001-001.\n\nWhy the correct answer is right: Mega to kilo is a factor of 1 000, so 3.525 MHz becomes 3 525 kHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"35.25 kHz\": This moves the decimal only one place, not three.\n- sourceIndex 2: \"3 525 000 kHz\": This converts as though the target were hertz while still labelling the result kHz.\n- sourceIndex 3: \"352.5 kHz\": This moves the decimal two places, not three.",
     "fr": null
   },
   "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-01"
+    },
     {
       "type": "question",
       "id": "B-005-001-001"

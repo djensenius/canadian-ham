@@ -4,10 +4,14 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-004-006. Lesson link: L-005-02.\n\nWhy the correct answer is right: Convert 10 mA to 0.010 A, then R = 9 V / 0.010 A = 900 ohms.\n\nWhy the distractors are wrong:\n- sourceIndex 1: This would fit 0.1 A, not 10 mA.\n- sourceIndex 2: This would fit 1 A, not 10 mA.\n- sourceIndex 3: This shifts the decimal one place too far in the high direction.",
+    "en": "Question B-005-004-006.\n\nWhy the correct answer is right: Convert 10 mA to 0.010 A, then R = 9 V / 0.010 A = 900 ohms.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"90 ohms\": This would fit 0.1 A, not 10 mA.\n- sourceIndex 2: \"9 ohms\": This would fit 1 A, not 10 mA.\n- sourceIndex 3: \"9000 ohms\": This shifts the decimal one place too far in the high direction.",
     "fr": null
   },
   "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-02"
+    },
     {
       "type": "question",
       "id": "B-005-004-006"

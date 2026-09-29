@@ -4,10 +4,14 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-003-010. Lesson link: L-005-02.\n\nWhy the correct answer is right: Continuity means the circuit path is closed or complete.\n\nWhy the distractors are wrong:\n- sourceIndex 1: Continuity does not mean the circuit is specifically DC.\n- sourceIndex 2: Backup power is unrelated to the continuity of a path.\n- sourceIndex 3: Continuous operation rating is not the meaning of continuity in circuit testing.",
+    "en": "Question B-005-003-010.\n\nWhy the correct answer is right: Continuity means the circuit path is closed or complete.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The circuit is designed for direct current (DC)\": Continuity does not mean the circuit is specifically DC.\n- sourceIndex 2: \"The circuit is supplied with backup power\": Backup power is unrelated to the continuity of a path.\n- sourceIndex 3: \"The circuit is rated for continuous operation\": Continuous operation rating is not the meaning of continuity in circuit testing.",
     "fr": null
   },
   "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-02"
+    },
     {
       "type": "question",
       "id": "B-005-003-010"

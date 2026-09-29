@@ -4,10 +4,14 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-001-009. Lesson link: L-005-01.\n\nWhy the correct answer is right: One volt is 1 000 millivolts, so two volts is 2 000 mV.\n\nWhy the distractors are wrong:\n- sourceIndex 1: This is far too small and moves the decimal in the wrong direction.\n- sourceIndex 2: This is too large by a factor of 1 000.\n- sourceIndex 3: This is too small by a factor of 1 000 000.",
+    "en": "Question B-005-001-009.\n\nWhy the correct answer is right: One volt is 1 000 millivolts, so two volts is 2 000 mV.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"0.000 002 mV\": This is far too small and moves the decimal in the wrong direction.\n- sourceIndex 2: \"2 000 000 mV\": This is too large by a factor of 1 000.\n- sourceIndex 3: \"0.002 mV\": This is too small by a factor of 1 000 000.",
     "fr": null
   },
   "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-01"
+    },
     {
       "type": "question",
       "id": "B-005-001-009"

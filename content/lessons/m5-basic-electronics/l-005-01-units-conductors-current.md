@@ -44,40 +44,40 @@ A prefix tells you how many base units are being counted. In Basic exam electron
 |---|---:|---:|---|
 | giga | G | 1 000 000 000 times the base unit | 1 GHz = 1 000 MHz |
 | mega | M | 1 000 000 times the base unit | 1 MHz = 1 000 kHz |
-| kilo | k | 1 000 times the base unit | 1 kHz = 1 000 Hz |
+| kilo | k | 1 000 times the base unit | 2 kHz = 2 000 Hz |
 | base unit | none | 1 unit | 1 ampere = 1 A |
 | milli | m | one thousandth | 1 A = 1 000 mA |
 | micro | µ | one millionth | 1 mH = 1 000 µH |
-| pico | p | one trillionth | 1 µF = 1 000 000 pF |
+| pico | p | one trillionth | 0.47 µF = 470 000 pF |
 
 When you change from a large unit to a smaller unit, the number gets larger. When you change from a small unit to a larger unit, the number gets smaller.
 
 ### Worked example: MHz to kHz
 
-A frequency is 3.525 MHz. Mega is one step larger than kilo, and each step here is a factor of 1 000.
+A frequency is 14.230 MHz. Mega is one step larger than kilo, and each step here is a factor of 1 000.
 
 - 1 MHz = 1 000 kHz.
-- 3.525 MHz = 3.525 x 1 000 kHz.
-- 3.525 x 1 000 = 3 525.
+- 14.230 MHz = 14.230 x 1 000 kHz.
+- 14.230 x 1 000 = 14 230.
 
-So 3.525 MHz is 3 525 kHz.
+So 14.230 MHz is 14 230 kHz.
 
 ### Worked example: mA to A
 
-A current is 3000 mA. Milli means one thousandth of an ampere.
+A receiver accessory draws 450 mA. Milli means one thousandth of an ampere.
 
 - 1 A = 1 000 mA.
 - To convert milliamperes to amperes, divide by 1 000.
-- 3000 mA / 1 000 = 3 A.
+- 450 mA / 1 000 = 0.45 A.
 
-So 3000 mA is 3 amperes.
+So 450 mA is 0.45 amperes.
 
 ### Worked example: pF to µF
 
-A capacitor is 1 000 000 pF. Pico is much smaller than micro.
+A small bypass capacitor is marked 470 000 pF. Pico is much smaller than micro.
 
-- 1 µF = 1 000 000 pF.
-- 1 000 000 pF = 1 µF.
+- A microfarad contains one million picofarads.
+- 470 000 pF is 0.47 of that amount, so it is 0.47 µF.
 
 This is a good reminder that capacitor values may look huge in picofarads but ordinary in microfarads.
 
@@ -87,7 +87,7 @@ A conductor lets electric charge move easily. Copper, silver, gold, and aluminum
 
 An insulator resists current flow. Glass, air, porcelain, many plastics, Teflon, mica, and dry wood are common insulating materials. Insulators hold conductors apart so current goes where the circuit designer intended.
 
-A semiconductor is between those two behaviours. Silicon and carbon are not usually the answer when a question is asking for the best simple conductor or a list of good insulators. Semiconductors become very important in diodes and transistors, but this lesson is about the basic material categories.
+A semiconductor is between those two behaviours. Silicon is the everyday semiconductor example. Carbon can appear in resistive materials, so treat it separately from both good metal conductors and common insulators. Semiconductors become very important in diodes and transistors, but this lesson is about the basic material categories.
 
 ## Current, resistance, and conductance
 
@@ -109,15 +109,15 @@ Temperature can change the resistance of a conductor. In many metal conductors, 
 
 Do these in your head before checking the answer.
 
-1. A handheld radio produces 500 mW. Since 1 W = 1 000 mW, 500 mW is half of one watt: 0.5 W.
-2. A resistance is 1 kilohm. Kilo means 1 000, so 1 kilohm is 1000 ohms.
-3. A frequency is 7040 kHz. Divide by 1 000 to get megahertz: 7.040 MHz.
-4. A current is one quarter ampere. One ampere is 1 000 mA, so one quarter is 250 mA.
-5. A voltage is 2 V. Each volt is 1 000 mV, so 2 V is 2 000 mV.
+1. A trail radio beacon produces 750 mW. Since 1 W = 1 000 mW, 750 mW is 0.75 W.
+2. A resistor is marked 4.7 kilohms. Kilo means 1 000, so 4.7 kilohms is 4 700 ohms.
+3. A frequency is 21 375 kHz. Divide by 1 000 to get megahertz: 21.375 MHz.
+4. A current is 0.18 A. One ampere is 1 000 mA, so 0.18 A is 180 mA.
+5. A supply is 13.8 V. Each volt is 1 000 mV, so 13.8 V is 13 800 mV.
 
 ## Radio connection
 
-A real station uses these conversions all the time. HF frequencies may be written as 7.040 MHz in a logging program and as 7040 kHz in a band plan. A handheld may advertise 500 mW on low power, which is 0.5 W. A small accessory may draw 250 mA, which is 0.25 A from the battery.
+A real station uses these conversions all the time. HF frequencies may be written as 14.230 MHz in a logging program and as 14 230 kHz in a band plan. A handheld may advertise 750 mW on low power, which is 0.75 W. A small accessory may draw 180 mA, which is 0.18 A from the battery.
 
 Conductors and insulators are just as practical. Coaxial cable works because the centre conductor carries RF current, an insulator keeps it separated from the shield, and the shield provides the return path and shielding. If the insulator fails or a conductor touches where it should not, the circuit behaviour changes immediately.
 
@@ -133,7 +133,7 @@ Conductors and insulators are just as practical. Coaxial cable works because the
 
 Alt text: A horizontal metric-prefix ladder from giga to pico, with arrows showing when to multiply or divide by 1 000.
 
-Description: Draw a simple ink-brush ladder with labelled steps: G, M, k, base, m, µ, p. Add a small radio dial labelled 7.040 MHz beside the MHz step and 7040 kHz beside the kHz step. Use arrows that say "multiply by 1 000" when moving toward smaller units and "divide by 1 000" when moving toward larger units.
+Description: Draw a simple ink-brush ladder with labelled steps: G, M, k, base, m, µ, p. Add a small radio dial labelled 14.230 MHz beside the MHz step and 14 230 kHz beside the kHz step. Use arrows that say "multiply by 1 000" when moving toward smaller units and "divide by 1 000" when moving toward larger units.
 
 ## Summary
 
@@ -143,39 +143,3 @@ Description: Draw a simple ink-brush ladder with labelled steps: G, M, k, base, 
 - Resistance opposes current; conductance is its inverse.
 - Conductors such as copper allow current flow; insulators such as glass, air, and porcelain resist it.
 - DC polarity matters because many circuits are designed for one direction of connection.
-
-## Lesson quiz definition
-
-Quiz ID: QZ-L-005-01-A
-
-Official question IDs to present with shuffled answers:
-
-- B-005-001-001
-- B-005-001-002
-- B-005-001-004
-- B-005-001-007
-- B-005-001-008
-- B-005-002-001
-- B-005-002-003
-- B-005-002-011
-
-Original concept-check questions:
-
-1. Original: A battery current is 750 mA. What is the same current in amperes?
-   - A. 0.75 A (correct)
-   - B. 7.5 A
-   - C. 75 A
-   - D. 0.075 A
-   - Explanation: Milliamperes are thousandths of an ampere, so divide 750 by 1 000.
-2. Original: Which statement best describes an insulator in a simple circuit?
-   - A. It is a material chosen to reduce unwanted current flow. (correct)
-   - B. It always stores energy like a battery.
-   - C. It is the same thing as a semiconductor.
-   - D. It must be made of metal.
-   - Explanation: Insulators separate conductors and help keep current on the intended path.
-3. Original: Why is polarity important when connecting a DC radio accessory?
-   - A. The circuit may be designed for one positive and negative direction. (correct)
-   - B. It changes MHz directly into kHz.
-   - C. It makes resistance disappear.
-   - D. It turns an insulator into a conductor.
-   - Explanation: DC equipment often expects positive and negative leads to be connected correctly.

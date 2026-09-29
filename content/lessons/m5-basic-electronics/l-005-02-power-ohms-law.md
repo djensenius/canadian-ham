@@ -49,13 +49,13 @@ That means power in watts equals current in amperes times voltage in volts.
 
 ### Worked example: radio accessory power
 
-A device runs from 12 V and draws 0.5 A.
+A field-day audio interface runs from 13.8 V and draws 0.45 A.
 
 - P = I x E.
-- P = 0.5 A x 12 V.
-- P = 6 W.
+- P = 0.45 A x 13.8 V.
+- P = 6.21 W.
 
-So the device uses 6 watts of electrical power.
+So the interface uses about 6.2 watts of electrical power.
 
 ## Ohm’s law
 
@@ -71,44 +71,44 @@ Always use volts, amperes, and ohms together. If the current is in milliamperes,
 
 ### Worked example: find voltage
 
-A 2 ohm resistor has 0.5 A through it.
+A 470 ohm resistor has 0.020 A through it.
 
 - E = I x R.
-- E = 0.5 A x 2 ohms.
-- E = 1.0 V.
+- E = 0.020 A x 470 ohms.
+- E = 9.4 V.
 
-So the voltage across the resistor is 1.0 volts.
+So the voltage across the resistor is 9.4 volts.
 
 ### Worked example: find current
 
-A 30 ohm resistor is connected across 6 V.
+A 150 ohm resistor is connected across 18 V.
 
 - I = E / R.
-- I = 6 V / 30 ohms.
-- I = 0.2 A.
+- I = 18 V / 150 ohms.
+- I = 0.12 A.
 
-So the current is 0.2 amperes, or 200 mA.
+So the current is 0.12 amperes, or 120 mA.
 
 ### Worked example: find resistance
 
-A circuit draws 0.25 A from a 12 V source.
+A circuit draws 0.60 A from a 13.8 V source.
 
 - R = E / I.
-- R = 12 V / 0.25 A.
-- R = 48 ohms.
+- R = 13.8 V / 0.60 A.
+- R = 23 ohms.
 
-The resistance is 48 ohms.
+The resistance is 23 ohms.
 
 ### Worked example: convert first
 
-A relay needs 200 mA and has a resistance of 25 ohms.
+A panel lamp draws 80 mA through a 150 ohm limiting resistor.
 
-- Convert current: 200 mA = 0.2 A.
+- Convert current: 80 mA = 0.080 A.
 - E = I x R.
-- E = 0.2 A x 25 ohms.
-- E = 5 V.
+- E = 0.080 A x 150 ohms.
+- E = 12 V.
 
-So the relay needs 5 volts.
+So the resistor has 12 volts across it.
 
 ## Open, closed, and short circuits
 
@@ -120,9 +120,9 @@ A short circuit is an unintended low-resistance path. It can draw too much curre
 
 ## Try it
 
-1. What resistance drops 9 V at 10 mA? Convert 10 mA to 0.010 A, then R = E / I = 9 / 0.010 = 900 ohms.
-2. What voltage is across 50 ohms at 0.44 A? E = I x R = 0.44 x 50 = 22 V.
-3. What resistance draws 300 mA from 3 V? Convert 300 mA to 0.3 A. R = 3 / 0.3 = 10 ohms.
+1. What resistance drops 7.5 V at 15 mA? Convert 15 mA to 0.015 A, then R = E / I = 7.5 / 0.015 = 500 ohms.
+2. What voltage is across 220 ohms at 0.035 A? E = I x R = 0.035 x 220 = 7.7 V.
+3. What resistance draws 120 mA from 18 V? Convert 120 mA to 0.120 A. R = 18 / 0.120 = 150 ohms.
 4. A formula answer says R = E x I. Does that match the reference sheet? No. Resistance is R = E / I.
 
 ## Radio connection
@@ -152,39 +152,3 @@ Description: Draw a simple original formula card. Put E above a horizontal line,
 - Use E = I x R, I = E / R, and R = E / I for Ohm’s law.
 - Convert milli values to base units before calculating.
 - Continuity means a closed path; an open circuit has no complete path; a short circuit is an unintended low-resistance path that can draw too much current.
-
-## Lesson quiz definition
-
-Quiz ID: QZ-L-005-02-A
-
-Official question IDs to present with shuffled answers:
-
-- B-005-003-001
-- B-005-003-004
-- B-005-003-005
-- B-005-003-007
-- B-005-003-010
-- B-005-004-001
-- B-005-004-006
-- B-005-004-010
-
-Original concept-check questions:
-
-1. Original: A 12 V circuit draws 2 A. What power is being used?
-   - A. 24 W (correct)
-   - B. 6 W
-   - C. 14 W
-   - D. 0.17 W
-   - Explanation: P = I x E, so 2 x 12 = 24 W.
-2. Original: A learner calculates resistance from 5 V and 0.5 A. Which setup is correct?
-   - A. R = 5 / 0.5 (correct)
-   - B. R = 5 x 0.5
-   - C. R = 0.5 / 5
-   - D. R = 5 + 0.5
-   - Explanation: The reference-sheet form is R = E / I.
-3. Original: Which fault is most likely to blow a fuse right away?
-   - A. An unintended very low-resistance path. (correct)
-   - B. A switch that is open and stops all current.
-   - C. A meter connected with correct polarity.
-   - D. A load that is disconnected from both wires.
-   - Explanation: A short circuit can draw excessive current until protection opens the circuit.

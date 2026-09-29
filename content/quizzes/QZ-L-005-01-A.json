@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-005-01-A",
+  "lessonId": "L-005-01",
+  "officialQuestionIds": [
+    "B-005-001-001",
+    "B-005-001-002",
+    "B-005-001-004",
+    "B-005-001-007",
+    "B-005-001-008",
+    "B-005-002-001",
+    "B-005-002-003",
+    "B-005-002-011"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-005-01-A-C1",
+      "prompt": { "en": "A battery current is 640 mA. What is the same current in amperes?", "fr": null },
+      "choices": [
+        { "text": { "en": "0.64 A", "fr": null }, "isCorrect": true },
+        { "text": { "en": "6.4 A", "fr": null }, "isCorrect": false },
+        { "text": { "en": "64 A", "fr": null }, "isCorrect": false },
+        { "text": { "en": "0.064 A", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Milliamperes are thousandths of an ampere, so divide 640 by 1 000.", "fr": null }
+    },
+    {
+      "id": "QZ-L-005-01-A-C2",
+      "prompt": { "en": "Which statement best describes an insulator in a simple circuit?", "fr": null },
+      "choices": [
+        { "text": { "en": "It always stores energy like a battery.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It is a material chosen to reduce unwanted current flow.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "It is the same thing as a semiconductor.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It must be made of metal.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Insulators separate conductors and help keep current on the intended path.", "fr": null }
+    },
+    {
+      "id": "QZ-L-005-01-A-C3",
+      "prompt": { "en": "Why is polarity important when connecting a DC radio accessory?", "fr": null },
+      "choices": [
+        { "text": { "en": "It changes MHz directly into kHz.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It makes resistance disappear.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The circuit may be designed for one positive and negative direction.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "It turns an insulator into a conductor.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "DC equipment often expects positive and negative leads to be connected correctly.", "fr": null }
+    }
+  ]
+}

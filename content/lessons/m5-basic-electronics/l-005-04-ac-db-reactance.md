@@ -43,15 +43,15 @@ By the end of this lesson, you can:
 
 ## AC basics
 
-Frequency is the number of complete cycles per second. The unit is hertz. A 60 Hz signal completes 60 cycles each second.
+Frequency is the number of complete cycles per second. The unit is hertz. A 400 Hz tone completes 400 cycles each second.
 
-Most humans can hear roughly 20 Hz to 20 000 Hz. That is why this range is called audio frequency. Radio frequencies are much higher. For example, a signal around 7 MHz is in the HF range.
+Most humans can hear roughly 20 Hz to 20 000 Hz. That is why this range is called audio frequency. Radio frequencies are much higher. For example, a signal around 14 MHz is in the HF range.
 
 Wavelength is the distance a signal travels during one complete cycle. As frequency increases, wavelength decreases. As wavelength gets shorter, frequency is higher.
 
 Phase describes timing between waveforms. Two AC signals may have the same frequency but not start their cycles at the same instant; that timing difference is phase.
 
-A sine wave is the smooth waveform associated with ideal AC. A harmonic is a signal at an integer multiple of a fundamental frequency. If a fundamental is 2 kHz, then 4 kHz is the second harmonic.
+A sine wave is the smooth waveform associated with ideal AC. A harmonic is a signal at an integer multiple of a fundamental frequency. If a fundamental is 1.5 kHz, then 3 kHz is the second harmonic.
 
 ## Decibels as power ratios
 
@@ -59,8 +59,8 @@ The decibel compares two levels. In these Basic questions, use practical power s
 
 | dB change | Power ratio |
 |---:|---:|
-| +3 dB | multiply power by 2 |
-| -3 dB | divide power by 2 |
+| +3 dB | multiply power by about 2 |
+| -3 dB | divide power by about 2 |
 | +6 dB | multiply power by 4 |
 | -6 dB | divide power by 4 |
 | +9 dB | multiply power by 8 |
@@ -70,28 +70,27 @@ The decibel compares two levels. In these Basic questions, use practical power s
 
 ### Worked example: gain
 
-A 2 W handheld feeds a 9 dB gain amplifier. A 9 dB power increase is three 3 dB steps.
+A 3 W handheld feeds a 7 dB gain amplifier. A 7 dB power increase can be estimated as +10 dB followed by -3 dB.
 
-- +3 dB doubles: 2 W becomes 4 W.
-- Another +3 dB doubles: 4 W becomes 8 W.
-- Another +3 dB doubles: 8 W becomes 16 W.
+- +10 dB multiplies by 10: 3 W becomes 30 W.
+- -3 dB cuts that approximately in half: 30 W becomes about 15 W.
 
-The output is 16 W.
+The output is about 15 W.
 
 ### Worked example: feedline loss
 
-A transmitter is 100 W and the line loss is 6 dB.
+A transmitter is 40 W and the line loss is 3 dB.
 
-- A 6 dB loss divides power by 4.
-- 100 W / 4 = 25 W.
+- A 3 dB loss divides power by about 2.
+- 40 W / 2 = 20 W.
 
-About 25 W reaches the antenna.
+About 20 W reaches the antenna.
 
-### Worked example: S-meter power reduction
+### Worked example: large power reduction
 
-If reducing power by 10 dB moves a report from "10 dB over S9" to S9, the power must be divided by 10. A reduction from 200 W to 20 W is one 10 dB step.
+If a station needs a 20 dB reduction for a close-range test, the power must be divided by 100. A reduction from 25 W to 0.25 W is two 10 dB steps.
 
-For a 30 dB reduction, divide by 1000. A 100 W signal reduced by 30 dB becomes 0.1 W.
+For a 30 dB reduction, divide by 1000. A 250 W signal reduced by 30 dB becomes 0.25 W.
 
 ## Inductors and capacitors in combinations
 
@@ -113,7 +112,7 @@ Notice that capacitors are opposite to resistors for series and parallel totals.
 - Two equal capacitors in series make half the capacitance of one.
 - Two equal capacitors in parallel make twice the capacitance of one.
 
-So two 12 mH chokes in series make 24 mH. Two 20 mH inductors in parallel make 10 mH. Two 20 µF capacitors in series make 10 µF. Two 24 µF capacitors in parallel make 48 µF.
+So two 7 mH chokes in series make 14 mH. Two 18 mH inductors in parallel make 9 mH. Two 33 µF capacitors in series make 16.5 µF. Two 47 µF capacitors in parallel make 94 µF.
 
 ## What sets inductance and capacitance?
 
@@ -135,9 +134,9 @@ Impedance is the combined effect of resistance and reactance in an AC circuit. I
 
 ## Try it
 
-1. What does 60 Hz mean? Sixty complete cycles each second.
+1. What does 400 Hz mean? Four hundred complete cycles each second.
 2. If power doubles, what is the dB change? About +3 dB.
-3. If transmitter power goes from 5 W to 50 W, the power ratio is 10, so the gain is 10 dB.
+3. If transmitter power goes from 4 W to 40 W, the power ratio is 10, so the gain is 10 dB.
 4. If frequency increases, what happens to inductive reactance? It increases.
 5. If frequency increases, what happens to capacitive reactance? It decreases.
 
@@ -169,39 +168,3 @@ Description: Draw a smooth sine wave with one full cycle bracketed and labelled 
 - Inductors add in series; capacitors add in parallel.
 - Inductive reactance increases with frequency; capacitive reactance decreases with frequency.
 - Impedance combines resistance and reactance in AC circuits.
-
-## Lesson quiz definition
-
-Quiz ID: QZ-L-005-04-A
-
-Official question IDs to present with shuffled answers:
-
-- B-005-007-001
-- B-005-007-005
-- B-005-007-009
-- B-005-008-003
-- B-005-008-009
-- B-005-009-003
-- B-005-009-011
-- B-005-010-001
-
-Original concept-check questions:
-
-1. Original: A transmitter power is reduced from 80 W to 20 W. What is the approximate dB change?
-   - A. -6 dB (correct)
-   - B. +6 dB
-   - C. -3 dB
-   - D. +10 dB
-   - Explanation: 80 W to 20 W divides power by 4, which is a 6 dB decrease.
-2. Original: Two equal 30 µF capacitors are connected in series. What is the total capacitance?
-   - A. 15 µF (correct)
-   - B. 60 µF
-   - C. 30 µF
-   - D. 900 µF
-   - Explanation: Two equal capacitors in series have half the capacitance of one.
-3. Original: Which part is useful when you want high opposition to RF but low opposition at low frequency?
-   - A. An inductor used as an RF choke. (correct)
-   - B. A short piece of wire labelled as an insulator.
-   - C. A reversed electrolytic capacitor.
-   - D. A voltmeter placed in series.
-   - Explanation: Inductive reactance increases with frequency, so a choke can impede RF.

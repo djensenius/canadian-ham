@@ -4,10 +4,14 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-003-009. Lesson link: L-005-02.\n\nWhy the correct answer is right: A burning resistor is dissipating too much power as heat.\n\nWhy the distractors are wrong:\n- sourceIndex 1: Voltage may contribute to the condition, but heat rate is power dissipation.\n- sourceIndex 2: Resistance is the component value, not the rate of heat being produced.\n- sourceIndex 3: Current may contribute, but the overheating quantity is power.",
+    "en": "Question B-005-003-009.\n\nWhy the correct answer is right: A burning resistor is dissipating too much power as heat.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"voltage\": Voltage may contribute to the condition, but heat rate is power dissipation.\n- sourceIndex 2: \"resistance\": Resistance is the component value, not the rate of heat being produced.\n- sourceIndex 3: \"current\": Current may contribute, but the overheating quantity is power.",
     "fr": null
   },
   "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-02"
+    },
     {
       "type": "question",
       "id": "B-005-003-009"

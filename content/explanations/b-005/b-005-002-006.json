@@ -4,10 +4,14 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-002-006. Lesson link: L-005-01.\n\nWhy the correct answer is right: Low resistance means little opposition to current, so the object conducts well.\n\nWhy the distractors are wrong:\n- sourceIndex 1: Reluctance belongs to magnetic circuits, not ordinary electrical conduction.\n- sourceIndex 2: Low capacitance describes charge storage, not good conduction.\n- sourceIndex 3: Low admittance would mean a poor AC current path, not a very good conductor.",
+    "en": "Question B-005-002-006.\n\nWhy the correct answer is right: Low resistance means little opposition to current, so the object conducts well.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Low reluctance\": Reluctance belongs to magnetic circuits, not ordinary electrical conduction.\n- sourceIndex 2: \"Low capacitance\": Low capacitance describes charge storage, not good conduction.\n- sourceIndex 3: \"Low admittance\": Low admittance would mean a poor AC current path, not a very good conductor.",
     "fr": null
   },
   "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-01"
+    },
     {
       "type": "question",
       "id": "B-005-002-006"

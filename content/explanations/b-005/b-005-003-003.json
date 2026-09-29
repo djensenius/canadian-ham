@@ -4,10 +4,14 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-003-003. Lesson link: L-005-02.\n\nWhy the correct answer is right: The watt is the basic unit of electrical power.\n\nWhy the distractors are wrong:\n- sourceIndex 1: The ampere is the unit of current.\n- sourceIndex 2: The volt is the unit of voltage.\n- sourceIndex 3: The ohm is the unit of resistance.",
+    "en": "Question B-005-003-003.\n\nWhy the correct answer is right: The watt is the basic unit of electrical power.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The ampere\": The ampere is the unit of current.\n- sourceIndex 2: \"The volt\": The volt is the unit of voltage.\n- sourceIndex 3: \"The ohm\": The ohm is the unit of resistance.",
     "fr": null
   },
   "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-02"
+    },
     {
       "type": "question",
       "id": "B-005-003-003"

@@ -4,10 +4,14 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-002-008. Lesson link: L-005-01.\n\nWhy the correct answer is right: Conductance is the inverse of resistance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: Reactance is frequency-dependent opposition in AC circuits, not the inverse of resistance.\n- sourceIndex 2: Reluctance is opposition to magnetic flux, not the inverse of resistance.\n- sourceIndex 3: Permeability describes how a material supports magnetic fields, not the inverse of resistance.",
+    "en": "Question B-005-002-008.\n\nWhy the correct answer is right: Conductance is the inverse of resistance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Reactance\": Reactance is frequency-dependent opposition in AC circuits, not the inverse of resistance.\n- sourceIndex 2: \"Reluctance\": Reluctance is opposition to magnetic flux, not the inverse of resistance.\n- sourceIndex 3: \"Permeability\": Permeability describes how a material supports magnetic fields, not the inverse of resistance.",
     "fr": null
   },
   "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-01"
+    },
     {
       "type": "question",
       "id": "B-005-002-008"

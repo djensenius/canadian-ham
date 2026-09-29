@@ -4,10 +4,14 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-004-002. Lesson link: L-005-02.\n\nWhy the correct answer is right: Use I = E / R when voltage and resistance are known.\n\nWhy the distractors are wrong:\n- sourceIndex 1: Resistance multiplied by voltage gives the wrong units and not current.\n- sourceIndex 2: Resistance divided by voltage is the reciprocal pattern, not current.\n- sourceIndex 3: Power divided by voltage can find current only when power is known; power is not the given pair here.",
+    "en": "Question B-005-004-002.\n\nWhy the correct answer is right: Use I = E / R when voltage and resistance are known.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Current equals resistance multiplied by voltage\": Resistance multiplied by voltage gives the wrong units and not current.\n- sourceIndex 2: \"Current equals resistance divided by voltage\": Resistance divided by voltage is the reciprocal pattern, not current.\n- sourceIndex 3: \"Current equals power divided by voltage\": Power divided by voltage can find current only when power is known; power is not the given pair here.",
     "fr": null
   },
   "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-02"
+    },
     {
       "type": "question",
       "id": "B-005-004-002"
