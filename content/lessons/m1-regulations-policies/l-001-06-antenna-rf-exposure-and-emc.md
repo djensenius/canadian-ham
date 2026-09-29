@@ -34,7 +34,7 @@ By the end of this lesson, you can:
 
 - identify antenna-siting authority, public consultation paths, exclusions, and concern-handling duties;
 - distinguish municipal process details from ISED default process and final decision authority;
-- describe the named human RF-exposure framework without inventing a safe-wattage shortcut;
+- connect the named human RF-exposure framework to measured fields, currents, absorption rate, and exposure factors;
 - name the RF exposure factors and quantities in the reference tables; and
 - apply EMCAB-2 field-strength and equipment-category facts for interference complaints.
 
@@ -84,7 +84,7 @@ Antenna-siting rows describe process. The station owner first finds the applicab
 
 The exposure-code rows describe human RF exposure. They connect the named publisher, the exposure-limit code, exposure situations, frequency-related effects, and universal consideration of transmitter types. Transmitter power matters as one factor among gain, distance, and frequency, and the exposure quantities include fields, currents, and absorption rate.
 
-EMCAB-2 rows describe interference cause decisions for affected equipment. The important comparison is field strength at the affected premises against ISED's specified immunity criterion, along with the equipment category. Treat amateur power privileges and EMCAB-2 field-strength criteria as separate checks.
+EMCAB-2 rows describe interference cause decisions for affected equipment. The important comparison is field strength at the affected premises against ISED's specified immunity criterion, along with the equipment category.
 
 ## Radio connection
 
@@ -98,7 +98,7 @@ Good operators document. Keep dates, contact names, notices, equipment settings 
 - Antenna-installation authority and local consultation process roles fit together in a single siting check.
 - The human RF-exposure publisher and exposure-limit code work together.
 - Exposure checks combine antenna gain, distance, transmitter power, frequency, and universal consideration of transmitter types.
-- Exposure rules use fields, currents, absorption rate, and related quantities as well as transmitter power.
+- Safety Code 6 limits are expressed as fields, currents, and specific absorption rate; transmitter power is an exposure factor.
 - EMCAB-2 cause decisions use field strength at the affected premises relative to ISED immunity criteria, plus the relevant equipment category.
 
 ## Illustration brief

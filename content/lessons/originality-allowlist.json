@@ -133,5 +133,10 @@
     "lessonId": "L-001-06",
     "blockHeading": "Reference facts: EMCAB-2 interference criteria",
     "reason": "Reviewed regulatory reference table: EMCAB-2 field-strength and equipment-category facts are established by official answers."
+  },
+  {
+    "lessonId": "L-001-06",
+    "blockHeading": "Summary",
+    "reason": "Reviewed summary rule: Safety Code 6 exposure-limit wording distinguishes limit quantities from transmitter power as an exposure factor."
   }
 ]

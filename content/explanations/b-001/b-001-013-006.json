@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-013-006.\n\nWhy the correct answer is right: Thirty minutes is the maximum interval between station identifications by call sign.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"20 minutes\": Twenty minutes is shorter than required; it would be safe practice but is not the longest allowed interval.\n- sourceIndex 2: \"15 minutes\": Fifteen minutes is also more frequent than required and therefore not the maximum period.\n- sourceIndex 3: \"10 minutes\": Ten minutes is a common interval in some services, but it is not the Canadian Basic answer here.",
+    "en": "Question B-001-013-006.\n\nWhy the correct answer is right: Thirty minutes is the maximum interval between station identifications by call sign.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"20 minutes\": Twenty minutes is shorter than required; it would be safe practice but is not the longest allowed interval.\n- sourceIndex 2: \"15 minutes\": Fifteen minutes is also more frequent than required and therefore not the maximum period.\n- sourceIndex 3: \"10 minutes\": Ten minutes is a common interval in some services, but it is not the Canadian Basic identification interval.",
     "fr": null
   },
   "citations": [

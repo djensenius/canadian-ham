@@ -33,7 +33,7 @@ By the end of this lesson, you can:
 
 - keep international amateur messages within amateur-purpose or personal content;
 - identify the ITU regulatory role used by the current question set;
-- use ITU regions as map references without treating them as complete permission slips;
+- use ITU regions as map references tied to the operating authority actually in force;
 - distinguish United States and CEPT-style visit requirements; and
 - explain why operating location matters for bands, limits, and identification.
 
@@ -43,7 +43,7 @@ By the end of this lesson, you can:
 |---|---|
 | Messages to an amateur station in a foreign country | Related to amateur-radio purposes or remarks of a personal nature. |
 | Operator duty for international communications | Limit them to amateur-radio purposes or personal remarks. |
-| Administration objection | International communications are permitted when administrations have kept that communication path open. |
+| Administration objection | International communications are permitted in the absence of a registered administration objection. |
 | Morse-code proficiency in ITU Radio Regulations | Administrations determine whether it is required for authorization. |
 | Radio regulations beyond Canadian Act and Regulations | International Telecommunication Union. |
 

@@ -51,7 +51,8 @@ Some modules are primarily made of rule facts already enumerated by the official
 
 - keep single facts in clearly labelled `Reference facts` tables;
 - explain relationships in prose under a `How these rules fit together` section;
-- do not include Try-its, question-and-answer worked examples, original practice items, or `Common mistakes` sections that restate an official scenario; and
+- do not include Try-its, question-and-answer worked examples, original practice items, or `Common mistakes` sections;
+- phrase objectives, tables, and explanations as positive rule statements and avoid restating wrong answer options; and
 - use lesson quiz JSON that includes all official question IDs for the covered subsections and `conceptChecks: []`.
 
 The format lets the app teach the official rules without creating near-duplicate concept checks for a rule bank that is already exhaustive.

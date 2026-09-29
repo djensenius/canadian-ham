@@ -34,7 +34,7 @@ By the end of this lesson, you can:
 - match the Radiocommunication Act, the Radiocommunication Regulations, ISED, and operating standards to their roles;
 - keep certificate validity, address, inspection, and call-sign-fee facts separate;
 - describe why false information, false distress traffic, unlawful obstruction, and due process are grouped with legal authority; and
-- state the Basic-entry, later-qualification, fee, and accommodation facts without adding unsupported conditions.
+- state the Basic-entry, later-qualification, fee, and accommodation facts with their supported conditions.
 
 ## Reference facts: Authority and source roles
 
@@ -89,7 +89,7 @@ By the end of this lesson, you can:
 | Morse sending accommodation | A disabled candidate may be allowed to recite the examination text in Morse code sounds. |
 | Required examination portions | All required portions of the examination remain part of an accommodated exam. |
 | Reading difficulty or language barrier | Oral examination delivery may be available. |
-| Interpreter for insufficient English or French | Examination accommodation uses examiner-managed delivery methods. |
+| Language-related examination delivery | Supported accommodations are oral delivery and examiner-managed tailoring; interpreter accompaniment is outside those supports. |
 | Medical evidence | An examiner may request evidence from a practising medical physician before accommodating testing. |
 
 ## How these rules fit together

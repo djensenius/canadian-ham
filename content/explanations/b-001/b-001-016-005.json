@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-016-005.\n\nWhy the correct answer is right: The 50 MHz to 54 MHz band has a maximum bandwidth of 30 kHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"20 kHz\": 20 kHz is the 10-metre category, so it is too low for the 6-metre maximum asked here.\n- sourceIndex 2: \"6 kHz\": 6 kHz is the HF-group limit for many bands between 7 MHz and 25 MHz, not the 6-metre limit.\n- sourceIndex 3: \"15 kHz\": 15 kHz is lower than the 30 kHz limit for this VHF band and is not the maximum for 50 MHz to 54 MHz.",
+    "en": "Question B-001-016-005.\n\nWhy the correct answer is right: The 50 MHz to 54 MHz band has a maximum bandwidth of 30 kHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"20 kHz\": 20 kHz is the 10-metre category, so it is too low for the 6-metre maximum.\n- sourceIndex 2: \"6 kHz\": 6 kHz is the HF-group limit for many bands between 7 MHz and 25 MHz, not the 6-metre limit.\n- sourceIndex 3: \"15 kHz\": 15 kHz is lower than the 30 kHz limit for this VHF band and is not the maximum for 50 MHz to 54 MHz.",
     "fr": null
   },
   "citations": [

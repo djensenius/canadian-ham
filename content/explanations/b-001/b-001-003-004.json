@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-003-004.\n\nWhy the correct answer is right: The Radiocommunication Act is the government document tied to offences and penalties for radiocommunications.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The Broadcasting Act\": Broadcasting law is outside the penalty source being tested for radiocommunications.\n- sourceIndex 2: \"The Radiocommunication Regulations\": The regulations are important, but this penalty question points to the Act.\n- sourceIndex 3: \"The Radio Systems Policies\": Policy documents are not the offence-and-penalty authority named here.",
+    "en": "Question B-001-003-004.\n\nWhy the correct answer is right: The Radiocommunication Act is the government document tied to offences and penalties for radiocommunications.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The Broadcasting Act\": Broadcasting law is outside the penalty source being tested for radiocommunications.\n- sourceIndex 2: \"The Radiocommunication Regulations\": The regulations are important, but this penalty question points to the Act.\n- sourceIndex 3: \"The Radio Systems Policies\": Policy documents are not the authority for radiocommunication offences and penalties.",
     "fr": null
   },
   "citations": [

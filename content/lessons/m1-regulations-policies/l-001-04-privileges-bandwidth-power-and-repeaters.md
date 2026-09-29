@@ -73,9 +73,8 @@ By the end of this lesson, you can:
 | FT8 | A narrow digital mode, with many FT8 contacts fitting in the space needed for one SSB transmission. |
 | SSB voice | Usual SSB bandwidth is between 2 kHz and 3 kHz. |
 | FM voice | 5 kHz-deviation FM occupies between 10 kHz and 20 kHz; FM below 28 MHz exceeds regulatory bandwidth limits. |
-| Slow-scan television on 14.23 MHz | Fits the B-001 mode-choice item. |
-| Fast-scan television on 145 MHz | Prohibited combination in the B-001 mode-choice item. |
-| Fast-scan television on 14.23 MHz | Prohibited combination in the B-001 mode-choice item. |
+| Fast-scan television on 145 MHz | Prohibited because ATV exceeds the 30 kHz limit for 144 MHz to 148 MHz. |
+| Fast-scan television on 14.23 MHz | Prohibited because ATV exceeds the 6 kHz limit for amateur bands between 7 MHz and 25 MHz. |
 
 ## Reference facts: Power quantities and limits
 
@@ -100,7 +99,7 @@ By the end of this lesson, you can:
 | Repeater station | Automatically retransmits the signals of other stations. |
 | Unmodulated carrier | May be transmitted only for brief tests on frequencies below 30 MHz. |
 | Frequency stability | Equivalent to crystal control below 148 MHz. |
-| Overmodulation indication or prevention | Required for SSB in the emission-mode item and for the voice signal-quality problem item. |
+| Overmodulation indication or prevention | Required for SSB and for voice-transmission quality control. |
 | Voice modulation maximum | 100%. |
 | Frequency measurement | All amateur stations must be capable of reliably measuring frequency, regardless of emission mode. |
 

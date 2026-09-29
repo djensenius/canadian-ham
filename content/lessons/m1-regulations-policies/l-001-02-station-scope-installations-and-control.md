@@ -56,7 +56,7 @@ By the end of this lesson, you can:
 | Low-power amateur station | Still must be under supervision of a certificate holder with a call sign. |
 | Amateur station communications | With stations operated under similar authorizations. |
 | Amplifying a licence-exempt transmitter with amateur equipment | Prohibited. |
-| Amateur equipment outside amateur bands | Amateur equipment is certified for operation on amateur bands. |
+| Amateur equipment outside amateur bands | Transmitting outside amateur bands with amateur equipment, modified or not, is prohibited because the equipment has no certification for other bands. |
 | Amateur-authorized apparatus in other services | Aeronautical, marine, and land-mobile operation require the applicable service authorization. |
 | VHF/UHF FM radio also programmed for land-mobile service | Permissible only if the radio is certified and licensed for land-mobile use. |
 

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-008-008.\n\nWhy the correct answer is right: Remote operation that includes changing frequency, emission mode, or output power requires Basic and Advanced.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Basic and Morse code\": Morse does not provide the Advanced remote-control privilege.\n- sourceIndex 2: \"Basic with Honours\": Honours is not the qualification named for this remote operation.\n- sourceIndex 3: \"Basic\": Basic alone is not enough for this level of remote transmitter control.",
+    "en": "Question B-001-008-008.\n\nWhy the correct answer is right: Remote operation that includes changing frequency, emission mode, or output power requires Basic and Advanced.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Basic and Morse code\": Morse does not provide the Advanced remote-control privilege.\n- sourceIndex 2: \"Basic with Honours\": Honours is not the qualification required for remote operation with frequency, emission-mode, or power changes.\n- sourceIndex 3: \"Basic\": Basic alone is not enough for this level of remote transmitter control.",
     "fr": null
   },
   "citations": [

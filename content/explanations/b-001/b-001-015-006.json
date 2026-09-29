@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-015-006.\n\nWhy the correct answer is right: The Canadian 160-metre amateur band range is 1.8 MHz to 2.0 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"1.5 MHz to 2.0 MHz\": This starts too low and includes spectrum below the 1.8 MHz lower edge.\n- sourceIndex 2: \"2.0 MHz to 2.25 MHz\": This starts at the upper edge instead of covering the 160-metre band.\n- sourceIndex 3: \"2.25 MHz to 2.5 MHz\": This entire range is above the 160-metre allocation named here.",
+    "en": "Question B-001-015-006.\n\nWhy the correct answer is right: The Canadian 160-metre amateur band range is 1.8 MHz to 2.0 MHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"1.5 MHz to 2.0 MHz\": This starts too low and includes spectrum below the 1.8 MHz lower edge.\n- sourceIndex 2: \"2.0 MHz to 2.25 MHz\": This starts at the upper edge instead of covering the 160-metre band.\n- sourceIndex 3: \"2.25 MHz to 2.5 MHz\": The entire 2.25 MHz to 2.5 MHz range is above the 160-metre allocation.",
     "fr": null
   },
   "citations": [

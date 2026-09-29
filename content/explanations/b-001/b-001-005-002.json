@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-005-002.\n\nWhy the correct answer is right: Reprogramming a land mobile transmitter for two metres on someone else's behalf is allowed only when that person holds an Amateur Radio Operator Certificate.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Only if an amateur radio operator with an Advanced Qualification performs the modification\": The helper's Advanced qualification alone does not address the other person's authorization.\n- sourceIndex 2: \"Only if the other person holds an Advanced Qualification\": Advanced is more than the required authorization for this two-metre reprogramming case.\n- sourceIndex 3: \"Only if the other person holds a Basic with Honours Qualification\": Basic with Honours is not the condition named for this authorization question.",
+    "en": "Question B-001-005-002.\n\nWhy the correct answer is right: Reprogramming a land mobile transmitter for two metres on someone else's behalf is allowed only when that person holds an Amateur Radio Operator Certificate.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Only if an amateur radio operator with an Advanced Qualification performs the modification\": The helper's Advanced qualification alone does not address the other person's authorization.\n- sourceIndex 2: \"Only if the other person holds an Advanced Qualification\": Advanced is more than the required authorization for this two-metre reprogramming case.\n- sourceIndex 3: \"Only if the other person holds a Basic with Honours Qualification\": Basic with Honours is not the authorization condition for reprogramming on someone else's behalf.",
     "fr": null
   },
   "citations": [

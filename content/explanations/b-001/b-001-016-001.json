@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-016-001.\n\nWhy the correct answer is right: The maximum authorized bandwidth on both the 6-metre and 2-metre bands is 30 kHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"20 kHz\": 20 kHz is the 10-metre bandwidth category, not the limit for the two VHF bands named in the question.\n- sourceIndex 2: \"6 kHz\": 6 kHz is the HF-group limit for many bands between 7 MHz and 25 MHz, not the 6-metre and 2-metre limit.\n- sourceIndex 3: \"5 kHz\": 5 kHz is lower than the 30 kHz limit for these VHF bands, so it is not the maximum authorized bandwidth here.",
+    "en": "Question B-001-016-001.\n\nWhy the correct answer is right: The maximum authorized bandwidth on both the 6-metre and 2-metre bands is 30 kHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"20 kHz\": 20 kHz is the 10-metre bandwidth category, not the limit for the two VHF bands named in the question.\n- sourceIndex 2: \"6 kHz\": 6 kHz is the HF-group limit for many bands between 7 MHz and 25 MHz, not the 6-metre and 2-metre limit.\n- sourceIndex 3: \"5 kHz\": 5 kHz is lower than the 30 kHz limit for these VHF bands, so it is not their maximum authorized bandwidth.",
     "fr": null
   },
   "citations": [

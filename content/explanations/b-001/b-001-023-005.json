@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-023-005.\n\nWhy the correct answer is right: ISED's default public consultation process for antenna systems uses written-notice and response elements; participating in public meetings sits outside those listed elements.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Providing written notice\": Written notice is one of the listed process elements.\n- sourceIndex 2: \"Addressing relevant questions, comments and concerns\": Responding to relevant concerns is part of the process, not the item excluded by the question.\n- sourceIndex 3: \"Providing an opportunity for the public to respond regarding measures to address reasonable and relevant concerns\": This public response opportunity is listed as part of the process, so it is not the answer to the NOT question.",
+    "en": "Question B-001-023-005.\n\nWhy the correct answer is right: The element outside ISED's listed default public consultation process is participating in public meetings; the default process uses written-notice and response elements.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Providing written notice\": Written notice is one of the listed process elements.\n- sourceIndex 2: \"Addressing relevant questions, comments and concerns\": Responding to relevant concerns is part of the process, not the item excluded by the question.\n- sourceIndex 3: \"Providing an opportunity for the public to respond regarding measures to address reasonable and relevant concerns\": This public response opportunity is listed as part of the process, so it is not the answer to the NOT question.",
     "fr": null
   },
   "citations": [

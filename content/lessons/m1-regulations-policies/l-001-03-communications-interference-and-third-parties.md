@@ -34,7 +34,7 @@ By the end of this lesson, you can:
 
 - distinguish accidental interference, harmful interference, secondary-service operation, and deliberate interference;
 - keep emergency and disaster-relief exceptions narrow;
-- apply message privacy, media, remuneration, and public-service rows without turning amateur radio into a commercial service;
+- apply message privacy, media, remuneration, and public-service rows as amateur-service boundary facts;
 - identify station-identification timing and language requirements; and
 - explain Canadian third-party and visiting-operator communication limits.
 
@@ -57,7 +57,7 @@ By the end of this lesson, you can:
 | Topic | Fact established for this lesson |
 |---|---|
 | Ordinary amateur communication | Only with other amateur radio stations. |
-| Disaster-relief use outside amateur bands | Amateur equipment remains within amateur bands for the disaster-relief scenario tested here. |
+| Disaster-relief use outside amateur bands | Prohibited. |
 | Unanswered distress signal on an amateur band outside the operator's normal privileges | The operator may respond and offer assistance. |
 | Broadcasting exception | Radio communications required for the safety of life and property. |
 | Amateur operator in distress | May use any means of radiocommunication. |
@@ -98,7 +98,7 @@ By the end of this lesson, you can:
 | Third-party content in the Canadian amateur service | Personal and non-commercial only. |
 | Canadian third-party communications | May be provided with any other amateur radio station. |
 | Canadian international third-party traffic | Canada permits international communications on behalf of third parties. |
-| International emergency or disaster-relief third-party traffic | Expressly permitted when the foreign administration concerned allows it. |
+| International emergency or disaster-relief third-party traffic | Expressly permitted; a specific prohibition by the foreign administration concerned is the only bar. |
 | Foreign administration objection to communication | A country can preclude communication by filing an objection with the ITU. |
 | Foreign visitors other than United States citizens | Their country must have an agreement with Canada and the operator must have the appropriate permit. |
 | CEPT amateur licence holders operating in Canada | Granted Advanced privileges by ISED. |
