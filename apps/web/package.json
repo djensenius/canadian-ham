@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
     "audit:urls": "node scripts/audit-dist-urls.ts",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
