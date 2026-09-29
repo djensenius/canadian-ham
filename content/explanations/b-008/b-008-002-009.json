@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-008-002-009.\n\nWhy the correct answer is right: Shorter speaker leads pick up less RF because there is less wire acting as an unintended antenna.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Lengthen the leads\": Longer leads usually make RF pickup worse by providing more conductor length to intercept the field.\n- sourceIndex 2: \"Connect the speakers through audio attenuators\": Audio attenuators reduce sound level, but they do not remove the RF being collected by the speaker wiring.\n- sourceIndex 3: \"Connect the speakers through series capacitors\": Series capacitors would alter the speaker circuit and are not the standard way to reduce RF pickup by long leads.",
+    "en": "Question B-008-002-009.\n\nWhy the correct answer is right: Shorter speaker leads pick up less RF because there is less wire acting as an unintended antenna.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Lengthen the leads\": Longer leads usually make RF pickup worse by providing more conductor length to intercept the field.\n- sourceIndex 2: \"Connect the speakers through audio attenuators\": Audio attenuators reduce sound level, but they do not remove the RF being collected by the speaker wiring.\n- sourceIndex 3: \"Connect the speakers through series capacitors\": Series capacitors in speaker leads would block bass audio while passing more RF than low-frequency audio. They are not the standard cure for RF pickup by long speaker leads.",
     "fr": null
   },
   "citations": [

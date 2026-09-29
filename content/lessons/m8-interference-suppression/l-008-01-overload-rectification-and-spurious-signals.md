@@ -65,6 +65,8 @@ When the front end is overloaded, several things can happen:
 
 Desensitization means the receiver becomes less sensitive because a strong signal is using up the front end's headroom. Intermodulation means signals mix in a non-linear stage and create new sum-and-difference products. Both can be receiver-side effects.
 
+Simple intermodulation checks use sums and differences. Two signals at frequencies f1 and f2 can create products such as f1 + f2, |f1 - f2|, 2 x f1 - f2, or 2 x f2 - f1. For example, a 104.3 MHz FM broadcast signal and an 18.1 MHz signal can mix to produce 104.3 - 18.1 = 86.2 MHz, which may fall inside another receiver's VHF tuning range. The arithmetic does not prove where the non-linear stage is, but it helps identify a plausible path to test.
+
 ### Worked example: overload clue
 
 A club sets up two temporary stations at opposite ends of a park shelter. One station is receiving a weak beacon on a small VHF receiver. Each time the other station transmits nearby on a different VHF channel, the beacon disappears under a rushing sound.
@@ -73,9 +75,9 @@ The first station should not immediately accuse the transmitter of generating ha
 
 ### Worked example: intermod clue
 
-A handheld receiver connected to a roof antenna hears a paging-like buzz only at home. Two strong commercial transmitters are visible from the street. Disconnecting the roof antenna and using the rubber antenna makes the buzz vanish.
+At a sailing-club event, a VHF receiver monitoring a weak harbour beacon on 156.8 MHz hears a false tone only when two nearby service transmitters are active. One is at 151.4 MHz and the other is at 154.1 MHz. A technician notices that 2 x 154.1 - 151.4 = 156.8, so a third-order mixing product could land on the beacon channel if the receiver input is being driven non-linear.
 
-That points toward receiver intermodulation or overload. The cure is often a filter or attenuation at the receiver input, not a repair to the amateur transmitter.
+That points toward receiver intermodulation or overload. The cure is often more separation, less unnecessary gain, or a suitable filter or attenuation at the receiver input, not a repair to the beacon or to every nearby transmitter.
 
 ## Filters at the affected receiver
 
@@ -108,9 +110,9 @@ Use parts and installation methods appropriate to the circuit voltage, safety re
 
 ### Worked example: powered-speaker pickup
 
-A station uses a balanced antenna tuner and a short indoor lead to a small loop. During voice transmissions, a set of computer speakers across the room produces garbled speech even with the speaker volume turned down. The speaker cable is a long coil behind the desk.
+A temporary classroom station uses a compact end-fed antenna outside a window. During voice transmissions, a pair of powered computer speakers on the demonstration table produces raspy syllables. The symptom is strongest when a spare three-metre audio extension is plugged in, and it nearly disappears when that extension is removed.
 
-Good first steps are to uncoil and shorten the speaker lead, add ferrite turns near the powered speaker input, and check the station feedline for common-mode current. If the problem changes when a common-mode choke is added at the station feed point, the station's RF-current path was part of the coupling.
+Good first steps are to keep the audio lead short, route it away from the antenna lead, add ferrite turns close to the powered speaker input, and check whether RF current is returning on station cables. If a common-mode choke at the feedline entry point changes the symptom, the station's RF-current path was part of the coupling.
 
 ## Common-mode current and station cures
 
@@ -158,11 +160,11 @@ A good approach is:
 
 ## Try it
 
-1. Question: A neighbour's powered speakers produce distorted voice even when their volume control is set low. What does that clue suggest? Answer: It suggests RF is being detected outside the normal audio path, so audio rectification and RF pickup on leads should be investigated.
-2. Question: A weak desired VHF signal vanishes only when a nearby transmitter keys up, but the nearby transmitter is not on the desired frequency. What receiver-side problem fits? Answer: Front-end overload or desensitization fits because the strong signal is reducing receiver sensitivity.
-3. Question: Two strong local signals create a third unwanted signal in a handheld receiver with a large outside antenna. What cure is worth trying at the receiver input? Answer: A suitable filter or attenuation before the overloaded stage can reduce the strong off-channel energy.
-4. Question: A CW signal is reported to click on nearby frequencies. Should the operator simply send more slowly? Answer: No. The keying waveform and transmitter stages should be checked because abrupt rise and fall times create broad key clicks.
-5. Question: An off-centre-fed antenna makes shack audio equipment noisy on transmit. What station-side part may help on the feedline? Answer: A common-mode choke can reduce RF current flowing on the outside of the feedline.
+1. Question: A doorbell intercom repeats raspy syllables from your transmissions only when its long button wire is connected. What does that clue suggest? Answer: The wire is likely carrying RF into a non-linear audio circuit, so audio rectification and lead pickup should be investigated.
+2. Question: In a lab rack, a sensitive HF receiver's S-meter jumps and weak signals fade whenever a 100 W transmitter in the next rack is keyed into an antenna. What receiver-side problem fits? Answer: Front-end overload or desensitization fits because the strong nearby RF can use up receiver headroom and reduce sensitivity.
+3. Question: A club scanner hears a false signal only at the fairground, where two paging transmitters and a taxi dispatch channel are much stronger than usual. What cure is worth trying before the receiver's first stage? Answer: A suitable front-end filter or modest attenuation can reduce the strong off-channel energy before it mixes.
+4. Question: After a keying-interface change, a CW transmitter's RF envelope shows nearly square leading edges on a monitor scope. What should be adjusted before using it on the air? Answer: The keying-shape network and following RF stages should be checked so the carrier rises and falls smoothly.
+5. Question: A balcony vertical feeds a station through coax that runs beside computer audio and USB leads, and the shack speakers buzz only on transmit. What station-side part may help on the feedline? Answer: A common-mode choke on the feedline can reduce RF current flowing on the outside of the coax.
 
 ## Radio connection
 

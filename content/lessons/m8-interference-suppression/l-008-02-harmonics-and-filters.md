@@ -97,7 +97,7 @@ A low-pass filter passes frequencies below its cut-off and attenuates frequencie
 
 ### Worked example: low-pass choice
 
-A receiver used for shortwave listening is being upset by very strong signals from much higher-frequency services. A low-pass filter ahead of the receiver can pass the lower shortwave range while reducing energy above the chosen cut-off.
+A workshop receiver is meant to monitor a 4.2 MHz propagation beacon, but it sits beside a test rack with a 24 MHz clock oscillator. When the rack is on, the receiver front end overloads even though the wanted beacon is far lower in frequency. A low-pass filter ahead of the receiver with a cut-off above 4.2 MHz and well below 24 MHz can pass the beacon while reducing the clock energy.
 
 Choose the cut-off so the desired signals are passed and the unwanted higher-frequency energy is reduced. Also match the filter impedance to the receiver and feedline system.
 
@@ -147,11 +147,11 @@ Keep notes. A written log prevents circular troubleshooting and makes it easier 
 
 ## Try it
 
-1. Question: A transmitter on 6.3 MHz is suspected of producing an unwanted signal at 18.9 MHz. Which harmonic is that? Answer: Divide 18.9 by 6.3. The result is 3, so it is the third harmonic.
-2. Question: A receiver needs signals around 11 MHz, but strong signals above 30 MHz are causing overload. Which filter family should be considered first? Answer: A low-pass filter can pass the lower desired range while attenuating higher-frequency energy.
-3. Question: A television receiver needs higher-frequency broadcast signals but is upset by nearby HF transmissions. Where does the likely high-pass filter belong? Answer: At the affected receiver input, before the HF energy overloads the receiver front end.
-4. Question: A single steady carrier sits almost on top of a weak signal. Is a broad band-reject filter always the best first choice? Answer: No. A notch filter may be better for one narrow frequency because it removes less nearby spectrum.
-5. Question: An SSB signal becomes wider and harsher when microphone gain is increased. What adjustment should be tried before adding external filters? Answer: Reduce the audio drive or microphone gain so the transmitter stages operate linearly.
+1. Question: A transmitter on 5.1 MHz is suspected of producing an unwanted signal at 20.4 MHz. Which harmonic is that? Answer: Divide 20.4 by 5.1. The result is 4, so it is the fourth harmonic.
+2. Question: A receiver needs a 5.0 MHz time signal, but a telemetry rack near 42 MHz is causing overload. Which filter family should be considered first? Answer: A low-pass filter can pass the lower desired signal while attenuating the higher-frequency telemetry energy.
+3. Question: An air-band receiver near 122 MHz is upset whenever a nearby 7 MHz station transmits. Where does the likely high-pass filter belong? Answer: At the affected air-band receiver input, before the lower-frequency HF energy overloads the receiver front end.
+4. Question: A calibration receiver needs to hear a weak signal at 10.140 MHz, but one stable birdie sits 700 Hz away. Is a broad band-reject filter always the best first choice? Answer: No. A notch filter may be better for one narrow frequency because it removes less nearby spectrum.
+5. Question: An RF power amplifier's drive control is advanced until output current rises sharply and a spectrum display shows stronger multiples of the carrier. What adjustment should be tried before blaming the antenna? Answer: Reduce the RF drive and tune the amplifier as recommended so the stage stays closer to linear operation.
 
 ## Radio connection
 

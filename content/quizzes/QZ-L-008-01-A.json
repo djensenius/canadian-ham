@@ -14,36 +14,36 @@
   "conceptChecks": [
     {
       "id": "QZ-L-008-01-A-C1",
-      "prompt": { "en": "A neighbour's powered speakers reproduce garbled voice while the speaker volume is at minimum. Which first action best matches the likely coupling path?", "fr": null },
+      "prompt": { "en": "A church sound mixer picks up buzzes from your transmissions only when a 12 metre unbalanced microphone cable is plugged into one input. Which first action best matches the likely coupling path?", "fr": null },
       "choices": [
-        { "text": { "en": "Add ferrite turns near the powered speaker input lead.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Install a low-pass filter in the amateur transmitter output before doing any other checks.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Lengthen the speaker cable so it is farther from the floor.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Increase microphone gain so the wanted audio is less distorted.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Add ferrite turns on the microphone cable close to the mixer input.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Install a surge suppressor on the mixer's AC cord to absorb voltage spikes.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Put an audio attenuator in series with the loudspeaker output to lower the room volume.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Add a low-pass filter at the transmitter output as though the symptom were harmonic radiation.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Low-volume distorted audio points to RF pickup and audio rectification, so choking the lead near the affected device is a sensible first step.", "fr": null }
+      "explanation": { "en": "A long audio lead can pick up RF and feed a non-linear mixer input, so a ferrite close to the affected audio equipment addresses that entry path.", "fr": null }
     },
     {
       "id": "QZ-L-008-01-A-C2",
-      "prompt": { "en": "A handheld receiver works normally with its rubber antenna but hears several unrelated services at once when connected to a high roof antenna. What is the most likely receiver-side issue?", "fr": null },
+      "prompt": { "en": "At a mountain checkpoint, a weak VHF repeater signal disappears whenever a nearby 50 W data link sends a burst, but no extra mixed voices are heard. What is the best diagnosis?", "fr": null },
       "choices": [
-        { "text": { "en": "The handheld's speaker is wired with the wrong polarity.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The receiver front end is being driven into overload or intermodulation.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The roof antenna has removed all harmonic radiation.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The receiver's volume control is creating key clicks.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Receiver desensitization from the strong nearby burst.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Receiver intermodulation from two strong off-channel signals mixing together.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A harmonic emission from the data link landing on the repeater frequency.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Audio rectification in the checkpoint loudspeaker wiring.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "A much larger antenna can deliver enough strong off-channel signal to overload the front end and create intermodulation products.", "fr": null }
+      "explanation": { "en": "The weak wanted signal is being suppressed during a strong nearby transmission, which is the classic front-end headroom problem called desensitization.", "fr": null }
     },
     {
       "id": "QZ-L-008-01-A-C3",
-      "prompt": { "en": "A CW transmitter is reported to click above and below the signal even though the local sidetone sounds clean. What should be checked?", "fr": null },
+      "prompt": { "en": "After a relay is added to a CW exciter, a monitor receiver several kilohertz away hears sharp ticks at every dot and dash while the oscillator frequency remains steady. What should be checked first?", "fr": null },
       "choices": [
-        { "text": { "en": "Only the operator's keying speed, because speed is the root cause of all clicks.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The receiver's broadcast-band tracking alignment.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The antenna's compass direction.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The transmitter keying waveform, keying filter, and later RF stages.", "fr": null }, "isCorrect": true }
+        { "text": { "en": "Only the operator's sending speed, because slower Morse cures relay clicks by itself.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The oscillator voltage regulator, because chirp is the same symptom as wide key clicks.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The keying waveform, keying filter, and following RF stages for abrupt carrier edges.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "A receiver input notch filter tuned to the clicks heard several kilohertz away.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Distant key clicks come from excessive side energy caused by abrupt keying or later-stage behaviour, not from the operator's sidetone quality alone.", "fr": null }
+      "explanation": { "en": "Ticks on nearby frequencies with a steady oscillator point to abrupt keyed-carrier edges or later-stage behaviour, so the keying shape and RF stages need attention.", "fr": null }
     }
   ]
 }

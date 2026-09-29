@@ -14,36 +14,36 @@
   "conceptChecks": [
     {
       "id": "QZ-L-008-02-A-C1",
-      "prompt": { "en": "A test transmitter on 6.3 MHz produces an unwanted signal at 18.9 MHz. Which explanation best fits the relationship?", "fr": null },
+      "prompt": { "en": "A service monitor shows a transmitter operating at 4.8 MHz and an unwanted output at 14.4 MHz. Which explanation best fits the relationship?", "fr": null },
       "choices": [
-        { "text": { "en": "It is the second harmonic because 18.9 is twice 6.3.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It is receiver desensitization because all multiples are receiver faults.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It is the third harmonic because 6.3 x 3 = 18.9.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "It is a notch-filter effect because the unwanted signal is narrow.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "It is the second harmonic of the actual 4.8 MHz operating frequency.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It is adjacent-channel splatter from an overmodulated voice signal.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It is the third harmonic, because 4.8 x 3 = 14.4.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "It is a receiver notch-filter response rather than a transmitter output.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "A harmonic is an integer multiple of the fundamental; 18.9 divided by 6.3 equals 3.", "fr": null }
+      "explanation": { "en": "A harmonic is an integer multiple of the fundamental; 14.4 divided by 4.8 equals 3.", "fr": null }
     },
     {
       "id": "QZ-L-008-02-A-C2",
-      "prompt": { "en": "You want to receive both below and above a strong utility transmitter near the middle of the range. Which filter family best matches that goal?", "fr": null },
+      "prompt": { "en": "A receiver must keep monitoring 3.9 MHz and 5.3 MHz, but a strong industrial controller produces RF across 4.45 to 4.65 MHz. Which filter family best matches that goal?", "fr": null },
       "choices": [
-        { "text": { "en": "High-pass, because it removes both sides of the utility signal.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Band-reject, because it can attenuate the problem range while passing frequencies on both sides.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Low-pass, because it passes only the high side of the range.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Audio bypass, because RF filters work only in transmitters.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Notch, aimed at one carrier in the middle of the controller's range.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Band-reject, because it can attenuate the controller's range while passing frequencies below and above it.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Low-pass with a cut-off just above the 3.9 MHz signal.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "High-pass with a cut-off just below the 5.3 MHz signal.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "A band-reject filter removes a chosen range while leaving lower and higher frequencies available.", "fr": null }
+      "explanation": { "en": "The unwanted energy occupies a middle range while wanted signals are on both sides, so a band-reject filter fits better than a notch, low-pass, or high-pass filter.", "fr": null }
     },
     {
       "id": "QZ-L-008-02-A-C3",
-      "prompt": { "en": "An SSB signal becomes wider and less intelligible after the microphone gain is raised. What is the best first correction?", "fr": null },
+      "prompt": { "en": "A station on 14.230 MHz is clean during tuning tones, but during loud voice syllables a monitor 3 kHz away hears rough bursts on both sides of the signal. Which explanation best fits?", "fr": null },
       "choices": [
-        { "text": { "en": "Add a receiver notch filter at the other station.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Replace the feedline with a longer cable to lower the audio level.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Increase drive until the power meter stops moving.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Reduce the audio drive so the transmitter stays in its linear range.", "fr": null }, "isCorrect": true }
+        { "text": { "en": "Harmonic emission, because the unwanted energy is at an integer multiple of 14.230 MHz.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Receiver desensitization, because the monitor front end is losing sensitivity across all bands.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Splatter from overmodulation or other non-linear voice peaks near the transmit frequency.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "A notch-filter problem, because one narrow carrier is being removed from the passband.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Excessive audio drive can cause flat topping and splatter; backing off drive treats the source of the unwanted side energy.", "fr": null }
+      "explanation": { "en": "Bursts only a few kilohertz from the SSB signal during loud syllables point to splatter from non-linear modulation, not a distant harmonic or a receiver filter choice.", "fr": null }
     }
   ]
 }
