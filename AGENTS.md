@@ -33,3 +33,15 @@
 - The repo stays private until T-009, which requires T-007 permission records and T-607 release checks; never make it public, deploy, or distribute builds before then; see `docs/content-licensing.md`.
 - Apple app must work fully offline and collect no data; no networking code, third-party SDKs, analytics, or iCloud sync in v1.
 - Use `xbuild` for Apple builds/tests; never call `xcodebuild` directly.
+
+## Apple builds
+- Scheme: `CanadianHam`.
+- Always run Apple builds/tests through `xbuild`, never direct `xcodebuild`.
+- `xcode-select` points at CommandLineTools on this machine, so prefix Apple build/test commands with `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`.
+- iOS simulator test command, using the single requested simulator destination:
+  `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test CODE_SIGNING_ALLOWED=NO`
+- macOS test command:
+  `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=macOS' test CODE_SIGN_IDENTITY=-`
+- Regenerate the Apple project after editing `apps/apple/project.yml` or target membership:
+  `cd apps/apple && /opt/homebrew/bin/xcodegen generate --spec project.yml`
+- Commit both `apps/apple/project.yml` and the generated `apps/apple/CanadianHam.xcodeproj` so Xcode can open the project without XcodeGen.

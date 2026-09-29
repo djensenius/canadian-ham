@@ -1,0 +1,560 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		00B831D959039736491B5A01 /* PracticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8C7D863EDBFCB83BF1BB73 /* PracticeView.swift */; };
+		1237CB6233327F0BA6C5F9E4 /* subsections.json in Resources */ = {isa = PBXBuildFile; fileRef = D91A2E065E76B0E859544ACB /* subsections.json */; };
+		1ACC1B99ACDE3E66DE37445D /* QuestionBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */; };
+		1BFB43872556E9D914BD271C /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = 0B5EF9C9199E3F5954B64713 /* questions.json */; };
+		1C042178F4987890B4904111 /* CanadianHamApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7036F3D3AAFB91C2998565A0 /* CanadianHamApp.swift */; };
+		25C478476BBC7D4013C5C7F2 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = CCD4F7710ABDB9523440DBC6 /* manifest.json */; };
+		2659E9A8A6453D084453102C /* TempShuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72EA752B63A5EB9AB40F4E50 /* TempShuffle.swift */; };
+		2C8F5043E3CA9DA4C9220BCF /* QuestionBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */; };
+		40C2EB96F24F8762DDB137D4 /* TempShuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72EA752B63A5EB9AB40F4E50 /* TempShuffle.swift */; };
+		4E603627EEDE8BAF133D484D /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 4A32A7B24720D5A3B2548BD4 /* categories.json */; };
+		6EE8F69155AFDCD869C6D68F /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140A13D95FE054984DF26281 /* AboutView.swift */; };
+		8F209160CE3A6BCB3283CF20 /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 4A32A7B24720D5A3B2548BD4 /* categories.json */; };
+		9405A070EB557B342A128819 /* QuestionBankTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0517B98CAB6282BC63A22BB5 /* QuestionBankTests.swift */; };
+		966248CCCFF7B66A9A718A53 /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = 0B5EF9C9199E3F5954B64713 /* questions.json */; };
+		A5C84AF9525F86DFA166EF45 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF15EA3BC012EB6FC4367D8 /* RootView.swift */; };
+		AECABBCC39DCD233882D6747 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = CCD4F7710ABDB9523440DBC6 /* manifest.json */; };
+		B9D65B4D05709AA74DE896F0 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
+		CBC1FACE31E263275CCC7AE3 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
+		DA8494DE030F9968C7D5505E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */; };
+		E319772B6E37BF00945589AC /* subsections.json in Resources */ = {isa = PBXBuildFile; fileRef = D91A2E065E76B0E859544ACB /* subsections.json */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0517B98CAB6282BC63A22BB5 /* QuestionBankTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionBankTests.swift; sourceTree = "<group>"; };
+		053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		0B5EF9C9199E3F5954B64713 /* questions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = questions.json; sourceTree = "<group>"; };
+		140A13D95FE054984DF26281 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionBankStore.swift; sourceTree = "<group>"; };
+		4A32A7B24720D5A3B2548BD4 /* categories.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = categories.json; sourceTree = "<group>"; };
+		4EF15EA3BC012EB6FC4367D8 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		5D8C7D863EDBFCB83BF1BB73 /* PracticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeView.swift; sourceTree = "<group>"; };
+		7036F3D3AAFB91C2998565A0 /* CanadianHamApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamApp.swift; sourceTree = "<group>"; };
+		72EA752B63A5EB9AB40F4E50 /* TempShuffle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TempShuffle.swift; sourceTree = "<group>"; };
+		8D63616999E30A9A60763F71 /* CanadianHam.macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CanadianHam.macOS.entitlements; sourceTree = "<group>"; };
+		CCD4F7710ABDB9523440DBC6 /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = manifest.json; sourceTree = "<group>"; };
+		D0021458FA54A1439DDAA83E /* CanadianHam.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CanadianHam.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D91A2E065E76B0E859544ACB /* subsections.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = subsections.json; sourceTree = "<group>"; };
+		EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionBankModels.swift; sourceTree = "<group>"; };
+		EA4B30848CBC96A261D9B678 /* CanadianHamTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CanadianHamTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0C5B50EA46005D18985F181C /* content */ = {
+			isa = PBXGroup;
+			children = (
+				2D6F9125DAAC217FD0E6DECE /* generated */,
+			);
+			path = content;
+			sourceTree = "<group>";
+		};
+		2D6F9125DAAC217FD0E6DECE /* generated */ = {
+			isa = PBXGroup;
+			children = (
+				334FEEA0E9C892281CDAB0C3 /* basic-2025-07-15 */,
+			);
+			path = generated;
+			sourceTree = "<group>";
+		};
+		334FEEA0E9C892281CDAB0C3 /* basic-2025-07-15 */ = {
+			isa = PBXGroup;
+			children = (
+				4A32A7B24720D5A3B2548BD4 /* categories.json */,
+				CCD4F7710ABDB9523440DBC6 /* manifest.json */,
+				0B5EF9C9199E3F5954B64713 /* questions.json */,
+				D91A2E065E76B0E859544ACB /* subsections.json */,
+			);
+			path = "basic-2025-07-15";
+			sourceTree = "<group>";
+		};
+		341B6A9C6E9775EFC439F872 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D0021458FA54A1439DDAA83E /* CanadianHam.app */,
+				EA4B30848CBC96A261D9B678 /* CanadianHamTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		37E36FF1524FE1D4BAEBEF30 /* CanadianHamTests */ = {
+			isa = PBXGroup;
+			children = (
+				0517B98CAB6282BC63A22BB5 /* QuestionBankTests.swift */,
+			);
+			path = CanadianHamTests;
+			sourceTree = "<group>";
+		};
+		422FFD741E4ECB957A502A3D /* CanadianHam */ = {
+			isa = PBXGroup;
+			children = (
+				7036F3D3AAFB91C2998565A0 /* CanadianHamApp.swift */,
+				715C649D0C483D6BC6DA19FB /* Models */,
+				4255DA0DD15A47613C50E8FA /* Practice */,
+				A9618E17354AA53128D6236B /* Resources */,
+				547A0C994CB31901FAB1913A /* Services */,
+				723FAF3280BC8C49C21CBF6E /* Views */,
+			);
+			path = CanadianHam;
+			sourceTree = "<group>";
+		};
+		4255DA0DD15A47613C50E8FA /* Practice */ = {
+			isa = PBXGroup;
+			children = (
+				72EA752B63A5EB9AB40F4E50 /* TempShuffle.swift */,
+			);
+			path = Practice;
+			sourceTree = "<group>";
+		};
+		547A0C994CB31901FAB1913A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		715C649D0C483D6BC6DA19FB /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		723FAF3280BC8C49C21CBF6E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				140A13D95FE054984DF26281 /* AboutView.swift */,
+				5D8C7D863EDBFCB83BF1BB73 /* PracticeView.swift */,
+				4EF15EA3BC012EB6FC4367D8 /* RootView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		7AFCAEF772D3658B6D2D3339 /* canadian-ham-apple */ = {
+			isa = PBXGroup;
+			children = (
+				0C5B50EA46005D18985F181C /* content */,
+			);
+			name = "canadian-ham-apple";
+			path = ../..;
+			sourceTree = "<group>";
+		};
+		A9618E17354AA53128D6236B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8D63616999E30A9A60763F71 /* CanadianHam.macOS.entitlements */,
+				053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		F58AF51821D9FECE68C4F4E2 = {
+			isa = PBXGroup;
+			children = (
+				7AFCAEF772D3658B6D2D3339 /* canadian-ham-apple */,
+				422FFD741E4ECB957A502A3D /* CanadianHam */,
+				37E36FF1524FE1D4BAEBEF30 /* CanadianHamTests */,
+				341B6A9C6E9775EFC439F872 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A562E6607979BCEA78F1DCF9 /* CanadianHamTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E2058F7B5140E2035B7E040B /* Build configuration list for PBXNativeTarget "CanadianHamTests" */;
+			buildPhases = (
+				4FE4C84A891821D7B82536D3 /* Sources */,
+				23EFF3AF5EC7CDF323BDAB20 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CanadianHamTests;
+			packageProductDependencies = (
+			);
+			productName = CanadianHamTests;
+			productReference = EA4B30848CBC96A261D9B678 /* CanadianHamTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		D4598F650553ED607A0E311B /* CanadianHam */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 02414B842EFEDB5029EB638B /* Build configuration list for PBXNativeTarget "CanadianHam" */;
+			buildPhases = (
+				F710CCDBCCEE6DD06C3718C8 /* Sources */,
+				70820DEF5BA3FD3C91F0105E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CanadianHam;
+			packageProductDependencies = (
+			);
+			productName = CanadianHam;
+			productReference = D0021458FA54A1439DDAA83E /* CanadianHam.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6176519A16EF9A85BF1EF089 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					A562E6607979BCEA78F1DCF9 = {
+						ProvisioningStyle = Automatic;
+					};
+					D4598F650553ED607A0E311B = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 963127A3DD5718B9A5C4A29C /* Build configuration list for PBXProject "CanadianHam" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = F58AF51821D9FECE68C4F4E2;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 341B6A9C6E9775EFC439F872 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D4598F650553ED607A0E311B /* CanadianHam */,
+				A562E6607979BCEA78F1DCF9 /* CanadianHamTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		23EFF3AF5EC7CDF323BDAB20 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8F209160CE3A6BCB3283CF20 /* categories.json in Resources */,
+				AECABBCC39DCD233882D6747 /* manifest.json in Resources */,
+				1BFB43872556E9D914BD271C /* questions.json in Resources */,
+				1237CB6233327F0BA6C5F9E4 /* subsections.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		70820DEF5BA3FD3C91F0105E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DA8494DE030F9968C7D5505E /* PrivacyInfo.xcprivacy in Resources */,
+				4E603627EEDE8BAF133D484D /* categories.json in Resources */,
+				25C478476BBC7D4013C5C7F2 /* manifest.json in Resources */,
+				966248CCCFF7B66A9A718A53 /* questions.json in Resources */,
+				E319772B6E37BF00945589AC /* subsections.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4FE4C84A891821D7B82536D3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1ACC1B99ACDE3E66DE37445D /* QuestionBankModels.swift in Sources */,
+				B9D65B4D05709AA74DE896F0 /* QuestionBankStore.swift in Sources */,
+				9405A070EB557B342A128819 /* QuestionBankTests.swift in Sources */,
+				40C2EB96F24F8762DDB137D4 /* TempShuffle.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F710CCDBCCEE6DD06C3718C8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6EE8F69155AFDCD869C6D68F /* AboutView.swift in Sources */,
+				1C042178F4987890B4904111 /* CanadianHamApp.swift in Sources */,
+				00B831D959039736491B5A01 /* PracticeView.swift in Sources */,
+				2C8F5043E3CA9DA4C9220BCF /* QuestionBankModels.swift in Sources */,
+				CBC1FACE31E263275CCC7AE3 /* QuestionBankStore.swift in Sources */,
+				A5C84AF9525F86DFA166EF45 /* RootView.swift in Sources */,
+				2659E9A8A6453D084453102C /* TempShuffle.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		53200E12EAC37D475BCFFC73 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHamTests;
+				PRODUCT_NAME = CanadianHamTests;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		57A3EFC60AC1FC71C197C590 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHamTests;
+				PRODUCT_NAME = CanadianHamTests;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		6FE4D0D9CEE24D623D7260C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		8C6A3EE1D07F08CA28E4A7DB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D82C1CD0F49B1E6C6323E713 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_ENTITLEMENTS[sdk=iphone*]" = "";
+				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = CanadianHam/Resources/CanadianHam.macOS.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Canadian Ham";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHam;
+				PRODUCT_NAME = CanadianHam;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D894D8116D94228E1D09E207 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_ENTITLEMENTS[sdk=iphone*]" = "";
+				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = CanadianHam/Resources/CanadianHam.macOS.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Canadian Ham";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHam;
+				PRODUCT_NAME = CanadianHam;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		02414B842EFEDB5029EB638B /* Build configuration list for PBXNativeTarget "CanadianHam" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D82C1CD0F49B1E6C6323E713 /* Debug */,
+				D894D8116D94228E1D09E207 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		963127A3DD5718B9A5C4A29C /* Build configuration list for PBXProject "CanadianHam" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8C6A3EE1D07F08CA28E4A7DB /* Debug */,
+				6FE4D0D9CEE24D623D7260C3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E2058F7B5140E2035B7E040B /* Build configuration list for PBXNativeTarget "CanadianHamTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				53200E12EAC37D475BCFFC73 /* Debug */,
+				57A3EFC60AC1FC71C197C590 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6176519A16EF9A85BF1EF089 /* Project object */;
+}
