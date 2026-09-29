@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-005-007",
+  "questionId": "B-005-005-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-005-007.\n\nWhy the correct answer is right: A series string is found by adding the resistor values. Five 24-ohm resistors make 24 + 24 + 24 + 24 + 24 = 120 ohms, matching the single resistor being replaced.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Six 22-ohm resistors\": Six times 22 ohms is 132 ohms, so this series string is too high.\n- sourceIndex 2: \"Two 240-ohm resistors\": Two in series make 480 ohms, four times the intended 120 ohms.\n- sourceIndex 3: \"Five 100-ohm resistors\": Five times 100 ohms is 500 ohms, not 120 ohms.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-03"
+    },
+    {
+      "type": "question",
+      "id": "B-005-005-007"
+    }
+  ],
+  "licenseClass": "original"
+}

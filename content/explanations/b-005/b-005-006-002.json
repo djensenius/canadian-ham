@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-006-002",
+  "questionId": "B-005-006-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-006-002.\n\nWhy the correct answer is right: Power is voltage times current. The load needs P = 12 V x 5 A = 60 W, so the transformer rating must be at least 60 watts.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"17 watts\": This resembles adding 12 and 5 instead of multiplying volts by amperes. Power is not found by addition.\n- sourceIndex 2: \"2.4 watts\": This comes from 12 / 5, which has the wrong operation for a power rating.\n- sourceIndex 3: \"6 watts\": This is one tenth of the required value; 12 x 5 is 60, not 6.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-03"
+    },
+    {
+      "type": "question",
+      "id": "B-005-006-002"
+    }
+  ],
+  "licenseClass": "original"
+}

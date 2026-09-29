@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-006-008",
+  "questionId": "B-005-006-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-006-008.\n\nWhy the correct answer is right: Use P = E x I, rearranged as I = P / E. The current is 30 W / 12 V = 2.5 A.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"18 amperes\": This appears to subtract 12 from 30, but current is found by dividing power by voltage.\n- sourceIndex 2: \"4.8 amperes\": This comes from reversing Ohm's-law units with the correct current: E / I = 12 / 2.5 = 4.8 ohms, a resistance, not the current.\n- sourceIndex 3: \"0.4 amperes\": This reverses the division as 12 / 30. The formula requires watts divided by volts.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-03"
+    },
+    {
+      "type": "question",
+      "id": "B-005-006-008"
+    }
+  ],
+  "licenseClass": "original"
+}

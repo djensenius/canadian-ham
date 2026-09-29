@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-007-002",
+  "questionId": "B-005-007-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-007-002.\n\nWhy the correct answer is right: The usual Basic-level audio range for most human hearing is about 20 Hz at the low end to 20 000 Hz, or 20 kHz, at the high end.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"20 Hz to 30 000 Hz\": The low end is plausible, but 30 000 Hz is above the usual upper limit stated for most humans.\n- sourceIndex 2: \"200 Hz to 200 000 Hz\": Both ends are shifted too high; 200 000 Hz is far above ordinary human hearing.\n- sourceIndex 3: \"300 Hz to 3 000 Hz\": This narrow range is associated with voice communications, not the approximate full range of human hearing.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-007-002"
+    }
+  ],
+  "licenseClass": "original"
+}

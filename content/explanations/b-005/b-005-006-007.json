@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-006-007",
+  "questionId": "B-005-006-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-006-007.\n\nWhy the correct answer is right: Four equal 200-ohm resistors in parallel make 200 / 4 = 50 ohms. Each part is rated 2 W, so the total rating is 8 W, which is safely above the required 5 W.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Two 5-watt 100-ohm resistors in series\": Series values add to 200 ohms, so the resistance is wrong even though the wattage would be high enough.\n- sourceIndex 2: \"Two 2-watt 25-ohm resistors in series\": The resistance adds to 50 ohms, but the total rating is only 4 W, below the 5 W requirement.\n- sourceIndex 3: \"Ten quarter-watt 500-ohm resistors in parallel\": The resistance is 500 / 10 = 50 ohms, but ten quarter-watt parts total only 2.5 W.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-03"
+    },
+    {
+      "type": "question",
+      "id": "B-005-006-007"
+    }
+  ],
+  "licenseClass": "original"
+}

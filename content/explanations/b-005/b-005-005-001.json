@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-005-001",
+  "questionId": "B-005-005-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-005-001.\n\nWhy the correct answer is right: In a parallel circuit, each branch has its own current path. The source must supply all of those branch currents, so the total current is the arithmetic sum of the current in every branch.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It equals the average of the branch current through each resistor\": An average would ignore how many branches are drawing current. Three 20 mA branches draw 60 mA in total, not 20 mA.\n- sourceIndex 2: \"It decreases as more parallel resistors are added to the circuit\": Adding another parallel path normally lowers total resistance and increases source current if the voltage stays the same.\n- sourceIndex 3: \"It is the sum of each resistor's voltage drop multiplied by the total number of resistors\": Voltage drops are not added to find current. In parallel, branch currents add; Ohm's law is used within each branch if a current must be calculated.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-03"
+    },
+    {
+      "type": "question",
+      "id": "B-005-005-001"
+    }
+  ],
+  "licenseClass": "original"
+}

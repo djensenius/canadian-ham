@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-006-004",
+  "questionId": "B-005-006-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-006-004.\n\nWhy the correct answer is right: The two series resistors have equal resistance, so they share the voltage and power equally. Each part can dissipate 1 W, giving a safe total of 1 W + 1 W = 2 W.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"1 watt\": That is the rating of one resistor. The second equal resistor can also dissipate 1 W.\n- sourceIndex 2: \"0.5 watts\": This is below the rating of even one resistor and does not account for two equal parts sharing heat.\n- sourceIndex 3: \"4 watts\": That exceeds the combined 2 W rating of the two 1 W parts.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-03"
+    },
+    {
+      "type": "question",
+      "id": "B-005-006-004"
+    }
+  ],
+  "licenseClass": "original"
+}

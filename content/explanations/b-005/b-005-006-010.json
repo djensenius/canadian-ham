@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-006-010",
+  "questionId": "B-005-006-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-006-010.\n\nWhy the correct answer is right: Two equal 100-ohm resistors in parallel make 100 / 2 = 50 ohms. If each has the same wattage rating as the original style of part, the pair can share heat, so the total power rating is greater.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Same resistance but lesser power rating\": The resistance is the same, but two equal parts sharing the load raise, not lower, the total wattage rating.\n- sourceIndex 2: \"Greater resistance and same power rating\": The resistance is not greater; two equal 100-ohm resistors in parallel make 50 ohms.\n- sourceIndex 3: \"Lesser resistance and same power rating\": The resistance is not lesser than 50 ohms, and using two rated parts increases the heat-dissipation capacity.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-03"
+    },
+    {
+      "type": "question",
+      "id": "B-005-006-010"
+    }
+  ],
+  "licenseClass": "original"
+}

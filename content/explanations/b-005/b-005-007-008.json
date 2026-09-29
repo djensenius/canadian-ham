@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-007-008",
+  "questionId": "B-005-007-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-007-008.\n\nWhy the correct answer is right: Hertz means cycles per second. A frequency of 60 Hz means the waveform completes 60 cycles in one second.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"6000 metres per second\": Metres per second is speed, not frequency, and 60 Hz does not mean 6000 of anything.\n- sourceIndex 2: \"60 metres per second\": This uses the correct number but the wrong unit; hertz counts cycles per second.\n- sourceIndex 3: \"6000 cycles per second\": This uses the right kind of unit but moves the decimal by a factor of 100. Sixty hertz is 60 cycles per second.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-007-008"
+    }
+  ],
+  "licenseClass": "original"
+}

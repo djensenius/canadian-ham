@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-007-007",
+  "questionId": "B-005-007-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-007-007.\n\nWhy the correct answer is right: Frequency and wavelength move in opposite directions for waves travelling at the same speed. A shorter wavelength means more cycles fit into the same distance, so the frequency is higher.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It decreases\": Decreasing frequency would make the wavelength longer, not shorter.\n- sourceIndex 2: \"It decreases proportionally to frequency squared\": This says frequency decreases, which is the wrong direction, and it introduces a squared relationship that is not used here.\n- sourceIndex 3: \"It increases proportionally to frequency squared\": The direction is upward, but the squared wording is wrong; frequency is inversely related to wavelength for a fixed wave speed.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-007-007"
+    }
+  ],
+  "licenseClass": "original"
+}

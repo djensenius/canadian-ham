@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-005-009",
+  "questionId": "B-005-005-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-005-009.\n\nWhy the correct answer is right: The four resistors are equal, so divide one value by the number of parallel branches: 68 ohms / 4 = 17 ohms.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"12 ohms\": This would require about six equal 68-ohm branches (68 / 6 ≈ 11.3 ohms), not the four branches shown. The equal-branch shortcut gives exactly 17 ohms.\n- sourceIndex 2: \"34 ohms\": This would be the equivalent of two 68-ohm resistors in parallel, not four.\n- sourceIndex 3: \"272 ohms\": This adds 68 + 68 + 68 + 68 as though the resistors were in series.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-03"
+    },
+    {
+      "type": "question",
+      "id": "B-005-005-009"
+    }
+  ],
+  "licenseClass": "original"
+}

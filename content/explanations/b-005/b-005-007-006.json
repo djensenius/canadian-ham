@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-007-006",
+  "questionId": "B-005-007-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-007-006.\n\nWhy the correct answer is right: For radio waves in the same medium, wavelength equals wave speed divided by frequency. When frequency increases, each cycle takes less distance, so wavelength decreases.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It increases\": That reverses the relationship; increasing frequency gives a shorter wavelength.\n- sourceIndex 2: \"It decreases proportionally to frequency squared\": The basic relationship is inverse proportionality to frequency, not to frequency squared.\n- sourceIndex 3: \"It increases proportionally to frequency squared\": This has both the wrong direction and the wrong squared relationship.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-007-006"
+    }
+  ],
+  "licenseClass": "original"
+}

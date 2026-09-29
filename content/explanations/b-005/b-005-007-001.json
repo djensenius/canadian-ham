@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-007-001",
+  "questionId": "B-005-007-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-007-001.\n\nWhy the correct answer is right: Frequency is the count of complete cycles per second. For alternating current, one cycle includes the positive swing, the negative swing, and the return to the same point in the waveform.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Speed\": Speed describes how fast something travels through space, not how many AC cycles occur each second.\n- sourceIndex 2: \"Pulse rate\": Pulse rate applies to pulses. A smooth alternating current waveform is described by frequency.\n- sourceIndex 3: \"Phase\": Phase describes timing position within a cycle or between waveforms; it is not the count of cycles per second.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-007-001"
+    }
+  ],
+  "licenseClass": "original"
+}

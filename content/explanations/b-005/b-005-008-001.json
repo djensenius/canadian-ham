@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-008-001",
+  "questionId": "B-005-008-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-008-001.\n\nWhy the correct answer is right: For power ratios, a factor of 2 is approximately a 3 dB increase. The shortcut is useful because every additional 3 dB doubles power again.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"6 dB higher\": Six dB is approximately two 3 dB doublings, or four times the power, not two times.\n- sourceIndex 2: \"12 dB higher\": Twelve dB is four 3 dB steps, about sixteen times the power.\n- sourceIndex 3: \"1 dB higher\": One dB is a much smaller change than a power doubling; doubling power is the 3 dB shortcut.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-008-001"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-006-005",
+  "questionId": "B-005-006-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-006-005.\n\nWhy the correct answer is right: Equal resistors in parallel have the same voltage across them and split current equally. Each 1 W resistor can safely dissipate 1 W, so together they can dissipate 2 W.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"0.5 watts\": Placing equal resistors in parallel does not reduce the total rating to half a watt; each part still has its own 1 W heat limit.\n- sourceIndex 2: \"1 watt\": This counts only one resistor's rating and ignores that there are two equal resistors sharing the load.\n- sourceIndex 3: \"4 watts\": Two 1 W resistors cannot safely dissipate 4 W in total because that would average 2 W per part.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-03"
+    },
+    {
+      "type": "question",
+      "id": "B-005-006-005"
+    }
+  ],
+  "licenseClass": "original"
+}

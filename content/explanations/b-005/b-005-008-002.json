@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-008-002",
+  "questionId": "B-005-008-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-008-002.\n\nWhy the correct answer is right: A 3 dB decrease is the power-ratio shortcut for cutting power in half. Dividing the original transmitter power by 2 gives that decrease.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Divide the original power by 1.5\": Dividing by 1.5 is only about a 1.8 dB decrease, not 3 dB.\n- sourceIndex 2: \"Divide the original power by 3\": A factor of 3 is about a 4.8 dB decrease, larger than the 3 dB step.\n- sourceIndex 3: \"Divide the original power by 4\": Dividing by 4 is two halvings, which is a 6 dB decrease.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-008-002"
+    }
+  ],
+  "licenseClass": "original"
+}

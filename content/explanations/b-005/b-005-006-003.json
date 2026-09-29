@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-006-003",
+  "questionId": "B-005-006-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-006-003.\n\nWhy the correct answer is right: Convert 500 mA to 0.5 A. DC input power is P = E x I = 12 V x 0.5 A = 6 W.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"24 watts\": This would require 2 A at 12 V, not 500 mA.\n- sourceIndex 2: \"60 watts\": This treats the current as 5 A instead of 0.5 A after converting milliamperes.\n- sourceIndex 3: \"600 watts\": This is a unit-conversion error that effectively treats 500 mA as 50 A in the power calculation.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-03"
+    },
+    {
+      "type": "question",
+      "id": "B-005-006-003"
+    }
+  ],
+  "licenseClass": "original"
+}

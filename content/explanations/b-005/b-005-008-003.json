@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-008-003",
+  "questionId": "B-005-008-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-008-003.\n\nWhy the correct answer is right: A 6 dB increase is two 3 dB steps. Each 3 dB step doubles power, so two steps multiply power by 2 x 2 = 4.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Multiply the original power by 3\": Three times power is about 4.8 dB, not the 6 dB shortcut.\n- sourceIndex 2: \"Multiply the original power by 2\": Doubling power is a 3 dB increase, only one step.\n- sourceIndex 3: \"Multiply the original power by 1.5\": A 1.5 times change is much less than 6 dB; it is about 1.8 dB.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-008-003"
+    }
+  ],
+  "licenseClass": "original"
+}
