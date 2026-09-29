@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-004-01-A",
+  "lessonId": "L-004-01",
+  "officialQuestionIds": [
+    "B-004-001-001",
+    "B-004-001-002",
+    "B-004-001-005",
+    "B-004-001-007",
+    "B-004-001-011",
+    "B-004-002-001",
+    "B-004-002-003",
+    "B-004-002-006"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-004-01-A-C1",
+      "prompt": { "en": "A receiver stage raises a tiny signal from the antenna before later tuning and detection stages use it. What kind of stage is this?", "fr": null },
+      "choices": [
+        { "text": { "en": "An RF amplifier", "fr": null }, "isCorrect": true },
+        { "text": { "en": "A loudspeaker filter", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A reverse-polarity diode", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A meter shunt", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "An RF amplifier raises a radio-frequency signal while keeping it at RF for later receiver stages.", "fr": null }
+    },
+    {
+      "id": "QZ-L-004-01-A-C2",
+      "prompt": { "en": "Why should a signal amplifier used for communications stay reasonably linear?", "fr": null },
+      "choices": [
+        { "text": { "en": "So it turns DC directly into light", "fr": null }, "isCorrect": false },
+        { "text": { "en": "So the output waveform keeps the intended shape instead of creating distortion", "fr": null }, "isCorrect": true },
+        { "text": { "en": "So the cathode and anode trade names", "fr": null }, "isCorrect": false },
+        { "text": { "en": "So its gain is always zero", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Linearity means the stage changes signal level without unwanted changes to the waveform shape.", "fr": null }
+    },
+    {
+      "id": "QZ-L-004-01-A-C3",
+      "prompt": { "en": "A diode in a small supply passes current with correct polarity but blocks when the leads are swapped. Which diode behaviour is being used?", "fr": null },
+      "choices": [
+        { "text": { "en": "It stores audio power", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It multiplies frequency", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It conducts mainly in one direction", "fr": null }, "isCorrect": true },
+        { "text": { "en": "It has no voltage drop", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Reverse-polarity protection depends on a diode conducting one way and blocking the other way.", "fr": null }
+    }
+  ]
+}

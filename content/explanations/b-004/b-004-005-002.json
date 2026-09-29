@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-005-002",
+  "questionId": "B-004-005-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-005-002.\n\nWhy the correct answer is right: In a triode, output current flows between cathode and plate, controlled by the grid.\n\nChoice notes:\n- sourceIndex 0: \"Cathode and plate\": These are the two tube elements in the main output current path.\n- sourceIndex 1: \"Cathode and grid\": The grid controls current but is not the main output-current electrode paired with cathode.\n- sourceIndex 2: \"Emitter and collector\": Emitter and collector are bipolar transistor terminals, not tube elements.\n- sourceIndex 3: \"Source and drain\": Source and drain are FET terminals, not triode elements.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-02"
+    },
+    {
+      "type": "question",
+      "id": "B-004-005-002"
+    }
+  ],
+  "licenseClass": "original"
+}

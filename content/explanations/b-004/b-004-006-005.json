@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-006-005",
+  "questionId": "B-004-006-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-006-005.\n\nWhy the correct answer is right: The two values share the same first digit and multiplier; the second significant digit distinguishes 33 ohms from 39 ohms.\n\nChoice notes:\n- sourceIndex 0: \"Second\": This band carries the changing second digit.\n- sourceIndex 1: \"Third\": The third band is the multiplier; it would be the same for both values if both are in ohms with the same place value.\n- sourceIndex 2: \"Fourth\": The fourth band is tolerance and does not distinguish nominal values.\n- sourceIndex 3: \"First\": The first digit is the same for the two values, so the first band does not distinguish them.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-03"
+    },
+    {
+      "type": "question",
+      "id": "B-004-006-005"
+    }
+  ],
+  "licenseClass": "original"
+}

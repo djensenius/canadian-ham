@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-005-007",
+  "questionId": "B-004-005-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-005-007.\n\nWhy the correct answer is right: The cathode emits electrons inside a vacuum tube.\n\nChoice notes:\n- sourceIndex 0: \"Cathode\": This is the electron-emitting electrode.\n- sourceIndex 1: \"Grid\": The grid controls electron flow but does not emit the electrons.\n- sourceIndex 2: \"Collector\": Collector is a transistor terminal, not a vacuum-tube electrode.\n- sourceIndex 3: \"Plate\": The plate attracts electrons; it is not the emitter.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-02"
+    },
+    {
+      "type": "question",
+      "id": "B-004-005-007"
+    }
+  ],
+  "licenseClass": "original"
+}

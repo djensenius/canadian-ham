@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-006-008",
+  "questionId": "B-004-006-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-006-008.\n\nWhy the correct answer is right: A resistor may increase, decrease, or stay nearly stable with temperature depending on its temperature coefficient.\n\nChoice notes:\n- sourceIndex 0: \"It depends on its temperature coefficient\": This rating determines the direction and amount of resistance change with temperature.\n- sourceIndex 1: \"It increases\": Some resistors increase with temperature, but not all resistor types do.\n- sourceIndex 2: \"It remains constant\": Real resistors are not guaranteed perfectly constant with ambient temperature.\n- sourceIndex 3: \"It decreases\": Some resistors decrease with temperature, but this is not universal.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-03"
+    },
+    {
+      "type": "question",
+      "id": "B-004-006-008"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-003-008",
+  "questionId": "B-004-003-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-003-008.\n\nWhy the correct answer is right: Excessive heat can damage semiconductor junctions and is a common transistor failure cause.\n\nChoice notes:\n- sourceIndex 0: \"Excessive heat\": Too much heat can exceed device ratings and cause failure.\n- sourceIndex 1: \"Excessive light\": Ordinary light is not usually the operating condition that destroys a normal transistor.\n- sourceIndex 2: \"Saturation\": Saturation can be a normal on state for a transistor switch when ratings are respected.\n- sourceIndex 3: \"Cut-off\": Cut-off can be a normal off state for a transistor switch.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-02"
+    },
+    {
+      "type": "question",
+      "id": "B-004-003-008"
+    }
+  ],
+  "licenseClass": "original"
+}

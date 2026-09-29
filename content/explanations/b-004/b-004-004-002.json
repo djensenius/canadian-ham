@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-004-002",
+  "questionId": "B-004-004-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-004-002.\n\nWhy the correct answer is right: Gate, drain, and source are the terminals of a field-effect transistor.\n\nChoice notes:\n- sourceIndex 0: \"Field-effect transistor\": This device family uses gate, drain, and source terminal names.\n- sourceIndex 1: \"Point-contact transistor\": A point-contact transistor is an older bipolar transistor form and does not use this terminal set.\n- sourceIndex 2: \"Bipolar transistor\": A bipolar transistor uses base, collector, and emitter.\n- sourceIndex 3: \"Unijunction transistor\": A unijunction transistor has different terminal naming and is not the gate-drain-source device.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-02"
+    },
+    {
+      "type": "question",
+      "id": "B-004-004-002"
+    }
+  ],
+  "licenseClass": "original"
+}

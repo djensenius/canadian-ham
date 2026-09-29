@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-002-004",
+  "questionId": "B-004-002-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-002-004.\n\nWhy the correct answer is right: Rectification is the name for changing AC into current that flows in one direction as DC or pulsating DC.\n\nChoice notes:\n- sourceIndex 0: \"rectification\": This is the term for AC-to-DC conversion by rectifier action.\n- sourceIndex 1: \"amplification\": Amplification increases signal level; it does not name AC-to-DC conversion.\n- sourceIndex 2: \"transformation\": Transformation usually refers to changing voltage or impedance with a transformer, not rectifier action.\n- sourceIndex 3: \"modulation\": Modulation puts information onto a carrier; it is not AC-to-DC conversion.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-01"
+    },
+    {
+      "type": "question",
+      "id": "B-004-002-004"
+    }
+  ],
+  "licenseClass": "original"
+}

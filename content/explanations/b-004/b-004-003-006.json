@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-003-006",
+  "questionId": "B-004-003-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-003-006.\n\nWhy the correct answer is right: A general-purpose audio NPN device is a bipolar transistor, because NPN is one bipolar transistor polarity.\n\nChoice notes:\n- sourceIndex 0: \"Bipolar transistor\": NPN identifies a bipolar transistor type.\n- sourceIndex 1: \"Field-effect transistor\": A field-effect transistor would be identified by gate/source/drain style or channel type, not NPN.\n- sourceIndex 2: \"Triac\": A triac is an AC switching device, not a general-purpose audio NPN transistor.\n- sourceIndex 3: \"Thyristor\": A thyristor is a latching switching device family, not an NPN audio transistor.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-02"
+    },
+    {
+      "type": "question",
+      "id": "B-004-003-006"
+    }
+  ],
+  "licenseClass": "original"
+}

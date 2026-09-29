@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-001-010",
+  "questionId": "B-004-001-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-001-010.\n\nWhy the correct answer is right: Amplifier efficiency compares useful output power with the DC input power supplied to the amplifier.\n\nChoice notes:\n- sourceIndex 0: \"Efficiency\": This is the ratio of useful output power to DC input power.\n- sourceIndex 1: \"Current gain\": Current gain compares currents, not output power to DC input power.\n- sourceIndex 2: \"Dynamic range\": Dynamic range describes the span between small usable signals and overload, not power-conversion ratio.\n- sourceIndex 3: \"Loss factor\": Loss factor is not the standard amplifier term for output-power to DC-input-power ratio.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-01"
+    },
+    {
+      "type": "question",
+      "id": "B-004-001-010"
+    }
+  ],
+  "licenseClass": "original"
+}

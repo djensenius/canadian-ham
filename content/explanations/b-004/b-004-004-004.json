@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-004-004",
+  "questionId": "B-004-004-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-004-004.\n\nWhy the correct answer is right: In FET terminology, charge carriers enter the channel at the source.\n\nChoice notes:\n- sourceIndex 0: \"Source\": This is the terminal where carriers enter the channel.\n- sourceIndex 1: \"Gate\": The gate controls channel conduction but is not the channel entry terminal.\n- sourceIndex 2: \"Drain\": The drain is where carriers leave the channel in the Basic-level terminology.\n- sourceIndex 3: \"Emitter\": Emitter is a bipolar transistor terminal, not a FET channel terminal.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-02"
+    },
+    {
+      "type": "question",
+      "id": "B-004-004-004"
+    }
+  ],
+  "licenseClass": "original"
+}

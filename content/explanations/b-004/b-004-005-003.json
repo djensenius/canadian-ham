@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-005-003",
+  "questionId": "B-004-005-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-005-003.\n\nWhy the correct answer is right: Both triode tubes and transistors are active devices capable of signal amplification.\n\nChoice notes:\n- sourceIndex 0: \"can amplify signals\": This is the shared function of the two device families.\n- sourceIndex 1: \"have electrons drifting through a vacuum\": Electrons drifting through a vacuum describes tubes, not semiconductor transistors.\n- sourceIndex 2: \"dissipate heat when not conducting\": Heat dissipation can occur in many parts, but it is not the distinguishing shared feature asked for here.\n- sourceIndex 3: \"use heat to cause electron movement\": A heated cathode applies to many tubes, not to ordinary transistors.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-02"
+    },
+    {
+      "type": "question",
+      "id": "B-004-005-003"
+    }
+  ],
+  "licenseClass": "original"
+}

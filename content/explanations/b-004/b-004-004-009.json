@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-004-009",
+  "questionId": "B-004-004-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-004-009.\n\nWhy the correct answer is right: The FET source corresponds most closely to the bipolar transistor emitter as the carrier-entry side in the simple comparison.\n\nChoice notes:\n- sourceIndex 0: \"Emitter\": This is the matching bipolar terminal for the FET source.\n- sourceIndex 1: \"Base\": The base corresponds to the FET gate as the control terminal, not to the source.\n- sourceIndex 2: \"Drain\": Drain is a FET terminal, not a bipolar transistor electrode.\n- sourceIndex 3: \"Collector\": The collector corresponds more closely to the FET drain, not the source.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-02"
+    },
+    {
+      "type": "question",
+      "id": "B-004-004-009"
+    }
+  ],
+  "licenseClass": "original"
+}

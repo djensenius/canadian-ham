@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-004-001",
+  "questionId": "B-004-004-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-004-001.\n\nWhy the correct answer is right: FET channel material is classified as N channel or P channel.\n\nChoice notes:\n- sourceIndex 0: \"N channel and P channel\": These are the two FET channel types.\n- sourceIndex 1: \"NPN and PNP\": NPN and PNP are bipolar transistor types, not FET channel types.\n- sourceIndex 2: \"Silicon and germanium\": Silicon and germanium are semiconductor materials, not the two channel-polarity names.\n- sourceIndex 3: \"Gallium and arsenide\": Gallium and arsenide refer to materials used in compound semiconductors, not the basic FET channel type pair.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-02"
+    },
+    {
+      "type": "question",
+      "id": "B-004-004-001"
+    }
+  ],
+  "licenseClass": "original"
+}

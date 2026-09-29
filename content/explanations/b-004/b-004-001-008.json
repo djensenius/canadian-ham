@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-001-008",
+  "questionId": "B-004-001-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-001-008.\n\nWhy the correct answer is right: A device with gain has amplification: it makes a signal larger in voltage, current, or power.\n\nChoice notes:\n- sourceIndex 0: \"amplification\": Gain is the property of amplification.\n- sourceIndex 1: \"attenuation\": Attenuation is loss or reduction, not gain.\n- sourceIndex 2: \"oscillation\": Oscillation means generating a repeating signal, not the property of gain.\n- sourceIndex 3: \"modulation\": Modulation changes a carrier according to information; it is not the same as gain.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-01"
+    },
+    {
+      "type": "question",
+      "id": "B-004-001-008"
+    }
+  ],
+  "licenseClass": "original"
+}

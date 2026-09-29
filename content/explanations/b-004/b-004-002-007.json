@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-002-007",
+  "questionId": "B-004-002-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-002-007.\n\nWhy the correct answer is right: Electron flow is opposite conventional current; in a conducting semiconductor diode, electrons flow from cathode toward anode.\n\nChoice notes:\n- sourceIndex 0: \"cathode to anode\": This states electron-flow direction for the diode.\n- sourceIndex 1: \"anode to cathode\": Anode to cathode is conventional current direction, not electron-flow direction.\n- sourceIndex 2: \"source to drain\": Source and drain are FET terminals, not diode electrodes.\n- sourceIndex 3: \"base to collector\": Base and collector are bipolar transistor terminals, not diode electrodes.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-01"
+    },
+    {
+      "type": "question",
+      "id": "B-004-002-007"
+    }
+  ],
+  "licenseClass": "original"
+}

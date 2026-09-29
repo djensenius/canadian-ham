@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-004-03-A",
+  "lessonId": "L-004-03",
+  "officialQuestionIds": [
+    "B-004-006-001",
+    "B-004-006-002",
+    "B-004-006-003",
+    "B-004-006-004",
+    "B-004-006-006",
+    "B-004-006-007",
+    "B-004-006-010",
+    "B-004-006-011"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-004-03-A-C1",
+      "prompt": { "en": "A resistor reads brown, black, orange, gold. What nominal value do the first three bands give?", "fr": null },
+      "choices": [
+        { "text": { "en": "1 000 ohms", "fr": null }, "isCorrect": false },
+        { "text": { "en": "10 000 ohms", "fr": null }, "isCorrect": true },
+        { "text": { "en": "100 ohms", "fr": null }, "isCorrect": false },
+        { "text": { "en": "10 ohms", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Brown and black form 10, and orange is the x 1 000 multiplier, so the nominal value is 10 x 1 000 ohms.", "fr": null }
+    },
+    {
+      "id": "QZ-L-004-03-A-C2",
+      "prompt": { "en": "What does a smaller resistor tolerance percentage mean?", "fr": null },
+      "choices": [
+        { "text": { "en": "The resistor has no ohmic value", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The resistor must be physically larger", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The allowed spread around the nominal value is narrower", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The multiplier band is ignored", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Higher precision means less permitted variation from the nominal resistance.", "fr": null }
+    },
+    {
+      "id": "QZ-L-004-03-A-C3",
+      "prompt": { "en": "Two resistors have the same first two value bands, but one has a multiplier that is one step larger. What changes?", "fr": null },
+      "choices": [
+        { "text": { "en": "Only the tolerance can change", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The nominal resistance changes by a factor of ten", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The component stops being a resistor", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The colour code no longer uses digits", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The multiplier band scales the same two value digits, so one multiplier step changes the nominal value by ten times.", "fr": null }
+    }
+  ]
+}

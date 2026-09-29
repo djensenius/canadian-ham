@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-004-005-008",
+  "questionId": "B-004-005-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-004-005-008.\n\nWhy the correct answer is right: A triode tube operates with its elements inside an evacuated envelope.\n\nChoice notes:\n- sourceIndex 0: \"A vacuum\": This is what is inside the tube envelope for normal operation.\n- sourceIndex 1: \"Argon\": Argon is a gas used in some discharge devices, not the normal triode-tube interior.\n- sourceIndex 2: \"Air\": Air would interfere with the tube electron stream and allow oxidation or arcing problems.\n- sourceIndex 3: \"Neon\": Neon is used in neon lamps and discharge devices, not as the triode-tube interior.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-004-02"
+    },
+    {
+      "type": "question",
+      "id": "B-004-005-008"
+    }
+  ],
+  "licenseClass": "original"
+}
