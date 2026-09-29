@@ -39,11 +39,11 @@
       "prompt": { "en": "A compact switching supply is rated 30 A continuous for a 19 A transceiver, and the buyer plans to trust it without any station test. Which added check is still needed?", "fr": null },
       "choices": [
         { "text": { "en": "Confirm under load that the supply is not adding receiver hash or transmitted noise", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Fit a larger fuse so any switching noise has more current headroom", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Use smaller DC leads because an efficient supply does not need low lead resistance", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Ignore the radio's voltage requirement because the current rating is higher than 19 A", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Measure only the no-load output voltage and stop if the meter shows nominal voltage", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Check only that the output plug fits, then skip transmit testing to avoid stressing it", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Listen only on receive and assume transmit will be clean if no hash is heard", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Current headroom is necessary, but it does not prove that the supply is quiet in the station. Fuses, lead size, and voltage matching still have their own safety and performance jobs.", "fr": null }
+      "explanation": { "en": "Current headroom is necessary, but it does not prove that the supply is quiet in the station under transmit load. No-load voltage, connector fit, and receive-only listening are useful checks, but they do not replace an under-load noise check.", "fr": null }
     }
   ]
 }
