@@ -1,3 +1,4 @@
+import CanadianHamContent
 import SwiftUI
 
 private enum SidebarSelection: Hashable {
@@ -17,6 +18,8 @@ struct RootView: View {
 
     @State private var bank: QuestionBank?
     @State private var bankLoadError: String?
+    @State private var contentLibrary: ContentLibrary?
+    @State private var contentLoadError: String?
     @State private var progressStore: ProgressStoreService?
     @State private var progressStoreError: String?
     @State private var selection: SidebarSelection = .home
@@ -25,8 +28,9 @@ struct RootView: View {
 
     var body: some View {
         Group {
-            if let bank, let progressStore {
-                appContent(bank: bank, progressStore: progressStore)
+            if let bank, let contentLibrary, let progressStore {
+                appContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+                    .environment(\.canadianHamContentLibrary, contentLibrary)
                     .preferredColorScheme(colorScheme(for: progressStore.preferences.theme))
             } else if let progressStoreError {
                 StoreRecoveryView(message: progressStoreError) {
@@ -41,6 +45,14 @@ struct RootView: View {
                 )
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .background(DesignTokens.Colors.paper)
+            } else if let contentLoadError {
+                ContentUnavailableView(
+                    "Lesson content unavailable",
+                    systemImage: "exclamationmark.triangle",
+                    description: Text(contentLoadError)
+                )
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .background(DesignTokens.Colors.paper)
             } else {
                 ProgressView("Loading Canadian Ham…")
                     .controlSize(.large)
@@ -51,16 +63,17 @@ struct RootView: View {
         }
         .task {
             loadBankIfNeeded()
+            loadContentIfNeeded()
             reloadStoreIfNeeded()
         }
     }
 
     @ViewBuilder
-    private func appContent(bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
+    private func appContent(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
 #if os(iOS)
         if effectiveHorizontalSizeClass == .compact {
             NavigationStack {
-                detailView(bank: bank, progressStore: progressStore)
+                detailView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
                     .background(DesignTokens.Colors.paper)
                     .toolbar { languageToolbarItem(progressStore: progressStore) }
             }
@@ -74,15 +87,15 @@ struct RootView: View {
                 language = next
             }
         } else {
-            splitContent(bank: bank, progressStore: progressStore)
+            splitContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
         }
 #else
-        splitContent(bank: bank, progressStore: progressStore)
+        splitContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
 #endif
     }
 
     @ViewBuilder
-    private func splitContent(bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
+    private func splitContent(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
         NavigationSplitView {
             List {
                 Section {
@@ -148,7 +161,7 @@ struct RootView: View {
             .navigationTitle("Canadian Ham")
             .toolbar { languageToolbarItem(progressStore: progressStore) }
         } detail: {
-            detailView(bank: bank, progressStore: progressStore)
+            detailView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
                 .background(DesignTokens.Colors.paper)
         }
         .navigationSplitViewStyle(.balanced)
@@ -169,7 +182,7 @@ struct RootView: View {
     }
 
     @ViewBuilder
-    private func detailView(bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
+    private func detailView(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
         switch selection {
         case .home:
             HomeView(bank: bank, progressStore: progressStore, language: language, revision: dataRevision) { scope in
@@ -178,7 +191,15 @@ struct RootView: View {
                 selection = .mockExam
             }
         case .learn:
-            LearnPlaceholderView()
+            LearnView(
+                library: contentLibrary,
+                bank: bank,
+                progressStore: progressStore,
+                language: language,
+                revision: dataRevision
+            ) {
+                dataRevision += 1
+            }
         case .practiceHub:
             PracticeHubView(bank: bank, progressStore: progressStore, language: language, revision: dataRevision) { scope in
                 selection = .practice(scope)
@@ -219,9 +240,27 @@ struct RootView: View {
     private func loadBankIfNeeded() {
         guard bank == nil, bankLoadError == nil else { return }
         do {
-            bank = try QuestionBankStore.load()
+            let loaded = try QuestionBankStore.load()
+            if let contentLibrary {
+                bank = loaded.withKnownLessonIds(Set(contentLibrary.lessons.map(\.id)))
+            } else {
+                bank = loaded
+            }
         } catch {
             bankLoadError = error.localizedDescription
+        }
+    }
+
+    private func loadContentIfNeeded() {
+        guard contentLibrary == nil, contentLoadError == nil else { return }
+        do {
+            let loaded = try ContentLibrary.load(from: .main)
+            contentLibrary = loaded
+            if let bank {
+                self.bank = bank.withKnownLessonIds(Set(loaded.lessons.map(\.id)))
+            }
+        } catch {
+            contentLoadError = error.localizedDescription
         }
     }
 
@@ -276,6 +315,9 @@ struct RootView: View {
 #endif
 
     private func applyLaunchNavigation(bank: QuestionBank) {
+        if AppLaunchArguments.value(after: "-CanadianHamInitialLessonID") != nil {
+            selection = .learn
+        }
         if let screen = AppLaunchArguments.value(after: "-CanadianHamInitialScreen") {
             switch screen {
             case "home": selection = .home

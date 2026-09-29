@@ -88,6 +88,27 @@ struct ProgressExportV1: Codable, Equatable, Sendable {
     }
 }
 
+struct LessonProgressRecord: Codable, Equatable, Sendable, Identifiable {
+    let lessonId: String
+    let readAt: String
+    let readCount: Int
+
+    var id: String { lessonId }
+}
+
+struct LessonQuizAttempt: Codable, Equatable, Sendable, Identifiable {
+    let id: String
+    let quizId: String
+    let lessonId: String
+    let submittedAt: String
+    let correct: Int
+    let total: Int
+    let percent: Double
+    let officialQuestionIds: [String]
+    let incorrectOfficialQuestionIds: [String]
+    let incorrectConceptCheckIds: [String]
+}
+
 struct ExportedPreferences: Codable, Equatable, Sendable {
     let practiceMode: String
     let examTimerEnabled: Bool
@@ -109,6 +130,10 @@ struct ExportedPreferences: Codable, Equatable, Sendable {
 
 struct ArchivedJSON: Codable, Equatable, Sendable {
     let storage: [String: JSONValue]
+
+    init(storage: [String: JSONValue]) {
+        self.storage = storage
+    }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
@@ -322,6 +347,36 @@ final class ProgressStoreService: ObservableObject {
 
     func latestExamAttempt() throws -> StoredExamAttempt? {
         try examAttempts().sorted { $0.submittedAt > $1.submittedAt }.first
+    }
+
+    func lessonProgressRecords() throws -> [LessonProgressRecord] {
+        let entity = try preferencesEntity(createIfMissing: true)
+        return try decoder.decode([LessonProgressRecord].self, from: entity.archivedLessonProgressData)
+            .sorted { $0.lessonId < $1.lessonId }
+    }
+
+    func lessonQuizAttempts() throws -> [LessonQuizAttempt] {
+        let entity = try preferencesEntity(createIfMissing: true)
+        return try decoder.decode([LessonQuizAttempt].self, from: entity.archivedLessonQuizAttemptsData)
+            .sorted { $0.submittedAt < $1.submittedAt }
+    }
+
+    func saveLessonProgress(_ record: LessonProgressRecord) throws {
+        let entity = try preferencesEntity(createIfMissing: true)
+        let current = try lessonProgressRecords().filter { $0.lessonId != record.lessonId }
+        entity.archivedLessonProgressData = try encoder.encode((current + [record]).sorted { $0.lessonId < $1.lessonId })
+        try context.save()
+        objectWillChange.send()
+    }
+
+    func saveLessonQuizAttempt(_ attempt: LessonQuizAttempt, questionProgress: [QuestionProgressRecord]) throws {
+        let entity = try preferencesEntity(createIfMissing: true)
+        entity.archivedLessonQuizAttemptsData = try encoder.encode((try lessonQuizAttempts() + [attempt]).sorted { $0.submittedAt < $1.submittedAt })
+        for record in questionProgress {
+            try upsertQuestionProgress(record)
+        }
+        try context.save()
+        objectWillChange.send()
     }
 
     func saveQuestionProgress(_ records: [QuestionProgressRecord]) throws {

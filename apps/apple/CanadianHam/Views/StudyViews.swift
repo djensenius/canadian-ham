@@ -374,7 +374,7 @@ struct PracticeSessionView: View {
                 }
             }
             if let selected, progressStore.preferences.practiceMode == .immediate {
-                PracticeFeedback(question: question, selectedSourceIndex: selected, language: language)
+                PracticeFeedback(question: question, selectedSourceIndex: selected, language: language, choicePermutation: item.choicePermutation)
                 Button(currentIndex + 1 == items.count ? "Finish session" : "Next question") {
                     advanceOrFinish()
                 }
@@ -407,8 +407,8 @@ struct PracticeSessionView: View {
                     Text(item.question.text.text(for: language))
                         .font(DesignTokens.FontScale.body.weight(.semibold))
                         .foregroundStyle(DesignTokens.Colors.ink)
-                    PracticeFeedback(question: item.question, selectedSourceIndex: selectedByQuestionId[item.question.id], language: language)
-                    Text("Category \(item.question.categoryId) • Subsection \(item.question.subsectionId) • Explanation pending where not yet authored.")
+                    PracticeFeedback(question: item.question, selectedSourceIndex: selectedByQuestionId[item.question.id], language: language, choicePermutation: item.choicePermutation)
+                    Text("Category \(item.question.categoryId) • Subsection \(item.question.subsectionId).")
                         .font(DesignTokens.FontScale.caption)
                         .foregroundStyle(DesignTokens.Colors.inkMuted)
                 }
@@ -557,6 +557,7 @@ struct MockExamView: View {
     @State private var confirmingSubmit = false
     @State private var isSubmitting = false
     @State private var timerStatus = "Timer off"
+    @State private var referenceSheet: ReferenceSheetKind?
 
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -584,6 +585,9 @@ struct MockExamView: View {
                 timerStatus = "Timer running, \(secondsElapsed) seconds elapsed"
             }
         }
+        .sheet(item: $referenceSheet) { sheet in
+            ReferenceSheetViewer(kind: sheet)
+        }
         .alert("Submit mock exam?", isPresented: $confirmingSubmit) {
             Button("Cancel", role: .cancel) {}
             Button("Submit", role: .destructive) { submitExam() }
@@ -601,9 +605,10 @@ struct MockExamView: View {
             Text("Generate 100 shared-engine questions: one from each subsection, shuffled by seed. The optional timer is off by default.")
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
-            Text("Reference sheet: placeholder. Another task adds the offline sheet viewer.")
+            Text("The bundled ISED exam reference material PDF is available offline from this screen.")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
+            ReferenceSheetButton(kind: .exam, selectedSheet: $referenceSheet)
             tokenButton("Start mock exam") { startExam() }
                 .accessibilityIdentifier("start-mock-exam-button")
         }
@@ -652,19 +657,25 @@ struct MockExamView: View {
             }
 
             HStack {
-                if generatedItems.count > 1 {
-                    tokenButton(currentIndex == 0 ? "First question" : "Previous") { currentIndex = max(0, currentIndex - 1) }
-                    tokenButton(currentIndex + 1 == generatedItems.count ? "Last question" : "Next") { currentIndex = min(generatedItems.count - 1, currentIndex + 1) }
-                }
+                Button("Previous") { if currentIndex > 0 { currentIndex -= 1 } }
+                    .buttonStyle(.bordered)
+                    .tint(DesignTokens.Colors.ink)
+                    .allowsHitTesting(currentIndex > 0)
+                    .accessibilityLabel(currentIndex == 0 ? "Previous, unavailable on the first question" : "Previous")
+                    .accessibilityIdentifier("mock-previous-button")
+                Button("Next") { if currentIndex + 1 < generatedItems.count { currentIndex += 1 } }
+                    .buttonStyle(.bordered)
+                    .tint(DesignTokens.Colors.ink)
+                    .allowsHitTesting(currentIndex + 1 < generatedItems.count)
+                    .accessibilityLabel(currentIndex + 1 >= generatedItems.count ? "Next, unavailable on the last question" : "Next")
+                    .accessibilityIdentifier("mock-next-button")
                 tokenButton(flagged.contains(question.id) ? "Flagged for review" : "Flag for review") { toggleFlag(question.id) }
             }
 
             navigator
 
             HStack {
-                Button("Reference sheet (placeholder)") {}
-                    .buttonStyle(.bordered)
-                    .accessibilityHint("Placeholder; another task adds the offline reference sheet")
+                ReferenceSheetButton(kind: .exam, selectedSheet: $referenceSheet)
                 Button("Submit exam") { confirmingSubmit = true }
                     .buttonStyle(.borderedProminent)
                     .disabled(isSubmitting)
@@ -768,7 +779,7 @@ struct MockExamView: View {
                             Text(question.text.text(for: language))
                                 .font(DesignTokens.FontScale.body)
                                 .foregroundStyle(DesignTokens.Colors.ink)
-                            PracticeFeedback(question: question, selectedSourceIndex: item.selectedSourceIndex, language: language)
+                            PracticeFeedback(question: question, selectedSourceIndex: item.selectedSourceIndex, language: language, choicePermutation: item.choicePermutation)
                         }
                         .paperCard()
                     }
@@ -873,6 +884,7 @@ struct SettingsView: View {
     @State private var pendingImport: ProgressExportV1?
     @State private var confirmingImport = false
     @State private var confirmingReset = false
+    @State private var referenceSheet: ReferenceSheetKind?
 
     var body: some View {
         ScrollView {
@@ -927,6 +939,10 @@ struct SettingsView: View {
                         tokenButton("Import progress JSON") { showingImporter = true }
                         tokenButton("Reset all data") { confirmingReset = true }
                     }
+                    HStack {
+                        ReferenceSheetButton(kind: .study, selectedSheet: $referenceSheet)
+                        ReferenceSheetButton(kind: .exam, selectedSheet: $referenceSheet)
+                    }
                     Text("Active bank: \(bank.manifest.bankId), effective \(bank.manifest.effectiveDate).")
                         .font(DesignTokens.FontScale.caption)
                         .foregroundStyle(DesignTokens.Colors.inkMuted)
@@ -951,6 +967,9 @@ struct SettingsView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Settings")
+        .sheet(item: $referenceSheet) { sheet in
+            ReferenceSheetViewer(kind: sheet)
+        }
         .fileExporter(isPresented: $showingExporter, document: exportDocument, contentType: .json, defaultFilename: "canadian-ham-progress.json") { result in
             switch result {
             case .success: statusMessage = "Progress export prepared."
@@ -1213,6 +1232,14 @@ struct PracticeFeedback: View {
     let question: BankQuestion
     let selectedSourceIndex: Int?
     let language: BankLanguage
+    let choicePermutation: [Int]?
+
+    init(question: BankQuestion, selectedSourceIndex: Int?, language: BankLanguage, choicePermutation: [Int]? = nil) {
+        self.question = question
+        self.selectedSourceIndex = selectedSourceIndex
+        self.language = language
+        self.choicePermutation = choicePermutation
+    }
 
     var body: some View {
         let isCorrect = selectedSourceIndex == 0
@@ -1228,10 +1255,11 @@ struct PracticeFeedback: View {
                     .textSelection(.enabled)
                     .accessibilityIdentifier("answer-feedback-correct-answer")
             }
-            Text("Source: \(question.categoryId) • \(question.subsectionId). Explanation pending where not yet authored.")
+            Text("Source: \(question.categoryId) • \(question.subsectionId).")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
                 .accessibilityIdentifier("answer-feedback-source")
+            ExplanationPanelView(questionId: question.id, selectedSourceIndex: selectedSourceIndex, language: language, choicePermutation: choicePermutation)
         }
         .padding(DesignTokens.Spacing.lg)
         .frame(maxWidth: .infinity, alignment: .leading)

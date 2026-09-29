@@ -158,6 +158,42 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertThrowsError(try decoder.decode(StoredExamTimer.self, from: Data(#"{"enabled":true,"secondsAllowed":null,"secondsElapsed":1e300}"#.utf8)))
     }
 
+    func testImportRollbackKeepsExistingDataWhenReplacementFails() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let store = try ProgressStoreService.inMemoryForTests()
+        let originalRecord = try applyAnswer(existing: nil, update: AnswerUpdate(
+            questionId: "B-001-001-001",
+            bankId: bank.manifest.bankId,
+            isCorrect: true,
+            now: "2026-01-02T03:04:05.000Z"
+        ))
+        try store.saveQuestionProgress([originalRecord])
+        var preferences = store.preferences
+        preferences.theme = .dark
+        try store.updatePreferences(preferences)
+
+        let invalidLessonProgress = ArchivedJSON(storage: [
+            "lessonId": .string("L-005-01"),
+            "readAt": .string("2026-01-02T03:30:00.000Z"),
+            "readCount": .string("not-a-number")
+        ])
+        let invalid = ProgressExportV1(
+            schema: "canadian-ham.progress-export",
+            version: 1,
+            exportedAt: "2026-01-02T05:04:05.000Z",
+            bankId: bank.manifest.bankId,
+            questionProgress: [],
+            examAttempts: [],
+            lessonProgress: [invalidLessonProgress],
+            lessonQuizAttempts: [],
+            preferences: ExportedPreferences(practiceMode: "immediate", examTimerEnabled: false, theme: "system")
+        )
+
+        XCTAssertThrowsError(try store.importData(invalid, bank: bank))
+        XCTAssertEqual(try store.questionProgressRecords(), [originalRecord])
+        XCTAssertEqual(store.preferences.theme, .dark)
+    }
+
     func testImportValidationRejectsUnknownIdsBadTimestampsBadBoxAndDuplicateSubmittedAt() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let store = try ProgressStoreService.inMemoryForTests()
