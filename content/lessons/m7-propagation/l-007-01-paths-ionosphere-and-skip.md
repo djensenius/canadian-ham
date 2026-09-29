@@ -53,7 +53,7 @@ A volunteer group wants to link a valley shelter, a ridge-top control point, and
 
 ## The ionosphere in layers
 
-The ionosphere forms when solar radiation removes electrons from atoms and molecules in the upper atmosphere. The result is a region with enough charged particles to affect radio waves. It changes with sunlight, season, solar activity, and time of day.
+The ionosphere forms when solar radiation removes electrons from atoms and molecules in the upper atmosphere. Ultraviolet radiation is especially important for ordinary ionization. The result is a region with enough charged particles to affect radio waves. It changes with sunlight, season, solar activity, and time of day, with daily ionization usually strongest around midday and weakest shortly before sunrise.
 
 The usual beginner picture has these regions, from lower to higher:
 
@@ -89,11 +89,11 @@ A field station is choosing how to report expected coverage to a served agency. 
 
 ## Try it
 
-1. A club can work a repeater from both ends of a town, but simplex between a pair of hand-held radios fails behind a ridge between the streets. Which path limit are they seeing? They are seeing a mostly line-of-sight VHF limit; the ridge blocks the direct path even though the repeater site has a better view.
-2. An HF net wants regional coverage over rough terrain rather than an overseas contact. What radiation angle should the antenna system favour? A higher radiation angle supports NVIS-style regional coverage when the band conditions suit it.
+1. A club moves a VHF antenna from a low parking lot to a clear mast on a nearby building, and the same radios now cover more of town. Explain the planning lesson. Extra height and a clearer path improve the radio horizon; the radios did not make the ionosphere return the signal.
+2. An HF net wants regional coverage over rough terrain rather than an overseas contact. What radiation-angle tradeoff should the antenna system favour? Favour higher-angle radiation when conditions suit it, because the goal is closer regional return rather than the farthest first hop.
 3. In a layer diagram, a wave passes the D region and bends back from a much higher region. What practical concern belongs to the lower layer? Daylight absorption in the lower ionosphere can weaken the signal before it reaches the useful refracting region.
-4. A rural HF station hears nearby ground-wave coverage fade out, then another town much farther away becomes strong. What should the operator look for between those areas? The operator should expect a coverage gap where the ground wave is gone but the returning sky wave has not arrived yet.
-5. A club compares a pair of temporary antennas on the same band: the first mostly covers nearby counties, while the second favours flatter takeoff angles. Which antenna is more suitable for a distant evening schedule? The flatter-angle antenna is the better candidate because that geometry pushes the first useful return farther away.
+4. A route map shows reliable reports close to the transmitter and again much farther out, but very few in the middle. What planning step should net control take? Plan an alternate band, relay, or antenna angle for the middle area instead of assuming extra power will fill the geometry gap.
+5. A pair of temporary HF antennas use the same band and layer height. The first launches most energy at a steep angle; the other favours flatter takeoff angles. Predict the change in first-return distance. The flatter-angle pattern pushes the first useful return farther away, while the steeper pattern favours closer regional coverage.
 
 ## Radio connection
 
@@ -120,7 +120,8 @@ Description: Draw a gentle curved Earth at the bottom with three stations. Show 
 - VHF and UHF usually rely on line-of-sight paths, with the radio horizon slightly beyond the visual horizon.
 - Ground wave is affected by the Earth's surface and is most useful at lower frequencies.
 - Sky wave is HF energy refracted by the ionosphere back toward Earth.
-- Solar radiation creates ionization; the D, E, F1, and F2 regions have different effects.
+- Solar ultraviolet radiation is a major source of ionization; ionization is usually highest around midday and lowest shortly before sunrise.
+- The D, E, F1, and F2 regions have different effects.
 - Skip distance is the first sky-wave return distance, and the skip zone is the uncovered gap before that return.
 - E-region single-hop paths are shorter than F2 single-hop paths; use about 2000 km and about 4000 km as planning scales.
 - Layer height and launch angle set skip geometry more directly than transmitter power does.

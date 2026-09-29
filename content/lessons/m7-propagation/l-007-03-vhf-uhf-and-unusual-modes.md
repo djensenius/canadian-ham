@@ -51,7 +51,7 @@ A station hears no distant signals on six metres at lunch. Later in the afternoo
 
 The troposphere is the lower atmosphere where weather happens. Normal refraction slightly extends the radio horizon. Without an enhanced mode, VHF tropospheric communication is still limited; use roughly 800 km as the broad upper planning scale for normal VHF tropospheric range, not as a guaranteed daily path. Stronger gradients in temperature, humidity, and pressure can bend VHF and UHF signals more than usual. A temperature inversion can form a duct, trapping part of the wave so it travels much farther than expected.
 
-Tropospheric scatter is different from ducting. It uses small variations in lower-atmosphere density and water-vapour content to redirect a small amount of energy beyond the radio horizon. Signals are often weak, but the mode can explain contacts that are beyond ordinary line of sight without requiring an ionospheric opening.
+Tropospheric scatter is different from ducting. It uses small variations in lower-atmosphere density and water-vapour content to redirect a small amount of energy beyond the radio horizon. Scattering sends small pieces of a wave off in many directions rather than bending the whole wave smoothly. Signals are often weak, but the mode can explain contacts that are beyond ordinary line of sight without requiring an ionospheric opening.
 
 Accessible text formula: ordinary VHF range starts with antenna height and radio horizon; enhanced tropospheric propagation adds bending, ducting, or scatter when lower-atmosphere conditions help. A path greatly beyond the normal scale is a clue to look for enhancement such as a duct.
 
@@ -63,7 +63,7 @@ After a calm evening, a cool air layer settles over a large lake while warmer ai
 
 Auroral propagation uses disturbed ionization near E-region height in high-latitude directions. In the northern hemisphere, operators often aim antennas northward to use the auroral region. The reflected or scattered signal can sound raspy or fluttery because the aurora is moving and irregular. CW is often more readable than analog voice through that distortion.
 
-Meteor scatter uses brief ionized trails left by meteors. VHF energy can reflect or scatter from the trail for a short burst. Six metres is a common amateur band for this mode, and specialized digital or fast-exchange techniques can make use of very short openings.
+Meteor scatter uses brief ionized trails left by meteors. VHF energy can reflect or scatter from the trail for a short burst. It is most effective for extended-range work from about 30 MHz to 100 MHz: below that range ordinary ionospheric propagation, absorption, and noise tend to dominate, while much higher frequencies make the trail less effective. Six metres sits in that useful range, and specialized digital or fast-exchange techniques can make use of very short openings.
 
 HF scatter can put weak, distorted signals into a skip zone. Only a small part of the transmitted energy is redirected toward the receiver, and multiple paths can smear the signal.
 
@@ -85,11 +85,11 @@ Do not turn these clues into guarantees. The same station may need a higher ante
 
 ## Try it
 
-1. A six-metre receiver is quiet all morning, then distant beacons from a single area appear for twenty minutes. What mode should you suspect first? Sporadic E is a strong candidate because six metres is especially known for sudden E-region openings.
-2. A VHF signal travels much farther than usual along a coastal path after a calm temperature inversion. What lower-atmosphere effect fits? Tropospheric ducting fits because an inversion can guide VHF energy.
+1. A six-metre opening appears suddenly and then vanishes after twenty minutes. What operating habit follows from that timing? Keep exchanges short, log quickly, and keep monitoring beacons because the patch can move or fade before a long conversation finishes.
+2. A two-metre contact reaches just beyond the normal planning scale during a calm evening over water. What evidence should the operator record before calling it a new everyday range? Note the weather layering, antenna direction, time, and distance so the contact can be tied to enhanced lower-atmosphere conditions rather than assumed permanent coverage.
 3. During a northern VHF opening, a club hears raspy signals but needs only short call-sign and grid exchanges. What operating style fits the clue? Use a narrow, simple mode and short messages that tolerate rapid flutter and distortion.
-4. A receiver near the edge of an HF opening hears a faint, rough signal from an area that is not on the normal direct sky-wave route. What clue points away from a clean ordinary hop? Weakness plus distortion suggests only a small portion of the wave is being redirected over mixed paths.
-5. A digital VHF contact completes in brief bursts during a meteor shower. What is reflecting or scattering the signal? Short-lived ionized meteor trails provide the temporary path.
+4. A marginal HF path produces intelligible peaks followed by smeared audio on the same frequency. What should the operator log before blaming the radio? Record the frequency, time, signal strength, and distortion pattern so mixed propagation can be compared with later openings.
+5. A meteor-shower schedule uses fast digital bursts instead of long voice overs. Explain the timing choice. The ionized trails last briefly, so short structured messages have a better chance of fitting into each reflection.
 
 ## Radio connection
 
@@ -117,5 +117,6 @@ Description: Draw four labelled sketches on a single page. Panel A shows a six-m
 - Tropospheric bending slightly extends VHF/UHF range; ordinary VHF tropospheric range is roughly limited to an 800 km planning scale unless enhancement is present.
 - Tropospheric scatter redirects a small amount of VHF/UHF energy beyond the normal horizon.
 - Auroral propagation is often distorted; CW is usually more readable than analog voice FM.
-- Meteor scatter uses brief ionized trails and is most useful in lower VHF ranges.
+- Meteor scatter uses brief ionized trails and is most useful from about 30 MHz to 100 MHz, including six metres.
+- Scattering redirects parts of a wave in many directions, so received signals are often weak or smeared.
 - Unusual modes are opportunities, not guaranteed everyday coverage.

@@ -14,36 +14,126 @@
   "conceptChecks": [
     {
       "id": "QZ-L-007-03-A-C1",
-      "prompt": { "en": "A two-metre station logs a 950 km contact during a calm evening with a sharp temperature change above the ground. Which explanation best fits the unusual range?", "fr": null },
+      "prompt": {
+        "en": "Which change would NOT make a planned two-metre path beyond the normal range scale more credible?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Ordinary VHF line-of-sight with no atmospheric help", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Tropospheric ducting caused by a temperature inversion", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Sporadic E on the 160-metre band", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Faraday rotation making the path shorter", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Putting the antennas higher with a clearer horizon",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Finding stable lower-atmosphere layering along the route",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Budgeting for weak redirected energy rather than a clean local path",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Treating rare ionospheric openings as guaranteed daily infrastructure",
+            "fr": null
+          },
+          "isCorrect": true
+        }
       ],
-      "explanation": { "en": "The distance is beyond the normal VHF planning scale, and the stable temperature layering is a classic clue for ducting in the lower atmosphere.", "fr": null }
+      "explanation": {
+        "en": "Height, lower-atmosphere enhancement, and scatter link budgets can all help explain difficult VHF paths. Rare ionospheric openings are not dependable daily infrastructure for a routine service.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-007-03-A-C2",
-      "prompt": { "en": "During a short early-summer opening, a six-metre station hears many stations from one distant region while two metres stays local. Which cause is most plausible?", "fr": null },
+      "prompt": {
+        "en": "A VHF event changes from second-long reflected bursts during a shower to a steadier path along a weather boundary. What operating prediction follows?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Lower-HF ground wave extending to VHF", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A temporary E-layer opening affecting low VHF", "fr": null }, "isCorrect": true },
-        { "text": { "en": "D-region absorption improving six-metre refraction", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Tropospheric scatter becoming strongest only on HF", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Use long overs during the burst period, then shorten messages only after the path becomes steady",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Keep burst-period messages highly structured, but allow more normal exchanges during the steadier path",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Switch to lower HF for both events because VHF timing no longer matters",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Assume both paths will remain open for the same length of time once the first contact is made",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "Six metres is the VHF band most associated with sporadic-E style openings. A short regional opening on six but not two metres points toward an E-layer event.", "fr": null }
+      "explanation": {
+        "en": "Brief reflected bursts reward short structured exchanges. A steadier lower-atmosphere path can support more normal contact timing while the enhancement lasts, but it still should not be treated as permanent coverage.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-007-03-A-C3",
-      "prompt": { "en": "A permanent UHF service link just beyond the radio horizon is weak but usable without a weather duct. Which mode should the engineer consider?", "fr": null },
+      "prompt": {
+        "en": "An operator investigating a weak, smeared HF signal near the path MUF writes, 'Use a wider signal and aim a UHF dish at storm clouds, because lower-atmosphere water vapour is the main HF skip-gap mechanism.' What is the main error?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Tropospheric scatter from small lower-atmosphere variations", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Meteor scatter with continuous hour-long reflections", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Sporadic E as a guaranteed daily VHF layer", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Ground wave as the dominant UHF long-distance path", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The note should use a lower antenna because all smeared signals are local ground-wave signals",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The note should blame ordinary line-of-sight blockage instead of any redirected energy",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The note mixes a VHF/UHF lower-atmosphere mechanism with HF skip-gap multipath, and wider signals may make distortion worse",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "The note should raise the frequency above the MUF so the signal bends more strongly",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "Tropospheric scatter can support weak beyond-horizon VHF/UHF paths by redirecting a small part of the signal in the lower atmosphere, even without a well-formed duct.", "fr": null }
+      "explanation": {
+        "en": "HF skip-gap reception is about small amounts of energy arriving over mixed sky-wave paths near the usable limit. A wider signal can suffer more selective distortion, and UHF weather-related redirection is a different planning problem.",
+        "fr": null
+      }
     }
   ]
 }

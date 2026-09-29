@@ -14,36 +14,126 @@
   "conceptChecks": [
     {
       "id": "QZ-L-007-01-A-C1",
-      "prompt": { "en": "A shoreline event has boats just beyond a headland. A hilltop relay hears everyone, while boat-to-boat VHF signals disappear when the rock is between them. Which planning idea best fits?", "fr": null },
+      "prompt": {
+        "en": "Under the same ionospheric height, rank these HF launch angles by first-return distance from shortest to longest: steep, medium, and shallow.",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "A higher site can restore an otherwise blocked line-of-sight VHF path.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The D region normally returns nearby VHF signals around headlands.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "F2 multi-hop is the routine solution for local marine VHF.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Ground wave is strongest on six metres and above.", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Steep, then medium, then shallow",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Shallow, then medium, then steep",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Medium, then shallow, then steep",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "All three return at the same distance if transmitter power is unchanged",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "Local VHF depends strongly on antenna height and clear terrain. A relay with a better view can solve a path that two low stations cannot close directly.", "fr": null }
+      "explanation": {
+        "en": "For a similar refracting height, steeper rays return sooner and shallower rays travel farther before their first return. Power does not set that geometry.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-007-01-A-C2",
-      "prompt": { "en": "A training diagram shows a low daylight absorbing region, a middle layer that can become patchy, and a high region used for the longest HF returns. Which label belongs between D and F?", "fr": null },
+      "prompt": {
+        "en": "A field note says: 'Nearby surface coverage ends at 60 km, the first returning HF reports begin near 450 km, so increasing power will close the uncovered gap by shortening the return distance.' Which part is the error?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "The E region", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The D region", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The F1 region", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The F2 region", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The uncovered gap cannot exist once surface coverage fades",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The distant reports must be surface coverage because they are beyond 60 km",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Power may improve strength, but it does not shorten the first-return geometry",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Adding power raises the D region enough to return the signal sooner",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "The standard order is D, E, then F, with F1 and F2 appearing as daytime F-region subdivisions.", "fr": null }
+      "explanation": {
+        "en": "The gap is a path-geometry problem between the fading surface wave and the first returning sky wave. More power may make a returned signal stronger, but it does not move the first return point inward.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-007-01-A-C3",
-      "prompt": { "en": "A single-return HF path is being planned for a route around 3500 km. Which ionospheric region is the more realistic candidate for that hop scale?", "fr": null },
+      "prompt": {
+        "en": "A route is about 6000 km. Use planning scales of about 2000 km for one E-region hop and 4000 km for one F2-region hop. Which plan is the first one with enough distance on paper?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "The D region, because absorption lengthens hops", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The E region, because its lower height gives the longest hops", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The F2 region, because its higher altitude supports longer single-hop paths", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The skip zone, because it is a refracting layer", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "One E-region hop",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Two E-region hops",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "One F2-region hop",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Two F2-region hops",
+            "fr": null
+          },
+          "isCorrect": true
+        }
       ],
-      "explanation": { "en": "E-region hops are the shorter planning scale, while F2 is high enough to support much longer single-hop HF distances.", "fr": null }
+      "explanation": {
+        "en": "One E hop is about 2000 km, two E hops about 4000 km, and one F2 hop about 4000 km. Two F2-scale hops provide enough planning distance for a 6000 km route, if conditions support them.",
+        "fr": null
+      }
     }
   ]
 }

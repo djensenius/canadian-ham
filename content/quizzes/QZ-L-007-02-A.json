@@ -14,36 +14,126 @@
   "conceptChecks": [
     {
       "id": "QZ-L-007-02-A-C1",
-      "prompt": { "en": "A summer daytime regional net on a low HF band is barely readable, while beacons on a higher HF band along the same route are strong. What is the best first propagation-based move?", "fr": null },
+      "prompt": {
+        "en": "A daytime forecast raises the LUF on a path from 4 MHz to 7 MHz while the MUF remains near 18 MHz. What should happen to a 3.7 MHz plan compared with a 14.2 MHz plan?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Move lower in frequency to increase D-region absorption", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Stay on the same band because daylight absorption is frequency-independent", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Try a higher suitable HF band that remains below the path MUF", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Use the critical frequency as if it were the LUF", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Both plans improve equally because LUF and MUF always rise together",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The 3.7 MHz plan falls below the usable window, while 14.2 MHz remains inside it",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "The 14.2 MHz plan fails first because higher HF always has more D-region absorption",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Neither plan can work because every usable frequency must equal the MUF",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "Lower HF is often hit harder by daylight D-region absorption. A higher band can reduce that loss if it is still within the usable window for the path.", "fr": null }
+      "explanation": {
+        "en": "When the LUF rises to 7 MHz, 3.7 MHz is below the lower edge and is more likely to be absorbed or unusable. A 14.2 MHz signal is still between 7 and 18 MHz, so it remains a plausible path choice.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-007-02-A-C2",
-      "prompt": { "en": "A forecast gives an afternoon MUF of 22 MHz for a path. If the operator uses an 85% OWF planning estimate, which target is closest?", "fr": null },
+      "prompt": {
+        "en": "A forecast gives an afternoon MUF of 22 MHz for a path. If the operator uses an 85% OWF planning estimate, which target is closest?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "18.7 MHz, because it is slightly below the MUF", "fr": null }, "isCorrect": true },
-        { "text": { "en": "22.0 MHz, because OWF is exactly the MUF", "fr": null }, "isCorrect": false },
-        { "text": { "en": "11.0 MHz, because OWF is always half the MUF", "fr": null }, "isCorrect": false },
-        { "text": { "en": "25.9 MHz, because OWF is above the MUF", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "18.7 MHz, because it is slightly below the MUF",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "22.0 MHz, because OWF is exactly the MUF",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "11.0 MHz, because OWF is always half the MUF",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "25.9 MHz, because OWF is above the MUF",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "Multiplying 22 MHz by 0.85 gives 18.7 MHz. OWF is a practical choice below the MUF, not at or above it.", "fr": null }
+      "explanation": {
+        "en": "Multiplying 22 MHz by 0.85 gives 18.7 MHz. OWF is a practical choice below the MUF, not at or above it.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-007-02-A-C3",
-      "prompt": { "en": "A local two-metre path is very sensitive to antenna orientation, but a long HF sky-wave contact is not. What propagation fact best explains the difference?", "fr": null },
+      "prompt": {
+        "en": "Which statement is NOT true when multipath is making a wide signal sound more distorted than a narrow signal on the same HF path?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "HF ionospheric paths can rotate or change the wave polarization", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The D region forces all HF waves to remain horizontally polarized", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Selective fading changes the transmitter's modulation mode", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Solar flux measurements set the receiving antenna orientation", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Different path lengths can make components arrive with different phase relationships",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Cancellation can vary across the occupied bandwidth instead of affecting every audio component equally",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Using a wider signal prevents selective fading because all frequencies average together",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "A narrower signal may fit within a part of the channel that is less affected at that moment",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "On HF, refraction and Faraday rotation can change polarization before the signal reaches the receiver. Local VHF/UHF paths usually preserve the antenna-polarization mismatch more directly.", "fr": null }
+      "explanation": {
+        "en": "Selective fading can be more noticeable across wider signals because different frequency components are affected differently. Making the occupied bandwidth wider does not remove the multipath phase differences.",
+        "fr": null
+      }
     }
   ]
 }

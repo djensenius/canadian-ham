@@ -76,7 +76,7 @@ Optimum working frequency, or OWF, is the practical choice a little below the MU
 
 ### Worked example: picking a working frequency
 
-A forecast for a coastal-to-prairie path suggests the LUF is near 5.8 MHz and the MUF is near 18.6 MHz during the afternoon. A common planning estimate for OWF is about 85% of the MUF, so 0.85 × 18.6 MHz is about 15.8 MHz. A voice operator would look near a band below the MUF rather than park at the top edge. If fading or absorption appears, the operator can test a nearby lower or higher band and compare actual signals.
+A forecast for a coastal-to-prairie path suggests the LUF is near 5.8 MHz and the MUF is near 18.6 MHz during the afternoon. A common planning estimate for OWF is about 85% of the MUF, so 0.85 × 18.6 MHz is about 15.8 MHz. The 20-metre band sits comfortably below that estimate and inside the usable window, while 17 metres is closer to the upper edge below the MUF. A voice operator would start with a real band inside the window rather than park at the top edge. If fading or absorption appears, the operator can test a nearby lower or higher band and compare actual signals.
 
 ## What to try when a path fails
 
@@ -90,10 +90,10 @@ Beacons and known broadcast or time-signal stations are useful clues. If signals
 
 ## Try it
 
-1. A daytime regional net on a low HF band becomes weak and noisy, but a higher HF band is active. What should the net control try? Move to the higher suitable band, because daylight lower-ionosphere absorption is often worse on the lower HF band.
-2. A wide digital signal sounds distorted while a narrow Morse signal on the same path remains copyable. What propagation effect might be stronger for the wider signal? Selective fading, because different frequency components can be affected differently by multipath.
-3. A forecast says the path MUF is below the band you planned to use. Should you add power or choose another band first? Choose a lower suitable band first; power does not make a too-high frequency refract back.
-4. A club sees a vertical test report from a nearby ionosonde, then hears a distant beacon on a somewhat higher frequency along a slanted path. Why are those observations not necessarily in conflict? The vertical test and the oblique communication path are different cases; a slanted ionospheric path can support a higher working frequency than the straight-up critical-frequency test.
+1. An operator raises microphone gain after a sunlit low-band path becomes noisy, but distant stations do not improve. Explain why an RF planning change is more useful. Daylight lower-ionosphere absorption is reducing the received signal before audio settings matter, so a better band or time is the practical fix.
+2. A wide digital signal sounds distorted while a narrow signal on the same path remains copyable. What station choice might improve readability? Try a narrower mode or bandwidth, because multipath can affect different parts of a wider signal unequally.
+3. A forecast says the path MUF is below the band you planned to use. What does adding transmitter power fail to change? It does not raise the path frequency limit, so choosing a suitable lower band is the better first test.
+4. The LUF is 5.8 MHz and the MUF is 18.6 MHz for a route. Compare trying 20 metres with trying 17 metres. Both are below the MUF, but 20 metres is the more conservative first try near the OWF estimate, while 17 metres is closer to the upper edge and may fail sooner if the MUF falls.
 5. A solar-cycle high arrives and higher HF bands become lively. What changed physically? Greater solar activity increased ionization enough to support higher usable frequencies on some paths.
 
 ## Radio connection
