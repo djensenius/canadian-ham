@@ -1,6 +1,6 @@
-import type { CategoryBreakdownEntry, QuestionProgressRecord } from "@canadian-ham/engine-ts";
+import { dueCount, type CategoryBreakdownEntry, type QuestionProgressRecord } from "@canadian-ham/engine-ts";
 
-import { bankId } from "../data/bank";
+import { bankId, categories, questionsById, subsections } from "../data/bank";
 
 export type PracticeMode = "immediate" | "review-later";
 export type ReadinessPreference = "not-enough-data" | "needs-review" | "pass-ready" | "honours-ready";
@@ -66,7 +66,7 @@ export const defaultPreferences: WebPreferences = {
   examTimerEnabled: false,
 };
 
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const DEFAULT_DB_NAME = "canadian-ham-web-progress";
 const PREFERENCES_KEY = "preferences";
 
@@ -182,23 +182,26 @@ export class ProgressStore {
   }
 
   private open(): Promise<IDBDatabase> {
-    this.#dbPromise ??= new Promise((resolve, reject) => {
+    this.#dbPromise ??= new Promise<IDBDatabase>((resolve, reject) => {
       const request = indexedDB.open(this.dbName, DB_VERSION);
-      request.onupgradeneeded = () => {
-        const db = request.result;
-        if (!db.objectStoreNames.contains("questionProgress")) {
-          db.createObjectStore("questionProgress", { keyPath: "questionId" });
-        }
-        if (!db.objectStoreNames.contains("examAttempts")) {
-          const store = db.createObjectStore("examAttempts", { keyPath: "id" });
-          store.createIndex("submittedAt", "submittedAt", { unique: false });
-        }
-        if (!db.objectStoreNames.contains("preferences")) {
-          db.createObjectStore("preferences", { keyPath: "key" });
-        }
+      request.onupgradeneeded = (event) => {
+        migrateDatabase(request.result, event.oldVersion, request.transaction);
+      };
+      request.onblocked = () => {
+        reject(new Error("Progress database upgrade is blocked by another open Canadian Ham tab. Close the other tab and try again."));
       };
       request.onerror = () => reject(request.error ?? new Error("Unable to open progress database"));
-      request.onsuccess = () => resolve(request.result);
+      request.onsuccess = () => {
+        const db = request.result;
+        db.onversionchange = () => {
+          db.close();
+          this.#dbPromise = null;
+        };
+        resolve(db);
+      };
+    }).catch((error: unknown) => {
+      this.#dbPromise = null;
+      throw error;
     });
     return this.#dbPromise;
   }
@@ -208,6 +211,28 @@ export const defaultProgressStore = new ProgressStore();
 
 export function serializeProgressExport(data: ProgressExportV1): string {
   return `${JSON.stringify(data, null, 2)}\n`;
+}
+
+function migrateDatabase(db: IDBDatabase, oldVersion: number, transaction: IDBTransaction | null): void {
+  if (oldVersion < 1) {
+    if (!db.objectStoreNames.contains("questionProgress")) {
+      db.createObjectStore("questionProgress", { keyPath: "questionId" });
+    }
+    if (!db.objectStoreNames.contains("examAttempts")) {
+      const store = db.createObjectStore("examAttempts", { keyPath: "id" });
+      store.createIndex("submittedAt", "submittedAt", { unique: false });
+    }
+    if (!db.objectStoreNames.contains("preferences")) {
+      db.createObjectStore("preferences", { keyPath: "key" });
+    }
+  }
+
+  if (oldVersion < 2 && transaction !== null && db.objectStoreNames.contains("examAttempts")) {
+    const attemptStore = transaction.objectStore("examAttempts");
+    if (!attemptStore.indexNames.contains("submittedAt")) {
+      attemptStore.createIndex("submittedAt", "submittedAt", { unique: false });
+    }
+  }
 }
 
 export function validateProgressImport(raw: unknown): ImportValidationResult {
@@ -224,8 +249,10 @@ export function validateProgressImport(raw: unknown): ImportValidationResult {
   if (raw.bankId !== bankId) {
     errors.push(`Import bankId must be ${bankId}.`);
   }
-  if (typeof raw.exportedAt !== "string" || Number.isNaN(Date.parse(raw.exportedAt))) {
-    errors.push("Import exportedAt must be an ISO timestamp string.");
+  if (typeof raw.exportedAt !== "string") {
+    errors.push("Import exportedAt must be a canonical UTC timestamp string.");
+  } else {
+    pushCanonicalTimestampError(errors, raw.exportedAt, "exportedAt");
   }
   if (!Array.isArray(raw.questionProgress)) {
     errors.push("Import questionProgress must be an array.");
@@ -239,17 +266,18 @@ export function validateProgressImport(raw: unknown): ImportValidationResult {
 
   const questionProgress = Array.isArray(raw.questionProgress) ? raw.questionProgress : [];
   for (const [index, record] of questionProgress.entries()) {
-    if (!isQuestionProgressRecord(record)) {
-      errors.push(`Invalid questionProgress record at index ${index}.`);
-      break;
-    }
+    errors.push(...validateQuestionProgressRecord(record, index));
   }
 
   const examAttempts = Array.isArray(raw.examAttempts) ? raw.examAttempts : [];
+  const submittedAtValues = new Set<string>();
   for (const [index, attempt] of examAttempts.entries()) {
-    if (!isExamAttempt(attempt)) {
-      errors.push(`Invalid examAttempts record at index ${index}.`);
-      break;
+    errors.push(...validateExamAttempt(attempt, index));
+    if (isRecord(attempt) && typeof attempt.submittedAt === "string") {
+      if (submittedAtValues.has(attempt.submittedAt)) {
+        errors.push(`Import examAttempts[${index}].submittedAt duplicates another exam attempt.`);
+      }
+      submittedAtValues.add(attempt.submittedAt);
     }
   }
 
@@ -304,56 +332,212 @@ function isPreferences(value: unknown): value is WebPreferences {
     && typeof value.examTimerEnabled === "boolean";
 }
 
-function isQuestionProgressRecord(value: unknown): value is QuestionProgressRecord {
-  if (!isRecord(value) || !isRecord(value.leitner)) {
-    return false;
-  }
-  return typeof value.questionId === "string"
-    && value.bankId === bankId
-    && Number.isInteger(value.attempts)
-    && Number.isInteger(value.correctAttempts)
-    && typeof value.lastAttemptedAt === "string"
-    && (value.lastResult === "correct" || value.lastResult === "incorrect")
-    && Array.isArray(value.recentResults)
-    && value.recentResults.every((result) => typeof result === "boolean")
-    && Number.isInteger(value.leitner.box)
-    && typeof value.leitner.dueAt === "string";
-}
-
-function isExamAttempt(value: unknown): value is ExamAttempt {
-  if (!isRecord(value) || !isRecord(value.timer) || !isRecord(value.score) || !Array.isArray(value.items)) {
-    return false;
-  }
-  return typeof value.id === "string"
-    && value.bankId === bankId
-    && value.mode === "mock-exam"
-    && typeof value.seed === "string"
-    && typeof value.startedAt === "string"
-    && typeof value.submittedAt === "string"
-    && typeof value.timer.enabled === "boolean"
-    && (typeof value.timer.secondsAllowed === "number" || value.timer.secondsAllowed === null)
-    && typeof value.timer.secondsElapsed === "number"
-    && Number.isInteger(value.score.correct)
-    && Number.isInteger(value.score.total)
-    && typeof value.score.percent === "number"
-    && typeof value.score.passed === "boolean"
-    && typeof value.score.honours === "boolean"
-    && Array.isArray(value.score.categoryBreakdown)
-    && Array.isArray(value.score.weakSubsectionIds)
-    && value.items.every(isExamAttemptItem);
-}
-
-function isExamAttemptItem(value: unknown): value is ExamAttemptItem {
+function validateQuestionProgressRecord(value: unknown, index: number): string[] {
+  const prefix = `Import questionProgress[${index}]`;
+  const errors: string[] = [];
   if (!isRecord(value)) {
-    return false;
+    return [`${prefix} must be an object.`];
   }
-  return Number.isInteger(value.position)
-    && typeof value.questionId === "string"
-    && typeof value.subsectionId === "string"
-    && typeof value.categoryId === "string"
-    && Array.isArray(value.choicePermutation)
-    && value.choicePermutation.every((entry) => Number.isInteger(entry))
-    && (Number.isInteger(value.selectedSourceIndex) || value.selectedSourceIndex === null)
-    && typeof value.isCorrect === "boolean"
-    && typeof value.flagged === "boolean";
+  if (typeof value.questionId !== "string" || !questionsById.has(value.questionId)) {
+    errors.push(`${prefix}.questionId must be a known question ID.`);
+  }
+  if (value.bankId !== bankId) {
+    errors.push(`${prefix}.bankId must be ${bankId}.`);
+  }
+  if (!isNonNegativeInteger(value.attempts)) {
+    errors.push(`${prefix}.attempts must be a non-negative integer.`);
+  }
+  if (!isNonNegativeInteger(value.correctAttempts)) {
+    errors.push(`${prefix}.correctAttempts must be a non-negative integer.`);
+  }
+  if (typeof value.lastAttemptedAt !== "string") {
+    errors.push(`${prefix}.lastAttemptedAt must be a canonical UTC timestamp string.`);
+  } else {
+    pushCanonicalTimestampError(errors, value.lastAttemptedAt, `${prefix}.lastAttemptedAt`);
+  }
+  if (value.lastResult !== "correct" && value.lastResult !== "incorrect") {
+    errors.push(`${prefix}.lastResult must be correct or incorrect.`);
+  }
+  if (!Array.isArray(value.recentResults) || !value.recentResults.every((result) => typeof result === "boolean") || value.recentResults.length > 5) {
+    errors.push(`${prefix}.recentResults must be an array of up to five booleans.`);
+  }
+  if (!isRecord(value.leitner)) {
+    errors.push(`${prefix}.leitner must be an object.`);
+  } else {
+    const box = value.leitner.box;
+    if (!Number.isInteger(box) || typeof box !== "number" || box < 0 || box > 5) {
+      errors.push(`${prefix}.leitner.box must be an integer between 0 and 5.`);
+    }
+    if (typeof value.leitner.dueAt !== "string") {
+      errors.push(`${prefix}.leitner.dueAt must be a canonical UTC timestamp string.`);
+    } else {
+      pushCanonicalTimestampError(errors, value.leitner.dueAt, `${prefix}.leitner.dueAt`);
+    }
+  }
+  return errors;
 }
+
+function validateExamAttempt(value: unknown, index: number): string[] {
+  const prefix = `Import examAttempts[${index}]`;
+  const errors: string[] = [];
+  if (!isRecord(value)) {
+    return [`${prefix} must be an object.`];
+  }
+  if (typeof value.id !== "string" || value.id.length === 0) {
+    errors.push(`${prefix}.id must be a non-empty string.`);
+  }
+  if (value.bankId !== bankId) {
+    errors.push(`${prefix}.bankId must be ${bankId}.`);
+  }
+  if (value.mode !== "mock-exam") {
+    errors.push(`${prefix}.mode must be mock-exam.`);
+  }
+  if (typeof value.seed !== "string") {
+    errors.push(`${prefix}.seed must be a string.`);
+  }
+  if (typeof value.startedAt !== "string") {
+    errors.push(`${prefix}.startedAt must be a canonical UTC timestamp string.`);
+  } else {
+    pushCanonicalTimestampError(errors, value.startedAt, `${prefix}.startedAt`);
+  }
+  if (typeof value.submittedAt !== "string") {
+    errors.push(`${prefix}.submittedAt must be a canonical UTC timestamp string.`);
+  } else {
+    pushCanonicalTimestampError(errors, value.submittedAt, `${prefix}.submittedAt`);
+  }
+  errors.push(...validateTimer(value.timer, `${prefix}.timer`));
+  errors.push(...validateScore(value.score, `${prefix}.score`));
+  if (!Array.isArray(value.items)) {
+    errors.push(`${prefix}.items must be an array.`);
+  } else {
+    for (const [itemIndex, item] of value.items.entries()) {
+      errors.push(...validateExamAttemptItem(item, `${prefix}.items[${itemIndex}]`));
+    }
+  }
+  return errors;
+}
+
+function validateTimer(value: unknown, prefix: string): string[] {
+  if (!isRecord(value)) {
+    return [`${prefix} must be an object.`];
+  }
+  const errors: string[] = [];
+  if (typeof value.enabled !== "boolean") {
+    errors.push(`${prefix}.enabled must be boolean.`);
+  }
+  if (!(value.secondsAllowed === null || isNonNegativeFiniteNumber(value.secondsAllowed))) {
+    errors.push(`${prefix}.secondsAllowed must be null or a non-negative number.`);
+  }
+  if (!isNonNegativeFiniteNumber(value.secondsElapsed)) {
+    errors.push(`${prefix}.secondsElapsed must be a non-negative number.`);
+  }
+  return errors;
+}
+
+function validateScore(value: unknown, prefix: string): string[] {
+  if (!isRecord(value)) {
+    return [`${prefix} must be an object.`];
+  }
+  const errors: string[] = [];
+  if (!isNonNegativeInteger(value.correct)) {
+    errors.push(`${prefix}.correct must be a non-negative integer.`);
+  }
+  if (!isNonNegativeInteger(value.total)) {
+    errors.push(`${prefix}.total must be a non-negative integer.`);
+  }
+  if (!isNonNegativeFiniteNumber(value.percent)) {
+    errors.push(`${prefix}.percent must be a non-negative number.`);
+  }
+  if (typeof value.passed !== "boolean") {
+    errors.push(`${prefix}.passed must be boolean.`);
+  }
+  if (typeof value.honours !== "boolean") {
+    errors.push(`${prefix}.honours must be boolean.`);
+  }
+  if (!Array.isArray(value.categoryBreakdown)) {
+    errors.push(`${prefix}.categoryBreakdown must be an array.`);
+  } else {
+    for (const [index, entry] of value.categoryBreakdown.entries()) {
+      errors.push(...validateCategoryBreakdownEntry(entry, `${prefix}.categoryBreakdown[${index}]`));
+    }
+  }
+  if (!Array.isArray(value.weakSubsectionIds) || !value.weakSubsectionIds.every((id) => typeof id === "string" && knownSubsectionIds.has(id))) {
+    errors.push(`${prefix}.weakSubsectionIds must contain known subsection IDs.`);
+  }
+  return errors;
+}
+
+function validateCategoryBreakdownEntry(value: unknown, prefix: string): string[] {
+  if (!isRecord(value)) {
+    return [`${prefix} must be an object.`];
+  }
+  const errors: string[] = [];
+  if (typeof value.categoryId !== "string" || !knownCategoryIds.has(value.categoryId)) {
+    errors.push(`${prefix}.categoryId must be a known category ID.`);
+  }
+  if (!isNonNegativeInteger(value.correct)) {
+    errors.push(`${prefix}.correct must be a non-negative integer.`);
+  }
+  if (!isNonNegativeInteger(value.total)) {
+    errors.push(`${prefix}.total must be a non-negative integer.`);
+  }
+  if (!isNonNegativeFiniteNumber(value.percent)) {
+    errors.push(`${prefix}.percent must be a non-negative number.`);
+  }
+  return errors;
+}
+
+function validateExamAttemptItem(value: unknown, prefix: string): string[] {
+  if (!isRecord(value)) {
+    return [`${prefix} must be an object.`];
+  }
+  const errors: string[] = [];
+  const question = typeof value.questionId === "string" ? questionsById.get(value.questionId) : undefined;
+  if (question === undefined) {
+    errors.push(`${prefix}.questionId must be a known question ID.`);
+  }
+  const position = value.position;
+  if (!Number.isInteger(position) || typeof position !== "number" || position < 1) {
+    errors.push(`${prefix}.position must be a positive integer.`);
+  }
+  if (typeof value.subsectionId !== "string" || !knownSubsectionIds.has(value.subsectionId) || (question !== undefined && value.subsectionId !== question.subsectionId)) {
+    errors.push(`${prefix}.subsectionId must match the known question subsection.`);
+  }
+  if (typeof value.categoryId !== "string" || !knownCategoryIds.has(value.categoryId) || (question !== undefined && value.categoryId !== question.categoryId)) {
+    errors.push(`${prefix}.categoryId must match the known question category.`);
+  }
+  if (!Array.isArray(value.choicePermutation) || value.choicePermutation.length !== 4 || !value.choicePermutation.every((entry) => Number.isInteger(entry) && entry >= 0 && entry <= 3) || new Set(value.choicePermutation).size !== 4) {
+    errors.push(`${prefix}.choicePermutation must be a permutation of 0, 1, 2, 3.`);
+  }
+  const selectedSourceIndex = value.selectedSourceIndex;
+  if (!(selectedSourceIndex === null || (Number.isInteger(selectedSourceIndex) && typeof selectedSourceIndex === "number" && selectedSourceIndex >= 0 && selectedSourceIndex <= 3))) {
+    errors.push(`${prefix}.selectedSourceIndex must be null or an answer source index between 0 and 3.`);
+  }
+  if (typeof value.isCorrect !== "boolean") {
+    errors.push(`${prefix}.isCorrect must be boolean.`);
+  }
+  if (typeof value.flagged !== "boolean") {
+    errors.push(`${prefix}.flagged must be boolean.`);
+  }
+  return errors;
+}
+
+function pushCanonicalTimestampError(errors: string[], value: string, fieldName: string): void {
+  try {
+    // Route import validation through the engine's canonical timestamp parser.
+    dueCount([{ questionId: "B-001-001-001", bankId, attempts: 0, correctAttempts: 0, lastAttemptedAt: value, lastResult: "incorrect", recentResults: [], leitner: { box: 0, dueAt: value } }], value);
+  } catch (error) {
+    errors.push(`${fieldName} must use canonical UTC timestamp format YYYY-MM-DDTHH:MM:SS.sssZ (${error instanceof Error ? error.message : String(error)}).`);
+  }
+}
+
+function isNonNegativeInteger(value: unknown): value is number {
+  return typeof value === "number" && Number.isInteger(value) && value >= 0;
+}
+
+function isNonNegativeFiniteNumber(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value) && value >= 0;
+}
+
+const knownCategoryIds = new Set(categories.map((category) => category.id));
+const knownSubsectionIds = new Set(subsections.map((subsection) => subsection.id));

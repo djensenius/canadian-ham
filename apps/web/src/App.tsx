@@ -5,7 +5,7 @@ import {
   type QuestionProgressRecord,
   type ReadinessResult,
 } from "@canadian-ham/engine-ts";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Component, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { LanguageToggle } from "./components/LanguageToggle";
 import {
@@ -85,6 +85,55 @@ function defaultSeed(): string {
   return globalThis.crypto?.randomUUID?.() ?? `seed-${Date.now().toString(36)}`;
 }
 
+interface AppErrorBoundaryProps {
+  readonly store: ProgressStore;
+  readonly now: () => string;
+  readonly children: ReactNode;
+}
+
+interface AppErrorBoundaryState {
+  readonly errorMessage: string | null;
+}
+
+class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorBoundaryState> {
+  override state: AppErrorBoundaryState = { errorMessage: null };
+
+  static getDerivedStateFromError(error: unknown): AppErrorBoundaryState {
+    return { errorMessage: formatError(error) };
+  }
+
+  override render(): ReactNode {
+    if (this.state.errorMessage === null) {
+      return this.props.children;
+    }
+    return (
+      <div className="app-shell">
+        <header className="site-header" role="banner">
+          <div>
+            <p className="eyebrow">Canadian Amateur Radio Basic</p>
+            <h1>canadian-ham study app</h1>
+          </div>
+        </header>
+        <main tabIndex={-1}>
+          <section className="card settings" aria-labelledby="app-recovery-title">
+            <h2 id="app-recovery-title">Settings and local data</h2>
+            <p role="alert">The app could not render saved progress: {this.state.errorMessage}</p>
+            <p>Reset remains available so invalid local data can be cleared on this device.</p>
+            <Settings
+              now={this.props.now}
+              onProgressImported={() => this.setState({ errorMessage: null })}
+              onReset={() => this.setState({ errorMessage: null })}
+              statusMessage=""
+              store={this.props.store}
+            />
+          </section>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+}
+
 function routeFromHash(fallback: Route): Route {
   const hash = globalThis.location?.hash.replace(/^#\/?/, "") ?? "";
   return isRoute(hash) ? hash : fallback;
@@ -94,7 +143,11 @@ function isRoute(value: string): value is Route {
   return value === "home" || value === "practice" || value === "mock" || value === "results" || value === "settings";
 }
 
-export function App({
+export function App(props: AppProps) {
+  return <AppErrorBoundary store={props.store ?? defaultProgressStore} now={props.now ?? defaultNow}><AppContent {...props} /></AppErrorBoundary>;
+}
+
+function AppContent({
   initialView = "home",
   initialScopeId = "all",
   store = defaultProgressStore,
@@ -111,20 +164,28 @@ export function App({
   const [mockExam, setMockExam] = useState<MockExamSession | null>(null);
   const [latestResult, setLatestResult] = useState<ExamAttempt | null>(null);
   const [statusMessage, setStatusMessage] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
   const mainRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     let cancelled = false;
     async function loadProgress(): Promise<void> {
-      const [storedProgress, storedAttempts, storedPreferences] = await Promise.all([
-        store.getQuestionProgress(),
-        store.getExamAttempts(),
-        store.getPreferences(),
-      ]);
-      if (!cancelled) {
-        setProgress(storedProgress);
-        setExamAttempts(storedAttempts);
-        setPreferencesState(storedPreferences);
+      try {
+        const [storedProgress, storedAttempts, storedPreferences] = await Promise.all([
+          store.getQuestionProgress(),
+          store.getExamAttempts(),
+          store.getPreferences(),
+        ]);
+        if (!cancelled) {
+          setProgress(storedProgress);
+          setExamAttempts(storedAttempts);
+          setPreferencesState(storedPreferences);
+          setAlertMessage("");
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setAlertMessage(`Unable to open local progress storage: ${formatError(error)}`);
+        }
       }
     }
     void loadProgress();
@@ -183,24 +244,44 @@ export function App({
 
   async function setPreferences(nextPreferences: WebPreferences): Promise<void> {
     setPreferencesState(nextPreferences);
-    await store.putPreferences(nextPreferences);
+    try {
+      await store.putPreferences(nextPreferences);
+      setAlertMessage("");
+    } catch (error) {
+      setAlertMessage(`Unable to save preferences locally: ${formatError(error)}`);
+      throw error;
+    }
   }
 
   async function commitProgress(nextProgress: readonly QuestionProgressRecord[]): Promise<void> {
-    setProgress(nextProgress);
-    await store.putQuestionProgressMany(nextProgress);
+    try {
+      await store.putQuestionProgressMany(nextProgress);
+      setProgress(nextProgress);
+      setAlertMessage("");
+    } catch (error) {
+      setAlertMessage(`Unable to save question progress locally: ${formatError(error)}`);
+      throw error;
+    }
   }
 
   async function handleExamSubmitted(attempt: ExamAttempt): Promise<void> {
-    setLatestResult(attempt);
-    setExamAttempts((current) => [...current.filter((existing) => existing.id !== attempt.id), attempt]);
-    await store.putExamAttempt(attempt);
     let nextProgress = progress;
     for (const item of attempt.items) {
       nextProgress = applyPracticeAnswer(nextProgress, item.questionId, item.selectedSourceIndex ?? -1, attempt.submittedAt);
     }
-    await commitProgress(nextProgress);
-    navigate("results");
+    try {
+      await store.putExamAttempt(attempt);
+      await store.putQuestionProgressMany(nextProgress);
+      setLatestResult(attempt);
+      setExamAttempts((current) => [...current.filter((existing) => existing.id !== attempt.id), attempt]);
+      setProgress(nextProgress);
+      setMockExam(null);
+      setAlertMessage("");
+      navigate("results");
+    } catch (error) {
+      setAlertMessage(`Unable to save mock exam locally: ${formatError(error)}`);
+      throw error;
+    }
   }
 
   return (
@@ -215,12 +296,13 @@ export function App({
 
       <nav className="top-nav" aria-label="Primary">
         <button type="button" onClick={() => navigate("home")}>Home</button>
-        <button type="button" onClick={() => startPractice({ type: "all" })}>Practice</button>
+        <button type="button" onClick={() => practiceSession === null ? startPractice(practiceScope) : navigate("practice")}>Practice</button>
         <button type="button" onClick={() => navigate("mock")}>Mock exam</button>
         <button type="button" onClick={() => navigate("settings")}>Settings</button>
       </nav>
 
       <main ref={mainRef} tabIndex={-1}>
+        {alertMessage ? <p className="alert-message" role="alert">{alertMessage}</p> : null}
         {route === "home" ? (
           <Home
             dueReviewCount={dueReviewCount}
@@ -234,6 +316,7 @@ export function App({
         {route === "practice" ? (
           <Practice
             language={language}
+            activeScope={practiceScope}
             now={now}
             onProgressChange={commitProgress}
             onSessionChange={setPracticeSession}
@@ -265,12 +348,21 @@ export function App({
               setProgress(data.questionProgress);
               setExamAttempts(data.examAttempts);
               setPreferencesState(data.preferences);
+              setPracticeSession(null);
+              setMockExam(null);
+              setLatestResult(null);
+              setPracticeScope({ type: "all" });
+              setAlertMessage("");
             }}
             onReset={() => {
               setProgress([]);
               setExamAttempts([]);
+              setPreferencesState(defaultPreferences);
+              setPracticeScope({ type: "all" });
               setPracticeSession(null);
+              setMockExam(null);
               setLatestResult(null);
+              setAlertMessage("");
               setStatusMessage("All local progress was reset.");
             }}
             statusMessage={statusMessage}
@@ -346,6 +438,7 @@ function Home({ readiness, weakSubsections, dueReviewCount, examAttempts, onStar
 }
 
 interface PracticeProps {
+  readonly activeScope: PracticeScope;
   readonly language: Language;
   readonly now: () => string;
   readonly preferences: WebPreferences;
@@ -358,6 +451,7 @@ interface PracticeProps {
 }
 
 function Practice({
+  activeScope,
   language,
   now,
   preferences,
@@ -368,9 +462,10 @@ function Practice({
   onProgressChange,
   onSetPreferences,
 }: PracticeProps) {
-  const [scopeKind, setScopeKind] = useState("all");
-  const [categoryId, setCategoryId] = useState(categories[0]?.id ?? "B-001");
-  const [subsectionId, setSubsectionId] = useState(subsections[0]?.id ?? "B-001-001");
+  const [scopeKind, setScopeKind] = useState(() => controlsFromScope(activeScope).scopeKind);
+  const [categoryId, setCategoryId] = useState(() => controlsFromScope(activeScope).categoryId);
+  const [subsectionId, setSubsectionId] = useState(() => controlsFromScope(activeScope).subsectionId);
+  const [submittingPractice, setSubmittingPractice] = useState(false);
   const feedbackRef = useRef<HTMLDivElement>(null);
   const reviewRef = useRef<HTMLDivElement>(null);
   const currentItem = session?.items[session.currentIndex];
@@ -380,9 +475,16 @@ function Practice({
 
   useEffect(() => {
     if (session === null) {
-      startPractice(scopeFromControls(scopeKind, categoryId, subsectionId), preferences.practiceMode);
+      startPractice(activeScope, preferences.practiceMode);
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const controls = controlsFromScope(session?.scope ?? activeScope);
+    setScopeKind(controls.scopeKind);
+    setCategoryId(controls.categoryId);
+    setSubsectionId(controls.subsectionId);
+  }, [activeScope, session?.scope]);
 
   useEffect(() => {
     if (isAnswered && preferences.practiceMode === "immediate") {
@@ -397,8 +499,13 @@ function Practice({
   }, [session?.submitted]);
 
   function restartWithControls(nextMode = preferences.practiceMode): void {
+    if (hasUnsubmittedReviewAnswers(session) && !window.confirm("Discard unsubmitted practice answers and start a new set?")) {
+      return;
+    }
     const nextScope = scopeFromControls(scopeKind, categoryId, subsectionId);
-    void onSetPreferences({ ...preferences, practiceMode: nextMode });
+    void onSetPreferences({ ...preferences, practiceMode: nextMode }).catch(() => {
+      // The parent surfaces IndexedDB failures in a role=alert message.
+    });
     startPractice(nextScope, nextMode);
   }
 
@@ -413,24 +520,35 @@ function Practice({
     onSessionChange(nextSession);
     if (session.mode === "immediate") {
       const nextProgress = applyPracticeAnswer(progress, item.question.id, sourceIndex, now());
-      await onProgressChange(nextProgress);
+      try {
+        await onProgressChange(nextProgress);
+      } catch {
+        // The parent surfaces IndexedDB failures in a role=alert message.
+      }
     }
   }
 
   async function submitReviewLater(): Promise<void> {
-    if (session === null) {
+    if (session === null || submittingPractice) {
       return;
     }
-    let nextProgress = progress;
-    const submittedAt = now();
-    for (const item of session.items) {
-      const sourceIndex = session.selectedByQuestionId.get(item.question.id);
-      if (sourceIndex !== undefined) {
-        nextProgress = applyPracticeAnswer(nextProgress, item.question.id, sourceIndex, submittedAt);
+    setSubmittingPractice(true);
+    try {
+      let nextProgress = progress;
+      const submittedAt = now();
+      for (const item of session.items) {
+        const sourceIndex = session.selectedByQuestionId.get(item.question.id);
+        if (sourceIndex !== undefined) {
+          nextProgress = applyPracticeAnswer(nextProgress, item.question.id, sourceIndex, submittedAt);
+        }
       }
+      await onProgressChange(nextProgress);
+      onSessionChange({ ...session, submitted: true });
+    } catch {
+      // The parent surfaces IndexedDB failures in a role=alert message.
+    } finally {
+      setSubmittingPractice(false);
     }
-    await onProgressChange(nextProgress);
-    onSessionChange({ ...session, submitted: true });
   }
 
   return (
@@ -479,6 +597,7 @@ function Practice({
         <>
           <div className="session-summary" aria-label="Practice session progress">
             <span>Question {session.currentIndex + 1} of {session.items.length}</span>
+            <span>Scope: {scopeLabel(session.scope)}</span>
             <span>Seed {session.seed}</span>
           </div>
           <QuestionCard
@@ -499,7 +618,7 @@ function Practice({
             <button type="button" disabled={session.currentIndex === 0} onClick={() => onSessionChange({ ...session, currentIndex: session.currentIndex - 1 })}>Previous</button>
             <button type="button" disabled={session.currentIndex >= session.items.length - 1} onClick={() => onSessionChange({ ...session, currentIndex: session.currentIndex + 1 })}>Next</button>
             {session.mode === "review-later" ? (
-              <button type="button" disabled={!allAnswered || session.submitted} onClick={() => void submitReviewLater()}>Submit practice set</button>
+              <button type="button" disabled={!allAnswered || session.submitted || submittingPractice} onClick={() => void submitReviewLater()}>{submittingPractice ? "Submitting practice set" : "Submit practice set"}</button>
             ) : null}
           </div>
           {session.submitted ? <div ref={reviewRef} tabIndex={-1}><PracticeReview session={session} language={language} /></div> : null}
@@ -594,13 +713,19 @@ interface MockExamProps {
 function MockExam({ exam, language, preferences, now, seedFactory, onExamChange, onSubmitExam }: MockExamProps) {
   const [seed, setSeed] = useState("");
   const [timerEnabled, setTimerEnabled] = useState(preferences.examTimerEnabled);
-  const liveRef = useRef<HTMLDivElement>(null);
+  const [timerAnnouncement, setTimerAnnouncement] = useState("");
+  const [submittingExam, setSubmittingExam] = useState(false);
   const confirmRef = useRef<HTMLElement>(null);
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (exam?.timerEnabled && exam.timerRunning) {
       const id = window.setInterval(() => {
-        onExamChange({ ...exam, secondsElapsed: exam.secondsElapsed + 1 });
+        const nextSecondsElapsed = exam.secondsElapsed + 1;
+        if (nextSecondsElapsed > 0 && nextSecondsElapsed % 900 === 0) {
+          setTimerAnnouncement(`Timer milestone: ${Math.floor(nextSecondsElapsed / 60)} minutes elapsed.`);
+        }
+        onExamChange({ ...exam, secondsElapsed: nextSecondsElapsed });
       }, 1000);
       return () => window.clearInterval(id);
     }
@@ -615,6 +740,8 @@ function MockExam({ exam, language, preferences, now, seedFactory, onExamChange,
 
   function startExam(): void {
     const selectedSeed = seed.trim() || seedFactory();
+    setSubmittingExam(false);
+    setTimerAnnouncement(timerEnabled ? "Timer started." : "");
     onExamChange({
       seed: selectedSeed,
       startedAt: now(),
@@ -671,20 +798,28 @@ function MockExam({ exam, language, preferences, now, seedFactory, onExamChange,
   }
 
   async function confirmSubmit(): Promise<void> {
-    const selected = new Map<string, number | null>();
-    for (const generatedItem of exam!.generatedItems) {
-      selected.set(generatedItem.questionId, exam!.selectedByQuestionId.get(generatedItem.questionId) ?? null);
+    if (exam === null || submittingExam) {
+      return;
     }
-    await onSubmitExam(buildExamAttempt({
-      seed: exam!.seed,
-      startedAt: exam!.startedAt,
-      submittedAt: now(),
-      timerEnabled: exam!.timerEnabled,
-      secondsElapsed: exam!.secondsElapsed,
-      generatedItems: exam!.generatedItems,
-      selectedByQuestionId: selected,
-      flaggedQuestionIds: exam!.flaggedQuestionIds,
-    }));
+    setSubmittingExam(true);
+    const selected = new Map<string, number | null>();
+    for (const generatedItem of exam.generatedItems) {
+      selected.set(generatedItem.questionId, exam.selectedByQuestionId.get(generatedItem.questionId) ?? null);
+    }
+    try {
+      await onSubmitExam(buildExamAttempt({
+        seed: exam.seed,
+        startedAt: exam.startedAt,
+        submittedAt: now(),
+        timerEnabled: exam.timerEnabled,
+        secondsElapsed: exam.secondsElapsed,
+        generatedItems: exam.generatedItems,
+        selectedByQuestionId: selected,
+        flaggedQuestionIds: exam.flaggedQuestionIds,
+      }));
+    } catch {
+      setSubmittingExam(false);
+    }
   }
 
   return (
@@ -696,9 +831,17 @@ function MockExam({ exam, language, preferences, now, seedFactory, onExamChange,
         <span>Answered: {exam.selectedByQuestionId.size} of {exam.generatedItems.length}</span>
       </div>
       {exam.timerEnabled ? (
-        <div className="timer-panel" role="status" aria-live="polite" ref={liveRef}>
-          Timer elapsed: {formatElapsed(exam.secondsElapsed)}
-          <button type="button" onClick={() => onExamChange({ ...exam, timerRunning: !exam.timerRunning })}>{exam.timerRunning ? "Pause timer" : "Resume timer"}</button>
+        <div className="timer-panel">
+          <span role="timer" aria-live="off" aria-label={`Timer elapsed ${formatElapsedForSpeech(exam.secondsElapsed)}`}>Timer elapsed: {formatElapsed(exam.secondsElapsed)}</span>
+          <button
+            type="button"
+            onClick={() => {
+              const nextRunning = !exam.timerRunning;
+              setTimerAnnouncement(nextRunning ? "Timer resumed." : "Timer paused.");
+              onExamChange({ ...exam, timerRunning: nextRunning });
+            }}
+          >{exam.timerRunning ? "Pause timer" : "Resume timer"}</button>
+          <span className="sr-only" role="status" aria-live="polite">{timerAnnouncement}</span>
         </div>
       ) : <p>Timer off. No time pressure by default.</p>}
       <QuestionCard
@@ -714,7 +857,7 @@ function MockExam({ exam, language, preferences, now, seedFactory, onExamChange,
         <button type="button" onClick={toggleFlag}>{exam.flaggedQuestionIds.has(question.id) ? "Remove flag" : "Flag for review"}</button>
         <button type="button" disabled={exam.currentIndex === 0} onClick={() => onExamChange({ ...exam, currentIndex: exam.currentIndex - 1 })}>Previous</button>
         <button type="button" disabled={exam.currentIndex >= exam.generatedItems.length - 1} onClick={() => onExamChange({ ...exam, currentIndex: exam.currentIndex + 1 })}>Next</button>
-        <button type="button" onClick={() => onExamChange({ ...exam, confirmingSubmit: true })}>Submit exam</button>
+        <button type="button" ref={submitButtonRef} onClick={() => onExamChange({ ...exam, confirmingSubmit: true })}>Submit exam</button>
       </div>
       <nav className="question-navigator" aria-label="Question navigator">
         {exam.generatedItems.map((candidate, index) => {
@@ -725,10 +868,11 @@ function MockExam({ exam, language, preferences, now, seedFactory, onExamChange,
               className={index === exam.currentIndex ? "current" : ""}
               key={candidate.questionId}
               type="button"
-              aria-label={`Question ${index + 1}${answered ? ", answered" : ", unanswered"}${flagged ? ", flagged" : ""}`}
+              aria-current={index === exam.currentIndex ? "step" : undefined}
+              aria-label={`Question ${index + 1}${index === exam.currentIndex ? ", current" : ""}${answered ? ", answered" : ", unanswered"}${flagged ? ", flagged" : ""}`}
               onClick={() => onExamChange({ ...exam, currentIndex: index })}
             >
-              {index + 1}{flagged ? " ⚑" : ""}{answered ? " ✓" : ""}
+              {index === exam.currentIndex ? <span aria-hidden="true">● </span> : null}{index + 1}{flagged ? " ⚑" : ""}{answered ? " ✓" : ""}
             </button>
           );
         })}
@@ -744,8 +888,8 @@ function MockExam({ exam, language, preferences, now, seedFactory, onExamChange,
             </details>
           ) : null}
           <div className="action-row">
-            <button type="button" onClick={() => onExamChange({ ...exam, confirmingSubmit: false })}>Continue exam</button>
-            <button type="button" onClick={() => void confirmSubmit()}>Confirm submit</button>
+            <button type="button" onClick={() => { onExamChange({ ...exam, confirmingSubmit: false }); window.setTimeout(() => submitButtonRef.current?.focus(), 0); }}>Continue exam</button>
+            <button type="button" disabled={submittingExam} onClick={() => void confirmSubmit()}>{submittingExam ? "Submitting exam" : "Confirm submit"}</button>
           </div>
         </section>
       ) : null}
@@ -813,17 +957,38 @@ function Settings({ store, now, statusMessage, onProgressImported, onReset }: Se
   const [pendingImport, setPendingImport] = useState<ProgressExportV1 | null>(null);
   const [message, setMessage] = useState(statusMessage);
   const [confirmReset, setConfirmReset] = useState(false);
+  const resetButtonRef = useRef<HTMLButtonElement>(null);
+  const resetDialogRef = useRef<HTMLDivElement>(null);
+  const statusRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMessage(statusMessage);
+  }, [statusMessage]);
+
+  useEffect(() => {
+    if (confirmReset) {
+      resetDialogRef.current?.focus();
+    }
+  }, [confirmReset]);
 
   async function exportProgress(): Promise<void> {
-    const data = await store.exportData(now());
-    const blob = new Blob([serializeProgressExport(data)], { type: "application/json" });
-    const href = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = href;
-    anchor.download = `canadian-ham-progress-${data.exportedAt.slice(0, 10)}.json`;
-    anchor.click();
-    URL.revokeObjectURL(href);
-    setMessage("Progress export was prepared locally. Nothing was uploaded.");
+    setErrors([]);
+    try {
+      const data = await store.exportData(now());
+      const blob = new Blob([serializeProgressExport(data)], { type: "application/json" });
+      const href = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = href;
+      anchor.download = `canadian-ham-progress-${data.exportedAt.slice(0, 10)}.json`;
+      anchor.style.display = "none";
+      document.body.append(anchor);
+      anchor.click();
+      anchor.remove();
+      window.setTimeout(() => URL.revokeObjectURL(href), 0);
+      setMessage("Progress export was prepared locally. Nothing was uploaded.");
+    } catch (error) {
+      setErrors([`Unable to export local progress: ${formatError(error)}`]);
+    }
   }
 
   async function handleImport(file: File | undefined): Promise<void> {
@@ -834,7 +999,7 @@ function Settings({ store, now, statusMessage, onProgressImported, onReset }: Se
       return;
     }
     try {
-      const parsed = JSON.parse(await file.text()) as unknown;
+      const parsed = JSON.parse(await readFileText(file)) as unknown;
       const result = validateProgressImport(parsed);
       if (!result.ok || result.data === undefined) {
         setErrors(result.errors);
@@ -851,17 +1016,29 @@ function Settings({ store, now, statusMessage, onProgressImported, onReset }: Se
     if (pendingImport === null) {
       return;
     }
-    await store.importData(pendingImport);
-    onProgressImported(pendingImport);
-    setPendingImport(null);
-    setMessage("Import complete. Imported progress replaced the previous local data.");
+    try {
+      await store.importData(pendingImport);
+      onProgressImported(pendingImport);
+      setPendingImport(null);
+      setErrors([]);
+      setMessage("Import complete. Imported progress replaced the previous local data.");
+      window.setTimeout(() => statusRef.current?.focus(), 0);
+    } catch (error) {
+      setErrors([`Unable to import local progress: ${formatError(error)}`]);
+    }
   }
 
   async function resetAll(): Promise<void> {
-    await store.resetAllData();
-    onReset();
-    setConfirmReset(false);
-    setMessage("All local data was reset.");
+    try {
+      await store.resetAllData();
+      onReset();
+      setConfirmReset(false);
+      setErrors([]);
+      setMessage("All local data was reset.");
+      window.setTimeout(() => statusRef.current?.focus(), 0);
+    } catch (error) {
+      setErrors([`Unable to reset local progress: ${formatError(error)}`]);
+    }
   }
 
   return (
@@ -875,23 +1052,35 @@ function Settings({ store, now, statusMessage, onProgressImported, onReset }: Se
           Import progress JSON
           <input type="file" accept="application/json,.json" onChange={(event) => void handleImport(event.currentTarget.files?.[0])} />
         </label>
-        <button type="button" className="danger" onClick={() => setConfirmReset(true)}>Reset all data</button>
+        <button type="button" className="danger" ref={resetButtonRef} onClick={() => setConfirmReset(true)}>Reset all data</button>
       </div>
       {pendingImport !== null ? <button type="button" onClick={() => void confirmImport()}>Confirm import and replace local data</button> : null}
       {confirmReset ? (
-        <div className="confirm-panel" role="alertdialog" aria-labelledby="reset-title" aria-modal="false">
+        <div className="confirm-panel" role="alertdialog" aria-labelledby="reset-title" aria-modal="false" ref={resetDialogRef} tabIndex={-1}>
           <h3 id="reset-title">Reset all local data?</h3>
           <p>This deletes browser-local question progress, mock exam attempts, and preferences. Bundled content remains available offline.</p>
-          <button type="button" onClick={() => setConfirmReset(false)}>Cancel reset</button>
+          <button type="button" onClick={() => { setConfirmReset(false); window.setTimeout(() => resetButtonRef.current?.focus(), 0); }}>Cancel reset</button>
           <button type="button" className="danger" onClick={() => void resetAll()}>Confirm reset all data</button>
         </div>
       ) : null}
-      <div role="status" aria-live="polite">
+      <div role="status" aria-live="polite" ref={statusRef} tabIndex={-1}>
         {message ? <p>{message}</p> : null}
-        {errors.length > 0 ? <ul>{errors.map((error) => <li key={error}>{error}</li>)}</ul> : null}
       </div>
+      {errors.length > 0 ? <div role="alert"><ul>{errors.map((error) => <li key={error}>{error}</li>)}</ul></div> : null}
     </section>
   );
+}
+
+function readFileText(file: File): Promise<string> {
+  if (typeof file.text === "function") {
+    return file.text();
+  }
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(reader.error ?? new Error("Unable to read file."));
+    reader.onload = () => resolve(String(reader.result ?? ""));
+    reader.readAsText(file);
+  });
 }
 
 function Footer() {
@@ -905,6 +1094,10 @@ function Footer() {
       </p>
     </footer>
   );
+}
+
+function formatError(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
 
 function scopeFromInitialId(scopeId: string): PracticeScope {
@@ -934,6 +1127,34 @@ function scopeFromControls(scopeKind: string, categoryId: string, subsectionId: 
     return { type: "due" };
   }
   return { type: "all" };
+}
+
+function controlsFromScope(scope: PracticeScope): { scopeKind: string; categoryId: string; subsectionId: string } {
+  return {
+    scopeKind: scope.type,
+    categoryId: scope.type === "category" ? scope.categoryId : categories[0]?.id ?? "B-001",
+    subsectionId: scope.type === "subsection" ? scope.subsectionId : subsections[0]?.id ?? "B-001-001",
+  };
+}
+
+function scopeLabel(scope: PracticeScope): string {
+  if (scope.type === "category") {
+    return categoryName(scope.categoryId);
+  }
+  if (scope.type === "subsection") {
+    return `${scope.subsectionId}: ${subsectionTitle(scope.subsectionId)}`;
+  }
+  if (scope.type === "weak") {
+    return "Weak areas";
+  }
+  if (scope.type === "due") {
+    return "Due review";
+  }
+  return "All questions";
+}
+
+function hasUnsubmittedReviewAnswers(session: PracticeSession | null): boolean {
+  return session !== null && session.mode === "review-later" && !session.submitted && session.selectedByQuestionId.size > 0;
 }
 
 function buildReadiness(progress: readonly QuestionProgressRecord[], attempts: readonly ExamAttempt[], now: string): ReadinessResult {
@@ -996,6 +1217,12 @@ function formatElapsed(secondsElapsed: number): string {
   const minutes = Math.floor(secondsElapsed / 60).toString().padStart(2, "0");
   const seconds = (secondsElapsed % 60).toString().padStart(2, "0");
   return `${minutes}:${seconds}`;
+}
+
+function formatElapsedForSpeech(secondsElapsed: number): string {
+  const minutes = Math.floor(secondsElapsed / 60);
+  const seconds = secondsElapsed % 60;
+  return `${minutes} minute${minutes === 1 ? "" : "s"} ${seconds} second${seconds === 1 ? "" : "s"}`;
 }
 
 export const webExamCategoryCounts = examCategoryCounts;
