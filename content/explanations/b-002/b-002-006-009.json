@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-006-009.\n\nWhy the correct answer is right: RST 579 reads as readability 5, strength 7, tone 9: perfectly readable, moderately strong, and perfect tone.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Your signal is perfectly readable, weak strength, and with perfect tone\": The strength digit is 7, not a weak-strength value.\n- sourceIndex 2: \"Your signal is fairly readable, fair strength, and with perfect tone\": The readability and strength digits are not 4 and 5; “fairly readable, fair strength” decodes a different report.\n- sourceIndex 3: \"Your signal is barely readable, moderately strong, and with a faint ripple\": Readability 5 is not barely readable, and tone 9 is not a faint ripple.",
+    "en": "Question B-002-006-009.\n\nWhy the correct answer is right: RST 579 reads as readability 5, strength 7, tone 9: perfectly readable, moderately strong, and perfect tone.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Your signal is perfectly readable, weak strength, and with perfect tone\": The first and third parts match 5 and 9, but strength 7 is moderately strong rather than weak.\n- sourceIndex 2: \"Your signal is fairly readable, fair strength, and with perfect tone\": This lowers both the readability and strength descriptions; RST 579 needs perfect readability and moderately strong signal strength.\n- sourceIndex 3: \"Your signal is barely readable, moderately strong, and with a faint ripple\": Strength 7 is moderately strong, but readability 5 is perfectly readable and tone 9 is perfect rather than a faint ripple.",
     "fr": null
   },
   "citations": [

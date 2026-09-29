@@ -24,7 +24,7 @@ status: draft
 
 Operating does not end when the microphone is released. Contact records help you confirm communication, remember conditions, chase awards, respond to interference questions, and plan future contacts. Maps and locators turn a call sign exchange into a sense of direction and distance.
 
-This lesson covers the Basic-bank facts about QSL cards and web confirmations, logbook usefulness, grid squares, azimuthal maps, long path, UTC, and time/frequency standard stations.
+This lesson covers QSL cards and web confirmations, logbook usefulness, grid squares, azimuthal maps, long path, UTC, and time/frequency standard stations.
 
 ## Learning objectives
 
@@ -41,7 +41,7 @@ By the end of this lesson, you can:
 
 A QSL card is written proof that two amateur stations communicated. Modern operators may also confirm contacts through web-based logging systems. Either way, the confirmation is about the contact: stations, date, time, band or frequency, mode, and often signal report or location.
 
-A personal station logbook is useful even when not required by the Basic-bank answer. It can support award applications, preserve memories, and help investigate neighbour interference complaints by showing when you were actually transmitting.
+A personal station logbook is useful even when it is not a regulatory requirement. It can support award applications, preserve memories, and help investigate neighbour interference complaints by showing when you were actually transmitting.
 
 ### Worked example: a useful log entry
 
@@ -49,7 +49,11 @@ After a portable contact, Dana records the date, UTC time, band, mode, other cal
 
 ## Grid locators
 
-In VHF contesting and many digital tools, a station may ask for your grid square. The Basic bank describes this as your location expressed as a short or extended character code. That is the Maidenhead locator style: compact enough to send quickly while still giving useful geographic information.
+In VHF contesting and many digital tools, a station may ask for your grid square. A grid square is compact enough to send quickly while still giving useful geographic information.
+
+### Reference fact: grid locator code length
+
+The location code is a 4- or 6-character Maidenhead-style locator.
 
 You do not need to calculate a grid square by hand for the Basic exam. You should recognize what information is being requested: a location code, not antenna direction, contact count, or elevation.
 
@@ -59,13 +63,13 @@ An azimuthal map is centred on a chosen location. When it is centred on your sta
 
 There are often two great-circle directions between places: the short path and the long path. The long-path heading is 180 degrees from the short-path heading. If local stations are working a distant country and you cannot hear it on the expected bearing, turning the antenna to the opposite direction is a reasonable experiment.
 
-### Worked example: trying the opposite bearing
+### Worked example: keeping a useful direction note
 
-A beam is pointed on the usual short path to an island station, but the signal is missing. Instead of assuming the contact is impossible, the operator turns the antenna to the reciprocal direction. If propagation favours the longer route at that moment, the station may appear from the opposite bearing.
+A beam is first aimed on the expected short-path bearing, then the operator tests the reciprocal direction. The log note records both bearings and marks which one was the long-path trial. Months later, the note is useful because "turned around" has been replaced by actual directions.
 
 ## UTC and time standards
 
-Amateur schedules, log entries, and confirmations commonly use UTC so operators in different time zones can agree on one clock. The Basic bank identifies the reference meridian as Greenwich in the United Kingdom.
+Amateur schedules, log entries, and confirmations commonly use UTC so operators in different time zones can agree on one clock. The reference meridian is Greenwich in the United Kingdom.
 
 A time zone labelled UTC minus 6 hours is six hours behind UTC. To convert a UTC schedule to that local time, subtract six hours.
 
@@ -73,15 +77,15 @@ A time zone labelled UTC minus 6 hours is six hours behind UTC. To convert a UTC
 
 A digital-mode roundtable is listed for 21:30 UTC. Your local zone is UTC minus 4 hours. Subtract four hours: the local time is 17:30, or 5:30 PM. A log entry for the contact would still normally use the UTC time so other operators see the same date and time basis.
 
-Stations CHU, WWV, and WWVH are useful as standard references for frequency and time. They are not signal-report services, band-condition forecasts, or amateur bulletin channels in the Basic-bank facts.
+Stations CHU, WWV, and WWVH are useful as standard references for frequency and time. They are not signal-report services, band-condition forecasts, or amateur bulletin channels.
 
 ## Try it
 
-1. You plan to enter a VHF event but only know your street address. What should you prepare before the first contact? Look up your Maidenhead locator with a reliable map or logging tool so you can send the requested code quickly.
-2. A QSL request arrives for a contact last month. Which log fields help verify it? The other call sign, UTC date and time, band or frequency, mode, and report make the confirmation traceable.
-3. Your short-path bearing is 040 degrees. What bearing is the reciprocal long-path test? Add 180 degrees and aim at 220 degrees.
-4. A schedule says 02:00 UTC and your zone is UTC minus 5. What local clock time is that on the previous evening? Subtract five hours to get 21:00, or 9 PM, on the previous local date.
-5. Your station clock has drifted and a standard signal is audible. What can you compare, and what should you not infer? Compare time or frequency accuracy; do not treat that signal as a propagation forecast for amateur bands.
+1. You plan to enter a VHF event and also want confirmations to match afterward. What should you prepare and log? Look up your Maidenhead locator for the exchange, and log UTC date/time with contact details so confirmations can be matched later.
+2. A neighbour asks whether your transmitter was on during a brief interference event reported in local time. Which log habit helps answer? Keep entries with UTC date, time, band or frequency, and mode, then convert the reported local time before comparing it with your operating record.
+3. Your azimuthal map is centred on your station and shows a short-path bearing of 035 degrees. What bearing is the reciprocal long-path test, and why is that map appropriate? Add 180 degrees and aim at 215 degrees; the centred azimuthal map gives bearings from your station.
+4. A schedule says 02:00 UTC, your zone is UTC minus 5, and you want the QSL details to agree later. What local clock time do you use, and what time basis should the confirmation keep? Use 21:00, or 9 PM, on the previous local date, while keeping the contact record in UTC for matching.
+5. Before a weekend activity, your logging computer clock is a minute slow and a standard signal is audible. What can you compare, and what should you avoid claiming? Compare the clock or frequency against the standard signal; do not treat CHU, WWV, or WWVH as a received report for your transmitter or a band forecast.
 
 ## Radio connection
 
@@ -92,7 +96,7 @@ Grid locators are especially useful at VHF and UHF because small changes in posi
 ## Common mistakes
 
 - Calling a QSL card just a friendly postcard instead of proof of communication.
-- Claiming the Basic-bank answer makes logbooks a regulatory requirement.
+- Claiming a logbook is a regulatory requirement in this lesson's scope.
 - Confusing a grid square with an antenna bearing or elevation.
 - Using a north-pole-centred map when the task is to find bearings from your own station.
 - Forgetting that long path is opposite the short-path heading.
@@ -107,7 +111,7 @@ Description: Draw a notebook page with columns for UTC, call sign, band, mode, r
 ## Summary
 
 - A QSL card or web-based log confirmation provides proof of communication between stations.
-- A logbook is useful for awards, memories, and interference follow-up, but the Basic-bank answer says it is not a regulatory requirement.
+- A logbook is useful for awards, memories, and interference follow-up, but it is not a regulatory requirement in this lesson's scope.
 - A grid square is a compact Maidenhead-style location code.
 - An azimuthal map centred on your location shows bearings from your station.
 - Long path is 180 degrees from the short-path heading.

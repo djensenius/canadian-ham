@@ -8,5 +8,20 @@
     "lessonId": "L-005-05",
     "blockHeading": "Resonance and tuned circuits",
     "reason": "Reviewed principle definition: the series-RLC maximum-current statement is an accepted standard resonance fact needed for the lesson."
+  },
+  {
+    "lessonId": "L-002-01",
+    "blockHeading": "Reference fact: voice calling patterns",
+    "reason": "Reviewed official calling-pattern reference table. The repetition counts and call-sign order are intentionally preserved because learners must recognize these exact procedural patterns; the block is labelled as reference, not a worked example or Try-it."
+  },
+  {
+    "lessonId": "L-002-02",
+    "blockHeading": "Reference fact: Morse calling patterns",
+    "reason": "Reviewed official Morse calling-pattern reference table. The CQ/DE repetition counts and answer order are intentionally preserved as a compact reference fact, not as a copied scenario, worked example, or Try-it."
+  },
+  {
+    "lessonId": "L-002-04",
+    "blockHeading": "Reference fact: grid locator code length",
+    "reason": "Reviewed official grid-locator length fact. The 4- or 6-character wording is intentionally preserved in a labelled reference fact because the numeric locator length is the fact being taught."
   }
 ]

@@ -26,7 +26,7 @@ status: draft
 
 Voice operating is mostly courtesy made repeatable. You identify clearly, choose a suitable channel, leave room for others, and keep the station adjusted so your signal does not take more spectrum or repeater time than the contact needs.
 
-This lesson stays with the operating principles established by the Basic question bank: repeater use, coordination, CTCSS access, the two-metre FM offset, the ITU phonetic alphabet, CQ and directed calls, simplex choices, band plans, dummy loads, and shared-frequency manners.
+This lesson stays with practical operating principles: repeater use, coordination, CTCSS access, the two-metre FM offset, the ITU phonetic alphabet, CQ and directed calls, simplex choices, band plans, dummy loads, and shared-frequency manners.
 
 ## Learning objectives
 
@@ -54,9 +54,9 @@ A repeater time-out timer protects the system by ending transmissions that run t
 
 ### Worked example: the pause that helps everyone
 
-Morgan calls Riley on a local machine. Riley answers, and Morgan has two short items to pass. After Riley stops talking, Morgan waits a moment before pressing the push-to-talk switch. That small gap lets another station say a call sign, lets emergency traffic break in, and lets the repeater reset for the next over.
+During a club information net, the control operator leaves a clear beat before taking the next station. One mobile station uses that beat to give a call sign and ask for a road-closure relay. Because the net did not run overs back-to-back, the mobile station is heard without having to double with the next speaker.
 
-The contact still feels natural, but it no longer locks everyone else out.
+The pause is not dead air. It is shared-channel access time.
 
 ## Coordination, tones, and offsets
 
@@ -64,7 +64,7 @@ Repeaters are planned so neighbouring systems do not trip over each other. Frequ
 
 Many repeaters require a CTCSS tone. The tone is a low-pitched access signal sent along with your voice. It lets the repeater receiver open its audio path only when the expected tone is present. A missing or wrong tone can make it seem as if the repeater is deaf even when your signal is strong.
 
-On the two-metre FM repeater channels taught by the Basic bank, the standard transmit/receive difference is 600 kHz. Your radio may display the repeater output frequency while automatically transmitting above or below it by the programmed offset.
+On two-metre FM repeater channels in this lesson, the standard transmit/receive difference is 600 kHz. Your radio may display the repeater output frequency while automatically transmitting above or below it by the programmed offset.
 
 ## Voice identification and phonetics
 
@@ -72,19 +72,25 @@ Call signs must be understood in noise, accents, flutter, and weak audio. The In
 
 Do not invent casual words for identification. Custom words may be funny in a club conversation, but they are poor tools for accurate callsigns because the listener has to guess your system.
 
-### Worked example: spelling a portable call
+### Worked example: spelling only the uncertain part
 
-A station signs as VE7LPR portable. The receiving operator misses the middle letters. A useful repair is: "VE7 Lima Papa Romeo portable." The speaker did not shout, speed up, or add microphone gain; the speaker made the uncertain letters unambiguous.
+A station signs as VA2QHX portable. The receiving operator copied VA2 but missed the suffix. A useful repair is: "VA2 Quebec Hotel X-ray portable." The speaker keeps the exchange short and uses standard words only for the letters that need repair.
 
 ## Calling on voice
 
 A general voice call asks for any station. A directed voice call names one station. Keep those jobs separate.
 
-For a general voice call, send a concise CQ sequence, identify yourself, and listen. Do not fill the frequency with repeated calling just because nobody answers at once. On a repeater, CQ is usually unnecessary; a simple announcement with your call sign and listening status is friendlier to the shared channel.
+For a general voice call, use a balanced CQ sequence, identify yourself, and listen. Do not fill the frequency with repeated calling just because nobody answers at once. On a repeater, CQ is usually unnecessary; a simple announcement with your call sign and listening status is friendlier to the shared channel.
 
-For a directed call, say the other call sign first, then "this is," then your own call sign. This tells the intended station to listen immediately and tells everyone else who is transmitting.
+### Reference fact: voice calling patterns
 
-When answering CQ, give the caller's call sign first, then "this is," then your call sign. The caller may have several stations replying; leading with the caller's call sign helps show which call you are answering.
+| Situation | Pattern to recognize |
+|---|---|
+| General voice CQ | Say CQ three times, then "this is," then your call sign three times. |
+| Answering a voice CQ | Say the other station's call sign once, then "this is," then your call sign. |
+| Directed voice call | Say the desired station's call sign, then "this is," then your call sign. |
+
+For a directed call, the other call sign comes first so the intended station knows to listen immediately and everyone else knows who is transmitting. When answering CQ, leading with the caller's call sign helps show which call you are answering.
 
 ## Simplex and repeater courtesy
 
@@ -92,13 +98,13 @@ Simplex means both stations transmit and receive on the same frequency. If two s
 
 Choose simplex channels carefully. A frequency that sounds quiet in your receiver may be the input to a local repeater; transmitting there can interfere with repeater users even though you do not hear them on your radio's displayed receive frequency.
 
-### Worked example: deciding whether direct contact will work
+### Worked example: planning a clean move
 
-Two operators are chatting through a repeater from opposite sides of town. They suspect a direct path is good. One checks the repeater input while the other gives a short test, then they agree on a recognized simplex channel. If they hear each other well, they continue there and leave the repeater idle.
+Two operators discover that their extended chat is no longer using the repeater's wide-area coverage. Before moving, they agree on a recognized simplex channel and a fallback plan: if the direct channel is not usable after a short call, both return to the repeater output and coordinate again. The move is courteous because it frees the shared machine without stranding either station.
 
 ## Sidebands and local band choices
 
-The Basic bank establishes two common voice sideband conventions: upper sideband on twenty metres and lower sideband around 3755 kHz. A learner does not need to memorize every band custom at once, but should recognize that sideband choice is a convention operators use so contacts line up and do not sound inverted.
+Two common voice sideband conventions in this lesson are upper sideband on twenty metres and lower sideband around 3755 kHz. A learner does not need to memorize every band custom at once, but should recognize that sideband choice is a convention operators use so contacts line up and do not sound inverted.
 
 For local communication, VHF and UHF are usually preferred over HF when they will do the job. That keeps HF bands available for the longer-distance communication for which they are especially useful.
 
@@ -110,15 +116,15 @@ Power is not a substitute for courtesy. If the other station reports that your s
 
 For lengthy transmitter tests, use a dummy load. A dummy load gives the transmitter a proper load while turning RF power into heat instead of radiation. For a brief antenna tuner adjustment before joining an HF voice net, move a small distance away from the net frequency, then come back after the adjustment.
 
-Single-sideband voice signals need room. The Basic bank uses approximately 3 kHz as the separation to allow from a contact already in progress. That is a practical listening rule: if the neighbouring voice still sounds splattery or intelligible in your receiver, move farther away.
+Single-sideband voice signals need room. Allow approximately 3 kHz from a contact already in progress. That is a practical listening rule: if the neighbouring voice still sounds splattery or intelligible in your receiver, move farther away.
 
 ## Try it
 
-1. You make a short directed call on a repeater, release PTT, and hear a weak station give only a call sign. What should you do? Wait and let the weak station be acknowledged before continuing, because your pause created access for someone else.
-2. Your radio has both transmit tone and receive tone-squelch menus. Which one is essential when a repeater expects an access tone from users? The transmit tone setting, because the repeater must receive the tone from your signal.
-3. A listener copied VE7 but missed the suffix LPR. How much of the call should you spell phonetically on the repair? Spell the uncertain suffix with Lima Papa Romeo while keeping the rest of the exchange brief.
-4. Two stations agree to leave a repeater after confirming a direct path. What should happen before either operator changes channels? Both stations should acknowledge the destination so nobody is stranded on the wrong frequency.
-5. A bench test after a microphone repair will take several minutes. Why is a dummy load better than a quiet frequency? A quiet frequency can become occupied or propagate farther than expected, while the dummy load keeps the test energy off the air.
+1. During a club demo on a repeater, you need ten seconds to read a note before answering and the timer is already near its limit. What should you do with PTT? Release it while thinking, then transmit only the answer, because pauses leave room for other stations and avoid treating the time-out timer as normal operating practice.
+2. You hear a repeater output strongly, but your calls are never repeated. Which two programming items should you check before assuming the machine is down? Check the transmit offset and the transmit CTCSS tone, because the repeater listens on its input frequency and may require the access tone on your transmitted signal.
+3. You are calling VE4ZDN on a repeater, but a listener says the suffix was unclear. How should you combine directed-call format with phonetics? Call the desired station first, identify your station, and spell only the uncertain suffix with Zulu Delta November.
+4. Two stations have a reliable direct path, but a proposed simplex channel is marked as a local repeater input. What is the courteous decision? Move the extended chat off the repeater, but choose a recognized simplex channel that is not a repeater input.
+5. Your HF net frequency is busy just before start time, and your tuner still needs a brief carrier. What operating plan combines both rules? Ask the occupants if they can accommodate the net or move the net to a clear frequency, and make any tuner adjustment several kilohertz away from the active net frequency.
 
 ## Radio connection
 

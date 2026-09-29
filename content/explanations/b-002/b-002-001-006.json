@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-001-006.\n\nWhy the correct answer is right: When the other station’s call sign is known, call that station and then give your own identification. This is the concise directed-call format.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Say \\\"break, break,\\\" then say the station's call sign\": “Break, break” is reserved for urgent interruption, not for routine calling of a known station.\n- sourceIndex 2: \"Say \\\"CQ\\\" three times, then say the station's call sign\": CQ is a general call to any station; it is not the preferred way to reach a specific station on a repeater.\n- sourceIndex 3: \"Wait for the station to call \\\"CQ,\\\" then answer it\": Waiting for the other station to call CQ reverses the job; you already know whom you want to call.",
+    "en": "Question B-002-001-006.\n\nWhy the correct answer is right: When the other station’s call sign is known, call that station and then give your own identification. This is the concise directed-call format.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Say \\\"break, break,\\\" then say the station's call sign\": The phrase delays the two call signs that make a directed repeater call clear; a routine call should start with the station being called.\n- sourceIndex 2: \"Say \\\"CQ\\\" three times, then say the station's call sign\": CQ is a general call to any station; it is not the preferred way to reach a specific station on a repeater.\n- sourceIndex 3: \"Wait for the station to call \\\"CQ,\\\" then answer it\": Waiting for the other station to call CQ reverses the job; you already know whom you want to call.",
     "fr": null
   },
   "citations": [

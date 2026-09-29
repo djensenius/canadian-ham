@@ -51,123 +51,123 @@
     {
       "id": "QZ-L-002-01-A-C1",
       "prompt": {
-        "en": "Two stations decide to leave a repeater for simplex. One operator says the new frequency quickly and changes channels before the other station acknowledges it. What is the procedural error?",
+        "en": "A newly coordinated repeater has a published channel pair, but users still cannot bring it up unless their radios send the required access tone. Which explanation combines both facts?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "They should confirm that both stations copied the destination before either station leaves the repeater.",
+            "en": "Coordination helps reduce channel conflicts; the programmed transmit CTCSS tone is still needed to open that receiver.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "They should keep talking on the repeater because direct-path contacts are never a courteous option.",
+            "en": "Coordination automatically inserts the access tone into every user radio in the coverage area.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "They should double transmitter power before changing channels so the move sounds official.",
+            "en": "A CTCSS tone replaces frequency coordination, so the repeater channel pair no longer matters.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "They should send a tuner carrier on the repeater output before announcing the move.",
+            "en": "The access tone changes the repeater into simplex operation whenever the channel is busy.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "A channel move fails if one station disappears before the other has copied the destination. Confirm the move first, then change channels.",
+        "en": "Coordination and CTCSS solve different problems. Coordination plans repeater channels; the access tone is a receiver-opening condition for users.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-002-01-A-C2",
       "prompt": {
-        "en": "Which action would NOT help keep a busy repeater available for other stations?",
+        "en": "Which statement is NOT true about repeater access and shared-channel courtesy?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "Leave a short gap after each over so another station can identify.",
+            "en": "A required transmit CTCSS tone must be sent by your radio for the repeater receiver to open correctly.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Use concise overs instead of filling the timer with one long transmission.",
+            "en": "A time-out timer is a backstop for excessive transmissions, not permission to hold the channel until it stops you.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Move an extended direct-path chat to a suitable simplex channel.",
+            "en": "A fallback plan helps when two stations try simplex and the direct channel is unusable.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Hold the microphone until the timer stops you because the controller will protect everyone else.",
+            "en": "If you hear the repeater output strongly, the transmit offset and transmit tone can no longer affect whether others hear you.",
             "fr": null
           },
           "isCorrect": true
         }
       ],
       "explanation": {
-        "en": "The timer is a safety backstop, not an operating method. Courtesy means leaving gaps, keeping overs short, and moving suitable conversations away from the repeater.",
+        "en": "Receiving the repeater output does not prove your transmitted signal is set up correctly. The offset and transmit access tone still matter on the input side.",
         "fr": null
       }
     },
     {
       "id": "QZ-L-002-01-A-C3",
       "prompt": {
-        "en": "A handheld is strong into a local repeater site but the programmed access tone is wrong. What result should the operator expect?",
+        "en": "A 20-metre voice operator is set to lower sideband and hears an existing contact only about 2 kHz away. Which combined correction fits the lesson?",
         "fr": null
       },
       "choices": [
         {
           "text": {
-            "en": "The repeater may receive RF energy but not repeat usable audio for everyone else.",
+            "en": "Use the 20-metre upper-sideband convention and choose a spot with about 3 kHz or more from the contact.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "The repeater will automatically translate the wrong tone into the coordinated tone.",
+            "en": "Keep lower sideband because moving closer than 3 kHz makes the wrong sideband easier to copy.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "The two-metre offset will change from 600 kHz to 800 kHz.",
+            "en": "Stay 2 kHz away if the other station is weak, because sideband convention replaces spacing courtesy.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Other stations will hear a louder signal because tones add transmitter power.",
+            "en": "Switch to a repeater offset, because offset programming provides SSB separation on HF.",
             "fr": null
           },
           "isCorrect": false
         }
       ],
       "explanation": {
-        "en": "A correct CTCSS setting is an access condition. Signal strength alone does not guarantee that the repeater opens and retransmits the audio.",
+        "en": "The operator must satisfy both ideas: use the expected 20-metre sideband and leave enough SSB spacing from the contact already in progress.",
         "fr": null
       }
     }

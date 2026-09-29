@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-006-003.\n\nWhy the correct answer is right: A 5 7 voice report means the signal is perfectly readable and moderately strong.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Your signal is readable with considerable difficulty\": Considerable difficulty would be a lower readability than 5.\n- sourceIndex 2: \"Your signal is perfectly readable with near pure tone\": Near-pure tone belongs to a Morse RST tone digit, not a two-number voice report.\n- sourceIndex 3: \"Your signal is perfectly readable, but weak\": Perfect readability is right, but strength 7 is not weak in the Basic-bank scale.",
+    "en": "Question B-002-006-003.\n\nWhy the correct answer is right: A 5 7 voice report means the signal is perfectly readable and moderately strong.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Your signal is readable with considerable difficulty\": Considerable difficulty would be a lower readability than 5.\n- sourceIndex 2: \"Your signal is perfectly readable with near pure tone\": Near-pure tone belongs to a Morse RST tone digit, not a two-number voice report.\n- sourceIndex 3: \"Your signal is perfectly readable, but weak\": Perfect readability is right, but strength 7 is moderately strong rather than weak.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-008-003.\n\nWhy the correct answer is right: For voice distress, the Basic bank uses MAYDAY transmitted three times.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"SOS\": SOS is the Morse distress signal in this module, not the spoken voice word asked here.\n- sourceIndex 2: \"EMERGENCY\": “EMERGENCY” may be plain English, but it is not the official answer for the voice distress signal.\n- sourceIndex 3: \"HELP\": “HELP” is understandable language, yet the taught voice distress signal is MAYDAY.",
+    "en": "Question B-002-008-003.\n\nWhy the correct answer is right: For voice distress in this item, the signal transmitted three times is MAYDAY.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"SOS\": SOS is the Morse distress signal in this module, not the spoken voice word asked here.\n- sourceIndex 2: \"EMERGENCY\": “EMERGENCY” describes a situation in plain English, but it is not the repeated voice distress word requested by the question.\n- sourceIndex 3: \"HELP\": “HELP” is understandable language, yet the item asks for the specific voice distress signal transmitted three times.",
     "fr": null
   },
   "citations": [

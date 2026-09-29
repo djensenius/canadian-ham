@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-008-002.\n\nWhy the correct answer is right: Being stranded remotely without immediate risk to life is serious help-needed traffic, but the Basic bank classifies it as urgent rather than distress.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Distress\": Distress is reserved for life-threatening situations in this module.\n- sourceIndex 2: \"Safety\": Safety traffic is lower priority and does not match the stated need to summon help.\n- sourceIndex 3: \"Welfare\": Welfare is not the priority class selected by the Basic-bank answer.",
+    "en": "Question B-002-008-002.\n\nWhy the correct answer is right: Being stranded remotely without immediate risk to life is serious help-needed traffic, but this item classifies it as urgent rather than distress.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Distress\": Distress is tied to life-threatening situations in this module, and the stem explicitly removes immediate risk to life.\n- sourceIndex 2: \"Safety\": The scenario asks for help while stranded; the item classifies that serious non-life-threatening request as urgent.\n- sourceIndex 3: \"Welfare\": Welfare may sound like a well-being check, but the stem is an active request to summon help from a remote location.",
     "fr": null
   },
   "citations": [

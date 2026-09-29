@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-007-002.\n\nWhy the correct answer is right: QTH gives location: “my location is ...” in the Basic-bank meaning.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Stop sending\": Stop sending is a different procedural instruction, not QTH.\n- sourceIndex 2: \"My name is ...\": Name is not what QTH asks or states.\n- sourceIndex 3: \"Time here is ...\": Time at the station is not the location meaning of QTH.",
+    "en": "Question B-002-007-002.\n\nWhy the correct answer is right: QTH gives location: “my location is ...” in this module's operating abbreviations.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Stop sending\": Stop sending is a different procedural instruction, not QTH.\n- sourceIndex 2: \"My name is ...\": Name is not what QTH asks or states.\n- sourceIndex 3: \"Time here is ...\": Time at the station is not the location meaning of QTH.",
     "fr": null
   },
   "citations": [

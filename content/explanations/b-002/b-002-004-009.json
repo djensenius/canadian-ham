@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-004-009.\n\nWhy the correct answer is right: For SSB voice, allow approximately 3 kHz from a contact in progress to reduce overlap between voice signals.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"150 Hz to 500 Hz\": 150 Hz to 500 Hz is the narrower separation associated with CW, not SSB voice.\n- sourceIndex 2: \"Approximately 6 kHz\": Six kilohertz is more than the minimum taught here; it may be comfortable but is not the Basic-bank answer.\n- sourceIndex 3: \"Approximately 10 kHz\": Ten kilohertz is wider than the expected minimum and would waste scarce band space if treated as mandatory.",
+    "en": "Question B-002-004-009.\n\nWhy the correct answer is right: For SSB voice, allow approximately 3 kHz from a contact in progress to reduce overlap between voice signals.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"150 Hz to 500 Hz\": 150 Hz to 500 Hz is the narrower separation associated with CW, not SSB voice.\n- sourceIndex 2: \"Approximately 6 kHz\": Six kilohertz is wider than the minimum asked for; it describes extra spacing rather than the minimum separation.\n- sourceIndex 3: \"Approximately 10 kHz\": Ten kilohertz is much wider than the minimum and would unnecessarily remove more spectrum from nearby SSB use if treated as required.",
     "fr": null
   },
   "citations": [

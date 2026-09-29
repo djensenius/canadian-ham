@@ -26,7 +26,7 @@ status: draft
 
 Morse and voice contacts use many of the same operating ideas: call clearly, identify, leave space, and report what you actually hear. Morse adds short procedural signals that save time when every character is being sent by hand or keyer.
 
-This lesson focuses on the abbreviations and signal-report habits the Basic bank expects: CQ, DE, K, R, DX, 73, QSK, RST reports, selected Q signals, and minimum separation for Morse contacts.
+This lesson focuses on the abbreviations and signal-report habits used here: CQ, DE, K, R, DX, 73, QSK, RST reports, selected Q signals, and minimum separation for Morse contacts.
 
 ## Learning objectives
 
@@ -44,9 +44,16 @@ A Morse CQ is a general call. In routine form, it sends CQ, gives DE to mean "fr
 
 When answering a routine Morse CQ, identify the station you are calling and then yourself. The exchange is compact, but it still follows the same courtesy as voice: make it clear who is being called and who is calling.
 
-### Worked example: choosing a sensible speed
+### Reference fact: Morse calling patterns
 
-Sam can send clean code at 18 words per minute but reliably copies new call signs at 12. For a first CQ on a quiet band, Sam sends near 12. That choice invites a reply Sam can actually understand instead of creating a fast contact that collapses after the first exchange.
+| Situation | Pattern to recognize |
+|---|---|
+| Routine Morse CQ | Send CQ three times, then DE, then your call sign three times. |
+| Answering routine Morse CQ | Send the other station's call sign twice, then DE, then your call sign twice. |
+
+### Worked example: reading who is from whom
+
+You copy "VE3RAC DE VE6NWT" before noise covers the rest. DE marks the station that is sending, so VE6NWT is the transmitting station and VE3RAC is the station being called.
 
 ## Short Morse signals and abbreviations
 
@@ -64,7 +71,7 @@ Several short groups appear often:
 
 Full break-in is a station capability and operating style. With QSK, an operator may hear another station between the dots and dashes being sent. That is different from using a manual send/receive switch or asking someone to interrupt by sending a break signal.
 
-Morse contacts are narrow compared with voice, but they still need spacing. The Basic bank teaches 150 Hz to 500 Hz as the minimum separation to allow from a CW contact in progress.
+Morse contacts are narrow compared with voice, but they still need spacing. Allow 150 Hz to 500 Hz from a CW contact in progress.
 
 ## Signal reports: RS and RST
 
@@ -72,13 +79,21 @@ Signal reports describe reception at your station. For voice, operators normally
 
 Readability tells how understandable the signal is. Strength describes relative received signal level. Tone applies to a keyed carrier and is most meaningful for Morse.
 
-Useful anchors from the Basic bank include:
+The digits used in this lesson decode as observations, not compliments:
 
-- 5 7: perfectly readable and moderately strong;
-- 3 3: readable with considerable difficulty and weak;
-- 1 1: unreadable and barely perceptible;
-- 579: perfectly readable, moderately strong, and perfect tone;
-- 459: quite readable, fair strength, and perfect tone.
+| Report part | Digit | Meaning used here |
+|---|---:|---|
+| Readability | 1 | Unreadable. |
+| Readability | 3 | Readable with considerable difficulty. |
+| Readability | 4 | Quite readable. |
+| Readability | 5 | Perfectly readable. |
+| Strength | 1 | Barely perceptible. |
+| Strength | 3 | Weak. |
+| Strength | 5 | Fair strength. |
+| Strength | 7 | Moderately strong. |
+| Tone | 9 | Perfect tone. |
+
+A report such as 579 is decoded one digit at a time: readability 5, strength 7, tone 9. A two-number voice report leaves off the tone digit.
 
 Reports should describe the signal you actually copy. Through a repeater, report the station's signal and audio as it comes through the repeater, not merely your S-meter reading of the repeater output.
 
@@ -98,7 +113,7 @@ Suppose a local test signal reads S9 at 90 W on a receiver using the 6 dB per S-
 
 Q signals are three-letter operating abbreviations. In Morse they can be sent as questions or statements. A question mark changes the job: QRL? asks whether a frequency is busy; QRL without the question mark can state that it is busy.
 
-The Basic bank uses these meanings:
+The Q signals used in this lesson are:
 
 | Q signal | Meaning taught in this module |
 |---|---|
@@ -116,11 +131,11 @@ Use Q signals when they make communication clearer. On voice, plain language is 
 
 ## Try it
 
-1. A station answers your CQ much faster than you can copy. What concise request fits the lesson? Send QRS or ask for slower sending, then resume at a speed you can receive accurately.
-2. You copied “VA3AAA DE VE5BBB” but missed the rest. Which station was transmitting? VE5BBB was transmitting, because DE marks the call sign that the message is from.
-3. A voice station is easy to understand but not especially strong. Which report part should be high and which should be moderate? Readability can be high while strength is only moderate.
-4. Your S-meter jumps upward during deep QSB on the band. Why should you avoid calculating the other station's power from that change? The path changed, so the simple S-unit power relationship no longer has its controlled assumption.
-5. You send QRL? and hear a partial reply under noise. What is the careful next step? Keep listening or ask again briefly before calling CQ, because a fragment may mean the frequency is occupied.
+1. You call CQ faster than you can copy, and the answering station comes back at that speed. Which request and future habit fix the problem? Send QRS or ask for slower sending now, then call CQ at a speed you can reliably receive.
+2. You copied “VE3RAC DE VE6NWT” after hearing a routine CQ. Which station was transmitting, and how would the answer format use those calls? VE6NWT was transmitting; a routine answer names VE6NWT before DE and then gives your own call.
+3. Before calling CQ on CW, you send QRL? but hear a weak reply mixed with static crashes. What should you do? Treat the static as QRN but keep checking whether the frequency is in use before calling.
+4. A distant station asks how their handheld audio sounds through the local repeater, and your S-meter shows the repeater output is strong. What should your report emphasize? Report the audio and copy as heard through the repeater, not merely the repeater output S-meter.
+5. You find a clear spot 200 Hz from a CW contact and use QSK. What must still be true before you transmit? The spacing fits the CW separation range, and full break-in helps you hear between your own code elements if someone needs to interrupt.
 
 ## Radio connection
 
