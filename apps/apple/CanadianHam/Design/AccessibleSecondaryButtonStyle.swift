@@ -1,10 +1,11 @@
 import SwiftUI
 
-struct AccessibleSecondaryButtonStyle: PrimitiveButtonStyle {
-    @Environment(\.isEnabled) private var isEnabled
+struct AccessibleSecondaryButtonLabel: View {
+    let title: String
+    let isDisabled: Bool
 
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
+    var body: some View {
+        Text(title)
             .font(DesignTokens.FontScale.body.weight(.semibold))
             .foregroundStyle(DesignTokens.Colors.ink)
             .padding(.horizontal, DesignTokens.Spacing.lg)
@@ -14,15 +15,17 @@ struct AccessibleSecondaryButtonStyle: PrimitiveButtonStyle {
             .overlay {
                 Capsule()
                     .strokeBorder(
-                        isEnabled ? DesignTokens.Colors.border : DesignTokens.Colors.inkMuted,
-                        style: StrokeStyle(lineWidth: 1, dash: isEnabled ? [] : [5, 4])
+                        isDisabled ? DesignTokens.Colors.inkMuted : DesignTokens.Colors.border,
+                        style: StrokeStyle(lineWidth: 1, dash: isDisabled ? [5, 4] : [])
                     )
             }
+    }
+}
+
+struct AccessibleSecondaryButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
             .contentShape(Capsule())
-            .onTapGesture {
-                if isEnabled {
-                    configuration.trigger()
-                }
-            }
+            .opacity(configuration.isPressed ? 0.85 : 1)
     }
 }

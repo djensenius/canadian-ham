@@ -686,8 +686,10 @@ private struct LessonQuizView: View {
                     }
                 }
                 Spacer()
-                Button("Retry quiz") { restart() }
-                    .buttonStyle(AccessibleSecondaryButtonStyle())
+                Button { restart() } label: {
+                    AccessibleSecondaryButtonLabel(title: "Retry quiz", isDisabled: false)
+                }
+                .buttonStyle(AccessibleSecondaryButtonStyle())
             }
 
             if let errorMessage {
@@ -709,12 +711,16 @@ private struct LessonQuizView: View {
                     selectedByItemId[item.id] = selected
                 }
                 HStack {
-                    Button("Previous") { currentIndex = max(0, currentIndex - 1) }
-                        .disabled(currentIndex == 0)
-                        .buttonStyle(AccessibleSecondaryButtonStyle())
-                    Button("Next") { currentIndex = min(items.count - 1, currentIndex + 1) }
-                        .disabled(currentIndex + 1 >= items.count)
-                        .buttonStyle(AccessibleSecondaryButtonStyle())
+                    Button { currentIndex = max(0, currentIndex - 1) } label: {
+                        AccessibleSecondaryButtonLabel(title: "Previous", isDisabled: currentIndex == 0)
+                    }
+                    .disabled(currentIndex == 0)
+                    .buttonStyle(AccessibleSecondaryButtonStyle())
+                    Button { currentIndex = min(items.count - 1, currentIndex + 1) } label: {
+                        AccessibleSecondaryButtonLabel(title: "Next", isDisabled: currentIndex + 1 >= items.count)
+                    }
+                    .disabled(currentIndex + 1 >= items.count)
+                    .buttonStyle(AccessibleSecondaryButtonStyle())
                     Button("Submit lesson quiz") { submit() }
                         .buttonStyle(.borderedProminent)
                         .disabled(!allAnswered || submittedAttemptID != nil)
