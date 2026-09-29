@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-021-007",
+  "questionId": "B-001-021-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-021-007.\n\nWhy the correct answer is right: In the CEPT voice-identification pattern tested here, the visited country's prefix comes first, followed by the spoken separator, followed by the Canadian call sign. The order is the key detail.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Transmit their Canadian call sign, followed by \\\"stroke,\\\" followed by the visited country's prefix\": This reverses the CEPT order by starting with the Canadian call sign instead of the visited-country prefix.\n- sourceIndex 2: \"Transmit their Canadian call sign\": The Canadian call sign alone omits the visited-country prefix and separator required by the official CEPT pattern.\n- sourceIndex 3: \"Transmit their Canadian call sign, followed by \\\"stroke,\\\" followed by the name of the country being visited\": The CEPT pattern uses the visited country's prefix, not the country's name, and it does not start with the Canadian call sign.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-05"
+    },
+    {
+      "type": "question",
+      "id": "B-001-021-007"
+    }
+  ],
+  "licenseClass": "original"
+}

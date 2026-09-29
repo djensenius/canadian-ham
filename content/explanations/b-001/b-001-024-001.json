@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-024-001",
+  "questionId": "B-001-024-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-024-001.\n\nWhy the correct answer is right: Health Canada is the organization named by the official bank for safety guidelines on maximum RF energy near the human body. The question asks for the source of those human-exposure guidelines.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Canadian Standards Association\": CSA is a standards organization, but it is not the organization named in the official RF-exposure guideline answer.\n- sourceIndex 2: \"Environment Canada\": Environment Canada is not identified by the bank as the publisher of maximum RF-energy guidelines near the human body.\n- sourceIndex 3: \"National Research Council\": The National Research Council is not the Health Canada source named for this Safety Code 6 topic.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-06"
+    },
+    {
+      "type": "question",
+      "id": "B-001-024-001"
+    }
+  ],
+  "licenseClass": "original"
+}

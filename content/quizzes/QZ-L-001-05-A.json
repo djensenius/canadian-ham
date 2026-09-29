@@ -1,0 +1,55 @@
+{
+  "id": "QZ-L-001-05-A",
+  "lessonId": "L-001-05",
+  "officialQuestionIds": [
+    "B-001-020-001",
+    "B-001-020-002",
+    "B-001-020-003",
+    "B-001-020-004",
+    "B-001-020-005",
+    "B-001-021-001",
+    "B-001-021-002",
+    "B-001-021-003",
+    "B-001-021-004",
+    "B-001-021-005",
+    "B-001-021-006",
+    "B-001-021-007",
+    "B-001-021-008",
+    "B-001-021-009"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-001-05-A-C1",
+      "prompt": { "en": "A Canadian operator prepares one travel card for a home stop and another for a foreign stop. Which card item would NOT help prevent a rule mistake?", "fr": null },
+      "choices": [
+        { "text": { "en": "A note of where the transmitter will actually be used", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The source checked for the destination's current authorization arrangement", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A reminder to verify the voice identification pattern before calling", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A plan to use the home-country band list whenever the map shows a familiar region label", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "A region label is useful background, but it is not a substitute for the rules that apply where the station is operated.", "fr": null }
+    },
+    {
+      "id": "QZ-L-001-05-A-C2",
+      "prompt": { "en": "A club writes a friendly event script for contacts with overseas stations. Which added line creates the real problem?", "fr": null },
+      "choices": [
+        { "text": { "en": "Ask each station for a signal report and antenna description", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Invite operators to share personal greetings after the technical exchange", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Offer to relay paid delivery instructions for a sponsor during the net", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Pause if an administration's published restriction affects the contact", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The troublesome line changes the contact from amateur-purpose or personal communication into paid third-party-style traffic.", "fr": null }
+    },
+    {
+      "id": "QZ-L-001-05-A-C3",
+      "prompt": { "en": "An operator copies a visiting-call-sign pattern from one destination into the notes for a different reciprocal arrangement. What is the error to spot?", "fr": null },
+      "choices": [
+        { "text": { "en": "Call-sign order and prefix placement can be arrangement-specific, so the pattern must be checked for that destination.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Voice identification never changes when a Canadian certificate holder travels.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A separator word always goes at the end of a spoken identification.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Only digital modes need destination-specific identification notes.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "The lesson separates destination-specific identification patterns so a traveller does not mix one arrangement's order with another.", "fr": null }
+    }
+  ]
+}

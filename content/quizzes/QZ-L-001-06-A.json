@@ -1,0 +1,65 @@
+{
+  "id": "QZ-L-001-06-A",
+  "lessonId": "L-001-06",
+  "officialQuestionIds": [
+    "B-001-023-001",
+    "B-001-023-002",
+    "B-001-023-003",
+    "B-001-023-004",
+    "B-001-023-005",
+    "B-001-023-006",
+    "B-001-023-007",
+    "B-001-023-008",
+    "B-001-023-009",
+    "B-001-023-010",
+    "B-001-024-001",
+    "B-001-024-002",
+    "B-001-024-003",
+    "B-001-024-004",
+    "B-001-024-005",
+    "B-001-024-006",
+    "B-001-024-007",
+    "B-001-024-008",
+    "B-001-024-009",
+    "B-001-024-010",
+    "B-001-025-001",
+    "B-001-025-002",
+    "B-001-025-003",
+    "B-001-025-004"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-001-06-A-C1",
+      "prompt": { "en": "An operator wants a cleaner antenna-project record. Which action would NOT help?", "fr": null },
+      "choices": [
+        { "text": { "en": "Keep dated copies of notices and responses", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Check whether a local process or exclusion applies before ordering tower parts", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Replace written concerns with memory-only notes after each conversation", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Record which consultation path was used for the project", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "A reliable record supports responsible consultation; relying only on memory makes it harder to show what was checked or answered.", "fr": null }
+    },
+    {
+      "id": "QZ-L-001-06-A-C2",
+      "prompt": { "en": "Power, gain, and frequency stay unchanged, but people are kept farther from the antenna. What change should you predict?", "fr": null },
+      "choices": [
+        { "text": { "en": "Exposure concern moves in the safer direction because separation increased", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Exposure concern increases because distance is not relevant", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The antenna automatically becomes exempt from RF exposure rules", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The transmitter's output power must rise when people move away", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Distance is one of the identified exposure factors, so increasing separation is a conservative improvement when the other named factors are unchanged.", "fr": null }
+    },
+    {
+      "id": "QZ-L-001-06-A-C3",
+      "prompt": { "en": "A station owner decides an EMC complaint only by checking that the transmitter is within the operator's power privilege. What procedure error should be spotted?", "fr": null },
+      "choices": [
+        { "text": { "en": "The comparison should include the field strength at the affected premises against the applicable immunity criterion.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The transmitter privilege check proves the affected device is always at fault.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The complaint can be ignored if the problem stops between transmissions.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The equipment category matters only for antennas, not for electronic devices.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "EMCAB-2 reasoning turns on the field-strength criterion at the affected location, not merely the transmitter's legal power setting.", "fr": null }
+    }
+  ]
+}

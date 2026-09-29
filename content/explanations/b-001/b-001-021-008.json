@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-021-008",
+  "questionId": "B-001-021-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-021-008.\n\nWhy the correct answer is right: The official answer names Basic as the minimum qualification for a Canadian amateur operating in the United States. This item is separate from the CEPT item, which has a different qualification requirement.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Basic with Honours\": Honours is more than the minimum named for United States operation in this official item.\n- sourceIndex 2: \"Basic with Morse code\": Morse is not identified as the minimum requirement for this United States visiting question.\n- sourceIndex 3: \"Advanced\": Advanced is named in the CEPT item, but this United States item asks for the minimum level and the official answer is Basic.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-05"
+    },
+    {
+      "type": "question",
+      "id": "B-001-021-008"
+    }
+  ],
+  "licenseClass": "original"
+}

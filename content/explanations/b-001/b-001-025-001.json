@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-025-001",
+  "questionId": "B-001-025-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-025-001.\n\nWhy the correct answer is right: Under the EMCAB-2 criterion in this item, if the field strength of the amateur emissions at the neighbour's premises is below ISED's specified immunity criteria, the affected stereo system's lack of immunity is deemed the cause. The deciding fact is the field strength at the affected premises relative to the criterion.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"You are transmitting at or below your maximum permitted power\": Staying within a power privilege does not by itself answer the EMCAB-2 immunity-cause question.\n- sourceIndex 2: \"The malfunction stops when you stop transmitting\": On/off timing may help troubleshoot, but the official criterion is the field strength compared with ISED's immunity criteria.\n- sourceIndex 3: \"The field strength of your emissions, on your neighbour's premises, is above Innovation, Science and Economic Development Canada's specified immunity criteria\": Above-criterion field strength points to the transmission being deemed the cause, not to lack of immunity in the stereo.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-06"
+    },
+    {
+      "type": "question",
+      "id": "B-001-025-001"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-023-003",
+  "questionId": "B-001-023-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-023-003.\n\nWhy the correct answer is right: If an ISED-defined exclusion criterion applies, the operator may not be required to contact the land-use authority to determine public consultation requirements. The key is that the exclusion comes from the applicable procedure, not from convenience.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"In a rural area\": Rural location alone is not the exclusion criterion identified by the official answer.\n- sourceIndex 2: \"When the structure is part of an amateur radio antenna\": Amateur use does not by itself remove antenna-siting consultation responsibilities.\n- sourceIndex 3: \"When transmitting will only be done at low power\": Low transmitter power is not the antenna-consultation exclusion named in this item.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-06"
+    },
+    {
+      "type": "question",
+      "id": "B-001-023-003"
+    }
+  ],
+  "licenseClass": "original"
+}

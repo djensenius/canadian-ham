@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-024-006",
+  "questionId": "B-001-024-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-024-006.\n\nWhy the correct answer is right: Safety Code 6 distinguishes controlled and uncontrolled environments when specifying maximum RF-field exposure levels. The distinction is about the exposure situation, not just the transmitter package or frequency side of a band boundary.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Fixed and portable transmitters\": Equipment mobility is not the two-situation distinction identified in the official answer.\n- sourceIndex 2: \"Transmitters below 30 MHz and above 30 MHz\": This frequency split is not the controlled-versus-uncontrolled exposure-environment distinction.\n- sourceIndex 3: \"Commercial and private transmitters\": Ownership or service type is not the pair of exposure situations named by Safety Code 6 for this item.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-06"
+    },
+    {
+      "type": "question",
+      "id": "B-001-024-006"
+    }
+  ],
+  "licenseClass": "original"
+}

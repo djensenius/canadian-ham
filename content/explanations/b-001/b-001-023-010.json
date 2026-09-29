@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-023-010",
+  "questionId": "B-001-023-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-023-010.\n\nWhy the correct answer is right: Where a land-use authority or municipality has established its own process, that municipality or local authority determines how public consultation should take place. ISED authority remains important, but this question asks who sets the local consultation procedure.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Innovation, Science and Economic Development Canada\": ISED is the federal authority and has a default process, but the stated case has a local process already established.\n- sourceIndex 2: \"The person planning to erect an antenna structure\": The proponent follows the applicable process; they do not decide the consultation procedure unilaterally.\n- sourceIndex 3: \"The provincial government\": The official answer names the municipality or local land-use authority, not the provincial government.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-06"
+    },
+    {
+      "type": "question",
+      "id": "B-001-023-010"
+    }
+  ],
+  "licenseClass": "original"
+}

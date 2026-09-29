@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-025-003",
+  "questionId": "B-001-025-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-025-003.\n\nWhy the correct answer is right: EMCAB-2 uses associated equipment for devices often found in home entertainment systems that are not strictly radio apparatus. The category helps determine which field-strength criterion applies.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Broadcast receivers\": Broadcast receivers are radio receivers, while the question asks about home-entertainment devices that are not strictly radio apparatus.\n- sourceIndex 2: \"Radio-sensitive equipment\": Radio-sensitive equipment is a different EMCAB-2 category; the official answer for home-entertainment devices in this wording is associated equipment.\n- sourceIndex 3: \"Low-immunity equipment\": Low immunity describes a possible weakness, not the equipment category named by the official criterion question.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-06"
+    },
+    {
+      "type": "question",
+      "id": "B-001-025-003"
+    }
+  ],
+  "licenseClass": "original"
+}

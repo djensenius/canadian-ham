@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-025-002",
+  "questionId": "B-001-025-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-025-002.\n\nWhy the correct answer is right: Under the EMCAB-2 criterion in this item, the transmission is deemed the cause when the field strength at the neighbour's premises is above ISED's specified immunity criteria. The comparison is made at the affected premises, not only at the transmitter.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"You are transmitting at or below your maximum permitted power\": A legal power setting does not settle whether the field strength exceeds the EMCAB-2 immunity criterion.\n- sourceIndex 2: \"The malfunction continues when you stop transmitting\": If the malfunction continues with no transmission, that fact does not match the official criterion for deeming your emissions the cause.\n- sourceIndex 3: \"The field strength of your emissions, on your neighbour's premises, is below Innovation, Science and Economic Development Canada's specified immunity criteria\": Below-criterion field strength is the condition associated with the affected equipment's lack of immunity, not with the transmission being deemed the cause.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-06"
+    },
+    {
+      "type": "question",
+      "id": "B-001-025-002"
+    }
+  ],
+  "licenseClass": "original"
+}

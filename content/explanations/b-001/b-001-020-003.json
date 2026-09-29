@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-020-003",
+  "questionId": "B-001-020-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-020-003.\n\nWhy the correct answer is right: The ITU rule principle in this item is that international amateur communication is allowed unless an administration has registered an objection. The permission is therefore conditional on administrations, not just on the wishes of the two operators.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Certification requirements in the amateur radio service are prescribed in the Radio Regulations\": The official answer for this item is about international communications and objections; certification details are handled by administrations rather than this choice's wording.\n- sourceIndex 2: \"Radiocommunications between certified amateur radio operators are always permitted even if a country objects\": An administration's objection matters, so certified operators cannot override it by mutual agreement.\n- sourceIndex 3: \"Amateur radio operators may recover reasonable costs from transmitting third-party messages\": Cost recovery would make amateur traffic resemble a paid message service, and it is not the ITU provision tested here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-05"
+    },
+    {
+      "type": "question",
+      "id": "B-001-020-003"
+    }
+  ],
+  "licenseClass": "original"
+}

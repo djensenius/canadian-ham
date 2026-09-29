@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-024-007",
+  "questionId": "B-001-024-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-024-007.\n\nWhy the correct answer is right: The other established adverse health effect named by the official bank, especially below 10 MHz, is nerve stimulation. The first effect in the question is energy absorption; this item asks for the second named effect.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Nausea\": Nausea is not the established adverse effect named by the official Safety Code 6 answer.\n- sourceIndex 2: \"Numbness\": Numbness may sound nerve-related, but the official term in this item is nerve stimulation.\n- sourceIndex 3: \"Skin redness\": Skin redness is not the second established effect identified by the question bank.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-06"
+    },
+    {
+      "type": "question",
+      "id": "B-001-024-007"
+    }
+  ],
+  "licenseClass": "original"
+}

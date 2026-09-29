@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-024-003",
+  "questionId": "B-001-024-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-024-003.\n\nWhy the correct answer is right: The official bank identifies 48 MHz to 300 MHz as the range that causes the greatest RF-energy risk. The companion item explains that the human body absorbs RF energy most strongly in that range.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"300 MHz to 3000 MHz\": This is a higher range than the official greatest-risk range named by the bank.\n- sourceIndex 2: \"Above 1500 MHz\": The official answer does not put the greatest-risk range simply above this frequency.\n- sourceIndex 3: \"3 MHz to 30 MHz\": This HF range is not the range identified for greatest RF-energy risk in the official answer.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-06"
+    },
+    {
+      "type": "question",
+      "id": "B-001-024-003"
+    }
+  ],
+  "licenseClass": "original"
+}
