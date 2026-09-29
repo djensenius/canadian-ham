@@ -1,6 +1,8 @@
 import categoriesJson from "../../../../content/generated/basic-2025-07-15/categories.json";
+import manifestJson from "../../../../content/generated/basic-2025-07-15/manifest.json";
 import questionsJson from "../../../../content/generated/basic-2025-07-15/questions.json";
 import subsectionsJson from "../../../../content/generated/basic-2025-07-15/subsections.json";
+import subsectionTitlesJson from "../../../../content/subsection-titles.json";
 
 export type Language = "en" | "fr";
 
@@ -52,15 +54,51 @@ export interface Subsection {
   };
 }
 
+export interface SubsectionTitle {
+  readonly id: string;
+  readonly title: {
+    readonly en: string;
+    readonly fr: string | null;
+  };
+  readonly status: string;
+}
+
+export interface BankManifest {
+  readonly bankId: string;
+  readonly effectiveDate: string;
+  readonly counts: {
+    readonly questions: number;
+    readonly categories: number;
+    readonly subsections: number;
+  };
+}
+
+export const manifest = manifestJson as BankManifest;
 export const questions = questionsJson as readonly Question[];
 export const categories = categoriesJson as readonly Category[];
 export const subsections = subsectionsJson as readonly Subsection[];
+export const subsectionTitles = subsectionTitlesJson as readonly SubsectionTitle[];
 
 export const allQuestionCount = questions.length;
+export const bankId = manifest.bankId;
 
-export function questionsForScope(scopeId: string): readonly Question[] {
-  if (scopeId === "all") {
-    return questions;
-  }
-  return questions.filter((question) => question.categoryId === scopeId);
+export const questionsById = new Map(questions.map((question) => [question.id, question]));
+export const categoriesById = new Map(categories.map((category) => [category.id, category]));
+export const subsectionsById = new Map(subsections.map((subsection) => [subsection.id, subsection]));
+export const subsectionTitlesById = new Map(subsectionTitles.map((subsection) => [subsection.id, subsection]));
+
+export function questionsForCategory(categoryId: string): readonly Question[] {
+  return questions.filter((question) => question.categoryId === categoryId);
+}
+
+export function questionsForSubsection(subsectionId: string): readonly Question[] {
+  return questions.filter((question) => question.subsectionId === subsectionId);
+}
+
+export function subsectionTitle(subsectionId: string): string {
+  return subsectionTitlesById.get(subsectionId)?.title.en ?? subsectionId;
+}
+
+export function categoryName(categoryId: string): string {
+  return categoriesById.get(categoryId)?.name.en ?? categoryId;
 }
