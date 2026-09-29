@@ -172,14 +172,18 @@ final class CanadianHamPracticeUITests: XCTestCase {
         for pass in passes {
             prepare(pass)
             let context = AuditContext(screen: screen, appearance: appearance, pass: pass, questionID: questionID, iterationID: auditIterationID)
-            let records = verifyAuditElementPositions(interests(pass), context: context, in: app)
+            let passInterests = interests(pass)
+            waitForStableAuditLayout(passInterests, context: context, in: app)
+            let records = verifyAuditElementPositions(passInterests, context: context, in: app)
             recordVisibleAuditCoverage(records, context: context)
         }
 
         for pass in passes {
             prepare(pass)
             let context = AuditContext(screen: screen, appearance: appearance, pass: pass, questionID: questionID, iterationID: auditIterationID)
-            let records = verifyAuditElementPositions(interests(pass), context: context, in: app)
+            let passInterests = interests(pass)
+            waitForStableAuditLayout(passInterests, context: context, in: app)
+            let records = verifyAuditElementPositions(passInterests, context: context, in: app)
             recordVisibleAuditCoverage(records, context: context)
             captureScreenEvidence(named: "\(context.evidenceStem)-accessibility-audit")
             try captureAccessibilityAudit(on: app, context: context, preAuditRecords: records)
@@ -451,6 +455,62 @@ final class CanadianHamPracticeUITests: XCTestCase {
         }
     }
 
+    private func waitForStableAuditLayout(
+        _ interests: [AuditInterest],
+        context: AuditContext,
+        in app: XCUIApplication,
+        timeout: TimeInterval = 3,
+        tolerance: CGFloat = 0.5,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        var previousSnapshot = auditFrameSnapshot(for: interests, in: app)
+        let deadline = Date().addingTimeInterval(timeout)
+        repeat {
+            waitBriefly()
+            let currentSnapshot = auditFrameSnapshot(for: interests, in: app)
+            if auditFramesAreStable(previousSnapshot, currentSnapshot, tolerance: tolerance) {
+                return
+            }
+            previousSnapshot = currentSnapshot
+        } while Date() < deadline
+
+        XCTFail("Audit layout did not settle before \(context.evidenceStem). Last frames: \(auditFrameSnapshotDescription(previousSnapshot))", file: file, line: line)
+    }
+
+    private func auditFrameSnapshot(for interests: [AuditInterest], in app: XCUIApplication) -> [String: CGRect] {
+        var snapshot: [String: CGRect] = [:]
+        let bars = barFrames(in: app)
+        snapshot["window"] = app.windows.firstMatch.exists ? app.windows.firstMatch.frame : .null
+        snapshot["navigationBar"] = bars.navigationBarFrame
+        snapshot["statusBar"] = bars.statusBarFrame
+        for interest in interests {
+            snapshot["element:\(interest.name)"] = interest.element.exists ? interest.element.frame : .null
+        }
+        return snapshot
+    }
+
+    private func auditFramesAreStable(_ first: [String: CGRect], _ second: [String: CGRect], tolerance: CGFloat) -> Bool {
+        guard Set(first.keys) == Set(second.keys) else { return false }
+        return first.allSatisfy { key, firstFrame in
+            guard let secondFrame = second[key] else { return false }
+            if firstFrame.isNull || secondFrame.isNull {
+                return firstFrame.isNull && secondFrame.isNull
+            }
+            return abs(firstFrame.minX - secondFrame.minX) <= tolerance
+                && abs(firstFrame.minY - secondFrame.minY) <= tolerance
+                && abs(firstFrame.width - secondFrame.width) <= tolerance
+                && abs(firstFrame.height - secondFrame.height) <= tolerance
+        }
+    }
+
+    private func auditFrameSnapshotDescription(_ snapshot: [String: CGRect]) -> String {
+        snapshot.keys.sorted().map { key in
+            let frame = snapshot[key] ?? .null
+            return "\(key)=\(frame.isNull ? "nil" : frameDescription(frame))"
+        }.joined(separator: "; ")
+    }
+
     private func isFullyVisible(_ element: XCUIElement, in app: XCUIApplication, requiresHittable: Bool) -> Bool {
         guard element.exists else { return false }
         if requiresHittable && !element.isHittable { return false }
@@ -562,10 +622,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         if #available(iOS 17.0, *) {
             var findings: [String] = []
             var occludedFindings: [String] = []
+            var nonExcludedFindings: [String] = []
             var auditError: Error?
-            defer {
-                attachAuditFindings(findings, occludedFindings: occludedFindings, context: context, error: auditError, app: app)
-            }
             do {
                 try app.performAccessibilityAudit { issue in
                     let exclusion = self.exclusionDecision(for: issue, context: context, app: app, preAuditRecords: preAuditRecords)
@@ -574,12 +632,23 @@ final class CanadianHamPracticeUITests: XCTestCase {
                     if exclusion.kind == .occludedByBar {
                         occludedFindings.append(description)
                     }
-                    return exclusion.isExcluded
+                    if !exclusion.isExcluded {
+                        nonExcludedFindings.append(description)
+                    }
+                    // Suppress XCTest's immediate audit failure so the raw finding
+                    // evidence is always attached before this test fails below.
+                    return true
                 }
             } catch {
                 auditError = error
+                attachAuditFindings(findings, occludedFindings: occludedFindings, context: context, error: auditError, app: app)
                 throw error
             }
+            attachAuditFindings(findings, occludedFindings: occludedFindings, context: context, error: auditError, app: app)
+            XCTAssertTrue(
+                nonExcludedFindings.isEmpty,
+                "Accessibility audit reported non-excluded issues before \(context.evidenceStem): \(nonExcludedFindings.joined(separator: " | "))"
+            )
         } else {
             let rawFindings = "Screen: \(context.screen.rawValue)\nAppearance: \(context.appearance.rawValue)\nPass: \(context.pass.rawValue)\nIteration: \(context.iterationID)\nScreen frame: \(frameDescription(app.windows.firstMatch.frame))\nperformAccessibilityAudit is unavailable before iOS 17."
             let attachment = XCTAttachment(string: rawFindings)
