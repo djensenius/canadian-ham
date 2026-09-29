@@ -49,6 +49,7 @@ private struct CanadianHamTVRootView: View {
     @State private var screen: PlatformScreen
     @State private var selectedCategoryID: String
     @State private var language: BankLanguage
+    @State private var practiceSession = TVPracticeSessionState()
 
     init(launchOptions: TVLaunchOptions) {
         self.launchOptions = launchOptions
@@ -91,6 +92,9 @@ private struct CanadianHamTVRootView: View {
                 bank: bank,
                 language: $language,
                 onSelectCategory: { category in
+                    if selectedCategoryID != category.id {
+                        practiceSession.reset(for: category.id)
+                    }
                     selectedCategoryID = category.id
                     screen = .practice
                 },
@@ -104,15 +108,17 @@ private struct CanadianHamTVRootView: View {
                     forcedQuestionID: launchOptions.practiceQuestionID,
                     answeredSourceIndex: launchOptions.answeredSourceIndex,
                     language: $language,
+                    session: $practiceSession,
                     onCategories: { screen = .categories },
                     onAbout: { screen = .about }
                 )
-                .id(category.id)
+                .onExitCommand { screen = .categories }
             } else {
                 TVMessageView(title: "No categories", message: "The bundled question bank has no practice categories.", systemImage: "questionmark.folder")
             }
         case .about:
             TVAboutView(bank: bank, onCategories: { screen = .categories })
+                .onExitCommand { screen = .categories }
         }
     }
 
@@ -135,21 +141,25 @@ private struct TVCategoryGridView: View {
     private let columns = Array(repeating: GridItem(.flexible(), spacing: DesignTokens.Spacing.xl), count: 4)
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xxl) {
-            TVTopBar(title: "Canadian Ham", subtitle: "Offline Basic question-bank practice", language: $language, onAbout: onAbout)
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xxl) {
+                TVTopBar(title: "Canadian Ham", subtitle: "Offline Basic question-bank practice", language: $language, onAbout: onAbout)
 
-            Text("Practice categories")
-                .font(DesignTokens.FontScale.display.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .accessibilityAddTraits(.isHeader)
+                Text("Practice categories")
+                    .font(DesignTokens.FontScale.display.weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .accessibilityAddTraits(.isHeader)
 
-            LazyVGrid(columns: columns, alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-                ForEach(bank.categories) { category in
-                    TVCategoryButton(category: category, language: language) {
-                        onSelectCategory(category)
+                LazyVGrid(columns: columns, alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                    ForEach(bank.categories) { category in
+                        TVCategoryButton(category: category, language: language) {
+                            onSelectCategory(category)
+                        }
                     }
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.bottom, DesignTokens.Spacing.xxl)
         }
         .accessibilityIdentifier("tv-category-grid")
     }
@@ -171,7 +181,6 @@ private struct TVCategoryButton: View {
                 Text(category.name.text(for: language))
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
-                    .lineLimit(3)
                 Text("\(category.questionCount) questions • \(category.subsectionCount) subsections")
                     .font(DesignTokens.FontScale.body.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
@@ -192,82 +201,110 @@ private struct TVCategoryButton: View {
     }
 }
 
+private struct TVPracticeSessionState {
+    var categoryID: String?
+    var sessionID = UUID().uuidString
+    var currentQuestion: BankQuestion?
+    var shuffledAnswers: [ShuffledAnswer] = []
+    var selectedSourceIndex: Int?
+    var answeredCount = 0
+    var correctCount = 0
+    var errorMessage: String?
+
+    mutating func reset(for categoryID: String) {
+        self.categoryID = categoryID
+        sessionID = UUID().uuidString
+        currentQuestion = nil
+        shuffledAnswers = []
+        selectedSourceIndex = nil
+        answeredCount = 0
+        correctCount = 0
+        errorMessage = nil
+    }
+
+    mutating func resetIfNeeded(for categoryID: String) {
+        if self.categoryID != categoryID {
+            reset(for: categoryID)
+        }
+    }
+}
+
 private struct TVPracticeView: View {
     let bank: QuestionBank
     let category: BankCategory
     let forcedQuestionID: String?
     let answeredSourceIndex: Int?
     @Binding var language: BankLanguage
+    @Binding var session: TVPracticeSessionState
     let onCategories: () -> Void
     let onAbout: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var currentQuestion: BankQuestion?
-    @State private var shuffledAnswers: [ShuffledAnswer] = []
-    @State private var selectedSourceIndex: Int?
-    @State private var answeredCount = 0
-    @State private var correctCount = 0
-    @State private var errorMessage: String?
 
     private var selectedAnswer: ShuffledAnswer? {
-        guard let selectedSourceIndex else { return nil }
-        return shuffledAnswers.first { $0.sourceIndex == selectedSourceIndex }
+        guard let selectedSourceIndex = session.selectedSourceIndex else { return nil }
+        return session.shuffledAnswers.first { $0.sourceIndex == selectedSourceIndex }
     }
 
     private var correctAnswer: ShuffledAnswer? {
-        AppleQuestionShuffle.correctAnswer(in: shuffledAnswers)
+        AppleQuestionShuffle.correctAnswer(in: session.shuffledAnswers)
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-            TVTopBar(
-                title: category.name.text(for: language),
-                subtitle: "\(correctCount) correct out of \(answeredCount) answered",
-                language: $language,
-                onAbout: onAbout,
-                leadingAction: ("Categories", onCategories)
-            )
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                TVTopBar(
+                    title: category.name.text(for: language),
+                    subtitle: "\(session.correctCount) correct out of \(session.answeredCount) answered",
+                    language: $language,
+                    onAbout: onAbout,
+                    leadingAction: ("Categories", onCategories)
+                )
 
-            if let errorMessage {
-                TVMessageView(title: "Practice unavailable", message: errorMessage, systemImage: "exclamationmark.triangle.fill")
-            } else if let currentQuestion {
-                HStack(alignment: .top, spacing: DesignTokens.Spacing.xxl) {
-                    TVQuestionPanel(question: currentQuestion, category: category, language: language)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                        Text("Answers")
-                            .font(DesignTokens.FontScale.title.weight(.bold))
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                            .accessibilityAddTraits(.isHeader)
-                        ForEach(shuffledAnswers) { answer in
-                            TVAnswerButton(
-                                answer: answer,
-                                displayLetter: displayLetter(for: answer.displayIndex),
-                                language: language,
-                                selectedSourceIndex: selectedSourceIndex,
-                                action: { select(answer) }
-                            )
+                if let errorMessage = session.errorMessage {
+                    TVMessageView(title: "Practice unavailable", message: errorMessage, systemImage: "exclamationmark.triangle.fill")
+                } else if let currentQuestion = session.currentQuestion {
+                    HStack(alignment: .top, spacing: DesignTokens.Spacing.xxl) {
+                        TVQuestionPanel(question: currentQuestion, category: category, language: language)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                            Text("Answers")
+                                .font(DesignTokens.FontScale.title.weight(.bold))
+                                .foregroundStyle(DesignTokens.Colors.ink)
+                                .accessibilityAddTraits(.isHeader)
+                            ForEach(session.shuffledAnswers) { answer in
+                                TVAnswerButton(
+                                    answer: answer,
+                                    displayLetter: displayLetter(for: answer.displayIndex),
+                                    language: language,
+                                    selectedSourceIndex: session.selectedSourceIndex,
+                                    action: { select(answer) }
+                                )
+                            }
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                }
 
-                if let selectedAnswer, let correctAnswer {
-                    TVFeedbackBar(
-                        selectedAnswer: selectedAnswer,
-                        correctAnswer: correctAnswer,
-                        category: category,
-                        question: currentQuestion,
-                        language: language,
-                        onNext: loadNextQuestion
-                    )
+                    if let selectedAnswer, let correctAnswer {
+                        TVFeedbackBar(
+                            selectedAnswer: selectedAnswer,
+                            correctAnswer: correctAnswer,
+                            category: category,
+                            question: currentQuestion,
+                            language: language,
+                            onNext: loadNextQuestion
+                        )
+                    }
+                } else {
+                    TVMessageView(title: "No questions", message: "This category has no bundled questions.", systemImage: "questionmark.circle")
                 }
-            } else {
-                TVMessageView(title: "No questions", message: "This category has no bundled questions.", systemImage: "questionmark.circle")
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.bottom, DesignTokens.Spacing.xxl)
         }
         .onAppear {
-            if currentQuestion == nil {
+            session.resetIfNeeded(for: category.id)
+            if session.currentQuestion == nil {
                 loadNextQuestion()
             }
         }
@@ -275,46 +312,50 @@ private struct TVPracticeView: View {
     }
 
     private func select(_ answer: ShuffledAnswer) {
-        guard selectedSourceIndex == nil else { return }
+        guard session.selectedSourceIndex == nil else { return }
         withAnimation(reduceMotion ? nil : .easeInOut(duration: DesignTokens.Motion.fast)) {
-            selectedSourceIndex = answer.sourceIndex
+            session.selectedSourceIndex = answer.sourceIndex
         }
-        answeredCount += 1
-        if answer.isCorrect { correctCount += 1 }
+        session.answeredCount += 1
+        if answer.isCorrect { session.correctCount += 1 }
         AccessibilityNotification.Announcement(answer.isCorrect ? "Correct" : "Incorrect").post()
     }
 
     private func loadNextQuestion() {
         let questions = bank.questions(in: category)
         guard !questions.isEmpty else {
-            currentQuestion = nil
-            shuffledAnswers = []
-            selectedSourceIndex = nil
+            session.currentQuestion = nil
+            session.shuffledAnswers = []
+            session.selectedSourceIndex = nil
             return
         }
 
-        let requestedQuestionID = answeredCount == 0 ? forcedQuestionID : nil
+        let requestedQuestionID = session.answeredCount == 0 ? forcedQuestionID : nil
         do {
             let question: BankQuestion
+            let usedForcedQuestion: Bool
             if let requestedQuestionID, let forced = questions.first(where: { $0.id == requestedQuestionID }) {
                 question = forced
+                usedForcedQuestion = true
             } else {
-                question = try AppleQuestionShuffle.randomQuestion(from: questions, seed: "tvos-practice/\(category.id)/\(answeredCount)") ?? questions[0]
+                question = try AppleQuestionShuffle.randomQuestion(from: questions, seed: "tvos-practice/\(category.id)/\(session.answeredCount)/\(session.sessionID)") ?? questions[0]
+                usedForcedQuestion = false
             }
-            currentQuestion = question
-            shuffledAnswers = try AppleQuestionShuffle.shuffledAnswers(for: question, seed: "tvos-answers/\(question.id)/\(answeredCount)")
-            if answeredCount == 0, let answeredSourceIndex {
-                selectedSourceIndex = answeredSourceIndex
-                answeredCount = 1
+            session.currentQuestion = question
+            let answerSeed = usedForcedQuestion ? "tvos-answers/\(question.id)/ui-test" : "tvos-answers/\(question.id)/\(session.answeredCount)/\(session.sessionID)"
+            session.shuffledAnswers = try AppleQuestionShuffle.shuffledAnswers(for: question, seed: answerSeed)
+            if session.answeredCount == 0, let answeredSourceIndex {
+                session.selectedSourceIndex = answeredSourceIndex
+                session.answeredCount = 1
                 if question.answers.first(where: { $0.sourceIndex == answeredSourceIndex })?.isCorrect == true {
-                    correctCount = 1
+                    session.correctCount = 1
                 }
             } else {
-                selectedSourceIndex = nil
+                session.selectedSourceIndex = nil
             }
-            errorMessage = nil
+            session.errorMessage = nil
         } catch {
-            errorMessage = "Unable to prepare this question with the shared engine: \(error.localizedDescription)"
+            session.errorMessage = "Unable to prepare this question with the shared engine: \(error.localizedDescription)"
         }
     }
 
@@ -334,9 +375,9 @@ private struct TVQuestionPanel: View {
                 .font(DesignTokens.FontScale.body.monospaced().weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
             Text(localized(question.text.text(for: language), language: language))
-                .font(DesignTokens.FontScale.headline.weight(.bold))
+                .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
-                .lineLimit(5)
+                .accessibilityIdentifier("question-stem")
             Text("Source: \(category.name.text(for: language)) • \(question.subsectionId)")
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
@@ -349,7 +390,13 @@ private struct TVQuestionPanel: View {
                 .strokeBorder(DesignTokens.Colors.border, lineWidth: 2)
         )
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Question \(question.id). \(question.text.text(for: language))")
+        .accessibilityLabel(Text(accessibilityLabel))
+    }
+
+    private var accessibilityLabel: AttributedString {
+        var label = english("Question \(question.id). ")
+        label += localized(question.text.text(for: language), language: language)
+        return label
     }
 }
 
@@ -377,7 +424,7 @@ private struct TVAnswerButton: View {
                     Text(localized(answer.answer.text.text(for: language), language: language))
                         .font(DesignTokens.FontScale.bodyLarge.weight(.semibold))
                         .foregroundStyle(textColor)
-                        .lineLimit(3)
+                        .accessibilityIdentifier("answer-\(displayLetter)-text")
                     if let statusText {
                         Label(statusText, systemImage: answer.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
                             .font(DesignTokens.FontScale.caption.weight(.bold))
@@ -397,7 +444,8 @@ private struct TVAnswerButton: View {
         .buttonStyle(.plain)
         .focused($isFocused)
         .disabled(isAnswered)
-        .accessibilityLabel(accessibilityLabel)
+        .accessibilityLabel(Text(accessibilityLabel))
+        .accessibilityIdentifier("answer-\(displayLetter)-button")
         .accessibilityHint(isAnswered ? "Question already answered. Use Next question to continue." : "Selects this answer")
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
@@ -429,9 +477,10 @@ private struct TVAnswerButton: View {
         if isSelected { return "Your answer, incorrect" }
         return nil
     }
-    private var accessibilityLabel: String {
-        var label = "Answer \(displayLetter), \(answer.answer.text.text(for: language))"
-        if let statusText { label += ", \(statusText)" }
+    private var accessibilityLabel: AttributedString {
+        var label = english("Answer \(displayLetter), ")
+        label += localized(answer.answer.text.text(for: language), language: language)
+        if let statusText { label += english(", \(statusText)") }
         return label
     }
 }
@@ -457,6 +506,7 @@ private struct TVFeedbackBar: View {
                 .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                 .buttonStyle(.borderedProminent)
                 .accessibilityHint("Loads another question from this category")
+                .accessibilityIdentifier("next-question-button")
         }
         .padding(DesignTokens.Spacing.xl)
         .background(selectedAnswer.isCorrect ? DesignTokens.Colors.correctBg : DesignTokens.Colors.incorrectBg, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous))
@@ -464,15 +514,41 @@ private struct TVFeedbackBar: View {
             RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous)
                 .strokeBorder(selectedAnswer.isCorrect ? DesignTokens.Colors.correctBorder : DesignTokens.Colors.incorrectBorder, lineWidth: 3)
         )
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(accessibilityLabel))
         .accessibilityIdentifier("answer-feedback")
     }
 
     private var resultText: String { selectedAnswer.isCorrect ? "Correct" : "Incorrect" }
-    private var sourceText: String {
-        selectedAnswer.isCorrect
-            ? "Source: \(category.name.text(for: language)) • \(question.subsectionId)"
-            : "Correct answer: \(correctAnswer.answer.text.text(for: language))"
+    private var sourceText: AttributedString {
+        if selectedAnswer.isCorrect {
+            var text = english("Source: ")
+            text += localized(category.name.text(for: language), language: language)
+            text += english(" • \(question.subsectionId)")
+            return text
+        }
+
+        var text = english("Correct answer: ")
+        text += localized(correctAnswer.answer.text.text(for: language), language: language)
+        return text
+    }
+
+    private var accessibilityLabel: AttributedString {
+        if selectedAnswer.isCorrect {
+            var label = english("Correct. Your answer: ")
+            label += localized(selectedAnswer.answer.text.text(for: language), language: language)
+            label += english(". Source: ")
+            label += localized(category.name.text(for: language), language: language)
+            label += english(", \(question.subsectionId)")
+            return label
+        }
+
+        var label = english("Incorrect. Correct answer: ")
+        label += localized(correctAnswer.answer.text.text(for: language), language: language)
+        label += english(". Source: ")
+        label += localized(category.name.text(for: language), language: language)
+        label += english(", \(question.subsectionId)")
+        return label
     }
 }
 
@@ -523,33 +599,37 @@ private struct TVAboutView: View {
     let onCategories: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-            HStack {
-                Button("Categories", action: onCategories)
-                    .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                    .buttonStyle(.bordered)
-                Spacer()
-            }
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                HStack {
+                    Button("Categories", action: onCategories)
+                        .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                        .buttonStyle(.bordered)
+                    Spacer()
+                }
 
-            Text("About Canadian Ham")
-                .font(DesignTokens.FontScale.display.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .accessibilityAddTraits(.isHeader)
+                Text("About Canadian Ham")
+                    .font(DesignTokens.FontScale.display.weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .accessibilityAddTraits(.isHeader)
 
-            HStack(alignment: .top, spacing: DesignTokens.Spacing.xl) {
-                TVPaperSection(title: "Bank") {
-                    Text("Active bank: \(bank.manifest.bankId)")
-                    Text("Effective date: \(bank.manifest.effectiveDate)")
-                    Text("Questions: \(bank.questions.count) • Categories: \(bank.categories.count) • Subsections: \(bank.subsections.count)")
-                }
-                TVPaperSection(title: "Attribution") {
-                    Text("Question-bank material is sourced from Innovation, Science and Economic Development Canada Amateur Radio Operator Certificate Basic Qualification materials.")
-                    Text("Canadian Ham is independent and not affiliated with, sponsored by, or endorsed by ISED, RAC, or any accredited examiner.")
-                }
-                TVPaperSection(title: "Privacy") {
-                    Text("This tvOS app works offline with bundled content, includes no networking code, no analytics, no telemetry, and no iCloud sync.")
+                HStack(alignment: .top, spacing: DesignTokens.Spacing.xl) {
+                    TVPaperSection(title: "Bank") {
+                        Text("Active bank: \(bank.manifest.bankId)")
+                        Text("Effective date: \(bank.manifest.effectiveDate)")
+                        Text("Questions: \(bank.questions.count) • Categories: \(bank.categories.count) • Subsections: \(bank.subsections.count)")
+                    }
+                    TVPaperSection(title: "Attribution") {
+                        Text("Question-bank material is sourced from Innovation, Science and Economic Development Canada Amateur Radio Operator Certificate Basic Qualification materials.")
+                        Text("Canadian Ham is independent and not affiliated with, sponsored by, or endorsed by ISED, RAC, or any accredited examiner.")
+                    }
+                    TVPaperSection(title: "Privacy") {
+                        Text("This tvOS app works offline with bundled content, includes no networking code, no analytics, no telemetry, and no iCloud sync.")
+                    }
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.bottom, DesignTokens.Spacing.xxl)
         }
         .accessibilityIdentifier("tv-about-screen")
     }
@@ -608,5 +688,11 @@ private struct TVMessageView: View {
 private func localized(_ string: String, language: BankLanguage) -> AttributedString {
     var attributedString = AttributedString(string)
     attributedString.languageIdentifier = language.accessibilityLanguageCode
+    return attributedString
+}
+
+private func english(_ string: String) -> AttributedString {
+    var attributedString = AttributedString(string)
+    attributedString.languageIdentifier = BankLanguage.english.accessibilityLanguageCode
     return attributedString
 }

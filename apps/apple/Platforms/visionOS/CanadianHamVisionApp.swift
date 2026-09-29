@@ -50,6 +50,7 @@ private struct CanadianHamVisionRootView: View {
     @State private var screen: VisionScreen
     @State private var selectedCategoryID: String
     @State private var language: BankLanguage
+    @State private var practiceSession = VisionPracticeSessionState()
 
     init(launchOptions: VisionLaunchOptions) {
         self.launchOptions = launchOptions
@@ -75,9 +76,9 @@ private struct CanadianHamVisionRootView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
             }
         }
-        .ornament(attachmentAnchor: .scene(.top), contentAlignment: .center) {
+        .ornament(attachmentAnchor: .scene(.bottom), contentAlignment: .top) {
             VisionLanguageOrnament(language: $language)
-                .padding(.top, DesignTokens.Spacing.md)
+                .padding(.bottom, DesignTokens.Spacing.md)
         }
         .task { loadBankIfNeeded() }
     }
@@ -90,6 +91,9 @@ private struct CanadianHamVisionRootView: View {
                 bank: bank,
                 language: language,
                 onSelectCategory: { category in
+                    if selectedCategoryID != category.id {
+                        practiceSession.reset(for: category.id)
+                    }
                     selectedCategoryID = category.id
                     screen = .practice
                 },
@@ -103,10 +107,10 @@ private struct CanadianHamVisionRootView: View {
                     forcedQuestionID: launchOptions.practiceQuestionID,
                     answeredSourceIndex: launchOptions.answeredSourceIndex,
                     language: language,
+                    session: $practiceSession,
                     onCategories: { screen = .categories },
                     onAbout: { screen = .about }
                 )
-                .id(category.id)
             } else {
                 VisionMessageView(title: "No categories", message: "The bundled question bank has no practice categories.", systemImage: "questionmark.folder")
             }
@@ -152,38 +156,41 @@ private struct VisionCategoryGridView: View {
     private let columns = Array(repeating: GridItem(.flexible(), spacing: DesignTokens.Spacing.lg), count: 4)
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-            HStack(alignment: .center) {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Text("Canadian Ham")
-                        .font(DesignTokens.FontScale.display.weight(.bold))
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                        .accessibilityAddTraits(.isHeader)
-                    Text("Offline Basic question-bank practice for visionOS")
-                        .font(DesignTokens.FontScale.body)
-                        .foregroundStyle(DesignTokens.Colors.inkMuted)
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                HStack(alignment: .center) {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                        Text("Canadian Ham")
+                            .font(DesignTokens.FontScale.display.weight(.bold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .accessibilityAddTraits(.isHeader)
+                        Text("Offline Basic question-bank practice for visionOS")
+                            .font(DesignTokens.FontScale.body)
+                            .foregroundStyle(DesignTokens.Colors.inkMuted)
+                    }
+                    Spacer()
+                    Button("About", action: onAbout)
+                        .buttonStyle(.bordered)
+                        .font(DesignTokens.FontScale.body.weight(.semibold))
+                        .accessibilityLabel("About Canadian Ham")
                 }
-                Spacer()
-                Button("About", action: onAbout)
-                    .buttonStyle(.bordered)
-                    .font(DesignTokens.FontScale.body.weight(.semibold))
-                    .accessibilityLabel("About Canadian Ham")
-            }
 
-            Text("Practice categories")
-                .font(DesignTokens.FontScale.title.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .accessibilityAddTraits(.isHeader)
+                Text("Practice categories")
+                    .font(DesignTokens.FontScale.title.weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .accessibilityAddTraits(.isHeader)
 
-            LazyVGrid(columns: columns, spacing: DesignTokens.Spacing.lg) {
-                ForEach(bank.categories) { category in
-                    VisionCategoryCard(category: category, language: language) {
-                        onSelectCategory(category)
+                LazyVGrid(columns: columns, spacing: DesignTokens.Spacing.lg) {
+                    ForEach(bank.categories) { category in
+                        VisionCategoryCard(category: category, language: language) {
+                            onSelectCategory(category)
+                        }
                     }
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .topLeading)
+            .padding(.bottom, DesignTokens.Spacing.xxl)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .accessibilityIdentifier("vision-category-grid")
     }
 }
@@ -202,7 +209,6 @@ private struct VisionCategoryCard: View {
                 Text(category.name.text(for: language))
                     .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
-                    .lineLimit(3)
                 Spacer(minLength: DesignTokens.Spacing.sm)
                 Text("\(category.questionCount) questions • \(category.subsectionCount) subsections")
                     .font(DesignTokens.FontScale.caption.weight(.semibold))
@@ -223,94 +229,121 @@ private struct VisionCategoryCard: View {
     }
 }
 
+private struct VisionPracticeSessionState {
+    var categoryID: String?
+    var sessionID = UUID().uuidString
+    var currentQuestion: BankQuestion?
+    var shuffledAnswers: [ShuffledAnswer] = []
+    var selectedSourceIndex: Int?
+    var answeredCount = 0
+    var correctCount = 0
+    var errorMessage: String?
+
+    mutating func reset(for categoryID: String) {
+        self.categoryID = categoryID
+        sessionID = UUID().uuidString
+        currentQuestion = nil
+        shuffledAnswers = []
+        selectedSourceIndex = nil
+        answeredCount = 0
+        correctCount = 0
+        errorMessage = nil
+    }
+
+    mutating func resetIfNeeded(for categoryID: String) {
+        if self.categoryID != categoryID {
+            reset(for: categoryID)
+        }
+    }
+}
+
 private struct VisionPracticeView: View {
     let bank: QuestionBank
     let category: BankCategory
     let forcedQuestionID: String?
     let answeredSourceIndex: Int?
     let language: BankLanguage
+    @Binding var session: VisionPracticeSessionState
     let onCategories: () -> Void
     let onAbout: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var currentQuestion: BankQuestion?
-    @State private var shuffledAnswers: [ShuffledAnswer] = []
-    @State private var selectedSourceIndex: Int?
-    @State private var answeredCount = 0
-    @State private var correctCount = 0
-    @State private var errorMessage: String?
 
     private var selectedAnswer: ShuffledAnswer? {
-        guard let selectedSourceIndex else { return nil }
-        return shuffledAnswers.first { $0.sourceIndex == selectedSourceIndex }
+        guard let selectedSourceIndex = session.selectedSourceIndex else { return nil }
+        return session.shuffledAnswers.first { $0.sourceIndex == selectedSourceIndex }
     }
 
     private var correctAnswer: ShuffledAnswer? {
-        AppleQuestionShuffle.correctAnswer(in: shuffledAnswers)
+        AppleQuestionShuffle.correctAnswer(in: session.shuffledAnswers)
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            HStack(alignment: .center, spacing: DesignTokens.Spacing.lg) {
-                Button("Categories", action: onCategories)
-                    .buttonStyle(.bordered)
-                    .accessibilityHint("Returns to the category grid")
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                    Text(category.name.text(for: language))
-                        .font(DesignTokens.FontScale.headline.weight(.bold))
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                        .accessibilityAddTraits(.isHeader)
-                    Text("\(correctCount) correct out of \(answeredCount) answered")
-                        .font(DesignTokens.FontScale.body)
-                        .foregroundStyle(DesignTokens.Colors.inkMuted)
-                }
-                Spacer()
-                Button("About", action: onAbout)
-                    .buttonStyle(.bordered)
-                    .accessibilityLabel("About Canadian Ham")
-            }
-
-            if let errorMessage {
-                VisionMessageView(title: "Practice unavailable", message: errorMessage, systemImage: "exclamationmark.triangle.fill")
-            } else if let currentQuestion {
-                HStack(alignment: .top, spacing: DesignTokens.Spacing.xl) {
-                    VisionQuestionCard(question: currentQuestion, category: category, language: language)
-                        .frame(maxWidth: .infinity)
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                        Text("Answers")
-                            .font(DesignTokens.FontScale.title.weight(.bold))
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                HStack(alignment: .center, spacing: DesignTokens.Spacing.lg) {
+                    Button("Categories", action: onCategories)
+                        .buttonStyle(.bordered)
+                        .accessibilityHint("Returns to the category grid")
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                        Text(category.name.text(for: language))
+                            .font(DesignTokens.FontScale.headline.weight(.bold))
                             .foregroundStyle(DesignTokens.Colors.ink)
                             .accessibilityAddTraits(.isHeader)
-                        ForEach(shuffledAnswers) { answer in
-                            VisionAnswerButton(
-                                answer: answer,
-                                displayLetter: displayLetter(for: answer.displayIndex),
-                                language: language,
-                                selectedSourceIndex: selectedSourceIndex,
-                                action: { select(answer) }
-                            )
-                        }
+                        Text("\(session.correctCount) correct out of \(session.answeredCount) answered")
+                            .font(DesignTokens.FontScale.body)
+                            .foregroundStyle(DesignTokens.Colors.inkMuted)
                     }
-                    .frame(maxWidth: .infinity)
+                    Spacer()
+                    Button("About", action: onAbout)
+                        .buttonStyle(.bordered)
+                        .accessibilityLabel("About Canadian Ham")
                 }
 
-                if let selectedAnswer, let correctAnswer {
-                    VisionFeedbackPanel(
-                        selectedAnswer: selectedAnswer,
-                        correctAnswer: correctAnswer,
-                        category: category,
-                        question: currentQuestion,
-                        language: language,
-                        onNext: loadNextQuestion
-                    )
+                if let errorMessage = session.errorMessage {
+                    VisionMessageView(title: "Practice unavailable", message: errorMessage, systemImage: "exclamationmark.triangle.fill")
+                } else if let currentQuestion = session.currentQuestion {
+                    HStack(alignment: .top, spacing: DesignTokens.Spacing.xl) {
+                        VisionQuestionCard(question: currentQuestion, category: category, language: language)
+                            .frame(maxWidth: .infinity)
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                            Text("Answers")
+                                .font(DesignTokens.FontScale.title.weight(.bold))
+                                .foregroundStyle(DesignTokens.Colors.ink)
+                                .accessibilityAddTraits(.isHeader)
+                            ForEach(session.shuffledAnswers) { answer in
+                                VisionAnswerButton(
+                                    answer: answer,
+                                    displayLetter: displayLetter(for: answer.displayIndex),
+                                    language: language,
+                                    selectedSourceIndex: session.selectedSourceIndex,
+                                    action: { select(answer) }
+                                )
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+
+                    if let selectedAnswer, let correctAnswer {
+                        VisionFeedbackPanel(
+                            selectedAnswer: selectedAnswer,
+                            correctAnswer: correctAnswer,
+                            category: category,
+                            question: currentQuestion,
+                            language: language,
+                            onNext: loadNextQuestion
+                        )
+                    }
+                } else {
+                    VisionMessageView(title: "No questions", message: "This category has no bundled questions.", systemImage: "questionmark.circle")
                 }
-            } else {
-                VisionMessageView(title: "No questions", message: "This category has no bundled questions.", systemImage: "questionmark.circle")
             }
+            .frame(maxWidth: .infinity, alignment: .topLeading)
+            .padding(.bottom, DesignTokens.Spacing.xxl)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .onAppear {
-            if currentQuestion == nil {
+            session.resetIfNeeded(for: category.id)
+            if session.currentQuestion == nil {
                 loadNextQuestion()
             }
         }
@@ -318,45 +351,49 @@ private struct VisionPracticeView: View {
     }
 
     private func select(_ answer: ShuffledAnswer) {
-        guard selectedSourceIndex == nil else { return }
+        guard session.selectedSourceIndex == nil else { return }
         withAnimation(reduceMotion ? nil : .easeInOut(duration: DesignTokens.Motion.fast)) {
-            selectedSourceIndex = answer.sourceIndex
+            session.selectedSourceIndex = answer.sourceIndex
         }
-        answeredCount += 1
-        if answer.isCorrect { correctCount += 1 }
+        session.answeredCount += 1
+        if answer.isCorrect { session.correctCount += 1 }
         AccessibilityNotification.Announcement(answer.isCorrect ? "Correct" : "Incorrect").post()
     }
 
     private func loadNextQuestion() {
         let questions = bank.questions(in: category)
         guard !questions.isEmpty else {
-            currentQuestion = nil
-            shuffledAnswers = []
-            selectedSourceIndex = nil
+            session.currentQuestion = nil
+            session.shuffledAnswers = []
+            session.selectedSourceIndex = nil
             return
         }
-        let requestedQuestionID = answeredCount == 0 ? forcedQuestionID : nil
+        let requestedQuestionID = session.answeredCount == 0 ? forcedQuestionID : nil
         do {
             let question: BankQuestion
+            let usedForcedQuestion: Bool
             if let requestedQuestionID, let forced = questions.first(where: { $0.id == requestedQuestionID }) {
                 question = forced
+                usedForcedQuestion = true
             } else {
-                question = try AppleQuestionShuffle.randomQuestion(from: questions, seed: "vision-practice/\(category.id)/\(answeredCount)") ?? questions[0]
+                question = try AppleQuestionShuffle.randomQuestion(from: questions, seed: "vision-practice/\(category.id)/\(session.answeredCount)/\(session.sessionID)") ?? questions[0]
+                usedForcedQuestion = false
             }
-            currentQuestion = question
-            shuffledAnswers = try AppleQuestionShuffle.shuffledAnswers(for: question, seed: "vision-answers/\(question.id)/\(answeredCount)")
-            if answeredCount == 0, let answeredSourceIndex {
-                selectedSourceIndex = answeredSourceIndex
-                answeredCount = 1
+            session.currentQuestion = question
+            let answerSeed = usedForcedQuestion ? "vision-answers/\(question.id)/ui-test" : "vision-answers/\(question.id)/\(session.answeredCount)/\(session.sessionID)"
+            session.shuffledAnswers = try AppleQuestionShuffle.shuffledAnswers(for: question, seed: answerSeed)
+            if session.answeredCount == 0, let answeredSourceIndex {
+                session.selectedSourceIndex = answeredSourceIndex
+                session.answeredCount = 1
                 if question.answers.first(where: { $0.sourceIndex == answeredSourceIndex })?.isCorrect == true {
-                    correctCount = 1
+                    session.correctCount = 1
                 }
             } else {
-                selectedSourceIndex = nil
+                session.selectedSourceIndex = nil
             }
-            errorMessage = nil
+            session.errorMessage = nil
         } catch {
-            errorMessage = "Unable to prepare this question with the shared engine: \(error.localizedDescription)"
+            session.errorMessage = "Unable to prepare this question with the shared engine: \(error.localizedDescription)"
         }
     }
 
@@ -379,7 +416,7 @@ private struct VisionQuestionCard: View {
             Text(localizedVision(question.text.text(for: language), language: language))
                 .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
-                .lineLimit(6)
+                .accessibilityIdentifier("question-stem")
             Text("Source: \(category.name.text(for: language)) • \(question.subsectionId)")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
@@ -393,7 +430,13 @@ private struct VisionQuestionCard: View {
         )
         .glassBackgroundEffect()
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Question \(question.id). \(question.text.text(for: language))")
+        .accessibilityLabel(Text(accessibilityLabel))
+    }
+
+    private var accessibilityLabel: AttributedString {
+        var label = englishVision("Question \(question.id). ")
+        label += localizedVision(question.text.text(for: language), language: language)
+        return label
     }
 }
 
@@ -419,7 +462,7 @@ private struct VisionAnswerButton: View {
                     Text(localizedVision(answer.answer.text.text(for: language), language: language))
                         .font(DesignTokens.FontScale.body.weight(.semibold))
                         .foregroundStyle(textColor)
-                        .lineLimit(3)
+                        .accessibilityIdentifier("answer-\(displayLetter)-text")
                     if let statusText {
                         Label(statusText, systemImage: answer.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
                             .font(DesignTokens.FontScale.caption.weight(.bold))
@@ -439,7 +482,8 @@ private struct VisionAnswerButton: View {
         .buttonStyle(.plain)
         .hoverEffect(.highlight)
         .disabled(isAnswered)
-        .accessibilityLabel(accessibilityLabel)
+        .accessibilityLabel(Text(accessibilityLabel))
+        .accessibilityIdentifier("answer-\(displayLetter)-button")
         .accessibilityHint(isAnswered ? "Question already answered. Use Next question to continue." : "Selects this answer")
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
@@ -471,9 +515,10 @@ private struct VisionAnswerButton: View {
         if isSelected { return "Your answer, incorrect" }
         return nil
     }
-    private var accessibilityLabel: String {
-        var label = "Answer \(displayLetter), \(answer.answer.text.text(for: language))"
-        if let statusText { label += ", \(statusText)" }
+    private var accessibilityLabel: AttributedString {
+        var label = englishVision("Answer \(displayLetter), ")
+        label += localizedVision(answer.answer.text.text(for: language), language: language)
+        if let statusText { label += englishVision(", \(statusText)") }
         return label
     }
 }
@@ -499,6 +544,7 @@ private struct VisionFeedbackPanel: View {
                 .buttonStyle(.borderedProminent)
                 .font(DesignTokens.FontScale.body.weight(.bold))
                 .accessibilityHint("Loads another question from this category")
+                .accessibilityIdentifier("next-question-button")
         }
         .padding(DesignTokens.Spacing.lg)
         .background(selectedAnswer.isCorrect ? DesignTokens.Colors.correctBg : DesignTokens.Colors.incorrectBg, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous))
@@ -507,15 +553,41 @@ private struct VisionFeedbackPanel: View {
                 .strokeBorder(selectedAnswer.isCorrect ? DesignTokens.Colors.correctBorder : DesignTokens.Colors.incorrectBorder, lineWidth: 2)
         )
         .glassBackgroundEffect()
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(accessibilityLabel))
         .accessibilityIdentifier("answer-feedback")
     }
 
     private var resultText: String { selectedAnswer.isCorrect ? "Correct" : "Incorrect" }
-    private var sourceText: String {
-        selectedAnswer.isCorrect
-            ? "Source: \(category.name.text(for: language)) • \(question.subsectionId)"
-            : "Correct answer: \(correctAnswer.answer.text.text(for: language))"
+    private var sourceText: AttributedString {
+        if selectedAnswer.isCorrect {
+            var text = englishVision("Source: ")
+            text += localizedVision(category.name.text(for: language), language: language)
+            text += englishVision(" • \(question.subsectionId)")
+            return text
+        }
+
+        var text = englishVision("Correct answer: ")
+        text += localizedVision(correctAnswer.answer.text.text(for: language), language: language)
+        return text
+    }
+
+    private var accessibilityLabel: AttributedString {
+        if selectedAnswer.isCorrect {
+            var label = englishVision("Correct. Your answer: ")
+            label += localizedVision(selectedAnswer.answer.text.text(for: language), language: language)
+            label += englishVision(". Source: ")
+            label += localizedVision(category.name.text(for: language), language: language)
+            label += englishVision(", \(question.subsectionId)")
+            return label
+        }
+
+        var label = englishVision("Incorrect. Correct answer: ")
+        label += localizedVision(correctAnswer.answer.text.text(for: language), language: language)
+        label += englishVision(". Source: ")
+        label += localizedVision(category.name.text(for: language), language: language)
+        label += englishVision(", \(question.subsectionId)")
+        return label
     }
 }
 
@@ -524,34 +596,37 @@ private struct VisionAboutView: View {
     let onCategories: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-            HStack {
-                Button("Categories", action: onCategories)
-                    .buttonStyle(.bordered)
-                Spacer()
-            }
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                HStack {
+                    Button("Categories", action: onCategories)
+                        .buttonStyle(.bordered)
+                    Spacer()
+                }
 
-            Text("About Canadian Ham")
-                .font(DesignTokens.FontScale.display.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .accessibilityAddTraits(.isHeader)
+                Text("About Canadian Ham")
+                    .font(DesignTokens.FontScale.display.weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .accessibilityAddTraits(.isHeader)
 
-            HStack(alignment: .top, spacing: DesignTokens.Spacing.lg) {
-                VisionPaperSection(title: "Bank") {
-                    Text("Active bank: \(bank.manifest.bankId)")
-                    Text("Effective date: \(bank.manifest.effectiveDate)")
-                    Text("Questions: \(bank.questions.count) • Categories: \(bank.categories.count) • Subsections: \(bank.subsections.count)")
-                }
-                VisionPaperSection(title: "Attribution") {
-                    Text("Question-bank material is sourced from Innovation, Science and Economic Development Canada Amateur Radio Operator Certificate Basic Qualification materials.")
-                    Text("Canadian Ham is independent and not affiliated with, sponsored by, or endorsed by ISED, RAC, or any accredited examiner.")
-                }
-                VisionPaperSection(title: "Privacy") {
-                    Text("This visionOS app works offline with bundled content, includes no networking code, no analytics, no telemetry, and no iCloud sync.")
+                HStack(alignment: .top, spacing: DesignTokens.Spacing.lg) {
+                    VisionPaperSection(title: "Bank") {
+                        Text("Active bank: \(bank.manifest.bankId)")
+                        Text("Effective date: \(bank.manifest.effectiveDate)")
+                        Text("Questions: \(bank.questions.count) • Categories: \(bank.categories.count) • Subsections: \(bank.subsections.count)")
+                    }
+                    VisionPaperSection(title: "Attribution") {
+                        Text("Question-bank material is sourced from Innovation, Science and Economic Development Canada Amateur Radio Operator Certificate Basic Qualification materials.")
+                        Text("Canadian Ham is independent and not affiliated with, sponsored by, or endorsed by ISED, RAC, or any accredited examiner.")
+                    }
+                    VisionPaperSection(title: "Privacy") {
+                        Text("This visionOS app works offline with bundled content, includes no networking code, no analytics, no telemetry, and no iCloud sync.")
+                    }
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .topLeading)
+            .padding(.bottom, DesignTokens.Spacing.xxl)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .accessibilityIdentifier("vision-about-screen")
     }
 }
@@ -611,5 +686,11 @@ private struct VisionMessageView: View {
 private func localizedVision(_ string: String, language: BankLanguage) -> AttributedString {
     var attributedString = AttributedString(string)
     attributedString.languageIdentifier = language.accessibilityLanguageCode
+    return attributedString
+}
+
+private func englishVision(_ string: String) -> AttributedString {
+    var attributedString = AttributedString(string)
+    attributedString.languageIdentifier = BankLanguage.english.accessibilityLanguageCode
     return attributedString
 }
