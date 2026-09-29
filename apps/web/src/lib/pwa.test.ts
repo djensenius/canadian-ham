@@ -77,6 +77,20 @@ describe("PWA manifest and service worker assets", () => {
     assert.equal(await missingPdf.response.text(), "network:https://example.test/assets/missing.pdf");
     assert.equal(missingPdf.fetchMock.mock.calls.length, 1);
   });
+
+  it("rejects cross-origin requests without fetching or caching them", async () => {
+    const result = await dispatchFetch(
+      createServiceWorkerSource(["./", "./index.html"], "crossorigin"),
+      new Request("https://ised-isde.canada.ca/site/example"),
+      new Map(),
+    );
+
+    assert.equal(result.response.type, "error");
+    assert.equal(result.response.status, 0);
+    assert.equal(result.fetchMock.mock.calls.length, 0);
+    assert.equal(result.cacheMatchMock.mock.calls.length, 0);
+    assert.equal(result.cachePutMock.mock.calls.length, 0);
+  });
 });
 
 function navigationRequest(url: string): Request {
@@ -87,20 +101,22 @@ function navigationRequest(url: string): Request {
 
 type ServiceWorkerFetchHandler = (event: { readonly request: Request; readonly respondWith: (response: Promise<Response> | Response) => void }) => void;
 
-async function dispatchFetch(source: string, request: Request, cachedEntries: Map<string, Response>): Promise<{ readonly response: Response; readonly fetchMock: ReturnType<typeof vi.fn> }> {
+async function dispatchFetch(source: string, request: Request, cachedEntries: Map<string, Response>): Promise<{ readonly response: Response; readonly fetchMock: ReturnType<typeof vi.fn>; readonly cacheMatchMock: ReturnType<typeof vi.fn>; readonly cachePutMock: ReturnType<typeof vi.fn> }> {
   let fetchHandler: ServiceWorkerFetchHandler = () => {
     throw new Error("Service worker fetch handler was not registered.");
   };
   const fetchMock = vi.fn(async (nextRequest: Request) => new Response(`network:${nextRequest.url}`));
+  const cacheMatchMock = vi.fn(async (key: Request | string) => cachedEntries.get(cacheKey(key))?.clone());
+  const cachePutMock = vi.fn(async (key: Request | string, response: Response) => {
+    cachedEntries.set(cacheKey(key), response.clone());
+  });
   const caches = {
-    match: vi.fn(async (key: Request | string) => cachedEntries.get(cacheKey(key))?.clone()),
+    match: cacheMatchMock,
     keys: vi.fn(async () => ["canadian-ham-old"]),
     delete: vi.fn(async () => true),
     open: vi.fn(async () => ({
       addAll: vi.fn(async () => undefined),
-      put: vi.fn(async (key: Request | string, response: Response) => {
-        cachedEntries.set(cacheKey(key), response.clone());
-      }),
+      put: cachePutMock,
     })),
   };
   const self = {
@@ -123,7 +139,7 @@ async function dispatchFetch(source: string, request: Request, cachedEntries: Ma
     },
   });
   assert.ok(responsePromise);
-  return { response: await responsePromise, fetchMock };
+  return { response: await responsePromise, fetchMock, cacheMatchMock, cachePutMock };
 }
 
 function cacheKey(key: Request | string): string {

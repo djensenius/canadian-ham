@@ -9,7 +9,7 @@ import axe from "axe-core";
 import { IDBFactory } from "fake-indexeddb";
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
 
-import { App, AppErrorBoundary } from "./App";
+import { App, AppErrorBoundary, CitationLink } from "./App";
 import { bankId, loadQuestions, loadQuestionsFromUrl, type Question } from "./data/bank";
 import { explanationForQuestion, parseChoiceNotes } from "./data/explanations";
 import { lessonQuizzesById, buildLessonQuizItems } from "./data/quizzes";
@@ -669,6 +669,24 @@ describe("App accessibility and flows", () => {
     assert.equal(examLink.getAttribute("target"), "_blank");
     assert.match(examLink.getAttribute("rel") ?? "", /noreferrer/);
     assert.match(screen.getByLabelText("Exam reference sheet attribution").textContent ?? "", /may be used while writing the exam/);
+  });
+
+  it("renders official-source citations as user-activated external links without preloading or fetching them", () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const explanation = explanationForQuestion("B-001-017-009");
+    assert.ok(explanation);
+    const citation = explanation.citations.find((candidate) => candidate.url !== undefined);
+    assert.ok(citation?.url);
+
+    render(<CitationLink citation={citation} />);
+
+    const citationLink = screen.getByRole("link", { name: `${citation.id ?? citation.type} (external site) (opens in new tab)` });
+    assert.equal(citationLink.getAttribute("href"), citation.url);
+    assert.equal(citationLink.getAttribute("target"), "_blank");
+    assert.equal(citationLink.getAttribute("rel"), "noopener noreferrer");
+    assert.equal(document.querySelector(`link[href="${citation.url}"][rel~="preload"], link[href="${citation.url}"][rel~="prefetch"]`), null);
+    assert.equal(fetchMock.mock.calls.length, 0);
   });
 
   it("surfaces bundled question-bank fetch failures", async () => {

@@ -157,6 +157,8 @@ The project may still contain source URLs in documentation and source manifests 
 
 Policy: same-origin static asset requests only. The app sends no progress or identifiers, but the static host can still observe asset requests and may record IP addresses in standard request logs.
 
+Official-source citation URLs, such as ISED/Government of Canada source pages in explanations, are rendered only as user-activated external links. The web app does not fetch, preload, or cache those citation URLs automatically; following a citation navigates the user to ISED in a new tab, where that external site receives the navigation request.
+
 Verification targets:
 
 - No third-party requests in browser developer tools during app load and normal flows.

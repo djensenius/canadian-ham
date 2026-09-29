@@ -2,7 +2,8 @@ import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const DIST_DIR = fileURLToPath(new URL("../dist/", import.meta.url));
+const MODULE_PATH = currentModulePath();
+const DIST_DIR = path.resolve(path.dirname(MODULE_PATH), "../dist/");
 const URL_PATTERN = /https?:\/\/[^\s"'<>`]+/g;
 const XML_NAMESPACE_URLS = new Set([
   "http://www.w3.org/1998/Math/MathML",
@@ -12,6 +13,15 @@ const XML_NAMESPACE_URLS = new Set([
   "http://www.w3.org/2000/xmlns/",
   "http://www.w3.org/XML/1998/namespace",
 ]);
+
+// Official ISED/Government of Canada source URLs are allowed in dist only as
+// bundled citation href values rendered by the app as user-activated external
+// links. Keep this allowlist exact; unexpected external URLs must still fail
+// the audit rather than being hidden behind a broader network exception.
+export const OFFICIAL_SOURCE_CITATION_URLS = new Set([
+  "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service",
+]);
+
 const TEXT_EXTENSIONS = new Set([".cjs", ".css", ".html", ".js", ".json", ".map", ".mjs", ".svg", ".txt", ".webmanifest", ".xml"]);
 const BINARY_EXTENSIONS = new Set([".avif", ".gif", ".ico", ".jpg", ".jpeg", ".pdf", ".png", ".webp"]);
 
@@ -19,6 +29,18 @@ interface UrlFinding {
   readonly file: string;
   readonly line: number;
   readonly url: string;
+}
+
+function currentModulePath(): string {
+  const moduleUrl = new URL(import.meta.url);
+  if (moduleUrl.protocol === "file:") {
+    return fileURLToPath(moduleUrl);
+  }
+  const pathname = decodeURIComponent(moduleUrl.pathname);
+  if (pathname.startsWith("/@fs/")) {
+    return pathname.slice("/@fs".length);
+  }
+  return path.isAbsolute(pathname) ? pathname : path.join(process.cwd(), pathname);
 }
 
 function toPosix(relativePath: string): string {
@@ -29,8 +51,8 @@ function normalizeUrl(rawUrl: string): string {
   return rawUrl.replace(/[),.;\]}]+$/g, "");
 }
 
-function isAllowedUrl(url: string): boolean {
-  return XML_NAMESPACE_URLS.has(url) || url.startsWith("https://react.dev/errors/");
+export function isAllowedUrl(url: string): boolean {
+  return XML_NAMESPACE_URLS.has(url) || url.startsWith("https://react.dev/errors/") || OFFICIAL_SOURCE_CITATION_URLS.has(url);
 }
 
 function lineNumberForOffset(text: string, offset: number): number {
@@ -57,7 +79,7 @@ async function findDistFiles(current: string): Promise<string[]> {
   return files.sort();
 }
 
-async function auditDistUrls(distDir = DIST_DIR): Promise<UrlFinding[]> {
+export async function auditDistUrls(distDir = DIST_DIR): Promise<UrlFinding[]> {
   const distStat = await stat(distDir).catch(() => null);
   if (distStat === null || !distStat.isDirectory()) {
     throw new Error(`dist directory not found: ${distDir}`);
@@ -100,8 +122,14 @@ async function main(): Promise<void> {
   console.log("dist URL audit passed.");
 }
 
-main().catch((error: unknown) => {
-  const message = error instanceof Error ? error.message : String(error);
-  console.error(`audit-dist-urls: ${message}`);
-  process.exitCode = 1;
-});
+function isDirectCliInvocation(): boolean {
+  return process.argv[1] !== undefined && path.resolve(process.argv[1]) === MODULE_PATH;
+}
+
+if (isDirectCliInvocation()) {
+  main().catch((error: unknown) => {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`audit-dist-urls: ${message}`);
+    process.exitCode = 1;
+  });
+}
