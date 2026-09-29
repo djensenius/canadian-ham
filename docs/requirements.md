@@ -69,7 +69,8 @@ Needs:
 | DEC-ENGINE-001 | Implement the quiz and exam engine natively twice: TypeScript for web and Swift for Apple. Both must pass the same JSON fixtures in `fixtures/`. | Avoids cross-language runtime dependencies while preserving behavioural consistency. |
 | DEC-BANK-001 | Use only the 2025 Basic question bank effective 2025-07-15. | Prevents user confusion and fixture ambiguity. |
 | DEC-WEB-001 | The web app is fully static: no server, no accounts, no analytics, no third-party requests, and self-hosted fonts/assets. | Supports privacy, low hosting cost, and offline PWA. |
-| DEC-WEB-002 | Recommend Vite + React + TypeScript as the default static web stack; Astro is an alternative for owner confirmation. | Vite + React is straightforward for interactive quizzes; Astro may be attractive if content-first pages dominate. |
+| DEC-WEB-002 | Use Vite + React + TypeScript for the static web app, with pnpm as the package manager. | Owner confirmed this stack on 2026-09-28; it is straightforward for interactive quizzes and the planned offline PWA. |
+| DEC-TOOLING-001 | Run importer and content tooling as TypeScript directly in Node using Node >= 23.6 type stripping; use `node:test`; keep the importer at zero runtime dependencies. | Owner confirmed this on 2026-09-28; the development machine has Node 26, and the importer should stay small and reproducible. |
 | DEC-APPLE-001 | Apple app is SwiftUI multiplatform for iOS, iPadOS, and macOS first. | Native offline UX, shared SwiftUI code, and no watchOS/visionOS/tvOS scope. |
 | DEC-APPLE-002 | Use SwiftData for local progress. | Native local persistence with no remote service. |
 | DEC-APPLE-003 | No third-party SDKs, no networking code, and no iCloud sync in v1. | Minimizes privacy risk and supports App Store Data Not Collected. iCloud sync may be reconsidered later only with a privacy review. |
@@ -477,7 +478,6 @@ Coverage check requirement:
 
 ## Open questions
 
-- Confirm owner choice between Vite + React + TypeScript and Astro for the static web app.
 - Verify official French category names.
 - Locate or confirm absence of French 2025 Basic reference material.
 - Verify the official Basic exam time limit, if any.

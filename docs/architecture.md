@@ -12,23 +12,23 @@ Decision: keep a single monorepo until real pain appears.
 canadian-ham/
   AGENTS.md
   apps/
-    web/                    # Static Vite/React/TypeScript app, owner to confirm stack
+    web/                    # Static Vite/React/TypeScript app
     apple/                  # SwiftUI multiplatform Xcode project/package
   content/
     sources/
       ised/
         basic-2025-07-15/   # Vendored official source files plus checksums
-    normalized/
-      basic-2025-07-15/     # Generated JSON, committed if useful for app builds
+    generated/
+      basic-2025-07-15/     # Generated normalized JSON committed for app builds
     categories.json         # Hand-maintained category names and expected counts
     lessons/                # Platform-neutral Markdown lessons
     explanations/           # Original explanation records by question ID
-    reference/              # Reference material metadata and permitted bundled assets
+    reference/              # Reference metadata/assets allowed by current licensing stage
   fixtures/
     engine/                 # Language-neutral engine fixtures
     importer/               # Importer validation fixtures
   packages/
-    content-tools/          # Import, validate, coverage, build scripts
+    content-tools/          # TypeScript importer, validation, coverage, build scripts
     engine-ts/              # Web-side TypeScript engine implementation
     engine-swift/           # SwiftPM engine package, tested through xbuild
     schemas/                # JSON Schema or TypeScript schema definitions
@@ -46,10 +46,17 @@ Notes:
 
 - The layout separates ISED data from original lessons and explanations.
 - `content/sources/ised/basic-2025-07-15/` contains the official Basic 2025 TXT, question-bank PDF, English reference PDFs, and checksum files for private development while the repository stays private; public exposure and distribution are gated by the [content licensing public-release gate](content-licensing.md#public-release-gate).
-- `content/normalized/` contains generated app-ready JSON only after the importer is implemented and reviewed.
+- `content/generated/` contains generated app-ready normalized JSON only after the importer is implemented and reviewed.
 - Shared fixtures in `fixtures/` are the contract between TypeScript and Swift engines.
 
 ## Content pipeline
+
+Tooling decisions:
+
+- Web/package management uses pnpm.
+- Importer and content tooling are TypeScript files run directly by Node using Node's type-stripping support (Node >= 23.6; the development machine has Node 26).
+- Importer tests use `node:test`.
+- The importer has zero runtime dependencies unless a future task explicitly changes that decision.
 
 ### Inputs
 
@@ -65,19 +72,19 @@ Notes:
 1. Vendor the official Basic 2025 TXT, question-bank PDF, and English reference PDFs under `content/sources/ised/basic-2025-07-15/` for private development under the [interim private-development policy](content-licensing.md#interim-private-development-policy); public exposure and distribution remain gated by the [public-release gate](content-licensing.md#public-release-gate).
 2. Record SHA-256 checksums in a manifest and fail import on any checksum mismatch.
 3. Parse the committed delimited TXT in importer and CI runs with strict format checks: trim header names only, preserve field values exactly, and reject quoted fields or embedded newlines.
-4. Normalize records into JSON with stable IDs and language-keyed text.
+4. Normalize records into JSON with stable IDs and language-keyed text under `content/generated/basic-2025-07-15/`.
 5. Derive categories and subsections from question IDs.
 6. Join hand-maintained category metadata.
 7. Lint answer text for position-dependent phrases before allowing answer shuffling.
 8. Validate counts against [exam-facts.md](exam-facts.md).
 9. Validate lesson coverage for all 100 subsections.
 10. Validate explanations against known question IDs and licensing rules.
-11. Emit app bundles for web and Apple.
+11. Emit committed app-ready generated JSON under `content/generated/basic-2025-07-15/`, then app bundles for web and Apple.
 12. Run TypeScript and Swift engines against shared fixtures.
 
 ### Generated artifacts
 
-Generated artifacts should include a source manifest so apps can display or log the active bank version without contacting a server.
+Generated artifacts are committed under `content/generated/basic-2025-07-15/` and should include a source manifest so apps can display or log the active bank version without contacting a server.
 
 Example manifest:
 
@@ -551,7 +558,7 @@ Session mode:
 
 ### Web app
 
-Default recommendation for owner confirmation: Vite + React + TypeScript static build. Astro remains an alternative if the owner decides content-first pages should dominate.
+Decision: the web app uses a Vite + React + TypeScript static build with pnpm as the package manager.
 
 Web app components:
 
@@ -568,7 +575,7 @@ Web app components:
 Apple app components:
 
 - SwiftUI multiplatform target for iOS, iPadOS, and macOS.
-- Bundled normalized content and reference material for private development; release bundles must satisfy the [public-release gate](content-licensing.md#public-release-gate).
+- Bundled generated content and reference material allowed for the current private-development or release stage; release bundles must satisfy the [public-release gate](content-licensing.md#public-release-gate).
 - Native Swift engine matching fixtures.
 - SwiftData local progress models.
 - File import/export for progress JSON.
@@ -598,7 +605,7 @@ Fixture requirements:
 
 ## Build and CI outline
 
-Initial CI should run without network-dependent tests after dependencies are installed.
+Initial CI should run without network-dependent tests after pnpm dependencies are installed.
 
 Suggested jobs:
 
@@ -644,8 +651,6 @@ print duplicate coverage for author review
 
 ## Open architecture questions
 
-- Confirm Vite + React + TypeScript versus Astro.
-- Decide whether generated normalized JSON is committed or generated during app builds.
-- Decide exact JSON Schema tooling after package manager selection.
+- Decide exact JSON Schema tooling.
 - Decide minimum supported Apple OS versions and browser versions.
 - Confirm T-007 permission scope covers public bundling of verbatim question text as app data and reference PDFs before publication or distribution.

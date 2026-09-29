@@ -4,7 +4,7 @@ This document defines how `canadian-ham` separates official ISED data from origi
 
 The ISED permission request has been drafted but not yet sent or granted. The requested scope covers the Basic 2025 question-bank TXT and PDF, the Basic 2025 English reference PDFs, the Advanced question bank, commercial use, future revisions, and structured app-data formats with shuffled choices. Written permission is pending; no permission has been granted or recorded yet.
 
-Until written permission is recorded, the GitHub repository `djensenius/canadian-ham` remains private. ISED's published terms allow reproduction for personal, non-commercial purposes without permission, including the [general terms and conditions](https://ised-isde.canada.ca/site/ised/en/terms-and-conditions) and [copyright written permission guidance](https://www.ised-isde.canada.ca/site/ised/en/copyright-written-permission). The owner has approved committing official ISED source artifacts for private, non-distributed development under the interim policy below. Public exposure or distribution does not fit that interim rationale and is blocked by the [public-release gate](#public-release-gate).
+Until written permission is recorded, the GitHub repository `djensenius/canadian-ham` remains private. ISED's published terms allow reproduction for personal, non-commercial purposes without permission, including the [general terms and conditions](https://ised-isde.canada.ca/site/ised/en/terms-and-conditions) and [copyright written permission guidance](https://www.ised-isde.canada.ca/site/ised/en/copyright-written-permission). The owner has approved committing official ISED source artifacts for private, non-distributed development under the interim policy below as the owner's risk decision, not as legal advice. Public exposure or distribution does not fit that interim rationale and is blocked by the [public-release gate](#public-release-gate).
 
 Related documents:
 
@@ -38,7 +38,15 @@ While the repository is private and no outside collaborators are added, the proj
 - the Basic 2025 question-bank PDF;
 - the English Basic 2025 reference PDFs, either in the same directory or in a documented reference subfolder under that directory.
 
-These files must be stored verbatim, with SHA-256 checksums recorded in the source manifest, and with the attribution and disclaimer in this document kept in place. The files must not be edited, reformatted, or mixed into original lesson or explanation content. This policy does not allow making the repository public, deploying the web app publicly, distributing Apple builds, adding outside collaborators, or any other redistribution.
+These files must be stored verbatim, with SHA-256 checksums recorded in the source manifest, and with the attribution and disclaimer in this document kept in place. The files must not be edited, reformatted, or mixed into original lesson or explanation content.
+
+ISED's non-commercial reproduction conditions include:
+
+- exercising due diligence in ensuring the accuracy of the materials reproduced;
+- identifying ISED as the source department and identifying the source work by title;
+- not representing the reproduction as an official version or as having been made in affiliation with or endorsed by the Government of Canada.
+
+This interim policy is the owner's risk decision and is not legal advice. This policy does not allow making the repository public, deploying the web app publicly, distributing Apple builds, adding outside collaborators, or any other redistribution.
 
 ## Public-release gate
 
@@ -51,7 +59,9 @@ All of the following actions are blocked until T-007 records written ISED permis
 
 Before any public exposure, the release review must verify that the repository history and release artifacts contain no ISED material outside the recorded permission scope.
 
-If permission is refused or narrower than requested, the ISED artifacts must be removed from repository history before the repository is made public. Recommended contingency: use `git filter-repo` to purge already-committed out-of-scope ISED files from this repository history, then keep any still-needed out-of-scope official source files in a separate private repository or private submodule that is never included in public release history. Because the files are already expected in this private repository for development, history filtering is the required cleanup path for this repo; a separate private source repository is the safer pattern for future out-of-scope artifacts.
+If permission is refused or narrower than requested, recommended contingency is to publish from a fresh public repository with new history containing only files within the recorded permission scope, and to keep the current repository private or archive it privately. This avoids relying on history rewriting to make a previously private repository safe for public release.
+
+Alternative contingency: use `git filter-repo` to purge already-committed out-of-scope ISED files from this repository history, then force-push rewritten branches and tags. History rewriting does not remove all risk: existing clones, worktrees, forks, and CI caches can retain the old objects, and GitHub may keep cached or unreachable commits and pull-request refs until GitHub Support purges them. Keep any still-needed out-of-scope official source files in a separate private repository or private submodule that is never included in public release history.
 
 ## Attribution text
 
@@ -78,7 +88,7 @@ The repository must keep ISED source data separate from original project content
 | Content class | Location | Rules |
 |---|---|---|
 | ISED official source artifacts | `content/sources/ised/basic-2025-07-15/` | Store the Basic 2025 TXT, Basic 2025 question-bank PDF, and English reference PDFs verbatim with checksums under the interim private-development policy while the repository remains private. Do not edit. Importer and CI jobs run against the committed TXT. Public release requires T-007 permission scope to cover the included artifacts. |
-| Normalized ISED question data | `content/normalized/basic-2025-07-15/` | Generated from official source. Preserve text verbatim. Include source manifest. Private development may use it; public release requires T-007 permission scope to cover bundling verbatim question text as app data. |
+| Generated ISED question data | `content/generated/basic-2025-07-15/` | Generated from official source. Preserve text verbatim. Include source manifest. Private development may use it; public release requires T-007 permission scope to cover bundling verbatim question text as app data. |
 | Category metadata | `content/categories.json` | Hand-maintained. English names from verified ISED/RAC materials. French names pending official verification. |
 | Original lessons | `content/lessons/` | Original writing by project. May cite ISED question IDs and RBR-4. Must not copy RAC/Coax study-guide text. |
 | Original explanations | `content/explanations/` | Original writing by project. Separate from ISED records. Must not copy third-party study guides. |

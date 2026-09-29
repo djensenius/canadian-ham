@@ -110,7 +110,7 @@ Header fields, exactly as present before trimming:
 
 ## Privileges for learning content
 
-These privilege facts are course content, not application authorization logic. Lessons must cite the applicable question IDs and RBR-4 where they teach privileges. T-103 validation must re-check the cited question IDs against the imported official data so the citations remain tied to the active bank.
+These privilege facts are course content, not application authorization logic. Lessons must cite the applicable question IDs and RBR-4 where they teach privileges. T-102 importer validation must re-check the cited question IDs against the imported official data so the citations remain tied to the active bank.
 
 | Fact | Source |
 |---|---|
@@ -146,4 +146,4 @@ These privilege facts are course content, not application authorization logic. L
 - French names for the eight category headings are not yet verified from an official source.
 - A French version of the 2025 Basic reference material ZIP/PDF has not yet been located.
 - The Basic exam time limit is unverified.
-- Permission record details for ISED Crown copyright clearance must be filled in, including reference number and date, in [content licensing](content-licensing.md).
+- ISED permission request is pending; see [content licensing](content-licensing.md) for the interim policy, public-release gate, and pending record fields.

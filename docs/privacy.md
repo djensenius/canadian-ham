@@ -160,7 +160,7 @@ Policy: same-origin static asset requests only. The app sends no progress or ide
 Verification targets:
 
 - No third-party requests in browser developer tools during app load and normal flows.
-- Service worker caches only same-origin app shell, content JSON, Markdown, and permitted reference assets.
+- Service worker caches only same-origin app shell, content JSON, Markdown, and reference assets allowed for the current private-development or public-release stage under the [content-licensing interim policy and public-release gate](content-licensing.md).
 - Fonts are self-hosted.
 - Content Security Policy blocks unexpected `connect-src`, `script-src`, `img-src`, and `font-src` third-party origins; if host response headers are unavailable, document and test the fallback CSP `<meta>` tag.
 - Hosting configuration disables optional access logs or uses the shortest retention available; any unavoidable host logs are treated as hosting operations data, not application analytics.

@@ -1,0 +1,4 @@
+# Official source artifacts must remain byte-identical for checksum validation.
+# Treat all files under content/sources as binary so Git does not normalize CRLF TXT
+# files or attempt text diffs for PDFs and archives.
+content/sources/** binary
