@@ -135,8 +135,10 @@ struct RootView: View {
         do {
             let loadedBank = try QuestionBankStore.load()
             bank = loadedBank
-            if let requestedCategoryID = AppLaunchArguments.value(after: "-CanadianHamInitialCategoryID"),
-               loadedBank.categories.contains(where: { $0.id == requestedCategoryID }) {
+            if ProcessInfo.processInfo.arguments.contains("-CanadianHamShowCategoryList") {
+                selection = nil
+            } else if let requestedCategoryID = AppLaunchArguments.value(after: "-CanadianHamInitialCategoryID"),
+                      loadedBank.categories.contains(where: { $0.id == requestedCategoryID }) {
                 selection = .category(requestedCategoryID)
             } else {
                 selection = loadedBank.categories.first.map { .category($0.id) }

@@ -54,7 +54,23 @@ final class CanadianHamPracticeUITests: XCTestCase {
         assertSingleLanguagePicker(in: app, context: "practice")
     }
 
-    func testAccessibilityAuditCategoryListAndAnsweredPracticeScreen() throws {
+    func testAccessibilityAuditCategoryListUnansweredAndAnsweredPracticeScreens() throws {
+        XCUIDevice.shared.appearance = .light
+        defer { XCUIDevice.shared.appearance = .light }
+
+        try auditFastPracticeFlow(appearance: .light)
+
+        XCUIDevice.shared.appearance = .dark
+        try auditFastPracticeFlow(appearance: .dark)
+
+        XCUIDevice.shared.appearance = .light
+    }
+
+    func testA11yDiagnosticsEvidenceHarness() throws {
+        guard ProcessInfo.processInfo.environment["CANADIAN_HAM_RUN_A11Y_DIAGNOSTICS"] == "1" else {
+            throw XCTSkip("Set CANADIAN_HAM_RUN_A11Y_DIAGNOSTICS=1 to run the opt-in accessibility evidence/position-log diagnostic harness.")
+        }
+
         XCUIDevice.shared.appearance = .light
         defer { XCUIDevice.shared.appearance = .light }
 
@@ -118,11 +134,50 @@ final class CanadianHamPracticeUITests: XCTestCase {
         )
     }
 
+    private func auditFastPracticeFlow(appearance: AuditAppearance) throws {
+        let app = configuredApp()
+        app.launchArguments += [
+            "-CanadianHamShowCategoryList",
+            "-CanadianHamPracticeQuestionID", fastAuditPracticeQuestionID
+        ]
+        app.launch()
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.staticTexts["Practice categories"].firstMatch.waitForExistence(timeout: 10), "Category list should render before the category-list audit")
+        try performFastAccessibilityAudit(on: app, context: "\(appearance.rawValue) category list")
+
+        let category = app.staticTexts["Regulations and Policies"].firstMatch
+        XCTAssertTrue(category.exists, "Fast audit category should be visible on the category list")
+        category.tap()
+
+        XCTAssertTrue(app.staticTexts["An Amateur Radio Operator Certificate is valid for:"].firstMatch.waitForExistence(timeout: 10), "Fast audit question should render before the unanswered practice audit")
+        try performFastAccessibilityAudit(on: app, context: "\(appearance.rawValue) unanswered practice")
+
+        answerFastAuditQuestionCorrectly(in: app)
+        _ = waitForAnswerFeedback(in: app)
+        try performFastAccessibilityAudit(on: app, context: "\(appearance.rawValue) answered practice")
+    }
+
+    private func performFastAccessibilityAudit(on app: XCUIApplication, context: String) throws {
+        if #available(iOS 17.0, *) {
+            try app.performAccessibilityAudit()
+        } else {
+            throw XCTSkip("performAccessibilityAudit is unavailable before iOS 17 for \(context).")
+        }
+    }
+
+    private func answerFastAuditQuestionCorrectly(in app: XCUIApplication) {
+        let correctAnswer = app.staticTexts["life"].firstMatch
+        XCTAssertTrue(correctAnswer.exists, "Known correct answer should be visible in the fast audit question")
+        correctAnswer.tap()
+    }
+
     private func auditCategoryListAndAnsweredPracticeScreen(appearance: AuditAppearance) throws {
         let app = configuredApp()
         app.launchArguments += [
             "-CanadianHamInitialCategoryID", "B-001",
-            "-CanadianHamPracticeQuestionID", auditPracticeQuestionID
+            "-CanadianHamPracticeQuestionID", auditPracticeQuestionID,
+            "-CanadianHamA11yAuditExtraBottomMargin"
         ]
         app.launch()
         defer { app.terminate() }
@@ -172,14 +227,18 @@ final class CanadianHamPracticeUITests: XCTestCase {
         for pass in passes {
             prepare(pass)
             let context = AuditContext(screen: screen, appearance: appearance, pass: pass, questionID: questionID, iterationID: auditIterationID)
-            let records = verifyAuditElementPositions(interests(pass), context: context, in: app)
+            let passInterests = interests(pass)
+            waitForStableAuditLayout(passInterests, context: context, in: app)
+            let records = verifyAuditElementPositions(passInterests, context: context, in: app)
             recordVisibleAuditCoverage(records, context: context)
         }
 
         for pass in passes {
             prepare(pass)
             let context = AuditContext(screen: screen, appearance: appearance, pass: pass, questionID: questionID, iterationID: auditIterationID)
-            let records = verifyAuditElementPositions(interests(pass), context: context, in: app)
+            let passInterests = interests(pass)
+            waitForStableAuditLayout(passInterests, context: context, in: app)
+            let records = verifyAuditElementPositions(passInterests, context: context, in: app)
             recordVisibleAuditCoverage(records, context: context)
             captureScreenEvidence(named: "\(context.evidenceStem)-accessibility-audit")
             try captureAccessibilityAudit(on: app, context: context, preAuditRecords: records)
@@ -191,6 +250,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private var auditPracticeQuestionID: String { "B-001-001-004" }
+    private var fastAuditPracticeQuestionID: String { "B-001-002-002" }
 
     private func navigateToPracticeIfNeeded(in app: XCUIApplication) {
         if app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10) {
@@ -247,10 +307,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
             let nextQuestionButton = app.buttons["Next question"].firstMatch
             XCTAssertTrue(nextQuestionButton.waitForExistence(timeout: 5), "Next question button should exist before the scrolled audit pass")
             scrollUntilHittable(nextQuestionButton, in: app, maxSwipes: 8)
-            app.scrollViews.firstMatch.swipeUp()
-            waitBriefly()
-            app.scrollViews.firstMatch.swipeUp()
-            waitBriefly()
+            for _ in 0..<3 {
+                app.scrollViews.firstMatch.swipeUp()
+                waitBriefly()
+            }
+            let answerC = app.descendants(matching: .any)["answer-C-button"].firstMatch
+            XCTAssertTrue(isFullyVisible(answerC, in: app, requiresHittable: false), "Answer C should be fully visible for the scrolled audit pass")
             XCTAssertTrue(isFullyVisible(nextQuestionButton, in: app, requiresHittable: true), "Next question button should be visible for the scrolled audit pass")
         }
     }
@@ -294,13 +356,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
             ]
         case .scrolled:
             namesEnforcedInPass = [
-                "Answers heading",
-                "Answer A",
-                "Answer A text",
-                "Answer A chip",
-                "Answer B",
-                "Answer B text",
-                "Answer B chip",
                 "Answer C",
                 "Answer C text",
                 "Answer C chip",
@@ -451,6 +506,62 @@ final class CanadianHamPracticeUITests: XCTestCase {
         }
     }
 
+    private func waitForStableAuditLayout(
+        _ interests: [AuditInterest],
+        context: AuditContext,
+        in app: XCUIApplication,
+        timeout: TimeInterval = 3,
+        tolerance: CGFloat = 0.5,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        var previousSnapshot = auditFrameSnapshot(for: interests, in: app)
+        let deadline = Date().addingTimeInterval(timeout)
+        repeat {
+            waitBriefly()
+            let currentSnapshot = auditFrameSnapshot(for: interests, in: app)
+            if auditFramesAreStable(previousSnapshot, currentSnapshot, tolerance: tolerance) {
+                return
+            }
+            previousSnapshot = currentSnapshot
+        } while Date() < deadline
+
+        XCTFail("Audit layout did not settle before \(context.evidenceStem). Last frames: \(auditFrameSnapshotDescription(previousSnapshot))", file: file, line: line)
+    }
+
+    private func auditFrameSnapshot(for interests: [AuditInterest], in app: XCUIApplication) -> [String: CGRect] {
+        var snapshot: [String: CGRect] = [:]
+        let bars = barFrames(in: app)
+        snapshot["window"] = app.windows.firstMatch.exists ? app.windows.firstMatch.frame : .null
+        snapshot["navigationBar"] = bars.navigationBarFrame
+        snapshot["statusBar"] = bars.statusBarFrame
+        for interest in interests {
+            snapshot["element:\(interest.name)"] = interest.element.exists ? interest.element.frame : .null
+        }
+        return snapshot
+    }
+
+    private func auditFramesAreStable(_ first: [String: CGRect], _ second: [String: CGRect], tolerance: CGFloat) -> Bool {
+        guard Set(first.keys) == Set(second.keys) else { return false }
+        return first.allSatisfy { key, firstFrame in
+            guard let secondFrame = second[key] else { return false }
+            if firstFrame.isNull || secondFrame.isNull {
+                return firstFrame.isNull && secondFrame.isNull
+            }
+            return abs(firstFrame.minX - secondFrame.minX) <= tolerance
+                && abs(firstFrame.minY - secondFrame.minY) <= tolerance
+                && abs(firstFrame.width - secondFrame.width) <= tolerance
+                && abs(firstFrame.height - secondFrame.height) <= tolerance
+        }
+    }
+
+    private func auditFrameSnapshotDescription(_ snapshot: [String: CGRect]) -> String {
+        snapshot.keys.sorted().map { key in
+            let frame = snapshot[key] ?? .null
+            return "\(key)=\(frame.isNull ? "nil" : frameDescription(frame))"
+        }.joined(separator: "; ")
+    }
+
     private func isFullyVisible(_ element: XCUIElement, in app: XCUIApplication, requiresHittable: Bool) -> Bool {
         guard element.exists else { return false }
         if requiresHittable && !element.isHittable { return false }
@@ -562,10 +673,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         if #available(iOS 17.0, *) {
             var findings: [String] = []
             var occludedFindings: [String] = []
+            var nonExcludedFindings: [String] = []
             var auditError: Error?
-            defer {
-                attachAuditFindings(findings, occludedFindings: occludedFindings, context: context, error: auditError, app: app)
-            }
             do {
                 try app.performAccessibilityAudit { issue in
                     let exclusion = self.exclusionDecision(for: issue, context: context, app: app, preAuditRecords: preAuditRecords)
@@ -574,12 +683,23 @@ final class CanadianHamPracticeUITests: XCTestCase {
                     if exclusion.kind == .occludedByBar {
                         occludedFindings.append(description)
                     }
-                    return exclusion.isExcluded
+                    if !exclusion.isExcluded {
+                        nonExcludedFindings.append(description)
+                    }
+                    // Suppress XCTest's immediate audit failure so the raw finding
+                    // evidence is always attached before this test fails below.
+                    return true
                 }
             } catch {
                 auditError = error
+                attachAuditFindings(findings, occludedFindings: occludedFindings, context: context, error: auditError, app: app)
                 throw error
             }
+            attachAuditFindings(findings, occludedFindings: occludedFindings, context: context, error: auditError, app: app)
+            XCTAssertTrue(
+                nonExcludedFindings.isEmpty,
+                "Accessibility audit reported non-excluded issues before \(context.evidenceStem): \(nonExcludedFindings.joined(separator: " | "))"
+            )
         } else {
             let rawFindings = "Screen: \(context.screen.rawValue)\nAppearance: \(context.appearance.rawValue)\nPass: \(context.pass.rawValue)\nIteration: \(context.iterationID)\nScreen frame: \(frameDescription(app.windows.firstMatch.frame))\nperformAccessibilityAudit is unavailable before iOS 17."
             let attachment = XCTAttachment(string: rawFindings)

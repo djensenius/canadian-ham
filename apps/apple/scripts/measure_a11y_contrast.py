@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Measure contrast for XCTest accessibility-audit findings.
+"""Measure contrast for XCTest accessibility-audit findings from pixels.
 
 The script intentionally uses only the Python standard library plus the macOS
 `sips` command to convert PNG screenshots to BMP files that stdlib code can
 sample. Raw finding files must include XCTest element frames in points, the
 screen frame, and the navigation/status bar frames emitted by the UI tests.
-Occluded element frames are refused instead of measured.
+Occluded element frames are refused instead of measured. Expected token pairs
+are used only as labels for known UI elements; the reported ratio is computed
+from sampled screenshot pixels.
 """
 
 from __future__ import annotations
@@ -112,7 +114,20 @@ EXPECTED_TOKEN_PAIRS: dict[tuple[str, str, str], tuple[tuple[int, int, int], tup
     # question-identifier uses inkMuted on paperElevated in PracticeView.
     ("answered-practice", "dark", "question-identifier"): ((0xCB, 0xBD, 0xA4), (0x2A, 0x24, 0x1D)),
     ("answered-practice", "light", "question-identifier"): ((0x5E, 0x53, 0x47), (0xFF, 0xF8, 0xEA)),
+    # answers-title uses ink on paper in PracticeView.
+    ("answered-practice", "light", "answers-title"): ((0x1F, 0x1A, 0x14), (0xF6, 0xEE, 0xDC)),
+    ("answered-practice", "dark", "answers-title"): ((0xF3, 0xE8, 0xD2), (0x20, 0x1B, 0x16)),
 }
+
+
+def safe_name(name: str) -> str:
+    return re.sub(r"[^A-Za-z0-9_.-]+", "-", name).strip("-")
+
+
+def audit_type_name(raw_value: str) -> str:
+    if raw_value == CONTRAST_AUDIT_RAW_VALUE:
+        return "contrast"
+    return raw_value or "unknown"
 
 
 def parse_rect(text: str) -> Rect:
@@ -143,6 +158,20 @@ def header_rect(text: str, key: str, fallback: Rect) -> Rect:
     return parse_rect(value) if value else fallback
 
 
+def screenshot_for_finding(raw_file: Path, evidence_prefix: str, identifier: str, audit_type_raw: str) -> Path:
+    finding_stem = f"{evidence_prefix}-finding-{safe_name(identifier or 'unidentified')}-{audit_type_name(audit_type_raw)}"
+    finding_candidates = sorted(raw_file.parent.glob(f"{finding_stem}*.png"))
+    if finding_candidates:
+        return finding_candidates[0]
+
+    pre_audit_candidates = sorted(raw_file.parent.glob(f"{evidence_prefix}*accessibility-audit*.png"))
+    if pre_audit_candidates:
+        return pre_audit_candidates[0]
+
+    screenshot_candidates = sorted(raw_file.parent.glob(f"{evidence_prefix}*.png"))
+    return screenshot_candidates[0] if screenshot_candidates else raw_file.with_name(f"{evidence_prefix}.png")
+
+
 def parse_findings(raw_file: Path) -> list[Finding]:
     text = raw_file.read_text(encoding="utf-8")
     screen = header_value(text, "Screen", raw_file.name.removesuffix("-raw-accessibility-audit-findings.txt"))
@@ -156,8 +185,6 @@ def parse_findings(raw_file: Path) -> list[Finding]:
     navigation_bar_frame = header_rect(text, "Navigation bar frame", Rect(0, 0, 0, 0))
     status_bar_frame = header_rect(text, "Status bar frame", Rect(0, 0, 0, 0))
     evidence_prefix = raw_file.name.split("-raw-accessibility-audit-findings", 1)[0]
-    screenshot_candidates = sorted(raw_file.parent.glob(f"{evidence_prefix}*.png"))
-    screenshot_file = screenshot_candidates[0] if screenshot_candidates else raw_file.with_name(f"{evidence_prefix}.png")
 
     findings: list[Finding] = []
     for block in re.split(r"\n\nIssue ", text):
@@ -177,6 +204,7 @@ def parse_findings(raw_file: Path) -> list[Finding]:
                 values[key] = value
         if audit_type_raw != CONTRAST_AUDIT_RAW_VALUE:
             continue
+        identifier = values.get("element.identifier", "")
         findings.append(
             Finding(
                 screen=screen,
@@ -186,7 +214,7 @@ def parse_findings(raw_file: Path) -> list[Finding]:
                 question_id=question_id,
                 issue=issue_heading,
                 audit_type_raw=audit_type_raw,
-                identifier=values.get("element.identifier", ""),
+                identifier=identifier,
                 label=values.get("element.label", ""),
                 element_type=values.get("element.elementType", ""),
                 frame=parse_rect(values.get("element.frame", "")),
@@ -196,7 +224,7 @@ def parse_findings(raw_file: Path) -> list[Finding]:
                 navigation_bar_frame=navigation_bar_frame,
                 status_bar_frame=status_bar_frame,
                 raw_file=raw_file,
-                screenshot_file=screenshot_file,
+                screenshot_file=screenshot_for_finding(raw_file, evidence_prefix, identifier, audit_type_raw),
             )
         )
     return findings
@@ -290,30 +318,82 @@ def ensure_reported_frame_matches_recorded(finding: Finding, tolerance_points: f
     return finding.recorded_frame
 
 
-def sample_contrast(image: BMPImage, finding: Finding, inset_points: float = 1.0) -> tuple[float, tuple[int, int, int], tuple[int, int, int], int]:
-    recorded_frame = ensure_reported_frame_matches_recorded(finding)
-    ensure_not_occluded(recorded_frame, finding)
-    token_pair = EXPECTED_TOKEN_PAIRS.get((finding.screen, finding.appearance, finding.identifier))
-    if token_pair is None:
-        raise MeasurementRefusedError(
-            "refused: no expected text/background token pair is declared for "
-            f"{finding.screen}/{finding.appearance}/{finding.identifier or 'unidentified'}"
-        )
-
+def frame_pixel_bounds(image: BMPImage, finding: Finding, frame: Rect, inset_points: float) -> tuple[int, int, int, int]:
     scale_x = image.width / finding.screen_frame.width
     scale_y = image.height / finding.screen_frame.height
-    min_x = math.floor((recorded_frame.x + inset_points) * scale_x)
-    max_x = math.ceil((recorded_frame.x + recorded_frame.width - inset_points) * scale_x)
-    min_y = math.floor((recorded_frame.y + inset_points) * scale_y)
-    max_y = math.ceil((recorded_frame.y + recorded_frame.height - inset_points) * scale_y)
+    min_x = math.floor((frame.x + inset_points) * scale_x)
+    max_x = math.ceil((frame.x + frame.width - inset_points) * scale_x)
+    min_y = math.floor((frame.y + inset_points) * scale_y)
+    max_y = math.ceil((frame.y + frame.height - inset_points) * scale_y)
     min_x = max(0, min(image.width - 1, min_x))
     max_x = max(min_x + 1, min(image.width, max_x))
     min_y = max(0, min(image.height - 1, min_y))
     max_y = max(min_y + 1, min(image.height, max_y))
-    sample_count = max(0, max_x - min_x) * max(0, max_y - min_y)
+    return min_x, max_x, min_y, max_y
 
-    text, background = token_pair
-    return contrast_ratio(text, background), text, background, sample_count
+
+def sample_contrast(image: BMPImage, finding: Finding, inset_points: float = 1.0) -> tuple[float, tuple[int, int, int], tuple[int, int, int], int, str]:
+    recorded_frame = ensure_reported_frame_matches_recorded(finding)
+    ensure_not_occluded(recorded_frame, finding)
+
+    min_x, max_x, min_y, max_y = frame_pixel_bounds(image, finding, recorded_frame, inset_points)
+    sample_count = max(0, max_x - min_x) * max(0, max_y - min_y)
+    if sample_count == 0:
+        raise MeasurementRefusedError(f"refused: frame produced an empty pixel sample (frame={recorded_frame})")
+
+    clusters: dict[tuple[int, int, int], dict[str, object]] = {}
+    for y in range(min_y, max_y):
+        for x in range(min_x, max_x):
+            rgb = image.rgb_at(x, y)
+            key = quantize(rgb)
+            cluster = clusters.setdefault(key, {"count": 0, "sum": [0, 0, 0]})
+            cluster["count"] = int(cluster["count"]) + 1
+            sums = cluster["sum"]
+            assert isinstance(sums, list)
+            sums[0] += rgb[0]
+            sums[1] += rgb[1]
+            sums[2] += rgb[2]
+
+    def cluster_average(key: tuple[int, int, int]) -> tuple[int, int, int]:
+        cluster = clusters[key]
+        count = int(cluster["count"])
+        sums = cluster["sum"]
+        assert isinstance(sums, list)
+        return tuple(round(sums[index] / count) for index in range(3))  # type: ignore[return-value]
+
+    background_key = max(clusters, key=lambda key: int(clusters[key]["count"]))
+    background = cluster_average(background_key)
+    minimum_text_samples = max(3, math.ceil(sample_count * 0.001))
+    candidates = [
+        key for key in clusters
+        if key != background_key
+        and int(clusters[key]["count"]) >= minimum_text_samples
+        and contrast_ratio(cluster_average(key), background) >= 1.5
+    ]
+    if not candidates:
+        raise MeasurementRefusedError(
+            "refused: could not identify a contrasting text cluster in sampled pixels "
+            f"(sampled={sample_count}, clusters={len(clusters)}, background=#{background[0]:02X}{background[1]:02X}{background[2]:02X})"
+        )
+
+    text_key = max(candidates, key=lambda key: contrast_ratio(cluster_average(key), background))
+    text = cluster_average(text_key)
+    ratio = contrast_ratio(text, background)
+    token_pair = EXPECTED_TOKEN_PAIRS.get((finding.screen, finding.appearance, finding.identifier))
+    token_note = ""
+    if token_pair is not None:
+        expected_text, expected_background = token_pair
+        token_note = (
+            f"; expected tokens #{expected_text[0]:02X}{expected_text[1]:02X}{expected_text[2]:02X}"
+            f" / #{expected_background[0]:02X}{expected_background[1]:02X}{expected_background[2]:02X}"
+        )
+    summary = (
+        f"sampled #{text[0]:02X}{text[1]:02X}{text[2]:02X} "
+        f"({int(clusters[text_key]['count'])} px) / "
+        f"#{background[0]:02X}{background[1]:02X}{background[2]:02X} "
+        f"({int(clusters[background_key]['count'])} px) from {sample_count} px{token_note}"
+    )
+    return ratio, text, background, sample_count, summary
 
 
 def measure(evidence_dir: Path) -> str:
@@ -346,8 +426,8 @@ def measure(evidence_dir: Path) -> str:
                 label = finding.label.replace("|", "\\|")
                 identifier = finding.identifier or "—"
                 try:
-                    ratio, text_color, background, samples = sample_contrast(image, finding)
-                    colors = f"#{text_color[0]:02X}{text_color[1]:02X}{text_color[2]:02X} / #{background[0]:02X}{background[1]:02X}{background[2]:02X}"
+                    ratio, _text_color, _background, samples, sample_summary = sample_contrast(image, finding)
+                    colors = sample_summary.replace("|", "\\|")
                     ratio_text = f"{ratio:.2f}:1"
                     samples_text = str(samples)
                 except MeasurementRefusedError as error:

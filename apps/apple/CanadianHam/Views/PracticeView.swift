@@ -32,6 +32,14 @@ struct PracticeView: View {
         AppleQuestionShuffle.correctAnswer(in: shuffledAnswers)
     }
 
+    private var bottomScrollContentMargin: CGFloat {
+        let defaultMargin = DesignTokens.Spacing.xxxl + DesignTokens.Spacing.md
+        if ProcessInfo.processInfo.arguments.contains("-CanadianHamA11yAuditExtraBottomMargin") {
+            return defaultMargin + 220
+        }
+        return defaultMargin
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
@@ -56,7 +64,7 @@ struct PracticeView: View {
             .frame(maxWidth: .infinity, alignment: .center)
         }
         .background(DesignTokens.Colors.paper)
-        .contentMargins(.bottom, DesignTokens.Spacing.xxxl + DesignTokens.Spacing.md, for: .scrollContent)
+        .contentMargins(.bottom, bottomScrollContentMargin, for: .scrollContent)
         .navigationTitle(category.name.text(for: language))
         .toolbar {
             if showsLanguagePicker {
