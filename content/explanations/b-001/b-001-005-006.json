@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-005-006",
+  "questionId": "B-001-005-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-005-006.\n\nWhy the correct answer is right: Placing an amateur transmitter in service for another person requires certificates on both sides.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Only the other person must hold an Amateur Radio Operator Certificate\": The other person's certificate alone does not authorize the person placing the transmitter in service.\n- sourceIndex 2: \"Only you must hold an Amateur Radio Operator Certificate\": Your own certificate alone misses the recipient's authorization requirement.\n- sourceIndex 3: \"The other person must be enrolled in an amateur radio certification course\": Enrolment shows interest, not the certificate required for the station use.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-005-006"
+    }
+  ],
+  "licenseClass": "original"
+}

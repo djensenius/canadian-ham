@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-009-002",
+  "questionId": "B-001-009-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-009-002.\n\nWhy the correct answer is right: If you transmit from another amateur station, both you and the station owner are responsible.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"You\": Your responsibility does not eliminate the station owner's responsibility.\n- sourceIndex 2: \"The station owner, unless the station logbook shows you as the control operator\": A log entry does not shift all responsibility away from the owner.\n- sourceIndex 3: \"The station owner\": The owner remains responsible, but the transmitting operator is responsible as well.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-009-002"
+    }
+  ],
+  "licenseClass": "original"
+}

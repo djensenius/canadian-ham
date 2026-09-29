@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-003-001",
+  "questionId": "B-001-003-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-003-001.\n\nWhy the correct answer is right: Transmitting outside amateur bands is prohibited, and penalties can be assessed to the control operator.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"must be identified with your call sign\": Identification does not make an out-of-band transmission lawful.\n- sourceIndex 2: \"are permitted when using less than 1 watt\": Low power does not create permission to transmit outside the amateur bands.\n- sourceIndex 3: \"are permitted for short tests only\": A brief test is still outside the authorized band if the frequency is not amateur.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-003-001"
+    }
+  ],
+  "licenseClass": "original"
+}

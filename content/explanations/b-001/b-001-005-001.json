@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-005-001",
+  "questionId": "B-001-005-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-005-001.\n\nWhy the correct answer is right: The Advanced holder may do that work for another person only when that person already holds the needed authorization for the apparatus.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Pending the granting of a radio authorization, if the apparatus covers amateur radio and commercial bands\": A pending authorization is not enough; the other person must already hold the authorization.\n- sourceIndex 2: \"Pending the granting of an Amateur Radio Operator Certificate if the apparatus covers amateur radio bands only\": Waiting for an amateur certificate does not satisfy the requirement for work on behalf of that person.\n- sourceIndex 3: \"Pending the granting of an authorization if the apparatus is certified and crystal controlled\": Certification and crystal control do not replace the other person's authorization.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-005-001"
+    }
+  ],
+  "licenseClass": "original"
+}

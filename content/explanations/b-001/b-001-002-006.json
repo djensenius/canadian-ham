@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-002-006",
+  "questionId": "B-001-002-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-002-006.\n\nWhy the correct answer is right: The first Amateur Radio Operator Certificate is free under the current bank.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"$32\": This dollar amount is not the fee for the first certificate.\n- sourceIndex 2: \"$10\": The bank does not set a ten-dollar first-certificate fee.\n- sourceIndex 3: \"$24\": Twenty-four dollars is not the amount attached to initial certificate issue.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-002-006"
+    }
+  ],
+  "licenseClass": "original"
+}

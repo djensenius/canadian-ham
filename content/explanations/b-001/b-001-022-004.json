@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-022-004",
+  "questionId": "B-001-022-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-022-004.\n\nWhy the correct answer is right: ISED office qualification examinations are no charge in the current bank.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"$20 per visit, regardless of the number of qualification examinations\": The bank does not use a per-visit ISED office fee.\n- sourceIndex 2: \"$20 per qualification\": No per-qualification office charge is stated by the current bank.\n- sourceIndex 3: \"$5 per qualification examination\": The five-dollar amount is the false fee idea tested elsewhere, not the correct office rule.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-022-004"
+    }
+  ],
+  "licenseClass": "original"
+}

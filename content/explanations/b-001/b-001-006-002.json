@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-006-002",
+  "questionId": "B-001-006-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-006-002.\n\nWhy the correct answer is right: An amateur station communicates with stations under similar authorizations, keeping traffic inside the amateur-service framework.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"any stations which are identified for special contests\": A contest label does not make unlike authorizations compatible.\n- sourceIndex 2: \"Armed Forces stations during contests and exercises\": Military exercise participation is not the similar-authorization rule for amateur stations.\n- sourceIndex 3: \"any station transmitting in amateur radio bands\": Being heard on an amateur band does not prove the other station is similarly authorized.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-006-002"
+    }
+  ],
+  "licenseClass": "original"
+}

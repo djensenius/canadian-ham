@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-006-004",
+  "questionId": "B-001-006-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-006-004.\n\nWhy the correct answer is right: Amateur equipment is not certified for operation outside amateur bands, so it may not be used there as amateur gear.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"When the control operator holds an Advanced Qualification\": Advanced amateur privileges do not authorize out-of-band operation with amateur equipment.\n- sourceIndex 2: \"When the operator already owns licensed equipment for such frequencies\": Owning some licensed equipment elsewhere does not make this amateur equipment certified for those frequencies.\n- sourceIndex 3: \"When transmissions are limited to licence-exempt frequencies\": Licence-exempt frequencies do not turn amateur equipment into compliant equipment for that service.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-006-004"
+    }
+  ],
+  "licenseClass": "original"
+}

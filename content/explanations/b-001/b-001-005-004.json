@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-005-004",
+  "questionId": "B-001-005-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-005-004.\n\nWhy the correct answer is right: A Basic-and-Morse holder may install another person's amateur station only when the other person holds a valid amateur certificate.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"only if the final power input does not exceed 100 watts\": The bank does not make this installation permission turn on a 100-watt input limit.\n- sourceIndex 2: \"only if the station is for use on one of the VHF bands\": A VHF-only station does not remove the other person's certificate requirement.\n- sourceIndex 3: \"only if the DC power input to the final stage does not exceed 200 watts\": The 200-watt condition is not the regulatory requirement tested here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-005-004"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-022-002",
+  "questionId": "B-001-022-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-022-002.\n\nWhy the correct answer is right: The NOT-correct statement is exemption from portions of the exam; the bank supports accommodation, not skipping required portions.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A disabled candidate, taking a Morse code sending test, may be allowed to recite the examination text in Morse code sounds\": This is an allowed accommodation in the bank item.\n- sourceIndex 2: \"Examinations for disabled candidates may be given orally, or tailored to the candidate's ability to complete the examination\": Oral or tailored examination delivery is treated as correct.\n- sourceIndex 3: \"After passing the basic exam, a disabled candidate may take the other exams in any order\": Taking later exams in any order after Basic remains a correct statement here.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-022-002"
+    }
+  ],
+  "licenseClass": "original"
+}

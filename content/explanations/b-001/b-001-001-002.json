@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-001-002",
+  "questionId": "B-001-001-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-001-002.\n\nWhy the correct answer is right: The Radiocommunication Act supplies the authority for publishing amateur-station operating standards in Canada.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The Radiocommunication Regulations\": The regulations define and implement rules, but the authority to publish the standards is traced to the Act.\n- sourceIndex 2: \"The Broadcasting Act\": Broadcasting law does not authorize the amateur-station standards named in this question.\n- sourceIndex 3: \"The International Telecommunication Union's Radio Regulations\": The ITU framework is international; it is not the Canadian legal source for publishing these standards.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-001-002"
+    }
+  ],
+  "licenseClass": "original"
+}

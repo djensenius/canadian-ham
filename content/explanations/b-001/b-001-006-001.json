@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-006-001",
+  "questionId": "B-001-006-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-006-001.\n\nWhy the correct answer is right: Even a two-watt amateur station must be supervised by a certificate holder with a call sign; low power does not remove amateur authorization.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"need not be authorized by Innovation, Science and Economic Development Canada\": The bank does not create a low-power exemption from authorization.\n- sourceIndex 2: \"need not be authorized in isolated areas only\": Isolation is not a condition that removes amateur-station authorization.\n- sourceIndex 3: \"is exempt from regulatory control\": The station remains within regulatory control despite the small power level.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-006-001"
+    }
+  ],
+  "licenseClass": "original"
+}

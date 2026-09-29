@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-004-003",
+  "questionId": "B-001-004-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-004-003.\n\nWhy the correct answer is right: The named RGMC maritime general certificate is the bridge recognized by the bank for issuing an Amateur Radio Operator Certificate.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Canadian Restricted Operator Certificate - Maritime (ROC-M)\": ROC-M sounds related to marine radio, but it is not the credential named by this bank item.\n- sourceIndex 2: \"Canadian Restricted Operator's Certificate - Maritime Commercial (ROC-MC)\": ROC-MC is another maritime credential, not the accepted bridge here.\n- sourceIndex 3: \"Canadian Restricted Operator Certificate - Aeronautical (ROC-A)\": An aeronautical restricted certificate is outside the bridge identified in the bank.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-004-003"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-003-007",
+  "questionId": "B-001-003-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-003-007.\n\nWhy the correct answer is right: False information is never permitted, even when the operator thinks the reason is harmless.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To play a practical joke, for example, giving incorrect location of an amateur radio event\": A joke still transmits false information.\n- sourceIndex 2: \"To conceal their identity when responding to inappropriate on-air conduct\": A response to bad behaviour does not authorize false identity or information.\n- sourceIndex 3: \"To exaggerate the scope of an emergency to obtain help more rapidly\": Exaggerating an emergency is still false information and can misdirect response.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-003-007"
+    }
+  ],
+  "licenseClass": "original"
+}

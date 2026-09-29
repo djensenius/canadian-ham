@@ -1,0 +1,164 @@
+{
+  "id": "QZ-L-001-01-A",
+  "lessonId": "L-001-01",
+  "officialQuestionIds": [
+    "B-001-001-001",
+    "B-001-001-002",
+    "B-001-001-003",
+    "B-001-001-004",
+    "B-001-002-001",
+    "B-001-002-002",
+    "B-001-002-003",
+    "B-001-002-004",
+    "B-001-002-005",
+    "B-001-002-006",
+    "B-001-002-007",
+    "B-001-002-008",
+    "B-001-002-009",
+    "B-001-003-001",
+    "B-001-003-002",
+    "B-001-003-003",
+    "B-001-003-004",
+    "B-001-003-005",
+    "B-001-003-006",
+    "B-001-003-007",
+    "B-001-003-008",
+    "B-001-004-001",
+    "B-001-004-002",
+    "B-001-004-003",
+    "B-001-004-004",
+    "B-001-004-005",
+    "B-001-004-006",
+    "B-001-004-007",
+    "B-001-022-001",
+    "B-001-022-002",
+    "B-001-022-003",
+    "B-001-022-004",
+    "B-001-022-005"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-001-01-A-C1",
+      "prompt": {
+        "en": "A learner builds a source map before reviewing station duties. Which ordering is the most defensible from broad authority toward individual operating records?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Certificate folder, department name, service definition, broad statute",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Broad statute, regulations that define the service, ISED station standards, certificate and call-sign records",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Club handbook, call-sign preference, examiner invoice, broad statute",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Exam accommodation note, station log, service definition, department name",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "The lesson groups sources from general legal authority to operating standards and finally to the individual certificate and call-sign records that identify the operator.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-001-01-A-C2",
+      "prompt": {
+        "en": "Which study habit would NOT help keep current fee rules accurate?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Separating an ISED office exam from an accredited examiner's cost recovery",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Checking whether a call-sign action is address-related or voluntary",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Using the current bank rather than a remembered club-story amount",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Combining every certificate, call-sign, and exam situation into one universal price rule",
+            "fr": null
+          },
+          "isCorrect": true
+        }
+      ],
+      "explanation": {
+        "en": "The bank treats different services differently. A single universal price rule would blur first certificates, address-related prefix replacement, voluntary call-sign changes, ISED office exams, and examiner cost recovery.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-001-01-A-C3",
+      "prompt": {
+        "en": "A drill planner says, 'We can use a fake emergency word if we immediately explain that it was a scenario.' What is the error in that procedure?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "A later explanation does not change the nature of transmitting false emergency information.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Practice traffic is forbidden even when no emergency word is used.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Only club officers are allowed to label an exercise as practice traffic.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "False wording becomes acceptable whenever a net control station is listening.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "The safe procedure is to identify exercise traffic without sending a false distress or false emergency claim in the first place.",
+        "fr": null
+      }
+    }
+  ]
+}

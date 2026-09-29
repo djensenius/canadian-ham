@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-003-005",
+  "questionId": "B-001-003-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-003-005.\n\nWhy the correct answer is right: The NOT-correct statement is suspension with no notice or opportunity to make representations; the bank expects a due-process boundary.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"where the holder has contravened the Radiocommunication Act, its regulations, or the terms and conditions of the certificate\": Contravention is one of the listed suspension grounds, leaving the no-notice claim as the bad option.\n- sourceIndex 2: \"where the certificate was obtained through misrepresentation\": Misrepresentation is a legitimate reason for suspension in the bank item.\n- sourceIndex 3: \"where the holder has failed to comply with a request to pay fees or interest due\": Failure to comply with a payment request is listed as a valid suspension ground, not the exception.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-003-005"
+    }
+  ],
+  "licenseClass": "original"
+}

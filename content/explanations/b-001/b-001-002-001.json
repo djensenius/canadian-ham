@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-002-001",
+  "questionId": "B-001-002-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-002-001.\n\nWhy the correct answer is right: A mailing-address change has to be reported to ISED so the certificate record remains current.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Inform your local amateur radio club\": A club roster does not update the regulator's certificate record.\n- sourceIndex 2: \"Inform an accredited examiner\": An examiner may administer exams, but the address record belongs with ISED.\n- sourceIndex 3: \"Inform Radio Amateurs of Canada (RAC)\": RAC is not the department holding the official certificate address record.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-002-001"
+    }
+  ],
+  "licenseClass": "original"
+}

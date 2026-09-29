@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-009-008",
+  "questionId": "B-001-009-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-009-008.\n\nWhy the correct answer is right: The owner may let any person operate under supervision and in the presence of a certificate holder.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"permit anyone to take part in communications only if prior written permission is received from Innovation, Science and Economic Development Canada\": Prior written ISED permission is not the supervision rule in the bank.\n- sourceIndex 2: \"permit anyone to use the station without restrictions\": The bank requires supervision and presence, so unrestricted use is wrong.\n- sourceIndex 3: \"permit anyone to use the station and take part in communications\": This omits the required supervision and presence of a certificate holder.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-009-008"
+    }
+  ],
+  "licenseClass": "original"
+}

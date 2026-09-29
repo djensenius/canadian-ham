@@ -1,0 +1,171 @@
+{
+  "id": "QZ-L-001-02-A",
+  "lessonId": "L-001-02",
+  "officialQuestionIds": [
+    "B-001-005-001",
+    "B-001-005-002",
+    "B-001-005-003",
+    "B-001-005-004",
+    "B-001-005-005",
+    "B-001-005-006",
+    "B-001-006-001",
+    "B-001-006-002",
+    "B-001-006-003",
+    "B-001-006-004",
+    "B-001-006-005",
+    "B-001-006-006",
+    "B-001-007-001",
+    "B-001-007-002",
+    "B-001-007-003",
+    "B-001-007-004",
+    "B-001-007-005",
+    "B-001-007-006",
+    "B-001-007-007",
+    "B-001-007-008",
+    "B-001-007-009",
+    "B-001-007-010",
+    "B-001-007-011",
+    "B-001-008-001",
+    "B-001-008-002",
+    "B-001-008-003",
+    "B-001-008-004",
+    "B-001-008-005",
+    "B-001-008-006",
+    "B-001-008-007",
+    "B-001-008-008",
+    "B-001-009-001",
+    "B-001-009-002",
+    "B-001-009-003",
+    "B-001-009-004",
+    "B-001-009-005",
+    "B-001-009-006",
+    "B-001-009-007",
+    "B-001-009-008",
+    "B-001-009-009"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-001-02-A-C1",
+      "prompt": {
+        "en": "A helper is preparing a transmitter for someone else. Which question would NOT help decide whether the work fits the amateur-service authorization pattern?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Is the recipient authorized for the amateur apparatus or station use involved?",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Is the helper staying within privileges held for the work being done?",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Is the planned operation inside the amateur service rather than another radio service?",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Does the equipment look modern enough that user authorization can be ignored?",
+            "fr": null
+          },
+          "isCorrect": true
+        }
+      ],
+      "explanation": {
+        "en": "Appearance or age of equipment does not replace the authorization checks. The useful questions are about the helper's privileges, the other person's authorization, and the radio service being used.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-001-02-A-C2",
+      "prompt": {
+        "en": "A programmable radio has amateur memories and a few memories for a non-amateur service. Which procedure best avoids the common error?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Treat every stored memory as amateur operation because the same operator owns the radio.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Use the amateur certificate for all memories as long as the antenna and power supply are unchanged.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Before transmitting, identify which radio service the memory belongs to and confirm the authorization required for that service.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Transmit first at low power, then decide afterward which service was being used.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "A radio's memory list can cross service boundaries. The operator must decide the service and authorization before transmitting, not after the fact.",
+        "fr": null
+      }
+    },
+    {
+      "id": "QZ-L-001-02-A-C3",
+      "prompt": {
+        "en": "A club demonstration wants visitors to speak briefly. Which plan is the defensible one?",
+        "fr": null
+      },
+      "choices": [
+        {
+          "text": {
+            "en": "Leave a written script and let visitors transmit alone if the room is unlocked by a certificate holder.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Have a qualified operator present at the control point, supervising and able to stop the transmission.",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Ask visitors to enroll in a course before the event, then let them transmit without supervision.",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Let the station owner transfer all responsibility to guests by entering their names in a log.",
+            "fr": null
+          },
+          "isCorrect": false
+        }
+      ],
+      "explanation": {
+        "en": "The lesson's control model keeps a qualified person at the control point and present with the unqualified participant. Permission notes, course enrolment, or log entries do not replace that supervision.",
+        "fr": null
+      }
+    }
+  ]
+}

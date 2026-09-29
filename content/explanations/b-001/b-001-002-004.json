@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-002-004",
+  "questionId": "B-001-002-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-002-004.\n\nWhy the correct answer is right: The certificate must be retained at the station, so it is available as part of the station record.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"must be put on file\": A vague file could be anywhere; the bank requires retention at the station.\n- sourceIndex 2: \"must be kept in a safe place\": Safe storage alone is not the location rule being tested.\n- sourceIndex 3: \"must be kept on the person to whom it is issued\": Carrying it personally is not the bank's station-retention requirement.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-002-004"
+    }
+  ],
+  "licenseClass": "original"
+}

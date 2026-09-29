@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-006-005",
+  "questionId": "B-001-006-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-006-005.\n\nWhy the correct answer is right: The NOT-correct statement is that amateur-authorized apparatus may be operated on aeronautical, marine, or land-mobile frequencies.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"only if the person complies with the Standards for the Operation of Radio Stations in the Amateur Radio Service\": Compliance with amateur operating standards is a real condition for amateur apparatus operation.\n- sourceIndex 2: \"only if the apparatus is maintained to the performance standards set by Innovation, Science and Economic Development Canada regulations and policies\": Maintaining the apparatus to ISED performance standards is a true requirement in this item.\n- sourceIndex 3: \"except for the amplification of the output power of licence-exempt radio apparatus operating outside authorized amateur radio service allocations\": This exception language is a true boundary: that amplification is not covered by amateur operation.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-006-005"
+    }
+  ],
+  "licenseClass": "original"
+}

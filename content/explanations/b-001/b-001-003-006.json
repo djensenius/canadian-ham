@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-003-006",
+  "questionId": "B-001-003-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-003-006.\n\nWhy the correct answer is right: The NOT-correct statement is warrantless, non-consensual entry into a dwelling; the bank preserves a warrant or consent boundary.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Where entry is refused, and is necessary to perform their duties under the Radiocommunication Act, a radio inspector may obtain a warrant\": Obtaining a warrant after refusal is a valid enforcement path.\n- sourceIndex 2: \"In executing a warrant, a radio inspector shall not use force, unless accompanied by a peace officer, and force is authorized\": That wording includes the required peace-officer and authorization conditions for force under a warrant.\n- sourceIndex 3: \"The person responsible for a dwelling entered by a radio inspector shall provide the inspector the requested information\": Providing requested information after lawful entry is treated as correct in this item.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-003-006"
+    }
+  ],
+  "licenseClass": "original"
+}

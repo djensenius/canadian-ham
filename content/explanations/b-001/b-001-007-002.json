@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-007-002",
+  "questionId": "B-001-007-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-007-002.\n\nWhy the correct answer is right: Amateur operators may not broadcast information to the general public.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Only when the amateur radio operator is being paid\": Payment would add a commercial problem; it does not authorize broadcasting.\n- sourceIndex 2: \"Only when the broadcasts last less than 1 hour\": A shorter duration does not change a broadcast into permitted amateur communication.\n- sourceIndex 3: \"Only when the broadcasts are of broad public interest\": Public interest does not create a general broadcasting privilege in the amateur service.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-007-002"
+    }
+  ],
+  "licenseClass": "original"
+}

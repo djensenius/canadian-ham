@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-007-010",
+  "questionId": "B-001-007-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-007-010.\n\nWhy the correct answer is right: Q codes are permitted because they are standard, non-secret procedural signals.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"programming that originates from a broadcasting undertaking\": Broadcast programming is not amateur communication.\n- sourceIndex 2: \"radiocommunication in support of industrial, business, or professional activities\": Business or professional support traffic is prohibited in amateur radio.\n- sourceIndex 3: \"commercially recorded material\": Commercial recordings are not permitted amateur communication content.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-007-010"
+    }
+  ],
+  "licenseClass": "original"
+}

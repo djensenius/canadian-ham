@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-007-005",
+  "questionId": "B-001-007-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-007-005.\n\nWhy the correct answer is right: A new digital encoding technique may be used when it is published in the public domain, so the meaning is not secret.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"When it is used for music streaming content\": Music streaming would introduce prohibited program material, not permission.\n- sourceIndex 2: \"When it is used for commercial traffic\": Commercial traffic is outside amateur communication.\n- sourceIndex 3: \"When it includes sending the amateur radio station's call sign\": Identifying the station does not make an unpublished encoding technique acceptable.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-02"
+    },
+    {
+      "type": "question",
+      "id": "B-001-007-005"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-004-001",
+  "questionId": "B-001-004-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-004-001.\n\nWhy the correct answer is right: The bank establishes no age limit for holding Basic qualification.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"70 years or younger\": A maximum age limit is not part of the Basic eligibility rule.\n- sourceIndex 2: \"18 years or older\": Adult age is not required by the current bank.\n- sourceIndex 3: \"14 years or older\": Fourteen is a plausible youth threshold, but the bank does not impose it for Basic.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-004-001"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-004-006",
+  "questionId": "B-001-004-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-004-006.\n\nWhy the correct answer is right: Even Advanced amateur qualification does not authorize operation in another radio service.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Aeronautical service\": Aeronautical operation requires its own authorization; amateur Advanced does not grant it.\n- sourceIndex 2: \"Maritime service\": Maritime operation is a separate service, not added by amateur Advanced.\n- sourceIndex 3: \"Land mobile service\": Land mobile authority is not created by an amateur Advanced qualification.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-01"
+    },
+    {
+      "type": "question",
+      "id": "B-001-004-006"
+    }
+  ],
+  "licenseClass": "original"
+}
