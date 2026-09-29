@@ -122,9 +122,9 @@ Question: A CW operator moves the BFO 400 Hz higher while leaving the IF signal 
 
 Worked answer: The recovered tone pitch shifts by the BFO change. The product detector is comparing the IF energy with that local reference to make audio.
 
-Question: A filtered SSB signal at 9.001 MHz is mixed with a 12.500 MHz VFO using the sum output. What is the transmit frequency before final amplification?
+Question: A filtered voice sideband is centred at 9.001 MHz and mixed with a 12.500 MHz VFO using the sum output. What centre frequency leaves the mixer, and what happens to the voice information?
 
-Worked answer: Add the two frequencies: 9.001 MHz + 12.500 MHz = 21.501 MHz.
+Worked answer: The centre moves to 9.001 MHz + 12.500 MHz = 21.501 MHz. The voice information moves with the translated sideband; the mixer changes the RF frequency rather than the message.
 
 ## Radio connection
 

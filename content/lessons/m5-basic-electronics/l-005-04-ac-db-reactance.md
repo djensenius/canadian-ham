@@ -137,7 +137,7 @@ Impedance is the combined effect of resistance and reactance in an AC circuit. Y
 
 ## Try it
 
-1. A logging note says 14.1 MHz, 900 kHz, and 146 MHz. Which one is HF, and where does HF sit in the LF/MF/HF/VHF order? 14.1 MHz is HF because it is between 3 MHz and 30 MHz; the order from lower to higher is LF, MF, HF, then VHF.
+1. A 14.1 MHz signal has harmonics at integer multiples of that frequency. Which ranges contain its second and third harmonics? The second harmonic is 28.2 MHz, still HF; the third is 42.3 MHz, now VHF.
 2. If a signal level rises by about 7 dB, what rough power ratio can you use? About five times.
 3. If transmitter power goes from 7 W to 21 W, what happened to the power? It became three times larger.
 4. If frequency increases, what happens to inductive reactance? It increases.

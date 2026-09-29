@@ -62,28 +62,28 @@
       "choices": [
         {
           "text": {
-            "en": "Ground-wave coverage usually becomes less useful as frequency rises, so the plan may need the lower band or another path.",
+            "en": "Ground-wave coverage becomes less useful as frequency rises, so use the lower band or choose another path.",
             "fr": null
           },
           "isCorrect": true
         },
         {
           "text": {
-            "en": "The surface-guided part should extend farther, because higher frequency always follows terrain more closely.",
+            "en": "The surface-guided part should extend farther, because higher frequency tends to follow terrain more closely.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "Only the antenna length changes; the ground-wave distance is independent of frequency.",
+            "en": "Mostly the antenna length changes; the ground-wave distance changes little with frequency.",
             "fr": null
           },
           "isCorrect": false
         },
         {
           "text": {
-            "en": "The path becomes an F2-region hop automatically once it is above the lower HF band.",
+            "en": "The path is likely to become an F2-region hop once it is above the lower HF band.",
             "fr": null
           },
           "isCorrect": false
