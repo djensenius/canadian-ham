@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-011-002.\n\nWhy the correct answer is right: The driven element is approximately a half wave, so use 143 / 14.0 = 10.21 m.\n\nPer-choice notes:\n- sourceIndex 0: \"10.21 metres\": Correct. 143 divided by 14.0 is 10.21 metres.\n- sourceIndex 1: \"5.09 metres\": This is about half the driven-element length, closer to a quarter-wave value.\n- sourceIndex 2: \"10.71 metres\": This uses a longer free-space half-wave estimate rather than the practical 143/f value.\n- sourceIndex 3: \"21.43 metres\": This is about a full wavelength, not the half-wave driven element.",
+    "en": "Question B-006-011-002.\n\nWhy the correct answer is right: The driven element of an HF Yagi is approximately a practical half wavelength. Using 143/f gives 143 / 14.0 = 10.21 metres.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"5.09 metres\": This is 71.3 / 14.0 = 5.09 m, the practical quarter-wave length. A Yagi driven element is approximately a half-wave element.\n- sourceIndex 2: \"10.71 metres\": This is 150 / 14.0 = 10.71 m, the free-space half-wave estimate. The practical HF formula used here is 143/f.\n- sourceIndex 3: \"21.43 metres\": This is 300 / 14.0 = 21.43 m, a full free-space wavelength. The driven element is approximately half that, shortened to 143/f.",
     "fr": null
   },
   "citations": [

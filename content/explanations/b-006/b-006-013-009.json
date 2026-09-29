@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-013-009.\n\nWhy the correct answer is right: Use the full-wave loop estimate L(m) = 306 / f(MHz). 306 / 7.15 = 42.80 m.\n\nPer-choice notes:\n- sourceIndex 0: \"42.80 metres\": Correct. 306 divided by 7.15 rounds to 42.80 metres.\n- sourceIndex 1: \"41.96 metres\": This comes from 300 / 7.15, the free-space wavelength shortcut, not the practical loop formula used here.\n- sourceIndex 2: \"10.49 metres\": This is about a quarter-wave length, not the full loop perimeter.\n- sourceIndex 3: \"20.00 metres\": This is less than half the required loop perimeter.",
+    "en": "Question B-006-013-009.\n\nWhy the correct answer is right: A horizontal loop is approximately one wavelength around, using 306/f for the wire length. At 7.15 MHz, 306 / 7.15 = 42.80 metres.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"41.96 metres\": This is 300 / 7.15 = 41.96 m, the free-space full-wave estimate. The practical horizontal-loop formula in the bank uses 306/f.\n- sourceIndex 2: \"10.49 metres\": This is 75 / 7.15 = 10.49 m, a quarter of the 300/f free-space wavelength and roughly one side of a square loop, not the total wire length.\n- sourceIndex 3: \"20.00 metres\": This is 143 / 7.15 = 20.00 m, the practical half-wave dipole length. A horizontal loop is a full-wave loop.",
     "fr": null
   },
   "citations": [

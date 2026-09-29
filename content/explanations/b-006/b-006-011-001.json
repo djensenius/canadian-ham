@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-011-001.\n\nWhy the correct answer is right: Element traps let one Yagi element act at different electrical lengths on multiple bands.\n\nPer-choice notes:\n- sourceIndex 0: \"Element traps\": Correct. Element traps let one Yagi element act at different electrical lengths on multiple bands.\n- sourceIndex 1: \"Large diameter elements\": The resonance move follows length: longer lowers frequency and shorter raises it.\n- sourceIndex 2: \"Multiple reflector elements\": Those may be Yagi design features, but traps are what enable multiband element behaviour here.\n- sourceIndex 3: \"T-match feed circuit\": Those may be Yagi design features, but traps are what enable multiband element behaviour here.",
+    "en": "Question B-006-011-001.\n\nWhy the correct answer is right: Element traps let different portions of the Yagi elements be active on different bands. That allows one physical antenna to resonate on 20, 15, and 10 metres.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Large diameter elements\": Larger diameter elements can broaden bandwidth, but they do not by themselves switch the electrical length for three separate HF bands.\n- sourceIndex 2: \"Multiple reflector elements\": Extra reflectors would affect the pattern on a band. They are not the design feature that makes each element the right length on several bands.\n- sourceIndex 3: \"T-match feed circuit\": A T-match can transform feedpoint impedance, but matching the feedpoint does not make the elements resonant on multiple bands.",
     "fr": null
   },
   "citations": [

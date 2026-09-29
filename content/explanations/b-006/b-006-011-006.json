@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-011-006.\n\nWhy the correct answer is right: Increased spacing can improve gain in the Basic-bank Yagi context.\n\nPer-choice notes:\n- sourceIndex 0: \"Higher gain\": Correct. Increased spacing can improve gain in the Basic-bank Yagi context.\n- sourceIndex 1: \"Better front-to-back ratio\": Those are antenna performance properties, but a basic analyzer reports impedance/SWR information over frequency.\n- sourceIndex 2: \"Lower feed point impedance\": The main effect being tested is polarization change, not a guaranteed large impedance change.\n- sourceIndex 3: \"Wider bandwidth\": Those are different performance topics; feed-point matching reduces high-SWR feedline loss.",
+    "en": "Question B-006-011-006.\n\nWhy the correct answer is right: Increasing Yagi element spacing, within the normal design range, can improve the array interaction and provide higher forward gain.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Better front-to-back ratio\": Front-to-back ratio is adjusted by the reflector, director tuning, and spacing details; wider spacing is not chiefly chosen for that advantage.\n- sourceIndex 2: \"Lower feed point impedance\": Element spacing can affect impedance, but lowering feedpoint impedance is not the major benefit asked for and may make matching harder.\n- sourceIndex 3: \"Wider bandwidth\": Yagi bandwidth is more strongly improved by element diameter and design choices. Increased spacing is taught here as a gain advantage.",
     "fr": null
   },
   "citations": [

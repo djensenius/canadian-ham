@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-012-008.\n\nWhy the correct answer is right: Trap antennas can cover multiple bands with one structure.\n\nPer-choice notes:\n- sourceIndex 0: \"It may be used for multi-band operation\": Correct. Trap antennas can cover multiple bands with one structure.\n- sourceIndex 1: \"It has high directivity at the higher frequencies\": This does not match the principle tested here: Dipoles, random wires, EFHW antennas, and trap antennas differ in pattern, feed impedance, and station RF behaviour.\n- sourceIndex 2: \"It has high gain\": SWR is a match indication, not antenna gain; below 1.5:1 is generally a usable match.\n- sourceIndex 3: \"It minimizes harmonic radiation\": Small coax at high frequency mainly causes excessive attenuation; heating can result, but loss is the primary adverse consequence.",
+    "en": "Question B-006-012-008.\n\nWhy the correct answer is right: A trap is a resonant circuit that can isolate or include different portions of an antenna on different bands. That lets one antenna be used for multiband operation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It has high directivity at the higher frequencies\": Traps change electrical length for bands; they do not by themselves create a beam or high-directivity pattern.\n- sourceIndex 2: \"It has high gain\": Gain depends on aperture, element arrangement, height, and losses. Adding traps is for multiband resonance, not automatic gain.\n- sourceIndex 3: \"It minimizes harmonic radiation\": The opposite concern can occur: traps may allow an antenna to radiate harmonics more readily. Their advantage is multiband use.",
     "fr": null
   },
   "citations": [

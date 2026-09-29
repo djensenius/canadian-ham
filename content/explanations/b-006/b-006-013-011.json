@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-013-011.\n\nWhy the correct answer is right: A delta loop has an overall conductor length of about one wavelength.\n\nPer-choice notes:\n- sourceIndex 0: \"One wavelength\": Correct. A delta loop has an overall conductor length of about one wavelength.\n- sourceIndex 1: \"One quarter of a wavelength\": Front-to-back ratio is a pattern-power comparison, not a dimension ratio.\n- sourceIndex 2: \"Two wavelengths\": Front-to-back ratio is a pattern-power comparison, not a dimension ratio.\n- sourceIndex 3: \"One half of a wavelength\": For purely resistive maximum power transfer, equal source and load impedances are required.",
+    "en": "Question B-006-013-011.\n\nWhy the correct answer is right: A delta loop is a triangular loop antenna whose total perimeter is approximately one wavelength.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"One quarter of a wavelength\": A quarter wavelength describes a short vertical element, not the total wire around a delta loop.\n- sourceIndex 2: \"Two wavelengths\": Two wavelengths is twice the normal delta-loop perimeter and would not be the basic approximate overall length.\n- sourceIndex 3: \"One half of a wavelength\": A half wavelength is the length of a dipole. A delta loop uses a full-wave loop perimeter.",
     "fr": null
   },
   "citations": [

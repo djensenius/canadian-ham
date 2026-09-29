@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-011-010.\n\nWhy the correct answer is right: For a three-element Yagi, about 0.20 wavelength spacing is the accepted compromise value in this Basic-bank context.\n\nPer-choice notes:\n- sourceIndex 0: \"0.20\": Correct. 0.20 wavelength is the compromise spacing expected here.\n- sourceIndex 1: \"0.10\": This is tighter than the compromise value and changes the pattern tradeoffs.\n- sourceIndex 2: \"0.50\": This is much wider than the expected compromise for a compact three-element Yagi.\n- sourceIndex 3: \"0.75\": This is far wider than the expected compromise spacing.",
+    "en": "Question B-006-011-010.\n\nWhy the correct answer is right: For a three-element Yagi, about 0.20 wavelength spacing is a common compromise that balances forward gain with front-to-back ratio.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"0.10\": One tenth wavelength is close spacing; it tends to limit gain and makes the element interactions more critical than the usual compromise value.\n- sourceIndex 2: \"0.50\": A half wavelength is much wider than the common three-element compromise and can produce less controlled patterns or excessive boom length.\n- sourceIndex 3: \"0.75\": Three quarters wavelength is far beyond the normal compromise spacing for a compact three-element Yagi and would not balance gain and front-to-back ratio well.",
     "fr": null
   },
   "citations": [
