@@ -1,6 +1,7 @@
+import { realpathSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const DEFAULT_LESSON_ROOT = path.join(REPO_ROOT, "content/lessons");
@@ -8,6 +9,8 @@ const DEFAULT_SUBSECTIONS_PATH = path.join(REPO_ROOT, "content/generated/basic-2
 
 type FrontMatterValue = string | number | null | string[] | Record<string, string | null>;
 type FrontMatter = Record<string, FrontMatterValue>;
+
+type ContentStatus = "outline" | "draft" | "review" | "published";
 
 type LessonFrontMatter = {
   id: string;
@@ -19,15 +22,26 @@ type LessonFrontMatter = {
   prerequisites: string[];
   estimatedMinutes: number;
   quizIds: string[];
-  status: "outline";
+  status: ContentStatus;
 };
 
 type ModuleFrontMatter = {
   id: string;
   categoryId: string;
+  order: number;
   title: { en: string; fr: string | null };
   lessonIds: string[];
-  status: "outline";
+  status: ContentStatus;
+};
+
+type ParsedLesson = {
+  filePath: string;
+  lesson: LessonFrontMatter;
+};
+
+type ParsedModule = {
+  filePath: string;
+  module: ModuleFrontMatter;
 };
 
 export type LessonCoverageOptions = {
@@ -181,7 +195,7 @@ function requireString(data: FrontMatter, key: string, filePath: string): string
 
 function requireNumber(data: FrontMatter, key: string, filePath: string): number {
   const value = data[key];
-  if (!Number.isInteger(value) || value <= 0) {
+  if (typeof value !== "number" || !Number.isInteger(value) || value <= 0) {
     throw new Error(`${filePath}: front matter field ${key} must be a positive integer`);
   }
   return value;
@@ -203,11 +217,40 @@ function requireLocalizedTitle(data: FrontMatter, filePath: string): { en: strin
   return { en: value.en, fr: value.fr };
 }
 
-function validateLesson(data: FrontMatter, filePath: string): LessonFrontMatter {
-  const status = requireString(data, "status", filePath);
-  if (status !== "outline") {
-    throw new Error(`${filePath}: lesson status must be outline`);
+const VALID_STATUSES = ["outline", "draft", "review", "published"] as const;
+
+function isContentStatus(value: string): value is ContentStatus {
+  return (VALID_STATUSES as readonly string[]).includes(value);
+}
+
+function requireStatus(data: FrontMatter, key: string, filePath: string, typeName: string): ContentStatus {
+  const status = requireString(data, key, filePath);
+  if (!isContentStatus(status)) {
+    throw new Error(`${filePath}: ${typeName} status must be one of ${VALID_STATUSES.join(", ")}`);
   }
+  return status;
+}
+
+function categoryIdForModuleId(moduleId: string): string | null {
+  const match = moduleId.match(/^M([1-8])$/);
+  const moduleNumber = match?.[1];
+  if (moduleNumber === undefined) {
+    return null;
+  }
+  return `B-00${moduleNumber}`;
+}
+
+function moduleIdForLessonId(lessonId: string): string | null {
+  const match = lessonId.match(/^L-00([1-8])-\d{2}$/);
+  const moduleNumber = match?.[1];
+  if (moduleNumber === undefined) {
+    return null;
+  }
+  return `M${moduleNumber}`;
+}
+
+function validateLesson(data: FrontMatter, filePath: string): LessonFrontMatter {
+  const status = requireStatus(data, "status", filePath, "lesson");
   const lesson: LessonFrontMatter = {
     id: requireString(data, "id", filePath),
     moduleId: requireString(data, "moduleId", filePath),
@@ -220,24 +263,41 @@ function validateLesson(data: FrontMatter, filePath: string): LessonFrontMatter 
     quizIds: requireStringArray(data, "quizIds", filePath, true),
     status,
   };
-  if (!/^L-\d{3}-\d{2}$/.test(lesson.id)) {
-    throw new Error(`${filePath}: lesson id must match L-000-00`);
+  const expectedModuleId = moduleIdForLessonId(lesson.id);
+  if (expectedModuleId === null) {
+    throw new Error(`${filePath}: lesson id must match L-001-00 through L-008-00`);
+  }
+  if (lesson.moduleId !== expectedModuleId) {
+    throw new Error(`${filePath}: lesson moduleId ${lesson.moduleId} must match lesson id prefix ${expectedModuleId}`);
+  }
+  const expectedCategoryId = categoryIdForModuleId(lesson.moduleId);
+  if (expectedCategoryId === null || !lesson.categoryIds.includes(expectedCategoryId)) {
+    throw new Error(`${filePath}: lesson categoryIds must include ${expectedCategoryId ?? "the module category"}`);
   }
   return lesson;
 }
 
 function validateModule(data: FrontMatter, filePath: string): ModuleFrontMatter {
-  const status = requireString(data, "status", filePath);
-  if (status !== "outline") {
-    throw new Error(`${filePath}: module status must be outline`);
-  }
-  return {
+  const status = requireStatus(data, "status", filePath, "module");
+  const module: ModuleFrontMatter = {
     id: requireString(data, "id", filePath),
     categoryId: requireString(data, "categoryId", filePath),
+    order: requireNumber(data, "order", filePath),
     title: requireLocalizedTitle(data, filePath),
     lessonIds: requireStringArray(data, "lessonIds", filePath),
     status,
   };
+  const expectedCategoryId = categoryIdForModuleId(module.id);
+  if (expectedCategoryId === null) {
+    throw new Error(`${filePath}: module id must match M1 through M8`);
+  }
+  if (module.categoryId !== expectedCategoryId) {
+    throw new Error(`${filePath}: module categoryId ${module.categoryId} must match ${module.id} as ${expectedCategoryId}`);
+  }
+  if (module.order > 8) {
+    throw new Error(`${filePath}: module order must be 1 through 8`);
+  }
+  return module;
 }
 
 async function listMarkdownFiles(root: string): Promise<string[]> {
@@ -275,8 +335,8 @@ export async function checkLessonCoverage(options: LessonCoverageOptions = {}): 
   const expectedSet = new Set(expectedSubsectionIds);
   const coverage = new Map<string, string[]>();
   const malformedFiles: { filePath: string; message: string }[] = [];
-  const lessonIds = new Set<string>();
-  const moduleIds = new Set<string>();
+  const lessonsById = new Map<string, ParsedLesson>();
+  const modulesById = new Map<string, ParsedModule>();
 
   const markdownFiles = await listMarkdownFiles(lessonRoot);
   for (const filePath of markdownFiles) {
@@ -285,10 +345,10 @@ export async function checkLessonCoverage(options: LessonCoverageOptions = {}): 
       const type = requireString(data, "type", filePath);
       if (type === "lesson") {
         const lesson = validateLesson(data, filePath);
-        if (lessonIds.has(lesson.id)) {
+        if (lessonsById.has(lesson.id)) {
           throw new Error(`${filePath}: duplicate lesson id ${lesson.id}`);
         }
-        lessonIds.add(lesson.id);
+        lessonsById.set(lesson.id, { filePath, lesson });
         for (const subsectionId of lesson.covers) {
           const lessonIdsForSubsection = coverage.get(subsectionId) ?? [];
           lessonIdsForSubsection.push(lesson.id);
@@ -296,15 +356,48 @@ export async function checkLessonCoverage(options: LessonCoverageOptions = {}): 
         }
       } else if (type === "module") {
         const module = validateModule(data, filePath);
-        if (moduleIds.has(module.id)) {
+        if (modulesById.has(module.id)) {
           throw new Error(`${filePath}: duplicate module id ${module.id}`);
         }
-        moduleIds.add(module.id);
+        modulesById.set(module.id, { filePath, module });
       } else {
         throw new Error(`${filePath}: front matter type must be lesson or module`);
       }
     } catch (error) {
       malformedFiles.push({ filePath, message: error instanceof Error ? error.message : String(error) });
+    }
+  }
+
+  const moduleOrderValues = [...modulesById.values()].map(({ module }) => module.order);
+  const missingOrderValues = [1, 2, 3, 4, 5, 6, 7, 8].filter((order) => !moduleOrderValues.includes(order));
+  if (modulesById.size !== 8 || new Set(moduleOrderValues).size !== 8 || missingOrderValues.length > 0) {
+    malformedFiles.push({ filePath: lessonRoot, message: "module order values must uniquely cover exactly 1 through 8" });
+  }
+
+  for (const { filePath, module } of modulesById.values()) {
+    for (const lessonId of module.lessonIds) {
+      const parsedLesson = lessonsById.get(lessonId);
+      if (parsedLesson === undefined) {
+        malformedFiles.push({ filePath, message: `module lessonIds references unknown lesson ${lessonId}` });
+      } else if (parsedLesson.lesson.moduleId !== module.id) {
+        malformedFiles.push({ filePath, message: `module lessonIds references ${lessonId} with moduleId ${parsedLesson.lesson.moduleId}, expected ${module.id}` });
+      }
+    }
+  }
+
+  for (const { filePath, lesson } of lessonsById.values()) {
+    if (!modulesById.has(lesson.moduleId)) {
+      malformedFiles.push({ filePath, message: `lesson moduleId references unknown module ${lesson.moduleId}` });
+    }
+    for (const prerequisiteId of lesson.prerequisites) {
+      if (!lessonsById.has(prerequisiteId)) {
+        malformedFiles.push({ filePath, message: `lesson prerequisites references unknown lesson ${prerequisiteId}` });
+      }
+    }
+    for (const subsectionId of lesson.covers) {
+      if (!lesson.categoryIds.some((categoryId) => subsectionId.startsWith(`${categoryId}-`))) {
+        malformedFiles.push({ filePath, message: `lesson covers ${subsectionId} does not match categoryIds ${lesson.categoryIds.join(", ")}` });
+      }
     }
   }
 
@@ -318,7 +411,7 @@ export async function checkLessonCoverage(options: LessonCoverageOptions = {}): 
     .sort((left, right) => left.subsectionId.localeCompare(right.subsectionId));
 
   const summaryLines = [
-    `Lesson coverage: ${coveredKnownSubsections.length}/${expectedSubsectionIds.length} subsections covered by ${lessonIds.size} lessons in ${moduleIds.size} modules.`,
+    `Lesson coverage: ${coveredKnownSubsections.length}/${expectedSubsectionIds.length} subsections covered by ${lessonsById.size} lessons in ${modulesById.size} modules.`,
     duplicateCoverage.length === 0
       ? "Duplicate subsection coverage: none."
       : `Duplicate subsection coverage: ${duplicateCoverage.map((entry) => `${entry.subsectionId} (${entry.lessonIds.join(", ")})`).join("; ")}.`,
@@ -334,8 +427,8 @@ export async function checkLessonCoverage(options: LessonCoverageOptions = {}): 
   }
 
   const report: LessonCoverageReport = {
-    lessonCount: lessonIds.size,
-    moduleCount: moduleIds.size,
+    lessonCount: lessonsById.size,
+    moduleCount: modulesById.size,
     expectedSubsectionCount: expectedSubsectionIds.length,
     coveredSubsectionCount: coveredKnownSubsections.length,
     missingSubsectionIds,
@@ -377,7 +470,7 @@ function parseCliArgs(args: string[]): LessonCoverageOptions {
   return options;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] !== undefined && import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href) {
   try {
     const report = await checkLessonCoverage(parseCliArgs(process.argv.slice(2)));
     console.log(report.summaryLines.join("\n"));

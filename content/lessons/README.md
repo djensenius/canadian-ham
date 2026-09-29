@@ -24,14 +24,14 @@ This outline contains 8 modules, one per official category, and 36 lesson outlin
 
 The recommended learning order is:
 
-1. M1 — Basic Electronics and Theory (B-005): Start with quantities, circuit relationships, AC behaviour, and measurements before applying them to radio hardware.
-2. M2 — Circuit Components (B-004): Introduce the parts used in transmitters, receivers, power supplies, and filters after the basic equations are familiar.
-3. M3 — Feedlines and Antenna Systems (B-006): Apply circuit ideas to the path from transmitter to antenna, then to practical antenna dimensions and patterns.
-4. M4 — Station Assembly, Practice and Safety (B-003): Build full station understanding from blocks, controls, power, and safety before operating scenarios.
-5. M5 — Radio Wave Propagation (B-007): Explain how radio waves travel after learners know antennas and stations.
-6. M6 — Interference and Suppression (B-008): Diagnose interference after learners understand stations, filtering, antennas, and signal quality.
-7. M7 — Operating and Procedures (B-002): Teach practical on-air behaviour after the station and interference foundations are in place.
-8. M8 — Regulations and Policies (B-001): Finish with the legal framework once learners understand the technical and operating context that the rules govern.
+1. M5 — Basic Electronics and Theory (B-005): Start with quantities, circuit relationships, AC behaviour, and measurements before applying them to radio hardware.
+2. M4 — Circuit Components (B-004): Introduce the parts used in transmitters, receivers, power supplies, and filters after the basic equations are familiar.
+3. M6 — Feedlines and Antenna Systems (B-006): Apply circuit ideas to the path from transmitter to antenna, then to practical antenna dimensions and patterns.
+4. M3 — Station Assembly, Practice and Safety (B-003): Build full station understanding from blocks, controls, power, and safety before operating scenarios.
+5. M7 — Radio Wave Propagation (B-007): Explain how radio waves travel after learners know antennas and stations.
+6. M8 — Interference and Suppression (B-008): Diagnose interference after learners understand stations, filtering, antennas, and signal quality.
+7. M2 — Operating and Procedures (B-002): Teach practical on-air behaviour after the station and interference foundations are in place.
+8. M1 — Regulations and Policies (B-001): Finish with the legal framework once learners understand the technical and operating context that the rules govern.
 
 This starts with electrical quantities, parts, feedlines, antennas, station blocks, safety, propagation, and interference. Operating procedure comes after learners understand what their station is doing, and regulations come last so rule details can be attached to the technical and operating context they govern.
 
