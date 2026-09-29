@@ -6,6 +6,118 @@ const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const DEFAULT_LESSON_ROOT = path.join(REPO_ROOT, "content/lessons");
 const DEFAULT_QUESTION_PATH = path.join(REPO_ROOT, "content/generated/basic-2025-07-15/questions.json");
 const DEFAULT_QUIZ_ROOT = path.join(REPO_ROOT, "content/quizzes");
+// Tuned on the accepted M4/M5/M6 lesson quizzes to catch near-restatements
+// without flagging ordinary same-topic vocabulary.
+const CONCEPT_OVERLAP_JACCARD_THRESHOLD = 0.88;
+const CONCEPT_OVERLAP_SHARED_FIVE_GRAM_THRESHOLD = 4;
+const CONCEPT_OVERLAP_SHARED_FIVE_GRAM_WITH_JACCARD_THRESHOLD = 0.82;
+const CONCEPT_OVERLAP_NGRAM_SIZE = 5;
+
+const CONTENT_STOP_WORDS = new Set([
+  "a",
+  "about",
+  "above",
+  "after",
+  "again",
+  "against",
+  "all",
+  "also",
+  "am",
+  "an",
+  "and",
+  "any",
+  "are",
+  "as",
+  "at",
+  "be",
+  "because",
+  "been",
+  "before",
+  "being",
+  "below",
+  "between",
+  "both",
+  "but",
+  "by",
+  "can",
+  "cannot",
+  "could",
+  "did",
+  "do",
+  "does",
+  "doing",
+  "down",
+  "during",
+  "each",
+  "for",
+  "from",
+  "had",
+  "has",
+  "have",
+  "having",
+  "how",
+  "if",
+  "in",
+  "into",
+  "is",
+  "it",
+  "its",
+  "may",
+  "more",
+  "most",
+  "must",
+  "no",
+  "not",
+  "of",
+  "off",
+  "on",
+  "once",
+  "one",
+  "only",
+  "or",
+  "other",
+  "out",
+  "over",
+  "own",
+  "same",
+  "should",
+  "so",
+  "some",
+  "such",
+  "than",
+  "that",
+  "the",
+  "their",
+  "then",
+  "there",
+  "these",
+  "this",
+  "those",
+  "through",
+  "to",
+  "too",
+  "under",
+  "up",
+  "use",
+  "used",
+  "using",
+  "very",
+  "was",
+  "we",
+  "were",
+  "what",
+  "when",
+  "where",
+  "which",
+  "while",
+  "who",
+  "why",
+  "will",
+  "with",
+  "would",
+  "you",
+  "your",
+]);
 
 type LocalizedText = {
   en: string;
@@ -31,9 +143,16 @@ type LessonQuiz = {
   conceptChecks: ConceptCheck[];
 };
 
+type AnswerRecord = {
+  isCorrect: boolean;
+  text: LocalizedText;
+};
+
 type QuestionRecord = {
   id: string;
   subsectionId: string;
+  text: LocalizedText;
+  answers: AnswerRecord[];
 };
 
 type LessonRecord = {
@@ -41,6 +160,7 @@ type LessonRecord = {
   moduleId: string | null;
   covers: string[];
   quizIds: string[];
+  tryItLines: string[];
   filePath: string;
 };
 
@@ -119,6 +239,33 @@ function parseFrontMatterString(frontMatter: string, key: string): string | null
   return match ? parseYamlString(match[1]!) : null;
 }
 
+function stripMarkdownListMarker(line: string): string {
+  return line.trim().replace(/^(?:[-*+]\s+|\d+[.)]\s+)/, "").trim();
+}
+
+function extractTryItLines(markdown: string): string[] {
+  const lines = markdown.split("\n");
+  const tryItLines: string[] = [];
+  let inTryIt = false;
+  for (const line of lines) {
+    if (/^##\s+Try it\s*$/i.test(line.trim())) {
+      inTryIt = true;
+      continue;
+    }
+    if (inTryIt && /^#{1,2}\s+/.test(line.trim())) {
+      inTryIt = false;
+    }
+    if (!inTryIt) {
+      continue;
+    }
+    const stripped = stripMarkdownListMarker(line);
+    if (stripped.length > 0) {
+      tryItLines.push(stripped);
+    }
+  }
+  return tryItLines;
+}
+
 function parseLessonFrontMatter(markdown: string, filePath: string): LessonRecord | null {
   if (!markdown.startsWith("---\n")) {
     return null;
@@ -140,6 +287,7 @@ function parseLessonFrontMatter(markdown: string, filePath: string): LessonRecor
     moduleId: parseFrontMatterString(frontMatter, "moduleId"),
     covers: parseFrontMatterArray(frontMatter, "covers"),
     quizIds: parseFrontMatterArray(frontMatter, "quizIds"),
+    tryItLines: extractTryItLines(markdown),
     filePath,
   };
 }
@@ -181,10 +329,18 @@ async function loadQuestions(questionsPath: string): Promise<Map<string, Questio
     throw new Error(`${questionsPath}: expected an array of question records`);
   }
   const questions = new Map<string, QuestionRecord>();
-  for (const item of raw) {
-    if (isRecord(item) && isNonEmptyString(item.id) && isNonEmptyString(item.subsectionId)) {
-      questions.set(item.id, { id: item.id, subsectionId: item.subsectionId });
+  for (const [index, item] of raw.entries()) {
+    if (!isRecord(item) || !isNonEmptyString(item.id) || !isNonEmptyString(item.subsectionId) || !hasLocalizedText(item.text) || !Array.isArray(item.answers)) {
+      throw new Error(`${questionsPath}: question record ${index} has an invalid shape`);
     }
+    const answers: AnswerRecord[] = [];
+    for (const [answerIndex, answer] of item.answers.entries()) {
+      if (!isRecord(answer) || typeof answer.isCorrect !== "boolean" || !hasLocalizedText(answer.text)) {
+        throw new Error(`${questionsPath}: ${item.id} answer ${answerIndex} has an invalid shape`);
+      }
+      answers.push({ isCorrect: answer.isCorrect, text: answer.text });
+    }
+    questions.set(item.id, { id: item.id, subsectionId: item.subsectionId, text: item.text, answers });
   }
   return questions;
 }
@@ -326,6 +482,87 @@ function duplicateValues(values: string[]): string[] {
   return [...duplicates].sort();
 }
 
+function normalizedText(value: string): string {
+  return value
+    .toLocaleLowerCase("en-CA")
+    .normalize("NFKC")
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'")
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+function contentTokens(value: string): string[] {
+  const normalized = normalizedText(value);
+  if (normalized.length === 0) {
+    return [];
+  }
+  return normalized
+    .split(" ")
+    .filter((token) => token.length > 1 && !CONTENT_STOP_WORDS.has(token));
+}
+
+function nGrams(tokens: string[], size: number): Set<string> {
+  const grams = new Set<string>();
+  for (let index = 0; index <= tokens.length - size; index += 1) {
+    grams.add(tokens.slice(index, index + size).join(" "));
+  }
+  return grams;
+}
+
+function jaccard(left: Set<string>, right: Set<string>): number {
+  if (left.size === 0 && right.size === 0) {
+    return 0;
+  }
+  let intersectionSize = 0;
+  for (const value of left) {
+    if (right.has(value)) {
+      intersectionSize += 1;
+    }
+  }
+  return intersectionSize / (left.size + right.size - intersectionSize);
+}
+
+function overlapMetrics(leftText: string, rightText: string): { jaccard: number; sharedFiveGrams: number } {
+  const leftTokens = contentTokens(leftText);
+  const rightTokens = contentTokens(rightText);
+  const leftTokenSet = new Set(leftTokens);
+  const rightTokenSet = new Set(rightTokens);
+  const leftFiveGrams = nGrams(leftTokens, CONCEPT_OVERLAP_NGRAM_SIZE);
+  const rightFiveGrams = nGrams(rightTokens, CONCEPT_OVERLAP_NGRAM_SIZE);
+  let sharedFiveGrams = 0;
+  for (const gram of leftFiveGrams) {
+    if (rightFiveGrams.has(gram)) {
+      sharedFiveGrams += 1;
+    }
+  }
+  return { jaccard: jaccard(leftTokenSet, rightTokenSet), sharedFiveGrams };
+}
+
+function conceptCheckText(check: ConceptCheck): string {
+  const correctChoice = check.choices.find((choice) => choice.isCorrect);
+  return `${check.prompt.en} ${correctChoice?.text.en ?? ""}`;
+}
+
+function officialQuestionText(question: QuestionRecord): string | null {
+  const correctAnswer = question.answers.find((answer) => answer.isCorrect);
+  if (correctAnswer === undefined) {
+    return null;
+  }
+  return `${question.text.en} ${correctAnswer.text.en}`;
+}
+
+function conceptOverlapIsFlagged(metrics: { jaccard: number; sharedFiveGrams: number }): boolean {
+  return metrics.jaccard >= CONCEPT_OVERLAP_JACCARD_THRESHOLD
+    || metrics.sharedFiveGrams >= CONCEPT_OVERLAP_SHARED_FIVE_GRAM_THRESHOLD
+    || (metrics.sharedFiveGrams >= 1 && metrics.jaccard >= CONCEPT_OVERLAP_SHARED_FIVE_GRAM_WITH_JACCARD_THRESHOLD);
+}
+
+function formatMetric(value: number): string {
+  return value.toFixed(2);
+}
+
 export async function checkQuizzes(options: QuizCheckOptions = {}): Promise<QuizCheckReport> {
   const lessonRoot = options.lessonRoot ?? DEFAULT_LESSON_ROOT;
   const questionsPath = options.questionsPath ?? DEFAULT_QUESTION_PATH;
@@ -423,6 +660,32 @@ export async function checkQuizzes(options: QuizCheckOptions = {}): Promise<Quiz
         issues.push(`${filePath}: duplicate concept-check id ${check.id}; first seen in ${previousCheckFile}`);
       } else {
         seenConceptCheckIds.set(check.id, filePath);
+      }
+    }
+
+    for (const check of quiz.conceptChecks) {
+      const checkText = conceptCheckText(check);
+      for (const questionId of uniqueOfficialQuestionIds) {
+        const question = questions.get(questionId);
+        if (question === undefined) {
+          continue;
+        }
+        const sourceText = officialQuestionText(question);
+        if (sourceText === null) {
+          continue;
+        }
+        const metrics = overlapMetrics(checkText, sourceText);
+        if (conceptOverlapIsFlagged(metrics)) {
+          issues.push(`${filePath}: CONCEPT-CHECK OVERLAP ${check.id} is too close to official question ${questionId} in the same quiz (Jaccard ${formatMetric(metrics.jaccard)}, shared ${CONCEPT_OVERLAP_NGRAM_SIZE}-grams ${metrics.sharedFiveGrams})`);
+        }
+      }
+      if (lesson !== undefined) {
+        for (const [lineIndex, tryItLine] of lesson.tryItLines.entries()) {
+          const metrics = overlapMetrics(checkText, tryItLine);
+          if (conceptOverlapIsFlagged(metrics)) {
+            issues.push(`${filePath}: CONCEPT-CHECK OVERLAP ${check.id} is too close to ${lesson.id} Try-it line ${lineIndex + 1} (Jaccard ${formatMetric(metrics.jaccard)}, shared ${CONCEPT_OVERLAP_NGRAM_SIZE}-grams ${metrics.sharedFiveGrams})`);
+          }
+        }
       }
     }
 

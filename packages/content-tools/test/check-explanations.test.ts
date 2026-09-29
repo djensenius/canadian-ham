@@ -70,7 +70,7 @@ function explanation(overrides: Record<string, unknown> = {}) {
     bankId: "basic-2025-07-15",
     status: "draft",
     body: {
-      en: "Question B-005-001-001.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Wrong answer\": This confuses the fixture principle.\n- sourceIndex 3: \"Long distractor choice…\": This documented short prefix still identifies the long choice.",
+      en: "Question B-005-001-001.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Wrong answer\": This confuses the fixture principle.\n- sourceIndex 2: \"Another wrong answer\": This mistakes the adjacent fixture condition for the tested one.\n- sourceIndex 3: \"Long distractor choice…\": This documented short prefix still identifies the long choice.",
       fr: null,
     },
     citations: [
@@ -113,7 +113,7 @@ test("explanation check accepts valid schema, exact choice quotes, short prefixe
 
     assert.equal(report.explanationFileCount, 1);
     assert.equal(report.explanationQuestionCount, 1);
-    assert.equal(report.perChoiceNoteCount, 2);
+    assert.equal(report.perChoiceNoteCount, 3);
     assert.equal(report.explainedQuestionCount, 1);
   });
 });
@@ -199,6 +199,89 @@ test("explanation check rejects generic filler phrases in per-choice notes", asy
     await assert.rejects(
       () => runCheck(root),
       (error: unknown) => error instanceof ExplanationCheckError && error.report.issues.some((issue) => issue.includes("generic filler phrase")),
+    );
+  });
+});
+
+test("explanation check rejects missing distractor-note header", async () => {
+  await withFixture("missing-header", async (root) => {
+    await writeBaseFixture(root, {
+      explanationRecord: explanation({
+        body: {
+          en: "Question B-005-001-001.\n\n- sourceIndex 1: \"Wrong answer\": This confuses the fixture principle.\n- sourceIndex 2: \"Another wrong answer\": This mistakes the adjacent fixture condition for the tested one.\n- sourceIndex 3: \"Long distractor choice…\": This documented short prefix still identifies the long choice.",
+          fr: null,
+        },
+      }),
+    });
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof ExplanationCheckError && error.report.issues.some((issue) => issue.includes("Why the distractors are wrong")),
+    );
+  });
+});
+
+test("explanation check rejects sourceIndex 0 in the distractor-note list", async () => {
+  await withFixture("source-index-zero-note", async (root) => {
+    await writeBaseFixture(root, {
+      explanationRecord: explanation({
+        body: {
+          en: "Question B-005-001-001.\n\nWhy the distractors are wrong:\n- sourceIndex 0: \"Correct answer\": This repeats the correct answer instead of explaining a distractor.\n- sourceIndex 1: \"Wrong answer\": This confuses the fixture principle.\n- sourceIndex 2: \"Another wrong answer\": This mistakes the adjacent fixture condition for the tested one.\n- sourceIndex 3: \"Long distractor choice…\": This documented short prefix still identifies the long choice.",
+          fr: null,
+        },
+      }),
+    });
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof ExplanationCheckError && error.report.issues.some((issue) => issue.includes("sourceIndex 0 must not appear")),
+    );
+  });
+});
+
+test("explanation check requires a note for every distractor", async () => {
+  await withFixture("missing-distractor-note", async (root) => {
+    await writeBaseFixture(root, {
+      explanationRecord: explanation({
+        body: {
+          en: "Question B-005-001-001.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Wrong answer\": This confuses the fixture principle.\n- sourceIndex 2: \"Another wrong answer\": This mistakes the adjacent fixture condition for the tested one.",
+          fr: null,
+        },
+      }),
+    });
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof ExplanationCheckError && error.report.issues.some((issue) => issue.includes("missing per-choice note for distractor sourceIndex 3")),
+    );
+  });
+});
+
+test("explanation check rejects rotating-opener TEMPLATE word 6-grams in one category", async () => {
+  await withFixture("template-six-gram", async (root) => {
+    const questions = [1, 2, 3, 4].map((sourceOrder) => question({ id: `B-005-001-00${sourceOrder}`, sourceOrder }));
+    await writeFile(path.join(root, "content/generated/basic-2025-07-15/questions.json"), `${JSON.stringify(questions, null, 2)}\n`, "utf8");
+    await writeFile(path.join(root, "content/lessons/m5-basic-electronics/l-005-01.md"), lessonMarkdown(), "utf8");
+    for (const sourceOrder of [1, 2, 3, 4]) {
+      const questionId = `B-005-001-00${sourceOrder}`;
+      await writeFile(
+        path.join(root, `content/explanations/b-005/${questionId.toLowerCase()}.json`),
+        `${JSON.stringify(explanation({
+          id: `EXP-${questionId}`,
+          questionId,
+          body: {
+            en: `Question ${questionId}.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Wrong answer\": This is a near-miss because it shifts attention from fixture ${sourceOrder}.\n- sourceIndex 2: \"Another wrong answer\": This mistakes alternate fixture ${sourceOrder} for the measured condition.\n- sourceIndex 3: \"Long distractor choice…\": This long-choice note stays unique for fixture ${sourceOrder}.`,
+            fr: null,
+          },
+          citations: [{ type: "lesson", id: "L-005-01" }, { type: "question", id: questionId }],
+        }), null, 2)}\n`,
+        "utf8",
+      );
+    }
+
+    await assert.rejects(
+      () => runCheck(root),
+      (error: unknown) => error instanceof ExplanationCheckError && error.report.issues.some((issue) => issue.includes("TEMPLATE") && issue.includes("near miss because it")),
     );
   });
 });
