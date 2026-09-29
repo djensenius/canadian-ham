@@ -8,8 +8,8 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 
 | Phase | Goal | Exit criteria | Status |
 |---|---|---|---|
-| P0 | Foundations | Monorepo skeleton, schemas, tooling, CI skeleton, and docs baseline exist. | in progress |
-| P1 | Question bank pipeline | Official 2025 Basic source is vendored and importer emits validated EN+FR JSON. | todo |
+| P0 | Foundations | Monorepo skeleton, decisions, docs baseline, base tooling (T-002), and release checklist (T-006) exist. | in progress |
+| P1 | Question bank pipeline | Official 2025 Basic source is vendored; importer emits validated EN+FR JSON; schemas and CI skeleton exist. | todo |
 | P2 | Shared engine spec and fixtures | TypeScript and Swift fixture contracts define exam, quiz, scoring, and spaced repetition. | todo |
 | P3 | Web MVP | Static web app supports lesson rendering, lesson quizzes, practice immediate/review-later modes, mock exam with reference sheet access, readiness guidance, local progress, export/import/reset, and offline PWA. | todo |
 | P4 | Curriculum | Lesson outline covers all 100 subsections; first authored lessons and explanations are tracked by coverage. | todo |
@@ -24,15 +24,15 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-000 | P0 | done | worker | none | Initial docs exist: `docs/requirements.md`, `docs/exam-facts.md`, `docs/architecture.md`, `docs/privacy.md`, `docs/content-licensing.md`, `tasks/PLAN.md`; AGENTS project notes filled; markdown links checked; branch committed. |
 | T-001 | P0 | in review | worker | T-000 | Create monorepo directories from `docs/architecture.md`; add placeholder READMEs explaining ownership and exclusions; add root README, `.gitignore`, `.editorconfig`, and `.gitattributes`; do not add app code. |
 | T-101 | P1 | todo | worker | T-001 | Commit the official 2025-07-15 Basic question-bank TXT, question-bank PDF, and English reference PDFs verbatim under `content/sources/ised/basic-2025-07-15/` under the private-repo policy; include a checksum manifest using SHA-256 values recorded in `docs/exam-facts.md`. |
-| T-102 | P1 | todo | worker | T-001,T-101 | Importer: parse, validate, lint, categories, emit normalized JSON. Implement the TypeScript importer using Node type stripping, `node:test`, and zero runtime dependencies; parse semicolon-delimited UTF-8 CRLF TXT; trim header names only; preserve field values verbatim; assert no quoting and no embedded newlines for the current source; validate 984 questions, 100 subsections, 11 fields, first/last IDs, 0 duplicate IDs, 0 missing French, category counts, and privilege question-ID citations; lint position-dependent answers; add hand-maintained category metadata; emit committed normalized JSON and source manifest under `content/generated/basic-2025-07-15/`. |
+| T-102 | P1 | todo | worker | T-001,T-101 | Importer: parse, validate, lint, categories, emit normalized JSON. Implement the TypeScript importer using Node type stripping, `node:test`, and zero runtime dependencies; parse semicolon-delimited UTF-8 CRLF TXT; trim header names only and preserve field values verbatim; assert the current source has no quoting and no embedded newlines; checksum mismatch fails. Tests assert 984 questions, 100 subsections, 11 fields, first/last IDs, 0 duplicate IDs, 0 missing French, category counts, and the privilege question-ID citations in `docs/exam-facts.md` checked against imported correct answers. The lint fails on phrases requiring fixed answer letters/positions; reviewed exceptions are documented. Add hand-maintained `content/categories.json` with eight English names, verified counts, and pending French names. Emit committed questions, subsections, categories, and the source manifest to `content/generated/basic-2025-07-15/`. |
 | T-103 | P1 | merged | worker | T-102 | Merged into T-102; row retained for stable ID. |
 | T-104 | P1 | merged | worker | T-102 | Merged into T-102; row retained for stable ID. |
 | T-105 | P1 | merged | worker | T-102 | Merged into T-102; row retained for stable ID. |
 | T-106 | P1 | merged | worker | T-102 | Merged into T-102; row retained for stable ID. |
 | T-002 | P0 | todo | worker | T-001 | Add pnpm workspace and base tooling files for documentation/content scripts; include markdown/link check command; no web or Apple app implementation. |
-| T-003 | P0 | todo | worker | T-102 | Define initial JSON Schemas for Question, Category, Subsection, Lesson front matter, Explanation, ExamAttempt, QuestionProgress, and EngineFixture from the reviewed generated output shape. |
-| T-004 | P0 | todo | worker | T-003 | Add schema validation tests using small synthetic fixtures; tests pass locally and in CI skeleton. |
-| T-005 | P0 | todo | worker | T-002,T-004 | Add CI skeleton for markdown links, schema validation, content validation placeholder, and web/package tests placeholder. |
+| T-003 | P1 | todo | worker | T-102 | Define initial JSON Schemas for Question, Category, Subsection, Lesson front matter, Explanation, ExamAttempt, QuestionProgress, and EngineFixture from the reviewed generated output shape. |
+| T-004 | P1 | todo | worker | T-003 | Add schema validation tests using small synthetic fixtures; tests pass locally and in CI skeleton. |
+| T-005 | P1 | todo | worker | T-002,T-004 | Add CI skeleton for markdown links, schema validation, content validation placeholder, and web/package tests placeholder. |
 | T-006 | P0 | todo | worker | T-000 | Add documentation release checklist issue template or task checklist covering licensing, privacy, and source verification. |
 | T-007 | P0 | blocked on owner input | owner/coordinator | none | Record the ISED permission reference number/date/scope in `docs/content-licensing.md`; confirm the scope covers bundling verbatim question text as app data and bundling the reference PDFs; publication and distribution remain blocked until this is complete; do not commit private correspondence unless explicitly approved. |
 | T-008 | P0 | done | worker | T-000 | Document the private-repository interim licensing policy, public-release gate, and leftover review dependency corrections; commit documentation-only changes on `docs/t008-private-repo-policy`. |
@@ -95,7 +95,7 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 
 - [ ] Skeleton directories and READMEs follow `docs/architecture.md`.
 - [ ] Root README includes project summary, private-repository notice, layout map, doc links, and `xbuild` rule.
-- [ ] `.gitignore`, `.editorconfig`, and `.gitattributes` are present; `content/sources/**` remains binary/no text normalization.
+- [ ] `.gitignore`, `.editorconfig`, and `.gitattributes` are present; versioned source artifacts remain binary/no text normalization while source READMEs remain text/readable.
 - [ ] Owner-confirmed web/importer/tooling decisions are recorded in requirements and architecture docs.
 - [ ] T-008 review notes are reflected in licensing, privacy, exam facts, architecture, and AGENTS docs.
 - [ ] PLAN statuses and dependencies are acyclic, and no task depends on a merged task.
