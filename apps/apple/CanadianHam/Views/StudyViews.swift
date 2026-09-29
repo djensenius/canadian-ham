@@ -658,12 +658,12 @@ struct MockExamView: View {
 
             HStack {
                 Button("Previous") { currentIndex = max(0, currentIndex - 1) }
-                    .buttonStyle(AccessibleSecondaryButtonStyle())
                     .disabled(currentIndex == 0)
+                    .buttonStyle(AccessibleSecondaryButtonStyle())
                     .accessibilityIdentifier("mock-previous-button")
                 Button("Next") { currentIndex = min(generatedItems.count - 1, currentIndex + 1) }
-                    .buttonStyle(AccessibleSecondaryButtonStyle())
                     .disabled(currentIndex + 1 >= generatedItems.count)
+                    .buttonStyle(AccessibleSecondaryButtonStyle())
                     .accessibilityIdentifier("mock-next-button")
                 tokenButton(flagged.contains(question.id) ? "Flagged for review" : "Flag for review") { toggleFlag(question.id) }
             }

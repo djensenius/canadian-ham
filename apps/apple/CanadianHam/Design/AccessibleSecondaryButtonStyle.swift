@@ -5,7 +5,6 @@ struct AccessibleSecondaryButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .environment(\.isEnabled, true)
             .font(DesignTokens.FontScale.body.weight(.semibold))
             .foregroundStyle(DesignTokens.Colors.ink)
             .padding(.horizontal, DesignTokens.Spacing.lg)
@@ -20,6 +19,5 @@ struct AccessibleSecondaryButtonStyle: ButtonStyle {
                     )
             }
             .opacity(configuration.isPressed ? 0.85 : 1)
-            .accessibilityRespondsToUserInteraction(isEnabled)
     }
 }
