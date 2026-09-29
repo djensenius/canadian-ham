@@ -11,6 +11,7 @@ type MarkdownBlock =
   | { readonly type: "unordered-list"; readonly items: readonly string[] }
   | { readonly type: "ordered-list"; readonly items: readonly string[] }
   | { readonly type: "table"; readonly headers: readonly string[]; readonly rows: readonly (readonly string[])[] }
+  | { readonly type: "code"; readonly language: string | null; readonly code: string }
   | { readonly type: "illustration"; readonly alt: string; readonly description: string };
 
 export function MarkdownContent({ markdown, title }: MarkdownContentProps) {
@@ -47,6 +48,17 @@ function renderBlock(block: MarkdownBlock, index: number): ReactNode {
       </div>
     );
   }
+  if (block.type === "code") {
+    return (
+      <pre
+        className="markdown-code-block"
+        key={index}
+        role="group"
+        aria-label={block.language === null ? "Lesson code block" : `Lesson code block (${block.language})`}
+        tabIndex={0}
+      ><code>{block.code}</code></pre>
+    );
+  }
   return (
     <figure className="illustration-placeholder" key={index}>
       <div className="illustration-placeholder__art" role="img" aria-label={block.alt}>
@@ -70,6 +82,14 @@ export function parseMarkdownBlocks(markdown: string, title?: string): MarkdownB
     const line = lines[index] ?? "";
     if (line.trim() === "") {
       index += 1;
+      assertParserProgress(previousIndex, index);
+      continue;
+    }
+
+    const fencedCode = parseFencedCode(lines, index);
+    if (fencedCode !== null) {
+      blocks.push(fencedCode.block);
+      index = fencedCode.nextIndex;
       assertParserProgress(previousIndex, index);
       continue;
     }
@@ -131,7 +151,7 @@ export function parseMarkdownBlocks(markdown: string, title?: string): MarkdownB
     const paragraphLines: string[] = [];
     while (index < lines.length) {
       const paragraphLine = lines[index] ?? "";
-      if (paragraphLine.trim() === "" || /^(#{1,6})(?:\s|$)/.test(paragraphLine) || /^\s*[-*+]\s+/.test(paragraphLine) || /^\s*\d+\.\s+/.test(paragraphLine) || isTableStart(lines, index)) {
+      if (paragraphLine.trim() === "" || /^(#{1,6})(?:\s|$)/.test(paragraphLine) || /^\s*[-*+]\s+/.test(paragraphLine) || /^\s*\d+\.\s+/.test(paragraphLine) || isTableStart(lines, index) || parseFencedCode(lines, index) !== null) {
         break;
       }
       paragraphLines.push(paragraphLine.trim());
@@ -147,6 +167,36 @@ export function parseMarkdownBlocks(markdown: string, title?: string): MarkdownB
   }
 
   return blocks;
+}
+
+function parseFencedCode(lines: readonly string[], startIndex: number): { readonly block: MarkdownBlock; readonly nextIndex: number } | null {
+  const language = parseFenceOpening(lines[startIndex] ?? "");
+  if (language === undefined) {
+    return null;
+  }
+  const codeLines: string[] = [];
+  let index = startIndex + 1;
+  while (index < lines.length) {
+    const line = lines[index] ?? "";
+    if (isFenceClosing(line)) {
+      return { block: { type: "code", language, code: codeLines.join("\n") }, nextIndex: index + 1 };
+    }
+    codeLines.push(line);
+    index += 1;
+  }
+  return null;
+}
+
+function parseFenceOpening(line: string): string | null | undefined {
+  const match = /^ {0,3}```(?:[ \t]*([^`\s]+))?[ \t]*$/.exec(line);
+  if (match === null) {
+    return undefined;
+  }
+  return match[1] ?? null;
+}
+
+function isFenceClosing(line: string): boolean {
+  return /^ {0,3}```[ \t]*$/.test(line);
 }
 
 function assertParserProgress(previousIndex: number, nextIndex: number): void {

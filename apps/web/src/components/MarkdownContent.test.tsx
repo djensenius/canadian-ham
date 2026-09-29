@@ -36,6 +36,24 @@ describe("MarkdownContent parser", () => {
     assert.deepEqual(blocks, [{ type: "paragraph", text: "R_1 and X_L stay formula-like, while emphasis is plain text." }]);
   });
 
+  it("parses a fenced code block with a language without inline markdown processing", () => {
+    const blocks = parseMarkdownBlocks("```text\n*not emphasized*\nR_1 stays formula-like\n```");
+
+    assert.deepEqual(blocks, [{ type: "code", language: "text", code: "*not emphasized*\nR_1 stays formula-like" }]);
+  });
+
+  it("parses a fenced code block without a language", () => {
+    const blocks = parseMarkdownBlocks("```\nvalue = 300 / f\n```");
+
+    assert.deepEqual(blocks, [{ type: "code", language: null, code: "value = 300 / f" }]);
+  });
+
+  it("falls back to paragraph text for an unterminated fenced code block", () => {
+    const blocks = parseMarkdownBlocks("```text\nvalue = 300 / f");
+
+    assert.deepEqual(blocks, [{ type: "paragraph", text: "```text value = 300 / f" }]);
+  });
+
   it("stops an illustration brief after its description", () => {
     const blocks = parseMarkdownBlocks("## Illustration brief\n\nAlt text: Meter\n\nDescription: Draw a meter.\n\nThis paragraph stays separate.");
 
