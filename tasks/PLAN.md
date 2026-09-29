@@ -30,7 +30,7 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-104 | P1 | merged | worker | T-102 | Merged into T-102; row retained for stable ID. |
 | T-105 | P1 | merged | worker | T-102 | Merged into T-102; row retained for stable ID. |
 | T-106 | P1 | merged | worker | T-102 | Merged into T-102; row retained for stable ID. |
-| T-002 | P0 | in progress | worker | T-001 | Add pnpm workspace and base tooling files for documentation/content scripts; include markdown/link check command; no web or Apple app implementation. |
+| T-002 | P0 | done | worker | T-001 | Add pnpm workspace and base tooling files for documentation/content scripts; include markdown/link check command; no web or Apple app implementation. |
 | T-003 | P1 | todo | worker | T-102 | Define initial JSON Schemas for Question, Category, Subsection, Lesson front matter, Explanation, ExamAttempt, QuestionProgress, and EngineFixture from the reviewed generated output shape. |
 | T-004 | P1 | todo | worker | T-003 | Add schema validation tests using small synthetic fixtures; tests pass locally and in CI skeleton. |
 | T-005 | P1 | todo | worker | T-002,T-004 | Add CI skeleton for markdown links, schema validation, content validation placeholder, and web/package tests placeholder. |
@@ -46,7 +46,8 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-205 | P2 | in progress | worker | T-202,T-203,T-204,T-208 | Implement TypeScript engine package that passes shared fixtures. |
 | T-206 | P2 | todo | worker | T-202,T-203,T-204,T-208 | Implement Swift engine SwiftPM package under `packages/engine-swift/` and test target that passes shared fixtures using `xbuild`. |
 | T-207 | P2 | todo | worker | T-205,T-206 | Add cross-platform fixture parity CI job or documented local command that runs both implementations. |
-| T-301 | P3 | in progress | worker | T-002,T-205 | Scaffold static web app using Vite + React + TypeScript. |
+| T-301 | P3 | done | worker | T-002,T-205 | Scaffold static web app using Vite + React + TypeScript. |
+| T-301b | P3 | in progress | worker | T-301 | Web slice polish from review: check-links anchors/code fences/footnotes/slugs, focus management, lang attribute, stronger render test, pnpm settings, dist URL audit script. |
 | T-302 | P3 | todo | worker | T-301,T-102 | Add web content loader for bundled generated bank, lesson metadata, explanations, and manifest. |
 | T-303 | P3 | todo | worker | T-302 | Implement IndexedDB progress store with export/import JSON and reset all data. |
 | T-304 | P3 | todo | worker | T-303,T-205 | Implement practice by category/subsection/all with answer shuffling and immediate feedback; progress and Leitner state update through the progress store. |
@@ -66,7 +67,8 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-405 | P4 | todo | worker | T-404 | Add original explanations for a small reviewed set of `B-001` questions; cite question IDs and verified sources. |
 | T-406 | P4 | todo | worker | T-403,T-405 | Add explanation coverage report showing count covered out of 984 and blocking invalid question IDs. |
 | T-407 | P4 | todo | worker | T-404 | Add reference-sheet teaching links in relevant lessons without copying unapproved diagrams. |
-| T-501 | P5 | in progress | worker | T-206 | Scaffold SwiftUI multiplatform Apple project for iOS, iPadOS, and macOS; verify build with `xbuild`. |
+| T-501 | P5 | done | worker | T-206 | Scaffold SwiftUI multiplatform Apple project for iOS, iPadOS, and macOS; verify build with `xbuild`. |
+| T-501b | P5 | in progress | worker | T-501 | Apple slice polish from review: EN/FR picker on compact iPhone, UI test, strong shuffle test, VoiceOver announcement, scaled answer letter, no visionOS availability, deterministic project generation, minimum-OS decision recorded. |
 | T-502 | P5 | todo | worker | T-501,T-102,T-402,T-405 | Bundle generated question bank, lesson metadata, explanations, manifest, and reference assets for private development in the Apple app; public release remains gated by T-007. |
 | T-503 | P5 | todo | worker | T-502 | Implement SwiftData local progress models for QuestionProgress, ExamAttempt, lesson progress, and preferences. |
 | T-504 | P5 | todo | worker | T-502,T-206,T-503 | Implement Apple practice flow with shuffled answers, immediate feedback, and review-later mode. |
