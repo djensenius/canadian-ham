@@ -13,7 +13,7 @@ canadian-ham/
   AGENTS.md
   apps/
     web/                    # Static Vite/React/TypeScript app
-    apple/                  # SwiftUI multiplatform Xcode project/package
+    apple/                  # SwiftUI multiplatform Xcode project/package for iOS, iPadOS, macOS, visionOS, and tvOS
   content/
     sources/
       ised/
@@ -220,6 +220,7 @@ Lesson files may store front matter as YAML in Markdown, but validation should p
     "fr": null
   },
   "moduleId": "M1",
+  "order": 3,
   "categoryIds": ["B-001"],
   "covers": [
     "B-001-011",
@@ -275,8 +276,8 @@ Explanations are original project content and must not copy study-guide prose.
   "bankId": "basic-2025-07-15",
   "mode": "mock-exam",
   "seed": "exam-fixture-001",
-  "startedAt": "2026-01-02T03:04:05Z",
-  "submittedAt": "2026-01-02T04:10:00Z",
+  "startedAt": "2026-01-02T03:04:05.000Z",
+  "submittedAt": "2026-01-02T04:10:00.000Z",
   "timer": {
     "enabled": false,
     "secondsAllowed": null,
@@ -311,12 +312,12 @@ Explanations are original project content and must not copy study-guide prose.
   "bankId": "basic-2025-07-15",
   "attempts": 5,
   "correctAttempts": 3,
-  "lastAttemptedAt": "2026-01-02T04:10:00Z",
+  "lastAttemptedAt": "2026-01-02T04:10:00.000Z",
   "lastResult": "incorrect",
   "recentResults": [true, true, false, true, false],
   "leitner": {
     "box": 0,
-    "dueAt": "2026-01-02T04:10:00Z"
+    "dueAt": "2026-01-02T04:10:00.000Z"
   },
   "notes": null
 }
@@ -592,13 +593,14 @@ Web app components:
 
 Apple app components:
 
-- SwiftUI multiplatform target for iOS, iPadOS, and macOS.
-- Bundled generated content and reference material allowed for the current private-development or release stage; release bundles must satisfy the [public-release gate](content-licensing.md#public-release-gate).
+- SwiftUI multiplatform target for iOS, iPadOS, macOS, visionOS 2.0+, and tvOS 18.0+. watchOS remains later.
+- Shared practice, lessons, mock exams, progress, settings, and reference viewing adapt per platform: navigation/window layout on iOS, iPadOS, macOS, and visionOS; focus-engine navigation, large type, and overscan-safe margins on tvOS.
+- Bundled generated content, reference material allowed for the current private-development or release stage, design tokens, and layered icon artwork; release bundles must satisfy the [public-release gate](content-licensing.md#public-release-gate).
 - Native Swift engine matching fixtures.
 - SwiftData local progress models.
 - File import/export for progress JSON.
 - Reference sheet viewer.
-- No networking code, no third-party SDKs, no iCloud sync in v1.
+- No networking code, no third-party SDKs, no iCloud sync, analytics, or telemetry in v1.
 
 Build rule:
 
