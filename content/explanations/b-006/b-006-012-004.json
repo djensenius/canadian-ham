@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-012-004.\n\nWhy the correct answer is right: A centre-fed half-wave dipole in free space has a feed point impedance of about 73 ohms.\n\nPer-choice notes:\n- sourceIndex 0: \"73 ohms\": Correct. 73 ohms is the accepted free-space centre-fed half-wave dipole value.\n- sourceIndex 1: \"52 ohms\": This is nearer common coax impedance than the free-space dipole feed point value.\n- sourceIndex 2: \"300 ohms\": This is typical of some folded-dipole discussions, not a simple half-wave dipole in free space.\n- sourceIndex 3: \"450 ohms\": This is more like open-wire feedline impedance, not the simple dipole feed point value.",
+    "en": "Question B-006-012-004.\n\nWhy the correct answer is right: The feedpoint impedance of a thin, centre-fed half-wave dipole in free space is approximately 73 ohms resistive.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"52 ohms\": This is closer to some practical installations affected by height, ground, or conductor size. The ideal free-space half-wave dipole value is about 73 ohms.\n- sourceIndex 2: \"300 ohms\": Three hundred ohms is associated with balanced line or a folded dipole order of impedance, not a simple centre-fed half-wave dipole in free space.\n- sourceIndex 3: \"450 ohms\": Four hundred fifty ohms is a common open-wire line impedance. It is not the feedpoint impedance of the simple free-space dipole asked here.",
     "fr": null
   },
   "citations": [

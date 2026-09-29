@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-010-010.\n\nWhy the correct answer is right: A loading coil supplies inductive reactance to cancel the capacitive reactance of a short HF mobile vertical.\n\nPer-choice notes:\n- sourceIndex 0: \"To tune out capacitive reactance\": Correct. A loading coil supplies inductive reactance to cancel the capacitive reactance of a short HF mobile vertical.\n- sourceIndex 1: \"To lower the losses\": A loading coil is mainly there to tune out capacitive reactance in a short antenna.\n- sourceIndex 2: \"To lower the Q\": A loading coil is mainly there to tune out capacitive reactance in a short antenna.\n- sourceIndex 3: \"To filter out electrical noise\": Those are different performance topics; feed-point matching reduces high-SWR feedline loss.",
+    "en": "Question B-006-010-010.\n\nWhy the correct answer is right: An HF mobile vertical is usually physically short compared with a quarter wavelength, so it has capacitive reactance. A loading coil supplies inductive reactance to tune out that capacitance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To lower the losses\": A loading coil is not installed to reduce loss; real coils add resistance, so the design goal is resonance rather than lower loss.\n- sourceIndex 2: \"To lower the Q\": Short loaded mobile antennas often have high Q and narrow bandwidth. The coil is present to add inductance, not to lower Q.\n- sourceIndex 3: \"To filter out electrical noise\": Noise filtering is done with suppression, bonding, chokes, or receiver filtering. The loading coil is part of the antenna tuning system.",
     "fr": null
   },
   "citations": [

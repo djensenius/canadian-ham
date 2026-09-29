@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-011-009.\n\nWhy the correct answer is right: Larger-diameter elements tend to increase Yagi bandwidth.\n\nPer-choice notes:\n- sourceIndex 0: \"Increase the diameter of the elements\": Correct. Larger-diameter elements tend to increase Yagi bandwidth.\n- sourceIndex 1: \"Decrease the element spacing\": Front-to-back ratio is a pattern-power comparison, not a dimension ratio.\n- sourceIndex 2: \"Install loading coils in the elements\": That device may solve a different problem, but it does not remove unnecessary feedline attenuation from excess cable length.\n- sourceIndex 3: \"Use tapered elements\": Larger element diameter is the expected bandwidth-improvement principle here.",
+    "en": "Question B-006-011-009.\n\nWhy the correct answer is right: Increasing the element diameter lowers the element Q and makes the antenna less sharply tuned, so the Yagi keeps an acceptable match over a wider frequency range.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Decrease the element spacing\": Closer spacing changes coupling and can reduce performance; it is not the standard way to broaden a Yagi bandwidth.\n- sourceIndex 2: \"Install loading coils in the elements\": Loading coils add reactance and loss and usually make an antenna more sharply tuned, so they tend to narrow rather than widen bandwidth.\n- sourceIndex 3: \"Use tapered elements\": Tapering is mainly a mechanical construction choice. The bandwidth principle being tested is larger effective element diameter.",
     "fr": null
   },
   "citations": [

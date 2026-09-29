@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-010-002.\n\nWhy the correct answer is right: Use the quarter-wave estimate L(m) = 71.3 / f(MHz). The calculation is about 3.375 m, and the official choice nearest that exam-bank estimate is 3.37 m.\n\nPer-choice notes:\n- sourceIndex 0: \"3.37 metres\": Correct. The quarter-wave estimate is about 3.375 m, and 3.37 metres is the nearest listed official choice.\n- sourceIndex 1: \"3.55 metres\": This is too long for the 71.3/f calculation.\n- sourceIndex 2: \"7.10 metres\": This is about a half-wave value, not the quarter-wave result.\n- sourceIndex 3: \"6.77 metres\": This is about twice the correct quarter-wave length.",
+    "en": "Question B-006-010-002.\n\nWhy the correct answer is right: Use the practical quarter-wave vertical formula 71.3/f. For 21.125 MHz, 71.3 / 21.125 = 3.375 m, which rounds to 3.37 metres.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"3.55 metres\": This is 75 / 21.125 = 3.55 m, the free-space quarter-wave estimate. The bank formula for a practical HF quarter-wave vertical uses 71.3/f.\n- sourceIndex 2: \"7.10 metres\": This is 150 / 21.125 = 7.10 m, a free-space half wavelength. The question asks for a quarter-wavelength vertical.\n- sourceIndex 3: \"6.77 metres\": This is 143 / 21.125 = 6.77 m, the practical half-wave length. A quarter-wave vertical is half of that, about 3.37 m.",
     "fr": null
   },
   "citations": [

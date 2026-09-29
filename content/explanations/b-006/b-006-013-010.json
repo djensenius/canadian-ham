@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-013-010.\n\nWhy the correct answer is right: A quad driven element is approximately one wavelength around its square loop.\n\nPer-choice notes:\n- sourceIndex 0: \"one wavelength\": Correct. A quad driven element is approximately one wavelength around its square loop.\n- sourceIndex 1: \"three quarters of a wavelength\": Front-to-back ratio is a pattern-power comparison, not a dimension ratio.\n- sourceIndex 2: \"two wavelengths\": Front-to-back ratio is a pattern-power comparison, not a dimension ratio.\n- sourceIndex 3: \"one half wavelength\": For purely resistive maximum power transfer, equal source and load impedances are required.",
+    "en": "Question B-006-013-010.\n\nWhy the correct answer is right: Each driven element in a quad is a square loop of wire with an overall perimeter of approximately one wavelength.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"three quarters of a wavelength\": Three quarters wavelength is too short for the resonant quad loop perimeter. The driven loop is approximately a full wavelength around.\n- sourceIndex 2: \"two wavelengths\": Two wavelengths would be a much larger loop operating on a different mode. A basic quad driven element is one wavelength overall.\n- sourceIndex 3: \"one half wavelength\": One half wavelength is the scale of a dipole, not the perimeter of a square quad loop.",
     "fr": null
   },
   "citations": [

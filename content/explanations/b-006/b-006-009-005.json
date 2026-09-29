@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-009-005.\n\nWhy the correct answer is right: Bandwidth is the range of frequencies over which the antenna works acceptably.\n\nPer-choice notes:\n- sourceIndex 0: \"bandwidth\": Correct. Bandwidth is the range of frequencies over which the antenna works acceptably.\n- sourceIndex 1: \"front-to-back ratio\": Those are antenna performance properties, but a basic analyzer reports impedance/SWR information over frequency.\n- sourceIndex 2: \"beamwidth\": That is a different antenna property, not the range of useful operating frequencies.\n- sourceIndex 3: \"antenna aperture\": That is a different antenna property, not the range of useful operating frequencies.",
+    "en": "Question B-006-009-005.\n\nWhy the correct answer is right: Antenna bandwidth is the range of frequencies over which the antenna is expected to work acceptably, usually meaning the impedance match and pattern remain useful over that range.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"front-to-back ratio\": Front-to-back ratio compares radiation in the forward direction with radiation in the opposite direction; it is a pattern ratio, not a frequency range.\n- sourceIndex 2: \"beamwidth\": Beamwidth is an angular width of a radiation lobe, commonly between half-power points. It says where the antenna radiates, not how many frequencies it covers.\n- sourceIndex 3: \"antenna aperture\": Aperture describes the effective area by which an antenna captures or radiates energy. It is not the name for usable frequency range.",
     "fr": null
   },
   "citations": [
