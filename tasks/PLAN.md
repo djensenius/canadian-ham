@@ -69,10 +69,12 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-401 | P4 | done | worker | T-102 | Create lesson directory structure and module index for eight categories. |
 | T-402 | P4 | done | worker | T-401 | Add lesson outline front matter mapping all 100 subsections to lesson IDs; no full lesson prose required. |
 | T-403 | P4 | done | worker | T-402 | Implement coverage check script that fails on missing or unknown subsection IDs and reports duplicate coverage. |
-| T-404 | P4 | in progress | worker | T-402 | Author first `B-001` introductory lesson as original content with built-in quiz references. |
-| T-405 | P4 | in progress | worker | T-404 | Add original explanations for a small reviewed set of `B-001` questions; cite question IDs and verified sources. |
+| T-404 | P4 | done | worker | T-402 | Author first `B-001` introductory lesson as original content with built-in quiz references. |
+| T-405 | P4 | done | worker | T-404 | Add original explanations for a small reviewed set of `B-001` questions; cite question IDs and verified sources. |
 | T-406 | P4 | todo | worker | T-403,T-405 | Add explanation coverage report showing count covered out of 984 and blocking invalid question IDs. |
 | T-407 | P4 | todo | worker | T-404 | Add reference-sheet teaching links in relevant lessons without copying unapproved diagrams. |
+| T-408 | P4 | in progress | worker | T-404 | Module 4 (Circuit Components, B-004) full lessons, quiz files, and explanations for every B-004 question, following the M5 conventions and checks. |
+| T-409 | P4 | in progress | worker | T-404 | Module 6 (Feedlines and Antenna Systems, B-006) full lessons, quiz files, and explanations for every B-006 question, following the M5 conventions and checks. |
 | T-501 | P5 | done | worker | T-206 | Scaffold SwiftUI multiplatform Apple project for iOS, iPadOS, and macOS; verify build with `xbuild`. |
 | T-501b | P5 | in progress | worker | T-501 | Apple slice polish from review: EN/FR picker on compact iPhone, UI test, strong shuffle test, VoiceOver announcement, scaled answer letter, no visionOS availability, deterministic project generation, minimum-OS decision recorded. |
 | T-513 | P5 | todo | worker | T-501b,T-206 | Native visionOS app target (visionOS 2.0+): window-based practice flow, glass materials, hover effects, ornaments for EN/FR; shared SwiftUI code where sensible; builds/tests via xbuild on the visionOS simulator. |
