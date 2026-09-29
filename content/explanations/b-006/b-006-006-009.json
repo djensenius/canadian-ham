@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-006-009.\n\nWhy the correct answer is right: If the antenna is matched to the line, changing line length does not create the match.\n\nPer-choice notes:\n- sourceIndex 0: \"will have no effect on the matching\": Correct. If the antenna is matched to the line, changing line length does not create the match.\n- sourceIndex 1: \"must be a full wavelength long\": A correctly matched line does not need a special length to preserve the match.\n- sourceIndex 2: \"must be an odd number of quarter-wavelengths\": A correctly matched line does not need a special length to preserve the match.\n- sourceIndex 3: \"must be an even number of half-wavelengths\": For purely resistive maximum power transfer, equal source and load impedances are required.",
+    "en": "Question B-006-006-009.\n\nWhy the correct answer is right: When the antenna impedance already matches the line characteristic impedance, the line is terminated correctly and its length does not change the match.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"must be a full wavelength long\": A full-wavelength line repeats impedance, but that special length is unnecessary when the antenna is already correctly matched to the line.\n- sourceIndex 2: \"must be an odd number of quarter-wavelengths\": Odd quarter-wave lengths are used for intentional impedance transformation in some systems; they are not required for a line that is already matched.\n- sourceIndex 3: \"must be an even number of half-wavelengths\": Even half-wavelengths repeat the load impedance at the input, but a matched load is matched through any practical line length.",
     "fr": null
   },
   "citations": [

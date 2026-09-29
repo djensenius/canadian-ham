@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-005-006.\n\nWhy the correct answer is right: An antenna analyzer lets you observe SWR or impedance over frequency while adjusting antenna length.\n\nPer-choice notes:\n- sourceIndex 0: \"Antenna analyzer\": Correct. An antenna analyzer lets you observe SWR or impedance over frequency while adjusting antenna length.\n- sourceIndex 1: \"Multimeter\": That instrument measures another electrical quantity, not antenna-system resonance and SWR versus frequency.\n- sourceIndex 2: \"Capacitance meter\": That instrument measures another electrical quantity, not antenna-system resonance and SWR versus frequency.\n- sourceIndex 3: \"Frequency meter\": This can affect loss or the impedance seen during a mismatch, but it is not the construction parameter being asked for.",
+    "en": "Question B-006-005-006.\n\nWhy the correct answer is right: An antenna analyzer shows impedance, reactance, and SWR as the antenna is changed, so it directly reveals whether trimming or lengthening has moved resonance to the desired frequency.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Multimeter\": A multimeter is useful for DC continuity and resistance checks, but it cannot show RF resonance or SWR while the antenna length is being adjusted.\n- sourceIndex 2: \"Capacitance meter\": A capacitance meter measures a component or small capacitance value; it does not measure the complete antenna system at radio frequency.\n- sourceIndex 3: \"Frequency meter\": A frequency meter tells the frequency of an RF signal; it does not tell whether the antenna is too long, too short, or correctly resonant.",
     "fr": null
   },
   "citations": [

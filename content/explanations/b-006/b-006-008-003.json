@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-008-003.\n\nWhy the correct answer is right: Use λ(m) = 300 / f(MHz). For 25 MHz, 300 / 25 = 12 m.\n\nPer-choice notes:\n- sourceIndex 0: \"12 metres\": Correct. 300 divided by 25 equals 12.\n- sourceIndex 1: \"19 metres\": This does not result from dividing 300 by 25.\n- sourceIndex 2: \"39 metres\": This is much longer than the wavelength calculated from 300 / 25.\n- sourceIndex 3: \"6 metres\": This is half of the correct wavelength for 25 MHz.",
+    "en": "Question B-006-008-003.\n\nWhy the correct answer is right: Free-space wavelength in metres is 300 / frequency in MHz. For 25 MHz, 300 / 25 = 12 metres.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"19 metres\": This is simply an incorrect value for 25 MHz; using the correct free-space formula gives 300 / 25 = 12 metres, while 19 metres would correspond to about 15.8 MHz.\n- sourceIndex 2: \"39 metres\": This is not produced by the free-space wavelength formula for 25 MHz; 39 metres would imply about 300 / 39 = 7.7 MHz instead.\n- sourceIndex 3: \"6 metres\": This is the half-wave value 150 / 25 = 6 metres, but the question asks for the full free-space wavelength.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-007-008.\n\nWhy the correct answer is right: A vertical receiving antenna matches the vertical polarization of the mobile whip.\n\nPer-choice notes:\n- sourceIndex 0: \"vertical ground-plane antenna\": Correct. A vertical receiving antenna matches the vertical polarization of the mobile whip.\n- sourceIndex 1: \"random length of wire\": For local vertical-whip work, matching vertical polarization is the key.\n- sourceIndex 2: \"horizontal ground-plane antenna\": The listed polarization must match the element orientation described in the question.\n- sourceIndex 3: \"horizontal dipole antenna\": The listed polarization must match the element orientation described in the question.",
+    "en": "Question B-006-007-008.\n\nWhy the correct answer is right: A vertical mobile whip radiates vertical polarization, so a vertical receiving ground-plane antenna has matching polarization and normally receives it best.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"random length of wire\": A random wire has unknown impedance, pattern, and polarization, so it is not the best matched receiving choice for a vertically polarized VHF mobile signal.\n- sourceIndex 2: \"horizontal ground-plane antenna\": A horizontal receiving antenna is cross-polarized to the vertical whip signal, even if it is described as a ground-plane arrangement.\n- sourceIndex 3: \"horizontal dipole antenna\": A horizontal dipole is cross-polarized relative to a vertical whip, so it normally receives a weaker signal than a vertical antenna.",
     "fr": null
   },
   "citations": [

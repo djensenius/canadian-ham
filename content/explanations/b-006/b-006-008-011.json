@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-008-011.\n\nWhy the correct answer is right: Use λ(m) = 300 / f(MHz). For 2 MHz, 300 / 2 = 150 m.\n\nPer-choice notes:\n- sourceIndex 0: \"150 metres\": Correct. 300 divided by 2 equals 150.\n- sourceIndex 1: \"360 metres\": This would not follow from the free-space wavelength formula.\n- sourceIndex 2: \"1500 metres\": This is ten times the correct 150 m result.\n- sourceIndex 3: \"30 metres\": This would correspond to 10 MHz, not 2 MHz.",
+    "en": "Question B-006-008-011.\n\nWhy the correct answer is right: Use the free-space formula wavelength in metres = 300 / frequency in MHz. At 2 MHz, 300 / 2 = 150 metres.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"360 metres\": This is simply an incorrect value for 2 MHz; the correct computation is 300 / 2 = 150 metres, while 360 metres would correspond to about 0.83 MHz.\n- sourceIndex 2: \"1500 metres\": This is a decimal-place error equivalent to using 3000 / 2 = 1500 metres instead of 300 / 2.\n- sourceIndex 3: \"30 metres\": This is the wavelength for 10 MHz, since 300 / 10 = 30 metres; it uses the wrong frequency for the 2 MHz question.",
     "fr": null
   },
   "citations": [

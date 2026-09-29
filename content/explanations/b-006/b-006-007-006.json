@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-007-006.\n\nWhy the correct answer is right: An isotropic antenna is a hypothetical point source used as a reference.\n\nPer-choice notes:\n- sourceIndex 0: \"a hypothetical point source\": Correct. An isotropic antenna is a hypothetical point source used as a reference.\n- sourceIndex 1: \"an infinitely long piece of wire\": An isotropic radiator is an idealized point reference, not a buildable wire antenna or load.\n- sourceIndex 2: \"a dummy load\": An isotropic radiator is an idealized point reference, not a buildable wire antenna or load.\n- sourceIndex 3: \"a half-wave reference dipole\": For purely resistive maximum power transfer, equal source and load impedances are required.",
+    "en": "Question B-006-007-006.\n\nWhy the correct answer is right: An isotropic antenna is an idealized point radiator used as a reference because it radiates equally in every direction in three-dimensional space.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"an infinitely long piece of wire\": An infinitely long wire is not a point source and would have a very different current distribution and radiation pattern from an isotropic reference.\n- sourceIndex 2: \"a dummy load\": A dummy load is intended to absorb RF power with little radiation, so it is the opposite of an ideal all-direction radiator.\n- sourceIndex 3: \"a half-wave reference dipole\": A half-wave dipole is a real reference antenna with a doughnut-shaped pattern and about 2.15 dB gain over isotropic, not the isotropic radiator itself.",
     "fr": null
   },
   "citations": [

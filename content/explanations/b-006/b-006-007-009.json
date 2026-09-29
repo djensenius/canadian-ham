@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-007-009.\n\nWhy the correct answer is right: A dipole produces vertical polarization when the element is mounted vertically.\n\nPer-choice notes:\n- sourceIndex 0: \"mounted vertically\": Correct. A dipole produces vertical polarization when the element is mounted vertically.\n- sourceIndex 1: \"mounted horizontally\": The listed polarization must match the element orientation described in the question.\n- sourceIndex 2: \"too near to the ground\": This does not match the principle tested here: Polarization is named from the electric-field orientation, and simple antenna orientation strongly affects local VHF/UHF signals.\n- sourceIndex 3: \"very high above ground\": This does not match the principle tested here: Polarization is named from the electric-field orientation, and simple antenna orientation strongly affects local VHF/UHF signals.",
+    "en": "Question B-006-007-009.\n\nWhy the correct answer is right: A dipole’s radiated electric field follows the wire, so mounting the dipole vertically produces vertical polarization.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"mounted horizontally\": A horizontally mounted dipole has its electric field parallel to the Earth’s surface, giving horizontal polarization.\n- sourceIndex 2: \"too near to the ground\": Being near the ground can alter feed impedance and radiation angle, but it does not make a nonvertical dipole vertically polarized.\n- sourceIndex 3: \"very high above ground\": Height above ground changes pattern and takeoff angle; the dipole’s physical orientation still determines whether its polarization is vertical.",
     "fr": null
   },
   "citations": [

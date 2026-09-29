@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-006-011.\n\nWhy the correct answer is right: Impedance transformation ratio is load impedance divided by line impedance: 300 ohms / 50 ohms = 6, so the needed ratio is 6:1.\n\nPer-choice notes:\n- sourceIndex 0: \"6:1\": Correct. 300 divided by 50 equals 6, so the impedance transformation is 6:1.\n- sourceIndex 1: \"2:1\": A 2:1 ratio would transform 50 ohms to 100 ohms, not close to 300 ohms.\n- sourceIndex 2: \"4:1\": A 4:1 ratio would transform 50 ohms to 200 ohms, still short of 300 ohms.\n- sourceIndex 3: \"9:1\": A 9:1 ratio would transform 50 ohms to 450 ohms, too high for this load.",
+    "en": "Question B-006-006-011.\n\nWhy the correct answer is right: The folded dipole is about 300 ohms and the line is 50 ohms, so the needed impedance ratio is 300 / 50 = 6:1.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"2:1\": A 2:1 transformer would turn 50 ohms into only 100 ohms, leaving a 300-ohm folded dipole still mismatched by about 3:1.\n- sourceIndex 2: \"4:1\": A 4:1 transformer would turn 50 ohms into 200 ohms; that is a common ratio for some jobs, but it is not 300 / 50.\n- sourceIndex 3: \"9:1\": A 9:1 transformer would turn 50 ohms into 450 ohms, overshooting the approximately 300-ohm folded-dipole feed point.",
     "fr": null
   },
   "citations": [
