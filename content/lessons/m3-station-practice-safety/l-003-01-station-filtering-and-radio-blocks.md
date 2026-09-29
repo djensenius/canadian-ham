@@ -123,9 +123,9 @@ Question: A 14.2 MHz transmitter can also create energy at 28.4 MHz. Explain why
 
 Worked answer: The unwanted 28.4 MHz energy should be reduced before the cable carries it around the station. Filtering late may leave extra wiring radiating or coupling the harmonic.
 
-Question: After moving an HF contact from the low end of a band toward the high end, the reflected-power reading rises. Why might the tuner need attention?
+Question: A club labels one cable bundle “wanted RF” and another “possible harmonic energy” during a station cleanup. Why is the label at the low-pass filter output more meaningful than one after the tuner?
 
-Worked answer: The antenna system impedance can change with frequency. The tuner setting that transformed the load well at one frequency may need readjustment at another.
+Worked answer: The low-pass filter is the block intended to reduce harmonic energy before later station wiring carries it. The tuner may improve the load seen by the transmitter, but it is not the harmonic-removal block.
 
 Question: A superheterodyne receiver has a noisy first RF stage. Why can later audio gain not fully repair that problem?
 

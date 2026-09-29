@@ -100,9 +100,9 @@ About ten watts of heat is enough to require serious heat sinking. The regulator
 
 ## Try it
 
-Question: A digital station is clean when the laptop runs on battery, but a hum appears when the charger is connected. Explain why audio isolation is worth checking.
+Question: A digital station keys the transmitter correctly, but the receiving station reports silence instead of tones. What separate interface path should be traced?
 
-Worked answer: The charger can create a ground-loop path between computer and radio. Audio isolation breaks the direct path for that unwanted current while still passing the tones.
+Worked answer: Trace the transmit-audio path from software output through the interface to the radio data input. Push-to-talk can work while the audio coupling or level path is open or muted.
 
 Question: A digital-mode transmit signal becomes wide after the computer playback slider is raised from 35 percent to 90 percent. Predict the better first adjustment.
 
@@ -123,7 +123,7 @@ Digital-mode problems often sound like RF problems but begin as audio problems. 
 ## Common mistakes
 
 - Saying the interface demodulates the RF signal. The transceiver demodulates RF; the interface passes and converts audio.
-- Assuming a USB connector proves that a radio has a sound card. The needed function is the audio codec.
+- Assuming the external connector alone identifies the conversion block. The needed function is the audio codec.
 - Confusing a rectifier with a regulator. The rectifier changes AC to pulsating DC; the regulator holds the output steady.
 - Placing overvoltage sensing before the regulator, where it cannot directly verify the voltage being delivered to the radio.
 - Forgetting that a linear regulator can waste substantial power as heat.
@@ -138,6 +138,6 @@ Description: Draw a brush-style laptop on the left, transceiver on the right, an
 
 - Computer digital modes commonly use audio tones between software and the transceiver.
 - Sound-card interfaces convert, couple, isolate, set levels, and often control transmit/receive switching.
-- Built-in digital-mode audio needs a codec, not merely a connector.
+- Built-in digital-mode audio depends on an audio codec to convert between audio and digital samples.
 - A linear supply sequence is transformer, rectifier, filter, regulator, output.
 - Overvoltage protection watches the regulated output, and a regulator may need a heat sink because voltage drop times current becomes heat.

@@ -110,9 +110,9 @@ The voice information has not changed into a different message. The mixer has mo
 
 ## Try it
 
-Question: A CW oscillator is stable into a dummy load, but its note slides when the following RF stage warms up. Explain why a one-way buffer action matters.
+Question: A lab SSB exciter plays the same recorded voice while its VFO is nudged from 5.200 MHz to 5.210 MHz. What changes, and what stays the same?
 
-Worked answer: The warmer RF stage presents a changing load. Good buffer isolation keeps that load change from tugging the oscillator frequency.
+Worked answer: The translated RF output moves by 10 kHz, but the voice message and filtered sideband shape stay the same. The mixer shifts the already-formed SSB signal to a new RF frequency.
 
 Question: A receiver has both a 500 Hz IF filter and a 2.4 kHz IF filter. Predict which one will admit more nearby signals during a narrow CW contact, and why.
 

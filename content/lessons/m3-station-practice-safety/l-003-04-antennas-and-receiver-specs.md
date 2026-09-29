@@ -113,9 +113,9 @@ SSB needs accurate tuning because there is no full carrier for the receiver to l
 
 ## Try it
 
-Question: A three-element Yagi is rebuilt on a nonconductive mast, but the element lengths and feedpoint stay the same. Explain why the main RF roles have not moved to the mast.
+Question: A three-element Yagi is rebuilt on a nonconductive boom, but the element lengths and feedpoint stay the same. Explain why the main RF roles have not moved to the boom.
 
-Worked answer: The radiating elements and feedpoint set the RF roles. The support structure holds them in position; changing the support material does not make it the fed radiating element.
+Worked answer: The radiating elements and feedpoint set the RF roles. The boom holds them in position; changing the support material does not make it the fed radiating element.
 
 Question: Put these receiver filters with likely uses: 400 Hz, 2.8 kHz, and 7 kHz.
 

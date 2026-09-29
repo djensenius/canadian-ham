@@ -19,7 +19,7 @@
         { "text": { "en": "Short director, fed driven element, long reflector", "fr": null }, "isCorrect": false },
         { "text": { "en": "Long reflector, fed driven element, short director", "fr": null }, "isCorrect": true },
         { "text": { "en": "Fed driven element, long reflector, short director", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Boom, long reflector, fed director", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Long director, fed driven element, short reflector", "fr": null }, "isCorrect": false }
       ],
       "explanation": { "en": "For a simple Yagi, the reflector is the longer rear element, the driven element is fed in the middle, and the shorter director is forward.", "fr": null }
     },
@@ -30,20 +30,20 @@
         { "text": { "en": "A weak-signal input number is meaningful only with a stated signal-to-noise target", "fr": null }, "isCorrect": false },
         { "text": { "en": "A narrow IF filter can reject nearby signals but may remove information if made too narrow", "fr": null }, "isCorrect": false },
         { "text": { "en": "Strong-signal overload behavior matters when weak and strong signals arrive together", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Turning on AGC widens the IF filter so adjacent signals disappear", "fr": null }, "isCorrect": true }
+        { "text": { "en": "Turning on AGC replaces IF filtering, so nearby signals no longer need to be rejected", "fr": null }, "isCorrect": true }
       ],
       "explanation": { "en": "AGC reduces volume swings as signal strength changes; it does not widen or narrow the IF filter and cannot replace selectivity.", "fr": null }
     },
     {
       "id": "QZ-L-003-04-A-C3",
-      "prompt": { "en": "For the same CW tone, rank these receiver filters by how much nearby spectrum they admit, from least to most.", "fr": null },
+      "prompt": { "en": "A waterfall shows two nearby traces, but the receiver audio blends them into one rough sound. Which conclusion best connects the display to the receiver settings?", "fr": null },
       "choices": [
-        { "text": { "en": "2.7 kHz, 800 Hz, 300 Hz, 5.5 kHz", "fr": null }, "isCorrect": false },
-        { "text": { "en": "5.5 kHz, 2.7 kHz, 800 Hz, 300 Hz", "fr": null }, "isCorrect": false },
-        { "text": { "en": "300 Hz, 800 Hz, 2.7 kHz, 5.5 kHz", "fr": null }, "isCorrect": true },
-        { "text": { "en": "800 Hz, 300 Hz, 5.5 kHz, 2.7 kHz", "fr": null }, "isCorrect": false }
+        { "text": { "en": "The display can reveal separate frequencies; the receiver still needs suitable selectivity to isolate one in the audio", "fr": null }, "isCorrect": true },
+        { "text": { "en": "A bright trace proves the receiver has enough dynamic range, so filter choice no longer matters", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Waterfall frequency spacing automatically retunes the local oscillator away from the stronger signal", "fr": null }, "isCorrect": false },
+        { "text": { "en": "AGC changes trace brightness into narrower occupied bandwidth before the IF filter", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "A narrower passband admits less nearby spectrum. The listed widths therefore go from least to most admitted spectrum as 300 Hz, 800 Hz, 2.7 kHz, then 5.5 kHz.", "fr": null }
+      "explanation": { "en": "A waterfall helps the operator see signal positions, but it is not the receiver's selectivity. Suitable filtering is still needed to separate close signals in the recovered audio.", "fr": null }
     }
   ]
 }

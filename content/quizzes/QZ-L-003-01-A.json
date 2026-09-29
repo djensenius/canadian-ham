@@ -14,36 +14,36 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-01-A-C1",
-      "prompt": { "en": "A station is transmitting on 7 MHz and a 14 MHz harmonic is measured in the accessory rack. Which change would NOT help keep harmonic energy out of station wiring?", "fr": null },
+      "prompt": { "en": "During a 100 W dummy-load test, the station is not intended to radiate, but the load's case temperature is climbing. Which operator response fits the block diagram?", "fr": null },
       "choices": [
-        { "text": { "en": "Move the low-pass filter to the antenna side of the tuner so the accessories see the harmonic first", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Install the low-pass filter at the final RF output before the accessory rack", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Use a short jumper from the final RF output to the filter input", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Choose a filter whose cutoff passes 7 MHz but attenuates the 14 MHz harmonic", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Continue indefinitely because a non-radiating load cannot absorb real power", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Check the dummy load's power and time rating because absorbed RF becomes heat", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Retune the antenna tuner until the dummy load stops converting RF to heat", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Move the SWR meter after the antenna switch so the load no longer warms", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Putting the filter after the tuner leaves more station wiring carrying the harmonic. The helpful changes all make the filter act earlier or make sure it rejects the harmonic frequency.", "fr": null }
+      "explanation": { "en": "A dummy load avoids intended radiation by absorbing RF, and absorbed RF becomes heat. The operator still has to respect the load's rating and duty cycle.", "fr": null }
     },
     {
       "id": "QZ-L-003-01-A-C2",
-      "prompt": { "en": "Spot the error in this FM-transmitter note: “The speech amplifier feeds audio to a multiplier; after the oscillator is tripled, the audio variations appear as FM at the output.”", "fr": null },
+      "prompt": { "en": "A block diagram labels a frequency multiplier as if microphone audio should be plugged into it directly. What is the best correction?", "fr": null },
       "choices": [
-        { "text": { "en": "A multiplier erases any frequency deviation that was already present on the oscillator signal", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The power amplifier should lower the oscillator centre frequency before speech is applied", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The audio must vary the oscillator before multiplication; a multiplier cannot create voice deviation from audio it never receives", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The microphone should generate the RF carrier directly so the multiplier has voice-frequency input", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Drive the multiplier from the oscillator path; audio stays in the speech-amplifier and modulator path", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Drive the multiplier from the microphone path; RF can be added by the final amplifier", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Use the multiplier as the modulator; the oscillator should stay unvaried until after multiplication", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Drive the modulator only from the multiplier output; speech should be added after amplification", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "In an FM chain the audio deviation is applied to the oscillator first. Later multiplier stages move that already frequency-varying RF signal to the needed carrier frequency.", "fr": null }
+      "explanation": { "en": "The multiplier is an RF block. Microphone audio is raised by the speech amplifier and used by the modulator before the oscillator-path RF is multiplied.", "fr": null }
     },
     {
       "id": "QZ-L-003-01-A-C3",
-      "prompt": { "en": "A receiver uses a 10.700 MHz IF and a local oscillator above a 144.390 MHz signal. What local oscillator frequency should you expect?", "fr": null },
+      "prompt": { "en": "A receiver uses a 10.700 MHz IF and a high-side oscillator for a 144.390 MHz signal. Its injection filter passes only 154 to 156 MHz. Which conclusion is correct?", "fr": null },
       "choices": [
-        { "text": { "en": "133.690 MHz", "fr": null }, "isCorrect": false },
-        { "text": { "en": "144.390 MHz", "fr": null }, "isCorrect": false },
-        { "text": { "en": "165.790 MHz", "fr": null }, "isCorrect": false },
-        { "text": { "en": "155.090 MHz", "fr": null }, "isCorrect": true }
+        { "text": { "en": "133.690 MHz, so it falls below the injection-filter range", "fr": null }, "isCorrect": false },
+        { "text": { "en": "144.390 MHz, because the oscillator stays on the received signal", "fr": null }, "isCorrect": false },
+        { "text": { "en": "165.790 MHz, because high side means adding the IF twice", "fr": null }, "isCorrect": false },
+        { "text": { "en": "155.090 MHz, so it falls inside the injection-filter range", "fr": null }, "isCorrect": true }
       ],
-      "explanation": { "en": "With high-side injection, add the IF: 144.390 MHz + 10.700 MHz = 155.090 MHz.", "fr": null }
+      "explanation": { "en": "High-side injection adds the IF: 144.390 MHz + 10.700 MHz = 155.090 MHz. That result is inside the stated 154 to 156 MHz injection-filter range.", "fr": null }
     }
   ]
 }

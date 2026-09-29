@@ -14,36 +14,36 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-02-A-C1",
-      "prompt": { "en": "A CW exciter is rebuilt so the buffer has much better reverse isolation. When the following RF amplifier input load swings during keying, what should happen to oscillator pulling?", "fr": null },
+      "prompt": { "en": "An SSB exciter note calls the sideband filter an audio tone control for the microphone. Which correction is best?", "fr": null },
       "choices": [
-        { "text": { "en": "Pulling should increase because reverse isolation adds extra RF output power", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Pulling should decrease because less of the load change reaches the oscillator", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Pulling should stay the same because buffers only shape key-click envelopes", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The oscillator should jump to a harmonic because isolation acts like a multiplier", "fr": null }, "isCorrect": false }
+        { "text": { "en": "It works on the RF/IF sideband signal after the balanced modulator, before the frequency-conversion mixer", "fr": null }, "isCorrect": true },
+        { "text": { "en": "It belongs in the antenna feed line, where it trims speech bandwidth after final amplification", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It should replace the speech amplifier, because filtering alone raises microphone audio to drive level", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It is the BFO, so moving it changes the receiver's CW tone instead of transmitter bandwidth", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Better reverse isolation makes the buffer more one-way, so load changes in the RF amplifier are less able to tug the oscillator frequency.", "fr": null }
+      "explanation": { "en": "The SSB sideband filter is not an audio tone control. It acts on the generated RF/IF sideband signal before that signal is mixed to the operating frequency.", "fr": null }
     },
     {
       "id": "QZ-L-003-02-A-C2",
-      "prompt": { "en": "An SSB exciter has a filtered signal at 9.000 MHz and mixes it with a 5.250 MHz VFO using the sum product. What output frequency is produced before final amplification?", "fr": null },
+      "prompt": { "en": "An SSB exciter has a filtered signal at 9.000 MHz and a 5.250 MHz VFO. A following band-pass network accepts 14.0 to 14.35 MHz and rejects the lower HF band. Which mixer product should be kept?", "fr": null },
       "choices": [
-        { "text": { "en": "14.250 MHz", "fr": null }, "isCorrect": true },
-        { "text": { "en": "3.750 MHz", "fr": null }, "isCorrect": false },
-        { "text": { "en": "9.525 MHz", "fr": null }, "isCorrect": false },
-        { "text": { "en": "47.250 MHz", "fr": null }, "isCorrect": false }
+        { "text": { "en": "14.250 MHz sum product; it lands in the accepted 20 m range", "fr": null }, "isCorrect": true },
+        { "text": { "en": "3.750 MHz difference product; it is the one inside the accepted range", "fr": null }, "isCorrect": false },
+        { "text": { "en": "9.000 MHz original filtered signal; mixing should leave the VFO unused", "fr": null }, "isCorrect": false },
+        { "text": { "en": "5.250 MHz VFO signal; the sideband information is no longer needed", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "For the sum product, add the two frequencies: 9.000 MHz + 5.250 MHz = 14.250 MHz.", "fr": null }
+      "explanation": { "en": "The mixer produces sum and difference products. The sum is 9.000 MHz + 5.250 MHz = 14.250 MHz, which is inside the stated 14.0 to 14.35 MHz pass range; the 3.750 MHz difference is rejected.", "fr": null }
     },
     {
       "id": "QZ-L-003-02-A-C3",
-      "prompt": { "en": "Spot the error in this receiver troubleshooting note: “The selected IF signal is present, so turning up AF gain will let the product detector recover SSB even if its local reference is absent.”", "fr": null },
+      "prompt": { "en": "A student says a hand key supplies the RF energy for each Morse element because RF appears only while the key is closed. Which correction best separates control from energy?", "fr": null },
       "choices": [
-        { "text": { "en": "The antenna must be disconnected before any product detector can recover audio", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The sideband filter belongs after the speaker whenever AF gain is increased", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The local oscillator should be mixed with the AF output instead of with the incoming RF signal", "fr": null }, "isCorrect": false },
-        { "text": { "en": "AF gain after the detector cannot replace the local reference needed to mix the selected IF into audio", "fr": null }, "isCorrect": true }
+        { "text": { "en": "The key controls when the carrier path is active; the transmitter stages get their operating energy from the DC supply", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The key is an audio oscillator, and that tone is what the antenna radiates during each element", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The key bypasses the driver and power amplifier, so the oscillator alone supplies full output power", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The key applies operating DC directly to the antenna system, so RF stages are only monitors", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "The product detector has to combine selected IF energy with a nearby reference before the AF amplifier can raise the recovered audio level.", "fr": null }
+      "explanation": { "en": "The key is a control in the carrier path. The RF stages are powered by DC and create/amplify the carrier; keying decides when that carrier is present at the output.", "fr": null }
     }
   ]
 }
