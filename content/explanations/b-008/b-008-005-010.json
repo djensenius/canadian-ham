@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-005-010",
+  "questionId": "B-008-005-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-005-010.\n\nWhy the correct answer is right: A band-pass filter for the 2-metre range passes the desired band while attenuating strong adjacent-band land mobile signals before the receiver overloads.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Low-pass\": A low-pass filter would pass many lower-frequency signals and does not select the desired 2-metre band by itself.\n- sourceIndex 2: \"High-pass\": A high-pass filter would pass signals above its cut-off, including some unwanted adjacent-band energy, rather than isolating the 2-metre band.\n- sourceIndex 3: \"Notch\": A notch filter removes one narrow signal, but the problem is several adjacent-band transmitters, so a band-pass response is better.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-02"
+    },
+    {
+      "type": "question",
+      "id": "B-008-005-010"
+    }
+  ],
+  "licenseClass": "original"
+}

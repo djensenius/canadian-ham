@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-001-003",
+  "questionId": "B-008-001-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-001-003.\n\nWhy the correct answer is right: Interference that follows transmissions on any band is usually a receiver overload clue. A harmonic or spurious problem normally has a stronger relationship to particular frequencies.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Incorrect antenna length\": A wrong antenna length affects the amateur station match and radiation, but it does not by itself explain a neighbour receiver reacting on every transmitting band.\n- sourceIndex 2: \"Spurious emissions\": Spurious emissions are unwanted transmitter outputs; they usually show up at particular frequencies rather than the same way no matter which band is used.\n- sourceIndex 3: \"Deficient harmonic suppression\": Poor harmonic suppression would tend to affect frequencies related to harmonics of the operating band, not produce the same symptom on all bands.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-01"
+    },
+    {
+      "type": "question",
+      "id": "B-008-001-003"
+    }
+  ],
+  "licenseClass": "original"
+}

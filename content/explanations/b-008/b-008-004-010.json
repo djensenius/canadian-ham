@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-004-010",
+  "questionId": "B-008-004-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-004-010.\n\nWhy the correct answer is right: Ten metres is around 28 MHz, and 28 MHz multiplied by 2 is 56 MHz. That makes the interfering signal a plausible second harmonic of a 10-metre transmission.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Crystal oscillator operating on its fundamental\": A crystal oscillator on its fundamental would simply be operating at the interfering frequency, not explaining an HF transmitter harmonic source.\n- sourceIndex 2: \"Seventh harmonic of an 80-metre transmission\": An 80-metre signal is around 3.5 to 4 MHz; its seventh harmonic is far below 56 MHz, so this numeric trace does not fit.\n- sourceIndex 3: \"Third harmonic of a 15-metre transmission\": A 15-metre signal is around 21 MHz; its third harmonic is around 63 MHz, not 56 MHz.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-02"
+    },
+    {
+      "type": "question",
+      "id": "B-008-004-010"
+    }
+  ],
+  "licenseClass": "original"
+}

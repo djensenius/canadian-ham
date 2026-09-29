@@ -9,7 +9,7 @@ title:
 lessonIds:
   - L-008-01
   - L-008-02
-status: outline
+status: draft
 ---
 # Interference and Suppression
 

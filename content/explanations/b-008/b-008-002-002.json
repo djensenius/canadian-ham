@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-002-002",
+  "questionId": "B-008-002-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-002-002.\n\nWhy the correct answer is right: A plug-in telephone RFI filter installed close to the affected telephone keeps RF out of the device while leaving the properly operating amateur station unchanged.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Ground and shield the telephone distribution amplifier\": Most nearby telephone interference complaints are at the device or its cord; a distribution amplifier may not even be part of the installation.\n- sourceIndex 2: \"Stop transmitting whenever the telephone is in use\": Stopping operation whenever the phone is used is not the normal cure when the amateur station is operating properly and filtering can be applied.\n- sourceIndex 3: \"Make internal adjustments to the telephone equipment\": Internal telephone adjustments should not be the first answer; use an appropriate external RFI filter near the telephone equipment.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-01"
+    },
+    {
+      "type": "question",
+      "id": "B-008-002-002"
+    }
+  ],
+  "licenseClass": "original"
+}

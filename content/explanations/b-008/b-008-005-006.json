@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-005-006",
+  "questionId": "B-008-005-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-005-006.\n\nWhy the correct answer is right: An AC line filter for RF noise should pass the low-frequency mains power and attenuate radio-frequency energy, which is a low-pass response.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"High-pass\": A high-pass response would reject the wanted mains frequency and pass the unwanted RF noise, the opposite of the goal.\n- sourceIndex 2: \"Band-pass\": A band-pass filter is not needed for ordinary power-line filtering because the wanted energy is at very low mains frequency.\n- sourceIndex 3: \"Band-reject\": A band-reject filter removes only a selected range; an AC line RF filter needs broad attenuation of RF above the power frequency.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-02"
+    },
+    {
+      "type": "question",
+      "id": "B-008-005-006"
+    }
+  ],
+  "licenseClass": "original"
+}

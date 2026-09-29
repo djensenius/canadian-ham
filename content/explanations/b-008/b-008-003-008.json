@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-003-008",
+  "questionId": "B-008-003-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-003-008.\n\nWhy the correct answer is right: The keying filter and following RF stages determine the transmitted envelope shape, so they are the right places to check when key clicks are reported.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Adjust your key\": Adjusting the key may improve feel or contact spacing, but it does not necessarily shape the RF envelope leaving the transmitter.\n- sourceIndex 2: \"Regulate the oscillator supply voltage\": Regulating the oscillator supply addresses chirp or drift, not the abrupt-envelope problem that causes key clicks.\n- sourceIndex 3: \"Use a choke in the RF power output\": A choke in the RF output is not the normal cure for key-click waveform shaping through the transmitter stages.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-01"
+    },
+    {
+      "type": "question",
+      "id": "B-008-003-008"
+    }
+  ],
+  "licenseClass": "original"
+}

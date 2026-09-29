@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-008-02-A",
+  "lessonId": "L-008-02",
+  "officialQuestionIds": [
+    "B-008-004-002",
+    "B-008-004-005",
+    "B-008-004-006",
+    "B-008-004-008",
+    "B-008-004-010",
+    "B-008-005-002",
+    "B-008-005-007",
+    "B-008-005-009"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-008-02-A-C1",
+      "prompt": { "en": "A test transmitter on 6.3 MHz produces an unwanted signal at 18.9 MHz. Which explanation best fits the relationship?", "fr": null },
+      "choices": [
+        { "text": { "en": "It is the second harmonic because 18.9 is twice 6.3.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It is receiver desensitization because all multiples are receiver faults.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It is the third harmonic because 6.3 x 3 = 18.9.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "It is a notch-filter effect because the unwanted signal is narrow.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "A harmonic is an integer multiple of the fundamental; 18.9 divided by 6.3 equals 3.", "fr": null }
+    },
+    {
+      "id": "QZ-L-008-02-A-C2",
+      "prompt": { "en": "You want to receive both below and above a strong utility transmitter near the middle of the range. Which filter family best matches that goal?", "fr": null },
+      "choices": [
+        { "text": { "en": "High-pass, because it removes both sides of the utility signal.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Band-reject, because it can attenuate the problem range while passing frequencies on both sides.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Low-pass, because it passes only the high side of the range.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Audio bypass, because RF filters work only in transmitters.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "A band-reject filter removes a chosen range while leaving lower and higher frequencies available.", "fr": null }
+    },
+    {
+      "id": "QZ-L-008-02-A-C3",
+      "prompt": { "en": "An SSB signal becomes wider and less intelligible after the microphone gain is raised. What is the best first correction?", "fr": null },
+      "choices": [
+        { "text": { "en": "Add a receiver notch filter at the other station.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Replace the feedline with a longer cable to lower the audio level.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Increase drive until the power meter stops moving.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Reduce the audio drive so the transmitter stays in its linear range.", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "Excessive audio drive can cause flat topping and splatter; backing off drive treats the source of the unwanted side energy.", "fr": null }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-004-004",
+  "questionId": "B-008-004-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-004-004.\n\nWhy the correct answer is right: Energy just outside the necessary bandwidth is called out-of-band emission because it lies immediately outside the bandwidth needed for the transmission.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Harmonic emissions\": Harmonic emissions are at integer multiples of the operating frequency, often far from the necessary bandwidth.\n- sourceIndex 2: \"Parasitic emissions\": Parasitic emissions come from unintended oscillations; the phrase just outside the necessary bandwidth points to out-of-band energy.\n- sourceIndex 3: \"Spurious emissions\": Spurious emissions is a broad category, but the specific term for energy just outside the needed bandwidth is out-of-band emissions.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-02"
+    },
+    {
+      "type": "question",
+      "id": "B-008-004-004"
+    }
+  ],
+  "licenseClass": "original"
+}

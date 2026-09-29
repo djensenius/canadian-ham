@@ -1,0 +1,49 @@
+{
+  "id": "QZ-L-008-01-A",
+  "lessonId": "L-008-01",
+  "officialQuestionIds": [
+    "B-008-001-001",
+    "B-008-001-004",
+    "B-008-001-006",
+    "B-008-001-011",
+    "B-008-002-001",
+    "B-008-002-005",
+    "B-008-002-011",
+    "B-008-003-005"
+  ],
+  "conceptChecks": [
+    {
+      "id": "QZ-L-008-01-A-C1",
+      "prompt": { "en": "A neighbour's powered speakers reproduce garbled voice while the speaker volume is at minimum. Which first action best matches the likely coupling path?", "fr": null },
+      "choices": [
+        { "text": { "en": "Add ferrite turns near the powered speaker input lead.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Install a low-pass filter in the amateur transmitter output before doing any other checks.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Lengthen the speaker cable so it is farther from the floor.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Increase microphone gain so the wanted audio is less distorted.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "Low-volume distorted audio points to RF pickup and audio rectification, so choking the lead near the affected device is a sensible first step.", "fr": null }
+    },
+    {
+      "id": "QZ-L-008-01-A-C2",
+      "prompt": { "en": "A handheld receiver works normally with its rubber antenna but hears several unrelated services at once when connected to a high roof antenna. What is the most likely receiver-side issue?", "fr": null },
+      "choices": [
+        { "text": { "en": "The handheld's speaker is wired with the wrong polarity.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The receiver front end is being driven into overload or intermodulation.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The roof antenna has removed all harmonic radiation.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The receiver's volume control is creating key clicks.", "fr": null }, "isCorrect": false }
+      ],
+      "explanation": { "en": "A much larger antenna can deliver enough strong off-channel signal to overload the front end and create intermodulation products.", "fr": null }
+    },
+    {
+      "id": "QZ-L-008-01-A-C3",
+      "prompt": { "en": "A CW transmitter is reported to click above and below the signal even though the local sidetone sounds clean. What should be checked?", "fr": null },
+      "choices": [
+        { "text": { "en": "Only the operator's keying speed, because speed is the root cause of all clicks.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The receiver's broadcast-band tracking alignment.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The antenna's compass direction.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The transmitter keying waveform, keying filter, and later RF stages.", "fr": null }, "isCorrect": true }
+      ],
+      "explanation": { "en": "Distant key clicks come from excessive side energy caused by abrupt keying or later-stage behaviour, not from the operator's sidetone quality alone.", "fr": null }
+    }
+  ]
+}

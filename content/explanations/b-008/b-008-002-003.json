@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-002-003",
+  "questionId": "B-008-002-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-002-003.\n\nWhy the correct answer is right: SSB voice detected by an unintended non-linear junction often becomes distorted speech because the equipment is acting like a crude receiver without proper demodulation and filtering.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Clearly audible speech from the transmitter's signals\": Clearly intelligible speech would imply a better detector than the accidental audio rectification usually found in PA equipment.\n- sourceIndex 2: \"On-and-off humming or clicking\": On-and-off hum or clicking matches keyed CW rectification more than a nearby SSB voice transmission.\n- sourceIndex 3: \"A steady hum\": A steady hum points toward power-line or grounding issues, not rectified SSB speech from a transmitter.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-01"
+    },
+    {
+      "type": "question",
+      "id": "B-008-002-003"
+    }
+  ],
+  "licenseClass": "original"
+}

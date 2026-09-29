@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-005-001",
+  "questionId": "B-008-005-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-005-001.\n\nWhy the correct answer is right: An ideal notch filter removes one narrow frequency while allowing other frequencies to pass.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Attenuate a range of frequencies and pass all others\": Attenuating a range while passing others describes a band-reject or band-stop filter, not the ideal single-frequency notch.\n- sourceIndex 2: \"Attenuate all frequencies except one single frequency\": Passing only one frequency while rejecting the rest is the opposite idea, closer to an ideal very narrow band-pass response.\n- sourceIndex 3: \"Attenuate all frequencies except a range of frequencies\": Passing a range while rejecting frequencies outside it describes a band-pass filter, not a notch.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-02"
+    },
+    {
+      "type": "question",
+      "id": "B-008-005-001"
+    }
+  ],
+  "licenseClass": "original"
+}

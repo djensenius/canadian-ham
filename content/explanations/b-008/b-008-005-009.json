@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-005-009",
+  "questionId": "B-008-005-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-005-009.\n\nWhy the correct answer is right: A band-reject filter can attenuate the strong broadcast band while still allowing reception on amateur bands below and above that problem range.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Band-pass\": A band-pass filter for one amateur band would not conveniently preserve reception on both desired bands mentioned.\n- sourceIndex 2: \"Low-pass\": A low-pass filter would pass lower frequencies but would not allow desired reception above the interfering range.\n- sourceIndex 3: \"High-pass\": A high-pass filter would pass higher frequencies but would not preserve desired reception below the interfering range.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-02"
+    },
+    {
+      "type": "question",
+      "id": "B-008-005-009"
+    }
+  ],
+  "licenseClass": "original"
+}

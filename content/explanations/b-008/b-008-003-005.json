@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-003-005",
+  "questionId": "B-008-003-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-003-005.\n\nWhy the correct answer is right: Opening and closing the Morse key abruptly changes the carrier. Those sharp transitions can produce local RF interference heard as key clicks.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"frequency shifting caused by poor voltage regulation\": Frequency shifting from poor regulation is chirp, a change in oscillator frequency, not the click energy from making and breaking the keying circuit.\n- sourceIndex 2: \"high frequency parasitic oscillations\": Parasitic oscillations are unwanted oscillations in a stage; key clicks are tied to the keyed carrier transitions.\n- sourceIndex 3: \"poor wave-shaping caused by a defective filter capacitor\": A defective filter capacitor may cause hum or supply ripple, but key-click interference comes from abrupt keying action and waveform shape.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-01"
+    },
+    {
+      "type": "question",
+      "id": "B-008-003-005"
+    }
+  ],
+  "licenseClass": "original"
+}

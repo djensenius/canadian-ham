@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-001-009",
+  "questionId": "B-008-001-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-001-009.\n\nWhy the correct answer is right: When mobile stations get very close, each transmitter can be strong enough at the other radio to desensitize its receiver, making repeater communication difficult.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"CTCSS tones are activating the receivers' squelch circuits\": CTCSS tones normally open squelch when correct; their presence does not explain trouble that appears as the two transmitters approach each other.\n- sourceIndex 2: \"They have entered a null area of their antenna patterns\": Antenna pattern nulls can happen, but simultaneous proximity-related difficulty is much more consistent with receiver desensitization.\n- sourceIndex 3: \"Transmitter signals are mixing with the repeater signal to cause intermodulation\": Intermodulation is possible in some strong-signal environments, yet this close mobile-to-mobile case points first to direct desensitization of the receivers.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-01"
+    },
+    {
+      "type": "question",
+      "id": "B-008-001-009"
+    }
+  ],
+  "licenseClass": "original"
+}

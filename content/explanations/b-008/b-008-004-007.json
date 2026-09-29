@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-004-007",
+  "questionId": "B-008-004-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-004-007.\n\nWhy the correct answer is right: The affected TV channel range lines up with a harmonic of the amateur transmission, and other channels are not affected. That selective symptom points to harmonic emission.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"No high-pass filter on the TV\": A missing high-pass filter on the TV would be a receiver-overload issue and would usually be less tied to only one harmonic-related channel.\n- sourceIndex 2: \"No high-pass filter at your transmitter\": A high-pass filter at the transmitter would block the wanted HF output; transmitter output harmonic reduction uses low-pass filtering.\n- sourceIndex 3: \"Front-end overload of the TV\": Front-end overload of the TV would tend to affect more than one harmonic-related channel and follow strong-signal level rather than a precise multiple.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-02"
+    },
+    {
+      "type": "question",
+      "id": "B-008-004-007"
+    }
+  ],
+  "licenseClass": "original"
+}

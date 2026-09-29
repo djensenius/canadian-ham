@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-001-006",
+  "questionId": "B-008-001-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-001-006.\n\nWhy the correct answer is right: When strong signals combine in a non-linear place and create energy on another frequency, the result is intermodulation. The desired frequency can be polluted even though neither transmitter is actually assigned there.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Spurious emissions\": Spurious emissions are unwanted outputs from a transmitter; the wording here says two signals combine, which is the mixing process of intermodulation.\n- sourceIndex 2: \"Receiver overload\": Receiver overload is a broader strong-signal condition; the specific creation of a product from two signals is intermodulation.\n- sourceIndex 3: \"Harmonic emissions\": Harmonics are integer multiples of one signal, not sum-and-difference products from two commercial transmitters.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-01"
+    },
+    {
+      "type": "question",
+      "id": "B-008-001-006"
+    }
+  ],
+  "licenseClass": "original"
+}

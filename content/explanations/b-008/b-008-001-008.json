@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-008-001-008",
+  "questionId": "B-008-001-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-008-001-008.\n\nWhy the correct answer is right: Two or more strong signals mixing in a receiver and producing a new unwanted signal is intermodulation interference.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Harmonic interference\": Harmonic interference involves integer multiples of a fundamental frequency, not mixing between two or more strong signals in the receiver.\n- sourceIndex 2: \"Capture effect\": Capture effect is an FM behaviour where the stronger of two same-channel signals dominates; it is not a new mixed product.\n- sourceIndex 3: \"Front-end desensitization\": Front-end desensitization reduces receiver sensitivity; it does not specifically name the new signal created by mixing.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-008-01"
+    },
+    {
+      "type": "question",
+      "id": "B-008-001-008"
+    }
+  ],
+  "licenseClass": "original"
+}
