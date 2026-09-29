@@ -114,7 +114,11 @@ FM carries audio by changing the carrier frequency around its assigned channel. 
 
 Phase modulation is closely related to FM because changing phase over time changes instantaneous frequency. Both are angle-modulation methods, unlike AM where the carrier amplitude changes.
 
-For repeaters and local channels, the transmitter deviation should match the system. Too little deviation sounds quiet at the far end. Too much deviation sounds loud, rough, or distorted, and can occupy more spectrum than the channel expects. A normal voice-deviation FM signal occupies a channel much wider than the deviation number alone, so plan for a many-kilohertz channel rather than a narrow sliver. Wide voice FM is not used below 28 MHz in amateur service because its occupied bandwidth would exceed regulatory limits there. Speaking very close to the microphone can cause overdeviation even if the frequency is exactly right.
+For repeaters and local channels, the transmitter deviation should match the system. Too little deviation sounds quiet at the far end. Too much deviation sounds loud, rough, or distorted, and can occupy more spectrum than the channel expects. A normal voice-deviation FM signal occupies a channel much wider than the deviation number alone, so plan for a many-kilohertz channel rather than a narrow sliver.
+
+Text formula: FM bandwidth by Carson's rule ≈ 2 × (peak deviation + highest audio frequency).
+
+For example, 2.5 kHz deviation with 3 kHz audio estimates to about 2 × (2.5 + 3) = 11 kHz. Higher deviation produces a still wider channel by the same formula. Below 28 MHz, amateur voice channels are planned around narrower modes such as SSB; reserve wide FM for band segments where a many-kilohertz channel is allowed. Speaking very close to the microphone can cause overdeviation even if the frequency is exactly right.
 
 An FM receiver often has high gain before the discriminator. With no usable signal present, that gain makes the speaker noise loud unless squelch mutes it. FM is popular for local VHF/UHF work because, above threshold, it can provide good signal-to-noise performance at modest received signal levels. When multiple FM signals are present, the receiver tends to demodulate the strongest one; this is the capture effect.
 
@@ -157,3 +161,4 @@ Description: Draw an original three-panel teaching graphic. Panel one shows a CW
 - SSB needs linear amplification and conservative microphone gain so voice peaks do not overdrive the transmitter.
 - PEP describes power at the crest of a modulated RF envelope, and ALC helps keep peaks inside the clean range.
 - FM audio level is controlled by deviation and microphone technique; too little sounds quiet, while too much sounds distorted and wide.
+- Carson's rule estimates FM bandwidth as about 2 × (peak deviation + highest audio frequency), so voice FM needs a many-kilohertz channel.

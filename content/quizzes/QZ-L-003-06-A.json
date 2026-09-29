@@ -14,36 +14,126 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-06-A-C1",
-      "prompt": { "en": "A hands-free station does not key from room noise, but the first syllable of each reply is missing before transmit starts. Which control area is the best first check?", "fr": null },
+      "prompt": {
+        "en": "In hands-free testing, the desk fan sometimes starts transmit and the first syllable of real speech is clipped. Which change would NOT address either problem?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "VOX sensitivity and timing for earlier voice-operated switching", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Lower VOX sensitivity so only louder speech can key the transmitter", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Lengthening only the VOX release delay after speech stops", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Maximum speech processing to raise average SSB power", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Set the voice trigger threshold high enough to ignore the fan, then retest the start of words",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Use timing or anti-trip controls so speech starts promptly but room noise does not hold transmit",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Monitor test transmissions into a dummy load before relying on hands-free operation",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Add maximum speech processing to raise average SSB output",
+            "fr": null
+          },
+          "isCorrect": true
+        }
       ],
-      "explanation": { "en": "Clipped first syllables point to VOX start sensitivity or timing; release delay and speech processing do not make transmit start sooner.", "fr": null }
+      "explanation": {
+        "en": "False trips and clipped starts are switching-threshold and timing problems. Speech processing changes audio density, not when transmit starts or stops.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-003-06-A-C2",
-      "prompt": { "en": "An emergency packet link must either deliver a shelter supply list correctly or report that it failed. Which feature provides that reliability?", "fr": null },
+      "prompt": {
+        "en": "Two packet links both detect a bad frame. Link A logs the error and continues; Link B asks for the frame again until it passes a check or retries run out. For a short form that must not be silently corrupted, which conclusion is best?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Automatic repeat requests for damaged or missing frames", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Turning off acknowledgements so messages move faster", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Adding speech compression to the packet audio", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Forwarding every packet to an internet gateway", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Link A is preferable because skipping acknowledgements prevents all message loss",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Link B is preferable because a damaged frame can be replaced instead of only noticed",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "The links are equivalent because detecting an error automatically repairs the data",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Link B works by turning the form into analog FM audio between retries",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "ARQ-style repeat requests let a packet system correct bad frames or report failure instead of silently losing the message.", "fr": null }
+      "explanation": {
+        "en": "Detection-only systems can know something went wrong, but a repeat-request exchange can obtain a clean copy or stop after the retry limit.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-003-06-A-C3",
-      "prompt": { "en": "On a busy digital HF segment, many FT8 traces fit inside the space one SSB voice signal would use. What property makes that possible?", "fr": null },
+      "prompt": {
+        "en": "A digital subband receiver shows a 2.5 kHz slice. If each weak-signal trace is about 50 Hz wide and you reserve roughly 200 Hz total for guard space, what is the closest planning estimate before practical spacing limits?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Each FT8 signal occupies a very narrow bandwidth", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Every FT8 station transmits on exactly the same audio tone", "fr": null }, "isCorrect": false },
-        { "text": { "en": "FT8 uses the same 2 kHz to 3 kHz audio width as SSB voice", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Receiver DSP removes all overlap between wide digital signals", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "About 4 traces",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "About 10 traces",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "About 46 traces",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "About 2,500 traces",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "FT8 contacts can be packed closely because each individual signal is narrow; they are not full-width SSB voice signals.", "fr": null }
+      "explanation": {
+        "en": "Subtract the guard allowance, then divide by signal width: (2,500 - 200) / 50 ≈ 46. Real operation still leaves spacing for filters, drift, and courtesy.",
+        "fr": null
+      }
     }
   ]
 }

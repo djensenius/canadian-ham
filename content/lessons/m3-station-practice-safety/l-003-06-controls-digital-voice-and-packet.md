@@ -80,7 +80,7 @@ Analog information varies smoothly. A microphone voltage rising and falling with
 
 Digital voice is not magic analog voice with a different label. A vocoder samples and encodes speech, the transmitter sends digital symbols, and the receiver reconstructs audio from the decoded data. If the link becomes too weak, digital voice may sound broken or disappear instead of fading smoothly like analog FM.
 
-Narrow digital modes are one reason digital operation can share spectrum efficiently. FT8 signals are very narrow, so many FT8 contacts can fit in the bandwidth of one SSB voice signal, and FT8 is designed to decode at very low signal-to-noise ratios. RTTY is wider than the very narrow weak-signal modes, so leave practical centre-to-centre spacing such as 250 Hz to 500 Hz from an RTTY contact already in progress.
+Narrow digital modes are one reason digital operation can share spectrum efficiently. An FT8 transmission is roughly 50 Hz wide; a 2.4 kHz to 3 kHz SSB voice channel is dozens of those slices before guard spacing and tuning accuracy are considered. FT8 is also designed with synchronized, structured exchanges that can decode at very low signal-to-noise ratios. RTTY is wider than the very narrow weak-signal modes: a common signal uses about 170 Hz shift plus filtering and sidebands, so practical centre-to-centre spacing is a few hundred hertz rather than just a tone-width.
 
 ### Worked example: choosing a mode for a weak path
 
@@ -90,7 +90,7 @@ A portable station wants to exchange short grid and signal information through a
 
 Packet radio sends data in framed chunks. A packet network connects stations so messages can move beyond one direct path. A digipeater receives digital packets and retransmits those marked to be forwarded. That is different from a voice repeater that demodulates and retransmits analog FM audio.
 
-Some digital protocols use automatic repeat request, or ARQ. The receiver can detect a missing or damaged frame and request a repeat, so retransmission provides error correction. The system can either deliver the message correctly or tell the user that delivery failed. That reliable delivery-or-failure notice is one reason packet-style systems are useful in emergency communications.
+Some digital protocols use automatic repeat request, or ARQ. The receiver can detect a missing or damaged frame and request a repeat, so retransmission provides error correction. Instead of letting a corrupted frame pass silently, the link either obtains a clean copy within its retry limit or stops and reports the problem. That failure-visible behaviour is one reason packet-style systems are useful when message accuracy matters.
 
 Sound-card digital modes use audio from a computer or interface to drive the transmitter. Excessive audio has the same bad result as excessive SSB microphone gain: splatter and out-of-channel emissions. Keep compression off unless a mode's instructions require otherwise, set the audio so the transmitter is not being overdriven, and ask a nearby station for a clean-signal report rather than only a decode report.
 
@@ -107,11 +107,11 @@ A decoded message does not prove the transmitted signal was spectrally clean.
 
 ## Try it
 
-1. A paddle operator sends uneven Morse when tired. Which accessory can help regulate dit and dah timing? An electronic keyer, because it controls element lengths after the operator moves the paddle.
+1. You double your keyer speed before you can space characters steadily. Why might copy get worse even though the keyer makes uniform elements? The keyer controls dit and dah lengths, but the operator still has to leave readable character and word spacing.
 2. A headset triggers transmit whenever the desk fan starts. Which control area should you revisit? VOX sensitivity and delay, because room noise is falsely keying the transmitter.
 3. A mobile receiver hears sharp clicking bursts from a nearby motor. Is DSP noise reduction or a noise blanker the better first experiment? Try the noise blanker first because the problem is short impulse noise.
 4. Why can a digital radio system send pictures as well as typed text? Pictures can be converted into digital values and sent as data symbols.
-5. A packet message must be delivered accurately, not just heard once. What does ARQ add? It allows repeat requests so damaged data can be corrected or reported as failed.
+5. A data link detects a checksum failure but has no repeat-request step. Explain why the receiving software should not simply display the damaged frame as if it were valid. Detection only proves the copy is suspect; without a clean repeat, the safe result is to reject it and show a failure.
 
 ## Radio connection
 

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-015-006.\n\nWhy the correct answer is right: FT8 is designed for weak-signal decoding and can work at a lower signal-to-noise ratio in a 2500 Hz reference bandwidth than these other listed modes.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"PSK31\": PSK31 is narrow and efficient, but it generally does not decode as far below the noise as FT8.\n- sourceIndex 2: \"RTTY\": RTTY is an older, wider-shift mode and normally needs a stronger signal-to-noise ratio than FT8.\n- sourceIndex 3: \"CW\": CW is effective for weak signals with skilled operators, but among these choices FT8 is specified for the lowest SNR.",
+    "en": "Question B-003-015-006.\n\nWhy the correct answer is right: FT8 is designed for weak-signal decoding and can work at a lower signal-to-noise ratio in a 2500 Hz reference bandwidth than these other listed modes.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"PSK31\": PSK31 is narrow and efficient for keyboard contacts, but it does not use FT8's synchronized weak-signal exchange and generally needs a stronger path.\n- sourceIndex 2: \"RTTY\": RTTY is an older, wider-shift mode and normally needs a stronger signal-to-noise ratio than FT8.\n- sourceIndex 3: \"CW\": CW can be excellent for weak-signal work with narrow filters and a skilled operator, but in the stated 2500 Hz reference bandwidth the listed digital weak-signal mode is designed to decode lower in the noise.",
     "fr": null
   },
   "citations": [

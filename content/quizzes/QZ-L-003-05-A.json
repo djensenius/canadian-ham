@@ -14,36 +14,126 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-05-A-C1",
-      "prompt": { "en": "After replacing a crystal oscillator with a VFO in a small CW transmitter, what operating habit best protects signal quality during a net?", "fr": null },
+      "prompt": {
+        "en": "A CW rig's carrier is steady when cold, then moves about 200 Hz upward as the cabinet warms; keying edges were already shaped. If the oscillator mounting and supply regulation are improved but the key-click filter is unchanged, what should change?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Let the oscillator stabilize and check that the transmit frequency stays put", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Make the keying edges as abrupt as possible for stronger dits", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Rely on the harmonic low-pass filter to stop oscillator drift", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Change Morse speed whenever the VFO tuning range is changed", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The RF note should stay nearer its starting frequency over time, while edge-click energy is about the same",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "The key-click sidebands should disappear, while long-term carrier movement is about the same",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The AM voice bandwidth should be cut in half because the carrier is steadier",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The harmonic output should rise because stable oscillators do not need low-pass filtering",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "A VFO adds tuning flexibility, but CW quality still depends on oscillator stability; filters and keying speed do not cure drift.", "fr": null }
+      "explanation": {
+        "en": "Improving oscillator stability predicts less frequency movement as the rig warms. Key-click shaping and harmonic filtering are separate signal-quality controls.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-003-05-A-C2",
-      "prompt": { "en": "A lower-sideband transmitter display is set to 4 180 kHz and a 500 Hz test tone is applied. Where should the RF tone appear?", "fr": null },
+      "prompt": {
+        "en": "During an SSB audio check, the ALC meter is pinned and a nearby receiver hears splatter on adjacent frequencies. Which action would NOT help clean up the signal?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "4 180.500 kHz", "fr": null }, "isCorrect": false },
-        { "text": { "en": "4 179.500 kHz", "fr": null }, "isCorrect": true },
-        { "text": { "en": "3 680.000 kHz", "fr": null }, "isCorrect": false },
-        { "text": { "en": "4 179.000 kHz", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Reduce microphone gain until voice peaks stay within the recommended ALC range",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Back off speech processing and compare reports before raising it again",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Increase speech processing until average output rises further",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Ask a nearby station whether the transmitted audio is clean, not just loud",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "For lower sideband, subtract the audio frequency: 500 Hz is 0.500 kHz, so 4 180 - 0.500 = 4 179.500 kHz.", "fr": null }
+      "explanation": {
+        "en": "Pinned ALC and splatter call for less drive or processing and a clean-audio report. More processing raises average output and can make the signal wider.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-003-05-A-C3",
-      "prompt": { "en": "A club plans a voice contact on a band below 28 MHz and considers using wide FM because it sounds good on VHF. What is the reason to choose a narrower voice mode instead?", "fr": null },
+      "prompt": {
+        "en": "A band-plan note says an 80 m voice slot should stay near 3 kHz, while a 10 m channel can accept a many-kilohertz FM signal. A 2.5 kHz-deviation FM signal with 3 kHz audio estimates to about 11 kHz by 2 x (deviation + audio). Which plan fits both slots?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Wide FM would occupy too much bandwidth for that part of the spectrum", "fr": null }, "isCorrect": true },
-        { "text": { "en": "FM transmitters cannot use stable oscillators below 28 MHz", "fr": null }, "isCorrect": false },
-        { "text": { "en": "FM final amplifiers always waste more heat than SSB amplifiers", "fr": null }, "isCorrect": false },
-        { "text": { "en": "FM sidebands cannot be filtered for harmonics on HF", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Put the 11 kHz FM signal in the 80 m slot and use SSB on 10 m",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Use SSB for the 80 m slot and reserve that FM setup for the 10 m channel",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Use the same FM setup in both slots because deviation is less than 3 kHz",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Turn down the FM microphone until the occupied bandwidth is exactly 3 kHz",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "The limiting issue is occupied bandwidth: wide voice FM needs more spectrum than is permitted below 28 MHz.", "fr": null }
+      "explanation": {
+        "en": "The two-step check is bandwidth first, then band choice: a many-kilohertz FM voice signal does not fit a narrow HF voice slot, while SSB does.",
+        "fr": null
+      }
     }
   ]
 }
