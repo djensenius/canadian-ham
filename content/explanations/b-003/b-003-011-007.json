@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-011-007.\n\nWhy the correct answer is right: AM has upper and lower sidebands, so audio limited to 3 kHz occupies about 2 x 3 kHz = 6 kHz when clean.\n\nPer-choice notes:\n- sourceIndex 0: \"6 kHz\": This is the correct choice because AM has upper and lower sidebands, so audio limited to 3 kHz occupies about 2 x 3 kHz = 6 kHz when clean.\n- sourceIndex 1: \"3 kHz\": This counts only one sideband. AM has an upper and lower sideband, so the audio limit must be doubled.\n- sourceIndex 2: \"12 kHz\": This doubles the already doubled bandwidth. The trace is 2 x 3 kHz, not 4 x 3 kHz.\n- sourceIndex 3: \"9 kHz\": This adds one extra audio-frequency span instead of accounting for the two equal sidebands.",
+    "en": "Question B-003-011-007.\n\nWhy the correct answer is right: A clean AM signal has an upper and a lower sideband, each extending to the highest audio frequency, so 2 × 3 kHz = 6 kHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"3 kHz\": This counts only one sideband's width from the carrier and forgets the matching sideband on the other side.\n- sourceIndex 2: \"12 kHz\": This doubles the correct two-sideband result again; AM bandwidth is twice the highest audio frequency, not four times it.\n- sourceIndex 3: \"9 kHz\": This adds an extra 3 kHz segment even though the two sidebands already account for the occupied width.",
     "fr": null
   },
   "citations": [

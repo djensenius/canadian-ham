@@ -14,36 +14,126 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-05-A-C1",
-      "prompt": { "en": "A CW signal has a steady pitch but produces sharp ticks on nearby receiver frequencies whenever the key is pressed. What should be investigated first?", "fr": null },
+      "prompt": {
+        "en": "A CW rig's carrier is steady when cold, then moves about 200 Hz upward as the cabinet warms; keying edges were already shaped. If the oscillator mounting and supply regulation are improved but the key-click filter is unchanged, what should change?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Keying waveform shaping or a key-click filter", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A higher RF power setting", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Changing from a VFO to a crystal only", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A lower speaker volume at the receiving station", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "The RF note should stay nearer its starting frequency over time, while edge-click energy is about the same",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "The key-click sidebands should disappear, while long-term carrier movement is about the same",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "The oscillator should lose its tuning range because better stability turns a VFO into fixed crystal channels",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Harmonic suppression should improve automatically, so the low-pass filter becomes unnecessary",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "Sharp nearby ticks are a keying-edge problem, so shaping or click filtering is the first area to check.", "fr": null }
+      "explanation": {
+        "en": "Improving oscillator stability predicts less frequency movement as the rig warms. Key-click shaping and harmonic filtering are separate signal-quality controls.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-003-05-A-C2",
-      "prompt": { "en": "A lower-sideband transmitter display is set to 4 180 kHz and a 500 Hz test tone is applied. Where should the RF tone appear?", "fr": null },
+      "prompt": {
+        "en": "During an SSB audio check, the ALC meter is pinned and a nearby receiver hears splatter on adjacent frequencies. Which action would NOT help clean up the signal?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "4 180.500 kHz", "fr": null }, "isCorrect": false },
-        { "text": { "en": "4 179.500 kHz", "fr": null }, "isCorrect": true },
-        { "text": { "en": "3 680.000 kHz", "fr": null }, "isCorrect": false },
-        { "text": { "en": "4 179.000 kHz", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Reduce microphone gain until voice peaks stay within the recommended ALC range",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Back off speech processing and compare reports before raising it again",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Increase speech processing until average output rises further",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Lower the audio drive so limiting only occurs within the manufacturer's recommended range",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "For lower sideband, subtract the audio frequency: 500 Hz is 0.500 kHz, so 4 180 - 0.500 = 4 179.500 kHz.", "fr": null }
+      "explanation": {
+        "en": "Pinned ALC and splatter call for less drive or processing and a clean-audio report. More processing raises average output and can make the signal wider.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-003-05-A-C3",
-      "prompt": { "en": "Several repeater users say your FM signal is strong but your voice sounds rough after you moved the microphone closer. What is the best first correction?", "fr": null },
+      "prompt": {
+        "en": "A band-plan note says an 80 m voice slot should stay near 3 kHz, while a 10 m channel can accept a many-kilohertz FM signal. A station plans 3.0 kHz peak deviation with 2.7 kHz audio. Using Carson's rule first, which plan fits both slots?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Increase transmitter output power", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Change antenna polarization", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Back away from the microphone or reduce transmit audio", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Open the receiver squelch farther", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Put the FM signal in the 80 m slot because the 3.0 kHz deviation number is close to the slot width",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Use SSB for the 80 m slot and reserve that FM setup for the 10 m channel because the estimate is about 11.4 kHz",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "Estimate about 5.7 kHz by adding deviation and audio but forgetting to double, then use FM in the 10 m channel only because it is under 6 kHz",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Use the FM setup in the 80 m slot after a clear audio report, without rechecking occupied bandwidth",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "A strong FM signal with rough audio after close talking points to overdeviation or excessive microphone audio, not RF path weakness.", "fr": null }
+      "explanation": {
+        "en": "The two-step check is bandwidth first, then band choice: 2 x (3.0 + 2.7) is about 11.4 kHz, so that FM voice signal does not fit a narrow HF voice slot, while SSB does.",
+        "fr": null
+      }
     }
   ]
 }

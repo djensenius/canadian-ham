@@ -14,36 +14,126 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-06-A-C1",
-      "prompt": { "en": "A station's VOX starts transmitting when a fan turns on across the room. Which adjustment area best matches the symptom?", "fr": null },
+      "prompt": {
+        "en": "In hands-free testing, the desk fan sometimes starts transmit and the first syllable of real speech is clipped. Which change would NOT address either problem?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "The receiver noise blanker threshold", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The antenna rotator calibration", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The VOX sensitivity and delay settings", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The packet network route list", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Set the voice trigger threshold high enough to ignore the fan, then retest the start of words",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Move the fan away from or behind the microphone's pickup pattern",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Use a closer directional headset microphone so speech is stronger than nearby fan noise",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Add maximum speech processing to raise average SSB output",
+            "fr": null
+          },
+          "isCorrect": true
+        }
       ],
-      "explanation": { "en": "VOX keys from detected audio, so accidental transmit from room noise calls for VOX sensitivity and timing adjustments.", "fr": null }
+      "explanation": {
+        "en": "False trips and clipped starts are VOX trigger, timing, or acoustic-pickup problems. Moving the fan or improving the microphone pickup can change what trips VOX; speech processing changes audio density, not when transmit starts or stops.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-003-06-A-C2",
-      "prompt": { "en": "A digital-mode signal decodes locally but shows extra side traces on a nearby waterfall display. What is the clean-signal fix?", "fr": null },
+      "prompt": {
+        "en": "Two packet links both detect a bad frame. Link A logs the error and continues; Link B asks for the frame again until it passes a check or retries run out. For a short form that must not be silently corrupted, which conclusion is best?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Raise computer audio until ALC is always active", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Reduce sound-card/interface drive and recheck for splatter", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Switch the receiver to a wider filter", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Add more receive DSP noise reduction", "fr": null }, "isCorrect": false }
+        {
+          "text": {
+            "en": "Link A is preferable because fewer repeats are faster even if a bad frame is kept",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Link B is preferable because a damaged frame can be replaced instead of only noticed",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "The links are equivalent because detecting an error automatically repairs the data",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "Link B is worse because retries erase the receiver's ability to detect errors",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "Extra traces beside the wanted digital signal are an overdrive clue; backing down transmit audio is the right first correction.", "fr": null }
+      "explanation": {
+        "en": "Detection-only systems can know something went wrong, but a repeat-request exchange can obtain a clean copy or stop after the retry limit.",
+        "fr": null
+      }
     },
     {
       "id": "QZ-L-003-06-A-C3",
-      "prompt": { "en": "A packet station hears a frame that requests forwarding through its callsign alias. What block-level action describes digipeater operation?", "fr": null },
+      "prompt": {
+        "en": "A digital subband receiver shows a 2.5 kHz slice. If each weak-signal trace is about 50 Hz wide and you reserve roughly 200 Hz total for guard space, what is the closest planning estimate before practical spacing limits?",
+        "fr": null
+      },
       "choices": [
-        { "text": { "en": "Convert the packet to analog FM speech", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Reject all frames unless connected to the internet", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Compress the audio for higher average SSB power", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Retransmit the marked digital frame", "fr": null }, "isCorrect": true }
+        {
+          "text": {
+            "en": "About 23 traces",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "About 50 traces",
+            "fr": null
+          },
+          "isCorrect": false
+        },
+        {
+          "text": {
+            "en": "About 46 traces",
+            "fr": null
+          },
+          "isCorrect": true
+        },
+        {
+          "text": {
+            "en": "About 2,300 traces",
+            "fr": null
+          },
+          "isCorrect": false
+        }
       ],
-      "explanation": { "en": "A digipeater is a digital relay: it forwards packets marked for retransmission, rather than changing them into analog voice.", "fr": null }
+      "explanation": {
+        "en": "Subtract the guard allowance, then divide by signal width: (2,500 - 200) / 50 ≈ 46. Real operation still leaves spacing for filters, drift, and courtesy.",
+        "fr": null
+      }
     }
   ]
 }

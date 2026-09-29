@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-012-010.\n\nWhy the correct answer is right: Lower sideband places the tone below the displayed carrier setting; 1000 Hz is 1 kHz, so 7100 kHz - 1 kHz = 7099 kHz.\n\nPer-choice notes:\n- sourceIndex 0: \"7099 kHz\": This is the correct choice because lower sideband places the tone below the displayed carrier setting; 1000 Hz is 1 kHz, so 7100 kHz - 1 kHz = 7099 kHz.\n- sourceIndex 1: \"7101 kHz\": That is the upper-sideband result: 7100 kHz + 1 kHz. Lower sideband subtracts the audio frequency.\n- sourceIndex 2: \"6100 kHz\": This subtracts 1000 kHz instead of 1000 Hz. The tone is 1 kHz, so the shift is only 1 kHz.\n- sourceIndex 3: \"8100 kHz\": This adds 1000 kHz instead of subtracting 1 kHz; it confuses hertz with kilohertz and the sideband direction.",
+    "en": "Question B-003-012-010.\n\nWhy the correct answer is right: On lower sideband, the RF tone appears below the suppressed carrier setting; 1000 Hz is 1 kHz, so 7100 kHz - 1 kHz = 7099 kHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"7101 kHz\": This adds the 1 kHz tone as if the transmitter were using upper sideband.\n- sourceIndex 2: \"6100 kHz\": This subtracts 1000 kHz instead of converting 1000 Hz to 1 kHz.\n- sourceIndex 3: \"8100 kHz\": This adds 1000 kHz instead of converting the tone to 1 kHz and using the lower-sideband direction.",
     "fr": null
   },
   "citations": [
