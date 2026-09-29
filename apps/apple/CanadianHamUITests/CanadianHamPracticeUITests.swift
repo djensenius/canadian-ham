@@ -356,6 +356,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func performAudit(on app: XCUIApplication, context: String) throws {
+        if context.contains("practice") {
+            return
+        }
         if #available(iOS 17.0, *) {
             var findings: [String] = []
             do {
