@@ -104,9 +104,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let app = launchApp(arguments: ["-CanadianHamInitialScreen", "mock"])
         XCTAssertTrue(app.staticTexts["Mock exam"].waitForExistence(timeout: 10))
         scrollAndTap("Exam reference sheet", in: app)
-        let done = app.buttons["Done"].firstMatch
-        XCTAssertTrue(done.waitForExistence(timeout: 10), "Quick Look should open the bundled exam reference PDF")
-        done.tap()
+        let close = app.buttons["close"].firstMatch
+        XCTAssertTrue(close.waitForExistence(timeout: 10), "Quick Look should open the bundled exam reference PDF")
+        close.tap()
         XCTAssertTrue(app.staticTexts["Mock exam"].waitForExistence(timeout: 5))
     }
 
@@ -466,8 +466,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
         scrollAndTap("Submit exam", in: app)
         submitMockExamAlert(in: app)
         assertMockExamResultVisible(in: app)
-        app.scrollViews.firstMatch.swipeUp()
-        waitBriefly()
         try performAudit(on: app, context: "\(appearance.rawValue) mock exam results")
         app.terminate()
     }
