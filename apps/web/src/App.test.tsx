@@ -274,6 +274,19 @@ describe("App accessibility and flows", () => {
     await user.click(screen.getByRole("button", { name: "Mark lesson read" }));
     await waitFor(async () => assert.equal((await store.getLessonProgress()).length, 1));
     await expectNoAxeViolations(container);
+
+    cleanup();
+    window.location.hash = "#/learn/M6/L-006-03";
+    const codeStore = createStore("lesson-code-block");
+    const codeRender = render(<App store={codeStore} now={() => fixedNow} seedFactory={() => "lesson-code-seed"} />);
+
+    await screen.findByRole("heading", { name: "Polarization, dipoles, and wavelength" });
+    const codeBlocks = screen.getAllByRole("group", { name: "Lesson code block (text)" });
+    assert.ok(codeBlocks.length >= 2);
+    assert.equal(codeBlocks[0]?.tagName, "PRE");
+    assert.equal(codeBlocks[0]?.getAttribute("tabindex"), "0");
+    assert.match(codeBlocks[0]?.textContent ?? "", /wavelength in metres = 300 \/ frequency in MHz/);
+    await expectNoAxeViolations(codeRender.container);
   });
 
   it("automatically includes M4 and M6 lessons from content and renders them", async () => {

@@ -1005,6 +1005,7 @@ input[type="checkbox"]:checked::after {
 .lesson-article > ul,
 .lesson-article > ol,
 .lesson-article > .markdown-table-wrapper,
+.lesson-article > .markdown-code-block,
 .lesson-article > .illustration-placeholder {
   margin-block-end: var(--ch-space-lg);
 }
@@ -1045,6 +1046,30 @@ input[type="checkbox"]:checked::after {
 .markdown-table-wrapper th {
   background: var(--ch-color-paper-inset);
   font-weight: 800;
+}
+
+.markdown-code-block {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: var(--ch-space-lg);
+  border: 1px solid var(--ch-color-border);
+  border-radius: var(--ch-radius-md);
+  background: var(--ch-color-paper-inset);
+  color: var(--ch-color-ink);
+  font-family: var(--ch-font-mono);
+  font-size: 0.95em;
+  line-height: 1.5;
+  white-space: pre;
+}
+
+.markdown-code-block:focus-visible {
+  outline: 3px solid var(--ch-color-focus);
+  outline-offset: 3px;
+}
+
+.markdown-code-block code {
+  color: inherit;
+  font: inherit;
 }
 
 .illustration-placeholder__art {
