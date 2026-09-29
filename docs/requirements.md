@@ -5,7 +5,7 @@
 The product ships as:
 
 1. An interactive static web app.
-2. A native offline Apple app built with SwiftUI for iPhone, iPad, and Mac.
+2. Native offline Apple apps built with SwiftUI for iPhone, iPad, Mac, visionOS, and tvOS.
 
 The Apple app must work fully offline and collect no data. The web app must also avoid accounts, analytics, third-party requests, and server-side storage.
 
@@ -27,7 +27,7 @@ Authoritative exam and bank facts live in [exam-facts.md](exam-facts.md). Archit
 
 - No Advanced qualification course.
 - No Morse trainer.
-- No watchOS, visionOS, or tvOS app.
+- No watchOS companion app.
 - No social features, leaderboards, comments, or instructor dashboards.
 - No paid account system or remote sync.
 - No server-rendered dynamic application backend.
@@ -71,7 +71,7 @@ Needs:
 | DEC-WEB-001 | The web app is fully static: no server, no accounts, no analytics, no third-party requests, and self-hosted fonts/assets. | Supports privacy, low hosting cost, and offline PWA. |
 | DEC-WEB-002 | Use Vite + React + TypeScript for the static web app, with pnpm as the package manager. | Owner confirmed this stack on 2026-09-28; it is straightforward for interactive quizzes and the planned offline PWA. |
 | DEC-TOOLING-001 | Run importer and content tooling as TypeScript directly in Node using Node >= 23.6 type stripping; use `node:test`; keep the importer at zero runtime dependencies. | Owner confirmed this on 2026-09-28; the development machine has Node 26, and the importer should stay small and reproducible. |
-| DEC-APPLE-001 | Apple app is SwiftUI multiplatform for iOS, iPadOS, and macOS first. | Native offline UX, shared SwiftUI code, and no watchOS/visionOS/tvOS scope. |
+| DEC-APPLE-001 | Apple app is SwiftUI multiplatform for iOS, iPadOS, macOS, visionOS 2.0+, and tvOS 18.0+ in v1; watchOS remains later. | Native offline UX, shared SwiftUI code, owner-approved platform expansion, and platform-appropriate layouts/focus/windowing. |
 | DEC-APPLE-002 | Use SwiftData for local progress. | Native local persistence with no remote service. |
 | DEC-APPLE-003 | No third-party SDKs, no networking code, and no iCloud sync in v1. | Minimizes privacy risk and supports App Store Data Not Collected. iCloud sync may be reconsidered later only with a privacy review. |
 | DEC-BILINGUAL-001 | Schema stores English and French from day one. UI ships English first; French UI comes in P6 using official ISED French question text. | Avoids schema migration later and prevents unofficial translations of ISED questions. |
@@ -159,7 +159,8 @@ The system shall render lessons from platform-neutral Markdown and JSON front ma
 
 Acceptance criteria:
 
-- A lesson has stable ID, title, language, module, covered subsections, prerequisites, estimated minutes, and quiz references.
+- A lesson has stable ID, title, language, module ID, covered subsections, prerequisites, estimated minutes, and quiz references.
+- Module front matter has stable ID, category ID, required unique `order` (1-8), title, lesson IDs, and status.
 - Web and Apple apps can render the same lesson body and metadata.
 - Lesson navigation supports previous, next, and module overview.
 
@@ -267,7 +268,7 @@ Acceptance criteria:
 
 #### REQ-EXAM-003: Exam timer
 
-Mock exams shall have an optional timer that defaults off until the real exam time limit is verified.
+Mock exams shall have an optional timer that defaults off.
 
 Acceptance criteria:
 
@@ -322,13 +323,13 @@ Acceptance criteria:
 
 #### REQ-APPLE-001: SwiftUI multiplatform app
 
-The Apple app shall target iOS, iPadOS, and macOS first using SwiftUI.
+The Apple app shall target iOS, iPadOS, macOS, visionOS 2.0+, and tvOS 18.0+ using SwiftUI.
 
 Acceptance criteria:
 
 - Shared SwiftUI views cover lessons, practice, mock exams, progress, settings, and reference sheet viewer.
-- Platform-specific adaptations are limited to navigation, file import/export, and window layout.
-- watchOS, visionOS, and tvOS targets are absent in v1.
+- Platform-specific adaptations include navigation, file import/export, window layout, visionOS window/material/ornament conventions, and tvOS focus-engine navigation with large type and overscan-safe margins.
+- watchOS targets are absent in v1 and remain later.
 
 #### REQ-APPLE-002: Fully offline bundle
 
@@ -361,6 +362,40 @@ Acceptance criteria:
 - App Store privacy label can truthfully state Data Not Collected.
 - Verification follows [privacy.md](privacy.md).
 
+#### REQ-APPLE-005: Basic visionOS app
+
+The Apple app shall include a native visionOS 2.0+ window app in v1.
+
+Acceptance criteria:
+
+- Practice flow works offline in a native visionOS window.
+- English/French question display, about/attribution information, and privacy/no-data messaging are available in the visionOS app.
+- Layout follows [design.md](design.md) for warm paper surfaces within visionOS glass/material conventions, comfortable depth, ornaments where useful, and hover/focus effects that do not obscure text.
+- Accessibility follows the Definition of Done in [accessibility.md](accessibility.md).
+- Later parity SHOULD bring lessons, mock exams, progress dashboards, settings depth, and reference viewers to visionOS after the basic v1 window app is accepted.
+
+#### REQ-APPLE-006: Basic tvOS app
+
+The Apple app shall include a native tvOS 18.0+ app in v1.
+
+Acceptance criteria:
+
+- Practice flow works offline using tvOS focus-engine navigation.
+- English/French question display, about/attribution information, and privacy/no-data messaging are available in the tvOS app.
+- Layout follows [design.md](design.md) for a 10-foot UI: large type, clear focus, generous spacing, and overscan-safe margins.
+- Accessibility follows the Definition of Done in [accessibility.md](accessibility.md).
+- Later parity SHOULD bring lessons, mock exams, progress dashboards, settings depth, and reference viewers to tvOS after the basic v1 focus-engine app is accepted.
+
+#### REQ-APPLE-007: Layered app icons
+
+The product shall maintain source artwork and exports for Apple and web icons from the start.
+
+Acceptance criteria:
+
+- Icon sources are layered under `design/app-icon/src/` and documented in `design/app-icon/README.md`.
+- Apple exports include a flattened 1024 PNG for iOS/iPadOS/macOS, a visionOS 3-layer image stack, tvOS 2-5-layer image stacks plus Top Shelf images, and web favicon/touch/PWA PNGs.
+- Artwork follows [design.md](design.md): sumi-e black ink on warm cream, readable at 60 px, no remote assets.
+
 ### Privacy, offline, accessibility, and language
 
 #### REQ-PRIV-001: No accounts or telemetry
@@ -387,15 +422,17 @@ Acceptance criteria:
 
 #### REQ-A11Y-001: Accessibility baseline
 
-The apps shall be usable with common accessibility technologies.
+The apps shall be usable with common accessibility technologies and meet the Definition of Done in [accessibility.md](accessibility.md). Visual implementation follows [design.md](design.md).
 
 Acceptance criteria:
 
 - Interactive controls have accessible labels.
 - Question and answer review is reachable by keyboard on web and by VoiceOver on Apple platforms.
-- Text supports dynamic sizing where platform allows.
+- Text supports Dynamic Type on Apple and browser text zoom to 200% on web.
+- Web layouts reflow at 320 CSS px.
 - Colour is not the only indicator of correctness.
-- Mock exam timers, if enabled, have non-visual announcements.
+- Mock exam timers, if enabled, are optional/off by default, pauseable/extendable, and have polite non-visual announcements.
+- UI tasks satisfy the manual and automated checks specified in [accessibility.md](accessibility.md).
 
 #### REQ-I18N-001: Bilingual-ready data model
 
@@ -425,8 +462,8 @@ Acceptance criteria:
 
 ### Accessibility
 
-- Design for screen readers, keyboard navigation, dynamic type, sufficient contrast, and non-colour correctness cues.
-- Accessibility checks are a release gate in P6.
+- Design for screen readers, keyboard navigation, Dynamic Type/text zoom, sufficient contrast, and non-colour correctness cues from day one. See [design.md](design.md) and the Definition of Done in [accessibility.md](accessibility.md).
+- Accessibility checks are required for every UI task and remain a release gate.
 
 ### Performance
 
@@ -447,15 +484,15 @@ Acceptance criteria:
 - Advanced qualification course: later.
 - Morse 5 wpm trainer: later.
 - watchOS companion: later.
-- visionOS: later.
-- tvOS: out of scope unless later explicitly approved.
+- visionOS and tvOS are in v1 per DEC-APPLE-001.
+- Additional platform-specific advanced features beyond the basic native apps are later unless explicitly approved.
 - iCloud sync: not in v1; possible later only after privacy review.
 - Remote progress sync, instructor dashboards, accounts, leaderboards, analytics, ads: out of scope.
 - Legacy question banks: out of scope.
 
 ## Curriculum outline
 
-Every one of the 100 subsections must map to at least one lesson. The first outline uses subsection ranges until official subsection names are imported or authored.
+Every one of the 100 subsections must map to at least one lesson. Module front matter includes a required unique `order` field so apps can sort modules and lessons consistently. The first outline uses subsection ranges until official subsection names are imported or authored.
 
 | Module | Category | Planned lessons | Required subsection coverage |
 |---|---|---|---|

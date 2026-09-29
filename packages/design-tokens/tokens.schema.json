@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://canadian-ham.local/schemas/design-tokens.schema.json",
+  "title": "Canadian Ham design tokens",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "meta", "themes", "typography", "spacing", "radii", "motion", "contrastPairs"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "description"],
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+    "themes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["light", "dark"],
+      "properties": {
+        "light": { "$ref": "#/$defs/theme" },
+        "dark": { "$ref": "#/$defs/theme" }
+      }
+    },
+    "typography": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["families", "scale"],
+      "properties": {
+        "families": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "required": ["display", "body", "mono"]
+        },
+        "scale": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/typeStep" },
+          "minProperties": 1
+        }
+      }
+    },
+    "spacing": {
+      "type": "object",
+      "additionalProperties": { "type": "number", "minimum": 0 },
+      "minProperties": 1
+    },
+    "radii": {
+      "type": "object",
+      "additionalProperties": { "type": "number", "minimum": 0 },
+      "minProperties": 1
+    },
+    "motion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["durations", "easing"],
+      "properties": {
+        "durations": {
+          "type": "object",
+          "additionalProperties": { "type": "number", "minimum": 0 },
+          "minProperties": 1
+        },
+        "easing": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "minProperties": 1
+        }
+      }
+    },
+    "contrastPairs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/contrastPair" }
+    }
+  },
+  "$defs": {
+    "theme": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["colors"],
+      "properties": {
+        "colors": {
+          "type": "object",
+          "additionalProperties": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+          "minProperties": 1
+        }
+      }
+    },
+    "typeStep": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rem", "lineHeight", "appleTextStyle"],
+      "properties": {
+        "rem": { "type": "number", "exclusiveMinimum": 0 },
+        "lineHeight": { "type": "number", "exclusiveMinimum": 0 },
+        "appleTextStyle": {
+          "type": "string",
+          "enum": ["largeTitle", "title", "title2", "title3", "headline", "body", "callout", "subheadline", "footnote", "caption", "caption2"]
+        }
+      }
+    },
+    "contrastPair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "theme", "foreground", "background", "kind"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "theme": { "type": "string" },
+        "foreground": { "type": "string" },
+        "background": { "type": "string" },
+        "kind": { "type": "string", "enum": ["body", "large", "ui"] }
+      }
+    }
+  }
+}
