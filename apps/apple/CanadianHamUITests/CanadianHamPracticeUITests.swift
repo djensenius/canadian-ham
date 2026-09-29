@@ -167,7 +167,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         answerFirstVisibleAnswer(in: app)
         scrollAndTap("Submit for review", in: app)
         XCTAssertTrue(app.staticTexts["Practice review"].waitForExistence(timeout: 10))
-        XCTAssertTrue(anyVisibleLabel(in: app, contains: "Correct answer:"), "Practice review should show answer feedback after a review-later subsection session is submitted")
+        XCTAssertTrue(app.descendants(matching: .any)["answer-feedback"].firstMatch.waitForExistence(timeout: 5), "Practice review should show answer feedback after a review-later subsection session is submitted")
     }
 
     func testPracticeFlowSupportsLargestAccessibilityTextSize() throws {
