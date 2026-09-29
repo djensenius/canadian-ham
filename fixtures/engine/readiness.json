@@ -1,0 +1,1166 @@
+{
+  "schemaVersion": 1,
+  "kind": "readiness",
+  "cases": [
+    {
+      "id": "readiness-new-user-not-enough-data-and-due-count-zero",
+      "input": {
+        "completedExams": [],
+        "dueReviewCount": 0
+      },
+      "expectedOutput": {
+        "state": "not-enough-data",
+        "consideredExamCount": 0,
+        "consideredSubmittedAt": [],
+        "reasons": [
+          {
+            "type": "not-enough-exams",
+            "completedExamCount": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "readiness-one-exam-not-enough-data",
+      "input": {
+        "completedExams": [
+          {
+            "submittedAt": "2026-01-03T00:00:00Z",
+            "score": {
+              "correct": 95,
+              "total": 100,
+              "percent": 95
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          }
+        ],
+        "dueReviewCount": 0
+      },
+      "expectedOutput": {
+        "state": "not-enough-data",
+        "consideredExamCount": 1,
+        "consideredSubmittedAt": [
+          "2026-01-03T00:00:00Z"
+        ],
+        "reasons": [
+          {
+            "type": "not-enough-exams",
+            "completedExamCount": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "readiness-last-three-aggregation-ignores-older-exam",
+      "input": {
+        "completedExams": [
+          {
+            "submittedAt": "2026-01-05T00:00:00Z",
+            "score": {
+              "correct": 82,
+              "total": 100,
+              "percent": 82
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          },
+          {
+            "submittedAt": "2026-01-04T00:00:00Z",
+            "score": {
+              "correct": 81,
+              "total": 100,
+              "percent": 81
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          },
+          {
+            "submittedAt": "2026-01-03T00:00:00Z",
+            "score": {
+              "correct": 72,
+              "total": 100,
+              "percent": 72
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          },
+          {
+            "submittedAt": "2026-01-02T00:00:00Z",
+            "score": {
+              "correct": 40,
+              "total": 100,
+              "percent": 40
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 1,
+                "total": 10,
+                "percent": 10
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          }
+        ],
+        "dueReviewCount": 0
+      },
+      "expectedOutput": {
+        "state": "honours-ready",
+        "consideredExamCount": 3,
+        "consideredSubmittedAt": [
+          "2026-01-05T00:00:00Z",
+          "2026-01-04T00:00:00Z",
+          "2026-01-03T00:00:00Z"
+        ],
+        "reasons": [
+          {
+            "type": "exam-threshold",
+            "threshold": 80,
+            "countAtOrAbove": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "readiness-category-weakness-precedes-due-review",
+      "input": {
+        "completedExams": [
+          {
+            "submittedAt": "2026-01-05T00:00:00Z",
+            "score": {
+              "correct": 95,
+              "total": 100,
+              "percent": 95
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 6,
+                "total": 10,
+                "percent": 60
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          },
+          {
+            "submittedAt": "2026-01-04T00:00:00Z",
+            "score": {
+              "correct": 95,
+              "total": 100,
+              "percent": 95
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 7,
+                "total": 10,
+                "percent": 70
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          }
+        ],
+        "dueReviewCount": 5
+      },
+      "expectedOutput": {
+        "state": "needs-review",
+        "consideredExamCount": 2,
+        "consideredSubmittedAt": [
+          "2026-01-05T00:00:00Z",
+          "2026-01-04T00:00:00Z"
+        ],
+        "reasons": [
+          {
+            "type": "weak-categories",
+            "categoryIds": [
+              "B-003"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "readiness-due-review-precedes-pass-or-honours-ready",
+      "input": {
+        "completedExams": [
+          {
+            "submittedAt": "2026-01-05T00:00:00Z",
+            "score": {
+              "correct": 90,
+              "total": 100,
+              "percent": 90
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          },
+          {
+            "submittedAt": "2026-01-04T00:00:00Z",
+            "score": {
+              "correct": 88,
+              "total": 100,
+              "percent": 88
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          }
+        ],
+        "dueReviewCount": 5
+      },
+      "expectedOutput": {
+        "state": "needs-review",
+        "consideredExamCount": 2,
+        "consideredSubmittedAt": [
+          "2026-01-05T00:00:00Z",
+          "2026-01-04T00:00:00Z"
+        ],
+        "reasons": [
+          {
+            "type": "due-review",
+            "dueReviewCount": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "readiness-honours-ready-with-two-of-last-three-at-or-above-eighty",
+      "input": {
+        "completedExams": [
+          {
+            "submittedAt": "2026-01-05T00:00:00Z",
+            "score": {
+              "correct": 83,
+              "total": 100,
+              "percent": 83
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          },
+          {
+            "submittedAt": "2026-01-04T00:00:00Z",
+            "score": {
+              "correct": 79,
+              "total": 100,
+              "percent": 79
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          },
+          {
+            "submittedAt": "2026-01-03T00:00:00Z",
+            "score": {
+              "correct": 80,
+              "total": 100,
+              "percent": 80
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          }
+        ],
+        "dueReviewCount": 0
+      },
+      "expectedOutput": {
+        "state": "honours-ready",
+        "consideredExamCount": 3,
+        "consideredSubmittedAt": [
+          "2026-01-05T00:00:00Z",
+          "2026-01-04T00:00:00Z",
+          "2026-01-03T00:00:00Z"
+        ],
+        "reasons": [
+          {
+            "type": "exam-threshold",
+            "threshold": 80,
+            "countAtOrAbove": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "readiness-pass-ready-with-two-of-last-three-at-or-above-seventy",
+      "input": {
+        "completedExams": [
+          {
+            "submittedAt": "2026-01-05T00:00:00Z",
+            "score": {
+              "correct": 75,
+              "total": 100,
+              "percent": 75
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          },
+          {
+            "submittedAt": "2026-01-04T00:00:00Z",
+            "score": {
+              "correct": 79,
+              "total": 100,
+              "percent": 79
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          },
+          {
+            "submittedAt": "2026-01-03T00:00:00Z",
+            "score": {
+              "correct": 65,
+              "total": 100,
+              "percent": 65
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          }
+        ],
+        "dueReviewCount": 0
+      },
+      "expectedOutput": {
+        "state": "pass-ready",
+        "consideredExamCount": 3,
+        "consideredSubmittedAt": [
+          "2026-01-05T00:00:00Z",
+          "2026-01-04T00:00:00Z",
+          "2026-01-03T00:00:00Z"
+        ],
+        "reasons": [
+          {
+            "type": "exam-threshold",
+            "threshold": 70,
+            "countAtOrAbove": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "readiness-needs-review-when-exam-thresholds-not-met",
+      "input": {
+        "completedExams": [
+          {
+            "submittedAt": "2026-01-05T00:00:00Z",
+            "score": {
+              "correct": 69,
+              "total": 100,
+              "percent": 69
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          },
+          {
+            "submittedAt": "2026-01-04T00:00:00Z",
+            "score": {
+              "correct": 65,
+              "total": 100,
+              "percent": 65
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-002",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-003",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-004",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-005",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-006",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-007",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              },
+              {
+                "categoryId": "B-008",
+                "correct": 9,
+                "total": 10,
+                "percent": 90
+              }
+            ]
+          }
+        ],
+        "dueReviewCount": 0
+      },
+      "expectedOutput": {
+        "state": "needs-review",
+        "consideredExamCount": 2,
+        "consideredSubmittedAt": [
+          "2026-01-05T00:00:00Z",
+          "2026-01-04T00:00:00Z"
+        ],
+        "reasons": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,326 @@
+{
+  "schemaVersion": 1,
+  "kind": "leitner",
+  "answerCases": [
+    {
+      "id": "leitner-unseen-correct-uses-virtual-box-zero-and-promotes-to-box-one",
+      "input": {
+        "existing": null,
+        "update": {
+          "questionId": "B-006-004-001",
+          "bankId": "basic-2025-07-15",
+          "isCorrect": true,
+          "now": "2026-01-02T00:00:00Z"
+        }
+      },
+      "expectedOutput": {
+        "record": {
+          "questionId": "B-006-004-001",
+          "bankId": "basic-2025-07-15",
+          "attempts": 1,
+          "correctAttempts": 1,
+          "lastAttemptedAt": "2026-01-02T00:00:00.000Z",
+          "lastResult": "correct",
+          "recentResults": [
+            true
+          ],
+          "leitner": {
+            "box": 1,
+            "dueAt": "2026-01-03T00:00:00.000Z"
+          },
+          "notes": null
+        }
+      }
+    },
+    {
+      "id": "leitner-correct-before-due-still-promotes-and-uses-three-day-box-two-interval",
+      "input": {
+        "existing": {
+          "questionId": "B-006-004-007",
+          "bankId": "basic-2025-07-15",
+          "attempts": 1,
+          "correctAttempts": 1,
+          "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
+          "lastResult": "correct",
+          "recentResults": [
+            true
+          ],
+          "leitner": {
+            "box": 1,
+            "dueAt": "2026-01-10T00:00:00.000Z"
+          },
+          "notes": null
+        },
+        "update": {
+          "questionId": "B-006-004-007",
+          "bankId": "basic-2025-07-15",
+          "isCorrect": true,
+          "now": "2026-01-02T00:00:00Z"
+        }
+      },
+      "expectedOutput": {
+        "record": {
+          "questionId": "B-006-004-007",
+          "bankId": "basic-2025-07-15",
+          "attempts": 2,
+          "correctAttempts": 2,
+          "lastAttemptedAt": "2026-01-02T00:00:00.000Z",
+          "lastResult": "correct",
+          "recentResults": [
+            true,
+            true
+          ],
+          "leitner": {
+            "box": 2,
+            "dueAt": "2026-01-05T00:00:00.000Z"
+          },
+          "notes": null
+        }
+      }
+    },
+    {
+      "id": "leitner-correct-caps-at-box-five-with-thirty-day-interval",
+      "input": {
+        "existing": {
+          "questionId": "B-006-004-009",
+          "bankId": "basic-2025-07-15",
+          "attempts": 5,
+          "correctAttempts": 5,
+          "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
+          "lastResult": "correct",
+          "recentResults": [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "leitner": {
+            "box": 5,
+            "dueAt": "2026-01-20T00:00:00.000Z"
+          },
+          "notes": null
+        },
+        "update": {
+          "questionId": "B-006-004-009",
+          "bankId": "basic-2025-07-15",
+          "isCorrect": true,
+          "now": "2026-01-02T00:00:00Z"
+        }
+      },
+      "expectedOutput": {
+        "record": {
+          "questionId": "B-006-004-009",
+          "bankId": "basic-2025-07-15",
+          "attempts": 6,
+          "correctAttempts": 6,
+          "lastAttemptedAt": "2026-01-02T00:00:00.000Z",
+          "lastResult": "correct",
+          "recentResults": [
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "leitner": {
+            "box": 5,
+            "dueAt": "2026-02-01T00:00:00.000Z"
+          },
+          "notes": null
+        }
+      }
+    },
+    {
+      "id": "leitner-incorrect-resets-to-box-zero-and-is-due-immediately",
+      "input": {
+        "existing": {
+          "questionId": "B-006-004-008",
+          "bankId": "basic-2025-07-15",
+          "attempts": 3,
+          "correctAttempts": 3,
+          "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
+          "lastResult": "correct",
+          "recentResults": [
+            true,
+            true,
+            true
+          ],
+          "leitner": {
+            "box": 3,
+            "dueAt": "2026-01-09T00:00:00.000Z"
+          },
+          "notes": null
+        },
+        "update": {
+          "questionId": "B-006-004-008",
+          "bankId": "basic-2025-07-15",
+          "isCorrect": false,
+          "now": "2026-01-02T00:00:00Z"
+        }
+      },
+      "expectedOutput": {
+        "record": {
+          "questionId": "B-006-004-008",
+          "bankId": "basic-2025-07-15",
+          "attempts": 4,
+          "correctAttempts": 3,
+          "lastAttemptedAt": "2026-01-02T00:00:00.000Z",
+          "lastResult": "incorrect",
+          "recentResults": [
+            true,
+            true,
+            true,
+            false
+          ],
+          "leitner": {
+            "box": 0,
+            "dueAt": "2026-01-02T00:00:00.000Z"
+          },
+          "notes": null
+        }
+      }
+    }
+  ],
+  "sequenceCases": [
+    {
+      "id": "leitner-repeated-session-answers-apply-in-order",
+      "input": {
+        "initialRecords": [],
+        "updates": [
+          {
+            "questionId": "B-006-004-010",
+            "bankId": "basic-2025-07-15",
+            "isCorrect": true,
+            "now": "2026-01-02T00:00:00Z"
+          },
+          {
+            "questionId": "B-006-004-010",
+            "bankId": "basic-2025-07-15",
+            "isCorrect": false,
+            "now": "2026-01-02T01:00:00Z"
+          },
+          {
+            "questionId": "B-006-004-011",
+            "bankId": "basic-2025-07-15",
+            "isCorrect": false,
+            "now": "2026-01-02T01:05:00Z"
+          }
+        ]
+      },
+      "expectedOutput": {
+        "records": [
+          {
+            "questionId": "B-006-004-010",
+            "bankId": "basic-2025-07-15",
+            "attempts": 2,
+            "correctAttempts": 1,
+            "lastAttemptedAt": "2026-01-02T01:00:00.000Z",
+            "lastResult": "incorrect",
+            "recentResults": [
+              true,
+              false
+            ],
+            "leitner": {
+              "box": 0,
+              "dueAt": "2026-01-02T01:00:00.000Z"
+            },
+            "notes": null
+          },
+          {
+            "questionId": "B-006-004-011",
+            "bankId": "basic-2025-07-15",
+            "attempts": 1,
+            "correctAttempts": 0,
+            "lastAttemptedAt": "2026-01-02T01:05:00.000Z",
+            "lastResult": "incorrect",
+            "recentResults": [
+              false
+            ],
+            "leitner": {
+              "box": 0,
+              "dueAt": "2026-01-02T01:05:00.000Z"
+            },
+            "notes": null
+          }
+        ]
+      }
+    }
+  ],
+  "dueCases": [
+    {
+      "id": "leitner-new-user-with-zero-progress-records-has-due-count-zero",
+      "input": {
+        "records": [],
+        "now": "2026-01-02T00:00:00Z"
+      },
+      "expectedOutput": {
+        "dueQuestionIds": [],
+        "dueCount": 0
+      }
+    },
+    {
+      "id": "leitner-due-count-includes-records-due-at-or-before-now-only",
+      "input": {
+        "records": [
+          {
+            "questionId": "B-006-004-001",
+            "bankId": "basic-2025-07-15",
+            "attempts": 1,
+            "correctAttempts": 0,
+            "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
+            "lastResult": "incorrect",
+            "recentResults": [
+              false
+            ],
+            "leitner": {
+              "box": 0,
+              "dueAt": "2026-01-02T00:00:00.000Z"
+            },
+            "notes": null
+          },
+          {
+            "questionId": "B-006-004-002",
+            "bankId": "basic-2025-07-15",
+            "attempts": 1,
+            "correctAttempts": 1,
+            "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
+            "lastResult": "correct",
+            "recentResults": [
+              true
+            ],
+            "leitner": {
+              "box": 1,
+              "dueAt": "2026-01-01T00:00:00.000Z"
+            },
+            "notes": null
+          },
+          {
+            "questionId": "B-006-004-003",
+            "bankId": "basic-2025-07-15",
+            "attempts": 1,
+            "correctAttempts": 1,
+            "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
+            "lastResult": "correct",
+            "recentResults": [
+              true
+            ],
+            "leitner": {
+              "box": 1,
+              "dueAt": "2026-01-03T00:00:00.000Z"
+            },
+            "notes": null
+          }
+        ],
+        "now": "2026-01-02T00:00:00Z"
+      },
+      "expectedOutput": {
+        "dueQuestionIds": [
+          "B-006-004-001",
+          "B-006-004-002"
+        ],
+        "dueCount": 2
+      }
+    }
+  ]
+}

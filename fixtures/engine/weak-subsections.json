@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "kind": "weak-subsections",
+  "recentResultCases": [
+    {
+      "id": "recent-results-append-truncates-to-five-oldest-to-newest",
+      "input": {
+        "existing": [
+          true,
+          false,
+          true,
+          false,
+          true
+        ],
+        "newest": false
+      },
+      "expectedOutput": {
+        "recentResults": [
+          false,
+          true,
+          false,
+          true,
+          false
+        ]
+      }
+    }
+  ],
+  "cases": [
+    {
+      "id": "weak-subsections-threshold-and-latest-exam-misses",
+      "input": {
+        "records": [
+          {
+            "questionId": "B-001-001-001",
+            "bankId": "basic-2025-07-15",
+            "attempts": 2,
+            "correctAttempts": 1,
+            "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
+            "lastResult": "incorrect",
+            "recentResults": [
+              true,
+              false
+            ],
+            "leitner": {
+              "box": 0,
+              "dueAt": "2026-01-01T00:00:00.000Z"
+            },
+            "notes": null
+          },
+          {
+            "questionId": "B-001-002-001",
+            "bankId": "basic-2025-07-15",
+            "attempts": 3,
+            "correctAttempts": 2,
+            "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
+            "lastResult": "incorrect",
+            "recentResults": [
+              true,
+              true,
+              false
+            ],
+            "leitner": {
+              "box": 0,
+              "dueAt": "2026-01-01T00:00:00.000Z"
+            },
+            "notes": null
+          },
+          {
+            "questionId": "B-001-003-001",
+            "bankId": "basic-2025-07-15",
+            "attempts": 4,
+            "correctAttempts": 3,
+            "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
+            "lastResult": "correct",
+            "recentResults": [
+              true,
+              true,
+              false,
+              true
+            ],
+            "leitner": {
+              "box": 1,
+              "dueAt": "2026-01-02T00:00:00.000Z"
+            },
+            "notes": null
+          },
+          {
+            "questionId": "B-001-004-001",
+            "bankId": "basic-2025-07-15",
+            "attempts": 1,
+            "correctAttempts": 0,
+            "lastAttemptedAt": "2026-01-01T00:00:00.000Z",
+            "lastResult": "incorrect",
+            "recentResults": [
+              false
+            ],
+            "leitner": {
+              "box": 0,
+              "dueAt": "2026-01-01T00:00:00.000Z"
+            },
+            "notes": null
+          }
+        ],
+        "latestExamItems": [
+          {
+            "questionId": "B-001-005-001",
+            "subsectionId": "B-001-005",
+            "selectedSourceIndex": 1
+          },
+          {
+            "questionId": "B-001-006-001",
+            "subsectionId": "B-001-006",
+            "selectedSourceIndex": null
+          },
+          {
+            "questionId": "B-001-007-001",
+            "subsectionId": "B-001-007",
+            "selectedSourceIndex": 0
+          }
+        ]
+      },
+      "expectedOutput": {
+        "weakSubsectionIds": [
+          "B-001-001",
+          "B-001-002",
+          "B-001-005",
+          "B-001-006"
+        ]
+      }
+    }
+  ]
+}
