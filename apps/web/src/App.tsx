@@ -35,6 +35,7 @@ import {
   type ProgressStore,
   type WebPreferences,
 } from "./lib/progressStore";
+import { applyThemePreference, mirrorThemePreference, readStoredThemePreference } from "./lib/theme";
 import {
   applyPracticeAnswer,
   buildExamAttempt,
@@ -129,8 +130,12 @@ class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorBoundary
               now={this.props.now}
               onProgressImported={() => this.setState({ errorMessage: null })}
               onReset={() => this.setState({ errorMessage: null })}
-              onSetPreferences={async () => {}}
-              preferences={defaultPreferences}
+              onSetPreferences={async (preferences) => {
+                await this.props.store.putPreferences(preferences);
+                applyThemePreference(preferences.theme);
+                mirrorThemePreference(preferences.theme);
+              }}
+              preferences={{ ...defaultPreferences, theme: readStoredThemePreference() }}
               statusMessage=""
               store={this.props.store}
             />
@@ -157,7 +162,7 @@ export function App(props: AppProps) {
 
 function HeaderMark() {
   return (
-    <svg className="header-mark" viewBox="0 0 64 64" role="img" aria-label="Ink brush antenna mark">
+    <svg className="header-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
       <rect width="64" height="64" rx="14" />
       <path strokeWidth="6" d="M19 55 C20 44 23 33 27 23" />
       <path strokeWidth="2.2" d="M35 18 C38 23 40 29 39 36" />
@@ -179,7 +184,7 @@ function AppContent({
   const [bankQuestions, setBankQuestions] = useState<readonly Question[] | null>(null);
   const [progress, setProgress] = useState<readonly QuestionProgressRecord[]>([]);
   const [examAttempts, setExamAttempts] = useState<readonly ExamAttempt[]>([]);
-  const [preferences, setPreferencesState] = useState<WebPreferences>(defaultPreferences);
+  const [preferences, setPreferencesState] = useState<WebPreferences>(() => ({ ...defaultPreferences, theme: readStoredThemePreference() }));
   const [practiceScope, setPracticeScope] = useState<PracticeScope>(() => scopeFromInitialId(initialScopeId));
   const [practiceSession, setPracticeSession] = useState<PracticeSession | null>(null);
   const [mockExam, setMockExam] = useState<MockExamSession | null>(null);
@@ -244,15 +249,18 @@ function AppContent({
   }, [route]);
 
   useEffect(() => {
-    document.documentElement.lang = language === "fr" ? "fr-CA" : "en-CA";
-  }, [language]);
-
-  useEffect(() => {
-    if (preferences.theme === "system") {
-      delete document.documentElement.dataset.theme;
-    } else {
-      document.documentElement.dataset.theme = preferences.theme;
+    applyThemePreference(preferences.theme);
+    mirrorThemePreference(preferences.theme);
+    if (preferences.theme !== "system") {
+      return undefined;
     }
+    const media = window.matchMedia?.("(prefers-color-scheme: dark)");
+    if (media === undefined) {
+      return undefined;
+    }
+    const onSystemThemeChange = () => applyThemePreference("system");
+    media.addEventListener("change", onSystemThemeChange);
+    return () => media.removeEventListener("change", onSystemThemeChange);
   }, [preferences.theme]);
 
   const bankQuestionsById = useMemo(() => bankQuestions === null ? new Map<string, Question>() : questionsById(bankQuestions), [bankQuestions]);
@@ -355,10 +363,10 @@ function AppContent({
       </header>
 
       <nav className="top-nav" aria-label="Primary">
-        <button type="button" onClick={() => navigate("home")}>Home</button>
-        <button type="button" onClick={() => practiceSession === null ? startPractice(practiceScope) : navigate("practice")}>Practice</button>
-        <button type="button" onClick={() => navigate("mock")}>Mock exam</button>
-        <button type="button" onClick={() => navigate("settings")}>Settings</button>
+        <button type="button" aria-current={route === "home" ? "page" : undefined} onClick={() => navigate("home")}>Home</button>
+        <button type="button" aria-current={route === "practice" ? "page" : undefined} onClick={() => practiceSession === null ? startPractice(practiceScope) : navigate("practice")}>Practice</button>
+        <button type="button" aria-current={route === "mock" ? "page" : undefined} onClick={() => navigate("mock")}>Mock exam</button>
+        <button type="button" aria-current={route === "settings" ? "page" : undefined} onClick={() => navigate("settings")}>Settings</button>
       </nav>
 
       <main ref={mainRef} tabIndex={-1}>
@@ -461,9 +469,9 @@ function Home({ readiness, weakSubsections, dueReviewCount, examAttempts, onStar
             Practice with the committed 2025-07-15 Basic EN/FR question bank. Progress stays in this browser only.
           </p>
           <div className="action-row">
-            <button type="button" onClick={() => onStartPractice({ type: "all" })}>Start practice</button>
+            <button type="button" className="primary-button" onClick={() => onStartPractice({ type: "all" })}>Start practice</button>
             <button type="button" className="secondary-button" onClick={() => onNavigate("mock")}>Mock exam</button>
-            <a className="button secondary-button" href={studyReferenceSheetUrl} target="_blank" rel="noreferrer">Study reference sheet</a>
+            <a className="button secondary-button" href={studyReferenceSheetUrl} target="_blank" rel="noreferrer">Study reference sheet <span className="new-tab-hint">(opens in new tab)</span></a>
           </div>
         </div>
         <div className="reference-note" aria-label="Study reference sheet attribution">
@@ -666,7 +674,7 @@ function Practice({
           <label><input type="radio" name="practice-mode" checked={preferences.practiceMode === "immediate"} onChange={() => restartWithControls("immediate")} /> Immediate feedback</label>
           <label><input type="radio" name="practice-mode" checked={preferences.practiceMode === "review-later"} onChange={() => restartWithControls("review-later")} /> Review later</label>
         </fieldset>
-        <button type="button" onClick={() => restartWithControls()}>Start set</button>
+        <button type="button" className="primary-button" onClick={() => restartWithControls()}>Start set</button>
       </div>
 
       {session === null || currentItem === undefined ? (
@@ -674,35 +682,42 @@ function Practice({
           <p>No questions are available for this scope yet. Try all questions or a category.</p>
         </div>
       ) : (
-        <>
-          <div className="session-summary" aria-label="Practice session progress">
-            <span>Question {session.currentIndex + 1} of {session.items.length}</span>
-            <span>Scope: {scopeLabel(session.scope)}</span>
-            <span>Seed {session.seed}</span>
+        <div className="practice-layout">
+          <aside className="session-outline" aria-label="Practice session outline">
+            <div className="session-summary" aria-label="Practice session progress">
+              <span>Question {session.currentIndex + 1} of {session.items.length}</span>
+              <span>Scope: {scopeLabel(session.scope)}</span>
+              <span>Mode: {session.mode === "immediate" ? "Immediate feedback" : "Review later"}</span>
+              <span>Seed {session.seed}</span>
+            </div>
+            <p>Answered: <strong>{session.selectedByQuestionId.size} of {session.items.length}</strong></p>
+            <p>Current subsection: <strong>{currentItem.question.subsectionId}</strong></p>
+          </aside>
+          <div className="practice-main">
+            <QuestionCard
+              choicePermutation={currentItem.choicePermutation}
+              disabled={session.mode === "immediate" && isAnswered}
+              language={language}
+              onChoose={(displayIndex) => void chooseAnswer(currentItem, displayIndex)}
+              question={currentItem.question}
+              selectedSourceIndex={selectedSourceIndex}
+              showCorrectness={session.mode === "immediate" && isAnswered}
+            />
+            <div className="feedback" role="status" aria-live="polite" ref={feedbackRef} tabIndex={-1}>
+              {session.mode === "immediate" ? immediateFeedback(currentItem.question, selectedSourceIndex, language) : (
+                <p>Review-later mode: answer all questions, then submit the set to see results.</p>
+              )}
+            </div>
+            <div className="action-row">
+              <button type="button" disabled={session.currentIndex === 0} onClick={() => onSessionChange({ ...session, currentIndex: session.currentIndex - 1 })}>Previous</button>
+              <button type="button" disabled={session.currentIndex >= session.items.length - 1} onClick={() => onSessionChange({ ...session, currentIndex: session.currentIndex + 1 })}>Next</button>
+              {session.mode === "review-later" ? (
+                <button type="button" className="primary-button" disabled={!allAnswered || session.submitted || submittingPractice} onClick={() => void submitReviewLater()}>{submittingPractice ? "Submitting practice set" : "Submit practice set"}</button>
+              ) : null}
+            </div>
+            {session.submitted ? <div ref={reviewRef} tabIndex={-1}><PracticeReview session={session} language={language} /></div> : null}
           </div>
-          <QuestionCard
-            choicePermutation={currentItem.choicePermutation}
-            disabled={session.mode === "immediate" && isAnswered}
-            language={language}
-            onChoose={(displayIndex) => void chooseAnswer(currentItem, displayIndex)}
-            question={currentItem.question}
-            selectedSourceIndex={selectedSourceIndex}
-            showCorrectness={session.mode === "immediate" && isAnswered}
-          />
-          <div className="feedback" role="status" aria-live="polite" ref={feedbackRef} tabIndex={-1}>
-            {session.mode === "immediate" ? immediateFeedback(currentItem.question, selectedSourceIndex, language) : (
-              <p>Review-later mode: answer all questions, then submit the set to see results.</p>
-            )}
-          </div>
-          <div className="action-row">
-            <button type="button" disabled={session.currentIndex === 0} onClick={() => onSessionChange({ ...session, currentIndex: session.currentIndex - 1 })}>Previous</button>
-            <button type="button" disabled={session.currentIndex >= session.items.length - 1} onClick={() => onSessionChange({ ...session, currentIndex: session.currentIndex + 1 })}>Next</button>
-            {session.mode === "review-later" ? (
-              <button type="button" disabled={!allAnswered || session.submitted || submittingPractice} onClick={() => void submitReviewLater()}>{submittingPractice ? "Submitting practice set" : "Submit practice set"}</button>
-            ) : null}
-          </div>
-          {session.submitted ? <div ref={reviewRef} tabIndex={-1}><PracticeReview session={session} language={language} /></div> : null}
-        </>
+        </div>
       )}
     </section>
   );
@@ -746,6 +761,8 @@ function QuestionCard({ question, choicePermutation, selectedSourceIndex, showCo
             >
               <span className="answer-label">{String.fromCharCode(65 + displayIndex)}</span>
               <span lang={languageTag(language)}>{answer.text[language]}</span>
+              {showCorrectness && correct ? <span className="answer-state-icon" aria-hidden="true">✓</span> : null}
+              {showCorrectness && selected && !correct ? <span className="answer-state-icon" aria-hidden="true">✕</span> : null}
               {showCorrectness && correct ? <strong>Correct answer</strong> : null}
               {showCorrectness && selected && !correct ? <strong>Your answer</strong> : null}
             </button>
@@ -856,9 +873,9 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
         <div className="reference-note" aria-label="Exam reference sheet attribution">
           <strong>Exam reference sheet</strong>
           <p>The unlabelled ISED exam reference material PDF contains formulas and block diagrams and may be used while writing the exam. Private-development access only; public release is blocked until permission is recorded.</p>
-          <a className="button secondary-button" href={examReferenceSheetUrl} target="_blank" rel="noreferrer">Open exam reference sheet</a>
+          <a className="button secondary-button" href={examReferenceSheetUrl} target="_blank" rel="noreferrer">Open exam reference sheet <span className="new-tab-hint">(opens in new tab)</span></a>
         </div>
-        <button type="button" disabled={questions === null} onClick={startExam}>{questions === null ? "Loading question bank" : "Start mock exam"}</button>
+        <button type="button" className="primary-button" disabled={questions === null} onClick={startExam}>{questions === null ? "Loading question bank" : "Start mock exam"}</button>
       </section>
     );
   }
@@ -919,7 +936,7 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
         <span>Answered: {exam.selectedByQuestionId.size} of {exam.generatedItems.length}</span>
       </div>
       <div className="exam-tool-row">
-        <a className="button secondary-button" href={examReferenceSheetUrl} target="_blank" rel="noreferrer">Exam reference sheet</a>
+        <a className="button secondary-button" href={examReferenceSheetUrl} target="_blank" rel="noreferrer">Exam reference sheet <span className="new-tab-hint">(opens in new tab)</span></a>
         <span>The PDF contains formulas and block diagrams; ISED source, private-development build.</span>
       </div>
       {exam.timerEnabled ? (
@@ -935,7 +952,7 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
           >{exam.timerRunning ? "Pause timer" : "Resume timer"}</button>
           <span className="sr-only" role="status" aria-live="polite">{timerAnnouncement}</span>
         </div>
-      ) : <p>Timer off. No time pressure by default.</p>}
+      ) : <p className="timer-off-note">Timer off. No time pressure by default.</p>}
       <QuestionCard
         choicePermutation={item.choicePermutation}
         disabled={false}
@@ -981,7 +998,7 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
           ) : null}
           <div className="action-row">
             <button type="button" onClick={() => { onExamChange({ ...exam, confirmingSubmit: false }); window.setTimeout(() => submitButtonRef.current?.focus(), 0); }}>Continue exam</button>
-            <button type="button" disabled={submittingExam} onClick={() => void confirmSubmit()}>{submittingExam ? "Submitting exam" : "Confirm submit"}</button>
+            <button type="button" className="danger" disabled={submittingExam} onClick={() => void confirmSubmit()}>{submittingExam ? "Submitting exam" : "Confirm submit"}</button>
           </div>
         </section>
       ) : null}
@@ -1080,7 +1097,7 @@ function Settings({ store, now, preferences, statusMessage, onProgressImported, 
       const anchor = document.createElement("a");
       anchor.href = href;
       anchor.download = `canadian-ham-progress-${data.exportedAt.slice(0, 10)}.json`;
-      anchor.style.display = "none";
+      anchor.hidden = true;
       document.body.append(anchor);
       anchor.click();
       anchor.remove();
@@ -1170,7 +1187,7 @@ function Settings({ store, now, preferences, statusMessage, onProgressImported, 
         </label>
         <button type="button" className="danger" ref={resetButtonRef} onClick={() => setConfirmReset(true)}>Reset all data</button>
       </div>
-      {pendingImport !== null ? <button type="button" onClick={() => void confirmImport()}>Confirm import and replace local data</button> : null}
+      {pendingImport !== null ? <button type="button" className="primary-button" onClick={() => void confirmImport()}>Confirm import and replace local data</button> : null}
       {confirmReset ? (
         <div className="confirm-panel" role="alertdialog" aria-labelledby="reset-title" aria-modal="false" ref={resetDialogRef} tabIndex={-1}>
           <h3 id="reset-title">Reset all local data?</h3>

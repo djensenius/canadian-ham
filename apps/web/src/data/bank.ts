@@ -119,7 +119,11 @@ async function loadQuestionsFromAsset(): Promise<readonly Question[]> {
     return module.default as readonly Question[];
   }
 
-  const response = await fetch(questionsJsonUrl);
+  return loadQuestionsFromUrl(questionsJsonUrl);
+}
+
+export async function loadQuestionsFromUrl(assetUrl: string): Promise<readonly Question[]> {
+  const response = await fetch(assetUrl);
   if (!response.ok) {
     throw new Error(`Unable to load bundled question bank (${response.status} ${response.statusText}).`);
   }

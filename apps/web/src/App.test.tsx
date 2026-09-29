@@ -6,8 +6,9 @@ import { IDBFactory } from "fake-indexeddb";
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
 
 import { App } from "./App";
-import { bankId, loadQuestions, type Question } from "./data/bank";
+import { bankId, loadQuestions, loadQuestionsFromUrl, type Question } from "./data/bank";
 import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExportV1 } from "./lib/progressStore";
+import { applyThemePreference, readStoredThemePreference, THEME_STORAGE_KEY } from "./lib/theme";
 import { buildExamAttempt, createMockExam } from "./lib/studyEngine";
 
 const fixedNow = "2026-01-02T03:04:05.000Z";
@@ -16,15 +17,19 @@ let testQuestions: readonly Question[] = [];
 
 beforeEach(async () => {
   Object.defineProperty(globalThis, "indexedDB", { value: new IDBFactory(), configurable: true });
+  Object.defineProperty(window, "localStorage", { value: createMemoryStorage(), configurable: true });
   window.location.hash = "#/home";
+  window.localStorage.clear();
   delete document.documentElement.dataset.theme;
   document.documentElement.lang = "en";
+  document.head.querySelector('meta[name="theme-color"]')?.remove();
   stores = [];
   testQuestions = await loadQuestions();
 });
 
 afterEach(async () => {
   cleanup();
+  vi.unstubAllGlobals();
   for (const store of stores) {
     await store.deleteDatabase();
   }
@@ -34,6 +39,20 @@ function createStore(name: string): ProgressStore {
   const store = new ProgressStore(name);
   stores.push(store);
   return store;
+}
+
+function createMemoryStorage(): Storage {
+  const values = new Map<string, string>();
+  return {
+    get length() {
+      return values.size;
+    },
+    clear: () => values.clear(),
+    getItem: (key: string) => values.get(key) ?? null,
+    key: (index: number) => [...values.keys()][index] ?? null,
+    removeItem: (key: string) => { values.delete(key); },
+    setItem: (key: string, value: string) => { values.set(key, value); },
+  };
 }
 
 async function expectNoAxeViolations(container: Element): Promise<void> {
@@ -145,9 +164,25 @@ describe("App accessibility and flows", () => {
     await screen.findByText(/Question 1 of/);
     await expectNoAxeViolations(container);
 
+    const questionMeta = document.querySelector(".question-meta")?.textContent ?? "";
+    const questionId = questionMeta.match(/B-\d{3}-\d{3}-\d{3}/)?.[0];
+    const displayedQuestion = testQuestions.find((question) => question.id === questionId);
+    assert.ok(displayedQuestion);
+    const correctAnswerText = displayedQuestion.answers.find((answer) => answer.sourceIndex === 0)?.text.en;
+    assert.ok(correctAnswerText);
     const choices = screen.getAllByTestId("answer-choice");
-    fireEvent.click(choices[0]!);
+    const wrongChoice = choices.find((choice) => !(choice.textContent ?? "").includes(correctAnswerText));
+    assert.ok(wrongChoice);
+    fireEvent.click(wrongChoice);
     await screen.findByRole("status");
+    const correctChoice = document.querySelector(".answer-button.is-correct");
+    const incorrectChoice = document.querySelector(".answer-button.is-incorrect");
+    assert.ok(correctChoice);
+    assert.ok(incorrectChoice);
+    assert.equal(correctChoice.querySelector(".answer-state-icon")?.textContent, "✓");
+    assert.equal(correctChoice.querySelector(".answer-state-icon")?.getAttribute("aria-hidden"), "true");
+    assert.equal(incorrectChoice.querySelector(".answer-state-icon")?.textContent, "✕");
+    assert.equal(incorrectChoice.querySelector(".answer-state-icon")?.getAttribute("aria-hidden"), "true");
     await waitFor(async () => assert.equal((await store.getQuestionProgress()).length, 1));
   });
 
@@ -240,6 +275,61 @@ describe("App accessibility and flows", () => {
     await user.click(screen.getByLabelText("Dark"));
     await waitFor(async () => assert.equal((await store.getPreferences()).theme, "dark"));
     assert.equal(document.documentElement.dataset.theme, "dark");
+    assert.equal(window.localStorage.getItem(THEME_STORAGE_KEY), "dark");
+  });
+
+  it("applies the mirrored stored theme before IndexedDB preferences load", async () => {
+    const themeColor = document.createElement("meta");
+    themeColor.setAttribute("name", "theme-color");
+    document.head.append(themeColor);
+    window.localStorage.setItem(THEME_STORAGE_KEY, "dark");
+
+    assert.equal(readStoredThemePreference(), "dark");
+    applyThemePreference(readStoredThemePreference());
+
+    assert.equal(document.documentElement.dataset.theme, "dark");
+    assert.equal(themeColor.getAttribute("content"), "#201B16");
+  });
+
+  it("keeps the root language stable and marks only question content as French", async () => {
+    window.location.hash = "#/practice";
+    const store = createStore("language-scope");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "language-seed"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    await user.click(screen.getByLabelText("Français"));
+
+    assert.equal(document.documentElement.lang, "en");
+    assert.ok(document.querySelector(".question-text[lang='fr-CA']"));
+  });
+
+  it("labels reference sheet links with new-tab hints and licensing notes", async () => {
+    const store = createStore("reference-links");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "reference-seed"} />);
+
+    const studyLink = await screen.findByRole("link", { name: "Study reference sheet (opens in new tab)" });
+    assert.match(studyLink.getAttribute("href") ?? "", /Reference.*Training.*Basic.*2025\.pdf/);
+    assert.equal(studyLink.getAttribute("target"), "_blank");
+    assert.match(studyLink.getAttribute("rel") ?? "", /noreferrer/);
+    assert.match(screen.getByLabelText("Study reference sheet attribution").textContent ?? "", /Private-development access only/);
+
+    await user.click(screen.getAllByRole("button", { name: "Mock exam" })[0]!);
+    const examLink = await screen.findByRole("link", { name: "Open exam reference sheet (opens in new tab)" });
+    assert.match(examLink.getAttribute("href") ?? "", /Reference.*Exam.*Basic.*2025\.pdf/);
+    assert.equal(examLink.getAttribute("target"), "_blank");
+    assert.match(examLink.getAttribute("rel") ?? "", /noreferrer/);
+    assert.match(screen.getByLabelText("Exam reference sheet attribution").textContent ?? "", /may be used while writing the exam/);
+  });
+
+  it("surfaces bundled question-bank fetch failures", async () => {
+    const fetchMock = vi.fn(async () => new Response("not found", { status: 503, statusText: "Service Unavailable" }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await assert.rejects(loadQuestionsFromUrl("/questions.json"), /503 Service Unavailable/);
+    assert.equal(fetchMock.mock.calls.length, 1);
   });
 
   it("surfaces Settings import/reset UI errors and confirmations with focus management", async () => {

@@ -12,7 +12,8 @@ const XML_NAMESPACE_URLS = new Set([
   "http://www.w3.org/2000/xmlns/",
   "http://www.w3.org/XML/1998/namespace",
 ]);
-const TEXT_EXTENSIONS = new Set([".css", ".html", ".js", ".json", ".map", ".svg", ".txt", ".webmanifest", ".xml"]);
+const TEXT_EXTENSIONS = new Set([".cjs", ".css", ".html", ".js", ".json", ".map", ".mjs", ".svg", ".txt", ".webmanifest", ".xml"]);
+const BINARY_EXTENSIONS = new Set([".avif", ".gif", ".ico", ".jpg", ".jpeg", ".pdf", ".png", ".webp"]);
 
 interface UrlFinding {
   readonly file: string;
@@ -64,8 +65,12 @@ async function auditDistUrls(distDir = DIST_DIR): Promise<UrlFinding[]> {
 
   const findings: UrlFinding[] = [];
   for (const filePath of await findDistFiles(distDir)) {
-    if (!TEXT_EXTENSIONS.has(path.extname(filePath))) {
+    const extension = path.extname(filePath).toLowerCase();
+    if (BINARY_EXTENSIONS.has(extension)) {
       continue;
+    }
+    if (!TEXT_EXTENSIONS.has(extension)) {
+      throw new Error(`dist URL audit does not know how to scan ${toPosix(path.relative(distDir, filePath))}`);
     }
     const text = await readFile(filePath, "utf8");
     for (const match of text.matchAll(URL_PATTERN)) {
