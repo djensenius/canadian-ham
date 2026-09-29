@@ -751,7 +751,7 @@ struct MockExamView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
                 Text("Seed: \(attempt.seed)")
                     .font(DesignTokens.FontScale.caption.monospaced())
-                    .foregroundStyle(DesignTokens.Colors.inkMuted)
+                    .foregroundStyle(DesignTokens.Colors.ink)
             }
             .paperCard()
 
