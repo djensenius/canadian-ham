@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-013-001",
+  "questionId": "B-001-013-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-013-001.\n\nWhy the correct answer is right: VA3RAC has a Canadian amateur prefix pattern from the group the bank teaches for Canadian call signs.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"SM2CAN\": SM2CAN begins with SM, outside the VA, VE, VO, and VY Canadian amateur prefix group.\n- sourceIndex 2: \"BY7HY\": BY7HY begins with BY, not with one of the Canadian amateur prefixes taught here.\n- sourceIndex 3: \"KA9OLS\": KA9OLS begins with K, a prefix associated with another country rather than the Canadian VA/VE/VO/VY pattern.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-013-001"
+    }
+  ],
+  "licenseClass": "original"
+}

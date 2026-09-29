@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-015-001",
+  "questionId": "B-001-015-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-015-001.\n\nWhy the correct answer is right: Operating under your call sign keeps the operation within your qualifications, even if the person at the controls has additional qualifications.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Any privileges allowed by the additional qualifications\": The additional operator's qualifications do not transfer to your call sign for this operation.\n- sourceIndex 2: \"All the emission privileges of the additional qualifications, but only the frequency privileges of your qualifications\": Splitting emissions from frequency privileges is not the rule; the operation is limited by your qualifications as a whole.\n- sourceIndex 3: \"All the frequency privileges of the additional qualifications, but only the emission privileges of your qualifications\": Borrowing only the visitor's frequency privileges still exceeds the certificate boundary attached to your station operation.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-015-001"
+    }
+  ],
+  "licenseClass": "original"
+}

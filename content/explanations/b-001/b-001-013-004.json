@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-013-004",
+  "questionId": "B-001-013-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-013-004.\n\nWhy the correct answer is right: At the beginning of communications, each amateur station must transmit its own call sign.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"No identification is required\": No identification would leave the stations unaccountable at the start of the contact.\n- sourceIndex 2: \"Both stations must transmit both call signs\": Both stations saying both call signs is not required; each station identifies itself.\n- sourceIndex 3: \"One of the stations must give both stations' call signs\": One station cannot satisfy the rule for both by being the only one to speak both call signs.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-013-004"
+    }
+  ],
+  "licenseClass": "original"
+}

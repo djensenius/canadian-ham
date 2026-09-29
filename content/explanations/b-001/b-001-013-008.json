@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-013-008",
+  "questionId": "B-001-013-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-013-008.\n\nWhy the correct answer is right: Station identification may be in English or French.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Any language being used for a contact\": The language used in the conversation does not expand the identification-language rule beyond English or French.\n- sourceIndex 2: \"Any language being used for a contact, providing Canada has a third-party communications agreement with that country\": A third-party agreement with another country is not the condition for Canadian station identification language.\n- sourceIndex 3: \"Any language of a country that is a member of the International Telecommunication Union\": International Telecommunication Union membership does not authorize any member-country language for the Canadian identification requirement.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-013-008"
+    }
+  ],
+  "licenseClass": "original"
+}

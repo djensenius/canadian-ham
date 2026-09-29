@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-016-011",
+  "questionId": "B-001-016-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-016-011.\n\nWhy the correct answer is right: Single sideband on 10.12 MHz falls inside the 10.100 MHz to 10.150 MHz band where SSB is specifically prohibited.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Frequency modulation (FM) on 29.6 MHz\": At 29.6 MHz, FM falls in the 10-metre 20 kHz category, and the FM bandwidth cue fits that allowance.\n- sourceIndex 2: \"Morse radiotelegraphy (CW) on 10.11 MHz\": CW is a narrow keyed mode, so it fits the narrow 10.100 MHz to 10.150 MHz context in a way SSB does not.\n- sourceIndex 3: \"FT8 on 10.136 MHz\": FT8 is a narrow digital mode; the bank's FT8 cue is narrow bandwidth, not the SSB prohibition.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-016-011"
+    }
+  ],
+  "licenseClass": "original"
+}

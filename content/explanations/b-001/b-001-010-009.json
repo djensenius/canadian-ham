@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-010-009",
+  "questionId": "B-001-010-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-010-009.\n\nWhy the correct answer is right: Test transmissions are permitted when they will not interfere with amateur stations or with other radio services.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"When transmitting in designated sub-bands\": Designated sub-bands alone do not make a test acceptable; the interference condition still controls.\n- sourceIndex 2: \"Only between the hours of midnight and 8:00 AM\": Time of day does not protect other stations from interference, so a midnight-to-morning window is the wrong test.\n- sourceIndex 3: \"After warning other stations who might be interfered with\": Warning others is not enough if the test will still interfere; avoiding the interference is the required condition.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-010-009"
+    }
+  ],
+  "licenseClass": "original"
+}

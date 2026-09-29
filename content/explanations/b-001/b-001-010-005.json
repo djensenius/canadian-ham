@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-010-005",
+  "questionId": "B-001-010-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-010-005.\n\nWhy the correct answer is right: The definition matches harmful interference: serious degradation, obstruction, or repeated interruption of a radiocommunication service.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Intentional interference\": Intentional interference describes the operator's deliberate action; the definition in the question is about the severity of the effect on a service.\n- sourceIndex 2: \"Adjacent interference\": Adjacent interference suggests energy from a nearby channel, but the definition is not limited to adjacent-channel cases.\n- sourceIndex 3: \"Disruptive interference\": Disruptive interference is plain-language wording, not the regulatory term used for this defined level of harm.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-010-005"
+    }
+  ],
+  "licenseClass": "original"
+}

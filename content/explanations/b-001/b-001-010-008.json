@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-010-008",
+  "questionId": "B-001-010-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-010-008.\n\nWhy the correct answer is right: The 902 MHz to 928 MHz band is the one where amateur operations are not protected from interference by another service.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"144 MHz to 148 MHz\": The 2-metre band is used in the bank for other facts, such as a 30 kHz bandwidth limit; it is not the reduced-protection example.\n- sourceIndex 2: \"222 MHz to 225 MHz\": This choice is another amateur VHF range, but the bank ties the not-protected warning to 902 MHz to 928 MHz.\n- sourceIndex 3: \"50 MHz to 54 MHz\": The 6-metre band appears in the bandwidth-limit items; it is not the band singled out for lack of protection from another service.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-010-008"
+    }
+  ],
+  "licenseClass": "original"
+}

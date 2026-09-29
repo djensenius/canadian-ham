@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-013-005",
+  "questionId": "B-001-013-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-013-005.\n\nWhy the correct answer is right: At the end of communications, each station identifies by transmitting its own call sign.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"No identification is required\": Ending without identification misses the close-of-contact requirement.\n- sourceIndex 2: \"One of the stations must transmit both stations' call signs\": One station giving both call signs does not replace each station's own identification.\n- sourceIndex 3: \"Both stations must transmit both call signs\": This adds an unnecessary exchange of the other station's call sign; the end-of-contact duty is for each station to identify itself.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-013-005"
+    }
+  ],
+  "licenseClass": "original"
+}

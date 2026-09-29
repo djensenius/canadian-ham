@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-016-010",
+  "questionId": "B-001-016-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-016-010.\n\nWhy the correct answer is right: Fast-scan television on 14.23 MHz is prohibited because 14.23 MHz is in the between-7-and-25-MHz group with a 6 kHz limit, and the bank treats fast-scan ATV as too wide for that HF context.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Slow-scan television (SSTV) on 14.23 MHz\": The bank contrasts slow-scan television with fast-scan ATV here; SSTV is treated as fitting the 14.23 MHz choice while fast-scan ATV is not.\n- sourceIndex 2: \"Frequency modulation (FM) on 29.60 MHz\": At 29.60 MHz, the signal is in the 10-metre bandwidth category; a 5 kHz-deviation FM signal is taught as occupying between 10 kHz and 20 kHz, so this choice fits that limit.\n- sourceIndex 3: \"Single sideband (SSB) on 3.76 MHz\": 3.76 MHz is inside the 80-metre band, and ordinary SSB voice is about 2 kHz to 3 kHz wide rather than a fast-scan-video-width signal.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-016-010"
+    }
+  ],
+  "licenseClass": "original"
+}

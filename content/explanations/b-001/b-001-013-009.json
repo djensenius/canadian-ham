@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-013-009",
+  "questionId": "B-001-013-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-013-009.\n\nWhy the correct answer is right: The required call-sign timing is beginning, end, and intervals no greater than 30 minutes.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"at intervals not greater than three minutes when using voice communications\": This invents a voice-only three-minute schedule; the Canadian Basic timing rule is not mode-specific in that way.\n- sourceIndex 2: \"at intervals not greater than ten minutes when using digital modes\": Digital operation does not get a separate ten-minute schedule in the bank; the same beginning, end, and 30-minute maximum interval structure applies.\n- sourceIndex 3: \"when requested to do so by the station being called\": Waiting for another station to ask would leave identification optional, but the rule requires the operator to identify on the timing schedule.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-013-009"
+    }
+  ],
+  "licenseClass": "original"
+}

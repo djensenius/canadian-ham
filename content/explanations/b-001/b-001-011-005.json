@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-011-005",
+  "questionId": "B-001-011-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-011-005.\n\nWhy the correct answer is right: A distressed amateur operator may use any means of radiocommunication; the emergency need is broader than ordinary band or mode limits.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"only use bands for which the operator is authorized\": Normal band authorization is too restrictive for the distress situation described.\n- sourceIndex 2: \"use any means of radiocommunication, but only on internationally recognized emergency channels\": The emergency permission is not confined to a named set of internationally recognized channels.\n- sourceIndex 3: \"only use Morse code communications on internationally recognized emergency channels\": This wrongly adds both a Morse-only limit and an emergency-channel-only limit to the distress rule.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-011-005"
+    }
+  ],
+  "licenseClass": "original"
+}

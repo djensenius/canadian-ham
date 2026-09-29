@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-019-005",
+  "questionId": "B-001-019-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-019-005.\n\nWhy the correct answer is right: All amateur stations must be capable of reliably measuring frequency.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"RF power\": RF power is important for limit compliance, but the question asks what every station must reliably measure regardless of mode.\n- sourceIndex 2: \"SWR\": SWR is a useful antenna-system measurement, but it is not the universal measurement capability required of all amateur stations in this item.\n- sourceIndex 3: \"Modulation\": Modulation is relevant for voice quality, but not every emission mode requires modulation measurement as the answer to this item.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-019-005"
+    }
+  ],
+  "licenseClass": "original"
+}

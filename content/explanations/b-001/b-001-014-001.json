@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-014-001",
+  "questionId": "B-001-014-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-014-001.\n\nWhy the correct answer is right: The certified operator must keep monitoring the friend's communications, maintaining control responsibility even when another station joins.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Take over the conversation with the Canadian and foreign station\": Taking over may be unnecessary; the key duty is continued monitoring and control of the friend's use of the station.\n- sourceIndex 2: \"Instruct your friend to ignore the foreign station\": Ignoring the foreign station does not address the control operator's responsibility for supervised third-party communication.\n- sourceIndex 3: \"Stop all discussions and quickly sign off\": Immediately signing off is more drastic than the rule requires for the described supervised use.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-014-001"
+    }
+  ],
+  "licenseClass": "original"
+}

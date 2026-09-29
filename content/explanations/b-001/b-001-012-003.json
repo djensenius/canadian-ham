@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-012-003",
+  "questionId": "B-001-012-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-012-003.\n\nWhy the correct answer is right: An amateur operator may never demand or accept remuneration for exchanging messages.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"When a gift or gratuity replaces remuneration\": Calling the payment a gift or gratuity does not remove the remuneration problem.\n- sourceIndex 2: \"When a non-governmental organization is involved\": A non-governmental organization's involvement does not create a compensation exception.\n- sourceIndex 3: \"When the messages are exchanged outside a real emergency\": The prohibition is not limited to emergencies; routine message exchange is also unpaid.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-012-003"
+    }
+  ],
+  "licenseClass": "original"
+}

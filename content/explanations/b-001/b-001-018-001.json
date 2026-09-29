@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-018-001",
+  "questionId": "B-001-018-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-018-001.\n\nWhy the correct answer is right: A repeater station automatically retransmits signals from other stations.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Satellite control station\": A satellite control station controls satellite functions; that is not the general station that retransmits other stations automatically.\n- sourceIndex 2: \"Remote-control station\": A remote-control station is operated from a control point, but automatic retransmission of other stations is the repeater role.\n- sourceIndex 3: \"Beacon station\": A beacon station transmits identifying or information signals; it is not defined by automatically retransmitting other stations.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-04"
+    },
+    {
+      "type": "question",
+      "id": "B-001-018-001"
+    }
+  ],
+  "licenseClass": "original"
+}

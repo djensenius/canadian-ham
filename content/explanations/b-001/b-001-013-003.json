@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-001-013-003",
+  "questionId": "B-001-013-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-001-013-003.\n\nWhy the correct answer is right: Station identification is done by transmitting the station call sign.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Your \\\"handle\\\"\": A handle may be friendly operating shorthand, but it is not the regulatory station identifier.\n- sourceIndex 2: \"Your first name and your location\": First name and location can help conversation, yet they do not replace the call sign.\n- sourceIndex 3: \"Your full name\": A full personal name identifies a person, not the amateur station in the required way.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-001-03"
+    },
+    {
+      "type": "question",
+      "id": "B-001-013-003"
+    }
+  ],
+  "licenseClass": "original"
+}
