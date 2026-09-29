@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-009-004",
+  "questionId": "B-002-009-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-009-004.\n\nWhy the correct answer is right: Long path is the opposite great-circle direction from short path, so the heading differs by 180 degrees.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"45 degrees\": Forty-five degrees is only an eighth-turn and not the reciprocal direction.\n- sourceIndex 2: \"90 degrees\": Ninety degrees is a right-angle change, not the opposite heading.\n- sourceIndex 3: \"270 degrees\": Two hundred seventy degrees is a three-quarter turn; the reciprocal of a heading is 180 degrees away.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-04"
+    },
+    {
+      "type": "question",
+      "id": "B-002-009-004"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-001-010",
+  "questionId": "B-002-001-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-001-010.\n\nWhy the correct answer is right: Plain language is accepted on a repeater; asking “Where are you?” is clear and does not import CB-style ten-codes.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"What is your 10-20?\": “10-20” is a ten-code expression, while amateur repeater procedure favours plain language for location.\n- sourceIndex 2: \"Locations are not normally broadcast over the radio\": Operators may state locations when appropriate; location can be useful for coverage, meeting, or assistance.\n- sourceIndex 3: \"What is your 10-85?\": This is another ten-code-style phrase, not clear plain language for asking location.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-001-010"
+    }
+  ],
+  "licenseClass": "original"
+}

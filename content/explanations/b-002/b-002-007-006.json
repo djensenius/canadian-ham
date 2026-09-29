@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-007-006",
+  "questionId": "B-002-007-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-007-006.\n\nWhy the correct answer is right: QRZ? is the Q signal used to ask who is calling you.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"QSL?\": QSL? asks about acknowledgement or confirmation, not who called.\n- sourceIndex 2: \"QRL?\": QRL? checks if a frequency is in use.\n- sourceIndex 3: \"QRT?\": QRT? concerns stopping transmission, not identifying the caller.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-007-006"
+    }
+  ],
+  "licenseClass": "original"
+}

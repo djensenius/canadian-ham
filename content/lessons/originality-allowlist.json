@@ -8,5 +8,50 @@
     "lessonId": "L-005-05",
     "blockHeading": "Resonance and tuned circuits",
     "reason": "Reviewed principle definition: the series-RLC maximum-current statement is an accepted standard resonance fact needed for the lesson."
+  },
+  {
+    "lessonId": "L-002-01",
+    "blockHeading": "Reference fact: ITU phonetic alphabet words used in this lesson",
+    "reason": "Reviewed reference table: the ITU spelling words are standardized operating vocabulary needed for the phonetic-alphabet questions, not a worked example or copied scenario."
+  },
+  {
+    "lessonId": "L-002-01",
+    "blockHeading": "Reference fact: voice calling patterns",
+    "reason": "Reviewed official calling-pattern reference table. The repetition counts and call-sign order are intentionally preserved because learners must recognize these exact procedural patterns; the block is labelled as reference, not a worked example or Try-it."
+  },
+  {
+    "lessonId": "L-002-02",
+    "blockHeading": "Reference fact: Morse calling patterns",
+    "reason": "Reviewed official Morse calling-pattern reference table. The CQ/DE repetition counts and answer order are intentionally preserved as a compact reference fact, not as a copied scenario, worked example, or Try-it."
+  },
+  {
+    "lessonId": "L-002-02",
+    "blockHeading": "Reference fact: Morse procedural groups",
+    "reason": "Reviewed reference table: the Morse procedural groups are standard abbreviations whose short meanings must remain recognizable; the table is reference vocabulary, not practice content."
+  },
+  {
+    "lessonId": "L-002-02",
+    "blockHeading": "Reference fact: signal-report digits used in this lesson",
+    "reason": "Reviewed reference table: RST digit meanings are standardized report facts required by the explanations; compact tabular presentation avoids creating copied scenarios."
+  },
+  {
+    "lessonId": "L-002-02",
+    "blockHeading": "Reference fact: Q signals used and compared in this lesson",
+    "reason": "Reviewed reference table: Q signals and their short meanings are standard operating vocabulary required by the official questions and explanations, presented as a labelled reference."
+  },
+  {
+    "lessonId": "L-002-03",
+    "blockHeading": "Reference fact: priority terms in this lesson",
+    "reason": "Reviewed reference table: distress, urgent, emergency, and safety terms are official Basic operating facts summarized without adding scenarios, practice items, or an unverified priority ladder."
+  },
+  {
+    "lessonId": "L-002-04",
+    "blockHeading": "Reference fact: grid locator code length",
+    "reason": "Reviewed reference table: the 4- or 6-character Maidenhead locator length is intentionally preserved in a labelled reference table because the numeric locator length is the fact being taught."
+  },
+  {
+    "lessonId": "L-002-04",
+    "blockHeading": "Reference fact: map and bearing relationships",
+    "reason": "Reviewed reference table: azimuthal-map and long-path bearing facts include standard terminology and the 180-degree relationship needed by the explanations."
   }
 ]

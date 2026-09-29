@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-006-011",
+  "questionId": "B-002-006-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-006-011.\n\nWhy the correct answer is right: A 1 1 voice report is the bottom of both scales: unreadable and barely perceptible.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Your signal is 11 dB over S9\": “11 dB over S9” is an S-meter-over-S9 expression; a two-digit 1 1 report gives readability 1 and strength 1.\n- sourceIndex 2: \"Your signal is moderately readable with moderate strength\": Moderate readability and strength would use middle numbers, not ones.\n- sourceIndex 3: \"Your signal is very readable and very strong\": Very readable and very strong would be high numbers, not the lowest report.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-006-011"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-005-005",
+  "questionId": "B-002-005-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-005-005.\n\nWhy the correct answer is right: In Morse procedure, DE means “from,” separating the called station or CQ from the transmitting station’s call sign.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Received all correctly\": “Received all correctly” is closer to R, not DE.\n- sourceIndex 2: \"Calling any station\": Calling any station is CQ, not DE.\n- sourceIndex 3: \"Directional Emissions\": Directional Emissions expands the letters in a technical-sounding way but is not the Morse procedural word.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-005-005"
+    }
+  ],
+  "licenseClass": "original"
+}

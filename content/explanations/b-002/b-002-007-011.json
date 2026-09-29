@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-007-011",
+  "questionId": "B-002-007-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-007-011.\n\nWhy the correct answer is right: QRX means “I will call you again” in amateur operating abbreviations.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"QRZ\": QRZ asks who is calling; it is not a promise to call again.\n- sourceIndex 2: \"QRS\": QRS asks for slower sending.\n- sourceIndex 3: \"QRT\": QRT concerns stopping transmission rather than calling again later.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-007-011"
+    }
+  ],
+  "licenseClass": "original"
+}

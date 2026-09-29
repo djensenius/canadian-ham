@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-001-003",
+  "questionId": "B-002-001-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-001-003.\n\nWhy the correct answer is right: Frequency coordination is the regional planning process that recommends repeater channels and separations so nearby repeaters do not interfere with one another.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A band plan detailing modes and frequency segments within a band\": A band plan is broader guidance about modes and segments; coordination deals with specific repeater frequency choices in an area.\n- sourceIndex 2: \"The selection of simplex frequencies used by individual operators\": Individual simplex choices are made by operators for direct contacts, not by the repeater coordination process.\n- sourceIndex 3: \"A part of the planning prior to a contest\": Contest planning can assign operating strategies, but it is not the VHF/UHF repeater coordination system.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-001-003"
+    }
+  ],
+  "licenseClass": "original"
+}

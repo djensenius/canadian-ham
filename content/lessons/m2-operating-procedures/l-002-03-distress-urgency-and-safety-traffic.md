@@ -10,34 +10,90 @@ title:
 covers:
   - B-002-008
 objectives:
-  - "Distinguish distress, urgency, and safety priority."
-  - "Know when emergency words are appropriate."
-  - "Keep emergency traffic clear and purposeful."
+  - "Recognize distress, urgent, and safety roles in emergency operating."
+  - "Interrupt routine traffic appropriately when life is at risk."
+  - "Prepare a station to communicate during power outages."
 prerequisites:
-  - L-002-02
-estimatedMinutes: 25
+  - L-002-01
+estimatedMinutes: 30
 quizIds:
   - QZ-L-002-03-A
-status: outline
+status: draft
 ---
+# Distress, urgency, and safety traffic
+
+Emergency operating begins with calm decisions and plain facts. Distress traffic involves immediate danger to life. Urgent traffic involves a serious need for help with no immediate threat to life. Safety traffic carries hazard information. Good amateur procedure keeps those roles clear, gives distress traffic immediate access, and keeps capable stations listening while proper authorities are notified.
+
+This lesson teaches the priority relationships needed for Basic operating and keeps the focus on practical amateur conduct: recognize the situation, use the proper signal, interrupt cleanly, pass accurate details, and maintain a usable station.
+
 ## Learning objectives
 
-- Distinguish distress, urgency, and safety priority.
-- Know when emergency words are appropriate.
-- Keep emergency traffic clear and purposeful.
+By the end of this lesson, you can:
 
-## Key concepts
+- distinguish distress, urgent, and safety traffic by role;
+- state the voice distress signal and Morse distress signal taught here;
+- interrupt a repeater conversation in a distress situation with clear facts;
+- decide what to do after hearing distress traffic; and
+- list simple station preparations for communication during a power outage.
 
-- Emergency signals are reserved for genuine need.
-- Priority words communicate severity before details.
-- Operators should yield and assist appropriately.
+## Distress, urgency, and safety roles
 
-## Coverage
+Distress is tied to immediate danger to life. Formal distress signals are standardized so all stations recognize a life-threatening situation quickly. In voice, the distress word is MAYDAY and it is transmitted three times. In Morse code, the distress signal is SOS.
 
-- B-002-008 — Distress, urgency, and safety traffic (questions B-002-008-001 through B-002-008-011)
+Urgent traffic handles serious requests for assistance with no immediate threat to life. Its purpose is fast assistance while reserving the distress signal for immediate danger to life.
 
-## Teaching notes
+In the priority comparison used in this module, distress immediately precedes emergency or urgency messages. Treat that comparison narrowly and classify each real situation by the facts you hear. Safety traffic warns stations about hazards that affect people, navigation, weather, or operating conditions.
 
-- Reference sheet: no formula; procedure cards can be original.
-- Avoid role-playing false distress as entertainment.
-- Connect to regulatory permissions for emergency communication.
+### Reference fact: priority terms in this lesson
+
+| Term or signal | Meaning used here |
+|---|---|
+| MAYDAY | Voice distress signal for a life-threatening situation; transmitted three times. |
+| SOS | Morse distress signal for a life-threatening situation. |
+| Urgent | Serious request for help with no immediate threat to life. |
+| Emergency message | The message level immediately after distress in the priority comparison. |
+| Safety traffic | Hazard information affecting people, navigation, weather, or operating conditions. |
+
+## Breaking into routine traffic
+
+If you are in distress on a repeater that is already busy, break in between transmissions. State your call sign and the situation. Give the essential information clearly, then answer follow-up questions from stations that can help. The operators already using the repeater need enough facts to give the distress station immediate access and start assistance.
+
+If you are one of the routine stations and you hear a distress break-in, acknowledge the distressed station. Find the location and assistance needed. If direct assistance is beyond your station, notify the appropriate authorities and keep listening in case your station becomes useful.
+
+A station unable to provide direct help still has a role. It can relay accurate information, contact the proper authority, and maintain watch for follow-up traffic. Staying engaged can preserve information that only your station heard.
+
+## Prepared stations are useful stations
+
+Emergency communication depends on equipment that works when commercial systems are unavailable. Preparing to operate on alternate power lets a station communicate during a power outage. A handheld emergency kit includes an adequate supply of charged batteries.
+
+Portable HF equipment may use simple antennas that can be carried and erected easily. A dipole or a vertical can be a practical portable HF choice for emergency setup when HF is the tool being deployed.
+
+## Records during priority traffic
+
+Emergency notes deserve special care. Write times, call signs, locations, frequencies, names if given, requested assistance, and the action you took. Notes reduce memory errors when you relay details to authorities or another station.
+
+Use plain language when it prevents confusion. Abbreviations are useful only if every station involved understands them under stress.
+
+## How these procedures fit together
+
+The operating chain is: recognize whether the situation is life-threatening distress, use the proper distress signal only when it applies, interrupt between transmissions with identification and facts, collect location and assistance details, contact people who can help, and keep listening while the incident is active. Station readiness supports that chain by making sure the radio, power source, batteries, and portable antenna can actually be used when commercial systems are unavailable.
+
+## Radio connection
+
+A radio operator in an emergency is valuable because they can listen, classify the traffic carefully, and relay accurately. Calm procedure carries more value than raw transmitter power: give the distress station immediate access, acknowledge it, find the location and assistance needed, notify the authorities, and keep watch until released or no longer useful.
+
+Emergency readiness is also ordinary station maintenance. Charged batteries, a known-good portable antenna, and a way to operate without commercial AC power turn a hobby station into a communication resource when other systems are unavailable.
+
+## Illustration brief
+
+Alt text: A priority note board showing distress facts and station-readiness items.
+
+Description: Draw a note board beside a small repeater scene. At the top, show distress traffic as life-threatening and link it to the voice and Morse distress signals. Below it, show urgent traffic as serious help with no immediate threat to life, emergency or urgency messages immediately after distress in the narrow priority comparison, and safety traffic as hazard information. Include a handheld with spare batteries and a simple portable dipole in a go-kit.
+
+## Summary
+
+- Distress, urgency, and safety traffic are classified by the situation they carry.
+- Formal distress signals mark life-threatening traffic so the distress station gets immediate access.
+- The narrow priority comparison places distress directly before the emergency or urgency level.
+- A distress break-in needs identification, location, assistance details, authority notification, and continued listening.
+- Station readiness links alternate power, charged batteries, practical portable antennas, and clear written records.

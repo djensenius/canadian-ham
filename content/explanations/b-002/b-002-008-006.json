@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-008-006",
+  "questionId": "B-002-008-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-008-006.\n\nWhy the correct answer is right: Preparing for operation without commercial AC power lets the station keep communicating during a power outage.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"So you will comply with the rules\": The point is readiness for an outage, not a blanket rule requiring off-grid capability.\n- sourceIndex 2: \"So you may operate in contests where AC power is not allowed\": Contest power categories exist in some events, but that is not the emergency-preparedness reason here.\n- sourceIndex 3: \"So you may use your station while mobile\": Mobile operation is a separate station arrangement and not the main advantage of backup power.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-03"
+    },
+    {
+      "type": "question",
+      "id": "B-002-008-006"
+    }
+  ],
+  "licenseClass": "original"
+}

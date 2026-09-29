@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-005-006",
+  "questionId": "B-002-005-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-005-006.\n\nWhy the correct answer is right: K invites a reply from any station, so it is used when the transmission is open for someone to answer.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"End of message\": End of message is a closing procedural signal such as AR; K invites a reply.\n- sourceIndex 2: \"Called station only reply\": A called-station-only invitation is more restrictive than K.\n- sourceIndex 3: \"All received correctly\": All received correctly is R, not K.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-005-006"
+    }
+  ],
+  "licenseClass": "original"
+}

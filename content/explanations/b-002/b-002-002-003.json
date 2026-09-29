@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-002-003",
+  "questionId": "B-002-002-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-002-003.\n\nWhy the correct answer is right: In the ITU alphabet, the letter A is spoken as Alfa, with the official spelling used in radio procedure.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Able\": Able belongs to older or informal spelling alphabets, not the ITU radiotelephony alphabet.\n- sourceIndex 2: \"Adam\": Adam may start with A, but initial letter alone is not enough for a standard phonetic word.\n- sourceIndex 3: \"America\": America is a recognizable place name, yet the ITU alphabet assigns Alfa to A.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-002-003"
+    }
+  ],
+  "licenseClass": "original"
+}

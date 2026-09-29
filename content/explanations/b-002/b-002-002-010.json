@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-002-010",
+  "questionId": "B-002-002-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-002-010.\n\nWhy the correct answer is right: Papa is the ITU phonetic word for P.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Portugal\": Portugal is geographic and not the standardized P word.\n- sourceIndex 2: \"Paris\": Paris can identify a city, but the phonetic alphabet does not use it for P.\n- sourceIndex 3: \"Peter\": Peter is an informal name-based spelling word; the ITU alphabet uses Papa for P.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-002-010"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-001-002",
+  "questionId": "B-002-001-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-001-002.\n\nWhy the correct answer is right: A repeater receives a weak portable or mobile signal and retransmits it from a better site, so the practical coverage of those stations is increased.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To link amateur radio stations with the telephone system\": Autopatch or phone-link features may exist on some systems, but telephone interconnection is separate from the basic RF relay function.\n- sourceIndex 2: \"To retransmit weather information during severe storm warnings\": Weather information may be carried by some systems, but rebroadcasting storm notices is not the basic reason a repeater exists.\n- sourceIndex 3: \"To make local information available 24 hours a day\": Local bulletins can be offered by clubs, yet continuous information service is separate from a repeater’s main relay function.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-001-002"
+    }
+  ],
+  "licenseClass": "original"
+}

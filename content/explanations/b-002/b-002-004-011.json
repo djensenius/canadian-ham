@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-004-011",
+  "questionId": "B-002-004-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-004-011.\n\nWhy the correct answer is right: The first operating action is to listen carefully so you do not interrupt communication already taking place.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"ask if the frequency is occupied\": Asking if the frequency is occupied can help after listening, but transmitting the question is not the first step.\n- sourceIndex 2: \"make an announcement on the frequency indicating that you intend to make a call\": Announcing an intended call before listening risks interrupting exactly the traffic you should have detected.\n- sourceIndex 3: \"decrease your receiver's volume\": Lowering receiver volume makes it harder to discover whether the frequency is in use.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-004-011"
+    }
+  ],
+  "licenseClass": "original"
+}

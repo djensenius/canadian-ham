@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-007-001",
+  "questionId": "B-002-007-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-007-001.\n\nWhy the correct answer is right: QRS means send more slowly, a useful request when the code is too fast to copy.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Interference from static\": Static trouble is QRN, not QRS.\n- sourceIndex 2: \"Send \\\"RST\\\" report\": An RST request asks for a signal report; QRS asks the other station to send more slowly.\n- sourceIndex 3: \"Radio station location is ...\": Station location is QTH, not QRS.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-007-001"
+    }
+  ],
+  "licenseClass": "original"
+}

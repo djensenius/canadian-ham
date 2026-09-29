@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-008-011",
+  "questionId": "B-002-008-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-008-011.\n\nWhy the correct answer is right: If you cannot help directly, contact authorities and keep watch in case you can relay or provide further information.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"enter the details in the logbook and take no further action\": Logging and then doing nothing abandons a situation where you may still be useful.\n- sourceIndex 2: \"take no action\": Taking no action ignores the responsibility to pass the distress information to someone who can help.\n- sourceIndex 3: \"tell all other stations to cease transmitting\": Ordering all stations off the air may exceed your role and could silence stations that can provide assistance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-03"
+    },
+    {
+      "type": "question",
+      "id": "B-002-008-011"
+    }
+  ],
+  "licenseClass": "original"
+}

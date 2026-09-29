@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-003-001",
+  "questionId": "B-002-003-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-003-001.\n\nWhy the correct answer is right: A routine voice CQ uses a balanced pattern: say CQ three times, say “this is,” and then give your call sign three times so listeners hear both the invitation and the station identity.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Say \\\"CQ\\\" once, followed by \\\"this is,\\\" followed by your call sign spoken three times\": One CQ may be missed before listeners realize a general call is being made.\n- sourceIndex 2: \"Say \\\"CQ\\\" at least five times, followed by \\\"this is,\\\" followed by your call sign spoken once\": Many CQs followed by one call sign gives poor identification balance and uses unnecessary airtime.\n- sourceIndex 3: \"Say \\\"CQ\\\" at least ten times, followed by \\\"this is,\\\" followed by your call sign spoken once\": Ten or more CQs wastes airtime and delays the call sign that answering stations need.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-003-001"
+    }
+  ],
+  "licenseClass": "original"
+}

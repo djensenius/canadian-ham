@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-007-009",
+  "questionId": "B-002-007-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-007-009.\n\nWhy the correct answer is right: QRS is the code that asks the other station to send more slowly.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"QRM\": QRM reports interference; it does not request slower sending.\n- sourceIndex 2: \"QRL\": QRL is about a busy frequency, not code speed.\n- sourceIndex 3: \"QRN\": QRN reports static and is unrelated to slowing down.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-007-009"
+    }
+  ],
+  "licenseClass": "original"
+}

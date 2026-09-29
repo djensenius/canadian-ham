@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-009-002",
+  "questionId": "B-002-009-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-009-002.\n\nWhy the correct answer is right: An azimuthal map is a projection centred on a selected location, often your station, so bearings radiate from that centre.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A map projection displaying Maidenhead grid squares\": Maidenhead grids can appear on maps, but that is not what defines an azimuthal projection.\n- sourceIndex 2: \"A map projection centred on the magnetic North Pole\": The centre is not necessarily the magnetic North Pole.\n- sourceIndex 3: \"A map projection centred on the geographic North Pole\": The geographic North Pole is not the required centre; the map can be centred on the operator’s location.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-04"
+    },
+    {
+      "type": "question",
+      "id": "B-002-009-002"
+    }
+  ],
+  "licenseClass": "original"
+}

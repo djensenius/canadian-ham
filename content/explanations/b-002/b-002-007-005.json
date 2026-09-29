@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-007-005",
+  "questionId": "B-002-007-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-007-005.\n\nWhy the correct answer is right: QSB indicates fading of the received signal.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"I am busy\": Being busy is QRL, not QSB.\n- sourceIndex 2: \"I have no message\": Having no message concerns traffic to send, while QSB describes changing signal strength from fading.\n- sourceIndex 3: \"I am confirming contact\": Confirming a contact is QSL in common use, not QSB.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-007-005"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-001-011",
+  "questionId": "B-002-001-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-001-011.\n\nWhy the correct answer is right: Two-metre FM repeater operation uses a 600 kHz standard offset between the transmit and receive frequencies.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"800 kHz\": 800 kHz would tune the transmitter 200 kHz away from the expected two-metre repeater split.\n- sourceIndex 2: \"1000 kHz\": 1000 kHz is a full megahertz, so a radio programmed that way would not be on the paired input for the 600 kHz plan.\n- sourceIndex 3: \"400 kHz\": 400 kHz is 200 kHz short of the standard two-metre FM repeater offset.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-001-011"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-009-005",
+  "questionId": "B-002-009-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-009-005.\n\nWhy the correct answer is right: Amateurs commonly prove contacts with QSL cards or entries in web-based logging systems.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A letter detailing contact date, time, frequency, mode and power\": A free-form letter could contain details, but QSL and web-log systems are the established proof-of-contact methods.\n- sourceIndex 2: \"A radiogram sent over amateur radio traffic nets\": A radiogram is a message format, not the usual proof-of-contact method.\n- sourceIndex 3: \"A brief email or text message\": A brief email or text may lack the structured confirmation role of QSL or web logging.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-04"
+    },
+    {
+      "type": "question",
+      "id": "B-002-009-005"
+    }
+  ],
+  "licenseClass": "original"
+}

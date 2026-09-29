@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-009-006",
+  "questionId": "B-002-009-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-009-006.\n\nWhy the correct answer is right: If the short-path direction does not work, trying the antenna 180 degrees away tests the long-path direction.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Point your antenna 90 degrees west of the current bearing\": Ninety degrees west is a side direction, not the reciprocal path.\n- sourceIndex 2: \"Point your antenna 90 degrees east of the current bearing\": Ninety degrees east is also perpendicular rather than opposite.\n- sourceIndex 3: \"Point your antenna further south\": “Further south” is vague and may not match the required reciprocal bearing.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-04"
+    },
+    {
+      "type": "question",
+      "id": "B-002-009-006"
+    }
+  ],
+  "licenseClass": "original"
+}

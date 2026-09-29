@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-005-001",
+  "questionId": "B-002-005-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-005-001.\n\nWhy the correct answer is right: A routine Morse CQ sends CQ three times, DE, and the caller’s call sign three times, giving listeners a clear chance to copy the call.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Send the letters \\\"CQ\\\" three times, followed by the word \\\"DE,\\\" followed by your call sign once\": Giving the call sign only once may be missed, especially by a station tuning across the signal.\n- sourceIndex 2: \"Send the letters \\\"CQ\\\" ten times, followed by the word \\\"DE,\\\" followed by your call sign once\": Ten CQs with only one call sign is unbalanced and wastes time before identification.\n- sourceIndex 3: \"Send the letters \\\"CQ\\\" until someone answers\": Sending CQ indefinitely without a complete identification is poor procedure and blocks the frequency.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-005-001"
+    }
+  ],
+  "licenseClass": "original"
+}

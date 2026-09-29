@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-003-003",
+  "questionId": "B-002-003-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-003-003.\n\nWhy the correct answer is right: Simplex operation uses the same frequency for transmitting and receiving, so the stations communicate directly on one channel.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Transmitting and receiving over a wide area\": Wide-area coverage can happen with repeaters or propagation; it does not define simplex.\n- sourceIndex 2: \"Transmitting on one frequency and receiving on another\": Separate transmit and receive frequencies describe duplex or repeater operation, not simplex.\n- sourceIndex 3: \"Transmitting one-way communications\": One-way communication would not be a normal two-way simplex contact.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-003-003"
+    }
+  ],
+  "licenseClass": "original"
+}

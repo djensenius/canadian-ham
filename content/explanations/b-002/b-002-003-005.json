@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-003-005",
+  "questionId": "B-002-003-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-003-005.\n\nWhy the correct answer is right: Use VHF and UHF for local contacts when suitable so HF spectrum remains less cluttered for longer-distance communication.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Because greater output power is permitted on VHF and UHF\": The reason is not that VHF/UHF automatically allow more output power; it is about appropriate use of bands.\n- sourceIndex 2: \"Because HF transmissions are not propagated locally\": HF can certainly support local paths in some conditions, so “not propagated locally” is too absolute.\n- sourceIndex 3: \"Because signals are stronger on VHF and UHF frequencies\": Signals are not inherently stronger on VHF/UHF in every local situation; the operating principle is spectrum courtesy.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-003-005"
+    }
+  ],
+  "licenseClass": "original"
+}

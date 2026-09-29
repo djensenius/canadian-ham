@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-004-006",
+  "questionId": "B-002-004-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-004-006.\n\nWhy the correct answer is right: If the usual net frequency is already occupied, ask courteously whether the occupants can move; if not, move the net to a clear frequency.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Reduce your output power and start the net as usual\": Starting over existing activity at lower power still interferes and does not respect current users.\n- sourceIndex 2: \"Increase your power output so that net participants will be able to hear you over the existing activity\": Increasing power to dominate the frequency is poor operating and escalates interference.\n- sourceIndex 3: \"Cancel the net for that day\": Cancelling is unnecessary if a clear alternative frequency can be used.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-004-006"
+    }
+  ],
+  "licenseClass": "original"
+}

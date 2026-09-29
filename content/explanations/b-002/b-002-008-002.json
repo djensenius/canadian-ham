@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-008-002",
+  "questionId": "B-002-008-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-008-002.\n\nWhy the correct answer is right: A serious request for help from an isolated place with no immediate threat to life fits urgent traffic; distress is reserved for immediate danger to life.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Distress\": Distress is tied to life-threatening situations, and no immediate danger to life is described.\n- sourceIndex 2: \"Safety\": Safety traffic warns about hazards; this scenario asks another station to summon help for an isolated place.\n- sourceIndex 3: \"Welfare\": Welfare may sound like a well-being check, but the stem is an active request for assistance from a remote location.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-03"
+    },
+    {
+      "type": "question",
+      "id": "B-002-008-002"
+    }
+  ],
+  "licenseClass": "original"
+}

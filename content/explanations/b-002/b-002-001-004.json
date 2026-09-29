@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-001-004",
+  "questionId": "B-002-001-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-001-004.\n\nWhy the correct answer is right: A repeater time-out timer is a protection feature: if one transmission runs too long, the controller stops the repeater from continuing indefinitely.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It hands over control to each user in turns\": The timer does not manage a formal turn-taking queue; operators still need to leave pauses and use courtesy.\n- sourceIndex 2: \"It logs repeater transmit time to predict when a repeater will fail\": Predictive maintenance uses service records; the time-out timer protects the repeater by cutting off overlong transmissions.\n- sourceIndex 3: \"It tells how long someone has been using a repeater\": An elapsed-time display would only inform the user; the time-out timer actively cuts off excessive transmissions.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-001-004"
+    }
+  ],
+  "licenseClass": "original"
+}

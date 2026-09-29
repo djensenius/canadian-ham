@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-009-009",
+  "questionId": "B-002-009-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-009-009.\n\nWhy the correct answer is right: UTC is referenced to the Greenwich meridian in the United Kingdom.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Geneva, Switzerland\": Geneva is associated with international organizations, but it is not the UTC reference meridian location.\n- sourceIndex 2: \"Ottawa, Canada\": Ottawa is a Canadian capital, not the meridian origin for UTC.\n- sourceIndex 3: \"Boulder, United States of America\": Boulder has time and frequency facilities, but the UTC meridian origin is Greenwich.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-04"
+    },
+    {
+      "type": "question",
+      "id": "B-002-009-009"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-008-010",
+  "questionId": "B-002-008-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-008-010.\n\nWhy the correct answer is right: Messages involving immediate danger to life take precedence over the emergency or urgency level in the narrow priority comparison.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"no other messages\": Traffic still has lower-priority handling after distress; operators need the next level once life-threatening traffic is handled.\n- sourceIndex 2: \"a government priority message\": Amateur emergency and urgency handling is based on the traffic’s urgency, not on a government-priority label.\n- sourceIndex 3: \"a safety message\": Safety traffic warns of hazards, while emergency or urgency traffic carries a request for urgent assistance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-03"
+    },
+    {
+      "type": "question",
+      "id": "B-002-008-010"
+    }
+  ],
+  "licenseClass": "original"
+}

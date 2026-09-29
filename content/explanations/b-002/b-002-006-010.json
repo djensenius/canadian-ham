@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-006-010",
+  "questionId": "B-002-006-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-006-010.\n\nWhy the correct answer is right: RST 459 means readability 4, strength 5, tone 9: quite readable, fair strength, and perfect tone.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Your signal is very readable, very strong, and with perfect tone\": That wording claims higher readability and strength than the digits 4 and 5 represent in the table.\n- sourceIndex 2: \"Your signal is barely readable, very weak, and with perfect tone\": Barely readable and very weak correspond to lower readability and strength digits than 4 and 5.\n- sourceIndex 3: \"Your signal is moderately readable, very weak, and with hum on the tone\": Hum on the tone points to a lower tone-quality digit; the final digit 9 indicates perfect tone in this scale.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-006-010"
+    }
+  ],
+  "licenseClass": "original"
+}

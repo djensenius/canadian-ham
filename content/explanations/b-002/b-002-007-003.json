@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-007-003",
+  "questionId": "B-002-007-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-007-003.\n\nWhy the correct answer is right: QRL? is the CW-style check asking whether the frequency is in use before you transmit further.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"QRV?\": QRV? asks about readiness, not whether the channel is already occupied.\n- sourceIndex 2: \"QRU?\": QRU? concerns whether there is more traffic, not a busy-frequency check.\n- sourceIndex 3: \"QRZ?\": QRZ? asks who is calling, not whether the frequency is clear.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-007-003"
+    }
+  ],
+  "licenseClass": "original"
+}

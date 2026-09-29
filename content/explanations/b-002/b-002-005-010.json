@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-005-010",
+  "questionId": "B-002-005-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-005-010.\n\nWhy the correct answer is right: CW occupies much less bandwidth than voice, so 150 Hz to 500 Hz is the minimum separation from another CW contact.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"5 Hz to 50 Hz\": Five to fifty hertz is too close for comfortable separation of practical CW contacts.\n- sourceIndex 2: \"1 kHz to 3 kHz\": One to three kilohertz is wider than the expected CW minimum and closer to voice-channel thinking.\n- sourceIndex 3: \"3 kHz to 6 kHz\": Three to six kilohertz is single-sideband voice-scale spacing, not narrow CW spacing.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-005-010"
+    }
+  ],
+  "licenseClass": "original"
+}

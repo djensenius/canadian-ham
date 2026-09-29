@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-006-004",
+  "questionId": "B-002-006-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-006-004.\n\nWhy the correct answer is right: A 3 3 report means the signal can be read only with considerable difficulty and is weak.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Your signal is unreadable, very weak in strength\": Unreadable and very weak would be lower than 3 for readability and strength.\n- sourceIndex 2: \"The station is located at latitude 33 degrees\": Latitude is unrelated to an RS signal report.\n- sourceIndex 3: \"The contact is serial number 33\": A serial number is a contest exchange item; a two-number report gives readability and strength.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-006-004"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-003-010",
+  "questionId": "B-002-003-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-003-010.\n\nWhy the correct answer is right: Around 3755 kHz, the common voice sideband is lower sideband.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Independent\": Independent sideband is not the normal amateur voice convention for this frequency.\n- sourceIndex 2: \"Double\": Double sideband does not match ordinary single-sideband voice practice.\n- sourceIndex 3: \"Upper\": Upper sideband is used on 20 metres, while the 3755 kHz convention is lower sideband.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-003-010"
+    }
+  ],
+  "licenseClass": "original"
+}

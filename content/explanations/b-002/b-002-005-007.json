@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-005-007",
+  "questionId": "B-002-005-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-005-007.\n\nWhy the correct answer is right: DX refers to a distant station or long-distance contact.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Calling any station\": Calling any station is CQ, not DX.\n- sourceIndex 2: \"Go ahead\": Go ahead is the idea carried by K in Morse procedure; DX refers to distance.\n- sourceIndex 3: \"Best regards\": Best regards is 73; DX refers to a distant station or contact.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-02"
+    },
+    {
+      "type": "question",
+      "id": "B-002-005-007"
+    }
+  ],
+  "licenseClass": "original"
+}

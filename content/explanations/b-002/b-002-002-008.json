@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-002-008",
+  "questionId": "B-002-002-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-002-008.\n\nWhy the correct answer is right: India is the ITU phonetic word for I.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Iran\": Iran is a country name beginning with I but not the standard code word.\n- sourceIndex 2: \"Italy\": Italy may be a tempting geographic word; the ITU list uses India instead.\n- sourceIndex 3: \"Item\": Item is an ordinary word, not the radiotelephony spelling word for I.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-002-008"
+    }
+  ],
+  "licenseClass": "original"
+}

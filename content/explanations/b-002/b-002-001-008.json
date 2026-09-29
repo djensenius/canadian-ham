@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-002-001-008",
+  "questionId": "B-002-001-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-002-001-008.\n\nWhy the correct answer is right: Long repeater transmissions can monopolize the shared channel, so keeping overs short preserves access for emergency or higher-priority traffic.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To keep long-distance charges down\": Amateur repeater use is not billed as long-distance telephone traffic in this context.\n- sourceIndex 2: \"To reduce the bandwidth used by the repeater\": The occupied FM channel width is not reduced merely because an over is shorter; the issue is channel availability.\n- sourceIndex 3: \"To avoid exceeding the repeater's memory storage\": Repeater memory storage is not what is consumed by a long voice transmission.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-002-01"
+    },
+    {
+      "type": "question",
+      "id": "B-002-001-008"
+    }
+  ],
+  "licenseClass": "original"
+}
