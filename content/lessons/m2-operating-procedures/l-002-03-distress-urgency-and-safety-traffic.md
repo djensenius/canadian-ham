@@ -22,31 +22,36 @@ status: draft
 ---
 # Distress, urgency, and safety traffic
 
-Emergency operating begins with calm priority decisions. The official Basic answers used here establish a small set of facts: MAYDAY or SOS are for life-threatening distress, a remote request for help without immediate risk to life is urgent, distress comes immediately before the emergency/urgent message level named in the priority-order item, and a station that hears distress traffic should help or keep listening while proper authorities are notified.
+Emergency operating begins with calm decisions and plain facts. The official Basic answers used here establish a small set of principles: MAYDAY or SOS are for life-threatening distress, a remote request for help when life is not immediately endangered is urgent, the priority-order item places a distress message immediately before an emergency message, and a station that hears distress traffic should help or keep listening while proper authorities are notified.
 
-This lesson does not add unverified distress-word systems or a broader priority ladder. It teaches only the terms and ordering stated by the official Basic answers and keeps the focus on practical amateur conduct.
+This lesson does not add unverified distress-word systems or a broader priority ladder. It teaches only the terms and comparisons established by the official Basic answers and keeps the focus on practical amateur conduct.
 
 ## Learning objectives
 
 By the end of this lesson, you can:
 
 - distinguish distress from urgent traffic using the official Basic wording;
-- state the voice distress signal and Morse distress signal taught in the bank;
+- state the voice distress signal and Morse distress signal taught here;
 - interrupt a repeater conversation in a distress situation without adding confusion;
 - decide what to do after hearing distress traffic; and
 - list simple station preparations for communication during a power outage.
 
-## Priority starts with risk
+## Distress and urgent traffic
 
-Distress is the highest priority in this lesson. SOS or MAYDAY use is tied to a life-threatening distress situation. In voice, the distress word is MAYDAY, transmitted three times. In Morse code, the distress signal is SOS.
+Distress is tied to immediate danger to life. SOS or MAYDAY is reserved for a life-threatening distress situation. In voice, the distress word is MAYDAY and it is transmitted three times. In Morse code, the distress signal is SOS. Ordinary words such as help or emergency can describe a situation in plain language, but they are not the formal voice distress signal taught here.
 
-Urgent traffic is serious but not the same as immediate danger to life. The official example classifies a request for assistance from an isolated place, when life is not immediately at risk, as urgent.
+Urgent traffic is serious, but it is not the same classification as life-threatening distress. The Basic wording classifies a request to summon help from a remote place, when life is not immediately endangered, as urgent.
 
-The priority-order item places distress immediately above the emergency/urgent level; the French wording for that answer is "message d'urgence." Because that item asks for the immediately lower level, "safety message" is not the answer to that specific comparison. Do not infer a complete safety-message ladder from these questions.
+The priority-order item asks what follows a distress message in that comparison. Its correct English answer is an emergency message, with French wording that uses "message d'urgence." This fact should not be expanded into a complete ladder of traffic classes. Safety traffic and other possible labels are outside the comparison taught by this question.
 
-### Worked example: sorting message priority
+### Reference fact: distress terms in this lesson
 
-A community event net hears three possible items: a lost-child report with no injury confirmed, a routine request for more water at a checkpoint, and a station reporting a life-threatening injury. The life-threatening report is handled first. The lost-child report may be important, but the lesson's established urgent/distress distinction still depends on whether immediate risk to life is present.
+| Term or signal | Meaning used here |
+|---|---|
+| MAYDAY | Voice distress signal for a life-threatening situation; transmitted three times. |
+| SOS | Morse distress signal for a life-threatening situation. |
+| Urgent | Serious request for help when the Basic wording says life is not immediately endangered. |
+| Emergency message | The message level immediately after distress in the Basic priority-order item. |
 
 ## Breaking into routine traffic
 
@@ -54,33 +59,27 @@ If you are in distress on a repeater that is already busy, break in between tran
 
 If you are one of the routine stations and you hear a distress break-in, acknowledge the distressed station. Determine location and what assistance may be needed. If you cannot directly assist, notify the appropriate authorities and keep listening in case your station becomes useful.
 
-### Worked example: a clear interruption
-
-A station with priority traffic waits for a gap, gives a call sign, and states the essential situation in one sentence. The listening stations stop routine comments and organize the next questions: location, what help is needed, and who is contacting the appropriate authority. The channel stays focused on facts that can be acted on.
+A station unable to provide direct help still has a role. It can relay accurate information, contact the proper authority, and maintain watch for follow-up traffic. Taking no action or leaving the frequency can strand information that only your station heard.
 
 ## Prepared stations are useful stations
 
-An emergency is a poor time to discover that every battery is flat. Two simple readiness ideas matter here: preparing to operate without commercial AC power lets a station communicate during a power outage, and handheld emergency communication depends on an adequate supply of charged batteries.
+An emergency is a poor time to discover that every battery is flat. Preparing to operate without commercial AC power lets a station communicate during a power outage. Handheld emergency communication depends on an adequate supply of charged batteries, not just a radio in a bag.
 
-Portable HF equipment may use simple antennas that can be carried and erected without a tower. The bank identifies a dipole or a vertical as good portable HF choices for emergency setup. That does not make every emergency an HF problem; it means the antenna choice is practical when HF is the tool being deployed.
+Portable HF equipment may use simple antennas that can be carried and erected without a tower. A dipole or a vertical can be a practical portable HF choice for emergency setup. That does not make every emergency an HF problem; it means the antenna choice is practical when HF is the tool being deployed.
 
-## Keep records during priority traffic
+## Records during priority traffic
 
-Even though this module later teaches logs for routine contacts, emergency notes deserve special care. Write times, call signs, locations, frequencies, names if given, requested assistance, and the action you took. Notes reduce memory errors when you relay details to authorities or another station.
+Emergency notes deserve special care. Write times, call signs, locations, frequencies, names if given, requested assistance, and the action you took. Notes reduce memory errors when you relay details to authorities or another station.
 
 Use plain language when it prevents confusion. Abbreviations are useful only if every station involved understands them under stress.
 
-## Try it
+## How these procedures fit together
 
-1. During routine repeater traffic, a priority station breaks in with a call sign and says only "need help at the bridge." What should the routine stations do next? Stop the routine exchange, acknowledge the station, and ask what assistance is needed so the break-in becomes actionable.
-2. You must pass emergency details to authorities by telephone. What information belongs in your first note? Record the time, frequency, call sign if known, location, and requested help before memory starts filling gaps.
-3. Your handheld go-kit has charged packs but no way to identify which pack was used last. What simple label helps readiness? Mark charged, used, and needs-charge status so you do not mistake a depleted pack for reserve energy.
-4. A portable HF antenna is packed for an outage deployment, but the bag has no support line and the station power plan assumes commercial AC. What two gaps should be fixed? Add the hardware to erect the antenna and a tested non-AC power source so the portable HF station can actually operate.
-5. A relay operator is relieved by another station during ongoing priority traffic. What should be handed over first? Give the current location, requested help, and who has already been contacted so the new relay does not restart from memory.
+The operating chain is: recognize whether the situation is life-threatening distress, use the proper distress signal only when it applies, interrupt between transmissions with identification and facts, collect location and assistance details, contact people who can help, and keep listening while the incident is active. Station readiness supports that chain by making sure the radio, power source, batteries, and portable antenna can actually be used when commercial systems are unavailable.
 
 ## Radio connection
 
-A radio operator in an emergency is valuable because they can listen, prioritize, and relay accurately. Transmitter power is less important than calm procedure: clear the channel, collect the essential facts, pass them to someone who can help, and keep watch until released or no longer useful.
+A radio operator in an emergency is valuable because they can listen, classify the traffic carefully, and relay accurately. Transmitter power is less important than calm procedure: clear the channel when distress requires it, collect the essential facts, pass them to someone who can help, and keep watch until released or no longer useful.
 
 Emergency readiness is also ordinary station maintenance. Charged batteries, a known-good portable antenna, and a way to operate without commercial AC power turn a hobby station into a communication resource when other systems are unavailable.
 
@@ -88,6 +87,7 @@ Emergency readiness is also ordinary station maintenance. Charged batteries, a k
 
 - Using MAYDAY or SOS for non-distress situations.
 - Treating urgent traffic as identical to life-threatening distress.
+- Expanding one priority comparison into a complete unverified traffic ladder.
 - Continuing a routine conversation after a distress break-in.
 - Leaving the frequency immediately when you may be the only station that can copy the distressed operator.
 - Packing a handheld radio for emergencies without charged spare batteries.
@@ -95,15 +95,16 @@ Emergency readiness is also ordinary station maintenance. Charged batteries, a k
 
 ## Illustration brief
 
-Alt text: A priority note board showing distress at the top and urgent traffic below it.
+Alt text: A priority note board showing distress facts and station-readiness items.
 
-Description: Draw a note board beside a small repeater scene. At the top, label "distress: life-threatening; MAYDAY on voice; SOS on Morse." Below it, show "urgent/emergency message: serious help needed without immediate life risk in the official wording." Add a warning callout that the lesson does not infer a full safety-message ladder. Include a handheld with spare batteries and a simple portable dipole in a go-kit.
+Description: Draw a note board beside a small repeater scene. At the top, label "distress: life-threatening; MAYDAY on voice; SOS on Morse." Below it, show "urgent: help needed when life is not immediately endangered in the Basic wording" and "emergency message: immediately after distress in the priority comparison." Add a warning callout that the lesson does not infer a full safety-message ladder. Include a handheld with spare batteries and a simple portable dipole in a go-kit.
 
 ## Summary
 
 - MAYDAY is the voice distress signal, and SOS is the Morse distress signal.
-- Distress is tied to life-threatening situations and comes immediately before the emergency/urgent message level in the official priority item.
-- A serious remote-help request without immediate life risk is urgent in the official Basic wording.
+- Distress is tied to life-threatening situations.
+- A serious remote-help request when life is not immediately endangered is urgent in the official Basic wording.
+- The priority-order item places distress immediately before an emergency message; do not infer a broader ladder from that single comparison.
 - Break into a repeater between transmissions with your call sign and situation when distress requires it.
 - Acknowledge distress traffic, determine location and assistance needed, notify authorities if you cannot directly help, and keep listening.
 - Station readiness includes non-AC power, charged batteries, and practical portable antennas.

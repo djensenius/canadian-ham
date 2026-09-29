@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-008-010.\n\nWhy the correct answer is right: The priority item places a distress message immediately before the emergency/urgent message level named by the correct answer.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"no other messages\": If no message followed distress, distress would not come immediately before the emergency/urgent level in this priority order.\n- sourceIndex 2: \"a government priority message\": This choice introduces a different label instead of the emergency/urgent level identified by the official English and French answer pair.\n- sourceIndex 3: \"a safety message\": The question asks for the immediately following level; safety message is not that immediate comparison in this item.",
+    "en": "Question B-002-008-010.\n\nWhy the correct answer is right: The priority comparison places a distress message immediately before the emergency message level, whose French wording is “message d'urgence.”\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"no other messages\": If no message followed distress, the comparison could not identify an immediately following message level.\n- sourceIndex 2: \"a government priority message\": Government priority is a different label from the emergency/urgent level established by the English and French answer pair.\n- sourceIndex 3: \"a safety message\": Safety is a separate label; choosing it would skip the emergency/urgent level named in the comparison.",
     "fr": null
   },
   "citations": [

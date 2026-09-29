@@ -41,11 +41,9 @@ By the end of this lesson, you can:
 
 A QSL card is written proof that two amateur stations communicated. Modern operators may also confirm contacts through web-based logging systems. Either way, the confirmation is about the contact: stations, date, time, band or frequency, mode, and often signal report or location.
 
-A personal station logbook is useful even when it is not a regulatory requirement. It can support award applications, preserve memories, and help investigate neighbour interference complaints by showing when you were actually transmitting.
+A personal station logbook is useful even when it is not a regulatory requirement. It can support award applications, preserve memories, help match confirmations, and help investigate neighbour interference complaints by showing when you were actually transmitting.
 
-### Worked example: a useful log entry
-
-After a portable contact, Dana records the date, UTC time, band, mode, other call sign, signal report exchanged, summit name, and a note that the station ran from battery power. Months later, that entry helps match a web confirmation and also reminds Dana which portable antenna worked well.
+Useful log details include UTC date and time, call sign, band or frequency, mode, signal report, location information, and brief station notes. A complete note is more valuable than a memory reconstructed later.
 
 ## Grid locators
 
@@ -55,37 +53,33 @@ In VHF contesting and many digital tools, a station may ask for your grid square
 
 The location code is a 4- or 6-character Maidenhead-style locator.
 
-You do not need to calculate a grid square by hand for the Basic exam. You should recognize what information is being requested: a location code, not antenna direction, contact count, or elevation.
+You do not need to calculate a grid square by hand for the Basic exam. You should recognize what information is being requested: a location code, not an antenna direction, contact count, or station height.
 
 ## Bearings, azimuthal maps, and long path
 
-An azimuthal map is centred on a chosen location. When it is centred on your station, directions radiating from the centre show bearings to other places. That makes it useful for aiming directional antennas or simply understanding where signals are coming from.
+An azimuthal map is centred on a chosen location. When it is centred on your station, directions radiating from the centre show bearings from your station to other places. That makes it useful for aiming directional antennas or simply understanding where signals are coming from.
 
-There are often two great-circle directions between places: the short path and the long path. The long-path heading is 180 degrees from the short-path heading. If local stations are working a distant country and you cannot hear it on the expected bearing, turning the antenna to the opposite direction is a reasonable experiment.
+There are often two great-circle directions between places: the short path and the long path. The long-path heading is 180 degrees from the short-path heading. If a desired signal is not heard on the expected short-path bearing, the opposite direction can be worth checking.
 
-### Worked example: keeping a useful direction note
+### Reference fact: map and bearing relationships
 
-A beam is first aimed on the expected short-path bearing, then the operator tests the reciprocal direction. The log note records both bearings and marks which one was the long-path trial. Months later, the note is useful because "turned around" has been replaced by actual directions.
+| Item | Meaning used here |
+|---|---|
+| Azimuthal map | Map projection centred on a chosen location. |
+| Station-centred azimuthal map | Shows bearings from the station at the centre. |
+| Long path | Direction 180 degrees from the short-path heading. |
 
 ## UTC and time standards
 
 Amateur schedules, log entries, and confirmations commonly use UTC so operators in different time zones can agree on one clock. The reference meridian is Greenwich in the United Kingdom.
 
-A time zone labelled UTC minus 6 hours is six hours behind UTC. To convert a UTC schedule to that local time, subtract six hours.
-
-### Worked example: converting a net time
-
-A digital-mode roundtable is listed for 21:30 UTC. Your local zone is UTC minus 4 hours. Subtract four hours: the local time is 17:30, or 5:30 PM. A log entry for the contact would still normally use the UTC time so other operators see the same date and time basis.
+A time zone labelled UTC minus 6 hours is six hours behind UTC. To convert a UTC schedule to that local time, subtract six hours and adjust the local date if the subtraction crosses midnight. Logs and confirmations should keep the UTC date and time together so both stations compare the same contact record.
 
 Stations CHU, WWV, and WWVH are useful as standard references for frequency and time. They are not signal-report services, band-condition forecasts, or amateur bulletin channels.
 
-## Try it
+## How these procedures fit together
 
-1. You plan to enter a VHF event and also want confirmations to match afterward. What should you prepare and log? Look up your Maidenhead locator for the exchange, and log UTC date/time with contact details so confirmations can be matched later.
-2. A neighbour asks whether your transmitter was on during a brief interference event reported in local time. Which log habit helps answer? Keep entries with UTC date, time, band or frequency, and mode, then convert the reported local time before comparing it with your operating record.
-3. Your azimuthal map is centred on your station and shows a short-path bearing of 035 degrees. What bearing is the reciprocal long-path test, and why is that map appropriate? Add 180 degrees and aim at 215 degrees; the centred azimuthal map gives bearings from your station.
-4. A schedule says 02:00 UTC, your zone is UTC minus 5, and you want the QSL details to agree later. What local clock time do you use, and what time basis should the confirmation keep? Use 21:00, or 9 PM, on the previous local date, while keeping the contact record in UTC for matching.
-5. Before a weekend activity, your logging computer clock is a minute slow and a standard signal is audible. What can you compare, and what should you avoid claiming? Compare the clock or frequency against the standard signal; do not treat CHU, WWV, or WWVH as a received report for your transmitter or a band forecast.
+Records, maps, and time standards make contacts verifiable and repeatable. QSL and web-log systems confirm that the contact happened. A station log preserves the details needed to match that confirmation and review later problems. Grid locators describe location compactly. Azimuthal maps turn location into bearing. UTC lets stations in different time zones describe the same moment without ambiguity.
 
 ## Radio connection
 
@@ -98,9 +92,10 @@ Grid locators are especially useful at VHF and UHF because small changes in posi
 - Calling a QSL card just a friendly postcard instead of proof of communication.
 - Claiming a logbook is a regulatory requirement in this lesson's scope.
 - Confusing a grid square with an antenna bearing or elevation.
-- Using a north-pole-centred map when the task is to find bearings from your own station.
+- Using a pole-centred map when the task is to find bearings from your own station.
 - Forgetting that long path is opposite the short-path heading.
 - Logging only local time and later being unable to match another station's UTC confirmation.
+- Treating CHU, WWV, or WWVH as signal-report or propagation-forecast services instead of standards.
 
 ## Illustration brief
 
@@ -111,7 +106,7 @@ Description: Draw a notebook page with columns for UTC, call sign, band, mode, r
 ## Summary
 
 - A QSL card or web-based log confirmation provides proof of communication between stations.
-- A logbook is useful for awards, memories, and interference follow-up, but it is not a regulatory requirement in this lesson's scope.
+- A logbook is useful for awards, memories, confirmation matching, and interference follow-up, but it is not a regulatory requirement in this lesson's scope.
 - A grid square is a compact Maidenhead-style location code.
 - An azimuthal map centred on your location shows bearings from your station.
 - Long path is 180 degrees from the short-path heading.

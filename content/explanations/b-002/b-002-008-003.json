@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-008-003.\n\nWhy the correct answer is right: For voice distress in this item, the signal transmitted three times is MAYDAY.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"SOS\": SOS is the Morse distress signal in this module, not the spoken voice word asked here.\n- sourceIndex 2: \"EMERGENCY\": “EMERGENCY” describes a situation in plain English, but it is not the repeated voice distress word requested by the question.\n- sourceIndex 3: \"HELP\": “HELP” is understandable language, yet the item asks for the specific voice distress signal transmitted three times.",
+    "en": "Question B-002-008-003.\n\nWhy the correct answer is right: The formal voice distress signal transmitted three times is MAYDAY.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"SOS\": SOS is the Morse distress signal, not the spoken voice word.\n- sourceIndex 2: \"EMERGENCY\": “EMERGENCY” is an ordinary word that can appear in many sentences; it is not the standardized repeated voice distress call.\n- sourceIndex 3: \"HELP\": “HELP” is understandable plain language, but it is too general to serve as the formal repeated distress signal.",
     "fr": null
   },
   "citations": [

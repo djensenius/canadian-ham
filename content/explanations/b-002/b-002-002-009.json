@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-002-009.\n\nWhy the correct answer is right: Lima is the ITU phonetic word for L.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Love\": Love is an English word beginning with L, but it is not a standard spelling word here.\n- sourceIndex 2: \"London\": London is often heard informally, yet the ITU alphabet uses Lima.\n- sourceIndex 3: \"Luxembourg\": Luxembourg is another place name and not the required code word.",
+    "en": "Question B-002-002-009.\n\nWhy the correct answer is right: Lima is the ITU phonetic word for L.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Love\": Love is an English word beginning with L, but initial letter alone is not enough for a standard phonetic word.\n- sourceIndex 2: \"London\": London is often heard informally, yet the ITU alphabet uses Lima.\n- sourceIndex 3: \"Luxembourg\": Luxembourg is another place name; the standardized radiotelephony word for L is Lima.",
     "fr": null
   },
   "citations": [

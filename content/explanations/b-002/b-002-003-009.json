@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-003-009.\n\nWhy the correct answer is right: The common sideband for 20-metre voice operation in this material is upper sideband.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Lower\": Lower sideband is the convention taught for some lower-frequency voice operation, not for 20 metres here.\n- sourceIndex 2: \"Independent\": Independent sideband is a different technical mode and not the ordinary 20-metre voice convention.\n- sourceIndex 3: \"Double\": Double sideband is not the standard single-sideband voice choice being tested.",
+    "en": "Question B-002-003-009.\n\nWhy the correct answer is right: The common sideband for 20-metre voice operation is upper sideband.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Lower\": Lower sideband is the convention for some lower-frequency voice operation, not for 20 metres.\n- sourceIndex 2: \"Independent\": Independent sideband is a different technical mode and not the ordinary 20-metre voice convention.\n- sourceIndex 3: \"Double\": Double sideband is not the standard single-sideband voice choice for ordinary 20-metre voice operation.",
     "fr": null
   },
   "citations": [

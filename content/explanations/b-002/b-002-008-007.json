@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-008-007.\n\nWhy the correct answer is right: A hand-held radio depends on charged batteries; without enough stored energy, the radio cannot maintain communications.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"An extra antenna\": An extra antenna may improve range, but it does not replace electrical energy for the handheld.\n- sourceIndex 2: \"A portable amplifier\": A portable amplifier adds complexity and power demand; it is not the crucial item identified here.\n- sourceIndex 3: \"A microphone headset for hands-free operation\": A headset can be convenient, but hands-free audio is secondary to having charged batteries.",
+    "en": "Question B-002-008-007.\n\nWhy the correct answer is right: A hand-held radio depends on charged batteries; without enough stored energy, the radio cannot maintain communications.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"An extra antenna\": An extra antenna may improve range, but it does not replace electrical energy for the handheld.\n- sourceIndex 2: \"A portable amplifier\": A portable amplifier adds complexity and power demand; it is not as fundamental as charged battery capacity.\n- sourceIndex 3: \"A microphone headset for hands-free operation\": A headset can be convenient, but it does not keep the radio powered.",
     "fr": null
   },
   "citations": [

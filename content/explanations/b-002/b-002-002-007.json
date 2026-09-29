@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-002-007.\n\nWhy the correct answer is right: Golf is the ITU phonetic word assigned to G.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"George\": George is a familiar spelling word but not the ITU choice.\n- sourceIndex 2: \"Germany\": Germany is a country name and not the standardized radiotelephony word.\n- sourceIndex 3: \"Gibraltar\": Gibraltar begins with G, but it is not the answer in the ITU phonetic alphabet.",
+    "en": "Question B-002-002-007.\n\nWhy the correct answer is right: Golf is the ITU phonetic word assigned to G.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"George\": George is a familiar spelling word but not the ITU choice.\n- sourceIndex 2: \"Germany\": Germany is a country name and not the standardized radiotelephony word.\n- sourceIndex 3: \"Gibraltar\": Gibraltar begins with G, but the ITU alphabet assigns Golf to that letter.",
     "fr": null
   },
   "citations": [
