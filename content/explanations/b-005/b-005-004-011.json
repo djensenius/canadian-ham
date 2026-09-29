@@ -1,0 +1,17 @@
+{
+  "id": "EXP-B-005-004-011",
+  "questionId": "B-005-004-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-004-011. Lesson link: L-005-02.\n\nWhy the correct answer is right: Convert 300 mA to 0.3 A, then R = 3 V / 0.3 A = 10 ohms.\n\nWhy the distractors are wrong:\n- sourceIndex 1: This multiplies 3 by 3 or shifts the current conversion incorrectly.\n- sourceIndex 2: This does not match 3 divided by 0.3.\n- sourceIndex 3: This repeats the voltage value instead of using Ohm’s law.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "question",
+      "id": "B-005-004-011"
+    }
+  ],
+  "licenseClass": "original"
+}

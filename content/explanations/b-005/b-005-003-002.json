@@ -1,0 +1,17 @@
+{
+  "id": "EXP-B-005-003-002",
+  "questionId": "B-005-003-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-003-002. Lesson link: L-005-02.\n\nWhy the correct answer is right: The largest watt rating consumes energy at the highest rate among the listed bulbs, so 100 W is highest.\n\nWhy the distractors are wrong:\n- sourceIndex 1: Sixty watts is less than 100 W.\n- sourceIndex 2: Fifty watts is less than 100 W.\n- sourceIndex 3: Forty watts is the lowest listed rate.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "question",
+      "id": "B-005-003-002"
+    }
+  ],
+  "licenseClass": "original"
+}

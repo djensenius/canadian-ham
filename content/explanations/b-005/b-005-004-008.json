@@ -1,0 +1,17 @@
+{
+  "id": "EXP-B-005-004-008",
+  "questionId": "B-005-004-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-004-008. Lesson link: L-005-02.\n\nWhy the correct answer is right: Use I = E / R. 6 V / 30 ohms = 0.2 A.\n\nWhy the distractors are wrong:\n- sourceIndex 1: This is ten times too high.\n- sourceIndex 2: This does not match the voltage divided by resistance.\n- sourceIndex 3: This is far too small for 6 V across 30 ohms.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "question",
+      "id": "B-005-004-008"
+    }
+  ],
+  "licenseClass": "original"
+}

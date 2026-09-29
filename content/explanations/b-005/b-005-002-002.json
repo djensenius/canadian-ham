@@ -1,0 +1,17 @@
+{
+  "id": "EXP-B-005-002-002",
+  "questionId": "B-005-002-002",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-002-002. Lesson link: L-005-01.\n\nWhy the correct answer is right: Glass, air, and porcelain are common insulating materials.\n\nWhy the distractors are wrong:\n- sourceIndex 1: Carbon can conduct enough to make the group unsuitable as three good insulators.\n- sourceIndex 2: Aluminum is a good conductor, so the group cannot be three insulators.\n- sourceIndex 3: Copper is a good conductor, so the group cannot be three insulators.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "question",
+      "id": "B-005-002-002"
+    }
+  ],
+  "licenseClass": "original"
+}

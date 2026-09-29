@@ -1,0 +1,17 @@
+{
+  "id": "EXP-B-005-001-004",
+  "questionId": "B-005-001-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-001-004. Lesson link: L-005-01.\n\nWhy the correct answer is right: One microfarad equals 1 000 000 picofarads, so the value is 1 microfarad.\n\nWhy the distractors are wrong:\n- sourceIndex 1: This is ten times too large.\n- sourceIndex 2: This is one hundred times too small.\n- sourceIndex 3: This is one thousand times too small.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "question",
+      "id": "B-005-001-004"
+    }
+  ],
+  "licenseClass": "original"
+}

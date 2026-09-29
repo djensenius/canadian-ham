@@ -1,0 +1,17 @@
+{
+  "id": "EXP-B-005-001-006",
+  "questionId": "B-005-001-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-001-006. Lesson link: L-005-01.\n\nWhy the correct answer is right: Kilo means 1 000, so one kilohm is 1000 ohms.\n\nWhy the distractors are wrong:\n- sourceIndex 1: This makes kilo a tenth instead of one thousand.\n- sourceIndex 2: This makes kilo one thousandth instead of one thousand.\n- sourceIndex 3: This is only ten ohms, not a kilohm.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "question",
+      "id": "B-005-001-006"
+    }
+  ],
+  "licenseClass": "original"
+}

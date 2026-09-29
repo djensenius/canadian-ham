@@ -1,0 +1,17 @@
+{
+  "id": "EXP-B-005-003-008",
+  "questionId": "B-005-003-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-003-008. Lesson link: L-005-02.\n\nWhy the correct answer is right: Volts multiplied by amperes give watts for DC power calculations.\n\nWhy the distractors are wrong:\n- sourceIndex 1: Volts times farads does not give watts.\n- sourceIndex 2: Farads times henries does not give watts.\n- sourceIndex 3: Amperes times henries does not give watts.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "question",
+      "id": "B-005-003-008"
+    }
+  ],
+  "licenseClass": "original"
+}

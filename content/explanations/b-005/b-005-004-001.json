@@ -1,0 +1,17 @@
+{
+  "id": "EXP-B-005-004-001",
+  "questionId": "B-005-004-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-004-001. Lesson link: L-005-02.\n\nWhy the correct answer is right: Use E = I x R. With 0.5 A and 2 ohms, E = 0.5 x 2 = 1.0 V.\n\nWhy the distractors are wrong:\n- sourceIndex 1: This multiplies in the wrong relationship or divides by too much.\n- sourceIndex 2: This does not match E = 0.5 x 2.\n- sourceIndex 3: This is not the product of current and resistance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "question",
+      "id": "B-005-004-001"
+    }
+  ],
+  "licenseClass": "original"
+}

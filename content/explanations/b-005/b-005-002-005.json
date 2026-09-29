@@ -1,0 +1,17 @@
+{
+  "id": "EXP-B-005-002-005",
+  "questionId": "B-005-002-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-002-005. Lesson link: L-005-01.\n\nWhy the correct answer is right: A conductor is a material that readily allows current flow.\n\nWhy the distractors are wrong:\n- sourceIndex 1: An insulator resists current flow.\n- sourceIndex 2: A semiconductor has conditional conductivity and is not the general term for a material that readily allows current.\n- sourceIndex 3: A dielectric is an insulating material used with electric fields, not the general current-carrying material.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "question",
+      "id": "B-005-002-005"
+    }
+  ],
+  "licenseClass": "original"
+}

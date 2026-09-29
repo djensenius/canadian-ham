@@ -1,0 +1,17 @@
+{
+  "id": "EXP-B-005-001-008",
+  "questionId": "B-005-001-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-001-008. Lesson link: L-005-01.\n\nWhy the correct answer is right: One ampere is 1 000 milliamperes. One quarter of that is 250 mA.\n\nWhy the distractors are wrong:\n- sourceIndex 1: This is one hundredth of an ampere, not one quarter.\n- sourceIndex 2: This confuses amperes and milliamperes; 0.25 mA is much smaller.\n- sourceIndex 3: This uses microamperes and is 1 000 times smaller than 250 mA.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "question",
+      "id": "B-005-001-008"
+    }
+  ],
+  "licenseClass": "original"
+}

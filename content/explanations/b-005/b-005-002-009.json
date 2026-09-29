@@ -1,0 +1,17 @@
+{
+  "id": "EXP-B-005-002-009",
+  "questionId": "B-005-002-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-002-009. Lesson link: L-005-01.\n\nWhy the correct answer is right: A voltage drop is the loss of voltage across part of a circuit when current flows through resistance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: A zero-voltage point is a reference or node condition, not the general meaning of voltage drop.\n- sourceIndex 2: Transformer output-terminal difference is a voltage, but not the definition of voltage drop.\n- sourceIndex 3: A step-down transformer output is one possible lower voltage, not the circuit effect called voltage drop.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "question",
+      "id": "B-005-002-009"
+    }
+  ],
+  "licenseClass": "original"
+}

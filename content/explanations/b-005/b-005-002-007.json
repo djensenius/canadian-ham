@@ -1,0 +1,17 @@
+{
+  "id": "EXP-B-005-002-007",
+  "questionId": "B-005-002-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-002-007. Lesson link: L-005-01.\n\nWhy the correct answer is right: R is the standard symbol for resistance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: Impedance is usually represented by Z.\n- sourceIndex 2: Reluctance is a magnetic-circuit idea and is not represented by R in this Basic context.\n- sourceIndex 3: Reactance is usually represented by X.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "question",
+      "id": "B-005-002-007"
+    }
+  ],
+  "licenseClass": "original"
+}

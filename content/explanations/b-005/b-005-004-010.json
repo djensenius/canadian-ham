@@ -1,0 +1,17 @@
+{
+  "id": "EXP-B-005-004-010",
+  "questionId": "B-005-004-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-004-010. Lesson link: L-005-02.\n\nWhy the correct answer is right: The reference-sheet formula for resistance is R = E / I.\n\nWhy the distractors are wrong:\n- sourceIndex 1: This is the reciprocal relationship.\n- sourceIndex 2: Voltage squared divided by current is not the resistance formula.\n- sourceIndex 3: Voltage times current gives power, not resistance.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "question",
+      "id": "B-005-004-010"
+    }
+  ],
+  "licenseClass": "original"
+}
