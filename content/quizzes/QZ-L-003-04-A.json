@@ -39,9 +39,9 @@
       "prompt": { "en": "A waterfall shows two nearby traces, but the receiver audio blends them into one rough sound. Which conclusion best connects the display to the receiver settings?", "fr": null },
       "choices": [
         { "text": { "en": "The display can reveal separate frequencies; the receiver still needs suitable selectivity to isolate one in the audio", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A bright trace proves the receiver has enough dynamic range, so filter choice no longer matters", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Waterfall frequency spacing automatically retunes the local oscillator away from the stronger signal", "fr": null }, "isCorrect": false },
-        { "text": { "en": "AGC changes trace brightness into narrower occupied bandwidth before the IF filter", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Increase the display contrast until one trace fades, because the receiver passband narrows with the screen setting", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Tune halfway between the traces, because the detector will separate them into two audio channels", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Use AGC to make both traces equal brightness, because equal levels replace the need for IF selectivity", "fr": null }, "isCorrect": false }
       ],
       "explanation": { "en": "A waterfall helps the operator see signal positions, but it is not the receiver's selectivity. Suitable filtering is still needed to separate close signals in the recovered audio.", "fr": null }
     }

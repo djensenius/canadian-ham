@@ -14,14 +14,14 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-01-A-C1",
-      "prompt": { "en": "During a 100 W dummy-load test, the station is not intended to radiate, but the load's case temperature is climbing. Which operator response fits the block diagram?", "fr": null },
+      "prompt": { "en": "A 100 W dummy-load test is planned for several minutes, and the load's case is warming quickly. Which response would NOT be a valid way to protect the test setup?", "fr": null },
       "choices": [
-        { "text": { "en": "Continue indefinitely because a non-radiating load cannot absorb real power", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Check the dummy load's power and time rating because absorbed RF becomes heat", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Retune the antenna tuner until the dummy load stops converting RF to heat", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Move the SWR meter after the antenna switch so the load no longer warms", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Pause and check the dummy load's power and time rating before continuing", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Reduce transmitter power or shorten the test if the rating is being approached", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Keep increasing power because a warmer load proves the station is safer", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Allow cooling time between transmissions when the rating calls for it", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "A dummy load avoids intended radiation by absorbing RF, and absorbed RF becomes heat. The operator still has to respect the load's rating and duty cycle.", "fr": null }
+      "explanation": { "en": "The unsafe response is treating heat as permission to increase power. A dummy load turns test RF into heat, so the operator should respect its power rating, time limit, and cooling needs.", "fr": null }
     },
     {
       "id": "QZ-L-003-01-A-C2",

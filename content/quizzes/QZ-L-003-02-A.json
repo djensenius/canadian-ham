@@ -14,14 +14,14 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-02-A-C1",
-      "prompt": { "en": "An SSB exciter note calls the sideband filter an audio tone control for the microphone. Which correction is best?", "fr": null },
+      "prompt": { "en": "A signal tracer finds the selected IF signal at the product detector input of an SSB/CW receiver, but nothing reaches the speaker. Which diagnostic plan best uses the block diagram?", "fr": null },
       "choices": [
-        { "text": { "en": "It works on the RF/IF sideband signal after the balanced modulator, before the frequency-conversion mixer", "fr": null }, "isCorrect": true },
-        { "text": { "en": "It belongs in the antenna feed line, where it trims speech bandwidth after final amplification", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It should replace the speech amplifier, because filtering alone raises microphone audio to drive level", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It is the BFO, so moving it changes the receiver's CW tone instead of transmitter bandwidth", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Start at the product detector, BFO, and audio path, because the selected IF signal has already arrived there", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Start by replacing the antenna, because a present IF signal proves the front end has failed", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Retune the final amplifier, because received audio is created by the transmitter output stage", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Bypass the IF filter first, because silence at the speaker means too much nearby spectrum is present", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "The SSB sideband filter is not an audio tone control. It acts on the generated RF/IF sideband signal before that signal is mixed to the operating frequency.", "fr": null }
+      "explanation": { "en": "A selected IF signal at the detector input means the upstream receive path has already done much of its job. Silence points the troubleshooting to the product detector, BFO, AF amplifier, speaker, or their connections.", "fr": null }
     },
     {
       "id": "QZ-L-003-02-A-C2",
@@ -36,14 +36,14 @@
     },
     {
       "id": "QZ-L-003-02-A-C3",
-      "prompt": { "en": "A student says a hand key supplies the RF energy for each Morse element because RF appears only while the key is closed. Which correction best separates control from energy?", "fr": null },
+      "prompt": { "en": "A CW note slides upward during a dash, and an SSB training transmitter's VFO drifts 120 Hz upward after its sideband has been formed. Which prediction is most consistent with the block diagrams?", "fr": null },
       "choices": [
-        { "text": { "en": "The key controls when the carrier path is active; the transmitter stages get their operating energy from the DC supply", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The key is an audio oscillator, and that tone is what the antenna radiates during each element", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The key bypasses the driver and power amplifier, so the oscillator alone supplies full output power", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The key applies operating DC directly to the antenna system, so RF stages are only monitors", "fr": null }, "isCorrect": false }
+        { "text": { "en": "The CW pitch heard by others can slide, and the SSB signal moves 120 Hz higher while carrying the same voice information", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Only the CW pitch changes; the SSB RF output stays fixed because the sideband filter locks the channel", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The CW pitch is fixed by the key, and the SSB drift is removed by the microphone speech amplifier", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Both transmitters keep the same RF frequency; drift can only change recovered audio loudness", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "The key is a control in the carrier path. The RF stages are powered by DC and create/amplify the carrier; keying decides when that carrier is present at the output.", "fr": null }
+      "explanation": { "en": "Frequency drift changes the RF frequency being transmitted. In CW that can be heard as a sliding received tone; in the SSB transmitter the already-formed voice sideband is shifted slightly in RF frequency, not rewritten as a different message.", "fr": null }
     }
   ]
 }

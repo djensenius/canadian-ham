@@ -50,7 +50,7 @@ oscillator -> driver/buffer -> power amplifier -> antenna system
 
 The oscillator supplies the RF signal at the transmitted frequency in this basic diagram. It must be stable because drift or pulling becomes a directly transmitted error. A driver or buffer stage isolates the oscillator from load changes caused by later stages. Without buffering, changes in the amplifier or antenna system can tug the oscillator frequency around.
 
-The transmitter stages are powered by direct current from the station power supply. The RF signal is created and amplified by the stages; the DC supply is the energy source. The key controls the carrier so Morse characters become on-off RF energy. At the output, the power amplifier raises the signal to the station's intended transmit power.
+The transmitter stages are powered by direct current from the station power supply. The RF signal is created and amplified by the stages; the DC supply is the energy source. The key controls the carrier so Morse characters become on-off RF energy. Practical keying also uses controlled rise and fall times; edges that are too abrupt can spread energy as clicks. At the output, the power amplifier raises the signal to the station's intended transmit power.
 
 ### Worked example: why a buffer helps
 
@@ -110,9 +110,9 @@ The voice information has not changed into a different message. The mixer has mo
 
 ## Try it
 
-Question: A lab SSB exciter plays the same recorded voice while its VFO is nudged from 5.200 MHz to 5.210 MHz. What changes, and what stays the same?
+Question: A CW practice transmitter is exactly on frequency, but each dit begins with a sharp click in a nearby monitor receiver. Which part of the keying is suspect?
 
-Worked answer: The translated RF output moves by 10 kHz, but the voice message and filtered sideband shape stay the same. The mixer shifts the already-formed SSB signal to a new RF frequency.
+Worked answer: The on-off transition is too abrupt. Keeping the carrier frequency steady is not enough; practical keying also needs controlled rise and fall times so the element edges do not spread energy as clicks.
 
 Question: A receiver has both a 500 Hz IF filter and a 2.4 kHz IF filter. Predict which one will admit more nearby signals during a narrow CW contact, and why.
 

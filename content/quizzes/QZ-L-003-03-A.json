@@ -14,14 +14,14 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-03-A-C1",
-      "prompt": { "en": "A waterfall program shows flat-topped receive tones because the interface input is being overdriven, but the RF signal on the air is normal. Which change is most likely to help decoding?", "fr": null },
+      "prompt": { "en": "A digital-mode program's input level meter shows clipping because the interface input is being overdriven, but the RF signal on the air is normal. Which change is most likely to help decoding?", "fr": null },
       "choices": [
         { "text": { "en": "Reduce the receiver-audio or interface input level before software samples it", "fr": null }, "isCorrect": true },
         { "text": { "en": "Raise the AF output further so the clipped waveform fills more of the sound-card range", "fr": null }, "isCorrect": false },
         { "text": { "en": "Adjust the push-to-talk control line because receive clipping is caused by transmit switching", "fr": null }, "isCorrect": false },
         { "text": { "en": "Change the transmit playback level because receive clipping is fixed on the transmit-audio path", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "This is receive-audio level trouble at the interface input. Reducing the audio before conversion keeps the samples from clipping; transmit power, PTT control, and supply filtering do not repair an overdriven audio input.", "fr": null }
+      "explanation": { "en": "This is receive-audio level trouble at the interface input. Reducing the audio before conversion keeps the samples from clipping; raising AF level makes clipping worse, PTT only switches transmit/receive, and transmit playback level is the opposite audio direction.", "fr": null }
     },
     {
       "id": "QZ-L-003-03-A-C2",

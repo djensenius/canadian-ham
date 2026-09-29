@@ -55,7 +55,7 @@ A low-pass filter passes the wanted HF signal while reducing energy at higher fr
 
 An SWR meter samples forward and reflected power so you can judge how well the transmitter is matched to the antenna system. An antenna tuner does not magically make a poor antenna efficient; it transforms impedance so the transmitter or amplifier sees a safer load. Because antenna impedance changes with frequency, the tuner may need readjustment after a frequency change even though the cables have not moved. An antenna switch chooses which antenna path, test load, or unused position is connected.
 
-A dummy load is a non-radiating test load. It turns RF power into heat so you can tune or test without intentionally putting a signal on the air.
+A dummy load is a non-radiating test load. It turns RF power into heat so you can tune or test without intentionally putting a signal on the air. Real dummy loads also have power and time limits, so a warming case is a reason to pause and check the rating.
 
 ### Worked example: locating the filter
 
@@ -77,7 +77,7 @@ microphone -> speech amplifier -> modulator -> oscillator -> frequency multiplie
 
 The microphone changes air pressure into a small electrical audio signal. The speech amplifier raises that signal to a useful level. In FM, the modulator changes the oscillator's frequency slightly above and below its centre value. Those frequency changes are the modulation.
 
-A frequency multiplier produces a useful harmonic of the oscillator signal. Multipliers let the oscillator run at a convenient stable frequency while later stages reach the desired RF carrier frequency. The power amplifier is the block that delivers the largest RF power to the antenna system, so it draws the most electrical power in this simplified chain.
+A frequency multiplier produces a useful harmonic of the oscillator signal. Multipliers let the oscillator run at a convenient stable frequency while later stages reach the desired RF carrier frequency. Because multiplication scales frequency, a small FM frequency deviation is multiplied by the same factor. The power amplifier is the block that delivers the largest RF power to the antenna system, so it draws the most electrical power in this simplified chain.
 
 ### Worked example: a multiplier chain
 
@@ -123,9 +123,9 @@ Question: A 14.2 MHz transmitter can also create energy at 28.4 MHz. Explain why
 
 Worked answer: The unwanted 28.4 MHz energy should be reduced before the cable carries it around the station. Filtering late may leave extra wiring radiating or coupling the harmonic.
 
-Question: A club labels one cable bundle “wanted RF” and another “possible harmonic energy” during a station cleanup. Why is the label at the low-pass filter output more meaningful than one after the tuner?
+Question: An FM exciter at 10.000 MHz has an instant when modulation nudges it 1.5 kHz above centre, and then a doubler follows. What are the doubled centre frequency and the doubled instant offset?
 
-Worked answer: The low-pass filter is the block intended to reduce harmonic energy before later station wiring carries it. The tuner may improve the load seen by the transmitter, but it is not the harmonic-removal block.
+Worked answer: The doubled centre frequency is 20.000 MHz. The 1.5 kHz upward deviation is doubled too, so the output is 3.0 kHz above its centre at that instant.
 
 Question: A superheterodyne receiver has a noisy first RF stage. Why can later audio gain not fully repair that problem?
 
