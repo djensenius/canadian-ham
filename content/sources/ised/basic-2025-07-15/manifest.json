@@ -1,0 +1,81 @@
+{
+  "manifestVersion": 1,
+  "bankEffectiveDate": "2025-07-15",
+  "publisher": "ISED",
+  "licensingStatus": "private-development interim policy; permission request drafted, not sent",
+  "licensingPolicyDocument": "../../../../docs/content-licensing.md",
+  "pathsRelativeTo": "content/sources/ised/basic-2025-07-15/",
+  "retrievalNotes": "All listed source artifacts were fetched fresh from ISED hosts on 2026-09-29; ZIP archives were used only for extraction and are not committed.",
+  "sourceArchives": [
+    {
+      "url": "https://apc-cap.ic.gc.ca/datafiles/amat_basic_quest.zip",
+      "committed": false
+    },
+    {
+      "url": "https://www.ised-isde.canada.ca/site/amateur-radio-operator-certificate-services/sites/default/files/documents/Reference%20Material%20for%20Amateur%20Radio%20Basic%20EN%202025%20.zip",
+      "committed": false
+    }
+  ],
+  "files": [
+    {
+      "path": "questions/amat_basic_quest_delim.txt",
+      "originalFilename": "amat_basic_quest_delim.txt",
+      "sourceUrl": "https://apc-cap.ic.gc.ca/datafiles/amat_basic_quest.zip#amat_basic_quest_delim.txt",
+      "containingZipUrl": "https://apc-cap.ic.gc.ca/datafiles/amat_basic_quest.zip",
+      "sha256": "34c7cd7967addfde648c566d0ecf25bf3d1e071c603b5101cfecc7bd0cbc284f",
+      "bytes": 517316,
+      "retrievedAt": "2026-09-29",
+      "fetchedFresh": true
+    },
+    {
+      "path": "questions/readme_basic.txt",
+      "originalFilename": "readme_basic.txt",
+      "sourceUrl": "https://apc-cap.ic.gc.ca/datafiles/amat_basic_quest.zip#readme_basic.txt",
+      "containingZipUrl": "https://apc-cap.ic.gc.ca/datafiles/amat_basic_quest.zip",
+      "sha256": "5fa4a8c747fe72dc5a132be98550bad0fae583cadbf9a5903fc87b14abd566f8",
+      "bytes": 303,
+      "retrievedAt": "2026-09-29",
+      "fetchedFresh": true
+    },
+    {
+      "path": "questions/lisezmoi_base.txt",
+      "originalFilename": "lisezmoi_base.txt",
+      "sourceUrl": "https://apc-cap.ic.gc.ca/datafiles/amat_basic_quest.zip#lisezmoi_base.txt",
+      "containingZipUrl": "https://apc-cap.ic.gc.ca/datafiles/amat_basic_quest.zip",
+      "sha256": "e1dd7ad073df57a5347103fa6d9863280a381d758a7b28cfb06e6e9783c1245a",
+      "bytes": 327,
+      "retrievedAt": "2026-09-29",
+      "fetchedFresh": true
+    },
+    {
+      "path": "amateur_basic_questions_en_2025-07-15.pdf",
+      "originalFilename": "amateur_basic_questions_en_2025-07-15.pdf",
+      "sourceUrl": "https://ised-isde.canada.ca/site/amateur-radio-operator-certificate-services/sites/default/files/documents/amateur_basic_questions_en_2025-07-15.pdf",
+      "containingZipUrl": null,
+      "sha256": "4e59b09f7711319091adfb729b138f6ad953f2c3d43108352155bfaa4f456ae4",
+      "bytes": 312363,
+      "retrievedAt": "2026-09-29",
+      "fetchedFresh": true
+    },
+    {
+      "path": "reference/Reference Material for Amateur Radio Exam Basic EN 2025.pdf",
+      "originalFilename": "Reference Material for Amateur Radio Exam Basic EN 2025.pdf",
+      "sourceUrl": "https://www.ised-isde.canada.ca/site/amateur-radio-operator-certificate-services/sites/default/files/documents/Reference%20Material%20for%20Amateur%20Radio%20Basic%20EN%202025%20.zip#Reference%20Material%20for%20Amateur%20Radio%20Exam%20Basic%20EN%202025.pdf",
+      "containingZipUrl": "https://www.ised-isde.canada.ca/site/amateur-radio-operator-certificate-services/sites/default/files/documents/Reference%20Material%20for%20Amateur%20Radio%20Basic%20EN%202025%20.zip",
+      "sha256": "e4e6a0ec35d9ccec2732b6c2a950b3ea721f826d44160b54b4e6298e86b93ae9",
+      "bytes": 456683,
+      "retrievedAt": "2026-09-29",
+      "fetchedFresh": true
+    },
+    {
+      "path": "reference/Reference Material for Amateur Radio Training Basic EN 2025.pdf",
+      "originalFilename": "Reference Material for Amateur Radio Training Basic EN 2025.pdf",
+      "sourceUrl": "https://www.ised-isde.canada.ca/site/amateur-radio-operator-certificate-services/sites/default/files/documents/Reference%20Material%20for%20Amateur%20Radio%20Basic%20EN%202025%20.zip#Reference%20Material%20for%20Amateur%20Radio%20Training%20Basic%20EN%202025.pdf",
+      "containingZipUrl": "https://www.ised-isde.canada.ca/site/amateur-radio-operator-certificate-services/sites/default/files/documents/Reference%20Material%20for%20Amateur%20Radio%20Basic%20EN%202025%20.zip",
+      "sha256": "2e0bf5e30a621852db0bf3c1e3954bbd60f906b19c531d97eab9b35c8f1a831e",
+      "bytes": 539260,
+      "retrievedAt": "2026-09-29",
+      "fetchedFresh": true
+    }
+  ]
+}

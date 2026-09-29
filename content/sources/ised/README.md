@@ -14,6 +14,6 @@ Must not go here:
 - Normalized JSON output; use [`../../generated/`](../../generated/).
 - Original lessons, explanations, or app code.
 
-Git handling: [`.gitattributes`](../../../.gitattributes) marks source artifacts as binary so Git does not normalize line endings or generate text diffs, while README Markdown stays text/readable. This preserves CRLF TXT files and PDFs byte-for-byte so recorded SHA-256 checksums remain valid.
+Git handling: [`.gitattributes`](../../../.gitattributes) marks source artifacts as binary so Git does not normalize line endings or generate text diffs, while README Markdown stays text/readable. Versioned source-directory files such as manifests and checksum lists are also treated as binary by that rule; this is intentional because the folder is optimized for byte-identity verification. This preserves CRLF TXT files and PDFs byte-for-byte so recorded SHA-256 checksums remain valid.
 
 Relevant docs: [`../../../docs/content-licensing.md`](../../../docs/content-licensing.md), [`../../../docs/exam-facts.md`](../../../docs/exam-facts.md), [`../../../docs/architecture.md`](../../../docs/architecture.md).
