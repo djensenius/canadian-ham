@@ -9,6 +9,12 @@ const DEFAULT_QUESTION_PATH = path.join(REPO_ROOT, "content/generated/basic-2025
 const EXPECTED_BANK_ID = "basic-2025-07-15";
 const NOTE_DUPLICATE_FILE_LIMIT = 3;
 const SHORT_PREFIX_MIN_LENGTH = 12;
+// A repeated 6-word run across four different questions is long enough to catch
+// rotating template openers while allowing normal repeated technical vocabulary.
+const TEMPLATE_GRAM_SIZE = 6;
+const TEMPLATE_DIFFERENT_QUESTION_LIMIT = 4;
+const DISTRACTOR_NOTE_HEADER = "Why the distractors are wrong:";
+const DEFAULT_TEMPLATE_ALLOWLIST_PATH = path.join(REPO_ROOT, "packages/content-tools/explanation-template-allowlist.json");
 
 const GENERIC_NOTE_PHRASES = [
   "does not match the principle tested here",
@@ -64,12 +70,23 @@ type PerChoiceNote = {
   lineNumber: number;
 };
 
+type TemplateAllowlist = {
+  categorySpecific: Map<string, Set<string>>;
+  global: Set<string>;
+};
+
+type TemplateGramOccurrence = {
+  questionId: string;
+  location: string;
+};
+
 export type ExplanationCheckOptions = {
   explanationRoot?: string;
   questionsPath?: string;
   lessonRoot?: string;
   categoryId?: string;
   moduleId?: string;
+  templateAllowlistPath?: string;
 };
 
 export type ExplanationCheckReport = {
@@ -343,6 +360,83 @@ function normalizedText(value: string): string {
     .replace(/\s+/g, " ");
 }
 
+function wordTokens(value: string): string[] {
+  const normalized = normalizedText(value);
+  return normalized.length === 0 ? [] : normalized.split(" ");
+}
+
+function wordNGrams(tokens: string[], size: number): string[] {
+  if (tokens.length < size) {
+    return [];
+  }
+  const grams: string[] = [];
+  for (let index = 0; index <= tokens.length - size; index += 1) {
+    grams.push(tokens.slice(index, index + size).join(" "));
+  }
+  return grams;
+}
+
+function hasDistractorHeader(body: string): boolean {
+  return body.split("\n").some((line) => line.trim() === DISTRACTOR_NOTE_HEADER);
+}
+
+async function loadTemplateAllowlist(filePath: string, issues: string[]): Promise<TemplateAllowlist> {
+  const allowlist: TemplateAllowlist = { categorySpecific: new Map(), global: new Set() };
+  let raw: unknown;
+  try {
+    raw = JSON.parse(await readFile(filePath, "utf8")) as unknown;
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    issues.push(`${filePath}: could not read TEMPLATE allow-list: ${message}`);
+    return allowlist;
+  }
+  if (!isRecord(raw) || !Array.isArray(raw.word6Grams)) {
+    issues.push(`${filePath}: TEMPLATE allow-list must be an object with a word6Grams array`);
+    return allowlist;
+  }
+  for (const [index, entry] of raw.word6Grams.entries()) {
+    const entryPath = `${filePath}: word6Grams[${index}]`;
+    if (!isRecord(entry)) {
+      issues.push(`${entryPath}: allow-list entry must be an object`);
+      continue;
+    }
+    if (!(entry.categoryId === undefined || entry.categoryId === null || isNonEmptyString(entry.categoryId))) {
+      issues.push(`${entryPath}: categoryId must be omitted, null, or a non-empty string`);
+      continue;
+    }
+    if (!isNonEmptyString(entry.phrase)) {
+      issues.push(`${entryPath}: phrase must be a non-empty string`);
+      continue;
+    }
+    if (!isNonEmptyString(entry.reason)) {
+      issues.push(`${entryPath}: reason must document why this repeated technical phrase is allowed`);
+      continue;
+    }
+    const categoryId = isNonEmptyString(entry.categoryId) ? normalizeCategoryId(entry.categoryId) : null;
+    if (isNonEmptyString(entry.categoryId) && categoryId === null) {
+      issues.push(`${entryPath}: categoryId ${entry.categoryId} is not a valid B-00N or module id`);
+      continue;
+    }
+    const grams = wordNGrams(wordTokens(entry.phrase), TEMPLATE_GRAM_SIZE);
+    if (grams.length !== 1) {
+      issues.push(`${entryPath}: phrase must normalize to exactly one ${TEMPLATE_GRAM_SIZE}-word phrase`);
+      continue;
+    }
+    if (categoryId === null) {
+      allowlist.global.add(grams[0]!);
+    } else {
+      const existing = allowlist.categorySpecific.get(categoryId) ?? new Set<string>();
+      existing.add(grams[0]!);
+      allowlist.categorySpecific.set(categoryId, existing);
+    }
+  }
+  return allowlist;
+}
+
+function templateGramIsAllowed(allowlist: TemplateAllowlist, categoryId: string, gram: string): boolean {
+  return allowlist.global.has(gram) || (allowlist.categorySpecific.get(categoryId)?.has(gram) ?? false);
+}
+
 function quotedChoiceMatches(quotedChoice: string, answerText: string): boolean {
   if (quotedChoice === answerText) {
     return true;
@@ -419,15 +513,30 @@ function recordMatchesFilter(record: ExplanationRecord, question: QuestionRecord
   return recordCategoryId === categoryId;
 }
 
+function addTemplateGramOccurrence(
+  occurrences: Map<string, Map<string, TemplateGramOccurrence[]>>,
+  categoryId: string,
+  gram: string,
+  occurrence: TemplateGramOccurrence,
+): void {
+  const categoryOccurrences = occurrences.get(categoryId) ?? new Map<string, TemplateGramOccurrence[]>();
+  const gramOccurrences = categoryOccurrences.get(gram) ?? [];
+  gramOccurrences.push(occurrence);
+  categoryOccurrences.set(gram, gramOccurrences);
+  occurrences.set(categoryId, categoryOccurrences);
+}
+
 export async function checkExplanations(options: ExplanationCheckOptions = {}): Promise<ExplanationCheckReport> {
   const explanationRoot = options.explanationRoot ?? DEFAULT_EXPLANATION_ROOT;
   const questionsPath = options.questionsPath ?? DEFAULT_QUESTION_PATH;
   const lessonRoot = options.lessonRoot ?? DEFAULT_LESSON_ROOT;
   const { categoryId } = filtersFromOptions(options);
   const issues: string[] = [];
+  const templateAllowlist = await loadTemplateAllowlist(options.templateAllowlistPath ?? DEFAULT_TEMPLATE_ALLOWLIST_PATH, issues);
   const questions = await loadQuestions(questionsPath);
   const lessons = await loadLessons(lessonRoot, issues);
   const duplicateNoteFiles = new Map<string, Set<string>>();
+  const templateGramOccurrences = new Map<string, Map<string, TemplateGramOccurrence[]>>();
   const explainedQuestionIds = new Set<string>();
 
   let explanationFileCount = 0;
@@ -498,6 +607,9 @@ export async function checkExplanations(options: ExplanationCheckOptions = {}): 
       issues.push(`${filePath}: no cited lesson covers ${question.subsectionId}`);
     }
 
+    if (!hasDistractorHeader(record.body.en)) {
+      issues.push(`${filePath}: body.en must include ${JSON.stringify(DISTRACTOR_NOTE_HEADER)} before distractor notes`);
+    }
     const notes = parsePerChoiceNotes(record.body.en, filePath, issues);
     if (notes.length === 0) {
       issues.push(`${filePath}: body.en must include per-choice sourceIndex notes`);
@@ -509,6 +621,9 @@ export async function checkExplanations(options: ExplanationCheckOptions = {}): 
         issues.push(`${filePath}:${note.lineNumber}: duplicate per-choice note for sourceIndex ${note.sourceIndex}`);
       }
       seenSourceIndexes.add(note.sourceIndex);
+      if (note.sourceIndex === 0) {
+        issues.push(`${filePath}:${note.lineNumber}: sourceIndex 0 must not appear in the distractor notes`);
+      }
       const answer = question?.answers.find((candidate) => candidate.sourceIndex === note.sourceIndex);
       if (answer === undefined) {
         issues.push(`${filePath}:${note.lineNumber}: sourceIndex ${note.sourceIndex} is not present on question ${record.questionId}`);
@@ -526,12 +641,44 @@ export async function checkExplanations(options: ExplanationCheckOptions = {}): 
       if (normalizedNote.length > 0) {
         addMapValue(duplicateNoteFiles, normalizedNote, filePath);
       }
+      if (note.sourceIndex !== 0) {
+        const noteCategoryId = question?.categoryId ?? record.questionId.slice(0, 5).toUpperCase();
+        for (const gram of new Set(wordNGrams(wordTokens(note.body), TEMPLATE_GRAM_SIZE))) {
+          addTemplateGramOccurrence(templateGramOccurrences, noteCategoryId, gram, {
+            questionId: record.questionId,
+            location: `${filePath}:${note.lineNumber}`,
+          });
+        }
+      }
+    }
+    if (question !== undefined) {
+      for (const answer of question.answers.filter((candidate) => !candidate.isCorrect).sort((left, right) => left.sourceIndex - right.sourceIndex)) {
+        if (!seenSourceIndexes.has(answer.sourceIndex)) {
+          issues.push(`${filePath}: missing per-choice note for distractor sourceIndex ${answer.sourceIndex}`);
+        }
+      }
     }
   }
 
   for (const [normalizedNote, filePaths] of [...duplicateNoteFiles].sort(([left], [right]) => left.localeCompare(right))) {
     if (filePaths.size >= NOTE_DUPLICATE_FILE_LIMIT) {
       issues.push(`DUPLICATE-NOTE: note body ${JSON.stringify(normalizedNote)} appears in ${filePaths.size} files: ${[...filePaths].sort().join(", ")}`);
+    }
+  }
+
+  for (const [templateCategoryId, categoryOccurrences] of [...templateGramOccurrences].sort(([left], [right]) => left.localeCompare(right))) {
+    for (const [gram, occurrences] of [...categoryOccurrences].sort(([left], [right]) => left.localeCompare(right))) {
+      if (templateGramIsAllowed(templateAllowlist, templateCategoryId, gram)) {
+        continue;
+      }
+      const questionIds = [...new Set(occurrences.map((occurrence) => occurrence.questionId))].sort();
+      if (questionIds.length >= TEMPLATE_DIFFERENT_QUESTION_LIMIT) {
+        const locations = occurrences
+          .filter((occurrence, index, all) => all.findIndex((candidate) => candidate.questionId === occurrence.questionId) === index)
+          .map((occurrence) => occurrence.location)
+          .sort();
+        issues.push(`TEMPLATE: category ${templateCategoryId} distractor-note ${TEMPLATE_GRAM_SIZE}-gram ${JSON.stringify(gram)} appears in ${questionIds.length} different questions (${questionIds.join(", ")}): ${locations.join(", ")}`);
+      }
     }
   }
 
@@ -565,6 +712,7 @@ function optionsFromArgs(args: string[]): ExplanationCheckOptions {
   return {
     categoryId: optionValue(args, "--category"),
     moduleId: optionValue(args, "--module"),
+    templateAllowlistPath: optionValue(args, "--template-allowlist"),
   };
 }
 
