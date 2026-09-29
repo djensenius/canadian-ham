@@ -65,7 +65,7 @@ That is a second-harmonic relationship. Whether it is a harmful station problem 
 
 ## Overdrive, flat topping, and splatter
 
-Amplifiers and modulators must operate in their intended linear range. If an SSB transmitter is driven too hard, the peaks can be clipped or flattened. This non-linear operation creates extra side energy and distortion. On the air, other stations may describe the result as splatter because the signal spreads beyond its necessary bandwidth.
+Amplifiers and modulators must operate in their intended linear range. If an SSB transmitter is driven too hard, the peaks can be clipped or flattened. This non-linear operation creates extra side energy and distortion. On the air, other stations may describe the result as splatter because the signal spreads beyond its necessary bandwidth. When extra RF appears immediately beyond the bandwidth the transmission actually needs, that specific case is called out-of-band emission.
 
 Excessive microphone gain is a common cause of SSB overdrive. More audio gain does not make the signal more readable once the transmitter is clipping. It usually makes the signal wider and less pleasant.
 
@@ -176,7 +176,7 @@ Description: Draw five small graphs with frequency increasing left to right and 
 ## Summary
 
 - Harmonics are unwanted signals at integer multiples of the operating frequency.
-- Overdriven RF stages and excessive audio drive can create harmonics, flat topping, and splatter.
+- Overdriven RF stages and excessive audio drive can create harmonics, flat topping, splatter, and out-of-band emission.
 - Low-pass filters pass lower frequencies and attenuate higher ones.
 - High-pass filters pass higher frequencies and attenuate lower ones.
 - Band-pass filters pass a range; band-reject filters attenuate a range; notch filters attenuate a narrow frequency.

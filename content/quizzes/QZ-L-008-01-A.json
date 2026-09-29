@@ -14,36 +14,36 @@
   "conceptChecks": [
     {
       "id": "QZ-L-008-01-A-C1",
-      "prompt": { "en": "A church sound mixer picks up buzzes from your transmissions only when a 12 metre unbalanced microphone cable is plugged into one input. Which first action best matches the likely coupling path?", "fr": null },
+      "prompt": { "en": "A volunteer wants to reduce RF pickup on a long audio lead before opening any equipment. Which proposed change would NOT help that coupling path?", "fr": null },
       "choices": [
-        { "text": { "en": "Add ferrite turns on the microphone cable close to the mixer input.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Install a surge suppressor on the mixer's AC cord to absorb voltage spikes.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Put an audio attenuator in series with the loudspeaker output to lower the room volume.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Add a low-pass filter at the transmitter output as though the symptom were harmonic radiation.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Add several ferrite turns on the audio lead close to the affected input.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Reroute the audio lead away from the antenna and transmitter cables.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Replace a two metre lead with a twelve metre spare lead coiled behind the mixer.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Clean or replace an oxidized plug that may act like a non-linear junction.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "A long audio lead can pick up RF and feed a non-linear mixer input, so a ferrite close to the affected audio equipment addresses that entry path.", "fr": null }
+      "explanation": { "en": "A longer coiled lead usually gives RF more conductor to couple into the audio input. The other actions reduce pickup or remove a likely detection point.", "fr": null }
     },
     {
       "id": "QZ-L-008-01-A-C2",
-      "prompt": { "en": "At a mountain checkpoint, a weak VHF repeater signal disappears whenever a nearby 50 W data link sends a burst, but no extra mixed voices are heard. What is the best diagnosis?", "fr": null },
+      "prompt": { "en": "Two strong site carriers are at 150.9 MHz and 154.2 MHz. A receiver is bothered at 157.5 MHz only when both carriers are active. Which conclusion uses the arithmetic and placement correctly?", "fr": null },
       "choices": [
-        { "text": { "en": "Receiver desensitization from the strong nearby burst.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Receiver intermodulation from two strong off-channel signals mixing together.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "A harmonic emission from the data link landing on the repeater frequency.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Audio rectification in the checkpoint loudspeaker wiring.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "154.2 - 150.9 = 3.3 MHz, so the receiver audio volume control is the best first adjustment.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "2 x 154.2 - 150.9 = 157.5 MHz, so test filtering or attenuation before the receiver input.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "150.9 + 154.2 = 305.1 MHz, so any filter after the first mixer will prevent front-end overload.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "2 x 150.9 - 154.2 = 147.6 MHz, so a transmitter low-pass filter on the receiver feed line is the matching cure.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "The weak wanted signal is being suppressed during a strong nearby transmission, which is the classic front-end headroom problem called desensitization.", "fr": null }
+      "explanation": { "en": "The third-order product 2 x 154.2 - 150.9 lands at 157.5 MHz. Reducing strong off-channel energy before the receiver input tests the suspected non-linear path.", "fr": null }
     },
     {
       "id": "QZ-L-008-01-A-C3",
-      "prompt": { "en": "After a relay is added to a CW exciter, a monitor receiver several kilohertz away hears sharp ticks at every dot and dash while the oscillator frequency remains steady. What should be checked first?", "fr": null },
+      "prompt": { "en": "A maintenance note says local Morse key clicks should be fixed by replacing the power-supply filter capacitor because the clicks happen at the key. What is the error in that note?", "fr": null },
       "choices": [
-        { "text": { "en": "Only the operator's sending speed, because slower Morse cures relay clicks by itself.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The oscillator voltage regulator, because chirp is the same symptom as wide key clicks.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The keying waveform, keying filter, and following RF stages for abrupt carrier edges.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A receiver input notch filter tuned to the clicks heard several kilohertz away.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "A filter capacitor controls supply ripple; local click energy is tied to the making and breaking of the key circuit.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The note should focus on voltage sag, because local key clicks are mainly slow chirp from oscillator drift.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The note should focus on parasitic oscillation, because local key clicks are always a self-oscillation above or below the carrier.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The note should focus on sending speed, because slower dots and dashes remove make-and-break RF without circuit changes.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Ticks on nearby frequencies with a steady oscillator point to abrupt keyed-carrier edges or later-stage behaviour, so the keying shape and RF stages need attention.", "fr": null }
+      "explanation": { "en": "For the local key-click clue, the make-and-break action in the key circuit is the issue. A power-supply filter capacitor is a ripple-control part, not the direct cure for that clue.", "fr": null }
     }
   ]
 }

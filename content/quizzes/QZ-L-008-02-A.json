@@ -14,36 +14,36 @@
   "conceptChecks": [
     {
       "id": "QZ-L-008-02-A-C1",
-      "prompt": { "en": "A service monitor shows a transmitter operating at 4.8 MHz and an unwanted output at 14.4 MHz. Which explanation best fits the relationship?", "fr": null },
+      "prompt": { "en": "A test transmitter has an unwanted output at 14.4 MHz while operating at 4.8 MHz. If the same fault remains after retuning the transmitter to 5.0 MHz, what should happen to that unwanted output?", "fr": null },
       "choices": [
-        { "text": { "en": "It is the second harmonic of the actual 4.8 MHz operating frequency.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It is adjacent-channel splatter from an overmodulated voice signal.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It is the third harmonic, because 4.8 x 3 = 14.4.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "It is a receiver notch-filter response rather than a transmitter output.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "It should stay at 14.4 MHz because unwanted outputs do not move with the operating frequency.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It should move down to 10.0 MHz because only the second multiple follows the transmitter.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It should move up to 15.0 MHz, preserving the three-to-one relationship.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "It should spread evenly from 14.4 MHz to 15.0 MHz because all splatter fills the gap.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "A harmonic is an integer multiple of the fundamental; 14.4 divided by 4.8 equals 3.", "fr": null }
+      "explanation": { "en": "The original ratio is 14.4 / 4.8 = 3. With the same relationship at 5.0 MHz, the unwanted output is 5.0 x 3 = 15.0 MHz, an upward move.", "fr": null }
     },
     {
       "id": "QZ-L-008-02-A-C2",
-      "prompt": { "en": "A receiver must keep monitoring 3.9 MHz and 5.3 MHz, but a strong industrial controller produces RF across 4.45 to 4.65 MHz. Which filter family best matches that goal?", "fr": null },
+      "prompt": { "en": "A receiver must keep monitoring 3.9 MHz and 5.3 MHz while reducing a strong controller that covers 4.45 to 4.65 MHz. Which statement is NOT true?", "fr": null },
       "choices": [
-        { "text": { "en": "Notch, aimed at one carrier in the middle of the controller's range.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Band-reject, because it can attenuate the controller's range while passing frequencies below and above it.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Low-pass with a cut-off just above the 3.9 MHz signal.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "High-pass with a cut-off just below the 5.3 MHz signal.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "A filter that rejects a middle range can protect the two wanted frequencies on either side.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "If the problem were one stable carrier instead of a range, a narrower rejection dip might sacrifice less nearby spectrum.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The filter belongs before the receiver stage that is being driven non-linear by the controller energy.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "One cutoff placed between 3.9 MHz and 5.3 MHz can remove the controller range and still pass both wanted frequencies.", "fr": null }, "isCorrect": true }
       ],
-      "explanation": { "en": "The unwanted energy occupies a middle range while wanted signals are on both sides, so a band-reject filter fits better than a notch, low-pass, or high-pass filter.", "fr": null }
+      "explanation": { "en": "A single cutoff is a one-sided boundary, so it cannot remove only the middle range while preserving wanted signals below and above it. The other statements match the taught filter-selection principles.", "fr": null }
     },
     {
       "id": "QZ-L-008-02-A-C3",
-      "prompt": { "en": "A station on 14.230 MHz is clean during tuning tones, but during loud voice syllables a monitor 3 kHz away hears rough bursts on both sides of the signal. Which explanation best fits?", "fr": null },
+      "prompt": { "en": "A station is clean on a steady test tone, but loud voice peaks create rough energy a few kilohertz on both sides. If the operator raises microphone gain further, what should you predict?", "fr": null },
       "choices": [
-        { "text": { "en": "Harmonic emission, because the unwanted energy is at an integer multiple of 14.230 MHz.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Receiver desensitization, because the monitor front end is losing sensitivity across all bands.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Splatter from overmodulation or other non-linear voice peaks near the transmit frequency.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A notch-filter problem, because one narrow carrier is being removed from the passband.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Nearby roughness should get worse; reducing the excessive audio drive should make the signal cleaner and narrower.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Only an exact integer-multiple output should change, while energy near the voice signal stays the same.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A single narrow rejection dip in the monitoring receiver should make the transmitted signal clean for everyone.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The symptom should vanish because more audio drive always improves SSB linearity on voice peaks.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Bursts only a few kilohertz from the SSB signal during loud syllables point to splatter from non-linear modulation, not a distant harmonic or a receiver filter choice.", "fr": null }
+      "explanation": { "en": "Rough energy close to the SSB signal during loud syllables points to non-linear voice peaks. More microphone gain tends to worsen that; reducing drive is the cleaner direction.", "fr": null }
     }
   ]
 }

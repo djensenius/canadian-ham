@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-008-004-011.\n\nWhy the correct answer is right: Excessive drive pushes the RF power amplifier into non-linear operation, which increases harmonic production.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"the output tank circuit is tuned to the fundamental frequency\": A properly tuned output tank at the fundamental helps select the intended signal and suppress unwanted harmonic energy.\n- sourceIndex 2: \"the oscillator frequency is unstable\": Oscillator instability causes drift or chirp, which is different from harmonic generation in an overdriven power amplifier.\n- sourceIndex 3: \"modulation is applied to a high-level stage\": Applying modulation to a high-level stage is a transmitter design method; by itself it is not the listed cause of harmonics.",
+    "en": "Question B-008-004-011.\n\nWhy the correct answer is right: Excessive drive pushes the RF power amplifier into non-linear operation, which increases harmonic production.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"the output tank circuit is tuned to the fundamental frequency\": A properly tuned output tank at the fundamental helps select the intended signal and suppress unwanted harmonic energy.\n- sourceIndex 2: \"the oscillator frequency is unstable\": Oscillator instability causes drift or chirp, which is different from harmonic generation in an overdriven power amplifier.\n- sourceIndex 3: \"modulation is applied to a high-level stage\": Applying modulation to a high-level stage is a transmitter design method; harmonics increase when an RF stage is driven non-linearly, not merely because the modulation point is high level.",
     "fr": null
   },
   "citations": [

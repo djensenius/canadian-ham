@@ -59,7 +59,7 @@ A receiver front end is the input section before the later tuned and detector st
 When the front end is overloaded, several things can happen:
 
 - the desired signal seems to disappear because the receiver is desensitized;
-- many parts of the dial appear to have the same interfering signal;
+- many tuned frequencies may show overload symptoms at the receiver input, especially when a strong off-channel signal is present;
 - two strong signals mix and produce a new signal on the frequency of interest; or
 - changing the amateur transmitting band does not change the nature of the interference very much.
 
@@ -75,7 +75,7 @@ The first station should not immediately accuse the transmitter of generating ha
 
 ### Worked example: intermod clue
 
-At a sailing-club event, a VHF receiver monitoring a weak harbour beacon on 156.8 MHz hears a false tone only when two nearby service transmitters are active. One is at 151.4 MHz and the other is at 154.1 MHz. A technician notices that 2 x 154.1 - 151.4 = 156.8, so a third-order mixing product could land on the beacon channel if the receiver input is being driven non-linear.
+At a sailing-club event, a VHF receiver monitoring a weak marine safety channel on 156.8 MHz hears a false tone only when two nearby service transmitters are active. One is at 151.4 MHz and the other is at 154.1 MHz. A technician notices that 2 x 154.1 - 151.4 = 156.8, so a third-order mixing product could land on the monitored channel if the receiver input is being driven non-linear.
 
 That points toward receiver intermodulation or overload. The cure is often more separation, less unnecessary gain, or a suitable filter or attenuation at the receiver input, not a repair to the beacon or to every nearby transmitter.
 
@@ -92,6 +92,7 @@ Audio rectification happens when RF is picked up by wiring and detected by a non
 The clues are different from ordinary receiver tuning:
 
 - the sound may be present even when the device is not tuned to a radio station;
+- a broadcast receiver or audio device may seem to hear the amateur transmission across the entire dial because the RF is being detected after it enters, not selected by the tuned RF stage;
 - the volume control may not change the interference because detection occurs after or outside the normal volume control path;
 - SSB may sound like muffled or distorted speech; and
 - CW may sound like clicks, buzzes, or on-and-off hum because the carrier is keyed.
@@ -130,6 +131,8 @@ A clean transmitter has filtering, shielding, and stages adjusted so the wanted 
 
 In Morse transmission, the carrier should rise and fall smoothly enough that the signal occupies a reasonable bandwidth. If the carrier turns on and off too abruptly, the sharp edges contain extra side energy. Distant receivers hear this as clicks near the signal.
 
+There are two related clues. Local RF interference from key clicks can come from the making and breaking of the key circuit itself. Key clicks heard at a distant receiver usually point to rise and decay times of the transmitted carrier that are too sharp.
+
 Key clicks are not fixed by sending slower with the same harsh waveform. The transmitter's keying waveform, keying filter, and later RF stages need attention. The idea is to shape the rise and decay times, not to hide the problem.
 
 ### Worked example: sharp keying
@@ -160,11 +163,11 @@ A good approach is:
 
 ## Try it
 
-1. Question: A doorbell intercom repeats raspy syllables from your transmissions only when its long button wire is connected. What does that clue suggest? Answer: The wire is likely carrying RF into a non-linear audio circuit, so audio rectification and lead pickup should be investigated.
-2. Question: In a lab rack, a sensitive HF receiver's S-meter jumps and weak signals fade whenever a 100 W transmitter in the next rack is keyed into an antenna. What receiver-side problem fits? Answer: Front-end overload or desensitization fits because the strong nearby RF can use up receiver headroom and reduce sensitivity.
-3. Question: A club scanner hears a false signal only at the fairground, where two paging transmitters and a taxi dispatch channel are much stronger than usual. What cure is worth trying before the receiver's first stage? Answer: A suitable front-end filter or modest attenuation can reduce the strong off-channel energy before it mixes.
-4. Question: After a keying-interface change, a CW transmitter's RF envelope shows nearly square leading edges on a monitor scope. What should be adjusted before using it on the air? Answer: The keying-shape network and following RF stages should be checked so the carrier rises and falls smoothly.
-5. Question: A balcony vertical feeds a station through coax that runs beside computer audio and USB leads, and the shack speakers buzz only on transmit. What station-side part may help on the feedline? Answer: A common-mode choke on the feedline can reduce RF current flowing on the outside of the coax.
+1. Question: A doorbell intercom is quiet when its 18 metre button cable is unplugged and noisy again when the cable is reconnected. Explain why shortening that run or adding ferrite near the intercom box is a sensible first test. Answer: The long cable can pick up RF and deliver it to a non-linear input in the intercom, so reducing RF current at the affected device tests the pickup path directly.
+2. Question: A sensitive receiver loses weak signals whenever a nearby test transmitter runs 100 W, but the symptom is much less severe at 10 W. What does that power-change trend suggest? Answer: A smooth improvement as the strong signal is reduced supports a receiver-headroom problem such as overload or desensitization rather than a fixed-frequency transmitter defect.
+3. Question: Two strong site transmitters at 151.2 MHz and 153.8 MHz are present when a scanner hears a false signal at 156.4 MHz. Compute one possible third-order product and name a practical first test. Answer: 2 x 153.8 - 151.2 = 156.4 MHz, so a front-end filter or modest attenuation ahead of the scanner is worth trying to reduce off-channel energy before it mixes.
+4. Question: A CW exciter change reduces the RF-envelope rise time from about 6 ms to less than 1 ms, and a monitor several kilohertz away hears ticks. Why is simply sending slower not a cure? Answer: The problem is the abrupt edge of each keyed carrier element, so the keying-shape network and following RF stages need correction before the signal is used on the air.
+5. Question: A doorbell intercom lead passes close to a transmitting antenna. A ferrite clipped at the station desk changes nothing, but moving the same ferrite to the intercom end helps. Explain why the location matters. Answer: The lead section after a choke can still pick up RF, so the choke usually belongs close to the affected device or entry point being protected.
 
 ## Radio connection
 
