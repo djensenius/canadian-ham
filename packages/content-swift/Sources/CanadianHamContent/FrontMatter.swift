@@ -132,7 +132,7 @@ public enum StrictFrontMatterParser {
         if value == "[]" {
             return .stringArray([])
         }
-        if let integer = Int(value), String(integer) == value {
+        if isIntegerLiteral(value), let integer = Int(value) {
             return .integer(integer)
         }
         if value.hasPrefix("\"") || value.hasSuffix("\"") {
@@ -153,12 +153,27 @@ public enum StrictFrontMatterParser {
     }
 
     private static func isKey(_ value: String) -> Bool {
-        guard let first = value.unicodeScalars.first, CharacterSet.letters.contains(first) else {
+        let letters = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+        let alphanumerics = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
+        guard let first = value.unicodeScalars.first, letters.contains(first) else {
             return false
         }
         return value.unicodeScalars.allSatisfy { scalar in
-            CharacterSet.alphanumerics.contains(scalar)
+            alphanumerics.contains(scalar)
         }
+    }
+
+    private static func isIntegerLiteral(_ value: String) -> Bool {
+        guard !value.isEmpty else {
+            return false
+        }
+        let digits: Substring
+        if value.hasPrefix("-") {
+            digits = value.dropFirst()
+        } else {
+            digits = value[...]
+        }
+        return !digits.isEmpty && digits.unicodeScalars.allSatisfy { CharacterSet.decimalDigits.contains($0) }
     }
 
     private static func isBareScalar(_ value: String) -> Bool {

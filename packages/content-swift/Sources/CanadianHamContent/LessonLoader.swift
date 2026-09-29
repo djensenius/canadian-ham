@@ -54,9 +54,11 @@ enum LessonMarkdownLoader {
             bodyMarkdown: document.bodyMarkdown,
             path: path
         )
-        let expectedModuleId = moduleIdForLessonId(id)
+        guard let expectedModuleId = moduleIdForLessonId(id) else {
+            throw ContentError("\(path): lesson id must match L-001-00 through L-008-00")
+        }
         guard expectedModuleId == moduleId else {
-            throw ContentError("\(path): lesson moduleId \(moduleId) must match lesson id prefix \(expectedModuleId ?? "<unknown>")")
+            throw ContentError("\(path): lesson moduleId \(moduleId) must match lesson id prefix \(expectedModuleId)")
         }
         let expectedCategoryId = categoryIdForModuleId(moduleId)
         guard let expectedCategoryId, categoryIds.contains(expectedCategoryId) else {
@@ -78,7 +80,15 @@ enum LessonMarkdownLoader {
 
     private static func moduleIdForLessonId(_ lessonId: String) -> String? {
         let parts = lessonId.split(separator: "-")
-        guard parts.count == 3, parts[0] == "L", parts[1].count == 3, let number = parts[1].last, let integer = Int(String(number)), (1...8).contains(integer) else {
+        guard parts.count == 3,
+              parts[0] == "L",
+              parts[1].count == 3,
+              parts[1].hasPrefix("00"),
+              let number = parts[1].last,
+              let integer = Int(String(number)),
+              (1...8).contains(integer),
+              parts[2].count == 2,
+              parts[2].allSatisfy({ $0.isNumber }) else {
             return nil
         }
         return "M\(number)"

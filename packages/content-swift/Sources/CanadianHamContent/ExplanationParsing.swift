@@ -1,5 +1,10 @@
 import Foundation
 
+public enum ContentLanguage: String, Codable, Equatable, Sendable {
+    case en
+    case fr
+}
+
 public struct ParsedDistractorNote: Equatable, Sendable {
     public let sourceIndex: Int
     public let quotedChoice: String
@@ -24,7 +29,11 @@ public struct ParsedExplanationBody: Equatable, Sendable {
     }
 
     public var distractorNotesBySourceIndex: [Int: ParsedDistractorNote] {
-        Dictionary(uniqueKeysWithValues: distractorNotes.map { ($0.sourceIndex, $0) })
+        var lookup: [Int: ParsedDistractorNote] = [:]
+        for note in distractorNotes where lookup[note.sourceIndex] == nil {
+            lookup[note.sourceIndex] = note
+        }
+        return lookup
     }
 }
 
@@ -49,9 +58,13 @@ public enum ExplanationBodyParser {
         return ParsedExplanationBody(correctAnswerParagraph: correctParagraph, distractorNotes: notes)
     }
 
-    public static func parse(_ explanation: Explanation, language: String = "en") throws -> ParsedExplanationBody {
-        let body = language == "fr" ? (explanation.body.fr ?? explanation.body.en) : explanation.body.en
+    public static func parse(_ explanation: Explanation, language: ContentLanguage = .en) throws -> ParsedExplanationBody {
+        let body = language == .fr ? (explanation.body.fr ?? explanation.body.en) : explanation.body.en
         return try parse(body)
+    }
+
+    public static func parse(_ explanation: Explanation, language: String) throws -> ParsedExplanationBody {
+        try parse(explanation, language: ContentLanguage(rawValue: language) ?? .en)
     }
 
     private static func normalizedCorrectAnswerParagraph(_ section: String) -> String {
@@ -68,6 +81,7 @@ public enum ExplanationBodyParser {
 
     private static func parseDistractorNotes(_ section: String, startingLineNumber: Int) throws -> [ParsedDistractorNote] {
         var notes: [ParsedDistractorNote] = []
+        var seenSourceIndexes: Set<Int> = []
         let lines = section.components(separatedBy: "\n")
         for (index, line) in lines.enumerated() {
             guard line.contains("sourceIndex") else {
@@ -86,6 +100,13 @@ public enum ExplanationBodyParser {
             guard let sourceIndex = Int(numberText) else {
                 throw ContentError("explanation line \(lineNumber): sourceIndex must be an integer")
             }
+            guard sourceIndex != 0 else {
+                throw ContentError("explanation line \(lineNumber): sourceIndex 0 must not appear in the distractor notes")
+            }
+            guard !seenSourceIndexes.contains(sourceIndex) else {
+                throw ContentError("explanation line \(lineNumber): duplicate per-choice note for sourceIndex \(sourceIndex)")
+            }
+            seenSourceIndexes.insert(sourceIndex)
             let afterNumber = String(afterPrefix[numberSeparator.upperBound...])
             let quoted = try parseQuotedChoiceAndNote(afterNumber, lineNumber: lineNumber)
             notes.append(ParsedDistractorNote(sourceIndex: sourceIndex, quotedChoice: quoted.choice, note: quoted.note, lineNumber: lineNumber))

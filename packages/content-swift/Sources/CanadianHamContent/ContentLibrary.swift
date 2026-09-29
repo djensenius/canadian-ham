@@ -186,7 +186,7 @@ public struct ContentLibrary: Sendable {
 
     private func validateLessonsAndModules() throws {
         let orders = modules.map(\.order)
-        guard Set(orders) == Set(1...modules.count), modules.count == 8 else {
+        guard modules.count == 8, Set(orders) == Set(1...8) else {
             throw ContentError("module order values must be unique 1 through 8")
         }
         for module in modules {
@@ -211,11 +211,25 @@ public struct ContentLibrary: Sendable {
                     throw ContentError("lesson \(lesson.id) references unknown categoryId \(categoryId)")
                 }
             }
+            for prerequisiteId in lesson.prerequisites {
+                guard lessonsById[prerequisiteId] != nil else {
+                    throw ContentError("lesson \(lesson.id) prerequisites references unknown lesson \(prerequisiteId)")
+                }
+            }
             for subsectionId in lesson.covers {
                 guard subsectionsById[subsectionId] != nil else {
                     throw ContentError("lesson \(lesson.id) covers unknown subsectionId \(subsectionId)")
                 }
+                guard lesson.categoryIds.contains(where: { subsectionId.hasPrefix("\($0)-") }) else {
+                    throw ContentError("lesson \(lesson.id) covers \(subsectionId) does not match categoryIds \(lesson.categoryIds.joined(separator: ", "))")
+                }
             }
+        }
+
+        let coveredSubsectionIds = Set(lessons.flatMap(\.covers))
+        let missingSubsectionIds = subsections.map(\.id).filter { !coveredSubsectionIds.contains($0) }
+        guard missingSubsectionIds.isEmpty else {
+            throw ContentError("missing lesson coverage for subsectionIds \(missingSubsectionIds.joined(separator: ", "))")
         }
     }
 
@@ -249,19 +263,28 @@ public struct ContentLibrary: Sendable {
     }
 
     private func validateExplanations() throws {
+        var explainedQuestionIds: Set<String> = []
         for explanation in explanations {
+            guard explanation.id == "EXP-\(explanation.questionId)" else {
+                throw ContentError("explanation \(explanation.id) id must be EXP-\(explanation.questionId)")
+            }
             guard explanation.bankId == manifest.bankId else {
                 throw ContentError("explanation \(explanation.id) bankId \(explanation.bankId) does not match manifest \(manifest.bankId)")
             }
             guard let question = questionsById[explanation.questionId] else {
                 throw ContentError("explanation \(explanation.id) references unknown questionId \(explanation.questionId)")
             }
+            explainedQuestionIds.insert(explanation.questionId)
             let parsed = try ExplanationBodyParser.parse(explanation)
             let expectedSourceIndexes = Set(question.answers.filter { !$0.isCorrect }.map(\.sourceIndex))
             let parsedSourceIndexes = Set(parsed.distractorNotes.map(\.sourceIndex))
             guard parsedSourceIndexes == expectedSourceIndexes else {
                 throw ContentError("explanation \(explanation.id) distractor notes have sourceIndexes \(parsedSourceIndexes.sorted()), expected \(expectedSourceIndexes.sorted())")
             }
+        }
+        let missingExplanationIds = questions.map(\.id).filter { !explainedQuestionIds.contains($0) }
+        guard missingExplanationIds.isEmpty else {
+            throw ContentError("missing explanations for questionIds \(missingExplanationIds.joined(separator: ", "))")
         }
     }
 }
