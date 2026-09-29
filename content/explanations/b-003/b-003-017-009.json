@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-017-009.\n\nWhy the correct answer is right: The 3 m distance means a 6 m round-trip conductor path; #10 gives 6 x 0.07 V = 0.42 V, within the 0.5 V limit, while #12 gives 0.66 V.\n\nPer-choice notes:\n- sourceIndex 0: \"Number 10, 0.07 V per metre\": This is the correct choice because the 3 m distance means a 6 m round-trip conductor path; #10 gives 6 x 0.07 V = 0.42 V, within the 0.5 V limit, while #12 gives 0.66 V.\n- sourceIndex 1: \"Number 14, 0.19 V per metre\": Number 14 gives 6 x 0.19 V = 1.14 V for the round trip, far above the 0.5 V limit.\n- sourceIndex 2: \"Number 12, 0.11 V per metre\": Number 12 gives 6 x 0.11 V = 0.66 V, which still exceeds the 0.5 V limit.\n- sourceIndex 3: \"Number 8, 0.05 V per metre\": Number 8 gives 6 x 0.05 V = 0.30 V, but the question asks for the minimum wire gauge; number 10 is the smallest listed wire that meets the limit.",
+    "en": "Question B-003-017-009.\n\nWhy the correct answer is right: The current travels to the radio and back, so a 3 m one-way run is 6 m of conductor. Number 10 gives 6 x 0.07 V = 0.42 V, within the 0.5 V limit, and it is the smallest listed wire that meets the limit.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Number 14, 0.19 V per metre\": Number 14 gives 6 x 0.19 V = 1.14 V, more than twice the allowed 0.5 V drop.\n- sourceIndex 2: \"Number 12, 0.11 V per metre\": Number 12 gives 6 x 0.11 V = 0.66 V, so it still exceeds the 0.5 V limit.\n- sourceIndex 3: \"Number 8, 0.05 V per metre\": Number 8 gives 6 x 0.05 V = 0.30 V, but it is heavier than necessary; the question asks for the minimum wire gauge that meets the limit.",
     "fr": null
   },
   "citations": [

@@ -91,7 +91,7 @@ A qualified repair mentor supervises a student inspecting an unplugged supply.
 - Confirm the power cord is unplugged and the unit cannot be accidentally energized.
 - Open the cabinet only after the safe work area is prepared.
 - Discharge filter capacitors with an insulated resistor tool and verify with a meter.
-- Keep one hand away from the chassis area while measuring, when measurement is necessary and safe.
+- Use the one-hand rule for necessary measurements: keep one hand away from the equipment and your body so an accidental contact is less likely to put current across your chest.
 
 The first action inside is to make stored energy safe, not to start replacing parts.
 
@@ -118,7 +118,7 @@ The protector location matters because the surge should be diverted before it re
 
 RF energy can heat body tissue when exposure is high enough. Eyes deserve particular care because they dissipate heat poorly compared with many other tissues. At UHF and microwave frequencies, antennas and amplifier openings can put significant RF energy close to people, so keep antennas away from eyes and make sure amplifiers cannot be energized while shielding is removed.
 
-Power density falls rapidly with distance in free space, so separation is a powerful safety tool. Keep handheld antennas away from your head and from other people while transmitting. Put UHF transmitting antennas where people cannot approach them during operation. Locate indoor antennas as far as practical from occupied living spaces, and mount directional high-gain antennas so their main beam is not aimed into nearby occupied structures.
+Power density falls rapidly with distance in free space, so separation is a powerful safety tool. For a simple free-space point-source model, RF field strength falls in proportion to `1/d`, while power density falls in proportion to `1/d^2`. Doubling distance can therefore greatly reduce exposure, even before considering duty cycle or antenna pattern. Keep handheld antennas away from your head and from other people while transmitting. Put UHF transmitting antennas where people cannot approach them during operation. Locate indoor antennas as far as practical from occupied living spaces, and mount directional high-gain antennas so their main beam is not aimed into nearby occupied structures.
 
 Health Canada Safety Code 6 is the general Canadian framework for RF exposure limits. This lesson does not invent numeric limits or replace a proper exposure evaluation. When in doubt, reduce power, increase distance, shorten transmission time, use lower-gain antennas near people, or move the antenna outdoors and higher.
 
@@ -135,10 +135,10 @@ Indoor antennas can work, but the safety margin comes from distance, lower power
 
 ## Try it
 
-1. A vehicle radio is parked at a community event. What simple step reduces unauthorized use? Remove or secure the microphone or control head so the transmitter is not ready to use.
+1. A club station shares a room with visitors during an open house. What kind of control is stronger than a warning sign? Use a positive power or control lockout so visitors cannot energize and transmit with the station.
 2. A long station "ground" wire still allows RF burns on transmit. What does that suggest? The wire may have high RF impedance, so common-mode current and antenna balance should be checked.
 3. Why should a replacement fuse keep the specified ratings? A larger current rating may not open during a fault, and an inadequate voltage rating may not interrupt safely.
-4. Where should a coax surge protector be placed for best lightning practice? At the outside entry point, as close to the grounding system as practical.
+4. A feedline enters through a basement wall and runs to the desk. Where should surge energy be diverted? At the outside entry panel bonded to the grounding system, before the cable continues indoors.
 5. How do you reduce RF exposure from a handheld radio? Hold the antenna separated from your head and from bystanders, and use only the power needed.
 
 ## Radio connection

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-018-007.\n\nWhy the correct answer is right: 30 V is the threshold used in this exam context for voltage normally treated as hazardous to people.\n\nPer-choice notes:\n- sourceIndex 0: \"30\": This is the correct choice because 30 V is the threshold used in this exam context for voltage normally treated as hazardous to people.\n- sourceIndex 1: \"100\": This is a higher voltage than the threshold used in the Basic safety question.\n- sourceIndex 2: \"240\": This is a mains-level value, but lower voltages can still be treated as hazardous in this safety context.\n- sourceIndex 3: \"347\": This industrial-level voltage is not the lowest threshold considered hazardous here.",
+    "en": "Question B-003-018-007.\n\nWhy the correct answer is right: About 30 volts is commonly treated as the lower boundary where shock hazard precautions become important, especially with wet skin or good contact.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"100\": One hundred volts is hazardous, but it is not the lowest voltage among the listed values that is usually treated as dangerous.\n- sourceIndex 2: \"240\": Two hundred forty volts is clearly hazardous mains voltage; choosing it misses lower voltages that can still require precautions.\n- sourceIndex 3: \"347\": Three hundred forty-seven volts is a dangerous high building-system voltage, not the lowest commonly cited hazard threshold.",
     "fr": null
   },
   "citations": [

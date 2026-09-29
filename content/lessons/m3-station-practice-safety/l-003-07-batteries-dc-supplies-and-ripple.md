@@ -41,7 +41,7 @@ By the end of this lesson, you can:
 
 A battery is a source of electromotive force. One terminal is marked positive and the other is marked negative, so polarity matters when connecting radios, chargers, and accessories. A rechargeable battery is often called a storage battery because electrical energy can be put back into it during charging.
 
-Common station batteries include lead-acid, nickel-metal hydride, and lithium-based packs. Lithium-based packs are popular for portable operation because they can provide high capacity for their mass, but they require the charger, protection, and handling specified for that chemistry. Never short-circuit a battery. Even a low-voltage battery can supply very high current into a short.
+Common station batteries include lead-acid, nickel-metal hydride (NiMH), and lithium-based packs. NiMH cells are often preferred over ordinary alkaline cells when rechargeability matters; that does not mean they have higher voltage. A NiMH cell is typically about 1.2 V nominal, lower than a fresh alkaline cell of the same size, and used cells still require proper recycling or disposal. Lithium-based packs are popular for portable operation because they can provide high capacity for their mass, but they require the charger, protection, and handling specified for that chemistry. Never short-circuit a battery. Even a low-voltage battery can supply very high current into a short.
 
 A battery is not an ideal voltage source. It has internal resistance, so its terminal voltage drops when current is drawn. The drop becomes more obvious with high current, cold temperature, discharged state, small wiring, or a tired battery.
 
@@ -61,6 +61,11 @@ Battery capacity is commonly described in ampere-hours. It is a planning number,
 
 Series connection adds voltage while capacity in ampere-hours stays that of one matched string. Parallel connection keeps the voltage the same while adding ampere-hour capacity, assuming properly matched and safely protected batteries.
 
+Text formulas:
+
+- Series: `V_total = V1 + V2 + ...`; ampere-hour capacity stays that of one matched string.
+- Parallel: voltage stays the same; `Ah_total = Ah1 + Ah2 + ...` for safely matched parallel batteries.
+
 ### Worked example: original battery bank
 
 Two matched 11.1 V, 9 Ah packs are used for a temporary receiver project.
@@ -72,9 +77,9 @@ Only connect batteries in ways approved for their chemistry and protection syste
 
 ## Station DC supplies
 
-Many amateur transceivers are designed for a nominal low-voltage DC input from a regulated supply. When selecting a supply, the output current capability is one of the most important specifications. The supply must handle the transmitter's peak current demand without the voltage sagging below the radio's requirement.
+Many amateur transceivers are designed for a nominal low-voltage DC input from a regulated supply. When selecting a supply, the output current capability is one of the most important specifications. The supply must handle the transmitter's peak current demand without the voltage sagging below the radio's requirement. Canadian homes are commonly supplied with nominal 120 V and 240 V AC power; a station DC supply converts mains AC to the DC voltage required by the radio.
 
-A linear supply is usually heavier and less efficient, but it may produce less RF noise. A switching supply is usually smaller and lighter and can be efficient, but poor designs or faulty units can generate radio-frequency noise. Either type can work well if it is properly rated, installed, and quiet in your station.
+A linear supply is usually heavier and less efficient than a switching supply, but it may produce less RF noise. A switching supply is usually smaller, lighter, and more efficient, but it carries a higher RF-noise risk if it is poorly designed, faulty, or installed without attention to filtering and layout. Either type can work well if it is properly rated, installed, and quiet in your station.
 
 A simple supply often has a transformer, rectifier, and filter capacitor. If the filtering or regulation is poor, residual AC ripple can get into the transmitter. In CW, varying voltage can contribute to chirp. In voice, ripple can show up as low-frequency hum on the transmitted signal.
 
@@ -94,13 +99,14 @@ Fuses protect wiring, not just the radio. A fuse near the source protects the le
 
 ### Worked example: checking wire drop
 
-A mobile radio draws 17 A on transmit. The battery connection is 2.4 m away one way, and the chosen cable data says the round-trip drop is 0.06 V per metre at that current.
+A mobile radio draws 17 A on transmit. The battery connection is 2.4 m away one way, and the chosen cable data says the wire drops 0.06 V per metre at that current.
 
-- Total drop estimate = 2.4 m x 0.06 V per metre.
-- Total drop estimate = 0.144 V.
-- That is well below a 0.4 V design limit for this original installation example.
+- Current travels out and back, so use the round-trip length: `2 x 2.4 m = 4.8 m`.
+- Total drop estimate = `4.8 m x 0.06 V per metre`.
+- Total drop estimate = `0.288 V`.
+- That is below a 0.4 V design limit for this original installation example.
 
-The exact table depends on wire size and current, so calculate with the data for the wire you intend to use.
+The exact table depends on wire size and current, so calculate with the data for the wire you intend to use and include both the positive and negative lead lengths.
 
 ## Try it
 

@@ -14,25 +14,25 @@
   "conceptChecks": [
     {
       "id": "QZ-L-003-08-A-C1",
-      "prompt": { "en": "A station has separate unbonded ground rods for the tower and operating desk. What is the safety concern?", "fr": null },
+      "prompt": { "en": "A replacement fuse has the specified current rating, but its voltage rating is lower than the equipment manual requires. What is the safety problem?", "fr": null },
       "choices": [
-        { "text": { "en": "The rods can develop dangerous voltage differences during a fault or surge", "fr": null }, "isCorrect": true },
-        { "text": { "en": "The transmitter will automatically change frequency", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The antenna polarization will become circular", "fr": null }, "isCorrect": false },
-        { "text": { "en": "The receiver squelch will stop muting noise", "fr": null }, "isCorrect": false }
+        { "text": { "en": "The fuse may not interrupt the circuit safely and could sustain an arc", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The fuse will necessarily open during normal receive current", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The fuse will lower the equipment's normal supply voltage", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The fuse will act as a surge suppressor for lightning transients", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Bonding electrodes together reduces voltage differences that could otherwise put surge or fault current through station equipment.", "fr": null }
+      "explanation": { "en": "A fuse needs both the correct current rating and a voltage rating high enough to interrupt the fault without maintaining an arc.", "fr": null }
     },
     {
       "id": "QZ-L-003-08-A-C2",
-      "prompt": { "en": "A desk radio's only lightning protector is mounted behind the transceiver after the cable has crossed the room. What improvement best matches the lesson?", "fr": null },
+      "prompt": { "en": "An indoor antenna test is moved from 1 m away from a marked keep-clear line to 2 m away in the same direction, with the same power and antenna. In the simple free-space model, what happens to power density at that line?", "fr": null },
       "choices": [
-        { "text": { "en": "Move the protector to the antenna feed point at the top of the mast", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Install the protector at the outside entry point and bond it there", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Remove the station bonding conductors", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Use a longer indoor coax loop before the radio", "fr": null }, "isCorrect": false }
+        { "text": { "en": "It falls to about one quarter", "fr": null }, "isCorrect": true },
+        { "text": { "en": "It falls to about one half", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It stays the same because frequency did not change", "fr": null }, "isCorrect": false },
+        { "text": { "en": "It increases because the antenna is farther from the operator", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Surge energy should be diverted at the entry and grounding point before it is routed through the operating position.", "fr": null }
+      "explanation": { "en": "Power density follows the inverse-square relationship in the simple free-space model, so doubling distance reduces it to roughly 1/4.", "fr": null }
     },
     {
       "id": "QZ-L-003-08-A-C3",
