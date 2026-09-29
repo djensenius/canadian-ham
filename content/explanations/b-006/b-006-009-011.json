@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-009-011.\n\nWhy the correct answer is right: A half-wave dipole is about 2.1 dB above isotropic. Gain over a dipole is therefore 4.1 dBi - 2.1 dB = 2.0 dB.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"4.1 dB\": This leaves the gain referenced to isotropic and never subtracts the dipole reference gain. It is dBi, not gain over a dipole.\n- sourceIndex 2: \"3.0 dB\": This would come from subtracting about 1.1 dB from 4.1 dBi, but the half-wave dipole reference is about 2.1 dB above isotropic.\n- sourceIndex 3: \"1.1 dB\": This looks like subtracting a 3 dB doubling figure from 4.1 dBi. The correct reference conversion subtracts the dipole gain of about 2.1 dB.",
+    "en": "Question B-006-009-011.\n\nWhy the correct answer is right: A half-wave dipole is about 2.1 dB above isotropic. Gain over a dipole is therefore 4.1 dBi - 2.1 dB = 2.0 dB.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"4.1 dB\": This leaves the gain referenced to isotropic and never subtracts the dipole reference gain. It is dBi, not gain over a dipole.\n- sourceIndex 2: \"3.0 dB\": This is simply wrong for converting from dBi to gain over a half-wave dipole. The required subtraction is about 2.1 dB, so 4.1 - 2.1 = 2.0 dB.\n- sourceIndex 3: \"1.1 dB\": This looks like subtracting a 3 dB doubling figure from 4.1 dBi. The correct reference conversion subtracts the dipole gain of about 2.1 dB.",
     "fr": null
   },
   "citations": [

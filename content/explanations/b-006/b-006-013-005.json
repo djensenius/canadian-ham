@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-013-005.\n\nWhy the correct answer is right: A delta loop is also a full-wave loop, so its total wire length is approximately 306/f. For 28.7 MHz, 306 / 28.7 = 10.66 metres.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"3.55 metres\": This is 10.66 / 3 = 3.55 m, one side of an equilateral delta loop. The question asks for the total loop length.\n- sourceIndex 2: \"8.15 metres\": This is 234 / 28.7 = 8.15 if the imperial half-wave dipole constant is wrongly treated as metres. A delta loop uses the full-wave loop constant 306.\n- sourceIndex 3: \"4.98 metres\": This is 143 / 28.7 = 4.98 m, the practical half-wave dipole length. A delta loop is approximately one full wavelength around.",
+    "en": "Question B-006-013-005.\n\nWhy the correct answer is right: A delta loop is also a full-wave loop, so its total wire length is approximately 306/f. For 28.7 MHz, 306 / 28.7 = 10.66 metres.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"3.55 metres\": This is 10.66 / 3 = 3.55 m, one side of an equilateral delta loop. The question asks for the total loop length.\n- sourceIndex 2: \"8.15 metres\": This is 234 / 28.7 = 8.15 if 234/f, the quarter-wave or dipole-leg length in feet, is wrongly treated as metres. A half-wave dipole in feet uses 468/f, and a delta loop uses the metric full-wave loop constant 306/f.\n- sourceIndex 3: \"4.98 metres\": This is 143 / 28.7 = 4.98 m, the practical half-wave dipole length. A delta loop is approximately one full wavelength around.",
     "fr": null
   },
   "citations": [

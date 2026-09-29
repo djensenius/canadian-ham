@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-008-002.\n\nWhy the correct answer is right: Raising a dipole’s resonant frequency requires reducing its electrical length. Shortening the wire moves resonance from 3600 kHz toward 3900 kHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Make it longer\": Lengthening a dipole lowers its resonant frequency, so it would move the antenna away from 3900 kHz.\n- sourceIndex 2: \"Install it as a sloper\": A sloper installation affects pattern, coupling, and impedance, but it is not the direct adjustment for raising the resonant frequency.\n- sourceIndex 3: \"Use larger diameter wire\": Larger diameter wire can broaden bandwidth and shift tuning slightly through end effects, but it is not the normal correction for a dipole resonant too low.",
+    "en": "Question B-006-008-002.\n\nWhy the correct answer is right: Raising a dipole’s resonant frequency requires reducing its electrical length. Shortening the wire moves resonance from 3600 kHz toward 3900 kHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Make it longer\": Lengthening a dipole lowers its resonant frequency, so it would move the antenna away from 3900 kHz.\n- sourceIndex 2: \"Install it as a sloper\": A sloper installation affects pattern, coupling, and impedance, but it is not the direct adjustment for raising the resonant frequency.\n- sourceIndex 3: \"Use larger diameter wire\": Thicker wire broadens bandwidth and tends to lower resonance slightly, so it is not the normal correction for a dipole resonant too low.",
     "fr": null
   },
   "citations": [

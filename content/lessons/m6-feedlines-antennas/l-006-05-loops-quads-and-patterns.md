@@ -96,7 +96,7 @@ If it is a square loop, each side starts near 7.58 m. The final shape may be irr
 
 ## Try it
 
-1. A dipole wire runs east-west in free space. Where are its strongest directions? Broadside to the wire, so the strongest directions are north and south.
+1. A dipole wire runs northeast-southwest in free space. Where are its strongest directions? Broadside to the wire, so the strongest directions are roughly northwest and southeast.
 2. A random wire causes audio distortion during transmit. What should you investigate? Look for RF feedback, bonding, matching, and counterpoise issues because RF may be returning through the operating position.
 3. A one-wavelength square loop is cut for a higher frequency. What happens to total wire length? It becomes shorter because wavelength and frequency move in opposite directions.
 4. A full-wave loop is planned for 15 MHz. Which estimate is the practical loop starting length? Use 306 / 15 = 20.4 m total wire; 300 / 15 = 20.0 m is the free-space wavelength estimate.

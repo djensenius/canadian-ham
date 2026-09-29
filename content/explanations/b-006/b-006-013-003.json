@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-013-003.\n\nWhy the correct answer is right: For a quad driven element, use the approximate full-wave loop perimeter 306/f. At 21.4 MHz, 306 / 21.4 = 14.30 metres overall.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"7.01 metres\": This is 150 / 21.4 = 7.01 m, the free-space half-wave length. A quad driven element is a full-wave loop perimeter, not a half-wave dipole.\n- sourceIndex 2: \"10.93 metres\": This is 234 / 21.4 = 10.93 if an imperial dipole constant is misused as metres. It is not the metric full-wave loop formula 306/f.\n- sourceIndex 3: \"3.57 metres\": This is 14.30 / 4 = 3.57 m, the side length of a square quad loop. The question asks for the driven element overall length.",
+    "en": "Question B-006-013-003.\n\nWhy the correct answer is right: For a quad driven element, use the approximate full-wave loop perimeter 306/f. At 21.4 MHz, 306 / 21.4 = 14.30 metres overall.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"7.01 metres\": This is 150 / 21.4 = 7.01 m, the free-space half-wave length. A quad driven element is a full-wave loop perimeter, not a half-wave dipole.\n- sourceIndex 2: \"10.93 metres\": This is 234 / 21.4 = 10.93 if 234/f, the quarter-wave or dipole-leg length in feet, is misused as metres. It is not the metric full-wave loop formula 306/f.\n- sourceIndex 3: \"3.57 metres\": This is 14.30 / 4 = 3.57 m, the side length of a square quad loop. The question asks for the driven element overall length.",
     "fr": null
   },
   "citations": [
