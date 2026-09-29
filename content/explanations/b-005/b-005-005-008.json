@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-005-008",
+  "questionId": "B-005-005-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-005-008.\n\nWhy the correct answer is right: Equal resistors in parallel use the shortcut Rtotal = one resistor value divided by the number of equal branches. With ten equal branches, the total is R / 10.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"10 / R\": This reverses the fraction. If R were 100 ohms, 10 / R would be 0.1, not the 10-ohm equivalent resistance.\n- sourceIndex 2: \"10 x R\": Multiplying by ten is the result for ten equal resistors in series, not parallel.\n- sourceIndex 3: \"10 + R\": Adding the count to the resistance mixes unlike quantities and is not a resistor-combination formula.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-03"
+    },
+    {
+      "type": "question",
+      "id": "B-005-005-008"
+    }
+  ],
+  "licenseClass": "original"
+}

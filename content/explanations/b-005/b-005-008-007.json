@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-008-007",
+  "questionId": "B-005-008-007",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-008-007.\n\nWhy the correct answer is right: The transmitter power doubles from 1 W to 2 W. A doubling of power is the Basic shortcut for a 3 dB increase.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"10 dB\": A 10 dB increase is a tenfold power increase, such as 1 W to 10 W.\n- sourceIndex 2: \"6 dB\": Six dB is two doublings, or four times the starting power, not two times.\n- sourceIndex 3: \"1 dB\": One dB is less than a doubling; the memorized power-doubling step is 3 dB.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-008-007"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-006-009",
+  "questionId": "B-005-006-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-006-009.\n\nWhy the correct answer is right: The series resistance is 10 + 10 = 20 ohms. Current is 10 V / 20 ohms = 0.5 A, and power is P = E x I = 10 V x 0.5 A = 5 W.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"2 watts\": This does not follow from either V^2 / R = 100 / 20 or E x I = 10 x 0.5.\n- sourceIndex 2: \"20 watts\": This repeats the total resistance value as though ohms were watts.\n- sourceIndex 3: \"0.5 watts\": This is the circuit current in amperes, not the power in watts.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-03"
+    },
+    {
+      "type": "question",
+      "id": "B-005-006-009"
+    }
+  ],
+  "licenseClass": "original"
+}

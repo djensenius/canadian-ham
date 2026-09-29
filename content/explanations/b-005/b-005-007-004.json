@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-007-004",
+  "questionId": "B-005-007-004",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-007-004.\n\nWhy the correct answer is right: 7125 kHz is 7.125 MHz. The HF range covers 3 MHz to 30 MHz, so 7.125 MHz is High Frequency.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Low Frequency (LF)\": LF is far below 7.125 MHz, so the converted frequency is not in that range.\n- sourceIndex 2: \"Medium frequency (MF)\": MF is below HF; 7.125 MHz is above the medium-frequency range.\n- sourceIndex 3: \"Very High Frequency (VHF)\": VHF begins above HF. A 7.125 MHz signal has not reached VHF.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-007-004"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-007-011",
+  "questionId": "B-005-007-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-007-011.\n\nWhy the correct answer is right: A harmonic is an integer multiple of a fundamental frequency. A 4 kHz component is 2 x 2 kHz, so it is a harmonic of the 2 kHz fundamental.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Alias\": An alias is a sampling or mixing artifact, not the name for an integer-multiple component of a fundamental.\n- sourceIndex 2: \"Sub-harmonic\": A sub-harmonic is below the fundamental, such as half the fundamental frequency. Four kilohertz is above 2 kHz.\n- sourceIndex 3: \"Intermodulation\": Intermodulation products come from mixing between signals. A simple 2-to-1 frequency relationship is called a harmonic.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-007-011"
+    }
+  ],
+  "licenseClass": "original"
+}

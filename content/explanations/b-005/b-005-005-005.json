@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-005-005",
+  "questionId": "B-005-005-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-005-005.\n\nWhy the correct answer is right: Series resistors are connected end-to-end, so the same current must pass through each resistance. The total resistance is R1 + R2 + R3 and so on, making it larger than any one resistor in the string.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"less than the resistance of any one resistor\": That describes the usual result for resistors in parallel, not in series.\n- sourceIndex 2: \"equal to the highest resistance present\": The highest resistor is only one part of the path. The smaller series resistors still add resistance.\n- sourceIndex 3: \"equal to the lowest resistance present\": The lowest resistor cannot represent the whole chain because all series resistances are included in the total.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-03"
+    },
+    {
+      "type": "question",
+      "id": "B-005-005-005"
+    }
+  ],
+  "licenseClass": "original"
+}

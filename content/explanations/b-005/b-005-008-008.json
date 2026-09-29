@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-008-008",
+  "questionId": "B-005-008-008",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-008-008.\n\nWhy the correct answer is right: The power ratio is 50 W / 5 W = 10. A tenfold power increase is 10 dB of gain.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"30 dB\": Thirty dB is three tenfold steps, or 1000 times the power, not 10 times.\n- sourceIndex 2: \"45 dB\": Forty-five dB is far larger than a ten-to-one power gain and is not produced by 50 divided by 5.\n- sourceIndex 3: \"20 dB\": Twenty dB is two tenfold steps, or 100 times the power, not 10 times.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-008-008"
+    }
+  ],
+  "licenseClass": "original"
+}

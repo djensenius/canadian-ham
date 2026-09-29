@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-007-009",
+  "questionId": "B-005-007-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-007-009.\n\nWhy the correct answer is right: Phase describes where a waveform is in its cycle compared with a reference waveform. If two same-frequency waveforms begin their cycles at different instants, they have a phase difference.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Polarity\": Polarity is positive or negative direction, especially in DC circuits. It does not describe AC timing offset between cycles.\n- sourceIndex 2: \"Offset\": Offset is a general word and can mean a DC shift or displacement, but the AC timing relationship is specifically phase.\n- sourceIndex 3: \"Delta\": Delta often means a change or difference in math, but it is not the standard AC term for timing position in a cycle.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-007-009"
+    }
+  ],
+  "licenseClass": "original"
+}

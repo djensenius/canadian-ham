@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-006-011",
+  "questionId": "B-005-006-011",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-006-011.\n\nWhy the correct answer is right: A resistor wattage rating is a heat limit. It depends on how well the part can dissipate heat without exceeding its safe temperature.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"calculated according to physical size and tolerance rating\": Physical size often relates to heat handling, but tolerance is accuracy of resistance value, not the wattage-rating calculation.\n- sourceIndex 2: \"expressed in joules\": Joules measure energy. A wattage rating is power, meaning joules per second.\n- sourceIndex 3: \"variable in steps of one hundred\": Resistor wattage ratings are not defined as hundred-step variables; common parts come in practical power ratings such as fractions of a watt or several watts.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-03"
+    },
+    {
+      "type": "question",
+      "id": "B-005-006-011"
+    }
+  ],
+  "licenseClass": "original"
+}

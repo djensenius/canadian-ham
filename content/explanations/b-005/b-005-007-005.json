@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-007-005",
+  "questionId": "B-005-007-005",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-007-005.\n\nWhy the correct answer is right: Wavelength is the physical distance occupied by one complete cycle of a wave as it travels. It is usually represented by the Greek letter lambda.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Wave speed\": Wave speed is distance per unit time, not distance per cycle.\n- sourceIndex 2: \"Waveform\": Waveform describes the shape of the signal, such as sinusoidal or square, not the length of one cycle.\n- sourceIndex 3: \"Wave spread\": Wave spread is not the standard term for the distance covered by one complete AC cycle.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-007-005"
+    }
+  ],
+  "licenseClass": "original"
+}

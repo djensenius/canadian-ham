@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-005-003",
+  "questionId": "B-005-005-003",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-005-003.\n\nWhy the correct answer is right: Parallel branches add conductance, which means they add paths for current. More path area means the combined resistance is lower than any single branch, including the smallest resistor.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It is greater than the largest resistor\": That is the behaviour of series resistance, where resistors add end-to-end. Parallel branches reduce the equivalent resistance.\n- sourceIndex 2: \"It equals the average of the resistors\": An average does not represent parallel current paths. Equal 100-ohm and 100-ohm resistors in parallel are 50 ohms, not 100 ohms.\n- sourceIndex 3: \"It equals the square root of the sum of the resistors\": Square roots are not part of the simple resistor-combination rule. The reciprocal conductances add for parallel resistors.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-03"
+    },
+    {
+      "type": "question",
+      "id": "B-005-005-003"
+    }
+  ],
+  "licenseClass": "original"
+}

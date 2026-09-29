@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-008-006",
+  "questionId": "B-005-008-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-008-006.\n\nWhy the correct answer is right: A decibel expresses a ratio between two signal levels. It is used for gain and loss because ratios such as doubled, halved, ten times, or one tenth can be handled as dB changes.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To describe a waveform on an oscilloscope\": An oscilloscope display can show shape and timing, but decibel is not the waveform-shape name.\n- sourceIndex 2: \"To describe very high frequency radio waves\": VHF identifies a frequency range. Decibels compare levels, not bands.\n- sourceIndex 3: \"To measure a single side band signal\": A decibel does not identify the SSB mode itself; it compares one signal or power level with another.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-008-006"
+    }
+  ],
+  "licenseClass": "original"
+}

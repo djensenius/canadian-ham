@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-006-006",
+  "questionId": "B-005-006-006",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-006-006.\n\nWhy the correct answer is right: For a fixed resistance, P = E^2 / R. Doubling the applied voltage makes the numerator four times larger, so the total power increases by a factor of four.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Decrease to half\": Power cannot decrease when the same resistance has more voltage applied across it.\n- sourceIndex 2: \"Double\": Current doubles, but power depends on voltage times current; both voltage and current double, making power four times larger.\n- sourceIndex 3: \"Decrease to one quarter\": One quarter is the inverse of the correct change and would describe reducing voltage to half, not doubling it.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-03"
+    },
+    {
+      "type": "question",
+      "id": "B-005-006-006"
+    }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-007-010",
+  "questionId": "B-005-007-010",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-007-010.\n\nWhy the correct answer is right: Normal utility AC is intended to be sinusoidal. The voltage rises and falls smoothly through positive and negative halves of each cycle.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Complex wave\": A complex wave contains multiple components. Household receptacle power is normally described as a sine wave.\n- sourceIndex 2: \"Modified square wave\": Modified square waves are associated with some inverter outputs, not ordinary utility receptacle power.\n- sourceIndex 3: \"Pulse wave\": A pulse wave switches in pulses and is not the smooth sinusoidal form supplied by household AC mains.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-007-010"
+    }
+  ],
+  "licenseClass": "original"
+}

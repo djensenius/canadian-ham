@@ -1,0 +1,21 @@
+{
+  "id": "EXP-B-005-008-009",
+  "questionId": "B-005-008-009",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": {
+    "en": "Question B-005-008-009.\n\nWhy the correct answer is right: Nine dB is three 3 dB steps. Each 3 dB step doubles power, so the power multiplier is 2 x 2 x 2 = 8; 2 W x 8 = 16 W.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"11 watts\": This adds 9 to 2 as if dB were watts. Decibels describe a ratio, not a direct watt addition.\n- sourceIndex 2: \"20 watts\": Twenty watts would be a tenfold increase from 2 W, which is 10 dB, not 9 dB.\n- sourceIndex 3: \"18 watts\": This is close numerically but would be a ninefold power increase. Nine dB is about an eightfold increase by the 3 dB shortcut.",
+    "fr": null
+  },
+  "citations": [
+    {
+      "type": "lesson",
+      "id": "L-005-04"
+    },
+    {
+      "type": "question",
+      "id": "B-005-008-009"
+    }
+  ],
+  "licenseClass": "original"
+}
