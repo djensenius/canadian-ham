@@ -117,7 +117,7 @@
         },
         {
           "text": {
-            "en": "Estimate about 5.7 kHz by adding deviation and audio but forgetting to double, then use FM in both slots",
+            "en": "Estimate about 5.7 kHz by adding deviation and audio but forgetting to double, then use FM in the 10 m channel only because it is under 6 kHz",
             "fr": null
           },
           "isCorrect": false
