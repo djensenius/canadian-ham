@@ -1,0 +1,89 @@
+Screen: answered-practice-dark
+
+Issue 1:
+auditType: XCUIAccessibilityAuditType(rawValue: 131072)
+element.identifier: 
+element.label: Be at least 14 years of age and a Canadian citizen or permanent resident
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 94.0, y: 732.36376953125, width: 250.0, height: 64.33333333333337
+compactDescription: Text clipped
+
+Issue 2:
+auditType: XCUIAccessibilityAuditType(rawValue: 131072)
+element.identifier: 
+element.label: Be a Canadian citizen or permanent resident
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 94.0, y: 560.0304361979166, width: 187.33333333333331, height: 42.33333333333337
+compactDescription: Text clipped
+
+Issue 3:
+auditType: XCUIAccessibilityAuditType(rawValue: 131072)
+element.identifier: 
+element.label: Question identifier B-001-004-007
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 40.0, y: 272.63623046875, width: 136.66666666666666, height: 20.333333333333258
+compactDescription: Text clipped
+
+Issue 4:
+auditType: XCUIAccessibilityAuditType(rawValue: 131072)
+element.identifier: 
+element.label: Have a valid address in Canada
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 94.0, y: 473.3028971354167, width: 236.66666666666663, height: 20.333333333333144
+compactDescription: Text clipped
+
+Issue 5:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier: 
+element.label: Regulations and Policies
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 40.0, y: 82.30289713541666, width: 318.3333333333333, height: 33.66666666666666
+compactDescription: Contrast failed
+
+Issue 6:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier: 
+element.label: A
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 40.0, y: 473.3333333333333, width: 42.0, height: 42.00000000000006
+compactDescription: Contrast failed
+
+Issue 7:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier: 
+element.label: Have a valid address in Canada
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 94.0, y: 473.3028971354167, width: 236.66666666666663, height: 20.333333333333144
+compactDescription: Contrast failed
+
+Issue 8:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier: 
+element.label: B
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 40.0, y: 560.0, width: 42.0, height: 42.0
+compactDescription: Contrast failed
+
+Issue 9:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier: 
+element.label: C
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 40.0, y: 646.3333333333334, width: 42.0, height: 42.0
+compactDescription: Contrast failed
+
+Issue 10:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier: 
+element.label: Be a Canadian citizen
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 94.0, y: 646.36376953125, width: 163.0, height: 20.33333333333337
+compactDescription: Contrast failed
+
+Issue 11:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier: 
+element.label: D
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 40.0, y: 732.3333333333334, width: 42.0, height: 42.0
+compactDescription: Contrast failed

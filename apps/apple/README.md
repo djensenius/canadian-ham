@@ -9,7 +9,7 @@ SwiftUI multiplatform first slice for iPhone, iPad, and Mac. The app is generate
 - `CanadianHam/` — app sources.
   - `Models/` — decodable question-bank models matching `content/generated/basic-2025-07-15/*.json`.
   - `Services/` — bundled JSON loading.
-  - `Practice/TempShuffle.swift` — temporary answer shuffler for this slice; replace with `packages/engine-swift` when the shared engine is ready.
+  - `Practice/EngineShuffle.swift` — adapter from the app models to the shared Swift practice/exam engine in `packages/engine-swift`.
   - `Views/` — SwiftUI category list, practice, and about views.
   - `Resources/` — privacy manifest and macOS sandbox entitlements.
 - `CanadianHamTests/` — unit tests for bundled content decoding and answer shuffling.

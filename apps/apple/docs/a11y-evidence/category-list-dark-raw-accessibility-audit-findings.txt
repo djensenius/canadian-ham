@@ -1,0 +1,3 @@
+Screen: category-list-dark
+
+No accessibility audit issues reported.

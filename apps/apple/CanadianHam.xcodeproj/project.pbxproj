@@ -17,6 +17,7 @@
 		306D368114DE44A3C3C2B06E /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 5B61FF08B59BD2425E771B49 /* categories.json */; };
 		3570042246D47C705FC3807A /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 5B61FF08B59BD2425E771B49 /* categories.json */; };
 		3D7E53A765016E133D5B3E7B /* CanadianHamPracticeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41444275857B5CF1758CE3B6 /* CanadianHamPracticeUITests.swift */; };
+		4A3F7F0CD01A2A85311ACD13 /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = A235069367EFC3776ADEE826 /* questions.json */; };
 		4E053E6B26ECB02C90C4C646 /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = A235069367EFC3776ADEE826 /* questions.json */; };
 		53AFCF2AAFF2212EA63976C9 /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = A235069367EFC3776ADEE826 /* questions.json */; };
 		56297686DFF5FF6625A68B96 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 641771DDA6C72AE924365999 /* manifest.json */; };
@@ -237,6 +238,7 @@
 			buildConfigurationList = C5463606046AD2032C5D6120 /* Build configuration list for PBXNativeTarget "CanadianHamUITests" */;
 			buildPhases = (
 				F8C27036A2E0322BD1EA9528 /* Sources */,
+				4D1957DEA6F12E99274E862B /* Resources */,
 			);
 			buildRules = (
 			);
@@ -324,6 +326,14 @@
 				56297686DFF5FF6625A68B96 /* manifest.json in Resources */,
 				53AFCF2AAFF2212EA63976C9 /* questions.json in Resources */,
 				65C653416A3A39692B571631 /* subsections.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4D1957DEA6F12E99274E862B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A3F7F0CD01A2A85311ACD13 /* questions.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

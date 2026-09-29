@@ -92,6 +92,10 @@ struct RootView: View {
                 .background(DesignTokens.Colors.paper)
         }
         .navigationSplitViewStyle(.balanced)
+#if os(iOS)
+        .toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+#endif
 #if os(macOS)
         .frame(minWidth: 920, minHeight: 640)
 #endif
@@ -138,11 +142,11 @@ struct RootView: View {
     }
 
 #if os(macOS)
-    private var showsSidebarLanguagePicker: Bool { false }
-    private var showsPracticeLanguagePicker: Bool { true }
+    private var showsSidebarLanguagePicker: Bool { true }
+    private var showsPracticeLanguagePicker: Bool { false }
 #else
-    private var showsSidebarLanguagePicker: Bool { horizontalSizeClass == .compact }
-    private var showsPracticeLanguagePicker: Bool { true }
+    private var showsSidebarLanguagePicker: Bool { true }
+    private var showsPracticeLanguagePicker: Bool { horizontalSizeClass == .compact }
 #endif
 
     private var languageToolbarItem: some ToolbarContent {

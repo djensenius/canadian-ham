@@ -62,6 +62,10 @@ struct PracticeView: View {
                 languageToolbarItem
             }
         }
+#if os(iOS)
+        .toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+#endif
         .onAppear {
             if currentQuestion == nil {
                 loadNextQuestion()
@@ -72,25 +76,19 @@ struct PracticeView: View {
     private var header: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             Text(category.name.text(for: language))
-                .font(DesignTokens.FontScale.headline.weight(.bold))
+                .font(.title.bold())
                 .foregroundStyle(DesignTokens.Colors.ink)
-                .dynamicTypeSize(...DynamicTypeSize.accessibility5)
-                .fixedSize(horizontal: false, vertical: true)
-                .accessibilityIdentifier("practice-category-title")
             Text("Random practice from \(category.questionCount) official Basic questions.")
-                .font(DesignTokens.FontScale.body)
+                .font(.body)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
-                .fixedSize(horizontal: false, vertical: true)
-                .accessibilityIdentifier("practice-category-summary")
             Text("Session tally: \(correctCount) correct out of \(answeredCount) answered")
-                .font(DesignTokens.FontScale.body.weight(.semibold))
+                .font(.body.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
-                .fixedSize(horizontal: false, vertical: true)
-                .accessibilityLabel("Session tally, \(correctCount) correct out of \(answeredCount) answered")
-                .accessibilityIdentifier("practice-session-tally")
         }
         .padding(cardPadding)
         .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(headerAccessibilityLabel())
         .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous)
@@ -103,17 +101,17 @@ struct PracticeView: View {
             Text(question.id)
                 .font(.body.monospaced())
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
-                .fixedSize(horizontal: false, vertical: true)
                 .accessibilityLabel("Question identifier \(question.id)")
-            Text(question.text.text(for: language))
-                .font(DesignTokens.FontScale.bodyLarge.weight(.semibold))
+            Text(localizedAttributedString(question.text.text(for: language)))
+                .font(.title3.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
-                .fixedSize(horizontal: false, vertical: true)
                 .textSelection(.enabled)
-                .environment(\.locale, Locale(identifier: language.accessibilityLanguageCode))
         }
         .padding(cardPadding)
         .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(questionAccessibilityLabel(question)))
+        .accessibilityIdentifier("question-stem")
         .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous)
@@ -125,16 +123,15 @@ struct PracticeView: View {
     private var answerList: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Text("Answers")
-                .font(DesignTokens.FontScale.title.weight(.bold))
+                .font(.title2.bold())
                 .foregroundStyle(DesignTokens.Colors.ink)
-                .accessibilityAddTraits(.isHeader)
-                .accessibilityIdentifier("answer-list-title")
+                .accessibilityHidden(true)
             ForEach(shuffledAnswers) { shuffledAnswer in
                 answerButton(for: shuffledAnswer)
-                if selectedSourceIndex == shuffledAnswer.sourceIndex {
-                    feedback
-                    controls
-                }
+            }
+            if selectedSourceIndex != nil {
+                feedback
+                controls
             }
         }
     }
@@ -149,34 +146,34 @@ struct PracticeView: View {
         return Button {
             select(shuffledAnswer)
         } label: {
-            HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.md) {
+            HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
                 Text(label)
                     .font(.headline.monospaced().bold())
                     .foregroundStyle(state.chipForeground)
                     .frame(minWidth: answerLetterMinWidth, minHeight: answerLetterMinWidth, alignment: .center)
                     .padding(DesignTokens.Spacing.xs)
                     .background(state.chipBackground, in: Circle())
-                    .accessibilityIdentifier("answer-\(label)-letter-chip")
+                    .accessibilityHidden(true)
 
-                Text(answerText)
-                    .font(DesignTokens.FontScale.body)
-                    .foregroundStyle(state.textColor)
-                    .lineLimit(nil)
-                    .multilineTextAlignment(.leading)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .layoutPriority(1)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .environment(\.locale, Locale(identifier: language.accessibilityLanguageCode))
-                    .accessibilityIdentifier("answer-\(label)-text")
-
-                if let iconName = state.iconName, let statusText = state.statusText {
-                    Label(statusText, systemImage: iconName)
-                        .font(DesignTokens.FontScale.caption.weight(.bold))
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                    Text(localizedAttributedString(answerText))
+                        .font(.body)
                         .foregroundStyle(state.textColor)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .labelStyle(.titleAndIcon)
-                        .accessibilityIdentifier("answer-\(label)-status")
+                        .lineLimit(nil)
+                        .multilineTextAlignment(.leading)
+                        .layoutPriority(1)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .accessibilityHidden(true)
+
+                    if let iconName = state.iconName, let statusText = state.statusText {
+                        Label(statusText, systemImage: iconName)
+                            .font(.caption.bold())
+                            .foregroundStyle(state.textColor)
+                            .labelStyle(.titleAndIcon)
+                            .accessibilityHidden(true)
+                    }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
             .padding(cardPadding)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -188,10 +185,11 @@ struct PracticeView: View {
             .accessibilityElement(children: .ignore)
         }
         .buttonStyle(.plain)
-        .disabled(isAnswered)
         .accessibilityElement(children: .ignore)
-        .accessibilityHint(isAnswered ? "Question already answered; choose Next question to continue" : "Selects this answer")
-        .accessibilityLabel(answerAccessibilityLabel(label: label, answerText: answerText, shuffledAnswer: shuffledAnswer, isSelected: isSelected))
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+        .accessibilityValue(isAnswered ? "Question answered" : "Not answered")
+        .accessibilityHint(isAnswered ? "Question already answered; this answer cannot be changed. Choose Next question to continue." : "Selects this answer")
+        .accessibilityLabel(Text(answerAccessibilityLabel(label: label, answerText: answerText, shuffledAnswer: shuffledAnswer, isSelected: isSelected)))
         .accessibilityIdentifier("answer-\(label)-button")
     }
 
@@ -204,28 +202,24 @@ struct PracticeView: View {
                     Image(systemName: correct ? "checkmark.circle.fill" : "xmark.circle.fill")
                         .accessibilityHidden(true)
                     Text(correct ? "Correct" : "Incorrect")
-                        .font(DesignTokens.FontScale.body.weight(.bold))
+                        .font(.body.bold())
                         .padding(.vertical, DesignTokens.Spacing.xs)
                 }
                 .foregroundStyle(correct ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
-                .fixedSize(horizontal: false, vertical: true)
-                .accessibilityIdentifier("answer-feedback-title")
+                .accessibilityHidden(true)
 
                 if !correct {
-                    Text("Correct answer: \(correctAnswer.answer.text.text(for: language))")
-                        .font(DesignTokens.FontScale.body.weight(.semibold))
+                    Text(correctAnswerFeedbackText(correctAnswer.answer.text.text(for: language)))
+                        .font(.body.weight(.semibold))
                         .foregroundStyle(DesignTokens.Colors.incorrectText)
-                        .fixedSize(horizontal: false, vertical: true)
                         .textSelection(.enabled)
-                        .environment(\.locale, Locale(identifier: language.accessibilityLanguageCode))
-                        .accessibilityIdentifier("answer-feedback-correct-answer")
+                        .accessibilityHidden(true)
                 }
 
                 Text("Source: \(category.name.text(for: language)) • \(currentQuestion?.subsectionId ?? "")")
-                    .font(DesignTokens.FontScale.caption)
+                    .font(.caption)
                     .foregroundStyle(correct ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .accessibilityIdentifier("answer-feedback-source")
+                    .accessibilityHidden(true)
             }
             .padding(cardPadding)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -235,7 +229,7 @@ struct PracticeView: View {
                     .strokeBorder(correct ? DesignTokens.Colors.correctBorder : DesignTokens.Colors.incorrectBorder, lineWidth: 2)
             )
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(feedbackAccessibilityLabel(selectedAnswer: selectedAnswer, correctAnswer: correctAnswer))
+            .accessibilityLabel(Text(feedbackAccessibilityLabel(selectedAnswer: selectedAnswer, correctAnswer: correctAnswer)))
             .accessibilityIdentifier("answer-feedback")
         }
     }
@@ -244,9 +238,9 @@ struct PracticeView: View {
         Label {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 Text(title)
-                    .font(DesignTokens.FontScale.title.weight(.bold))
+                    .font(.title2.bold())
                 Text(message)
-                    .font(DesignTokens.FontScale.body)
+                    .font(.body)
             }
         } icon: {
             Image(systemName: systemImage)
@@ -280,29 +274,21 @@ struct PracticeView: View {
                 loadNextQuestion()
             } label: {
                 Text("Next question")
-                    .font(DesignTokens.FontScale.body.weight(.bold))
-                    .foregroundStyle(selectedSourceIndex == nil ? DesignTokens.Colors.inkMuted : DesignTokens.Colors.paper)
+                    .font(.body.bold())
+                    .foregroundStyle(DesignTokens.Colors.paper)
                     .padding(.horizontal, DesignTokens.Spacing.lg)
                     .padding(.vertical, DesignTokens.Spacing.md)
                     .frame(minHeight: 44)
                     .frame(maxWidth: .infinity)
-                    .background(selectedSourceIndex == nil ? DesignTokens.Colors.paperInset : DesignTokens.Colors.accent, in: Capsule())
+                    .background(DesignTokens.Colors.accent, in: Capsule())
                     .overlay(
                         Capsule()
-                            .strokeBorder(selectedSourceIndex == nil ? DesignTokens.Colors.border : DesignTokens.Colors.accentStrong, lineWidth: 1)
+                            .strokeBorder(DesignTokens.Colors.accentStrong, lineWidth: 1)
                     )
             }
             .buttonStyle(.plain)
-            .disabled(selectedSourceIndex == nil)
             .accessibilityHint("Loads another random question from this category")
             .accessibilityIdentifier("next-question-button")
-
-            if selectedSourceIndex == nil {
-                Text("Choose an answer to continue.")
-                    .font(DesignTokens.FontScale.caption)
-                    .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -328,16 +314,15 @@ struct PracticeView: View {
         }
 
         let questionSeed = "practice-question/\(category.id)/\(answeredCount)/\(UUID().uuidString)"
-        let question = (try? AppleQuestionShuffle.randomQuestion(from: categoryQuestions, seed: questionSeed)) ?? categoryQuestions.first
-        guard let question else {
-            currentQuestion = nil
-            shuffledAnswers = []
-            selectedSourceIndex = nil
-            return
-        }
-
-        let answerSeed = "practice-answers/\(question.id)/\(answeredCount)/\(UUID().uuidString)"
         do {
+            guard let question = try AppleQuestionShuffle.randomQuestion(from: categoryQuestions, seed: questionSeed) else {
+                currentQuestion = nil
+                shuffledAnswers = []
+                selectedSourceIndex = nil
+                return
+            }
+
+            let answerSeed = "practice-answers/\(question.id)/\(answeredCount)/\(UUID().uuidString)"
             currentQuestion = question
             shuffledAnswers = try AppleQuestionShuffle.shuffledAnswers(for: question, seed: answerSeed)
             selectedSourceIndex = nil
@@ -346,7 +331,7 @@ struct PracticeView: View {
             currentQuestion = nil
             shuffledAnswers = []
             selectedSourceIndex = nil
-            loadError = "Unable to shuffle this question with the shared engine: \(error.localizedDescription)"
+            loadError = "Unable to prepare this question with the shared engine: \(error.localizedDescription)"
         }
     }
 
@@ -375,10 +360,10 @@ struct PracticeView: View {
                 background: DesignTokens.Colors.correctBg,
                 border: DesignTokens.Colors.correctBorder,
                 textColor: DesignTokens.Colors.correctText,
-                chipBackground: DesignTokens.Colors.correctText,
-                chipForeground: DesignTokens.Colors.correctBg,
+                chipBackground: DesignTokens.Colors.correctBg,
+                chipForeground: DesignTokens.Colors.correctText,
                 iconName: "checkmark.circle.fill",
-                statusText: "Correct answer",
+                statusText: isSelected ? "Your answer, correct answer" : "Correct answer",
                 isSemantic: true
             )
         }
@@ -388,8 +373,8 @@ struct PracticeView: View {
                 background: DesignTokens.Colors.incorrectBg,
                 border: DesignTokens.Colors.incorrectBorder,
                 textColor: DesignTokens.Colors.incorrectText,
-                chipBackground: DesignTokens.Colors.incorrectText,
-                chipForeground: DesignTokens.Colors.incorrectBg,
+                chipBackground: DesignTokens.Colors.incorrectBg,
+                chipForeground: DesignTokens.Colors.incorrectText,
                 iconName: "xmark.circle.fill",
                 statusText: "Your answer",
                 isSemantic: true
@@ -420,12 +405,28 @@ struct PracticeView: View {
         return "Incorrect"
     }
 
-    private func feedbackAccessibilityLabel(selectedAnswer: ShuffledAnswer, correctAnswer: ShuffledAnswer) -> String {
+    private func headerAccessibilityLabel() -> String {
+        "\(category.name.text(for: language)). Random practice from \(category.questionCount) official Basic questions. Session tally: \(correctCount) correct out of \(answeredCount) answered."
+    }
+
+    private func questionAccessibilityLabel(_ question: BankQuestion) -> AttributedString {
+        var label = englishAttributedString("Question identifier \(question.id). ")
+        label += localizedAttributedString(question.text.text(for: language))
+        return label
+    }
+
+    private func feedbackAccessibilityLabel(selectedAnswer: ShuffledAnswer, correctAnswer: ShuffledAnswer) -> AttributedString {
         if selectedAnswer.isCorrect {
-            return "Correct. Source: \(category.name.text(for: language)), \(currentQuestion?.subsectionId ?? "")"
+            var label = englishAttributedString("Correct. Your answer: ")
+            label += localizedAttributedString(selectedAnswer.answer.text.text(for: language))
+            label += englishAttributedString(". Source: \(category.name.text(for: language)), \(currentQuestion?.subsectionId ?? "")")
+            return label
         }
 
-        return "Incorrect. Correct answer: \(correctAnswer.answer.text.text(for: language)). Source: \(category.name.text(for: language)), \(currentQuestion?.subsectionId ?? "")"
+        var label = englishAttributedString("Incorrect. Correct answer: ")
+        label += localizedAttributedString(correctAnswer.answer.text.text(for: language))
+        label += englishAttributedString(". Source: \(category.name.text(for: language)), \(currentQuestion?.subsectionId ?? "")")
+        return label
     }
 
     private func answerAccessibilityLabel(
@@ -433,16 +434,40 @@ struct PracticeView: View {
         answerText: String,
         shuffledAnswer: ShuffledAnswer,
         isSelected: Bool
-    ) -> String {
-        var parts = ["Answer \(label)", answerText]
+    ) -> AttributedString {
+        var accessibilityLabel = englishAttributedString("Answer \(label), ")
+        accessibilityLabel += localizedAttributedString(answerText)
+
         if selectedSourceIndex != nil {
+            if isSelected {
+                accessibilityLabel += englishAttributedString(", your answer")
+            }
             if shuffledAnswer.isCorrect {
-                parts.append("correct answer")
+                accessibilityLabel += englishAttributedString(", correct answer")
             } else if isSelected {
-                parts.append("your selected answer, incorrect")
+                accessibilityLabel += englishAttributedString(", incorrect")
             }
         }
-        return parts.joined(separator: ", ")
+
+        return accessibilityLabel
+    }
+
+    private func correctAnswerFeedbackText(_ answerText: String) -> AttributedString {
+        var text = englishAttributedString("Correct answer: ")
+        text += localizedAttributedString(answerText)
+        return text
+    }
+
+    private func localizedAttributedString(_ string: String) -> AttributedString {
+        var attributedString = AttributedString(string)
+        attributedString.languageIdentifier = language.accessibilityLanguageCode
+        return attributedString
+    }
+
+    private func englishAttributedString(_ string: String) -> AttributedString {
+        var attributedString = AttributedString(string)
+        attributedString.languageIdentifier = BankLanguage.english.accessibilityLanguageCode
+        return attributedString
     }
 }
 

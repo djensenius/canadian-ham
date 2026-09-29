@@ -100,6 +100,10 @@ targets:
     supportedDestinations: [iOS]
     sources:
       - path: CanadianHamUITests
+      - path: ../../content/generated/basic-2025-07-15/questions.json
+        type: file
+        buildPhase: resources
+        createIntermediateGroups: false
     dependencies:
       - target: CanadianHam
     settings:

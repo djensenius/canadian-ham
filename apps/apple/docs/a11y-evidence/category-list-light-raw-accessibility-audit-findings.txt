@@ -1,0 +1,3 @@
+Screen: category-list-light
+
+No accessibility audit issues reported.

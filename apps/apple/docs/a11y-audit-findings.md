@@ -1,45 +1,215 @@
 # Apple accessibility audit findings
 
-Generated during T-516 on iPhone 17 Pro simulator (iOS 27.0) with `performAccessibilityAudit` attachments for the category list and answered practice screen in light and dark appearances. The UI test stores screenshots plus raw issue text attachments for each audited screen.
+Generated during the T-516 fix round on iPhone 17 Pro simulator (iOS 27.0) using `performAccessibilityAudit()` with the default audit type set in both light and dark appearances.
 
-## Final run summary
+Result bundle: `/Users/david/Library/Developer/Xcode/DerivedData/CanadianHam-foyispdmcaiqxiclpwvlsywtmrxg/Logs/Test/Test-CanadianHam-2026.09.29_02-09-17--0400.xcresult`
 
-Result bundle: `/Users/david/Library/Developer/Xcode/DerivedData/CanadianHam-foyispdmcaiqxiclpwvlsywtmrxg/Logs/Test/Test-CanadianHam-2026.09.29_01-02-32--0400.xcresult`
+## Summary
 
-| Screen | Appearance | Real issues | Excluded false positives | Evidence |
+| Screen | Appearance | Audit issues reported | Excluded issues | Evidence |
 |---|---:|---:|---:|---|
-| Category list | Light | 0 | 0 | Raw attachment: `category-list-light-raw-accessibility-audit-findings` says no issues. |
-| Category list | Dark | 0 | 0 | Raw attachment: `category-list-dark-raw-accessibility-audit-findings` says no issues. |
-| Answered practice | Light | 0 | 10-11 per iteration | Raw attachments show all findings marked `excludedAsFalsePositive: true`. |
-| Answered practice | Dark | 0 | 3-7 per iteration | Raw attachments show all findings marked `excludedAsFalsePositive: true`. |
+| Category list | Light | 0 | 0 | `a11y-evidence/category-list-light-accessibility-audit.png`; raw: `a11y-evidence/category-list-light-raw-accessibility-audit-findings.txt` |
+| Category list | Dark | 0 | 0 | `a11y-evidence/category-list-dark-accessibility-audit.png`; raw: `a11y-evidence/category-list-dark-raw-accessibility-audit-findings.txt` |
+| Answered practice | Light | 8 | 0 | `a11y-evidence/answered-practice-light-accessibility-audit.png`; raw: `a11y-evidence/answered-practice-light-raw-accessibility-audit-findings.txt` |
+| Answered practice | Dark | 11 | 0 | `a11y-evidence/answered-practice-dark-accessibility-audit.png`; raw: `a11y-evidence/answered-practice-dark-raw-accessibility-audit-findings.txt` |
 
-The test was run with `-test-iterations 3`, so attachment counts vary by random question and visible answer text. All unresolved findings count as test failures; the final run had zero unresolved findings.
+No audit handler exclusions are currently applied. The UI test records findings and screenshots so the remaining checker output is visible in source control. The answered-screen reports below are not framed as fixed or false-positive counts; they are the raw current audit output to re-check in future Xcode/iOS simulator versions.
 
-## Real issues fixed
+## Root-cause work performed
 
-- Feedback was moved out of the non-scrolling safe-area inset and back into the scroll content.
-- The largest Dynamic Type run verifies a visible answer can be selected, feedback remains reachable in the scroll view, and `Next question` is reachable before advancing.
-- Answer text and feedback text remain VoiceOver-readable through their row/panel accessibility labels; the old answer-text `accessibilityHidden(true)` workaround and deterministic first-question launch hook were removed.
-- Correct and incorrect states use token semantic backgrounds/borders plus SF Symbol icons and explicit text.
+- Removed `.disabled(isAnswered)` from answer rows. Taps after answering are ignored in `select(_:)`, and answered rows keep their token colours instead of disabled dimming.
+- Moved feedback and `Next question` below the entire answer list.
+- Added an opaque iOS navigation-bar background and waits after scrolling so screenshots/audits are captured after the `Next question` control has settled.
+- Removed fixed-size text modifiers in the practice screen and verified largest accessibility text size still reaches feedback and `Next question`.
+- Changed the row layout so the status label sits below the answer text, reducing horizontal compression.
+- Kept the audit call at the default `performAccessibilityAudit()` coverage for light and dark.
 
-## Excluded false positives
+## Remaining raw findings
 
-All exclusions are identifier-based, never label-text based. They are limited to SwiftUI audit findings where screenshots show visible text and the colours are token-declared pairs documented in `docs/design.md`.
+### Category list, light
 
-Identifiers excluded for contrast/text-clipping false positives:
+```text
+Screen: category-list-light
 
-- `answer-A-letter-chip`, `answer-B-letter-chip`, `answer-C-letter-chip`, `answer-D-letter-chip`
-- `answer-A-text`, `answer-B-text`, `answer-C-text`, `answer-D-text`
-- `answer-A-status`, `answer-B-status`, `answer-C-status`, `answer-D-status`
-- `answer-feedback-title`, `answer-feedback-correct-answer`, `answer-feedback-source`
-- `answer-list-title`, `question-card`, `next-question-button`, `practice-category-title`, `practice-category-summary`, `practice-session-tally`
+No accessibility audit issues reported.
+```
 
-Contrast evidence from `docs/design.md` token table:
+### Category list, dark
 
-- Light ink on raised paper: `light-card-body` 16.34:1; muted on raised paper: `light-card-muted` 7.08:1.
-- Dark ink on raised paper: `dark-card-body` 12.63:1; muted on raised paper: `dark-card-muted` 8.30:1.
-- Light correct text/background: `light-correct-text` 8.36:1; dark correct text/background: `dark-correct-text` 11.41:1.
-- Light incorrect text/background: `light-incorrect-text` 7.73:1; dark incorrect text/background: `dark-incorrect-text` 11.21:1.
-- Primary button text: `light-primary-button-text` 5.61:1 and `dark-primary-button-text` 7.42:1.
+```text
+Screen: category-list-dark
 
-The raw attachments also include `auditType`, identifier, label, element type, frame, and compact description for every reported issue, along with screenshots for each audited screen.
+No accessibility audit issues reported.
+```
+
+### Answered practice, light
+
+```text
+Screen: answered-practice-light
+
+Issue 1:
+auditType: XCUIAccessibilityAuditType(rawValue: 131072)
+element.identifier:
+element.label: Question identifier B-001-006-005
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 40.0, y: 118.63623046874989, width: 136.66666666666666, height: 20.333333333333314
+compactDescription: Text clipped
+
+Issue 2:
+auditType: XCUIAccessibilityAuditType(rawValue: 131072)
+element.identifier:
+element.label: except for the amplification of the output power of licence-exempt radio apparatus operating outside authorized amateur radio service allocations
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 94.0, y: 630.3637695312498, width: 261.3333333333333, height: 108.3333333333336
+compactDescription: Text clipped
+
+Issue 3:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier:
+element.label: Question identifier B-001-006-005
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 40.0, y: 118.63623046874989, width: 136.66666666666666, height: 20.333333333333314
+compactDescription: Contrast failed
+
+Issue 4:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier:
+element.label: A
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 40.0, y: 369.3333333333333, width: 42.0, height: 42.0
+compactDescription: Contrast failed
+
+Issue 5:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier:
+element.label: on aeronautical, marine or land mobile frequencies
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 94.0, y: 369.3028971354165, width: 238.33333333333331, height: 42.333333333333314
+compactDescription: Contrast failed
+
+Issue 6:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier:
+element.label: only if the apparatus is maintained to the performance standards set by Innovation, Science and Economic Development Canada regulations and policies
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 94.0, y: 478.0304361979166, width: 264.6666666666667, height: 108.33333333333343
+compactDescription: Contrast failed
+
+Issue 7:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier:
+element.label: C
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 40.0, y: 630.3333333333333, width: 42.0, height: 42.0
+compactDescription: Contrast nearly passed
+
+Issue 8:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier:
+element.label: except for the amplification of the output power of licence-exempt radio apparatus operating outside authorized amateur radio service allocations
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 94.0, y: 630.3637695312498, width: 261.3333333333333, height: 108.3333333333336
+compactDescription: Contrast nearly passed
+```
+
+### Answered practice, dark
+
+```text
+Screen: answered-practice-dark
+
+Issue 1:
+auditType: XCUIAccessibilityAuditType(rawValue: 131072)
+element.identifier:
+element.label: Be at least 14 years of age and a Canadian citizen or permanent resident
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 94.0, y: 732.36376953125, width: 250.0, height: 64.33333333333337
+compactDescription: Text clipped
+
+Issue 2:
+auditType: XCUIAccessibilityAuditType(rawValue: 131072)
+element.identifier:
+element.label: Be a Canadian citizen or permanent resident
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 94.0, y: 560.0304361979166, width: 187.33333333333331, height: 42.33333333333337
+compactDescription: Text clipped
+
+Issue 3:
+auditType: XCUIAccessibilityAuditType(rawValue: 131072)
+element.identifier:
+element.label: Question identifier B-001-004-007
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 40.0, y: 272.63623046875, width: 136.66666666666666, height: 20.333333333333258
+compactDescription: Text clipped
+
+Issue 4:
+auditType: XCUIAccessibilityAuditType(rawValue: 131072)
+element.identifier:
+element.label: Have a valid address in Canada
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 94.0, y: 473.3028971354167, width: 236.66666666666663, height: 20.333333333333144
+compactDescription: Text clipped
+
+Issue 5:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier:
+element.label: Regulations and Policies
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 40.0, y: 82.30289713541666, width: 318.3333333333333, height: 33.66666666666666
+compactDescription: Contrast failed
+
+Issue 6:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier:
+element.label: A
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 40.0, y: 473.3333333333333, width: 42.0, height: 42.00000000000006
+compactDescription: Contrast failed
+
+Issue 7:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier:
+element.label: Have a valid address in Canada
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 94.0, y: 473.3028971354167, width: 236.66666666666663, height: 20.333333333333144
+compactDescription: Contrast failed
+
+Issue 8:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier:
+element.label: B
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 40.0, y: 560.0, width: 42.0, height: 42.0
+compactDescription: Contrast failed
+
+Issue 9:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier:
+element.label: C
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 40.0, y: 646.3333333333334, width: 42.0, height: 42.0
+compactDescription: Contrast failed
+
+Issue 10:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier:
+element.label: Be a Canadian citizen
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 94.0, y: 646.36376953125, width: 163.0, height: 20.33333333333337
+compactDescription: Contrast failed
+
+Issue 11:
+auditType: XCUIAccessibilityAuditType(rawValue: 1)
+element.identifier:
+element.label: D
+element.elementType: XCUIElementType(rawValue: 48)
+element.frame: x: 40.0, y: 732.3333333333334, width: 42.0, height: 42.0
+compactDescription: Contrast failed
+```
+
+## Evidence files
+
+- `apps/apple/docs/a11y-evidence/category-list-light-accessibility-audit.png`
+- `apps/apple/docs/a11y-evidence/category-list-dark-accessibility-audit.png`
+- `apps/apple/docs/a11y-evidence/answered-practice-light-accessibility-audit.png`
+- `apps/apple/docs/a11y-evidence/answered-practice-dark-accessibility-audit.png`
+- Raw text attachments beside each screenshot in `apps/apple/docs/a11y-evidence/`.
