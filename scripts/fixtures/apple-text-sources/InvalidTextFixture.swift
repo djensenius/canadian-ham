@@ -5,6 +5,9 @@ struct InvalidTextFixture: View {
     let marked: String
     let model: UnknownTextModel
     let localized: LocalizedStringResource
+    let text: LocalizedStringKey
+    let runtime: String
+    let s: String
 
     var body: some View {
         let text = "Runtime value from a same-name clash"
@@ -16,6 +19,14 @@ struct InvalidTextFixture: View {
         Text(marked) // l10n: localized
         Text(localized) // l10n: localized
         Text(text)
+        Text("" + runtime)
+        Text("x".uppercased())
+        Text(verbatim: "" + runtime)
+        Text("Question \(model.title)")
+        Text("Answer \(model.name)")
+            .accessibilityLabel("" + s)
+        Text(LocalizedStringKey("" + runtime))
+        Text(LocalizedStringKey.init(marked)) // l10n: localized
     }
 
     private func makeTitle() -> String { wrappedKey }
@@ -23,4 +34,5 @@ struct InvalidTextFixture: View {
 
 struct UnknownTextModel {
     let title: String
+    let name: String
 }

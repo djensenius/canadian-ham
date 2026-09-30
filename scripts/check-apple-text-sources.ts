@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { dirname, extname, join, relative, resolve, sep } from "node:path";
+import { basename, dirname, extname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -10,7 +10,8 @@ const DEFAULT_SOURCE_ROOTS = [
 ];
 const SELF_TEST_FIXTURE = join(ROOT, "scripts/fixtures/apple-text-sources");
 
-const MARKER_RE = /\/\/\s*l10n:\s*(?:content\([^)]+\)|localized\b|verbatim\b)/;
+// content(question) means official/question-bank text in the active question language.
+const MARKER_RE = /\/\/\s*l10n:\s*(?:content\((?:en|fr|question)\)|localized\b|verbatim\b)/;
 const STRING_LITERAL_RE = /^#*"/;
 
 interface Violation {
@@ -28,7 +29,7 @@ interface CallPattern {
 }
 
 const callPatterns: CallPattern[] = [
-  { callee: "LocalizedStringKey", pattern: /\bLocalizedStringKey\s*\(/g, requiresMarker: false },
+  { callee: "LocalizedStringKey", pattern: /\bLocalizedStringKey(?:\s*\.\s*init)?\s*\(/g, requiresMarker: false },
   { callee: "Text", pattern: /\bText\s*\(/g, requiresMarker: true },
   { callee: "Label", pattern: /\bLabel\s*\(/g, requiresMarker: true },
   { callee: "Button", pattern: /\bButton\s*\(/g, requiresMarker: true },
@@ -174,20 +175,89 @@ function unlabeled(expression: string): string {
   return match ? match[1].trim() : expression.trim();
 }
 
+function stringLiteralTokenEnd(expression: string): number | undefined {
+  const value = unlabeled(expression);
+  const prefix = value.match(/^(#*)"/);
+  if (!prefix) return undefined;
+  const hashes = prefix[1] ?? "";
+  const closing = `"${hashes}`;
+  let escaped = false;
+  for (let index = hashes.length + 1; index < value.length; index += 1) {
+    const char = value[index];
+    if (hashes.length === 0 && escaped) {
+      escaped = false;
+      continue;
+    }
+    if (hashes.length === 0 && char === "\\") {
+      escaped = true;
+      continue;
+    }
+    if (char === '"' && value.slice(index, index + closing.length) === closing) {
+      return index + closing.length;
+    }
+  }
+  return undefined;
+}
+
 function isStringLiteral(expression: string): boolean {
-  return STRING_LITERAL_RE.test(unlabeled(expression));
+  const value = unlabeled(expression);
+  const end = stringLiteralTokenEnd(expression);
+  return end !== undefined && value.slice(end).trim() === "";
+}
+
+function literalInterpolations(expression: string): string[] {
+  const value = unlabeled(expression);
+  const prefix = value.match(/^(#*)"/);
+  if (!prefix) return [];
+  const hashes = prefix[1] ?? "";
+  const opening = `\\${hashes}(`;
+  const interpolations: string[] = [];
+  let escaped = false;
+  for (let index = hashes.length + 1; index < value.length; index += 1) {
+    const char = value[index];
+    if (hashes.length === 0 && escaped) {
+      escaped = false;
+      continue;
+    }
+    if (hashes.length === 0 && char === "\\") {
+      if (value.startsWith(opening, index)) {
+        const openIndex = index + opening.length - 1;
+        const closeIndex = findMatchingParen(value, openIndex);
+        if (closeIndex !== undefined) {
+          interpolations.push(value.slice(openIndex + 1, closeIndex));
+          index = closeIndex;
+        }
+      } else {
+        escaped = true;
+      }
+      continue;
+    }
+    if (hashes.length > 0 && value.startsWith(opening, index)) {
+      const openIndex = index + opening.length - 1;
+      const closeIndex = findMatchingParen(value, openIndex);
+      if (closeIndex !== undefined) {
+        interpolations.push(value.slice(openIndex + 1, closeIndex));
+        index = closeIndex;
+      }
+    }
+  }
+  return interpolations;
+}
+
+function hasHiddenContentInterpolation(expression: string): boolean {
+  return literalInterpolations(expression).some((interpolation) => /(?:\.text\s*\(|question|answer|title|name)/i.test(interpolation));
 }
 
 function isTextVerbatimLiteral(expression: string): boolean {
   const value = expression.trim();
-  if (/^verbatim\s*:\s*#*"/.test(value)) return true;
+  if (/^verbatim\s*:/.test(value)) return isStringLiteral(value);
   const textMatch = value.match(/^Text\s*\(([^]*)\)$/);
-  return textMatch ? /^verbatim\s*:\s*#*"/.test(textMatch[1].trim()) : false;
+  return textMatch ? isTextVerbatimLiteral(textMatch[1]) : false;
 }
 
 function isNonLiteralLocalizedStringKey(expression: string): boolean {
   const value = expression.trim();
-  const match = value.match(/^LocalizedStringKey\s*\(([^]*)\)$/);
+  const match = value.match(/^LocalizedStringKey(?:\s*\.\s*init)?\s*\(([^]*)\)$/);
   return Boolean(match && !isStringLiteral(firstArgument(match[1])));
 }
 
@@ -225,9 +295,10 @@ function scanFile(path: string): Violation[] {
       }
 
       if (callPattern.callee === "Button" && shouldSkipButtonInitializer(argument)) continue;
-      if (isStringLiteral(argument) || isTextVerbatimLiteral(argument)) continue;
+      const hasMarker = lineHasMarker(lines, startLine);
+      if ((isStringLiteral(argument) || isTextVerbatimLiteral(argument)) && (!hasHiddenContentInterpolation(argument) || hasMarker)) continue;
       if (isNonLiteralLocalizedStringKey(argument)) continue;
-      if (lineHasMarker(lines, startLine)) continue;
+      if (hasMarker) continue;
 
       violations.push({
         path,
@@ -242,12 +313,18 @@ function scanFile(path: string): Violation[] {
   return violations;
 }
 
+function shouldSkipEntry(entry: string): boolean {
+  if (basename(entry) === "CanadianHam.xcodeproj") return true;
+  const rel = relative(ROOT, entry);
+  if (!rel || rel.startsWith("..") || isAbsolute(rel)) return false;
+  return rel.split(sep).some((part) => part.endsWith("Tests"));
+}
+
 function swiftFiles(roots: string[]): string[] {
   const files: string[] = [];
   const visit = (entry: string) => {
-    const parts = entry.split(sep);
-    if (parts.some((part) => part.endsWith("Tests") || part === "CanadianHam.xcodeproj")) return;
-    const statEntries = existsSync(entry) ? readdirOrFile(entry) : [];
+    if (shouldSkipEntry(entry)) return;
+    const statEntries = readdirOrFile(entry);
     for (const child of statEntries) {
       if (child.kind === "file" && extname(child.path) === ".swift") {
         files.push(child.path);
@@ -256,7 +333,13 @@ function swiftFiles(roots: string[]): string[] {
       }
     }
   };
-  for (const root of roots) visit(resolve(root));
+  for (const root of roots) {
+    const resolvedRoot = resolve(root);
+    if (!existsSync(resolvedRoot)) {
+      throw new Error(`Apple text-source root does not exist: ${relative(ROOT, resolvedRoot) || resolvedRoot}`);
+    }
+    visit(resolvedRoot);
+  }
   return files.sort();
 }
 
@@ -270,16 +353,28 @@ function readdirOrFile(path: string): { kind: "file" | "directory"; path: string
 }
 
 function runScan(roots: string[]): Violation[] {
-  return swiftFiles(roots).flatMap(scanFile);
+  const files = swiftFiles(roots);
+  if (files.length === 0) {
+    throw new Error(`Apple text-source scan found 0 Swift files under: ${roots.map((root) => relative(ROOT, resolve(root)) || resolve(root)).join(", ")}`);
+  }
+  return files.flatMap(scanFile);
 }
 
 function selfTest(): void {
   const actual = runScan([SELF_TEST_FIXTURE]).map(formatViolation).sort();
   const expectedFragments = [
-    "InvalidTextFixture.swift:13: LocalizedStringKey(wrappedKey) uses a non-literal key",
-    "InvalidTextFixture.swift:14: Text(makeTitle()) uses a non-literal text source",
-    "InvalidTextFixture.swift:15: Text(model.title) uses a non-literal text source",
-    "InvalidTextFixture.swift:18: Text(text) uses a non-literal text source",
+    "InvalidTextFixture.swift:16: LocalizedStringKey(wrappedKey) uses a non-literal key",
+    "InvalidTextFixture.swift:17: Text(makeTitle()) uses a non-literal text source",
+    "InvalidTextFixture.swift:18: Text(model.title) uses a non-literal text source",
+    "InvalidTextFixture.swift:21: Text(text) uses a non-literal text source",
+    "InvalidTextFixture.swift:22: Text(\"\" + runtime) uses a non-literal text source",
+    "InvalidTextFixture.swift:23: Text(\"x\".uppercased()) uses a non-literal text source",
+    "InvalidTextFixture.swift:24: Text(verbatim: \"\" + runtime) uses a non-literal text source",
+    "InvalidTextFixture.swift:25: Text(\"Question \\(model.title)\") uses a non-literal text source",
+    "InvalidTextFixture.swift:26: Text(\"Answer \\(model.name)\") uses a non-literal text source",
+    "InvalidTextFixture.swift:27: accessibilityLabel(\"\" + s) uses a non-literal text source",
+    "InvalidTextFixture.swift:28: LocalizedStringKey(\"\" + runtime) uses a non-literal key",
+    "InvalidTextFixture.swift:29: LocalizedStringKey(marked) uses a non-literal key",
   ];
   const missing = expectedFragments.filter((fragment) => !actual.some((line) => line.includes(fragment)));
   if (actual.length !== expectedFragments.length || missing.length > 0) {
@@ -300,7 +395,13 @@ if (args.includes("--self-test")) {
 }
 
 const roots = args.length > 0 ? args : DEFAULT_SOURCE_ROOTS;
-const violations = runScan(roots);
+let violations: Violation[];
+try {
+  violations = runScan(roots);
+} catch (error) {
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exit(1);
+}
 if (violations.length > 0) {
   console.error("Unlocalized SwiftUI text sources:");
   for (const violation of violations) console.error(`- ${formatViolation(violation)}`);

@@ -12,6 +12,7 @@ node --no-warnings "$ROOT_DIR/scripts/check-apple-text-sources.ts"
 
 DERIVED_DATA="$TMP_DIR/DerivedData"
 LOCALIZATION_DIR="$TMP_DIR/Localization"
+CATALOG_HASH_BEFORE="$(shasum -a 256 "$CATALOG" | awk '{print $1}')"
 
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
   xbuild -exportLocalizations \
@@ -20,6 +21,12 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
   -derivedDataPath "$DERIVED_DATA" \
   -localizationPath "$LOCALIZATION_DIR" \
   -exportLanguage fr
+
+CATALOG_HASH_AFTER="$(shasum -a 256 "$CATALOG" | awk '{print $1}')"
+if [[ "$CATALOG_HASH_BEFORE" != "$CATALOG_HASH_AFTER" ]]; then
+  echo "xbuild -exportLocalizations modified $CATALOG; run the export intentionally and commit the catalogue changes." >&2
+  exit 1
+fi
 
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
   xbuild -project "$PROJECT" \
