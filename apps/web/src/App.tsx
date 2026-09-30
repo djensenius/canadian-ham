@@ -241,6 +241,7 @@ function AppContent({
   const mainRef = useRef<HTMLElement>(null);
   const didRunInitialFocusEffect = useRef(false);
   const interfaceLanguageRef = useRef(interfaceLanguage);
+  const preferencesMutationVersion = useRef(0);
 
   useEffect(() => {
     interfaceLanguageRef.current = interfaceLanguage;
@@ -248,6 +249,7 @@ function AppContent({
 
   useEffect(() => {
     let cancelled = false;
+    const loadPreferencesVersion = preferencesMutationVersion.current;
     async function loadProgress(): Promise<void> {
       try {
         const [storedProgress, storedAttempts, storedLessonProgress, storedQuizAttempts, storedPreferences] = await Promise.all([
@@ -262,7 +264,9 @@ function AppContent({
           setExamAttempts(storedAttempts);
           setLessonProgress(storedLessonProgress);
           setLessonQuizAttempts(storedQuizAttempts);
-          setPreferencesState(storedPreferences);
+          if (preferencesMutationVersion.current === loadPreferencesVersion) {
+            setPreferencesState(storedPreferences);
+          }
           setAlertMessage("");
         }
       } catch (error) {
@@ -411,6 +415,7 @@ function AppContent({
   }
 
   async function setPreferences(nextPreferences: WebPreferences): Promise<void> {
+    preferencesMutationVersion.current += 1;
     setPreferencesState(nextPreferences);
     try {
       await store.putPreferences(nextPreferences);
@@ -596,6 +601,7 @@ function AppContent({
               setExamAttempts(data.examAttempts);
               setLessonProgress(data.lessonProgress ?? []);
               setLessonQuizAttempts(data.lessonQuizAttempts ?? []);
+              preferencesMutationVersion.current += 1;
               setPreferencesState(data.preferences);
               setPracticeSession(null);
               setMockExam(null);
@@ -608,6 +614,7 @@ function AppContent({
               setExamAttempts([]);
               setLessonProgress([]);
               setLessonQuizAttempts([]);
+              preferencesMutationVersion.current += 1;
               setPreferencesState(defaultPreferences);
               setPracticeScope({ type: "all" });
               setPracticeSession(null);
