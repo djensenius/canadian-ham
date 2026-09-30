@@ -30,10 +30,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
         )
 
         answerFirstVisibleAnswer(in: app)
-        let feedback = waitForAnswerFeedback(in: app)
+        _ = waitForAnswerFeedback(in: app)
+        let feedbackTitle = app.staticTexts["answer-feedback-title"].firstMatch
+        XCTAssertTrue(feedbackTitle.waitForExistence(timeout: 5), "Feedback title should exist")
         XCTAssertTrue(
-            feedback.label.hasPrefix("Correct") || feedback.label.hasPrefix("Incorrect"),
-            "Feedback label should start with Correct or Incorrect, got: \(feedback.label)"
+            feedbackTitle.label.hasPrefix("Correct") || feedbackTitle.label.hasPrefix("Incorrect"),
+            "Feedback title should start with Correct or Incorrect, got: \(feedbackTitle.label)"
         )
     }
 

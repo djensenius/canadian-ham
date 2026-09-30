@@ -992,6 +992,7 @@ struct ExplanationPanelView: View {
                     .font(DesignTokens.FontScale.body.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("explanation-panel")
                 if let parsed {
                     Text(localized(parsed.correctAnswerParagraph, language: language))
                         .font(DesignTokens.FontScale.body)
@@ -1021,14 +1022,13 @@ struct ExplanationPanelView: View {
                             citationView(citation)
                         }
                     }
-                    .foregroundStyle(DesignTokens.Colors.inkMuted)
+                    .foregroundStyle(DesignTokens.Colors.ink)
                 }
             }
             .padding(DesignTokens.Spacing.md)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
-            .accessibilityIdentifier("explanation-panel")
         } else {
             Text("No project explanation is bundled for this question yet.")
                 .font(DesignTokens.FontScale.caption)
@@ -1049,12 +1049,15 @@ struct ExplanationPanelView: View {
             NavigationLink(value: LearnRoute.lesson(id)) {
                 Text(id)
                     .font(DesignTokens.FontScale.caption)
+                    .frame(minHeight: 44, alignment: .leading)
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .accessibilityLabel("Open lesson \(id)")
         } else if citation.url == rbr4CitationURL, let url = URL(string: rbr4CitationURL) {
             Link(citation.id ?? "RBR-4", destination: url)
                 .font(DesignTokens.FontScale.caption)
+                .frame(minHeight: 44, alignment: .leading)
         } else {
             Text(citation.id ?? citation.type)
                 .font(DesignTokens.FontScale.caption)
