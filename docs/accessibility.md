@@ -104,6 +104,7 @@ The mock exam timer is optional and off by default.
 - Component tests use axe-core in Vitest when UI components are added.
 - A later Playwright + axe smoke test covers home, practice, mock exam, exam results, lesson, settings, and language switching.
 - Tests include keyboard traversal for answer selection and exam submit.
+- Web answer choices intentionally remain toggle buttons with `aria-pressed` rather than radio groups. In immediate-feedback practice and lesson quizzes, activating a choice commits the answer and may show feedback immediately; radio-group arrow-key selection would unexpectedly commit answers while a keyboard user is only exploring choices. Keep this button pattern unless selection and submission become separate actions.
 
 ### Apple
 

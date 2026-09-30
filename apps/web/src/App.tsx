@@ -5,7 +5,7 @@ import {
   type QuestionProgressRecord,
   type ReadinessResult,
 } from "@canadian-ham/engine-ts";
-import { Component, useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
+import { Component, useEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode, type RefObject } from "react";
 
 import { LanguageToggle } from "./components/LanguageToggle";
 import { MarkdownContent } from "./components/MarkdownContent";
@@ -129,6 +129,7 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
     const interfaceLanguage = readStoredInterfaceLanguage();
     return (
       <div className="app-shell">
+        <a className="skip-link" href="#main">{t(interfaceLanguage, "skipToMainContent")}</a>
         <header className="site-header" role="banner">
           <div className="brand-lockup">
             <HeaderMark />
@@ -138,7 +139,7 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
             </div>
           </div>
         </header>
-        <main tabIndex={-1}>
+        <main id="main" tabIndex={-1}>
           <section className="card settings" aria-labelledby="app-recovery-title">
             <h2 id="app-recovery-title">{t(interfaceLanguage, "errorBoundaryTitle")}</h2>
             <p role="alert">{t(interfaceLanguage, "errorBoundaryRenderFailed", this.state.errorMessage)}</p>
@@ -238,6 +239,7 @@ function AppContent({
   const [statusMessage, setStatusMessage] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
   const mainRef = useRef<HTMLElement>(null);
+  const didRunInitialFocusEffect = useRef(false);
   const interfaceLanguageRef = useRef(interfaceLanguage);
 
   useEffect(() => {
@@ -304,6 +306,10 @@ function AppContent({
   }, []);
 
   useEffect(() => {
+    if (!didRunInitialFocusEffect.current) {
+      didRunInitialFocusEffect.current = true;
+      return;
+    }
     mainRef.current?.focus();
   }, [locationHash, route]);
 
@@ -369,6 +375,11 @@ function AppContent({
     if (window.location.hash !== nextHash) {
       window.location.hash = `/learn/${moduleId}/${lessonId}`;
     }
+  }
+
+  function handleSkipToMain(event: MouseEvent<HTMLAnchorElement>): void {
+    event.preventDefault();
+    mainRef.current?.focus();
   }
 
   function startPractice(scope: PracticeScope = practiceScope, mode: PracticeMode = preferences.practiceMode): void {
@@ -475,6 +486,7 @@ function AppContent({
 
   return (
     <div className="app-shell" data-theme={preferences.theme === "system" ? undefined : preferences.theme}>
+      <a className="skip-link" href="#main" onClick={handleSkipToMain}>{t(interfaceLanguage, "skipToMainContent")}</a>
       <header className="site-header" role="banner">
         <div className="brand-lockup">
           <HeaderMark />
@@ -497,7 +509,7 @@ function AppContent({
         <button type="button" aria-current={route === "settings" ? "page" : undefined} onClick={() => navigate("settings")}>{t(interfaceLanguage, "navSettings")}</button>
       </nav>
 
-      <main ref={mainRef} tabIndex={-1}>
+      <main id="main" ref={mainRef} tabIndex={-1}>
         {alertMessage ? <p className="alert-message" role="alert">{alertMessage}</p> : null}
         {route === "home" ? (
           <Home

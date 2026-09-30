@@ -209,6 +209,30 @@ function progressExport(): ProgressExportV1 {
 }
 
 describe("App accessibility and flows", () => {
+  it("offers a localized skip link as the first focus stop and keeps route focus management", async () => {
+    const store = createStore("skip-link");
+    const user = userEvent.setup();
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "skip-seed"} />);
+
+    await screen.findByRole("heading", { name: "Ready for Basic with Honours?" });
+    const skipLink = screen.getByRole("link", { name: "Skip to main content" });
+    assert.equal(skipLink.getAttribute("href"), "#main");
+
+    await user.tab();
+    assert.equal(document.activeElement, skipLink);
+    await user.keyboard("{Enter}");
+    const main = document.querySelector("main#main");
+    assert.ok(main);
+    await waitFor(() => assert.equal(document.activeElement, main));
+    assert.equal(window.location.hash, "#/home");
+
+    const primaryNav = screen.getByRole("navigation", { name: "Primary" });
+    await user.click(within(primaryNav).getByRole("button", { name: "Learn" }));
+    await screen.findByRole("heading", { name: "Learn" });
+    await waitFor(() => assert.equal(document.activeElement, main));
+    await expectNoAxeViolations(container);
+  });
+
   it("renders main screens in French, sets document language, and has no axe violations", async () => {
     window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
     const store = createStore("french-main-screens");
@@ -218,6 +242,7 @@ describe("App accessibility and flows", () => {
 
     await screen.findByRole("heading", { name: "Prêt pour la compétence de base avec distinction?" });
     assert.equal(document.documentElement.lang, "fr-CA");
+    assert.ok(screen.getByRole("link", { name: "Aller au contenu principal" }));
     await expectNoAxeViolations(container);
 
     const primaryNav = screen.getByRole("navigation", { name: "Principale" });
