@@ -336,6 +336,8 @@ Desktop:
 └───────────────┴────────────────────────────────────────────┘
 ```
 
+Design decision: compact-width mock exams open the question navigator in a sheet from the header `Questions` button; the header keeps Flag, Questions, and optional timer controls in one row that wraps before content is hidden at large Dynamic Type sizes.
+
 ### Exam results with category breakdown
 
 Phone:
