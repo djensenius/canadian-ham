@@ -257,6 +257,36 @@ final class CanadianHamPracticeUITests: XCTestCase {
         waitForElementToDisappear(feedback, timeout: 5, message: "Answer feedback should disappear after advancing at the largest accessibility text size")
     }
 
+    func testMockExamHeaderControlsSupportLargestAccessibilityTextSize() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamMockExamSeed", "ui-mock-header-accessibility-size",
+            "-CanadianHamMockExamQuestionID", "B-001-002-002",
+            "-CanadianHamMockExamLimit", "1",
+            "-CanadianHamExamTimerEnabled", "true",
+            "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"
+        ])
+
+        openMockExamStart(in: app)
+        XCTAssertTrue(app.staticTexts["mock-exam-seed"].waitForExistence(timeout: 10))
+        scrollToTop(in: app)
+        let flagButton = app.buttons["mock-flag-button"].firstMatch
+        let questionsButton = app.buttons["mock-questions-button"].firstMatch
+        XCTAssertTrue(flagButton.waitForExistence(timeout: 5), "Flag control should exist at the largest accessibility text size")
+        scrollUntilHittable(flagButton, in: app, maxSwipes: 8)
+        XCTAssertTrue(flagButton.isHittable, "Flag control should remain reachable at the largest accessibility text size")
+        XCTAssertTrue(questionsButton.waitForExistence(timeout: 5), "Questions control should exist at the largest accessibility text size")
+        scrollUntilHittable(questionsButton, in: app, maxSwipes: 8)
+        XCTAssertTrue(questionsButton.isHittable, "Questions control should remain reachable at the largest accessibility text size")
+
+        flagButton.tap()
+        XCTAssertTrue(app.buttons["Flagged for review"].firstMatch.waitForExistence(timeout: 5), "Flag control should remain usable after wrapping")
+        scrollUntilHittable(questionsButton, in: app, maxSwipes: 8)
+        questionsButton.tap()
+        XCTAssertTrue(app.staticTexts["Question navigator"].waitForExistence(timeout: 5), "Questions control should remain usable after wrapping")
+    }
+
     func testLongestAnswerWrapsAtLargestAccessibilityTextSize() throws {
         XCUIDevice.shared.appearance = .light
         let longestAnswer = try longestEnglishAnswerInBank()

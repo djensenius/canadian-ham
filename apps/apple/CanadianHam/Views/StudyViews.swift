@@ -704,6 +704,7 @@ struct MockExamView: View {
                 flagAndNavigatorControls(questionID: questionID)
                 timerControls
             }
+            .fixedSize(horizontal: true, vertical: false)
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 flagAndNavigatorControls(questionID: questionID)
                 timerControls
@@ -712,19 +713,35 @@ struct MockExamView: View {
     }
 
     private func flagAndNavigatorControls(questionID: String) -> some View {
-        HStack(spacing: DesignTokens.Spacing.sm) {
-            Button { toggleFlag(questionID) } label: {
-                AccessibleSecondaryButtonLabel(title: flagged.contains(questionID) ? "Flagged for review" : "Flag for review")
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: DesignTokens.Spacing.sm) {
+                flagButton(questionID: questionID)
+                questionsButton
+            }
+            .fixedSize(horizontal: true, vertical: false)
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                flagButton(questionID: questionID)
+                questionsButton
+            }
+        }
+    }
+
+    private func flagButton(questionID: String) -> some View {
+        Button { toggleFlag(questionID) } label: {
+            AccessibleSecondaryButtonLabel(title: flagged.contains(questionID) ? "Flagged for review" : "Flag for review")
+        }
+        .buttonStyle(AccessibleSecondaryButtonStyle())
+        .accessibilityIdentifier("mock-flag-button")
+    }
+
+    @ViewBuilder
+    private var questionsButton: some View {
+        if usesNavigatorSheet {
+            Button { showingNavigator = true } label: {
+                AccessibleSecondaryButtonLabel(title: "Questions")
             }
             .buttonStyle(AccessibleSecondaryButtonStyle())
-            .accessibilityIdentifier("mock-flag-button")
-            if usesNavigatorSheet {
-                Button { showingNavigator = true } label: {
-                    AccessibleSecondaryButtonLabel(title: "Questions")
-                }
-                .buttonStyle(AccessibleSecondaryButtonStyle())
-                .accessibilityIdentifier("mock-questions-button")
-            }
+            .accessibilityIdentifier("mock-questions-button")
         }
     }
 
