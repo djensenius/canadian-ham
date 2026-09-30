@@ -41,7 +41,7 @@ final class LocalizationCatalogTests: XCTestCase {
         XCTAssertEqual(localizedQuestionCount(1, bundle: frenchBundle, locale: locale), "1 question")
         XCTAssertEqual(localizedQuestionCount(2, bundle: frenchBundle, locale: locale), "2 questions")
 
-        XCTAssertEqual(localizedUnansweredQuestionCount(0, bundle: frenchBundle, locale: locale), "0 question sans réponse comptera comme incorrecte.")
+        XCTAssertEqual(localizedUnansweredQuestionCount(0, bundle: frenchBundle, locale: locale), "0 questions sans réponse compteront comme incorrectes.")
         XCTAssertEqual(localizedUnansweredQuestionCount(1, bundle: frenchBundle, locale: locale), "1 question sans réponse comptera comme incorrecte.")
         XCTAssertEqual(localizedUnansweredQuestionCount(2, bundle: frenchBundle, locale: locale), "2 questions sans réponse compteront comme incorrectes.")
 
