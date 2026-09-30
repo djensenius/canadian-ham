@@ -1,0 +1,29 @@
+[
+  {
+    "id": "B-001-001",
+    "bankId": "basic-2025-07-15",
+    "categoryId": "B-001",
+    "questionIds": ["B-001-001-001", "B-001-001-002"],
+    "questionCount": 2,
+    "lessonIds": [],
+    "title": { "en": null, "fr": null }
+  },
+  {
+    "id": "B-001-002",
+    "bankId": "basic-2025-07-15",
+    "categoryId": "B-001",
+    "questionIds": ["B-001-002-001"],
+    "questionCount": 1,
+    "lessonIds": [],
+    "title": { "en": null, "fr": null }
+  },
+  {
+    "id": "B-001-003",
+    "bankId": "basic-2025-07-15",
+    "categoryId": "B-001",
+    "questionIds": ["B-001-003-001"],
+    "questionCount": 1,
+    "lessonIds": [],
+    "title": { "en": null, "fr": null }
+  }
+]

@@ -1,0 +1,70 @@
+[
+  {
+    "id": "B-001-001-001",
+    "bankId": "basic-2025-07-15",
+    "categoryId": "B-001",
+    "subsectionId": "B-001-001",
+    "sourceOrder": 1,
+    "text": {
+      "en": "Unchanged question?",
+      "fr": "Question inchangée?"
+    },
+    "answers": [
+      { "sourceIndex": 0, "isCorrect": true, "text": { "en": "Correct", "fr": "Correcte" } },
+      { "sourceIndex": 1, "isCorrect": false, "text": { "en": "Wrong 1", "fr": "Mauvaise 1" } },
+      { "sourceIndex": 2, "isCorrect": false, "text": { "en": "Wrong 2", "fr": "Mauvaise 2" } },
+      { "sourceIndex": 3, "isCorrect": false, "text": { "en": "Wrong 3", "fr": "Mauvaise 3" } }
+    ]
+  },
+  {
+    "id": "B-001-001-002",
+    "bankId": "basic-2025-07-15",
+    "categoryId": "B-001",
+    "subsectionId": "B-001-001",
+    "sourceOrder": 2,
+    "text": {
+      "en": "Removed question?",
+      "fr": "Question supprimée?"
+    },
+    "answers": [
+      { "sourceIndex": 0, "isCorrect": true, "text": { "en": "Removed correct", "fr": "Correcte supprimée" } },
+      { "sourceIndex": 1, "isCorrect": false, "text": { "en": "Removed wrong 1", "fr": "Mauvaise supprimée 1" } },
+      { "sourceIndex": 2, "isCorrect": false, "text": { "en": "Removed wrong 2", "fr": "Mauvaise supprimée 2" } },
+      { "sourceIndex": 3, "isCorrect": false, "text": { "en": "Removed wrong 3", "fr": "Mauvaise supprimée 3" } }
+    ]
+  },
+  {
+    "id": "B-001-002-001",
+    "bankId": "basic-2025-07-15",
+    "categoryId": "B-001",
+    "subsectionId": "B-001-002",
+    "sourceOrder": 3,
+    "text": {
+      "en": "Which value is old?",
+      "fr": "Quelle valeur est ancienne?"
+    },
+    "answers": [
+      { "sourceIndex": 0, "isCorrect": true, "text": { "en": "Old correct", "fr": "Ancienne correcte" } },
+      { "sourceIndex": 1, "isCorrect": false, "text": { "en": "Old distractor", "fr": "Ancien distracteur" } },
+      { "sourceIndex": 2, "isCorrect": false, "text": { "en": "Stable distractor", "fr": "Distracteur stable" } },
+      { "sourceIndex": 3, "isCorrect": false, "text": { "en": "Another distractor", "fr": "Autre distracteur" } }
+    ]
+  },
+  {
+    "id": "B-001-003-001",
+    "bankId": "basic-2025-07-15",
+    "categoryId": "B-001",
+    "subsectionId": "B-001-003",
+    "sourceOrder": 4,
+    "text": {
+      "en": "Question in a removed subsection?",
+      "fr": "Question dans une sous-section supprimée?"
+    },
+    "answers": [
+      { "sourceIndex": 0, "isCorrect": true, "text": { "en": "Removed subsection correct", "fr": "Correcte sous-section supprimée" } },
+      { "sourceIndex": 1, "isCorrect": false, "text": { "en": "Wrong", "fr": "Mauvaise" } },
+      { "sourceIndex": 2, "isCorrect": false, "text": { "en": "Wrong", "fr": "Mauvaise" } },
+      { "sourceIndex": 3, "isCorrect": false, "text": { "en": "Wrong", "fr": "Mauvaise" } }
+    ]
+  }
+]

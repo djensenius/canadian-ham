@@ -1,0 +1,87 @@
+[
+  {
+    "id": "B-001-001-001",
+    "bankId": "basic-2026-01-01",
+    "categoryId": "B-001",
+    "subsectionId": "B-001-001",
+    "sourceOrder": 1,
+    "text": {
+      "en": "Unchanged question?",
+      "fr": "Question inchangée?"
+    },
+    "answers": [
+      { "sourceIndex": 0, "isCorrect": true, "text": { "en": "Correct", "fr": "Correcte" } },
+      { "sourceIndex": 1, "isCorrect": false, "text": { "en": "Wrong 1", "fr": "Mauvaise 1" } },
+      { "sourceIndex": 2, "isCorrect": false, "text": { "en": "Wrong 2", "fr": "Mauvaise 2" } },
+      { "sourceIndex": 3, "isCorrect": false, "text": { "en": "Wrong 3", "fr": "Mauvaise 3" } }
+    ]
+  },
+  {
+    "id": "B-001-001-003",
+    "bankId": "basic-2026-01-01",
+    "categoryId": "B-001",
+    "subsectionId": "B-001-001",
+    "sourceOrder": 2,
+    "text": {
+      "en": "Added question?",
+      "fr": "Question ajoutée?"
+    },
+    "answers": [
+      { "sourceIndex": 0, "isCorrect": true, "text": { "en": "Added correct", "fr": "Correcte ajoutée" } },
+      { "sourceIndex": 1, "isCorrect": false, "text": { "en": "Added wrong 1", "fr": "Mauvaise ajoutée 1" } },
+      { "sourceIndex": 2, "isCorrect": false, "text": { "en": "Added wrong 2", "fr": "Mauvaise ajoutée 2" } },
+      { "sourceIndex": 3, "isCorrect": false, "text": { "en": "Added wrong 3", "fr": "Mauvaise ajoutée 3" } }
+    ]
+  },
+  {
+    "id": "B-001-002-001",
+    "bankId": "basic-2026-01-01",
+    "categoryId": "B-001",
+    "subsectionId": "B-001-002",
+    "sourceOrder": 3,
+    "text": {
+      "en": "Which value is new?",
+      "fr": "Quelle valeur est nouvelle?"
+    },
+    "answers": [
+      { "sourceIndex": 0, "isCorrect": true, "text": { "en": "New correct", "fr": "Ancienne correcte" } },
+      { "sourceIndex": 1, "isCorrect": false, "text": { "en": "Old distractor", "fr": "Nouveau distracteur" } },
+      { "sourceIndex": 2, "isCorrect": false, "text": { "en": "Stable distractor", "fr": "Distracteur stable" } },
+      { "sourceIndex": 3, "isCorrect": false, "text": { "en": "Another distractor", "fr": "Autre distracteur" } }
+    ]
+  },
+  {
+    "id": "B-001-002-002",
+    "bankId": "basic-2026-01-01",
+    "categoryId": "B-001",
+    "subsectionId": "B-001-002",
+    "sourceOrder": 4,
+    "text": {
+      "en": "Added question in changed subsection?",
+      "fr": "Question ajoutée dans une sous-section modifiée?"
+    },
+    "answers": [
+      { "sourceIndex": 0, "isCorrect": true, "text": { "en": "Correct", "fr": "Correcte" } },
+      { "sourceIndex": 1, "isCorrect": false, "text": { "en": "Wrong", "fr": "Mauvaise" } },
+      { "sourceIndex": 2, "isCorrect": false, "text": { "en": "Wrong", "fr": "Mauvaise" } },
+      { "sourceIndex": 3, "isCorrect": false, "text": { "en": "Wrong", "fr": "Mauvaise" } }
+    ]
+  },
+  {
+    "id": "B-001-004-001",
+    "bankId": "basic-2026-01-01",
+    "categoryId": "B-001",
+    "subsectionId": "B-001-004",
+    "sourceOrder": 5,
+    "text": {
+      "en": "Question in an added subsection?",
+      "fr": "Question dans une sous-section ajoutée?"
+    },
+    "answers": [
+      { "sourceIndex": 0, "isCorrect": true, "text": { "en": "Added subsection correct", "fr": "Correcte sous-section ajoutée" } },
+      { "sourceIndex": 1, "isCorrect": false, "text": { "en": "Wrong", "fr": "Mauvaise" } },
+      { "sourceIndex": 2, "isCorrect": false, "text": { "en": "Wrong", "fr": "Mauvaise" } },
+      { "sourceIndex": 3, "isCorrect": false, "text": { "en": "Wrong", "fr": "Mauvaise" } }
+    ]
+  }
+]
