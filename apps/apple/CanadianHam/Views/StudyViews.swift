@@ -559,6 +559,7 @@ struct MockExamView: View {
     @State private var timerStatus = "Timer off"
     @State private var showingNavigator = false
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -698,30 +699,44 @@ struct MockExamView: View {
 #endif
     }
 
+    @ViewBuilder
     private func examHeaderControls(questionID: String) -> some View {
-        ViewThatFits(in: .horizontal) {
-            HStack(alignment: .center, spacing: DesignTokens.Spacing.sm) {
-                flagAndNavigatorControls(questionID: questionID)
-                timerControls
-            }
-            .fixedSize(horizontal: true, vertical: false)
+        if dynamicTypeSize.isAccessibilitySize {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 flagAndNavigatorControls(questionID: questionID)
                 timerControls
+            }
+        } else {
+            ViewThatFits(in: .horizontal) {
+                HStack(alignment: .center, spacing: DesignTokens.Spacing.sm) {
+                    flagAndNavigatorControls(questionID: questionID)
+                    timerControls
+                }
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                    flagAndNavigatorControls(questionID: questionID)
+                    timerControls
+                }
             }
         }
     }
 
+    @ViewBuilder
     private func flagAndNavigatorControls(questionID: String) -> some View {
-        ViewThatFits(in: .horizontal) {
-            HStack(spacing: DesignTokens.Spacing.sm) {
-                flagButton(questionID: questionID)
-                questionsButton
-            }
-            .fixedSize(horizontal: true, vertical: false)
+        if dynamicTypeSize.isAccessibilitySize {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 flagButton(questionID: questionID)
                 questionsButton
+            }
+        } else {
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: DesignTokens.Spacing.sm) {
+                    flagButton(questionID: questionID)
+                    questionsButton
+                }
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                    flagButton(questionID: questionID)
+                    questionsButton
+                }
             }
         }
     }
