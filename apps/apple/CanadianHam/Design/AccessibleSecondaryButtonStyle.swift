@@ -2,7 +2,7 @@ import SwiftUI
 
 struct AccessibleSecondaryButtonLabel: View {
     let title: String
-    let isDisabled: Bool
+    @Environment(\.isEnabled) private var isEnabled
 
     var body: some View {
         Text(title)
@@ -15,8 +15,8 @@ struct AccessibleSecondaryButtonLabel: View {
             .overlay {
                 Capsule()
                     .strokeBorder(
-                        isDisabled ? DesignTokens.Colors.inkMuted : DesignTokens.Colors.border,
-                        style: StrokeStyle(lineWidth: 1, dash: isDisabled ? [5, 4] : [])
+                        isEnabled ? DesignTokens.Colors.border : DesignTokens.Colors.inkMuted,
+                        style: StrokeStyle(lineWidth: 1, dash: isEnabled ? [] : [5, 4])
                     )
             }
     }

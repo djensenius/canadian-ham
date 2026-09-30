@@ -660,7 +660,7 @@ private struct LessonQuizView: View {
                 }
                 Spacer()
                 Button { restart() } label: {
-                    AccessibleSecondaryButtonLabel(title: "Retry quiz", isDisabled: false)
+                    AccessibleSecondaryButtonLabel(title: "Retry quiz")
                 }
                 .buttonStyle(AccessibleSecondaryButtonStyle())
             }
@@ -685,12 +685,12 @@ private struct LessonQuizView: View {
                 }
                 HStack {
                     Button { currentIndex = max(0, currentIndex - 1) } label: {
-                        AccessibleSecondaryButtonLabel(title: "Previous", isDisabled: currentIndex == 0)
+                        AccessibleSecondaryButtonLabel(title: "Previous")
                     }
                     .disabled(currentIndex == 0)
                     .buttonStyle(AccessibleSecondaryButtonStyle())
                     Button { currentIndex = min(items.count - 1, currentIndex + 1) } label: {
-                        AccessibleSecondaryButtonLabel(title: "Next", isDisabled: currentIndex + 1 >= items.count)
+                        AccessibleSecondaryButtonLabel(title: "Next")
                     }
                     .disabled(currentIndex + 1 >= items.count)
                     .buttonStyle(AccessibleSecondaryButtonStyle())

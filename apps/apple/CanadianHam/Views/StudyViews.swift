@@ -653,19 +653,19 @@ struct MockExamView: View {
 
             HStack {
                 Button { currentIndex = max(0, currentIndex - 1) } label: {
-                    AccessibleSecondaryButtonLabel(title: "Previous", isDisabled: currentIndex == 0)
+                    AccessibleSecondaryButtonLabel(title: "Previous")
                 }
                 .disabled(currentIndex == 0)
                 .buttonStyle(AccessibleSecondaryButtonStyle())
                 .accessibilityIdentifier("mock-previous-button")
                 Button { currentIndex = min(generatedItems.count - 1, currentIndex + 1) } label: {
-                    AccessibleSecondaryButtonLabel(title: "Next", isDisabled: currentIndex + 1 >= generatedItems.count)
+                    AccessibleSecondaryButtonLabel(title: "Next")
                 }
                 .disabled(currentIndex + 1 >= generatedItems.count)
                 .buttonStyle(AccessibleSecondaryButtonStyle())
                 .accessibilityIdentifier("mock-next-button")
                 Button { toggleFlag(question.id) } label: {
-                    AccessibleSecondaryButtonLabel(title: flagged.contains(question.id) ? "Flagged for review" : "Flag for review", isDisabled: false)
+                    AccessibleSecondaryButtonLabel(title: flagged.contains(question.id) ? "Flagged for review" : "Flag for review")
                 }
                 .buttonStyle(AccessibleSecondaryButtonStyle())
             }
