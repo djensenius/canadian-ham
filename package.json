@@ -8,6 +8,7 @@
     "import:check": "pnpm --filter @canadian-ham/content-tools import:basic:check",
     "check:links": "node packages/content-tools/src/check-links.ts",
     "typecheck": "pnpm -r typecheck",
-    "build:web": "pnpm --filter @canadian-ham/web build"
+    "build:web": "pnpm --filter @canadian-ham/web build",
+    "check:apple-l10n": "bash scripts/check-apple-localizations.sh"
   }
 }

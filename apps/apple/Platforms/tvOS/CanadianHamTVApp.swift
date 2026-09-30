@@ -196,8 +196,8 @@ private struct TVCategoryButton: View {
         }
         .buttonStyle(.plain)
         .focused($isFocused)
-        .accessibilityLabel("\(category.name.text(for: language)), \(category.questionCount) questions, \(category.subsectionCount) subsections")
-        .accessibilityHint("Starts practice for this category")
+        .accessibilityLabel(Text("\(category.name.text(for: language)), \(category.questionCount) questions, \(category.subsectionCount) subsections"))
+        .accessibilityHint(Text("Starts practice for this category"))
     }
 }
 
@@ -255,7 +255,7 @@ private struct TVPracticeView: View {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
                 TVTopBar(
                     title: category.name.text(for: language),
-                    subtitle: "\(session.correctCount) correct out of \(session.answeredCount) answered",
+                    subtitle: String(localized: "\(session.correctCount) correct out of \(session.answeredCount) answered"),
                     language: $language,
                     onAbout: onAbout,
                     leadingAction: ("Categories", onCategories)
@@ -447,7 +447,7 @@ private struct TVAnswerButton: View {
         .disabled(isAnswered)
         .accessibilityLabel(Text(accessibilityLabel))
         .accessibilityIdentifier("answer-\(displayLetter)-button")
-        .accessibilityHint(isAnswered ? "Question already answered. Use Next question to continue." : "Selects this answer")
+        .accessibilityHint(isAnswered ? Text("Question already answered. Use Next question to continue.") : Text("Selects this answer"))
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
@@ -540,7 +540,7 @@ private struct TVFeedbackBar: View {
                 .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                 .buttonStyle(TVPrimaryButtonStyle())
                 .focused($isNextQuestionFocused)
-                .accessibilityHint("Loads another question from this category")
+                .accessibilityHint(Text("Loads another question from this category"))
                 .accessibilityIdentifier("next-question-button")
         }
         .padding(DesignTokens.Spacing.xl)
@@ -557,32 +557,32 @@ private struct TVFeedbackBar: View {
     private var resultText: String { selectedAnswer.isCorrect ? "Correct" : "Incorrect" }
     private var sourceText: AttributedString {
         if selectedAnswer.isCorrect {
-            var text = english("Source: ")
+            var text = AttributedString(String(localized: "Source: "))
             text += localized(category.name.text(for: language), language: language)
-            text += english(" • \(question.subsectionId)")
+            text += AttributedString(" • \(question.subsectionId)")
             return text
         }
 
-        var text = english("Correct answer: ")
+        var text = AttributedString(String(localized: "Correct answer: "))
         text += localized(correctAnswer.answer.text.text(for: language), language: language)
         return text
     }
 
     private var accessibilityLabel: AttributedString {
         if selectedAnswer.isCorrect {
-            var label = english("Correct. Your answer: ")
+            var label = AttributedString(String(localized: "Correct. Your answer: "))
             label += localized(selectedAnswer.answer.text.text(for: language), language: language)
-            label += english(". Source: ")
+            label += AttributedString(String(localized: ". Source: "))
             label += localized(category.name.text(for: language), language: language)
-            label += english(", \(question.subsectionId)")
+            label += AttributedString(", \(question.subsectionId)")
             return label
         }
 
-        var label = english("Incorrect. Correct answer: ")
+        var label = AttributedString(String(localized: "Incorrect. Correct answer: "))
         label += localized(correctAnswer.answer.text.text(for: language), language: language)
-        label += english(". Source: ")
+        label += AttributedString(String(localized: ". Source: "))
         label += localized(category.name.text(for: language), language: language)
-        label += english(", \(question.subsectionId)")
+        label += AttributedString(", \(question.subsectionId)")
         return label
     }
 }
@@ -600,14 +600,14 @@ private struct TVTopBar: View {
                 Button(leadingAction.title, action: leadingAction.action)
                     .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                     .buttonStyle(.bordered)
-                    .accessibilityHint("Returns to the category grid")
+                    .accessibilityHint(Text("Returns to the category grid"))
             }
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                 Text(LocalizedStringKey(title))
                     .font(DesignTokens.FontScale.headline.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
-                Text(LocalizedStringKey(subtitle))
+                Text(subtitle)
                     .font(DesignTokens.FontScale.body.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
             }
@@ -619,12 +619,12 @@ private struct TVTopBar: View {
             }
             .pickerStyle(.segmented)
             .frame(width: 420)
-            .accessibilityLabel("Question language")
+            .accessibilityLabel(Text("Question language"))
             .accessibilityIdentifier("question-language-picker")
             Button("About", action: onAbout)
                 .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                 .buttonStyle(.bordered)
-                .accessibilityLabel("About Canadian Ham")
+                .accessibilityLabel(Text("About Canadian Ham"))
         }
     }
 }
@@ -655,8 +655,8 @@ private struct TVAboutView: View {
                         Text("Questions: \(bank.questions.count) • Categories: \(bank.categories.count) • Subsections: \(bank.subsections.count)")
                     }
                     TVPaperSection(title: "Attribution") {
-                        Text("Question-bank material is sourced from Innovation, Science and Economic Development Canada Amateur Radio Operator Certificate Basic Qualification materials.")
-                        Text("Canadian Ham is independent and not affiliated with, sponsored by, or endorsed by ISED, RAC, or any accredited examiner.")
+                        Text(english("Question-bank material is sourced from Innovation, Science and Economic Development Canada Amateur Radio Operator Certificate Basic Qualification materials."))
+                        Text(english("Canadian Ham is independent and not affiliated with, sponsored by, or endorsed by ISED, RAC, or any accredited examiner."))
                     }
                     TVPaperSection(title: "Privacy") {
                         Text("This tvOS app works offline with bundled content, includes no networking code, no analytics, no telemetry, and no iCloud sync.")

@@ -17,15 +17,15 @@ struct AboutView: View {
                 }
 
                 paperSection("Attribution and development status") {
-                    Text("Question-bank material and related reference material are sourced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification materials.")
-                    Text("The ISED permission request has been drafted but not yet sent or granted. Until written permission is recorded, this app is for private, non-distributed development only and must not claim written permission has been granted.")
-                    Text("Source path: \(bank.manifest.source.path)")
+                    Text(english("Question-bank material and related reference material are sourced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification materials."))
+                    Text(english("The ISED permission request has been drafted but not yet sent or granted. Until written permission is recorded, this app is for private, non-distributed development only and must not claim written permission has been granted."))
+                    Text(english(String(localized: "Source path: \(bank.manifest.source.path)")))
                         .font(DesignTokens.FontScale.caption)
                         .textSelection(.enabled)
                 }
 
                 paperSection("Disclaimer") {
-                    Text("Canadian Ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner.")
+                    Text(english("Canadian Ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner."))
                 }
 
                 paperSection("Privacy") {
@@ -60,4 +60,10 @@ struct AboutView: View {
                 .strokeBorder(DesignTokens.Colors.border, lineWidth: 1)
         )
     }
+}
+
+private func english(_ string: String) -> AttributedString {
+    var attributed = AttributedString(string)
+    attributed.languageIdentifier = BankLanguage.english.accessibilityLanguageCode
+    return attributed
 }

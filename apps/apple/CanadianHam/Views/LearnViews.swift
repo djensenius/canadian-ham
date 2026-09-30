@@ -4,26 +4,33 @@ import SwiftUI
 
 private let rbr4CitationURL = "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service"
 
-private extension Locale {
-    var canadianHamUsesFrenchUI: Bool { identifier.lowercased().hasPrefix("fr") }
+private var canadianHamUsesFrenchUI: Bool {
+    Bundle.main.preferredLocalizations.first?.lowercased().hasPrefix("fr") == true
 }
 
-private extension View {
-    func englishContentLanguage() -> some View {
-        self.environment(\.locale, Locale(identifier: "en_CA"))
+private struct EnglishOnlyNotice: View {
+    let text: LocalizedStringKey
+    let identifier: String
+
+    var body: some View {
+        if canadianHamUsesFrenchUI {
+            Text(text)
+                .font(DesignTokens.FontScale.caption.weight(.semibold))
+                .foregroundStyle(DesignTokens.Colors.inkMuted)
+                .accessibilityIdentifier(identifier)
+        }
     }
 }
 
 private struct EnglishOnlyLessonNotice: View {
-    @Environment(\.locale) private var locale
-
     var body: some View {
-        if locale.canadianHamUsesFrenchUI {
-            Text("Lesson offered in English only.")
-                .font(DesignTokens.FontScale.caption.weight(.semibold))
-                .foregroundStyle(DesignTokens.Colors.inkMuted)
-                .accessibilityIdentifier("english-only-lesson-notice")
-        }
+        EnglishOnlyNotice(text: "Lesson offered in English only.", identifier: "english-only-lesson-notice")
+    }
+}
+
+private struct EnglishOnlyExplanationNotice: View {
+    var body: some View {
+        EnglishOnlyNotice(text: "Explanation offered in English only.", identifier: "english-only-explanation-notice")
     }
 }
 
@@ -95,11 +102,10 @@ struct LearnView: View {
             Text("Module \(module.order) · \(module.categoryId)")
                 .font(.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
-            Text(module.title.en)
+            Text(localized(module.title.en, language: .english))
                 .font(.headline)
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
-                .englishContentLanguage()
             Text(module.status == .outline ? "Outline available" : "Draft lessons available")
                 .font(.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
@@ -198,14 +204,12 @@ private struct ModuleLessonListView: View {
                     Text("Module \(module.order) · \(module.categoryId)")
                         .font(DesignTokens.FontScale.caption.weight(.semibold))
                         .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    Text(module.title.en)
+                    Text(localized(module.title.en, language: .english))
                         .font(DesignTokens.FontScale.headline.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
-                        .englishContentLanguage()
                     EnglishOnlyLessonNotice()
                     LessonMarkdownView(markdown: module.bodyMarkdown, title: module.title.en)
-                        .englishContentLanguage()
                 }
                 .paperCard()
 
@@ -234,16 +238,23 @@ private struct LessonRow: View {
     let lesson: Lesson
     let isRead: Bool
 
+    private var lessonStatusText: String {
+        lesson.status == .outline ? String(localized: "Coming soon") : String(localized: "Ready to read")
+    }
+
+    private var readStatusText: String {
+        isRead ? String(localized: "Marked read") : String(localized: "Not marked read")
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             Text("\(lesson.id) · \(lesson.estimatedMinutes) min · \(lesson.covers.joined(separator: ", "))")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
-            Text(lesson.title.en)
+            Text(localized(lesson.title.en, language: .english))
                 .font(DesignTokens.FontScale.body.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
-                .englishContentLanguage()
-            Text("\(lesson.status == .outline ? "Coming soon" : "Ready to read") · \(isRead ? "Marked read" : "Not marked read")")
+            Text("\(lessonStatusText) · \(readStatusText)")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
         }
@@ -270,13 +281,12 @@ private struct LessonReaderView: View {
                     Text("\(lesson.id) · \(lesson.estimatedMinutes) min · \(lesson.covers.joined(separator: ", "))")
                         .font(DesignTokens.FontScale.caption.weight(.semibold))
                         .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    Text(lesson.title.en)
+                    Text(localized(lesson.title.en, language: .english))
                         .font(DesignTokens.FontScale.headline.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
                         .accessibilityIdentifier("lesson-reader-title")
-                        .englishContentLanguage()
                     if let lessonProgress {
                         Text("Marked read \(lessonProgress.readCount) time\(lessonProgress.readCount == 1 ? "" : "s").")
                             .font(DesignTokens.FontScale.caption)
@@ -295,12 +305,10 @@ private struct LessonReaderView: View {
 
                 if lesson.status == .outline {
                     OutlineLessonView(lesson: lesson, library: library)
-                        .englishContentLanguage()
                 } else {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                         EnglishOnlyLessonNotice()
                         LessonMarkdownView(markdown: lesson.bodyMarkdown, title: lesson.title.en)
-                            .englishContentLanguage()
                     }
                     .paperCard()
                 }
@@ -363,7 +371,7 @@ private struct LessonReaderView: View {
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
                 if let latest = quizAttempts.filter({ $0.quizId == quiz.id }).last {
-                    Text("Latest score: \(latest.correct) / \(latest.total) (\(latest.percent, format: .number.precision(.fractionLength(0...0)))%). Attempts saved: \(quizAttempts.filter { $0.quizId == quiz.id }.count).")
+                    Text("Latest result: \(latest.correct) / \(latest.total) (\(latest.percent, format: .number.precision(.fractionLength(0...0)))%). Attempts saved: \(quizAttempts.filter { $0.quizId == quiz.id }.count).")
                         .font(DesignTokens.FontScale.caption)
                         .foregroundStyle(DesignTokens.Colors.inkMuted)
                         .accessibilityIdentifier("lesson-quiz-latest-score")
@@ -428,15 +436,19 @@ private struct OutlineLessonView: View {
                 .font(DesignTokens.FontScale.body.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
             ForEach(lesson.objectives, id: \.self) { objective in
-                Label(objective, systemImage: "circle.fill")
-                    .font(DesignTokens.FontScale.body)
-                    .foregroundStyle(DesignTokens.Colors.ink)
+                Label {
+                    Text(localized(objective, language: .english))
+                } icon: {
+                    Image(systemName: "circle.fill")
+                }
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
             }
             Text("Covered subsections")
                 .font(DesignTokens.FontScale.body.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
             ForEach(lesson.covers, id: \.self) { cover in
-                Text("\(cover): \(library.subsectionTitlesById[cover]?.title.en ?? cover)")
+                Text(localized("\(cover): \(library.subsectionTitlesById[cover]?.title.en ?? cover)", language: .english))
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
             }
@@ -468,13 +480,13 @@ private struct LessonMarkdownView: View {
         switch block {
         case .heading(let level, let text):
             if !(level == 1 && title != nil && plainString(text) == title) {
-                Text(strippingLinks(from: text))
+                Text(english(strippingLinks(from: text)))
                     .font(level <= 2 ? DesignTokens.FontScale.title.weight(.bold) : DesignTokens.FontScale.bodyLarge.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
             }
         case .paragraph(let text):
-            Text(strippingLinks(from: text))
+            Text(english(strippingLinks(from: text)))
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
         case .list(let ordered, let items):
@@ -484,7 +496,7 @@ private struct LessonMarkdownView: View {
                         Text(ordered ? "\(index + 1)." : "•")
                             .font(DesignTokens.FontScale.body.weight(.semibold))
                             .foregroundStyle(DesignTokens.Colors.ink)
-                        Text(strippingLinks(from: item))
+                        Text(english(strippingLinks(from: item)))
                             .font(DesignTokens.FontScale.body)
                             .foregroundStyle(DesignTokens.Colors.ink)
                     }
@@ -506,19 +518,19 @@ private struct LessonMarkdownView: View {
                 Label("Illustration brief", systemImage: "paintbrush")
                     .font(DesignTokens.FontScale.body.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
-                Text(brief.description)
+                Text(localized(brief.description, language: .english))
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
-                Text("Alt text: \(brief.altText)")
+                Text(english(String(localized: "Alt text: \(brief.altText)")))
                     .font(DesignTokens.FontScale.caption)
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
             }
             .padding(DesignTokens.Spacing.md)
             .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
             .accessibilityElement(children: .combine)
-            .accessibilityLabel("Illustration brief. \(brief.altText). \(brief.description)")
+            .accessibilityLabel(Text(english(String(localized: "Illustration brief. \(brief.altText). \(brief.description)"))))
         case .blockquote(let text):
-            Text(strippingLinks(from: text))
+            Text(english(strippingLinks(from: text)))
                 .font(DesignTokens.FontScale.body.italic())
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .padding(DesignTokens.Spacing.md)
@@ -548,7 +560,7 @@ private struct LessonTableView: View {
             Grid(alignment: .leading, horizontalSpacing: DesignTokens.Spacing.md, verticalSpacing: DesignTokens.Spacing.sm) {
                 GridRow {
                     ForEach(Array(table.headers.enumerated()), id: \.offset) { _, header in
-                        Text(header)
+                        Text(english(header))
                             .font(DesignTokens.FontScale.caption.weight(.bold))
                             .foregroundStyle(DesignTokens.Colors.ink)
                     }
@@ -557,7 +569,7 @@ private struct LessonTableView: View {
                 ForEach(Array(table.rows.enumerated()), id: \.offset) { _, row in
                     GridRow {
                         ForEach(Array(row.enumerated()), id: \.offset) { _, cell in
-                            Text(cell)
+                            Text(english(cell))
                                 .font(DesignTokens.FontScale.caption)
                                 .foregroundStyle(DesignTokens.Colors.ink)
                         }
@@ -683,7 +695,7 @@ private struct LessonQuizView: View {
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                     if let latest = attempts.last {
-                        Text("Latest score: \(latest.correct) / \(latest.total) (\(latest.percent, format: .number.precision(.fractionLength(0...0)))%). Attempts saved: \(attempts.count).")
+                        Text("Latest result: \(latest.correct) / \(latest.total) (\(latest.percent, format: .number.precision(.fractionLength(0...0)))%). Attempts saved: \(attempts.count).")
                             .font(DesignTokens.FontScale.caption)
                             .foregroundStyle(DesignTokens.Colors.inkMuted)
                             .accessibilityIdentifier("lesson-quiz-latest-score")
@@ -1002,9 +1014,19 @@ private struct ConceptChoiceButton: View {
     }
 
     private var accessibilityLabel: Text {
-        var value = "Answer \(letter), \(choice.text.text(for: language))"
-        if let statusText { value += ", \(statusText)" }
+        var value = String(localized: "Answer \(letter), \(choice.text.text(for: language))")
+        if let statusText {
+            value += String(localized: ", \(localizedStatusText(statusText))")
+        }
         return Text(value)
+    }
+
+    private func localizedStatusText(_ statusText: String) -> String {
+        switch statusText {
+        case "Correct answer": String(localized: "Correct answer")
+        case "Your answer, incorrect": String(localized: "Your answer, incorrect")
+        default: statusText
+        }
     }
 
     private var background: Color {
@@ -1027,7 +1049,6 @@ struct ExplanationPanelView: View {
     let choicePermutation: [Int]?
 
     @Environment(\.canadianHamContentLibrary) private var library
-    @Environment(\.locale) private var locale
 
     var body: some View {
         if let explanation = library?.explanationsByQuestionId[questionId] {
@@ -1038,9 +1059,7 @@ struct ExplanationPanelView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityIdentifier("explanation-panel")
-                if locale.canadianHamUsesFrenchUI {
-                    EnglishOnlyLessonNotice()
-                }
+                EnglishOnlyExplanationNotice()
                 if let parsed {
                     Text(localized(parsed.correctAnswerParagraph, language: .english))
                         .font(DesignTokens.FontScale.body)
@@ -1117,6 +1136,19 @@ private func localized(_ string: String, language: BankLanguage) -> AttributedSt
     var attributed = AttributedString(string)
     attributed.languageIdentifier = language.accessibilityLanguageCode
     return attributed
+}
+
+private func english(_ string: String) -> AttributedString {
+    localized(string, language: .english)
+}
+
+private func english(_ attributed: AttributedString) -> AttributedString {
+    var copy = attributed
+    let ranges = copy.runs.map(\.range)
+    for range in ranges {
+        copy[range].languageIdentifier = BankLanguage.english.accessibilityLanguageCode
+    }
+    return copy
 }
 
 private extension LocalizedNullableText {

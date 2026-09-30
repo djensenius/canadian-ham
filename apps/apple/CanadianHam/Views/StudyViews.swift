@@ -54,7 +54,7 @@ struct HomeView: View {
                             CategoryCard(category: category, language: language)
                         }
                         .buttonStyle(.plain)
-                        .accessibilityLabel("Practice \(category.name.text(for: language)), \(category.questionCount) questions")
+                        .accessibilityLabel(Text("Practice \(category.name.text(for: language)), \(category.questionCount) questions"))
                     }
                 }
                 .paperCard()
@@ -73,10 +73,14 @@ struct HomeView: View {
                 .font(DesignTokens.FontScale.title.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
-            Label(LocalizedStringKey(summary.title), systemImage: summary.symbol)
-                .font(DesignTokens.FontScale.body.weight(.bold))
-                .foregroundStyle(summary.tint)
-            Text(LocalizedStringKey(summary.message))
+            Label {
+                Text(summary.title)
+            } icon: {
+                Image(systemName: summary.symbol)
+            }
+            .font(DesignTokens.FontScale.body.weight(.bold))
+            .foregroundStyle(summary.tint)
+            Text(summary.message)
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
             Text("Due review: \(summary.dueReviewCount). Weak subsections: \(summary.weakSubsectionCount). Completed mock exams: \(summary.completedExamCount).")
@@ -107,8 +111,8 @@ struct HomeView: View {
 }
 
 private struct HomeSummary {
-    let title: String
-    let message: String
+    let title: LocalizedStringResource
+    let message: LocalizedStringResource
     let symbol: String
     let tint: Color
     let dueReviewCount: Int
@@ -182,9 +186,27 @@ struct PracticeHubView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 220), spacing: DesignTokens.Spacing.md)], spacing: DesignTokens.Spacing.md) {
-                    practiceButton("All questions", detail: "Draw from all \(bank.questions.count) questions", systemImage: "tray.full", scope: .all)
-                    practiceButton("Weak areas", detail: "\(weak) weak subsections", systemImage: "exclamationmark.triangle", scope: .weak)
-                    practiceButton("Due review", detail: "\(due) due questions; unseen excluded", systemImage: "calendar.badge.clock", scope: .due)
+                    practiceButton(
+                        "All questions",
+                        detail: String(localized: "Draw from all \(bank.questions.count) questions"),
+                        accessibilityLabel: String(localized: "Start all questions. Draw from all \(bank.questions.count) questions"),
+                        systemImage: "tray.full",
+                        scope: .all
+                    )
+                    practiceButton(
+                        "Weak areas",
+                        detail: String(localized: "\(weak) weak subsections"),
+                        accessibilityLabel: String(localized: "Start weak areas. \(weak) weak subsections"),
+                        systemImage: "exclamationmark.triangle",
+                        scope: .weak
+                    )
+                    practiceButton(
+                        "Due review",
+                        detail: String(localized: "\(due) due questions; unseen excluded"),
+                        accessibilityLabel: String(localized: "Start due review. \(due) due questions; unseen excluded"),
+                        systemImage: "calendar.badge.clock",
+                        scope: .due
+                    )
                 }
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     Text("Practice categories")
@@ -197,7 +219,7 @@ struct PracticeHubView: View {
                                 CategoryCard(category: category, language: language)
                             }
                             .buttonStyle(.plain)
-                            .accessibilityLabel("Practice category \(category.name.text(for: language)), \(category.questionCount) questions")
+                            .accessibilityLabel(Text("Practice category \(category.name.text(for: language)), \(category.questionCount) questions"))
 
                             DisclosureGroup("Subsections") {
                                 ForEach(bank.subsectionsByCategory[category.id] ?? []) { subsection in
@@ -205,7 +227,7 @@ struct PracticeHubView: View {
                                         SubsectionCard(subsection: subsection, title: bank.subsectionTitle(subsection, language: language))
                                     }
                                     .buttonStyle(.plain)
-                                    .accessibilityLabel("Practice subsection \(bank.subsectionTitle(subsection, language: language)), \(subsection.questionCount) questions")
+                                    .accessibilityLabel(Text("Practice subsection \(bank.subsectionTitle(subsection, language: language)), \(subsection.questionCount) questions"))
                                 }
                             }
                             .font(DesignTokens.FontScale.body.weight(.semibold))
@@ -222,7 +244,7 @@ struct PracticeHubView: View {
         .task(id: revision) { refreshCounts() }
     }
 
-    private func practiceButton(_ title: String, detail: String, systemImage: String, scope: PracticeScope) -> some View {
+    private func practiceButton(_ title: LocalizedStringKey, detail: String, accessibilityLabel: String, systemImage: String, scope: PracticeScope) -> some View {
         Button { startPractice(scope) } label: {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 Label(title, systemImage: systemImage)
@@ -235,7 +257,7 @@ struct PracticeHubView: View {
             .paperCard()
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("Start \(title). \(detail)")
+        .accessibilityLabel(Text(accessibilityLabel))
     }
 
     private func refreshCounts() {
@@ -313,37 +335,38 @@ struct PracticeSessionView: View {
         .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(scopeTitle). \(sessionProgressText). Due review excludes unseen questions. Progress updates use the shared engine with an explicit timestamp.")
+        .accessibilityLabel(Text("\(scopeTitle). \(sessionProgressText). Due review excludes unseen questions. Progress updates use the shared engine with an explicit timestamp."))
     }
 
     private var sessionProgressText: String {
+        let mode = progressStore.preferences.practiceMode.localizedString
         switch progressStore.preferences.practiceMode {
         case .immediate:
-            "Mode: \(progressStore.preferences.practiceMode.label). Session tally: \(correctCount) correct out of \(answeredCount) answered."
+            return String(localized: "Mode: \(mode). Session tally: \(correctCount) correct out of \(answeredCount) answered.")
         case .reviewLater:
             if reviewSubmitted {
-                "Mode: \(progressStore.preferences.practiceMode.label). Review complete: \(correctCount) correct out of \(answeredCount) answered."
+                return String(localized: "Mode: \(mode). Review complete: \(correctCount) correct out of \(answeredCount) answered.")
             } else {
-                "Mode: \(progressStore.preferences.practiceMode.label). Answered \(answeredCount) of \(items.count); results are hidden until review."
+                return String(localized: "Mode: \(mode). Answered \(answeredCount) of \(items.count); results are hidden until review.")
             }
         }
     }
 
     private var scopeTitle: String {
         switch scope {
-        case .all: "All questions"
-        case .weak: "Weak areas"
-        case .due: "Due review"
+        case .all: String(localized: "All questions")
+        case .weak: String(localized: "Weak areas")
+        case .due: String(localized: "Due review")
         case .category(let id): bank.categories.first { $0.id == id }?.name.text(for: language) ?? id
-        case .subsection(let id): bank.subsectionsById[id].map { bank.subsectionTitle($0, language: language) } ?? "Subsection \(id)"
+        case .subsection(let id): bank.subsectionsById[id].map { bank.subsectionTitle($0, language: language) } ?? String(localized: "Subsection \(id)")
         }
     }
 
     private var emptyMessage: String {
         switch scope {
-        case .due: "No stored progress records are due. Unseen questions are not included in due review."
-        case .weak: "No weak subsections are available yet. Complete practice or a mock exam first."
-        default: "No bundled questions match this scope."
+        case .due: String(localized: "No stored progress records are due. Unseen questions are not included in due review.")
+        case .weak: String(localized: "No weak subsections are available yet. Complete practice or a mock exam first.")
+        default: String(localized: "No bundled questions match this scope.")
         }
     }
 
@@ -389,7 +412,7 @@ struct PracticeSessionView: View {
                 .buttonStyle(.bordered)
                 .tint(DesignTokens.Colors.ink)
                 .disabled(selected == nil)
-                .accessibilityHint(selected == nil ? "Choose an answer before continuing" : "Continues without feedback until review")
+                .accessibilityHint(selected == nil ? Text("Choose an answer before continuing") : Text("Continues without feedback until review"))
             }
         }
     }
@@ -557,7 +580,7 @@ struct MockExamView: View {
     @State private var errorMessage: String?
     @State private var confirmingSubmit = false
     @State private var isSubmitting = false
-    @State private var timerStatus = "Timer off"
+    @State private var timerStatus = String(localized: "Timer off")
     @State private var showingNavigator = false
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -596,7 +619,7 @@ struct MockExamView: View {
         .onReceive(timer) { _ in
             if timerRunning {
                 secondsElapsed += 1
-                timerStatus = "Timer running, \(secondsElapsed) seconds elapsed"
+                timerStatus = String(localized: "Timer running, \(secondsElapsed) seconds elapsed")
             }
         }
         .alert("Submit mock exam?", isPresented: $confirmingSubmit) {
@@ -798,7 +821,7 @@ struct MockExamView: View {
                             .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous).strokeBorder(navigatorBorder(for: index, item: item), lineWidth: index == currentIndex ? 2 : 1))
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel("Question \(index + 1), \(selectedByQuestionId[item.questionId] != nil ? "answered" : "unanswered")\(flagged.contains(item.questionId) ? ", flagged" : "")\(index == currentIndex ? ", current" : "")")
+                    .accessibilityLabel(mockNavigatorAccessibilityLabel(for: index, item: item))
                 }
             }
         }
@@ -811,6 +834,14 @@ struct MockExamView: View {
         if selectedByQuestionId[item.questionId] != nil { label += " ✓" }
         if flagged.contains(item.questionId) { label += " ⚑" }
         return label
+    }
+
+    private func mockNavigatorAccessibilityLabel(for index: Int, item: GeneratedExamItem) -> Text {
+        let answerState = selectedByQuestionId[item.questionId] != nil ? String(localized: "answered") : String(localized: "unanswered")
+        var label = String(localized: "Question \(index + 1), \(answerState)")
+        if flagged.contains(item.questionId) { label += String(localized: ", flagged") }
+        if index == currentIndex { label += String(localized: ", current") }
+        return Text(label)
     }
 
     private func navigatorBackground(for item: GeneratedExamItem) -> Color {
@@ -913,7 +944,7 @@ struct MockExamView: View {
             flagged = []
             secondsElapsed = 0
             timerRunning = progressStore.preferences.examTimerEnabled
-            timerStatus = progressStore.preferences.examTimerEnabled ? "Timer running, 0 seconds elapsed" : "Timer off"
+            timerStatus = progressStore.preferences.examTimerEnabled ? String(localized: "Timer running, 0 seconds elapsed") : String(localized: "Timer off")
             result = nil
             errorMessage = nil
         } catch {
@@ -996,7 +1027,7 @@ struct SettingsView: View {
                         set: { mode in savePreferences { $0.practiceMode = mode } }
                     )) {
                         ForEach(ApplePreferences.PracticeMode.allCases) { mode in
-                            Text(mode.label).tag(mode)
+                            Text(mode.localizedLabel).tag(mode)
                         }
                     }
                     .pickerStyle(.segmented)
@@ -1009,7 +1040,7 @@ struct SettingsView: View {
                         set: { theme in savePreferences { $0.theme = theme } }
                     )) {
                         ForEach(ApplePreferences.Theme.allCases) { theme in
-                            Text(theme.label).tag(theme)
+                            Text(theme.localizedLabel).tag(theme)
                         }
                     }
                     Picker("Question language", selection: Binding(
@@ -1312,9 +1343,21 @@ struct AnswerChoiceButton: View {
     }
 
     private var accessibilityLabel: Text {
-        var value = "Answer \(letter), \(answer.text.text(for: language))"
-        if let statusText { value += ", \(statusText)" }
+        var value = String(localized: "Answer \(letter), \(answer.text.text(for: language))")
+        if let statusText {
+            value += String(localized: ", \(localizedStatusText(statusText))")
+        }
         return Text(value)
+    }
+
+    private func localizedStatusText(_ statusText: String) -> String {
+        switch statusText {
+        case "Your answer, correct answer": String(localized: "Your answer, correct answer")
+        case "Correct answer": String(localized: "Correct answer")
+        case "Your answer, incorrect": String(localized: "Your answer, incorrect")
+        case "Selected": String(localized: "Selected")
+        default: statusText
+        }
     }
 }
 
@@ -1418,6 +1461,27 @@ struct MessagePanel: View {
         .background(kind == .success ? DesignTokens.Colors.correctBg : DesignTokens.Colors.warningBg, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(kind == .success ? DesignTokens.Colors.correctBorder : DesignTokens.Colors.warningBorder, lineWidth: 1))
         .accessibilityElement(children: .combine)
+    }
+}
+
+private extension ApplePreferences.PracticeMode {
+    var localizedLabel: LocalizedStringResource {
+        switch self {
+        case .immediate: "Immediate feedback"
+        case .reviewLater: "Review later"
+        }
+    }
+
+    var localizedString: String { String(localized: localizedLabel) }
+}
+
+private extension ApplePreferences.Theme {
+    var localizedLabel: LocalizedStringResource {
+        switch self {
+        case .system: "System"
+        case .light: "Light"
+        case .dark: "Dark"
+        }
     }
 }
 

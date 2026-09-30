@@ -142,7 +142,7 @@ private struct VisionLanguageOrnament: View {
         .frame(width: 320)
         .padding(DesignTokens.Spacing.sm)
         .glassBackgroundEffect()
-        .accessibilityLabel("Question language")
+        .accessibilityLabel(Text("Question language"))
         .accessibilityIdentifier("question-language-picker")
     }
 }
@@ -172,7 +172,7 @@ private struct VisionCategoryGridView: View {
                     Button("About", action: onAbout)
                         .buttonStyle(.bordered)
                         .font(DesignTokens.FontScale.body.weight(.semibold))
-                        .accessibilityLabel("About Canadian Ham")
+                        .accessibilityLabel(Text("About Canadian Ham"))
                 }
 
                 Text("Practice categories")
@@ -224,8 +224,8 @@ private struct VisionCategoryCard: View {
         }
         .buttonStyle(.plain)
         .hoverEffect(.lift)
-        .accessibilityLabel("\(category.name.text(for: language)), \(category.questionCount) questions, \(category.subsectionCount) subsections")
-        .accessibilityHint("Starts practice for this category")
+        .accessibilityLabel(Text("\(category.name.text(for: language)), \(category.questionCount) questions, \(category.subsectionCount) subsections"))
+        .accessibilityHint(Text("Starts practice for this category"))
     }
 }
 
@@ -284,7 +284,7 @@ private struct VisionPracticeView: View {
                 HStack(alignment: .center, spacing: DesignTokens.Spacing.lg) {
                     Button("Categories", action: onCategories)
                         .buttonStyle(.bordered)
-                        .accessibilityHint("Returns to the category grid")
+                        .accessibilityHint(Text("Returns to the category grid"))
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                         Text(category.name.text(for: language))
                             .font(DesignTokens.FontScale.headline.weight(.bold))
@@ -297,7 +297,7 @@ private struct VisionPracticeView: View {
                     Spacer()
                     Button("About", action: onAbout)
                         .buttonStyle(.bordered)
-                        .accessibilityLabel("About Canadian Ham")
+                        .accessibilityLabel(Text("About Canadian Ham"))
                 }
 
                 if let errorMessage = session.errorMessage {
@@ -485,7 +485,7 @@ private struct VisionAnswerButton: View {
         .disabled(isAnswered)
         .accessibilityLabel(Text(accessibilityLabel))
         .accessibilityIdentifier("answer-\(displayLetter)-button")
-        .accessibilityHint(isAnswered ? "Question already answered. Use Next question to continue." : "Selects this answer")
+        .accessibilityHint(isAnswered ? Text("Question already answered. Use Next question to continue.") : Text("Selects this answer"))
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
@@ -575,7 +575,7 @@ private struct VisionFeedbackPanel: View {
                 .buttonStyle(VisionPrimaryButtonStyle())
                 .font(DesignTokens.FontScale.body.weight(.bold))
                 .hoverEffect(.highlight)
-                .accessibilityHint("Loads another question from this category")
+                .accessibilityHint(Text("Loads another question from this category"))
                 .accessibilityIdentifier("next-question-button")
         }
         .padding(DesignTokens.Spacing.lg)
@@ -590,32 +590,32 @@ private struct VisionFeedbackPanel: View {
     private var resultText: String { selectedAnswer.isCorrect ? "Correct" : "Incorrect" }
     private var sourceText: AttributedString {
         if selectedAnswer.isCorrect {
-            var text = englishVision("Source: ")
+            var text = AttributedString(String(localized: "Source: "))
             text += localizedVision(category.name.text(for: language), language: language)
-            text += englishVision(" • \(question.subsectionId)")
+            text += AttributedString(" • \(question.subsectionId)")
             return text
         }
 
-        var text = englishVision("Correct answer: ")
+        var text = AttributedString(String(localized: "Correct answer: "))
         text += localizedVision(correctAnswer.answer.text.text(for: language), language: language)
         return text
     }
 
     private var accessibilityLabel: AttributedString {
         if selectedAnswer.isCorrect {
-            var label = englishVision("Correct. Your answer: ")
+            var label = AttributedString(String(localized: "Correct. Your answer: "))
             label += localizedVision(selectedAnswer.answer.text.text(for: language), language: language)
-            label += englishVision(". Source: ")
+            label += AttributedString(String(localized: ". Source: "))
             label += localizedVision(category.name.text(for: language), language: language)
-            label += englishVision(", \(question.subsectionId)")
+            label += AttributedString(", \(question.subsectionId)")
             return label
         }
 
-        var label = englishVision("Incorrect. Correct answer: ")
+        var label = AttributedString(String(localized: "Incorrect. Correct answer: "))
         label += localizedVision(correctAnswer.answer.text.text(for: language), language: language)
-        label += englishVision(". Source: ")
+        label += AttributedString(String(localized: ". Source: "))
         label += localizedVision(category.name.text(for: language), language: language)
-        label += englishVision(", \(question.subsectionId)")
+        label += AttributedString(", \(question.subsectionId)")
         return label
     }
 }
@@ -645,8 +645,8 @@ private struct VisionAboutView: View {
                         Text("Questions: \(bank.questions.count) • Categories: \(bank.categories.count) • Subsections: \(bank.subsections.count)")
                     }
                     VisionPaperSection(title: "Attribution") {
-                        Text("Question-bank material is sourced from Innovation, Science and Economic Development Canada Amateur Radio Operator Certificate Basic Qualification materials.")
-                        Text("Canadian Ham is independent and not affiliated with, sponsored by, or endorsed by ISED, RAC, or any accredited examiner.")
+                        Text(englishVision("Question-bank material is sourced from Innovation, Science and Economic Development Canada Amateur Radio Operator Certificate Basic Qualification materials."))
+                        Text(englishVision("Canadian Ham is independent and not affiliated with, sponsored by, or endorsed by ISED, RAC, or any accredited examiner."))
                     }
                     VisionPaperSection(title: "Privacy") {
                         Text("This visionOS app works offline with bundled content, includes no networking code, no analytics, no telemetry, and no iCloud sync.")
