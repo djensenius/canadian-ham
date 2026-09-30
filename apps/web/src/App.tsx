@@ -238,6 +238,11 @@ function AppContent({
   const [statusMessage, setStatusMessage] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
   const mainRef = useRef<HTMLElement>(null);
+  const interfaceLanguageRef = useRef(interfaceLanguage);
+
+  useEffect(() => {
+    interfaceLanguageRef.current = interfaceLanguage;
+  }, [interfaceLanguage]);
 
   useEffect(() => {
     let cancelled = false;
@@ -260,7 +265,7 @@ function AppContent({
         }
       } catch (error) {
         if (!cancelled) {
-          setAlertMessage(t(interfaceLanguage, "errorOpenStorage", formatError(error)));
+          setAlertMessage(t(interfaceLanguageRef.current, "errorOpenStorage", formatError(error)));
         }
       }
     }
@@ -268,7 +273,7 @@ function AppContent({
     return () => {
       cancelled = true;
     };
-  }, [interfaceLanguage, store]);
+  }, [store]);
 
   useEffect(() => {
     let cancelled = false;
@@ -280,13 +285,13 @@ function AppContent({
       })
       .catch((error: unknown) => {
         if (!cancelled) {
-          setAlertMessage(t(interfaceLanguage, "errorLoadQuestionBank", formatError(error)));
+          setAlertMessage(t(interfaceLanguageRef.current, "errorLoadQuestionBank", formatError(error)));
         }
       });
     return () => {
       cancelled = true;
     };
-  }, [interfaceLanguage]);
+  }, []);
 
   useEffect(() => {
     const onHashChange = () => {
@@ -597,9 +602,10 @@ function AppContent({
               setMockExam(null);
               setLatestResult(null);
               clearStoredInterfaceLanguage();
-              setInterfaceLanguageState(readStoredInterfaceLanguage());
+              const resetInterfaceLanguage = readStoredInterfaceLanguage();
+              setInterfaceLanguageState(resetInterfaceLanguage);
               setAlertMessage("");
-              setStatusMessage(t(interfaceLanguage, "statusAllLocalProgressReset"));
+              setStatusMessage(t(resetInterfaceLanguage, "statusAllLocalProgressReset"));
             }}
             onInterfaceLanguageChange={setInterfaceLanguage}
             onSetPreferences={setPreferences}
@@ -648,14 +654,16 @@ function Home({ interfaceLanguage, readiness, weakSubsections, dueReviewCount, e
         <p>{t(interfaceLanguage, "readinessDueCount")} <strong>{dueReviewCount}</strong></p>
         <p>{t(interfaceLanguage, "readinessCompletedExams")} <strong>{examAttempts.length}</strong></p>
         {weakCategories.size > 0 ? (
-          <p>{t(interfaceLanguage, "readinessWeakCategories")} {[...weakCategories].map(categoryName).join(", ")}</p>
+          <p>{t(interfaceLanguage, "readinessWeakCategories")} {[...weakCategories].map((categoryId, index) => (
+            <span key={categoryId}>{index > 0 ? ", " : null}<span lang={englishTextLang(interfaceLanguage)}>{categoryName(categoryId)}</span></span>
+          ))}</p>
         ) : <p>{t(interfaceLanguage, "readinessNoWeakCategory")}</p>}
         {weakSubsections.length > 0 ? (
           <details>
             <summary>{t(interfaceLanguage, "readinessWeakSubsections")}</summary>
             <ul>
               {weakSubsections.slice(0, 12).map((subsectionId) => (
-                <li key={subsectionId}>{subsectionId}: {subsectionTitle(subsectionId)}</li>
+                <li key={subsectionId}>{subsectionId}{colonSeparator(interfaceLanguage)}<span lang={englishTextLang(interfaceLanguage)}>{subsectionTitle(subsectionId)}</span></li>
               ))}
             </ul>
           </details>
@@ -675,7 +683,7 @@ function Home({ interfaceLanguage, readiness, weakSubsections, dueReviewCount, e
         </button>
         {categories.map((category) => (
           <button className="category-card" type="button" key={category.id} onClick={() => onStartPractice({ type: "category", categoryId: category.id })}>
-            <span>{category.name.en}</span>
+            <span lang={englishTextLang(interfaceLanguage)}>{category.name.en}</span>
             <strong>{category.questionCount}</strong>
             <small>{t(interfaceLanguage, "subsectionCount", category.subsectionCount)}</small>
           </button>
@@ -707,7 +715,7 @@ function Learn({ interfaceLanguage, lessonProgress, onOpenModule, onOpenLesson }
           return (
             <article className="module-card" key={module.id}>
               <p className="eyebrow">{t(interfaceLanguage, "moduleLabel", module.order, module.categoryId)}</p>
-              <h3>{module.title.en}</h3>
+              <h3 lang={englishTextLang(interfaceLanguage)}>{module.title.en}</h3>
               <p>{module.status === "outline" ? t(interfaceLanguage, "moduleOutlineAvailable") : t(interfaceLanguage, "moduleDraftAvailable")}</p>
               <p>{t(interfaceLanguage, "moduleLessonsMarkedRead", readCount, moduleLessons.length)}</p>
               <div className="action-row">
@@ -737,9 +745,9 @@ function ModulePage({ interfaceLanguage, moduleId, lessonProgress, onOpenLesson 
   return (
     <section className="card module-page" aria-labelledby="module-title">
       <p className="eyebrow">{t(interfaceLanguage, "moduleLabel", module.order, module.categoryId)}</p>
-      <h2 id="module-title">{module.title.en}</h2>
+      <h2 id="module-title" lang={englishTextLang(interfaceLanguage)}>{module.title.en}</h2>
       {interfaceLanguage === "fr" ? <p className="reference-note">{t(interfaceLanguage, "englishOnlyLessonNotice")}</p> : null}
-      <div lang="en-CA">
+      <div lang={englishTextLang(interfaceLanguage)}>
         <MarkdownContent interfaceLanguage={interfaceLanguage} markdown={module.body} title={module.title.en} />
       </div>
       <div className="lesson-list" aria-label={t(interfaceLanguage, "moduleLessonsAria", module.title.en)}>
@@ -747,7 +755,7 @@ function ModulePage({ interfaceLanguage, moduleId, lessonProgress, onOpenLesson 
           <article className="lesson-row" key={lesson.id}>
             <div>
               <p className="eyebrow">{t(interfaceLanguage, "lessonMeta", lesson.id, lesson.estimatedMinutes, lesson.covers.join(", "))}</p>
-              <h3>{lesson.title.en}</h3>
+              <h3 lang={englishTextLang(interfaceLanguage)}>{lesson.title.en}</h3>
               <p>{lesson.status === "outline" ? t(interfaceLanguage, "lessonComingSoonStatus") : t(interfaceLanguage, "lessonReadyStatus")} · {readLessonIds.has(lesson.id) ? t(interfaceLanguage, "lessonMarkedRead") : t(interfaceLanguage, "lessonNotMarkedRead")}</p>
             </div>
             <button type="button" onClick={() => onOpenLesson(module.id, lesson.id)}>{lesson.status === "outline" ? t(interfaceLanguage, "lessonPreviewOutline") : t(interfaceLanguage, "lessonRead")}</button>
@@ -792,40 +800,41 @@ function LessonPage({ interfaceLanguage, moduleId, lessonId, language, bankQuest
     <section className="card lesson-page" aria-labelledby="lesson-title">
       <aside className="lesson-sidebar" aria-label={t(interfaceLanguage, "lessonModuleNavigation")}>
         <button type="button" className="secondary-button" onClick={() => onOpenModule(module.id)}>{t(interfaceLanguage, "lessonModuleOverview")}</button>
-        <p className="eyebrow">{module.title.en}</p>
+        <p className="eyebrow" lang={englishTextLang(interfaceLanguage)}>{module.title.en}</p>
         <ol>
           {(lessonsByModuleId.get(module.id) ?? []).map((moduleLesson) => (
             <li key={moduleLesson.id}>
-              <button type="button" aria-current={moduleLesson.id === lesson.id ? "page" : undefined} onClick={() => onOpenLesson(module.id, moduleLesson.id)}>{moduleLesson.title.en}</button>
+              <button type="button" aria-current={moduleLesson.id === lesson.id ? "page" : undefined} onClick={() => onOpenLesson(module.id, moduleLesson.id)}><span lang={englishTextLang(interfaceLanguage)}>{moduleLesson.title.en}</span></button>
             </li>
           ))}
         </ol>
       </aside>
       <article className="lesson-article">
         <p className="eyebrow">{t(interfaceLanguage, "lessonMeta", lesson.id, lesson.estimatedMinutes, lesson.covers.join(", "))}</p>
-        <h2 id="lesson-title">{lesson.title.en}</h2>
+        <h2 id="lesson-title" lang={englishTextLang(interfaceLanguage)}>{lesson.title.en}</h2>
         <p>{readRecord === undefined ? t(interfaceLanguage, "lessonNotMarkedYet") : t(interfaceLanguage, "lessonMarkedReadTimes", readRecord.readCount)}</p>
         {lesson.status === "outline" ? (
           <section className="coming-soon" aria-labelledby="coming-soon-title">
             <h3 id="coming-soon-title">{t(interfaceLanguage, "lessonComingSoonTitle")}</h3>
             <p>{t(interfaceLanguage, "lessonComingSoonCopy")}</p>
             <h4>{t(interfaceLanguage, "lessonObjectives")}</h4>
-            <ul>{lesson.objectives.map((objective) => <li key={objective}>{objective}</li>)}</ul>
+            {interfaceLanguage === "fr" ? <p className="reference-note">{t(interfaceLanguage, "englishOnlyContentNotice")}</p> : null}
+            <ul>{lesson.objectives.map((objective) => <li key={objective} lang={englishTextLang(interfaceLanguage)}>{objective}</li>)}</ul>
             <h4>{t(interfaceLanguage, "lessonCoveredSubsections")}</h4>
-            <ul>{lesson.covers.map((cover) => <li key={cover}>{cover}: {subsectionTitle(cover)}</li>)}</ul>
+            <ul>{lesson.covers.map((cover) => <li key={cover}>{cover}{colonSeparator(interfaceLanguage)}<span lang={englishTextLang(interfaceLanguage)}>{subsectionTitle(cover)}</span></li>)}</ul>
           </section>
         ) : (
           <>
             {interfaceLanguage === "fr" ? <p className="reference-note">{t(interfaceLanguage, "englishOnlyLessonNotice")}</p> : null}
-            <div lang="en-CA">
+            <div lang={englishTextLang(interfaceLanguage)}>
               <MarkdownContent interfaceLanguage={interfaceLanguage} markdown={lesson.body} title={lesson.title.en} />
             </div>
           </>
         )}
         <div className="action-row lesson-actions">
           <button type="button" onClick={() => onLessonRead(lesson)}>{t(interfaceLanguage, "lessonMarkRead")}</button>
-          {neighbors.previous !== null ? <button type="button" className="secondary-button" onClick={() => onOpenLesson(neighbors.previous!.moduleId, neighbors.previous!.id)}>{t(interfaceLanguage, "lessonPrevious", neighbors.previous.title.en)}</button> : null}
-          {neighbors.next !== null ? <button type="button" className="secondary-button" onClick={() => onOpenLesson(neighbors.next!.moduleId, neighbors.next!.id)}>{t(interfaceLanguage, "lessonNext", neighbors.next.title.en)}</button> : null}
+          {neighbors.previous !== null ? <button type="button" className="secondary-button" onClick={() => onOpenLesson(neighbors.previous!.moduleId, neighbors.previous!.id)}>{interfaceLanguage === "fr" ? <>Précédente : <span lang="en">{neighbors.previous.title.en}</span></> : t(interfaceLanguage, "lessonPrevious", neighbors.previous.title.en)}</button> : null}
+          {neighbors.next !== null ? <button type="button" className="secondary-button" onClick={() => onOpenLesson(neighbors.next!.moduleId, neighbors.next!.id)}>{interfaceLanguage === "fr" ? <>Suivante : <span lang="en">{neighbors.next.title.en}</span></> : t(interfaceLanguage, "lessonNext", neighbors.next.title.en)}</button> : null}
         </div>
         {lesson.quizIds.map((quizId) => {
           const quiz = lessonQuizzesById.get(quizId);
@@ -1157,7 +1166,7 @@ function Practice({
           <label>
             {t(interfaceLanguage, "category")}
             <select value={categoryId} onChange={(event) => setCategoryId(event.currentTarget.value)}>
-              {categories.map((category) => <option key={category.id} value={category.id}>{category.name.en}</option>)}
+              {categories.map((category) => <option key={category.id} lang={englishTextLang(interfaceLanguage)} value={category.id}>{category.name.en}</option>)}
             </select>
           </label>
         ) : null}
@@ -1165,7 +1174,7 @@ function Practice({
           <label>
             {t(interfaceLanguage, "subsection")}
             <select value={subsectionId} onChange={(event) => setSubsectionId(event.currentTarget.value)}>
-              {subsectionTitles.map((subsection) => <option key={subsection.id} value={subsection.id}>{subsection.id}: {subsection.title.en}</option>)}
+              {subsectionTitles.map((subsection) => <option key={subsection.id} lang={englishTextLang(interfaceLanguage)} value={subsection.id}>{subsection.id}{colonSeparator(interfaceLanguage)}{subsection.title.en}</option>)}
             </select>
           </label>
         ) : null}
@@ -1186,7 +1195,7 @@ function Practice({
           <aside className="session-outline" aria-label={t(interfaceLanguage, "practiceSessionOutline")}>
             <div className="session-summary" aria-label={t(interfaceLanguage, "practiceSessionProgress")}>
               <span>{t(interfaceLanguage, "questionProgress", session.currentIndex + 1, session.items.length)}</span>
-              <span>{t(interfaceLanguage, "scopePrefix")} {scopeLabel(interfaceLanguage, session.scope)}</span>
+              <span>{t(interfaceLanguage, "scopePrefix")} <ScopeValue interfaceLanguage={interfaceLanguage} scope={session.scope} /></span>
               <span>{t(interfaceLanguage, "modePrefix")} {session.mode === "immediate" ? t(interfaceLanguage, "feedbackImmediate") : t(interfaceLanguage, "feedbackReviewLater")}</span>
               <span>{t(interfaceLanguage, "seedPrefix")} {session.seed}</span>
             </div>
@@ -1240,7 +1249,7 @@ function QuestionCard({ interfaceLanguage, question, choicePermutation, selected
   const HeadingTag = `h${headingLevel}` as "h3" | "h4";
   return (
     <article className="question-panel" aria-labelledby={`question-${question.id}`}>
-      <p className="question-meta">{question.id} · {question.categoryId} · {subsectionTitle(question.subsectionId)}</p>
+      <p className="question-meta">{question.id} · {question.categoryId} · <span lang={englishTextLang(interfaceLanguage)}>{subsectionTitle(question.subsectionId)}</span></p>
       <HeadingTag id={`question-${question.id}`}>{t(interfaceLanguage, "questionHeading")}</HeadingTag>
       <p className="question-text" lang={languageTag(language)}>{question.text[language]}</p>
       <div className="answers" role="group" aria-label={t(interfaceLanguage, "answerChoices")}>
@@ -1293,7 +1302,7 @@ function PracticeReview({ interfaceLanguage, session, language }: { readonly int
               <p>{t(interfaceLanguage, "yourAnswerPrefix")} <span lang={languageTag(language)}>{selectedAnswer?.text[language] ?? t(interfaceLanguage, "unanswered")}</span></p>
               <p>{t(interfaceLanguage, "correctAnswerPrefix")} <span lang={languageTag(language)}>{correctAnswer.text[language]}</span></p>
               <ExplanationPanel explanation={explanationForQuestion(item.question.id)} interfaceLanguage={interfaceLanguage} language={language} choicePermutation={item.choicePermutation} />
-              <p>{item.question.categoryId}; {subsectionTitle(item.question.subsectionId)}</p>
+              <p>{item.question.categoryId}; <span lang={englishTextLang(interfaceLanguage)}>{subsectionTitle(item.question.subsectionId)}</span></p>
             </li>
           );
         })}
@@ -1311,7 +1320,7 @@ export function ExplanationPanel({ explanation, interfaceLanguage = "en", langua
   return (
     <section className="explanation-panel" aria-label={t(interfaceLanguage, "explanationAria", explanation.questionId)}>
       <h4>{t(interfaceLanguage, "explanationTitle")}</h4>
-      {interfaceLanguage === "fr" ? <p className="reference-note">{t(interfaceLanguage, "englishOnlyExplanationNotice")}</p> : null}
+      {interfaceLanguage === "fr" && explanation.body.fr === null ? <p className="reference-note">{t(interfaceLanguage, "englishOnlyExplanationNotice")}</p> : null}
       {mainExplanationText(explanation, language).split(/\n\n+/).map((paragraph) => <p key={paragraph} lang={languageTag(explanationLanguage)}>{paragraph}</p>)}
       {choiceNotes.length > 0 ? (
         <ul>
@@ -1581,13 +1590,13 @@ function Results({ attempt, interfaceLanguage, language, onStartPractice, questi
   return (
     <section className="card results" aria-labelledby="results-title">
       <h2 id="results-title">{t(interfaceLanguage, "mockResultsTitle")}</h2>
-      <p><strong>{attempt.score.correct} / {attempt.score.total}</strong> ({attempt.score.percent.toFixed(0)}%)</p>
+      <p><strong>{attempt.score.correct} / {attempt.score.total}</strong> ({attempt.score.percent.toFixed(0)}{interfaceLanguage === "fr" ? " %" : "%"})</p>
       <p>{attempt.score.honours ? t(interfaceLanguage, "resultHonours") : attempt.score.passed ? t(interfaceLanguage, "resultPass") : t(interfaceLanguage, "resultBelowPass")}</p>
       <p>{t(interfaceLanguage, "passThresholdCopy")}</p>
       <h3>{t(interfaceLanguage, "categoryBreakdown")}</h3>
       <ul>
         {attempt.score.categoryBreakdown.map((entry) => (
-          <li key={entry.categoryId}>{categoryName(entry.categoryId)}: {entry.correct}/{entry.total} ({entry.percent.toFixed(0)}%)</li>
+          <li key={entry.categoryId}><span lang={englishTextLang(interfaceLanguage)}>{categoryName(entry.categoryId)}</span>{colonSeparator(interfaceLanguage)}{entry.correct}/{entry.total} ({entry.percent.toFixed(0)}{interfaceLanguage === "fr" ? " %" : "%"})</li>
         ))}
       </ul>
       <button type="button" onClick={() => onStartPractice({ type: "weak" })}>{t(interfaceLanguage, "readinessPracticeWeak")}</button>
@@ -1756,7 +1765,7 @@ function Settings({ interfaceLanguage, store, now, preferences, statusMessage, o
       </fieldset>
       <fieldset className="segmented-control interface-language-toggle">
         <legend>{t(interfaceLanguage, "languageInterfaceLegend")}</legend>
-        <label><input type="radio" name="interface-language" checked={interfaceLanguage === "en"} onChange={() => chooseInterfaceLanguage("en")} /> {t(interfaceLanguage, "languageEnglish")}</label>
+        <label><input type="radio" name="interface-language" checked={interfaceLanguage === "en"} onChange={() => chooseInterfaceLanguage("en")} /> <span lang={englishTextLang(interfaceLanguage)}>{t(interfaceLanguage, "languageEnglish")}</span></label>
         <label><input type="radio" name="interface-language" checked={interfaceLanguage === "fr"} onChange={() => chooseInterfaceLanguage("fr")} /> <span lang="fr">{t(interfaceLanguage, "languageFrench")}</span></label>
       </fieldset>
       <div className="action-row">
@@ -1799,8 +1808,8 @@ function readFileText(file: File): Promise<string> {
 function Footer({ interfaceLanguage }: { readonly interfaceLanguage: InterfaceLanguage }) {
   return (
     <footer className="site-footer">
-      <p>{t(interfaceLanguage, "footerISED")}</p>
-      <p>{t(interfaceLanguage, "footerIndependent")}</p>
+      <p lang={englishTextLang(interfaceLanguage)}>{t(interfaceLanguage, "footerISED")}</p>
+      <p lang={englishTextLang(interfaceLanguage)}>{t(interfaceLanguage, "footerIndependent")}</p>
     </footer>
   );
 }
@@ -1846,20 +1855,20 @@ function controlsFromScope(scope: PracticeScope): { scopeKind: string; categoryI
   };
 }
 
-function scopeLabel(interfaceLanguage: InterfaceLanguage, scope: PracticeScope): string {
+function ScopeValue({ interfaceLanguage, scope }: { readonly interfaceLanguage: InterfaceLanguage; readonly scope: PracticeScope }) {
   if (scope.type === "category") {
-    return categoryName(scope.categoryId);
+    return <span lang={englishTextLang(interfaceLanguage)}>{categoryName(scope.categoryId)}</span>;
   }
   if (scope.type === "subsection") {
-    return `${scope.subsectionId}: ${subsectionTitle(scope.subsectionId)}`;
+    return <>{scope.subsectionId}{colonSeparator(interfaceLanguage)}<span lang={englishTextLang(interfaceLanguage)}>{subsectionTitle(scope.subsectionId)}</span></>;
   }
   if (scope.type === "weak") {
-    return t(interfaceLanguage, "practiceScopeWeak");
+    return <>{t(interfaceLanguage, "practiceScopeWeak")}</>;
   }
   if (scope.type === "due") {
-    return t(interfaceLanguage, "practiceScopeDue");
+    return <>{t(interfaceLanguage, "practiceScopeDue")}</>;
   }
-  return t(interfaceLanguage, "practiceScopeAll");
+  return <>{t(interfaceLanguage, "practiceScopeAll")}</>;
 }
 
 function hasUnsubmittedReviewAnswers(session: PracticeSession | null): boolean {
@@ -1881,8 +1890,16 @@ function latestSubmittedAttempt(attempts: readonly ExamAttempt[]): ExamAttempt |
   return [...attempts].sort((a, b) => Date.parse(b.submittedAt) - Date.parse(a.submittedAt))[0] ?? null;
 }
 
-function languageTag(language: Language): "en-CA" | "fr-CA" {
-  return language === "fr" ? "fr-CA" : "en-CA";
+function languageTag(language: Language): "en" | "fr-CA" {
+  return language === "fr" ? "fr-CA" : "en";
+}
+
+function englishTextLang(interfaceLanguage: InterfaceLanguage): "en" | undefined {
+  return interfaceLanguage === "fr" ? "en" : undefined;
+}
+
+function colonSeparator(interfaceLanguage: InterfaceLanguage): ": " | " : " {
+  return interfaceLanguage === "fr" ? " : " : ": ";
 }
 
 function readinessLabel(interfaceLanguage: InterfaceLanguage, state: ReadinessResult["state"]): string {

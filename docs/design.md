@@ -113,7 +113,7 @@ The design-token test computes these WCAG 2.2 ratios for every declared foregrou
 
 ## Typography
 
-Use system stacks only. Do not download fonts.
+Use system stacks only. Do not download fonts. French UI copy follows the Canadian federal typography and terminology rules in [`docs/french-style.md`](french-style.md).
 
 - Display/headings: `ui-serif`, New York on Apple platforms, falling back to Iowan Old Style/Georgia/serif.
 - Body/UI: system sans (`system-ui`, SF Pro, Segoe UI fallback).

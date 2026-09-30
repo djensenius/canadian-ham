@@ -19,7 +19,7 @@ export function LanguageToggle({ language, interfaceLanguage, onLanguageChange }
           checked={language === "en"}
           onChange={() => onLanguageChange("en")}
         />
-        {t(interfaceLanguage, "languageEnglish")}
+        <span lang={interfaceLanguage === "fr" ? "en" : undefined}>{t(interfaceLanguage, "languageEnglish")}</span>
       </label>
       <label>
         <input

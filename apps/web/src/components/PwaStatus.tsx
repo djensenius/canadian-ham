@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 
-import { t, type InterfaceLanguage } from "../lib/i18n";
+import { t, type InterfaceLanguage, type MessageCatalogue } from "../lib/i18n";
 
 type OfflineState = "unsupported" | "installing" | "ready" | "error";
+type PwaMessageKey = Extract<keyof MessageCatalogue, "pwaUpdateReady" | "pwaUpdateApplying">;
 
 interface PwaStatusProps {
   readonly interfaceLanguage: InterfaceLanguage;
@@ -13,7 +14,8 @@ export function PwaStatus({ interfaceLanguage, updateDisabled = false }: PwaStat
   const serviceWorkerAvailable = typeof navigator !== "undefined" && "serviceWorker" in navigator && import.meta.env.PROD;
   const [offlineState, setOfflineState] = useState<OfflineState>(() => serviceWorkerAvailable ? "installing" : "unsupported");
   const [updateWorker, setUpdateWorker] = useState<ServiceWorker | null>(null);
-  const [message, setMessage] = useState("");
+  const [messageKey, setMessageKey] = useState<PwaMessageKey | null>(null);
+  const [errorMessage, setErrorMessage] = useState("");
   const applyingUpdateRef = useRef(false);
 
   useEffect(() => {
@@ -41,7 +43,8 @@ export function PwaStatus({ interfaceLanguage, updateDisabled = false }: PwaStat
         }
         if (worker.state === "installed" && navigator.serviceWorker.controller !== null) {
           setUpdateWorker(worker);
-          setMessage(t(interfaceLanguage, "pwaUpdateReady"));
+          setMessageKey("pwaUpdateReady");
+          setErrorMessage("");
         }
         if (worker.state === "activated") {
           setOfflineState("ready");
@@ -57,7 +60,8 @@ export function PwaStatus({ interfaceLanguage, updateDisabled = false }: PwaStat
       watchInstalling(registration.installing);
       if (registration.waiting !== null && navigator.serviceWorker.controller !== null) {
         setUpdateWorker(registration.waiting);
-        setMessage(t(interfaceLanguage, "pwaUpdateReady"));
+        setMessageKey("pwaUpdateReady");
+        setErrorMessage("");
       }
       registration.addEventListener("updatefound", () => watchInstalling(registration?.installing ?? null));
       await navigator.serviceWorker.ready;
@@ -67,7 +71,8 @@ export function PwaStatus({ interfaceLanguage, updateDisabled = false }: PwaStat
     }).catch((error: unknown) => {
       if (!cancelled) {
         setOfflineState("error");
-        setMessage(error instanceof Error ? error.message : String(error));
+        setMessageKey(null);
+        setErrorMessage(error instanceof Error ? error.message : String(error));
       }
     });
 
@@ -75,7 +80,7 @@ export function PwaStatus({ interfaceLanguage, updateDisabled = false }: PwaStat
       cancelled = true;
       navigator.serviceWorker.removeEventListener("controllerchange", onControllerChange);
     };
-  }, [interfaceLanguage, serviceWorkerAvailable]);
+  }, [serviceWorkerAvailable]);
 
   const label = offlineState === "ready"
     ? t(interfaceLanguage, "pwaAvailableOffline")
@@ -84,6 +89,7 @@ export function PwaStatus({ interfaceLanguage, updateDisabled = false }: PwaStat
       : offlineState === "error"
         ? t(interfaceLanguage, "pwaOfflineAttention")
         : t(interfaceLanguage, "pwaCaching");
+  const message = messageKey === null ? errorMessage : t(interfaceLanguage, messageKey);
 
   return (
     <div className="pwa-status" aria-label={t(interfaceLanguage, "pwaOfflineAvailability")} aria-live="polite">
@@ -98,7 +104,8 @@ export function PwaStatus({ interfaceLanguage, updateDisabled = false }: PwaStat
             applyingUpdateRef.current = true;
             updateWorker.postMessage({ type: "SKIP_WAITING" });
             setUpdateWorker(null);
-            setMessage(t(interfaceLanguage, "pwaUpdateApplying"));
+            setMessageKey("pwaUpdateApplying");
+            setErrorMessage("");
           }}
         >{updateDisabled ? t(interfaceLanguage, "pwaFinishExamBeforeUpdating") : t(interfaceLanguage, "pwaReloadToUpdate")}</button>
       ) : null}
