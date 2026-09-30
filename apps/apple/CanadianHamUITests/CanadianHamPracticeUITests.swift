@@ -13,19 +13,23 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let frenchLocaleArguments = ["-AppleLanguages", "(fr)", "-AppleLocale", "fr_CA"]
 
         var app = launchApp(arguments: frenchLocaleArguments + ["-CanadianHamInitialScreen", "home"])
-        XCTAssertTrue(app.staticTexts["Prêt pour la base avec mention ?"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Prêt pour la compétence de base avec distinction?"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "Effectuez au moins deux examens simulés"), "Expected a localized French readiness body message on Home")
         try performAudit(on: app, context: "French home")
         app.terminate()
 
         for (screen, expectedText) in [
             ("learn", "Apprendre"),
-            ("practice", "Pratique"),
-            ("mock", "Examen blanc"),
+            ("practice", "S’exercer"),
+            ("mock", "Examen simulé"),
             ("settings", "Réglages"),
             ("about", "À propos de Canadian Ham")
         ] {
             app = launchApp(arguments: frenchLocaleArguments + ["-CanadianHamInitialScreen", screen])
             XCTAssertTrue(app.staticTexts[expectedText].firstMatch.waitForExistence(timeout: 10), "Expected localized \(screen) screen")
+            if screen == "settings" {
+                XCTAssertTrue(anyVisibleLabel(in: app, contains: "La progression est stockée localement"), "Expected localized Settings body copy")
+            }
             app.terminate()
         }
 
