@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, configure, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
 import { IDBFactory } from "fake-indexeddb";
@@ -17,6 +17,8 @@ import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExpor
 import { INTERFACE_LANGUAGE_STORAGE_KEY } from "./lib/i18n";
 import { applyThemePreference, readStoredThemePreference, THEME_COLORS, THEME_STORAGE_KEY } from "./lib/theme";
 import { buildExamAttempt, createMockExam } from "./lib/studyEngine";
+
+configure({ asyncUtilTimeout: 3000 });
 
 const fixedNow = "2026-01-02T03:04:05.000Z";
 const referenceSheetNote = "In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.";
@@ -103,11 +105,24 @@ class DelayedInitialPreferencesStore extends ProgressStore {
       this.preferencesReadCount += 1;
       this.initialPreferencesReadStartedResolve?.();
       await this.releaseInitialPreferencesPromise;
+      const preferences = await super.getPreferences();
       this.initialPreferencesReturnedResolve?.();
-      return defaultPreferences;
+      return preferences;
     }
     this.preferencesReadCount += 1;
     return super.getPreferences();
+  }
+}
+
+class FailingPreferencesStore extends ProgressStore {
+  failNextPreferencesSave = true;
+
+  override async putPreferences(preferences: WebPreferences): Promise<void> {
+    if (this.failNextPreferencesSave) {
+      this.failNextPreferencesSave = false;
+      throw new Error("simulated preferences failure");
+    }
+    await super.putPreferences(preferences);
   }
 }
 
@@ -239,6 +254,11 @@ async function chooseFirstLessonQuizOption(user: ReturnType<typeof userEvent.set
     return;
   }
   await user.click(screen.getAllByTestId("answer-choice")[0]!);
+}
+
+function clickFirstLessonQuizOption(): void {
+  const choices = screen.queryAllByTestId("lesson-quiz-choice");
+  fireEvent.click(choices[0] ?? screen.getAllByTestId("answer-choice")[0]!);
 }
 
 function progressExport(): ProgressExportV1 {
@@ -629,28 +649,21 @@ describe("App accessibility and flows", () => {
     assert.equal(document.activeElement, next);
   });
 
-  it("renders lesson quizzes with official explanations and stores attempts without concept Leitner updates", async () => {
+  it("stores lesson quiz attempts with official explanations and without concept Leitner updates", async () => {
     window.location.hash = "#/learn/M5/L-005-01";
     const store = createStore("lesson-quiz");
-    const user = userEvent.setup();
-    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "lesson-quiz-seed"} />);
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "lesson-quiz-seed"} />);
 
     await screen.findByRole("heading", { name: "QZ-L-005-01-A" });
     for (let index = 0; index < 11; index += 1) {
-      const choices = screen.queryAllByTestId("lesson-quiz-choice");
-      if (choices.length > 0) {
-        await user.click(choices[0]!);
-      } else {
-        await user.click(screen.getAllByTestId("answer-choice")[0]!);
-      }
-      const status = await screen.findByRole("status");
-      assert.equal(document.activeElement, status);
+      clickFirstLessonQuizOption();
+      await screen.findByRole("status");
       const next = screen.getByRole("button", { name: "Next" });
       if (!next.hasAttribute("disabled")) {
-        await user.click(next);
+        fireEvent.click(next);
       }
     }
-    await user.click(screen.getByRole("button", { name: "Submit lesson quiz" }));
+    fireEvent.click(screen.getByRole("button", { name: "Submit lesson quiz" }));
     await waitFor(async () => assert.equal((await store.getLessonQuizAttempts()).length, 1));
     const attempts = await store.getLessonQuizAttempts();
     assert.equal(attempts[0]?.total, 11);
@@ -660,6 +673,14 @@ describe("App accessibility and flows", () => {
     assert.ok(progress.length > 0);
     assert.ok(progress.length <= 8);
     assert.ok(progress.every((record) => attempts[0]?.officialQuestionIds.includes(record.questionId)));
+  });
+
+  it("has no axe violations on the lesson quiz UI", async () => {
+    window.location.hash = "#/learn/M5/L-005-01";
+    const store = createStore("lesson-quiz-axe");
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "lesson-quiz-seed"} />);
+
+    await screen.findByRole("heading", { name: "QZ-L-005-01-A" });
     await expectNoAxeViolations(container);
   });
 
@@ -823,31 +844,72 @@ describe("App accessibility and flows", () => {
     assert.equal(window.localStorage.getItem(THEME_STORAGE_KEY), "dark");
   });
 
-  it("keeps a user-selected theme when the initial preferences load finishes later", async () => {
-    window.location.hash = "#/settings";
-    const store = new DelayedInitialPreferencesStore("settings-theme-load-race");
+  it("gates practice answering until the initial IndexedDB load finishes", async () => {
+    window.location.hash = "#/practice";
+    const store = new DelayedInitialPreferencesStore("practice-load-gate");
     stores.push(store);
-    const user = userEvent.setup();
-    render(<App store={store} now={() => fixedNow} seedFactory={() => "settings-race-seed"} />);
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "practice-race-seed"} />);
 
-    await screen.findByRole("heading", { name: "Settings and local data" });
     await store.initialPreferencesReadStarted;
-    await user.click(screen.getByLabelText("Dark"));
-    await waitFor(async () => {
-      assert.equal((await store.getPreferences()).theme, "dark");
-      assert.equal(document.documentElement.dataset.theme, "dark");
-    });
+    assert.ok(screen.getByRole("status", { name: /Loading/ }));
+    assert.equal(screen.queryByTestId("answer-choice"), null);
 
     await act(async () => {
       store.releaseInitialPreferences();
       await store.initialPreferencesReturned;
     });
 
-    await waitFor(() => {
-      assert.equal((screen.getByLabelText("Dark") as HTMLInputElement).checked, true);
+    await screen.findByRole("heading", { name: "Practice" });
+    fireEvent.click(screen.getAllByTestId("answer-choice")[0]!);
+    await waitFor(async () => assert.equal((await store.getQuestionProgress()).length, 1));
+  });
+
+  it("keeps stored preference fields when a gated theme change is the first user edit", async () => {
+    window.location.hash = "#/settings";
+    const store = new DelayedInitialPreferencesStore("settings-theme-load-race");
+    stores.push(store);
+    await store.putPreferences({ ...defaultPreferences, practiceMode: "review-later", examTimerEnabled: true, theme: "light" });
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "settings-race-seed"} />);
+
+    await store.initialPreferencesReadStarted;
+    assert.ok(screen.getByRole("status", { name: /Loading/ }));
+    assert.equal(screen.queryByLabelText("Dark"), null);
+
+    await act(async () => {
+      store.releaseInitialPreferences();
+      await store.initialPreferencesReturned;
+    });
+
+    await screen.findByRole("heading", { name: "Settings and local data" });
+    await user.click(screen.getByLabelText("Dark"));
+    await waitFor(async () => {
+      assert.deepEqual(await store.getPreferences(), { ...defaultPreferences, practiceMode: "review-later", examTimerEnabled: true, theme: "dark" });
       assert.equal(document.documentElement.dataset.theme, "dark");
     });
     assert.equal(window.localStorage.getItem(THEME_STORAGE_KEY), "dark");
+  });
+
+  it("rolls back an in-memory preference change when saving it fails", async () => {
+    window.location.hash = "#/settings";
+    const store = new FailingPreferencesStore("settings-theme-save-failure");
+    stores.push(store);
+    store.failNextPreferencesSave = false;
+    await store.putPreferences({ ...defaultPreferences, practiceMode: "review-later", examTimerEnabled: true, theme: "light" });
+    store.failNextPreferencesSave = true;
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "settings-save-failure-seed"} />);
+
+    await screen.findByRole("heading", { name: "Settings and local data" });
+    await user.click(screen.getByLabelText("Dark"));
+
+    await waitFor(() => {
+      assert.equal((screen.getByLabelText("Light") as HTMLInputElement).checked, true);
+      assert.equal((screen.getByLabelText("Dark") as HTMLInputElement).checked, false);
+      assert.equal(document.documentElement.dataset.theme, "light");
+    });
+    assert.deepEqual(await store.getPreferences(), { ...defaultPreferences, practiceMode: "review-later", examTimerEnabled: true, theme: "light" });
+    assert.ok(screen.getAllByRole("alert").some((alert) => /simulated preferences failure/.test(alert.textContent ?? "")));
   });
 
   it("applies the mirrored stored theme before IndexedDB preferences load", async () => {
