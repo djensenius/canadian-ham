@@ -4,6 +4,36 @@ import SwiftUI
 
 private let rbr4CitationURL = "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service"
 
+private var canadianHamUsesFrenchUI: Bool {
+    Bundle.main.preferredLocalizations.first?.lowercased().hasPrefix("fr") == true
+}
+
+private struct EnglishOnlyNotice: View {
+    let text: LocalizedStringKey
+    let identifier: String
+
+    var body: some View {
+        if canadianHamUsesFrenchUI {
+            Text(text) // l10n: localized
+                .font(DesignTokens.FontScale.caption.weight(.semibold))
+                .foregroundStyle(DesignTokens.Colors.inkMuted)
+                .accessibilityIdentifier(identifier)
+        }
+    }
+}
+
+private struct EnglishOnlyLessonNotice: View {
+    var body: some View {
+        EnglishOnlyNotice(text: "Lesson offered in English only.", identifier: "english-only-lesson-notice")
+    }
+}
+
+private struct EnglishOnlyExplanationNotice: View {
+    var body: some View {
+        EnglishOnlyNotice(text: "Explanation offered in English only.", identifier: "english-only-explanation-notice")
+    }
+}
+
 private struct ContentLibraryEnvironmentKey: EnvironmentKey {
     static let defaultValue: ContentLibrary? = nil
 }
@@ -43,6 +73,7 @@ struct LearnView: View {
                     Text("In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
+                    EnglishOnlyLessonNotice()
                 }
                 .paperCard()
 
@@ -71,14 +102,14 @@ struct LearnView: View {
             Text("Module \(module.order) · \(module.categoryId)")
                 .font(.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
-            Text(module.title.en)
+            Text(localized(module.title.en, language: .english)) // l10n: content(en)
                 .font(.headline)
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
-            Text(module.status == .outline ? "Outline available" : "Draft lessons available")
+            Text(module.status == .outline ? "Outline available" : "Draft lessons available") // l10n: localized
                 .font(.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
-            Text("\(readCount) of \(lessons.count) lessons marked read")
+            Text(localizedLessonReadProgress(readCount: readCount, totalCount: lessons.count)) // l10n: localized
                 .font(.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
@@ -99,7 +130,7 @@ struct LearnView: View {
             lessonProgress = try progressStore.lessonProgressRecords()
             errorMessage = nil
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 }
@@ -173,10 +204,11 @@ private struct ModuleLessonListView: View {
                     Text("Module \(module.order) · \(module.categoryId)")
                         .font(DesignTokens.FontScale.caption.weight(.semibold))
                         .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    Text(module.title.en)
+                    Text(localized(module.title.en, language: .english)) // l10n: content(en)
                         .font(DesignTokens.FontScale.headline.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
+                    EnglishOnlyLessonNotice()
                     LessonMarkdownView(markdown: module.bodyMarkdown, title: module.title.en)
                 }
                 .paperCard()
@@ -198,7 +230,7 @@ private struct ModuleLessonListView: View {
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
-        .navigationTitle(module.title.en)
+        .navigationTitle(Text(english(module.title.en))) // l10n: content(en)
     }
 }
 
@@ -206,15 +238,23 @@ private struct LessonRow: View {
     let lesson: Lesson
     let isRead: Bool
 
+    private var lessonStatusText: String {
+        lesson.status == .outline ? String(localized: "Coming soon") : String(localized: "Ready to read")
+    }
+
+    private var readStatusText: String {
+        isRead ? String(localized: "Marked read") : String(localized: "Not marked read")
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             Text("\(lesson.id) · \(lesson.estimatedMinutes) min · \(lesson.covers.joined(separator: ", "))")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
-            Text(lesson.title.en)
+            Text(localized(lesson.title.en, language: .english)) // l10n: content(en)
                 .font(DesignTokens.FontScale.body.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
-            Text("\(lesson.status == .outline ? "Coming soon" : "Ready to read") · \(isRead ? "Marked read" : "Not marked read")")
+            Text("\(lessonStatusText) · \(readStatusText)")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
         }
@@ -241,14 +281,14 @@ private struct LessonReaderView: View {
                     Text("\(lesson.id) · \(lesson.estimatedMinutes) min · \(lesson.covers.joined(separator: ", "))")
                         .font(DesignTokens.FontScale.caption.weight(.semibold))
                         .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    Text(lesson.title.en)
+                    Text(localized(lesson.title.en, language: .english)) // l10n: content(en)
                         .font(DesignTokens.FontScale.headline.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
                         .accessibilityIdentifier("lesson-reader-title")
                     if let lessonProgress {
-                        Text("Marked read \(lessonProgress.readCount) time\(lessonProgress.readCount == 1 ? "" : "s").")
+                        Text(markedReadText(lessonProgress.readCount)) // l10n: localized
                             .font(DesignTokens.FontScale.caption)
                             .foregroundStyle(DesignTokens.Colors.inkMuted)
                     } else {
@@ -267,6 +307,7 @@ private struct LessonReaderView: View {
                     OutlineLessonView(lesson: lesson, library: library)
                 } else {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                        EnglishOnlyLessonNotice()
                         LessonMarkdownView(markdown: lesson.bodyMarkdown, title: lesson.title.en)
                     }
                     .paperCard()
@@ -274,7 +315,7 @@ private struct LessonReaderView: View {
 
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                     Button { markRead() } label: {
-                        lessonActionLabel("Mark lesson read")
+                        lessonActionLabel(Text("Mark lesson read"))
                     }
                     .buttonStyle(.plain)
                     if let firstQuizID = lesson.quizIds.first {
@@ -284,13 +325,13 @@ private struct LessonReaderView: View {
                     }
                     if let previous = neighbor(offset: -1) {
                         NavigationLink(value: LearnRoute.lesson(previous.id)) {
-                            lessonActionLabel("Previous: \(previous.title.en)")
+                            lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Previous: "), lessonTitle: previous.title.en))) // l10n: localized
                         }
                         .buttonStyle(.plain)
                     }
                     if let next = neighbor(offset: 1) {
                         NavigationLink(value: LearnRoute.lesson(next.id)) {
-                            lessonActionLabel("Next: \(next.title.en)")
+                            lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Next: "), lessonTitle: next.title.en))) // l10n: localized
                         }
                         .buttonStyle(.plain)
                     }
@@ -301,12 +342,12 @@ private struct LessonReaderView: View {
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
-        .navigationTitle(lesson.title.en)
+        .navigationTitle(Text(english(lesson.title.en))) // l10n: content(en)
         .task { refresh() }
     }
 
-    private func lessonActionLabel(_ text: String) -> some View {
-        Text(text)
+    private func lessonActionLabel(_ text: Text) -> some View {
+        text
             .font(.body.weight(.semibold))
             .foregroundStyle(DesignTokens.Colors.ink)
             .padding(.horizontal, DesignTokens.Spacing.lg)
@@ -316,21 +357,28 @@ private struct LessonReaderView: View {
             .overlay(Capsule().strokeBorder(DesignTokens.Colors.ink, lineWidth: 1))
     }
 
+
+    private func lessonNavigationTitle(prefix: String, lessonTitle: String) -> AttributedString {
+        var label = AttributedString(prefix)
+        label += english(lessonTitle)
+        return label
+    }
+
     private var quizCards: some View {
         ForEach(lesson.quizIds.compactMap { library.quizzesById[$0] }, id: \.id) { quiz in
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 Text("Lesson quiz")
                     .font(DesignTokens.FontScale.caption.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
-                Text(quiz.id)
+                Text(quiz.id) // l10n: verbatim
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
-                Text("\(quiz.officialQuestionIds.count + quiz.conceptChecks.count) questions: official bank questions update Leitner progress; concept checks do not.")
+                Text("\(quiz.officialQuestionIds.count + quiz.conceptChecks.count) questions: official bank questions update practice progress; concept checks do not.") // l10n: localized
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
                 if let latest = quizAttempts.filter({ $0.quizId == quiz.id }).last {
-                    Text("Latest score: \(latest.correct) / \(latest.total) (\(latest.percent, format: .number.precision(.fractionLength(0...0)))%). Attempts saved: \(quizAttempts.filter { $0.quizId == quiz.id }.count).")
+                    Text("Latest result: \(latest.correct) / \(latest.total) (\(latest.percent, format: .number.precision(.fractionLength(0...0)))%). Attempts saved: \(quizAttempts.filter { $0.quizId == quiz.id }.count).")
                         .font(DesignTokens.FontScale.caption)
                         .foregroundStyle(DesignTokens.Colors.inkMuted)
                         .accessibilityIdentifier("lesson-quiz-latest-score")
@@ -350,7 +398,7 @@ private struct LessonReaderView: View {
             quizAttempts = try progressStore.lessonQuizAttempts().filter { $0.lessonId == lesson.id }
             errorMessage = nil
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 
@@ -367,7 +415,7 @@ private struct LessonReaderView: View {
             errorMessage = nil
             onDataChanged()
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 
@@ -395,15 +443,19 @@ private struct OutlineLessonView: View {
                 .font(DesignTokens.FontScale.body.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
             ForEach(lesson.objectives, id: \.self) { objective in
-                Label(objective, systemImage: "circle.fill")
-                    .font(DesignTokens.FontScale.body)
-                    .foregroundStyle(DesignTokens.Colors.ink)
+                Label {
+                    Text(localized(objective, language: .english)) // l10n: content(en)
+                } icon: {
+                    Image(systemName: "circle.fill")
+                }
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
             }
             Text("Covered subsections")
                 .font(DesignTokens.FontScale.body.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
             ForEach(lesson.covers, id: \.self) { cover in
-                Text("\(cover): \(library.subsectionTitlesById[cover]?.title.en ?? cover)")
+                Text(localized("\(cover): \(library.subsectionTitlesById[cover]?.title.en ?? cover)", language: .english)) // l10n: content(en)
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
             }
@@ -435,23 +487,23 @@ private struct LessonMarkdownView: View {
         switch block {
         case .heading(let level, let text):
             if !(level == 1 && title != nil && plainString(text) == title) {
-                Text(strippingLinks(from: text))
+                Text(english(strippingLinks(from: text))) // l10n: content(en)
                     .font(level <= 2 ? DesignTokens.FontScale.title.weight(.bold) : DesignTokens.FontScale.bodyLarge.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
             }
         case .paragraph(let text):
-            Text(strippingLinks(from: text))
+            Text(english(strippingLinks(from: text))) // l10n: content(en)
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
         case .list(let ordered, let items):
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 ForEach(Array(items.enumerated()), id: \.offset) { index, item in
                     HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
-                        Text(ordered ? "\(index + 1)." : "•")
+                        Text(ordered ? "\(index + 1)." : "•") // l10n: verbatim
                             .font(DesignTokens.FontScale.body.weight(.semibold))
                             .foregroundStyle(DesignTokens.Colors.ink)
-                        Text(strippingLinks(from: item))
+                        Text(english(strippingLinks(from: item))) // l10n: content(en)
                             .font(DesignTokens.FontScale.body)
                             .foregroundStyle(DesignTokens.Colors.ink)
                     }
@@ -459,7 +511,7 @@ private struct LessonMarkdownView: View {
             }
         case .code(_, let text):
             ScrollView(.horizontal) {
-                Text(text)
+                Text(english(text)) // l10n: content(en)
                     .font(.system(.body, design: .monospaced))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .textSelection(.enabled)
@@ -473,24 +525,38 @@ private struct LessonMarkdownView: View {
                 Label("Illustration brief", systemImage: "paintbrush")
                     .font(DesignTokens.FontScale.body.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
-                Text(brief.description)
+                Text(localized(brief.description, language: .english)) // l10n: content(en)
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
-                Text("Alt text: \(brief.altText)")
+                Text(illustrationAltText(brief)) // l10n: localized
                     .font(DesignTokens.FontScale.caption)
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
             }
             .padding(DesignTokens.Spacing.md)
             .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
             .accessibilityElement(children: .combine)
-            .accessibilityLabel("Illustration brief. \(brief.altText). \(brief.description)")
+            .accessibilityLabel(Text(illustrationAccessibilityLabel(brief))) // l10n: localized
         case .blockquote(let text):
-            Text(strippingLinks(from: text))
+            Text(english(strippingLinks(from: text))) // l10n: content(en)
                 .font(DesignTokens.FontScale.body.italic())
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .padding(DesignTokens.Spacing.md)
                 .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         }
+    }
+
+    private func illustrationAltText(_ brief: MarkdownIllustrationBrief) -> AttributedString {
+        var text = AttributedString(String(localized: "Alt text: "))
+        text += english(brief.altText)
+        return text
+    }
+
+    private func illustrationAccessibilityLabel(_ brief: MarkdownIllustrationBrief) -> AttributedString {
+        var text = AttributedString(String(localized: "Illustration brief. "))
+        text += english(brief.altText)
+        text += AttributedString(". ")
+        text += english(brief.description)
+        return text
     }
 
     private func strippingLinks(from value: AttributedString) -> AttributedString {
@@ -515,7 +581,7 @@ private struct LessonTableView: View {
             Grid(alignment: .leading, horizontalSpacing: DesignTokens.Spacing.md, verticalSpacing: DesignTokens.Spacing.sm) {
                 GridRow {
                     ForEach(Array(table.headers.enumerated()), id: \.offset) { _, header in
-                        Text(header)
+                        Text(english(header)) // l10n: content(en)
                             .font(DesignTokens.FontScale.caption.weight(.bold))
                             .foregroundStyle(DesignTokens.Colors.ink)
                     }
@@ -524,7 +590,7 @@ private struct LessonTableView: View {
                 ForEach(Array(table.rows.enumerated()), id: \.offset) { _, row in
                     GridRow {
                         ForEach(Array(row.enumerated()), id: \.offset) { _, cell in
-                            Text(cell)
+                            Text(english(cell)) // l10n: content(en)
                                 .font(DesignTokens.FontScale.caption)
                                 .foregroundStyle(DesignTokens.Colors.ink)
                         }
@@ -584,7 +650,7 @@ private struct LessonQuizScreen: View {
             attempts = try progressStore.lessonQuizAttempts().filter { $0.lessonId == lesson.id && $0.quizId == quiz.id }
             errorMessage = nil
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 }
@@ -642,15 +708,15 @@ private struct LessonQuizView: View {
                     Text("Lesson quiz")
                         .font(DesignTokens.FontScale.caption.weight(.semibold))
                         .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    Text(quiz.id)
+                    Text(quiz.id) // l10n: verbatim
                         .font(DesignTokens.FontScale.title.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
-                    Text("\(items.count) questions: official bank questions update Leitner progress; concept checks do not.")
+                    Text("\(items.count) questions: official bank questions update practice progress; concept checks do not.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                     if let latest = attempts.last {
-                        Text("Latest score: \(latest.correct) / \(latest.total) (\(latest.percent, format: .number.precision(.fractionLength(0...0)))%). Attempts saved: \(attempts.count).")
+                        Text("Latest result: \(latest.correct) / \(latest.total) (\(latest.percent, format: .number.precision(.fractionLength(0...0)))%). Attempts saved: \(attempts.count).")
                             .font(DesignTokens.FontScale.caption)
                             .foregroundStyle(DesignTokens.Colors.inkMuted)
                             .accessibilityIdentifier("lesson-quiz-latest-score")
@@ -729,7 +795,7 @@ private struct LessonQuizView: View {
             submittedAttemptID = nil
             errorMessage = nil
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
             items = []
         }
     }
@@ -809,7 +875,7 @@ private struct LessonQuizView: View {
             errorMessage = nil
             onSaved()
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 }
@@ -857,7 +923,7 @@ private struct LessonQuizQuestionView: View {
                     }
                 }
             } else {
-                Text("Official question \(questionId) is loading from the bundled bank.")
+                Text("Official question \(questionId) is loading from the bundled bank.") // l10n: localized
                     .font(DesignTokens.FontScale.body)
             }
         case .concept(_, let check, let permutation):
@@ -875,12 +941,12 @@ private struct ConceptCheckQuestionView: View {
     let onChoose: (Int) -> Void
 
     var body: some View {
-        let prompt = check.prompt.text(for: language)
+        let prompt = check.prompt.textAndLanguage(for: language)
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Text("Concept check · \(check.id)")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
-            Text(localized(prompt, language: language))
+            Text(localized(prompt.text, language: prompt.language)) // l10n: content(question)
                 .font(DesignTokens.FontScale.bodyLarge.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
             ForEach(Array(permutation.enumerated()), id: \.offset) { displayIndex, choiceIndex in
@@ -894,10 +960,11 @@ private struct ConceptCheckQuestionView: View {
                 let isCorrect = check.choices[safe: selectedChoiceIndex]?.isCorrect == true
                 let feedbackTextColor = isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Text(isCorrect ? "Correct" : "Incorrect")
+                    Text(isCorrect ? "Correct" : "Incorrect") // l10n: localized
                         .font(DesignTokens.FontScale.body.weight(.bold))
                         .foregroundStyle(feedbackTextColor)
-                    Text(localized(check.explanation.text(for: language), language: language))
+                    let explanation = check.explanation.textAndLanguage(for: language)
+                    Text(localized(explanation.text, language: explanation.language)) // l10n: content(question)
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(feedbackTextColor)
                 }
@@ -927,14 +994,15 @@ private struct ConceptChoiceButton: View {
     var body: some View {
         Button(action: action) {
             HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
-                Text(letter)
+                Text(letter) // l10n: verbatim
                     .font(DesignTokens.FontScale.body.monospaced().weight(.bold))
                     .frame(minWidth: 34, minHeight: 34)
                     .padding(DesignTokens.Spacing.xs)
                     .background(DesignTokens.Colors.ink, in: Circle())
                     .foregroundStyle(DesignTokens.Colors.paperElevated)
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                    Text(localized(choice.text.text(for: language), language: language))
+                    let choiceText = choice.text.textAndLanguage(for: language)
+                    Text(localized(choiceText.text, language: choiceText.language)) // l10n: content(question)
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                     if showCorrectness && choice.isCorrect {
@@ -956,7 +1024,7 @@ private struct ConceptChoiceButton: View {
         }
         .buttonStyle(.plain)
         .allowsHitTesting(!disabled)
-        .accessibilityLabel(accessibilityLabel)
+        .accessibilityLabel(accessibilityLabel) // l10n: content(question)
         .accessibilityAddTraits(selected ? .isSelected : [])
         .accessibilityIdentifier("lesson-quiz-choice-\(letter)-button")
     }
@@ -969,9 +1037,21 @@ private struct ConceptChoiceButton: View {
     }
 
     private var accessibilityLabel: Text {
-        var value = "Answer \(letter), \(choice.text.text(for: language))"
-        if let statusText { value += ", \(statusText)" }
-        return Text(value)
+        var value = AttributedString(String(localized: "Answer \(letter), "))
+        let choiceText = choice.text.textAndLanguage(for: language)
+        value += localized(choiceText.text, language: choiceText.language)
+        if let statusText {
+            value += AttributedString(String(localized: ", \(localizedStatusText(statusText))"))
+        }
+        return Text(value) // l10n: content(question)
+    }
+
+    private func localizedStatusText(_ statusText: String) -> String {
+        switch statusText {
+        case "Correct answer": String(localized: "Correct answer")
+        case "Your answer, incorrect": String(localized: "Your answer, incorrect")
+        default: statusText
+        }
     }
 
     private var background: Color {
@@ -1004,15 +1084,16 @@ struct ExplanationPanelView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityIdentifier("explanation-panel")
+                EnglishOnlyExplanationNotice()
                 if let parsed {
-                    Text(localized(parsed.correctAnswerParagraph, language: language))
+                    Text(localized(parsed.correctAnswerParagraph, language: .english)) // l10n: content(en)
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .textSelection(.enabled)
                     if !parsed.distractorNotes.isEmpty {
                         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                             ForEach(parsed.distractorNotes, id: \.sourceIndex) { note in
-                                Text(localized("\(label(for: note.sourceIndex)): \(note.note)", language: language))
+                                Text(distractorNoteText(note)) // l10n: localized
                                     .font(DesignTokens.FontScale.caption)
                                     .foregroundStyle(DesignTokens.Colors.ink)
                                     .textSelection(.enabled)
@@ -1020,7 +1101,8 @@ struct ExplanationPanelView: View {
                         }
                     }
                 } else {
-                    Text(localized(explanation.body.text(for: language), language: language))
+                    let explanationBody = explanation.body.textAndLanguage(for: .english)
+                    Text(localized(explanationBody.text, language: explanationBody.language)) // l10n: content(en)
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .textSelection(.enabled)
@@ -1041,24 +1123,31 @@ struct ExplanationPanelView: View {
             .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         } else {
-            Text("No project explanation is bundled for this question yet.")
+            Text("No Canadian Ham explanation is bundled for this question yet.")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
         }
     }
 
+    private func distractorNoteText(_ note: ParsedDistractorNote) -> AttributedString {
+        var text = AttributedString(String.localizedStringWithFormat(String(localized: "%@: "), label(for: note.sourceIndex)))
+        text += english(note.note)
+        return text
+    }
+
     private func label(for sourceIndex: Int) -> String {
         if let index = choicePermutation?.firstIndex(of: sourceIndex) {
-            return "Displayed choice \(["A", "B", "C", "D"][safe: index] ?? "\(index + 1)")"
+            let letter = ["A", "B", "C", "D"][safe: index] ?? "\(index + 1)"
+            return String(localized: "Displayed choice \(letter)")
         }
-        return "sourceIndex \(sourceIndex)"
+        return String(localized: "Source choice \(sourceIndex + 1)")
     }
 
     @ViewBuilder
     private func citationView(_ citation: ExplanationCitation) -> some View {
         if citation.type == "lesson", let id = citation.id {
             NavigationLink(value: LearnRoute.lesson(id)) {
-                Text(id)
+                Text(id) // l10n: verbatim
                     .font(DesignTokens.FontScale.caption)
                     .frame(minHeight: 44, alignment: .leading)
                     .contentShape(Rectangle())
@@ -1070,7 +1159,7 @@ struct ExplanationPanelView: View {
                 .font(DesignTokens.FontScale.caption)
                 .frame(minHeight: 44, alignment: .leading)
         } else {
-            Text(citation.id ?? citation.type)
+            Text(citation.id ?? citation.type) // l10n: verbatim
                 .font(DesignTokens.FontScale.caption)
         }
     }
@@ -1082,13 +1171,45 @@ private func localized(_ string: String, language: BankLanguage) -> AttributedSt
     return attributed
 }
 
-private extension LocalizedNullableText {
-    func text(for language: BankLanguage) -> String {
+private func english(_ string: String) -> AttributedString {
+    localized(string, language: .english)
+}
+
+private func english(_ attributed: AttributedString) -> AttributedString {
+    var copy = attributed
+    let ranges = copy.runs.map(\.range)
+    for range in ranges {
+        copy[range].languageIdentifier = BankLanguage.english.accessibilityLanguageCode
+    }
+    return copy
+}
+
+private func localizedLessonReadProgress(readCount: Int, totalCount: Int) -> String {
+    let read = String.localizedStringWithFormat(String(localized: "%lld lesson marked read"), readCount)
+    let total = String.localizedStringWithFormat(String(localized: "%lld lesson"), totalCount)
+    return String(localized: "\(read) out of \(total)")
+}
+
+private func markedReadText(_ count: Int) -> String {
+    String.localizedStringWithFormat(String(localized: "Marked read %lld times."), count)
+}
+
+struct LocalizedNullableResolvedText {
+    let text: String
+    let language: BankLanguage
+}
+
+extension LocalizedNullableText {
+    func textAndLanguage(for language: BankLanguage) -> LocalizedNullableResolvedText {
         switch language {
         case .english:
-            en
+            LocalizedNullableResolvedText(text: en, language: .english)
         case .french:
-            fr ?? en
+            if let fr {
+                LocalizedNullableResolvedText(text: fr, language: .french)
+            } else {
+                LocalizedNullableResolvedText(text: en, language: .english)
+            }
         }
     }
 }

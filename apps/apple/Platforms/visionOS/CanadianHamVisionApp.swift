@@ -112,7 +112,7 @@ private struct CanadianHamVisionRootView: View {
                     onAbout: { screen = .about }
                 )
             } else {
-                VisionMessageView(title: "No categories", message: "The bundled question bank has no practice categories.", systemImage: "questionmark.folder")
+                VisionMessageView(title: "No categories", message: String(localized: "The bundled question bank has no practice categories."), systemImage: "questionmark.folder")
             }
         case .about:
             VisionAboutView(bank: bank, onCategories: { screen = .categories })
@@ -124,7 +124,7 @@ private struct CanadianHamVisionRootView: View {
         do {
             bank = try QuestionBankStore.load()
         } catch {
-            loadError = error.localizedDescription
+            loadError = localizedErrorMessage(String(localized: "Unable to load question bank: \("")"), detail: error)
         }
     }
 }
@@ -135,14 +135,19 @@ private struct VisionLanguageOrnament: View {
     var body: some View {
         Picker("Question language", selection: $language) {
             ForEach(BankLanguage.allCases) { language in
-                Text(language.displayName).tag(language)
+                switch language {
+                case .english:
+                    Text(localizedVision(language.displayName, language: .english)).tag(language) // l10n: content(en)
+                case .french:
+                    Text(localizedVision(language.displayName, language: .french)).tag(language) // l10n: content(fr)
+                }
             }
         }
         .pickerStyle(.segmented)
         .frame(width: 320)
         .padding(DesignTokens.Spacing.sm)
         .glassBackgroundEffect()
-        .accessibilityLabel("Question language")
+        .accessibilityLabel(Text("Question language")) // l10n: localized
         .accessibilityIdentifier("question-language-picker")
     }
 }
@@ -172,7 +177,7 @@ private struct VisionCategoryGridView: View {
                     Button("About", action: onAbout)
                         .buttonStyle(.bordered)
                         .font(DesignTokens.FontScale.body.weight(.semibold))
-                        .accessibilityLabel("About Canadian Ham")
+                        .accessibilityLabel(Text("About Canadian Ham")) // l10n: localized
                 }
 
                 Text("Practice categories")
@@ -200,17 +205,23 @@ private struct VisionCategoryCard: View {
     let language: BankLanguage
     let action: () -> Void
 
+    private var categoryAccessibilityLabel: AttributedString {
+        var label = localizedVision(category.name.text(for: language), language: language)
+        label += AttributedString(", \(localizedVisionQuestionCount(category.questionCount)), \(localizedVisionSubsectionCount(category.subsectionCount))")
+        return label
+    }
+
     var body: some View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Text(category.id)
+                Text(category.id) // l10n: verbatim
                     .font(DesignTokens.FontScale.caption.monospaced().weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
-                Text(category.name.text(for: language))
+                Text(localizedVision(category.name.text(for: language), language: language)) // l10n: content(question)
                     .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                 Spacer(minLength: DesignTokens.Spacing.sm)
-                Text("\(category.questionCount) questions • \(category.subsectionCount) subsections")
+                Text(verbatim: "\(localizedVisionQuestionCount(category.questionCount)) • \(localizedVisionSubsectionCount(category.subsectionCount))") // l10n: verbatim
                     .font(DesignTokens.FontScale.caption.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
             }
@@ -224,8 +235,8 @@ private struct VisionCategoryCard: View {
         }
         .buttonStyle(.plain)
         .hoverEffect(.lift)
-        .accessibilityLabel("\(category.name.text(for: language)), \(category.questionCount) questions, \(category.subsectionCount) subsections")
-        .accessibilityHint("Starts practice for this category")
+        .accessibilityLabel(Text(categoryAccessibilityLabel)) // l10n: content(question)
+        .accessibilityHint(Text("Starts practice for this category")) // l10n: localized
     }
 }
 
@@ -284,20 +295,20 @@ private struct VisionPracticeView: View {
                 HStack(alignment: .center, spacing: DesignTokens.Spacing.lg) {
                     Button("Categories", action: onCategories)
                         .buttonStyle(.bordered)
-                        .accessibilityHint("Returns to the category grid")
+                        .accessibilityHint(Text("Returns to the category grid")) // l10n: localized
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                        Text(category.name.text(for: language))
+                        Text(localizedVision(category.name.text(for: language), language: language)) // l10n: content(question)
                             .font(DesignTokens.FontScale.headline.weight(.bold))
                             .foregroundStyle(DesignTokens.Colors.ink)
                             .accessibilityAddTraits(.isHeader)
-                        Text("\(session.correctCount) correct out of \(session.answeredCount) answered")
+                        Text(localizedVisionCorrectOutOfAnswered(correct: session.correctCount, answered: session.answeredCount)) // l10n: localized
                             .font(DesignTokens.FontScale.body)
                             .foregroundStyle(DesignTokens.Colors.inkMuted)
                     }
                     Spacer()
                     Button("About", action: onAbout)
                         .buttonStyle(.bordered)
-                        .accessibilityLabel("About Canadian Ham")
+                        .accessibilityLabel(Text("About Canadian Ham")) // l10n: localized
                 }
 
                 if let errorMessage = session.errorMessage {
@@ -335,7 +346,7 @@ private struct VisionPracticeView: View {
                         )
                     }
                 } else {
-                    VisionMessageView(title: "No questions", message: "This category has no bundled questions.", systemImage: "questionmark.circle")
+                    VisionMessageView(title: "No questions", message: String(localized: "This category has no bundled questions."), systemImage: "questionmark.circle")
                 }
             }
             .frame(maxWidth: .infinity, alignment: .topLeading)
@@ -357,7 +368,8 @@ private struct VisionPracticeView: View {
         }
         session.answeredCount += 1
         if answer.isCorrect { session.correctCount += 1 }
-        AccessibilityNotification.Announcement(answer.isCorrect ? "Correct" : "Incorrect").post()
+        let announcement = answer.isCorrect ? String(localized: "Correct") : String(localized: "Incorrect")
+        AccessibilityNotification.Announcement(announcement).post()
     }
 
     private func loadNextQuestion() {
@@ -393,7 +405,7 @@ private struct VisionPracticeView: View {
             }
             session.errorMessage = nil
         } catch {
-            session.errorMessage = "Unable to prepare this question with the shared engine: \(error.localizedDescription)"
+            session.errorMessage = localizedErrorMessage(String(localized: "Unable to prepare this question: \("")"), detail: error)
         }
     }
 
@@ -410,14 +422,14 @@ private struct VisionQuestionCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Text(question.id)
+            Text(question.id) // l10n: verbatim
                 .font(DesignTokens.FontScale.body.monospaced().weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
-            Text(localizedVision(question.text.text(for: language), language: language))
+            Text(localizedVision(question.text.text(for: language), language: language)) // l10n: content(question)
                 .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityIdentifier("question-stem")
-            Text("Source: \(category.name.text(for: language)) • \(question.subsectionId)")
+            Text(sourceText) // l10n: content(question)
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
         }
@@ -430,7 +442,14 @@ private struct VisionQuestionCard: View {
         )
         .glassBackgroundEffect()
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(accessibilityLabel))
+        .accessibilityLabel(Text(accessibilityLabel)) // l10n: content(question)
+    }
+
+    private var sourceText: AttributedString {
+        var text = AttributedString(String(localized: "Source: "))
+        text += localizedVision(category.name.text(for: language), language: language)
+        text += englishVision(" • \(question.subsectionId)")
+        return text
     }
 
     private var accessibilityLabel: AttributedString {
@@ -453,20 +472,24 @@ private struct VisionAnswerButton: View {
     var body: some View {
         Button(action: action) {
             HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
-                Text(displayLetter)
+                Text(displayLetter) // l10n: verbatim
                     .font(DesignTokens.FontScale.bodyLarge.monospaced().weight(.bold))
                     .frame(width: 44, height: 44)
                     .foregroundStyle(chipForeground)
                     .background(chipBackground, in: Circle())
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                    Text(localizedVision(answer.answer.text.text(for: language), language: language))
+                    Text(localizedVision(answer.answer.text.text(for: language), language: language)) // l10n: content(question)
                         .font(DesignTokens.FontScale.body.weight(.semibold))
                         .foregroundStyle(textColor)
                         .accessibilityIdentifier("answer-\(displayLetter)-text")
                     if let statusText {
-                        Label(statusText, systemImage: answer.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
-                            .font(DesignTokens.FontScale.caption.weight(.bold))
-                            .foregroundStyle(textColor)
+                        Label {
+                            Text(localizedStatusText(statusText)) // l10n: localized
+                        } icon: {
+                            Image(systemName: answer.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
+                        }
+                        .font(DesignTokens.FontScale.caption.weight(.bold))
+                        .foregroundStyle(textColor)
                     }
                 }
                 Spacer(minLength: 0)
@@ -482,9 +505,9 @@ private struct VisionAnswerButton: View {
         .buttonStyle(.plain)
         .hoverEffect(.highlight)
         .disabled(isAnswered)
-        .accessibilityLabel(Text(accessibilityLabel))
+        .accessibilityLabel(Text(accessibilityLabel)) // l10n: content(question)
         .accessibilityIdentifier("answer-\(displayLetter)-button")
-        .accessibilityHint(isAnswered ? "Question already answered. Use Next question to continue." : "Selects this answer")
+        .accessibilityHint(isAnswered ? Text("Question already answered. Use Next question to continue.") : Text("Selects this answer")) // l10n: localized
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
@@ -516,10 +539,21 @@ private struct VisionAnswerButton: View {
         return nil
     }
     private var accessibilityLabel: AttributedString {
-        var label = englishVision("Answer \(displayLetter), ")
+        var label = AttributedString(String(localized: "Answer \(displayLetter), "))
         label += localizedVision(answer.answer.text.text(for: language), language: language)
-        if let statusText { label += englishVision(", \(statusText)") }
+        if let statusText {
+            label += AttributedString(String(localized: ", \(localizedStatusText(statusText))"))
+        }
         return label
+    }
+
+    private func localizedStatusText(_ statusText: String) -> String {
+        switch statusText {
+        case "Your answer, correct answer": String(localized: "Your answer, correct answer")
+        case "Correct answer": String(localized: "Correct answer")
+        case "Your answer, incorrect": String(localized: "Your answer, incorrect")
+        default: statusText
+        }
     }
 }
 
@@ -557,15 +591,19 @@ private struct VisionFeedbackPanel: View {
     var body: some View {
         HStack(spacing: DesignTokens.Spacing.lg) {
             HStack(spacing: DesignTokens.Spacing.lg) {
-                Label(resultText, systemImage: selectedAnswer.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
-                    .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                    .foregroundStyle(selectedAnswer.isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
-                Text(sourceText)
+                Label {
+                    Text(resultText) // l10n: localized
+                } icon: {
+                    Image(systemName: selectedAnswer.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
+                }
+                .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                .foregroundStyle(selectedAnswer.isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
+                Text(sourceText) // l10n: content(question)
                     .font(DesignTokens.FontScale.body.weight(.semibold))
                     .foregroundStyle(selectedAnswer.isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
             }
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(Text(accessibilityLabel))
+            .accessibilityLabel(Text(accessibilityLabel)) // l10n: content(question)
             .accessibilityIdentifier("answer-feedback")
 
             Spacer()
@@ -574,7 +612,7 @@ private struct VisionFeedbackPanel: View {
                 .buttonStyle(VisionPrimaryButtonStyle())
                 .font(DesignTokens.FontScale.body.weight(.bold))
                 .hoverEffect(.highlight)
-                .accessibilityHint("Loads another question from this category")
+                .accessibilityHint(Text("Loads another question from this category")) // l10n: localized
                 .accessibilityIdentifier("next-question-button")
         }
         .padding(DesignTokens.Spacing.lg)
@@ -586,33 +624,35 @@ private struct VisionFeedbackPanel: View {
         .glassBackgroundEffect()
     }
 
-    private var resultText: String { selectedAnswer.isCorrect ? "Correct" : "Incorrect" }
+    private var resultText: String {
+        selectedAnswer.isCorrect ? String(localized: "Correct") : String(localized: "Incorrect")
+    }
     private var sourceText: AttributedString {
         if selectedAnswer.isCorrect {
-            var text = englishVision("Source: ")
+            var text = AttributedString(String(localized: "Source: "))
             text += localizedVision(category.name.text(for: language), language: language)
             text += englishVision(" • \(question.subsectionId)")
             return text
         }
 
-        var text = englishVision("Correct answer: ")
+        var text = AttributedString(String(localized: "Correct answer: "))
         text += localizedVision(correctAnswer.answer.text.text(for: language), language: language)
         return text
     }
 
     private var accessibilityLabel: AttributedString {
         if selectedAnswer.isCorrect {
-            var label = englishVision("Correct. Your answer: ")
+            var label = AttributedString(String(localized: "Correct. Your answer: "))
             label += localizedVision(selectedAnswer.answer.text.text(for: language), language: language)
-            label += englishVision(". Source: ")
+            label += AttributedString(String(localized: ". Source: "))
             label += localizedVision(category.name.text(for: language), language: language)
             label += englishVision(", \(question.subsectionId)")
             return label
         }
 
-        var label = englishVision("Incorrect. Correct answer: ")
+        var label = AttributedString(String(localized: "Incorrect. Correct answer: "))
         label += localizedVision(correctAnswer.answer.text.text(for: language), language: language)
-        label += englishVision(". Source: ")
+        label += AttributedString(String(localized: ". Source: "))
         label += localizedVision(category.name.text(for: language), language: language)
         label += englishVision(", \(question.subsectionId)")
         return label
@@ -641,11 +681,11 @@ private struct VisionAboutView: View {
                     VisionPaperSection(title: "Bank") {
                         Text("Active bank: \(bank.manifest.bankId)")
                         Text("Effective date: \(bank.manifest.effectiveDate)")
-                        Text("Questions: \(bank.questions.count) • Categories: \(bank.categories.count) • Subsections: \(bank.subsections.count)")
+                        Text("Questions: \(bank.questions.count) • Categories: \(bank.categories.count) • Subsections: \(bank.subsections.count)") // l10n: localized
                     }
                     VisionPaperSection(title: "Attribution") {
-                        Text("Question-bank material is sourced from Innovation, Science and Economic Development Canada Amateur Radio Operator Certificate Basic Qualification materials.")
-                        Text("Canadian Ham is independent and not affiliated with, sponsored by, or endorsed by ISED, RAC, or any accredited examiner.")
+                        Text(englishVision("Question-bank material is sourced from Innovation, Science and Economic Development Canada Amateur Radio Operator Certificate Basic Qualification materials.")) // l10n: content(en)
+                        Text(englishVision("Canadian Ham is independent and not affiliated with, sponsored by, or endorsed by ISED, RAC, or any accredited examiner.")) // l10n: content(en)
                     }
                     VisionPaperSection(title: "Privacy") {
                         Text("This visionOS app works offline with bundled content, includes no networking code, no analytics, no telemetry, and no iCloud sync.")
@@ -660,12 +700,12 @@ private struct VisionAboutView: View {
 }
 
 private struct VisionPaperSection<Content: View>: View {
-    let title: String
+    let title: LocalizedStringKey
     @ViewBuilder let content: () -> Content
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Text(title)
+            Text(title) // l10n: localized
                 .font(DesignTokens.FontScale.title.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
@@ -684,17 +724,46 @@ private struct VisionPaperSection<Content: View>: View {
     }
 }
 
+private let localizedErrorDetailSeparator = "\u{1E}"
+
+private func localizedErrorMessage(_ localizedPrefix: String, detail error: Error) -> String {
+    localizedPrefix + localizedErrorDetailSeparator + error.localizedDescription
+}
+
+private func localizedErrorMessageParts(_ message: String) -> (summary: String, detail: String?) {
+    guard let separatorRange = message.range(of: localizedErrorDetailSeparator) else {
+        return (message, nil)
+    }
+    let summary = String(message[..<separatorRange.lowerBound])
+    let detail = String(message[separatorRange.upperBound...])
+    return (summary, detail.isEmpty ? nil : detail)
+}
+
+private struct LocalizedErrorMessageText: View {
+    let message: String
+
+    var body: some View {
+        let parts = localizedErrorMessageParts(message)
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            Text(parts.summary) // l10n: localized
+            if let detail = parts.detail {
+                Text(verbatim: detail) // l10n: verbatim
+            }
+        }
+    }
+}
+
 private struct VisionMessageView: View {
-    let title: String
+    let title: LocalizedStringKey
     let message: String
     let systemImage: String
 
     var body: some View {
         Label {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Text(title)
+                Text(title) // l10n: localized
                     .font(DesignTokens.FontScale.headline.weight(.bold))
-                Text(message)
+                LocalizedErrorMessageText(message: message)
                     .font(DesignTokens.FontScale.body)
             }
         } icon: {
@@ -709,6 +778,20 @@ private struct VisionMessageView: View {
         )
         .glassBackgroundEffect()
     }
+}
+
+private func localizedVisionCorrectOutOfAnswered(correct: Int, answered: Int) -> String {
+    let correctText = String.localizedStringWithFormat(String(localized: "%lld correct answer"), correct)
+    let answeredText = String.localizedStringWithFormat(String(localized: "%lld answered question"), answered)
+    return String(localized: "\(correctText) out of \(answeredText)")
+}
+
+private func localizedVisionQuestionCount(_ count: Int) -> String {
+    String.localizedStringWithFormat(String(localized: "%lld questions"), count)
+}
+
+private func localizedVisionSubsectionCount(_ count: Int) -> String {
+    String.localizedStringWithFormat(String(localized: "%lld subsections"), count)
 }
 
 private func localizedVision(_ string: String, language: BankLanguage) -> AttributedString {

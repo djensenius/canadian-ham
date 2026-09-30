@@ -40,19 +40,19 @@ struct RootView: View {
                     reloadStore()
                 }
             } else if let bankLoadError {
-                ContentUnavailableView(
-                    "Question bank unavailable",
-                    systemImage: "exclamationmark.triangle",
-                    description: Text(bankLoadError)
-                )
+                ContentUnavailableView {
+                    Label("Question bank unavailable", systemImage: "exclamationmark.triangle")
+                } description: {
+                    LocalizedErrorMessageText(message: bankLoadError)
+                }
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .background(DesignTokens.Colors.paper)
             } else if let contentLoadError {
-                ContentUnavailableView(
-                    "Lesson content unavailable",
-                    systemImage: "exclamationmark.triangle",
-                    description: Text(contentLoadError)
-                )
+                ContentUnavailableView {
+                    Label("Lesson content unavailable", systemImage: "exclamationmark.triangle")
+                } description: {
+                    LocalizedErrorMessageText(message: contentLoadError)
+                }
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .background(DesignTokens.Colors.paper)
             } else {
@@ -133,7 +133,7 @@ struct RootView: View {
                         SidebarButton(selection: .practice(.category(category.id)), current: selection) {
                             CategoryRow(category: category, language: language)
                         } action: { selection = .practice(.category(category.id)) }
-                        .accessibilityLabel(categoryAccessibilityLabel(category))
+                        .accessibilityLabel(Text(categoryAccessibilityLabel(category))) // l10n: content(question)
                     }
                 } header: {
                     Text("Practice categories")
@@ -275,7 +275,7 @@ struct RootView: View {
                 bank = loaded
             }
         } catch {
-            bankLoadError = error.localizedDescription
+            bankLoadError = localizedErrorMessage(String(localized: "Unable to load question bank: \("")"), detail: error)
         }
     }
 
@@ -288,7 +288,7 @@ struct RootView: View {
                 self.bank = bank.withKnownLessonIds(Set(loaded.lessons.map(\.id)))
             }
         } catch {
-            contentLoadError = error.localizedDescription
+            contentLoadError = localizedErrorMessage(String(localized: "Unable to load lesson content: \("")"), detail: error)
         }
     }
 
@@ -315,7 +315,7 @@ struct RootView: View {
             language = progressStore?.preferences.language ?? .english
         } catch {
             progressStore = nil
-            progressStoreError = error.localizedDescription
+            progressStoreError = localizedErrorMessage(String(localized: "Unable to open the local progress store: \("")"), detail: error)
         }
     }
 
@@ -389,7 +389,12 @@ struct RootView: View {
                 }
             )) {
                 ForEach(BankLanguage.allCases) { language in
-                    Text(language.displayName).tag(language)
+                    switch language {
+                    case .english:
+                        Text(localized(language.displayName, language: .english)).tag(language) // l10n: content(en)
+                    case .french:
+                        Text(localized(language.displayName, language: .french)).tag(language) // l10n: content(fr)
+                    }
                 }
             }
             .pickerStyle(.segmented)
@@ -398,8 +403,10 @@ struct RootView: View {
         }
     }
 
-    private func categoryAccessibilityLabel(_ category: BankCategory) -> String {
-        "\(category.name.text(for: language)), \(category.questionCount) questions, \(category.subsectionCount) subsections"
+    private func categoryAccessibilityLabel(_ category: BankCategory) -> AttributedString {
+        var label = localized(category.name.text(for: language), language: language)
+        label += AttributedString(", \(localizedQuestionCount(category.questionCount)), \(localizedSubsectionCount(category.subsectionCount))")
+        return label
     }
 
     private func colorScheme(for theme: ApplePreferences.Theme) -> ColorScheme? {
@@ -409,6 +416,20 @@ struct RootView: View {
         case .dark: .dark
         }
     }
+}
+
+private func localized(_ string: String, language: BankLanguage) -> AttributedString {
+    var attributed = AttributedString(string)
+    attributed.languageIdentifier = language.accessibilityLanguageCode
+    return attributed
+}
+
+private func localizedQuestionCount(_ count: Int) -> String {
+    String.localizedStringWithFormat(String(localized: "%lld questions"), count)
+}
+
+private func localizedSubsectionCount(_ count: Int) -> String {
+    String.localizedStringWithFormat(String(localized: "%lld subsections"), count)
 }
 
 private struct StoreRecoveryView: View {
@@ -422,11 +443,11 @@ private struct StoreRecoveryView: View {
                 .foregroundStyle(DesignTokens.Colors.warningText)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
-            Text(message)
+            LocalizedErrorMessageText(message: message)
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .fixedSize(horizontal: false, vertical: true)
-            Text("Reset remains available so damaged local SwiftData files can be cleared. Bundled questions are not deleted.")
+            Text("Reset remains available so damaged local progress files can be cleared. Bundled questions are not deleted.")
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .fixedSize(horizontal: false, vertical: true)
@@ -478,10 +499,10 @@ private struct CategoryRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            Text(category.name.text(for: language))
+            Text(localized(category.name.text(for: language), language: language)) // l10n: content(question)
                 .font(DesignTokens.FontScale.body.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
-            Text("\(category.questionCount) questions • \(category.subsectionCount) subsections")
+            Text(verbatim: "\(localizedQuestionCount(category.questionCount)) • \(localizedSubsectionCount(category.subsectionCount))") // l10n: verbatim
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
         }

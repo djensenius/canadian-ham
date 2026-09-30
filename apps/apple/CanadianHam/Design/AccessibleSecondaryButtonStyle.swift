@@ -1,11 +1,11 @@
 import SwiftUI
 
 struct AccessibleSecondaryButtonLabel: View {
-    let title: String
+    let title: LocalizedStringKey
     @Environment(\.isEnabled) private var isEnabled
 
     var body: some View {
-        Text(title)
+        Text(title) // l10n: localized
             .font(DesignTokens.FontScale.body.weight(.semibold))
             .foregroundStyle(DesignTokens.Colors.ink)
             .multilineTextAlignment(.center)

@@ -54,7 +54,7 @@ struct HomeView: View {
                             CategoryCard(category: category, language: language)
                         }
                         .buttonStyle(.plain)
-                        .accessibilityLabel("Practice \(category.name.text(for: language)), \(category.questionCount) questions")
+                        .accessibilityLabel(Text(categoryPracticeAccessibilityLabel(category))) // l10n: content(question)
                     }
                 }
                 .paperCard()
@@ -73,10 +73,14 @@ struct HomeView: View {
                 .font(DesignTokens.FontScale.title.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
-            Label(summary.title, systemImage: summary.symbol)
-                .font(DesignTokens.FontScale.body.weight(.bold))
-                .foregroundStyle(summary.tint)
-            Text(summary.message)
+            Label {
+                Text(summary.title) // l10n: localized
+            } icon: {
+                Image(systemName: summary.symbol)
+            }
+            .font(DesignTokens.FontScale.body.weight(.bold))
+            .foregroundStyle(summary.tint)
+            Text(summary.message) // l10n: localized
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
             Text("Due review: \(summary.dueReviewCount). Weak subsections: \(summary.weakSubsectionCount). Completed mock exams: \(summary.completedExamCount).")
@@ -91,6 +95,14 @@ struct HomeView: View {
         .accessibilityIdentifier("readiness-card")
     }
 
+    private func categoryPracticeAccessibilityLabel(_ category: BankCategory) -> AttributedString {
+        var label = AttributedString(String(localized: "Practice"))
+        label += AttributedString(" ")
+        label += localized(category.name.text(for: language), language: language)
+        label += AttributedString(", \(localizedQuestionCount(category.questionCount))")
+        return label
+    }
+
     private func loadSummary() {
         do {
             let progress = try progressStore.questionProgressRecords()
@@ -101,14 +113,14 @@ struct HomeView: View {
             summary = HomeSummary(readiness: readiness, dueReviewCount: try dueCount(records: progress, now: now), weakSubsectionCount: weak.count, completedExamCount: attempts.count)
             errorMessage = nil
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 }
 
 private struct HomeSummary {
-    let title: String
-    let message: String
+    let title: LocalizedStringResource
+    let message: LocalizedStringResource
     let symbol: String
     let tint: Color
     let dueReviewCount: Int
@@ -144,26 +156,6 @@ private struct HomeSummary {
     }
 }
 
-struct LearnPlaceholderView: View {
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                Text("Learn")
-                    .font(DesignTokens.FontScale.headline.weight(.bold))
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                    .accessibilityAddTraits(.isHeader)
-                Text("Placeholder for the next lesson lane. Practice, mock exams, progress, export, import, and reset are available now; lesson reading will be wired in a separate task.")
-                    .font(DesignTokens.FontScale.body)
-                    .foregroundStyle(DesignTokens.Colors.ink)
-            }
-            .paperCard()
-            .pagePadding()
-        }
-        .background(DesignTokens.Colors.paper)
-        .navigationTitle("Learn")
-    }
-}
-
 struct PracticeHubView: View {
     let bank: QuestionBank
     @ObservedObject var progressStore: ProgressStoreService
@@ -182,9 +174,27 @@ struct PracticeHubView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 220), spacing: DesignTokens.Spacing.md)], spacing: DesignTokens.Spacing.md) {
-                    practiceButton("All questions", detail: "Draw from all \(bank.questions.count) questions", systemImage: "tray.full", scope: .all)
-                    practiceButton("Weak areas", detail: "\(weak) weak subsections", systemImage: "exclamationmark.triangle", scope: .weak)
-                    practiceButton("Due review", detail: "\(due) due questions; unseen excluded", systemImage: "calendar.badge.clock", scope: .due)
+                    practiceButton(
+                        "All questions",
+                        detail: String(localized: "Draw from all \(bank.questions.count) questions"),
+                        accessibilityLabel: String(localized: "Start all questions. Draw from all \(bank.questions.count) questions"),
+                        systemImage: "tray.full",
+                        scope: .all
+                    )
+                    practiceButton(
+                        "Weak areas",
+                        detail: String(localized: "\(weak) weak subsections"),
+                        accessibilityLabel: String(localized: "Start weak areas. \(weak) weak subsections"),
+                        systemImage: "exclamationmark.triangle",
+                        scope: .weak
+                    )
+                    practiceButton(
+                        "Due review",
+                        detail: String(localized: "\(due) due questions; unseen excluded"),
+                        accessibilityLabel: String(localized: "Start due review. \(due) due questions; unseen excluded"),
+                        systemImage: "calendar.badge.clock",
+                        scope: .due
+                    )
                 }
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     Text("Practice categories")
@@ -197,15 +207,15 @@ struct PracticeHubView: View {
                                 CategoryCard(category: category, language: language)
                             }
                             .buttonStyle(.plain)
-                            .accessibilityLabel("Practice category \(category.name.text(for: language)), \(category.questionCount) questions")
+                            .accessibilityLabel(Text(categoryPracticeAccessibilityLabel(category))) // l10n: content(question)
 
                             DisclosureGroup("Subsections") {
                                 ForEach(bank.subsectionsByCategory[category.id] ?? []) { subsection in
                                     Button { startPractice(.subsection(subsection.id)) } label: {
-                                        SubsectionCard(subsection: subsection, title: bank.subsectionTitle(subsection, language: language))
+                                        SubsectionCard(subsection: subsection, title: localized(bank.subsectionTitle(subsection, language: language), language: language))
                                     }
                                     .buttonStyle(.plain)
-                                    .accessibilityLabel("Practice subsection \(bank.subsectionTitle(subsection, language: language)), \(subsection.questionCount) questions")
+                                    .accessibilityLabel(Text(subsectionPracticeAccessibilityLabel(subsection))) // l10n: content(question)
                                 }
                             }
                             .font(DesignTokens.FontScale.body.weight(.semibold))
@@ -222,12 +232,12 @@ struct PracticeHubView: View {
         .task(id: revision) { refreshCounts() }
     }
 
-    private func practiceButton(_ title: String, detail: String, systemImage: String, scope: PracticeScope) -> some View {
+    private func practiceButton(_ title: LocalizedStringKey, detail: String, accessibilityLabel: String, systemImage: String, scope: PracticeScope) -> some View {
         Button { startPractice(scope) } label: {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Label(title, systemImage: systemImage)
+                Label(title, systemImage: systemImage) // l10n: localized
                     .font(DesignTokens.FontScale.body.weight(.bold))
-                Text(detail)
+                Text(detail) // l10n: localized
                     .font(DesignTokens.FontScale.caption)
             }
             .foregroundStyle(DesignTokens.Colors.ink)
@@ -235,7 +245,23 @@ struct PracticeHubView: View {
             .paperCard()
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("Start \(title). \(detail)")
+        .accessibilityLabel(Text(accessibilityLabel)) // l10n: localized
+    }
+
+    private func categoryPracticeAccessibilityLabel(_ category: BankCategory) -> AttributedString {
+        var label = AttributedString(String(localized: "Practice category"))
+        label += AttributedString(" ")
+        label += localized(category.name.text(for: language), language: language)
+        label += AttributedString(", \(localizedQuestionCount(category.questionCount))")
+        return label
+    }
+
+    private func subsectionPracticeAccessibilityLabel(_ subsection: BankSubsection) -> AttributedString {
+        var label = AttributedString(String(localized: "Practice subsection"))
+        label += AttributedString(" ")
+        label += localized(bank.subsectionTitle(subsection, language: language), language: language)
+        label += AttributedString(", \(localizedQuestionCount(subsection.questionCount))")
+        return label
     }
 
     private func refreshCounts() {
@@ -275,7 +301,7 @@ struct PracticeSessionView: View {
                 if let errorMessage {
                     MessagePanel(title: "Practice unavailable", message: errorMessage, kind: .warning)
                 } else if items.isEmpty {
-                    ContentUnavailableView("No questions found", systemImage: "tray", description: Text(emptyMessage))
+                    ContentUnavailableView("No questions found", systemImage: "tray", description: Text(emptyMessage)) // l10n: localized
                         .foregroundStyle(DesignTokens.Colors.ink)
                 } else if reviewSubmitted {
                     practiceReview
@@ -286,23 +312,23 @@ struct PracticeSessionView: View {
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
-        .navigationTitle(scopeTitle)
+        .navigationTitle(Text(scopeTitleAttributed)) // l10n: localized
         .task(id: scope) { loadSession() }
     }
 
     private var header: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            Text(scopeTitle)
+            Text(scopeTitleAttributed) // l10n: localized
                 .font(DesignTokens.FontScale.headline.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
                 .accessibilityIdentifier("practice-category-title")
-            Text(sessionProgressText)
+            Text(sessionProgressText) // l10n: localized
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityIdentifier("practice-session-tally")
                 .accessibilityHidden(true)
-            Text("Due review excludes unseen questions. Progress updates use the shared engine with an explicit timestamp.")
+            Text("Due review excludes unseen questions. Progress is saved locally after each answer.")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
                 .accessibilityIdentifier("practice-category-summary")
@@ -313,37 +339,58 @@ struct PracticeSessionView: View {
         .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(scopeTitle). \(sessionProgressText). Due review excludes unseen questions. Progress updates use the shared engine with an explicit timestamp.")
+        .accessibilityLabel(headerAccessibilityLabel) // l10n: localized
     }
 
     private var sessionProgressText: String {
+        let mode = progressStore.preferences.practiceMode.localizedString
+        let tally = localizedCorrectOutOfAnswered(correct: correctCount, answered: answeredCount)
         switch progressStore.preferences.practiceMode {
         case .immediate:
-            "Mode: \(progressStore.preferences.practiceMode.label). Session tally: \(correctCount) correct out of \(answeredCount) answered."
+            return String(localized: "Mode: \(mode). Session tally: \(tally).")
         case .reviewLater:
             if reviewSubmitted {
-                "Mode: \(progressStore.preferences.practiceMode.label). Review complete: \(correctCount) correct out of \(answeredCount) answered."
+                return String(localized: "Mode: \(mode). Review complete: \(tally).")
             } else {
-                "Mode: \(progressStore.preferences.practiceMode.label). Answered \(answeredCount) of \(items.count); results are hidden until review."
+                let progress = localizedAnsweredOutOfTotal(answered: answeredCount, total: items.count)
+                return String(localized: "Mode: \(mode). \(progress); results are hidden until review.")
             }
         }
     }
 
     private var scopeTitle: String {
         switch scope {
-        case .all: "All questions"
-        case .weak: "Weak areas"
-        case .due: "Due review"
+        case .all: String(localized: "All questions")
+        case .weak: String(localized: "Weak areas")
+        case .due: String(localized: "Due review")
         case .category(let id): bank.categories.first { $0.id == id }?.name.text(for: language) ?? id
-        case .subsection(let id): bank.subsectionsById[id].map { bank.subsectionTitle($0, language: language) } ?? "Subsection \(id)"
+        case .subsection(let id): bank.subsectionsById[id].map { bank.subsectionTitle($0, language: language) } ?? String(localized: "Subsection \(id)")
         }
+    }
+
+    private var scopeTitleAttributed: AttributedString {
+        switch scope {
+        case .category(let id):
+            localized(bank.categories.first { $0.id == id }?.name.text(for: language) ?? id, language: language)
+        case .subsection(let id):
+            localized(bank.subsectionsById[id].map { bank.subsectionTitle($0, language: language) } ?? String(localized: "Subsection \(id)"), language: language)
+        default:
+            AttributedString(scopeTitle)
+        }
+    }
+
+    private var headerAccessibilityLabel: Text {
+        var label = scopeTitleAttributed
+        label += AttributedString(". \(sessionProgressText). ")
+        label += AttributedString(String(localized: "Due review excludes unseen questions. Progress is saved locally after each answer."))
+        return Text(label) // l10n: localized
     }
 
     private var emptyMessage: String {
         switch scope {
-        case .due: "No stored progress records are due. Unseen questions are not included in due review."
-        case .weak: "No weak subsections are available yet. Complete practice or a mock exam first."
-        default: "No bundled questions match this scope."
+        case .due: String(localized: "No stored progress records are due. Unseen questions are not included in due review.")
+        case .weak: String(localized: "No weak subsections are available yet. Complete practice or a mock exam first.")
+        default: String(localized: "No bundled questions match this scope.")
         }
     }
 
@@ -375,7 +422,7 @@ struct PracticeSessionView: View {
             }
             if let selected, progressStore.preferences.practiceMode == .immediate {
                 PracticeFeedback(question: question, selectedSourceIndex: selected, language: language, choicePermutation: item.choicePermutation)
-                Button(currentIndex + 1 == items.count ? "Finish session" : "Next question") {
+                Button(currentIndex + 1 == items.count ? "Finish session" : "Next question") { // l10n: localized
                     advanceOrFinish()
                 }
                 .buttonStyle(.bordered)
@@ -383,13 +430,13 @@ struct PracticeSessionView: View {
                 .frame(minHeight: 44)
                 .accessibilityIdentifier("next-question-button")
             } else if progressStore.preferences.practiceMode == .reviewLater {
-                Button(currentIndex + 1 == items.count ? "Submit for review" : "Next question") {
+                Button(currentIndex + 1 == items.count ? "Submit for review" : "Next question") { // l10n: localized
                     advanceReviewLater()
                 }
                 .buttonStyle(.bordered)
                 .tint(DesignTokens.Colors.ink)
                 .disabled(selected == nil)
-                .accessibilityHint(selected == nil ? "Choose an answer before continuing" : "Continues without feedback until review")
+                .accessibilityHint(selected == nil ? Text("Choose an answer before continuing") : Text("Continues without feedback until review")) // l10n: localized
             }
         }
     }
@@ -402,13 +449,13 @@ struct PracticeSessionView: View {
                 .accessibilityAddTraits(.isHeader)
             ForEach(items) { item in
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Text(item.question.id)
+                    Text(item.question.id) // l10n: verbatim
                         .font(DesignTokens.FontScale.body.monospaced())
-                    Text(item.question.text.text(for: language))
+                    Text(localized(item.question.text.text(for: language), language: language)) // l10n: content(question)
                         .font(DesignTokens.FontScale.body.weight(.semibold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                     PracticeFeedback(question: item.question, selectedSourceIndex: selectedByQuestionId[item.question.id], language: language, choicePermutation: item.choicePermutation)
-                    Text("Category \(item.question.categoryId) • Subsection \(item.question.subsectionId).")
+                    Text("Category \(item.question.categoryId) • Subsection \(item.question.subsectionId).") // l10n: localized
                         .font(DesignTokens.FontScale.caption)
                         .foregroundStyle(DesignTokens.Colors.inkMuted)
                 }
@@ -454,7 +501,7 @@ struct PracticeSessionView: View {
             correctCount = 0
             errorMessage = nil
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
             items = []
         }
     }
@@ -483,7 +530,7 @@ struct PracticeSessionView: View {
             selectedByQuestionId[question.id] = sourceIndex
             if previous == 0, sourceIndex != 0 { correctCount -= 1 }
             if previous != 0, sourceIndex == 0 { correctCount += 1 }
-            AccessibilityNotification.Announcement("Selected answer updated").post()
+            AccessibilityNotification.Announcement(String(localized: "Selected answer updated")).post()
             return
         }
         selectedByQuestionId[question.id] = sourceIndex
@@ -491,7 +538,8 @@ struct PracticeSessionView: View {
         if sourceIndex == 0 { correctCount += 1 }
         if progressStore.preferences.practiceMode == .immediate {
             commitAnswer(question: question, sourceIndex: sourceIndex)
-            AccessibilityNotification.Announcement(sourceIndex == 0 ? "Correct" : "Incorrect").post()
+            let announcement = sourceIndex == 0 ? String(localized: "Correct") : String(localized: "Incorrect")
+            AccessibilityNotification.Announcement(announcement).post()
         }
     }
 
@@ -505,7 +553,7 @@ struct PracticeSessionView: View {
             committedQuestionIds.insert(question.id)
             onDataChanged()
         } catch {
-            errorMessage = "Unable to save progress locally: \(error.localizedDescription)"
+            errorMessage = localizedErrorMessage(String(localized: "Unable to save progress locally: \("")"), detail: error)
         }
     }
 
@@ -533,7 +581,7 @@ struct PracticeSessionView: View {
             reviewSubmitted = true
             onDataChanged()
         } catch {
-            errorMessage = "Unable to save review-later progress: \(error.localizedDescription)"
+            errorMessage = localizedErrorMessage(String(localized: "Unable to save review-later progress: \("")"), detail: error)
         }
     }
 }
@@ -556,7 +604,7 @@ struct MockExamView: View {
     @State private var errorMessage: String?
     @State private var confirmingSubmit = false
     @State private var isSubmitting = false
-    @State private var timerStatus = "Timer off"
+    @State private var timerStatus = String(localized: "Timer off")
     @State private var showingNavigator = false
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -595,14 +643,14 @@ struct MockExamView: View {
         .onReceive(timer) { _ in
             if timerRunning {
                 secondsElapsed += 1
-                timerStatus = "Timer running, \(secondsElapsed) seconds elapsed"
+                timerStatus = String(localized: "Timer running, \(secondsElapsed) seconds elapsed")
             }
         }
         .alert("Submit mock exam?", isPresented: $confirmingSubmit) {
             Button("Cancel", role: .cancel) {}
             Button("Submit", role: .destructive) { submitExam() }
         } message: {
-            Text(submitConfirmationText)
+            Text(submitConfirmationText) // l10n: localized
         }
     }
 
@@ -612,7 +660,7 @@ struct MockExamView: View {
                 .font(DesignTokens.FontScale.headline.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
-            Text("Generate 100 shared-engine questions: one from each subsection, shuffled by seed. The optional timer is off by default.")
+            Text("Generate 100 questions: one from each subsection, mixed into a repeatable order. The optional timer is off by default.")
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
             Text("In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.")
@@ -627,7 +675,7 @@ struct MockExamView: View {
     private func examQuestion(item: GeneratedExamItem, question: BankQuestion) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Text("Seed: \(seed)")
+                Text("Exam code: \(seed)")
                     .font(DesignTokens.FontScale.caption.monospaced())
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .textSelection(.enabled)
@@ -636,7 +684,7 @@ struct MockExamView: View {
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
-                Text("Answered \(selectedByQuestionId.count) of \(generatedItems.count). \(timerStatus).")
+                Text("\(localizedAnsweredOutOfTotal(answered: selectedByQuestionId.count, total: generatedItems.count)). \(timerStatus).") // l10n: localized
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
                 examHeaderControls(questionID: question.id)
@@ -764,9 +812,10 @@ struct MockExamView: View {
     private var timerControls: some View {
         if progressStore.preferences.examTimerEnabled {
             HStack {
-                tokenButton(timerRunning ? "Pause timer" : secondsElapsed == 0 ? "Start timer" : "Resume timer") {
+                let buttonTitle: LocalizedStringKey = timerRunning ? "Pause timer" : secondsElapsed == 0 ? "Start timer" : "Resume timer"
+                tokenButton(buttonTitle) {
                     timerRunning.toggle()
-                    timerStatus = timerRunning ? "Timer running, \(secondsElapsed) seconds elapsed" : "Timer paused, \(secondsElapsed) seconds elapsed"
+                    timerStatus = timerRunning ? String(localized: "Timer running, \(secondsElapsed) seconds elapsed") : String(localized: "Timer paused, \(secondsElapsed) seconds elapsed")
                     AccessibilityNotification.Announcement(timerStatus).post()
                 }
             }
@@ -787,7 +836,7 @@ struct MockExamView: View {
                 ForEach(generatedItems.indices, id: \.self) { index in
                     let item = generatedItems[index]
                     Button { currentIndex = index } label: {
-                        Text(navigatorLabel(for: index, item: item))
+                        Text(navigatorLabel(for: index, item: item)) // l10n: verbatim
                             .font(DesignTokens.FontScale.body.monospaced().weight(.semibold))
                             .foregroundStyle(DesignTokens.Colors.ink)
                             .frame(minWidth: 48, minHeight: 44)
@@ -796,7 +845,7 @@ struct MockExamView: View {
                             .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous).strokeBorder(navigatorBorder(for: index, item: item), lineWidth: index == currentIndex ? 2 : 1))
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel("Question \(index + 1), \(selectedByQuestionId[item.questionId] != nil ? "answered" : "unanswered")\(flagged.contains(item.questionId) ? ", flagged" : "")\(index == currentIndex ? ", current" : "")")
+                    .accessibilityLabel(mockNavigatorAccessibilityLabel(for: index, item: item)) // l10n: localized
                 }
             }
         }
@@ -809,6 +858,14 @@ struct MockExamView: View {
         if selectedByQuestionId[item.questionId] != nil { label += " ✓" }
         if flagged.contains(item.questionId) { label += " ⚑" }
         return label
+    }
+
+    private func mockNavigatorAccessibilityLabel(for index: Int, item: GeneratedExamItem) -> Text {
+        let answerState = selectedByQuestionId[item.questionId] != nil ? String(localized: "answered") : String(localized: "unanswered")
+        var label = String(localized: "Question \(index + 1), \(answerState)")
+        if flagged.contains(item.questionId) { label += String(localized: ", flagged") }
+        if index == currentIndex { label += String(localized: ", current") }
+        return Text(label) // l10n: localized
     }
 
     private func navigatorBackground(for item: GeneratedExamItem) -> Color {
@@ -826,22 +883,24 @@ struct MockExamView: View {
         let unanswered = generatedItems.filter { selectedByQuestionId[$0.questionId] == nil }
         let listed = unanswered.prefix(10).map { String($0.position) }.joined(separator: ", ")
         if unanswered.isEmpty {
-            return "All questions are answered. You can submit now."
+            return String(localized: "All questions are answered. You can submit now.")
         }
-        return "\(unanswered.count) unanswered questions count as incorrect. Unanswered positions: \(listed)\(unanswered.count > 10 ? ", …" : "")."
+        let unansweredText = localizedUnansweredQuestionCount(unanswered.count)
+        let suffix = unanswered.count > 10 ? ", …" : ""
+        return String(localized: "\(unansweredText) Unanswered positions: \(listed)\(suffix).")
     }
 
     private func examResults(_ attempt: StoredExamAttempt) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Text(attempt.score.honours ? "Basic with Honours" : attempt.score.passed ? "Pass" : "Needs review")
+                Text(attempt.score.honours ? "Basic with Honours" : attempt.score.passed ? "Pass" : "Needs review") // l10n: localized
                     .font(DesignTokens.FontScale.headline.weight(.bold))
                     .foregroundStyle(attempt.score.passed ? DesignTokens.Colors.correctText : DesignTokens.Colors.warningText)
                     .accessibilityAddTraits(.isHeader)
                 Text("Score: \(attempt.score.correct) / \(attempt.score.total) (\(attempt.score.percent, format: .number.precision(.fractionLength(0...1)))%). Pass is 70%; honours is 80%.")
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
-                Text("Seed: \(attempt.seed)")
+                Text("Exam code: \(attempt.seed)")
                     .font(DesignTokens.FontScale.caption.monospaced())
                     .foregroundStyle(DesignTokens.Colors.ink)
             }
@@ -870,9 +929,9 @@ struct MockExamView: View {
                 ForEach(attempt.items.filter { $0.selectedSourceIndex != 0 }) { item in
                     if let question = bank.question(id: item.questionId) {
                         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                            Text("\(item.position). \(question.id)")
+                            Text(verbatim: "\(item.position). \(question.id)") // l10n: verbatim
                                 .font(DesignTokens.FontScale.body.monospaced())
-                            Text(question.text.text(for: language))
+                            Text(localized(question.text.text(for: language), language: language)) // l10n: content(question)
                                 .font(DesignTokens.FontScale.body)
                                 .foregroundStyle(DesignTokens.Colors.ink)
                             PracticeFeedback(question: question, selectedSourceIndex: item.selectedSourceIndex, language: language, choicePermutation: item.choicePermutation)
@@ -911,11 +970,11 @@ struct MockExamView: View {
             flagged = []
             secondsElapsed = 0
             timerRunning = progressStore.preferences.examTimerEnabled
-            timerStatus = progressStore.preferences.examTimerEnabled ? "Timer running, 0 seconds elapsed" : "Timer off"
+            timerStatus = progressStore.preferences.examTimerEnabled ? String(localized: "Timer running, 0 seconds elapsed") : String(localized: "Timer off")
             result = nil
             errorMessage = nil
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 
@@ -948,7 +1007,7 @@ struct MockExamView: View {
             timerRunning = false
             onDataChanged()
         } catch {
-            errorMessage = "Unable to save mock exam: \(error.localizedDescription)"
+            errorMessage = localizedErrorMessage(String(localized: "Unable to save mock exam: \("")"), detail: error)
         }
     }
 
@@ -972,7 +1031,7 @@ struct SettingsView: View {
     @ObservedObject var progressStore: ProgressStoreService
     let onDataChanged: () -> Void
 
-    @State private var statusMessage = ""
+    @State private var statusMessage: String?
     @State private var errorMessage: String?
     @State private var exportDocument: ProgressExportDocument?
     @State private var showingExporter = false
@@ -994,7 +1053,7 @@ struct SettingsView: View {
                         set: { mode in savePreferences { $0.practiceMode = mode } }
                     )) {
                         ForEach(ApplePreferences.PracticeMode.allCases) { mode in
-                            Text(mode.label).tag(mode)
+                            Text(mode.localizedLabel).tag(mode) // l10n: localized
                         }
                     }
                     .pickerStyle(.segmented)
@@ -1007,7 +1066,7 @@ struct SettingsView: View {
                         set: { theme in savePreferences { $0.theme = theme } }
                     )) {
                         ForEach(ApplePreferences.Theme.allCases) { theme in
-                            Text(theme.label).tag(theme)
+                            Text(theme.localizedLabel).tag(theme) // l10n: localized
                         }
                     }
                     Picker("Question language", selection: Binding(
@@ -1015,7 +1074,12 @@ struct SettingsView: View {
                         set: { language in savePreferences { $0.language = language } }
                     )) {
                         ForEach(BankLanguage.allCases) { language in
-                            Text(language.displayName).tag(language)
+                            switch language {
+                            case .english:
+                                Text(localized(language.displayName, language: .english)).tag(language) // l10n: content(en)
+                            case .french:
+                                Text(localized(language.displayName, language: .french)).tag(language) // l10n: content(fr)
+                            }
                         }
                     }
                 }
@@ -1026,7 +1090,7 @@ struct SettingsView: View {
                         .font(DesignTokens.FontScale.title.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
-                    Text("Progress is stored locally with SwiftData. Export, import, and reset are user-initiated only.")
+                    Text("Progress is stored on this device. Export, import, and reset are user-initiated only.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                     HStack {
@@ -1051,7 +1115,7 @@ struct SettingsView: View {
                 }
                 .paperCard()
 
-                if !statusMessage.isEmpty { MessagePanel(title: "Settings", message: statusMessage, kind: .success) }
+                if let statusMessage { MessagePanel(title: "Settings", message: statusMessage, kind: .success) }
                 if let errorMessage { MessagePanel(title: "Settings error", message: errorMessage, kind: .warning) }
             }
             .pagePadding()
@@ -1060,8 +1124,8 @@ struct SettingsView: View {
         .navigationTitle("Settings")
         .fileExporter(isPresented: $showingExporter, document: exportDocument, contentType: .json, defaultFilename: "canadian-ham-progress.json") { result in
             switch result {
-            case .success: statusMessage = "Progress export prepared."
-            case .failure(let error): errorMessage = error.localizedDescription
+            case .success: statusMessage = String(localized: "Progress export prepared.")
+            case .failure(let error): errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
             }
         }
         .fileImporter(isPresented: $showingImporter, allowedContentTypes: [.json]) { result in
@@ -1086,11 +1150,11 @@ struct SettingsView: View {
         mutate(&next)
         do {
             try progressStore.updatePreferences(next)
-            statusMessage = "Preferences saved locally."
+            statusMessage = String(localized: "Preferences saved locally.")
             errorMessage = nil
             onDataChanged()
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 
@@ -1100,7 +1164,7 @@ struct SettingsView: View {
             exportDocument = ProgressExportDocument(text: text)
             showingExporter = true
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 
@@ -1119,7 +1183,7 @@ struct SettingsView: View {
                 errorMessage = errors.joined(separator: "\n")
             }
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 
@@ -1128,22 +1192,22 @@ struct SettingsView: View {
         do {
             try progressStore.importData(pendingImport, bank: bank)
             self.pendingImport = nil
-            statusMessage = "Progress imported."
+            statusMessage = String(localized: "Progress imported.")
             errorMessage = nil
             onDataChanged()
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 
     private func resetAllData() {
         do {
             try progressStore.resetAllData()
-            statusMessage = "All local progress was reset."
+            statusMessage = String(localized: "All local progress was reset.")
             errorMessage = nil
             onDataChanged()
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 }
@@ -1175,11 +1239,11 @@ struct QuestionCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Text(question.id)
+            Text(question.id) // l10n: verbatim
                 .font(DesignTokens.FontScale.body.monospaced())
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
                 .accessibilityIdentifier("question-identifier")
-            Text(localized(question.text.text(for: language), language: language))
+            Text(localized(question.text.text(for: language), language: language)) // l10n: content(question)
                 .font(DesignTokens.FontScale.bodyLarge.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .textSelection(.enabled)
@@ -1206,7 +1270,7 @@ struct AnswerChoiceButton: View {
     var body: some View {
         Button(action: action) {
             HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
-                Text(letter)
+                Text(letter) // l10n: verbatim
                     .font(DesignTokens.FontScale.body.monospaced().weight(.bold))
                     .frame(minWidth: 34, minHeight: 34)
                     .padding(DesignTokens.Spacing.xs)
@@ -1214,15 +1278,19 @@ struct AnswerChoiceButton: View {
                     .foregroundStyle(chipForeground)
                     .accessibilityIdentifier("answer-\(letter)-chip")
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                    Text(localized(answer.text.text(for: language), language: language))
+                    Text(localized(answer.text.text(for: language), language: language)) // l10n: content(question)
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(textColor)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .accessibilityIdentifier("answer-\(letter)-text")
                     if let statusText {
-                        Label(statusText, systemImage: statusIcon)
-                            .font(DesignTokens.FontScale.caption.weight(.bold))
-                            .foregroundStyle(textColor)
+                        Label {
+                            Text(localizedStatusText(statusText)) // l10n: localized
+                        } icon: {
+                            Image(systemName: statusIcon)
+                        }
+                        .font(DesignTokens.FontScale.caption.weight(.bold))
+                        .foregroundStyle(textColor)
                     }
                 }
             }
@@ -1234,7 +1302,7 @@ struct AnswerChoiceButton: View {
         .buttonStyle(.plain)
         .allowsHitTesting(!disabled)
         .accessibilityRespondsToUserInteraction(!disabled)
-        .accessibilityLabel(accessibilityLabel)
+        .accessibilityLabel(accessibilityLabel) // l10n: content(question)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityIdentifier("answer-\(letter)-button")
     }
@@ -1310,9 +1378,22 @@ struct AnswerChoiceButton: View {
     }
 
     private var accessibilityLabel: Text {
-        var value = "Answer \(letter), \(answer.text.text(for: language))"
-        if let statusText { value += ", \(statusText)" }
-        return Text(value)
+        var accessibleText = AttributedString(String(localized: "Answer \(letter), "))
+        accessibleText += localized(answer.text.text(for: language), language: language)
+        if let statusText {
+            accessibleText += AttributedString(String(localized: ", \(localizedStatusText(statusText))"))
+        }
+        return Text(accessibleText) // l10n: content(question)
+    }
+
+    private func localizedStatusText(_ statusText: String) -> String {
+        switch statusText {
+        case "Your answer, correct answer": String(localized: "Your answer, correct answer")
+        case "Correct answer": String(localized: "Correct answer")
+        case "Your answer, incorrect": String(localized: "Your answer, incorrect")
+        case "Selected": String(localized: "Selected")
+        default: statusText
+        }
     }
 }
 
@@ -1332,18 +1413,18 @@ struct PracticeFeedback: View {
     var body: some View {
         let isCorrect = selectedSourceIndex == 0
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            Text(isCorrect ? "Correct" : "Incorrect")
+            Text(isCorrect ? "Correct" : "Incorrect") // l10n: localized
                 .font(DesignTokens.FontScale.body.weight(.bold))
                 .foregroundStyle(isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
                 .accessibilityIdentifier("answer-feedback-title")
             if !isCorrect, let correct = question.answers.first(where: { $0.sourceIndex == 0 }) {
-                Text("Correct answer: \(correct.text.text(for: language))")
+                Text(correctAnswerText(correct)) // l10n: content(question)
                     .font(DesignTokens.FontScale.body.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.incorrectText)
                     .textSelection(.enabled)
                     .accessibilityIdentifier("answer-feedback-correct-answer")
             }
-            Text("Source: \(question.categoryId) • \(question.subsectionId).")
+            Text("Source: \(question.categoryId) • \(question.subsectionId).") // l10n: localized
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
                 .accessibilityIdentifier("answer-feedback-source")
@@ -1356,18 +1437,24 @@ struct PracticeFeedback: View {
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("answer-feedback")
     }
+
+    private func correctAnswerText(_ answer: BankAnswer) -> AttributedString {
+        var text = AttributedString(String(localized: "Correct answer: "))
+        text += localized(answer.text.text(for: language), language: language)
+        return text
+    }
 }
 
 private struct SubsectionCard: View {
     let subsection: BankSubsection
-    let title: String
+    let title: AttributedString
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            Text(title)
+            Text(title) // l10n: content(question)
                 .font(DesignTokens.FontScale.body.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
-            Text("\(subsection.questionCount) questions • \(subsection.id)")
+            Text(verbatim: "\(localizedQuestionCount(subsection.questionCount)) • \(subsection.id)") // l10n: verbatim
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
         }
@@ -1383,10 +1470,10 @@ private struct CategoryCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            Text(category.name.text(for: language))
+            Text(localized(category.name.text(for: language), language: language)) // l10n: content(question)
                 .font(DesignTokens.FontScale.body.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
-            Text("\(category.questionCount) questions • \(category.subsectionCount) subsections")
+            Text(verbatim: "\(localizedQuestionCount(category.questionCount)) • \(localizedSubsectionCount(category.subsectionCount))") // l10n: verbatim
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
         }
@@ -1395,17 +1482,47 @@ private struct CategoryCard: View {
     }
 }
 
+private let localizedErrorDetailSeparator = "\u{1E}"
+
+func localizedErrorMessage(_ localizedPrefix: String, detail error: Error) -> String {
+    localizedPrefix + localizedErrorDetailSeparator + error.localizedDescription
+}
+
+private func localizedErrorMessageParts(_ message: String) -> (summary: String, detail: String?) {
+    guard let separatorRange = message.range(of: localizedErrorDetailSeparator) else {
+        return (message, nil)
+    }
+    let summary = String(message[..<separatorRange.lowerBound])
+    let detail = String(message[separatorRange.upperBound...])
+    return (summary, detail.isEmpty ? nil : detail)
+}
+
+struct LocalizedErrorMessageText: View {
+    let message: String
+
+    var body: some View {
+        let parts = localizedErrorMessageParts(message)
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            Text(parts.summary) // l10n: localized
+            if let detail = parts.detail {
+                Text(verbatim: detail) // l10n: verbatim
+            }
+        }
+    }
+}
+
 struct MessagePanel: View {
     enum Kind { case warning, success }
-    let title: String
+    let title: LocalizedStringKey
     let message: String
     let kind: Kind
 
     var body: some View {
         Label {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Text(title).font(DesignTokens.FontScale.title.weight(.bold))
-                Text(message).font(DesignTokens.FontScale.body)
+                Text(title).font(DesignTokens.FontScale.title.weight(.bold)) // l10n: localized
+                LocalizedErrorMessageText(message: message)
+                    .font(DesignTokens.FontScale.body)
             }
         } icon: {
             Image(systemName: kind == .success ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
@@ -1416,6 +1533,32 @@ struct MessagePanel: View {
         .background(kind == .success ? DesignTokens.Colors.correctBg : DesignTokens.Colors.warningBg, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(kind == .success ? DesignTokens.Colors.correctBorder : DesignTokens.Colors.warningBorder, lineWidth: 1))
         .accessibilityElement(children: .combine)
+    }
+}
+
+private extension ApplePreferences.PracticeMode {
+    var localizedLabel: LocalizedStringResource {
+        switch self {
+        case .immediate: "Immediate feedback"
+        case .reviewLater: "Review later"
+        }
+    }
+
+    var localizedString: String {
+        switch self {
+        case .immediate: String(localized: "Immediate feedback")
+        case .reviewLater: String(localized: "Review later")
+        }
+    }
+}
+
+private extension ApplePreferences.Theme {
+    var localizedLabel: LocalizedStringResource {
+        switch self {
+        case .system: "System"
+        case .light: "Light"
+        case .dark: "Dark"
+        }
     }
 }
 
@@ -1434,10 +1577,34 @@ private func localized(_ string: String, language: BankLanguage) -> AttributedSt
     return attributed
 }
 
+private func localizedCorrectOutOfAnswered(correct: Int, answered: Int) -> String {
+    let correctText = String.localizedStringWithFormat(String(localized: "%lld correct answer"), correct)
+    let answeredText = String.localizedStringWithFormat(String(localized: "%lld answered question"), answered)
+    return String(localized: "\(correctText) out of \(answeredText)")
+}
+
+func localizedAnsweredOutOfTotal(answered: Int, total: Int) -> String {
+    String.localizedStringWithFormat(String(localized: "Answered %lld of %lld"), answered, total)
+}
+
+func localizedQuestionCount(_ count: Int, bundle: Bundle = .main, locale: Locale = .current) -> String {
+    let format = String(localized: "%lld questions", bundle: bundle, locale: locale)
+    return String(format: format, locale: locale, Int64(count))
+}
+
+func localizedUnansweredQuestionCount(_ count: Int, bundle: Bundle = .main, locale: Locale = .current) -> String {
+    let format = String(localized: "%lld unanswered questions count as incorrect.", bundle: bundle, locale: locale)
+    return String(format: format, locale: locale, Int64(count))
+}
+
+private func localizedSubsectionCount(_ count: Int) -> String {
+    String.localizedStringWithFormat(String(localized: "%lld subsections"), count)
+}
+
 @MainActor
-private func tokenButton(_ title: String, action: @escaping () -> Void) -> some View {
+private func tokenButton(_ title: LocalizedStringKey, action: @escaping () -> Void) -> some View {
     Button(action: action) {
-        Text(title)
+        Text(title) // l10n: localized
             .font(DesignTokens.FontScale.body.weight(.semibold))
             .foregroundStyle(DesignTokens.Colors.ink)
             .padding(.horizontal, DesignTokens.Spacing.lg)

@@ -7,6 +7,7 @@ options:
     tvOS: "18.0"
     visionOS: "2.0"
   developmentLanguage: en
+  knownRegions: [en, fr, fr-CA]
   createIntermediateGroups: true
 packages:
   CanadianHamEngine:
@@ -38,6 +39,9 @@ targets:
         excludes:
           - Resources/Assets.xcassets
       - path: CanadianHam/Resources/Assets.xcassets
+      - path: CanadianHam/Resources/Localizable.xcstrings
+        type: file
+        buildPhase: resources
       - path: ../../content/generated
         type: folder
         buildPhase: resources
@@ -76,6 +80,8 @@ targets:
         CODE_SIGN_ENTITLEMENTS[sdk=iphone*]: ""
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
         SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
+        SWIFT_EMIT_LOC_STRINGS: YES
+        LOCALIZATION_PREFERS_STRING_CATALOGS: YES
   CanadianHamTests:
     type: bundle.unit-test
     platform: auto
@@ -109,6 +115,7 @@ targets:
         buildPhase: resources
         createIntermediateGroups: false
     dependencies:
+      - target: CanadianHam
       - package: CanadianHamEngine
         product: CanadianHamEngine
       - package: CanadianHamContent
@@ -120,6 +127,8 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
         SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
+        BUNDLE_LOADER[sdk=macosx*]: $(TEST_HOST)
+        TEST_HOST[sdk=macosx*]: $(BUILT_PRODUCTS_DIR)/CanadianHam.app/Contents/MacOS/CanadianHam
   CanadianHamUITests:
     type: bundle.ui-testing
     platform: auto
@@ -150,6 +159,9 @@ targets:
       - path: CanadianHam/Practice/EngineShuffle.swift
       - path: CanadianHam/Design/Tokens.swift
       - path: CanadianHam/Support/LaunchArguments.swift
+      - path: CanadianHam/Resources/Localizable.xcstrings
+        type: file
+        buildPhase: resources
       - path: CanadianHam/Resources/PrivacyInfo.xcprivacy
         type: file
         buildPhase: resources
@@ -181,6 +193,8 @@ targets:
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.education
         TARGETED_DEVICE_FAMILY: "3"
         ASSETCATALOG_COMPILER_APPICON_NAME: App Icon & Top Shelf Image
+        SWIFT_EMIT_LOC_STRINGS: YES
+        LOCALIZATION_PREFERS_STRING_CATALOGS: YES
   CanadianHamTVTests:
     type: bundle.unit-test
     platform: tvOS
@@ -240,6 +254,9 @@ targets:
       - path: CanadianHam/Practice/EngineShuffle.swift
       - path: CanadianHam/Design/Tokens.swift
       - path: CanadianHam/Support/LaunchArguments.swift
+      - path: CanadianHam/Resources/Localizable.xcstrings
+        type: file
+        buildPhase: resources
       - path: CanadianHam/Resources/PrivacyInfo.xcprivacy
         type: file
         buildPhase: resources
@@ -271,6 +288,8 @@ targets:
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.education
         TARGETED_DEVICE_FAMILY: "7"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        SWIFT_EMIT_LOC_STRINGS: YES
+        LOCALIZATION_PREFERS_STRING_CATALOGS: YES
   CanadianHamVisionTests:
     type: bundle.unit-test
     platform: visionOS

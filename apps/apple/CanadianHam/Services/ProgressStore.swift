@@ -545,36 +545,36 @@ final class ProgressStoreService: ObservableObject {
         let knownCategoryIds = Set(bank.categories.map(\.id))
         let knownSubsectionIds = Set(bank.subsections.map(\.id))
 
-        if data.schema != "canadian-ham.progress-export" { errors.append("Import file schema is not canadian-ham.progress-export.") }
-        if data.version != 1 { errors.append("Import file version must be 1.") }
-        if data.bankId != bank.manifest.bankId { errors.append("Import bankId must be \(bank.manifest.bankId).") }
-        appendTimestampError(&errors, value: data.exportedAt, field: "exportedAt")
+        if data.schema != "canadian-ham.progress-export" { errors.append(String(localized: "Import file schema is not canadian-ham.progress-export.")) }
+        if data.version != 1 { errors.append(String(localized: "Import file version must be 1.")) }
+        if data.bankId != bank.manifest.bankId { errors.append(String(localized: "Import bankId must be \(bank.manifest.bankId).")) }
+        appendTimestampError(&errors, value: data.exportedAt, field: String(localized: "Import exportedAt"))
 
         var questionProgressIds = Set<String>()
         for (index, record) in data.questionProgress.enumerated() {
-            let prefix = "Import questionProgress[\(index)]"
-            if !knownQuestionIds.contains(record.questionId) { errors.append("\(prefix).questionId must be a known question ID.") }
-            if !questionProgressIds.insert(record.questionId).inserted { errors.append("\(prefix).questionId duplicates another question progress record.") }
-            if record.bankId != bank.manifest.bankId { errors.append("\(prefix).bankId must be \(bank.manifest.bankId).") }
-            if record.attempts < 0 { errors.append("\(prefix).attempts must be a non-negative integer.") }
-            if record.correctAttempts < 0 || record.correctAttempts > record.attempts { errors.append("\(prefix).correctAttempts must be between 0 and attempts.") }
+            let prefix = String.localizedStringWithFormat(String(localized: "Import questionProgress[%lld]"), Int64(index))
+            if !knownQuestionIds.contains(record.questionId) { errors.append(String(localized: "\(prefix).questionId must be a known question ID.")) }
+            if !questionProgressIds.insert(record.questionId).inserted { errors.append(String(localized: "\(prefix).questionId duplicates another question progress record.")) }
+            if record.bankId != bank.manifest.bankId { errors.append(String(localized: "\(prefix).bankId must be \(bank.manifest.bankId).")) }
+            if record.attempts < 0 { errors.append(String(localized: "\(prefix).attempts must be a non-negative integer.")) }
+            if record.correctAttempts < 0 || record.correctAttempts > record.attempts { errors.append(String(localized: "\(prefix).correctAttempts must be between 0 and attempts.")) }
             appendTimestampError(&errors, value: record.lastAttemptedAt, field: "\(prefix).lastAttemptedAt")
-            if record.recentResults.count > 5 { errors.append("\(prefix).recentResults must contain at most five booleans.") }
-            if !(0...5).contains(record.leitner.box) { errors.append("\(prefix).leitner.box must be an integer between 0 and 5.") }
+            if record.recentResults.count > 5 { errors.append(String(localized: "\(prefix).recentResults must contain at most five booleans.")) }
+            if !(0...5).contains(record.leitner.box) { errors.append(String(localized: "\(prefix).leitner.box must be an integer between 0 and 5.")) }
             appendTimestampError(&errors, value: record.leitner.dueAt, field: "\(prefix).leitner.dueAt")
         }
 
         var submittedAt = Set<String>()
         for (index, attempt) in data.examAttempts.enumerated() {
-            let prefix = "Import examAttempts[\(index)]"
-            if attempt.id.isEmpty { errors.append("\(prefix).id must be a non-empty string.") }
-            if attempt.bankId != bank.manifest.bankId { errors.append("\(prefix).bankId must be \(bank.manifest.bankId).") }
-            if attempt.mode != "mock-exam" { errors.append("\(prefix).mode must be mock-exam.") }
+            let prefix = String.localizedStringWithFormat(String(localized: "Import examAttempts[%lld]"), Int64(index))
+            if attempt.id.isEmpty { errors.append(String(localized: "\(prefix).id must be a non-empty string.")) }
+            if attempt.bankId != bank.manifest.bankId { errors.append(String(localized: "\(prefix).bankId must be \(bank.manifest.bankId).")) }
+            if attempt.mode != "mock-exam" { errors.append(String(localized: "\(prefix).mode must be mock-exam.")) }
             appendTimestampError(&errors, value: attempt.startedAt, field: "\(prefix).startedAt")
             appendTimestampError(&errors, value: attempt.submittedAt, field: "\(prefix).submittedAt")
-            if !submittedAt.insert(attempt.submittedAt).inserted { errors.append("\(prefix).submittedAt duplicates another exam attempt.") }
-            if attempt.timer.secondsAllowed != nil && attempt.timer.secondsAllowed! < 0 { errors.append("\(prefix).timer.secondsAllowed must be null or non-negative.") }
-            if attempt.timer.secondsElapsed < 0 { errors.append("\(prefix).timer.secondsElapsed must be non-negative.") }
+            if !submittedAt.insert(attempt.submittedAt).inserted { errors.append(String(localized: "\(prefix).submittedAt duplicates another exam attempt.")) }
+            if attempt.timer.secondsAllowed != nil && attempt.timer.secondsAllowed! < 0 { errors.append(String(localized: "\(prefix).timer.secondsAllowed must be null or non-negative.")) }
+            if attempt.timer.secondsElapsed < 0 { errors.append(String(localized: "\(prefix).timer.secondsElapsed must be non-negative.")) }
             validateScore(attempt.score, prefix: "\(prefix).score", knownCategoryIds: knownCategoryIds, knownSubsectionIds: knownSubsectionIds, errors: &errors)
             for (itemIndex, item) in attempt.items.enumerated() {
                 validateAttemptItem(item, prefix: "\(prefix).items[\(itemIndex)]", knownQuestionIds: knownQuestionIds, knownCategoryIds: knownCategoryIds, knownSubsectionIds: knownSubsectionIds, errors: &errors)
@@ -591,10 +591,10 @@ final class ProgressStoreService: ObservableObject {
         )
 
         if ApplePreferences.PracticeMode(rawValue: data.preferences.practiceMode) == nil {
-            errors.append("Import preferences.practiceMode is invalid.")
+            errors.append(String(localized: "Import preferences.practiceMode is invalid."))
         }
         if ApplePreferences.Theme(rawValue: data.preferences.theme) == nil {
-            errors.append("Import preferences.theme is invalid.")
+            errors.append(String(localized: "Import preferences.theme is invalid."))
         }
         return errors
     }
@@ -747,7 +747,7 @@ private func appendTimestampError(_ errors: inout [String], value: String, field
     do {
         try CanonicalTimestamp.require(value, fieldName: field)
     } catch {
-        errors.append("\(field) must use canonical UTC timestamp format YYYY-MM-DDTHH:MM:SS.sssZ.")
+        errors.append(String(localized: "\(field) must use canonical UTC timestamp format YYYY-MM-DDTHH:MM:SS.sssZ."))
     }
 }
 
@@ -758,43 +758,43 @@ private func validateScore(
     knownSubsectionIds: Set<String>,
     errors: inout [String]
 ) {
-    if score.correct < 0 { errors.append("\(prefix).correct must be non-negative.") }
-    if score.total < 0 { errors.append("\(prefix).total must be non-negative.") }
-    if score.correct > score.total { errors.append("\(prefix).correct must not exceed total.") }
-    if score.percent < 0 { errors.append("\(prefix).percent must be non-negative.") }
+    if score.correct < 0 { errors.append(String(localized: "\(prefix).correct must be non-negative.")) }
+    if score.total < 0 { errors.append(String(localized: "\(prefix).total must be non-negative.")) }
+    if score.correct > score.total { errors.append(String(localized: "\(prefix).correct must not exceed total.")) }
+    if score.percent < 0 { errors.append(String(localized: "\(prefix).percent must be non-negative.")) }
     for (index, entry) in score.categoryBreakdown.enumerated() {
         let entryPrefix = "\(prefix).categoryBreakdown[\(index)]"
-        if !knownCategoryIds.contains(entry.categoryId) { errors.append("\(entryPrefix).categoryId must be a known category ID.") }
-        if entry.correct < 0 || entry.total < 0 || entry.correct > entry.total { errors.append("\(entryPrefix) counts are invalid.") }
+        if !knownCategoryIds.contains(entry.categoryId) { errors.append(String(localized: "\(entryPrefix).categoryId must be a known category ID.")) }
+        if entry.correct < 0 || entry.total < 0 || entry.correct > entry.total { errors.append(String(localized: "\(entryPrefix) counts are invalid.")) }
     }
     for id in score.weakSubsectionIds where !knownSubsectionIds.contains(id) {
-        errors.append("\(prefix).weakSubsectionIds contains unknown subsection ID \(id).")
+        errors.append(String(localized: "\(prefix).weakSubsectionIds contains unknown subsection ID \(id)."))
     }
 }
 
 private func validateLessonProgress(_ records: [ArchivedJSON], knownLessonIds: Set<String>, errors: inout [String]) {
     var lessonIds = Set<String>()
     for (index, record) in records.enumerated() {
-        let prefix = "Import lessonProgress[\(index)]"
+        let prefix = String.localizedStringWithFormat(String(localized: "Import lessonProgress[%lld]"), Int64(index))
         guard let lessonId = record.storage["lessonId"]?.stringValue, !lessonId.isEmpty else {
-            errors.append("\(prefix).lessonId must be a non-empty string.")
+            errors.append(String(localized: "\(prefix).lessonId must be a non-empty string."))
             continue
         }
         if !knownLessonIds.contains(lessonId) {
-            errors.append("\(prefix).lessonId must be a known lesson ID.")
+            errors.append(String(localized: "\(prefix).lessonId must be a known lesson ID."))
         }
         if !lessonIds.insert(lessonId).inserted {
-            errors.append("\(prefix).lessonId duplicates another lesson progress record.")
+            errors.append(String(localized: "\(prefix).lessonId duplicates another lesson progress record."))
         }
         if let readAt = record.storage["readAt"]?.stringValue {
             appendTimestampError(&errors, value: readAt, field: "\(prefix).readAt")
         } else {
-            errors.append("\(prefix).readAt must be a canonical UTC timestamp string.")
+            errors.append(String(localized: "\(prefix).readAt must be a canonical UTC timestamp string."))
         }
         if let readCount = record.storage["readCount"]?.numberValue, readCount.rounded() == readCount, readCount > 0 {
             continue
         }
-        errors.append("\(prefix).readCount must be a positive integer.")
+        errors.append(String(localized: "\(prefix).readCount must be a positive integer."))
     }
 }
 
@@ -807,91 +807,91 @@ private func validateLessonQuizAttempts(
 ) {
     var ids = Set<String>()
     for (index, attempt) in attempts.enumerated() {
-        let prefix = "Import lessonQuizAttempts[\(index)]"
+        let prefix = String.localizedStringWithFormat(String(localized: "Import lessonQuizAttempts[%lld]"), Int64(index))
         guard let id = attempt.storage["id"]?.stringValue, !id.isEmpty else {
-            errors.append("\(prefix).id must be a non-empty string.")
+            errors.append(String(localized: "\(prefix).id must be a non-empty string."))
             continue
         }
         if !ids.insert(id).inserted {
-            errors.append("\(prefix).id duplicates another lesson quiz attempt.")
+            errors.append(String(localized: "\(prefix).id duplicates another lesson quiz attempt."))
         }
 
         let quiz: BankLessonQuiz?
         if let quizId = attempt.storage["quizId"]?.nonEmptyStringValue {
             quiz = lessonQuizzesById[quizId]
             if quiz == nil {
-                errors.append("\(prefix).quizId must be a known lesson quiz ID.")
+                errors.append(String(localized: "\(prefix).quizId must be a known lesson quiz ID."))
             }
         } else {
             quiz = nil
-            errors.append("\(prefix).quizId must be a non-empty string.")
+            errors.append(String(localized: "\(prefix).quizId must be a non-empty string."))
         }
 
         if let lessonId = attempt.storage["lessonId"]?.nonEmptyStringValue {
             if !knownLessonIds.contains(lessonId) || (quiz != nil && lessonId != quiz?.lessonId) {
-                errors.append("\(prefix).lessonId must match the known lesson quiz.")
+                errors.append(String(localized: "\(prefix).lessonId must match the known lesson quiz."))
             }
         } else {
-            errors.append("\(prefix).lessonId must be a non-empty string.")
+            errors.append(String(localized: "\(prefix).lessonId must be a non-empty string."))
         }
 
         if let submittedAt = attempt.storage["submittedAt"]?.stringValue {
             appendTimestampError(&errors, value: submittedAt, field: "\(prefix).submittedAt")
         } else {
-            errors.append("\(prefix).submittedAt must be a canonical UTC timestamp string.")
+            errors.append(String(localized: "\(prefix).submittedAt must be a canonical UTC timestamp string."))
         }
         guard let correct = attempt.storage["correct"]?.numberValue, correct.rounded() == correct, correct >= 0 else {
-            errors.append("\(prefix).correct must be a non-negative integer.")
+            errors.append(String(localized: "\(prefix).correct must be a non-negative integer."))
             continue
         }
         guard let total = attempt.storage["total"]?.numberValue, total.rounded() == total, total > 0 else {
-            errors.append("\(prefix).total must be a positive integer.")
+            errors.append(String(localized: "\(prefix).total must be a positive integer."))
             continue
         }
-        if correct > total { errors.append("\(prefix).correct must not exceed total.") }
+        if correct > total { errors.append(String(localized: "\(prefix).correct must not exceed total.")) }
         if let percent = attempt.storage["percent"]?.numberValue, percent.isFinite, percent >= 0, percent <= 100 {
             let expectedPercent = (correct / total) * 100
             if abs(percent - expectedPercent) > 1e-9 {
-                errors.append("\(prefix).percent must match correct divided by total.")
+                errors.append(String(localized: "\(prefix).percent must match correct divided by total."))
             }
         } else {
-            errors.append("\(prefix).percent must be a number between 0 and 100.")
+            errors.append(String(localized: "\(prefix).percent must be a number between 0 and 100."))
         }
 
         if let officialQuestionIds = stringArray(attempt.storage["officialQuestionIds"]) {
             let quizQuestionIds = Set(quiz?.officialQuestionIds ?? [])
             if !officialQuestionIds.allSatisfy(knownQuestionIds.contains) {
-                errors.append("\(prefix).officialQuestionIds must contain known question IDs.")
+                errors.append(String(localized: "\(prefix).officialQuestionIds must contain known question IDs."))
             } else if quiz != nil && !officialQuestionIds.allSatisfy(quizQuestionIds.contains) {
-                errors.append("\(prefix).officialQuestionIds must belong to the lesson quiz.")
+                errors.append(String(localized: "\(prefix).officialQuestionIds must belong to the lesson quiz."))
             }
 
             if let incorrectOfficialQuestionIds = stringArray(attempt.storage["incorrectOfficialQuestionIds"]) {
                 if !incorrectOfficialQuestionIds.allSatisfy(knownQuestionIds.contains) {
-                    errors.append("\(prefix).incorrectOfficialQuestionIds must contain known question IDs.")
+                    errors.append(String(localized: "\(prefix).incorrectOfficialQuestionIds must contain known question IDs."))
                 } else {
                     let officialSet = Set(officialQuestionIds)
                     if !incorrectOfficialQuestionIds.allSatisfy(officialSet.contains) {
-                        errors.append("\(prefix).incorrectOfficialQuestionIds must be a subset of officialQuestionIds.")
+                        errors.append(String(localized: "\(prefix).incorrectOfficialQuestionIds must be a subset of officialQuestionIds."))
                     }
                 }
             } else {
-                errors.append("\(prefix).incorrectOfficialQuestionIds must be an array of strings.")
+                errors.append(String(localized: "\(prefix).incorrectOfficialQuestionIds must be an array of strings."))
             }
         } else {
-            errors.append("\(prefix).officialQuestionIds must be an array of strings.")
+            errors.append(String(localized: "\(prefix).officialQuestionIds must be an array of strings."))
             if stringArray(attempt.storage["incorrectOfficialQuestionIds"]) == nil {
-                errors.append("\(prefix).incorrectOfficialQuestionIds must be an array of strings.")
+                errors.append(String(localized: "\(prefix).incorrectOfficialQuestionIds must be an array of strings."))
             }
         }
 
         if let incorrectConceptCheckIds = stringArray(attempt.storage["incorrectConceptCheckIds"]) {
             let conceptCheckIds = quiz?.conceptCheckIds ?? []
             if quiz != nil && !incorrectConceptCheckIds.allSatisfy(conceptCheckIds.contains) {
-                errors.append("\(prefix).incorrectConceptCheckIds must contain known concept check IDs for the quiz.")
+                errors.append(String(localized: "\(prefix).incorrectConceptCheckIds must contain known concept check IDs for the quiz."))
             }
         } else {
-            errors.append("\(prefix).incorrectConceptCheckIds must be an array of strings.")
+            errors.append(String(localized: "\(prefix).incorrectConceptCheckIds must be an array of strings."))
         }
     }
 }
@@ -926,18 +926,18 @@ private func validateAttemptItem(
     knownSubsectionIds: Set<String>,
     errors: inout [String]
 ) {
-    if item.position < 1 { errors.append("\(prefix).position must be positive.") }
-    if !knownQuestionIds.contains(item.questionId) { errors.append("\(prefix).questionId must be a known question ID.") }
+    if item.position < 1 { errors.append(String(localized: "\(prefix).position must be positive.")) }
+    if !knownQuestionIds.contains(item.questionId) { errors.append(String(localized: "\(prefix).questionId must be a known question ID.")) }
     if !knownSubsectionIds.contains(item.subsectionId) || item.subsectionId != String(item.questionId.prefix(9)) {
-        errors.append("\(prefix).subsectionId must match the known question subsection.")
+        errors.append(String(localized: "\(prefix).subsectionId must match the known question subsection."))
     }
     if !knownCategoryIds.contains(item.categoryId) || item.categoryId != String(item.questionId.prefix(5)) {
-        errors.append("\(prefix).categoryId must match the known question category.")
+        errors.append(String(localized: "\(prefix).categoryId must match the known question category."))
     }
     if Set(item.choicePermutation) != Set([0, 1, 2, 3]) || item.choicePermutation.count != 4 {
-        errors.append("\(prefix).choicePermutation must be a permutation of 0, 1, 2, 3.")
+        errors.append(String(localized: "\(prefix).choicePermutation must be a permutation of 0, 1, 2, 3."))
     }
     if let selected = item.selectedSourceIndex, !(0...3).contains(selected) {
-        errors.append("\(prefix).selectedSourceIndex must be null or an answer source index between 0 and 3.")
+        errors.append(String(localized: "\(prefix).selectedSourceIndex must be null or an answer source index between 0 and 3."))
     }
 }
