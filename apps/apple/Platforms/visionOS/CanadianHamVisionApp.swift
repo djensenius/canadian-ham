@@ -67,7 +67,7 @@ private struct CanadianHamVisionRootView: View {
                 content(for: bank)
                     .padding(DesignTokens.Spacing.xxl)
             } else if let loadError {
-                VisionMessageView(title: "Question bank unavailable", message: LocalizedStringKey(loadError), systemImage: "exclamationmark.triangle.fill")
+                VisionMessageView(title: "Question bank unavailable", message: loadError, systemImage: "exclamationmark.triangle.fill")
                     .padding(DesignTokens.Spacing.xxl)
             } else {
                 ProgressView("Loading question bank…")
@@ -112,7 +112,7 @@ private struct CanadianHamVisionRootView: View {
                     onAbout: { screen = .about }
                 )
             } else {
-                VisionMessageView(title: "No categories", message: "The bundled question bank has no practice categories.", systemImage: "questionmark.folder")
+                VisionMessageView(title: "No categories", message: String(localized: "The bundled question bank has no practice categories."), systemImage: "questionmark.folder")
             }
         case .about:
             VisionAboutView(bank: bank, onCategories: { screen = .categories })
@@ -135,14 +135,14 @@ private struct VisionLanguageOrnament: View {
     var body: some View {
         Picker("Question language", selection: $language) {
             ForEach(BankLanguage.allCases) { language in
-                Text(language.displayName).tag(language)
+                Text(localizedVision(language.displayName, language: language)).tag(language) // l10n: content(language)
             }
         }
         .pickerStyle(.segmented)
         .frame(width: 320)
         .padding(DesignTokens.Spacing.sm)
         .glassBackgroundEffect()
-        .accessibilityLabel(Text("Question language"))
+        .accessibilityLabel(Text("Question language")) // l10n: localized
         .accessibilityIdentifier("question-language-picker")
     }
 }
@@ -172,7 +172,7 @@ private struct VisionCategoryGridView: View {
                     Button("About", action: onAbout)
                         .buttonStyle(.bordered)
                         .font(DesignTokens.FontScale.body.weight(.semibold))
-                        .accessibilityLabel(Text("About Canadian Ham"))
+                        .accessibilityLabel(Text("About Canadian Ham")) // l10n: localized
                 }
 
                 Text("Practice categories")
@@ -209,10 +209,10 @@ private struct VisionCategoryCard: View {
     var body: some View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Text(category.id)
+                Text(category.id) // l10n: verbatim
                     .font(DesignTokens.FontScale.caption.monospaced().weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
-                Text(category.name.text(for: language))
+                Text(localizedVision(category.name.text(for: language), language: language)) // l10n: content(question)
                     .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                 Spacer(minLength: DesignTokens.Spacing.sm)
@@ -230,8 +230,8 @@ private struct VisionCategoryCard: View {
         }
         .buttonStyle(.plain)
         .hoverEffect(.lift)
-        .accessibilityLabel(Text(categoryAccessibilityLabel))
-        .accessibilityHint(Text("Starts practice for this category"))
+        .accessibilityLabel(Text(categoryAccessibilityLabel)) // l10n: content(question)
+        .accessibilityHint(Text("Starts practice for this category")) // l10n: localized
     }
 }
 
@@ -290,24 +290,24 @@ private struct VisionPracticeView: View {
                 HStack(alignment: .center, spacing: DesignTokens.Spacing.lg) {
                     Button("Categories", action: onCategories)
                         .buttonStyle(.bordered)
-                        .accessibilityHint(Text("Returns to the category grid"))
+                        .accessibilityHint(Text("Returns to the category grid")) // l10n: localized
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                        Text(category.name.text(for: language))
+                        Text(localizedVision(category.name.text(for: language), language: language)) // l10n: content(question)
                             .font(DesignTokens.FontScale.headline.weight(.bold))
                             .foregroundStyle(DesignTokens.Colors.ink)
                             .accessibilityAddTraits(.isHeader)
-                        Text(localizedVisionCorrectOutOfAnswered(correct: session.correctCount, answered: session.answeredCount))
+                        Text(localizedVisionCorrectOutOfAnswered(correct: session.correctCount, answered: session.answeredCount)) // l10n: localized
                             .font(DesignTokens.FontScale.body)
                             .foregroundStyle(DesignTokens.Colors.inkMuted)
                     }
                     Spacer()
                     Button("About", action: onAbout)
                         .buttonStyle(.bordered)
-                        .accessibilityLabel(Text("About Canadian Ham"))
+                        .accessibilityLabel(Text("About Canadian Ham")) // l10n: localized
                 }
 
                 if let errorMessage = session.errorMessage {
-                    VisionMessageView(title: "Practice unavailable", message: LocalizedStringKey(errorMessage), systemImage: "exclamationmark.triangle.fill")
+                    VisionMessageView(title: "Practice unavailable", message: errorMessage, systemImage: "exclamationmark.triangle.fill")
                 } else if let currentQuestion = session.currentQuestion {
                     HStack(alignment: .top, spacing: DesignTokens.Spacing.xl) {
                         VisionQuestionCard(question: currentQuestion, category: category, language: language)
@@ -341,7 +341,7 @@ private struct VisionPracticeView: View {
                         )
                     }
                 } else {
-                    VisionMessageView(title: "No questions", message: "This category has no bundled questions.", systemImage: "questionmark.circle")
+                    VisionMessageView(title: "No questions", message: String(localized: "This category has no bundled questions."), systemImage: "questionmark.circle")
                 }
             }
             .frame(maxWidth: .infinity, alignment: .topLeading)
@@ -417,14 +417,14 @@ private struct VisionQuestionCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Text(question.id)
+            Text(question.id) // l10n: verbatim
                 .font(DesignTokens.FontScale.body.monospaced().weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
-            Text(localizedVision(question.text.text(for: language), language: language))
+            Text(localizedVision(question.text.text(for: language), language: language)) // l10n: content(question)
                 .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityIdentifier("question-stem")
-            Text(sourceText)
+            Text(sourceText) // l10n: content(question)
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
         }
@@ -437,7 +437,7 @@ private struct VisionQuestionCard: View {
         )
         .glassBackgroundEffect()
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(accessibilityLabel))
+        .accessibilityLabel(Text(accessibilityLabel)) // l10n: content(question)
     }
 
     private var sourceText: AttributedString {
@@ -473,14 +473,18 @@ private struct VisionAnswerButton: View {
                     .foregroundStyle(chipForeground)
                     .background(chipBackground, in: Circle())
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                    Text(localizedVision(answer.answer.text.text(for: language), language: language))
+                    Text(localizedVision(answer.answer.text.text(for: language), language: language)) // l10n: content(question)
                         .font(DesignTokens.FontScale.body.weight(.semibold))
                         .foregroundStyle(textColor)
                         .accessibilityIdentifier("answer-\(displayLetter)-text")
                     if let statusText {
-                        Label(LocalizedStringKey(statusText), systemImage: answer.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
-                            .font(DesignTokens.FontScale.caption.weight(.bold))
-                            .foregroundStyle(textColor)
+                        Label {
+                            Text(localizedStatusText(statusText)) // l10n: localized
+                        } icon: {
+                            Image(systemName: answer.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
+                        }
+                        .font(DesignTokens.FontScale.caption.weight(.bold))
+                        .foregroundStyle(textColor)
                     }
                 }
                 Spacer(minLength: 0)
@@ -496,9 +500,9 @@ private struct VisionAnswerButton: View {
         .buttonStyle(.plain)
         .hoverEffect(.highlight)
         .disabled(isAnswered)
-        .accessibilityLabel(Text(accessibilityLabel))
+        .accessibilityLabel(Text(accessibilityLabel)) // l10n: content(question)
         .accessibilityIdentifier("answer-\(displayLetter)-button")
-        .accessibilityHint(isAnswered ? Text("Question already answered. Use Next question to continue.") : Text("Selects this answer"))
+        .accessibilityHint(isAnswered ? Text("Question already answered. Use Next question to continue.") : Text("Selects this answer")) // l10n: localized
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
@@ -582,15 +586,19 @@ private struct VisionFeedbackPanel: View {
     var body: some View {
         HStack(spacing: DesignTokens.Spacing.lg) {
             HStack(spacing: DesignTokens.Spacing.lg) {
-                Label(LocalizedStringKey(resultText), systemImage: selectedAnswer.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
-                    .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                    .foregroundStyle(selectedAnswer.isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
-                Text(sourceText)
+                Label {
+                    Text(resultText) // l10n: localized
+                } icon: {
+                    Image(systemName: selectedAnswer.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
+                }
+                .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                .foregroundStyle(selectedAnswer.isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
+                Text(sourceText) // l10n: content(question)
                     .font(DesignTokens.FontScale.body.weight(.semibold))
                     .foregroundStyle(selectedAnswer.isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
             }
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(Text(accessibilityLabel))
+            .accessibilityLabel(Text(accessibilityLabel)) // l10n: content(question)
             .accessibilityIdentifier("answer-feedback")
 
             Spacer()
@@ -599,7 +607,7 @@ private struct VisionFeedbackPanel: View {
                 .buttonStyle(VisionPrimaryButtonStyle())
                 .font(DesignTokens.FontScale.body.weight(.bold))
                 .hoverEffect(.highlight)
-                .accessibilityHint(Text("Loads another question from this category"))
+                .accessibilityHint(Text("Loads another question from this category")) // l10n: localized
                 .accessibilityIdentifier("next-question-button")
         }
         .padding(DesignTokens.Spacing.lg)
@@ -669,8 +677,8 @@ private struct VisionAboutView: View {
                         Text("Questions: \(bank.questions.count) • Categories: \(bank.categories.count) • Subsections: \(bank.subsections.count)")
                     }
                     VisionPaperSection(title: "Attribution") {
-                        Text(englishVision("Question-bank material is sourced from Innovation, Science and Economic Development Canada Amateur Radio Operator Certificate Basic Qualification materials."))
-                        Text(englishVision("Canadian Ham is independent and not affiliated with, sponsored by, or endorsed by ISED, RAC, or any accredited examiner."))
+                        Text(englishVision("Question-bank material is sourced from Innovation, Science and Economic Development Canada Amateur Radio Operator Certificate Basic Qualification materials.")) // l10n: content(en)
+                        Text(englishVision("Canadian Ham is independent and not affiliated with, sponsored by, or endorsed by ISED, RAC, or any accredited examiner.")) // l10n: content(en)
                     }
                     VisionPaperSection(title: "Privacy") {
                         Text("This visionOS app works offline with bundled content, includes no networking code, no analytics, no telemetry, and no iCloud sync.")
@@ -690,7 +698,7 @@ private struct VisionPaperSection<Content: View>: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Text(title)
+            Text(title) // l10n: localized
                 .font(DesignTokens.FontScale.title.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
@@ -711,15 +719,15 @@ private struct VisionPaperSection<Content: View>: View {
 
 private struct VisionMessageView: View {
     let title: LocalizedStringKey
-    let message: LocalizedStringKey
+    let message: String
     let systemImage: String
 
     var body: some View {
         Label {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Text(title)
+                Text(title) // l10n: localized
                     .font(DesignTokens.FontScale.headline.weight(.bold))
-                Text(message)
+                Text(message) // l10n: localized
                     .font(DesignTokens.FontScale.body)
             }
         } icon: {

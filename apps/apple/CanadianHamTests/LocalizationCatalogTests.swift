@@ -1,3 +1,4 @@
+@testable import CanadianHam
 import XCTest
 
 final class LocalizationCatalogTests: XCTestCase {
@@ -44,6 +45,8 @@ final class LocalizationCatalogTests: XCTestCase {
             String(localized: "Immediate feedback", bundle: frenchBundle, locale: locale),
             "Rétroaction immédiate"
         )
+
+        XCTAssertEqual(localizedAnsweredOutOfTotal(answered: 3, total: 100), "Answered 3 of 100")
     }
 
     private func localizedQuestionCount(_ count: Int, bundle: Bundle, locale: Locale) -> String {

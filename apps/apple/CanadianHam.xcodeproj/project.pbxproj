@@ -113,6 +113,13 @@
 			remoteGlobalIDString = EF84BA0D38616E93BC19F5E7;
 			remoteInfo = CanadianHamTV;
 		};
+		924B1E63A73C28AFAA136441 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6176519A16EF9A85BF1EF089 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D4598F650553ED607A0E311B;
+			remoteInfo = CanadianHam;
+		};
 		D81CAD08CC9BF9BE3E77E5B4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6176519A16EF9A85BF1EF089 /* Project object */;
@@ -564,6 +571,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				3328A970F1707FFC2C363215 /* PBXTargetDependency */,
 			);
 			name = CanadianHamTests;
 			packageProductDependencies = (
@@ -951,6 +959,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3328A970F1707FFC2C363215 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D4598F650553ED607A0E311B /* CanadianHam */;
+			targetProxy = 924B1E63A73C28AFAA136441 /* PBXContainerItemProxy */;
+		};
 		6B9258D71DDE37E773F1A6A9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = EF84BA0D38616E93BC19F5E7 /* CanadianHamTV */;
@@ -1104,6 +1117,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CanadianHam.app/CanadianHam";
 			};
 			name = Debug;
 		};
@@ -1125,6 +1139,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CanadianHam.app/CanadianHam";
 			};
 			name = Release;
 		};

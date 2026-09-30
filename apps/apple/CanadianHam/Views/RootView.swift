@@ -43,7 +43,7 @@ struct RootView: View {
                 ContentUnavailableView(
                     "Question bank unavailable",
                     systemImage: "exclamationmark.triangle",
-                    description: Text(LocalizedStringKey(bankLoadError))
+                    description: Text(bankLoadError) // l10n: localized
                 )
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .background(DesignTokens.Colors.paper)
@@ -51,7 +51,7 @@ struct RootView: View {
                 ContentUnavailableView(
                     "Lesson content unavailable",
                     systemImage: "exclamationmark.triangle",
-                    description: Text(LocalizedStringKey(contentLoadError))
+                    description: Text(contentLoadError) // l10n: localized
                 )
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .background(DesignTokens.Colors.paper)
@@ -133,7 +133,7 @@ struct RootView: View {
                         SidebarButton(selection: .practice(.category(category.id)), current: selection) {
                             CategoryRow(category: category, language: language)
                         } action: { selection = .practice(.category(category.id)) }
-                        .accessibilityLabel(Text(categoryAccessibilityLabel(category)))
+                        .accessibilityLabel(Text(categoryAccessibilityLabel(category))) // l10n: content(question)
                     }
                 } header: {
                     Text("Practice categories")
@@ -275,7 +275,7 @@ struct RootView: View {
                 bank = loaded
             }
         } catch {
-            bankLoadError = error.localizedDescription
+            bankLoadError = String(localized: "Unable to load question bank: \(error.localizedDescription)")
         }
     }
 
@@ -288,7 +288,7 @@ struct RootView: View {
                 self.bank = bank.withKnownLessonIds(Set(loaded.lessons.map(\.id)))
             }
         } catch {
-            contentLoadError = error.localizedDescription
+            contentLoadError = String(localized: "Unable to load lesson content: \(error.localizedDescription)")
         }
     }
 
@@ -315,7 +315,7 @@ struct RootView: View {
             language = progressStore?.preferences.language ?? .english
         } catch {
             progressStore = nil
-            progressStoreError = error.localizedDescription
+            progressStoreError = String(localized: "Unable to open the local progress store: \(error.localizedDescription)")
         }
     }
 
@@ -389,7 +389,7 @@ struct RootView: View {
                 }
             )) {
                 ForEach(BankLanguage.allCases) { language in
-                    Text(language.displayName).tag(language)
+                    Text(localized(language.displayName, language: language)).tag(language) // l10n: content(language)
                 }
             }
             .pickerStyle(.segmented)
@@ -438,7 +438,7 @@ private struct StoreRecoveryView: View {
                 .foregroundStyle(DesignTokens.Colors.warningText)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
-            Text(message) // l10n: content
+            Text(message) // l10n: localized
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .fixedSize(horizontal: false, vertical: true)
@@ -494,7 +494,7 @@ private struct CategoryRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            Text(category.name.text(for: language))
+            Text(localized(category.name.text(for: language), language: language)) // l10n: content(question)
                 .font(DesignTokens.FontScale.body.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
             Text(verbatim: "\(localizedQuestionCount(category.questionCount)) • \(localizedSubsectionCount(category.subsectionCount))")

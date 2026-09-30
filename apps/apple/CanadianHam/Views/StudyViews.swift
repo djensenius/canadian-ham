@@ -37,7 +37,7 @@ struct HomeView: View {
                 .paperCard()
 
                 if let errorMessage {
-                    MessagePanel(title: "Readiness unavailable", message: LocalizedStringKey(errorMessage), kind: .warning)
+                    MessagePanel(title: "Readiness unavailable", message: errorMessage, kind: .warning)
                 } else if let summary {
                     readinessCard(summary)
                 }
@@ -54,7 +54,7 @@ struct HomeView: View {
                             CategoryCard(category: category, language: language)
                         }
                         .buttonStyle(.plain)
-                        .accessibilityLabel(Text(categoryPracticeAccessibilityLabel(category)))
+                        .accessibilityLabel(Text(categoryPracticeAccessibilityLabel(category))) // l10n: content(question)
                     }
                 }
                 .paperCard()
@@ -74,13 +74,13 @@ struct HomeView: View {
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
             Label {
-                Text(summary.title)
+                Text(summary.title) // l10n: localized
             } icon: {
                 Image(systemName: summary.symbol)
             }
             .font(DesignTokens.FontScale.body.weight(.bold))
             .foregroundStyle(summary.tint)
-            Text(summary.message)
+            Text(summary.message) // l10n: localized
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
             Text("Due review: \(summary.dueReviewCount). Weak subsections: \(summary.weakSubsectionCount). Completed mock exams: \(summary.completedExamCount).")
@@ -207,15 +207,15 @@ struct PracticeHubView: View {
                                 CategoryCard(category: category, language: language)
                             }
                             .buttonStyle(.plain)
-                            .accessibilityLabel(Text(categoryPracticeAccessibilityLabel(category)))
+                            .accessibilityLabel(Text(categoryPracticeAccessibilityLabel(category))) // l10n: content(question)
 
                             DisclosureGroup("Subsections") {
                                 ForEach(bank.subsectionsByCategory[category.id] ?? []) { subsection in
                                     Button { startPractice(.subsection(subsection.id)) } label: {
-                                        SubsectionCard(subsection: subsection, title: bank.subsectionTitle(subsection, language: language))
+                                        SubsectionCard(subsection: subsection, title: localized(bank.subsectionTitle(subsection, language: language), language: language))
                                     }
                                     .buttonStyle(.plain)
-                                    .accessibilityLabel(Text(subsectionPracticeAccessibilityLabel(subsection)))
+                                    .accessibilityLabel(Text(subsectionPracticeAccessibilityLabel(subsection))) // l10n: content(question)
                                 }
                             }
                             .font(DesignTokens.FontScale.body.weight(.semibold))
@@ -235,9 +235,9 @@ struct PracticeHubView: View {
     private func practiceButton(_ title: LocalizedStringKey, detail: String, accessibilityLabel: String, systemImage: String, scope: PracticeScope) -> some View {
         Button { startPractice(scope) } label: {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Label(title, systemImage: systemImage)
+                Label(title, systemImage: systemImage) // l10n: localized
                     .font(DesignTokens.FontScale.body.weight(.bold))
-                Text(LocalizedStringKey(detail))
+                Text(detail) // l10n: localized
                     .font(DesignTokens.FontScale.caption)
             }
             .foregroundStyle(DesignTokens.Colors.ink)
@@ -245,7 +245,7 @@ struct PracticeHubView: View {
             .paperCard()
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(Text(accessibilityLabel))
+        .accessibilityLabel(Text(accessibilityLabel)) // l10n: localized
     }
 
     private func categoryPracticeAccessibilityLabel(_ category: BankCategory) -> AttributedString {
@@ -299,9 +299,9 @@ struct PracticeSessionView: View {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
                 header
                 if let errorMessage {
-                    MessagePanel(title: "Practice unavailable", message: LocalizedStringKey(errorMessage), kind: .warning)
+                    MessagePanel(title: "Practice unavailable", message: errorMessage, kind: .warning)
                 } else if items.isEmpty {
-                    ContentUnavailableView("No questions found", systemImage: "tray", description: Text(LocalizedStringKey(emptyMessage)))
+                    ContentUnavailableView("No questions found", systemImage: "tray", description: Text(emptyMessage)) // l10n: localized
                         .foregroundStyle(DesignTokens.Colors.ink)
                 } else if reviewSubmitted {
                     practiceReview
@@ -312,18 +312,18 @@ struct PracticeSessionView: View {
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
-        .navigationTitle(LocalizedStringKey(scopeTitle))
+        .navigationTitle(Text(scopeTitleAttributed)) // l10n: localized
         .task(id: scope) { loadSession() }
     }
 
     private var header: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            Text(LocalizedStringKey(scopeTitle))
+            Text(scopeTitleAttributed) // l10n: localized
                 .font(DesignTokens.FontScale.headline.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
                 .accessibilityIdentifier("practice-category-title")
-            Text(LocalizedStringKey(sessionProgressText))
+            Text(sessionProgressText) // l10n: localized
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityIdentifier("practice-session-tally")
@@ -339,7 +339,7 @@ struct PracticeSessionView: View {
         .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         .accessibilityElement(children: .combine)
-        .accessibilityLabel(Text("\(scopeTitle). \(sessionProgressText). Due review excludes unseen questions. Progress is saved locally after each answer."))
+        .accessibilityLabel(headerAccessibilityLabel) // l10n: localized
     }
 
     private var sessionProgressText: String {
@@ -366,6 +366,24 @@ struct PracticeSessionView: View {
         case .category(let id): bank.categories.first { $0.id == id }?.name.text(for: language) ?? id
         case .subsection(let id): bank.subsectionsById[id].map { bank.subsectionTitle($0, language: language) } ?? String(localized: "Subsection \(id)")
         }
+    }
+
+    private var scopeTitleAttributed: AttributedString {
+        switch scope {
+        case .category(let id):
+            localized(bank.categories.first { $0.id == id }?.name.text(for: language) ?? id, language: language)
+        case .subsection(let id):
+            localized(bank.subsectionsById[id].map { bank.subsectionTitle($0, language: language) } ?? String(localized: "Subsection \(id)"), language: language)
+        default:
+            AttributedString(scopeTitle)
+        }
+    }
+
+    private var headerAccessibilityLabel: Text {
+        var label = scopeTitleAttributed
+        label += AttributedString(". \(sessionProgressText). ")
+        label += AttributedString(String(localized: "Due review excludes unseen questions. Progress is saved locally after each answer."))
+        return Text(label) // l10n: localized
     }
 
     private var emptyMessage: String {
@@ -404,7 +422,7 @@ struct PracticeSessionView: View {
             }
             if let selected, progressStore.preferences.practiceMode == .immediate {
                 PracticeFeedback(question: question, selectedSourceIndex: selected, language: language, choicePermutation: item.choicePermutation)
-                Button(currentIndex + 1 == items.count ? "Finish session" : "Next question") {
+                Button(currentIndex + 1 == items.count ? "Finish session" : "Next question") { // l10n: localized
                     advanceOrFinish()
                 }
                 .buttonStyle(.bordered)
@@ -412,13 +430,13 @@ struct PracticeSessionView: View {
                 .frame(minHeight: 44)
                 .accessibilityIdentifier("next-question-button")
             } else if progressStore.preferences.practiceMode == .reviewLater {
-                Button(currentIndex + 1 == items.count ? "Submit for review" : "Next question") {
+                Button(currentIndex + 1 == items.count ? "Submit for review" : "Next question") { // l10n: localized
                     advanceReviewLater()
                 }
                 .buttonStyle(.bordered)
                 .tint(DesignTokens.Colors.ink)
                 .disabled(selected == nil)
-                .accessibilityHint(selected == nil ? Text("Choose an answer before continuing") : Text("Continues without feedback until review"))
+                .accessibilityHint(selected == nil ? Text("Choose an answer before continuing") : Text("Continues without feedback until review")) // l10n: localized
             }
         }
     }
@@ -431,9 +449,9 @@ struct PracticeSessionView: View {
                 .accessibilityAddTraits(.isHeader)
             ForEach(items) { item in
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Text(item.question.id)
+                    Text(item.question.id) // l10n: verbatim
                         .font(DesignTokens.FontScale.body.monospaced())
-                    Text(item.question.text.text(for: language))
+                    Text(localized(item.question.text.text(for: language), language: language)) // l10n: content(question)
                         .font(DesignTokens.FontScale.body.weight(.semibold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                     PracticeFeedback(question: item.question, selectedSourceIndex: selectedByQuestionId[item.question.id], language: language, choicePermutation: item.choicePermutation)
@@ -604,7 +622,7 @@ struct MockExamView: View {
                     examQuestion(item: currentItem, question: question)
                 }
                 if let errorMessage {
-                    MessagePanel(title: "Mock exam unavailable", message: LocalizedStringKey(errorMessage), kind: .warning)
+                    MessagePanel(title: "Mock exam unavailable", message: errorMessage, kind: .warning)
                 }
             }
             .pagePadding()
@@ -632,7 +650,7 @@ struct MockExamView: View {
             Button("Cancel", role: .cancel) {}
             Button("Submit", role: .destructive) { submitExam() }
         } message: {
-            Text(LocalizedStringKey(submitConfirmationText))
+            Text(submitConfirmationText) // l10n: localized
         }
     }
 
@@ -818,7 +836,7 @@ struct MockExamView: View {
                 ForEach(generatedItems.indices, id: \.self) { index in
                     let item = generatedItems[index]
                     Button { currentIndex = index } label: {
-                        Text(navigatorLabel(for: index, item: item))
+                        Text(navigatorLabel(for: index, item: item)) // l10n: verbatim
                             .font(DesignTokens.FontScale.body.monospaced().weight(.semibold))
                             .foregroundStyle(DesignTokens.Colors.ink)
                             .frame(minWidth: 48, minHeight: 44)
@@ -827,7 +845,7 @@ struct MockExamView: View {
                             .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous).strokeBorder(navigatorBorder(for: index, item: item), lineWidth: index == currentIndex ? 2 : 1))
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel(mockNavigatorAccessibilityLabel(for: index, item: item))
+                    .accessibilityLabel(mockNavigatorAccessibilityLabel(for: index, item: item)) // l10n: localized
                 }
             }
         }
@@ -847,7 +865,7 @@ struct MockExamView: View {
         var label = String(localized: "Question \(index + 1), \(answerState)")
         if flagged.contains(item.questionId) { label += String(localized: ", flagged") }
         if index == currentIndex { label += String(localized: ", current") }
-        return Text(LocalizedStringKey(label))
+        return Text(label) // l10n: localized
     }
 
     private func navigatorBackground(for item: GeneratedExamItem) -> Color {
@@ -865,15 +883,17 @@ struct MockExamView: View {
         let unanswered = generatedItems.filter { selectedByQuestionId[$0.questionId] == nil }
         let listed = unanswered.prefix(10).map { String($0.position) }.joined(separator: ", ")
         if unanswered.isEmpty {
-            return "All questions are answered. You can submit now."
+            return String(localized: "All questions are answered. You can submit now.")
         }
-        return "\(unanswered.count) unanswered questions count as incorrect. Unanswered positions: \(listed)\(unanswered.count > 10 ? ", …" : "")."
+        let unansweredText = String.localizedStringWithFormat(String(localized: "%lld unanswered questions count as incorrect."), unanswered.count)
+        let suffix = unanswered.count > 10 ? ", …" : ""
+        return String(localized: "\(unansweredText) Unanswered positions: \(listed)\(suffix).")
     }
 
     private func examResults(_ attempt: StoredExamAttempt) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Text(attempt.score.honours ? "Basic with Honours" : attempt.score.passed ? "Pass" : "Needs review")
+                Text(attempt.score.honours ? "Basic with Honours" : attempt.score.passed ? "Pass" : "Needs review") // l10n: localized
                     .font(DesignTokens.FontScale.headline.weight(.bold))
                     .foregroundStyle(attempt.score.passed ? DesignTokens.Colors.correctText : DesignTokens.Colors.warningText)
                     .accessibilityAddTraits(.isHeader)
@@ -911,7 +931,7 @@ struct MockExamView: View {
                         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                             Text("\(item.position). \(question.id)")
                                 .font(DesignTokens.FontScale.body.monospaced())
-                            Text(question.text.text(for: language))
+                            Text(localized(question.text.text(for: language), language: language)) // l10n: content(question)
                                 .font(DesignTokens.FontScale.body)
                                 .foregroundStyle(DesignTokens.Colors.ink)
                             PracticeFeedback(question: question, selectedSourceIndex: item.selectedSourceIndex, language: language, choicePermutation: item.choicePermutation)
@@ -1033,7 +1053,7 @@ struct SettingsView: View {
                         set: { mode in savePreferences { $0.practiceMode = mode } }
                     )) {
                         ForEach(ApplePreferences.PracticeMode.allCases) { mode in
-                            Text(mode.localizedLabel).tag(mode)
+                            Text(mode.localizedLabel).tag(mode) // l10n: localized
                         }
                     }
                     .pickerStyle(.segmented)
@@ -1046,7 +1066,7 @@ struct SettingsView: View {
                         set: { theme in savePreferences { $0.theme = theme } }
                     )) {
                         ForEach(ApplePreferences.Theme.allCases) { theme in
-                            Text(theme.localizedLabel).tag(theme)
+                            Text(theme.localizedLabel).tag(theme) // l10n: localized
                         }
                     }
                     Picker("Question language", selection: Binding(
@@ -1054,7 +1074,7 @@ struct SettingsView: View {
                         set: { language in savePreferences { $0.language = language } }
                     )) {
                         ForEach(BankLanguage.allCases) { language in
-                            Text(language.displayName).tag(language)
+                            Text(localized(language.displayName, language: language)).tag(language) // l10n: content(language)
                         }
                     }
                 }
@@ -1090,8 +1110,8 @@ struct SettingsView: View {
                 }
                 .paperCard()
 
-                if let statusMessage { MessagePanel(title: "Settings", message: LocalizedStringKey(statusMessage), kind: .success) }
-                if let errorMessage { MessagePanel(title: "Settings error", message: LocalizedStringKey(errorMessage), kind: .warning) }
+                if let statusMessage { MessagePanel(title: "Settings", message: statusMessage, kind: .success) }
+                if let errorMessage { MessagePanel(title: "Settings error", message: errorMessage, kind: .warning) }
             }
             .pagePadding()
         }
@@ -1214,11 +1234,11 @@ struct QuestionCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Text(question.id)
+            Text(question.id) // l10n: verbatim
                 .font(DesignTokens.FontScale.body.monospaced())
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
                 .accessibilityIdentifier("question-identifier")
-            Text(localized(question.text.text(for: language), language: language))
+            Text(localized(question.text.text(for: language), language: language)) // l10n: content(question)
                 .font(DesignTokens.FontScale.bodyLarge.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .textSelection(.enabled)
@@ -1253,15 +1273,19 @@ struct AnswerChoiceButton: View {
                     .foregroundStyle(chipForeground)
                     .accessibilityIdentifier("answer-\(letter)-chip")
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                    Text(localized(answer.text.text(for: language), language: language))
+                    Text(localized(answer.text.text(for: language), language: language)) // l10n: content(question)
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(textColor)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .accessibilityIdentifier("answer-\(letter)-text")
                     if let statusText {
-                        Label(LocalizedStringKey(statusText), systemImage: statusIcon)
-                            .font(DesignTokens.FontScale.caption.weight(.bold))
-                            .foregroundStyle(textColor)
+                        Label {
+                            Text(localizedStatusText(statusText)) // l10n: localized
+                        } icon: {
+                            Image(systemName: statusIcon)
+                        }
+                        .font(DesignTokens.FontScale.caption.weight(.bold))
+                        .foregroundStyle(textColor)
                     }
                 }
             }
@@ -1273,7 +1297,7 @@ struct AnswerChoiceButton: View {
         .buttonStyle(.plain)
         .allowsHitTesting(!disabled)
         .accessibilityRespondsToUserInteraction(!disabled)
-        .accessibilityLabel(accessibilityLabel)
+        .accessibilityLabel(accessibilityLabel) // l10n: content(question)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
         .accessibilityIdentifier("answer-\(letter)-button")
     }
@@ -1354,7 +1378,7 @@ struct AnswerChoiceButton: View {
         if let statusText {
             accessibleText += AttributedString(String(localized: ", \(localizedStatusText(statusText))"))
         }
-        return Text(accessibleText)
+        return Text(accessibleText) // l10n: content(question)
     }
 
     private func localizedStatusText(_ statusText: String) -> String {
@@ -1384,7 +1408,7 @@ struct PracticeFeedback: View {
     var body: some View {
         let isCorrect = selectedSourceIndex == 0
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            Text(isCorrect ? "Correct" : "Incorrect")
+            Text(isCorrect ? "Correct" : "Incorrect") // l10n: localized
                 .font(DesignTokens.FontScale.body.weight(.bold))
                 .foregroundStyle(isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
                 .accessibilityIdentifier("answer-feedback-title")
@@ -1412,11 +1436,11 @@ struct PracticeFeedback: View {
 
 private struct SubsectionCard: View {
     let subsection: BankSubsection
-    let title: String
+    let title: AttributedString
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            Text(title)
+            Text(title) // l10n: content(question)
                 .font(DesignTokens.FontScale.body.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
             Text(verbatim: "\(localizedQuestionCount(subsection.questionCount)) • \(subsection.id)")
@@ -1435,7 +1459,7 @@ private struct CategoryCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            Text(category.name.text(for: language))
+            Text(localized(category.name.text(for: language), language: language)) // l10n: content(question)
                 .font(DesignTokens.FontScale.body.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
             Text(verbatim: "\(localizedQuestionCount(category.questionCount)) • \(localizedSubsectionCount(category.subsectionCount))")
@@ -1450,14 +1474,14 @@ private struct CategoryCard: View {
 struct MessagePanel: View {
     enum Kind { case warning, success }
     let title: LocalizedStringKey
-    let message: LocalizedStringKey
+    let message: String
     let kind: Kind
 
     var body: some View {
         Label {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Text(title).font(DesignTokens.FontScale.title.weight(.bold))
-                Text(message).font(DesignTokens.FontScale.body)
+                Text(title).font(DesignTokens.FontScale.title.weight(.bold)) // l10n: localized
+                Text(message).font(DesignTokens.FontScale.body) // l10n: localized
             }
         } icon: {
             Image(systemName: kind == .success ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
@@ -1518,10 +1542,8 @@ private func localizedCorrectOutOfAnswered(correct: Int, answered: Int) -> Strin
     return String(localized: "\(correctText) out of \(answeredText)")
 }
 
-private func localizedAnsweredOutOfTotal(answered: Int, total: Int) -> String {
-    let answeredText = String.localizedStringWithFormat(String(localized: "%lld answered question"), answered)
-    let totalText = String.localizedStringWithFormat(String(localized: "%lld total question"), total)
-    return String(localized: "Answered \(answeredText) of \(totalText)")
+func localizedAnsweredOutOfTotal(answered: Int, total: Int) -> String {
+    String.localizedStringWithFormat(String(localized: "Answered %lld of %lld"), answered, total)
 }
 
 private func localizedQuestionCount(_ count: Int) -> String {
@@ -1535,7 +1557,7 @@ private func localizedSubsectionCount(_ count: Int) -> String {
 @MainActor
 private func tokenButton(_ title: LocalizedStringKey, action: @escaping () -> Void) -> some View {
     Button(action: action) {
-        Text(title)
+        Text(title) // l10n: localized
             .font(DesignTokens.FontScale.body.weight(.semibold))
             .foregroundStyle(DesignTokens.Colors.ink)
             .padding(.horizontal, DesignTokens.Spacing.lg)

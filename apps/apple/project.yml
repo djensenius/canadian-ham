@@ -115,6 +115,7 @@ targets:
         buildPhase: resources
         createIntermediateGroups: false
     dependencies:
+      - target: CanadianHam
       - package: CanadianHamEngine
         product: CanadianHamEngine
       - package: CanadianHamContent
