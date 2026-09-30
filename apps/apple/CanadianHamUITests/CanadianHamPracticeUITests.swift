@@ -556,15 +556,27 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let categoryBreakdown = app.descendants(matching: .any)["mock-results-category-breakdown"].firstMatch
         XCTAssertTrue(categoryBreakdown.waitForExistence(timeout: 5), "Mock exam results should expose a deterministic category-breakdown anchor")
         scrollUntilPartiallyVisible(categoryBreakdown, in: app, maxSwipes: 12)
+        XCTAssertTrue(
+            isPartiallyVisibleBelowNavigationBar(categoryBreakdown, in: app),
+            "Category breakdown anchor should be visible below the navigation bar before auditing mock results details. Frame: \(frameDescription(categoryBreakdown.frame))"
+        )
         let wrongAnswerReview = app.descendants(matching: .any)["mock-results-wrong-answer-review"].firstMatch
         XCTAssertTrue(wrongAnswerReview.waitForExistence(timeout: 5), "Mock exam results should expose a deterministic wrong-answer-review anchor")
         scrollUntilPartiallyVisible(wrongAnswerReview, in: app, maxSwipes: 12)
+        XCTAssertTrue(
+            isPartiallyVisibleBelowNavigationBar(wrongAnswerReview, in: app),
+            "Wrong-answer review anchor should be visible below the navigation bar before auditing mock results details. Frame: \(frameDescription(wrongAnswerReview.frame))"
+        )
     }
 
     private func scrollPracticeReviewFeedbackIntoView(in app: XCUIApplication) {
         let explanation = app.descendants(matching: .any)["explanation-panel"].firstMatch
         XCTAssertTrue(explanation.waitForExistence(timeout: 5), "Practice review should expose a deterministic explanation anchor")
         scrollUntilPartiallyVisible(explanation, in: app, maxSwipes: 12)
+        XCTAssertTrue(
+            isPartiallyVisibleBelowNavigationBar(explanation, in: app),
+            "Explanation panel anchor should be visible below the navigation bar before auditing practice review feedback. Frame: \(frameDescription(explanation.frame))"
+        )
     }
 
     private func answerKnownCorrectLifeAnswerIfPresent(in app: XCUIApplication, identifier: String) {
