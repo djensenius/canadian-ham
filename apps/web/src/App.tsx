@@ -40,6 +40,14 @@ import {
   type ProgressStore,
   type WebPreferences,
 } from "./lib/progressStore";
+import {
+  clearStoredInterfaceLanguage,
+  interfaceLanguageTag,
+  readStoredInterfaceLanguage,
+  storeInterfaceLanguage,
+  t,
+  type InterfaceLanguage,
+} from "./lib/i18n";
 import { applyThemePreference, mirrorThemePreference, readStoredThemePreference } from "./lib/theme";
 import {
   applyPracticeAnswer,
@@ -55,7 +63,6 @@ import {
 type Route = "home" | "learn" | "module" | "lesson" | "practice" | "mock" | "results" | "settings";
 type View = Route;
 
-const REFERENCE_SHEET_NOTE = "In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.";
 
 interface AppProps {
   readonly initialView?: View;
@@ -119,22 +126,23 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
       return this.props.children;
     }
     const recoveryPreferences = this.state.recoveryPreferences ?? { ...defaultPreferences, theme: readStoredThemePreference() };
+    const interfaceLanguage = readStoredInterfaceLanguage();
     return (
       <div className="app-shell">
         <header className="site-header" role="banner">
           <div className="brand-lockup">
             <HeaderMark />
             <div>
-              <p className="eyebrow">Canadian Amateur Radio Basic</p>
-              <h1>Canadian Ham</h1>
+              <p className="eyebrow">{t(interfaceLanguage, "appEyebrow")}</p>
+              <h1>{t(interfaceLanguage, "appName")}</h1>
             </div>
           </div>
         </header>
         <main tabIndex={-1}>
           <section className="card settings" aria-labelledby="app-recovery-title">
-            <h2 id="app-recovery-title">Settings and local data</h2>
-            <p role="alert">The app could not render saved progress: {this.state.errorMessage}</p>
-            <p>Reset remains available so invalid local data can be cleared on this device.</p>
+            <h2 id="app-recovery-title">{t(interfaceLanguage, "errorBoundaryTitle")}</h2>
+            <p role="alert">{t(interfaceLanguage, "errorBoundaryRenderFailed", this.state.errorMessage)}</p>
+            <p>{t(interfaceLanguage, "errorBoundaryResetAvailable")}</p>
             <Settings
               now={this.props.now}
               onProgressImported={() => this.setState({ errorMessage: null })}
@@ -147,13 +155,15 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
                 mirrorThemePreference(nextPreferences.theme);
                 this.setState({ recoveryPreferences: nextPreferences });
               }}
+              interfaceLanguage={interfaceLanguage}
+              onInterfaceLanguageChange={(language) => { storeInterfaceLanguage(language); this.forceUpdate(); }}
               preferences={recoveryPreferences}
               statusMessage=""
               store={this.props.store}
             />
           </section>
         </main>
-        <Footer />
+        <Footer interfaceLanguage={interfaceLanguage} />
       </div>
     );
   }
@@ -214,6 +224,7 @@ function AppContent({
   const [locationHash, setLocationHash] = useState(() => globalThis.location?.hash ?? "");
   const [route, setRoute] = useState<Route>(() => routeFromHash(initialView));
   const [language, setLanguage] = useState<Language>("en");
+  const [interfaceLanguage, setInterfaceLanguageState] = useState<InterfaceLanguage>(() => readStoredInterfaceLanguage());
   const [bankQuestions, setBankQuestions] = useState<readonly Question[] | null>(null);
   const [progress, setProgress] = useState<readonly QuestionProgressRecord[]>([]);
   const [examAttempts, setExamAttempts] = useState<readonly ExamAttempt[]>([]);
@@ -227,6 +238,11 @@ function AppContent({
   const [statusMessage, setStatusMessage] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
   const mainRef = useRef<HTMLElement>(null);
+  const interfaceLanguageRef = useRef(interfaceLanguage);
+
+  useEffect(() => {
+    interfaceLanguageRef.current = interfaceLanguage;
+  }, [interfaceLanguage]);
 
   useEffect(() => {
     let cancelled = false;
@@ -249,7 +265,7 @@ function AppContent({
         }
       } catch (error) {
         if (!cancelled) {
-          setAlertMessage(`Unable to open local progress storage: ${formatError(error)}`);
+          setAlertMessage(t(interfaceLanguageRef.current, "errorOpenStorage", formatError(error)));
         }
       }
     }
@@ -269,7 +285,7 @@ function AppContent({
       })
       .catch((error: unknown) => {
         if (!cancelled) {
-          setAlertMessage(`Unable to load bundled question bank: ${formatError(error)}`);
+          setAlertMessage(t(interfaceLanguageRef.current, "errorLoadQuestionBank", formatError(error)));
         }
       });
     return () => {
@@ -290,6 +306,10 @@ function AppContent({
   useEffect(() => {
     mainRef.current?.focus();
   }, [locationHash, route]);
+
+  useEffect(() => {
+    document.documentElement.lang = interfaceLanguageTag(interfaceLanguage);
+  }, [interfaceLanguage]);
 
   useEffect(() => {
     applyThemePreference(preferences.theme);
@@ -353,7 +373,7 @@ function AppContent({
 
   function startPractice(scope: PracticeScope = practiceScope, mode: PracticeMode = preferences.practiceMode): void {
     if (bankQuestions === null) {
-      setAlertMessage("Question bank is still loading locally. Try again in a moment.");
+      setAlertMessage(t(interfaceLanguage, "errorQuestionBankLoading"));
       return;
     }
     const seed = seedFactory();
@@ -385,9 +405,14 @@ function AppContent({
       await store.putPreferences(nextPreferences);
       setAlertMessage("");
     } catch (error) {
-      setAlertMessage(`Unable to save preferences locally: ${formatError(error)}`);
+      setAlertMessage(t(interfaceLanguage, "errorSavePreferences", formatError(error)));
       throw error;
     }
+  }
+
+  function setInterfaceLanguage(nextLanguage: InterfaceLanguage): void {
+    setInterfaceLanguageState(nextLanguage);
+    storeInterfaceLanguage(nextLanguage);
   }
 
   async function commitProgress(nextProgress: readonly QuestionProgressRecord[]): Promise<void> {
@@ -396,7 +421,7 @@ function AppContent({
       setProgress(nextProgress);
       setAlertMessage("");
     } catch (error) {
-      setAlertMessage(`Unable to save question progress locally: ${formatError(error)}`);
+      setAlertMessage(t(interfaceLanguage, "errorSaveQuestionProgress", formatError(error)));
       throw error;
     }
   }
@@ -413,7 +438,7 @@ function AppContent({
       setLessonProgress((current) => [...current.filter((record) => record.lessonId !== lesson.id), nextRecord].sort((a, b) => a.lessonId.localeCompare(b.lessonId)));
       setAlertMessage("");
     } catch (error) {
-      setAlertMessage(`Unable to save lesson progress locally: ${formatError(error)}`);
+      setAlertMessage(t(interfaceLanguage, "errorSaveLessonProgress", formatError(error)));
     }
   }
 
@@ -424,7 +449,7 @@ function AppContent({
       setProgress(nextProgress);
       setAlertMessage("");
     } catch (error) {
-      setAlertMessage(`Unable to save lesson quiz locally: ${formatError(error)}`);
+      setAlertMessage(t(interfaceLanguage, "errorSaveLessonQuiz", formatError(error)));
     }
   }
 
@@ -443,7 +468,7 @@ function AppContent({
       setAlertMessage("");
       navigate("results");
     } catch (error) {
-      setAlertMessage(`Unable to save mock exam locally: ${formatError(error)}`);
+      setAlertMessage(t(interfaceLanguage, "errorSaveMockExam", formatError(error)));
       throw error;
     }
   }
@@ -454,28 +479,29 @@ function AppContent({
         <div className="brand-lockup">
           <HeaderMark />
           <div>
-            <p className="eyebrow">Canadian Amateur Radio Basic</p>
-            <h1>Canadian Ham</h1>
+            <p className="eyebrow">{t(interfaceLanguage, "appEyebrow")}</p>
+            <h1>{t(interfaceLanguage, "appName")}</h1>
           </div>
         </div>
         <div className="header-actions">
-          <PwaStatus updateDisabled={mockExam !== null} />
-          <LanguageToggle language={language} onLanguageChange={setLanguage} />
+          <PwaStatus interfaceLanguage={interfaceLanguage} updateDisabled={mockExam !== null} />
+          <LanguageToggle interfaceLanguage={interfaceLanguage} language={language} onLanguageChange={setLanguage} />
         </div>
       </header>
 
-      <nav className="top-nav" aria-label="Primary">
-        <button type="button" aria-current={route === "home" ? "page" : undefined} onClick={() => navigate("home")}>Home</button>
-        <button type="button" aria-current={route === "learn" || route === "module" || route === "lesson" ? "page" : undefined} onClick={() => navigate("learn")}>Learn</button>
-        <button type="button" aria-current={route === "practice" ? "page" : undefined} onClick={() => practiceSession === null ? startPractice(practiceScope) : navigate("practice")}>Practice</button>
-        <button type="button" aria-current={route === "mock" ? "page" : undefined} onClick={() => navigate("mock")}>Mock exam</button>
-        <button type="button" aria-current={route === "settings" ? "page" : undefined} onClick={() => navigate("settings")}>Settings</button>
+      <nav className="top-nav" aria-label={t(interfaceLanguage, "navPrimary")}>
+        <button type="button" aria-current={route === "home" ? "page" : undefined} onClick={() => navigate("home")}>{t(interfaceLanguage, "navHome")}</button>
+        <button type="button" aria-current={route === "learn" || route === "module" || route === "lesson" ? "page" : undefined} onClick={() => navigate("learn")}>{t(interfaceLanguage, "navLearn")}</button>
+        <button type="button" aria-current={route === "practice" ? "page" : undefined} onClick={() => practiceSession === null ? startPractice(practiceScope) : navigate("practice")}>{t(interfaceLanguage, "navPractice")}</button>
+        <button type="button" aria-current={route === "mock" ? "page" : undefined} onClick={() => navigate("mock")}>{t(interfaceLanguage, "navMockExam")}</button>
+        <button type="button" aria-current={route === "settings" ? "page" : undefined} onClick={() => navigate("settings")}>{t(interfaceLanguage, "navSettings")}</button>
       </nav>
 
       <main ref={mainRef} tabIndex={-1}>
         {alertMessage ? <p className="alert-message" role="alert">{alertMessage}</p> : null}
         {route === "home" ? (
           <Home
+            interfaceLanguage={interfaceLanguage}
             dueReviewCount={dueReviewCount}
             examAttempts={examAttempts}
             onNavigate={navigate}
@@ -486,6 +512,7 @@ function AppContent({
         ) : null}
         {route === "learn" ? (
           <Learn
+            interfaceLanguage={interfaceLanguage}
             lessonProgress={lessonProgress}
             onOpenLesson={navigateToLesson}
             onOpenModule={navigateToModule}
@@ -493,6 +520,7 @@ function AppContent({
         ) : null}
         {route === "module" ? (
           <ModulePage
+            interfaceLanguage={interfaceLanguage}
             lessonProgress={lessonProgress}
             moduleId={currentModuleId ?? ""}
             onOpenLesson={navigateToLesson}
@@ -500,6 +528,7 @@ function AppContent({
         ) : null}
         {route === "lesson" ? (
           <LessonPage
+            interfaceLanguage={interfaceLanguage}
             attempts={lessonQuizAttempts}
             bankQuestionsById={bankQuestionsById}
             language={language}
@@ -516,6 +545,7 @@ function AppContent({
         ) : null}
         {route === "practice" ? (
           <Practice
+            interfaceLanguage={interfaceLanguage}
             language={language}
             bankReady={bankQuestions !== null}
             activeScope={practiceScope}
@@ -531,6 +561,7 @@ function AppContent({
         ) : null}
         {route === "mock" ? (
           <MockExam
+            interfaceLanguage={interfaceLanguage}
             exam={mockExam}
             language={language}
             questions={bankQuestions}
@@ -542,10 +573,11 @@ function AppContent({
           />
         ) : null}
         {route === "results" ? (
-          <Results attempt={latestResult ?? latestAttempt} language={language} onStartPractice={startPractice} questionsById={bankQuestionsById} />
+          <Results attempt={latestResult ?? latestAttempt} interfaceLanguage={interfaceLanguage} language={language} onStartPractice={startPractice} questionsById={bankQuestionsById} />
         ) : null}
         {route === "settings" ? (
           <Settings
+            interfaceLanguage={interfaceLanguage}
             now={now}
             onProgressImported={(data) => {
               setProgress(data.questionProgress);
@@ -569,9 +601,13 @@ function AppContent({
               setPracticeSession(null);
               setMockExam(null);
               setLatestResult(null);
+              clearStoredInterfaceLanguage();
+              const resetInterfaceLanguage = readStoredInterfaceLanguage();
+              setInterfaceLanguageState(resetInterfaceLanguage);
               setAlertMessage("");
-              setStatusMessage("All local progress was reset.");
+              setStatusMessage(t(resetInterfaceLanguage, "statusAllLocalProgressReset"));
             }}
+            onInterfaceLanguageChange={setInterfaceLanguage}
             onSetPreferences={setPreferences}
             preferences={preferences}
             statusMessage={statusMessage}
@@ -580,12 +616,13 @@ function AppContent({
         ) : null}
       </main>
 
-      <Footer />
+      <Footer interfaceLanguage={interfaceLanguage} />
     </div>
   );
 }
 
 interface HomeProps {
+  readonly interfaceLanguage: InterfaceLanguage;
   readonly readiness: ReadinessResult;
   readonly weakSubsections: readonly string[];
   readonly dueReviewCount: number;
@@ -594,61 +631,61 @@ interface HomeProps {
   readonly onNavigate: (route: Route) => void;
 }
 
-function Home({ readiness, weakSubsections, dueReviewCount, examAttempts, onStartPractice, onNavigate }: HomeProps) {
+function Home({ interfaceLanguage, readiness, weakSubsections, dueReviewCount, examAttempts, onStartPractice, onNavigate }: HomeProps) {
   const weakCategories = new Set(weakSubsections.map((id) => id.slice(0, 5)));
   return (
     <section className="card home" aria-labelledby="home-title">
       <div className="home-hero">
         <div>
-          <p className="eyebrow">Offline, private, 2025 bank</p>
-          <h2 id="home-title">Ready for Basic with Honours?</h2>
-          <p>
-            Practice with the committed 2025-07-15 Basic EN/FR question bank. Progress stays in this browser only.
-          </p>
+          <p className="eyebrow">{t(interfaceLanguage, "homeEyebrow")}</p>
+          <h2 id="home-title">{t(interfaceLanguage, "homeTitle")}</h2>
+          <p>{t(interfaceLanguage, "homeIntro")}</p>
           <div className="action-row">
-            <button type="button" className="primary-button" onClick={() => onStartPractice({ type: "all" })}>Start practice</button>
-            <button type="button" className="secondary-button" onClick={() => onNavigate("learn")}>Learn</button>
-            <button type="button" className="secondary-button" onClick={() => onNavigate("mock")}>Mock exam</button>
+            <button type="button" className="primary-button" onClick={() => onStartPractice({ type: "all" })}>{t(interfaceLanguage, "homeStartPractice")}</button>
+            <button type="button" className="secondary-button" onClick={() => onNavigate("learn")}>{t(interfaceLanguage, "homeLearn")}</button>
+            <button type="button" className="secondary-button" onClick={() => onNavigate("mock")}>{t(interfaceLanguage, "homeMockExam")}</button>
           </div>
         </div>
       </div>
       <div className="readiness-panel" aria-labelledby="readiness-title">
-        <h3 id="readiness-title">Readiness guidance</h3>
-        <p><strong>{readinessLabel(readiness.state)}</strong></p>
-        <p>{readinessCopy(readiness)}</p>
-        <p>Due review count: <strong>{dueReviewCount}</strong></p>
-        <p>Completed mock exams: <strong>{examAttempts.length}</strong></p>
+        <h3 id="readiness-title">{t(interfaceLanguage, "readinessTitle")}</h3>
+        <p><strong>{readinessLabel(interfaceLanguage, readiness.state)}</strong></p>
+        <p>{readinessCopy(interfaceLanguage, readiness)}</p>
+        <p>{t(interfaceLanguage, "readinessDueCount")} <strong>{dueReviewCount}</strong></p>
+        <p>{t(interfaceLanguage, "readinessCompletedExams")} <strong>{examAttempts.length}</strong></p>
         {weakCategories.size > 0 ? (
-          <p>Weak categories: {[...weakCategories].map(categoryName).join(", ")}</p>
-        ) : <p>No weak category has enough local data yet.</p>}
+          <p>{t(interfaceLanguage, "readinessWeakCategories")} {[...weakCategories].map((categoryId, index) => (
+            <span key={categoryId}>{index > 0 ? ", " : null}<span lang={englishTextLang(interfaceLanguage)}>{categoryName(categoryId)}</span></span>
+          ))}</p>
+        ) : <p>{t(interfaceLanguage, "readinessNoWeakCategory")}</p>}
         {weakSubsections.length > 0 ? (
           <details>
-            <summary>Weak subsections</summary>
+            <summary>{t(interfaceLanguage, "readinessWeakSubsections")}</summary>
             <ul>
               {weakSubsections.slice(0, 12).map((subsectionId) => (
-                <li key={subsectionId}>{subsectionId}: {subsectionTitle(subsectionId)}</li>
+                <li key={subsectionId}>{subsectionId}{colonSeparator(interfaceLanguage)}<span lang={englishTextLang(interfaceLanguage)}>{subsectionTitle(subsectionId)}</span></li>
               ))}
             </ul>
           </details>
         ) : null}
         <div className="action-row">
-          <button type="button" onClick={() => onStartPractice({ type: "weak" })}>Practice weak areas</button>
-          <button type="button" onClick={() => onStartPractice({ type: "due" })}>Review due</button>
-          <button type="button" onClick={() => onNavigate("mock")}>Take a mock exam</button>
+          <button type="button" onClick={() => onStartPractice({ type: "weak" })}>{t(interfaceLanguage, "readinessPracticeWeak")}</button>
+          <button type="button" onClick={() => onStartPractice({ type: "due" })}>{t(interfaceLanguage, "readinessReviewDue")}</button>
+          <button type="button" onClick={() => onNavigate("mock")}>{t(interfaceLanguage, "readinessTakeMock")}</button>
         </div>
       </div>
 
-      <div className="category-grid" aria-label="Practice categories">
+      <div className="category-grid" aria-label={t(interfaceLanguage, "practiceCategoriesAria")}>
         <button className="category-card all-questions" type="button" onClick={() => onStartPractice({ type: "all" })}>
-          <span>All questions</span>
+          <span>{t(interfaceLanguage, "allQuestions")}</span>
           <strong>{allQuestionCount}</strong>
-          <small>Mixed across all categories</small>
+          <small>{t(interfaceLanguage, "mixedAllCategories")}</small>
         </button>
         {categories.map((category) => (
           <button className="category-card" type="button" key={category.id} onClick={() => onStartPractice({ type: "category", categoryId: category.id })}>
-            <span>{category.name.en}</span>
+            <span lang={englishTextLang(interfaceLanguage)}>{category.name.en}</span>
             <strong>{category.questionCount}</strong>
-            <small>{category.subsectionCount} subsections</small>
+            <small>{t(interfaceLanguage, "subsectionCount", category.subsectionCount)}</small>
           </button>
         ))}
       </div>
@@ -657,32 +694,33 @@ function Home({ readiness, weakSubsections, dueReviewCount, examAttempts, onStar
 }
 
 interface LearnProps {
+  readonly interfaceLanguage: InterfaceLanguage;
   readonly lessonProgress: readonly LessonProgressRecord[];
   readonly onOpenModule: (moduleId: string) => void;
   readonly onOpenLesson: (moduleId: string, lessonId: string) => void;
 }
 
-function Learn({ lessonProgress, onOpenModule, onOpenLesson }: LearnProps) {
+function Learn({ interfaceLanguage, lessonProgress, onOpenModule, onOpenLesson }: LearnProps) {
   const readLessonIds = new Set(lessonProgress.map((record) => record.lessonId));
   return (
     <section className="card learn" aria-labelledby="learn-title">
-      <p className="eyebrow">Structured lessons</p>
-      <h2 id="learn-title">Learn</h2>
-      <p>Study the eight modules in the recommended order. Draft lessons include full reading pages and quizzes; outline lessons show objectives until authored.</p>
-      <p className="reference-note">{REFERENCE_SHEET_NOTE}</p>
+      <p className="eyebrow">{t(interfaceLanguage, "learnEyebrow")}</p>
+      <h2 id="learn-title">{t(interfaceLanguage, "learnTitle")}</h2>
+      <p>{t(interfaceLanguage, "learnIntro")}</p>
+      <p className="reference-note">{t(interfaceLanguage, "referenceSheetNote")}</p>
       <div className="module-grid">
         {modules.map((module) => {
           const moduleLessons = lessonsByModuleId.get(module.id) ?? [];
           const readCount = moduleLessons.filter((lesson) => readLessonIds.has(lesson.id)).length;
           return (
             <article className="module-card" key={module.id}>
-              <p className="eyebrow">Module {module.order} · {module.categoryId}</p>
-              <h3>{module.title.en}</h3>
-              <p>{module.status === "outline" ? "Outline available" : "Draft lessons available"}</p>
-              <p><strong>{readCount} of {moduleLessons.length}</strong> lessons marked read.</p>
+              <p className="eyebrow">{t(interfaceLanguage, "moduleLabel", module.order, module.categoryId)}</p>
+              <h3 lang={englishTextLang(interfaceLanguage)}>{module.title.en}</h3>
+              <p>{module.status === "outline" ? t(interfaceLanguage, "moduleOutlineAvailable") : t(interfaceLanguage, "moduleDraftAvailable")}</p>
+              <p>{t(interfaceLanguage, "moduleLessonsMarkedRead", readCount, moduleLessons.length)}</p>
               <div className="action-row">
-                <button type="button" onClick={() => onOpenModule(module.id)}>Open module</button>
-                {moduleLessons[0] !== undefined ? <button type="button" className="secondary-button" onClick={() => onOpenLesson(module.id, moduleLessons[0]!.id)}>Start module</button> : null}
+                <button type="button" onClick={() => onOpenModule(module.id)}>{t(interfaceLanguage, "moduleOpen")}</button>
+                {moduleLessons[0] !== undefined ? <button type="button" className="secondary-button" onClick={() => onOpenLesson(module.id, moduleLessons[0]!.id)}>{t(interfaceLanguage, "moduleStart")}</button> : null}
               </div>
             </article>
           );
@@ -692,13 +730,13 @@ function Learn({ lessonProgress, onOpenModule, onOpenLesson }: LearnProps) {
   );
 }
 
-function ModulePage({ moduleId, lessonProgress, onOpenLesson }: { readonly moduleId: string; readonly lessonProgress: readonly LessonProgressRecord[]; readonly onOpenLesson: (moduleId: string, lessonId: string) => void }) {
+function ModulePage({ interfaceLanguage, moduleId, lessonProgress, onOpenLesson }: { readonly interfaceLanguage: InterfaceLanguage; readonly moduleId: string; readonly lessonProgress: readonly LessonProgressRecord[]; readonly onOpenLesson: (moduleId: string, lessonId: string) => void }) {
   const module = modulesById.get(moduleId);
   if (module === undefined) {
     return (
       <section className="card module-page" aria-labelledby="module-title">
-        <h2 id="module-title">Module not found</h2>
-        <p>The requested module route is not in the bundled curriculum.</p>
+        <h2 id="module-title">{t(interfaceLanguage, "moduleNotFoundTitle")}</h2>
+        <p>{t(interfaceLanguage, "moduleNotFoundCopy")}</p>
       </section>
     );
   }
@@ -706,18 +744,21 @@ function ModulePage({ moduleId, lessonProgress, onOpenLesson }: { readonly modul
   const readLessonIds = new Set(lessonProgress.map((record) => record.lessonId));
   return (
     <section className="card module-page" aria-labelledby="module-title">
-      <p className="eyebrow">Module {module.order} · {module.categoryId}</p>
-      <h2 id="module-title">{module.title.en}</h2>
-      <MarkdownContent markdown={module.body} title={module.title.en} />
-      <div className="lesson-list" aria-label={`${module.title.en} lessons`}>
+      <p className="eyebrow">{t(interfaceLanguage, "moduleLabel", module.order, module.categoryId)}</p>
+      <h2 id="module-title" lang={englishTextLang(interfaceLanguage)}>{module.title.en}</h2>
+      {interfaceLanguage === "fr" ? <p className="reference-note">{t(interfaceLanguage, "englishOnlyLessonNotice")}</p> : null}
+      <div lang={englishTextLang(interfaceLanguage)}>
+        <MarkdownContent interfaceLanguage={interfaceLanguage} markdown={module.body} title={module.title.en} />
+      </div>
+      <div className="lesson-list" aria-label={t(interfaceLanguage, "moduleLessonsAria", module.title.en)}>
         {moduleLessons.map((lesson) => (
           <article className="lesson-row" key={lesson.id}>
             <div>
-              <p className="eyebrow">{lesson.id} · {lesson.estimatedMinutes} min · {lesson.covers.join(", ")}</p>
-              <h3>{lesson.title.en}</h3>
-              <p>{lesson.status === "outline" ? "Coming soon" : "Ready to read"} · {readLessonIds.has(lesson.id) ? "Marked read" : "Not marked read"}</p>
+              <p className="eyebrow">{t(interfaceLanguage, "lessonMeta", lesson.id, lesson.estimatedMinutes, lesson.covers.join(", "))}</p>
+              <h3 lang={englishTextLang(interfaceLanguage)}>{lesson.title.en}</h3>
+              <p>{lesson.status === "outline" ? t(interfaceLanguage, "lessonComingSoonStatus") : t(interfaceLanguage, "lessonReadyStatus")} · {readLessonIds.has(lesson.id) ? t(interfaceLanguage, "lessonMarkedRead") : t(interfaceLanguage, "lessonNotMarkedRead")}</p>
             </div>
-            <button type="button" onClick={() => onOpenLesson(module.id, lesson.id)}>{lesson.status === "outline" ? "Preview outline" : "Read lesson"}</button>
+            <button type="button" onClick={() => onOpenLesson(module.id, lesson.id)}>{lesson.status === "outline" ? t(interfaceLanguage, "lessonPreviewOutline") : t(interfaceLanguage, "lessonRead")}</button>
           </article>
         ))}
       </div>
@@ -726,6 +767,7 @@ function ModulePage({ moduleId, lessonProgress, onOpenLesson }: { readonly modul
 }
 
 interface LessonPageProps {
+  readonly interfaceLanguage: InterfaceLanguage;
   readonly moduleId: string;
   readonly lessonId: string;
   readonly language: Language;
@@ -740,14 +782,14 @@ interface LessonPageProps {
   readonly onQuizAttempt: (attempt: LessonQuizAttempt, nextProgress: readonly QuestionProgressRecord[]) => void;
 }
 
-function LessonPage({ moduleId, lessonId, language, bankQuestionsById, progress, lessonProgress, attempts, now, onLessonRead, onOpenModule, onOpenLesson, onQuizAttempt }: LessonPageProps) {
+function LessonPage({ interfaceLanguage, moduleId, lessonId, language, bankQuestionsById, progress, lessonProgress, attempts, now, onLessonRead, onOpenModule, onOpenLesson, onQuizAttempt }: LessonPageProps) {
   const lesson = lessonsById.get(lessonId);
   const module = modulesById.get(moduleId) ?? (lesson !== undefined ? modulesById.get(lesson.moduleId) : undefined);
   if (lesson === undefined || module === undefined) {
     return (
       <section className="card lesson-page" aria-labelledby="lesson-title">
-        <h2 id="lesson-title">Lesson not found</h2>
-        <p>The requested lesson route is not in the bundled curriculum.</p>
+        <h2 id="lesson-title">{t(interfaceLanguage, "lessonNotFoundTitle")}</h2>
+        <p>{t(interfaceLanguage, "lessonNotFoundCopy")}</p>
       </section>
     );
   }
@@ -756,47 +798,54 @@ function LessonPage({ moduleId, lessonId, language, bankQuestionsById, progress,
   const lessonAttempts = attempts.filter((attempt) => attempt.lessonId === lesson.id);
   return (
     <section className="card lesson-page" aria-labelledby="lesson-title">
-      <aside className="lesson-sidebar" aria-label="Module navigation">
-        <button type="button" className="secondary-button" onClick={() => onOpenModule(module.id)}>Module overview</button>
-        <p className="eyebrow">{module.title.en}</p>
+      <aside className="lesson-sidebar" aria-label={t(interfaceLanguage, "lessonModuleNavigation")}>
+        <button type="button" className="secondary-button" onClick={() => onOpenModule(module.id)}>{t(interfaceLanguage, "lessonModuleOverview")}</button>
+        <p className="eyebrow" lang={englishTextLang(interfaceLanguage)}>{module.title.en}</p>
         <ol>
           {(lessonsByModuleId.get(module.id) ?? []).map((moduleLesson) => (
             <li key={moduleLesson.id}>
-              <button type="button" aria-current={moduleLesson.id === lesson.id ? "page" : undefined} onClick={() => onOpenLesson(module.id, moduleLesson.id)}>{moduleLesson.title.en}</button>
+              <button type="button" aria-current={moduleLesson.id === lesson.id ? "page" : undefined} onClick={() => onOpenLesson(module.id, moduleLesson.id)}><span lang={englishTextLang(interfaceLanguage)}>{moduleLesson.title.en}</span></button>
             </li>
           ))}
         </ol>
       </aside>
       <article className="lesson-article">
-        <p className="eyebrow">{lesson.id} · {lesson.estimatedMinutes} min · {lesson.covers.join(", ")}</p>
-        <h2 id="lesson-title">{lesson.title.en}</h2>
-        <p>{readRecord === undefined ? "Not marked read yet." : `Marked read ${readRecord.readCount} time${readRecord.readCount === 1 ? "" : "s"}.`}</p>
+        <p className="eyebrow">{t(interfaceLanguage, "lessonMeta", lesson.id, lesson.estimatedMinutes, lesson.covers.join(", "))}</p>
+        <h2 id="lesson-title" lang={englishTextLang(interfaceLanguage)}>{lesson.title.en}</h2>
+        <p>{readRecord === undefined ? t(interfaceLanguage, "lessonNotMarkedYet") : t(interfaceLanguage, "lessonMarkedReadTimes", readRecord.readCount)}</p>
         {lesson.status === "outline" ? (
           <section className="coming-soon" aria-labelledby="coming-soon-title">
-            <h3 id="coming-soon-title">Coming soon</h3>
-            <p>This outline is bundled now so module order and objectives are visible offline while the full lesson is authored.</p>
-            <h4>Objectives</h4>
-            <ul>{lesson.objectives.map((objective) => <li key={objective}>{objective}</li>)}</ul>
-            <h4>Covered subsections</h4>
-            <ul>{lesson.covers.map((cover) => <li key={cover}>{cover}: {subsectionTitle(cover)}</li>)}</ul>
+            <h3 id="coming-soon-title">{t(interfaceLanguage, "lessonComingSoonTitle")}</h3>
+            <p>{t(interfaceLanguage, "lessonComingSoonCopy")}</p>
+            <h4>{t(interfaceLanguage, "lessonObjectives")}</h4>
+            {interfaceLanguage === "fr" ? <p className="reference-note">{t(interfaceLanguage, "englishOnlyContentNotice")}</p> : null}
+            <ul>{lesson.objectives.map((objective) => <li key={objective} lang={englishTextLang(interfaceLanguage)}>{objective}</li>)}</ul>
+            <h4>{t(interfaceLanguage, "lessonCoveredSubsections")}</h4>
+            <ul>{lesson.covers.map((cover) => <li key={cover}>{cover}{colonSeparator(interfaceLanguage)}<span lang={englishTextLang(interfaceLanguage)}>{subsectionTitle(cover)}</span></li>)}</ul>
           </section>
         ) : (
-          <MarkdownContent markdown={lesson.body} title={lesson.title.en} />
+          <>
+            {interfaceLanguage === "fr" ? <p className="reference-note">{t(interfaceLanguage, "englishOnlyLessonNotice")}</p> : null}
+            <div lang={englishTextLang(interfaceLanguage)}>
+              <MarkdownContent interfaceLanguage={interfaceLanguage} markdown={lesson.body} title={lesson.title.en} />
+            </div>
+          </>
         )}
         <div className="action-row lesson-actions">
-          <button type="button" onClick={() => onLessonRead(lesson)}>Mark lesson read</button>
-          {neighbors.previous !== null ? <button type="button" className="secondary-button" onClick={() => onOpenLesson(neighbors.previous!.moduleId, neighbors.previous!.id)}>Previous: {neighbors.previous.title.en}</button> : null}
-          {neighbors.next !== null ? <button type="button" className="secondary-button" onClick={() => onOpenLesson(neighbors.next!.moduleId, neighbors.next!.id)}>Next: {neighbors.next.title.en}</button> : null}
+          <button type="button" onClick={() => onLessonRead(lesson)}>{t(interfaceLanguage, "lessonMarkRead")}</button>
+          {neighbors.previous !== null ? <button type="button" className="secondary-button" onClick={() => onOpenLesson(neighbors.previous!.moduleId, neighbors.previous!.id)}>{interfaceLanguage === "fr" ? <>Précédente : <span lang="en">{neighbors.previous.title.en}</span></> : t(interfaceLanguage, "lessonPrevious", neighbors.previous.title.en)}</button> : null}
+          {neighbors.next !== null ? <button type="button" className="secondary-button" onClick={() => onOpenLesson(neighbors.next!.moduleId, neighbors.next!.id)}>{interfaceLanguage === "fr" ? <>Suivante : <span lang="en">{neighbors.next.title.en}</span></> : t(interfaceLanguage, "lessonNext", neighbors.next.title.en)}</button> : null}
         </div>
         {lesson.quizIds.map((quizId) => {
           const quiz = lessonQuizzesById.get(quizId);
           return quiz === undefined ? (
-            <p className="reference-note" key={quizId}>Lesson quiz {quizId} is coming soon.</p>
+            <p className="reference-note" key={quizId}>{t(interfaceLanguage, "lessonQuizComingSoon", quizId)}</p>
           ) : (
             <LessonQuizView
               attempts={lessonAttempts.filter((attempt) => attempt.quizId === quiz.id)}
               bankQuestionsById={bankQuestionsById}
               key={quiz.id}
+              interfaceLanguage={interfaceLanguage}
               language={language}
               lesson={lesson}
               now={now}
@@ -811,7 +860,7 @@ function LessonPage({ moduleId, lessonId, language, bankQuestionsById, progress,
   );
 }
 
-function LessonQuizView({ quiz, lesson, language, bankQuestionsById, progress, attempts, now, onQuizAttempt }: { readonly quiz: LessonQuiz; readonly lesson: LessonMeta; readonly language: Language; readonly bankQuestionsById: ReadonlyMap<string, Question>; readonly progress: readonly QuestionProgressRecord[]; readonly attempts: readonly LessonQuizAttempt[]; readonly now: () => string; readonly onQuizAttempt: (attempt: LessonQuizAttempt, nextProgress: readonly QuestionProgressRecord[]) => void }) {
+function LessonQuizView({ quiz, lesson, interfaceLanguage, language, bankQuestionsById, progress, attempts, now, onQuizAttempt }: { readonly quiz: LessonQuiz; readonly lesson: LessonMeta; readonly interfaceLanguage: InterfaceLanguage; readonly language: Language; readonly bankQuestionsById: ReadonlyMap<string, Question>; readonly progress: readonly QuestionProgressRecord[]; readonly attempts: readonly LessonQuizAttempt[]; readonly now: () => string; readonly onQuizAttempt: (attempt: LessonQuizAttempt, nextProgress: readonly QuestionProgressRecord[]) => void }) {
   const [seed, setSeed] = useState(() => `${quiz.id}:${Date.now().toString(36)}`);
   const [items, setItems] = useState(() => buildLessonQuizItems(quiz, seed));
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -887,21 +936,21 @@ function LessonQuizView({ quiz, lesson, language, bankQuestionsById, progress, a
     <section className="lesson-quiz" aria-labelledby={`${quiz.id}-title`}>
       <div className="lesson-quiz__header">
         <div>
-          <p className="eyebrow">Lesson quiz</p>
+          <p className="eyebrow">{t(interfaceLanguage, "lessonQuizEyebrow")}</p>
           <h3 id={`${quiz.id}-title`}>{quiz.id}</h3>
-          <p>{items.length} questions: official bank questions update Leitner progress; concept checks do not.</p>
-          {latestAttempt !== undefined ? <p>Latest score: <strong>{latestAttempt.correct} / {latestAttempt.total}</strong> ({latestAttempt.percent.toFixed(0)}%). Attempts saved: {attempts.length}.</p> : null}
+          <p>{t(interfaceLanguage, "lessonQuizSummary", items.length)}</p>
+          {latestAttempt !== undefined ? <p>{t(interfaceLanguage, "lessonQuizLatestScore", latestAttempt.correct, latestAttempt.total, latestAttempt.percent.toFixed(0), attempts.length)}</p> : null}
         </div>
-        <button type="button" className="secondary-button" onClick={restart}>Retry quiz</button>
+        <button type="button" className="secondary-button" onClick={restart}>{t(interfaceLanguage, "lessonQuizRetry")}</button>
       </div>
-      {currentItem === undefined ? <p>No quiz items are bundled for this lesson yet.</p> : (
+      {currentItem === undefined ? <p>{t(interfaceLanguage, "lessonQuizNoItems")}</p> : (
         <>
-          <p>Question {currentIndex + 1} of {items.length}</p>
-          <LessonQuizQuestion item={currentItem} language={language} questionsById={bankQuestionsById} selectedSourceOrChoiceIndex={selectedByItemId.get(currentItem.id)} showCorrectness={selectedByItemId.has(currentItem.id)} onChoose={selectCurrent} />
+          <p>{t(interfaceLanguage, "questionProgress", currentIndex + 1, items.length)}</p>
+          <LessonQuizQuestion interfaceLanguage={interfaceLanguage} item={currentItem} language={language} questionsById={bankQuestionsById} selectedSourceOrChoiceIndex={selectedByItemId.get(currentItem.id)} showCorrectness={selectedByItemId.has(currentItem.id)} onChoose={selectCurrent} />
           <div className="action-row">
-            <button type="button" disabled={currentIndex === 0} onClick={() => setCurrentIndex(currentIndex - 1)}>Previous</button>
-            <button type="button" disabled={currentIndex >= items.length - 1} onClick={() => setCurrentIndex(currentIndex + 1)}>Next</button>
-            <button type="button" className="primary-button" disabled={!allAnswered || submittedAttemptId !== null} onClick={submitQuiz}>Submit lesson quiz</button>
+            <button type="button" disabled={currentIndex === 0} onClick={() => setCurrentIndex(currentIndex - 1)}>{t(interfaceLanguage, "previous")}</button>
+            <button type="button" disabled={currentIndex >= items.length - 1} onClick={() => setCurrentIndex(currentIndex + 1)}>{t(interfaceLanguage, "next")}</button>
+            <button type="button" className="primary-button" disabled={!allAnswered || submittedAttemptId !== null} onClick={submitQuiz}>{t(interfaceLanguage, "lessonQuizSubmit")}</button>
           </div>
         </>
       )}
@@ -920,31 +969,31 @@ function useFocusOnAnswerChosen(answerableId: string, showCorrectness: boolean, 
   }, [answerableId, showCorrectness, feedbackRef]);
 }
 
-function LessonQuizQuestion({ item, language, questionsById, selectedSourceOrChoiceIndex, showCorrectness, onChoose }: { readonly item: LessonQuizItem; readonly language: Language; readonly questionsById: ReadonlyMap<string, Question>; readonly selectedSourceOrChoiceIndex: number | undefined; readonly showCorrectness: boolean; readonly onChoose: (displayIndex: number) => void }) {
+function LessonQuizQuestion({ item, interfaceLanguage, language, questionsById, selectedSourceOrChoiceIndex, showCorrectness, onChoose }: { readonly item: LessonQuizItem; readonly interfaceLanguage: InterfaceLanguage; readonly language: Language; readonly questionsById: ReadonlyMap<string, Question>; readonly selectedSourceOrChoiceIndex: number | undefined; readonly showCorrectness: boolean; readonly onChoose: (displayIndex: number) => void }) {
   const feedbackRef = useRef<HTMLParagraphElement>(null);
   useFocusOnAnswerChosen(item.id, showCorrectness, feedbackRef);
 
   if (item.type === "official") {
     const question = questionsById.get(item.questionId);
     if (question === undefined) {
-      return <p role="status">Official question {item.questionId} is loading from the bundled bank.</p>;
+      return <p role="status">{t(interfaceLanguage, "officialQuestionLoading", item.questionId)}</p>;
     }
     return (
       <>
-        <QuestionCard choicePermutation={item.choicePermutation} disabled={showCorrectness} headingLevel={4} language={language} onChoose={onChoose} question={question} selectedSourceIndex={selectedSourceOrChoiceIndex} showCorrectness={showCorrectness} />
+        <QuestionCard choicePermutation={item.choicePermutation} disabled={showCorrectness} headingLevel={4} interfaceLanguage={interfaceLanguage} language={language} onChoose={onChoose} question={question} selectedSourceIndex={selectedSourceOrChoiceIndex} showCorrectness={showCorrectness} />
         {showCorrectness ? (
           <div className="feedback">
-            <p role="status" ref={feedbackRef} tabIndex={-1}>{selectedSourceOrChoiceIndex === 0 ? "Correct." : "Incorrect."}</p>
-            <ExplanationPanel explanation={explanationForQuestion(question.id)} language={language} choicePermutation={item.choicePermutation} />
+            <p role="status" ref={feedbackRef} tabIndex={-1}>{selectedSourceOrChoiceIndex === 0 ? t(interfaceLanguage, "feedbackCorrectSentence") : t(interfaceLanguage, "feedbackIncorrectSentence")}</p>
+            <ExplanationPanel explanation={explanationForQuestion(question.id)} interfaceLanguage={interfaceLanguage} language={language} choicePermutation={item.choicePermutation} />
           </div>
         ) : null}
       </>
     );
   }
-  return <ConceptCheckCard conceptCheck={item.conceptCheck} choicePermutation={item.choicePermutation} disabled={showCorrectness} language={language} selectedChoiceIndex={selectedSourceOrChoiceIndex} showCorrectness={showCorrectness} onChoose={onChoose} />;
+  return <ConceptCheckCard conceptCheck={item.conceptCheck} choicePermutation={item.choicePermutation} disabled={showCorrectness} interfaceLanguage={interfaceLanguage} language={language} selectedChoiceIndex={selectedSourceOrChoiceIndex} showCorrectness={showCorrectness} onChoose={onChoose} />;
 }
 
-function ConceptCheckCard({ conceptCheck, choicePermutation, selectedChoiceIndex, showCorrectness, disabled, language, onChoose }: { readonly conceptCheck: ConceptCheck; readonly choicePermutation: readonly number[]; readonly selectedChoiceIndex: number | undefined; readonly showCorrectness: boolean; readonly disabled: boolean; readonly language: Language; readonly onChoose: (displayIndex: number) => void }) {
+function ConceptCheckCard({ conceptCheck, choicePermutation, selectedChoiceIndex, showCorrectness, disabled, interfaceLanguage, language, onChoose }: { readonly conceptCheck: ConceptCheck; readonly choicePermutation: readonly number[]; readonly selectedChoiceIndex: number | undefined; readonly showCorrectness: boolean; readonly disabled: boolean; readonly interfaceLanguage: InterfaceLanguage; readonly language: Language; readonly onChoose: (displayIndex: number) => void }) {
   const feedbackRef = useRef<HTMLParagraphElement>(null);
   useFocusOnAnswerChosen(conceptCheck.id, showCorrectness, feedbackRef);
   const selectedChoice = selectedChoiceIndex === undefined ? undefined : conceptCheck.choices[selectedChoiceIndex];
@@ -952,10 +1001,10 @@ function ConceptCheckCard({ conceptCheck, choicePermutation, selectedChoiceIndex
   const promptLanguage = conceptCheck.prompt[language] === null ? "en" : language;
   return (
     <article className="question-panel" aria-labelledby={`concept-${conceptCheck.id}`}>
-      <p className="question-meta">Concept check · {conceptCheck.id}</p>
-      <h4 id={`concept-${conceptCheck.id}`}>Question</h4>
+      <p className="question-meta">{t(interfaceLanguage, "conceptCheckMeta", conceptCheck.id)}</p>
+      <h4 id={`concept-${conceptCheck.id}`}>{t(interfaceLanguage, "questionHeading")}</h4>
       <p className="question-text" lang={languageTag(promptLanguage)}>{prompt}</p>
-      <div className="answers" role="group" aria-label="Answer choices">
+      <div className="answers" role="group" aria-label={t(interfaceLanguage, "answerChoices")}>
         {choicePermutation.map((choiceIndex, displayIndex) => {
           const choice = conceptCheck.choices[choiceIndex]!;
           const selected = selectedChoiceIndex === choiceIndex;
@@ -965,15 +1014,15 @@ function ConceptCheckCard({ conceptCheck, choicePermutation, selectedChoiceIndex
             <button aria-pressed={selected} className={className} data-testid="lesson-quiz-choice" disabled={disabled} key={choice.text.en} type="button" onClick={() => onChoose(displayIndex)}>
               <span className="answer-label">{String.fromCharCode(65 + displayIndex)}</span>
               <span lang={languageTag(choice.text[language] === null ? "en" : language)}>{choice.text[language] ?? choice.text.en}</span>
-              {showCorrectness && correct ? <strong>Correct answer</strong> : null}
-              {showCorrectness && selected && !correct ? <strong>Your answer</strong> : null}
+              {showCorrectness && correct ? <strong>{t(interfaceLanguage, "correctAnswer")}</strong> : null}
+              {showCorrectness && selected && !correct ? <strong>{t(interfaceLanguage, "yourAnswer")}</strong> : null}
             </button>
           );
         })}
       </div>
       {showCorrectness ? (
         <div className="feedback">
-          <p role="status" ref={feedbackRef} tabIndex={-1}>{selectedChoice?.isCorrect ? "Correct." : "Incorrect."}</p>
+          <p role="status" ref={feedbackRef} tabIndex={-1}>{selectedChoice?.isCorrect ? t(interfaceLanguage, "feedbackCorrectSentence") : t(interfaceLanguage, "feedbackIncorrectSentence")}</p>
           <p lang={languageTag(conceptCheck.explanation[language] === null ? "en" : language)}>{conceptCheck.explanation[language] ?? conceptCheck.explanation.en}</p>
         </div>
       ) : null}
@@ -982,6 +1031,7 @@ function ConceptCheckCard({ conceptCheck, choicePermutation, selectedChoiceIndex
 }
 
 interface PracticeProps {
+  readonly interfaceLanguage: InterfaceLanguage;
   readonly activeScope: PracticeScope;
   readonly language: Language;
   readonly bankReady: boolean;
@@ -996,6 +1046,7 @@ interface PracticeProps {
 }
 
 function Practice({
+  interfaceLanguage,
   activeScope,
   language,
   bankReady,
@@ -1045,7 +1096,7 @@ function Practice({
   }, [session?.submitted]);
 
   function restartWithControls(nextMode = preferences.practiceMode): void {
-    if (hasUnsubmittedReviewAnswers(session) && !window.confirm("Discard unsubmitted practice answers and start a new set?")) {
+    if (hasUnsubmittedReviewAnswers(session) && !window.confirm(t(interfaceLanguage, "practiceDiscardConfirm"))) {
       return;
     }
     const nextScope = scopeFromControls(scopeKind, categoryId, subsectionId);
@@ -1099,62 +1150,63 @@ function Practice({
 
   return (
     <section className="card practice" aria-labelledby="practice-title">
-      <h2 id="practice-title">Practice</h2>
+      <h2 id="practice-title">{t(interfaceLanguage, "practiceTitle")}</h2>
       <div className="practice-topline">
         <label>
-          Practice scope
+          {t(interfaceLanguage, "practiceScope")}
           <select value={scopeKind} onChange={(event) => setScopeKind(event.currentTarget.value)}>
-            <option value="all">All questions</option>
-            <option value="category">Category</option>
-            <option value="subsection">Subsection</option>
-            <option value="weak">Weak areas</option>
-            <option value="due">Due review</option>
+            <option value="all">{t(interfaceLanguage, "practiceScopeAll")}</option>
+            <option value="category">{t(interfaceLanguage, "practiceScopeCategory")}</option>
+            <option value="subsection">{t(interfaceLanguage, "practiceScopeSubsection")}</option>
+            <option value="weak">{t(interfaceLanguage, "practiceScopeWeak")}</option>
+            <option value="due">{t(interfaceLanguage, "practiceScopeDue")}</option>
           </select>
         </label>
         {scopeKind === "category" ? (
           <label>
-            Category
+            {t(interfaceLanguage, "category")}
             <select value={categoryId} onChange={(event) => setCategoryId(event.currentTarget.value)}>
-              {categories.map((category) => <option key={category.id} value={category.id}>{category.name.en}</option>)}
+              {categories.map((category) => <option key={category.id} lang={englishTextLang(interfaceLanguage)} value={category.id}>{category.name.en}</option>)}
             </select>
           </label>
         ) : null}
         {scopeKind === "subsection" ? (
           <label>
-            Subsection
+            {t(interfaceLanguage, "subsection")}
             <select value={subsectionId} onChange={(event) => setSubsectionId(event.currentTarget.value)}>
-              {subsectionTitles.map((subsection) => <option key={subsection.id} value={subsection.id}>{subsection.id}: {subsection.title.en}</option>)}
+              {subsectionTitles.map((subsection) => <option key={subsection.id} lang={englishTextLang(interfaceLanguage)} value={subsection.id}>{subsection.id}{colonSeparator(interfaceLanguage)}{subsection.title.en}</option>)}
             </select>
           </label>
         ) : null}
         <fieldset className="segmented-control">
-          <legend>Feedback mode</legend>
-          <label><input type="radio" name="practice-mode" checked={preferences.practiceMode === "immediate"} onChange={() => restartWithControls("immediate")} /> Immediate feedback</label>
-          <label><input type="radio" name="practice-mode" checked={preferences.practiceMode === "review-later"} onChange={() => restartWithControls("review-later")} /> Review later</label>
+          <legend>{t(interfaceLanguage, "feedbackMode")}</legend>
+          <label><input type="radio" name="practice-mode" checked={preferences.practiceMode === "immediate"} onChange={() => restartWithControls("immediate")} /> {t(interfaceLanguage, "feedbackImmediate")}</label>
+          <label><input type="radio" name="practice-mode" checked={preferences.practiceMode === "review-later"} onChange={() => restartWithControls("review-later")} /> {t(interfaceLanguage, "feedbackReviewLater")}</label>
         </fieldset>
-        <button type="button" className="primary-button" onClick={() => restartWithControls()}>Start set</button>
+        <button type="button" className="primary-button" onClick={() => restartWithControls()}>{t(interfaceLanguage, "practiceStartSet")}</button>
       </div>
 
       {session === null || currentItem === undefined ? (
         <div className="empty-state" role="status">
-          <p>No questions are available for this scope yet. Try all questions or a category.</p>
+          <p>{t(interfaceLanguage, "practiceEmpty")}</p>
         </div>
       ) : (
         <div className="practice-layout">
-          <aside className="session-outline" aria-label="Practice session outline">
-            <div className="session-summary" aria-label="Practice session progress">
-              <span>Question {session.currentIndex + 1} of {session.items.length}</span>
-              <span>Scope: {scopeLabel(session.scope)}</span>
-              <span>Mode: {session.mode === "immediate" ? "Immediate feedback" : "Review later"}</span>
-              <span>Seed {session.seed}</span>
+          <aside className="session-outline" aria-label={t(interfaceLanguage, "practiceSessionOutline")}>
+            <div className="session-summary" aria-label={t(interfaceLanguage, "practiceSessionProgress")}>
+              <span>{t(interfaceLanguage, "questionProgress", session.currentIndex + 1, session.items.length)}</span>
+              <span>{t(interfaceLanguage, "scopePrefix")} <ScopeValue interfaceLanguage={interfaceLanguage} scope={session.scope} /></span>
+              <span>{t(interfaceLanguage, "modePrefix")} {session.mode === "immediate" ? t(interfaceLanguage, "feedbackImmediate") : t(interfaceLanguage, "feedbackReviewLater")}</span>
+              <span>{t(interfaceLanguage, "seedPrefix")} {session.seed}</span>
             </div>
-            <p>Answered: <strong>{session.selectedByQuestionId.size} of {session.items.length}</strong></p>
-            <p>Current subsection: <strong>{currentItem.question.subsectionId}</strong></p>
+            <p>{t(interfaceLanguage, "answeredCount", session.selectedByQuestionId.size, session.items.length)}</p>
+            <p>{t(interfaceLanguage, "currentSubsection")} <strong>{currentItem.question.subsectionId}</strong></p>
           </aside>
           <div className="practice-main">
             <QuestionCard
               choicePermutation={currentItem.choicePermutation}
               disabled={session.mode === "immediate" && isAnswered}
+              interfaceLanguage={interfaceLanguage}
               language={language}
               onChoose={(displayIndex) => void chooseAnswer(currentItem, displayIndex)}
               question={currentItem.question}
@@ -1162,18 +1214,18 @@ function Practice({
               showCorrectness={session.mode === "immediate" && isAnswered}
             />
             <div className="feedback" role="status" aria-live="polite" ref={feedbackRef} tabIndex={-1}>
-              {session.mode === "immediate" ? immediateFeedback(currentItem.question, currentItem.choicePermutation, selectedSourceIndex, language) : (
-                <p>Review-later mode: answer all questions, then submit the set to see results.</p>
+              {session.mode === "immediate" ? immediateFeedback(interfaceLanguage, currentItem.question, currentItem.choicePermutation, selectedSourceIndex, language) : (
+                <p>{t(interfaceLanguage, "practiceReviewLaterHint")}</p>
               )}
             </div>
             <div className="action-row">
-              <button type="button" disabled={session.currentIndex === 0} onClick={() => onSessionChange({ ...session, currentIndex: session.currentIndex - 1 })}>Previous</button>
-              <button type="button" disabled={session.currentIndex >= session.items.length - 1} onClick={() => onSessionChange({ ...session, currentIndex: session.currentIndex + 1 })}>Next</button>
+              <button type="button" disabled={session.currentIndex === 0} onClick={() => onSessionChange({ ...session, currentIndex: session.currentIndex - 1 })}>{t(interfaceLanguage, "previous")}</button>
+              <button type="button" disabled={session.currentIndex >= session.items.length - 1} onClick={() => onSessionChange({ ...session, currentIndex: session.currentIndex + 1 })}>{t(interfaceLanguage, "next")}</button>
               {session.mode === "review-later" ? (
-                <button type="button" className="primary-button" disabled={!allAnswered || session.submitted || submittingPractice} onClick={() => void submitReviewLater()}>{submittingPractice ? "Submitting practice set" : "Submit practice set"}</button>
+                <button type="button" className="primary-button" disabled={!allAnswered || session.submitted || submittingPractice} onClick={() => void submitReviewLater()}>{submittingPractice ? t(interfaceLanguage, "practiceSubmittingSet") : t(interfaceLanguage, "practiceSubmitSet")}</button>
               ) : null}
             </div>
-            {session.submitted ? <div ref={reviewRef} tabIndex={-1}><PracticeReview session={session} language={language} /></div> : null}
+            {session.submitted ? <div ref={reviewRef} tabIndex={-1}><PracticeReview interfaceLanguage={interfaceLanguage} session={session} language={language} /></div> : null}
           </div>
         </div>
       )}
@@ -1182,6 +1234,7 @@ function Practice({
 }
 
 interface QuestionCardProps {
+  readonly interfaceLanguage: InterfaceLanguage;
   readonly question: Question;
   readonly choicePermutation: readonly number[];
   readonly selectedSourceIndex: number | undefined;
@@ -1192,14 +1245,14 @@ interface QuestionCardProps {
   readonly headingLevel?: 3 | 4;
 }
 
-function QuestionCard({ question, choicePermutation, selectedSourceIndex, showCorrectness, disabled, language, onChoose, headingLevel = 3 }: QuestionCardProps) {
+function QuestionCard({ interfaceLanguage, question, choicePermutation, selectedSourceIndex, showCorrectness, disabled, language, onChoose, headingLevel = 3 }: QuestionCardProps) {
   const HeadingTag = `h${headingLevel}` as "h3" | "h4";
   return (
     <article className="question-panel" aria-labelledby={`question-${question.id}`}>
-      <p className="question-meta">{question.id} · {question.categoryId} · {subsectionTitle(question.subsectionId)}</p>
-      <HeadingTag id={`question-${question.id}`}>Question</HeadingTag>
+      <p className="question-meta">{question.id} · {question.categoryId} · <span lang={englishTextLang(interfaceLanguage)}>{subsectionTitle(question.subsectionId)}</span></p>
+      <HeadingTag id={`question-${question.id}`}>{t(interfaceLanguage, "questionHeading")}</HeadingTag>
       <p className="question-text" lang={languageTag(language)}>{question.text[language]}</p>
-      <div className="answers" role="group" aria-label="Answer choices">
+      <div className="answers" role="group" aria-label={t(interfaceLanguage, "answerChoices")}>
         {choicePermutation.map((sourceIndex, displayIndex) => {
           const answer = question.answers.find((candidate) => candidate.sourceIndex === sourceIndex)!;
           const selected = selectedSourceIndex === sourceIndex;
@@ -1223,8 +1276,8 @@ function QuestionCard({ question, choicePermutation, selectedSourceIndex, showCo
               <span lang={languageTag(language)}>{answer.text[language]}</span>
               {showCorrectness && correct ? <span className="answer-state-icon" aria-hidden="true">✓</span> : null}
               {showCorrectness && selected && !correct ? <span className="answer-state-icon" aria-hidden="true">✕</span> : null}
-              {showCorrectness && correct ? <strong>Correct answer</strong> : null}
-              {showCorrectness && selected && !correct ? <strong>Your answer</strong> : null}
+              {showCorrectness && correct ? <strong>{t(interfaceLanguage, "correctAnswer")}</strong> : null}
+              {showCorrectness && selected && !correct ? <strong>{t(interfaceLanguage, "yourAnswer")}</strong> : null}
             </button>
           );
         })}
@@ -1233,10 +1286,10 @@ function QuestionCard({ question, choicePermutation, selectedSourceIndex, showCo
   );
 }
 
-function PracticeReview({ session, language }: { readonly session: PracticeSession; readonly language: Language }) {
+function PracticeReview({ interfaceLanguage, session, language }: { readonly interfaceLanguage: InterfaceLanguage; readonly session: PracticeSession; readonly language: Language }) {
   return (
     <section className="review-panel" aria-labelledby="practice-review-title">
-      <h3 id="practice-review-title">Practice set review</h3>
+      <h3 id="practice-review-title">{t(interfaceLanguage, "practiceSetReview")}</h3>
       <ol>
         {session.items.map((item) => {
           const selected = session.selectedByQuestionId.get(item.question.id);
@@ -1244,12 +1297,12 @@ function PracticeReview({ session, language }: { readonly session: PracticeSessi
           const selectedAnswer = item.question.answers.find((answer) => answer.sourceIndex === selected);
           return (
             <li key={item.question.id}>
-              <strong>{item.question.id}</strong> — {selected === 0 ? "Correct" : "Incorrect"}
+              <strong>{item.question.id}</strong> — {selected === 0 ? t(interfaceLanguage, "correct") : t(interfaceLanguage, "incorrect")}
               <p lang={languageTag(language)}>{item.question.text[language]}</p>
-              <p>Your answer: <span lang={languageTag(language)}>{selectedAnswer?.text[language] ?? "Unanswered"}</span></p>
-              <p>Correct answer: <span lang={languageTag(language)}>{correctAnswer.text[language]}</span></p>
-              <ExplanationPanel explanation={explanationForQuestion(item.question.id)} language={language} choicePermutation={item.choicePermutation} />
-              <p>{item.question.categoryId}; {subsectionTitle(item.question.subsectionId)}</p>
+              <p>{t(interfaceLanguage, "yourAnswerPrefix")} <span lang={languageTag(language)}>{selectedAnswer?.text[language] ?? t(interfaceLanguage, "unanswered")}</span></p>
+              <p>{t(interfaceLanguage, "correctAnswerPrefix")} <span lang={languageTag(language)}>{correctAnswer.text[language]}</span></p>
+              <ExplanationPanel explanation={explanationForQuestion(item.question.id)} interfaceLanguage={interfaceLanguage} language={language} choicePermutation={item.choicePermutation} />
+              <p>{item.question.categoryId}; <span lang={englishTextLang(interfaceLanguage)}>{subsectionTitle(item.question.subsectionId)}</span></p>
             </li>
           );
         })}
@@ -1258,27 +1311,28 @@ function PracticeReview({ session, language }: { readonly session: PracticeSessi
   );
 }
 
-export function ExplanationPanel({ explanation, language, choicePermutation }: { readonly explanation: Explanation | null; readonly language: Language; readonly choicePermutation?: readonly number[] }) {
+export function ExplanationPanel({ explanation, interfaceLanguage = "en", language, choicePermutation }: { readonly explanation: Explanation | null; readonly interfaceLanguage?: InterfaceLanguage; readonly language: Language; readonly choicePermutation?: readonly number[] }) {
   if (explanation === null) {
-    return <p className="explanation-panel explanation-panel--missing">No project explanation is bundled for this question yet.</p>;
+    return <p className="explanation-panel explanation-panel--missing">{t(interfaceLanguage, "noExplanation")}</p>;
   }
   const explanationLanguage: Language = explanation.body[language] === null ? "en" : language;
   const choiceNotes = parseChoiceNotes(explanation, language);
   return (
-    <section className="explanation-panel" aria-label={`Explanation for ${explanation.questionId}`}>
-      <h4>Explanation</h4>
+    <section className="explanation-panel" aria-label={t(interfaceLanguage, "explanationAria", explanation.questionId)}>
+      <h4>{t(interfaceLanguage, "explanationTitle")}</h4>
+      {interfaceLanguage === "fr" && explanation.body.fr === null ? <p className="reference-note">{t(interfaceLanguage, "englishOnlyExplanationNotice")}</p> : null}
       {mainExplanationText(explanation, language).split(/\n\n+/).map((paragraph) => <p key={paragraph} lang={languageTag(explanationLanguage)}>{paragraph}</p>)}
       {choiceNotes.length > 0 ? (
         <ul>
           {choiceNotes.map((note) => {
             const displayIndex = choicePermutation?.findIndex((sourceIndex) => sourceIndex === note.sourceIndex);
-            const label = displayIndex === undefined || displayIndex < 0 ? `sourceIndex ${note.sourceIndex}` : `Displayed choice ${String.fromCharCode(65 + displayIndex)}`;
-            return <li key={note.sourceIndex} lang={languageTag(explanationLanguage)}><strong>{label}:</strong> {note.note}</li>;
+            const label = displayIndex === undefined || displayIndex < 0 ? t(interfaceLanguage, "sourceIndex", note.sourceIndex) : t(interfaceLanguage, "displayedChoice", String.fromCharCode(65 + displayIndex));
+            return <li key={note.sourceIndex} lang={languageTag(explanationLanguage)}><strong>{label}{interfaceLanguage === "fr" ? " :" : ":"}</strong> {note.note}</li>;
           })}
         </ul>
       ) : null}
       {explanation.citations.length > 0 ? (
-        <p className="question-meta">Citations: {explanation.citations.map((citation, index) => <CitationLink citation={citation} key={`${citation.type}-${citation.id ?? index}`} />).reduce<ReactNode[]>((nodes, element, index) => index === 0 ? [element] : [...nodes, ", ", element], [])}</p>
+        <p className="question-meta">{t(interfaceLanguage, "citationsPrefix")} {explanation.citations.map((citation, index) => <CitationLink citation={citation} interfaceLanguage={interfaceLanguage} key={`${citation.type}-${citation.id ?? index}`} />).reduce<ReactNode[]>((nodes, element, index) => index === 0 ? [element] : [...nodes, ", ", element], [])}</p>
       ) : null}
     </section>
   );
@@ -1292,7 +1346,7 @@ function isHttpsUrl(rawUrl: string): boolean {
   }
 }
 
-export function CitationLink({ citation }: { readonly citation: Explanation["citations"][number] }) {
+export function CitationLink({ citation, interfaceLanguage = "en" }: { readonly citation: Explanation["citations"][number]; readonly interfaceLanguage?: InterfaceLanguage }) {
   if (citation.type === "lesson" && citation.id !== undefined) {
     const lesson = lessonsById.get(citation.id);
     if (lesson !== undefined) {
@@ -1302,7 +1356,7 @@ export function CitationLink({ citation }: { readonly citation: Explanation["cit
   if (citation.url !== undefined && isHttpsUrl(citation.url)) {
     return (
       <a href={citation.url} target="_blank" rel="noopener noreferrer">
-        {citation.id ?? citation.type} <span className="external-site-hint">(external site)</span> <span className="new-tab-hint">(opens in new tab)</span>
+        {citation.id ?? citation.type} <span className="external-site-hint">{t(interfaceLanguage, "externalSiteHint")}</span> <span className="new-tab-hint">{t(interfaceLanguage, "newTabHint")}</span>
       </a>
     );
   }
@@ -1310,6 +1364,7 @@ export function CitationLink({ citation }: { readonly citation: Explanation["cit
 }
 
 interface MockExamProps {
+  readonly interfaceLanguage: InterfaceLanguage;
   readonly exam: MockExamSession | null;
   readonly language: Language;
   readonly questions: readonly Question[] | null;
@@ -1320,7 +1375,7 @@ interface MockExamProps {
   readonly onSubmitExam: (attempt: ExamAttempt) => Promise<void>;
 }
 
-function MockExam({ exam, language, questions, preferences, now, seedFactory, onExamChange, onSubmitExam }: MockExamProps) {
+function MockExam({ interfaceLanguage, exam, language, questions, preferences, now, seedFactory, onExamChange, onSubmitExam }: MockExamProps) {
   const [seed, setSeed] = useState("");
   const [timerEnabled, setTimerEnabled] = useState(preferences.examTimerEnabled);
   const [timerAnnouncement, setTimerAnnouncement] = useState("");
@@ -1334,14 +1389,14 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
       const id = window.setInterval(() => {
         const nextSecondsElapsed = exam.secondsElapsed + 1;
         if (nextSecondsElapsed > 0 && nextSecondsElapsed % 900 === 0) {
-          setTimerAnnouncement(`Timer milestone: ${Math.floor(nextSecondsElapsed / 60)} minutes elapsed.`);
+          setTimerAnnouncement(t(interfaceLanguage, "mockTimerMilestone", Math.floor(nextSecondsElapsed / 60)));
         }
         onExamChange({ ...exam, secondsElapsed: nextSecondsElapsed });
       }, 1000);
       return () => window.clearInterval(id);
     }
     return undefined;
-  }, [exam, onExamChange]);
+  }, [exam, interfaceLanguage, onExamChange]);
 
   useEffect(() => {
     if (exam?.confirmingSubmit) {
@@ -1351,12 +1406,12 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
 
   function startExam(): void {
     if (questions === null) {
-      setTimerAnnouncement("Question bank is still loading locally.");
+      setTimerAnnouncement(t(interfaceLanguage, "mockQuestionBankLoading"));
       return;
     }
     const selectedSeed = seed.trim() || seedFactory();
     setSubmittingExam(false);
-    setTimerAnnouncement(timerEnabled ? "Timer started." : "");
+    setTimerAnnouncement(timerEnabled ? t(interfaceLanguage, "mockTimerStarted") : "");
     onExamChange({
       seed: selectedSeed,
       startedAt: now(),
@@ -1374,16 +1429,16 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
   if (exam === null) {
     return (
       <section className="card mock-exam" aria-labelledby="mock-title">
-        <h2 id="mock-title">Mock exam</h2>
-        <p>Generate 100 questions: one from each subsection. Unanswered questions count as incorrect when submitted.</p>
+        <h2 id="mock-title">{t(interfaceLanguage, "mockTitle")}</h2>
+        <p>{t(interfaceLanguage, "mockIntro")}</p>
         <label>
-          Seed (optional)
-          <input value={seed} onChange={(event) => setSeed(event.currentTarget.value)} placeholder="Leave blank for a local random seed" />
+          {t(interfaceLanguage, "seedOptional")}
+          <input value={seed} onChange={(event) => setSeed(event.currentTarget.value)} placeholder={t(interfaceLanguage, "seedPlaceholder")} />
         </label>
-        <label><input type="checkbox" checked={timerEnabled} onChange={(event) => setTimerEnabled(event.currentTarget.checked)} /> Enable optional timer</label>
-        <p id="timer-note">Timer is off by default because the official time limit is unverified.</p>
-        <p className="reference-note">{REFERENCE_SHEET_NOTE}</p>
-        <button type="button" className="primary-button" disabled={questions === null} onClick={startExam}>{questions === null ? "Loading question bank" : "Start mock exam"}</button>
+        <label><input type="checkbox" checked={timerEnabled} onChange={(event) => setTimerEnabled(event.currentTarget.checked)} /> {t(interfaceLanguage, "timerEnable")}</label>
+        <p id="timer-note">{t(interfaceLanguage, "timerNote")}</p>
+        <p className="reference-note">{t(interfaceLanguage, "referenceSheetNote")}</p>
+        <button type="button" className="primary-button" disabled={questions === null} onClick={startExam}>{questions === null ? t(interfaceLanguage, "loadingQuestionBank") : t(interfaceLanguage, "startMockExam")}</button>
       </section>
     );
   }
@@ -1447,30 +1502,31 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
 
   return (
     <section className="card mock-exam mock-exam--running" aria-labelledby="mock-title">
-      <h2 id="mock-title">Mock exam</h2>
-      <div className="session-summary" aria-label="Mock exam progress">
-        <span>Question {exam.currentIndex + 1} of {exam.generatedItems.length}</span>
-        <span>Seed: {exam.seed}</span>
-        <span>Answered: {exam.selectedByQuestionId.size} of {exam.generatedItems.length}</span>
+      <h2 id="mock-title">{t(interfaceLanguage, "mockTitle")}</h2>
+      <div className="session-summary" aria-label={t(interfaceLanguage, "mockProgressAria")}>
+        <span>{t(interfaceLanguage, "questionProgress", exam.currentIndex + 1, exam.generatedItems.length)}</span>
+        <span>{t(interfaceLanguage, "seedWithColon", exam.seed)}</span>
+        <span>{t(interfaceLanguage, "answeredCount", exam.selectedByQuestionId.size, exam.generatedItems.length)}</span>
       </div>
       {exam.timerEnabled ? (
         <div className="timer-panel">
-          <span role="timer" aria-live="off" aria-label={`Timer elapsed ${formatElapsedForSpeech(exam.secondsElapsed)}`}>Timer elapsed: {formatElapsed(exam.secondsElapsed)}</span>
+          <span role="timer" aria-live="off" aria-label={t(interfaceLanguage, "timerElapsedAria", formatElapsedForSpeech(interfaceLanguage, exam.secondsElapsed))}>{t(interfaceLanguage, "timerElapsed", formatElapsed(exam.secondsElapsed))}</span>
           <button
             type="button"
             onClick={() => {
               const nextRunning = !exam.timerRunning;
-              setTimerAnnouncement(nextRunning ? "Timer resumed." : "Timer paused.");
+              setTimerAnnouncement(nextRunning ? t(interfaceLanguage, "timerResumed") : t(interfaceLanguage, "timerPaused"));
               onExamChange({ ...exam, timerRunning: nextRunning });
             }}
-          >{exam.timerRunning ? "Pause timer" : "Resume timer"}</button>
+          >{exam.timerRunning ? t(interfaceLanguage, "pauseTimer") : t(interfaceLanguage, "resumeTimer")}</button>
           <span className="sr-only" role="status" aria-live="polite">{timerAnnouncement}</span>
         </div>
-      ) : <p className="timer-off-note">Timer off. No time pressure by default.</p>}
-      <button className="secondary-button question-map-link" type="button" onClick={jumpToQuestionMap}>Jump to question map</button>
+      ) : <p className="timer-off-note">{t(interfaceLanguage, "timerOff")}</p>}
+      <button className="secondary-button question-map-link" type="button" onClick={jumpToQuestionMap}>{t(interfaceLanguage, "jumpQuestionMap")}</button>
       <QuestionCard
         choicePermutation={item.choicePermutation}
         disabled={false}
+        interfaceLanguage={interfaceLanguage}
         language={language}
         onChoose={choose}
         question={question}
@@ -1478,12 +1534,12 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
         showCorrectness={false}
       />
       <div className="action-row">
-        <button type="button" onClick={toggleFlag}>{exam.flaggedQuestionIds.has(question.id) ? "Remove flag" : "Flag for review"}</button>
-        <button type="button" disabled={exam.currentIndex === 0} onClick={() => onExamChange({ ...exam, currentIndex: exam.currentIndex - 1 })}>Previous</button>
-        <button type="button" disabled={exam.currentIndex >= exam.generatedItems.length - 1} onClick={() => onExamChange({ ...exam, currentIndex: exam.currentIndex + 1 })}>Next</button>
-        <button type="button" ref={submitButtonRef} onClick={() => onExamChange({ ...exam, confirmingSubmit: true })}>Submit exam</button>
+        <button type="button" onClick={toggleFlag}>{exam.flaggedQuestionIds.has(question.id) ? t(interfaceLanguage, "removeFlag") : t(interfaceLanguage, "flagForReview")}</button>
+        <button type="button" disabled={exam.currentIndex === 0} onClick={() => onExamChange({ ...exam, currentIndex: exam.currentIndex - 1 })}>{t(interfaceLanguage, "previous")}</button>
+        <button type="button" disabled={exam.currentIndex >= exam.generatedItems.length - 1} onClick={() => onExamChange({ ...exam, currentIndex: exam.currentIndex + 1 })}>{t(interfaceLanguage, "next")}</button>
+        <button type="button" ref={submitButtonRef} onClick={() => onExamChange({ ...exam, confirmingSubmit: true })}>{t(interfaceLanguage, "submitExam")}</button>
       </div>
-      <nav id="question-map" className="question-navigator" aria-label="Question navigator" tabIndex={-1}>
+      <nav id="question-map" className="question-navigator" aria-label={t(interfaceLanguage, "questionNavigator")} tabIndex={-1}>
         {exam.generatedItems.map((candidate, index) => {
           const answered = exam.selectedByQuestionId.has(candidate.questionId);
           const flagged = exam.flaggedQuestionIds.has(candidate.questionId);
@@ -1493,7 +1549,7 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
               key={candidate.questionId}
               type="button"
               aria-current={index === exam.currentIndex ? "step" : undefined}
-              aria-label={`Question ${index + 1}${index === exam.currentIndex ? ", current" : ""}${answered ? ", answered" : ", unanswered"}${flagged ? ", flagged" : ""}`}
+              aria-label={t(interfaceLanguage, "questionNavigatorLabel", index + 1, index === exam.currentIndex, answered, flagged)}
               onClick={() => onExamChange({ ...exam, currentIndex: index })}
             >
               {index === exam.currentIndex ? <span aria-hidden="true">● </span> : null}{index + 1}{flagged ? " ⚑" : ""}{answered ? " ✓" : ""}
@@ -1503,17 +1559,17 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
       </nav>
       {exam.confirmingSubmit ? (
         <section className="confirm-panel" aria-labelledby="submit-confirm-title" role="alertdialog" aria-modal="false" ref={confirmRef} tabIndex={-1}>
-          <h3 id="submit-confirm-title">Submit mock exam?</h3>
-          <p>{unanswered.length === 0 ? "All questions are answered." : `${unanswered.length} unanswered questions will be scored incorrect.`}</p>
+          <h3 id="submit-confirm-title">{t(interfaceLanguage, "submitMockTitle")}</h3>
+          <p>{unanswered.length === 0 ? t(interfaceLanguage, "allQuestionsAnswered") : t(interfaceLanguage, "unansweredScoredIncorrect", unanswered.length)}</p>
           {unanswered.length > 0 ? (
             <details open>
-              <summary>Unanswered questions</summary>
-              <ol>{unanswered.map((candidate) => <li key={candidate.questionId}>Question {candidate.position}: {candidate.questionId}</li>)}</ol>
+              <summary>{t(interfaceLanguage, "unansweredQuestions")}</summary>
+              <ol>{unanswered.map((candidate) => <li key={candidate.questionId}>{t(interfaceLanguage, "questionNumberWithId", candidate.position, candidate.questionId)}</li>)}</ol>
             </details>
           ) : null}
           <div className="action-row">
-            <button type="button" onClick={() => { onExamChange({ ...exam, confirmingSubmit: false }); window.setTimeout(() => submitButtonRef.current?.focus(), 0); }}>Continue exam</button>
-            <button type="button" className="danger" disabled={submittingExam} onClick={() => void confirmSubmit()}>{submittingExam ? "Submitting exam" : "Confirm submit"}</button>
+            <button type="button" onClick={() => { onExamChange({ ...exam, confirmingSubmit: false }); window.setTimeout(() => submitButtonRef.current?.focus(), 0); }}>{t(interfaceLanguage, "continueExam")}</button>
+            <button type="button" className="danger" disabled={submittingExam} onClick={() => void confirmSubmit()}>{submittingExam ? t(interfaceLanguage, "submittingExam") : t(interfaceLanguage, "confirmSubmit")}</button>
           </div>
         </section>
       ) : null}
@@ -1521,32 +1577,32 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
   );
 }
 
-function Results({ attempt, language, onStartPractice, questionsById }: { readonly attempt: ExamAttempt | null; readonly language: Language; readonly onStartPractice: (scope: PracticeScope) => void; readonly questionsById: ReadonlyMap<string, Question> }) {
+function Results({ attempt, interfaceLanguage, language, onStartPractice, questionsById }: { readonly attempt: ExamAttempt | null; readonly interfaceLanguage: InterfaceLanguage; readonly language: Language; readonly onStartPractice: (scope: PracticeScope) => void; readonly questionsById: ReadonlyMap<string, Question> }) {
   if (attempt === null) {
     return (
       <section className="card results" aria-labelledby="results-title">
-        <h2 id="results-title">Results</h2>
-        <p>No mock exam result has been saved yet.</p>
+        <h2 id="results-title">{t(interfaceLanguage, "resultsTitle")}</h2>
+        <p>{t(interfaceLanguage, "noMockResult")}</p>
       </section>
     );
   }
   const wrongItems = attempt.items.filter((item) => !item.isCorrect);
   return (
     <section className="card results" aria-labelledby="results-title">
-      <h2 id="results-title">Mock exam results</h2>
-      <p><strong>{attempt.score.correct} / {attempt.score.total}</strong> ({attempt.score.percent.toFixed(0)}%)</p>
-      <p>{attempt.score.honours ? "Basic with Honours ready for this attempt." : attempt.score.passed ? "Pass achieved for this attempt; keep practising for honours." : "Below pass threshold for this attempt."}</p>
-      <p>Pass threshold is 70%; honours threshold is 80%.</p>
-      <h3>Category breakdown</h3>
+      <h2 id="results-title">{t(interfaceLanguage, "mockResultsTitle")}</h2>
+      <p><strong>{attempt.score.correct} / {attempt.score.total}</strong> ({attempt.score.percent.toFixed(0)}{interfaceLanguage === "fr" ? " %" : "%"})</p>
+      <p>{attempt.score.honours ? t(interfaceLanguage, "resultHonours") : attempt.score.passed ? t(interfaceLanguage, "resultPass") : t(interfaceLanguage, "resultBelowPass")}</p>
+      <p>{t(interfaceLanguage, "passThresholdCopy")}</p>
+      <h3>{t(interfaceLanguage, "categoryBreakdown")}</h3>
       <ul>
         {attempt.score.categoryBreakdown.map((entry) => (
-          <li key={entry.categoryId}>{categoryName(entry.categoryId)}: {entry.correct}/{entry.total} ({entry.percent.toFixed(0)}%)</li>
+          <li key={entry.categoryId}><span lang={englishTextLang(interfaceLanguage)}>{categoryName(entry.categoryId)}</span>{colonSeparator(interfaceLanguage)}{entry.correct}/{entry.total} ({entry.percent.toFixed(0)}{interfaceLanguage === "fr" ? " %" : "%"})</li>
         ))}
       </ul>
-      <button type="button" onClick={() => onStartPractice({ type: "weak" })}>Practice weak areas</button>
+      <button type="button" onClick={() => onStartPractice({ type: "weak" })}>{t(interfaceLanguage, "readinessPracticeWeak")}</button>
       <section className="review-panel" aria-labelledby="wrong-review-title">
-        <h3 id="wrong-review-title">Review wrong answers</h3>
-        {wrongItems.length === 0 ? <p>No wrong answers on this attempt.</p> : (
+        <h3 id="wrong-review-title">{t(interfaceLanguage, "reviewWrongAnswers")}</h3>
+        {wrongItems.length === 0 ? <p>{t(interfaceLanguage, "noWrongAnswers")}</p> : (
           <ol>
             {wrongItems.map((item) => {
               const question = questionsById.get(item.questionId);
@@ -1556,13 +1612,13 @@ function Results({ attempt, language, onStartPractice, questionsById }: { readon
                 <li key={item.questionId}>
                   <strong>{item.questionId}</strong>
                   {question === undefined ? (
-                    <p>Question text is loading from the bundled bank.</p>
+                    <p>{t(interfaceLanguage, "questionTextLoading")}</p>
                   ) : (
                     <>
                       <p lang={languageTag(language)}>{question.text[language]}</p>
-                      <p>Your answer: <span lang={languageTag(language)}>{selected?.text[language] ?? "Unanswered"}</span></p>
-                      <p>Correct answer: <span lang={languageTag(language)}>{correct?.text[language] ?? "Loading"}</span></p>
-                      <ExplanationPanel explanation={explanationForQuestion(question.id)} language={language} choicePermutation={item.choicePermutation} />
+                      <p>{t(interfaceLanguage, "yourAnswerPrefix")} <span lang={languageTag(language)}>{selected?.text[language] ?? t(interfaceLanguage, "unanswered")}</span></p>
+                      <p>{t(interfaceLanguage, "correctAnswerPrefix")} <span lang={languageTag(language)}>{correct?.text[language] ?? t(interfaceLanguage, "loading")}</span></p>
+                      <ExplanationPanel explanation={explanationForQuestion(question.id)} interfaceLanguage={interfaceLanguage} language={language} choicePermutation={item.choicePermutation} />
                     </>
                   )}
                 </li>
@@ -1576,16 +1632,18 @@ function Results({ attempt, language, onStartPractice, questionsById }: { readon
 }
 
 interface SettingsProps {
+  readonly interfaceLanguage: InterfaceLanguage;
   readonly store: ProgressStore;
   readonly now: () => string;
   readonly preferences: WebPreferences;
   readonly statusMessage: string;
   readonly onProgressImported: (data: ProgressExportV1) => void;
   readonly onReset: () => void;
+  readonly onInterfaceLanguageChange: (language: InterfaceLanguage) => void;
   readonly onSetPreferences: (preferences: WebPreferences) => Promise<void>;
 }
 
-function Settings({ store, now, preferences, statusMessage, onProgressImported, onReset, onSetPreferences }: SettingsProps) {
+function Settings({ interfaceLanguage, store, now, preferences, statusMessage, onProgressImported, onReset, onInterfaceLanguageChange, onSetPreferences }: SettingsProps) {
   const [errors, setErrors] = useState<readonly string[]>([]);
   const [pendingImport, setPendingImport] = useState<ProgressExportV1 | null>(null);
   const [message, setMessage] = useState(statusMessage);
@@ -1618,9 +1676,9 @@ function Settings({ store, now, preferences, statusMessage, onProgressImported, 
       anchor.click();
       anchor.remove();
       window.setTimeout(() => URL.revokeObjectURL(href), 0);
-      setMessage("Progress export was prepared locally. Nothing was uploaded.");
+      setMessage(t(interfaceLanguage, "exportPrepared"));
     } catch (error) {
-      setErrors([`Unable to export local progress: ${formatError(error)}`]);
+      setErrors([t(interfaceLanguage, "errorExport", formatError(error))]);
     }
   }
 
@@ -1639,9 +1697,9 @@ function Settings({ store, now, preferences, statusMessage, onProgressImported, 
         return;
       }
       setPendingImport(result.data);
-      setMessage(`Import file is valid: ${result.data.questionProgress.length} question records, ${result.data.examAttempts.length} exam attempts, ${result.data.lessonProgress?.length ?? 0} lesson read records, and ${result.data.lessonQuizAttempts?.length ?? 0} lesson quiz attempts. Confirm to replace local data.`);
+      setMessage(t(interfaceLanguage, "importValid", result.data.questionProgress.length, result.data.examAttempts.length, result.data.lessonProgress?.length ?? 0, result.data.lessonQuizAttempts?.length ?? 0));
     } catch (error) {
-      setErrors([`Import file is not valid JSON: ${error instanceof Error ? error.message : String(error)}`]);
+      setErrors([t(interfaceLanguage, "errorImportJson", error instanceof Error ? error.message : String(error))]);
     }
   }
 
@@ -1654,10 +1712,10 @@ function Settings({ store, now, preferences, statusMessage, onProgressImported, 
       onProgressImported(pendingImport);
       setPendingImport(null);
       setErrors([]);
-      setMessage("Import complete. Imported progress replaced the previous local data.");
+      setMessage(t(interfaceLanguage, "importComplete"));
       window.setTimeout(() => statusRef.current?.focus(), 0);
     } catch (error) {
-      setErrors([`Unable to import local progress: ${formatError(error)}`]);
+      setErrors([t(interfaceLanguage, "errorImport", formatError(error))]);
     }
   }
 
@@ -1667,10 +1725,10 @@ function Settings({ store, now, preferences, statusMessage, onProgressImported, 
       onReset();
       setConfirmReset(false);
       setErrors([]);
-      setMessage("All local data was reset.");
+      setMessage(t(interfaceLanguage, "resetComplete"));
       window.setTimeout(() => statusRef.current?.focus(), 0);
     } catch (error) {
-      setErrors([`Unable to reset local progress: ${formatError(error)}`]);
+      setErrors([t(interfaceLanguage, "errorReset", formatError(error))]);
     }
   }
 
@@ -1678,38 +1736,53 @@ function Settings({ store, now, preferences, statusMessage, onProgressImported, 
     try {
       await onSetPreferences({ ...preferences, theme });
       setErrors([]);
-      setMessage(`Theme preference saved: ${theme === "system" ? "System" : theme === "light" ? "Light" : "Dark"}.`);
+      setMessage(t(interfaceLanguage, "themeSaved", theme === "system" ? t(interfaceLanguage, "themeSystem") : theme === "light" ? t(interfaceLanguage, "themeLight") : t(interfaceLanguage, "themeDark")));
     } catch (error) {
-      setErrors([`Unable to save theme preference: ${formatError(error)}`]);
+      setErrors([t(interfaceLanguage, "errorThemeSave", formatError(error))]);
+    }
+  }
+
+  function chooseInterfaceLanguage(language: InterfaceLanguage): void {
+    try {
+      onInterfaceLanguageChange(language);
+      setErrors([]);
+      setMessage(t(language, "interfaceLanguageSaved", language === "fr" ? t(language, "languageFrench") : t(language, "languageEnglish")));
+    } catch (error) {
+      setErrors([t(interfaceLanguage, "errorInterfaceLanguageSave", formatError(error))]);
     }
   }
 
   return (
     <section className="card settings" aria-labelledby="settings-title">
-      <h2 id="settings-title">Settings and local data</h2>
-      <p>No accounts, analytics, telemetry, network sync, remote assets, or third-party runtime SDKs are used. Progress stays in IndexedDB on this device unless you export it.</p>
-      <p>Active bank: {bankId}, effective {manifest.effectiveDate}. Export/import/reset are user initiated.</p>
+      <h2 id="settings-title">{t(interfaceLanguage, "settingsTitle")}</h2>
+      <p>{t(interfaceLanguage, "settingsPrivacyCopy")}</p>
+      <p>{t(interfaceLanguage, "activeBank", bankId, manifest.effectiveDate)}</p>
       <fieldset className="segmented-control theme-toggle">
-        <legend>Theme</legend>
-        <label><input type="radio" name="theme" checked={preferences.theme === "system"} onChange={() => void chooseTheme("system")} /> System</label>
-        <label><input type="radio" name="theme" checked={preferences.theme === "light"} onChange={() => void chooseTheme("light")} /> Light</label>
-        <label><input type="radio" name="theme" checked={preferences.theme === "dark"} onChange={() => void chooseTheme("dark")} /> Dark</label>
+        <legend>{t(interfaceLanguage, "themeLegend")}</legend>
+        <label><input type="radio" name="theme" checked={preferences.theme === "system"} onChange={() => void chooseTheme("system")} /> {t(interfaceLanguage, "themeSystem")}</label>
+        <label><input type="radio" name="theme" checked={preferences.theme === "light"} onChange={() => void chooseTheme("light")} /> {t(interfaceLanguage, "themeLight")}</label>
+        <label><input type="radio" name="theme" checked={preferences.theme === "dark"} onChange={() => void chooseTheme("dark")} /> {t(interfaceLanguage, "themeDark")}</label>
+      </fieldset>
+      <fieldset className="segmented-control interface-language-toggle">
+        <legend>{t(interfaceLanguage, "languageInterfaceLegend")}</legend>
+        <label><input type="radio" name="interface-language" checked={interfaceLanguage === "en"} onChange={() => chooseInterfaceLanguage("en")} /> <span lang={englishTextLang(interfaceLanguage)}>{t(interfaceLanguage, "languageEnglish")}</span></label>
+        <label><input type="radio" name="interface-language" checked={interfaceLanguage === "fr"} onChange={() => chooseInterfaceLanguage("fr")} /> <span lang="fr">{t(interfaceLanguage, "languageFrench")}</span></label>
       </fieldset>
       <div className="action-row">
-        <button type="button" onClick={() => void exportProgress()}>Export progress JSON</button>
+        <button type="button" onClick={() => void exportProgress()}>{t(interfaceLanguage, "exportProgress")}</button>
         <label className="file-control">
-          Import progress JSON
+          {t(interfaceLanguage, "importProgress")}
           <input type="file" accept="application/json,.json" onChange={(event) => void handleImport(event.currentTarget.files?.[0])} />
         </label>
-        <button type="button" className="danger" ref={resetButtonRef} onClick={() => setConfirmReset(true)}>Reset all data</button>
+        <button type="button" className="danger" ref={resetButtonRef} onClick={() => setConfirmReset(true)}>{t(interfaceLanguage, "resetAllData")}</button>
       </div>
-      {pendingImport !== null ? <button type="button" className="primary-button" onClick={() => void confirmImport()}>Confirm import and replace local data</button> : null}
+      {pendingImport !== null ? <button type="button" className="primary-button" onClick={() => void confirmImport()}>{t(interfaceLanguage, "confirmImport")}</button> : null}
       {confirmReset ? (
         <div className="confirm-panel" role="alertdialog" aria-labelledby="reset-title" aria-modal="false" ref={resetDialogRef} tabIndex={-1}>
-          <h3 id="reset-title">Reset all local data?</h3>
-          <p>This deletes browser-local question progress, lesson read status, lesson quiz attempts, mock exam attempts, and preferences. Bundled content remains available offline.</p>
-          <button type="button" onClick={() => { setConfirmReset(false); window.setTimeout(() => resetButtonRef.current?.focus(), 0); }}>Cancel reset</button>
-          <button type="button" className="danger" onClick={() => void resetAll()}>Confirm reset all data</button>
+          <h3 id="reset-title">{t(interfaceLanguage, "resetTitle")}</h3>
+          <p>{t(interfaceLanguage, "resetCopy")}</p>
+          <button type="button" onClick={() => { setConfirmReset(false); window.setTimeout(() => resetButtonRef.current?.focus(), 0); }}>{t(interfaceLanguage, "cancelReset")}</button>
+          <button type="button" className="danger" onClick={() => void resetAll()}>{t(interfaceLanguage, "confirmResetAllData")}</button>
         </div>
       ) : null}
       <div role="status" aria-live="polite" ref={statusRef} tabIndex={-1}>
@@ -1726,21 +1799,17 @@ function readFileText(file: File): Promise<string> {
   }
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onerror = () => reject(reader.error ?? new Error("Unable to read file."));
+    reader.onerror = () => reject(reader.error ?? new Error(t(readStoredInterfaceLanguage(), "fileReadError")));
     reader.onload = () => resolve(String(reader.result ?? ""));
     reader.readAsText(file);
   });
 }
 
-function Footer() {
+function Footer({ interfaceLanguage }: { readonly interfaceLanguage: InterfaceLanguage }) {
   return (
     <footer className="site-footer">
-      <p>
-        Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page. Written permission is pending; this private-development build is not for public release.
-      </p>
-      <p>
-        canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner.
-      </p>
+      <p lang={englishTextLang(interfaceLanguage)}>{t(interfaceLanguage, "footerISED")}</p>
+      <p lang={englishTextLang(interfaceLanguage)}>{t(interfaceLanguage, "footerIndependent")}</p>
     </footer>
   );
 }
@@ -1786,20 +1855,20 @@ function controlsFromScope(scope: PracticeScope): { scopeKind: string; categoryI
   };
 }
 
-function scopeLabel(scope: PracticeScope): string {
+function ScopeValue({ interfaceLanguage, scope }: { readonly interfaceLanguage: InterfaceLanguage; readonly scope: PracticeScope }) {
   if (scope.type === "category") {
-    return categoryName(scope.categoryId);
+    return <span lang={englishTextLang(interfaceLanguage)}>{categoryName(scope.categoryId)}</span>;
   }
   if (scope.type === "subsection") {
-    return `${scope.subsectionId}: ${subsectionTitle(scope.subsectionId)}`;
+    return <>{scope.subsectionId}{colonSeparator(interfaceLanguage)}<span lang={englishTextLang(interfaceLanguage)}>{subsectionTitle(scope.subsectionId)}</span></>;
   }
   if (scope.type === "weak") {
-    return "Weak areas";
+    return <>{t(interfaceLanguage, "practiceScopeWeak")}</>;
   }
   if (scope.type === "due") {
-    return "Due review";
+    return <>{t(interfaceLanguage, "practiceScopeDue")}</>;
   }
-  return "All questions";
+  return <>{t(interfaceLanguage, "practiceScopeAll")}</>;
 }
 
 function hasUnsubmittedReviewAnswers(session: PracticeSession | null): boolean {
@@ -1821,52 +1890,60 @@ function latestSubmittedAttempt(attempts: readonly ExamAttempt[]): ExamAttempt |
   return [...attempts].sort((a, b) => Date.parse(b.submittedAt) - Date.parse(a.submittedAt))[0] ?? null;
 }
 
-function languageTag(language: Language): "en-CA" | "fr-CA" {
-  return language === "fr" ? "fr-CA" : "en-CA";
+function languageTag(language: Language): "en" | "fr-CA" {
+  return language === "fr" ? "fr-CA" : "en";
 }
 
-function readinessLabel(state: ReadinessResult["state"]): string {
+function englishTextLang(interfaceLanguage: InterfaceLanguage): "en" | undefined {
+  return interfaceLanguage === "fr" ? "en" : undefined;
+}
+
+function colonSeparator(interfaceLanguage: InterfaceLanguage): ": " | " : " {
+  return interfaceLanguage === "fr" ? " : " : ": ";
+}
+
+function readinessLabel(interfaceLanguage: InterfaceLanguage, state: ReadinessResult["state"]): string {
   switch (state) {
-    case "honours-ready": return "Honours-ready";
-    case "pass-ready": return "Pass-ready";
-    case "needs-review": return "Needs review";
-    case "not-enough-data": return "Not enough data";
+    case "honours-ready": return t(interfaceLanguage, "readinessHonoursReady");
+    case "pass-ready": return t(interfaceLanguage, "readinessPassReady");
+    case "needs-review": return t(interfaceLanguage, "readinessNeedsReview");
+    case "not-enough-data": return t(interfaceLanguage, "readinessNotEnoughData");
   }
 }
 
-function readinessCopy(readiness: ReadinessResult): string {
+function readinessCopy(interfaceLanguage: InterfaceLanguage, readiness: ReadinessResult): string {
   if (readiness.state === "honours-ready") {
-    return "Two of your recent mock exams are at or above the 80% Basic with Honours threshold.";
+    return t(interfaceLanguage, "readinessHonoursCopy");
   }
   if (readiness.state === "pass-ready") {
-    return "Two recent mock exams are at or above 70%; keep practising weak areas to target honours.";
+    return t(interfaceLanguage, "readinessPassCopy");
   }
   if (readiness.state === "not-enough-data") {
-    return "Complete at least two mock exams before the app claims pass or honours readiness.";
+    return t(interfaceLanguage, "readinessNotEnoughCopy");
   }
   const reason = readiness.reasons[0];
   if (reason?.type === "due-review") {
-    return "Your Leitner due-review count is high enough to review before relying on exam scores.";
+    return t(interfaceLanguage, "readinessDueReviewCopy");
   }
   if (reason?.type === "weak-categories") {
-    return "One or more categories are below 70% across the considered mock exams.";
+    return t(interfaceLanguage, "readinessWeakCategoriesCopy");
   }
-  return "Recent results do not yet meet the pass-ready rule.";
+  return t(interfaceLanguage, "readinessRecentResultsCopy");
 }
 
-function immediateFeedback(question: Question, choicePermutation: readonly number[], selectedSourceIndex: number | undefined, language: Language) {
+function immediateFeedback(interfaceLanguage: InterfaceLanguage, question: Question, choicePermutation: readonly number[], selectedSourceIndex: number | undefined, language: Language) {
   if (selectedSourceIndex === undefined) {
-    return <p>Choose an answer to see immediate feedback.</p>;
+    return <p>{t(interfaceLanguage, "feedbackChooseAnswer")}</p>;
   }
   const correctAnswer = question.answers.find((answer) => answer.sourceIndex === 0)!;
   return (
     <>
       {selectedSourceIndex === 0 ? (
-        <p>Correct. The correct answer is: <strong lang={languageTag(language)}>{correctAnswer.text[language]}</strong></p>
+        <p>{t(interfaceLanguage, "feedbackCorrectWithAnswer")} <strong lang={languageTag(language)}>{correctAnswer.text[language]}</strong></p>
       ) : (
-        <p>Incorrect. The correct answer is: <strong lang={languageTag(language)}>{correctAnswer.text[language]}</strong></p>
+        <p>{t(interfaceLanguage, "feedbackIncorrectWithAnswer")} <strong lang={languageTag(language)}>{correctAnswer.text[language]}</strong></p>
       )}
-      <ExplanationPanel explanation={explanationForQuestion(question.id)} language={language} choicePermutation={choicePermutation} />
+      <ExplanationPanel explanation={explanationForQuestion(question.id)} interfaceLanguage={interfaceLanguage} language={language} choicePermutation={choicePermutation} />
     </>
   );
 }
@@ -1877,10 +1954,10 @@ function formatElapsed(secondsElapsed: number): string {
   return `${minutes}:${seconds}`;
 }
 
-function formatElapsedForSpeech(secondsElapsed: number): string {
+function formatElapsedForSpeech(interfaceLanguage: InterfaceLanguage, secondsElapsed: number): string {
   const minutes = Math.floor(secondsElapsed / 60);
   const seconds = secondsElapsed % 60;
-  return `${minutes} minute${minutes === 1 ? "" : "s"} ${seconds} second${seconds === 1 ? "" : "s"}`;
+  return t(interfaceLanguage, "elapsedSpeech", minutes, seconds);
 }
 
 export const webExamCategoryCounts = examCategoryCounts;

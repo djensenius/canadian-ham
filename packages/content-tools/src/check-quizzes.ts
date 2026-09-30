@@ -2,11 +2,12 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { ACTIVE_GENERATED_DIR } from "./active-bank.ts";
 import { isMainModule } from "./cli.ts";
 
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const DEFAULT_LESSON_ROOT = path.join(REPO_ROOT, "content/lessons");
-const DEFAULT_QUESTION_PATH = path.join(REPO_ROOT, "content/generated/basic-2025-07-15/questions.json");
+const DEFAULT_QUESTION_PATH = path.join(REPO_ROOT, ACTIVE_GENERATED_DIR, "questions.json");
 const DEFAULT_QUIZ_ROOT = path.join(REPO_ROOT, "content/quizzes");
 // Tuned on the accepted M4/M5/M6 lesson quizzes to catch near-restatements
 // without flagging ordinary same-topic vocabulary.

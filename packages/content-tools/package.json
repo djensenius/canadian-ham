@@ -13,6 +13,7 @@
     "check:explanations": "node src/check-explanations.ts",
     "check:lesson-originality": "node src/check-lesson-originality.ts ../../content/lessons/m5-basic-electronics",
     "check:lesson-originality:all": "node src/check-lesson-originality.ts --all",
+    "diff:banks": "node src/diff-banks.ts",
     "test": "node --test test/",
     "typecheck": "tsc --noEmit"
   },

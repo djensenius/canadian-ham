@@ -2,11 +2,12 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { ACTIVE_GENERATED_DIR } from "./active-bank.ts";
 import { isMainModule } from "./cli.ts";
 
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const DEFAULT_LESSON_ROOT = path.join(REPO_ROOT, "content/lessons");
-const DEFAULT_SUBSECTIONS_PATH = path.join(REPO_ROOT, "content/generated/basic-2025-07-15/subsections.json");
+const DEFAULT_SUBSECTIONS_PATH = path.join(REPO_ROOT, ACTIVE_GENERATED_DIR, "subsections.json");
 
 type FrontMatterValue = string | number | null | string[] | Record<string, string | null>;
 type FrontMatter = Record<string, FrontMatterValue>;

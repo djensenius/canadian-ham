@@ -2,13 +2,14 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { ACTIVE_BANK_ID, ACTIVE_GENERATED_DIR } from "./active-bank.ts";
 import { isMainModule } from "./cli.ts";
 
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const DEFAULT_EXPLANATION_ROOT = path.join(REPO_ROOT, "content/explanations");
 const DEFAULT_LESSON_ROOT = path.join(REPO_ROOT, "content/lessons");
-const DEFAULT_QUESTION_PATH = path.join(REPO_ROOT, "content/generated/basic-2025-07-15/questions.json");
-const EXPECTED_BANK_ID = "basic-2025-07-15";
+const DEFAULT_QUESTION_PATH = path.join(REPO_ROOT, ACTIVE_GENERATED_DIR, "questions.json");
+const EXPECTED_BANK_ID = ACTIVE_BANK_ID;
 const NOTE_DUPLICATE_FILE_LIMIT = 3;
 const SHORT_PREFIX_MIN_LENGTH = 12;
 // A repeated 6-word run across four different questions is long enough to catch

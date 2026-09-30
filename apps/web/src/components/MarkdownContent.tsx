@@ -1,8 +1,11 @@
 import type { ReactNode } from "react";
 
+import { t, type InterfaceLanguage } from "../lib/i18n";
+
 interface MarkdownContentProps {
   readonly markdown: string;
   readonly title?: string;
+  readonly interfaceLanguage?: InterfaceLanguage;
 }
 
 type MarkdownBlock =
@@ -14,11 +17,11 @@ type MarkdownBlock =
   | { readonly type: "code"; readonly language: string | null; readonly code: string }
   | { readonly type: "illustration"; readonly alt: string; readonly description: string };
 
-export function MarkdownContent({ markdown, title }: MarkdownContentProps) {
-  return <>{parseMarkdownBlocks(markdown, title).map((block, index) => renderBlock(block, index))}</>;
+export function MarkdownContent({ markdown, title, interfaceLanguage = "en" }: MarkdownContentProps) {
+  return <>{parseMarkdownBlocks(markdown, title).map((block, index) => renderBlock(block, index, interfaceLanguage))}</>;
 }
 
-function renderBlock(block: MarkdownBlock, index: number): ReactNode {
+function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: InterfaceLanguage): ReactNode {
   if (block.type === "heading") {
     const Tag = `h${Math.min(block.depth + 1, 6)}` as "h2" | "h3" | "h4" | "h5" | "h6";
     return <Tag key={index}>{block.text}</Tag>;
@@ -34,7 +37,7 @@ function renderBlock(block: MarkdownBlock, index: number): ReactNode {
   }
   if (block.type === "table") {
     return (
-      <div className="markdown-table-wrapper" key={index} role="region" aria-label="Lesson table" tabIndex={0}>
+      <div className="markdown-table-wrapper" key={index} role="region" aria-label={t(interfaceLanguage, "markdownTableAria")} tabIndex={0}>
         <table>
           <thead>
             <tr>{block.headers.map((header) => <th key={header} scope="col">{header}</th>)}</tr>
@@ -54,7 +57,7 @@ function renderBlock(block: MarkdownBlock, index: number): ReactNode {
         className="markdown-code-block"
         key={index}
         role="group"
-        aria-label={block.language === null ? "Lesson code block" : `Lesson code block (${block.language})`}
+        aria-label={block.language === null ? t(interfaceLanguage, "markdownCodeBlockAria") : t(interfaceLanguage, "markdownCodeBlockLanguageAria", block.language)}
         tabIndex={0}
       ><code>{block.code}</code></pre>
     );
@@ -62,10 +65,10 @@ function renderBlock(block: MarkdownBlock, index: number): ReactNode {
   return (
     <figure className="illustration-placeholder" key={index}>
       <div className="illustration-placeholder__art" role="img" aria-label={block.alt}>
-        Illustration placeholder
+        {t(interfaceLanguage, "markdownIllustrationPlaceholder")}
       </div>
       <figcaption>
-        <strong>Illustration brief:</strong> {block.description}
+        <strong>{t(interfaceLanguage, "markdownIllustrationBrief")}</strong> {block.description}
       </figcaption>
     </figure>
   );
