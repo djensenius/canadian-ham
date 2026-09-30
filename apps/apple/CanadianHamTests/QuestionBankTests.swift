@@ -1,3 +1,4 @@
+import CanadianHamContent
 import Foundation
 import XCTest
 
@@ -69,11 +70,27 @@ final class QuestionBankTests: XCTestCase {
         }
     }
 
-    func testRealBundleKnownLessonIdsCoverAllBundledLessonQuizzes() throws {
-        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+    func testRealBundleKnownLessonIdsCoverBundledContentLibraryLessons() throws {
+        let library = try ContentLibrary.load(from: Bundle(for: Self.self))
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self)).withKnownLessonIds(Set(library.lessons.map(\.id)))
 
-        XCTAssertEqual(bank.knownLessonIds.count, 36)
+        XCTAssertEqual(bank.knownLessonIds.count, library.lessons.count)
+        XCTAssertEqual(bank.knownLessonIds, Set(library.lessons.map(\.id)))
         XCTAssertTrue(bank.knownLessonIds.contains("L-005-01"))
+    }
+
+    func testBundledLessonsAndExplanationsLoadThroughContentLibrary() throws {
+        let library = try ContentLibrary.load(from: Bundle(for: Self.self))
+
+        XCTAssertEqual(library.lessons.count, library.orderedLessons().count)
+        XCTAssertFalse(library.lessons.isEmpty)
+        XCTAssertEqual(library.explanations.count, library.questions.count)
+        for lesson in library.lessons {
+            XCTAssertNoThrow(try LessonMarkdownRenderer.render(lesson.bodyMarkdown), "Lesson \(lesson.id) should render")
+        }
+        for explanation in library.explanations {
+            XCTAssertNoThrow(try ExplanationBodyParser.parse(explanation), "Explanation \(explanation.id) should parse")
+        }
     }
 
     func testKnownLessonIdsComeFromSubsectionLessonMappingsWithoutQuizzes() {

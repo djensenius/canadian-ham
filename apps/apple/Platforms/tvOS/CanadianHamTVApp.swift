@@ -485,6 +485,30 @@ private struct TVAnswerButton: View {
     }
 }
 
+private struct TVPrimaryButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.isFocused) private var isFocused
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundStyle(isEnabled ? DesignTokens.Colors.paper : DesignTokens.Colors.ink)
+            .multilineTextAlignment(.center)
+            .padding(.horizontal, DesignTokens.Spacing.xl)
+            .padding(.vertical, DesignTokens.Spacing.lg)
+            .frame(minHeight: 72)
+            .background(isEnabled ? DesignTokens.Colors.accent : DesignTokens.Colors.paperInset, in: Capsule())
+            .overlay {
+                Capsule()
+                    .strokeBorder(
+                        isFocused ? DesignTokens.Colors.focus : isEnabled ? DesignTokens.Colors.accent : DesignTokens.Colors.inkMuted,
+                        style: StrokeStyle(lineWidth: isFocused ? 6 : 2, dash: isEnabled ? [] : [6, 5])
+                    )
+            }
+            .contentShape(Capsule())
+            .scaleEffect(isFocused ? 1.04 : (configuration.isPressed ? 0.97 : 1))
+    }
+}
+
 private struct TVFeedbackBar: View {
     let selectedAnswer: ShuffledAnswer
     let correctAnswer: ShuffledAnswer
@@ -492,6 +516,8 @@ private struct TVFeedbackBar: View {
     let question: BankQuestion
     let language: BankLanguage
     let onNext: () -> Void
+
+    @FocusState private var isNextQuestionFocused: Bool
 
     var body: some View {
         HStack(spacing: DesignTokens.Spacing.xl) {
@@ -511,7 +537,8 @@ private struct TVFeedbackBar: View {
 
             Button("Next question", action: onNext)
                 .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(TVPrimaryButtonStyle())
+                .focused($isNextQuestionFocused)
                 .accessibilityHint("Loads another question from this category")
                 .accessibilityIdentifier("next-question-button")
         }
@@ -521,6 +548,9 @@ private struct TVFeedbackBar: View {
             RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous)
                 .strokeBorder(selectedAnswer.isCorrect ? DesignTokens.Colors.correctBorder : DesignTokens.Colors.incorrectBorder, lineWidth: 3)
         )
+        .onAppear {
+            isNextQuestionFocused = true
+        }
     }
 
     private var resultText: String { selectedAnswer.isCorrect ? "Correct" : "Incorrect" }

@@ -71,6 +71,7 @@ The design-token test computes these WCAG 2.2 ratios for every declared foregrou
 | light-card-border | light | ui | border #8C7656 | paperElevated #FFF8EA | 4.10 | 3.0 |
 | light-card-focus | light | ui | focus #8F2E1D | paperElevated #FFF8EA | 7.71 | 3.0 |
 | light-inset-body | light | body | ink #1F1A14 | paperInset #EFE3CB | 13.58 | 4.5 |
+| light-inset-muted | light | ui | inkMuted #5E5347 | paperInset #EFE3CB | 5.89 | 3.0 |
 | light-inset-border | light | ui | border #8C7656 | paperInset #EFE3CB | 3.41 | 3.0 |
 | light-inset-accent | light | body | accent #A53A2A | paperInset #EFE3CB | 5.10 | 4.5 |
 | light-inset-focus | light | ui | focus #8F2E1D | paperInset #EFE3CB | 6.41 | 3.0 |
@@ -94,6 +95,7 @@ The design-token test computes these WCAG 2.2 ratios for every declared foregrou
 | dark-card-border | dark | ui | border #8A7759 | paperElevated #2A241D | 3.55 | 3.0 |
 | dark-card-focus | dark | ui | focus #FFB36B | paperElevated #2A241D | 8.70 | 3.0 |
 | dark-inset-body | dark | body | ink #F3E8D2 | paperInset #181410 | 15.08 | 4.5 |
+| dark-inset-muted | dark | ui | inkMuted #CBBDA4 | paperInset #181410 | 9.90 | 3.0 |
 | dark-inset-border | dark | ui | border #8A7759 | paperInset #181410 | 4.24 | 3.0 |
 | dark-inset-accent | dark | body | accent #FF8A70 | paperInset #181410 | 7.96 | 4.5 |
 | dark-inset-focus | dark | ui | focus #FFB36B | paperInset #181410 | 10.39 | 3.0 |
@@ -333,6 +335,8 @@ Desktop:
 │ answered flag │                                            │
 └───────────────┴────────────────────────────────────────────┘
 ```
+
+Design decision: compact-width mock exams open the question navigator in a sheet from the header `Questions` button; the header keeps Flag, Questions, and optional timer controls in one row that wraps before content is hidden at large Dynamic Type sizes.
 
 ### Exam results with category breakdown
 

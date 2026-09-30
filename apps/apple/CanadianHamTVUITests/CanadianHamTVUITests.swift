@@ -41,8 +41,11 @@ final class CanadianHamTVUITests: XCTestCase {
         let nextQuestion = app.buttons["next-question-button"].firstMatch
         XCTAssertTrue(nextQuestion.waitForExistence(timeout: 5), "Next question button should exist")
         assertNextQuestionIsSeparateButton(nextQuestion, feedback: feedback)
+        waitForFocus(on: nextQuestion)
+        XCTAssertTrue(nextQuestion.hasFocus, "Next question should receive tvOS focus after answering before Select is pressed")
 
-        pressUntil(feedback, exists: false, remote: remote, buttons: [.down, .down, .select, .down, .select, .down, .select])
+        remote.press(.select)
+        waitForElementToDisappear(feedback, timeout: 5, message: "Feedback should disappear after advancing to the next question with the remote")
         XCTAssertFalse(feedback.exists, "Feedback should disappear after advancing to the next question with the remote")
         XCTAssertTrue(
             app.descendants(matching: .any)["tv-practice-screen"].firstMatch.exists,
@@ -140,6 +143,25 @@ final class CanadianHamTVUITests: XCTestCase {
             file: file,
             line: line
         )
+    }
+
+    private func waitForFocus(on element: XCUIElement) {
+        for _ in 0..<10 where !element.hasFocus {
+            RunLoop.current.run(until: Date().addingTimeInterval(0.2))
+        }
+    }
+
+    private func waitForElementToDisappear(
+        _ element: XCUIElement,
+        timeout: TimeInterval,
+        message: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let predicate = NSPredicate(format: "exists == false")
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
+        let result = XCTWaiter.wait(for: [expectation], timeout: timeout)
+        XCTAssertEqual(result, .completed, message, file: file, line: line)
     }
 
     private func pressUntil(

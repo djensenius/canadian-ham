@@ -11,6 +11,8 @@ options:
 packages:
   CanadianHamEngine:
     path: ../../packages/engine-swift
+  CanadianHamContent:
+    path: ../../packages/content-swift
 settings:
   base:
     CURRENT_PROJECT_VERSION: 1
@@ -36,29 +38,31 @@ targets:
         excludes:
           - Resources/Assets.xcassets
       - path: CanadianHam/Resources/Assets.xcassets
-      - path: ../../content/generated/basic-2025-07-15/questions.json
-        type: file
+      - path: ../../content/generated
+        type: folder
         buildPhase: resources
         createIntermediateGroups: false
-      - path: ../../content/generated/basic-2025-07-15/subsections.json
-        type: file
-        buildPhase: resources
-        createIntermediateGroups: false
-      - path: ../../content/generated/basic-2025-07-15/categories.json
-        type: file
-        buildPhase: resources
-        createIntermediateGroups: false
-      - path: ../../content/generated/basic-2025-07-15/manifest.json
-        type: file
+      - path: ../../content/lessons
+        type: folder
         buildPhase: resources
         createIntermediateGroups: false
       - path: ../../content/quizzes
         type: folder
         buildPhase: resources
         createIntermediateGroups: false
+      - path: ../../content/explanations
+        type: folder
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/subsection-titles.json
+        type: file
+        buildPhase: resources
+        createIntermediateGroups: false
     dependencies:
       - package: CanadianHamEngine
         product: CanadianHamEngine
+      - package: CanadianHamContent
+        product: CanadianHamContent
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.djensenius.CanadianHam
@@ -84,29 +88,31 @@ targets:
       - path: CanadianHam/Services/AppleStudyEngine.swift
       - path: CanadianHam/Models/ProgressModels.swift
       - path: CanadianHam/Practice/EngineShuffle.swift
-      - path: ../../content/generated/basic-2025-07-15/questions.json
-        type: file
+      - path: ../../content/generated
+        type: folder
         buildPhase: resources
         createIntermediateGroups: false
-      - path: ../../content/generated/basic-2025-07-15/subsections.json
-        type: file
-        buildPhase: resources
-        createIntermediateGroups: false
-      - path: ../../content/generated/basic-2025-07-15/categories.json
-        type: file
-        buildPhase: resources
-        createIntermediateGroups: false
-      - path: ../../content/generated/basic-2025-07-15/manifest.json
-        type: file
+      - path: ../../content/lessons
+        type: folder
         buildPhase: resources
         createIntermediateGroups: false
       - path: ../../content/quizzes
         type: folder
         buildPhase: resources
         createIntermediateGroups: false
+      - path: ../../content/explanations
+        type: folder
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/subsection-titles.json
+        type: file
+        buildPhase: resources
+        createIntermediateGroups: false
     dependencies:
       - package: CanadianHamEngine
         product: CanadianHamEngine
+      - package: CanadianHamContent
+        product: CanadianHamContent
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.djensenius.CanadianHamTests

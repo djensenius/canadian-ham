@@ -16,8 +16,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let languagePicker = app.segmentedControls["question-language-picker"].firstMatch
         let frenchSegment = languagePicker.buttons["Français"].firstMatch
         XCTAssertTrue(frenchSegment.waitForExistence(timeout: 2), "French segment should be available")
-        frenchSegment.tap()
-        waitBriefly()
+        let selectedPredicate = NSPredicate(format: "selected == true")
+        for _ in 0..<3 where !frenchSegment.isSelected {
+            frenchSegment.tap()
+            let selectedExpectation = XCTNSPredicateExpectation(predicate: selectedPredicate, object: frenchSegment)
+            if XCTWaiter.wait(for: [selectedExpectation], timeout: 2) == .completed { break }
+        }
+        XCTAssertTrue(frenchSegment.isSelected, "Français segment should become selected")
 
         let frenchQuestionTexts = try bundledFrenchQuestionTexts(forCategoryID: "B-001")
         let frenchQuestionPredicate = NSPredicate(format: "label IN %@", Array(frenchQuestionTexts))
@@ -28,10 +33,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
         )
 
         answerFirstVisibleAnswer(in: app)
-        let feedback = waitForAnswerFeedback(in: app)
+        _ = waitForAnswerFeedback(in: app)
+        let feedbackTitle = app.staticTexts["answer-feedback-title"].firstMatch
+        XCTAssertTrue(feedbackTitle.waitForExistence(timeout: 5), "Feedback title should exist")
         XCTAssertTrue(
-            feedback.label.hasPrefix("Correct") || feedback.label.hasPrefix("Incorrect"),
-            "Feedback label should start with Correct or Incorrect, got: \(feedback.label)"
+            feedbackTitle.label.hasPrefix("Correct") || feedbackTitle.label.hasPrefix("Incorrect"),
+            "Feedback title should start with Correct or Incorrect, got: \(feedbackTitle.label)"
         )
     }
 
@@ -45,6 +52,65 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app = launchApp(arguments: ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
         assertSingleLanguagePicker(in: app, context: "practice")
         XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
+    }
+
+    func testLearnOpensLessonAndShowsFirstHeading() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: ["-CanadianHamInitialLessonID", "L-006-03"])
+
+        XCTAssertTrue(app.staticTexts["Polarization, dipoles, and wavelength"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.exists)
+    }
+
+    func testLessonQuizResultPersistsAfterRelaunch() throws {
+        XCUIDevice.shared.appearance = .light
+        var app = launchApp(arguments: [
+            "-CanadianHamInitialLessonQuizID", "QZ-L-006-03-A",
+            "-CanadianHamLessonQuizLimit", "1",
+            "-CanadianHamLessonQuizSeed", "ui-lesson-quiz-persist"
+        ])
+        waitForLessonQuizScreen(in: app)
+        completeVisibleLessonQuiz(in: app, expectedCount: 1)
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-quiz-latest-score"].firstMatch.waitForExistence(timeout: 10))
+        app.terminate()
+
+        app = launchApp(arguments: ["-CanadianHamInitialLessonQuizID", "QZ-L-006-03-A"], resetData: false)
+        waitForLessonQuizScreen(in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-quiz-latest-score"].firstMatch.waitForExistence(timeout: 10), "Saved lesson quiz score should persist after relaunch")
+    }
+
+    func testLearnUserNavigationOpensLessonQuiz() throws {
+        XCUIDevice.shared.appearance = .light
+#if os(iOS)
+        // Forced regular size class alone does not expose the split-view sidebar on the iPhone simulator.
+        XCUIDevice.shared.orientation = .landscapeLeft
+        defer { XCUIDevice.shared.orientation = .portrait }
+#endif
+        let app = launchApp(arguments: ["-CanadianHamForceRegularHorizontalSizeClass"])
+        XCTAssertTrue(app.descendants(matching: .any)["root-sidebar"].firstMatch.waitForExistence(timeout: 10))
+        tap("Learn", in: app)
+        XCTAssertTrue(app.staticTexts["Learn"].firstMatch.waitForExistence(timeout: 10))
+
+        tap("Open module", in: app)
+        XCTAssertTrue(app.staticTexts["Basic Electronics and Theory"].firstMatch.waitForExistence(timeout: 10))
+
+        let firstLesson = app.staticTexts["Units, conductors, and current"].firstMatch
+        XCTAssertTrue(firstLesson.waitForExistence(timeout: 10), "First module should expose its first lesson")
+        firstLesson.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
+
+        goToLessonQuiz(in: app)
+    }
+
+    func testExplanationAppearsAfterAnsweringInPractice() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
+        XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
+        answerFirstVisibleAnswer(in: app)
+        _ = waitForAnswerFeedback(in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["explanation-panel"].firstMatch.waitForExistence(timeout: 5), "Immediate feedback should include the authored explanation")
+        scrollAndTap("Open lesson L-001-01", in: app)
+        XCTAssertTrue(app.staticTexts["Authority, certificates, and exams"].waitForExistence(timeout: 10), "Lesson citation link should be independently activatable from practice feedback")
     }
 
     func testPracticeImmediateFeedbackKeepsStateAfterFirstAnswer() throws {
@@ -191,6 +257,36 @@ final class CanadianHamPracticeUITests: XCTestCase {
         waitForElementToDisappear(feedback, timeout: 5, message: "Answer feedback should disappear after advancing at the largest accessibility text size")
     }
 
+    func testMockExamHeaderControlsSupportLargestAccessibilityTextSize() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamMockExamSeed", "ui-mock-header-accessibility-size",
+            "-CanadianHamMockExamQuestionID", "B-001-002-002",
+            "-CanadianHamMockExamLimit", "1",
+            "-CanadianHamExamTimerEnabled", "true",
+            "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"
+        ])
+
+        openMockExamStart(in: app)
+        XCTAssertTrue(app.staticTexts["mock-exam-seed"].waitForExistence(timeout: 10))
+        scrollToTop(in: app)
+        let flagButton = app.buttons["mock-flag-button"].firstMatch
+        let questionsButton = app.buttons["mock-questions-button"].firstMatch
+        XCTAssertTrue(flagButton.waitForExistence(timeout: 5), "Flag control should exist at the largest accessibility text size")
+        scrollUntilHittable(flagButton, in: app, maxSwipes: 8)
+        XCTAssertTrue(flagButton.isHittable, "Flag control should remain reachable at the largest accessibility text size")
+        XCTAssertTrue(questionsButton.waitForExistence(timeout: 5), "Questions control should exist at the largest accessibility text size")
+        scrollUntilHittable(questionsButton, in: app, maxSwipes: 8)
+        XCTAssertTrue(questionsButton.isHittable, "Questions control should remain reachable at the largest accessibility text size")
+
+        flagButton.tap()
+        XCTAssertTrue(app.buttons["Flagged for review"].firstMatch.waitForExistence(timeout: 5), "Flag control should remain usable after wrapping")
+        scrollUntilHittable(questionsButton, in: app, maxSwipes: 8)
+        questionsButton.tap()
+        XCTAssertTrue(app.staticTexts["Question navigator"].waitForExistence(timeout: 5), "Questions control should remain usable after wrapping")
+    }
+
     func testLongestAnswerWrapsAtLargestAccessibilityTextSize() throws {
         XCUIDevice.shared.appearance = .light
         let longestAnswer = try longestEnglishAnswerInBank()
@@ -239,6 +335,17 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCUIDevice.shared.appearance = .light
     }
 
+    func testAccessibilityAuditLearnFlowLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditLearnFlow(appearance: .light)
+    }
+
+    func testAccessibilityAuditLearnFlowDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditLearnFlow(appearance: .dark)
+        XCUIDevice.shared.appearance = .light
+    }
+
     func testAccessibilityAuditMockExamFlowLight() throws {
         XCUIDevice.shared.appearance = .light
         try auditMockExamFlow(appearance: .light)
@@ -247,18 +354,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
     func testAccessibilityAuditMockExamFlowDark() throws {
         XCUIDevice.shared.appearance = .dark
         try auditMockExamFlow(appearance: .dark)
-        XCUIDevice.shared.appearance = .light
-    }
-
-    func testA11yDiagnosticsEvidenceHarness() throws {
-        guard ProcessInfo.processInfo.environment["CANADIAN_HAM_RUN_A11Y_DIAGNOSTICS"] == "1" else {
-            throw XCTSkip("Set CANADIAN_HAM_RUN_A11Y_DIAGNOSTICS=1 to run the opt-in accessibility evidence diagnostic harness.")
-        }
-
-        XCUIDevice.shared.appearance = .light
-        try runDiagnosticsHarness(appearance: .light)
-        XCUIDevice.shared.appearance = .dark
-        try runDiagnosticsHarness(appearance: .dark)
         XCUIDevice.shared.appearance = .light
     }
 
@@ -280,7 +375,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
         app = launchApp(arguments: ["-CanadianHamInitialScreen", "learn"])
         XCTAssertTrue(app.staticTexts["Learn"].waitForExistence(timeout: 10))
-        try performAudit(on: app, context: "\(appearance.rawValue) learn placeholder")
+        try performAudit(on: app, context: "\(appearance.rawValue) learn module list")
         app.terminate()
 
         app = launchApp(arguments: ["-CanadianHamInitialScreen", "settings"])
@@ -304,10 +399,21 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
         try performAudit(on: app, context: "\(appearance.rawValue) unanswered practice")
 
-        answerKnownCorrectLifeAnswerIfPresent(in: app)
+        answerKnownIncorrectLifeAnswerIfPresent(in: app)
         _ = waitForAnswerFeedback(in: app)
-        try performAudit(on: app, context: "\(appearance.rawValue) answered practice")
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "Incorrect"), "Audit fixture should expose the incorrect-answer state")
+        try performAudit(on: app, context: "\(appearance.rawValue) incorrect answered practice")
         app.terminate()
+
+        let correctApp = launchApp(arguments: ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
+        XCTAssertTrue(correctApp.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
+        answerKnownCorrectLifeAnswerIfPresent(in: correctApp, identifier: "answer-C-button")
+        _ = waitForAnswerFeedback(in: correctApp)
+        let correctFeedbackTitle = correctApp.staticTexts["answer-feedback-title"].firstMatch
+        XCTAssertTrue(correctFeedbackTitle.waitForExistence(timeout: 5), "Correct-answer feedback title should exist")
+        XCTAssertEqual(correctFeedbackTitle.label, "Correct", "Audit fixture should expose the exact correct-answer state")
+        try performAudit(on: correctApp, context: "\(appearance.rawValue) correct answered practice")
+        correctApp.terminate()
 
         let reviewApp = launchApp(arguments: [
             "-CanadianHamInitialCategoryID", "B-001",
@@ -319,8 +425,30 @@ final class CanadianHamPracticeUITests: XCTestCase {
         answerFirstVisibleAnswer(in: reviewApp)
         scrollAndTap("Submit for review", in: reviewApp)
         XCTAssertTrue(reviewApp.staticTexts["Practice review"].waitForExistence(timeout: 10))
+        scrollToTop(in: reviewApp)
         try performAudit(on: reviewApp, context: "\(appearance.rawValue) practice review")
+        scrollPracticeReviewFeedbackIntoView(in: reviewApp)
+        try performAudit(on: reviewApp, context: "\(appearance.rawValue) practice review feedback")
         reviewApp.terminate()
+    }
+
+    private func auditLearnFlow(appearance: AuditAppearance) throws {
+        var app = launchApp(arguments: ["-CanadianHamInitialScreen", "learn"])
+        XCTAssertTrue(app.staticTexts["Learn"].waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "\(appearance.rawValue) learn module list")
+        app.terminate()
+
+        app = launchApp(arguments: ["-CanadianHamInitialLessonID", "L-006-03"])
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "\(appearance.rawValue) lesson reader top")
+        app.terminate()
+
+        app = launchApp(arguments: ["-CanadianHamInitialLessonQuizID", "QZ-L-006-03-A", "-CanadianHamLessonQuizLimit", "1", "-CanadianHamLessonQuizSeed", "ui-a11y-lesson-quiz"])
+        waitForLessonQuizScreen(in: app)
+        answerFirstVisibleQuizAnswer(in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-quiz-feedback"].firstMatch.waitForExistence(timeout: 5) || app.descendants(matching: .any)["answer-feedback"].firstMatch.waitForExistence(timeout: 1))
+        try performAudit(on: app, context: "\(appearance.rawValue) lesson quiz answered")
+        app.terminate()
     }
 
     private func auditMockExamFlow(appearance: AuditAppearance) throws {
@@ -333,6 +461,17 @@ final class CanadianHamPracticeUITests: XCTestCase {
         ])
         openMockExamStart(in: timerApp)
         XCTAssertTrue(timerApp.staticTexts["mock-exam-seed"].waitForExistence(timeout: 10))
+        let pauseTimer = timerApp.buttons["Pause timer"].firstMatch
+        XCTAssertTrue(pauseTimer.waitForExistence(timeout: 5), "Timer-enabled mock exam should auto-start and expose Pause timer on the question screen")
+        XCTAssertTrue(pauseTimer.isHittable, "Pause timer should be visible and hittable before auditing the question screen")
+        let timerPrevious = timerApp.buttons["mock-previous-button"].firstMatch
+        let timerNext = timerApp.buttons["mock-next-button"].firstMatch
+        XCTAssertTrue(timerPrevious.waitForExistence(timeout: 5), "One-question mock exam should expose Previous")
+        XCTAssertTrue(timerNext.waitForExistence(timeout: 5), "One-question mock exam should expose Next")
+        XCTAssertFalse(timerPrevious.isEnabled, "Previous should be disabled on a one-question mock exam")
+        XCTAssertFalse(timerNext.isEnabled, "Next should be disabled on a one-question mock exam")
+        try performAudit(on: timerApp, context: "\(appearance.rawValue) mock exam question timer")
+        tap("Questions", in: timerApp)
         XCTAssertTrue(timerApp.staticTexts["Question navigator"].waitForExistence(timeout: 5))
         try performAudit(on: timerApp, context: "\(appearance.rawValue) mock exam question navigator timer")
         timerApp.terminate()
@@ -341,34 +480,36 @@ final class CanadianHamPracticeUITests: XCTestCase {
             "-CanadianHamInitialScreen", "mock",
             "-CanadianHamMockExamSeed", "ui-a11y-mock-exam-answered-flagged",
             "-CanadianHamMockExamQuestionID", "B-001-002-002",
-            "-CanadianHamMockExamLimit", "1"
+            "-CanadianHamMockExamLimit", "3"
         ])
         openMockExamStart(in: app)
         XCTAssertTrue(app.staticTexts["mock-exam-seed"].waitForExistence(timeout: 10))
-        answerKnownCorrectLifeAnswerIfPresent(in: app)
-        scrollAndTap("Flag for review", in: app)
+        let topAnswer = app.descendants(matching: .any)["answer-A-button"].firstMatch
+        XCTAssertTrue(topAnswer.waitForExistence(timeout: 5), "Answered-flagged fixture should expose answer A")
+        XCTAssertTrue(topAnswer.isHittable, "Answered-flagged fixture should answer the visible top answer at offset 0")
+        topAnswer.tap()
         waitBriefly()
+        tap("Flag for review", in: app)
+        waitBriefly()
+        XCTAssertTrue(topAnswer.isHittable, "Selected top answer should remain visible before auditing")
+        XCTAssertTrue(topAnswer.label.localizedCaseInsensitiveContains("Selected"), "Selected top answer should expose the Selected state before auditing")
         XCTAssertTrue(app.buttons["Flagged for review"].firstMatch.waitForExistence(timeout: 5), "Mock exam should expose the flagged state before auditing")
+        try performAudit(on: app, context: "\(appearance.rawValue) mock exam answered flagged question")
+        tap("Questions", in: app)
+        XCTAssertTrue(app.staticTexts["Question navigator"].firstMatch.waitForExistence(timeout: 5), "Mock exam should expose the navigator sheet before auditing")
         try performAudit(on: app, context: "\(appearance.rawValue) mock exam question navigator answered flagged")
+        tap("Done", in: app)
+        let next = app.buttons["mock-next-button"].firstMatch
+        XCTAssertTrue(next.isEnabled, "Answered-flagged audit fixture should keep mock Next enabled")
+        next.tap()
 
         scrollAndTap("Submit exam", in: app)
         submitMockExamAlert(in: app)
         assertMockExamResultVisible(in: app)
-        app.scrollViews.firstMatch.swipeUp()
-        waitBriefly()
+        scrollToTop(in: app)
         try performAudit(on: app, context: "\(appearance.rawValue) mock exam results")
-        app.terminate()
-    }
-
-    private func runDiagnosticsHarness(appearance: AuditAppearance) throws {
-        let app = launchApp(arguments: ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
-        XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
-        captureScreenEvidence(named: "practice-\(appearance.rawValue)-unanswered-iteration-\(auditIterationID)")
-        try captureAccessibilityAudit(on: app, context: "practice \(appearance.rawValue) unanswered")
-        answerFirstVisibleAnswer(in: app)
-        _ = waitForAnswerFeedback(in: app)
-        captureScreenEvidence(named: "practice-\(appearance.rawValue)-answered-iteration-\(auditIterationID)")
-        try captureAccessibilityAudit(on: app, context: "practice \(appearance.rawValue) answered")
+        scrollMockResultsDetailsIntoView(in: app)
+        try performAudit(on: app, context: "\(appearance.rawValue) mock exam results details")
         app.terminate()
     }
 
@@ -385,77 +526,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
         } else {
             throw XCTSkip("performAccessibilityAudit is unavailable before iOS 17 for \(context).")
         }
-    }
-
-    private func captureAccessibilityAudit(on app: XCUIApplication, context: String) throws {
-        if #available(iOS 17.0, *) {
-            var findings: [String] = []
-            do {
-                try app.performAccessibilityAudit { issue in
-                    findings.append(self.describe(issue))
-                    return true
-                }
-            } catch {
-                attachRawAuditFindings(findings, context: context, error: error)
-                throw error
-            }
-            attachRawAuditFindings(findings, context: context, error: nil)
-            XCTAssertTrue(findings.isEmpty, "Accessibility audit reported issues for \(context): \(findings.joined(separator: " | "))")
-        } else {
-            attachRawAuditFindings(["performAccessibilityAudit is unavailable before iOS 17."], context: context, error: nil)
-        }
-    }
-
-    @available(iOS 17.0, *)
-    private func describe(_ issue: XCUIAccessibilityAuditIssue) -> String {
-        let element = issue.element
-        return """
-        auditType: \(issue.auditType)
-        element.identifier: \(element?.identifier ?? "")
-        element.label: \(element?.label ?? "")
-        element.frame: \(element.map { frameDescription($0.frame) } ?? "nil")
-        compactDescription: \(issue.compactDescription)
-        """
-    }
-
-    private func attachRawAuditFindings(_ findings: [String], context: String, error: Error?) {
-        var lines = ["Context: \(context)", "Iteration: \(auditIterationID)"]
-        if let error { lines.append("Audit error: \(error)") }
-        lines.append(findings.isEmpty ? "No accessibility audit issues reported." : findings.joined(separator: "\n\n"))
-        let text = lines.joined(separator: "\n\n")
-        let attachment = XCTAttachment(string: text)
-        attachment.name = "\(sanitizedEvidenceName(context))-raw-accessibility-audit-findings"
-        attachment.lifetime = .keepAlways
-        add(attachment)
-        exportEvidence(Data(text.utf8), filename: "\(sanitizedEvidenceName(context))-raw-accessibility-audit-findings.txt")
-    }
-
-    @discardableResult
-    private func captureScreenEvidence(named name: String) -> XCUIScreenshot {
-        let screenshot = XCUIScreen.main.screenshot()
-        let attachment = XCTAttachment(screenshot: screenshot)
-        attachment.name = sanitizedEvidenceName(name)
-        attachment.lifetime = .keepAlways
-        add(attachment)
-        exportEvidence(screenshot.pngRepresentation, filename: "\(sanitizedEvidenceName(name)).png")
-        return screenshot
-    }
-
-    private func exportEvidence(_ data: Data, filename: String, file: StaticString = #filePath, line: UInt = #line) {
-        let directory = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
-            .appendingPathComponent("CanadianHamA11yEvidence", isDirectory: true)
-            .appendingPathComponent(auditIterationID, isDirectory: true)
-        do {
-            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-            try data.write(to: directory.appendingPathComponent(sanitizedEvidenceName(filename)), options: .atomic)
-        } catch {
-            XCTFail("Failed to export accessibility evidence \(filename): \(error)", file: file, line: line)
-        }
-    }
-
-    private func sanitizedEvidenceName(_ name: String) -> String {
-        let allowedCharacters = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-_."))
-        return String(name.unicodeScalars.map { allowedCharacters.contains($0) ? Character($0) : "-" })
     }
 
     private func openMockExamStart(in app: XCUIApplication) {
@@ -512,13 +582,79 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Wrong-answer review"].firstMatch.exists, "Mock exam results should include wrong-answer review")
     }
 
-    private func answerKnownCorrectLifeAnswerIfPresent(in app: XCUIApplication) {
-        let correctAnswer = app.staticTexts["life"].firstMatch
-        if correctAnswer.waitForExistence(timeout: 2) {
-            correctAnswer.tap()
-        } else {
-            answerFirstVisibleAnswer(in: app)
+    private func scrollMockResultsDetailsIntoView(in app: XCUIApplication) {
+        let categoryBreakdown = app.descendants(matching: .any)["mock-results-category-breakdown"].firstMatch
+        XCTAssertTrue(categoryBreakdown.waitForExistence(timeout: 5), "Mock exam results should expose a deterministic category-breakdown anchor")
+        scrollUntilPartiallyVisible(categoryBreakdown, in: app, maxSwipes: 12)
+        XCTAssertTrue(
+            isPartiallyVisibleBelowNavigationBar(categoryBreakdown, in: app),
+            "Category breakdown anchor should be visible below the navigation bar before auditing mock results details. Frame: \(frameDescription(categoryBreakdown.frame))"
+        )
+        let wrongAnswerReview = app.descendants(matching: .any)["mock-results-wrong-answer-review"].firstMatch
+        XCTAssertTrue(wrongAnswerReview.waitForExistence(timeout: 5), "Mock exam results should expose a deterministic wrong-answer-review anchor")
+        scrollUntilPartiallyVisible(wrongAnswerReview, in: app, maxSwipes: 12)
+        XCTAssertTrue(
+            isPartiallyVisibleBelowNavigationBar(wrongAnswerReview, in: app),
+            "Wrong-answer review anchor should be visible below the navigation bar before auditing mock results details. Frame: \(frameDescription(wrongAnswerReview.frame))"
+        )
+    }
+
+    private func scrollPracticeReviewFeedbackIntoView(in app: XCUIApplication) {
+        let explanation = app.descendants(matching: .any)["explanation-panel"].firstMatch
+        XCTAssertTrue(explanation.waitForExistence(timeout: 5), "Practice review should expose a deterministic explanation anchor")
+        scrollUntilPartiallyVisible(explanation, in: app, maxSwipes: 12)
+        XCTAssertTrue(
+            isPartiallyVisibleBelowNavigationBar(explanation, in: app),
+            "Explanation panel anchor should be visible below the navigation bar before auditing practice review feedback. Frame: \(frameDescription(explanation.frame))"
+        )
+    }
+
+    private func answerKnownCorrectLifeAnswerIfPresent(in app: XCUIApplication, identifier: String) {
+        let correctAnswer = app.descendants(matching: .any)[identifier].firstMatch
+        XCTAssertTrue(correctAnswer.waitForExistence(timeout: 5), "Known correct answer \(identifier) should exist for the fixed life-answer fixture")
+        scrollUntilHittable(correctAnswer, in: app, maxSwipes: 10)
+        XCTAssertTrue(correctAnswer.isHittable, "Known correct answer \(identifier) should be hittable for the fixed life-answer fixture")
+        correctAnswer.tap()
+    }
+
+    private func answerKnownIncorrectLifeAnswerIfPresent(in app: XCUIApplication) {
+        let identifiers = ["answer-A-button", "answer-B-button", "answer-C-button", "answer-D-button"]
+        if app.staticTexts["life"].firstMatch.waitForExistence(timeout: 2) {
+            for id in identifiers {
+                let button = app.descendants(matching: .any)[id].firstMatch
+                if button.exists && button.isHittable && !button.label.localizedCaseInsensitiveContains("life") {
+                    button.tap()
+                    return
+                }
+            }
         }
+        answerFirstVisibleAnswer(in: app)
+    }
+
+    private func completeVisibleLessonQuiz(in app: XCUIApplication, expectedCount: Int) {
+        for index in 1...expectedCount {
+            answerFirstVisibleQuizAnswer(in: app)
+            if index < expectedCount {
+                scrollAndTap("Next", in: app)
+            }
+        }
+        scrollAndTap("Submit lesson quiz", in: app)
+    }
+
+    private func answerFirstVisibleQuizAnswer(in app: XCUIApplication) {
+        let identifiers = ["answer-A-button", "lesson-quiz-choice-A-button", "answer-B-button", "lesson-quiz-choice-B-button", "answer-C-button", "lesson-quiz-choice-C-button", "answer-D-button", "lesson-quiz-choice-D-button"]
+        for _ in 0..<12 {
+            for id in identifiers {
+                let button = app.descendants(matching: .any)[id].firstMatch
+                if button.exists && button.isEnabled && button.isHittable {
+                    button.tap()
+                    return
+                }
+            }
+            app.scrollViews.firstMatch.swipeUp()
+            waitBriefly()
+        }
+        XCTFail("No lesson quiz answer button was available after tapping Go to quiz")
     }
 
     private func answerFirstVisibleAnswer(in app: XCUIApplication) {
@@ -601,6 +737,19 @@ final class CanadianHamPracticeUITests: XCTestCase {
             target.swipeDown()
             waitBriefly()
         }
+    }
+
+    private func goToLessonQuiz(in app: XCUIApplication) {
+        let button = app.buttons["Go to quiz"].firstMatch
+        XCTAssertTrue(button.waitForExistence(timeout: 10), "Lesson reader should expose a Go to quiz button")
+        scrollUntilHittable(button, in: app, maxSwipes: 24)
+        XCTAssertTrue(button.isHittable, "Go to quiz button should be hittable")
+        button.tap()
+        waitForLessonQuizScreen(in: app)
+    }
+
+    private func waitForLessonQuizScreen(in app: XCUIApplication) {
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-quiz-card"].firstMatch.waitForExistence(timeout: 10), "Expected the real lesson quiz screen")
     }
 
     private func waitForElementToDisappear(_ element: XCUIElement, timeout: TimeInterval, message: String, file: StaticString = #filePath, line: UInt = #line) {

@@ -34,7 +34,12 @@ enum QuestionBankStore {
         from bundle: Bundle,
         with decoder: JSONDecoder
     ) throws -> Value {
-        guard let url = bundle.url(forResource: resourceName, withExtension: "json") else {
+        guard let url = bundle.url(forResource: resourceName, withExtension: "json")
+            ?? bundle.resourceURL?
+                .appendingPathComponent("generated", isDirectory: true)
+                .appendingPathComponent("basic-2025-07-15", isDirectory: true)
+                .appendingPathComponent("\(resourceName).json")
+        else {
             throw QuestionBankLoadError.missingResource(resourceName)
         }
         let data = try Data(contentsOf: url)

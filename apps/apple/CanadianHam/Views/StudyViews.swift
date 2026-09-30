@@ -374,7 +374,7 @@ struct PracticeSessionView: View {
                 }
             }
             if let selected, progressStore.preferences.practiceMode == .immediate {
-                PracticeFeedback(question: question, selectedSourceIndex: selected, language: language)
+                PracticeFeedback(question: question, selectedSourceIndex: selected, language: language, choicePermutation: item.choicePermutation)
                 Button(currentIndex + 1 == items.count ? "Finish session" : "Next question") {
                     advanceOrFinish()
                 }
@@ -407,8 +407,8 @@ struct PracticeSessionView: View {
                     Text(item.question.text.text(for: language))
                         .font(DesignTokens.FontScale.body.weight(.semibold))
                         .foregroundStyle(DesignTokens.Colors.ink)
-                    PracticeFeedback(question: item.question, selectedSourceIndex: selectedByQuestionId[item.question.id], language: language)
-                    Text("Category \(item.question.categoryId) • Subsection \(item.question.subsectionId) • Explanation pending where not yet authored.")
+                    PracticeFeedback(question: item.question, selectedSourceIndex: selectedByQuestionId[item.question.id], language: language, choicePermutation: item.choicePermutation)
+                    Text("Category \(item.question.categoryId) • Subsection \(item.question.subsectionId).")
                         .font(DesignTokens.FontScale.caption)
                         .foregroundStyle(DesignTokens.Colors.inkMuted)
                 }
@@ -557,6 +557,9 @@ struct MockExamView: View {
     @State private var confirmingSubmit = false
     @State private var isSubmitting = false
     @State private var timerStatus = "Timer off"
+    @State private var showingNavigator = false
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -578,6 +581,17 @@ struct MockExamView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Mock exam")
+        .sheet(isPresented: $showingNavigator) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                navigator
+                Button { showingNavigator = false } label: {
+                    AccessibleSecondaryButtonLabel(title: "Done")
+                }
+                .buttonStyle(AccessibleSecondaryButtonStyle())
+            }
+            .pagePadding()
+            .background(DesignTokens.Colors.paper)
+        }
         .onReceive(timer) { _ in
             if timerRunning {
                 secondsElapsed += 1
@@ -601,9 +615,9 @@ struct MockExamView: View {
             Text("Generate 100 shared-engine questions: one from each subsection, shuffled by seed. The optional timer is off by default.")
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
-            Text("Reference sheet: placeholder. Another task adds the offline sheet viewer.")
-                .font(DesignTokens.FontScale.caption)
-                .foregroundStyle(DesignTokens.Colors.inkMuted)
+            Text("In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.")
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
             tokenButton("Start mock exam") { startExam() }
                 .accessibilityIdentifier("start-mock-exam-button")
         }
@@ -625,7 +639,7 @@ struct MockExamView: View {
                 Text("Answered \(selectedByQuestionId.count) of \(generatedItems.count). \(timerStatus).")
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
-                timerControls
+                examHeaderControls(questionID: question.id)
             }
             .paperCard()
 
@@ -652,24 +666,97 @@ struct MockExamView: View {
             }
 
             HStack {
-                if generatedItems.count > 1 {
-                    tokenButton(currentIndex == 0 ? "First question" : "Previous") { currentIndex = max(0, currentIndex - 1) }
-                    tokenButton(currentIndex + 1 == generatedItems.count ? "Last question" : "Next") { currentIndex = min(generatedItems.count - 1, currentIndex + 1) }
+                Button { currentIndex = max(0, currentIndex - 1) } label: {
+                    AccessibleSecondaryButtonLabel(title: "Previous")
                 }
-                tokenButton(flagged.contains(question.id) ? "Flagged for review" : "Flag for review") { toggleFlag(question.id) }
+                .disabled(currentIndex == 0)
+                .buttonStyle(AccessibleSecondaryButtonStyle())
+                .accessibilityIdentifier("mock-previous-button")
+                Button { currentIndex = min(generatedItems.count - 1, currentIndex + 1) } label: {
+                    AccessibleSecondaryButtonLabel(title: "Next")
+                }
+                .disabled(currentIndex + 1 >= generatedItems.count)
+                .buttonStyle(AccessibleSecondaryButtonStyle())
+                .accessibilityIdentifier("mock-next-button")
             }
 
-            navigator
-
-            HStack {
-                Button("Reference sheet (placeholder)") {}
-                    .buttonStyle(.bordered)
-                    .accessibilityHint("Placeholder; another task adds the offline reference sheet")
-                Button("Submit exam") { confirmingSubmit = true }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(isSubmitting)
-                    .accessibilityIdentifier("submit-mock-exam-button")
+            if !usesNavigatorSheet {
+                navigator
             }
+
+            Button("Submit exam") { confirmingSubmit = true }
+                .buttonStyle(AccessiblePrimaryButtonStyle())
+                .disabled(isSubmitting)
+                .accessibilityIdentifier("submit-mock-exam-button")
+        }
+    }
+
+    private var usesNavigatorSheet: Bool {
+#if os(iOS)
+        horizontalSizeClass == .compact
+#else
+        false
+#endif
+    }
+
+    @ViewBuilder
+    private func examHeaderControls(questionID: String) -> some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                flagAndNavigatorControls(questionID: questionID)
+                timerControls
+            }
+        } else {
+            ViewThatFits(in: .horizontal) {
+                HStack(alignment: .center, spacing: DesignTokens.Spacing.sm) {
+                    flagAndNavigatorControls(questionID: questionID)
+                    timerControls
+                }
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                    flagAndNavigatorControls(questionID: questionID)
+                    timerControls
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func flagAndNavigatorControls(questionID: String) -> some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                flagButton(questionID: questionID)
+                questionsButton
+            }
+        } else {
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: DesignTokens.Spacing.sm) {
+                    flagButton(questionID: questionID)
+                    questionsButton
+                }
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                    flagButton(questionID: questionID)
+                    questionsButton
+                }
+            }
+        }
+    }
+
+    private func flagButton(questionID: String) -> some View {
+        Button { toggleFlag(questionID) } label: {
+            AccessibleSecondaryButtonLabel(title: flagged.contains(questionID) ? "Flagged for review" : "Flag for review")
+        }
+        .buttonStyle(AccessibleSecondaryButtonStyle())
+        .accessibilityIdentifier("mock-flag-button")
+    }
+
+    @ViewBuilder
+    private var questionsButton: some View {
+        if usesNavigatorSheet {
+            Button { showingNavigator = true } label: {
+                AccessibleSecondaryButtonLabel(title: "Questions")
+            }
+            .buttonStyle(AccessibleSecondaryButtonStyle())
+            .accessibilityIdentifier("mock-questions-button")
         }
     }
 
@@ -699,10 +786,17 @@ struct MockExamView: View {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 48), spacing: DesignTokens.Spacing.sm)], spacing: DesignTokens.Spacing.sm) {
                 ForEach(generatedItems.indices, id: \.self) { index in
                     let item = generatedItems[index]
-                    Button(navigatorLabel(for: index, item: item)) { currentIndex = index }
-                        .buttonStyle(.bordered)
-                        .tint(selectedByQuestionId[item.questionId] != nil ? DesignTokens.Colors.correctText : DesignTokens.Colors.inkMuted)
-                        .accessibilityLabel("Question \(index + 1), \(selectedByQuestionId[item.questionId] != nil ? "answered" : "unanswered")\(flagged.contains(item.questionId) ? ", flagged" : "")\(index == currentIndex ? ", current" : "")")
+                    Button { currentIndex = index } label: {
+                        Text(navigatorLabel(for: index, item: item))
+                            .font(DesignTokens.FontScale.body.monospaced().weight(.semibold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .frame(minWidth: 48, minHeight: 44)
+                            .padding(.horizontal, DesignTokens.Spacing.xs)
+                            .background(navigatorBackground(for: item), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous).strokeBorder(navigatorBorder(for: index, item: item), lineWidth: index == currentIndex ? 2 : 1))
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Question \(index + 1), \(selectedByQuestionId[item.questionId] != nil ? "answered" : "unanswered")\(flagged.contains(item.questionId) ? ", flagged" : "")\(index == currentIndex ? ", current" : "")")
                 }
             }
         }
@@ -715,6 +809,17 @@ struct MockExamView: View {
         if selectedByQuestionId[item.questionId] != nil { label += " ✓" }
         if flagged.contains(item.questionId) { label += " ⚑" }
         return label
+    }
+
+    private func navigatorBackground(for item: GeneratedExamItem) -> Color {
+        selectedByQuestionId[item.questionId] != nil ? DesignTokens.Colors.paperInset : DesignTokens.Colors.paperElevated
+    }
+
+    private func navigatorBorder(for index: Int, item: GeneratedExamItem) -> Color {
+        if index == currentIndex || selectedByQuestionId[item.questionId] != nil || flagged.contains(item.questionId) {
+            return DesignTokens.Colors.inkMuted
+        }
+        return DesignTokens.Colors.border
     }
 
     private var submitConfirmationText: String {
@@ -738,7 +843,7 @@ struct MockExamView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
                 Text("Seed: \(attempt.seed)")
                     .font(DesignTokens.FontScale.caption.monospaced())
-                    .foregroundStyle(DesignTokens.Colors.inkMuted)
+                    .foregroundStyle(DesignTokens.Colors.ink)
             }
             .paperCard()
 
@@ -747,6 +852,7 @@ struct MockExamView: View {
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("mock-results-category-breakdown")
                 ForEach(attempt.score.categoryBreakdown, id: \.categoryId) { entry in
                     Text("\(entry.categoryId): \(entry.correct) / \(entry.total) (\(entry.percent, format: .number.precision(.fractionLength(0...1)))%)")
                         .font(DesignTokens.FontScale.body)
@@ -760,6 +866,7 @@ struct MockExamView: View {
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("mock-results-wrong-answer-review")
                 ForEach(attempt.items.filter { $0.selectedSourceIndex != 0 }) { item in
                     if let question = bank.question(id: item.questionId) {
                         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
@@ -768,7 +875,7 @@ struct MockExamView: View {
                             Text(question.text.text(for: language))
                                 .font(DesignTokens.FontScale.body)
                                 .foregroundStyle(DesignTokens.Colors.ink)
-                            PracticeFeedback(question: question, selectedSourceIndex: item.selectedSourceIndex, language: language)
+                            PracticeFeedback(question: question, selectedSourceIndex: item.selectedSourceIndex, language: language, choicePermutation: item.choicePermutation)
                         }
                         .paperCard()
                     }
@@ -1213,6 +1320,14 @@ struct PracticeFeedback: View {
     let question: BankQuestion
     let selectedSourceIndex: Int?
     let language: BankLanguage
+    let choicePermutation: [Int]?
+
+    init(question: BankQuestion, selectedSourceIndex: Int?, language: BankLanguage, choicePermutation: [Int]? = nil) {
+        self.question = question
+        self.selectedSourceIndex = selectedSourceIndex
+        self.language = language
+        self.choicePermutation = choicePermutation
+    }
 
     var body: some View {
         let isCorrect = selectedSourceIndex == 0
@@ -1228,16 +1343,17 @@ struct PracticeFeedback: View {
                     .textSelection(.enabled)
                     .accessibilityIdentifier("answer-feedback-correct-answer")
             }
-            Text("Source: \(question.categoryId) • \(question.subsectionId). Explanation pending where not yet authored.")
+            Text("Source: \(question.categoryId) • \(question.subsectionId).")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
                 .accessibilityIdentifier("answer-feedback-source")
+            ExplanationPanelView(questionId: question.id, selectedSourceIndex: selectedSourceIndex, language: language, choicePermutation: choicePermutation)
         }
         .padding(DesignTokens.Spacing.lg)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(isCorrect ? DesignTokens.Colors.correctBg : DesignTokens.Colors.incorrectBg, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(isCorrect ? DesignTokens.Colors.correctBorder : DesignTokens.Colors.incorrectBorder, lineWidth: 2))
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("answer-feedback")
     }
 }
