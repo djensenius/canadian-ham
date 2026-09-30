@@ -216,7 +216,7 @@ describe("App accessibility and flows", () => {
     const user = userEvent.setup();
     const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "fr-seed"} />);
 
-    await screen.findByRole("heading", { name: "Prêt pour la qualification de base avec distinction?" });
+    await screen.findByRole("heading", { name: "Prêt pour la compétence de base avec distinction?" });
     assert.equal(document.documentElement.lang, "fr-CA");
     await expectNoAxeViolations(container);
 
@@ -227,20 +227,43 @@ describe("App accessibility and flows", () => {
     window.location.hash = "#/learn/M5/L-005-01";
     window.dispatchEvent(new HashChangeEvent("hashchange"));
     await screen.findByText("Leçon offerte en anglais seulement.");
-    assert.ok(container.querySelector('.lesson-article div[lang="en-CA"]'));
+    assert.ok(container.querySelector('.lesson-article h2[lang="en"]'));
+    assert.ok(container.querySelector('.lesson-article div[lang="en"]'));
 
     await user.click(within(primaryNav).getByRole("button", { name: "Exercices" }));
     await screen.findByRole("heading", { name: "Exercices" });
 
-    await user.click(within(primaryNav).getByRole("button", { name: "Examen blanc" }));
-    await screen.findByRole("heading", { name: "Examen blanc" });
+    await user.click(within(primaryNav).getByRole("button", { name: "Examen simulé" }));
+    await screen.findByRole("heading", { name: "Examen simulé" });
 
     window.location.hash = "#/results";
     window.dispatchEvent(new HashChangeEvent("hashchange"));
-    await screen.findByRole("heading", { name: "Résultats de l’examen blanc" });
+    await screen.findByRole("heading", { name: "Résultats de l’examen simulé" });
 
     await user.click(within(primaryNav).getByRole("button", { name: "Réglages" }));
     await screen.findByRole("heading", { name: "Réglages et données locales" });
+    for (const englishLabel of screen.getAllByText("English")) {
+      assert.equal(englishLabel.getAttribute("lang"), "en");
+    }
+  });
+
+  it("has no axe violations on French Practice feedback and Mock exam start", async () => {
+    window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
+    window.location.hash = "#/practice";
+    const store = createStore("french-practice-mock-axe");
+    const user = userEvent.setup();
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "fr-practice-seed"} />);
+
+    await screen.findByRole("heading", { name: "Exercices" });
+    await screen.findByText(/Question 1 sur/);
+    await user.click(screen.getAllByTestId("answer-choice")[0]!);
+    await screen.findByRole("status");
+    await expectNoAxeViolations(container);
+
+    const primaryNav = screen.getByRole("navigation", { name: "Principale" });
+    await user.click(within(primaryNav).getByRole("button", { name: "Examen simulé" }));
+    await screen.findByRole("heading", { name: "Examen simulé" });
+    await expectNoAxeViolations(container);
   });
 
   it("defaults the interface to French from navigator and keeps it out of progress exports", async () => {
@@ -253,7 +276,7 @@ describe("App accessibility and flows", () => {
       const user = userEvent.setup();
       render(<App store={store} now={() => fixedNow} seedFactory={() => "fr-default-seed"} />);
 
-      await screen.findByRole("heading", { name: "Prêt pour la qualification de base avec distinction?" });
+      await screen.findByRole("heading", { name: "Prêt pour la compétence de base avec distinction?" });
       const primaryNav = screen.getByRole("navigation", { name: "Principale" });
       await user.click(within(primaryNav).getByRole("button", { name: "Réglages" }));
       const interfaceLanguageGroup = await screen.findByRole("group", { name: "Langue de l’interface" });
@@ -266,6 +289,74 @@ describe("App accessibility and flows", () => {
       Object.defineProperty(navigator, "language", { value: originalLanguage, configurable: true });
       Object.defineProperty(navigator, "languages", { value: originalLanguages, configurable: true });
     }
+  });
+
+  it("does not re-read IndexedDB when switching interface language", async () => {
+    window.location.hash = "#/settings";
+    const store = createStore("interface-switch-no-indexeddb");
+    const readSpies = [
+      vi.spyOn(store, "getQuestionProgress"),
+      vi.spyOn(store, "getExamAttempts"),
+      vi.spyOn(store, "getLessonProgress"),
+      vi.spyOn(store, "getLessonQuizAttempts"),
+      vi.spyOn(store, "getPreferences"),
+    ];
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "switch-language-seed"} />);
+
+    await screen.findByRole("heading", { name: "Settings and local data" });
+    for (const spy of readSpies) {
+      spy.mockClear();
+    }
+
+    const interfaceLanguageGroup = screen.getByRole("group", { name: "Interface language" });
+    await user.click(within(interfaceLanguageGroup).getByRole("radio", { name: "Français" }));
+    await screen.findByRole("heading", { name: "Réglages et données locales" });
+
+    for (const spy of readSpies) {
+      assert.equal(spy.mock.calls.length, 0);
+    }
+  });
+
+  it("keeps the question-language toggle independent from interface language", async () => {
+    window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
+    window.location.hash = "#/practice";
+    const store = createStore("question-language-independent");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "question-language-seed"} />);
+
+    await screen.findByRole("heading", { name: "Exercices" });
+    await screen.findByText(/Question 1 sur/);
+    const frenchQuestionRadio = within(screen.getByRole("group", { name: "Langue des questions" })).getByRole("radio", { name: "Français" }) as HTMLInputElement;
+    await user.click(frenchQuestionRadio);
+    assert.equal(frenchQuestionRadio.checked, true);
+    assert.ok(document.querySelector(".question-text[lang='fr-CA']"));
+
+    const primaryNav = screen.getByRole("navigation", { name: "Principale" });
+    await user.click(within(primaryNav).getByRole("button", { name: "Réglages" }));
+    const interfaceLanguageGroup = await screen.findByRole("group", { name: "Langue de l’interface" });
+    await user.click(within(interfaceLanguageGroup).getByRole("radio", { name: "English" }));
+    await screen.findByRole("heading", { name: "Settings and local data" });
+    const questionLanguageGroup = screen.getByRole("group", { name: "Question language" });
+    assert.equal((within(questionLanguageGroup).getByRole("radio", { name: "Français" }) as HTMLInputElement).checked, true);
+  });
+
+  it("shows the French explanation notice only when no French explanation body exists", () => {
+    const withFrenchExplanation = {
+      id: "EXP-FR",
+      questionId: "B-TEST-001",
+      bankId,
+      status: "draft",
+      body: { en: "English explanation.", fr: "Explication française." },
+      citations: [],
+      licenseClass: "original" as const,
+    };
+    render(<ExplanationPanel explanation={withFrenchExplanation} interfaceLanguage="fr" language="fr" />);
+    assert.equal(screen.queryByText("Explication offerte en anglais seulement."), null);
+    cleanup();
+
+    render(<ExplanationPanel explanation={{ ...withFrenchExplanation, body: { en: "English explanation.", fr: null } }} interfaceLanguage="fr" language="fr" />);
+    assert.ok(screen.getByText("Explication offerte en anglais seulement."));
   });
 
   it("renders all Home readiness states and has no axe violations", async () => {
