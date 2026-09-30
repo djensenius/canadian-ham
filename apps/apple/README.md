@@ -30,16 +30,32 @@ cd apps/apple
 
 Commit both `project.yml` and the regenerated `CanadianHam.xcodeproj`. To keep project-file churn deterministic, external `content/generated` resources opt out of intermediate parent groups in `project.yml`; after regeneration, run XcodeGen a second time and confirm `git diff -- apps/apple/CanadianHam.xcodeproj` is empty.
 
-## Build and test
+## Build, test, and offline audits
 
-Use `xbuild`, never direct `xcodebuild`. `xcode-select` points at CommandLineTools on this machine, so include the `DEVELOPER_DIR` prefix. The iOS command runs both the unit-test target and the XCUITest target.
+Use `xbuild`, never direct `xcodebuild`. `xcode-select` points at CommandLineTools on this machine, so include the `DEVELOPER_DIR` prefix. The iOS command runs both the unit-test target and the XCUITest target. The macOS command runs unit tests only because the UI tests are iOS-only for the shared `CanadianHam` scheme.
+
+Canonical Apple validation commands, kept in sync with the root `AGENTS.md`:
 
 ```sh
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test CODE_SIGNING_ALLOWED=NO
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=macOS,arch=arm64' -skip-testing:CanadianHamUITests test SDKROOT=macosx SUPPORTED_PLATFORMS=macosx CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamTV -destination 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation)' test CODE_SIGNING_ALLOWED=NO
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamVision -destination 'platform=visionOS Simulator,name=Apple Vision Pro' test CODE_SIGNING_ALLOWED=NO
 ```
 
-Scheme: `CanadianHam`.
+If the named visionOS simulator runtime is unavailable, use this build-only fallback for the visionOS scheme:
+
+```sh
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamVision -destination 'generic/platform=visionOS Simulator' build CODE_SIGNING_ALLOWED=NO
+```
+
+Run the Apple no-network audit from the repository root:
+
+```sh
+pnpm check:apple-network
+```
+
+The audit script is `scripts/check-apple-no-network.sh` and intentionally uses only bash, grep, and plutil. It scans `apps/apple` Swift files plus `packages/*-swift/Sources` and package manifests for forbidden networking/browser/iCloud/socket/analytics SDK symbols, unexpected URL literals, non-local Swift package dependencies, and network/iCloud entitlements or Info.plist keys. The only permitted Swift URL literal is the exact RBR-4 ISED citation also allow-listed by the web URL audit, rendered in the app as a user-activated SwiftUI `Link`.
 
 ## Progress, practice, and mock exams
 
