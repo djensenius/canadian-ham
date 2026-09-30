@@ -54,7 +54,7 @@ struct HomeView: View {
                             CategoryCard(category: category, language: language)
                         }
                         .buttonStyle(.plain)
-                        .accessibilityLabel(Text("Practice \(category.name.text(for: language)), \(category.questionCount) questions"))
+                        .accessibilityLabel(Text(verbatim: "\(String(localized: "Practice")) \(category.name.text(for: language)), \(localizedQuestionCount(category.questionCount))"))
                     }
                 }
                 .paperCard()
@@ -219,7 +219,7 @@ struct PracticeHubView: View {
                                 CategoryCard(category: category, language: language)
                             }
                             .buttonStyle(.plain)
-                            .accessibilityLabel(Text("Practice category \(category.name.text(for: language)), \(category.questionCount) questions"))
+                            .accessibilityLabel(Text(verbatim: "\(String(localized: "Practice category")) \(category.name.text(for: language)), \(localizedQuestionCount(category.questionCount))"))
 
                             DisclosureGroup("Subsections") {
                                 ForEach(bank.subsectionsByCategory[category.id] ?? []) { subsection in
@@ -227,7 +227,7 @@ struct PracticeHubView: View {
                                         SubsectionCard(subsection: subsection, title: bank.subsectionTitle(subsection, language: language))
                                     }
                                     .buttonStyle(.plain)
-                                    .accessibilityLabel(Text("Practice subsection \(bank.subsectionTitle(subsection, language: language)), \(subsection.questionCount) questions"))
+                                    .accessibilityLabel(Text(verbatim: "\(String(localized: "Practice subsection")) \(bank.subsectionTitle(subsection, language: language)), \(localizedQuestionCount(subsection.questionCount))"))
                                 }
                             }
                             .font(DesignTokens.FontScale.body.weight(.semibold))
@@ -324,7 +324,7 @@ struct PracticeSessionView: View {
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityIdentifier("practice-session-tally")
                 .accessibilityHidden(true)
-            Text("Due review excludes unseen questions. Progress updates use the shared engine with an explicit timestamp.")
+            Text("Due review excludes unseen questions. Progress is saved locally after each answer.")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
                 .accessibilityIdentifier("practice-category-summary")
@@ -335,7 +335,7 @@ struct PracticeSessionView: View {
         .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         .accessibilityElement(children: .combine)
-        .accessibilityLabel(Text("\(scopeTitle). \(sessionProgressText). Due review excludes unseen questions. Progress updates use the shared engine with an explicit timestamp."))
+        .accessibilityLabel(Text("\(scopeTitle). \(sessionProgressText). Due review excludes unseen questions. Progress is saved locally after each answer."))
     }
 
     private var sessionProgressText: String {
@@ -636,7 +636,7 @@ struct MockExamView: View {
                 .font(DesignTokens.FontScale.headline.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
-            Text("Generate 100 shared-engine questions: one from each subsection, shuffled by seed. The optional timer is off by default.")
+            Text("Generate 100 questions: one from each subsection, mixed into a repeatable order. The optional timer is off by default.")
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
             Text("In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.")
@@ -651,7 +651,7 @@ struct MockExamView: View {
     private func examQuestion(item: GeneratedExamItem, question: BankQuestion) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Text("Seed: \(seed)")
+                Text("Exam code: \(seed)")
                     .font(DesignTokens.FontScale.caption.monospaced())
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .textSelection(.enabled)
@@ -874,7 +874,7 @@ struct MockExamView: View {
                 Text("Score: \(attempt.score.correct) / \(attempt.score.total) (\(attempt.score.percent, format: .number.precision(.fractionLength(0...1)))%). Pass is 70%; honours is 80%.")
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
-                Text("Seed: \(attempt.seed)")
+                Text("Exam code: \(attempt.seed)")
                     .font(DesignTokens.FontScale.caption.monospaced())
                     .foregroundStyle(DesignTokens.Colors.ink)
             }
@@ -1059,7 +1059,7 @@ struct SettingsView: View {
                         .font(DesignTokens.FontScale.title.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
-                    Text("Progress is stored locally with SwiftData. Export, import, and reset are user-initiated only.")
+                    Text("Progress is stored on this device. Export, import, and reset are user-initiated only.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                     HStack {
@@ -1412,7 +1412,7 @@ private struct SubsectionCard: View {
             Text(title)
                 .font(DesignTokens.FontScale.body.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
-            Text("\(subsection.questionCount) questions • \(subsection.id)")
+            Text(verbatim: "\(localizedQuestionCount(subsection.questionCount)) • \(subsection.id)")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
         }
@@ -1431,7 +1431,7 @@ private struct CategoryCard: View {
             Text(category.name.text(for: language))
                 .font(DesignTokens.FontScale.body.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
-            Text("\(category.questionCount) questions • \(category.subsectionCount) subsections")
+            Text(verbatim: "\(localizedQuestionCount(category.questionCount)) • \(localizedSubsectionCount(category.subsectionCount))")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
         }
@@ -1498,6 +1498,14 @@ private func localized(_ string: String, language: BankLanguage) -> AttributedSt
     var attributed = AttributedString(string)
     attributed.languageIdentifier = language.accessibilityLanguageCode
     return attributed
+}
+
+private func localizedQuestionCount(_ count: Int) -> String {
+    String.localizedStringWithFormat(String(localized: "%lld questions"), count)
+}
+
+private func localizedSubsectionCount(_ count: Int) -> String {
+    String.localizedStringWithFormat(String(localized: "%lld subsections"), count)
 }
 
 @MainActor

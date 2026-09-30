@@ -80,6 +80,8 @@ targets:
         CODE_SIGN_ENTITLEMENTS[sdk=iphone*]: ""
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
         SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
+        SWIFT_EMIT_LOC_STRINGS: YES
+        LOCALIZATION_PREFERS_STRING_CATALOGS: YES
   CanadianHamTests:
     type: bundle.unit-test
     platform: auto
@@ -188,6 +190,8 @@ targets:
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.education
         TARGETED_DEVICE_FAMILY: "3"
         ASSETCATALOG_COMPILER_APPICON_NAME: App Icon & Top Shelf Image
+        SWIFT_EMIT_LOC_STRINGS: YES
+        LOCALIZATION_PREFERS_STRING_CATALOGS: YES
   CanadianHamTVTests:
     type: bundle.unit-test
     platform: tvOS
@@ -281,6 +285,8 @@ targets:
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.education
         TARGETED_DEVICE_FAMILY: "7"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        SWIFT_EMIT_LOC_STRINGS: YES
+        LOCALIZATION_PREFERS_STRING_CATALOGS: YES
   CanadianHamVisionTests:
     type: bundle.unit-test
     platform: visionOS

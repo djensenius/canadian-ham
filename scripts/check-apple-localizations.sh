@@ -25,6 +25,16 @@ xliff_path = Path(sys.argv[1])
 catalog_path = Path(sys.argv[2])
 
 catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+stale = sorted(
+    key for key, entry in catalog.get("strings", {}).items()
+    if entry.get("extractionState") == "stale"
+)
+if stale:
+    print("Stale Apple localization catalogue keys:", file=sys.stderr)
+    for key in stale:
+        print(f"- {key}", file=sys.stderr)
+    sys.exit(1)
+
 do_not_translate = {
     key for key, entry in catalog.get("strings", {}).items()
     if entry.get("shouldTranslate") is False

@@ -288,7 +288,7 @@ private struct LessonReaderView: View {
                         .accessibilityAddTraits(.isHeader)
                         .accessibilityIdentifier("lesson-reader-title")
                     if let lessonProgress {
-                        Text("Marked read \(lessonProgress.readCount) time\(lessonProgress.readCount == 1 ? "" : "s").")
+                        Text(markedReadText(lessonProgress.readCount))
                             .font(DesignTokens.FontScale.caption)
                             .foregroundStyle(DesignTokens.Colors.inkMuted)
                     } else {
@@ -367,7 +367,7 @@ private struct LessonReaderView: View {
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
-                Text("\(quiz.officialQuestionIds.count + quiz.conceptChecks.count) questions: official bank questions update Leitner progress; concept checks do not.")
+                Text("\(quiz.officialQuestionIds.count + quiz.conceptChecks.count) questions: official bank questions update practice progress; concept checks do not.")
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
                 if let latest = quizAttempts.filter({ $0.quizId == quiz.id }).last {
@@ -691,7 +691,7 @@ private struct LessonQuizView: View {
                         .font(DesignTokens.FontScale.title.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
-                    Text("\(items.count) questions: official bank questions update Leitner progress; concept checks do not.")
+                    Text("\(items.count) questions: official bank questions update practice progress; concept checks do not.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                     if let latest = attempts.last {
@@ -1097,7 +1097,7 @@ struct ExplanationPanelView: View {
             .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         } else {
-            Text("No project explanation is bundled for this question yet.")
+            Text("No Canadian Ham explanation is bundled for this question yet.")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
         }
@@ -1107,7 +1107,7 @@ struct ExplanationPanelView: View {
         if let index = choicePermutation?.firstIndex(of: sourceIndex) {
             return "Displayed choice \(["A", "B", "C", "D"][safe: index] ?? "\(index + 1)")"
         }
-        return "sourceIndex \(sourceIndex)"
+        return "Source choice \(sourceIndex + 1)"
     }
 
     @ViewBuilder
@@ -1149,6 +1149,10 @@ private func english(_ attributed: AttributedString) -> AttributedString {
         copy[range].languageIdentifier = BankLanguage.english.accessibilityLanguageCode
     }
     return copy
+}
+
+private func markedReadText(_ count: Int) -> String {
+    String.localizedStringWithFormat(String(localized: "Marked read %lld times."), count)
 }
 
 private extension LocalizedNullableText {

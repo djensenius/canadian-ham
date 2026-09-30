@@ -181,7 +181,7 @@ private struct TVCategoryButton: View {
                 Text(category.name.text(for: language))
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
-                Text("\(category.questionCount) questions • \(category.subsectionCount) subsections")
+                Text(verbatim: "\(localizedQuestionCount(category.questionCount)) • \(localizedSubsectionCount(category.subsectionCount))")
                     .font(DesignTokens.FontScale.body.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
             }
@@ -196,7 +196,7 @@ private struct TVCategoryButton: View {
         }
         .buttonStyle(.plain)
         .focused($isFocused)
-        .accessibilityLabel(Text("\(category.name.text(for: language)), \(category.questionCount) questions, \(category.subsectionCount) subsections"))
+        .accessibilityLabel(Text(verbatim: "\(category.name.text(for: language)), \(localizedQuestionCount(category.questionCount)), \(localizedSubsectionCount(category.subsectionCount))"))
         .accessibilityHint(Text("Starts practice for this category"))
     }
 }
@@ -356,7 +356,7 @@ private struct TVPracticeView: View {
             }
             session.errorMessage = nil
         } catch {
-            session.errorMessage = "Unable to prepare this question with the shared engine: \(error.localizedDescription)"
+            session.errorMessage = "Unable to prepare this question: \(error.localizedDescription)"
         }
     }
 
@@ -379,7 +379,7 @@ private struct TVQuestionPanel: View {
                 .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityIdentifier("question-stem")
-            Text("Source: \(category.name.text(for: language)) • \(question.subsectionId)")
+            Text(sourceText)
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
         }
@@ -392,6 +392,13 @@ private struct TVQuestionPanel: View {
         )
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(accessibilityLabel))
+    }
+
+    private var sourceText: AttributedString {
+        var text = AttributedString(String(localized: "Source: "))
+        text += localized(category.name.text(for: language), language: language)
+        text += english(" • \(question.subsectionId)")
+        return text
     }
 
     private var accessibilityLabel: AttributedString {
@@ -559,7 +566,7 @@ private struct TVFeedbackBar: View {
         if selectedAnswer.isCorrect {
             var text = AttributedString(String(localized: "Source: "))
             text += localized(category.name.text(for: language), language: language)
-            text += AttributedString(" • \(question.subsectionId)")
+            text += english(" • \(question.subsectionId)")
             return text
         }
 
@@ -574,7 +581,7 @@ private struct TVFeedbackBar: View {
             label += localized(selectedAnswer.answer.text.text(for: language), language: language)
             label += AttributedString(String(localized: ". Source: "))
             label += localized(category.name.text(for: language), language: language)
-            label += AttributedString(", \(question.subsectionId)")
+            label += english(", \(question.subsectionId)")
             return label
         }
 
@@ -582,7 +589,7 @@ private struct TVFeedbackBar: View {
         label += localized(correctAnswer.answer.text.text(for: language), language: language)
         label += AttributedString(String(localized: ". Source: "))
         label += localized(category.name.text(for: language), language: language)
-        label += AttributedString(", \(question.subsectionId)")
+        label += english(", \(question.subsectionId)")
         return label
     }
 }
@@ -652,7 +659,7 @@ private struct TVAboutView: View {
                     TVPaperSection(title: "Bank") {
                         Text("Active bank: \(bank.manifest.bankId)")
                         Text("Effective date: \(bank.manifest.effectiveDate)")
-                        Text("Questions: \(bank.questions.count) • Categories: \(bank.categories.count) • Subsections: \(bank.subsections.count)")
+                        Text(verbatim: "\(String(localized: "Questions")): \(bank.questions.count) • \(String(localized: "Categories")): \(bank.categories.count) • \(String(localized: "Subsections")): \(bank.subsections.count)")
                     }
                     TVPaperSection(title: "Attribution") {
                         Text(english("Question-bank material is sourced from Innovation, Science and Economic Development Canada Amateur Radio Operator Certificate Basic Qualification materials."))
@@ -718,6 +725,14 @@ private struct TVMessageView: View {
                 .strokeBorder(DesignTokens.Colors.warningBorder, lineWidth: 2)
         )
     }
+}
+
+private func localizedQuestionCount(_ count: Int) -> String {
+    String.localizedStringWithFormat(String(localized: "%lld questions"), count)
+}
+
+private func localizedSubsectionCount(_ count: Int) -> String {
+    String.localizedStringWithFormat(String(localized: "%lld subsections"), count)
 }
 
 private func localized(_ string: String, language: BankLanguage) -> AttributedString {

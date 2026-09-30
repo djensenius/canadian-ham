@@ -399,7 +399,7 @@ struct RootView: View {
     }
 
     private func categoryAccessibilityLabel(_ category: BankCategory) -> String {
-        String(localized: "\(category.name.text(for: language)), \(category.questionCount) questions, \(category.subsectionCount) subsections")
+        "\(category.name.text(for: language)), \(localizedQuestionCount(category.questionCount)), \(localizedSubsectionCount(category.subsectionCount))"
     }
 
     private func colorScheme(for theme: ApplePreferences.Theme) -> ColorScheme? {
@@ -409,6 +409,14 @@ struct RootView: View {
         case .dark: .dark
         }
     }
+}
+
+private func localizedQuestionCount(_ count: Int) -> String {
+    String.localizedStringWithFormat(String(localized: "%lld questions"), count)
+}
+
+private func localizedSubsectionCount(_ count: Int) -> String {
+    String.localizedStringWithFormat(String(localized: "%lld subsections"), count)
 }
 
 private struct StoreRecoveryView: View {
@@ -426,7 +434,7 @@ private struct StoreRecoveryView: View {
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .fixedSize(horizontal: false, vertical: true)
-            Text("Reset remains available so damaged local SwiftData files can be cleared. Bundled questions are not deleted.")
+            Text("Reset remains available so damaged local progress files can be cleared. Bundled questions are not deleted.")
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .fixedSize(horizontal: false, vertical: true)
@@ -481,7 +489,7 @@ private struct CategoryRow: View {
             Text(category.name.text(for: language))
                 .font(DesignTokens.FontScale.body.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
-            Text("\(category.questionCount) questions • \(category.subsectionCount) subsections")
+            Text(verbatim: "\(localizedQuestionCount(category.questionCount)) • \(localizedSubsectionCount(category.subsectionCount))")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
         }
