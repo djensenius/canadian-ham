@@ -88,6 +88,10 @@ async function expectNoAxeViolations(container: Element): Promise<void> {
   assert.deepEqual(results.violations, []);
 }
 
+function assertNoPdfLinks(container: Element): void {
+  assert.equal(container.querySelector('a[href*=".pdf"]'), null);
+}
+
 function allCorrectAttempt(seed: string, submittedAt: string): ExamAttempt {
   return attemptWithCorrectCount(seed, submittedAt, 100);
 }
@@ -671,17 +675,24 @@ describe("App accessibility and flows", () => {
   it("does not render reference PDF links", async () => {
     const store = createStore("reference-links-removed");
     const user = userEvent.setup();
-    render(<App store={store} now={() => fixedNow} seedFactory={() => "reference-seed"} />);
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "reference-seed"} />);
 
     await screen.findByRole("heading", { name: "Ready for Basic with Honours?" });
     assert.equal(screen.queryByRole("link", { name: /reference sheet/i }), null);
     assert.equal(screen.queryByText(/Reference Material.*\.pdf/i), null);
+    assertNoPdfLinks(container);
+
+    await user.click(screen.getAllByRole("button", { name: "Learn" })[0]!);
+    await screen.findByRole("heading", { name: "Learn" });
+    assert.equal(screen.getByText(referenceSheetNote).className, "reference-note");
+    assertNoPdfLinks(container);
 
     await user.click(screen.getAllByRole("button", { name: "Mock exam" })[0]!);
     await screen.findByRole("heading", { name: "Mock exam" });
     assert.equal(screen.getByText(referenceSheetNote).className, "reference-note");
     assert.equal(screen.queryByRole("link", { name: /reference sheet/i }), null);
     assert.equal(screen.queryByText(/\.pdf/i), null);
+    assertNoPdfLinks(container);
   });
 
   it("renders the B-001-017-009 explanation panel citation as a user-activated external link without preloading or fetching it", () => {

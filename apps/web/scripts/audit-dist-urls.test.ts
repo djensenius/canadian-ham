@@ -44,6 +44,14 @@ describe("dist URL audit", () => {
     assert.deepEqual(await auditDistUrls(distDir), [{ file: "app.js", line: 1, url: "https://example.com/api" }]);
   });
 
+  it("fails when dist contains a PDF file", async () => {
+    const distDir = await mkdtemp(join(tmpdir(), "canadian-ham-url-audit-pdf-"));
+    tempDirs.push(distDir);
+    await writeFile(join(distDir, "reference.pdf"), "not a real PDF", "utf8");
+
+    await assert.rejects(() => auditDistUrls(distDir), /does not know how to scan reference\.pdf/);
+  });
+
   it("runs from the CLI and scans the requested dist directory", async () => {
     const distDir = await mkdtemp(join(tmpdir(), "canadian-ham-url-audit-cli-"));
     tempDirs.push(distDir);
