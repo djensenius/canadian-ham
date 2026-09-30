@@ -73,10 +73,10 @@ struct HomeView: View {
                 .font(DesignTokens.FontScale.title.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
-            Label(summary.title, systemImage: summary.symbol)
+            Label(LocalizedStringKey(summary.title), systemImage: summary.symbol)
                 .font(DesignTokens.FontScale.body.weight(.bold))
                 .foregroundStyle(summary.tint)
-            Text(summary.message)
+            Text(LocalizedStringKey(summary.message))
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
             Text("Due review: \(summary.dueReviewCount). Weak subsections: \(summary.weakSubsectionCount). Completed mock exams: \(summary.completedExamCount).")
@@ -483,7 +483,7 @@ struct PracticeSessionView: View {
             selectedByQuestionId[question.id] = sourceIndex
             if previous == 0, sourceIndex != 0 { correctCount -= 1 }
             if previous != 0, sourceIndex == 0 { correctCount += 1 }
-            AccessibilityNotification.Announcement("Selected answer updated").post()
+            AccessibilityNotification.Announcement(String(localized: "Selected answer updated")).post()
             return
         }
         selectedByQuestionId[question.id] = sourceIndex
@@ -491,7 +491,8 @@ struct PracticeSessionView: View {
         if sourceIndex == 0 { correctCount += 1 }
         if progressStore.preferences.practiceMode == .immediate {
             commitAnswer(question: question, sourceIndex: sourceIndex)
-            AccessibilityNotification.Announcement(sourceIndex == 0 ? "Correct" : "Incorrect").post()
+            let announcement = sourceIndex == 0 ? String(localized: "Correct") : String(localized: "Incorrect")
+            AccessibilityNotification.Announcement(announcement).post()
         }
     }
 
@@ -764,9 +765,10 @@ struct MockExamView: View {
     private var timerControls: some View {
         if progressStore.preferences.examTimerEnabled {
             HStack {
-                tokenButton(timerRunning ? "Pause timer" : secondsElapsed == 0 ? "Start timer" : "Resume timer") {
+                let buttonTitle: LocalizedStringKey = timerRunning ? "Pause timer" : secondsElapsed == 0 ? "Start timer" : "Resume timer"
+                tokenButton(buttonTitle) {
                     timerRunning.toggle()
-                    timerStatus = timerRunning ? "Timer running, \(secondsElapsed) seconds elapsed" : "Timer paused, \(secondsElapsed) seconds elapsed"
+                    timerStatus = timerRunning ? String(localized: "Timer running, \(secondsElapsed) seconds elapsed") : String(localized: "Timer paused, \(secondsElapsed) seconds elapsed")
                     AccessibilityNotification.Announcement(timerStatus).post()
                 }
             }
@@ -1220,7 +1222,7 @@ struct AnswerChoiceButton: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .accessibilityIdentifier("answer-\(letter)-text")
                     if let statusText {
-                        Label(statusText, systemImage: statusIcon)
+                        Label(LocalizedStringKey(statusText), systemImage: statusIcon)
                             .font(DesignTokens.FontScale.caption.weight(.bold))
                             .foregroundStyle(textColor)
                     }
@@ -1397,7 +1399,7 @@ private struct CategoryCard: View {
 
 struct MessagePanel: View {
     enum Kind { case warning, success }
-    let title: String
+    let title: LocalizedStringKey
     let message: String
     let kind: Kind
 
@@ -1435,7 +1437,7 @@ private func localized(_ string: String, language: BankLanguage) -> AttributedSt
 }
 
 @MainActor
-private func tokenButton(_ title: String, action: @escaping () -> Void) -> some View {
+private func tokenButton(_ title: LocalizedStringKey, action: @escaping () -> Void) -> some View {
     Button(action: action) {
         Text(title)
             .font(DesignTokens.FontScale.body.weight(.semibold))

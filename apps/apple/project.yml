@@ -7,6 +7,7 @@ options:
     tvOS: "18.0"
     visionOS: "2.0"
   developmentLanguage: en
+  knownRegions: [en, fr, fr-CA]
   createIntermediateGroups: true
 packages:
   CanadianHamEngine:
@@ -38,6 +39,9 @@ targets:
         excludes:
           - Resources/Assets.xcassets
       - path: CanadianHam/Resources/Assets.xcassets
+      - path: CanadianHam/Resources/Localizable.xcstrings
+        type: file
+        buildPhase: resources
       - path: ../../content/generated
         type: folder
         buildPhase: resources
@@ -150,6 +154,9 @@ targets:
       - path: CanadianHam/Practice/EngineShuffle.swift
       - path: CanadianHam/Design/Tokens.swift
       - path: CanadianHam/Support/LaunchArguments.swift
+      - path: CanadianHam/Resources/Localizable.xcstrings
+        type: file
+        buildPhase: resources
       - path: CanadianHam/Resources/PrivacyInfo.xcprivacy
         type: file
         buildPhase: resources
@@ -240,6 +247,9 @@ targets:
       - path: CanadianHam/Practice/EngineShuffle.swift
       - path: CanadianHam/Design/Tokens.swift
       - path: CanadianHam/Support/LaunchArguments.swift
+      - path: CanadianHam/Resources/Localizable.xcstrings
+        type: file
+        buildPhase: resources
       - path: CanadianHam/Resources/PrivacyInfo.xcprivacy
         type: file
         buildPhase: resources

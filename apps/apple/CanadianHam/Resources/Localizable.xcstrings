@@ -1,0 +1,2518 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "About": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À propos"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À propos"
+          }
+        }
+      }
+    },
+    "About Canadian Ham": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À propos de Canadian Ham"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À propos de Canadian Ham"
+          }
+        }
+      }
+    },
+    "Active bank: %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Banque active : %@"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Banque active : %@"
+          }
+        }
+      }
+    },
+    "All questions": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toutes les questions"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toutes les questions"
+          }
+        }
+      }
+    },
+    "Answer %@, %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réponse %@, %@"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réponse %@, %@"
+          }
+        }
+      }
+    },
+    "Answers": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réponses"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réponses"
+          }
+        }
+      }
+    },
+    "Attribution": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Attribution"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Attribution"
+          }
+        }
+      }
+    },
+    "Attribution and development status": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Attribution et état du développement"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Attribution et état du développement"
+          }
+        }
+      }
+    },
+    "Bank": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Banque"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Banque"
+          }
+        }
+      }
+    },
+    "Basic with Honours": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Base avec mention"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Base avec mention"
+          }
+        }
+      }
+    },
+    "Canadian Ham": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canadian Ham"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canadian Ham"
+          }
+        }
+      }
+    },
+    "Canadian Ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canadian Ham est un outil d’étude indépendant. Il n’est ni affilié au gouvernement du Canada, à Innovation, Sciences et Développement économique Canada (ISED), à Radio Amateurs du Canada (RAC) ou à un examinateur accrédité, ni commandité ou approuvé par eux."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canadian Ham est un outil d’étude indépendant. Il n’est ni affilié au gouvernement du Canada, à Innovation, Sciences et Développement économique Canada (ISED), à Radio Amateurs du Canada (RAC) ou à un examinateur accrédité, ni commandité ou approuvé par eux."
+          }
+        }
+      }
+    },
+    "Canadian Ham is independent and not affiliated with, sponsored by, or endorsed by ISED, RAC, or any accredited examiner.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canadian Ham est indépendant et n’est ni affilié à ISED, à RAC ou à un examinateur accrédité, ni commandité ou approuvé par eux."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canadian Ham est indépendant et n’est ni affilié à ISED, à RAC ou à un examinateur accrédité, ni commandité ou approuvé par eux."
+          }
+        }
+      }
+    },
+    "Cancel": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annuler"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annuler"
+          }
+        }
+      }
+    },
+    "Categories": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Catégories"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Catégories"
+          }
+        }
+      }
+    },
+    "Category breakdown": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Répartition par catégorie"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Répartition par catégorie"
+          }
+        }
+      }
+    },
+    "Choose an answer before continuing": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisissez une réponse avant de continuer"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisissez une réponse avant de continuer"
+          }
+        }
+      }
+    },
+    "Citations:": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Références :"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Références :"
+          }
+        }
+      }
+    },
+    "Coming soon": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À venir"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À venir"
+          }
+        }
+      }
+    },
+    "Concept check · %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vérification des notions · %@"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vérification des notions · %@"
+          }
+        }
+      }
+    },
+    "Correct": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bonne réponse"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bonne réponse"
+          }
+        }
+      }
+    },
+    "Correct answer": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bonne réponse"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bonne réponse"
+          }
+        }
+      }
+    },
+    "Correct answer: %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bonne réponse : %@"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bonne réponse : %@"
+          }
+        }
+      }
+    },
+    "Covered subsections": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sous-sections couvertes"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sous-sections couvertes"
+          }
+        }
+      }
+    },
+    "Dark": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sombre"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sombre"
+          }
+        }
+      }
+    },
+    "Deletes local progress and preferences, then attempts to reopen the store": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprime la progression et les préférences locales, puis tente de rouvrir la base locale"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprime la progression et les préférences locales, puis tente de rouvrir la base locale"
+          }
+        }
+      }
+    },
+    "Deletes local progress, mock exams, and preferences. Bundled content remains installed.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprime la progression locale, les examens blancs et les préférences. Le contenu intégré reste installé."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprime la progression locale, les examens blancs et les préférences. Le contenu intégré reste installé."
+          }
+        }
+      }
+    },
+    "Disclaimer": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avis de non-responsabilité"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avis de non-responsabilité"
+          }
+        }
+      }
+    },
+    "Done": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminé"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminé"
+          }
+        }
+      }
+    },
+    "Draft lessons available": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leçons provisoires disponibles"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leçons provisoires disponibles"
+          }
+        }
+      }
+    },
+    "Due review": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Révision due"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Révision due"
+          }
+        }
+      }
+    },
+    "Effective date: %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Date d’entrée en vigueur : %@"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Date d’entrée en vigueur : %@"
+          }
+        }
+      }
+    },
+    "English": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        }
+      }
+    },
+    "English-only lesson notice": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leçon offerte en anglais seulement."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leçon offerte en anglais seulement."
+          }
+        }
+      }
+    },
+    "Explanation": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Explication"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Explication"
+          }
+        }
+      }
+    },
+    "Export progress JSON": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exporter la progression JSON"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exporter la progression JSON"
+          }
+        }
+      }
+    },
+    "Finish session": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminer la séance"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminer la séance"
+          }
+        }
+      }
+    },
+    "Flag for review": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Marquer pour révision"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Marquer pour révision"
+          }
+        }
+      }
+    },
+    "Flagged for review": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Marqué pour révision"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Marqué pour révision"
+          }
+        }
+      }
+    },
+    "Français": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Français"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Français"
+          }
+        }
+      }
+    },
+    "Generate 100 shared-engine questions: one from each subsection, shuffled by seed. The optional timer is off by default.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Générez 100 questions avec le moteur partagé : une par sous-section, mélangées selon une graine. La minuterie facultative est désactivée par défaut."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Générez 100 questions avec le moteur partagé : une par sous-section, mélangées selon une graine. La minuterie facultative est désactivée par défaut."
+          }
+        }
+      }
+    },
+    "Go to quiz": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aller au questionnaire"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aller au questionnaire"
+          }
+        }
+      }
+    },
+    "Home": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accueil"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accueil"
+          }
+        }
+      }
+    },
+    "Illustration brief": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Note d’illustration"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Note d’illustration"
+          }
+        }
+      }
+    },
+    "Import": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importer"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importer"
+          }
+        }
+      }
+    },
+    "Import progress JSON": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importer la progression JSON"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importer la progression JSON"
+          }
+        }
+      }
+    },
+    "Import progress?": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importer la progression ?"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importer la progression ?"
+          }
+        }
+      }
+    },
+    "Import replaces local progress, mock exams, and preferences with the selected valid JSON file.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’importation remplace la progression locale, les examens blancs et les préférences par le fichier JSON valide sélectionné."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’importation remplace la progression locale, les examens blancs et les préférences par le fichier JSON valide sélectionné."
+          }
+        }
+      }
+    },
+    "In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À l’examen réel, ISED fournit une feuille de référence avec des formules et des schémas-blocs. Les leçons en enseignent tout le contenu."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À l’examen réel, ISED fournit une feuille de référence avec des formules et des schémas-blocs. Les leçons en enseignent tout le contenu."
+          }
+        }
+      }
+    },
+    "Incorrect": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mauvaise réponse"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mauvaise réponse"
+          }
+        }
+      }
+    },
+    "Learn": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apprendre"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apprendre"
+          }
+        }
+      }
+    },
+    "Learn progress unavailable": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Progression des leçons indisponible"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Progression des leçons indisponible"
+          }
+        }
+      }
+    },
+    "Lesson content unavailable": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contenu des leçons indisponible"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contenu des leçons indisponible"
+          }
+        }
+      }
+    },
+    "Lesson not found": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leçon introuvable"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leçon introuvable"
+          }
+        }
+      }
+    },
+    "Lesson offered in English only.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leçon offerte en anglais seulement."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leçon offerte en anglais seulement."
+          }
+        }
+      }
+    },
+    "Lesson progress unavailable": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Progression de la leçon indisponible"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Progression de la leçon indisponible"
+          }
+        }
+      }
+    },
+    "Lesson quiz": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questionnaire de leçon"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questionnaire de leçon"
+          }
+        }
+      }
+    },
+    "Lesson quiz not found": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questionnaire de leçon introuvable"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questionnaire de leçon introuvable"
+          }
+        }
+      }
+    },
+    "Lesson quiz unavailable": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questionnaire de leçon indisponible"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questionnaire de leçon indisponible"
+          }
+        }
+      }
+    },
+    "Lesson table": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tableau de leçon"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tableau de leçon"
+          }
+        }
+      }
+    },
+    "Lessons": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leçons"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leçons"
+          }
+        }
+      }
+    },
+    "Light": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clair"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clair"
+          }
+        }
+      }
+    },
+    "Loading Canadian Ham…": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chargement de Canadian Ham…"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chargement de Canadian Ham…"
+          }
+        }
+      }
+    },
+    "Loading question bank": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chargement de la banque de questions"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chargement de la banque de questions"
+          }
+        }
+      }
+    },
+    "Loading question bank…": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chargement de la banque de questions…"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chargement de la banque de questions…"
+          }
+        }
+      }
+    },
+    "Local data": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Données locales"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Données locales"
+          }
+        }
+      }
+    },
+    "Local progress store unavailable": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stockage local de la progression indisponible"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stockage local de la progression indisponible"
+          }
+        }
+      }
+    },
+    "Mark lesson read": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Marquer la leçon comme lue"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Marquer la leçon comme lue"
+          }
+        }
+      }
+    },
+    "Mock exam": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Examen blanc"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Examen blanc"
+          }
+        }
+      }
+    },
+    "Mock exam unavailable": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Examen blanc indisponible"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Examen blanc indisponible"
+          }
+        }
+      }
+    },
+    "Module not found": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Module introuvable"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Module introuvable"
+          }
+        }
+      }
+    },
+    "Needs review": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Révision requise"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Révision requise"
+          }
+        }
+      }
+    },
+    "Next": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suivant"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suivant"
+          }
+        }
+      }
+    },
+    "Next question": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Question suivante"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Question suivante"
+          }
+        }
+      }
+    },
+    "No accounts, networking, analytics, telemetry, third-party SDKs, or iCloud sync. Import and export use local files you choose.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun compte, réseau, analytique, télémétrie, SDK tiers ni synchronisation iCloud. L’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun compte, réseau, analytique, télémétrie, SDK tiers ni synchronisation iCloud. L’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
+          }
+        }
+      }
+    },
+    "No categories": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune catégorie"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune catégorie"
+          }
+        }
+      }
+    },
+    "No project explanation is bundled for this question yet.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune explication du projet n’est encore intégrée pour cette question."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune explication du projet n’est encore intégrée pour cette question."
+          }
+        }
+      }
+    },
+    "No questions": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune question"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune question"
+          }
+        }
+      }
+    },
+    "No questions found": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune question trouvée"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune question trouvée"
+          }
+        }
+      }
+    },
+    "No quiz items are bundled for this lesson yet.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun élément de questionnaire n’est encore intégré pour cette leçon."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun élément de questionnaire n’est encore intégré pour cette leçon."
+          }
+        }
+      }
+    },
+    "Not enough data": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Données insuffisantes"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Données insuffisantes"
+          }
+        }
+      }
+    },
+    "Not marked read yet.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pas encore marquée comme lue."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pas encore marquée comme lue."
+          }
+        }
+      }
+    },
+    "Objectives": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Objectifs"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Objectifs"
+          }
+        }
+      }
+    },
+    "Official question %@ is loading from the bundled bank.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La question officielle %@ est chargée depuis la banque intégrée."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La question officielle %@ est chargée depuis la banque intégrée."
+          }
+        }
+      }
+    },
+    "Offline Basic question-bank practice": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pratique hors ligne de la banque de questions de base"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pratique hors ligne de la banque de questions de base"
+          }
+        }
+      }
+    },
+    "Offline Basic question-bank practice for visionOS": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pratique hors ligne de la banque de questions de base pour visionOS"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pratique hors ligne de la banque de questions de base pour visionOS"
+          }
+        }
+      }
+    },
+    "Offline, private, 2025 bank": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hors ligne, privé, banque 2025"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hors ligne, privé, banque 2025"
+          }
+        }
+      }
+    },
+    "Open lesson %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrir la leçon %@"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrir la leçon %@"
+          }
+        }
+      }
+    },
+    "Open module": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrir le module"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrir le module"
+          }
+        }
+      }
+    },
+    "Outline available": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plan disponible"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plan disponible"
+          }
+        }
+      }
+    },
+    "Pass": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réussite"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réussite"
+          }
+        }
+      }
+    },
+    "Pass-ready": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prêt pour la réussite"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prêt pour la réussite"
+          }
+        }
+      }
+    },
+    "Pause timer": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mettre la minuterie en pause"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mettre la minuterie en pause"
+          }
+        }
+      }
+    },
+    "Practice": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pratique"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pratique"
+          }
+        }
+      }
+    },
+    "Practice categories": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Catégories de pratique"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Catégories de pratique"
+          }
+        }
+      }
+    },
+    "Practice review": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Révision de la pratique"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Révision de la pratique"
+          }
+        }
+      }
+    },
+    "Practice unavailable": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pratique indisponible"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pratique indisponible"
+          }
+        }
+      }
+    },
+    "Practice weak areas": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pratiquer les points faibles"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pratiquer les points faibles"
+          }
+        }
+      }
+    },
+    "Previous": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Précédent"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Précédent"
+          }
+        }
+      }
+    },
+    "Privacy": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confidentialité"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confidentialité"
+          }
+        }
+      }
+    },
+    "Progress is stored locally with SwiftData. Export, import, and reset are user-initiated only.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La progression est stockée localement avec SwiftData. L’exportation, l’importation et la réinitialisation sont déclenchées uniquement par l’utilisateur."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La progression est stockée localement avec SwiftData. L’exportation, l’importation et la réinitialisation sont déclenchées uniquement par l’utilisateur."
+          }
+        }
+      }
+    },
+    "Question bank unavailable": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Banque de questions indisponible"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Banque de questions indisponible"
+          }
+        }
+      }
+    },
+    "Question language": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Langue des questions"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Langue des questions"
+          }
+        }
+      }
+    },
+    "Question navigator": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Navigateur de questions"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Navigateur de questions"
+          }
+        }
+      }
+    },
+    "Question-bank material and related reference material are sourced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification materials.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le contenu de la banque de questions et le matériel de référence connexe proviennent du matériel de qualification de base du Certificat d’opérateur radioamateur d’Innovation, Sciences et Développement économique Canada (ISED)."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le contenu de la banque de questions et le matériel de référence connexe proviennent du matériel de qualification de base du Certificat d’opérateur radioamateur d’Innovation, Sciences et Développement économique Canada (ISED)."
+          }
+        }
+      }
+    },
+    "Question-bank material is sourced from Innovation, Science and Economic Development Canada Amateur Radio Operator Certificate Basic Qualification materials.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le contenu de la banque de questions provient du matériel de qualification de base du Certificat d’opérateur radioamateur d’Innovation, Sciences et Développement économique Canada."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le contenu de la banque de questions provient du matériel de qualification de base du Certificat d’opérateur radioamateur d’Innovation, Sciences et Développement économique Canada."
+          }
+        }
+      }
+    },
+    "Questions": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questions"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questions"
+          }
+        }
+      }
+    },
+    "Readiness": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Préparation"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Préparation"
+          }
+        }
+      }
+    },
+    "Readiness unavailable": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Préparation indisponible"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Préparation indisponible"
+          }
+        }
+      }
+    },
+    "Ready for Basic with Honours?": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prêt pour la base avec mention ?"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prêt pour la base avec mention ?"
+          }
+        }
+      }
+    },
+    "Reset": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinitialiser"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinitialiser"
+          }
+        }
+      }
+    },
+    "Reset all data": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinitialiser toutes les données"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinitialiser toutes les données"
+          }
+        }
+      }
+    },
+    "Reset all local data?": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinitialiser toutes les données locales ?"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinitialiser toutes les données locales ?"
+          }
+        }
+      }
+    },
+    "Reset local data and retry": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinitialiser les données locales et réessayer"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinitialiser les données locales et réessayer"
+          }
+        }
+      }
+    },
+    "Resume timer": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reprendre la minuterie"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reprendre la minuterie"
+          }
+        }
+      }
+    },
+    "Retry quiz": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recommencer le questionnaire"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recommencer le questionnaire"
+          }
+        }
+      }
+    },
+    "Review due questions": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réviser les questions dues"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réviser les questions dues"
+          }
+        }
+      }
+    },
+    "Review later": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réviser plus tard"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réviser plus tard"
+          }
+        }
+      }
+    },
+    "Saved result: %@.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Résultat enregistré : %@."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Résultat enregistré : %@."
+          }
+        }
+      }
+    },
+    "Score: %@.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Score : %@."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Score : %@."
+          }
+        }
+      }
+    },
+    "Selected": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sélectionnée"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sélectionnée"
+          }
+        }
+      }
+    },
+    "Selected answer updated": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réponse sélectionnée mise à jour"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réponse sélectionnée mise à jour"
+          }
+        }
+      }
+    },
+    "Settings": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réglages"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réglages"
+          }
+        }
+      }
+    },
+    "Source: %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Source : %@"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Source : %@"
+          }
+        }
+      }
+    },
+    "Start another mock exam": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Commencer un autre examen blanc"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Commencer un autre examen blanc"
+          }
+        }
+      }
+    },
+    "Start another session": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Commencer une autre séance"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Commencer une autre séance"
+          }
+        }
+      }
+    },
+    "Start mock exam": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Commencer l’examen blanc"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Commencer l’examen blanc"
+          }
+        }
+      }
+    },
+    "Start module": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Commencer le module"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Commencer le module"
+          }
+        }
+      }
+    },
+    "Start practice": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Commencer la pratique"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Commencer la pratique"
+          }
+        }
+      }
+    },
+    "Start quiz": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Commencer le questionnaire"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Commencer le questionnaire"
+          }
+        }
+      }
+    },
+    "Start timer": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Démarrer la minuterie"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Démarrer la minuterie"
+          }
+        }
+      }
+    },
+    "Structured lessons": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leçons structurées"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leçons structurées"
+          }
+        }
+      }
+    },
+    "Study": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Étude"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Étude"
+          }
+        }
+      }
+    },
+    "Study the eight modules in order. Lessons are currently authored in English, matching the web app; official practice questions still use the language picker.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Étudiez les huit modules dans l’ordre. Les leçons sont actuellement rédigées en anglais, comme dans l’app Web; les questions officielles de pratique utilisent toujours le sélecteur de langue."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Étudiez les huit modules dans l’ordre. Les leçons sont actuellement rédigées en anglais, comme dans l’app Web; les questions officielles de pratique utilisent toujours le sélecteur de langue."
+          }
+        }
+      }
+    },
+    "Study with the bundled ISED Basic 2025-07-15 question bank on iPhone, iPad, and Mac. Progress stays on this device unless you export it.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Étudiez avec la banque de questions ISED Base 2025-07-15 intégrée sur iPhone, iPad et Mac. La progression reste sur cet appareil, sauf si vous l’exportez."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Étudiez avec la banque de questions ISED Base 2025-07-15 intégrée sur iPhone, iPad et Mac. La progression reste sur cet appareil, sauf si vous l’exportez."
+          }
+        }
+      }
+    },
+    "Submit": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soumettre"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soumettre"
+          }
+        }
+      }
+    },
+    "Submit exam": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soumettre l’examen"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soumettre l’examen"
+          }
+        }
+      }
+    },
+    "Submit for review": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soumettre pour révision"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soumettre pour révision"
+          }
+        }
+      }
+    },
+    "Submit lesson quiz": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soumettre le questionnaire de leçon"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soumettre le questionnaire de leçon"
+          }
+        }
+      }
+    },
+    "Submit mock exam?": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soumettre l’examen blanc ?"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soumettre l’examen blanc ?"
+          }
+        }
+      }
+    },
+    "Subsections": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sous-sections"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sous-sections"
+          }
+        }
+      }
+    },
+    "System": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Système"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Système"
+          }
+        }
+      }
+    },
+    "The ISED permission request has been drafted but not yet sent or granted. Until written permission is recorded, this app is for private, non-distributed development only and must not claim written permission has been granted.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La demande d’autorisation à ISED a été rédigée, mais n’a pas encore été envoyée ni accordée. Tant qu’une autorisation écrite n’est pas consignée, cette app est réservée au développement privé non distribué et ne doit pas prétendre qu’une autorisation écrite a été accordée."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La demande d’autorisation à ISED a été rédigée, mais n’a pas encore été envoyée ni accordée. Tant qu’une autorisation écrite n’est pas consignée, cette app est réservée au développement privé non distribué et ne doit pas prétendre qu’une autorisation écrite a été accordée."
+          }
+        }
+      }
+    },
+    "The bundled question bank has no practice categories.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La banque de questions intégrée ne contient aucune catégorie de pratique."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La banque de questions intégrée ne contient aucune catégorie de pratique."
+          }
+        }
+      }
+    },
+    "This Apple app works offline, uses bundled content, includes no networking code, includes no analytics or telemetry, and stores no progress remotely in this first slice.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cette app Apple fonctionne hors ligne, utilise du contenu intégré, n’inclut aucun code réseau, aucune analytique ni télémétrie, et ne stocke aucune progression à distance dans cette première version."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cette app Apple fonctionne hors ligne, utilise du contenu intégré, n’inclut aucun code réseau, aucune analytique ni télémétrie, et ne stocke aucune progression à distance dans cette première version."
+          }
+        }
+      }
+    },
+    "This category has no bundled questions.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cette catégorie ne contient aucune question intégrée."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cette catégorie ne contient aucune question intégrée."
+          }
+        }
+      }
+    },
+    "This outline is bundled so module order and objectives remain visible offline while the full lesson is authored.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ce plan est intégré afin que l’ordre des modules et les objectifs restent visibles hors ligne pendant la rédaction de la leçon complète."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ce plan est intégré afin que l’ordre des modules et les objectifs restent visibles hors ligne pendant la rédaction de la leçon complète."
+          }
+        }
+      }
+    },
+    "This tvOS app works offline with bundled content, includes no networking code, no analytics, no telemetry, and no iCloud sync.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cette app tvOS fonctionne hors ligne avec du contenu intégré, sans code réseau, sans analytique, sans télémétrie et sans synchronisation iCloud."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cette app tvOS fonctionne hors ligne avec du contenu intégré, sans code réseau, sans analytique, sans télémétrie et sans synchronisation iCloud."
+          }
+        }
+      }
+    },
+    "This visionOS app works offline with bundled content, includes no networking code, no analytics, no telemetry, and no iCloud sync.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cette app visionOS fonctionne hors ligne avec du contenu intégré, sans code réseau, sans analytique, sans télémétrie et sans synchronisation iCloud."
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cette app visionOS fonctionne hors ligne avec du contenu intégré, sans code réseau, sans analytique, sans télémétrie et sans synchronisation iCloud."
+          }
+        }
+      }
+    },
+    "Timer off": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minuterie désactivée"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minuterie désactivée"
+          }
+        }
+      }
+    },
+    "Timer off by default": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minuterie désactivée par défaut"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minuterie désactivée par défaut"
+          }
+        }
+      }
+    },
+    "Tools": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Outils"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Outils"
+          }
+        }
+      }
+    },
+    "Weak areas": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Points faibles"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Points faibles"
+          }
+        }
+      }
+    },
+    "Wrong-answer review": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Révision des mauvaises réponses"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Révision des mauvaises réponses"
+          }
+        }
+      }
+    },
+    "Your answer, correct answer": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Votre réponse, bonne réponse"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Votre réponse, bonne réponse"
+          }
+        }
+      }
+    },
+    "Your answer, incorrect": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Votre réponse, mauvaise réponse"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Votre réponse, mauvaise réponse"
+          }
+        }
+      }
+    },
+    "Your answer, incorrect, %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Votre réponse, mauvaise réponse, %@"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Votre réponse, mauvaise réponse, %@"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

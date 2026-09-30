@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AccessibleSecondaryButtonLabel: View {
-    let title: String
+    let title: LocalizedStringKey
     @Environment(\.isEnabled) private var isEnabled
 
     var body: some View {

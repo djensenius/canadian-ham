@@ -4,6 +4,29 @@ import SwiftUI
 
 private let rbr4CitationURL = "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service"
 
+private extension Locale {
+    var canadianHamUsesFrenchUI: Bool { identifier.lowercased().hasPrefix("fr") }
+}
+
+private extension View {
+    func englishContentLanguage() -> some View {
+        self.environment(\.locale, Locale(identifier: "en_CA"))
+    }
+}
+
+private struct EnglishOnlyLessonNotice: View {
+    @Environment(\.locale) private var locale
+
+    var body: some View {
+        if locale.canadianHamUsesFrenchUI {
+            Text("Lesson offered in English only.")
+                .font(DesignTokens.FontScale.caption.weight(.semibold))
+                .foregroundStyle(DesignTokens.Colors.inkMuted)
+                .accessibilityIdentifier("english-only-lesson-notice")
+        }
+    }
+}
+
 private struct ContentLibraryEnvironmentKey: EnvironmentKey {
     static let defaultValue: ContentLibrary? = nil
 }
@@ -43,6 +66,7 @@ struct LearnView: View {
                     Text("In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
+                    EnglishOnlyLessonNotice()
                 }
                 .paperCard()
 
@@ -75,6 +99,7 @@ struct LearnView: View {
                 .font(.headline)
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
+                .englishContentLanguage()
             Text(module.status == .outline ? "Outline available" : "Draft lessons available")
                 .font(.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
@@ -177,7 +202,10 @@ private struct ModuleLessonListView: View {
                         .font(DesignTokens.FontScale.headline.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
+                        .englishContentLanguage()
+                    EnglishOnlyLessonNotice()
                     LessonMarkdownView(markdown: module.bodyMarkdown, title: module.title.en)
+                        .englishContentLanguage()
                 }
                 .paperCard()
 
@@ -214,6 +242,7 @@ private struct LessonRow: View {
             Text(lesson.title.en)
                 .font(DesignTokens.FontScale.body.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
+                .englishContentLanguage()
             Text("\(lesson.status == .outline ? "Coming soon" : "Ready to read") · \(isRead ? "Marked read" : "Not marked read")")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
@@ -247,6 +276,7 @@ private struct LessonReaderView: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
                         .accessibilityIdentifier("lesson-reader-title")
+                        .englishContentLanguage()
                     if let lessonProgress {
                         Text("Marked read \(lessonProgress.readCount) time\(lessonProgress.readCount == 1 ? "" : "s").")
                             .font(DesignTokens.FontScale.caption)
@@ -265,9 +295,12 @@ private struct LessonReaderView: View {
 
                 if lesson.status == .outline {
                     OutlineLessonView(lesson: lesson, library: library)
+                        .englishContentLanguage()
                 } else {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                        EnglishOnlyLessonNotice()
                         LessonMarkdownView(markdown: lesson.bodyMarkdown, title: lesson.title.en)
+                            .englishContentLanguage()
                     }
                     .paperCard()
                 }
@@ -994,6 +1027,7 @@ struct ExplanationPanelView: View {
     let choicePermutation: [Int]?
 
     @Environment(\.canadianHamContentLibrary) private var library
+    @Environment(\.locale) private var locale
 
     var body: some View {
         if let explanation = library?.explanationsByQuestionId[questionId] {
@@ -1004,15 +1038,18 @@ struct ExplanationPanelView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityIdentifier("explanation-panel")
+                if locale.canadianHamUsesFrenchUI {
+                    EnglishOnlyLessonNotice()
+                }
                 if let parsed {
-                    Text(localized(parsed.correctAnswerParagraph, language: language))
+                    Text(localized(parsed.correctAnswerParagraph, language: .english))
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .textSelection(.enabled)
                     if !parsed.distractorNotes.isEmpty {
                         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                             ForEach(parsed.distractorNotes, id: \.sourceIndex) { note in
-                                Text(localized("\(label(for: note.sourceIndex)): \(note.note)", language: language))
+                                Text(localized("\(label(for: note.sourceIndex)): \(note.note)", language: .english))
                                     .font(DesignTokens.FontScale.caption)
                                     .foregroundStyle(DesignTokens.Colors.ink)
                                     .textSelection(.enabled)
@@ -1020,7 +1057,7 @@ struct ExplanationPanelView: View {
                         }
                     }
                 } else {
-                    Text(localized(explanation.body.text(for: language), language: language))
+                    Text(localized(explanation.body.text(for: .english), language: .english))
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .textSelection(.enabled)

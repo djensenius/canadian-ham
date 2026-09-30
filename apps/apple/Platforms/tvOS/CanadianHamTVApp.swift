@@ -318,7 +318,8 @@ private struct TVPracticeView: View {
         }
         session.answeredCount += 1
         if answer.isCorrect { session.correctCount += 1 }
-        AccessibilityNotification.Announcement(answer.isCorrect ? "Correct" : "Incorrect").post()
+        let announcement = answer.isCorrect ? String(localized: "Correct") : String(localized: "Incorrect")
+        AccessibilityNotification.Announcement(announcement).post()
     }
 
     private func loadNextQuestion() {
@@ -426,7 +427,7 @@ private struct TVAnswerButton: View {
                         .foregroundStyle(textColor)
                         .accessibilityIdentifier("answer-\(displayLetter)-text")
                     if let statusText {
-                        Label(statusText, systemImage: answer.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
+                        Label(LocalizedStringKey(statusText), systemImage: answer.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
                             .font(DesignTokens.FontScale.caption.weight(.bold))
                             .foregroundStyle(textColor)
                     }
@@ -522,7 +523,7 @@ private struct TVFeedbackBar: View {
     var body: some View {
         HStack(spacing: DesignTokens.Spacing.xl) {
             HStack(spacing: DesignTokens.Spacing.xl) {
-                Label(resultText, systemImage: selectedAnswer.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
+                Label(LocalizedStringKey(resultText), systemImage: selectedAnswer.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(selectedAnswer.isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
                 Text(sourceText)
@@ -591,7 +592,7 @@ private struct TVTopBar: View {
     let subtitle: String
     @Binding var language: BankLanguage
     let onAbout: () -> Void
-    var leadingAction: (title: String, action: () -> Void)? = nil
+    var leadingAction: (title: LocalizedStringKey, action: () -> Void)? = nil
 
     var body: some View {
         HStack(spacing: DesignTokens.Spacing.xl) {
@@ -602,11 +603,11 @@ private struct TVTopBar: View {
                     .accessibilityHint("Returns to the category grid")
             }
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(DesignTokens.FontScale.headline.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
-                Text(subtitle)
+                Text(LocalizedStringKey(subtitle))
                     .font(DesignTokens.FontScale.body.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
             }
@@ -670,7 +671,7 @@ private struct TVAboutView: View {
 }
 
 private struct TVPaperSection<Content: View>: View {
-    let title: String
+    let title: LocalizedStringKey
     @ViewBuilder let content: () -> Content
 
     var body: some View {
@@ -694,7 +695,7 @@ private struct TVPaperSection<Content: View>: View {
 }
 
 private struct TVMessageView: View {
-    let title: String
+    let title: LocalizedStringKey
     let message: String
     let systemImage: String
 

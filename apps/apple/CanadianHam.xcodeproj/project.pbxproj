@@ -10,6 +10,7 @@
 		018B9FABEC72D0DC5202DBC0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5F42909CFD2242DE9CFD019 /* Assets.xcassets */; };
 		02D2C3FC60500A28C043164F /* AppleStudyEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76177BE24F1B7915BB916C63 /* AppleStudyEngine.swift */; };
 		06F98767DA87C95EB04ABFEF /* CanadianHamEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 94C45D93BD1BF4DF19826B39 /* CanadianHamEngine */; };
+		08BF73A02D5B4B5A42259B7E /* LocalizationCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19D0EE29F4AF58261D7F6B2C /* LocalizationCatalogTests.swift */; };
 		10FA036510A648A0BD33F258 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26CEF53E707EFDB7074F0A99 /* Assets.xcassets */; };
 		1A532FBCB03EEDAB5AD727F0 /* StudyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0390C2BF7D07DEAD8A246557 /* StudyViews.swift */; };
 		1ACC1B99ACDE3E66DE37445D /* QuestionBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */; };
@@ -47,10 +48,12 @@
 		6EE8F69155AFDCD869C6D68F /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140A13D95FE054984DF26281 /* AboutView.swift */; };
 		6EFADA5EE0B61414AA83A09D /* CanadianHamContent in Frameworks */ = {isa = PBXBuildFile; productRef = A4E736FDA05FB857B049D1C5 /* CanadianHamContent */; };
 		6F0E7D31B3B2DD3B7C2F540C /* CanadianHamVisionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C28A9D49438EBAC030569D6E /* CanadianHamVisionTests.swift */; };
+		70BBC9801C24E0B8B879ABAA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 10FA8D954031CD5F553D46A3 /* Localizable.xcstrings */; };
 		71824E1D425D494043EA0781 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */; };
 		747531E2672E2252C908D095 /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = A235069367EFC3776ADEE826 /* questions.json */; };
 		752B46FA11D4B4D51DA668B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C782F628EB577B33F58A9306 /* Assets.xcassets */; };
 		7A69A327192A249A5B2FF3AD /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */; };
+		7AC3F901ABC1A7ED3D21F3E4 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 10FA8D954031CD5F553D46A3 /* Localizable.xcstrings */; };
 		7E2869C0EF3CD0A21C072580 /* EngineShuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */; };
 		8490F17176EBB9E8968E07D0 /* QuestionBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */; };
 		883A3E64C9D89F484D72EFE5 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 641771DDA6C72AE924365999 /* manifest.json */; };
@@ -69,6 +72,7 @@
 		AF5FFCE4182F976F8E9D2D96 /* generated in Resources */ = {isa = PBXBuildFile; fileRef = 462E302776F5ECBAF29B138D /* generated */; };
 		B00FB34D312F4173BFFCF151 /* CanadianHamEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 2E108B72C914D6F8D1BF0C66 /* CanadianHamEngine */; };
 		B0482ACB36AF22C5E174F05E /* quizzes in Resources */ = {isa = PBXBuildFile; fileRef = 68B2019B8C107CCE6C8C9198 /* quizzes */; };
+		B0C7B7CAC1D226318F0900AC /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 10FA8D954031CD5F553D46A3 /* Localizable.xcstrings */; };
 		B1D73B5C5972B72A5B59CBED /* CanadianHamContent in Frameworks */ = {isa = PBXBuildFile; productRef = A9EEDAA05AD705E57A6948B6 /* CanadianHamContent */; };
 		B7DB41FE2F0E756C08A1885F /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543DA6642D20EAF6FA88693D /* Tokens.swift */; };
 		B9D65B4D05709AA74DE896F0 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
@@ -125,8 +129,10 @@
 		053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		073C44134E027E62BEC27FEC /* CanadianHamUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CanadianHamUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CE325C0851B44E13EA76E8A /* subsection-titles.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "subsection-titles.json"; sourceTree = "<group>"; };
+		10FA8D954031CD5F553D46A3 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		119AECAEDB885D3C3A535950 /* CanadianHamVision.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CanadianHamVision.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		140A13D95FE054984DF26281 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		19D0EE29F4AF58261D7F6B2C /* LocalizationCatalogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationCatalogTests.swift; sourceTree = "<group>"; };
 		1DED9AA3F205BE249BD8DC23 /* ProgressStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStore.swift; sourceTree = "<group>"; };
 		26CEF53E707EFDB7074F0A99 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2B1FBF49E8AB06030D37A8C7 /* CanadianHamTVTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CanadianHamTVTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -276,6 +282,7 @@
 		37E36FF1524FE1D4BAEBEF30 /* CanadianHamTests */ = {
 			isa = PBXGroup;
 			children = (
+				19D0EE29F4AF58261D7F6B2C /* LocalizationCatalogTests.swift */,
 				A387AB9BF7A49146142C4A66 /* ProgressStoreTests.swift */,
 				0517B98CAB6282BC63A22BB5 /* QuestionBankTests.swift */,
 			);
@@ -403,6 +410,7 @@
 			children = (
 				C5F42909CFD2242DE9CFD019 /* Assets.xcassets */,
 				8D63616999E30A9A60763F71 /* CanadianHam.macOS.entitlements */,
+				10FA8D954031CD5F553D46A3 /* Localizable.xcstrings */,
 				053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */,
 			);
 			path = Resources;
@@ -691,6 +699,8 @@
 			knownRegions = (
 				Base,
 				en,
+				fr,
+				"fr-CA",
 			);
 			mainGroup = F58AF51821D9FECE68C4F4E2;
 			minimizedProjectReferenceProxies = 1;
@@ -734,6 +744,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				10FA036510A648A0BD33F258 /* Assets.xcassets in Resources */,
+				B0C7B7CAC1D226318F0900AC /* Localizable.xcstrings in Resources */,
 				71824E1D425D494043EA0781 /* PrivacyInfo.xcprivacy in Resources */,
 				92BA95D6FCD407A66C0ED1E8 /* categories.json in Resources */,
 				883A3E64C9D89F484D72EFE5 /* manifest.json in Resources */,
@@ -755,6 +766,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				018B9FABEC72D0DC5202DBC0 /* Assets.xcassets in Resources */,
+				7AC3F901ABC1A7ED3D21F3E4 /* Localizable.xcstrings in Resources */,
 				DA8494DE030F9968C7D5505E /* PrivacyInfo.xcprivacy in Resources */,
 				3C1B7F75096DB44648DDD167 /* explanations in Resources */,
 				5C3C75763DD74FFF954E3068 /* generated in Resources */,
@@ -780,6 +792,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				752B46FA11D4B4D51DA668B7 /* Assets.xcassets in Resources */,
+				70BBC9801C24E0B8B879ABAA /* Localizable.xcstrings in Resources */,
 				7A69A327192A249A5B2FF3AD /* PrivacyInfo.xcprivacy in Resources */,
 				CD8A5A7802FF75614CC1DA0F /* categories.json in Resources */,
 				BF95B48C3152C964718844AD /* manifest.json in Resources */,
@@ -819,6 +832,7 @@
 			files = (
 				D7E320E0C9430271DF5C5CCE /* AppleStudyEngine.swift in Sources */,
 				29093220F5952D4EEFCB3282 /* EngineShuffle.swift in Sources */,
+				08BF73A02D5B4B5A42259B7E /* LocalizationCatalogTests.swift in Sources */,
 				42B335E4F445B4521F5ACA40 /* ProgressModels.swift in Sources */,
 				5A1CE4F99519795442DFAA39 /* ProgressStore.swift in Sources */,
 				4CBF95D998062361B45D4394 /* ProgressStoreTests.swift in Sources */,

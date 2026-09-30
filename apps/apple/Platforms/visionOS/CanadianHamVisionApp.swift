@@ -357,7 +357,8 @@ private struct VisionPracticeView: View {
         }
         session.answeredCount += 1
         if answer.isCorrect { session.correctCount += 1 }
-        AccessibilityNotification.Announcement(answer.isCorrect ? "Correct" : "Incorrect").post()
+        let announcement = answer.isCorrect ? String(localized: "Correct") : String(localized: "Incorrect")
+        AccessibilityNotification.Announcement(announcement).post()
     }
 
     private func loadNextQuestion() {
@@ -464,7 +465,7 @@ private struct VisionAnswerButton: View {
                         .foregroundStyle(textColor)
                         .accessibilityIdentifier("answer-\(displayLetter)-text")
                     if let statusText {
-                        Label(statusText, systemImage: answer.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
+                        Label(LocalizedStringKey(statusText), systemImage: answer.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
                             .font(DesignTokens.FontScale.caption.weight(.bold))
                             .foregroundStyle(textColor)
                     }
@@ -557,7 +558,7 @@ private struct VisionFeedbackPanel: View {
     var body: some View {
         HStack(spacing: DesignTokens.Spacing.lg) {
             HStack(spacing: DesignTokens.Spacing.lg) {
-                Label(resultText, systemImage: selectedAnswer.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
+                Label(LocalizedStringKey(resultText), systemImage: selectedAnswer.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
                     .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                     .foregroundStyle(selectedAnswer.isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
                 Text(sourceText)
@@ -660,7 +661,7 @@ private struct VisionAboutView: View {
 }
 
 private struct VisionPaperSection<Content: View>: View {
-    let title: String
+    let title: LocalizedStringKey
     @ViewBuilder let content: () -> Content
 
     var body: some View {
@@ -685,7 +686,7 @@ private struct VisionPaperSection<Content: View>: View {
 }
 
 private struct VisionMessageView: View {
-    let title: String
+    let title: LocalizedStringKey
     let message: String
     let systemImage: String
 

@@ -399,7 +399,7 @@ struct RootView: View {
     }
 
     private func categoryAccessibilityLabel(_ category: BankCategory) -> String {
-        "\(category.name.text(for: language)), \(category.questionCount) questions, \(category.subsectionCount) subsections"
+        String(localized: "\(category.name.text(for: language)), \(category.questionCount) questions, \(category.subsectionCount) subsections")
     }
 
     private func colorScheme(for theme: ApplePreferences.Theme) -> ColorScheme? {
