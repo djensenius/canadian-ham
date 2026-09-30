@@ -8,6 +8,7 @@
     "import:check": "pnpm --filter @canadian-ham/content-tools import:basic:check",
     "check:links": "node packages/content-tools/src/check-links.ts",
     "check:apple-network": "bash scripts/check-apple-no-network.sh",
+    "test:apple-network": "bash scripts/test-check-apple-no-network.sh",
     "typecheck": "pnpm -r typecheck",
     "build:web": "pnpm --filter @canadian-ham/web build"
   }
