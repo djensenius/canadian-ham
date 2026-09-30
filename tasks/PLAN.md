@@ -93,15 +93,15 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-515 | P5 | done | worker | T-011,T-513,T-514 | Wire app icons into all targets: iOS/macOS icon (Icon Composer bundle if validated), visionOS 3-layer solid image stack, tvOS layered App Icon + Top Shelf/Top Shelf Wide brand assets. |
 | T-516 | P5 | done | worker | T-011,T-012,T-206,T-501b | Apply design tokens to Apple UI; replace TempShuffle with CanadianHamEngine; performAccessibilityAudit on every screen for each platform. |
 | T-517 | P5 | done | worker | T-206 | CanadianHamContent Swift package: loaders, strict front matter, ordered lesson blocks (tables, illustration briefs), explanation note parsing, cross-validation parity with TS checkers. Follow-ups: tighter autolink pattern, ASCII-only digits in lesson IDs. |
-| T-502 | P5 | todo | worker | T-501,T-102,T-402,T-405 | Bundle generated question bank, lesson metadata, explanations, manifest, and reference assets for private development in the Apple app; public release remains gated by T-007. |
+| T-502 | P5 | done | worker | T-501,T-102,T-402,T-405 | Bundle generated question bank, lesson metadata, explanations, manifest, and reference assets for private development in the Apple app; public release remains gated by T-007. |
 | T-503 | P5 | done | worker | T-502 | Implement SwiftData local progress models for QuestionProgress, ExamAttempt, lesson progress, and preferences. |
 | T-504 | P5 | done | worker | T-502,T-206,T-503 | Implement Apple practice flow with shuffled answers, immediate feedback, and review-later mode. |
 | T-505 | P5 | done | worker | T-502,T-206,T-503,T-507 | Implement Apple mock exam flow, scoring, review, category breakdown, optional timer default off, unanswered-as-incorrect scoring, progress updates; reference viewer dropped (see T-507). |
 | T-506 | P5 | done | worker | T-503 | Implement user-initiated progress export/import JSON and reset all data. |
 | T-507 | P5 | dropped | owner | T-502 | DROPPED (owner decision): reference PDFs are not shipped in web or Apple apps; a static note says the exam provides ISED's reference sheet and lessons teach its contents. Sources stay vendored under content/sources. |
 | T-508 | P5 | todo | worker | T-506,T-507,T-504,T-505,T-509,T-510,T-512 | Add Apple no-network audit: source search, entitlement review, no third-party SDK check, and airplane-mode smoke test plan. |
-| T-509 | P5 | todo | worker | T-502 | Render platform-neutral lessons in the Apple app with metadata, body content, previous/next navigation, and module overview. |
-| T-510 | P5 | todo | worker | T-503,T-509,T-206 | Implement Apple built-in lesson quizzes with shuffled official-bank answers, local scores, and retry history. |
+| T-509 | P5 | done | worker | T-502 | Render platform-neutral lessons in the Apple app with metadata, body content, previous/next navigation, and module overview. |
+| T-510 | P5 | done | worker | T-503,T-509,T-206 | Implement Apple built-in lesson quizzes with shuffled official-bank answers, local scores, and retry history. |
 | T-511 | P5 | todo | worker | T-508,T-509,T-510,T-512 | Run Apple app tests/build through `xbuild`; record command and result in task review notes. |
 | T-512 | P5 | done | worker | T-503,T-206,T-208,T-504,T-505 | Implement Apple weak-area and due-review practice scopes plus readiness guidance using local SwiftData progress and shared readiness fixtures; exclude unseen questions from due scope/count; show `not-enough-data` for a new user with fewer than two exams. |
 | T-601 | P6 | todo | worker | T-313,T-511 | Run accessibility audit for web and Apple; fix labels, keyboard/VoiceOver navigation, dynamic text, contrast, and non-colour indicators. |
