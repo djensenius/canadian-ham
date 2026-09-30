@@ -606,8 +606,13 @@ struct MockExamView: View {
     @State private var isSubmitting = false
     @State private var timerStatus = String(localized: "Timer off")
     @State private var showingNavigator = false
+    @AccessibilityFocusState private var resultFocus: MockExamAccessibilityFocus?
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    private enum MockExamAccessibilityFocus: Hashable {
+        case resultsHeading
+    }
 
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -692,6 +697,12 @@ struct MockExamView: View {
             .paperCard()
 
             QuestionCard(question: question, language: language)
+                .accessibilityAction(named: Text("Next unanswered")) {
+                    jumpToNextUnanswered()
+                }
+                .accessibilityAction(named: Text("Next flagged")) {
+                    jumpToNextFlagged()
+                }
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                 Text("Answers")
                     .font(DesignTokens.FontScale.title.weight(.bold))
@@ -774,16 +785,19 @@ struct MockExamView: View {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 flagButton(questionID: questionID)
                 questionsButton
+                quickJumpControls
             }
         } else {
             ViewThatFits(in: .horizontal) {
                 HStack(spacing: DesignTokens.Spacing.sm) {
                     flagButton(questionID: questionID)
                     questionsButton
+                    quickJumpControls
                 }
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                     flagButton(questionID: questionID)
                     questionsButton
+                    quickJumpControls
                 }
             }
         }
@@ -806,6 +820,45 @@ struct MockExamView: View {
             .buttonStyle(AccessibleSecondaryButtonStyle())
             .accessibilityIdentifier("mock-questions-button")
         }
+    }
+
+    @ViewBuilder
+    private var quickJumpControls: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                nextUnansweredButton
+                nextFlaggedButton
+            }
+        } else {
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: DesignTokens.Spacing.sm) {
+                    nextUnansweredButton
+                    nextFlaggedButton
+                }
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                    nextUnansweredButton
+                    nextFlaggedButton
+                }
+            }
+        }
+    }
+
+    private var nextUnansweredButton: some View {
+        Button { jumpToNextUnanswered() } label: {
+            AccessibleSecondaryButtonLabel(title: "Next unanswered")
+        }
+        .buttonStyle(AccessibleSecondaryButtonStyle())
+        .disabled(nextUnansweredIndex == nil)
+        .accessibilityIdentifier("mock-next-unanswered-button")
+    }
+
+    private var nextFlaggedButton: some View {
+        Button { jumpToNextFlagged() } label: {
+            AccessibleSecondaryButtonLabel(title: "Next flagged")
+        }
+        .buttonStyle(AccessibleSecondaryButtonStyle())
+        .disabled(nextFlaggedIndex == nil)
+        .accessibilityIdentifier("mock-next-flagged-button")
     }
 
     @ViewBuilder
@@ -832,6 +885,7 @@ struct MockExamView: View {
                 .font(DesignTokens.FontScale.title.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
+            quickJumpControls
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 48), spacing: DesignTokens.Spacing.sm)], spacing: DesignTokens.Spacing.sm) {
                 ForEach(generatedItems.indices, id: \.self) { index in
                     let item = generatedItems[index]
@@ -879,6 +933,43 @@ struct MockExamView: View {
         return DesignTokens.Colors.border
     }
 
+    private var nextUnansweredIndex: Int? {
+        nextIndex { item in
+            selectedByQuestionId[item.questionId] == nil
+        }
+    }
+
+    private var nextFlaggedIndex: Int? {
+        nextIndex { item in
+            flagged.contains(item.questionId)
+        }
+    }
+
+    private func nextIndex(matching predicate: (GeneratedExamItem) -> Bool) -> Int? {
+        guard !generatedItems.isEmpty else { return nil }
+        for offset in 1..<generatedItems.count {
+            let index = (currentIndex + offset) % generatedItems.count
+            if predicate(generatedItems[index]) {
+                return index
+            }
+        }
+        return nil
+    }
+
+    private func jumpToNextUnanswered() {
+        if let nextUnansweredIndex {
+            currentIndex = nextUnansweredIndex
+            showingNavigator = false
+        }
+    }
+
+    private func jumpToNextFlagged() {
+        if let nextFlaggedIndex {
+            currentIndex = nextFlaggedIndex
+            showingNavigator = false
+        }
+    }
+
     private var submitConfirmationText: String {
         let unanswered = generatedItems.filter { selectedByQuestionId[$0.questionId] == nil }
         let listed = unanswered.prefix(10).map { String($0.position) }.joined(separator: ", ")
@@ -897,6 +988,7 @@ struct MockExamView: View {
                     .font(DesignTokens.FontScale.headline.weight(.bold))
                     .foregroundStyle(attempt.score.passed ? DesignTokens.Colors.correctText : DesignTokens.Colors.warningText)
                     .accessibilityAddTraits(.isHeader)
+                    .accessibilityFocused($resultFocus, equals: .resultsHeading)
                 Text("Score: \(attempt.score.correct) / \(attempt.score.total) (\(attempt.score.percent, format: .number.precision(.fractionLength(0...1)))%). Pass is 70%; honours is 80%.")
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
@@ -1006,9 +1098,24 @@ struct MockExamView: View {
             result = attempt
             timerRunning = false
             onDataChanged()
+            let announcement = mockExamSubmissionAnnouncement(for: attempt)
+            Task { @MainActor in
+                resultFocus = .resultsHeading
+                AccessibilityNotification.Announcement(announcement).post()
+            }
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to save mock exam: \("")"), detail: error)
         }
+    }
+
+    private func mockExamSubmissionAnnouncement(for attempt: StoredExamAttempt) -> String {
+        let status = attempt.score.honours ? String(localized: "Basic with Honours") : attempt.score.passed ? String(localized: "Pass") : String(localized: "Needs review")
+        return String.localizedStringWithFormat(
+            String(localized: "Mock exam submitted. %@, %lld of %lld."),
+            status,
+            Int64(attempt.score.correct),
+            Int64(attempt.score.total)
+        )
     }
 
     private func toggleFlag(_ questionId: String) {

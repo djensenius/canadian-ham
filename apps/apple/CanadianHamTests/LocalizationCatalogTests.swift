@@ -48,6 +48,15 @@ final class LocalizationCatalogTests: XCTestCase {
         XCTAssertEqual(localizedUnansweredQuestionCount(1, bundle: frenchBundle, locale: locale), "1 question sans réponse comptera comme incorrecte.")
         XCTAssertEqual(localizedUnansweredQuestionCount(2, bundle: frenchBundle, locale: locale), "2 questions sans réponse compteront comme incorrectes.")
 
+        let mockExamSubmittedFormat = frenchBundle.localizedString(forKey: "Mock exam submitted. %@, %lld of %lld.", value: nil, table: nil)
+        let passStatus = frenchBundle.localizedString(forKey: "Pass", value: nil, table: nil)
+        XCTAssertEqual(
+            String(format: mockExamSubmittedFormat, locale: locale, passStatus, Int64(82), Int64(100)),
+            "Examen simulé soumis. Réussite, 82 sur 100."
+        )
+        XCTAssertEqual(frenchBundle.localizedString(forKey: "Next unanswered", value: nil, table: nil), "Question sans réponse suivante")
+        XCTAssertEqual(frenchBundle.localizedString(forKey: "Next flagged", value: nil, table: nil), "Question marquée suivante")
+
         XCTAssertEqual(
             String(localized: "Immediate feedback", bundle: frenchBundle, locale: locale),
             "Rétroaction immédiate"
