@@ -78,7 +78,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     func testLearnUserNavigationOpensLessonQuiz() throws {
         XCUIDevice.shared.appearance = .light
-        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "learn"])
+#if os(iOS)
+        XCUIDevice.shared.orientation = .landscapeLeft
+        defer { XCUIDevice.shared.orientation = .portrait }
+#endif
+        let app = launchApp(arguments: ["-CanadianHamForceRegularHorizontalSizeClass"])
+        XCTAssertTrue(app.descendants(matching: .any)["root-sidebar"].firstMatch.waitForExistence(timeout: 10))
+        tap("Learn", in: app)
         XCTAssertTrue(app.staticTexts["Learn"].firstMatch.waitForExistence(timeout: 10))
 
         tap("Open module", in: app)
