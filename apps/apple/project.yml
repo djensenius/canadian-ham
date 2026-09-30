@@ -58,10 +58,6 @@ targets:
         type: file
         buildPhase: resources
         createIntermediateGroups: false
-      - path: ../../content/sources/ised/basic-2025-07-15/reference
-        type: folder
-        buildPhase: resources
-        createIntermediateGroups: false
     dependencies:
       - package: CanadianHamEngine
         product: CanadianHamEngine
@@ -110,10 +106,6 @@ targets:
         createIntermediateGroups: false
       - path: ../../content/subsection-titles.json
         type: file
-        buildPhase: resources
-        createIntermediateGroups: false
-      - path: ../../content/sources/ised/basic-2025-07-15/reference
-        type: folder
         buildPhase: resources
         createIntermediateGroups: false
     dependencies:

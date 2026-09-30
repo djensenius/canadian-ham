@@ -99,17 +99,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["explanation-panel"].firstMatch.waitForExistence(timeout: 5), "Immediate feedback should include the authored explanation")
     }
 
-    func testReferenceViewerOpensAndClosesFromMockExam() throws {
-        XCUIDevice.shared.appearance = .light
-        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "mock"])
-        XCTAssertTrue(app.staticTexts["Mock exam"].waitForExistence(timeout: 10))
-        scrollAndTap("Exam reference sheet", in: app)
-        let close = app.buttons["close"].firstMatch
-        XCTAssertTrue(close.waitForExistence(timeout: 10), "Quick Look should open the bundled exam reference PDF")
-        close.tap()
-        XCTAssertTrue(app.staticTexts["Mock exam"].waitForExistence(timeout: 5))
-    }
-
     func testPracticeImmediateFeedbackKeepsStateAfterFirstAnswer() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
@@ -410,11 +399,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
         answerFirstVisibleQuizAnswer(in: app)
         XCTAssertTrue(app.descendants(matching: .any)["lesson-quiz-feedback"].firstMatch.waitForExistence(timeout: 5) || app.descendants(matching: .any)["answer-feedback"].firstMatch.waitForExistence(timeout: 1))
         try performAudit(on: app, context: "\(appearance.rawValue) lesson quiz answered")
-        app.terminate()
-
-        app = launchApp(arguments: ["-CanadianHamInitialScreen", "mock"])
-        XCTAssertTrue(app.staticTexts["Mock exam"].waitForExistence(timeout: 10))
-        try performAudit(on: app, context: "\(appearance.rawValue) reference sheet controls")
         app.terminate()
     }
 

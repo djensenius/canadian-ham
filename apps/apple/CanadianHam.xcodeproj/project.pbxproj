@@ -51,12 +51,10 @@
 		747531E2672E2252C908D095 /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = A235069367EFC3776ADEE826 /* questions.json */; };
 		752B46FA11D4B4D51DA668B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C782F628EB577B33F58A9306 /* Assets.xcassets */; };
 		7A69A327192A249A5B2FF3AD /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */; };
-		7DE4515F0825E081039DCA71 /* reference in Resources */ = {isa = PBXBuildFile; fileRef = 4BE92D886DFE65F226D82B93 /* reference */; };
 		7E2869C0EF3CD0A21C072580 /* EngineShuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */; };
 		8490F17176EBB9E8968E07D0 /* QuestionBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */; };
 		883A3E64C9D89F484D72EFE5 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 641771DDA6C72AE924365999 /* manifest.json */; };
 		8A06B7AF447073AD26DAC6E9 /* QuestionBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */; };
-		8CA88B8884DB7671655DE8D7 /* reference in Resources */ = {isa = PBXBuildFile; fileRef = 4BE92D886DFE65F226D82B93 /* reference */; };
 		916F171C8628700ACA3A58E0 /* EngineShuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */; };
 		92BA95D6FCD407A66C0ED1E8 /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 5B61FF08B59BD2425E771B49 /* categories.json */; };
 		93A17F0A518F9EFA2B532E3A /* LaunchArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAE5A136902875D58354C00 /* LaunchArguments.swift */; };
@@ -138,7 +136,6 @@
 		3E31A65DF43C45C6F15475C7 /* LearnViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnViews.swift; sourceTree = "<group>"; };
 		41444275857B5CF1758CE3B6 /* CanadianHamPracticeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamPracticeUITests.swift; sourceTree = "<group>"; };
 		462E302776F5ECBAF29B138D /* generated */ = {isa = PBXFileReference; lastKnownFileType = folder; name = generated; path = ../../content/generated; sourceTree = SOURCE_ROOT; };
-		4BE92D886DFE65F226D82B93 /* reference */ = {isa = PBXFileReference; lastKnownFileType = folder; name = reference; path = "../../content/sources/ised/basic-2025-07-15/reference"; sourceTree = SOURCE_ROOT; };
 		4EF15EA3BC012EB6FC4367D8 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		543DA6642D20EAF6FA88693D /* Tokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tokens.swift; sourceTree = "<group>"; };
 		5B61FF08B59BD2425E771B49 /* categories.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = categories.json; sourceTree = "<group>"; };
@@ -452,7 +449,6 @@
 				462E302776F5ECBAF29B138D /* generated */,
 				EF0A093E186AB771F904629B /* lessons */,
 				68B2019B8C107CCE6C8C9198 /* quizzes */,
-				4BE92D886DFE65F226D82B93 /* reference */,
 				92AC9D1337CAB361B9C569D0 /* basic-2025-07-15 */,
 				422FFD741E4ECB957A502A3D /* CanadianHam */,
 				37E36FF1524FE1D4BAEBEF30 /* CanadianHamTests */,
@@ -729,7 +725,6 @@
 				AF5FFCE4182F976F8E9D2D96 /* generated in Resources */,
 				CBBD854076689D0E6F2EE822 /* lessons in Resources */,
 				9DD26BBE2A0EFA8F53C536CF /* quizzes in Resources */,
-				8CA88B8884DB7671655DE8D7 /* reference in Resources */,
 				2F050C4A4E0713BC8DA97210 /* subsection-titles.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -765,7 +760,6 @@
 				5C3C75763DD74FFF954E3068 /* generated in Resources */,
 				C35F4DB3660A226431C7A5B4 /* lessons in Resources */,
 				B0482ACB36AF22C5E174F05E /* quizzes in Resources */,
-				7DE4515F0825E081039DCA71 /* reference in Resources */,
 				405BC94A2E3B2953E7FD1C5C /* subsection-titles.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

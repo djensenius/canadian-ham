@@ -1,7 +1,6 @@
 import Accessibility
 import CanadianHamEngine
 import Combine
-import QuickLook
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -558,7 +557,6 @@ struct MockExamView: View {
     @State private var confirmingSubmit = false
     @State private var isSubmitting = false
     @State private var timerStatus = "Timer off"
-    @State private var referenceSheetURL: URL?
 
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -586,7 +584,6 @@ struct MockExamView: View {
                 timerStatus = "Timer running, \(secondsElapsed) seconds elapsed"
             }
         }
-        .quickLookPreview($referenceSheetURL)
         .alert("Submit mock exam?", isPresented: $confirmingSubmit) {
             Button("Cancel", role: .cancel) {}
             Button("Submit", role: .destructive) { submitExam() }
@@ -604,10 +601,9 @@ struct MockExamView: View {
             Text("Generate 100 shared-engine questions: one from each subsection, shuffled by seed. The optional timer is off by default.")
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
-            Text("The bundled ISED exam reference material PDF is available offline from this screen.")
-                .font(DesignTokens.FontScale.caption)
-                .foregroundStyle(DesignTokens.Colors.inkMuted)
-            ReferenceSheetButton(kind: .exam, previewURL: $referenceSheetURL)
+            Text("In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.")
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
             tokenButton("Start mock exam") { startExam() }
                 .accessibilityIdentifier("start-mock-exam-button")
         }
@@ -676,13 +672,11 @@ struct MockExamView: View {
 
             navigator
 
-            HStack {
-                ReferenceSheetButton(kind: .exam, previewURL: $referenceSheetURL)
-                Button("Submit exam") { confirmingSubmit = true }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(isSubmitting)
-                    .accessibilityIdentifier("submit-mock-exam-button")
-            }
+            Button("Submit exam") { confirmingSubmit = true }
+                .buttonStyle(.borderedProminent)
+                .disabled(isSubmitting)
+                .tint(DesignTokens.Colors.accent)
+                .accessibilityIdentifier("submit-mock-exam-button")
         }
     }
 
@@ -886,7 +880,6 @@ struct SettingsView: View {
     @State private var pendingImport: ProgressExportV1?
     @State private var confirmingImport = false
     @State private var confirmingReset = false
-    @State private var referenceSheetURL: URL?
 
     var body: some View {
         ScrollView {
@@ -941,10 +934,6 @@ struct SettingsView: View {
                         tokenButton("Import progress JSON") { showingImporter = true }
                         tokenButton("Reset all data") { confirmingReset = true }
                     }
-                    HStack {
-                        ReferenceSheetButton(kind: .study, previewURL: $referenceSheetURL)
-                        ReferenceSheetButton(kind: .exam, previewURL: $referenceSheetURL)
-                    }
                     Text("Active bank: \(bank.manifest.bankId), effective \(bank.manifest.effectiveDate).")
                         .font(DesignTokens.FontScale.caption)
                         .foregroundStyle(DesignTokens.Colors.inkMuted)
@@ -969,7 +958,6 @@ struct SettingsView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Settings")
-        .quickLookPreview($referenceSheetURL)
         .fileExporter(isPresented: $showingExporter, document: exportDocument, contentType: .json, defaultFilename: "canadian-ham-progress.json") { result in
             switch result {
             case .success: statusMessage = "Progress export prepared."

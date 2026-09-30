@@ -1,6 +1,5 @@
 import CanadianHamContent
 import CanadianHamEngine
-import QuickLook
 import SwiftUI
 
 private let rbr4CitationURL = "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service"
@@ -16,27 +15,6 @@ extension EnvironmentValues {
     }
 }
 
-enum ReferenceSheetKind: String, Identifiable, Sendable {
-    case study
-    case exam
-
-    var id: String { rawValue }
-
-    var title: String {
-        switch self {
-        case .study: "Study reference sheet"
-        case .exam: "Exam reference sheet"
-        }
-    }
-
-    var fileName: String {
-        switch self {
-        case .study: "Reference Material for Amateur Radio Training Basic EN 2025"
-        case .exam: "Reference Material for Amateur Radio Exam Basic EN 2025"
-        }
-    }
-}
-
 struct LearnView: View {
     let library: ContentLibrary
     let bank: QuestionBank
@@ -47,7 +25,6 @@ struct LearnView: View {
 
     @State private var lessonProgress: [LessonProgressRecord] = []
     @State private var errorMessage: String?
-    @State private var referenceSheetURL: URL?
 
     var body: some View {
         ScrollView {
@@ -63,10 +40,9 @@ struct LearnView: View {
                     Text("Study the eight modules in order. Lessons are currently authored in English, matching the web app; official practice questions still use the language picker.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
-                    HStack {
-                        ReferenceSheetButton(kind: .study, previewURL: $referenceSheetURL)
-                        ReferenceSheetButton(kind: .exam, previewURL: $referenceSheetURL)
-                    }
+                    Text("In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.")
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
                 }
                 .paperCard()
 
@@ -84,7 +60,6 @@ struct LearnView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Learn")
-        .quickLookPreview($referenceSheetURL)
         .task(id: revision) { refreshProgress() }
     }
 
@@ -1083,33 +1058,6 @@ struct ExplanationPanelView: View {
             Text(citation.id ?? citation.type)
                 .font(DesignTokens.FontScale.caption)
         }
-    }
-}
-
-struct ReferenceSheetButton: View {
-    let kind: ReferenceSheetKind
-    @Binding var previewURL: URL?
-
-    var body: some View {
-        Button { previewURL = ReferenceSheetLocator.url(for: kind) } label: {
-            Text(kind.title)
-                .font(DesignTokens.FontScale.body.weight(.semibold))
-        }
-        .buttonStyle(.bordered)
-            .tint(DesignTokens.Colors.ink)
-            .accessibilityHint("Opens the bundled PDF in Quick Look")
-    }
-}
-
-enum ReferenceSheetLocator {
-    static func url(for kind: ReferenceSheetKind, bundle: Bundle = .main) -> URL? {
-        let file = kind.fileName
-        let candidates = [
-            bundle.url(forResource: file, withExtension: "pdf"),
-            bundle.resourceURL?.appendingPathComponent("reference", isDirectory: true).appendingPathComponent("\(file).pdf"),
-            bundle.resourceURL?.appendingPathComponent("content/sources/ised/basic-2025-07-15/reference", isDirectory: true).appendingPathComponent("\(file).pdf")
-        ].compactMap { $0 }
-        return candidates.first { FileManager.default.fileExists(atPath: $0.path(percentEncoded: false)) }
     }
 }
 

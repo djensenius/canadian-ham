@@ -10,12 +10,12 @@ SwiftUI multiplatform first slice for iPhone, iPad, and Mac. The app is generate
   - `Models/` — decodable question-bank models matching `content/generated/basic-2025-07-15/*.json`, plus SwiftData progress models.
   - `Services/` — bundled JSON loading, SwiftData progress storage, export/import validation, and Apple adapters over `CanadianHamEngine`.
   - `Practice/EngineShuffle.swift` — adapter from the app models to the shared Swift practice/exam engine in `packages/engine-swift`.
-  - `Views/` — SwiftUI Home/readiness, Learn lesson reader/quizzes/PDF reference viewer, Practice, Mock exam, Settings/export-import-reset, and About views.
+  - `Views/` — SwiftUI Home/readiness, Learn lesson reader/quizzes, Practice, Mock exam, Settings/export-import-reset, and About views.
   - `Resources/` — privacy manifest and macOS sandbox entitlements.
 - `CanadianHamTests/` — unit tests for bundled content decoding and answer shuffling.
 - `CanadianHamUITests/` — XCUITests for iPhone practice, subsection practice, settings reset, mock exams, split-view state persistence, and accessibility audits.
 
-The generated Basic 2025 question-bank files, lesson Markdown, explanation JSON, lesson quizzes, subsection titles, and reference PDFs are referenced from `project.yml` under `../../content/` and copied into app/test bundles by the build; they are not duplicated under `apps/apple/`. The iOS/iPadOS/macOS app target depends on the local `packages/content-swift` package (`CanadianHamContent`) to load and validate that bundled content offline. tvOS/visionOS targets stay on their existing shared question-bank resources.
+The generated Basic 2025 question-bank files, lesson Markdown, explanation JSON, lesson quizzes, and subsection titles are referenced from `project.yml` under `../../content/` and copied into app/test bundles by the build; they are not duplicated under `apps/apple/`. ISED source reference-sheet files are not bundled in the Apple app. The iOS/iPadOS/macOS app target depends on the local `packages/content-swift` package (`CanadianHamContent`) to load and validate that bundled content offline. tvOS/visionOS targets stay on their existing shared question-bank resources.
 
 ## Open and regenerate
 
@@ -50,9 +50,9 @@ Current implemented flows for iPhone, iPad, and Mac:
 - Home readiness card using `CanadianHamEngine.computeReadiness` and local mock-exam/due-review records.
 - Practice scopes for all questions, categories, subsections, weak areas, and due review; due review excludes unseen questions.
 - Immediate-feedback and review-later preferences, with progress updates routed through `CanadianHamEngine.applyAnswer` using explicit canonical timestamps.
-- Learn modules M1–M8 with native lesson rendering, local read progress, lesson quizzes, authored explanations, and bundled PDF reference-sheet access.
+- Learn modules M1–M8 with native lesson rendering, local read progress, lesson quizzes, authored explanations, and a static note explaining that the real exam supplies ISED's reference sheet.
 - Lesson quizzes open on a dedicated Apple quiz screen from the lesson action row and lesson quiz card as a platform adaptation of the web inline quiz.
-- Mock exam generation via `CanadianHamEngine.generateExam(requireFullMockExam: true)`, visible seed, question navigator, flag-for-review, submit confirmation, results, category breakdown, wrong-answer review, and bundled offline exam reference-sheet access.
+- Mock exam generation via `CanadianHamEngine.generateExam(requireFullMockExam: true)`, visible seed, question navigator, flag-for-review, submit confirmation, results, category breakdown, wrong-answer review, and a static note explaining that the real exam supplies ISED's reference sheet.
 - Settings export/import/reset. Export JSON uses the web progress schema (`canadian-ham.progress-export`, version 1); import validates canonical timestamps, known question/lesson/quiz IDs, lesson-quiz question subsets, Leitner box range, and duplicate `submittedAt` values before replacement.
 
 ## Accessibility audit tests
@@ -62,20 +62,12 @@ The default iOS UI suite includes deterministic accessibility regressions that r
 - Home/readiness;
 - Practice hub, unanswered practice, answered practice, and practice review;
 - Mock exam start, question navigator/timer, answered/flagged navigator state, and results;
-- Learn module list, lesson reader, lesson quiz answered state, and reference viewer;
+- Learn module list, lesson reader, and lesson quiz answered state;
 - Settings;
 - About;
 - Store recovery.
 
-The heavier T-516 diagnostic harness (screenshots and raw audit findings) is skipped by default. Run it only when collecting accessibility evidence. UI tests also use DEBUG-only launch arguments such as `-CanadianHamForceRegularHorizontalSizeClass` to exercise split-view state on an iPhone simulator:
-
-```sh
-CANADIAN_HAM_RUN_A11Y_DIAGNOSTICS=1 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testA11yDiagnosticsEvidenceHarness test CODE_SIGNING_ALLOWED=NO
-apps/apple/scripts/export_a11y_evidence.sh /path/to/Test-CanadianHam-....xcresult
-apps/apple/scripts/measure_a11y_contrast.py apps/apple/docs/a11y-evidence
-```
-
-Do not commit refreshed `apps/apple/docs/a11y-evidence/` output unless the diagnostic was intentionally run for an evidence update.
+UI tests also use DEBUG-only launch arguments such as `-CanadianHamForceRegularHorizontalSizeClass` to exercise split-view state on an iPhone simulator. Do not commit refreshed `apps/apple/docs/a11y-evidence/` output unless an evidence update was intentionally requested.
 
 ## Privacy posture
 

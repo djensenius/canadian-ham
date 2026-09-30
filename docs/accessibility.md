@@ -108,7 +108,6 @@ The mock exam timer is optional and off by default.
 ### Apple
 
 - XCUITest runs `performAccessibilityAudit` on every screen when screen UI exists.
-- Bundled fixed-layout reference PDFs open with system Quick Look; app audits cover the launch controls rather than PDF page contents.
 - A largest-Dynamic-Type UI run validates no clipped essential text and no unreachable actions.
 - VoiceOver manual smoke covers practice, mock exam, results, lessons, import/export, and reset.
 
