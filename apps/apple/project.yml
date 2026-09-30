@@ -127,6 +127,8 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
         SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
+        BUNDLE_LOADER[sdk=macosx*]: $(TEST_HOST)
+        TEST_HOST[sdk=macosx*]: $(BUILT_PRODUCTS_DIR)/CanadianHam.app/Contents/MacOS/CanadianHam
   CanadianHamUITests:
     type: bundle.ui-testing
     platform: auto
