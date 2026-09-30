@@ -13,7 +13,7 @@ struct AboutView: View {
                 paperSection("Bank") {
                     Text("Active bank: \(bank.manifest.bankId)")
                     Text("Effective date: \(bank.manifest.effectiveDate)")
-                    Text("Questions: \(bank.questions.count) • Categories: \(bank.categories.count) • Subsections: \(bank.subsections.count)")
+                    Text("Questions: \(bank.questions.count) • Categories: \(bank.categories.count) • Subsections: \(bank.subsections.count)") // l10n: localized
                 }
 
                 paperSection("Attribution and development status") {

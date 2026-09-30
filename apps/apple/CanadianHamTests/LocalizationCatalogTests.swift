@@ -41,17 +41,16 @@ final class LocalizationCatalogTests: XCTestCase {
         XCTAssertEqual(localizedQuestionCount(1, bundle: frenchBundle, locale: locale), "1 question")
         XCTAssertEqual(localizedQuestionCount(2, bundle: frenchBundle, locale: locale), "2 questions")
 
+        XCTAssertEqual(localizedUnansweredQuestionCount(0, bundle: frenchBundle, locale: locale), "0 question sans réponse comptera comme incorrecte.")
+        XCTAssertEqual(localizedUnansweredQuestionCount(1, bundle: frenchBundle, locale: locale), "1 question sans réponse comptera comme incorrecte.")
+        XCTAssertEqual(localizedUnansweredQuestionCount(2, bundle: frenchBundle, locale: locale), "2 questions sans réponse compteront comme incorrectes.")
+
         XCTAssertEqual(
             String(localized: "Immediate feedback", bundle: frenchBundle, locale: locale),
             "Rétroaction immédiate"
         )
 
         XCTAssertEqual(localizedAnsweredOutOfTotal(answered: 3, total: 100), "Answered 3 of 100")
-    }
-
-    private func localizedQuestionCount(_ count: Int, bundle: Bundle, locale: Locale) -> String {
-        let format = String(localized: "%lld questions", bundle: bundle, locale: locale)
-        return String.localizedStringWithFormat(format, Int64(count))
     }
 
     private static func hasTranslatedValue(_ rawLocalization: Any?) -> Bool {

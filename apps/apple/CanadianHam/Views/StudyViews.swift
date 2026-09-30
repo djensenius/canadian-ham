@@ -113,7 +113,7 @@ struct HomeView: View {
             summary = HomeSummary(readiness: readiness, dueReviewCount: try dueCount(records: progress, now: now), weakSubsectionCount: weak.count, completedExamCount: attempts.count)
             errorMessage = nil
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
         }
     }
 }
@@ -455,7 +455,7 @@ struct PracticeSessionView: View {
                         .font(DesignTokens.FontScale.body.weight(.semibold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                     PracticeFeedback(question: item.question, selectedSourceIndex: selectedByQuestionId[item.question.id], language: language, choicePermutation: item.choicePermutation)
-                    Text("Category \(item.question.categoryId) • Subsection \(item.question.subsectionId).")
+                    Text("Category \(item.question.categoryId) • Subsection \(item.question.subsectionId).") // l10n: localized
                         .font(DesignTokens.FontScale.caption)
                         .foregroundStyle(DesignTokens.Colors.inkMuted)
                 }
@@ -501,7 +501,7 @@ struct PracticeSessionView: View {
             correctCount = 0
             errorMessage = nil
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
             items = []
         }
     }
@@ -684,7 +684,7 @@ struct MockExamView: View {
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
-                Text("\(localizedAnsweredOutOfTotal(answered: selectedByQuestionId.count, total: generatedItems.count)). \(timerStatus).")
+                Text("\(localizedAnsweredOutOfTotal(answered: selectedByQuestionId.count, total: generatedItems.count)). \(timerStatus).") // l10n: localized
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
                 examHeaderControls(questionID: question.id)
@@ -885,7 +885,7 @@ struct MockExamView: View {
         if unanswered.isEmpty {
             return String(localized: "All questions are answered. You can submit now.")
         }
-        let unansweredText = String.localizedStringWithFormat(String(localized: "%lld unanswered questions count as incorrect."), unanswered.count)
+        let unansweredText = localizedUnansweredQuestionCount(unanswered.count)
         let suffix = unanswered.count > 10 ? ", …" : ""
         return String(localized: "\(unansweredText) Unanswered positions: \(listed)\(suffix).")
     }
@@ -929,7 +929,7 @@ struct MockExamView: View {
                 ForEach(attempt.items.filter { $0.selectedSourceIndex != 0 }) { item in
                     if let question = bank.question(id: item.questionId) {
                         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                            Text("\(item.position). \(question.id)")
+                            Text(verbatim: "\(item.position). \(question.id)") // l10n: verbatim
                                 .font(DesignTokens.FontScale.body.monospaced())
                             Text(localized(question.text.text(for: language), language: language)) // l10n: content(question)
                                 .font(DesignTokens.FontScale.body)
@@ -974,7 +974,7 @@ struct MockExamView: View {
             result = nil
             errorMessage = nil
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
         }
     }
 
@@ -1074,7 +1074,12 @@ struct SettingsView: View {
                         set: { language in savePreferences { $0.language = language } }
                     )) {
                         ForEach(BankLanguage.allCases) { language in
-                            Text(localized(language.displayName, language: language)).tag(language) // l10n: content(language)
+                            switch language {
+                            case .english:
+                                Text(localized(language.displayName, language: .english)).tag(language) // l10n: content(en)
+                            case .french:
+                                Text(localized(language.displayName, language: .french)).tag(language) // l10n: content(fr)
+                            }
                         }
                     }
                 }
@@ -1120,7 +1125,7 @@ struct SettingsView: View {
         .fileExporter(isPresented: $showingExporter, document: exportDocument, contentType: .json, defaultFilename: "canadian-ham-progress.json") { result in
             switch result {
             case .success: statusMessage = String(localized: "Progress export prepared.")
-            case .failure(let error): errorMessage = error.localizedDescription
+            case .failure(let error): errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
             }
         }
         .fileImporter(isPresented: $showingImporter, allowedContentTypes: [.json]) { result in
@@ -1149,7 +1154,7 @@ struct SettingsView: View {
             errorMessage = nil
             onDataChanged()
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
         }
     }
 
@@ -1159,7 +1164,7 @@ struct SettingsView: View {
             exportDocument = ProgressExportDocument(text: text)
             showingExporter = true
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
         }
     }
 
@@ -1178,7 +1183,7 @@ struct SettingsView: View {
                 errorMessage = errors.joined(separator: "\n")
             }
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
         }
     }
 
@@ -1191,7 +1196,7 @@ struct SettingsView: View {
             errorMessage = nil
             onDataChanged()
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
         }
     }
 
@@ -1202,7 +1207,7 @@ struct SettingsView: View {
             errorMessage = nil
             onDataChanged()
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
         }
     }
 }
@@ -1413,13 +1418,13 @@ struct PracticeFeedback: View {
                 .foregroundStyle(isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
                 .accessibilityIdentifier("answer-feedback-title")
             if !isCorrect, let correct = question.answers.first(where: { $0.sourceIndex == 0 }) {
-                Text("Correct answer: \(correct.text.text(for: language))")
+                Text(correctAnswerText(correct)) // l10n: content(question)
                     .font(DesignTokens.FontScale.body.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.incorrectText)
                     .textSelection(.enabled)
                     .accessibilityIdentifier("answer-feedback-correct-answer")
             }
-            Text("Source: \(question.categoryId) • \(question.subsectionId).")
+            Text("Source: \(question.categoryId) • \(question.subsectionId).") // l10n: localized
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText)
                 .accessibilityIdentifier("answer-feedback-source")
@@ -1432,6 +1437,12 @@ struct PracticeFeedback: View {
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("answer-feedback")
     }
+
+    private func correctAnswerText(_ answer: BankAnswer) -> AttributedString {
+        var text = AttributedString(String(localized: "Correct answer: "))
+        text += localized(answer.text.text(for: language), language: language)
+        return text
+    }
 }
 
 private struct SubsectionCard: View {
@@ -1443,7 +1454,7 @@ private struct SubsectionCard: View {
             Text(title) // l10n: content(question)
                 .font(DesignTokens.FontScale.body.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
-            Text(verbatim: "\(localizedQuestionCount(subsection.questionCount)) • \(subsection.id)")
+            Text(verbatim: "\(localizedQuestionCount(subsection.questionCount)) • \(subsection.id)") // l10n: verbatim
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
         }
@@ -1462,7 +1473,7 @@ private struct CategoryCard: View {
             Text(localized(category.name.text(for: language), language: language)) // l10n: content(question)
                 .font(DesignTokens.FontScale.body.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
-            Text(verbatim: "\(localizedQuestionCount(category.questionCount)) • \(localizedSubsectionCount(category.subsectionCount))")
+            Text(verbatim: "\(localizedQuestionCount(category.questionCount)) • \(localizedSubsectionCount(category.subsectionCount))") // l10n: verbatim
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
         }
@@ -1546,8 +1557,14 @@ func localizedAnsweredOutOfTotal(answered: Int, total: Int) -> String {
     String.localizedStringWithFormat(String(localized: "Answered %lld of %lld"), answered, total)
 }
 
-private func localizedQuestionCount(_ count: Int) -> String {
-    String.localizedStringWithFormat(String(localized: "%lld questions"), count)
+func localizedQuestionCount(_ count: Int, bundle: Bundle = .main, locale: Locale = .current) -> String {
+    let format = String(localized: "%lld questions", bundle: bundle, locale: locale)
+    return String.localizedStringWithFormat(format, Int64(count))
+}
+
+func localizedUnansweredQuestionCount(_ count: Int, bundle: Bundle = .main, locale: Locale = .current) -> String {
+    let format = String(localized: "%lld unanswered questions count as incorrect.", bundle: bundle, locale: locale)
+    return String.localizedStringWithFormat(format, Int64(count))
 }
 
 private func localizedSubsectionCount(_ count: Int) -> String {

@@ -124,7 +124,7 @@ private struct CanadianHamVisionRootView: View {
         do {
             bank = try QuestionBankStore.load()
         } catch {
-            loadError = error.localizedDescription
+            loadError = String(localized: "Unable to load question bank: \(error.localizedDescription)")
         }
     }
 }
@@ -135,7 +135,12 @@ private struct VisionLanguageOrnament: View {
     var body: some View {
         Picker("Question language", selection: $language) {
             ForEach(BankLanguage.allCases) { language in
-                Text(localizedVision(language.displayName, language: language)).tag(language) // l10n: content(language)
+                switch language {
+                case .english:
+                    Text(localizedVision(language.displayName, language: .english)).tag(language) // l10n: content(en)
+                case .french:
+                    Text(localizedVision(language.displayName, language: .french)).tag(language) // l10n: content(fr)
+                }
             }
         }
         .pickerStyle(.segmented)
@@ -216,7 +221,7 @@ private struct VisionCategoryCard: View {
                     .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                 Spacer(minLength: DesignTokens.Spacing.sm)
-                Text(verbatim: "\(localizedVisionQuestionCount(category.questionCount)) • \(localizedVisionSubsectionCount(category.subsectionCount))")
+                Text(verbatim: "\(localizedVisionQuestionCount(category.questionCount)) • \(localizedVisionSubsectionCount(category.subsectionCount))") // l10n: verbatim
                     .font(DesignTokens.FontScale.caption.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
             }
@@ -619,7 +624,9 @@ private struct VisionFeedbackPanel: View {
         .glassBackgroundEffect()
     }
 
-    private var resultText: String { selectedAnswer.isCorrect ? "Correct" : "Incorrect" }
+    private var resultText: String {
+        selectedAnswer.isCorrect ? String(localized: "Correct") : String(localized: "Incorrect")
+    }
     private var sourceText: AttributedString {
         if selectedAnswer.isCorrect {
             var text = AttributedString(String(localized: "Source: "))
@@ -674,7 +681,7 @@ private struct VisionAboutView: View {
                     VisionPaperSection(title: "Bank") {
                         Text("Active bank: \(bank.manifest.bankId)")
                         Text("Effective date: \(bank.manifest.effectiveDate)")
-                        Text("Questions: \(bank.questions.count) • Categories: \(bank.categories.count) • Subsections: \(bank.subsections.count)")
+                        Text("Questions: \(bank.questions.count) • Categories: \(bank.categories.count) • Subsections: \(bank.subsections.count)") // l10n: localized
                     }
                     VisionPaperSection(title: "Attribution") {
                         Text(englishVision("Question-bank material is sourced from Innovation, Science and Economic Development Canada Amateur Radio Operator Certificate Basic Qualification materials.")) // l10n: content(en)

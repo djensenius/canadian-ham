@@ -548,11 +548,11 @@ final class ProgressStoreService: ObservableObject {
         if data.schema != "canadian-ham.progress-export" { errors.append(String(localized: "Import file schema is not canadian-ham.progress-export.")) }
         if data.version != 1 { errors.append(String(localized: "Import file version must be 1.")) }
         if data.bankId != bank.manifest.bankId { errors.append(String(localized: "Import bankId must be \(bank.manifest.bankId).")) }
-        appendTimestampError(&errors, value: data.exportedAt, field: "exportedAt")
+        appendTimestampError(&errors, value: data.exportedAt, field: String(localized: "Import exportedAt"))
 
         var questionProgressIds = Set<String>()
         for (index, record) in data.questionProgress.enumerated() {
-            let prefix = "Import questionProgress[\(index)]"
+            let prefix = String.localizedStringWithFormat(String(localized: "Import questionProgress[%lld]"), Int64(index))
             if !knownQuestionIds.contains(record.questionId) { errors.append(String(localized: "\(prefix).questionId must be a known question ID.")) }
             if !questionProgressIds.insert(record.questionId).inserted { errors.append(String(localized: "\(prefix).questionId duplicates another question progress record.")) }
             if record.bankId != bank.manifest.bankId { errors.append(String(localized: "\(prefix).bankId must be \(bank.manifest.bankId).")) }
@@ -566,7 +566,7 @@ final class ProgressStoreService: ObservableObject {
 
         var submittedAt = Set<String>()
         for (index, attempt) in data.examAttempts.enumerated() {
-            let prefix = "Import examAttempts[\(index)]"
+            let prefix = String.localizedStringWithFormat(String(localized: "Import examAttempts[%lld]"), Int64(index))
             if attempt.id.isEmpty { errors.append(String(localized: "\(prefix).id must be a non-empty string.")) }
             if attempt.bankId != bank.manifest.bankId { errors.append(String(localized: "\(prefix).bankId must be \(bank.manifest.bankId).")) }
             if attempt.mode != "mock-exam" { errors.append(String(localized: "\(prefix).mode must be mock-exam.")) }
@@ -775,7 +775,7 @@ private func validateScore(
 private func validateLessonProgress(_ records: [ArchivedJSON], knownLessonIds: Set<String>, errors: inout [String]) {
     var lessonIds = Set<String>()
     for (index, record) in records.enumerated() {
-        let prefix = "Import lessonProgress[\(index)]"
+        let prefix = String.localizedStringWithFormat(String(localized: "Import lessonProgress[%lld]"), Int64(index))
         guard let lessonId = record.storage["lessonId"]?.stringValue, !lessonId.isEmpty else {
             errors.append(String(localized: "\(prefix).lessonId must be a non-empty string."))
             continue
@@ -807,7 +807,7 @@ private func validateLessonQuizAttempts(
 ) {
     var ids = Set<String>()
     for (index, attempt) in attempts.enumerated() {
-        let prefix = "Import lessonQuizAttempts[\(index)]"
+        let prefix = String.localizedStringWithFormat(String(localized: "Import lessonQuizAttempts[%lld]"), Int64(index))
         guard let id = attempt.storage["id"]?.stringValue, !id.isEmpty else {
             errors.append(String(localized: "\(prefix).id must be a non-empty string."))
             continue

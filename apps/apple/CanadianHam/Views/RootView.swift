@@ -389,7 +389,12 @@ struct RootView: View {
                 }
             )) {
                 ForEach(BankLanguage.allCases) { language in
-                    Text(localized(language.displayName, language: language)).tag(language) // l10n: content(language)
+                    switch language {
+                    case .english:
+                        Text(localized(language.displayName, language: .english)).tag(language) // l10n: content(en)
+                    case .french:
+                        Text(localized(language.displayName, language: .french)).tag(language) // l10n: content(fr)
+                    }
                 }
             }
             .pickerStyle(.segmented)
@@ -497,7 +502,7 @@ private struct CategoryRow: View {
             Text(localized(category.name.text(for: language), language: language)) // l10n: content(question)
                 .font(DesignTokens.FontScale.body.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
-            Text(verbatim: "\(localizedQuestionCount(category.questionCount)) • \(localizedSubsectionCount(category.subsectionCount))")
+            Text(verbatim: "\(localizedQuestionCount(category.questionCount)) • \(localizedSubsectionCount(category.subsectionCount))") // l10n: verbatim
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
         }

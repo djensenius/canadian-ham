@@ -127,7 +127,7 @@ private struct CanadianHamTVRootView: View {
         do {
             bank = try QuestionBankStore.load()
         } catch {
-            loadError = error.localizedDescription
+            loadError = String(localized: "Unable to load question bank: \(error.localizedDescription)")
         }
     }
 }
@@ -187,7 +187,7 @@ private struct TVCategoryButton: View {
                 Text(localized(category.name.text(for: language), language: language)) // l10n: content(question)
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
-                Text(verbatim: "\(localizedQuestionCount(category.questionCount)) • \(localizedSubsectionCount(category.subsectionCount))")
+                Text(verbatim: "\(localizedQuestionCount(category.questionCount)) • \(localizedSubsectionCount(category.subsectionCount))") // l10n: verbatim
                     .font(DesignTokens.FontScale.body.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
             }
@@ -586,7 +586,9 @@ private struct TVFeedbackBar: View {
         }
     }
 
-    private var resultText: String { selectedAnswer.isCorrect ? "Correct" : "Incorrect" }
+    private var resultText: String {
+        selectedAnswer.isCorrect ? String(localized: "Correct") : String(localized: "Incorrect")
+    }
     private var sourceText: AttributedString {
         if selectedAnswer.isCorrect {
             var text = AttributedString(String(localized: "Source: "))
@@ -646,7 +648,12 @@ private struct TVTopBar: View {
             Spacer()
             Picker("Question language", selection: $language) {
                 ForEach(BankLanguage.allCases) { language in
-                    Text(localized(language.displayName, language: language)).tag(language) // l10n: content(language)
+                    switch language {
+                    case .english:
+                        Text(localized(language.displayName, language: .english)).tag(language) // l10n: content(en)
+                    case .french:
+                        Text(localized(language.displayName, language: .french)).tag(language) // l10n: content(fr)
+                    }
                 }
             }
             .pickerStyle(.segmented)
@@ -684,7 +691,7 @@ private struct TVAboutView: View {
                     TVPaperSection(title: "Bank") {
                         Text("Active bank: \(bank.manifest.bankId)")
                         Text("Effective date: \(bank.manifest.effectiveDate)")
-                        Text("Questions: \(bank.questions.count) • Categories: \(bank.categories.count) • Subsections: \(bank.subsections.count)")
+                        Text("Questions: \(bank.questions.count) • Categories: \(bank.categories.count) • Subsections: \(bank.subsections.count)") // l10n: localized
                     }
                     TVPaperSection(title: "Attribution") {
                         Text(english("Question-bank material is sourced from Innovation, Science and Economic Development Canada Amateur Radio Operator Certificate Basic Qualification materials.")) // l10n: content(en)
