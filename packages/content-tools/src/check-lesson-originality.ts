@@ -2,12 +2,13 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { ACTIVE_GENERATED_DIR } from "./active-bank.ts";
 import { isMainModule } from "./cli.ts";
 
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const DEFAULT_LESSON_ROOT = path.join(REPO_ROOT, "content/lessons/m5-basic-electronics");
 const ALL_LESSON_ROOT = path.join(REPO_ROOT, "content/lessons");
-const DEFAULT_QUESTIONS_PATH = path.join(REPO_ROOT, "content/generated/basic-2025-07-15/questions.json");
+const DEFAULT_QUESTIONS_PATH = path.join(REPO_ROOT, ACTIVE_GENERATED_DIR, "questions.json");
 const DEFAULT_ALLOWLIST_PATH = path.join(REPO_ROOT, "content/lessons/originality-allowlist.json");
 const FIVE_GRAM_SIZE = 5;
 const SHARED_FIVE_GRAM_THRESHOLD = 5;
