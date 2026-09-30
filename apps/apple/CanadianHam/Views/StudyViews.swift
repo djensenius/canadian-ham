@@ -557,6 +557,8 @@ struct MockExamView: View {
     @State private var confirmingSubmit = false
     @State private var isSubmitting = false
     @State private var timerStatus = "Timer off"
+    @State private var showingNavigator = false
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -578,6 +580,17 @@ struct MockExamView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Mock exam")
+        .sheet(isPresented: $showingNavigator) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                navigator
+                Button { showingNavigator = false } label: {
+                    AccessibleSecondaryButtonLabel(title: "Done")
+                }
+                .buttonStyle(AccessibleSecondaryButtonStyle())
+            }
+            .pagePadding()
+            .background(DesignTokens.Colors.paper)
+        }
         .onReceive(timer) { _ in
             if timerRunning {
                 secondsElapsed += 1
@@ -625,7 +638,20 @@ struct MockExamView: View {
                 Text("Answered \(selectedByQuestionId.count) of \(generatedItems.count). \(timerStatus).")
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
-                timerControls
+                HStack {
+                    Button { toggleFlag(question.id) } label: {
+                        AccessibleSecondaryButtonLabel(title: flagged.contains(question.id) ? "Flagged for review" : "Flag for review")
+                    }
+                    .buttonStyle(AccessibleSecondaryButtonStyle())
+                    .accessibilityIdentifier("mock-flag-button")
+                    if usesNavigatorSheet {
+                        Button { showingNavigator = true } label: {
+                            AccessibleSecondaryButtonLabel(title: "Questions")
+                        }
+                        .buttonStyle(AccessibleSecondaryButtonStyle())
+                        .accessibilityIdentifier("mock-questions-button")
+                    }
+                }
             }
             .paperCard()
 
@@ -664,19 +690,25 @@ struct MockExamView: View {
                 .disabled(currentIndex + 1 >= generatedItems.count)
                 .buttonStyle(AccessibleSecondaryButtonStyle())
                 .accessibilityIdentifier("mock-next-button")
-                Button { toggleFlag(question.id) } label: {
-                    AccessibleSecondaryButtonLabel(title: flagged.contains(question.id) ? "Flagged for review" : "Flag for review")
-                }
-                .buttonStyle(AccessibleSecondaryButtonStyle())
             }
 
-            navigator
+            if !usesNavigatorSheet {
+                navigator
+            }
 
             Button("Submit exam") { confirmingSubmit = true }
                 .buttonStyle(AccessiblePrimaryButtonStyle())
                 .disabled(isSubmitting)
                 .accessibilityIdentifier("submit-mock-exam-button")
         }
+    }
+
+    private var usesNavigatorSheet: Bool {
+#if os(iOS)
+        horizontalSizeClass == .compact
+#else
+        false
+#endif
     }
 
     @ViewBuilder
@@ -705,10 +737,17 @@ struct MockExamView: View {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 48), spacing: DesignTokens.Spacing.sm)], spacing: DesignTokens.Spacing.sm) {
                 ForEach(generatedItems.indices, id: \.self) { index in
                     let item = generatedItems[index]
-                    Button(navigatorLabel(for: index, item: item)) { currentIndex = index }
-                        .buttonStyle(.bordered)
-                        .tint(selectedByQuestionId[item.questionId] != nil ? DesignTokens.Colors.correctText : DesignTokens.Colors.inkMuted)
-                        .accessibilityLabel("Question \(index + 1), \(selectedByQuestionId[item.questionId] != nil ? "answered" : "unanswered")\(flagged.contains(item.questionId) ? ", flagged" : "")\(index == currentIndex ? ", current" : "")")
+                    Button { currentIndex = index } label: {
+                        Text(navigatorLabel(for: index, item: item))
+                            .font(DesignTokens.FontScale.body.monospaced().weight(.semibold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .frame(minWidth: 48, minHeight: 44)
+                            .padding(.horizontal, DesignTokens.Spacing.xs)
+                            .background(navigatorBackground(for: item), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous).strokeBorder(navigatorBorder(for: index, item: item), lineWidth: index == currentIndex ? 2 : 1))
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Question \(index + 1), \(selectedByQuestionId[item.questionId] != nil ? "answered" : "unanswered")\(flagged.contains(item.questionId) ? ", flagged" : "")\(index == currentIndex ? ", current" : "")")
                 }
             }
         }
@@ -721,6 +760,17 @@ struct MockExamView: View {
         if selectedByQuestionId[item.questionId] != nil { label += " ✓" }
         if flagged.contains(item.questionId) { label += " ⚑" }
         return label
+    }
+
+    private func navigatorBackground(for item: GeneratedExamItem) -> Color {
+        selectedByQuestionId[item.questionId] != nil ? DesignTokens.Colors.paperInset : DesignTokens.Colors.paperElevated
+    }
+
+    private func navigatorBorder(for index: Int, item: GeneratedExamItem) -> Color {
+        if index == currentIndex || selectedByQuestionId[item.questionId] != nil || flagged.contains(item.questionId) {
+            return DesignTokens.Colors.inkMuted
+        }
+        return DesignTokens.Colors.border
     }
 
     private var submitConfirmationText: String {

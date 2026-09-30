@@ -8,9 +8,11 @@ struct AccessibleSecondaryButtonLabel: View {
         Text(title)
             .font(DesignTokens.FontScale.body.weight(.semibold))
             .foregroundStyle(DesignTokens.Colors.ink)
+            .multilineTextAlignment(.center)
+            .fixedSize(horizontal: false, vertical: true)
             .padding(.horizontal, DesignTokens.Spacing.lg)
             .padding(.vertical, DesignTokens.Spacing.md)
-            .frame(minHeight: 44)
+            .frame(minHeight: 56)
             .background(DesignTokens.Colors.paperInset, in: Capsule())
             .overlay {
                 Capsule()
