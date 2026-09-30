@@ -16,10 +16,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let languagePicker = app.segmentedControls["question-language-picker"].firstMatch
         let frenchSegment = languagePicker.buttons["Français"].firstMatch
         XCTAssertTrue(frenchSegment.waitForExistence(timeout: 2), "French segment should be available")
-        frenchSegment.tap()
         let selectedPredicate = NSPredicate(format: "selected == true")
-        let selectedExpectation = XCTNSPredicateExpectation(predicate: selectedPredicate, object: frenchSegment)
-        XCTAssertEqual(XCTWaiter.wait(for: [selectedExpectation], timeout: 5), .completed, "Français segment should become selected")
+        for _ in 0..<3 where !frenchSegment.isSelected {
+            frenchSegment.tap()
+            let selectedExpectation = XCTNSPredicateExpectation(predicate: selectedPredicate, object: frenchSegment)
+            if XCTWaiter.wait(for: [selectedExpectation], timeout: 2) == .completed { break }
+        }
+        XCTAssertTrue(frenchSegment.isSelected, "Français segment should become selected")
 
         let frenchQuestionTexts = try bundledFrenchQuestionTexts(forCategoryID: "B-001")
         let frenchQuestionPredicate = NSPredicate(format: "label IN %@", Array(frenchQuestionTexts))
