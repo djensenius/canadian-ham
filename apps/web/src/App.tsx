@@ -244,6 +244,10 @@ function AppContent({
   const didRunInitialFocusEffect = useRef(false);
   const interfaceLanguageRef = useRef(interfaceLanguage);
   const savedPreferencesRef = useRef(preferences);
+  const latestRequestedPreferencesRef = useRef(preferences);
+  const preferencesSaveQueueRef = useRef<Promise<void>>(Promise.resolve());
+  const preferencesSaveSequenceRef = useRef(0);
+  const savedPreferencesSequenceRef = useRef(0);
 
   useEffect(() => {
     interfaceLanguageRef.current = interfaceLanguage;
@@ -267,6 +271,7 @@ function AppContent({
           setLessonProgress(storedLessonProgress);
           setLessonQuizAttempts(storedQuizAttempts);
           savedPreferencesRef.current = storedPreferences;
+          latestRequestedPreferencesRef.current = storedPreferences;
           setPreferencesState(storedPreferences);
           setAlertMessage("");
         }
@@ -420,15 +425,31 @@ function AppContent({
   }
 
   async function setPreferences(preferencesPatch: PreferencesPatch): Promise<void> {
-    const previousSavedPreferences = savedPreferencesRef.current;
-    const nextPreferences = { ...previousSavedPreferences, ...preferencesPatch };
+    const nextPreferences = { ...latestRequestedPreferencesRef.current, ...preferencesPatch };
+    latestRequestedPreferencesRef.current = nextPreferences;
+    const saveSequence = preferencesSaveSequenceRef.current + 1;
+    preferencesSaveSequenceRef.current = saveSequence;
     setPreferencesState(nextPreferences);
+
+    const saveOperation = preferencesSaveQueueRef.current.then(() => store.putPreferences(nextPreferences));
+    preferencesSaveQueueRef.current = saveOperation.catch(() => undefined);
+
     try {
-      await store.putPreferences(nextPreferences);
-      savedPreferencesRef.current = nextPreferences;
-      setAlertMessage("");
+      await saveOperation;
+      if (saveSequence > savedPreferencesSequenceRef.current) {
+        savedPreferencesSequenceRef.current = saveSequence;
+        savedPreferencesRef.current = nextPreferences;
+      }
+      if (saveSequence === preferencesSaveSequenceRef.current) {
+        setAlertMessage("");
+      }
     } catch (error) {
-      setPreferencesState(previousSavedPreferences);
+      if (saveSequence !== preferencesSaveSequenceRef.current) {
+        return;
+      }
+      const rollbackPreferences = savedPreferencesRef.current;
+      latestRequestedPreferencesRef.current = rollbackPreferences;
+      setPreferencesState(rollbackPreferences);
       setAlertMessage(t(interfaceLanguage, "errorSavePreferences", formatError(error)));
       throw error;
     }
@@ -611,6 +632,7 @@ function AppContent({
               setLessonProgress(data.lessonProgress ?? []);
               setLessonQuizAttempts(data.lessonQuizAttempts ?? []);
               savedPreferencesRef.current = data.preferences;
+              latestRequestedPreferencesRef.current = data.preferences;
               setPreferencesState(data.preferences);
               setPracticeSession(null);
               setMockExam(null);
@@ -624,6 +646,7 @@ function AppContent({
               setLessonProgress([]);
               setLessonQuizAttempts([]);
               savedPreferencesRef.current = defaultPreferences;
+              latestRequestedPreferencesRef.current = defaultPreferences;
               setPreferencesState(defaultPreferences);
               setPracticeScope({ type: "all" });
               setPracticeSession(null);
@@ -651,7 +674,7 @@ function AppContent({
 
 function InitialStoreLoading({ interfaceLanguage }: { readonly interfaceLanguage: InterfaceLanguage }) {
   return (
-    <section className="card app-loading" aria-labelledby="app-loading-title" role="status" aria-live="polite">
+    <section className="card app-loading-compact" aria-labelledby="app-loading-title" role="status" aria-live="polite">
       <h2 id="app-loading-title">{t(interfaceLanguage, "loading")}</h2>
       <p>{t(interfaceLanguage, "loadingLocalProgress")}</p>
     </section>

@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { act, cleanup, configure, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
 import { IDBFactory } from "fake-indexeddb";
@@ -17,8 +17,6 @@ import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExpor
 import { INTERFACE_LANGUAGE_STORAGE_KEY } from "./lib/i18n";
 import { applyThemePreference, readStoredThemePreference, THEME_COLORS, THEME_STORAGE_KEY } from "./lib/theme";
 import { buildExamAttempt, createMockExam } from "./lib/studyEngine";
-
-configure({ asyncUtilTimeout: 3000 });
 
 const fixedNow = "2026-01-02T03:04:05.000Z";
 const referenceSheetNote = "In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.";
@@ -123,6 +121,26 @@ class FailingPreferencesStore extends ProgressStore {
       throw new Error("simulated preferences failure");
     }
     await super.putPreferences(preferences);
+  }
+}
+
+class DelayedPreferencesStore extends ProgressStore {
+  readonly pendingPreferenceSaves: Array<{
+    readonly preferences: WebPreferences;
+    readonly resolve: () => void;
+  }> = [];
+
+  override async putPreferences(preferences: WebPreferences): Promise<void> {
+    await new Promise<void>((resolve) => {
+      this.pendingPreferenceSaves.push({ preferences, resolve });
+    });
+    await super.putPreferences(preferences);
+  }
+
+  releaseNextPreferenceSave(): void {
+    const nextSave = this.pendingPreferenceSaves.shift();
+    assert.ok(nextSave);
+    nextSave.resolve();
   }
 }
 
@@ -675,12 +693,23 @@ describe("App accessibility and flows", () => {
     assert.ok(progress.every((record) => attempts[0]?.officialQuestionIds.includes(record.questionId)));
   });
 
-  it("has no axe violations on the lesson quiz UI", async () => {
+  it("has no axe violations on answered and submitted lesson quiz UI", async () => {
     window.location.hash = "#/learn/M5/L-005-01";
     const store = createStore("lesson-quiz-axe");
     const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "lesson-quiz-seed"} />);
 
     await screen.findByRole("heading", { name: "QZ-L-005-01-A" });
+    clickFirstLessonQuizOption();
+    await screen.findByRole("status");
+    await expectNoAxeViolations(container);
+
+    for (let index = 1; index < 11; index += 1) {
+      fireEvent.click(screen.getByRole("button", { name: "Next" }));
+      clickFirstLessonQuizOption();
+      await screen.findByRole("status");
+    }
+    fireEvent.click(screen.getByRole("button", { name: "Submit lesson quiz" }));
+    await waitFor(async () => assert.equal((await store.getLessonQuizAttempts()).length, 1));
     await expectNoAxeViolations(container);
   });
 
@@ -888,6 +917,29 @@ describe("App accessibility and flows", () => {
       assert.equal(document.documentElement.dataset.theme, "dark");
     });
     assert.equal(window.localStorage.getItem(THEME_STORAGE_KEY), "dark");
+  });
+
+  it("persists two quick preference edits to different fields", async () => {
+    window.location.hash = "#/practice";
+    const store = new DelayedPreferencesStore("settings-overlapping-preference-saves");
+    stores.push(store);
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "settings-overlap-seed"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    fireEvent.click(screen.getByLabelText("Review later"));
+    await waitFor(() => assert.equal(store.pendingPreferenceSaves.length, 1));
+
+    const primaryNav = screen.getByRole("navigation", { name: "Primary" });
+    fireEvent.click(within(primaryNav).getByRole("button", { name: "Settings" }));
+    await screen.findByRole("heading", { name: "Settings and local data" });
+    fireEvent.click(screen.getByLabelText("Dark"));
+
+    assert.deepEqual(store.pendingPreferenceSaves[0]?.preferences, { ...defaultPreferences, practiceMode: "review-later" });
+    store.releaseNextPreferenceSave();
+    await waitFor(() => assert.equal(store.pendingPreferenceSaves.length, 1));
+    assert.deepEqual(store.pendingPreferenceSaves[0]?.preferences, { ...defaultPreferences, practiceMode: "review-later", theme: "dark" });
+    store.releaseNextPreferenceSave();
+    await waitFor(async () => assert.deepEqual(await store.getPreferences(), { ...defaultPreferences, practiceMode: "review-later", theme: "dark" }));
   });
 
   it("rolls back an in-memory preference change when saving it fails", async () => {
