@@ -82,6 +82,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
     func testLearnUserNavigationOpensLessonQuiz() throws {
         XCUIDevice.shared.appearance = .light
 #if os(iOS)
+        // Forced regular size class alone does not expose the split-view sidebar on the iPhone simulator.
         XCUIDevice.shared.orientation = .landscapeLeft
         defer { XCUIDevice.shared.orientation = .portrait }
 #endif
