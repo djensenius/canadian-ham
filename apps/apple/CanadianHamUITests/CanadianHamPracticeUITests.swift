@@ -391,6 +391,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         answerFirstVisibleAnswer(in: reviewApp)
         scrollAndTap("Submit for review", in: reviewApp)
         XCTAssertTrue(reviewApp.staticTexts["Practice review"].waitForExistence(timeout: 10))
+        scrollToTop(in: reviewApp)
         try performAudit(on: reviewApp, context: "\(appearance.rawValue) practice review")
         reviewApp.terminate()
     }
