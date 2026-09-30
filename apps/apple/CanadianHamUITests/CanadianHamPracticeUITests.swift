@@ -28,7 +28,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
             app = launchApp(arguments: frenchLocaleArguments + ["-CanadianHamInitialScreen", screen])
             XCTAssertTrue(app.staticTexts[expectedText].firstMatch.waitForExistence(timeout: 10), "Expected localized \(screen) screen")
             if screen == "settings" {
-                XCTAssertTrue(anyVisibleLabel(in: app, contains: "La progression est stockée localement"), "Expected localized Settings body copy")
+                XCTAssertTrue(anyVisibleLabel(in: app, contains: "La progression est enregistrée sur cet appareil"), "Expected localized Settings body copy")
+            }
+            if screen == "mock" {
+                tap("Démarrer l’examen simulé", in: app)
+                XCTAssertTrue(app.staticTexts["Question 1 sur 100"].firstMatch.waitForExistence(timeout: 10), "Expected localized interpolated mock-exam progress")
             }
             app.terminate()
         }
