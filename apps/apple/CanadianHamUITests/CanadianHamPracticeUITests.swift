@@ -466,6 +466,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         scrollAndTap("Submit exam", in: app)
         submitMockExamAlert(in: app)
         assertMockExamResultVisible(in: app)
+        scrollToTop(in: app)
         try performAudit(on: app, context: "\(appearance.rawValue) mock exam results")
         app.terminate()
     }
