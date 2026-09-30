@@ -18,6 +18,7 @@ import { applyThemePreference, readStoredThemePreference, THEME_COLORS, THEME_ST
 import { buildExamAttempt, createMockExam } from "./lib/studyEngine";
 
 const fixedNow = "2026-01-02T03:04:05.000Z";
+const referenceSheetNote = "In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.";
 let stores: ProgressStore[] = [];
 let testQuestions: readonly Question[] = [];
 
@@ -252,6 +253,7 @@ describe("App accessibility and flows", () => {
     const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "learn-seed"} />);
 
     await screen.findByRole("heading", { name: "Learn" });
+    assert.equal(screen.getByText(referenceSheetNote).className, "reference-note");
     const moduleEyebrows = [...container.querySelectorAll(".module-card .eyebrow")].map((element) => element.textContent ?? "");
     assert.match(moduleEyebrows[0] ?? "", /Module 1 · B-005/);
     await expectNoAxeViolations(container);
@@ -472,6 +474,7 @@ describe("App accessibility and flows", () => {
     const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "mock-seed"} />);
 
     await screen.findByRole("heading", { name: "Mock exam" });
+    assert.equal(screen.getByText(referenceSheetNote).className, "reference-note");
     await expectNoAxeViolations(container);
 
     await user.click(screen.getByRole("button", { name: "Start mock exam" }));
@@ -665,23 +668,20 @@ describe("App accessibility and flows", () => {
     assert.ok(document.querySelector(".question-text[lang='fr-CA']"));
   });
 
-  it("labels reference sheet links with new-tab hints and licensing notes", async () => {
-    const store = createStore("reference-links");
+  it("does not render reference PDF links", async () => {
+    const store = createStore("reference-links-removed");
     const user = userEvent.setup();
     render(<App store={store} now={() => fixedNow} seedFactory={() => "reference-seed"} />);
 
-    const studyLink = await screen.findByRole("link", { name: "Study reference sheet (opens in new tab)" });
-    assert.match(studyLink.getAttribute("href") ?? "", /Reference.*Training.*Basic.*2025\.pdf/);
-    assert.equal(studyLink.getAttribute("target"), "_blank");
-    assert.match(studyLink.getAttribute("rel") ?? "", /noreferrer/);
-    assert.match(screen.getByLabelText("Study reference sheet attribution").textContent ?? "", /Private-development access only/);
+    await screen.findByRole("heading", { name: "Ready for Basic with Honours?" });
+    assert.equal(screen.queryByRole("link", { name: /reference sheet/i }), null);
+    assert.equal(screen.queryByText(/Reference Material.*\.pdf/i), null);
 
     await user.click(screen.getAllByRole("button", { name: "Mock exam" })[0]!);
-    const examLink = await screen.findByRole("link", { name: "Open exam reference sheet (opens in new tab)" });
-    assert.match(examLink.getAttribute("href") ?? "", /Reference.*Exam.*Basic.*2025\.pdf/);
-    assert.equal(examLink.getAttribute("target"), "_blank");
-    assert.match(examLink.getAttribute("rel") ?? "", /noreferrer/);
-    assert.match(screen.getByLabelText("Exam reference sheet attribution").textContent ?? "", /may be used while writing the exam/);
+    await screen.findByRole("heading", { name: "Mock exam" });
+    assert.equal(screen.getByText(referenceSheetNote).className, "reference-note");
+    assert.equal(screen.queryByRole("link", { name: /reference sheet/i }), null);
+    assert.equal(screen.queryByText(/\.pdf/i), null);
   });
 
   it("renders the B-001-017-009 explanation panel citation as a user-activated external link without preloading or fetching it", () => {

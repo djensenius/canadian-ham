@@ -24,7 +24,7 @@ export const OFFICIAL_SOURCE_CITATION_URLS = new Set([
 ]);
 
 const TEXT_EXTENSIONS = new Set([".cjs", ".css", ".html", ".js", ".json", ".map", ".mjs", ".svg", ".txt", ".webmanifest", ".xml"]);
-const BINARY_EXTENSIONS = new Set([".avif", ".gif", ".ico", ".jpg", ".jpeg", ".pdf", ".png", ".webp"]);
+const BINARY_EXTENSIONS = new Set([".avif", ".gif", ".ico", ".jpg", ".jpeg", ".png", ".webp"]);
 
 interface UrlFinding {
   readonly file: string;

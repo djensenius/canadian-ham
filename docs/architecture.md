@@ -45,7 +45,7 @@ canadian-ham/
 Notes:
 
 - The layout separates ISED data from original lessons and explanations.
-- `content/sources/ised/basic-2025-07-15/` contains the official Basic 2025 TXT, question-bank PDF, English reference PDFs, and checksum files for private development while the repository stays private; public exposure and distribution are gated by the [content licensing public-release gate](content-licensing.md#public-release-gate).
+- `content/sources/ised/basic-2025-07-15/` contains the official Basic 2025 TXT, question-bank PDF, English reference PDFs, and checksum files for private development while the repository stays private; the reference PDFs are not shipped in the apps, and public exposure and distribution are gated by the [content licensing public-release gate](content-licensing.md#public-release-gate).
 - `content/generated/` contains generated app-ready normalized JSON only after the importer is implemented and reviewed.
 - Shared fixtures in `fixtures/` are the contract between TypeScript and Swift engines.
 
@@ -62,14 +62,14 @@ Tooling decisions:
 
 - Official delimited TXT described in [exam-facts.md](exam-facts.md).
 - Official English PDF question bank for human cross-checks.
-- Official English reference material ZIP/PDF files.
+- Official English reference material ZIP/PDF files for provenance and lesson context; these PDFs are not shipped in the apps.
 - Hand-maintained category metadata.
 - Original lesson Markdown.
 - Original explanation JSON.
 
 ### Pipeline stages
 
-1. Vendor the official Basic 2025 TXT, question-bank PDF, and English reference PDFs under `content/sources/ised/basic-2025-07-15/` for private development under the [interim private-development policy](content-licensing.md#interim-private-development-policy); public exposure and distribution remain gated by the [public-release gate](content-licensing.md#public-release-gate).
+1. Vendor the official Basic 2025 TXT, question-bank PDF, and English reference PDFs under `content/sources/ised/basic-2025-07-15/` for private development under the [interim private-development policy](content-licensing.md#interim-private-development-policy); the reference PDFs remain source artifacts and are not shipped in the apps, and public exposure and distribution remain gated by the [public-release gate](content-licensing.md#public-release-gate).
 2. Record SHA-256 checksums in a manifest and fail import on any checksum mismatch.
 3. Parse the committed delimited TXT in importer and CI runs with strict format checks: trim header names only, preserve field values exactly, reject wrapper-shaped CSV fields and doubled-quote CSV escapes, reject embedded newlines, and preserve quote characters that are part of official wording.
 4. Normalize records into JSON with stable IDs and language-keyed text under `content/generated/basic-2025-07-15/`.
@@ -616,12 +616,11 @@ Web app components:
 Apple app components:
 
 - SwiftUI multiplatform target for iOS, iPadOS, macOS, visionOS 2.0+, and tvOS 18.0+. watchOS remains later.
-- Shared practice, lessons, mock exams, progress, settings, and reference viewing adapt per platform: navigation/window layout on iOS, iPadOS, macOS, and visionOS; focus-engine navigation, large type, and overscan-safe margins on tvOS.
-- Bundled generated content, reference material allowed for the current private-development or release stage, design tokens, and layered icon artwork; release bundles must satisfy the [public-release gate](content-licensing.md#public-release-gate).
+- Shared practice, lessons, mock exams, progress, and settings adapt per platform: navigation/window layout on iOS, iPadOS, macOS, and visionOS; focus-engine navigation, large type, and overscan-safe margins on tvOS.
+- Bundled generated content, design tokens, and layered icon artwork; reference PDFs are not shipped in the apps, and release bundles must satisfy the [public-release gate](content-licensing.md#public-release-gate).
 - Native Swift engine matching fixtures.
 - SwiftData local progress models.
 - File import/export for progress JSON.
-- Reference sheet viewer.
 - No networking code, no third-party SDKs, no iCloud sync, analytics, or telemetry in v1.
 
 Build rule:
@@ -695,4 +694,4 @@ print duplicate coverage for author review
 
 - Decide exact JSON Schema tooling.
 - Decide minimum supported Apple OS versions and browser versions.
-- Confirm T-007 permission scope covers public bundling of verbatim question text as app data and reference PDFs before publication or distribution.
+- Confirm T-007 permission scope covers public bundling of verbatim question text as app data before publication or distribution; reference PDFs remain source artifacts and are not shipped in the apps.
