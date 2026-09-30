@@ -1327,7 +1327,7 @@ export function ExplanationPanel({ explanation, interfaceLanguage = "en", langua
           {choiceNotes.map((note) => {
             const displayIndex = choicePermutation?.findIndex((sourceIndex) => sourceIndex === note.sourceIndex);
             const label = displayIndex === undefined || displayIndex < 0 ? t(interfaceLanguage, "sourceIndex", note.sourceIndex) : t(interfaceLanguage, "displayedChoice", String.fromCharCode(65 + displayIndex));
-            return <li key={note.sourceIndex} lang={languageTag(explanationLanguage)}><strong>{label}:</strong> {note.note}</li>;
+            return <li key={note.sourceIndex} lang={languageTag(explanationLanguage)}><strong>{label}{interfaceLanguage === "fr" ? " :" : ":"}</strong> {note.note}</li>;
           })}
         </ul>
       ) : null}
