@@ -142,16 +142,16 @@ Acceptance criteria:
 - Coverage tooling reports how many of 984 questions have explanations.
 - No explanation copies RAC, Coax, or other third-party study-guide text.
 
-#### REQ-CONTENT-006: Reference sheet support
+#### REQ-CONTENT-006: Reference sheet context
 
-The system shall include the official English reference material as study material and exam-context material subject to licensing rules.
+The system shall use the official English reference material as source context for lessons and exam guidance, without shipping the reference PDFs in app bundles.
 
 Acceptance criteria:
 
-- Content metadata distinguishes the labelled training version from the unlabelled exam version.
-- Lessons can link to relevant formulas or block diagrams without requiring figure-based questions.
+- Source metadata distinguishes the labelled training version from the unlabelled exam version.
+- Lessons can teach relevant formulas or block diagrams without requiring figure-based questions or a bundled PDF viewer.
 - French reference material remains an open-question placeholder until located.
-- Private-development bundling follows the [interim private-development policy](content-licensing.md#interim-private-development-policy); public release follows the [public-release gate](content-licensing.md#public-release-gate).
+- The reference PDFs remain vendored only under `content/sources` for private provenance and checksum verification; they are not shipped in the apps.
 
 ### Lesson experience
 
@@ -279,15 +279,15 @@ Acceptance criteria:
 - If enabled, timer state is local to the attempt.
 - Documentation explains that the official time limit is unverified.
 
-#### REQ-EXAM-004: Reference sheet access
+#### REQ-EXAM-004: Reference sheet context
 
-Mock exam mode shall allow opening the unlabelled formula/block-diagram reference sheet.
+Mock exam mode shall remind learners that the real exam provides ISED's formula/block-diagram reference sheet, without opening or bundling the PDF.
 
 Acceptance criteria:
 
-- The app labels the sheet as exam reference material.
+- The mock exam start screen explains that the real exam provides the reference sheet and that lessons teach the material on it.
 - The app does not imply affiliation with ISED.
-- The reference sheet is available offline in private-development Apple app bundles and PWA offline caches; public availability is blocked until the [public-release gate](content-licensing.md#public-release-gate) is complete.
+- The app does not ship reference PDFs, link to bundled reference PDFs, or include reference PDFs in PWA offline caches.
 
 ### Web app
 
@@ -309,7 +309,7 @@ Acceptance criteria:
 
 - Core app shell and bundled content load offline after first successful visit.
 - Mock exam and practice work offline.
-- Reference material availability offline is tested if bundled for private development or public release.
+- Reference PDFs are not included in the web app build or PWA offline cache.
 - A visible status indicates whether content is ready for offline use.
 
 #### REQ-WEB-003: Browser-local progress
@@ -330,7 +330,7 @@ The Apple app shall target iOS, iPadOS, macOS, visionOS 2.0+, and tvOS 18.0+ usi
 
 Acceptance criteria:
 
-- Shared SwiftUI views cover lessons, practice, mock exams, progress, settings, and reference sheet viewer.
+- Shared SwiftUI views cover lessons, practice, mock exams, progress, and settings.
 - Platform-specific adaptations include navigation, file import/export, window layout, visionOS window/material/ornament conventions, and tvOS focus-engine navigation with large type and overscan-safe margins.
 - watchOS targets are absent in v1 and remain later.
 
@@ -340,9 +340,9 @@ The Apple app shall work fully offline after installation.
 
 Acceptance criteria:
 
-- All questions, lessons, explanations, fixtures needed at runtime, and reference assets allowed for the current private-development or release stage are included in the app bundle.
+- All questions, lessons, explanations, and fixtures needed at runtime are included in the app bundle; reference PDFs are not shipped in the apps.
 - First launch succeeds in airplane mode.
-- Lessons, practice, mock exams, progress, import/export, reset, and reference viewing do not require networking.
+- Lessons, practice, mock exams, progress, import/export, and reset do not require networking.
 
 #### REQ-APPLE-003: Local progress with SwiftData
 
@@ -375,7 +375,7 @@ Acceptance criteria:
 - English/French question display, about/attribution information, and privacy/no-data messaging are available in the visionOS app.
 - Layout follows [design.md](design.md) for warm paper surfaces within visionOS glass/material conventions, comfortable depth, ornaments where useful, and hover/focus effects that do not obscure text.
 - Accessibility follows the Definition of Done in [accessibility.md](accessibility.md).
-- Later parity SHOULD bring lessons, mock exams, progress dashboards, settings depth, and reference viewers to visionOS after the basic v1 window app is accepted.
+- Later parity SHOULD bring lessons, mock exams, progress dashboards, and settings depth to visionOS after the basic v1 window app is accepted.
 
 #### REQ-APPLE-006: Basic tvOS app
 
@@ -387,7 +387,7 @@ Acceptance criteria:
 - English/French question display, about/attribution information, and privacy/no-data messaging are available in the tvOS app.
 - Layout follows [design.md](design.md) for a 10-foot UI: large type, clear focus, generous spacing, and overscan-safe margins.
 - Accessibility follows the Definition of Done in [accessibility.md](accessibility.md).
-- Later parity SHOULD bring lessons, mock exams, progress dashboards, settings depth, and reference viewers to tvOS after the basic v1 focus-engine app is accepted.
+- Later parity SHOULD bring lessons, mock exams, progress dashboards, and settings depth to tvOS after the basic v1 focus-engine app is accepted.
 
 #### REQ-APPLE-007: Layered app icons
 
@@ -461,7 +461,7 @@ Acceptance criteria:
 
 - Apple app must be fully functional offline immediately after installation.
 - Web app must be able to function as an offline PWA after initial load and cache.
-- Bank, lessons, explanations, and reference sheets must have deterministic bundled versions for private development; release bundles must pass the [public-release gate](content-licensing.md#public-release-gate).
+- Bank, lessons, and explanations must have deterministic bundled versions for private development; release bundles must pass the [public-release gate](content-licensing.md#public-release-gate). Reference PDFs remain source artifacts and are not shipped in the apps.
 
 ### Accessibility
 
@@ -521,5 +521,5 @@ Coverage check requirement:
 - Verify official French category names.
 - Locate or confirm absence of French 2025 Basic reference material.
 - Verify the official Basic exam time limit, if any.
-- ISED permission status: requested scope drafted, pending; not yet sent or granted as of the 2026-09-28 owner decision. Fill in the reference number, date, scope, and explicit app-data/reference-PDF bundling coverage in T-007 before public release.
+- ISED permission status: requested scope drafted, pending; not yet sent or granted as of the 2026-09-28 owner decision. Fill in the reference number, date, and scope in T-007 before public release; reference PDFs are retained as source artifacts and are not shipped in the apps.
 - Decide minimum supported browser versions during implementation planning.

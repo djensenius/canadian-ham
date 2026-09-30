@@ -16,12 +16,10 @@ describe("PWA manifest and service worker assets", () => {
     assert.ok(manifest.icons.every((icon) => icon.purpose === undefined));
   });
 
-  it("builds a precache list covering app shell, generated assets, icons, question bank and reference PDFs", () => {
+  it("builds a precache list covering app shell, generated assets, icons, and question bank", () => {
     const precache = createPrecacheManifest([
       "assets/index-abc123.js",
       "assets/questions-def456.json",
-      "assets/Reference Material for Amateur Radio Exam Basic EN 2025-aaa.pdf",
-      "assets/Reference Material for Amateur Radio Training Basic EN 2025-bbb.pdf",
       "assets/style.css.map",
     ]);
 
@@ -30,8 +28,6 @@ describe("PWA manifest and service worker assets", () => {
     assert.ok(precache.includes("./manifest.webmanifest"));
     assert.ok(precache.includes("./pwa-icon-192.png"));
     assert.ok(precache.includes("./assets/questions-def456.json"));
-    assert.ok(precache.some((entry) => /Reference Material.*Exam.*\.pdf/.test(entry)));
-    assert.ok(precache.some((entry) => /Reference Material.*Training.*\.pdf/.test(entry)));
     assert.ok(precache.every((entry) => !entry.endsWith(".map")));
   });
 
@@ -49,19 +45,19 @@ describe("PWA manifest and service worker assets", () => {
     assert.equal(isSameOriginCacheableRequest("https://other.example/assets/index.js", "https://example.test"), false);
   });
 
-  it("serves an exact cached PDF navigation instead of the app shell", async () => {
-    const pdfUrl = "https://example.test/assets/reference.pdf";
+  it("serves an exact cached same-origin asset navigation instead of the app shell", async () => {
+    const assetUrl = "https://example.test/assets/lesson.txt";
     const { response, fetchMock } = await dispatchFetch(
-      createServiceWorkerSource(["./", "./index.html", "./assets/reference.pdf"], "pdfnav"),
-      navigationRequest(pdfUrl),
+      createServiceWorkerSource(["./", "./index.html", "./assets/lesson.txt"], "assetnav"),
+      navigationRequest(assetUrl),
       new Map([
-        [pdfUrl, new Response("PDF bytes", { headers: { "content-type": "application/pdf" } })],
+        [assetUrl, new Response("Lesson bytes", { headers: { "content-type": "text/plain" } })],
         ["./index.html", new Response("<html>app shell</html>", { headers: { "content-type": "text/html" } })],
       ]),
     );
 
-    assert.equal(await response.text(), "PDF bytes");
-    assert.equal(response.headers.get("content-type"), "application/pdf");
+    assert.equal(await response.text(), "Lesson bytes");
+    assert.equal(response.headers.get("content-type"), "text/plain");
     assert.equal(fetchMock.mock.calls.length, 0);
   });
 
@@ -73,9 +69,9 @@ describe("PWA manifest and service worker assets", () => {
     assert.equal(await shell.response.text(), "<html>app shell</html>");
     assert.equal(shell.fetchMock.mock.calls.length, 0);
 
-    const missingPdf = await dispatchFetch(source, navigationRequest("https://example.test/assets/missing.pdf"), cachedEntries);
-    assert.equal(await missingPdf.response.text(), "network:https://example.test/assets/missing.pdf");
-    assert.equal(missingPdf.fetchMock.mock.calls.length, 1);
+    const missingAsset = await dispatchFetch(source, navigationRequest("https://example.test/assets/missing.txt"), cachedEntries);
+    assert.equal(await missingAsset.response.text(), "network:https://example.test/assets/missing.txt");
+    assert.equal(missingAsset.fetchMock.mock.calls.length, 1);
   });
 
   it("rejects cross-origin requests without fetching or caching them", async () => {

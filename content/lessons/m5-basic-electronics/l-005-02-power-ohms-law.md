@@ -25,7 +25,7 @@ status: draft
 
 In Lesson 1, you learned the names of the quantities. Now we connect them. Ohm’s law describes how voltage, current, and resistance fit together. Power describes how quickly electrical energy is being used or changed into heat, light, sound, RF output, or motion.
 
-The ISED reference sheet uses E for voltage, I for current, R for resistance, and P for power. These lessons use that notation so the formulas match the sheet you will see while studying.
+The ISED reference sheet uses E for voltage, I for current, R for resistance, and P for power. These lessons use that notation so the formulas match the reference sheet you are given in the exam.
 
 ## Learning objectives
 
