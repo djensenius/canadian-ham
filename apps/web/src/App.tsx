@@ -62,7 +62,7 @@ import {
 
 type Route = "home" | "learn" | "module" | "lesson" | "practice" | "mock" | "results" | "settings";
 type View = Route;
-
+type PreferencesPatch = Partial<WebPreferences>;
 
 interface AppProps {
   readonly initialView?: View;
@@ -148,9 +148,9 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
               now={this.props.now}
               onProgressImported={() => this.setState({ errorMessage: null })}
               onReset={() => this.setState({ errorMessage: null })}
-              onSetPreferences={async (preferences) => {
+              onSetPreferences={async (preferencesPatch) => {
                 const storedPreferences = await readRecoverablePreferences(this.props.store);
-                const nextPreferences = { ...storedPreferences, theme: preferences.theme };
+                const nextPreferences = { ...storedPreferences, ...preferencesPatch };
                 await this.props.store.putPreferences(nextPreferences);
                 applyThemePreference(nextPreferences.theme);
                 mirrorThemePreference(nextPreferences.theme);
@@ -222,16 +222,18 @@ function AppContent({
   now = defaultNow,
   seedFactory = defaultSeed,
 }: AppProps) {
+  const initialPreferences = () => ({ ...defaultPreferences, theme: readStoredThemePreference() });
   const [locationHash, setLocationHash] = useState(() => globalThis.location?.hash ?? "");
   const [route, setRoute] = useState<Route>(() => routeFromHash(initialView));
   const [language, setLanguage] = useState<Language>("en");
   const [interfaceLanguage, setInterfaceLanguageState] = useState<InterfaceLanguage>(() => readStoredInterfaceLanguage());
   const [bankQuestions, setBankQuestions] = useState<readonly Question[] | null>(null);
+  const [initialStoreLoaded, setInitialStoreLoaded] = useState(false);
   const [progress, setProgress] = useState<readonly QuestionProgressRecord[]>([]);
   const [examAttempts, setExamAttempts] = useState<readonly ExamAttempt[]>([]);
   const [lessonProgress, setLessonProgress] = useState<readonly LessonProgressRecord[]>([]);
   const [lessonQuizAttempts, setLessonQuizAttempts] = useState<readonly LessonQuizAttempt[]>([]);
-  const [preferences, setPreferencesState] = useState<WebPreferences>(() => ({ ...defaultPreferences, theme: readStoredThemePreference() }));
+  const [preferences, setPreferencesState] = useState<WebPreferences>(initialPreferences);
   const [practiceScope, setPracticeScope] = useState<PracticeScope>(() => scopeFromInitialId(initialScopeId));
   const [practiceSession, setPracticeSession] = useState<PracticeSession | null>(null);
   const [mockExam, setMockExam] = useState<MockExamSession | null>(null);
@@ -241,7 +243,11 @@ function AppContent({
   const mainRef = useRef<HTMLElement>(null);
   const didRunInitialFocusEffect = useRef(false);
   const interfaceLanguageRef = useRef(interfaceLanguage);
-  const preferencesMutationVersion = useRef(0);
+  const savedPreferencesRef = useRef(preferences);
+  const latestRequestedPreferencesRef = useRef(preferences);
+  const preferencesSaveQueueRef = useRef<Promise<void>>(Promise.resolve());
+  const preferencesSaveSequenceRef = useRef(0);
+  const savedPreferencesSequenceRef = useRef(0);
 
   useEffect(() => {
     interfaceLanguageRef.current = interfaceLanguage;
@@ -249,7 +255,7 @@ function AppContent({
 
   useEffect(() => {
     let cancelled = false;
-    const loadPreferencesVersion = preferencesMutationVersion.current;
+    setInitialStoreLoaded(false);
     async function loadProgress(): Promise<void> {
       try {
         const [storedProgress, storedAttempts, storedLessonProgress, storedQuizAttempts, storedPreferences] = await Promise.all([
@@ -264,14 +270,18 @@ function AppContent({
           setExamAttempts(storedAttempts);
           setLessonProgress(storedLessonProgress);
           setLessonQuizAttempts(storedQuizAttempts);
-          if (preferencesMutationVersion.current === loadPreferencesVersion) {
-            setPreferencesState(storedPreferences);
-          }
+          savedPreferencesRef.current = storedPreferences;
+          latestRequestedPreferencesRef.current = storedPreferences;
+          setPreferencesState(storedPreferences);
           setAlertMessage("");
         }
       } catch (error) {
         if (!cancelled) {
           setAlertMessage(t(interfaceLanguageRef.current, "errorOpenStorage", formatError(error)));
+        }
+      } finally {
+        if (!cancelled) {
+          setInitialStoreLoaded(true);
         }
       }
     }
@@ -414,13 +424,32 @@ function AppContent({
     navigate("practice");
   }
 
-  async function setPreferences(nextPreferences: WebPreferences): Promise<void> {
-    preferencesMutationVersion.current += 1;
+  async function setPreferences(preferencesPatch: PreferencesPatch): Promise<void> {
+    const nextPreferences = { ...latestRequestedPreferencesRef.current, ...preferencesPatch };
+    latestRequestedPreferencesRef.current = nextPreferences;
+    const saveSequence = preferencesSaveSequenceRef.current + 1;
+    preferencesSaveSequenceRef.current = saveSequence;
     setPreferencesState(nextPreferences);
+
+    const saveOperation = preferencesSaveQueueRef.current.then(() => store.putPreferences(nextPreferences));
+    preferencesSaveQueueRef.current = saveOperation.catch(() => undefined);
+
     try {
-      await store.putPreferences(nextPreferences);
-      setAlertMessage("");
+      await saveOperation;
+      if (saveSequence > savedPreferencesSequenceRef.current) {
+        savedPreferencesSequenceRef.current = saveSequence;
+        savedPreferencesRef.current = nextPreferences;
+      }
+      if (saveSequence === preferencesSaveSequenceRef.current) {
+        setAlertMessage("");
+      }
     } catch (error) {
+      if (saveSequence !== preferencesSaveSequenceRef.current) {
+        return;
+      }
+      const rollbackPreferences = savedPreferencesRef.current;
+      latestRequestedPreferencesRef.current = rollbackPreferences;
+      setPreferencesState(rollbackPreferences);
       setAlertMessage(t(interfaceLanguage, "errorSavePreferences", formatError(error)));
       throw error;
     }
@@ -507,16 +536,17 @@ function AppContent({
       </header>
 
       <nav className="top-nav" aria-label={t(interfaceLanguage, "navPrimary")}>
-        <button type="button" aria-current={route === "home" ? "page" : undefined} onClick={() => navigate("home")}>{t(interfaceLanguage, "navHome")}</button>
-        <button type="button" aria-current={route === "learn" || route === "module" || route === "lesson" ? "page" : undefined} onClick={() => navigate("learn")}>{t(interfaceLanguage, "navLearn")}</button>
-        <button type="button" aria-current={route === "practice" ? "page" : undefined} onClick={() => practiceSession === null ? startPractice(practiceScope) : navigate("practice")}>{t(interfaceLanguage, "navPractice")}</button>
-        <button type="button" aria-current={route === "mock" ? "page" : undefined} onClick={() => navigate("mock")}>{t(interfaceLanguage, "navMockExam")}</button>
-        <button type="button" aria-current={route === "settings" ? "page" : undefined} onClick={() => navigate("settings")}>{t(interfaceLanguage, "navSettings")}</button>
+        <button type="button" disabled={!initialStoreLoaded} aria-current={route === "home" ? "page" : undefined} onClick={() => navigate("home")}>{t(interfaceLanguage, "navHome")}</button>
+        <button type="button" disabled={!initialStoreLoaded} aria-current={route === "learn" || route === "module" || route === "lesson" ? "page" : undefined} onClick={() => navigate("learn")}>{t(interfaceLanguage, "navLearn")}</button>
+        <button type="button" disabled={!initialStoreLoaded} aria-current={route === "practice" ? "page" : undefined} onClick={() => practiceSession === null ? startPractice(practiceScope) : navigate("practice")}>{t(interfaceLanguage, "navPractice")}</button>
+        <button type="button" disabled={!initialStoreLoaded} aria-current={route === "mock" ? "page" : undefined} onClick={() => navigate("mock")}>{t(interfaceLanguage, "navMockExam")}</button>
+        <button type="button" disabled={!initialStoreLoaded} aria-current={route === "settings" ? "page" : undefined} onClick={() => navigate("settings")}>{t(interfaceLanguage, "navSettings")}</button>
       </nav>
 
       <main id="main" ref={mainRef} tabIndex={-1}>
         {alertMessage ? <p className="alert-message" role="alert">{alertMessage}</p> : null}
-        {route === "home" ? (
+        {!initialStoreLoaded ? <InitialStoreLoading interfaceLanguage={interfaceLanguage} /> : null}
+        {initialStoreLoaded && route === "home" ? (
           <Home
             interfaceLanguage={interfaceLanguage}
             dueReviewCount={dueReviewCount}
@@ -527,7 +557,7 @@ function AppContent({
             weakSubsections={weakSubsections}
           />
         ) : null}
-        {route === "learn" ? (
+        {initialStoreLoaded && route === "learn" ? (
           <Learn
             interfaceLanguage={interfaceLanguage}
             lessonProgress={lessonProgress}
@@ -535,7 +565,7 @@ function AppContent({
             onOpenModule={navigateToModule}
           />
         ) : null}
-        {route === "module" ? (
+        {initialStoreLoaded && route === "module" ? (
           <ModulePage
             interfaceLanguage={interfaceLanguage}
             lessonProgress={lessonProgress}
@@ -543,7 +573,7 @@ function AppContent({
             onOpenLesson={navigateToLesson}
           />
         ) : null}
-        {route === "lesson" ? (
+        {initialStoreLoaded && route === "lesson" ? (
           <LessonPage
             interfaceLanguage={interfaceLanguage}
             attempts={lessonQuizAttempts}
@@ -560,7 +590,7 @@ function AppContent({
             progress={progress}
           />
         ) : null}
-        {route === "practice" ? (
+        {initialStoreLoaded && route === "practice" ? (
           <Practice
             interfaceLanguage={interfaceLanguage}
             language={language}
@@ -576,7 +606,7 @@ function AppContent({
             startPractice={startPractice}
           />
         ) : null}
-        {route === "mock" ? (
+        {initialStoreLoaded && route === "mock" ? (
           <MockExam
             interfaceLanguage={interfaceLanguage}
             exam={mockExam}
@@ -589,10 +619,10 @@ function AppContent({
             seedFactory={seedFactory}
           />
         ) : null}
-        {route === "results" ? (
+        {initialStoreLoaded && route === "results" ? (
           <Results attempt={latestResult ?? latestAttempt} interfaceLanguage={interfaceLanguage} language={language} onStartPractice={startPractice} questionsById={bankQuestionsById} />
         ) : null}
-        {route === "settings" ? (
+        {initialStoreLoaded && route === "settings" ? (
           <Settings
             interfaceLanguage={interfaceLanguage}
             now={now}
@@ -601,7 +631,8 @@ function AppContent({
               setExamAttempts(data.examAttempts);
               setLessonProgress(data.lessonProgress ?? []);
               setLessonQuizAttempts(data.lessonQuizAttempts ?? []);
-              preferencesMutationVersion.current += 1;
+              savedPreferencesRef.current = data.preferences;
+              latestRequestedPreferencesRef.current = data.preferences;
               setPreferencesState(data.preferences);
               setPracticeSession(null);
               setMockExam(null);
@@ -614,7 +645,8 @@ function AppContent({
               setExamAttempts([]);
               setLessonProgress([]);
               setLessonQuizAttempts([]);
-              preferencesMutationVersion.current += 1;
+              savedPreferencesRef.current = defaultPreferences;
+              latestRequestedPreferencesRef.current = defaultPreferences;
               setPreferencesState(defaultPreferences);
               setPracticeScope({ type: "all" });
               setPracticeSession(null);
@@ -637,6 +669,15 @@ function AppContent({
 
       <Footer interfaceLanguage={interfaceLanguage} />
     </div>
+  );
+}
+
+function InitialStoreLoading({ interfaceLanguage }: { readonly interfaceLanguage: InterfaceLanguage }) {
+  return (
+    <section className="card app-loading-compact" aria-labelledby="app-loading-title" role="status" aria-live="polite">
+      <h2 id="app-loading-title">{t(interfaceLanguage, "loading")}</h2>
+      <p>{t(interfaceLanguage, "loadingLocalProgress")}</p>
+    </section>
   );
 }
 
@@ -1061,7 +1102,7 @@ interface PracticeProps {
   readonly startPractice: (scope?: PracticeScope, mode?: PracticeMode) => void;
   readonly onSessionChange: (session: PracticeSession | null) => void;
   readonly onProgressChange: (progress: readonly QuestionProgressRecord[]) => Promise<void>;
-  readonly onSetPreferences: (preferences: WebPreferences) => Promise<void>;
+  readonly onSetPreferences: (preferences: PreferencesPatch) => Promise<void>;
 }
 
 function Practice({
@@ -1119,7 +1160,7 @@ function Practice({
       return;
     }
     const nextScope = scopeFromControls(scopeKind, categoryId, subsectionId);
-    void onSetPreferences({ ...preferences, practiceMode: nextMode }).catch(() => {
+    void onSetPreferences({ practiceMode: nextMode }).catch(() => {
       // The parent surfaces IndexedDB failures in a role=alert message.
     });
     startPractice(nextScope, nextMode);
@@ -1659,7 +1700,7 @@ interface SettingsProps {
   readonly onProgressImported: (data: ProgressExportV1) => void;
   readonly onReset: () => void;
   readonly onInterfaceLanguageChange: (language: InterfaceLanguage) => void;
-  readonly onSetPreferences: (preferences: WebPreferences) => Promise<void>;
+  readonly onSetPreferences: (preferences: PreferencesPatch) => Promise<void>;
 }
 
 function Settings({ interfaceLanguage, store, now, preferences, statusMessage, onProgressImported, onReset, onInterfaceLanguageChange, onSetPreferences }: SettingsProps) {
@@ -1753,7 +1794,7 @@ function Settings({ interfaceLanguage, store, now, preferences, statusMessage, o
 
   async function chooseTheme(theme: WebPreferences["theme"]): Promise<void> {
     try {
-      await onSetPreferences({ ...preferences, theme });
+      await onSetPreferences({ theme });
       setErrors([]);
       setMessage(t(interfaceLanguage, "themeSaved", theme === "system" ? t(interfaceLanguage, "themeSystem") : theme === "light" ? t(interfaceLanguage, "themeLight") : t(interfaceLanguage, "themeDark")));
     } catch (error) {

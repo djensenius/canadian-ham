@@ -101,6 +101,17 @@ main:focus-visible,
   font-size: var(--ch-type-title-size);
 }
 
+.app-loading-compact {
+  display: grid;
+  gap: var(--ch-space-sm);
+  padding-block: var(--ch-space-lg);
+}
+
+.app-loading-compact h2,
+.app-loading-compact p {
+  margin-bottom: 0;
+}
+
 .site-header,
 .site-footer,
 .top-nav,
