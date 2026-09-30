@@ -278,8 +278,12 @@ function answersBySourceIndex(question: Question): ReadonlyMap<number, Answer> {
   return bySourceIndex;
 }
 
+function cliPathBase(): string {
+  return process.env.INIT_CWD ?? process.cwd();
+}
+
 function resolveBankDirectory(directory: string): string {
-  return path.isAbsolute(directory) ? directory : path.resolve(DEFAULT_REPO_ROOT, directory);
+  return path.isAbsolute(directory) ? directory : path.resolve(cliPathBase(), directory);
 }
 
 async function readBankDirectory(directory: string): Promise<GeneratedBank> {
@@ -511,20 +515,37 @@ function usage(): string {
   return "usage: node packages/content-tools/src/diff-banks.ts [--json] <old-generated-bank-dir> <new-generated-bank-dir>";
 }
 
-async function main(): Promise<void> {
-  const rawArgs = process.argv.slice(2);
+type CliOptions = {
+  readonly json: boolean;
+  readonly directories: readonly [string, string];
+};
+
+function parseCliArgs(rawArgs: readonly string[]): CliOptions {
   const args = rawArgs[0] === "--" ? rawArgs.slice(1) : rawArgs;
-  const json = args[0] === "--json";
-  const directories = json ? args.slice(1) : args;
+  let json = false;
+  const directories: string[] = [];
+  for (const arg of args) {
+    if (arg === "--json") {
+      json = true;
+    } else {
+      directories.push(arg);
+    }
+  }
+
   if (directories.length !== 2) {
     throw new Error(usage());
   }
 
-  const report = await buildBankDiffReport(directories[0]!, directories[1]!);
-  if (json) {
-    console.log(JSON.stringify(report, null, 2));
+  return { json, directories: [directories[0]!, directories[1]!] };
+}
+
+export async function main(rawArgs = process.argv.slice(2), output: NodeJS.WritableStream = process.stdout): Promise<void> {
+  const options = parseCliArgs(rawArgs);
+  const report = await buildBankDiffReport(options.directories[0], options.directories[1]);
+  if (options.json) {
+    output.write(`${JSON.stringify(report, null, 2)}\n`);
   } else {
-    process.stdout.write(renderBankDiffReport(report));
+    output.write(renderBankDiffReport(report));
   }
 }
 

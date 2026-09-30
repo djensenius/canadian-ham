@@ -44,10 +44,10 @@
       "fr": "Quelle valeur est nouvelle?"
     },
     "answers": [
-      { "sourceIndex": 0, "isCorrect": true, "text": { "en": "New correct", "fr": "Ancienne correcte" } },
-      { "sourceIndex": 1, "isCorrect": false, "text": { "en": "Old distractor", "fr": "Nouveau distracteur" } },
-      { "sourceIndex": 2, "isCorrect": false, "text": { "en": "Stable distractor", "fr": "Distracteur stable" } },
-      { "sourceIndex": 3, "isCorrect": false, "text": { "en": "Another distractor", "fr": "Autre distracteur" } }
+      { "sourceIndex": 0, "isCorrect": false, "text": { "en": "New correct", "fr": "Ancienne correcte" } },
+      { "sourceIndex": 1, "isCorrect": true, "text": { "en": "Old distractor", "fr": "Nouveau distracteur" } },
+      { "sourceIndex": 3, "isCorrect": false, "text": { "en": "Another distractor", "fr": "Autre distracteur" } },
+      { "sourceIndex": 4, "isCorrect": false, "text": { "en": "Added distractor", "fr": "Distracteur ajouté" } }
     ]
   },
   {
