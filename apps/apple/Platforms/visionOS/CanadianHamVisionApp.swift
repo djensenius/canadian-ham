@@ -573,6 +573,7 @@ private struct VisionFeedbackPanel: View {
             Button("Next question", action: onNext)
                 .buttonStyle(VisionPrimaryButtonStyle())
                 .font(DesignTokens.FontScale.body.weight(.bold))
+                .hoverEffect(.highlight)
                 .accessibilityHint("Loads another question from this category")
                 .accessibilityIdentifier("next-question-button")
         }
