@@ -8,6 +8,32 @@ final class CanadianHamPracticeUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    func testFrenchSystemLanguageNavigatesMainScreensAndAuditsHomeAndPractice() throws {
+        XCUIDevice.shared.appearance = .light
+        let frenchLocaleArguments = ["-AppleLanguages", "(fr)", "-AppleLocale", "fr_CA"]
+
+        var app = launchApp(arguments: frenchLocaleArguments + ["-CanadianHamInitialScreen", "home"])
+        XCTAssertTrue(app.staticTexts["Prêt pour la base avec mention ?"].firstMatch.waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "French home")
+        app.terminate()
+
+        for (screen, expectedText) in [
+            ("learn", "Apprendre"),
+            ("practice", "Pratique"),
+            ("mock", "Examen blanc"),
+            ("settings", "Réglages"),
+            ("about", "À propos de Canadian Ham")
+        ] {
+            app = launchApp(arguments: frenchLocaleArguments + ["-CanadianHamInitialScreen", screen])
+            XCTAssertTrue(app.staticTexts[expectedText].firstMatch.waitForExistence(timeout: 10), "Expected localized \(screen) screen")
+            app.terminate()
+        }
+
+        app = launchApp(arguments: frenchLocaleArguments + ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
+        XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "French practice question")
+    }
+
     func testCanPracticeInFrenchAndSeeFeedback() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
