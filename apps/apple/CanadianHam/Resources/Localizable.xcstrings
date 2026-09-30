@@ -1,24 +1,66 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "%@ out of %@" : {
+    ", %@" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ out of %2$@"
-          }
-        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ sur %@"
+            "value" : ", %@"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ sur %@"
+            "value" : ", %@"
+          }
+        }
+      }
+    },
+    ", current" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ", en cours"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ", en cours"
+          }
+        }
+      }
+    },
+    ", flagged" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ", marquée"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ", marquée"
+          }
+        }
+      }
+    },
+    ". Source: " : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ". Source : "
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ". Source : "
           }
         }
       }
@@ -67,6 +109,50 @@
         }
       }
     },
+    "%@ out of %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ out of %2$@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ sur %@"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ sur %@"
+          }
+        }
+      }
+    },
+    "%@: %lld / %lld (%@%%)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$lld / %3$lld (%4$@%%)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ : %lld / %lld (%@ %%)"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ : %lld / %lld (%@ %%)"
+          }
+        }
+      }
+    },
     "%@. %@." : {
       "localizations" : {
         "en" : {
@@ -107,28 +193,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@. %@. La révision à faire exclut les questions inédites. La progression est enregistrée sur cet appareil après chaque réponse."
-          }
-        }
-      }
-    },
-    "%@: %lld / %lld (%@%%)" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@: %2$lld / %3$lld (%4$@%%)"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ : %lld / %lld (%@ %%)"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ : %lld / %lld (%@ %%)"
           }
         }
       }
@@ -817,66 +881,18 @@
         }
       }
     },
-    ", %@" : {
+    "•" : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : ", %@"
+            "value" : "•"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : ", %@"
-          }
-        }
-      }
-    },
-    ", current" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ", en cours"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ", en cours"
-          }
-        }
-      }
-    },
-    ", flagged" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ", marquée"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ", marquée"
-          }
-        }
-      }
-    },
-    ". Source: " : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ". Source : "
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ". Source : "
+            "value" : "•"
           }
         }
       }
@@ -1039,6 +1055,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réponse %@, %@"
+          }
+        }
+      }
+    },
+    "answered" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "répondue"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "répondue"
           }
         }
       }
@@ -2685,22 +2717,6 @@
         }
       }
     },
-    "No Canadian Ham explanation is bundled for this question yet." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune explication Canadian Ham n’est encore fournie pour cette question."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune explication Canadian Ham n’est encore fournie pour cette question."
-          }
-        }
-      }
-    },
     "No accounts, networking, analytics, telemetry, third-party SDKs, or iCloud sync. Import and export use local files you choose." : {
       "localizations" : {
         "fr" : {
@@ -2729,6 +2745,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aucune question intégrée ne correspond à cette portée."
+          }
+        }
+      }
+    },
+    "No Canadian Ham explanation is bundled for this question yet." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune explication Canadian Ham n’est encore fournie pour cette question."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune explication Canadian Ham n’est encore fournie pour cette question."
           }
         }
       }
@@ -4817,6 +4849,22 @@
         }
       }
     },
+    "unanswered" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sans réponse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sans réponse"
+          }
+        }
+      }
+    },
     "Weak areas" : {
       "localizations" : {
         "fr" : {
@@ -4893,54 +4941,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Votre progression locale indique des catégories faibles, des révisions dues ou moins d’examens simulés réussis que nécessaire. Révisez les questions faibles et dues avant de vous fier à votre préparation à l’examen."
-          }
-        }
-      }
-    },
-    "answered" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "répondue"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "répondue"
-          }
-        }
-      }
-    },
-    "unanswered" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "sans réponse"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "sans réponse"
-          }
-        }
-      }
-    },
-    "•" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "•"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "•"
           }
         }
       }
