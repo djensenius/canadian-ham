@@ -456,6 +456,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         assertMockExamResultVisible(in: app)
         scrollToTop(in: app)
         try performAudit(on: app, context: "\(appearance.rawValue) mock exam results")
+        scrollMockResultsDetailsIntoView(in: app)
+        try performAudit(on: app, context: "\(appearance.rawValue) mock exam results details")
         app.terminate()
     }
 
@@ -526,6 +528,15 @@ final class CanadianHamPracticeUITests: XCTestCase {
     private func assertMockExamResultDetailsVisible(in app: XCUIApplication) {
         XCTAssertTrue(app.staticTexts["Category breakdown"].waitForExistence(timeout: 5), "Mock exam results should include category breakdown")
         XCTAssertTrue(app.staticTexts["Wrong-answer review"].firstMatch.exists, "Mock exam results should include wrong-answer review")
+    }
+
+    private func scrollMockResultsDetailsIntoView(in app: XCUIApplication) {
+        let categoryBreakdown = app.descendants(matching: .any)["mock-results-category-breakdown"].firstMatch
+        XCTAssertTrue(categoryBreakdown.waitForExistence(timeout: 5), "Mock exam results should expose a deterministic category-breakdown anchor")
+        scrollUntilPartiallyVisible(categoryBreakdown, in: app, maxSwipes: 12)
+        let wrongAnswerReview = app.descendants(matching: .any)["mock-results-wrong-answer-review"].firstMatch
+        XCTAssertTrue(wrongAnswerReview.waitForExistence(timeout: 5), "Mock exam results should expose a deterministic wrong-answer-review anchor")
+        scrollUntilPartiallyVisible(wrongAnswerReview, in: app, maxSwipes: 12)
     }
 
     private func answerKnownCorrectLifeAnswerIfPresent(in app: XCUIApplication, identifier: String) {

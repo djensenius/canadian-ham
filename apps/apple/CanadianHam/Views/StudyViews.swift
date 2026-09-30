@@ -803,6 +803,7 @@ struct MockExamView: View {
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("mock-results-category-breakdown")
                 ForEach(attempt.score.categoryBreakdown, id: \.categoryId) { entry in
                     Text("\(entry.categoryId): \(entry.correct) / \(entry.total) (\(entry.percent, format: .number.precision(.fractionLength(0...1)))%)")
                         .font(DesignTokens.FontScale.body)
@@ -816,6 +817,7 @@ struct MockExamView: View {
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("mock-results-wrong-answer-review")
                 ForEach(attempt.items.filter { $0.selectedSourceIndex != 0 }) { item in
                     if let question = bank.question(id: item.questionId) {
                         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
