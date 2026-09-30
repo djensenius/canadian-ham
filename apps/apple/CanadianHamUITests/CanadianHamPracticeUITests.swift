@@ -324,18 +324,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCUIDevice.shared.appearance = .light
     }
 
-    func testA11yDiagnosticsEvidenceHarness() throws {
-        guard ProcessInfo.processInfo.environment["CANADIAN_HAM_RUN_A11Y_DIAGNOSTICS"] == "1" else {
-            throw XCTSkip("Set CANADIAN_HAM_RUN_A11Y_DIAGNOSTICS=1 to run the opt-in accessibility evidence diagnostic harness.")
-        }
-
-        XCUIDevice.shared.appearance = .light
-        try runDiagnosticsHarness(appearance: .light)
-        XCUIDevice.shared.appearance = .dark
-        try runDiagnosticsHarness(appearance: .dark)
-        XCUIDevice.shared.appearance = .light
-    }
-
     private func auditCoreScreens(appearance: AuditAppearance) throws {
         var app = launchApp(arguments: ["-CanadianHamInitialScreen", "home"])
         XCTAssertTrue(app.staticTexts["Ready for Basic with Honours?"].waitForExistence(timeout: 10))
@@ -471,18 +459,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app.terminate()
     }
 
-    private func runDiagnosticsHarness(appearance: AuditAppearance) throws {
-        let app = launchApp(arguments: ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
-        XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
-        captureScreenEvidence(named: "practice-\(appearance.rawValue)-unanswered-iteration-\(auditIterationID)")
-        try captureAccessibilityAudit(on: app, context: "practice \(appearance.rawValue) unanswered")
-        answerFirstVisibleAnswer(in: app)
-        _ = waitForAnswerFeedback(in: app)
-        captureScreenEvidence(named: "practice-\(appearance.rawValue)-answered-iteration-\(auditIterationID)")
-        try captureAccessibilityAudit(on: app, context: "practice \(appearance.rawValue) answered")
-        app.terminate()
-    }
-
     private func launchApp(arguments: [String] = [], resetData: Bool = true) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = (resetData ? ["-CanadianHamResetDataOnLaunch"] : []) + arguments
@@ -496,77 +472,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
         } else {
             throw XCTSkip("performAccessibilityAudit is unavailable before iOS 17 for \(context).")
         }
-    }
-
-    private func captureAccessibilityAudit(on app: XCUIApplication, context: String) throws {
-        if #available(iOS 17.0, *) {
-            var findings: [String] = []
-            do {
-                try app.performAccessibilityAudit { issue in
-                    findings.append(self.describe(issue))
-                    return true
-                }
-            } catch {
-                attachRawAuditFindings(findings, context: context, error: error)
-                throw error
-            }
-            attachRawAuditFindings(findings, context: context, error: nil)
-            XCTAssertTrue(findings.isEmpty, "Accessibility audit reported issues for \(context): \(findings.joined(separator: " | "))")
-        } else {
-            attachRawAuditFindings(["performAccessibilityAudit is unavailable before iOS 17."], context: context, error: nil)
-        }
-    }
-
-    @available(iOS 17.0, *)
-    private func describe(_ issue: XCUIAccessibilityAuditIssue) -> String {
-        let element = issue.element
-        return """
-        auditType: \(issue.auditType)
-        element.identifier: \(element?.identifier ?? "")
-        element.label: \(element?.label ?? "")
-        element.frame: \(element.map { frameDescription($0.frame) } ?? "nil")
-        compactDescription: \(issue.compactDescription)
-        """
-    }
-
-    private func attachRawAuditFindings(_ findings: [String], context: String, error: Error?) {
-        var lines = ["Context: \(context)", "Iteration: \(auditIterationID)"]
-        if let error { lines.append("Audit error: \(error)") }
-        lines.append(findings.isEmpty ? "No accessibility audit issues reported." : findings.joined(separator: "\n\n"))
-        let text = lines.joined(separator: "\n\n")
-        let attachment = XCTAttachment(string: text)
-        attachment.name = "\(sanitizedEvidenceName(context))-raw-accessibility-audit-findings"
-        attachment.lifetime = .keepAlways
-        add(attachment)
-        exportEvidence(Data(text.utf8), filename: "\(sanitizedEvidenceName(context))-raw-accessibility-audit-findings.txt")
-    }
-
-    @discardableResult
-    private func captureScreenEvidence(named name: String) -> XCUIScreenshot {
-        let screenshot = XCUIScreen.main.screenshot()
-        let attachment = XCTAttachment(screenshot: screenshot)
-        attachment.name = sanitizedEvidenceName(name)
-        attachment.lifetime = .keepAlways
-        add(attachment)
-        exportEvidence(screenshot.pngRepresentation, filename: "\(sanitizedEvidenceName(name)).png")
-        return screenshot
-    }
-
-    private func exportEvidence(_ data: Data, filename: String, file: StaticString = #filePath, line: UInt = #line) {
-        let directory = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
-            .appendingPathComponent("CanadianHamA11yEvidence", isDirectory: true)
-            .appendingPathComponent(auditIterationID, isDirectory: true)
-        do {
-            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-            try data.write(to: directory.appendingPathComponent(sanitizedEvidenceName(filename)), options: .atomic)
-        } catch {
-            XCTFail("Failed to export accessibility evidence \(filename): \(error)", file: file, line: line)
-        }
-    }
-
-    private func sanitizedEvidenceName(_ name: String) -> String {
-        let allowedCharacters = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-_."))
-        return String(name.unicodeScalars.map { allowedCharacters.contains($0) ? Character($0) : "-" })
     }
 
     private func openMockExamStart(in app: XCUIApplication) {
