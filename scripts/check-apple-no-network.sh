@@ -8,7 +8,14 @@ cd "$repo_root" || exit 2
 
 shopt -s nullglob
 
+# Keep this exact RBR-4 URL in sync with OFFICIAL_SOURCE_CITATION_URLS
+# in apps/web/scripts/audit-dist-urls.ts.
 allowed_citation_url="https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service"
+# Bundled lessons/explanations are copied into the Apple app. Their external
+# content references are allowed only when they are the exact RBR-4 URL above or
+# satisfy check-explanations' citation rule: absolute https URLs on
+# ised-isde.canada.ca or www.ised-isde.canada.ca, with no credentials.
+allowed_ised_citation_pattern='^https://(ised-isde\.canada\.ca|www\.ised-isde\.canada\.ca)(/|[?#]|$)'
 issue_count=0
 
 report_issue() {
@@ -28,6 +35,51 @@ print_grep_matches() {
     fi
     printf '  %s\n' "$line" >&2
   done < <(grep -nE "$@" 2>/dev/null)
+}
+
+normalize_detected_content_reference() {
+  local token=$1
+  if [[ $token == \<*\> ]]; then
+    token=${token#<}
+    token=${token%>}
+  fi
+  while [[ $token == *[.,\;\]\}] ]]; do
+    token=${token%?}
+  done
+  printf '%s\n' "$token"
+}
+
+is_allowed_content_citation_url() {
+  local url=$1
+  [[ "$url" == "$allowed_citation_url" ]] && return 0
+  [[ $url =~ $allowed_ised_citation_pattern ]]
+}
+
+scan_text_files_for_content_references() {
+  local label=$1
+  local pattern=$2
+  shift 2
+  local file
+  local line
+  local line_number
+  local text
+  local raw_reference
+  local reference
+  for file in "$@"; do
+    line_number=0
+    while IFS= read -r line || [[ -n $line ]]; do
+      line_number=$((line_number + 1))
+      text=$line
+      while [[ $text =~ $pattern ]]; do
+        raw_reference=${BASH_REMATCH[0]}
+        reference=$(normalize_detected_content_reference "$raw_reference")
+        if ! is_allowed_content_citation_url "$reference"; then
+          report_issue "$label: $file:$line_number: $reference"
+        fi
+        text=${text#*"$raw_reference"}
+      done
+    done < "$file"
+  done
 }
 
 swift_files=()
@@ -78,13 +130,27 @@ for package_dir in packages/*-swift; do
 done
 [[ -f Package.resolved ]] && package_resolved_files+=("Package.resolved")
 
+lesson_markdown_files=()
+if [[ -d content/lessons ]]; then
+  while IFS= read -r file; do
+    lesson_markdown_files+=("$file")
+  done < <(find content/lessons -type f -name '*.md' -print | sort)
+fi
+
+explanation_json_files=()
+if [[ -d content/explanations ]]; then
+  while IFS= read -r file; do
+    explanation_json_files+=("$file")
+  done < <(find content/explanations -type f -name '*.json' -print | sort)
+fi
+
 if [[ ${#swift_files[@]} -eq 0 ]]; then
   report_issue "no Swift files found under apps/apple or packages/*-swift/Sources"
 fi
 
 if [[ ${#swift_files[@]} -gt 0 ]]; then
   source_identifier_pattern='(^|[^[:alnum:]_])(NSUbiquitous[[:alnum:]_]*|URLSession[[:alnum:]_]*|NSURLSession[[:alnum:]_]*|NSURLConnection[[:alnum:]_]*|URLRequest[[:alnum:]_]*|NSURLRequest[[:alnum:]_]*|NW[A-Z][[:alnum:]_]*|CK[A-Z][[:alnum:]_]*|CFSocket[[:alnum:]_]*|CFStream[[:alnum:]_]*|CFHTTP[[:alnum:]_]*|CFNetwork[[:alnum:]_]*|WKWebView[[:alnum:]_]*|SFSafariViewController[[:alnum:]_]*|ASWebAuthenticationSession[[:alnum:]_]*|CloudKit[[:alnum:]_]*|NSPersistentCloudKitContainer[[:alnum:]_]*|Firebase[[:alnum:]_]*|FirebaseAnalytics[[:alnum:]_]*|Crashlytics[[:alnum:]_]*|GoogleAnalytics[[:alnum:]_]*|GoogleTagManager[[:alnum:]_]*|Sentry[[:alnum:]_]*|Segment[[:alnum:]_]*|Mixpanel[[:alnum:]_]*|Amplitude[[:alnum:]_]*|PostHog[[:alnum:]_]*|Datadog[[:alnum:]_]*|AppCenter[[:alnum:]_]*|AdMob[[:alnum:]_]*|AppsFlyer[[:alnum:]_]*|Adjust[[:alnum:]_]*|Braze[[:alnum:]_]*|Snowplow[[:alnum:]_]*|TelemetryDeck[[:alnum:]_]*|Bugsnag[[:alnum:]_]*|NewRelic[[:alnum:]_]*|[[:alnum:]_]*(WebSocket|Socket)[[:alnum:]_]*)([^[:alnum:]_]|$)'
-  source_import_pattern='^[[:space:]]*import[[:space:]]+(Network|CloudKit|WebKit|SafariServices|CFNetwork|AuthenticationServices|Firebase[[:alnum:]_]*|[[:alnum:]_]*Analytics[[:alnum:]_]*)([^[:alnum:]_]|$)'
+  source_import_pattern='^[[:space:]]*(@[A-Za-z_][A-Za-z0-9_]*(\([^)]*\))?[[:space:]]+)*import[[:space:]]+((struct|class|enum|protocol|typealias|func|var|let)[[:space:]]+)?(Network|CloudKit|WebKit|SafariServices|CFNetwork|AuthenticationServices|Firebase[[:alnum:]_]*|[[:alnum:]_]*Analytics[[:alnum:]_]*)(\.|[^[:alnum:]_]|$)'
   lowercase_socket_pattern='(^|[^[:alnum:]_])socket[[:space:]]*\('
   source_api_pattern="$source_import_pattern|$source_identifier_pattern|$lowercase_socket_pattern"
   print_grep_matches "forbidden networking, browser, iCloud, socket, or analytics SDK symbol in Swift source" "$source_api_pattern" "${swift_files[@]}"
@@ -140,6 +206,16 @@ fi
 if [[ ${#package_resolved_files[@]} -gt 0 ]]; then
   resolved_remote_pattern='https?://|git@|ssh://|github\.com|gitlab\.com|bitbucket\.org|repositoryURL'
   print_grep_matches "Package.resolved contains remote package pins; Apple builds must use local packages only" "$resolved_remote_pattern" "${package_resolved_files[@]}"
+fi
+
+if [[ ${#lesson_markdown_files[@]} -gt 0 ]]; then
+  lesson_reference_pattern='https?://[^[:space:]"<>)]+|<[A-Za-z][A-Za-z0-9+.-]*:[^[:space:]<>]+>|<[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}>|www\.[^[:space:]"<>)]+|mailto:[^[:space:]"<>)]+|tel:[^[:space:]"<>)]+|sms:[^[:space:]"<>)]+|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
+  scan_text_files_for_content_references "unexpected content link/contact in bundled lesson Markdown" "$lesson_reference_pattern" "${lesson_markdown_files[@]}"
+fi
+
+if [[ ${#explanation_json_files[@]} -gt 0 ]]; then
+  explanation_url_pattern='https?://[^[:space:]"<>)]+|[A-Za-z][A-Za-z0-9+.-]*://[^[:space:]"<>)]+|www\.[^[:space:]"<>)]+|mailto:[^[:space:]"<>)]+|tel:[^[:space:]"<>)]+|sms:[^[:space:]"<>)]+'
+  scan_text_files_for_content_references "unexpected URL in bundled explanation JSON" "$explanation_url_pattern" "${explanation_json_files[@]}"
 fi
 
 if [[ $issue_count -ne 0 ]]; then
