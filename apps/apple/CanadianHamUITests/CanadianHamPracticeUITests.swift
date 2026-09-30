@@ -396,6 +396,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(reviewApp.staticTexts["Practice review"].waitForExistence(timeout: 10))
         scrollToTop(in: reviewApp)
         try performAudit(on: reviewApp, context: "\(appearance.rawValue) practice review")
+        scrollPracticeReviewFeedbackIntoView(in: reviewApp)
+        try performAudit(on: reviewApp, context: "\(appearance.rawValue) practice review feedback")
         reviewApp.terminate()
     }
 
@@ -556,6 +558,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let wrongAnswerReview = app.descendants(matching: .any)["mock-results-wrong-answer-review"].firstMatch
         XCTAssertTrue(wrongAnswerReview.waitForExistence(timeout: 5), "Mock exam results should expose a deterministic wrong-answer-review anchor")
         scrollUntilPartiallyVisible(wrongAnswerReview, in: app, maxSwipes: 12)
+    }
+
+    private func scrollPracticeReviewFeedbackIntoView(in app: XCUIApplication) {
+        let explanation = app.descendants(matching: .any)["explanation-panel"].firstMatch
+        XCTAssertTrue(explanation.waitForExistence(timeout: 5), "Practice review should expose a deterministic explanation anchor")
+        scrollUntilPartiallyVisible(explanation, in: app, maxSwipes: 12)
     }
 
     private func answerKnownCorrectLifeAnswerIfPresent(in app: XCUIApplication, identifier: String) {
