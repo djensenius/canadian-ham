@@ -51,15 +51,16 @@ Recommended layout:
 content/sources/ised/<bank-id>/
   manifest.json
   SHA256SUMS
+  <official-question-bank-pdf>.pdf
   questions/
     amat_basic_quest_delim.txt
     readme_basic.txt
     lisezmoi_base.txt
-  pdf/
-    <official-question-bank-pdf>.pdf
   reference/
     <official-reference-material-files-if-in-scope>
 ```
+
+The active bank keeps its PDF at the source-directory root. Keep that layout for future official question-bank PDFs unless a migration task deliberately changes it. The importer only reads the delimited TXT plus `manifest.json` and `SHA256SUMS`; checksum files must record the exact committed relative path for PDFs and reference files.
 
 Rules:
 
@@ -75,8 +76,9 @@ The current importer is pinned to the active `basic-2025-07-15` bank. A future u
 
 Expected migration work:
 
-1. Update the importer constants and expected bank counts for the new `<bank-id>`.
-2. Keep strict parsing rules unless ISED has changed the source format and the format change is reviewed:
+1. Update `packages/content-tools/src/active-bank.ts` for the new `<bank-id>`. This shared module defines the active bank ID, source directory, and generated directory used by `basic-importer.ts`, `check-explanations.ts`, `check-quizzes.ts`, `check-lesson-coverage.ts`, and `check-lesson-originality.ts`; do not add separate hard-coded active-bank paths in those tools.
+2. Update importer expected dates, counts, source assumptions, and tests for the new bank.
+3. Keep strict parsing rules unless ISED has changed the source format and the format change is reviewed:
    - UTF-8 without BOM;
    - CRLF line endings;
    - semicolon delimiter;
@@ -85,7 +87,7 @@ Expected migration work:
    - field values preserved verbatim;
    - no embedded newlines;
    - no CSV quote wrappers or doubled-quote escapes.
-3. Run the importer and review the generated output:
+4. Run the importer and review the generated output:
 
 ```sh
 pnpm --filter @canadian-ham/content-tools import:basic
@@ -94,14 +96,26 @@ pnpm --filter @canadian-ham/content-tools import:basic:check
 
 The importer writes deterministic JSON under `content/generated/<bank-id>/`. Do not edit generated JSON by hand.
 
+Concrete files to touch or review during the importer/content migration:
+
+- `packages/content-tools/src/active-bank.ts` for the single active bank ID/source/generated directory switch.
+- `packages/content-tools/src/basic-importer.ts` for effective date, expected counts, privilege assertions, source-format assumptions, and any path rules not derived from `active-bank.ts`.
+- `content/explanations/**/*.json` `bankId` fields and explanation records for removed, added, or changed official question IDs.
+- `packages/content-tools/test/**/*.ts` fixtures that assert the active bank ID, generated directory, or importer output.
+
 ## 5. Run validation checks
 
 After importing the new bank, run the content-tool checks before touching app bundles:
 
 ```sh
 pnpm --filter @canadian-ham/content-tools test
+pnpm --filter @canadian-ham/content-tools check:explanations
+pnpm --filter @canadian-ham/content-tools check:quizzes
+pnpm --filter @canadian-ham/content-tools check:coverage
+pnpm --filter @canadian-ham/content-tools check:lesson-originality:all
 pnpm typecheck
 pnpm test
+pnpm import:check
 pnpm check:links
 ```
 
@@ -123,9 +137,18 @@ If the source format changed, stop and review the importer contract before accep
 Use the zero-dependency diff script to compare the active generated bank with the candidate generated bank:
 
 ```sh
-pnpm diff:banks -- content/generated/basic-2025-07-15 content/generated/<bank-id> > /tmp/basic-bank-diff.md
-pnpm diff:banks -- --json content/generated/basic-2025-07-15 content/generated/<bank-id> > /tmp/basic-bank-diff.json
+pnpm --silent diff:banks -- content/generated/basic-2025-07-15 content/generated/<bank-id> > /tmp/basic-bank-diff.md
+pnpm --silent diff:banks -- --json content/generated/basic-2025-07-15 content/generated/<bank-id> > /tmp/basic-bank-diff.json
+node -e 'JSON.parse(require("node:fs").readFileSync("/tmp/basic-bank-diff.json", "utf8"))'
 ```
+
+Use `pnpm --silent` when redirecting so pnpm banner lines do not corrupt the saved Markdown or JSON. The direct equivalent is:
+
+```sh
+node packages/content-tools/src/diff-banks.ts --json content/generated/basic-2025-07-15 content/generated/<bank-id> > /tmp/basic-bank-diff.json
+```
+
+Relative bank paths resolve against `INIT_CWD` when that environment variable is set by pnpm, otherwise against the current working directory. Run the parse check after saving JSON; do not attach or archive a redirected JSON report until it parses.
 
 The report lists:
 
@@ -142,6 +165,8 @@ Review the Markdown report for human sign-off. Keep the JSON report if another s
 
 A bank update can invalidate original content that cites official IDs. Run these checks and fix failures in the same migration branch or in clearly sequenced follow-up branches.
 
+The four content checkers use `packages/content-tools/src/active-bank.ts` for their default generated-bank paths. To switch them to a candidate bank, update that shared module before running the checks. Do not leave a checker pointed at `content/generated/basic-2025-07-15/` while reviewing a future bank.
+
 ### Explanations
 
 Command:
@@ -153,7 +178,8 @@ pnpm --filter @canadian-ham/content-tools check:explanations
 Likely failures and fixes:
 
 - Unknown question ID: remove, replace, or rewrite the explanation for the new official ID.
-- Changed official question or answer text: review whether the explanation still answers the new wording. Update only original explanation prose; never edit official generated text.
+- `bankId` mismatch in `content/explanations/**/*.json`: update records after the active bank switch and review the related question IDs at the same time.
+- Changed official question or answer text, including quoted per-choice distractor notes: review whether the explanation still answers the new wording. Update only original explanation prose; never edit official generated text.
 - Removed ID: retire the explanation or map the concept to a new official question after review.
 - Added ID: author a new original explanation if release coverage requires it.
 
@@ -168,8 +194,8 @@ pnpm --filter @canadian-ham/content-tools check:quizzes
 Likely failures and fixes:
 
 - Quiz references an unknown official question ID: replace it with a current-bank ID or convert the item to an original concept-check question.
-- Quoted official answer text no longer matches: update the quiz reference or original surrounding prose after reviewing the new generated data.
-- Quiz subsection target changed: move the quiz item to the correct lesson or adjust lesson front matter if the official subsection changed.
+- Official question IDs are no longer covered by the lesson's subsection list: move the quiz item to the correct lesson or adjust lesson front matter after reviewing the new generated data.
+- Concept-check prompt, choice, or explanation prose overlaps too closely with official question or answer text: rewrite the original quiz prose so it teaches the concept without copying official wording.
 
 ### Lesson coverage
 
@@ -185,21 +211,38 @@ Likely failures and fixes:
 - Unknown subsection: remove or replace lesson front matter that points at a subsection removed from the bank.
 - Duplicate coverage: decide which lesson owns the subsection and keep the mapping unambiguous unless the checker explicitly allows shared coverage in a future task.
 
+### Lesson originality
+
+Command:
+
+```sh
+pnpm --filter @canadian-ham/content-tools check:lesson-originality:all
+```
+
+Likely failures and fixes:
+
+- Lesson prose now shares long word runs or too many five-grams with changed official question or answer text: rewrite the lesson example or explanation in original wording.
+- Numeric examples now duplicate official question-and-answer values in one block: change the original example values while preserving the teaching point.
+- Existing allowlist entries no longer apply cleanly to the new official text: review, remove, or update them rather than broadening allowlists silently.
+
 When the bank changes counts or IDs, update lesson prose only as original project content. Keep official text in `content/generated/<bank-id>/` and source artifacts in `content/sources/ised/<bank-id>/`.
 
 ## 8. Check progress-data compatibility
 
-Progress stores can contain records for question IDs from an older bank. Import and migration paths must handle unknown IDs safely.
+Progress stores can contain records for question IDs from an older bank. Today's code does not yet have a compatibility migration for a new bank and must be treated as strict-reject behavior:
 
-Required behaviour for web and Apple progress import:
+- Web `apps/web/src/lib/progressStore.ts` rejects imports when the top-level `bankId` differs from the active bank, when `questionProgress[].bankId` differs, or when a question ID is not in the active generated bank. Exam attempts and lesson-quiz attempts also validate against known current-bank question, category, subsection, lesson, and quiz IDs.
+- Apple `apps/apple/CanadianHam/Services/ProgressStore.swift` does the same validation against `QuestionBank`: mismatched `bankId` values and unknown question IDs, exam-attempt item IDs, weak subsection IDs, and lesson-quiz official question IDs fail the import before any data is written.
 
-- Do not crash when imported progress references an unknown question ID.
-- Preserve or report unknown IDs as legacy data; do not treat them as current-bank due items.
-- Exclude unknown IDs from current practice, readiness, weak-area, and mock-exam calculations.
-- Show a user-facing import summary if records were skipped or retained as legacy unknown IDs.
-- Keep export data explicit about the bank ID that produced each question-progress record when the platform supports it.
+Before shipping a new bank, the owner must choose and approve a progress-compatibility policy and the apps need a code change. Do not implement that policy as part of the bank-import documentation task. The policy options include:
 
-When testing a future bank migration, create a small progress export containing:
+- map old IDs to reviewed replacement IDs when ISED changed identifiers but the learning concept is equivalent;
+- drop unknown or removed IDs with an explicit import/migration summary;
+- keep legacy data isolated from the current bank so it can be exported or viewed historically without affecting current practice.
+
+The decision must cover both imported export files and records already stored on devices: web IndexedDB records and Apple SwiftData entities with old `bankId` values, plus exam attempts and lesson-quiz attempts that reference removed question IDs, subsection IDs, category IDs, lesson IDs, or quiz IDs. Until that owner decision and code change exist, shipping a new bank would make older exports and some on-device history fail current import/validation paths.
+
+When testing a future bank migration after the owner decision is implemented, create a small progress export containing:
 
 - a known current-bank question ID;
 - a removed old-bank question ID;
@@ -210,6 +253,15 @@ Verify import, export, readiness, due-review counts, weak-area filtering, and re
 ## 9. Update web and Apple bundles
 
 After source, generated data, explanations, quizzes, and coverage are valid, update app bundle references from the old bank ID to the new bank ID.
+
+Concrete files to touch or review:
+
+- `apps/web/src/data/bank.ts` and `apps/web/README.md`.
+- `apps/apple/project.yml` for all four Apple targets, then run XcodeGen and commit the regenerated `apps/apple/CanadianHam.xcodeproj/project.pbxproj`.
+- `apps/apple/CanadianHam/Services/QuestionBankStore.swift`.
+- Hard-coded bank ID assertions in `apps/apple/CanadianHamTVTests/CanadianHamTVTests.swift` and `apps/apple/CanadianHamVisionTests/CanadianHamVisionTests.swift`.
+- `packages/engine-ts/src/generate-fixtures.ts`, the full-bank engine fixture, and Swift engine parity fixtures/tests.
+- `AGENTS.md` active question-bank SHA note.
 
 Web checks:
 
