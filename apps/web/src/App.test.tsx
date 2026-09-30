@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
 import { IDBFactory } from "fake-indexeddb";
@@ -13,7 +13,7 @@ import { App, AppErrorBoundary, CitationLink, ExplanationPanel } from "./App";
 import { bankId, loadQuestions, loadQuestionsFromUrl, type Question } from "./data/bank";
 import { explanationForQuestion, parseChoiceNotes } from "./data/explanations";
 import { lessonQuizzesById, buildLessonQuizItems } from "./data/quizzes";
-import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExportV1 } from "./lib/progressStore";
+import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExportV1, type WebPreferences } from "./lib/progressStore";
 import { INTERFACE_LANGUAGE_STORAGE_KEY } from "./lib/i18n";
 import { applyThemePreference, readStoredThemePreference, THEME_COLORS, THEME_STORAGE_KEY } from "./lib/theme";
 import { buildExamAttempt, createMockExam } from "./lib/studyEngine";
@@ -62,6 +62,53 @@ function createMemoryStorage(): Storage {
     removeItem: (key: string) => { values.delete(key); },
     setItem: (key: string, value: string) => { values.set(key, value); },
   };
+}
+
+class DelayedInitialPreferencesStore extends ProgressStore {
+  private readonly releaseInitialPreferencesPromise: Promise<void>;
+  private releaseInitialPreferencesPromiseResolve: (() => void) | null = null;
+  private readonly initialPreferencesReadStartedPromise: Promise<void>;
+  private initialPreferencesReadStartedResolve: (() => void) | null = null;
+  private readonly initialPreferencesReturnedPromise: Promise<void>;
+  private initialPreferencesReturnedResolve: (() => void) | null = null;
+  private preferencesReadCount = 0;
+
+  constructor(name: string) {
+    super(name);
+    this.releaseInitialPreferencesPromise = new Promise((resolve) => {
+      this.releaseInitialPreferencesPromiseResolve = resolve;
+    });
+    this.initialPreferencesReadStartedPromise = new Promise((resolve) => {
+      this.initialPreferencesReadStartedResolve = resolve;
+    });
+    this.initialPreferencesReturnedPromise = new Promise((resolve) => {
+      this.initialPreferencesReturnedResolve = resolve;
+    });
+  }
+
+  get initialPreferencesReadStarted(): Promise<void> {
+    return this.initialPreferencesReadStartedPromise;
+  }
+
+  get initialPreferencesReturned(): Promise<void> {
+    return this.initialPreferencesReturnedPromise;
+  }
+
+  releaseInitialPreferences(): void {
+    this.releaseInitialPreferencesPromiseResolve?.();
+  }
+
+  override async getPreferences(): Promise<WebPreferences> {
+    if (this.preferencesReadCount === 0) {
+      this.preferencesReadCount += 1;
+      this.initialPreferencesReadStartedResolve?.();
+      await this.releaseInitialPreferencesPromise;
+      this.initialPreferencesReturnedResolve?.();
+      return defaultPreferences;
+    }
+    this.preferencesReadCount += 1;
+    return super.getPreferences();
+  }
 }
 
 function webIndexHtml(): string {
@@ -771,6 +818,33 @@ describe("App accessibility and flows", () => {
     await user.click(screen.getByLabelText("Dark"));
     await waitFor(async () => {
       assert.equal((await store.getPreferences()).theme, "dark");
+      assert.equal(document.documentElement.dataset.theme, "dark");
+    });
+    assert.equal(window.localStorage.getItem(THEME_STORAGE_KEY), "dark");
+  });
+
+  it("keeps a user-selected theme when the initial preferences load finishes later", async () => {
+    window.location.hash = "#/settings";
+    const store = new DelayedInitialPreferencesStore("settings-theme-load-race");
+    stores.push(store);
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "settings-race-seed"} />);
+
+    await screen.findByRole("heading", { name: "Settings and local data" });
+    await store.initialPreferencesReadStarted;
+    await user.click(screen.getByLabelText("Dark"));
+    await waitFor(async () => {
+      assert.equal((await store.getPreferences()).theme, "dark");
+      assert.equal(document.documentElement.dataset.theme, "dark");
+    });
+
+    await act(async () => {
+      store.releaseInitialPreferences();
+      await store.initialPreferencesReturned;
+    });
+
+    await waitFor(() => {
+      assert.equal((screen.getByLabelText("Dark") as HTMLInputElement).checked, true);
       assert.equal(document.documentElement.dataset.theme, "dark");
     });
     assert.equal(window.localStorage.getItem(THEME_STORAGE_KEY), "dark");
