@@ -97,6 +97,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         answerFirstVisibleAnswer(in: app)
         _ = waitForAnswerFeedback(in: app)
         XCTAssertTrue(app.descendants(matching: .any)["explanation-panel"].firstMatch.waitForExistence(timeout: 5), "Immediate feedback should include the authored explanation")
+        scrollAndTap("Open lesson L-001-01", in: app)
+        XCTAssertTrue(app.staticTexts["Authority, certificates, and exams"].waitForExistence(timeout: 10), "Lesson citation link should be independently activatable from practice feedback")
     }
 
     func testPracticeImmediateFeedbackKeepsStateAfterFirstAnswer() throws {
