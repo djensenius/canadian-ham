@@ -428,6 +428,16 @@ final class CanadianHamPracticeUITests: XCTestCase {
         ])
         openMockExamStart(in: timerApp)
         XCTAssertTrue(timerApp.staticTexts["mock-exam-seed"].waitForExistence(timeout: 10))
+        let startTimer = timerApp.buttons["Start timer"].firstMatch
+        XCTAssertTrue(startTimer.waitForExistence(timeout: 5), "Timer-enabled mock exam should expose Start timer on the question screen")
+        XCTAssertTrue(startTimer.isHittable, "Start timer should be visible and hittable before auditing the question screen")
+        let timerPrevious = timerApp.buttons["mock-previous-button"].firstMatch
+        let timerNext = timerApp.buttons["mock-next-button"].firstMatch
+        XCTAssertTrue(timerPrevious.waitForExistence(timeout: 5), "One-question mock exam should expose Previous")
+        XCTAssertTrue(timerNext.waitForExistence(timeout: 5), "One-question mock exam should expose Next")
+        XCTAssertFalse(timerPrevious.isEnabled, "Previous should be disabled on a one-question mock exam")
+        XCTAssertFalse(timerNext.isEnabled, "Next should be disabled on a one-question mock exam")
+        try performAudit(on: timerApp, context: "\(appearance.rawValue) mock exam question timer")
         tap("Questions", in: timerApp)
         XCTAssertTrue(timerApp.staticTexts["Question navigator"].waitForExistence(timeout: 5))
         try performAudit(on: timerApp, context: "\(appearance.rawValue) mock exam question navigator timer")

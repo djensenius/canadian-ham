@@ -638,20 +638,7 @@ struct MockExamView: View {
                 Text("Answered \(selectedByQuestionId.count) of \(generatedItems.count). \(timerStatus).")
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
-                HStack {
-                    Button { toggleFlag(question.id) } label: {
-                        AccessibleSecondaryButtonLabel(title: flagged.contains(question.id) ? "Flagged for review" : "Flag for review")
-                    }
-                    .buttonStyle(AccessibleSecondaryButtonStyle())
-                    .accessibilityIdentifier("mock-flag-button")
-                    if usesNavigatorSheet {
-                        Button { showingNavigator = true } label: {
-                            AccessibleSecondaryButtonLabel(title: "Questions")
-                        }
-                        .buttonStyle(AccessibleSecondaryButtonStyle())
-                        .accessibilityIdentifier("mock-questions-button")
-                    }
-                }
+                examHeaderControls(questionID: question.id)
             }
             .paperCard()
 
@@ -709,6 +696,36 @@ struct MockExamView: View {
 #else
         false
 #endif
+    }
+
+    private func examHeaderControls(questionID: String) -> some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(alignment: .center, spacing: DesignTokens.Spacing.sm) {
+                flagAndNavigatorControls(questionID: questionID)
+                timerControls
+            }
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                flagAndNavigatorControls(questionID: questionID)
+                timerControls
+            }
+        }
+    }
+
+    private func flagAndNavigatorControls(questionID: String) -> some View {
+        HStack(spacing: DesignTokens.Spacing.sm) {
+            Button { toggleFlag(questionID) } label: {
+                AccessibleSecondaryButtonLabel(title: flagged.contains(questionID) ? "Flagged for review" : "Flag for review")
+            }
+            .buttonStyle(AccessibleSecondaryButtonStyle())
+            .accessibilityIdentifier("mock-flag-button")
+            if usesNavigatorSheet {
+                Button { showingNavigator = true } label: {
+                    AccessibleSecondaryButtonLabel(title: "Questions")
+                }
+                .buttonStyle(AccessibleSecondaryButtonStyle())
+                .accessibilityIdentifier("mock-questions-button")
+            }
+        }
     }
 
     @ViewBuilder
@@ -861,8 +878,8 @@ struct MockExamView: View {
             selectedByQuestionId = [:]
             flagged = []
             secondsElapsed = 0
-            timerRunning = progressStore.preferences.examTimerEnabled
-            timerStatus = progressStore.preferences.examTimerEnabled ? "Timer running, 0 seconds elapsed" : "Timer off"
+            timerRunning = false
+            timerStatus = progressStore.preferences.examTimerEnabled ? "Timer ready" : "Timer off"
             result = nil
             errorMessage = nil
         } catch {
