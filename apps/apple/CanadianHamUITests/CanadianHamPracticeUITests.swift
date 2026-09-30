@@ -363,9 +363,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
         let correctApp = launchApp(arguments: ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
         XCTAssertTrue(correctApp.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
-        answerKnownCorrectLifeAnswerIfPresent(in: correctApp)
+        answerKnownCorrectLifeAnswerIfPresent(in: correctApp, identifier: "answer-C-button")
         _ = waitForAnswerFeedback(in: correctApp)
-        XCTAssertTrue(anyVisibleLabel(in: correctApp, contains: "Correct"), "Audit fixture should expose the correct-answer state")
+        let correctFeedbackTitle = correctApp.staticTexts["answer-feedback-title"].firstMatch
+        XCTAssertTrue(correctFeedbackTitle.waitForExistence(timeout: 5), "Correct-answer feedback title should exist")
+        XCTAssertEqual(correctFeedbackTitle.label, "Correct", "Audit fixture should expose the exact correct-answer state")
         try performAudit(on: correctApp, context: "\(appearance.rawValue) correct answered practice")
         correctApp.terminate()
 
@@ -426,7 +428,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         ])
         openMockExamStart(in: app)
         XCTAssertTrue(app.staticTexts["mock-exam-seed"].waitForExistence(timeout: 10))
-        answerKnownCorrectLifeAnswerIfPresent(in: app)
+        answerKnownCorrectLifeAnswerIfPresent(in: app, identifier: "answer-D-button")
         scrollAndTap("Flag for review", in: app)
         waitBriefly()
         XCTAssertTrue(app.buttons["Flagged for review"].firstMatch.waitForExistence(timeout: 5), "Mock exam should expose the flagged state before auditing")
@@ -512,13 +514,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Wrong-answer review"].firstMatch.exists, "Mock exam results should include wrong-answer review")
     }
 
-    private func answerKnownCorrectLifeAnswerIfPresent(in app: XCUIApplication) {
-        let correctAnswer = app.staticTexts["life"].firstMatch
-        if correctAnswer.waitForExistence(timeout: 2) {
-            correctAnswer.tap()
-        } else {
-            answerFirstVisibleAnswer(in: app)
-        }
+    private func answerKnownCorrectLifeAnswerIfPresent(in app: XCUIApplication, identifier: String) {
+        let correctAnswer = app.descendants(matching: .any)[identifier].firstMatch
+        XCTAssertTrue(correctAnswer.waitForExistence(timeout: 5), "Known correct answer \(identifier) should exist for the fixed life-answer fixture")
+        scrollUntilHittable(correctAnswer, in: app, maxSwipes: 10)
+        XCTAssertTrue(correctAnswer.isHittable, "Known correct answer \(identifier) should be hittable for the fixed life-answer fixture")
+        correctAnswer.tap()
     }
 
     private func answerKnownIncorrectLifeAnswerIfPresent(in app: XCUIApplication) {
