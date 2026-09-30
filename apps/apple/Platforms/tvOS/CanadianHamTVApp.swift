@@ -69,7 +69,7 @@ private struct CanadianHamTVRootView: View {
             } else if let loadError {
                 TVMessageView(
                     title: "Question bank unavailable",
-                    message: loadError,
+                    message: LocalizedStringKey(loadError),
                     systemImage: "exclamationmark.triangle.fill"
                 )
                 .padding(DesignTokens.Spacing.tvSafe)
@@ -143,7 +143,7 @@ private struct TVCategoryGridView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xxl) {
-                TVTopBar(title: "Canadian Ham", subtitle: "Offline Basic question-bank practice", language: $language, onAbout: onAbout)
+                TVTopBar(title: "Canadian Ham", subtitle: Text("Offline Basic question-bank practice"), language: $language, onAbout: onAbout)
 
                 Text("Practice categories")
                     .font(DesignTokens.FontScale.display.weight(.bold))
@@ -172,6 +172,12 @@ private struct TVCategoryButton: View {
 
     @FocusState private var isFocused: Bool
 
+    private var categoryAccessibilityLabel: AttributedString {
+        var label = localized(category.name.text(for: language), language: language)
+        label += AttributedString(", \(localizedQuestionCount(category.questionCount)), \(localizedSubsectionCount(category.subsectionCount))")
+        return label
+    }
+
     var body: some View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -196,7 +202,7 @@ private struct TVCategoryButton: View {
         }
         .buttonStyle(.plain)
         .focused($isFocused)
-        .accessibilityLabel(Text(verbatim: "\(category.name.text(for: language)), \(localizedQuestionCount(category.questionCount)), \(localizedSubsectionCount(category.subsectionCount))"))
+        .accessibilityLabel(Text(categoryAccessibilityLabel))
         .accessibilityHint(Text("Starts practice for this category"))
     }
 }
@@ -255,14 +261,14 @@ private struct TVPracticeView: View {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
                 TVTopBar(
                     title: category.name.text(for: language),
-                    subtitle: String(localized: "\(session.correctCount) correct out of \(session.answeredCount) answered"),
+                    subtitle: Text(localizedCorrectOutOfAnswered(correct: session.correctCount, answered: session.answeredCount)),
                     language: $language,
                     onAbout: onAbout,
                     leadingAction: ("Categories", onCategories)
                 )
 
                 if let errorMessage = session.errorMessage {
-                    TVMessageView(title: "Practice unavailable", message: errorMessage, systemImage: "exclamationmark.triangle.fill")
+                    TVMessageView(title: "Practice unavailable", message: LocalizedStringKey(errorMessage), systemImage: "exclamationmark.triangle.fill")
                 } else if let currentQuestion = session.currentQuestion {
                     HStack(alignment: .top, spacing: DesignTokens.Spacing.xxl) {
                         TVQuestionPanel(question: currentQuestion, category: category, language: language)
@@ -356,7 +362,7 @@ private struct TVPracticeView: View {
             }
             session.errorMessage = nil
         } catch {
-            session.errorMessage = "Unable to prepare this question: \(error.localizedDescription)"
+            session.errorMessage = String(localized: "Unable to prepare this question: \(error.localizedDescription)")
         }
     }
 
@@ -423,7 +429,7 @@ private struct TVAnswerButton: View {
     var body: some View {
         Button(action: action) {
             HStack(alignment: .center, spacing: DesignTokens.Spacing.lg) {
-                Text(displayLetter)
+                Text(displayLetter) // l10n: verbatim
                     .font(DesignTokens.FontScale.title.monospaced().weight(.bold))
                     .frame(width: 54, height: 54)
                     .foregroundStyle(chipForeground)
@@ -486,10 +492,21 @@ private struct TVAnswerButton: View {
         return nil
     }
     private var accessibilityLabel: AttributedString {
-        var label = english("Answer \(displayLetter), ")
+        var label = AttributedString(String(localized: "Answer \(displayLetter), "))
         label += localized(answer.answer.text.text(for: language), language: language)
-        if let statusText { label += english(", \(statusText)") }
+        if let statusText {
+            label += AttributedString(String(localized: ", \(localizedStatusText(statusText))"))
+        }
         return label
+    }
+
+    private func localizedStatusText(_ statusText: String) -> String {
+        switch statusText {
+        case "Your answer, correct answer": String(localized: "Your answer, correct answer")
+        case "Correct answer": String(localized: "Correct answer")
+        case "Your answer, incorrect": String(localized: "Your answer, incorrect")
+        default: statusText
+        }
     }
 }
 
@@ -596,7 +613,7 @@ private struct TVFeedbackBar: View {
 
 private struct TVTopBar: View {
     let title: String
-    let subtitle: String
+    let subtitle: Text
     @Binding var language: BankLanguage
     let onAbout: () -> Void
     var leadingAction: (title: LocalizedStringKey, action: () -> Void)? = nil
@@ -614,7 +631,7 @@ private struct TVTopBar: View {
                     .font(DesignTokens.FontScale.headline.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
-                Text(subtitle)
+                subtitle
                     .font(DesignTokens.FontScale.body.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
             }
@@ -659,7 +676,7 @@ private struct TVAboutView: View {
                     TVPaperSection(title: "Bank") {
                         Text("Active bank: \(bank.manifest.bankId)")
                         Text("Effective date: \(bank.manifest.effectiveDate)")
-                        Text(verbatim: "\(String(localized: "Questions")): \(bank.questions.count) • \(String(localized: "Categories")): \(bank.categories.count) • \(String(localized: "Subsections")): \(bank.subsections.count)")
+                        Text("Questions: \(bank.questions.count) • Categories: \(bank.categories.count) • Subsections: \(bank.subsections.count)")
                     }
                     TVPaperSection(title: "Attribution") {
                         Text(english("Question-bank material is sourced from Innovation, Science and Economic Development Canada Amateur Radio Operator Certificate Basic Qualification materials."))
@@ -703,7 +720,7 @@ private struct TVPaperSection<Content: View>: View {
 
 private struct TVMessageView: View {
     let title: LocalizedStringKey
-    let message: String
+    let message: LocalizedStringKey
     let systemImage: String
 
     var body: some View {
@@ -725,6 +742,12 @@ private struct TVMessageView: View {
                 .strokeBorder(DesignTokens.Colors.warningBorder, lineWidth: 2)
         )
     }
+}
+
+private func localizedCorrectOutOfAnswered(correct: Int, answered: Int) -> String {
+    let correctText = String.localizedStringWithFormat(String(localized: "%lld correct answer"), correct)
+    let answeredText = String.localizedStringWithFormat(String(localized: "%lld answered question"), answered)
+    return String(localized: "\(correctText) out of \(answeredText)")
 }
 
 private func localizedQuestionCount(_ count: Int) -> String {

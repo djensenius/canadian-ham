@@ -78,7 +78,7 @@ struct LearnView: View {
                 .paperCard()
 
                 if let errorMessage {
-                    MessagePanel(title: "Learn progress unavailable", message: errorMessage, kind: .warning)
+                    MessagePanel(title: "Learn progress unavailable", message: LocalizedStringKey(errorMessage), kind: .warning)
                 }
 
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -109,7 +109,7 @@ struct LearnView: View {
             Text(module.status == .outline ? "Outline available" : "Draft lessons available")
                 .font(.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
-            Text("\(readCount) of \(lessons.count) lessons marked read")
+            Text(localizedLessonReadProgress(readCount: readCount, totalCount: lessons.count))
                 .font(.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
@@ -300,7 +300,7 @@ private struct LessonReaderView: View {
                 .paperCard()
 
                 if let errorMessage {
-                    MessagePanel(title: "Lesson progress unavailable", message: errorMessage, kind: .warning)
+                    MessagePanel(title: "Lesson progress unavailable", message: LocalizedStringKey(errorMessage), kind: .warning)
                 }
 
                 if lesson.status == .outline {
@@ -315,7 +315,7 @@ private struct LessonReaderView: View {
 
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                     Button { markRead() } label: {
-                        lessonActionLabel("Mark lesson read")
+                        lessonActionLabel(Text("Mark lesson read"))
                     }
                     .buttonStyle(.plain)
                     if let firstQuizID = lesson.quizIds.first {
@@ -325,13 +325,13 @@ private struct LessonReaderView: View {
                     }
                     if let previous = neighbor(offset: -1) {
                         NavigationLink(value: LearnRoute.lesson(previous.id)) {
-                            lessonActionLabel("Previous: \(previous.title.en)")
+                            lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Previous: "), lessonTitle: previous.title.en)))
                         }
                         .buttonStyle(.plain)
                     }
                     if let next = neighbor(offset: 1) {
                         NavigationLink(value: LearnRoute.lesson(next.id)) {
-                            lessonActionLabel("Next: \(next.title.en)")
+                            lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Next: "), lessonTitle: next.title.en)))
                         }
                         .buttonStyle(.plain)
                     }
@@ -342,12 +342,12 @@ private struct LessonReaderView: View {
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
-        .navigationTitle(lesson.title.en)
+        .navigationTitle(lesson.title.en) // l10n: content
         .task { refresh() }
     }
 
-    private func lessonActionLabel(_ text: String) -> some View {
-        Text(text)
+    private func lessonActionLabel(_ text: Text) -> some View {
+        text
             .font(.body.weight(.semibold))
             .foregroundStyle(DesignTokens.Colors.ink)
             .padding(.horizontal, DesignTokens.Spacing.lg)
@@ -355,6 +355,13 @@ private struct LessonReaderView: View {
             .frame(minHeight: 56, alignment: .leading)
             .background(DesignTokens.Colors.paperInset, in: Capsule())
             .overlay(Capsule().strokeBorder(DesignTokens.Colors.ink, lineWidth: 1))
+    }
+
+
+    private func lessonNavigationTitle(prefix: String, lessonTitle: String) -> AttributedString {
+        var label = AttributedString(prefix)
+        label += english(lessonTitle)
+        return label
     }
 
     private var quizCards: some View {
@@ -601,7 +608,7 @@ private struct LessonQuizScreen: View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
                 if let errorMessage {
-                    MessagePanel(title: "Lesson quiz unavailable", message: errorMessage, kind: .warning)
+                    MessagePanel(title: "Lesson quiz unavailable", message: LocalizedStringKey(errorMessage), kind: .warning)
                 }
                 LessonQuizView(
                     quiz: quiz,
@@ -709,7 +716,7 @@ private struct LessonQuizView: View {
             }
 
             if let errorMessage {
-                MessagePanel(title: "Lesson quiz unavailable", message: errorMessage, kind: .warning)
+                MessagePanel(title: "Lesson quiz unavailable", message: LocalizedStringKey(errorMessage), kind: .warning)
             }
 
             if let item = items[safe: currentIndex] {
@@ -972,7 +979,7 @@ private struct ConceptChoiceButton: View {
     var body: some View {
         Button(action: action) {
             HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
-                Text(letter)
+                Text(letter) // l10n: verbatim
                     .font(DesignTokens.FontScale.body.monospaced().weight(.bold))
                     .frame(minWidth: 34, minHeight: 34)
                     .padding(DesignTokens.Spacing.xs)
@@ -1149,6 +1156,12 @@ private func english(_ attributed: AttributedString) -> AttributedString {
         copy[range].languageIdentifier = BankLanguage.english.accessibilityLanguageCode
     }
     return copy
+}
+
+private func localizedLessonReadProgress(readCount: Int, totalCount: Int) -> String {
+    let read = String.localizedStringWithFormat(String(localized: "%lld lesson marked read"), readCount)
+    let total = String.localizedStringWithFormat(String(localized: "%lld lesson"), totalCount)
+    return String(localized: "\(read) out of \(total)")
 }
 
 private func markedReadText(_ count: Int) -> String {

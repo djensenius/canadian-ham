@@ -19,7 +19,7 @@ struct AboutView: View {
                 paperSection("Attribution and development status") {
                     Text(english("Question-bank material and related reference material are sourced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification materials."))
                     Text(english("The ISED permission request has been drafted but not yet sent or granted. Until written permission is recorded, this app is for private, non-distributed development only and must not claim written permission has been granted."))
-                    Text(english(String(localized: "Source path: \(bank.manifest.source.path)")))
+                    Text("Source path: \(bank.manifest.source.path)")
                         .font(DesignTokens.FontScale.caption)
                         .textSelection(.enabled)
                 }
@@ -40,7 +40,7 @@ struct AboutView: View {
         .navigationTitle("About")
     }
 
-    private func paperSection<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
+    private func paperSection<Content: View>(_ title: LocalizedStringKey, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Text(title)
                 .font(DesignTokens.FontScale.title.weight(.bold))

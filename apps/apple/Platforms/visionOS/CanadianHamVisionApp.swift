@@ -67,7 +67,7 @@ private struct CanadianHamVisionRootView: View {
                 content(for: bank)
                     .padding(DesignTokens.Spacing.xxl)
             } else if let loadError {
-                VisionMessageView(title: "Question bank unavailable", message: loadError, systemImage: "exclamationmark.triangle.fill")
+                VisionMessageView(title: "Question bank unavailable", message: LocalizedStringKey(loadError), systemImage: "exclamationmark.triangle.fill")
                     .padding(DesignTokens.Spacing.xxl)
             } else {
                 ProgressView("Loading question bank…")
@@ -200,6 +200,12 @@ private struct VisionCategoryCard: View {
     let language: BankLanguage
     let action: () -> Void
 
+    private var categoryAccessibilityLabel: AttributedString {
+        var label = localizedVision(category.name.text(for: language), language: language)
+        label += AttributedString(", \(localizedVisionQuestionCount(category.questionCount)), \(localizedVisionSubsectionCount(category.subsectionCount))")
+        return label
+    }
+
     var body: some View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
@@ -224,7 +230,7 @@ private struct VisionCategoryCard: View {
         }
         .buttonStyle(.plain)
         .hoverEffect(.lift)
-        .accessibilityLabel(Text(verbatim: "\(category.name.text(for: language)), \(localizedVisionQuestionCount(category.questionCount)), \(localizedVisionSubsectionCount(category.subsectionCount))"))
+        .accessibilityLabel(Text(categoryAccessibilityLabel))
         .accessibilityHint(Text("Starts practice for this category"))
     }
 }
@@ -290,7 +296,7 @@ private struct VisionPracticeView: View {
                             .font(DesignTokens.FontScale.headline.weight(.bold))
                             .foregroundStyle(DesignTokens.Colors.ink)
                             .accessibilityAddTraits(.isHeader)
-                        Text("\(session.correctCount) correct out of \(session.answeredCount) answered")
+                        Text(localizedVisionCorrectOutOfAnswered(correct: session.correctCount, answered: session.answeredCount))
                             .font(DesignTokens.FontScale.body)
                             .foregroundStyle(DesignTokens.Colors.inkMuted)
                     }
@@ -301,7 +307,7 @@ private struct VisionPracticeView: View {
                 }
 
                 if let errorMessage = session.errorMessage {
-                    VisionMessageView(title: "Practice unavailable", message: errorMessage, systemImage: "exclamationmark.triangle.fill")
+                    VisionMessageView(title: "Practice unavailable", message: LocalizedStringKey(errorMessage), systemImage: "exclamationmark.triangle.fill")
                 } else if let currentQuestion = session.currentQuestion {
                     HStack(alignment: .top, spacing: DesignTokens.Spacing.xl) {
                         VisionQuestionCard(question: currentQuestion, category: category, language: language)
@@ -394,7 +400,7 @@ private struct VisionPracticeView: View {
             }
             session.errorMessage = nil
         } catch {
-            session.errorMessage = "Unable to prepare this question: \(error.localizedDescription)"
+            session.errorMessage = String(localized: "Unable to prepare this question: \(error.localizedDescription)")
         }
     }
 
@@ -461,7 +467,7 @@ private struct VisionAnswerButton: View {
     var body: some View {
         Button(action: action) {
             HStack(alignment: .top, spacing: DesignTokens.Spacing.md) {
-                Text(displayLetter)
+                Text(displayLetter) // l10n: verbatim
                     .font(DesignTokens.FontScale.bodyLarge.monospaced().weight(.bold))
                     .frame(width: 44, height: 44)
                     .foregroundStyle(chipForeground)
@@ -524,10 +530,21 @@ private struct VisionAnswerButton: View {
         return nil
     }
     private var accessibilityLabel: AttributedString {
-        var label = englishVision("Answer \(displayLetter), ")
+        var label = AttributedString(String(localized: "Answer \(displayLetter), "))
         label += localizedVision(answer.answer.text.text(for: language), language: language)
-        if let statusText { label += englishVision(", \(statusText)") }
+        if let statusText {
+            label += AttributedString(String(localized: ", \(localizedStatusText(statusText))"))
+        }
         return label
+    }
+
+    private func localizedStatusText(_ statusText: String) -> String {
+        switch statusText {
+        case "Your answer, correct answer": String(localized: "Your answer, correct answer")
+        case "Correct answer": String(localized: "Correct answer")
+        case "Your answer, incorrect": String(localized: "Your answer, incorrect")
+        default: statusText
+        }
     }
 }
 
@@ -649,7 +666,7 @@ private struct VisionAboutView: View {
                     VisionPaperSection(title: "Bank") {
                         Text("Active bank: \(bank.manifest.bankId)")
                         Text("Effective date: \(bank.manifest.effectiveDate)")
-                        Text(verbatim: "\(String(localized: "Questions")): \(bank.questions.count) • \(String(localized: "Categories")): \(bank.categories.count) • \(String(localized: "Subsections")): \(bank.subsections.count)")
+                        Text("Questions: \(bank.questions.count) • Categories: \(bank.categories.count) • Subsections: \(bank.subsections.count)")
                     }
                     VisionPaperSection(title: "Attribution") {
                         Text(englishVision("Question-bank material is sourced from Innovation, Science and Economic Development Canada Amateur Radio Operator Certificate Basic Qualification materials."))
@@ -694,7 +711,7 @@ private struct VisionPaperSection<Content: View>: View {
 
 private struct VisionMessageView: View {
     let title: LocalizedStringKey
-    let message: String
+    let message: LocalizedStringKey
     let systemImage: String
 
     var body: some View {
@@ -717,6 +734,12 @@ private struct VisionMessageView: View {
         )
         .glassBackgroundEffect()
     }
+}
+
+private func localizedVisionCorrectOutOfAnswered(correct: Int, answered: Int) -> String {
+    let correctText = String.localizedStringWithFormat(String(localized: "%lld correct answer"), correct)
+    let answeredText = String.localizedStringWithFormat(String(localized: "%lld answered question"), answered)
+    return String(localized: "\(correctText) out of \(answeredText)")
 }
 
 private func localizedVisionQuestionCount(_ count: Int) -> String {

@@ -43,7 +43,7 @@ struct RootView: View {
                 ContentUnavailableView(
                     "Question bank unavailable",
                     systemImage: "exclamationmark.triangle",
-                    description: Text(bankLoadError)
+                    description: Text(LocalizedStringKey(bankLoadError))
                 )
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .background(DesignTokens.Colors.paper)
@@ -51,7 +51,7 @@ struct RootView: View {
                 ContentUnavailableView(
                     "Lesson content unavailable",
                     systemImage: "exclamationmark.triangle",
-                    description: Text(contentLoadError)
+                    description: Text(LocalizedStringKey(contentLoadError))
                 )
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .background(DesignTokens.Colors.paper)
@@ -133,7 +133,7 @@ struct RootView: View {
                         SidebarButton(selection: .practice(.category(category.id)), current: selection) {
                             CategoryRow(category: category, language: language)
                         } action: { selection = .practice(.category(category.id)) }
-                        .accessibilityLabel(categoryAccessibilityLabel(category))
+                        .accessibilityLabel(Text(categoryAccessibilityLabel(category)))
                     }
                 } header: {
                     Text("Practice categories")
@@ -398,8 +398,10 @@ struct RootView: View {
         }
     }
 
-    private func categoryAccessibilityLabel(_ category: BankCategory) -> String {
-        "\(category.name.text(for: language)), \(localizedQuestionCount(category.questionCount)), \(localizedSubsectionCount(category.subsectionCount))"
+    private func categoryAccessibilityLabel(_ category: BankCategory) -> AttributedString {
+        var label = localized(category.name.text(for: language), language: language)
+        label += AttributedString(", \(localizedQuestionCount(category.questionCount)), \(localizedSubsectionCount(category.subsectionCount))")
+        return label
     }
 
     private func colorScheme(for theme: ApplePreferences.Theme) -> ColorScheme? {
@@ -409,6 +411,12 @@ struct RootView: View {
         case .dark: .dark
         }
     }
+}
+
+private func localized(_ string: String, language: BankLanguage) -> AttributedString {
+    var attributed = AttributedString(string)
+    attributed.languageIdentifier = language.accessibilityLanguageCode
+    return attributed
 }
 
 private func localizedQuestionCount(_ count: Int) -> String {
@@ -430,7 +438,7 @@ private struct StoreRecoveryView: View {
                 .foregroundStyle(DesignTokens.Colors.warningText)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
-            Text(message)
+            Text(message) // l10n: content
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .fixedSize(horizontal: false, vertical: true)
