@@ -1,14 +1,16 @@
 import type { Language } from "../data/bank";
+import { t, type InterfaceLanguage } from "../lib/i18n";
 
 interface LanguageToggleProps {
   readonly language: Language;
+  readonly interfaceLanguage: InterfaceLanguage;
   readonly onLanguageChange: (language: Language) => void;
 }
 
-export function LanguageToggle({ language, onLanguageChange }: LanguageToggleProps) {
+export function LanguageToggle({ language, interfaceLanguage, onLanguageChange }: LanguageToggleProps) {
   return (
-    <fieldset className="language-toggle" aria-label="Question language">
-      <legend>Question language</legend>
+    <fieldset className="language-toggle" aria-label={t(interfaceLanguage, "languageQuestionAria")}>
+      <legend>{t(interfaceLanguage, "languageQuestionLegend")}</legend>
       <label>
         <input
           type="radio"
@@ -17,7 +19,7 @@ export function LanguageToggle({ language, onLanguageChange }: LanguageTogglePro
           checked={language === "en"}
           onChange={() => onLanguageChange("en")}
         />
-        English
+        {t(interfaceLanguage, "languageEnglish")}
       </label>
       <label>
         <input
@@ -27,7 +29,7 @@ export function LanguageToggle({ language, onLanguageChange }: LanguageTogglePro
           checked={language === "fr"}
           onChange={() => onLanguageChange("fr")}
         />
-        <span lang="fr">Français</span>
+        <span lang="fr">{t(interfaceLanguage, "languageFrench")}</span>
       </label>
     </fieldset>
   );
