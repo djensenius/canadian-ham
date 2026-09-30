@@ -485,6 +485,29 @@ private struct TVAnswerButton: View {
     }
 }
 
+private struct TVPrimaryButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundStyle(isEnabled ? DesignTokens.Colors.paper : DesignTokens.Colors.ink)
+            .multilineTextAlignment(.center)
+            .padding(.horizontal, DesignTokens.Spacing.xl)
+            .padding(.vertical, DesignTokens.Spacing.lg)
+            .frame(minHeight: 72)
+            .background(isEnabled ? DesignTokens.Colors.accent : DesignTokens.Colors.paperInset, in: Capsule())
+            .overlay {
+                Capsule()
+                    .strokeBorder(
+                        isEnabled ? DesignTokens.Colors.accent : DesignTokens.Colors.inkMuted,
+                        style: StrokeStyle(lineWidth: 2, dash: isEnabled ? [] : [6, 5])
+                    )
+            }
+            .contentShape(Capsule())
+            .scaleEffect(configuration.isPressed ? 0.97 : 1)
+    }
+}
+
 private struct TVFeedbackBar: View {
     let selectedAnswer: ShuffledAnswer
     let correctAnswer: ShuffledAnswer
@@ -511,7 +534,7 @@ private struct TVFeedbackBar: View {
 
             Button("Next question", action: onNext)
                 .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(TVPrimaryButtonStyle())
                 .accessibilityHint("Loads another question from this category")
                 .accessibilityIdentifier("next-question-button")
         }
