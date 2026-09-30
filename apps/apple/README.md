@@ -55,7 +55,7 @@ Run the Apple no-network audit from the repository root:
 pnpm check:apple-network
 ```
 
-The audit script is `scripts/check-apple-no-network.sh` and intentionally uses only bash, grep, and plutil. It scans `apps/apple` Swift files plus `packages/*-swift/Sources` and package manifests for forbidden networking/browser/iCloud/socket/analytics SDK symbols, unexpected URL literals, non-local Swift package dependencies, and network/iCloud entitlements or Info.plist keys. The only permitted Swift URL literal is the exact RBR-4 ISED citation also allow-listed by the web URL audit, rendered in the app as a user-activated SwiftUI `Link`.
+The audit script is `scripts/check-apple-no-network.sh` and intentionally uses only bash, grep, find, sort, and plutil. It scans `apps/apple` Swift files plus `packages/*-swift/Sources` and package manifests for forbidden networking/browser/iCloud/socket/analytics SDK symbols, unexpected URL literals, non-local Swift package dependencies, and network/iCloud entitlements or Info.plist keys. The only permitted Swift URL literal is the exact RBR-4 ISED citation also allow-listed by the web URL audit, rendered in the app as a user-activated SwiftUI `Link`. Bundled lesson Markdown autolinks are user-activated content links and are covered by the content link checker (`pnpm check:links`), not by the Swift literal audit.
 
 ## Progress, practice, and mock exams
 
