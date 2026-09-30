@@ -29,3 +29,27 @@ struct AccessibleSecondaryButtonStyle: ButtonStyle {
             .opacity(configuration.isPressed ? 0.85 : 1)
     }
 }
+
+struct AccessiblePrimaryButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(DesignTokens.FontScale.body.weight(.semibold))
+            .foregroundStyle(isEnabled ? DesignTokens.Colors.paper : DesignTokens.Colors.ink)
+            .multilineTextAlignment(.center)
+            .padding(.horizontal, DesignTokens.Spacing.lg)
+            .padding(.vertical, DesignTokens.Spacing.md)
+            .frame(minHeight: 44)
+            .background(isEnabled ? DesignTokens.Colors.accent : DesignTokens.Colors.paperInset, in: Capsule())
+            .overlay {
+                Capsule()
+                    .strokeBorder(
+                        isEnabled ? DesignTokens.Colors.accent : DesignTokens.Colors.inkMuted,
+                        style: StrokeStyle(lineWidth: 1, dash: isEnabled ? [] : [5, 4])
+                    )
+            }
+            .contentShape(Capsule())
+            .opacity(configuration.isPressed ? 0.85 : 1)
+    }
+}

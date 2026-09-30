@@ -279,8 +279,7 @@ private struct LessonReaderView: View {
                     .buttonStyle(.plain)
                     if let firstQuizID = lesson.quizIds.first {
                         NavigationLink("Go to quiz", value: LearnRoute.lessonQuiz(firstQuizID))
-                            .buttonStyle(.borderedProminent)
-                            .tint(DesignTokens.Colors.accent)
+                            .buttonStyle(AccessiblePrimaryButtonStyle())
                             .accessibilityIdentifier("go-to-lesson-quiz-button")
                     }
                     if let previous = neighbor(offset: -1) {
@@ -337,8 +336,7 @@ private struct LessonReaderView: View {
                         .accessibilityIdentifier("lesson-quiz-latest-score")
                 }
                 NavigationLink("Start quiz", value: LearnRoute.lessonQuiz(quiz.id))
-                    .buttonStyle(.borderedProminent)
-                    .tint(DesignTokens.Colors.accent)
+                    .buttonStyle(AccessiblePrimaryButtonStyle())
             }
             .paperCard()
             .accessibilityElement(children: .contain)
@@ -695,7 +693,7 @@ private struct LessonQuizView: View {
                     .disabled(currentIndex + 1 >= items.count)
                     .buttonStyle(AccessibleSecondaryButtonStyle())
                     Button("Submit lesson quiz") { submit() }
-                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(AccessiblePrimaryButtonStyle())
                         .disabled(!allAnswered || submittedAttemptID != nil)
                         .accessibilityIdentifier("submit-lesson-quiz-button")
                 }

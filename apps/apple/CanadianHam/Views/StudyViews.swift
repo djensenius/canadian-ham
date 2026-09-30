@@ -673,9 +673,8 @@ struct MockExamView: View {
             navigator
 
             Button("Submit exam") { confirmingSubmit = true }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(AccessiblePrimaryButtonStyle())
                 .disabled(isSubmitting)
-                .tint(DesignTokens.Colors.accent)
                 .accessibilityIdentifier("submit-mock-exam-button")
         }
     }
