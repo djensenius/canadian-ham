@@ -956,9 +956,22 @@ private struct ConceptChoiceButton: View {
         }
         .buttonStyle(.plain)
         .allowsHitTesting(!disabled)
-        .accessibilityLabel("Answer \(letter), \(choice.text.text(for: language))")
+        .accessibilityLabel(accessibilityLabel)
         .accessibilityAddTraits(selected ? .isSelected : [])
         .accessibilityIdentifier("lesson-quiz-choice-\(letter)-button")
+    }
+
+    private var statusText: String? {
+        guard showCorrectness else { return nil }
+        if choice.isCorrect { return "Correct answer" }
+        if selected { return "Your answer, incorrect" }
+        return nil
+    }
+
+    private var accessibilityLabel: Text {
+        var value = "Answer \(letter), \(choice.text.text(for: language))"
+        if let statusText { value += ", \(statusText)" }
+        return Text(value)
     }
 
     private var background: Color {
