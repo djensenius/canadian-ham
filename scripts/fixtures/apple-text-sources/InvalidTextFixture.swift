@@ -24,9 +24,15 @@ struct InvalidTextFixture: View {
         Text(verbatim: "" + runtime)
         Text("Question \(model.title)")
         Text("Answer \(model.name)")
+        Text("\(runtime)")
+        Text("\(marked)") // l10n: localized
             .accessibilityLabel("" + s)
         Text(LocalizedStringKey("" + runtime))
         Text(LocalizedStringKey.init(marked)) // l10n: localized
+        Text.init(runtime)
+        Label.init(runtime, systemImage: "x")
+        Button.init(runtime) {}
+        .init(runtime)
     }
 
     private func makeTitle() -> String { wrappedKey }

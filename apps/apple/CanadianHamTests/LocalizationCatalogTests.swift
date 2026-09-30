@@ -1,4 +1,5 @@
 @testable import CanadianHam
+import CanadianHamContent
 import XCTest
 
 final class LocalizationCatalogTests: XCTestCase {
@@ -35,13 +36,15 @@ final class LocalizationCatalogTests: XCTestCase {
         let locale = Locale(identifier: "fr")
 
         let questionFormat = frenchBundle.localizedString(forKey: "Question %lld of %lld", value: nil, table: nil)
-        XCTAssertEqual(String.localizedStringWithFormat(questionFormat, Int64(1), Int64(3)), "Question 1 sur 3")
+        XCTAssertEqual(String(format: questionFormat, locale: locale, Int64(1), Int64(3)), "Question 1 sur 3")
 
         XCTAssertEqual(localizedQuestionCount(0, bundle: frenchBundle, locale: locale), "0 question")
         XCTAssertEqual(localizedQuestionCount(1, bundle: frenchBundle, locale: locale), "1 question")
         XCTAssertEqual(localizedQuestionCount(2, bundle: frenchBundle, locale: locale), "2 questions")
 
-        XCTAssertEqual(localizedUnansweredQuestionCount(0, bundle: frenchBundle, locale: locale), "0 questions sans réponse compteront comme incorrectes.")
+        let unansweredFormat = frenchBundle.localizedString(forKey: "%lld unanswered questions count as incorrect.", value: nil, table: nil)
+        XCTAssertEqual(String(format: unansweredFormat, locale: locale, Int64(0)), "0 question sans réponse comptera comme incorrecte.")
+        XCTAssertEqual(localizedUnansweredQuestionCount(0, bundle: frenchBundle, locale: locale), "0 question sans réponse comptera comme incorrecte.")
         XCTAssertEqual(localizedUnansweredQuestionCount(1, bundle: frenchBundle, locale: locale), "1 question sans réponse comptera comme incorrecte.")
         XCTAssertEqual(localizedUnansweredQuestionCount(2, bundle: frenchBundle, locale: locale), "2 questions sans réponse compteront comme incorrectes.")
 
@@ -51,6 +54,18 @@ final class LocalizationCatalogTests: XCTestCase {
         )
 
         XCTAssertEqual(localizedAnsweredOutOfTotal(answered: 3, total: 100), "Answered 3 of 100")
+    }
+
+    func testLocalizedNullableTextAndLanguageFallsBackToEnglish() {
+        let englishOnly = LocalizedNullableText(en: "English fallback", fr: nil)
+        let englishFallback = englishOnly.textAndLanguage(for: .french)
+        XCTAssertEqual(englishFallback.text, "English fallback")
+        XCTAssertEqual(englishFallback.language, .english)
+
+        let localized = LocalizedNullableText(en: "English", fr: "Français")
+        let french = localized.textAndLanguage(for: .french)
+        XCTAssertEqual(french.text, "Français")
+        XCTAssertEqual(french.language, .french)
     }
 
     private static func hasTranslatedValue(_ rawLocalization: Any?) -> Bool {

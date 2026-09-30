@@ -124,7 +124,7 @@ private struct CanadianHamVisionRootView: View {
         do {
             bank = try QuestionBankStore.load()
         } catch {
-            loadError = String(localized: "Unable to load question bank: \(error.localizedDescription)")
+            loadError = localizedErrorMessage(String(localized: "Unable to load question bank: \("")"), detail: error)
         }
     }
 }
@@ -405,7 +405,7 @@ private struct VisionPracticeView: View {
             }
             session.errorMessage = nil
         } catch {
-            session.errorMessage = String(localized: "Unable to prepare this question: \(error.localizedDescription)")
+            session.errorMessage = localizedErrorMessage(String(localized: "Unable to prepare this question: \("")"), detail: error)
         }
     }
 
@@ -724,6 +724,35 @@ private struct VisionPaperSection<Content: View>: View {
     }
 }
 
+private let localizedErrorDetailSeparator = "\u{1E}"
+
+private func localizedErrorMessage(_ localizedPrefix: String, detail error: Error) -> String {
+    localizedPrefix + localizedErrorDetailSeparator + error.localizedDescription
+}
+
+private func localizedErrorMessageParts(_ message: String) -> (summary: String, detail: String?) {
+    guard let separatorRange = message.range(of: localizedErrorDetailSeparator) else {
+        return (message, nil)
+    }
+    let summary = String(message[..<separatorRange.lowerBound])
+    let detail = String(message[separatorRange.upperBound...])
+    return (summary, detail.isEmpty ? nil : detail)
+}
+
+private struct LocalizedErrorMessageText: View {
+    let message: String
+
+    var body: some View {
+        let parts = localizedErrorMessageParts(message)
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            Text(parts.summary) // l10n: localized
+            if let detail = parts.detail {
+                Text(verbatim: detail) // l10n: verbatim
+            }
+        }
+    }
+}
+
 private struct VisionMessageView: View {
     let title: LocalizedStringKey
     let message: String
@@ -734,7 +763,7 @@ private struct VisionMessageView: View {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 Text(title) // l10n: localized
                     .font(DesignTokens.FontScale.headline.weight(.bold))
-                Text(message) // l10n: localized
+                LocalizedErrorMessageText(message: message)
                     .font(DesignTokens.FontScale.body)
             }
         } icon: {

@@ -5,14 +5,39 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROJECT="$ROOT_DIR/apps/apple/CanadianHam.xcodeproj"
 CATALOG="$ROOT_DIR/apps/apple/CanadianHam/Resources/Localizable.xcstrings"
 TMP_DIR="$(mktemp -d)"
-trap 'rm -rf "$TMP_DIR"' EXIT
+CATALOG_HASH_BEFORE="$(shasum -a 256 "$CATALOG" | awk '{print $1}')"
+
+assert_catalog_unchanged() {
+  local phase="$1"
+  local current_hash
+  current_hash="$(shasum -a 256 "$CATALOG" | awk '{print $1}')"
+  if [[ "$CATALOG_HASH_BEFORE" != "$current_hash" ]]; then
+    echo "$phase modified $CATALOG; run the export intentionally and commit the catalogue changes." >&2
+    exit 1
+  fi
+}
+
+cleanup() {
+  local status=$?
+  if [[ -f "$CATALOG" ]]; then
+    local current_hash
+    current_hash="$(shasum -a 256 "$CATALOG" | awk '{print $1}')"
+    if [[ "$CATALOG_HASH_BEFORE" != "$current_hash" ]]; then
+      echo "Apple localization check modified $CATALOG; run the export intentionally and commit the catalogue changes." >&2
+      status=1
+    fi
+  fi
+  rm -rf "$TMP_DIR"
+  exit "$status"
+}
+trap cleanup EXIT
 
 node --no-warnings "$ROOT_DIR/scripts/check-apple-text-sources.ts" --self-test
 node --no-warnings "$ROOT_DIR/scripts/check-apple-text-sources.ts"
+assert_catalog_unchanged "Apple text-source checks"
 
 DERIVED_DATA="$TMP_DIR/DerivedData"
 LOCALIZATION_DIR="$TMP_DIR/Localization"
-CATALOG_HASH_BEFORE="$(shasum -a 256 "$CATALOG" | awk '{print $1}')"
 
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
   xbuild -exportLocalizations \
@@ -22,11 +47,7 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
   -localizationPath "$LOCALIZATION_DIR" \
   -exportLanguage fr
 
-CATALOG_HASH_AFTER="$(shasum -a 256 "$CATALOG" | awk '{print $1}')"
-if [[ "$CATALOG_HASH_BEFORE" != "$CATALOG_HASH_AFTER" ]]; then
-  echo "xbuild -exportLocalizations modified $CATALOG; run the export intentionally and commit the catalogue changes." >&2
-  exit 1
-fi
+assert_catalog_unchanged "xbuild -exportLocalizations"
 
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
   xbuild -project "$PROJECT" \
@@ -34,6 +55,7 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
   -destination 'generic/platform=tvOS Simulator' \
   -derivedDataPath "$DERIVED_DATA" \
   build CODE_SIGNING_ALLOWED=NO
+assert_catalog_unchanged "CanadianHamTV localization build"
 
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
   xbuild -project "$PROJECT" \
@@ -41,6 +63,7 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
   -destination 'generic/platform=visionOS Simulator' \
   -derivedDataPath "$DERIVED_DATA" \
   build CODE_SIGNING_ALLOWED=NO
+assert_catalog_unchanged "CanadianHamVision localization build"
 
 XLIFF="$LOCALIZATION_DIR/fr.xcloc/Localized Contents/fr.xliff"
 
@@ -123,3 +146,4 @@ if missing:
 
 print("Apple French localization export is complete.")
 PY
+assert_catalog_unchanged "Apple localization stale check"

@@ -130,7 +130,7 @@ struct LearnView: View {
             lessonProgress = try progressStore.lessonProgressRecords()
             errorMessage = nil
         } catch {
-            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 }
@@ -325,13 +325,13 @@ private struct LessonReaderView: View {
                     }
                     if let previous = neighbor(offset: -1) {
                         NavigationLink(value: LearnRoute.lesson(previous.id)) {
-                            lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Previous: "), lessonTitle: previous.title.en))) // l10n: content(en)
+                            lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Previous: "), lessonTitle: previous.title.en))) // l10n: localized
                         }
                         .buttonStyle(.plain)
                     }
                     if let next = neighbor(offset: 1) {
                         NavigationLink(value: LearnRoute.lesson(next.id)) {
-                            lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Next: "), lessonTitle: next.title.en))) // l10n: content(en)
+                            lessonActionLabel(Text(lessonNavigationTitle(prefix: String(localized: "Next: "), lessonTitle: next.title.en))) // l10n: localized
                         }
                         .buttonStyle(.plain)
                     }
@@ -398,7 +398,7 @@ private struct LessonReaderView: View {
             quizAttempts = try progressStore.lessonQuizAttempts().filter { $0.lessonId == lesson.id }
             errorMessage = nil
         } catch {
-            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 
@@ -415,7 +415,7 @@ private struct LessonReaderView: View {
             errorMessage = nil
             onDataChanged()
         } catch {
-            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 
@@ -650,7 +650,7 @@ private struct LessonQuizScreen: View {
             attempts = try progressStore.lessonQuizAttempts().filter { $0.lessonId == lesson.id && $0.quizId == quiz.id }
             errorMessage = nil
         } catch {
-            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 }
@@ -795,7 +795,7 @@ private struct LessonQuizView: View {
             submittedAttemptID = nil
             errorMessage = nil
         } catch {
-            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
             items = []
         }
     }
@@ -875,7 +875,7 @@ private struct LessonQuizView: View {
             errorMessage = nil
             onSaved()
         } catch {
-            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 }
@@ -1130,8 +1130,7 @@ struct ExplanationPanelView: View {
     }
 
     private func distractorNoteText(_ note: ParsedDistractorNote) -> AttributedString {
-        var text = AttributedString(label(for: note.sourceIndex))
-        text += AttributedString(": ")
+        var text = AttributedString(String.localizedStringWithFormat(String(localized: "%@: "), label(for: note.sourceIndex)))
         text += english(note.note)
         return text
     }
@@ -1195,12 +1194,12 @@ private func markedReadText(_ count: Int) -> String {
     String.localizedStringWithFormat(String(localized: "Marked read %lld times."), count)
 }
 
-private struct LocalizedNullableResolvedText {
+struct LocalizedNullableResolvedText {
     let text: String
     let language: BankLanguage
 }
 
-private extension LocalizedNullableText {
+extension LocalizedNullableText {
     func textAndLanguage(for language: BankLanguage) -> LocalizedNullableResolvedText {
         switch language {
         case .english:

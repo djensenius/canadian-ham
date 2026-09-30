@@ -87,6 +87,28 @@
         }
       }
     },
+    "%@: " : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: "
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ : "
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ : "
+          }
+        }
+      }
+    },
     "%@ · %lld min · %@" : {
       "localizations" : {
         "en" : {
@@ -120,13 +142,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les décomptes de %@ sont invalides."
+            "value" : "%@ : décomptes invalides."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les décomptes de %@ sont invalides."
+            "value" : "%@ : décomptes invalides."
           }
         }
       }

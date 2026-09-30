@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { basename, dirname, extname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -28,15 +29,18 @@ interface CallPattern {
   requiresMarker: boolean;
 }
 
+const INIT_SUFFIX_RE = "(?:\\s*\\.\\s*init)?";
+
 const callPatterns: CallPattern[] = [
-  { callee: "LocalizedStringKey", pattern: /\bLocalizedStringKey(?:\s*\.\s*init)?\s*\(/g, requiresMarker: false },
-  { callee: "Text", pattern: /\bText\s*\(/g, requiresMarker: true },
-  { callee: "Label", pattern: /\bLabel\s*\(/g, requiresMarker: true },
-  { callee: "Button", pattern: /\bButton\s*\(/g, requiresMarker: true },
-  { callee: "navigationTitle", pattern: /\.navigationTitle\s*\(/g, requiresMarker: true },
-  { callee: "accessibilityLabel", pattern: /\.accessibilityLabel\s*\(/g, requiresMarker: true },
-  { callee: "accessibilityHint", pattern: /\.accessibilityHint\s*\(/g, requiresMarker: true },
-  { callee: "accessibilityValue", pattern: /\.accessibilityValue\s*\(/g, requiresMarker: true },
+  { callee: "LocalizedStringKey", pattern: new RegExp(`\\bLocalizedStringKey${INIT_SUFFIX_RE}\\s*\\(`, "g"), requiresMarker: false },
+  { callee: "Text", pattern: new RegExp(`\\bText${INIT_SUFFIX_RE}\\s*\\(`, "g"), requiresMarker: true },
+  { callee: "Label", pattern: new RegExp(`\\bLabel${INIT_SUFFIX_RE}\\s*\\(`, "g"), requiresMarker: true },
+  { callee: "Button", pattern: new RegExp(`\\bButton${INIT_SUFFIX_RE}\\s*\\(`, "g"), requiresMarker: true },
+  { callee: "navigationTitle", pattern: new RegExp(`\\.navigationTitle${INIT_SUFFIX_RE}\\s*\\(`, "g"), requiresMarker: true },
+  { callee: "accessibilityLabel", pattern: new RegExp(`\\.accessibilityLabel${INIT_SUFFIX_RE}\\s*\\(`, "g"), requiresMarker: true },
+  { callee: "accessibilityHint", pattern: new RegExp(`\\.accessibilityHint${INIT_SUFFIX_RE}\\s*\\(`, "g"), requiresMarker: true },
+  { callee: "accessibilityValue", pattern: new RegExp(`\\.accessibilityValue${INIT_SUFFIX_RE}\\s*\\(`, "g"), requiresMarker: true },
+  { callee: ".init", pattern: /(?<![A-Za-z0-9_)\]])\.\s*init\s*\(/g, requiresMarker: true },
 ];
 
 function formatViolation(violation: Violation): string {
@@ -244,8 +248,34 @@ function literalInterpolations(expression: string): string[] {
   return interpolations;
 }
 
+function isPureInterpolationLiteral(expression: string): boolean {
+  const value = unlabeled(expression);
+  const prefix = value.match(/^(#*)"/);
+  if (!prefix) return false;
+  const end = stringLiteralTokenEnd(expression);
+  if (end === undefined || value.slice(end).trim() !== "") return false;
+
+  const hashes = prefix[1] ?? "";
+  const contentStart = hashes.length + 1;
+  const contentEnd = end - (`"${hashes}`).length;
+  const opening = `\\${hashes}(`;
+  let index = contentStart;
+  let foundInterpolation = false;
+
+  while (index < contentEnd) {
+    if (!value.startsWith(opening, index)) return false;
+    const openIndex = index + opening.length - 1;
+    const closeIndex = findMatchingParen(value, openIndex);
+    if (closeIndex === undefined || closeIndex >= contentEnd) return false;
+    foundInterpolation = true;
+    index = closeIndex + 1;
+  }
+
+  return foundInterpolation;
+}
+
 function hasHiddenContentInterpolation(expression: string): boolean {
-  return literalInterpolations(expression).some((interpolation) => /(?:\.text\s*\(|question|answer|title|name)/i.test(interpolation));
+  return literalInterpolations(expression).some((interpolation) => /(?:\.text\s*\(|\.(?:en|fr)\b|question|answer|title|name|prompt|body|note|altText|description)/i.test(interpolation));
 }
 
 function isTextVerbatimLiteral(expression: string): boolean {
@@ -296,7 +326,7 @@ function scanFile(path: string): Violation[] {
 
       if (callPattern.callee === "Button" && shouldSkipButtonInitializer(argument)) continue;
       const hasMarker = lineHasMarker(lines, startLine);
-      if ((isStringLiteral(argument) || isTextVerbatimLiteral(argument)) && (!hasHiddenContentInterpolation(argument) || hasMarker)) continue;
+      if ((isStringLiteral(argument) || isTextVerbatimLiteral(argument)) && !isPureInterpolationLiteral(argument) && (!hasHiddenContentInterpolation(argument) || hasMarker)) continue;
       if (isNonLiteralLocalizedStringKey(argument)) continue;
       if (hasMarker) continue;
 
@@ -360,6 +390,19 @@ function runScan(roots: string[]): Violation[] {
   return files.flatMap(scanFile);
 }
 
+function expectRunScanError(roots: string[], expectedFragment: string): void {
+  try {
+    runScan(roots);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (message.includes(expectedFragment)) return;
+    console.error(`Apple text-source gate self-test expected error containing "${expectedFragment}" but got "${message}".`);
+    process.exit(1);
+  }
+  console.error(`Apple text-source gate self-test expected error containing "${expectedFragment}" but scan succeeded.`);
+  process.exit(1);
+}
+
 function selfTest(): void {
   const actual = runScan([SELF_TEST_FIXTURE]).map(formatViolation).sort();
   const expectedFragments = [
@@ -372,18 +415,40 @@ function selfTest(): void {
     "InvalidTextFixture.swift:24: Text(verbatim: \"\" + runtime) uses a non-literal text source",
     "InvalidTextFixture.swift:25: Text(\"Question \\(model.title)\") uses a non-literal text source",
     "InvalidTextFixture.swift:26: Text(\"Answer \\(model.name)\") uses a non-literal text source",
-    "InvalidTextFixture.swift:27: accessibilityLabel(\"\" + s) uses a non-literal text source",
-    "InvalidTextFixture.swift:28: LocalizedStringKey(\"\" + runtime) uses a non-literal key",
-    "InvalidTextFixture.swift:29: LocalizedStringKey(marked) uses a non-literal key",
+    "InvalidTextFixture.swift:27: Text(\"\\(runtime)\") uses a non-literal text source",
+    "InvalidTextFixture.swift:29: accessibilityLabel(\"\" + s) uses a non-literal text source",
+    "InvalidTextFixture.swift:30: LocalizedStringKey(\"\" + runtime) uses a non-literal key",
+    "InvalidTextFixture.swift:31: LocalizedStringKey(marked) uses a non-literal key",
+    "InvalidTextFixture.swift:32: Text(runtime) uses a non-literal text source",
+    "InvalidTextFixture.swift:33: Label(runtime) uses a non-literal text source",
+    "InvalidTextFixture.swift:34: Button(runtime) uses a non-literal text source",
+    "InvalidTextFixture.swift:35: .init(runtime) uses a non-literal text source",
   ];
   const missing = expectedFragments.filter((fragment) => !actual.some((line) => line.includes(fragment)));
-  if (actual.length !== expectedFragments.length || missing.length > 0) {
+  const forbiddenFragments = [
+    "InvalidTextFixture.swift:28: Text(\"\\(marked)\") uses a non-literal text source",
+    "SkippedTextFixture.swift",
+  ];
+  const forbidden = forbiddenFragments.filter((fragment) => actual.some((line) => line.includes(fragment)));
+  if (actual.length !== expectedFragments.length || missing.length > 0 || forbidden.length > 0) {
     console.error("Apple text-source gate self-test failed.");
     console.error("Expected fragments:");
     for (const fragment of expectedFragments) console.error(`- ${fragment}`);
+    if (forbidden.length > 0) {
+      console.error("Forbidden fragments:");
+      for (const fragment of forbidden) console.error(`- ${fragment}`);
+    }
     console.error("Actual:");
     for (const line of actual) console.error(`- ${line}`);
     process.exit(1);
+  }
+
+  expectRunScanError([join(SELF_TEST_FIXTURE, "MissingRoot")], "does not exist");
+  const emptyRoot = mkdtempSync(join(tmpdir(), "apple-text-sources-empty-"));
+  try {
+    expectRunScanError([emptyRoot], "found 0 Swift files");
+  } finally {
+    rmSync(emptyRoot, { recursive: true, force: true });
   }
 }
 

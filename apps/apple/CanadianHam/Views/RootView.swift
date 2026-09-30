@@ -40,19 +40,19 @@ struct RootView: View {
                     reloadStore()
                 }
             } else if let bankLoadError {
-                ContentUnavailableView(
-                    "Question bank unavailable",
-                    systemImage: "exclamationmark.triangle",
-                    description: Text(bankLoadError) // l10n: localized
-                )
+                ContentUnavailableView {
+                    Label("Question bank unavailable", systemImage: "exclamationmark.triangle")
+                } description: {
+                    LocalizedErrorMessageText(message: bankLoadError)
+                }
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .background(DesignTokens.Colors.paper)
             } else if let contentLoadError {
-                ContentUnavailableView(
-                    "Lesson content unavailable",
-                    systemImage: "exclamationmark.triangle",
-                    description: Text(contentLoadError) // l10n: localized
-                )
+                ContentUnavailableView {
+                    Label("Lesson content unavailable", systemImage: "exclamationmark.triangle")
+                } description: {
+                    LocalizedErrorMessageText(message: contentLoadError)
+                }
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .background(DesignTokens.Colors.paper)
             } else {
@@ -275,7 +275,7 @@ struct RootView: View {
                 bank = loaded
             }
         } catch {
-            bankLoadError = String(localized: "Unable to load question bank: \(error.localizedDescription)")
+            bankLoadError = localizedErrorMessage(String(localized: "Unable to load question bank: \("")"), detail: error)
         }
     }
 
@@ -288,7 +288,7 @@ struct RootView: View {
                 self.bank = bank.withKnownLessonIds(Set(loaded.lessons.map(\.id)))
             }
         } catch {
-            contentLoadError = String(localized: "Unable to load lesson content: \(error.localizedDescription)")
+            contentLoadError = localizedErrorMessage(String(localized: "Unable to load lesson content: \("")"), detail: error)
         }
     }
 
@@ -315,7 +315,7 @@ struct RootView: View {
             language = progressStore?.preferences.language ?? .english
         } catch {
             progressStore = nil
-            progressStoreError = String(localized: "Unable to open the local progress store: \(error.localizedDescription)")
+            progressStoreError = localizedErrorMessage(String(localized: "Unable to open the local progress store: \("")"), detail: error)
         }
     }
 
@@ -443,7 +443,7 @@ private struct StoreRecoveryView: View {
                 .foregroundStyle(DesignTokens.Colors.warningText)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityAddTraits(.isHeader)
-            Text(message) // l10n: localized
+            LocalizedErrorMessageText(message: message)
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .fixedSize(horizontal: false, vertical: true)

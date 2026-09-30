@@ -113,7 +113,7 @@ struct HomeView: View {
             summary = HomeSummary(readiness: readiness, dueReviewCount: try dueCount(records: progress, now: now), weakSubsectionCount: weak.count, completedExamCount: attempts.count)
             errorMessage = nil
         } catch {
-            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 }
@@ -501,7 +501,7 @@ struct PracticeSessionView: View {
             correctCount = 0
             errorMessage = nil
         } catch {
-            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
             items = []
         }
     }
@@ -553,7 +553,7 @@ struct PracticeSessionView: View {
             committedQuestionIds.insert(question.id)
             onDataChanged()
         } catch {
-            errorMessage = String(localized: "Unable to save progress locally: \(error.localizedDescription)")
+            errorMessage = localizedErrorMessage(String(localized: "Unable to save progress locally: \("")"), detail: error)
         }
     }
 
@@ -581,7 +581,7 @@ struct PracticeSessionView: View {
             reviewSubmitted = true
             onDataChanged()
         } catch {
-            errorMessage = String(localized: "Unable to save review-later progress: \(error.localizedDescription)")
+            errorMessage = localizedErrorMessage(String(localized: "Unable to save review-later progress: \("")"), detail: error)
         }
     }
 }
@@ -974,7 +974,7 @@ struct MockExamView: View {
             result = nil
             errorMessage = nil
         } catch {
-            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 
@@ -1007,7 +1007,7 @@ struct MockExamView: View {
             timerRunning = false
             onDataChanged()
         } catch {
-            errorMessage = String(localized: "Unable to save mock exam: \(error.localizedDescription)")
+            errorMessage = localizedErrorMessage(String(localized: "Unable to save mock exam: \("")"), detail: error)
         }
     }
 
@@ -1125,7 +1125,7 @@ struct SettingsView: View {
         .fileExporter(isPresented: $showingExporter, document: exportDocument, contentType: .json, defaultFilename: "canadian-ham-progress.json") { result in
             switch result {
             case .success: statusMessage = String(localized: "Progress export prepared.")
-            case .failure(let error): errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
+            case .failure(let error): errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
             }
         }
         .fileImporter(isPresented: $showingImporter, allowedContentTypes: [.json]) { result in
@@ -1154,7 +1154,7 @@ struct SettingsView: View {
             errorMessage = nil
             onDataChanged()
         } catch {
-            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 
@@ -1164,7 +1164,7 @@ struct SettingsView: View {
             exportDocument = ProgressExportDocument(text: text)
             showingExporter = true
         } catch {
-            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 
@@ -1183,7 +1183,7 @@ struct SettingsView: View {
                 errorMessage = errors.joined(separator: "\n")
             }
         } catch {
-            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 
@@ -1196,7 +1196,7 @@ struct SettingsView: View {
             errorMessage = nil
             onDataChanged()
         } catch {
-            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 
@@ -1207,7 +1207,7 @@ struct SettingsView: View {
             errorMessage = nil
             onDataChanged()
         } catch {
-            errorMessage = String(localized: "Unable to complete this operation: \(error.localizedDescription)")
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 }
@@ -1482,6 +1482,35 @@ private struct CategoryCard: View {
     }
 }
 
+private let localizedErrorDetailSeparator = "\u{1E}"
+
+func localizedErrorMessage(_ localizedPrefix: String, detail error: Error) -> String {
+    localizedPrefix + localizedErrorDetailSeparator + error.localizedDescription
+}
+
+private func localizedErrorMessageParts(_ message: String) -> (summary: String, detail: String?) {
+    guard let separatorRange = message.range(of: localizedErrorDetailSeparator) else {
+        return (message, nil)
+    }
+    let summary = String(message[..<separatorRange.lowerBound])
+    let detail = String(message[separatorRange.upperBound...])
+    return (summary, detail.isEmpty ? nil : detail)
+}
+
+struct LocalizedErrorMessageText: View {
+    let message: String
+
+    var body: some View {
+        let parts = localizedErrorMessageParts(message)
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            Text(parts.summary) // l10n: localized
+            if let detail = parts.detail {
+                Text(verbatim: detail) // l10n: verbatim
+            }
+        }
+    }
+}
+
 struct MessagePanel: View {
     enum Kind { case warning, success }
     let title: LocalizedStringKey
@@ -1492,7 +1521,8 @@ struct MessagePanel: View {
         Label {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 Text(title).font(DesignTokens.FontScale.title.weight(.bold)) // l10n: localized
-                Text(message).font(DesignTokens.FontScale.body) // l10n: localized
+                LocalizedErrorMessageText(message: message)
+                    .font(DesignTokens.FontScale.body)
             }
         } icon: {
             Image(systemName: kind == .success ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
@@ -1559,12 +1589,12 @@ func localizedAnsweredOutOfTotal(answered: Int, total: Int) -> String {
 
 func localizedQuestionCount(_ count: Int, bundle: Bundle = .main, locale: Locale = .current) -> String {
     let format = String(localized: "%lld questions", bundle: bundle, locale: locale)
-    return String.localizedStringWithFormat(format, Int64(count))
+    return String(format: format, locale: locale, Int64(count))
 }
 
 func localizedUnansweredQuestionCount(_ count: Int, bundle: Bundle = .main, locale: Locale = .current) -> String {
     let format = String(localized: "%lld unanswered questions count as incorrect.", bundle: bundle, locale: locale)
-    return String.localizedStringWithFormat(format, Int64(count))
+    return String(format: format, locale: locale, Int64(count))
 }
 
 private func localizedSubsectionCount(_ count: Int) -> String {
