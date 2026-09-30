@@ -878,8 +878,8 @@ struct MockExamView: View {
             selectedByQuestionId = [:]
             flagged = []
             secondsElapsed = 0
-            timerRunning = false
-            timerStatus = progressStore.preferences.examTimerEnabled ? "Timer ready" : "Timer off"
+            timerRunning = progressStore.preferences.examTimerEnabled
+            timerStatus = progressStore.preferences.examTimerEnabled ? "Timer running, 0 seconds elapsed" : "Timer off"
             result = nil
             errorMessage = nil
         } catch {
