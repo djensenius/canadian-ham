@@ -152,7 +152,7 @@ Rules:
 
 ## Source update policy
 
-When ISED updates the bank:
+When ISED updates the bank, follow the detailed [content update process](content-update-process.md) as well as the summary below:
 
 1. Follow the re-verification procedure in [exam-facts.md](exam-facts.md).
 2. Create a new versioned source directory rather than overwriting the active bank.

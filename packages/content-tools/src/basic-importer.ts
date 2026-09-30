@@ -3,17 +3,19 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { TextDecoder } from "node:util";
 
-export const BANK_ID = "basic-2025-07-15";
+import { ACTIVE_BANK_ID, ACTIVE_GENERATED_DIR, ACTIVE_SOURCE_DIR } from "./active-bank.ts";
+
+export const BANK_ID = ACTIVE_BANK_ID;
 export const BANK_EFFECTIVE_DATE = "2025-07-15";
 export const IMPORTER_VERSION = "1";
 
-export const SOURCE_DIR = "content/sources/ised/basic-2025-07-15";
+export const SOURCE_DIR = ACTIVE_SOURCE_DIR;
 export const SOURCE_TXT_PATH = `${SOURCE_DIR}/questions/amat_basic_quest_delim.txt`;
 export const SOURCE_MANIFEST_PATH = `${SOURCE_DIR}/manifest.json`;
 export const SOURCE_SHA256SUMS_PATH = `${SOURCE_DIR}/SHA256SUMS`;
 export const HAND_CATEGORIES_PATH = "content/categories.json";
 export const DOCS_EXAM_FACTS_PATH = "docs/exam-facts.md";
-export const GENERATED_DIR = `content/generated/${BANK_ID}`;
+export const GENERATED_DIR = ACTIVE_GENERATED_DIR;
 
 export const EXPECTED_HEADERS = [
   "question_id",
