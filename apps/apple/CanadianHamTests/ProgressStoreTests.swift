@@ -168,6 +168,38 @@ final class ProgressStoreTests: XCTestCase {
             now: "2026-01-02T03:04:05.000Z"
         ))
         try store.saveQuestionProgress([originalRecord])
+        let originalLessonProgress = LessonProgressRecord(
+            lessonId: "L-005-01",
+            readAt: "2026-01-02T03:10:00.000Z",
+            readCount: 2
+        )
+        try store.saveLessonProgress(originalLessonProgress)
+        let originalLessonQuizAttempt = LessonQuizAttempt(
+            id: "lesson-quiz-import-rollback",
+            quizId: "QZ-L-005-01-A",
+            lessonId: "L-005-01",
+            submittedAt: "2026-01-02T03:20:00.000Z",
+            correct: 1,
+            total: 1,
+            percent: 100,
+            officialQuestionIds: ["B-005-001-001"],
+            incorrectOfficialQuestionIds: [],
+            incorrectConceptCheckIds: []
+        )
+        try store.saveLessonQuizAttempt(originalLessonQuizAttempt, questionProgress: [originalRecord])
+        let generated = try AppleStudyEngine.generatedMockExam(bank: bank, seed: "import-rollback-original")
+        let originalExamAttempt = AppleStudyEngine.buildExamAttempt(
+            bank: bank,
+            seed: "import-rollback-original",
+            startedAt: "2026-01-02T03:30:00.000Z",
+            submittedAt: "2026-01-02T04:30:00.000Z",
+            timerEnabled: false,
+            secondsElapsed: 0,
+            generatedItems: generated.items,
+            selectedByQuestionId: [:],
+            flaggedQuestionIds: []
+        )
+        try store.saveExamAttempt(originalExamAttempt)
         var preferences = store.preferences
         preferences.theme = .dark
         try store.updatePreferences(preferences)
@@ -187,6 +219,9 @@ final class ProgressStoreTests: XCTestCase {
         store.failNextImportAfterDeleteForTesting = true
         XCTAssertThrowsError(try store.importData(replacement, bank: bank))
         XCTAssertEqual(try store.questionProgressRecords(), [originalRecord])
+        XCTAssertEqual(try store.lessonProgressRecords(), [originalLessonProgress])
+        XCTAssertEqual(try store.lessonQuizAttempts(), [originalLessonQuizAttempt])
+        XCTAssertEqual(try store.examAttempts(), [originalExamAttempt])
         XCTAssertEqual(store.preferences.theme, .dark)
     }
 

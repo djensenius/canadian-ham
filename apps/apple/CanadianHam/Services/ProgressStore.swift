@@ -645,11 +645,15 @@ final class ProgressStoreService: ObservableObject {
         return try context.fetch(descriptor).first
     }
 
-    private func preferencesEntity(createIfMissing: Bool, saveIfCreated: Bool = true) throws -> PreferencesEntity {
+    private func existingPreferencesEntity() throws -> PreferencesEntity? {
         let defaultKey = PreferencesEntity.defaultKey
         var descriptor = FetchDescriptor<PreferencesEntity>(predicate: #Predicate { $0.key == defaultKey })
         descriptor.fetchLimit = 1
-        if let existing = try context.fetch(descriptor).first {
+        return try context.fetch(descriptor).first
+    }
+
+    private func preferencesEntity(createIfMissing: Bool, saveIfCreated: Bool = true) throws -> PreferencesEntity {
+        if let existing = try existingPreferencesEntity() {
             return existing
         }
         let entity = PreferencesEntity(
@@ -690,13 +694,13 @@ final class ProgressStoreService: ObservableObject {
     }
 
     private func snapshotForRollback() throws -> ProgressStoreSnapshot {
-        let entity = try preferencesEntity(createIfMissing: true)
+        let entity = try existingPreferencesEntity()
         return ProgressStoreSnapshot(
             questionProgress: try questionProgressRecords(),
             examAttempts: try examAttempts(),
             preferences: preferences,
-            archivedLessonProgressData: entity.archivedLessonProgressData,
-            archivedLessonQuizAttemptsData: entity.archivedLessonQuizAttemptsData
+            archivedLessonProgressData: entity?.archivedLessonProgressData ?? Data("[]".utf8),
+            archivedLessonQuizAttemptsData: entity?.archivedLessonQuizAttemptsData ?? Data("[]".utf8)
         )
     }
 

@@ -894,13 +894,14 @@ private struct ConceptCheckQuestionView: View {
             }
             if let selectedChoiceIndex {
                 let isCorrect = check.choices[safe: selectedChoiceIndex]?.isCorrect == true
+                let feedbackTextColor = isCorrect ? DesignTokens.Colors.correctText : DesignTokens.Colors.incorrectText
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                     Text(isCorrect ? "Correct" : "Incorrect")
                         .font(DesignTokens.FontScale.body.weight(.bold))
-                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .foregroundStyle(feedbackTextColor)
                     Text(localized(check.explanation.text(for: language), language: language))
                         .font(DesignTokens.FontScale.body)
-                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .foregroundStyle(feedbackTextColor)
                 }
                 .padding(DesignTokens.Spacing.lg)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -941,12 +942,12 @@ private struct ConceptChoiceButton: View {
                     if showCorrectness && choice.isCorrect {
                         Label("Correct answer", systemImage: "checkmark.circle.fill")
                             .font(DesignTokens.FontScale.caption.weight(.bold))
-                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .foregroundStyle(DesignTokens.Colors.correctText)
                     }
                     if showCorrectness && selected && !choice.isCorrect {
                         Label("Your answer, incorrect", systemImage: "xmark.circle.fill")
                             .font(DesignTokens.FontScale.caption.weight(.bold))
-                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .foregroundStyle(DesignTokens.Colors.incorrectText)
                     }
                 }
             }
