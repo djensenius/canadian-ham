@@ -7,18 +7,37 @@ CATALOG="$ROOT_DIR/apps/apple/CanadianHam/Resources/Localizable.xcstrings"
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
 
-python3 "$ROOT_DIR/scripts/check-apple-text-sources.py" --self-test
-python3 "$ROOT_DIR/scripts/check-apple-text-sources.py"
+node --no-warnings "$ROOT_DIR/scripts/check-apple-text-sources.ts" --self-test
+node --no-warnings "$ROOT_DIR/scripts/check-apple-text-sources.ts"
+
+DERIVED_DATA="$TMP_DIR/DerivedData"
+LOCALIZATION_DIR="$TMP_DIR/Localization"
 
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
   xbuild -exportLocalizations \
   -project "$PROJECT" \
-  -localizationPath "$TMP_DIR" \
+  -scheme CanadianHam \
+  -derivedDataPath "$DERIVED_DATA" \
+  -localizationPath "$LOCALIZATION_DIR" \
   -exportLanguage fr
 
-XLIFF="$TMP_DIR/fr.xcloc/Localized Contents/fr.xliff"
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
+  xbuild -project "$PROJECT" \
+  -scheme CanadianHamTV \
+  -destination 'generic/platform=tvOS Simulator' \
+  -derivedDataPath "$DERIVED_DATA" \
+  build CODE_SIGNING_ALLOWED=NO
 
-python3 - "$XLIFF" "$CATALOG" "$ROOT_DIR" <<'PY'
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
+  xbuild -project "$PROJECT" \
+  -scheme CanadianHamVision \
+  -destination 'generic/platform=visionOS Simulator' \
+  -derivedDataPath "$DERIVED_DATA" \
+  build CODE_SIGNING_ALLOWED=NO
+
+XLIFF="$LOCALIZATION_DIR/fr.xcloc/Localized Contents/fr.xliff"
+
+python3 - "$XLIFF" "$CATALOG" "$ROOT_DIR" "$DERIVED_DATA" <<'PY'
 import json
 import sys
 import xml.etree.ElementTree as ET
@@ -27,6 +46,7 @@ from pathlib import Path
 xliff_path = Path(sys.argv[1])
 catalog_path = Path(sys.argv[2])
 root_dir = Path(sys.argv[3]).resolve()
+derived_data = Path(sys.argv[4]).resolve()
 
 catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
 
@@ -56,9 +76,8 @@ for file_node in root.findall("x:file", ns):
 
 catalog_keys = set(catalog.get("strings", {}).keys())
 compiled_keys = set()
-derived_data = Path.home() / "Library/Developer/Xcode/DerivedData"
 if derived_data.exists():
-    for stringsdata_path in derived_data.glob("CanadianHam-*/Build/Intermediates.noindex/CanadianHam.build/**/*.stringsdata"):
+    for stringsdata_path in derived_data.glob("Build/Intermediates.noindex/*.build/**/*.stringsdata"):
         try:
             stringsdata = json.loads(stringsdata_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
@@ -88,14 +107,6 @@ if stale_by_export:
     for key in stale_by_export:
         print(f"- {key}", file=sys.stderr)
     sys.exit(1)
-
-removed_extraction_state = False
-for entry in catalog.get("strings", {}).values():
-    if entry.pop("extractionState", None) is not None:
-        removed_extraction_state = True
-if removed_extraction_state:
-    text = json.dumps(catalog, ensure_ascii=False, indent=2).replace('": ', '" : ')
-    catalog_path.write_text(text + "\n", encoding="utf-8")
 
 if missing:
     print("Missing French localization targets:", file=sys.stderr)
