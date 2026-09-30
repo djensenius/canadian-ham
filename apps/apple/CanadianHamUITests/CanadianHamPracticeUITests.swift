@@ -183,6 +183,28 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertFalse(anyVisibleLabel(in: app, contains: "Your answer, incorrect"), "Mock exams must not reveal incorrectness before submit")
     }
 
+    func testMockExamNextUnansweredJumpsAfterAnsweringFirstQuestion() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamMockExamSeed", "ui-next-unanswered",
+            "-CanadianHamMockExamLimit", "3"
+        ])
+        openMockExamStart(in: app)
+        XCTAssertTrue(app.staticTexts["Question 1 of 3"].waitForExistence(timeout: 10))
+
+        answerFirstVisibleAnswer(in: app)
+        scrollToTop(in: app)
+        let nextUnanswered = app.buttons["mock-next-unanswered-button"].firstMatch
+        XCTAssertTrue(nextUnanswered.waitForExistence(timeout: 5), "Mock exam should expose Next unanswered")
+        scrollUntilHittable(nextUnanswered, in: app, maxSwipes: 8)
+        XCTAssertTrue(nextUnanswered.isEnabled, "Next unanswered should be enabled when a later question is unanswered")
+        XCTAssertTrue(nextUnanswered.isHittable, "Next unanswered should be hittable after returning to the question header")
+        nextUnanswered.tap()
+
+        XCTAssertTrue(app.staticTexts["Question 2 of 3"].waitForExistence(timeout: 5), "Next unanswered should advance to the first unanswered question")
+    }
+
     func testReviewLaterHidesCorrectnessUntilSubmitAndResultsSurviveSave() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [

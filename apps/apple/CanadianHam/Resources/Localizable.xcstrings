@@ -3787,6 +3787,28 @@
         }
       }
     },
+    "Mock exam submitted. %@, %lld of %lld." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mock exam submitted. %1$@, %2$lld of %3$lld."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Examen simulé soumis. %@, %lld sur %lld."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Examen simulé soumis. %@, %lld sur %lld."
+          }
+        }
+      }
+    },
     "Mock exam unavailable" : {
       "localizations" : {
         "fr" : {
@@ -3939,6 +3961,22 @@
         }
       }
     },
+    "Next flagged" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Question marquée suivante"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Question marquée suivante"
+          }
+        }
+      }
+    },
     "Next question" : {
       "localizations" : {
         "fr" : {
@@ -3951,6 +3989,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Question suivante"
+          }
+        }
+      }
+    },
+    "Next unanswered" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Question sans réponse suivante"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Question sans réponse suivante"
           }
         }
       }

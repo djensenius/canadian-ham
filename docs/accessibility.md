@@ -108,13 +108,15 @@ The mock exam timer is optional and off by default.
 
 ### Apple
 
-- XCUITest runs `performAccessibilityAudit` on every screen when screen UI exists.
+- XCUITest runs `performAccessibilityAudit` on every iOS, tvOS, and visionOS screen when screen UI exists.
+- The macOS UI suite is intentionally skipped for speed; macOS keyboard and Full Keyboard Access coverage is verified in the manual release checklist below.
 - A largest-Dynamic-Type UI run validates no clipped essential text and no unreachable actions.
 - VoiceOver manual smoke covers practice, mock exam, results, lessons, import/export, and reset.
 
 ## Manual release checklist
 
 - Keyboard-only web walkthrough completed.
+- macOS keyboard walkthrough completed with Full Keyboard Access enabled: open System Settings > Accessibility > Keyboard, turn on Full Keyboard Access, launch Canadian Ham, then use Tab/Shift-Tab, arrow keys, Space, Enter, and Escape to traverse Home, Practice, Mock exam, Results, Learn, Settings, import/export, and reset without a pointer; confirm focus remains visible, ordered, and trap-free.
 - VoiceOver walkthrough completed on at least one iOS/iPadOS device or simulator and macOS.
 - tvOS focus walkthrough completed when tvOS app is present.
 - visionOS window/readability walkthrough completed when visionOS app is present.
