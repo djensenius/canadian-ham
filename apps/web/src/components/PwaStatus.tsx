@@ -1,16 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 
+import { t, type InterfaceLanguage, type MessageCatalogue } from "../lib/i18n";
+
 type OfflineState = "unsupported" | "installing" | "ready" | "error";
+type PwaMessageKey = Extract<keyof MessageCatalogue, "pwaUpdateReady" | "pwaUpdateApplying">;
 
 interface PwaStatusProps {
+  readonly interfaceLanguage: InterfaceLanguage;
   readonly updateDisabled?: boolean;
 }
 
-export function PwaStatus({ updateDisabled = false }: PwaStatusProps) {
+export function PwaStatus({ interfaceLanguage, updateDisabled = false }: PwaStatusProps) {
   const serviceWorkerAvailable = typeof navigator !== "undefined" && "serviceWorker" in navigator && import.meta.env.PROD;
   const [offlineState, setOfflineState] = useState<OfflineState>(() => serviceWorkerAvailable ? "installing" : "unsupported");
   const [updateWorker, setUpdateWorker] = useState<ServiceWorker | null>(null);
-  const [message, setMessage] = useState("");
+  const [messageKey, setMessageKey] = useState<PwaMessageKey | null>(null);
+  const [errorMessage, setErrorMessage] = useState("");
   const applyingUpdateRef = useRef(false);
 
   useEffect(() => {
@@ -38,7 +43,8 @@ export function PwaStatus({ updateDisabled = false }: PwaStatusProps) {
         }
         if (worker.state === "installed" && navigator.serviceWorker.controller !== null) {
           setUpdateWorker(worker);
-          setMessage("An offline update is ready. Apply it when you are not in the middle of an exam.");
+          setMessageKey("pwaUpdateReady");
+          setErrorMessage("");
         }
         if (worker.state === "activated") {
           setOfflineState("ready");
@@ -54,7 +60,8 @@ export function PwaStatus({ updateDisabled = false }: PwaStatusProps) {
       watchInstalling(registration.installing);
       if (registration.waiting !== null && navigator.serviceWorker.controller !== null) {
         setUpdateWorker(registration.waiting);
-        setMessage("An offline update is ready. Apply it when you are not in the middle of an exam.");
+        setMessageKey("pwaUpdateReady");
+        setErrorMessage("");
       }
       registration.addEventListener("updatefound", () => watchInstalling(registration?.installing ?? null));
       await navigator.serviceWorker.ready;
@@ -64,7 +71,8 @@ export function PwaStatus({ updateDisabled = false }: PwaStatusProps) {
     }).catch((error: unknown) => {
       if (!cancelled) {
         setOfflineState("error");
-        setMessage(error instanceof Error ? error.message : String(error));
+        setMessageKey(null);
+        setErrorMessage(error instanceof Error ? error.message : String(error));
       }
     });
 
@@ -75,15 +83,16 @@ export function PwaStatus({ updateDisabled = false }: PwaStatusProps) {
   }, [serviceWorkerAvailable]);
 
   const label = offlineState === "ready"
-    ? "Available offline"
+    ? t(interfaceLanguage, "pwaAvailableOffline")
     : offlineState === "unsupported"
-      ? "Offline install unavailable"
+      ? t(interfaceLanguage, "pwaOfflineUnavailable")
       : offlineState === "error"
-        ? "Offline cache needs attention"
-        : "Caching for offline use";
+        ? t(interfaceLanguage, "pwaOfflineAttention")
+        : t(interfaceLanguage, "pwaCaching");
+  const message = messageKey === null ? errorMessage : t(interfaceLanguage, messageKey);
 
   return (
-    <div className="pwa-status" aria-label="Offline availability" aria-live="polite">
+    <div className="pwa-status" aria-label={t(interfaceLanguage, "pwaOfflineAvailability")} aria-live="polite">
       <span aria-hidden="true">{offlineState === "ready" ? "✓" : "•"}</span>
       <span>{label}</span>
       {message ? <span className="pwa-status__message">{message}</span> : null}
@@ -95,9 +104,10 @@ export function PwaStatus({ updateDisabled = false }: PwaStatusProps) {
             applyingUpdateRef.current = true;
             updateWorker.postMessage({ type: "SKIP_WAITING" });
             setUpdateWorker(null);
-            setMessage("Offline update is applying. The app will reload to finish installing it.");
+            setMessageKey("pwaUpdateApplying");
+            setErrorMessage("");
           }}
-        >{updateDisabled ? "Finish mock exam before updating" : "Reload to apply offline update"}</button>
+        >{updateDisabled ? t(interfaceLanguage, "pwaFinishExamBeforeUpdating") : t(interfaceLanguage, "pwaReloadToUpdate")}</button>
       ) : null}
     </div>
   );
