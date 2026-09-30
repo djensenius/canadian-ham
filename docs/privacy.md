@@ -149,7 +149,7 @@ Verification targets:
 - No remote URLs in runtime configuration except non-clickable attribution or source text where appropriate.
 - No code paths using URL loading for remote resources.
 - No app entitlements for iCloud sync or push notifications.
-- Runtime smoke test in airplane mode covers first launch, lesson reading, practice, mock exam, progress persistence, reference viewer, export, import, and reset.
+- Runtime smoke test in airplane mode covers first launch, lesson reading, practice, mock exam, progress persistence, export, import, and reset.
 
 The project may still contain source URLs in documentation and source manifests for attribution and verification. Those URLs are not runtime network dependencies.
 
@@ -162,7 +162,7 @@ Official-source citation URLs, such as ISED/Government of Canada source pages in
 Verification targets:
 
 - No third-party requests in browser developer tools during app load and normal flows.
-- Service worker caches only same-origin app shell, content JSON, Markdown, and reference assets allowed for the current private-development or public-release stage under the [content-licensing interim policy and public-release gate](content-licensing.md).
+- Service worker caches only same-origin app shell, content JSON, Markdown, and app assets; reference PDFs are not shipped in the web app or PWA cache.
 - Fonts are self-hosted.
 - Content Security Policy blocks unexpected `connect-src`, `script-src`, `img-src`, and `font-src` third-party origins; if host response headers are unavailable, document and test the fallback CSP `<meta>` tag.
 - Hosting configuration disables optional access logs or uses the shortest retention available; any unavoidable host logs are treated as hosting operations data, not application analytics.
@@ -176,7 +176,7 @@ Run before release and when dependencies change:
 3. Confirm Apple entitlements do not include iCloud sync or push notifications.
 4. Confirm no Apple target links third-party SDKs.
 5. Build and test Apple app with `xbuild`.
-6. Launch Apple app in airplane mode and complete a lesson, practice quiz, mock exam, reference sheet view, export, import, and reset.
+6. Launch Apple app in airplane mode and complete a lesson, practice quiz, mock exam, export, import, and reset.
 7. Build static web app.
 8. Load web app with browser dev tools open and confirm no third-party requests.
 9. Put web app offline after PWA cache readiness and complete a lesson, practice quiz, mock exam, export, import, and reset.

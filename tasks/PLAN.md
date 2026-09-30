@@ -96,9 +96,9 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-502 | P5 | todo | worker | T-501,T-102,T-402,T-405 | Bundle generated question bank, lesson metadata, explanations, manifest, and reference assets for private development in the Apple app; public release remains gated by T-007. |
 | T-503 | P5 | done | worker | T-502 | Implement SwiftData local progress models for QuestionProgress, ExamAttempt, lesson progress, and preferences. |
 | T-504 | P5 | done | worker | T-502,T-206,T-503 | Implement Apple practice flow with shuffled answers, immediate feedback, and review-later mode. |
-| T-505 | P5 | done | worker | T-502,T-206,T-503,T-507 | Implement Apple mock exam flow, scoring, review, category breakdown, optional timer default off, unanswered-as-incorrect scoring, progress updates, and mock-exam access to the T-507 reference viewer for REQ-EXAM-004. |
+| T-505 | P5 | done | worker | T-502,T-206,T-503,T-507 | Implement Apple mock exam flow, scoring, review, category breakdown, optional timer default off, unanswered-as-incorrect scoring, progress updates; reference viewer dropped (see T-507). |
 | T-506 | P5 | done | worker | T-503 | Implement user-initiated progress export/import JSON and reset all data. |
-| T-507 | P5 | todo | worker | T-502 | Implement offline reference sheet viewer for reference assets bundled for private development; public release remains gated by T-007. |
+| T-507 | P5 | dropped | owner | T-502 | DROPPED (owner decision): reference PDFs are not shipped in web or Apple apps; a static note says the exam provides ISED's reference sheet and lessons teach its contents. Sources stay vendored under content/sources. |
 | T-508 | P5 | todo | worker | T-506,T-507,T-504,T-505,T-509,T-510,T-512 | Add Apple no-network audit: source search, entitlement review, no third-party SDK check, and airplane-mode smoke test plan. |
 | T-509 | P5 | todo | worker | T-502 | Render platform-neutral lessons in the Apple app with metadata, body content, previous/next navigation, and module overview. |
 | T-510 | P5 | todo | worker | T-503,T-509,T-206 | Implement Apple built-in lesson quizzes with shuffled official-bank answers, local scores, and retry history. |

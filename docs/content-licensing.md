@@ -28,7 +28,7 @@ Record the written permission here when available in project records.
 | Storage location for permission evidence | Pending: private owner records; do not commit private correspondence unless approved |
 | Release review status | Blocked until reference number/date/scope are recorded and the scope explicitly covers the release artifacts |
 
-Do not infer permission scope beyond the written clearance. T-007 records the permission reference number, date, scope, and explicit confirmation that the scope covers bundling verbatim question text as app data and bundling the reference PDFs. Until then, vendoring is allowed only for private, non-distributed development under the [interim private-development policy](#interim-private-development-policy); publication and distribution remain blocked by the [public-release gate](#public-release-gate).
+Do not infer permission scope beyond the written clearance. T-007 records the permission reference number, date, scope, and explicit confirmation that the scope covers bundling verbatim question text as app data. The reference PDFs are retained only as source artifacts and are not shipped in the apps. Until permission is recorded, vendoring is allowed only for private, non-distributed development under the [interim private-development policy](#interim-private-development-policy); publication and distribution remain blocked by the [public-release gate](#public-release-gate).
 
 ## Interim private-development policy
 
@@ -37,7 +37,7 @@ While the repository is private and no outside collaborators are added, the proj
 - the Basic 2025 delimited TXT;
 - `readme_basic.txt` and `lisezmoi_base.txt` from the Basic 2025 question-bank ZIP;
 - the Basic 2025 question-bank PDF;
-- the English Basic 2025 reference PDFs, either in the same directory or in a documented reference subfolder under that directory.
+- the English Basic 2025 reference PDFs, either in the same directory or in a documented reference subfolder under that directory; these PDFs are not shipped in the apps.
 
 These files must be stored verbatim, with SHA-256 checksums recorded in the source manifest, and with the attribution and disclaimer in this document kept in place. The files must not be edited, reformatted, or mixed into original lesson or explanation content.
 
@@ -51,7 +51,7 @@ This interim policy is the owner's risk decision and is not legal advice. This p
 
 ## Public-release gate
 
-All of the following actions are blocked until T-007 records written ISED permission with the reference number, date, scope, and explicit confirmation that the scope covers both bundling verbatim question text as app data and bundling the reference PDFs:
+All of the following actions are blocked until T-007 records written ISED permission with the reference number, date, scope, and explicit confirmation that the scope covers bundling verbatim question text as app data. The reference PDFs remain source artifacts and are not shipped in the apps:
 
 - making the GitHub repository public or adding outside collaborators;
 - deploying the web app anywhere publicly reachable;
@@ -66,9 +66,9 @@ Alternative contingency: use `git filter-repo` to purge already-committed out-of
 
 ## Attribution text
 
-Use this attribution near question-bank and reference-material acknowledgements after T-007 records permission, adjusted only after legal/owner review:
+Use this attribution near question-bank acknowledgements after T-007 records permission, adjusted only after legal/owner review:
 
-> Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank and related reference material, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page.
+> Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page.
 
 Short form for app settings or about page after T-007 records permission:
 
@@ -88,12 +88,12 @@ The repository must keep ISED source data separate from original project content
 
 | Content class | Location | Rules |
 |---|---|---|
-| ISED official source artifacts | `content/sources/ised/basic-2025-07-15/` | Store the Basic 2025 TXT, Basic 2025 question-bank PDF, and English reference PDFs verbatim with checksums under the interim private-development policy while the repository remains private. Do not edit. Importer and CI jobs run against the committed TXT. Public release requires T-007 permission scope to cover the included artifacts. |
+| ISED official source artifacts | `content/sources/ised/basic-2025-07-15/` | Store the Basic 2025 TXT, Basic 2025 question-bank PDF, and English reference PDFs verbatim with checksums under the interim private-development policy while the repository remains private. Do not edit. Importer and CI jobs run against the committed TXT. The reference PDFs are not shipped in the apps. Public release requires T-007 permission scope to cover included ISED app data. |
 | Generated ISED question data | `content/generated/basic-2025-07-15/` | Generated from official source. Preserve text verbatim. Include source manifest. Private development may use it; public release requires T-007 permission scope to cover bundling verbatim question text as app data. |
 | Category metadata | `content/categories.json` | Hand-maintained. English names from verified ISED/RAC materials. French names pending official verification. |
 | Original lessons | `content/lessons/` | Original writing by project. May cite ISED question IDs and RBR-4. Must not copy RAC/Coax study-guide text. |
 | Original explanations | `content/explanations/` | Original writing by project. Separate from ISED records. Must not copy third-party study guides. |
-| Reference material metadata/assets | `content/reference/` | Private development may use the English reference PDFs under the interim policy. Public release requires T-007 permission scope to cover bundling the PDFs. Keep tracked checksums. |
+| Reference material metadata/assets | `content/reference/` | Private development may track metadata and checksums for the English reference PDFs under the interim policy. The PDFs remain in `content/sources` for provenance and are not shipped in the apps. |
 
 ## Verbatim ISED question text
 
@@ -139,18 +139,16 @@ Original content must not:
 
 The English reference material ZIP contains:
 
-- `Reference Material for Amateur Radio Exam Basic EN 2025.pdf`, SHA-256 `e4e6a0ec35d9ccec2732b6c2a950b3ea721f826d44160b54b4e6298e86b93ae9`.
-- `Reference Material for Amateur Radio Training Basic EN 2025.pdf`, SHA-256 `2e0bf5e30a621852db0bf3c1e3954bbd60f906b19c531d97eab9b35c8f1a831e`.
+- `Reference Material for Amateur Radio Exam Basic EN 2025.pdf`, SHA-256 `e4e6a0ec35d9ccec2732b6c2a950b3ea721f826d44160b54b4e6298e86b93ae9`; not shipped in the apps.
+- `Reference Material for Amateur Radio Training Basic EN 2025.pdf`, SHA-256 `2e0bf5e30a621852db0bf3c1e3954bbd60f906b19c531d97eab9b35c8f1a831e`; not shipped in the apps.
 
 Rules:
 
 - Label the training version as study aid material.
 - Label the unlabelled exam version as reference material that may be used while writing the exam.
-- Private development may bundle these PDFs while the repository remains private and undistributed under the [interim private-development policy](#interim-private-development-policy).
-- Public release may bundle these PDFs only if T-007 permission scope covers bundling them in the relevant app or release artifact.
+- Do not bundle these PDFs in web or Apple app artifacts; they are kept only as source artifacts under `content/sources`.
 - Keep checksums in the source manifest.
 - Do not recreate ISED diagrams unless permission scope explicitly allows derivative formats.
-- If a native viewer renders PDF pages, it must not send the PDF to a remote service.
 
 ## Source update policy
 
@@ -171,7 +169,7 @@ Before any public release:
 
 - Permission reference number, date, and scope are recorded above.
 - Permission scope explicitly covers bundling verbatim question text as app data.
-- Permission scope explicitly covers bundling the reference PDFs in release artifacts.
+- Reference PDFs are not shipped in release artifacts.
 - Attribution text appears in web and Apple about/settings surfaces.
 - Disclaimer appears in web and Apple about/settings surfaces.
 - Source URLs and checksums are recorded.
@@ -186,6 +184,6 @@ Before any public release:
 - Fill in ISED permission reference number.
 - Fill in ISED permission date.
 - Confirm whether permission explicitly covers bundling verbatim question text as app data, including structured formats with shuffled choices.
-- Confirm whether permission explicitly covers bundling the English reference PDFs in both web and Apple apps.
+- Confirm whether any future change to ship English reference PDFs in web or Apple apps has explicit permission before implementation; current app artifacts do not ship them.
 - Verify official French category names before displaying French category headings.
 - Locate French 2025 Basic reference material or document its absence in release notes.

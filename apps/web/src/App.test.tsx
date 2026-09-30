@@ -18,6 +18,7 @@ import { applyThemePreference, readStoredThemePreference, THEME_COLORS, THEME_ST
 import { buildExamAttempt, createMockExam } from "./lib/studyEngine";
 
 const fixedNow = "2026-01-02T03:04:05.000Z";
+const referenceSheetNote = "In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.";
 let stores: ProgressStore[] = [];
 let testQuestions: readonly Question[] = [];
 
@@ -85,6 +86,10 @@ function extractCsp(html: string): string {
 async function expectNoAxeViolations(container: Element): Promise<void> {
   const results = await axe.run(container);
   assert.deepEqual(results.violations, []);
+}
+
+function assertNoPdfLinks(container: Element): void {
+  assert.equal(container.querySelector('a[href*=".pdf"]'), null);
 }
 
 function allCorrectAttempt(seed: string, submittedAt: string): ExamAttempt {
@@ -252,6 +257,7 @@ describe("App accessibility and flows", () => {
     const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "learn-seed"} />);
 
     await screen.findByRole("heading", { name: "Learn" });
+    assert.equal(screen.getByText(referenceSheetNote).className, "reference-note");
     const moduleEyebrows = [...container.querySelectorAll(".module-card .eyebrow")].map((element) => element.textContent ?? "");
     assert.match(moduleEyebrows[0] ?? "", /Module 1 · B-005/);
     await expectNoAxeViolations(container);
@@ -274,6 +280,19 @@ describe("App accessibility and flows", () => {
     await user.click(screen.getByRole("button", { name: "Mark lesson read" }));
     await waitFor(async () => assert.equal((await store.getLessonProgress()).length, 1));
     await expectNoAxeViolations(container);
+
+    cleanup();
+    window.location.hash = "#/learn/M6/L-006-03";
+    const codeStore = createStore("lesson-code-block");
+    const codeRender = render(<App store={codeStore} now={() => fixedNow} seedFactory={() => "lesson-code-seed"} />);
+
+    await screen.findByRole("heading", { name: "Polarization, dipoles, and wavelength" });
+    const codeBlocks = screen.getAllByRole("group", { name: "Lesson code block (text)" });
+    assert.ok(codeBlocks.length >= 2);
+    assert.equal(codeBlocks[0]?.tagName, "PRE");
+    assert.equal(codeBlocks[0]?.getAttribute("tabindex"), "0");
+    assert.match(codeBlocks[0]?.textContent ?? "", /wavelength in metres = 300 \/ frequency in MHz/);
+    await expectNoAxeViolations(codeRender.container);
   });
 
   it("automatically includes M4 and M6 lessons from content and renders them", async () => {
@@ -459,6 +478,7 @@ describe("App accessibility and flows", () => {
     const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "mock-seed"} />);
 
     await screen.findByRole("heading", { name: "Mock exam" });
+    assert.equal(screen.getByText(referenceSheetNote).className, "reference-note");
     await expectNoAxeViolations(container);
 
     await user.click(screen.getByRole("button", { name: "Start mock exam" }));
@@ -652,23 +672,27 @@ describe("App accessibility and flows", () => {
     assert.ok(document.querySelector(".question-text[lang='fr-CA']"));
   });
 
-  it("labels reference sheet links with new-tab hints and licensing notes", async () => {
-    const store = createStore("reference-links");
+  it("does not render reference PDF links", async () => {
+    const store = createStore("reference-links-removed");
     const user = userEvent.setup();
-    render(<App store={store} now={() => fixedNow} seedFactory={() => "reference-seed"} />);
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "reference-seed"} />);
 
-    const studyLink = await screen.findByRole("link", { name: "Study reference sheet (opens in new tab)" });
-    assert.match(studyLink.getAttribute("href") ?? "", /Reference.*Training.*Basic.*2025\.pdf/);
-    assert.equal(studyLink.getAttribute("target"), "_blank");
-    assert.match(studyLink.getAttribute("rel") ?? "", /noreferrer/);
-    assert.match(screen.getByLabelText("Study reference sheet attribution").textContent ?? "", /Private-development access only/);
+    await screen.findByRole("heading", { name: "Ready for Basic with Honours?" });
+    assert.equal(screen.queryByRole("link", { name: /reference sheet/i }), null);
+    assert.equal(screen.queryByText(/Reference Material.*\.pdf/i), null);
+    assertNoPdfLinks(container);
+
+    await user.click(screen.getAllByRole("button", { name: "Learn" })[0]!);
+    await screen.findByRole("heading", { name: "Learn" });
+    assert.equal(screen.getByText(referenceSheetNote).className, "reference-note");
+    assertNoPdfLinks(container);
 
     await user.click(screen.getAllByRole("button", { name: "Mock exam" })[0]!);
-    const examLink = await screen.findByRole("link", { name: "Open exam reference sheet (opens in new tab)" });
-    assert.match(examLink.getAttribute("href") ?? "", /Reference.*Exam.*Basic.*2025\.pdf/);
-    assert.equal(examLink.getAttribute("target"), "_blank");
-    assert.match(examLink.getAttribute("rel") ?? "", /noreferrer/);
-    assert.match(screen.getByLabelText("Exam reference sheet attribution").textContent ?? "", /may be used while writing the exam/);
+    await screen.findByRole("heading", { name: "Mock exam" });
+    assert.equal(screen.getByText(referenceSheetNote).className, "reference-note");
+    assert.equal(screen.queryByRole("link", { name: /reference sheet/i }), null);
+    assert.equal(screen.queryByText(/\.pdf/i), null);
+    assertNoPdfLinks(container);
   });
 
   it("renders the B-001-017-009 explanation panel citation as a user-activated external link without preloading or fetching it", () => {

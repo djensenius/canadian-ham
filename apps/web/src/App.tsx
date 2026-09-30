@@ -10,8 +10,6 @@ import { Component, useEffect, useMemo, useRef, useState, type ReactNode, type R
 import { LanguageToggle } from "./components/LanguageToggle";
 import { MarkdownContent } from "./components/MarkdownContent";
 import { PwaStatus } from "./components/PwaStatus";
-import examReferenceSheetUrl from "../../../content/sources/ised/basic-2025-07-15/reference/Reference Material for Amateur Radio Exam Basic EN 2025.pdf?url";
-import studyReferenceSheetUrl from "../../../content/sources/ised/basic-2025-07-15/reference/Reference Material for Amateur Radio Training Basic EN 2025.pdf?url";
 import {
   allQuestionCount,
   bankId,
@@ -56,6 +54,8 @@ import {
 
 type Route = "home" | "learn" | "module" | "lesson" | "practice" | "mock" | "results" | "settings";
 type View = Route;
+
+const REFERENCE_SHEET_NOTE = "In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.";
 
 interface AppProps {
   readonly initialView?: View;
@@ -609,12 +609,7 @@ function Home({ readiness, weakSubsections, dueReviewCount, examAttempts, onStar
             <button type="button" className="primary-button" onClick={() => onStartPractice({ type: "all" })}>Start practice</button>
             <button type="button" className="secondary-button" onClick={() => onNavigate("learn")}>Learn</button>
             <button type="button" className="secondary-button" onClick={() => onNavigate("mock")}>Mock exam</button>
-            <a className="button secondary-button" href={studyReferenceSheetUrl} target="_blank" rel="noreferrer">Study reference sheet <span className="new-tab-hint">(opens in new tab)</span></a>
           </div>
-        </div>
-        <div className="reference-note" aria-label="Study reference sheet attribution">
-          <strong>Study reference sheet</strong>
-          <p>Labelled ISED training reference material for formulas and block diagrams. Private-development access only; public release is blocked until permission is recorded.</p>
         </div>
       </div>
       <div className="readiness-panel" aria-labelledby="readiness-title">
@@ -674,6 +669,7 @@ function Learn({ lessonProgress, onOpenModule, onOpenLesson }: LearnProps) {
       <p className="eyebrow">Structured lessons</p>
       <h2 id="learn-title">Learn</h2>
       <p>Study the eight modules in the recommended order. Draft lessons include full reading pages and quizzes; outline lessons show objectives until authored.</p>
+      <p className="reference-note">{REFERENCE_SHEET_NOTE}</p>
       <div className="module-grid">
         {modules.map((module) => {
           const moduleLessons = lessonsByModuleId.get(module.id) ?? [];
@@ -1386,11 +1382,7 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
         </label>
         <label><input type="checkbox" checked={timerEnabled} onChange={(event) => setTimerEnabled(event.currentTarget.checked)} /> Enable optional timer</label>
         <p id="timer-note">Timer is off by default because the official time limit is unverified.</p>
-        <div className="reference-note" aria-label="Exam reference sheet attribution">
-          <strong>Exam reference sheet</strong>
-          <p>The unlabelled ISED exam reference material PDF contains formulas and block diagrams and may be used while writing the exam. Private-development access only; public release is blocked until permission is recorded.</p>
-          <a className="button secondary-button" href={examReferenceSheetUrl} target="_blank" rel="noreferrer">Open exam reference sheet <span className="new-tab-hint">(opens in new tab)</span></a>
-        </div>
+        <p className="reference-note">{REFERENCE_SHEET_NOTE}</p>
         <button type="button" className="primary-button" disabled={questions === null} onClick={startExam}>{questions === null ? "Loading question bank" : "Start mock exam"}</button>
       </section>
     );
@@ -1460,10 +1452,6 @@ function MockExam({ exam, language, questions, preferences, now, seedFactory, on
         <span>Question {exam.currentIndex + 1} of {exam.generatedItems.length}</span>
         <span>Seed: {exam.seed}</span>
         <span>Answered: {exam.selectedByQuestionId.size} of {exam.generatedItems.length}</span>
-      </div>
-      <div className="exam-tool-row">
-        <a className="button secondary-button" href={examReferenceSheetUrl} target="_blank" rel="noreferrer">Exam reference sheet <span className="new-tab-hint">(opens in new tab)</span></a>
-        <span>The PDF contains formulas and block diagrams; ISED source, private-development build.</span>
       </div>
       {exam.timerEnabled ? (
         <div className="timer-panel">
@@ -1748,7 +1736,7 @@ function Footer() {
   return (
     <footer className="site-footer">
       <p>
-        Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank and related reference material. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page. Written permission is pending; this private-development build is not for public release.
+        Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page. Written permission is pending; this private-development build is not for public release.
       </p>
       <p>
         canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner.

@@ -123,8 +123,7 @@ main:focus-visible,
 }
 
 .top-nav,
-.action-row,
-.exam-tool-row {
+.action-row {
   display: flex;
   flex-wrap: wrap;
   gap: var(--ch-space-md);
@@ -181,8 +180,7 @@ a.button:hover {
 
 .secondary-button,
 .top-nav button,
-.action-row .secondary-button,
-.exam-tool-row .secondary-button {
+.action-row .secondary-button {
   background: var(--ch-color-paper-elevated);
   color: var(--ch-color-ink);
 }
@@ -362,8 +360,7 @@ li {
 .empty-state,
 .feedback,
 .session-summary,
-.session-outline,
-.exam-tool-row {
+.session-outline {
   display: grid;
   gap: var(--ch-space-md);
   margin: var(--ch-space-lg) 0;
@@ -374,7 +371,6 @@ li {
   color: var(--ch-color-ink);
 }
 
-.reference-note strong,
 .session-summary strong {
   font-family: var(--ch-font-display);
   font-size: var(--ch-type-body-large-size);
@@ -436,7 +432,6 @@ li {
 }
 
 .session-summary span,
-.exam-tool-row span,
 .all-questions small {
   color: var(--ch-color-ink);
 }
@@ -793,7 +788,6 @@ input[type="checkbox"]:checked::after {
     grid-template-areas:
       "title title"
       "summary summary"
-      "tools tools"
       "timer timer"
       "maplink maplink"
       "navigator question"
@@ -808,10 +802,6 @@ input[type="checkbox"]:checked::after {
 
   .mock-exam--running > .session-summary {
     grid-area: summary;
-  }
-
-  .mock-exam--running > .exam-tool-row {
-    grid-area: tools;
   }
 
   .mock-exam--running > .timer-panel,
@@ -1005,6 +995,7 @@ input[type="checkbox"]:checked::after {
 .lesson-article > ul,
 .lesson-article > ol,
 .lesson-article > .markdown-table-wrapper,
+.lesson-article > .markdown-code-block,
 .lesson-article > .illustration-placeholder {
   margin-block-end: var(--ch-space-lg);
 }
@@ -1045,6 +1036,30 @@ input[type="checkbox"]:checked::after {
 .markdown-table-wrapper th {
   background: var(--ch-color-paper-inset);
   font-weight: 800;
+}
+
+.markdown-code-block {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: var(--ch-space-lg);
+  border: 1px solid var(--ch-color-border);
+  border-radius: var(--ch-radius-md);
+  background: var(--ch-color-paper-inset);
+  color: var(--ch-color-ink);
+  font-family: var(--ch-font-mono);
+  font-size: 0.95em;
+  line-height: 1.5;
+  white-space: pre;
+}
+
+.markdown-code-block:focus-visible {
+  outline: 3px solid var(--ch-color-focus);
+  outline-offset: 3px;
+}
+
+.markdown-code-block code {
+  color: inherit;
+  font: inherit;
 }
 
 .illustration-placeholder__art {

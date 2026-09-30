@@ -327,7 +327,7 @@ Desktop:
 
 ```text
 ┌────────────────────────────────────────────────────────────┐
-│ Mock exam 18/100 | Timer off | Reference sheet | Submit    │
+│ Mock exam 18/100 | Timer off | Submit                    │
 ├───────────────┬────────────────────────────────────────────┤
 │ Question map  │ Question card and answer choices           │
 │ answered flag │                                            │
