@@ -105,10 +105,10 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-511 | P5 | todo | worker | T-508,T-509,T-510,T-512 | Run Apple app tests/build through `xbuild`; record command and result in task review notes. |
 | T-512 | P5 | done | worker | T-503,T-206,T-208,T-504,T-505 | Implement Apple weak-area and due-review practice scopes plus readiness guidance using local SwiftData progress and shared readiness fixtures; exclude unseen questions from due scope/count; show `not-enough-data` for a new user with fewer than two exams. |
 | T-601 | P6 | todo | worker | T-313,T-511 | Run accessibility audit for web and Apple; fix labels, keyboard/VoiceOver navigation, dynamic text, contrast, and non-colour indicators. |
-| T-602 | P6 | todo | worker | T-302,T-502 | Add French UI infrastructure and translate original UI copy; use official ISED French question text only. |
+| T-602 | P6 | in-progress (web done; Apple in review) | worker | T-302,T-502 | Add French UI infrastructure and translate original UI copy; use official ISED French question text only. |
 | T-603 | P6 | todo | worker | T-313,T-508,T-007 | Prepare App Store privacy label evidence for Data Not Collected and web privacy summary. |
 | T-604 | P6 | todo | worker | T-312,T-007 | Add static web deployment configuration and post-deploy offline smoke test checklist. |
-| T-605 | P6 | todo | worker | T-101,T-102 | Document and test content-update process for future ISED bank updates using checksum and validation, not file dates. |
+| T-605 | P6 | done | worker | T-101,T-102 | Document and test content-update process for future ISED bank updates using checksum and validation, not file dates. |
 | T-606 | P6 | todo | worker | T-309,T-405,T-603 | Complete release about pages with attribution, disclaimer, source manifest, privacy summary, and active bank version. |
 | T-607 | P6 | todo | worker | T-601,T-603,T-604,T-606,T-602,T-605,T-207,T-406,T-107,T-102,T-005,T-006,T-007 | Release candidate pass: all tests, link checks, privacy checks, accessibility checks, and licensing checklist pass. |
 | T-009 | P6 | todo | owner/coordinator | T-007,T-607 | Make repository public only after permission is recorded, the public-release gate checklist is complete, and history contains no ISED artifacts outside the recorded scope. |
