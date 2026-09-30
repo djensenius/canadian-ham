@@ -31,7 +31,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 XCTAssertTrue(anyVisibleLabel(in: app, contains: "La progression est enregistrée sur cet appareil"), "Expected localized Settings body copy")
             }
             if screen == "mock" {
-                tap("Démarrer l’examen simulé", in: app)
+                tap("Commencer l’examen simulé", in: app)
                 XCTAssertTrue(app.staticTexts["Question 1 sur 100"].firstMatch.waitForExistence(timeout: 10), "Expected localized interpolated mock-exam progress")
             }
             app.terminate()
