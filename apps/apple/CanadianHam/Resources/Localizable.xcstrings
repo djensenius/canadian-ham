@@ -87,28 +87,6 @@
         }
       }
     },
-    "%@: " : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@: "
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ : "
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ : "
-          }
-        }
-      }
-    },
     "%@ · %lld min · %@" : {
       "localizations" : {
         "en" : {
@@ -215,6 +193,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@ Positions sans réponse : %2$@%3$@."
+          }
+        }
+      }
+    },
+    "%@: " : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: "
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ : "
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ : "
           }
         }
       }
@@ -2903,6 +2903,28 @@
         }
       }
     },
+    "Forced store open failure for UI testing." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forced store open failure for UI testing."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Échec forcé de l’ouverture du stockage pour les tests d’interface."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Échec forcé de l’ouverture du stockage pour les tests d’interface."
+          }
+        }
+      }
+    },
     "Generate 100 questions: one from each subsection, mixed into a repeatable order. The optional timer is off by default." : {
       "localizations" : {
         "fr" : {
@@ -3767,6 +3789,28 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "Missing bundled resource: %@.json" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missing bundled resource: %@.json"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ressource intégrée manquante : %@.json"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ressource intégrée manquante : %@.json"
           }
         }
       }

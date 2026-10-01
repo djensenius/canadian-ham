@@ -62,6 +62,15 @@ final class LocalizationCatalogTests: XCTestCase {
             "Rétroaction immédiate"
         )
 
+        let missingResourceFormat = frenchBundle.localizedString(forKey: "Missing bundled resource: %@.json", value: nil, table: nil)
+        XCTAssertEqual(
+            String(format: missingResourceFormat, locale: locale, "manifest"),
+            "Ressource intégrée manquante : manifest.json"
+        )
+        XCTAssertEqual(
+            frenchBundle.localizedString(forKey: "Forced store open failure for UI testing.", value: nil, table: nil),
+            "Échec forcé de l’ouverture du stockage pour les tests d’interface."
+        )
         XCTAssertEqual(localizedAnsweredOutOfTotal(answered: 3, total: 100), "Answered 3 of 100")
     }
 

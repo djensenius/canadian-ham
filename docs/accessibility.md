@@ -118,6 +118,10 @@ The mock exam timer is optional and off by default.
 - Keyboard-only web walkthrough completed.
 - macOS keyboard walkthrough completed with Full Keyboard Access enabled: open System Settings > Accessibility > Keyboard, turn on Full Keyboard Access, launch Canadian Ham, then use Tab/Shift-Tab, arrow keys, Space, Enter, and Escape to traverse Home, Practice, Mock exam, Results, Learn, Settings, import/export, and reset without a pointer; confirm focus remains visible, ordered, and trap-free.
 - VoiceOver walkthrough completed on at least one iOS/iPadOS device or simulator and macOS.
+- Mock exam results VoiceOver check completed:
+  1. Turn on VoiceOver, open Mock exam, answer at least one question, and submit the exam.
+  2. Confirm VoiceOver focus lands on the results heading when results appear.
+  3. Confirm the spoken heading includes the full submission summary, for example “Mock exam submitted. Pass, 72 of 100,” without being cut off.
 - tvOS focus walkthrough completed when tvOS app is present.
 - visionOS window/readability walkthrough completed when visionOS app is present.
 - 200% text zoom and 320 CSS px reflow checked on web.

@@ -6,7 +6,7 @@ enum QuestionBankLoadError: Error, LocalizedError, Sendable {
     var errorDescription: String? {
         switch self {
         case .missingResource(let name):
-            "Missing bundled resource: \(name).json"
+            String(localized: "Missing bundled resource: \(name).json")
         }
     }
 }
