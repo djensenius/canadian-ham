@@ -78,6 +78,7 @@ export type LessonOriginalityOptions = {
   lessonRoot?: string;
   questionsPath?: string;
   allowlistPath?: string;
+  requireLessonFiles?: boolean;
 };
 
 export type LessonOriginalityIssue = {
@@ -106,8 +107,8 @@ export type LessonOriginalityReport = {
 export class LessonOriginalityError extends Error {
   report: LessonOriginalityReport;
 
-  constructor(report: LessonOriginalityReport) {
-    super("lesson originality check failed");
+  constructor(report: LessonOriginalityReport, message = "lesson originality check failed") {
+    super(message);
     this.report = report;
   }
 }
@@ -418,6 +419,7 @@ export async function checkLessonOriginality(options: LessonOriginalityOptions =
   const lessonRoot = options.lessonRoot ?? DEFAULT_LESSON_ROOT;
   const questionsPath = options.questionsPath ?? DEFAULT_QUESTIONS_PATH;
   const allowlistPath = options.allowlistPath ?? DEFAULT_ALLOWLIST_PATH;
+  const requireLessonFiles = options.requireLessonFiles ?? false;
   const questionChecks = await loadQuestions(questionsPath);
   const allowlist = await loadAllowlist(allowlistPath);
   const files = await findMarkdownFiles(lessonRoot);
@@ -511,23 +513,33 @@ export async function checkLessonOriginality(options: LessonOriginalityOptions =
   if (issues.length > 0) {
     throw new LessonOriginalityError(report);
   }
+  if (requireLessonFiles && checkedFileCount === 0) {
+    throw new LessonOriginalityError(report, "no lesson Markdown files were checked");
+  }
   return report;
 }
 
-function lessonRootFromArgs(args: string[]): string | undefined {
+type LessonRootSelection = {
+  lessonRoot?: string;
+  requireLessonFiles: boolean;
+};
+
+function lessonRootFromArgs(args: string[]): LessonRootSelection {
   const rootArg = args.find((arg) => arg.startsWith("--lesson-root="));
+  const requireLessonFiles = args.includes("--all");
   if (rootArg !== undefined) {
-    return path.resolve(rootArg.slice("--lesson-root=".length));
+    return { lessonRoot: path.resolve(rootArg.slice("--lesson-root=".length)), requireLessonFiles };
   }
-  if (args.includes("--all")) {
-    return ALL_LESSON_ROOT;
+  if (requireLessonFiles) {
+    return { lessonRoot: ALL_LESSON_ROOT, requireLessonFiles };
   }
   const positional = args.find((arg) => !arg.startsWith("--"));
-  return positional === undefined ? undefined : path.resolve(positional);
+  return { lessonRoot: positional === undefined ? undefined : path.resolve(positional), requireLessonFiles };
 }
 
 async function main(): Promise<void> {
-  const report = await checkLessonOriginality({ lessonRoot: lessonRootFromArgs(process.argv.slice(2)) });
+  const lessonRootSelection = lessonRootFromArgs(process.argv.slice(2));
+  const report = await checkLessonOriginality(lessonRootSelection);
   for (const line of report.summaryLines) {
     console.log(line);
   }
@@ -536,6 +548,9 @@ async function main(): Promise<void> {
 if (isMainModule(import.meta)) {
   main().catch((error: unknown) => {
     if (error instanceof LessonOriginalityError) {
+      if (error.report.issues.length === 0) {
+        console.error(`check-lesson-originality: ${error.message}`);
+      }
       for (const issue of error.report.issues) {
         if (issue.issueType === "numeric-overlap") {
           console.error(`${issue.filePath}: heading block "${issue.blockHeading}" reuses all numeric token(s) ${issue.questionTokens.join(", ")} with correct answer token(s) ${issue.answerTokens.join(", ")} from ${issue.questionId}`);

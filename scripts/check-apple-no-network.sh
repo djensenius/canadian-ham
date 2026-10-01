@@ -164,22 +164,32 @@ if [[ ${#swift_files[@]} -gt 0 ]]; then
   print_grep_matches "forbidden networking, browser, iCloud, socket, or analytics SDK symbol in Swift source" "$source_api_pattern" "${swift_files[@]}"
 
   url_pattern='https?://[^[:space:]"<>)]+|mailto:[^[:space:]"<>)]+|tel:[^[:space:]"<>)]+|sms:[^[:space:]"<>)]+|[A-Za-z][A-Za-z0-9+.-]*://[^[:space:]"<>)]+'
-  while IFS= read -r match_line; do
-    file=${match_line%%:*}
-    rest=${match_line#*:}
-    line_number=${rest%%:*}
-    text=${rest#*:}
-    while [[ $text =~ $url_pattern ]]; do
-      url=${BASH_REMATCH[0]}
-      while [[ $url == *[.,\;\]\}] ]]; do
-        url=${url%?}
+  swift_url_matches=$(grep -nE "$url_pattern" "${swift_files[@]}" 2>&1)
+  swift_url_grep_status=$?
+  if [[ $swift_url_grep_status -gt 1 ]]; then
+    report_issue "grep failed while checking Swift URL literals"
+    while IFS= read -r line; do
+      [[ -n "$line" ]] || continue
+      printf '  %s\n' "$line" >&2
+    done <<< "$swift_url_matches"
+  elif [[ $swift_url_grep_status -eq 0 ]]; then
+    while IFS= read -r match_line; do
+      file=${match_line%%:*}
+      rest=${match_line#*:}
+      line_number=${rest%%:*}
+      text=${rest#*:}
+      while [[ $text =~ $url_pattern ]]; do
+        url=${BASH_REMATCH[0]}
+        while [[ $url == *[.,\;\]\}] ]]; do
+          url=${url%?}
+        done
+        if [[ "$url" != "$allowed_citation_url" ]]; then
+          report_issue "unexpected URL literal in Swift source: $file:$line_number: $url"
+        fi
+        text=${text#*"${BASH_REMATCH[0]}"}
       done
-      if [[ "$url" != "$allowed_citation_url" ]]; then
-        report_issue "unexpected URL literal in Swift source: $file:$line_number: $url"
-      fi
-      text=${text#*"${BASH_REMATCH[0]}"}
-    done
-  done < <(grep -nE "$url_pattern" "${swift_files[@]}" 2>/dev/null)
+    done <<< "$swift_url_matches"
+  fi
 fi
 
 if [[ ${#plist_files[@]} -gt 0 ]]; then
@@ -221,7 +231,7 @@ if [[ ${#package_resolved_files[@]} -gt 0 ]]; then
 fi
 
 if [[ ${#lesson_markdown_files[@]} -gt 0 ]]; then
-  lesson_reference_pattern='https?://[^[:space:]"<>)]+|<[A-Za-z][A-Za-z0-9+.-]*:[^[:space:]<>]+>|<[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}>|www\.[^[:space:]"<>)]+|mailto:[^[:space:]"<>)]+|tel:[^[:space:]"<>)]+|sms:[^[:space:]"<>)]+|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
+  lesson_reference_pattern='[Hh][Tt][Tt][Pp][Ss]?://[^[:space:]"<>)]+|<[A-Za-z][A-Za-z0-9+.-]*:[^[:space:]<>]+>|<[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}>|[Ww][Ww][Ww]\.[^[:space:]"<>)]+|mailto:[^[:space:]"<>)]+|tel:[^[:space:]"<>)]+|sms:[^[:space:]"<>)]+|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
   scan_text_files_for_content_references "unexpected content link/contact in bundled lesson Markdown" "$lesson_reference_pattern" "${lesson_markdown_files[@]}"
 fi
 

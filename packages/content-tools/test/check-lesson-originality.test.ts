@@ -92,6 +92,18 @@ test("originality check runs when invoked through a symlink", async () => {
   }
 });
 
+test("originality check --all fails when no lesson files are checked", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "canadian-ham-originality-empty-all-"));
+  try {
+    const result = spawnSync(process.execPath, [CHECK_SCRIPT, "--all", `--lesson-root=${root}`], { encoding: "utf8" });
+
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /check-lesson-originality: no lesson Markdown files were checked/);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("originality check passes original numeric examples", async () => {
   await withFixture("valid", async (root) => {
     await writeFixture(root, [
