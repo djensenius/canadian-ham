@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 22:38'
+updated_date: '2026-10-01 22:48'
 labels:
   - apple
   - docs
@@ -38,4 +38,6 @@ Verify the iCloud sync research claims (Apple's definition of 'collect' for the 
 
 <!-- SECTION:NOTES:BEGIN -->
 Committed source-checked iCloud sync proposal in ce489dc: docs/proposals/icloud-sync.md plus docs/proposals/README.md. Validation: pnpm check:links passed (Markdown relative links verified). Verification summary table counts: Verified 13; Verified as inference 1; Corrected 9; Verified, secondary source only 1; Verified at API level/corrected at project level 1; Unverified 7; Unverified / unclear 1; Researcher inference 1; Not applicable 1. Open owner decisions remain: schema strategy now vs later; sync scope (learning progress only vs preferences too); default state (confirm opt-in OFF); container ID and platform scope for tvOS/visionOS; privacy-doc changes for scoped CloudKit/Push/remote-notification exception and CloudKit Console log no-retention policy. AC #3 left unchecked until owner decisions are recorded in the parent task notes.
+
+Updated PR #65 after merging origin/main: kept both docs/proposals README entries, added macOS 14+ to @Attribute(.allowsCloudEncryption) availability with Apple docs source, and rewrote Delete iCloud Progress as a coordinated local-only/zone-delete/local-record-choice flow. Validation: pnpm check:links passed.
 <!-- SECTION:NOTES:END -->
