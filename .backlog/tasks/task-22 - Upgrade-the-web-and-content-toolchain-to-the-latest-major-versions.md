@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 18:11'
-updated_date: '2026-10-01 18:17'
+updated_date: '2026-10-01 19:22'
 labels:
   - ci
   - web
@@ -34,6 +34,8 @@ The owner wants every dependency on its latest major version. Dependabot's first
 
 <!-- SECTION:PLAN:BEGIN -->
 1. Update packageManager and workspace devDependency ranges for TypeScript 7, Vite 8, Vitest 5, jsdom 30, and @types/node 26, then refresh pnpm-lock.yaml with pnpm 12.8.2.\n2. Adjust source/tests/config for actual migration breakages without weakening checks, especially fixing the TypeScript 7 App.test.tsx TS7022 by adding a concrete type.\n3. Update .github/dependabot.yml grouping so only minor+patch npm updates are grouped weekly while major npm updates open individually.\n4. Run the required install, typecheck, web test twice, build, URL/PWA audits, content validators, schema validators, Apple network check, link check, and actionlint; inspect built sw.js for app-shell precache.\n5. Record evidence, check proven ACs, write the final summary, and move task-22 to Done only after all ACs pass.
+
+Fix review round: remove the Vite minimumReleaseAge exception, lower the apps/web Vite range so pnpm resolves a Vite 8 release that satisfies the release-age policy, regenerate the lockfile normally, verify Vitest 5's peer range, and then run the requested repo checks before committing.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
