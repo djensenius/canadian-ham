@@ -5,23 +5,57 @@
   "type": "array",
   "minItems": 8,
   "maxItems": 8,
-  "items": {
-    "allOf": [
-      { "$ref": "common.schema.json#/$defs/generatedCategory" },
-      {
-        "oneOf": [
-          { "$ref": "#/$defs/B-001" },
-          { "$ref": "#/$defs/B-002" },
-          { "$ref": "#/$defs/B-003" },
-          { "$ref": "#/$defs/B-004" },
-          { "$ref": "#/$defs/B-005" },
-          { "$ref": "#/$defs/B-006" },
-          { "$ref": "#/$defs/B-007" },
-          { "$ref": "#/$defs/B-008" }
-        ]
-      }
-    ]
-  },
+  "prefixItems": [
+    {
+      "allOf": [
+        { "$ref": "common.schema.json#/$defs/generatedCategory" },
+        { "$ref": "#/$defs/B-001" }
+      ]
+    },
+    {
+      "allOf": [
+        { "$ref": "common.schema.json#/$defs/generatedCategory" },
+        { "$ref": "#/$defs/B-002" }
+      ]
+    },
+    {
+      "allOf": [
+        { "$ref": "common.schema.json#/$defs/generatedCategory" },
+        { "$ref": "#/$defs/B-003" }
+      ]
+    },
+    {
+      "allOf": [
+        { "$ref": "common.schema.json#/$defs/generatedCategory" },
+        { "$ref": "#/$defs/B-004" }
+      ]
+    },
+    {
+      "allOf": [
+        { "$ref": "common.schema.json#/$defs/generatedCategory" },
+        { "$ref": "#/$defs/B-005" }
+      ]
+    },
+    {
+      "allOf": [
+        { "$ref": "common.schema.json#/$defs/generatedCategory" },
+        { "$ref": "#/$defs/B-006" }
+      ]
+    },
+    {
+      "allOf": [
+        { "$ref": "common.schema.json#/$defs/generatedCategory" },
+        { "$ref": "#/$defs/B-007" }
+      ]
+    },
+    {
+      "allOf": [
+        { "$ref": "common.schema.json#/$defs/generatedCategory" },
+        { "$ref": "#/$defs/B-008" }
+      ]
+    }
+  ],
+  "items": false,
   "$defs": {
     "B-001": { "$ref": "#/$defs/categoryB001" },
     "B-002": { "$ref": "#/$defs/categoryB002" },

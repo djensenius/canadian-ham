@@ -6,7 +6,8 @@ import { fileURLToPath } from "node:url";
 
 import { parseLessonFrontMatter, validateDataAgainstSchema } from "./validate.mjs";
 
-const fixturesDir = path.join(path.dirname(fileURLToPath(import.meta.url)), "test/fixtures/valid");
+const validFixturesDir = path.join(path.dirname(fileURLToPath(import.meta.url)), "test/fixtures/valid");
+const invalidFixturesDir = path.join(path.dirname(fileURLToPath(import.meta.url)), "test/fixtures/invalid");
 
 const validLessonFrontMatter = {
   type: "lesson",
@@ -136,6 +137,19 @@ test("generated bank categories reject authoritative count drift", () => {
   );
 });
 
+test("generated bank categories reject duplicate and reordered category IDs", () => {
+  assertSchemaRejects(
+    readInvalidFixture("generated-bank-categories-duplicate-id.json"),
+    "generated-bank-categories.schema.json",
+    "$[1].id: expected const \"B-002\"",
+  );
+  assertSchemaRejects(
+    readInvalidFixture("generated-bank-categories-reordered.json"),
+    "generated-bank-categories.schema.json",
+    "$[0].id: expected const \"B-001\"",
+  );
+});
+
 test("generated bank subsections reject non-importer lesson and title fields", () => {
   const [subsection] = readValidFixture("generated-bank-subsections.json");
   assertSchemaRejects(
@@ -151,5 +165,9 @@ test("generated bank subsections reject non-importer lesson and title fields", (
 });
 
 function readValidFixture(fixture) {
-  return JSON.parse(fs.readFileSync(path.join(fixturesDir, fixture), "utf8"));
+  return JSON.parse(fs.readFileSync(path.join(validFixturesDir, fixture), "utf8"));
+}
+
+function readInvalidFixture(fixture) {
+  return JSON.parse(fs.readFileSync(path.join(invalidFixturesDir, fixture), "utf8"));
 }
