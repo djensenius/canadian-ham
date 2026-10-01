@@ -3,11 +3,11 @@ id: TASK-20
 title: >-
   Adopt the pull-request workflow: .backlog folder, Copilot review rules and
   agent instructions
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 13:51'
-updated_date: '2026-10-01 16:02'
+updated_date: '2026-10-01 16:27'
 labels:
   - ci
   - docs
@@ -31,7 +31,7 @@ The owner wants every change to reach main through a pull request with Copilot c
 - [x] #3 CI reports success quickly for PRs that only change .backlog/ (a job-level changes check, not paths-ignore, so a required status check never stays pending), and runs the full checks otherwise
 - [x] #4 AGENTS.md describes the PR workflow (task branch, task status changes in the branch, PR titled '<task-id>: Title', Copilot review and CI before merge, either the owner or the coordinator merges, Apple xbuild per-test results posted in the PR) and the GitHub Project as the live board, and the 'In Progress on main before branching' rule is removed
 - [x] #5 README, docs and tasks/PLAN.md references to backlog/ point to .backlog/
-- [ ] #6 After merge, a main branch ruleset requires a pull request, the CI status check and automatic Copilot review (recorded in the task notes)
+- [x] #6 After merge, a main branch ruleset requires a pull request, the CI status check and automatic Copilot review (recorded in the task notes)
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -53,10 +53,12 @@ Research: backlog init --help supports --backlog-dir with backlog, .backlog, or 
 Implementation/validation evidence: moved Backlog.md data with git mv backlog .backlog. CLI support evidence: backlog init --help documents --backlog-dir accepting backlog, .backlog, or custom project-relative paths; Backlog.md 1.53.0 README says settings resolve from backlog.config.yml, then backlog/config.yml or .backlog/config.yml. Post-move commands passed: backlog task list --plain, backlog doctor, and backlog board. Copilot skip verification: task-21 completed .github/instructions/backlog.instructions.md with applyTo covering backlog/**,.backlog/** plus .github/copilot-instructions.md; task-21 notes record no personal/user-owned Copilot Pro/Pro+ repository content-exclusion support found, with /.backlog/** and /backlog/** fallback paths if it becomes available. CI now has a Change classification job and keeps the Node/content status green quickly for .backlog-only PRs while running full checks otherwise. AGENTS.md now documents task-branch PR workflow, branch-local task status changes, PR title format, automatic Copilot review and CI, owner/coordinator merge, Apple xbuild per-test PR-body expectation, inbox manual triage, the GitHub Project live board, and the copied Copilot review-loop stopping rule. README/docs/tasks references now point to .backlog/ and the syncer docs point to djensenius/backlog-sync. Validation passed: pnpm typecheck; pnpm test; pnpm check:links; pnpm check:apple-network; backlog task list --plain; backlog doctor; backlog board. actionlint was not available on PATH. AC #6 is intentionally left unchecked for coordinator follow-up after merge.
 
 Fix round: addressed reviewer medium/low notes by making Node and content checks run when not cancelled and fail first if change classification is not success; changed classification to git diff --name-only --no-renames BASE...HEAD; clarified that new tasks, including inbox triage, are created on a branch and land through a PR because main is PR-only; aligned inbox wording with backlog-sync inbox.mode: manual. Validation passed: pnpm check:links; go run github.com/rhysd/actionlint/cmd/actionlint@latest.
+
+Coordinator, 2026-10-01: after PR #50 merged, created ruleset 'main: PRs, CI, Copilot review' (id 24319761, active, no bypass actors) on the default branch: deletion and non_fast_forward blocked; pull_request required (0 approvals, so the owner or coordinator can merge); required status checks 'Change classification' and 'Node and content checks'; copilot_code_review on push (not on drafts). Removed the empty untracked backlog/ folder skeleton left in the main checkout after the move.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Moved Backlog.md data to .backlog/ with CLI-supported discovery evidence, updated PR/workflow instructions and docs, added .backlog-only CI change classification, verified Copilot skip coverage from task-21, and closed task-18 as moved to djensenius/backlog-sync task-8. Verified with pnpm typecheck, pnpm test, pnpm check:links, pnpm check:apple-network, backlog task list --plain, backlog doctor, and backlog board. Leaving task-20 In Progress because AC #6 (main branch ruleset after merge) remains coordinator-owned.
+Moved Backlog.md to .backlog/, added a CI change-classification job with a safe fast path for Backlog-only PRs, documented the PR workflow, Copilot review-loop stopping rule, live GitHub Project board and inbox triage in AGENTS.md, pointed docs to .backlog/ and djensenius/backlog-sync, and protected main with a ruleset requiring PRs, both CI checks and automatic Copilot review. Verified with pnpm typecheck/test/check:links/check:apple-network, backlog doctor, actionlint, Copilot and CI on PR #50, and this Backlog-only PR exercising the fast path under the new ruleset.
 <!-- SECTION:FINAL_SUMMARY:END -->
