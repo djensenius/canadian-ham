@@ -38,3 +38,9 @@ Every change now goes through a pull request with Copilot code review, and task 
 <!-- SECTION:NOTES:BEGIN -->
 Docs/validation: GitHub's repository custom instructions doc (https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions) says path-specific instructions live in .github/instructions/NAME.instructions.md and use applyTo glob frontmatter; its reusable source says multiple patterns are comma-separated (example applyTo: "**/*.ts,**/*.tsx"). GitHub's 2025-09-03 code-review changelog (https://github.blog/changelog/2025-09-03-copilot-code-review-path-scoped-custom-instruction-file-support/) says Copilot code review recognizes *.instructions.md files with applyTo path globs. Content exclusion: GitHub's content-exclusion doc (https://docs.github.com/en/copilot/how-tos/configure-content-exclusion/exclude-content-from-copilot) is marked for Copilot Business/Enterprise, so I found no repository-level content exclusion support for a personal/user-owned Copilot Pro or Pro+ repository. If the owner later has the setting available, the repository-level paths to enter are - "/.backlog/**" and - "/backlog/**". Validation passed: pnpm check:links; Python assertions verified both instruction files' required rules/context.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Added path-scoped and repository-wide Copilot instructions telling code review to skip Backlog.md task files managed by the backlog CLI. Verified comma-separated applyTo support and code-review path-scoped support from GitHub docs/changelog, recorded the Copilot Business/Enterprise-only content-exclusion finding and fallback paths, and ran pnpm check:links plus file-content assertions.
+<!-- SECTION:FINAL_SUMMARY:END -->
