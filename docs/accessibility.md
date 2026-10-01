@@ -21,7 +21,7 @@ A UI change is done only when all applicable items are true:
 
 ## Keyboard and focus
 
-- Web supports Tab/Shift+Tab for all controls, Enter/Space activation where expected, arrow-key navigation for radio groups/segmented controls, and Escape to close dismissible dialogs.
+- Web supports Tab/Shift+Tab for all controls, Enter/Space activation where expected, arrow-key navigation where a widget pattern calls for it, and Escape to close dismissible dialogs.
 - Focus order follows visual/task order: navigation, main heading, question stem, answers, primary action, secondary actions, then supporting panels.
 - Focus indicators use the design-token focus colour and a shape/border change; do not hide native focus without an accessible replacement.
 - Disabled controls remain understandable. If a disabled action blocks progress, provide explanatory text.
@@ -30,7 +30,7 @@ A UI change is done only when all applicable items are true:
 ## Screen readers
 
 - Primary validation: VoiceOver on iOS, iPadOS, macOS, visionOS, and tvOS as applicable.
-- Web sanity checks also consider NVDA/JAWS patterns: semantic HTML first, landmarks, headings, buttons/links with accessible names, fieldsets/radio groups for answer choices.
+- Web sanity checks also consider NVDA/JAWS patterns: semantic HTML first, landmarks, headings, buttons/links with accessible names, and grouped answer-choice toggle buttons with accurate `aria-pressed` state.
 - Announce practice feedback politely after answer submission. Do not interrupt while the user is reading.
 - Mock exam progress should be available as text, e.g. “Question 18 of 100, answered”.
 - Results must identify score, pass/honours status, and category breakdown in text.
