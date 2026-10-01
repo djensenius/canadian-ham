@@ -1,7 +1,7 @@
 ---
 id: TASK-9
 title: Web follow-ups
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
