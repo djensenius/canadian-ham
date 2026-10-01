@@ -3,9 +3,11 @@ id: TASK-19
 title: >-
   backlog-sync: support a hidden .backlog folder and open inbox imports as pull
   requests
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@pi-worker'
 created_date: '2026-10-01 13:51'
+updated_date: '2026-10-01 13:51'
 labels:
   - ci
   - tooling
