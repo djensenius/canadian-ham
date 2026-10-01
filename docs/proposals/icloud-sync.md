@@ -172,10 +172,14 @@ Core Data "Creating a Core Data Model for CloudKit" adds: "Unique constraints ar
 **Status:** "Last-writer-wins" is **Unverified** (not in the Apple CloudKit/Core Data docs checked). The merge rules are **researcher inference** and unchanged.
 
 - Apple does document that sync happens in the background on the system's schedule: "CloudKit periodically sends push notifications … the system creates a background task to download all of the changed records". It also says "Push notifications may get dropped or deferred". Divergent progress across devices is therefore plausible (inference).
-- Merge rules (inference, made deterministic after review): order question progress by `lastAttemptedAt` and take `box`, `dueAt`, `lastResult` and `recentResults` from the latest attempt. **Ties must be broken deterministically:** when two devices have the same `lastAttemptedAt`, prefer the record with the higher `attempts` count (the total attempt counter; `recentResults` is capped at five entries, so its length can't break ties), then the lower `box` (the more conservative Leitner state), then a stable byte-wise comparison of the serialized record, so every device converges on the same result.
-- Exam attempts: union by `id`. The existing contract rejects duplicate `submittedAt` values because tie-breaking is undefined (`docs/architecture.md`, readiness inputs; the import validation in `ProgressStore.swift` and `progressStore.ts` does the same). Sync must keep that invariant: if two different attempt IDs share a `submittedAt`, keep the one with the byte-wise smaller `id` in the synced set and surface the other to the user (or re-time it by +1 ms with a recorded note) rather than storing both. Fixture tests should cover both collision cases before sync ships.
+- **Merge semantics are an open design question, not settled here.** Review of this brief found that a field-picking merge is not enough, so the implementation subtask must design and test a convergent merge that meets these requirements:
+  - **Cumulative counters:** `attempts` and `correctAttempts` (`docs/architecture.md`, question progress) can't be taken from either device (that loses the other device's attempts) or summed (not idempotent across repeated syncs). They need a convergent representation, for example stable per-attempt events or per-device counters.
+  - **Scheduling state:** `box`, `dueAt`, `lastResult` and `recentResults` follow from the merged attempt history; ties at equal `lastAttemptedAt` need a stable, documented tie-breaker so every device converges on the same result.
+  - **Exam attempts:** union by `id` while keeping the existing invariant that `submittedAt` values are unique (the readiness contract in `docs/architecture.md` and both importers reject duplicates); define how a collision on either `id` or `submittedAt` resolves.
+  - **Fixtures:** shared TypeScript/Swift fixture tests for every collision case before sync ships.
+- **Keep sync merge separate from JSON import.** Today's import is replace-all after user confirmation (the Apple store deletes all entities first, the web store clears every object store). Reusing the sync merge for import would silently keep records the user chose to replace, so import stays replace-all unless its semantics, UI and tests are deliberately redesigned.
 - **Repo note:** `lastAttemptedAt`, `dueAt`, `startedAt` and `submittedAt` are stored as `String`. Max/compare logic must use a normalized, sortable timestamp format (inference).
-- The web export/import schema is in `docs/architecture.md`, which was not re-audited here. The same merge function can serve both paths (inference).
+- The web export/import schema is in `docs/architecture.md`, which was not re-audited here.
 
 ### 7. Zero-network testability
 
@@ -280,7 +284,7 @@ Core Data "Creating a Core Data Model for CloudKit" adds: "Unique constraints ar
 - Make the test configurations build without restricted iCloud entitlements: the macOS unit tests sign ad hoc (`CODE_SIGN_IDENTITY=-` with `CODE_SIGNING_ALLOWED=YES`, as in `AGENTS.md`), and the iOS, tvOS and visionOS simulator runs use `CODE_SIGNING_ALLOWED=NO`.
 
 ### Phase 3: Conflict resolution and cloud data management (estimate ~1–2 days, unverified)
-- Deterministic merge for Leitner progress and exam attempts. Use the same function for web JSON import.
+- A convergent, deterministic merge for Leitner progress and exam attempts (see section 6 requirements). JSON import stays replace-all.
 - **"Delete iCloud Progress"** in Settings as a coordinated delete, not a standalone zone delete while the mirror is active:
   1. Stop sync first: quiesce CloudKit work and rebuild/switch the progress container to explicit local-only `.none`.
   2. Delete the private CloudKit progress zone with `CKModifyRecordZonesOperation(recordZonesToSave: nil, recordZoneIDsToDelete: zoneIDs)`.
@@ -314,7 +318,7 @@ Core Data "Creating a Core Data Model for CloudKit" adds: "Unique constraints ar
 | task-13.x Privacy review for opt-in iCloud sync | v1 release | `docs/privacy.md`, REQ-APPLE-003/004 and DEC-APPLE-003 updated for opt-in CloudKit, Push and Remote-notification scope; "Data Not Collected" reasoning recorded with Apple sources; CloudKit Console log no-retention policy documented. |
 | task-13.x SwiftData schema V2 for CloudKit compatibility | privacy review | `.unique` removed from all three entities; declaration-level defaults on all non-optional properties; dedup in `ProgressStore`; V1→V2 migration and dedup tests pass via `xbuild`. |
 | task-13.x Opt-in iCloud sync toggle | schema V2 | iCloud (CloudKit), Push and Background Modes (remote notifications) added in `project.yml`; toggle defaults OFF using explicit `.none` / `.private("<container>")`; preferences stay in a local configuration; account-change and sign-out behaviour tested for local data loss; tests build without restricted entitlements. |
-| task-13.x Merge rules, cloud deletion and privacy verification | toggle | Deterministic Leitner/exam merge shared with web import; coordinated "Delete iCloud Progress" flow that stops sync / switches to local-only before zone deletion, handles the user's local delete-or-keep choice, and verifies no re-upload; Reset-all covering cloud data; airplane-mode and no-account smoke tests; App Store privacy answers re-checked. |
+| task-13.x Merge rules, cloud deletion and privacy verification | toggle | Convergent Leitner/exam merge meeting the section 6 requirements (cumulative counters, tie-breakers, unique `submittedAt`), with shared TS/Swift fixtures; JSON import stays replace-all; coordinated "Delete iCloud Progress" flow that stops sync / switches to local-only before zone deletion, handles the user's local delete-or-keep choice, and verifies no re-upload; Reset-all covering cloud data; airplane-mode and no-account smoke tests; App Store privacy answers re-checked. |
 
 ---
 
