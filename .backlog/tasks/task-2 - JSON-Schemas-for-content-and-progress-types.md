@@ -41,3 +41,9 @@ Content and progress data cross several boundaries: the ISED importer writes gen
 <!-- SECTION:NOTES:BEGIN -->
 Implemented draft 2020-12 schemas and zero-dependency validator in packages/schemas. Validation evidence: node packages/schemas/validate.mjs -> Schema validation passed: 1042 validation target(s). Validated generated bank JSON, subsection titles, lesson front matter, explanations, engine fixtures, and progress export samples. pnpm typecheck, pnpm test, and pnpm check:links passed.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Added draft 2020-12 JSON Schemas for generated bank content, lesson/module front matter, explanations, progress export v1, subsection titles, and engine fixtures under packages/schemas. Added packages/schemas/validate.mjs, a zero-dependency validator for the documented keyword subset, and documented inventory/usage/limitations in packages/schemas/README.md. Verified with node packages/schemas/validate.mjs (1042 validation targets), pnpm typecheck, pnpm test, and pnpm check:links.
+<!-- SECTION:FINAL_SUMMARY:END -->
