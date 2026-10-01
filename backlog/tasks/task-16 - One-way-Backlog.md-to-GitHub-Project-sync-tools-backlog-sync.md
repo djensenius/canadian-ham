@@ -5,12 +5,13 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:33'
-updated_date: '2026-10-01 03:16'
+updated_date: '2026-10-01 12:57'
 labels:
   - ci
   - tooling
 milestone: m-0
-dependencies: []
+dependencies:
+  - TASK-17
 ordinal: 26000
 ---
 
@@ -818,6 +819,8 @@ Round 3 started in /Users/david/Developer/canadian-ham-task-16 on branch task-16
 Round 3 implementation slice complete: added claimed-issue tracking across marker/inbox/adoption paths, prefix-derived marker/ID/branch handling, dry-run project field reporting for adopted issues, sub-issue parent repo allowlist checks, no-optional-locks status, help handling, option docs, and expanded fake/parser/fixture tests. Local go vet/go test/go build passed in tools/backlog-sync.
 
 Round 3 validation passed: from tools/backlog-sync, go vet ./..., go test ./..., and go build all succeeded. Read-only dry runs saved full output to /tmp/ch-backlog-sync-canadian-dryrun2.txt (143 lines; sync complete: 26 created, 0 updated, 26 status changes, 0 imported) and /tmp/ch-backlog-sync-arkham-dryrun2.txt (684 lines; sync complete: 38 created, 21 updated, 59 status changes, 0 imported, including adopted issue status/field reporting). ArkhamHorror remained clean: git status --porcelain empty and .git/index mtime stayed 1790824246 before/after.
+
+First real run (2026-10-01 08:56) created issues #17-#33 for task-1..task-15, then aborted on task-16: the rendered body exceeded GitHub's 65,536-character limit (HTTP 422; the notes alone are ~75k chars). Fix tracked in task-17; AC #3/#4 wait on it.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
