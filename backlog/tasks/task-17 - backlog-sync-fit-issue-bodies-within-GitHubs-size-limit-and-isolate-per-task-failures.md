@@ -29,3 +29,9 @@ The first real sync run aborted at task-16: its implementation notes (about 75,0
 - [ ] #3 Unit tests cover the truncation boundary (exactly at, just over and far over the limit, including multi-byte characters) and per-task failure isolation
 - [ ] #4 A real run against canadian-ham completes, and a second run reports 0 created, 0 updated and 0 status changes
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Add deterministic issue-body fitting in tools/backlog-sync/render.go using a 60,000-rune budget so GitHub's 65,536-character body limit has margin; keep the marker/metadata/acceptance criteria intact and shrink implementation notes, then plan, then description, then final summary at line boundaries where possible with a visible omitted-character marker pointing to backlog task view <id> --plain.\n2. Update tools/backlog-sync/sync.go to isolate per-task write failures during create/update/project field/sub-issue work: log each failure with the task ID, count it, continue remaining tasks, include the failure count in the summary, and return a non-zero error after the run when failures occurred while keeping pre-write global errors aborting.\n3. Add unit tests for truncation boundaries including multi-byte runes and for one task create failure not blocking other tasks; run gofmt, go test ./..., go vet ./..., go build, and the required dry-run only.
+<!-- SECTION:PLAN:END -->
