@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 13:51'
-updated_date: '2026-10-01 14:44'
+updated_date: '2026-10-01 14:53'
 labels:
   - ci
   - tooling
@@ -67,6 +67,8 @@ Review cleanup: merged main, removed dead sync_test scaffolding, clarified manua
 Copilot review fix: DiscoverBacklogDir now honors root backlog.config.yml backlog_directory before folder-local and bounded-search fallbacks.
 
 Second Copilot review fix: removed bounded Backlog directory search, aligned discovery with CLI-visible root config/backlog/.backlog layouts, added requested fallbacks/tests, and validation passed (go vet/test/build plus dry run with 0 failed ops).
+
+Copilot third review fix: manual inbox mode now skips marked inbox issues and claims unmarked inbox issues so adoption never writes to them.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
