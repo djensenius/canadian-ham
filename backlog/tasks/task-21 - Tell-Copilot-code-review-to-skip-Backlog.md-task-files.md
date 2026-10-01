@@ -26,3 +26,9 @@ Every change now goes through a pull request with Copilot code review, and task 
 - [ ] #2 `.github/copilot-instructions.md` states the same rule repository-wide (and briefly that task files are managed with the backlog CLI)
 - [ ] #3 The owner's plan support for repository content exclusion (Settings → Copilot → Content exclusion) is checked and recorded in the task notes, with the path to add if it is available
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Verify GitHub custom-instructions and content-exclusion docs.\n2. Add Copilot instruction files scoped to Backlog task paths and repository-wide review context.\n3. Run link checks, record validation and content-exclusion finding, then finalize task.
+<!-- SECTION:PLAN:END -->
