@@ -1,10 +1,11 @@
 ---
 id: TASK-16
 title: One-way Backlog.md to GitHub Project sync (tools/backlog-sync)
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@pi-worker'
 created_date: '2026-10-01 02:33'
-updated_date: '2026-10-01 02:34'
+updated_date: '2026-10-01 02:35'
 labels:
   - ci
   - tooling
