@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:33'
-updated_date: '2026-10-01 03:14'
+updated_date: '2026-10-01 03:16'
 labels:
   - ci
   - tooling
@@ -816,10 +816,12 @@ ArkhamHorror dry-run full output:
 Round 3 started in /Users/david/Developer/canadian-ham-task-16 on branch task-16-backlog-sync after reading AGENTS.md, backlog task-execution, /tmp/ch-reviews/sync2.md, and /tmp/ch-backlog-sync-round2.md.
 
 Round 3 implementation slice complete: added claimed-issue tracking across marker/inbox/adoption paths, prefix-derived marker/ID/branch handling, dry-run project field reporting for adopted issues, sub-issue parent repo allowlist checks, no-optional-locks status, help handling, option docs, and expanded fake/parser/fixture tests. Local go vet/go test/go build passed in tools/backlog-sync.
+
+Round 3 validation passed: from tools/backlog-sync, go vet ./..., go test ./..., and go build all succeeded. Read-only dry runs saved full output to /tmp/ch-backlog-sync-canadian-dryrun2.txt (143 lines; sync complete: 26 created, 0 updated, 26 status changes, 0 imported) and /tmp/ch-backlog-sync-arkham-dryrun2.txt (684 lines; sync complete: 38 created, 21 updated, 59 status changes, 0 imported, including adopted issue status/field reporting). ArkhamHorror remained clean: git status --porcelain empty and .git/index mtime stayed 1790824246 before/after.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Added a standard-library Go backlog-sync module that scans local worktrees through backlog CLI JSON, resolves task copies deterministically, mirrors tasks to GitHub Issues/Project v2 through gh, supports guarded inbox imports and dry-run no-op behavior, and documents/builds a launchd job. Verified with unit tests, vet, build, and a read-only dry run.
+Round 3 fixed the review blockers and should-fix items for the generic backlog-sync: one claimed issue per task/run across markers, inbox and adoption; cfg.TaskPrefix-driven markers/titles/branch/CreateTask parsing; sub-issue parent repo allowlist checks and remove-error handling; dry-run reporting for adopted issues; zero-write/dedup/pagination/no-optional-locks/help/deferred-push fixes; expanded fake/parser/fixture coverage; and documented Project v2 option preservation risk. Verified with go vet ./..., go test ./..., go build, and saved canadian-ham/ArkhamHorror dry-run outputs under /tmp.
 <!-- SECTION:FINAL_SUMMARY:END -->
