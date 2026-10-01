@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 17:17'
+updated_date: '2026-10-01 17:21'
 labels:
   - content
   - 'legacy:T-003'
@@ -44,10 +44,12 @@ Clarification for this fix round: validate.mjs will reject sibling keywords next
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented draft 2020-12 schemas and zero-dependency validator in packages/schemas. Validation evidence: node packages/schemas/validate.mjs -> Schema validation passed: 1042 validation target(s). Validated generated bank JSON, subsection titles, lesson front matter, explanations, engine fixtures, and progress export samples. pnpm typecheck, pnpm test, and pnpm check:links passed.
+
+Review fix round: aligned lesson/module/subsection status schema values with check-lesson-coverage, kept explanation status as any non-empty string to match check-explanations, added schema-load rejection for unsupported keywords and $ref sibling keywords, switched object property checks to Object.hasOwn, loosened exam timer fields to non-negative numbers, rejected empty nullable French strings, and made non-README lesson Markdown without front matter fail validation. Validation passed: node packages/schemas/validate.mjs (1042 targets), pnpm typecheck, pnpm test, pnpm check:links.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Added draft 2020-12 JSON Schemas for generated bank content, lesson/module front matter, explanations, progress export v1, subsection titles, and engine fixtures under packages/schemas. Added packages/schemas/validate.mjs, a zero-dependency validator for the documented keyword subset, and documented inventory/usage/limitations in packages/schemas/README.md. Verified with node packages/schemas/validate.mjs (1042 validation targets), pnpm typecheck, pnpm test, and pnpm check:links.
+Added draft 2020-12 JSON Schemas for generated bank content, lesson/module front matter, explanations, progress export v1, subsection titles, and engine fixtures under packages/schemas. Added packages/schemas/validate.mjs, a zero-dependency validator for the documented keyword subset; the review fix round now aligns status/timer/string constraints with content tools/importers, rejects unsupported schema keywords and $ref sibling keywords at load time, uses Object.hasOwn for property checks, and fails non-README lesson Markdown that lacks front matter. Documented inventory, usage, keyword limits, and status/timer rationale in packages/schemas/README.md. Verified with node packages/schemas/validate.mjs (1042 validation targets), pnpm typecheck, pnpm test, and pnpm check:links.
 <!-- SECTION:FINAL_SUMMARY:END -->
