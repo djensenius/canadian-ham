@@ -44,3 +44,9 @@ Reviews of the web accessibility and stale-load race lanes approved the work but
 <!-- SECTION:NOTES:BEGIN -->
 Implemented web follow-ups in apps/web/src/App.tsx, apps/web/src/App.test.tsx, and docs/accessibility.md. Evidence: docs now describe answer-choice toggle buttons with aria-pressed; App.test covers StrictMode skip-link first tab, recovery skip-link focus/hash preservation, superseded failed preference save status suppression, and lesson quiz axe scanning only .lesson-quiz. Validation passed: pnpm typecheck; pnpm test three consecutive runs; pnpm build:web; pnpm --filter @canadian-ham/web audit:urls.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Updated docs/accessibility.md to match the toggle-button answer-choice decision. Fixed route focus so StrictMode initial effects do not skip the skip link, added recovery skip-link preventDefault focus handling, suppressed stale preference-save success announcements, and narrowed the lesson quiz axe test to the quiz section. Verified with pnpm typecheck, pnpm test x3, pnpm build:web, and pnpm --filter @canadian-ham/web audit:urls.
+<!-- SECTION:FINAL_SUMMARY:END -->
