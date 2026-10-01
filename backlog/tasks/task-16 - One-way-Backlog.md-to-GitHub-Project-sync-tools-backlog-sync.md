@@ -1,11 +1,11 @@
 ---
 id: TASK-16
 title: One-way Backlog.md to GitHub Project sync (tools/backlog-sync)
-status: Done
+status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:33'
-updated_date: '2026-10-01 02:42'
+updated_date: '2026-10-01 02:46'
 labels:
   - ci
   - tooling
@@ -24,8 +24,8 @@ We moved tracking to Backlog.md, but the owner wants to see work on GitHub, and 
 <!-- AC:BEGIN -->
 - [x] #1 Reads task state through the backlog CLI across all local worktrees and picks the most recently updated copy of each task
 - [x] #2 Creates or updates one issue per task, matched by a hidden <!-- backlog:task-N --> marker plus a 'task-N:' title prefix
-- [x] #3 Sets the Project Status field via GraphQL; Done closes the issue and reopening a task reopens it
-- [x] #4 Idempotent (a second run changes nothing) with a --dry-run flag
+- [ ] #3 Sets the Project Status field via GraphQL; Done closes the issue and reopening a task reopens it
+- [ ] #4 Idempotent (a second run changes nothing) with a --dry-run flag
 - [x] #5 Inbox: open issues labelled 'inbox' become new To Do tasks (create only), then the label is removed and the marker added
 - [x] #6 launchd plist and install steps are documented, and logs go to a file
 - [x] #7 Go unit tests cover resolution, rendering, marker matching, diffing and inbox import without network access
@@ -39,6 +39,8 @@ We moved tracking to Backlog.md, but the owner wants to see work on GitHub, and 
 3. Add unit tests with fakes for resolution, rendering, marker parsing, diff/idempotency, issue state/project status changes, inbox import/guards, and empty-main abort safety.
 4. Add README and launchd plist documenting flags, cross-branch behavior, build/install/operation, and log file paths.
 5. Validate with go vet, go test, go build, and one read-only dry run; then update Backlog task evidence without marking coordinator-only real-run/install evidence complete.
+
+6. Fix review blockers and correctness/test gaps, generalize configuration for reuse in other repos, validate with tests/build/vet plus one read-only dry run, then leave task-16 In Progress for coordinator real-run evidence.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -47,6 +49,8 @@ We moved tracking to Backlog.md, but the owner wants to see work on GitHub, and 
 Implemented tools/backlog-sync in code commit 8cf6f8488aa62ab39146524f623fce407f4890e7; Backlog finalization commits follow it on branch task-16-backlog-sync. Validation passed: cd tools/backlog-sync && go test ./...; go vet ./...; go build -o /tmp/backlog-sync .
 Read-only dry-run against /Users/david/Developer/canadian-ham and GitHub Project 8 succeeded. Representative output: "would create issue task-1: v1 release", "would add new issue for task-1 to project", "would set project status for new issue task-16 <unset>→In Progress". Summary line: "sync complete: 26 created, 0 updated, 26 status changes, 0 imported".
 Coordinator follow-up after review: perform the real GitHub sync and install/bootstrap the launchd plist if desired; I did not perform real writes or install launchd.
+
+Fix round 2 workflow correction: AC #3 and #4 are unchecked and remain pending until the coordinator performs a real GitHub sync/no-op verification; this round will provide only read-only dry-run evidence.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
