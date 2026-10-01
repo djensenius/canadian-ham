@@ -1,10 +1,11 @@
 ---
 id: TASK-7
 title: Harden CI and audit scripts
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 02:34'
+updated_date: '2026-10-01 21:58'
 labels:
   - ci
 milestone: m-0
