@@ -37,11 +37,11 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-002 | P0 | done | worker | T-001 | Add pnpm workspace and base tooling files for documentation/content scripts; include markdown/link check command; no web or Apple app implementation. |
 | T-003 | P1 | todo | worker | T-102 | Define initial JSON Schemas for Question, Category, Subsection, Lesson front matter, Explanation, ExamAttempt, QuestionProgress, and EngineFixture from the reviewed generated output shape. |
 | T-004 | P1 | todo | worker | T-003 | Add schema validation tests using small synthetic fixtures; tests pass locally and in CI skeleton. |
-| T-005 | P1 | todo | worker | T-002,T-004 | Add CI skeleton for markdown links, schema validation, content validation placeholder, and web/package tests placeholder. |
-| T-006 | P0 | todo | worker | T-000 | Add documentation release checklist issue template or task checklist covering licensing, privacy, and source verification. |
+| T-005 | P1 | in-progress (GitHub Actions, chore/t005-ci) | worker | T-002,T-004 | Add CI skeleton for markdown links, schema validation, content validation placeholder, and web/package tests placeholder. |
+| T-006 | P0 | on hold (owner); checklists exist in content-licensing.md and accessibility.md | worker | T-000 | Add documentation release checklist issue template or task checklist covering licensing, privacy, and source verification. |
 | T-007 | P6 | blocked on owner input | owner/coordinator | none | Record the ISED permission reference number/date/scope in `docs/content-licensing.md`; confirm the scope covers bundling verbatim question text as app data and bundling the reference PDFs; publication and distribution remain blocked until this is complete; do not commit private correspondence unless explicitly approved. |
 | T-008 | P0 | done | worker | T-000 | Document the private-repository interim licensing policy, public-release gate, and leftover review dependency corrections; commit documentation-only changes on `docs/t008-private-repo-policy`. |
-| T-107 | P1 | todo | worker | T-102 | Add import reproducibility test comparing normalized output from source to committed/generated expected output. |
+| T-107 | P1 | done (pnpm import:check regenerates and diffs) | worker | T-102 | Add import reproducibility test comparing normalized output from source to committed/generated expected output. |
 | T-201 | P2 | done | worker | T-003 | Create shared fixture format for seeded RNG, question selection, answer shuffling, scoring, category breakdown, weak subsections, readiness aggregation, and Leitner updates. |
 | T-202 | P2 | done | worker | T-201 | Add deterministic exam-generation fixtures requiring exactly one question per subsection, category counts 25/9/21/6/13/13/8/5, specified RNG vector outputs, final question order, and choice permutations. |
 | T-203 | P2 | done | worker | T-201 | Add scoring fixtures for boundary scores 0, 69, 70, 79, 80, and 100, per-category breakdown, and unanswered mock questions counted incorrect with `selectedSourceIndex: null`. |
@@ -50,11 +50,11 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-205 | P2 | done | worker | T-202,T-203,T-204,T-208 | Implement TypeScript engine package that passes shared fixtures. |
 | T-206 | P2 | done | worker | T-202,T-203,T-204,T-208 | Implement Swift engine SwiftPM package under `packages/engine-swift/` and test target that passes shared fixtures using `xbuild`. |
 | T-206b | P2 | done | worker | T-206 | Swift engine hardening: no crash on bad saved box, strict JSON deep-equality fixture runner, timestamp edge tests, UTF-8 ordinal parity in TS and Swift, engine-ts typecheck. Follow-up: align TS applyAnswer box-range validation with Swift; fix the non-ASCII-digit test to reach the digit check. |
-| T-207 | P2 | todo | worker | T-205,T-206 | Add cross-platform fixture parity CI job or documented local command that runs both implementations. |
+| T-207 | P2 | done (scripts/check-engine-parity.sh) | worker | T-205,T-206 | Add cross-platform fixture parity CI job or documented local command that runs both implementations. |
 | T-301 | P3 | done | worker | T-002,T-205 | Scaffold static web app using Vite + React + TypeScript. |
 | T-301b | P3 | done | worker | T-301 | Web slice polish from review: check-links anchors/code fences/footnotes/slugs, focus management, lang attribute, stronger render test, pnpm settings, dist URL audit script. |
 | T-314 | P3 | done | worker | T-301b,T-011,T-012,T-205 | Apply design tokens and design.md components to the web app; switch web practice to @canadian-ham/engine-ts; add axe-core checks to component tests; bump vitest to >= 4.1.11 (Dependabot); wire favicon/touch icons. |
-| T-302 | P3 | todo | worker | T-301,T-102 | Add web content loader for bundled generated bank, lesson metadata, explanations, and manifest. |
+| T-302 | P3 | done (apps/web/src/data/bank.ts + content loaders) | worker | T-301,T-102 | Add web content loader for bundled generated bank, lesson metadata, explanations, and manifest. |
 | T-303 | P3 | done | worker | T-302 | Implement IndexedDB progress store with export/import JSON and reset all data. |
 | T-304 | P3 | done | worker | T-303,T-205 | Implement practice by category/subsection/all with answer shuffling and immediate feedback; progress and Leitner state update through the progress store. |
 | T-305 | P3 | done | worker | T-304 | Implement web review-later practice mode with submit-time feedback and submit-time progress updates. |
@@ -65,14 +65,14 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-310 | P3 | done | worker | T-304,T-309 | Implement web built-in lesson quizzes with official-bank and concept-check items, shuffled official answers, local scores, and retry history. |
 | T-311 | P3 | done | worker | T-303,T-307,T-208 | Implement web readiness guidance for weak categories/subsections and due items using the shared readiness fixtures for REQ-LESSON-003. |
 | T-312 | P3 | done | worker | T-305,T-306,T-307,T-308,T-309,T-310,T-311 | Add PWA service worker caching app shell, bundled content, lessons, fixtures needed at runtime, and reference assets allowed for the current private-development or release stage; show offline readiness status. |
-| T-313 | P3 | todo | worker | T-312 | Add web privacy audit test confirming no third-party requests in normal flows and document host log/CSP configuration. |
+| T-313 | P3 | partial: dist URL audit done; host/CSP config doc pending with T-604 | worker | T-312 | Add web privacy audit test confirming no third-party requests in normal flows and document host log/CSP configuration. |
 | T-401 | P4 | done | worker | T-102 | Create lesson directory structure and module index for eight categories. |
 | T-402 | P4 | done | worker | T-401 | Add lesson outline front matter mapping all 100 subsections to lesson IDs; no full lesson prose required. |
 | T-403 | P4 | done | worker | T-402 | Implement coverage check script that fails on missing or unknown subsection IDs and reports duplicate coverage. |
 | T-404 | P4 | done | worker | T-402 | Author first `B-001` introductory lesson as original content with built-in quiz references. |
 | T-405 | P4 | done | worker | T-404 | Add original explanations for a small reviewed set of `B-001` questions; cite question IDs and verified sources. |
-| T-406 | P4 | todo | worker | T-403,T-405 | Add explanation coverage report showing count covered out of 984 and blocking invalid question IDs. |
-| T-407 | P4 | todo | worker | T-404 | Add reference-sheet teaching links in relevant lessons without copying unapproved diagrams. |
+| T-406 | P4 | done (check-explanations reports N/984 and blocks invalid IDs) | worker | T-403,T-405 | Add explanation coverage report showing count covered out of 984 and blocking invalid question IDs. |
+| T-407 | P4 | todo: reference PDFs dropped; decide prose-only vs remove | worker | T-404 | Add reference-sheet teaching links in relevant lessons without copying unapproved diagrams. |
 | T-408 | P4 | done | worker | T-404 | Module 4 (Circuit Components, B-004) full lessons, quiz files, and explanations for every B-004 question, following the M5 conventions and checks. |
 | T-409 | P4 | done | worker | T-404 | Module 6 (Feedlines and Antenna Systems, B-006) full lessons, quiz files, and explanations for every B-006 question, following the M5 conventions and checks. |
 | T-410 | P4 | done | worker | T-404 | Content lints: module-scoped check:quizzes and check-explanations (quoted choice text, no filler, no 3+ file duplicate notes, lesson citation covers subsection). |
@@ -112,10 +112,10 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-606 | P6 | todo | worker | T-309,T-405,T-603 | Complete release about pages with attribution, disclaimer, source manifest, privacy summary, and active bank version. |
 | T-607 | P6 | todo | worker | T-601,T-603,T-604,T-606,T-602,T-605,T-207,T-406,T-107,T-102,T-005,T-006,T-007 | Release candidate pass: all tests, link checks, privacy checks, accessibility checks, and licensing checklist pass. |
 | T-009 | P6 | todo | owner/coordinator | T-007,T-607 | Make repository public only after permission is recorded, the public-release gate checklist is complete, and history contains no ISED artifacts outside the recorded scope. |
-| T-701 | Later | todo | worker | v1 release | Investigate Advanced qualification course as separate scope; do not mix with Basic bank pipeline unless approved. |
-| T-702 | Later | todo | worker | v1 release | Investigate Morse 5 wpm trainer as separate module. |
+| T-701 | Later | investigating | worker | v1 release | Investigate Advanced qualification course as separate scope; do not mix with Basic bank pipeline unless approved. |
+| T-702 | Later | investigating | worker | v1 release | Investigate Morse 5 wpm trainer as separate module. |
 | T-703 | Later | todo | worker | v1 release | Investigate watchOS companion only after Apple v1 privacy posture is stable. |
-| T-705 | Later | todo | worker | v1 release | Revisit optional iCloud sync as a privacy-review item, not as a default feature. |
+| T-705 | Later | investigating | worker | v1 release | Revisit optional iCloud sync as a privacy-review item, not as a default feature. |
 | T-706 | Later | todo | worker | T-511 | Prepare the Apple app for iPhone Duo (foldable; announced 2026-09-09, ships 2026-10-23): build with Xcode 27.1+, confirm UIScene lifecycle, freely resizable adaptive layouts (compact outer / regular inner display, posed states), no UIScreen.main assumptions, reserved regions and asymmetric safe areas, state preserved across fold/unfold mid-practice/exam; extend UI tests and accessibility audits to the iPhone Duo simulator. Ref: https://developer.apple.com/iphone-duo/ |
 
 ## Current branch review checklist for T-001
