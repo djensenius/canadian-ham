@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 16:59'
+updated_date: '2026-10-01 17:00'
 labels:
   - ci
 milestone: m-0
@@ -41,10 +41,12 @@ GitHub's default Dependabot security updates for vitest in apps/web failed twice
 Dependabot diagnosis: gh run list --workflow 'Dependabot Updates' showed two failed 2026-09-29 vitest security-update jobs (36509071802 and 36510963092) for npm_and_yarn in /apps/web. gh run view --log-failed for both jobs reported security_update_not_possible: latest-resolvable-version 3.2.7, lowest-non-vulnerable-version 4.1.11, conflicting-dependencies [], so Dependabot's default manifest-scoped security update could not produce the patched vitest update. gh api repos/djensenius/canadian-ham/dependabot/alerts showed alert #1 for apps/web/package.json vitest >=2.1.0,<4.1.11 is now fixed. Current GitHub Docs (Dependabot supported ecosystems reusable, fetched from github/docs main) list pnpm under YAML value npm with version and security updates supported for pnpm v7-v10. Current branch already has apps/web vitest ^4.1.11 and pnpm-lock.yaml resolves vitest 4.1.11, so no additional vitest pnpm update was needed here. Added .github/dependabot.yml with npm at / for the pnpm workspace/lockfile and github-actions at /.
 
 Validation passed: pnpm install --frozen-lockfile; pnpm typecheck; pnpm test (content-tools 93 passed, web 10 files/78 tests passed); pnpm build:web; go run github.com/rhysd/actionlint/cmd/actionlint@latest; ruby YAML parse for .github/dependabot.yml. AC #3 remains unchecked because the next Dependabot run can only be verified after this branch is merged and Dependabot runs on main.
+
+Residual risk for AC #3: GitHub Docs currently list Dependabot pnpm support for pnpm v7-v10 under package-ecosystem npm, while this repository declares packageManager pnpm@12.6.0 and uses pnpm-lock.yaml lockfileVersion 9.0. I did not downgrade or otherwise change the repository package manager because that would widen this task's configuration scope; the next Dependabot run must confirm whether GitHub's updater accepts the current pnpm 12 workspace.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Added explicit Dependabot configuration for the root pnpm workspace lockfile and GitHub Actions, grouped on a weekly schedule to reduce PR volume. Documented the failed vitest security-update cause from the GitHub Dependabot run logs and confirmed the existing branch already uses fixed vitest 4.1.11. Verified locally with install, typecheck, tests, web build, actionlint, and YAML parsing. Task remains In Progress because AC #3 requires a post-merge Dependabot run.
+Added explicit Dependabot configuration for the root pnpm workspace lockfile and GitHub Actions, grouped on a weekly schedule to reduce PR volume. Documented the failed vitest security-update cause from the GitHub Dependabot run logs and confirmed the existing branch already uses fixed vitest 4.1.11. Verified locally with install, typecheck, tests, web build, actionlint, and YAML parsing. Task remains In Progress because AC #3 requires a post-merge Dependabot run; note the current GitHub Docs list pnpm v7-v10 while this repo declares pnpm@12.6.0, so that compatibility must be confirmed by the next run.
 <!-- SECTION:FINAL_SUMMARY:END -->
