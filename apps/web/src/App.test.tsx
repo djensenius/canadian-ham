@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
+import { StrictMode } from "react";
 import { IDBFactory } from "fake-indexeddb";
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
 
@@ -128,11 +129,12 @@ class DelayedPreferencesStore extends ProgressStore {
   readonly pendingPreferenceSaves: Array<{
     readonly preferences: WebPreferences;
     readonly resolve: () => void;
+    readonly reject: (error: Error) => void;
   }> = [];
 
   override async putPreferences(preferences: WebPreferences): Promise<void> {
-    await new Promise<void>((resolve) => {
-      this.pendingPreferenceSaves.push({ preferences, resolve });
+    await new Promise<void>((resolve, reject) => {
+      this.pendingPreferenceSaves.push({ preferences, resolve, reject });
     });
     await super.putPreferences(preferences);
   }
@@ -141,6 +143,12 @@ class DelayedPreferencesStore extends ProgressStore {
     const nextSave = this.pendingPreferenceSaves.shift();
     assert.ok(nextSave);
     nextSave.resolve();
+  }
+
+  rejectNextPreferenceSave(error = new Error("simulated preferences failure")): void {
+    const nextSave = this.pendingPreferenceSaves.shift();
+    assert.ok(nextSave);
+    nextSave.reject(error);
   }
 }
 
@@ -274,9 +282,17 @@ async function chooseFirstLessonQuizOption(user: ReturnType<typeof userEvent.set
   await user.click(screen.getAllByTestId("answer-choice")[0]!);
 }
 
-function clickFirstLessonQuizOption(): void {
-  const choices = screen.queryAllByTestId("lesson-quiz-choice");
-  fireEvent.click(choices[0] ?? screen.getAllByTestId("answer-choice")[0]!);
+function clickFirstLessonQuizOption(root: ParentNode = document): void {
+  const choice = root.querySelector<HTMLElement>('[data-testid="lesson-quiz-choice"]')
+    ?? root.querySelector<HTMLElement>('[data-testid="answer-choice"]');
+  assert.ok(choice);
+  fireEvent.click(choice);
+}
+
+function getLessonQuizSection(): HTMLElement {
+  const quizSection = document.querySelector<HTMLElement>(".lesson-quiz");
+  assert.ok(quizSection);
+  return quizSection;
 }
 
 function progressExport(): ProgressExportV1 {
@@ -316,6 +332,22 @@ describe("App accessibility and flows", () => {
     await screen.findByRole("heading", { name: "Learn" });
     await waitFor(() => assert.equal(document.activeElement, main));
     await expectNoAxeViolations(container);
+  });
+
+  it("keeps the skip link as the first focus stop under React StrictMode", async () => {
+    const store = createStore("skip-link-strict-mode");
+    const user = userEvent.setup();
+    render(
+      <StrictMode>
+        <App store={store} now={() => fixedNow} seedFactory={() => "skip-strict-seed"} />
+      </StrictMode>,
+    );
+
+    await screen.findByRole("heading", { name: "Ready for Basic with Honours?" });
+    const skipLink = screen.getByRole("link", { name: "Skip to main content" });
+    await user.tab();
+
+    assert.equal(document.activeElement, skipLink);
   });
 
   it("renders main screens in French, sets document language, and has no axe violations", async () => {
@@ -696,21 +728,22 @@ describe("App accessibility and flows", () => {
   it("has no axe violations on answered and submitted lesson quiz UI", async () => {
     window.location.hash = "#/learn/M5/L-005-01";
     const store = createStore("lesson-quiz-axe");
-    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "lesson-quiz-seed"} />);
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "lesson-quiz-seed"} />);
 
     await screen.findByRole("heading", { name: "QZ-L-005-01-A" });
-    clickFirstLessonQuizOption();
-    await screen.findByRole("status");
-    await expectNoAxeViolations(container);
+    const quizSection = getLessonQuizSection();
+    clickFirstLessonQuizOption(quizSection);
+    await waitFor(() => assert.ok(quizSection.querySelector('[role="status"]')));
+    await expectNoAxeViolations(quizSection);
 
     for (let index = 1; index < 11; index += 1) {
-      fireEvent.click(screen.getByRole("button", { name: "Next" }));
-      clickFirstLessonQuizOption();
-      await screen.findByRole("status");
+      fireEvent.click(within(quizSection).getByRole("button", { name: "Next" }));
+      clickFirstLessonQuizOption(quizSection);
+      await waitFor(() => assert.ok(quizSection.querySelector('[role="status"]')));
     }
-    fireEvent.click(screen.getByRole("button", { name: "Submit lesson quiz" }));
+    fireEvent.click(within(quizSection).getByRole("button", { name: "Submit lesson quiz" }));
     await waitFor(async () => assert.equal((await store.getLessonQuizAttempts()).length, 1));
-    await expectNoAxeViolations(container);
+    await expectNoAxeViolations(quizSection);
   });
 
   it("renders Practice with immediate feedback, progress persistence, and no axe violations", async () => {
@@ -942,6 +975,28 @@ describe("App accessibility and flows", () => {
     await waitFor(async () => assert.deepEqual(await store.getPreferences(), { ...defaultPreferences, practiceMode: "review-later", theme: "dark" }));
   });
 
+  it("does not announce Theme saved for a superseded failed preference save", async () => {
+    window.location.hash = "#/settings";
+    const store = new DelayedPreferencesStore("settings-superseded-failed-theme-save");
+    stores.push(store);
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "settings-stale-failure-seed"} />);
+
+    await screen.findByRole("heading", { name: "Settings and local data" });
+    fireEvent.click(screen.getByLabelText("Dark"));
+    await waitFor(() => assert.equal(store.pendingPreferenceSaves.length, 1));
+    fireEvent.click(screen.getByLabelText("Light"));
+
+    assert.deepEqual(store.pendingPreferenceSaves[0]?.preferences, { ...defaultPreferences, theme: "dark" });
+    store.rejectNextPreferenceSave(new Error("simulated stale preferences failure"));
+    await waitFor(() => assert.equal(store.pendingPreferenceSaves.length, 1));
+    assert.equal(screen.queryByText(/Theme preference saved:/), null);
+    assert.deepEqual(store.pendingPreferenceSaves[0]?.preferences, { ...defaultPreferences, theme: "light" });
+
+    store.releaseNextPreferenceSave();
+    await screen.findByText(/Theme preference saved: Light/);
+    await waitFor(async () => assert.equal((await store.getPreferences()).theme, "light"));
+  });
+
   it("rolls back an in-memory preference change when saving it fails", async () => {
     window.location.hash = "#/settings";
     const store = new FailingPreferencesStore("settings-theme-save-failure");
@@ -1000,6 +1055,25 @@ describe("App accessibility and flows", () => {
     runThemeScript();
     assert.equal(document.documentElement.dataset.theme, "light");
     assert.equal(themeColor.getAttribute("content"), THEME_COLORS.light);
+  });
+
+  it("keeps the recovery skip link focused without appending #main to the route", async () => {
+    const store = createStore("error-boundary-skip-link");
+    const user = userEvent.setup();
+    function BrokenContent() {
+      throw new Error("corrupt local progress");
+      return null;
+    }
+
+    render(<AppErrorBoundary store={store} now={() => fixedNow}><BrokenContent /></AppErrorBoundary>);
+    await screen.findByText(/The app could not render saved progress/);
+    const skipLink = screen.getByRole("link", { name: "Skip to main content" });
+    await user.click(skipLink);
+
+    const main = document.querySelector("main#main");
+    assert.ok(main);
+    await waitFor(() => assert.equal(document.activeElement, main));
+    assert.equal(window.location.hash, "#/home");
   });
 
   it("preserves stored preferences and re-renders theme radios in recovery settings", async () => {

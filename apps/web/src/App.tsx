@@ -5,7 +5,7 @@ import {
   type QuestionProgressRecord,
   type ReadinessResult,
 } from "@canadian-ham/engine-ts";
-import { Component, useEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode, type RefObject } from "react";
+import { Component, createRef, useEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode, type RefObject } from "react";
 
 import { LanguageToggle } from "./components/LanguageToggle";
 import { MarkdownContent } from "./components/MarkdownContent";
@@ -116,10 +116,16 @@ interface AppErrorBoundaryState {
 
 export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorBoundaryState> {
   override state: AppErrorBoundaryState = { errorMessage: null, recoveryPreferences: null };
+  private readonly mainRef = createRef<HTMLElement>();
 
   static getDerivedStateFromError(error: unknown): AppErrorBoundaryState {
     return { errorMessage: formatError(error), recoveryPreferences: null };
   }
+
+  private readonly handleSkipToMain = (event: MouseEvent<HTMLAnchorElement>): void => {
+    event.preventDefault();
+    this.mainRef.current?.focus();
+  };
 
   override render(): ReactNode {
     if (this.state.errorMessage === null) {
@@ -129,7 +135,7 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
     const interfaceLanguage = readStoredInterfaceLanguage();
     return (
       <div className="app-shell">
-        <a className="skip-link" href="#main">{t(interfaceLanguage, "skipToMainContent")}</a>
+        <a className="skip-link" href="#main" onClick={this.handleSkipToMain}>{t(interfaceLanguage, "skipToMainContent")}</a>
         <header className="site-header" role="banner">
           <div className="brand-lockup">
             <HeaderMark />
@@ -139,7 +145,7 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
             </div>
           </div>
         </header>
-        <main id="main" tabIndex={-1}>
+        <main id="main" ref={this.mainRef} tabIndex={-1}>
           <section className="card settings" aria-labelledby="app-recovery-title">
             <h2 id="app-recovery-title">{t(interfaceLanguage, "errorBoundaryTitle")}</h2>
             <p role="alert">{t(interfaceLanguage, "errorBoundaryRenderFailed", this.state.errorMessage)}</p>
@@ -155,6 +161,7 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
                 applyThemePreference(nextPreferences.theme);
                 mirrorThemePreference(nextPreferences.theme);
                 this.setState({ recoveryPreferences: nextPreferences });
+                return true;
               }}
               interfaceLanguage={interfaceLanguage}
               onInterfaceLanguageChange={(language) => { storeInterfaceLanguage(language); this.forceUpdate(); }}
@@ -241,7 +248,7 @@ function AppContent({
   const [statusMessage, setStatusMessage] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
   const mainRef = useRef<HTMLElement>(null);
-  const didRunInitialFocusEffect = useRef(false);
+  const previousRouteFocusRef = useRef({ locationHash, route });
   const interfaceLanguageRef = useRef(interfaceLanguage);
   const savedPreferencesRef = useRef(preferences);
   const latestRequestedPreferencesRef = useRef(preferences);
@@ -320,10 +327,11 @@ function AppContent({
   }, []);
 
   useEffect(() => {
-    if (!didRunInitialFocusEffect.current) {
-      didRunInitialFocusEffect.current = true;
+    const previousRouteFocus = previousRouteFocusRef.current;
+    if (previousRouteFocus.locationHash === locationHash && previousRouteFocus.route === route) {
       return;
     }
+    previousRouteFocusRef.current = { locationHash, route };
     mainRef.current?.focus();
   }, [locationHash, route]);
 
@@ -424,7 +432,7 @@ function AppContent({
     navigate("practice");
   }
 
-  async function setPreferences(preferencesPatch: PreferencesPatch): Promise<void> {
+  async function setPreferences(preferencesPatch: PreferencesPatch): Promise<boolean> {
     const nextPreferences = { ...latestRequestedPreferencesRef.current, ...preferencesPatch };
     latestRequestedPreferencesRef.current = nextPreferences;
     const saveSequence = preferencesSaveSequenceRef.current + 1;
@@ -440,12 +448,14 @@ function AppContent({
         savedPreferencesSequenceRef.current = saveSequence;
         savedPreferencesRef.current = nextPreferences;
       }
-      if (saveSequence === preferencesSaveSequenceRef.current) {
+      const savedLatestRequest = saveSequence === preferencesSaveSequenceRef.current;
+      if (savedLatestRequest) {
         setAlertMessage("");
       }
+      return savedLatestRequest;
     } catch (error) {
       if (saveSequence !== preferencesSaveSequenceRef.current) {
-        return;
+        return false;
       }
       const rollbackPreferences = savedPreferencesRef.current;
       latestRequestedPreferencesRef.current = rollbackPreferences;
@@ -1102,7 +1112,7 @@ interface PracticeProps {
   readonly startPractice: (scope?: PracticeScope, mode?: PracticeMode) => void;
   readonly onSessionChange: (session: PracticeSession | null) => void;
   readonly onProgressChange: (progress: readonly QuestionProgressRecord[]) => Promise<void>;
-  readonly onSetPreferences: (preferences: PreferencesPatch) => Promise<void>;
+  readonly onSetPreferences: (preferences: PreferencesPatch) => Promise<boolean>;
 }
 
 function Practice({
@@ -1700,7 +1710,7 @@ interface SettingsProps {
   readonly onProgressImported: (data: ProgressExportV1) => void;
   readonly onReset: () => void;
   readonly onInterfaceLanguageChange: (language: InterfaceLanguage) => void;
-  readonly onSetPreferences: (preferences: PreferencesPatch) => Promise<void>;
+  readonly onSetPreferences: (preferences: PreferencesPatch) => Promise<boolean>;
 }
 
 function Settings({ interfaceLanguage, store, now, preferences, statusMessage, onProgressImported, onReset, onInterfaceLanguageChange, onSetPreferences }: SettingsProps) {
@@ -1794,7 +1804,10 @@ function Settings({ interfaceLanguage, store, now, preferences, statusMessage, o
 
   async function chooseTheme(theme: WebPreferences["theme"]): Promise<void> {
     try {
-      await onSetPreferences({ theme });
+      const savedLatestRequest = await onSetPreferences({ theme });
+      if (!savedLatestRequest) {
+        return;
+      }
       setErrors([]);
       setMessage(t(interfaceLanguage, "themeSaved", theme === "system" ? t(interfaceLanguage, "themeSystem") : theme === "light" ? t(interfaceLanguage, "themeLight") : t(interfaceLanguage, "themeDark")));
     } catch (error) {
