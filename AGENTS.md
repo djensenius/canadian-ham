@@ -61,14 +61,19 @@ read-only mirror produced by `tools/backlog-sync`; never track work there (excep
 - Always use the `backlog` CLI to read and change tasks, with `--plain` for output meant for agents
   (`backlog task list --plain`, `backlog task view task-12 --plain`, `backlog board`).
   Never create or edit files in `backlog/` directly.
-- Task changes are auto-committed (`autoCommit: true`) on the branch you run the CLI on, and the board
-  reads every active branch (`checkActiveBranches: true`). Run task updates for branch work from that
-  task's worktree so the status travels with the branch.
+- Task changes are auto-committed (`autoCommit: true`) on the branch you run the CLI on. After the
+  task is In Progress, every further change (plan, notes, checked criteria, final summary, Done) is made
+  from the task's worktree and reaches main with the merge. Don't edit that task on main while its
+  branch is open: `updated_date` has minute resolution and main's copy would mask the branch's.
+  If a merge conflicts only in a task file under `backlog/`, keep the branch's version.
 - Before creating a task, search first (`backlog search "<words>" --plain`) and don't duplicate an
   existing task; extend it or ask instead. New tasks need a clear description and acceptance criteria
   (`--ac`), and use `--dep` for dependencies and `-p` for subtasks.
-- Before starting work: pick a `To Do` task whose dependencies are all `Done`, then
-  `backlog task edit task-12 -s "In Progress" -a @<your-name>`.
+- Before starting work: pick a `To Do` task whose dependencies are all `Done`. On `main`
+  (the coordinator, before creating the branch), run
+  `backlog task edit task-12 -s "In Progress" -a @<worker-name>`, then create the branch and
+  worktree from that commit. `backlog board` on main always prefers main's copy of a task, so
+  this is what keeps the board correct while the work happens on the branch.
 - Before writing code, add a short implementation plan: `backlog task edit task-12 --plan "1. ..."`.
 - Put the task ID in the branch name and PR title, e.g. branch `task-12-short-slug`, worktree
   `../canadian-ham-task-12`, PR "task-12: Short title".
