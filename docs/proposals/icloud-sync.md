@@ -14,7 +14,7 @@
 | 1 | Apple defines "collect" as sending data off the device so you or partners can access it longer than needed to handle the request in real time | **Verified** (word for word) | developer.apple.com/app-store/app-privacy-details/ |
 | 2 | The App Privacy page's guidance on Apple frameworks and services (MapKit, CloudKit, App Analytics) | **Verified** (word for word), but it is *not* an exemption: it says to disclose data **you** collect from Apple services | same |
 | 3 | Data kept only in the user's private CloudKit database keeps "Data Not Collected" | **Verified as inference**. Apple has no explicit statement; wording corrected from "explicitly distinguishes" | app-privacy-details; developer.apple.com/documentation/cloudkit/ckcontainer/privateclouddatabase |
-| 4 | Private DB records are "end-to-end encrypted or protected" | **Corrected**: under standard data protection Apple holds the keys; only encrypted fields are end-to-end, and only with Advanced Data Protection on | support.apple.com/en-us/102651 |
+| 4 | Private DB records are "end-to-end encrypted or protected" | **Corrected**: under standard data protection Apple holds the keys; only CloudKit encrypted fields and assets are end-to-end, and only with Advanced Data Protection on. SwiftData `@Attribute(.allowsCloudEncryption)` can mark fields for CloudKit encryption on iOS/iPadOS 17+, macOS 14+, tvOS 17+ and visionOS 1+ | support.apple.com/en-us/102651; developer.apple.com/documentation/swiftdata/schema/attribute/option/allowscloudencryption |
 | 5 | Developer has "zero access" | **Corrected**: no access to record data, but CloudKit Logs show per-user anonymous IDs, platform, OS and operations, and can be exported | developer.apple.com/icloud/logs/ |
 | 6 | All three v1 entities use `@Attribute(.unique)` | **Verified** (repo) | `apps/apple/CanadianHam/Models/ProgressModels.swift` |
 | 7 | SwiftData quote: "…CloudKit is unable to enforce the Unique property option" | **Verified** (word for word) | developer.apple.com/documentation/swiftdata/syncing-model-data-across-a-persons-devices |
@@ -31,7 +31,7 @@
 | 18 | The opt-in toggle needs a dynamic `ModelContainer` rebuild or a dual store | **Unverified** (design inference); no Apple doc covers switching at runtime | Searched SwiftData and Core Data docs and Developer Forums |
 | 19 | On sign-out the app must fall back to a local store without deleting cached progress | **Unverified / unclear**. Community reports say the CloudKit container may purge mirrored local data when the account changes | StackOverflow 70755205, 58179862 (community) |
 | 20 | `CKAccountChanged` notification and `CKAccountStatus` exist on all target platforms | **Verified** | ckaccountstatus and CKAccountChanged docs |
-| 21 | Apple asks apps to offer a way to delete CloudKit data; zone deletion via `CKModifyRecordZonesOperation` | **Verified** | developer.apple.com/documentation/cloudkit/responding-to-requests-to-delete-data |
+| 21 | Apple asks apps to offer a way to delete CloudKit data; zone deletion via `CKModifyRecordZonesOperation`; SwiftData sync uses `NSPersistentCloudKitContainer` | **Verified**, with project implementation inference: stop sync or switch the mirror to local-only before deleting the zone, then delete or keep local records according to the user's choice and verify no re-upload | developer.apple.com/documentation/cloudkit/responding-to-requests-to-delete-data; SwiftData sync article; developer.apple.com/documentation/coredata/nspersistentcloudkitcontainer |
 | 22 | "GDPR/privacy compliance *requires*" a Delete iCloud Data function | **Unverified** (legal claim). Apple's GDPR tech talk explicitly says it isn't legal advice | developer.apple.com/videos/play/tech-talks/703/ |
 | 23 | SwiftData's default conflict handling is "last-writer-wins" field merging | **Unverified** | Not found in the Core Data/SwiftData CloudKit docs checked |
 | 24 | Leitner / exam-attempt merge rules | Researcher inference (design, not an external fact) | — |
@@ -85,7 +85,7 @@ The recommendation is unchanged: **LATER (after v1, gated behind a schema refact
 > "Data in the private database counts toward the user’s iCloud storage quota."
 
 **Corrections:**
-- **Encryption.** The original said private DB records are "end-to-end encrypted or protected". Apple Support (support.apple.com/en-us/102651) says: "Third-party app data stored in iCloud is always encrypted in transit and on server. When you turn on Advanced Data Protection, third-party app data stored in iCloud Backup and CloudKit encrypted fields and assets are end-to-end encrypted." Under standard data protection, "The encryption keys … are secured in Apple data centers." Apple can technically decrypt; the developer cannot read the records. Optional hardening: `@Attribute(.allowsCloudEncryption)` (SwiftData, iOS 17+/tvOS 17+/visionOS 1+) stores values as CloudKit encrypted fields.
+- **Encryption.** The original said private DB records are "end-to-end encrypted or protected". Apple Support (support.apple.com/en-us/102651) says: "Third-party app data stored in iCloud is always encrypted in transit and on server. When you turn on Advanced Data Protection, third-party app data stored in iCloud Backup and CloudKit encrypted fields and assets are end-to-end encrypted." Under standard data protection, "The encryption keys … are secured in Apple data centers." Apple can technically decrypt; the developer cannot read the records. Optional hardening: `@Attribute(.allowsCloudEncryption)` (SwiftData, iOS/iPadOS 17+, macOS 14+, tvOS 17+, visionOS 1+ per Apple's attribute-option docs) stores values as CloudKit encrypted fields.
 - **Developer access.** The original said the developer has "zero access". developer.apple.com/icloud/logs/ says: "Logs show you every CloudKit server event for each user without exposing any personally identifiable information. Log entries only display anonymous, container-specific CloudKit user IDs … The reports can show record modifications per account, but not the actual data that has changed." Fields include Time, Platform, CK User ID, Client OS, Database and Operation. Logs cover "the past week" and can be exported "for offline analysis".
 - *Interpretation:* Apple presents these logs as privacy-preserving, and viewing them is not clearly "collection". But the App Privacy guidance says to disclose data you **collect about your app from Apple services**. The safest way to keep "Data Not Collected" honest is a written policy: do not export, retain or link CloudKit Console logs or telemetry. Re-check the App Store Connect questionnaire before release.
 
@@ -161,6 +161,8 @@ Core Data "Creating a Core Data Model for CloudKit" adds: "Unique constraints ar
   - *Recommendation (inference):* keep a local-only store as the source of truth, or test sign-out explicitly before promising "no progress loss".
 - **Cloud data deletion:**
   - Apple guidance is **Verified**: "If your app stores data in CloudKit on behalf of your users, give them a simple way to delete their data." The `CKModifyRecordZonesOperation(recordZonesToSave: nil, recordZoneIDsToDelete: zoneIDs)` sample on `privateCloudDatabase` is **Verified**.
+  - SwiftData's sync article says SwiftData uses `NSPersistentCloudKitContainer` for CloudKit synchronization; the delete flow should not leave that mirror active against local records after deleting the CloudKit zone, or those local records can be eligible for re-upload.
+  - *Project inference:* implement deletion as a coordinated flow: stop sync / rebuild the progress container with explicit `.none`, delete the private CloudKit progress zone, then either delete local records or keep them in the local-only store according to the user's choice, and verify the zone is not recreated or re-uploaded after restart.
   - "GDPR/privacy compliance *requires*" is **Unverified** as a legal claim. Apple's GDPR & CloudKit tech talk: "I am an engineer, not a lawyer … consult a lawyer."
   - *Project inference:* REQ-QUIZ-005 "Reset all data" semantics should be extended to cover cloud data when sync is on.
 
@@ -226,7 +228,7 @@ Core Data "Creating a Core Data Model for CloudKit" adds: "Unique constraints ar
 - CloudKit Logs: https://developer.apple.com/icloud/logs/
 - iCloud data security overview: https://support.apple.com/en-us/102651
 - GDPR & CloudKit tech talk: https://developer.apple.com/videos/play/tech-talks/703/
-- `@Attribute(.allowsCloudEncryption)`: https://developer.apple.com/documentation/swiftdata/schema/attribute/option/allowscloudencryption
+- `@Attribute(.allowsCloudEncryption)` (iOS/iPadOS 17+, macOS 14+, tvOS 17+, visionOS 1+): https://developer.apple.com/documentation/swiftdata/schema/attribute/option/allowscloudencryption
 - Archived tvOS App Programming Guide, iCloud Storage (2017): https://developer.apple.com/library/archive/documentation/General/Conceptual/AppleTV_PG/iCloudStorage.html
 
 **Secondary (used only where no official source exists; flagged):**
@@ -278,7 +280,11 @@ Core Data "Creating a Core Data Model for CloudKit" adds: "Unique constraints ar
 
 ### Phase 3: Conflict resolution and cloud data management (estimate ~1–2 days, unverified)
 - Deterministic merge for Leitner progress and exam attempts. Use the same function for web JSON import.
-- **"Delete iCloud Progress"** in Settings (`CKModifyRecordZonesOperation` on all private zones). Extend **Reset all data** to cover cloud data when sync is on.
+- **"Delete iCloud Progress"** in Settings as a coordinated delete, not a standalone zone delete while the mirror is active:
+  1. Stop sync first: quiesce CloudKit work and rebuild/switch the progress container to explicit local-only `.none`.
+  2. Delete the private CloudKit progress zone with `CKModifyRecordZonesOperation(recordZonesToSave: nil, recordZoneIDsToDelete: zoneIDs)`.
+  3. Follow the user's choice: delete local progress too (for Reset all data / delete everywhere), or keep local records only in the local-only store.
+  4. Verify restart and disabled sync do not recreate the zone or re-upload records.
 - Optional: `@Attribute(.allowsCloudEncryption)` on progress fields.
 - Airplane-mode, no-account and account-switch smoke tests.
 - tvOS/visionOS: sync only after those targets get progress storage (REQ-APPLE-005/006 parity).
@@ -307,7 +313,7 @@ Core Data "Creating a Core Data Model for CloudKit" adds: "Unique constraints ar
 | task-13.x Privacy review for opt-in iCloud sync | v1 release | `docs/privacy.md`, REQ-APPLE-003/004 and DEC-APPLE-003 updated for opt-in CloudKit, Push and Remote-notification scope; "Data Not Collected" reasoning recorded with Apple sources; CloudKit Console log no-retention policy documented. |
 | task-13.x SwiftData schema V2 for CloudKit compatibility | privacy review | `.unique` removed from all three entities; declaration-level defaults on all non-optional properties; dedup in `ProgressStore`; V1→V2 migration and dedup tests pass via `xbuild`. |
 | task-13.x Opt-in iCloud sync toggle | schema V2 | iCloud (CloudKit), Push and Background Modes (remote notifications) added in `project.yml`; toggle defaults OFF using explicit `.none` / `.private("<container>")`; preferences stay in a local configuration; account-change and sign-out behaviour tested for local data loss; tests build without restricted entitlements. |
-| task-13.x Merge rules, cloud deletion and privacy verification | toggle | Deterministic Leitner/exam merge shared with web import; "Delete iCloud Progress" plus Reset-all covering cloud data; airplane-mode and no-account smoke tests; App Store privacy answers re-checked. |
+| task-13.x Merge rules, cloud deletion and privacy verification | toggle | Deterministic Leitner/exam merge shared with web import; coordinated "Delete iCloud Progress" flow that stops sync / switches to local-only before zone deletion, handles the user's local delete-or-keep choice, and verifies no re-upload; Reset-all covering cloud data; airplane-mode and no-account smoke tests; App Store privacy answers re-checked. |
 
 ---
 
