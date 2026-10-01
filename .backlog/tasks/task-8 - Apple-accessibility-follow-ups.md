@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 21:59'
+updated_date: '2026-10-01 22:43'
 labels:
   - apple
   - accessibility
@@ -23,8 +23,8 @@ Reviews of the Apple accessibility and French interface lanes approved the work 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [ ] #1 After mock exam submission, focus moves to the results heading on appear and the announcement isn't cut off (verified with VoiceOver)
-- [ ] #2 The tvOS 'Next question' focus ring visibly renders (screenshot or manual check recorded)
-- [ ] #3 English system error details (e.g. QuestionBankLoadError) are tagged en or localised in the French UI
+- [x] #2 The tvOS 'Next question' focus ring visibly renders (screenshot or manual check recorded)
+- [x] #3 English system error details (e.g. QuestionBankLoadError) are tagged en or localised in the French UI
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -34,3 +34,15 @@ Reviews of the Apple accessibility and French interface lanes approved the work 
 2. Extend tvOS UI coverage to capture a screenshot after the Next question button receives focus, save exported evidence under docs/evidence, and verify the focus ring remains rendered.
 3. Tag English error detail text with the English language identifier in the shared Apple LocalizedErrorMessageText pattern (including tvOS), then run apple l10n and affected/full xbuild checks before finalizing.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented Apple follow-ups and validation. Mock exam results heading now owns the spoken summary and is focused after the result view appears; XCUITest verifies the heading identifier/label, but the actual VoiceOver listening check remains manual for the owner per docs/accessibility.md. tvOS focus evidence exported to docs/evidence/tvos-next-question-focus-ring.png with manifest at docs/evidence/tvos-next-question-focus-ring-xcresult/manifest.json. English error details are tagged with English language attributes in shared Apple and tvOS LocalizedErrorMessageText. Validation passed: pnpm check:apple-l10n; full iOS, macOS, tvOS, and visionOS xbuild suites.
+<!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Implemented mock-results focus/announcement exposure, tvOS focus-ring evidence capture, and English error-detail language tagging. Verified AC2 with exported tvOS screenshot evidence and AC3 with pnpm check:apple-l10n plus full Apple xbuild suites. AC1 remains In Progress pending the owner\'s documented 3-step VoiceOver listening check.
+<!-- SECTION:FINAL_SUMMARY:END -->
