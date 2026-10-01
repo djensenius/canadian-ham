@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 13:51'
-updated_date: '2026-10-01 14:01'
+updated_date: '2026-10-01 14:07'
 labels:
   - ci
   - tooling
@@ -25,8 +25,8 @@ The owner moved to a pull-request-only workflow: nothing may be pushed to main d
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 Worktree scanning finds the Backlog folder wherever the project's Backlog.md config puts it (backlog/, .backlog/ or a custom path), using the CLI or the config file read-only, with tests
-- [ ] #2 A config option selects the inbox mode: 'push' (current behaviour) or 'pr' (create the task on a new branch such as inbox/<repo>-<N> from origin's main in a temporary worktree, push the branch, open a PR titled '<task-id>: <title>', then link and unlabel the issue)
-- [ ] #3 In 'pr' mode nothing is committed to or pushed to main, the temporary worktree is removed, and a re-run never opens a second PR for the same issue (it finds the open PR or the task reference)
+- [x] #2 A config option selects the inbox mode: 'push' (current behaviour) or 'pr' (create the task on a new branch such as inbox/<repo>-<N> from origin's main in a temporary worktree, push the branch, open a PR titled '<task-id>: <title>', then link and unlabel the issue)
+- [x] #3 In 'pr' mode nothing is committed to or pushed to main, the temporary worktree is removed, and a re-run never opens a second PR for the same issue (it finds the open PR or the task reference)
 - [ ] #4 canadian-ham's .backlog-sync.json uses 'pr' mode; the README documents both modes and the dry-run output shows the planned PR
 - [x] #5 go test covers both modes, including the crash-replay case for 'pr' mode, without network access
 <!-- AC:END -->
@@ -50,10 +50,12 @@ Round 2 fix steps:
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented Backlog directory discovery for backlog/, .backlog/, and custom Backlog data dirs; added inbox.mode push/pr with temp-worktree PR imports, explicit root repo allowlist checks, duplicate PR detection, and cleanup. Validation passed: cd tools/backlog-sync && go vet ./... && go test ./... && go build -o /tmp/backlog-sync-19 .; read-only dry run saved to /tmp/ch-dry-task19.txt (no current inbox issues, so no real planned PR; unit test covers planned PR dry-run output).
+
+Round 2 fixes implemented: PR mode now keeps the inbox label while an import PR is open, links/retitles/unlabels the original issue after the task reaches main, reuses existing open PRs, recovers by opening a PR from an already-pushed inbox branch, prunes stale worktrees, skips temp inbox worktrees during collection, creates detached temp worktrees from origin/<main>, pushes HEAD:refs/heads/<branch> with --force-with-lease, deletes stale local inbox branches, and fails clearly if Backlog autoCommit leaves temp-worktree changes. Added no-network tests for merge linking/no duplicate issue, branch-pushed/no-PR replay, stale local branch cleanup, temp cleanup on failure, invalid inbox.mode, origin allowlist refusal, temp worktree skipping, ambiguous non-root Backlog folders, start point/base selection, and PR lookup by head plus marker. Validation passed: cd tools/backlog-sync && go vet ./... && go test ./... && go build -o /tmp/backlog-sync-19b . && /tmp/backlog-sync-19b --config /Users/david/Developer/canadian-ham/.backlog-sync.json --dry-run > /tmp/ch-dry-task19b.txt. The live dry run had no inbox issue, so it could not show a planned PR line for AC #4; /tmp/ch-dry-task19b.txt records the read-only run and AC #4 live planned-PR evidence is left for the coordinator.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-backlog-sync now discovers Backlog data directories instead of assuming backlog/, supports configurable inbox.mode push/pr, opens inbox imports as explicit-repo PRs from temporary worktrees with replay protection, and documents/configures Canadian Ham for pr mode. Verified with go vet, go test ./..., go build, and a read-only dry run against /Users/david/Developer/canadian-ham.
+Round 2 hardened backlog-sync PR inbox mode: inbox labels stay until merge, merged tasks mark/retitle/unlabel the original issue without duplicate issue creation, crash replay recovers open PRs or already-pushed branches, temp worktrees are detached/cleaned/skipped during collection, stale local inbox branches are deleted, PR pushes use --force-with-lease, origin repos are allowlisted, and autoCommit-off temp worktrees fail clearly. README documents the revised PR lifecycle including closed-unmerged retry behavior and the autoCommit requirement. Verified with go vet ./..., go test ./..., go build -o /tmp/backlog-sync-19b ., and a read-only Canadian Ham dry run saved to /tmp/ch-dry-task19b.txt; the dry run had no inbox issue, so AC #4's live planned-PR line remains for coordinator verification.
 <!-- SECTION:FINAL_SUMMARY:END -->
