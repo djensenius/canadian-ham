@@ -47,7 +47,7 @@ jobs:
             exit 0
           fi
 
-          changed_files="$(git diff --name-only "${BASE_SHA}" "${HEAD_SHA}")"
+          changed_files="$(git diff --name-only --no-renames "${BASE_SHA}...${HEAD_SHA}")"
           if [[ -z "${changed_files}" ]]; then
             echo "full_checks=true" >> "${GITHUB_OUTPUT}"
             echo "backlog_only=false" >> "${GITHUB_OUTPUT}"
@@ -79,8 +79,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: changes
+    if: ${{ !cancelled() }}
 
     steps:
+      - name: Verify change classification
+        env:
+          CHANGE_RESULT: ${{ needs.changes.result }}
+        run: |
+          if [[ "${CHANGE_RESULT}" != "success" ]]; then
+            echo "Change classification did not succeed (${CHANGE_RESULT}); refusing to skip checks."
+            exit 1
+          fi
+          echo "Change classification succeeded."
+
       - name: Report .backlog-only pull request
         if: needs.changes.outputs.backlog_only == 'true'
         run: echo "Only .backlog/ files changed; full Node/content checks intentionally skipped."

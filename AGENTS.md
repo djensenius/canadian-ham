@@ -69,8 +69,8 @@ never track work directly on GitHub except for owner-created issues with the `in
 
 - At the start of a session, run `backlog instructions overview`, then read the detailed guide for the
   action you are about to take. Coordinators also check for open GitHub issues labelled `inbox`, triage
-  them into Backlog tasks (search first), and remove the label manually after triage because inbox mode
-  is report-only.
+  them into Backlog tasks (search first), and remove the label manually after triage because this
+  repository uses backlog-sync `inbox.mode: manual`.
 - Always use the `backlog` CLI to read and change tasks, with `--plain` for output meant for agents
   (`backlog task list --plain`, `backlog task view task-12 --plain`, `backlog board`). Never create or
   edit files in `.backlog/` directly.
@@ -81,8 +81,9 @@ never track work directly on GitHub except for owner-created issues with the `in
   main catches up when PRs merge. If a merge conflicts only in a task file under `.backlog/`, keep the
   branch's version.
 - Before creating a task, search first (`backlog search "<words>" --plain`) and don't duplicate an
-  existing task; extend it or ask instead. New tasks need a clear description and acceptance criteria
-  (`--ac`), and use `--dep` for dependencies and `-p` for subtasks.
+  existing task; extend it or ask instead. Create new tasks (including inbox triage) on a branch and
+  land them through a PR because `main` is PR-only. New tasks need a clear description and acceptance
+  criteria (`--ac`), and use `--dep` for dependencies and `-p` for subtasks.
 - Before writing code, add a short implementation plan: `backlog task edit task-12 --plan "1. ..."`.
 - Put the task ID in the branch name and PR title, e.g. branch `task-12-short-slug`, worktree
   `../canadian-ham-task-12`, PR "task-12: Short title".
