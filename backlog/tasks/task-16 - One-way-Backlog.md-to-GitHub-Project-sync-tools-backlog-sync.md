@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:33'
-updated_date: '2026-10-01 02:48'
+updated_date: '2026-10-01 02:56'
 labels:
   - ci
   - tooling
@@ -29,14 +29,14 @@ We moved tracking to Backlog.md, but the owner wants to see work on GitHub, and 
 - [x] #5 Inbox: open issues labelled 'inbox' become new To Do tasks (create only), then the label is removed and the marker added
 - [x] #6 launchd plist and install steps are documented, and logs go to a file
 - [x] #7 Go unit tests cover resolution, rendering, marker matching, diffing and inbox import without network access
-- [ ] #8 ArkhamHorror multi-repo placement maps Backlog project values to configured issue repos, searches all configured repos for existing markers, refuses all GitHub reads/writes outside the allowlist, and never duplicates issues when a task moves repos.
-- [ ] #9 Nested task IDs such as TASK-1.2.7 normalize consistently for markers, title prefixes, branch ownership and matching.
-- [ ] #10 Referenced GitHub issues can be adopted behind adoptReferencedIssues without adopting pull requests, mismatched repos, or issues carrying a different marker.
-- [ ] #11 Managed-label sync supports exact/prefix/* allowlists, addAlways, priority labels, case-insensitive comparison, missing-label creation, and never touches the inbox label or unmanaged labels.
-- [ ] #12 Optional extra Project fields for priority, milestone title, area, task ID and branch are updated only when configured and safe, with absent fields/options handled without data loss.
-- [ ] #13 Configured sub-issues link child issues under parent issues when needed and warn once on unsupported cross-repo linking.
-- [ ] #14 Inbox import scans every configured repo, guards against existing references before creating tasks, writes only from a clean main worktree, removes inbox labels, marks imported issues, and pushes main only when configured.
-- [ ] #15 One binary works for multiple config files with per-config launchd install and per-config locking so independent configs can run side by side.
+- [x] #8 ArkhamHorror multi-repo placement maps Backlog project values to configured issue repos, searches all configured repos for existing markers, refuses all GitHub reads/writes outside the allowlist, and never duplicates issues when a task moves repos.
+- [x] #9 Nested task IDs such as TASK-1.2.7 normalize consistently for markers, title prefixes, branch ownership and matching.
+- [x] #10 Referenced GitHub issues can be adopted behind adoptReferencedIssues without adopting pull requests, mismatched repos, or issues carrying a different marker.
+- [x] #11 Managed-label sync supports exact/prefix/* allowlists, addAlways, priority labels, case-insensitive comparison, missing-label creation, and never touches the inbox label or unmanaged labels.
+- [x] #12 Optional extra Project fields for priority, milestone title, area, task ID and branch are updated only when configured and safe, with absent fields/options handled without data loss.
+- [x] #13 Configured sub-issues link child issues under parent issues when needed and warn once on unsupported cross-repo linking.
+- [x] #14 Inbox import scans every configured repo, guards against existing references before creating tasks, writes only from a clean main worktree, removes inbox labels, marks imported issues, and pushes main only when configured.
+- [x] #15 One binary works for multiple config files with per-config launchd install and per-config locking so independent configs can run side by side.
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -63,6 +63,753 @@ Coordinator follow-up after review: perform the real GitHub sync and install/boo
 Fix round 2 workflow correction: AC #3 and #4 are unchecked and remain pending until the coordinator performs a real GitHub sync/no-op verification; this round will provide only read-only dry-run evidence.
 
 Round 2 start: AC #3 and #4 remain unchecked pending the coordinator's real-run status/no-op evidence. ArkhamHorror scope is owner-approved; adding explicit ACs before implementation.
+
+Round 2 implementation commit: eec67a096c91fe689ab0c68a4db9d9c330cfd933.
+Implemented owner-approved ArkhamHorror/generalization scope: JSON config, multi-repo allowlist and placement, dotted IDs, adoption, managed labels, optional Project fields, sub-issues, multi-repo inbox/ref guard, per-config lock and launchd installer. Validation passed: go test ./..., go vet ./..., go build -o /tmp/backlog-sync ., Canadian dry-run, ArkhamHorror dry-run. AC #3 and #4 remain unchecked for coordinator real-run/no-op evidence.
+
+Canadian Ham dry-run command:
+/tmp/backlog-sync --root /Users/david/Developer/canadian-ham --config /Users/david/Developer/canadian-ham-task-16/.backlog-sync.json --dry-run
+
+Canadian Ham dry-run full output:
+```text
+2026-09-30T22:56:01-04:00 would create label "release" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-1: v1 release in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "blocked" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "legacy:T-007" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "release" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-1.1: Record ISED permission (reference number, date, scope) in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "apple" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "legacy:T-603" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "release" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-1.2: Prepare App Store privacy label evidence in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "legacy:T-313" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "legacy:T-604" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "release" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "web" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-1.3: Static web deploy configuration, CSP/host docs and post-deploy offline smoke test in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "apple" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "legacy:T-606" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "release" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "web" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-1.4: Release About pages (web and Apple) in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "docs" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "legacy:T-006" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "on-hold" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "release" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-1.5: Consolidated release checklist in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "legacy:T-607" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "release" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-1.6: Release candidate pass in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "legacy:T-009" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "release" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-1.7: Make the repository public in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "ci" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-10: Fix failing Dependabot updates in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "content" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "legacy:T-701" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "needs-decision" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-11: Advanced qualification course in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "content" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "docs" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-11.1: Source-check the Advanced course brief and record decisions in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "apple" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "legacy:T-702" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "needs-decision" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "web" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-12: Morse code 5 wpm trainer in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "docs" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-12.1: Source-check the Morse trainer brief and record decisions in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "apple" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "legacy:T-705" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "needs-decision" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "privacy" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-13: Optional iCloud sync in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "apple" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "docs" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-13.1: Source-check the iCloud sync brief and record decisions in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "apple" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "legacy:T-703" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-14: watchOS companion in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "apple" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "legacy:T-706" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-15: iPhone Duo readiness in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "ci" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "tooling" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-16: One-way Backlog.md to GitHub Project sync (tools/backlog-sync) in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "content" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "legacy:T-003" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-2: JSON Schemas for content and progress types in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "ci" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "content" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "legacy:T-004" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-3: Schema validation tests in CI in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "blocked" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "design" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "legacy:T-011b" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-4: Final app icon artwork approval in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "content" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "legacy:T-407" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "needs-decision" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-5: Decide on reference-sheet teaching links in lessons in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "docs" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "needs-decision" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-6: Resolve open planning questions in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "ci" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-7: Harden CI and audit scripts in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "accessibility" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "apple" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-8: Apple accessibility follow-ups in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would create label "accessibility" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create label "web" in djensenius/canadian-ham if missing
+2026-09-30T22:56:01-04:00 would create issue task-9: Web follow-ups in djensenius/canadian-ham
+2026-09-30T22:56:01-04:00 would add new issue for task-1 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-1 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-1.1 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-1.1 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-1.2 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-1.2 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-1.3 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-1.3 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-1.4 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-1.4 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-1.5 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-1.5 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-1.6 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-1.6 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-1.7 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-1.7 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-10 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-10 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-11 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-11 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-11.1 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-11.1 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-12 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-12 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-12.1 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-12.1 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-13 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-13 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-13.1 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-13.1 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-14 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-14 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-15 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-15 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-16 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-16 <unset>→In Progress
+2026-09-30T22:56:01-04:00 would add new issue for task-2 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-2 <unset>→In Progress
+2026-09-30T22:56:01-04:00 would add new issue for task-3 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-3 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-4 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-4 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-5 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-5 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-6 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-6 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-7 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-7 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-8 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-8 <unset>→To Do
+2026-09-30T22:56:01-04:00 would add new issue for task-9 to project
+2026-09-30T22:56:01-04:00 would set project status for new issue task-9 <unset>→To Do
+2026-09-30T22:56:01-04:00 sync complete: 26 created, 0 updated, 26 status changes, 0 imported
+```
+
+ArkhamHorror dry-run command:
+/tmp/backlog-sync --config /tmp/ch-arkham-backlog-sync.json --dry-run
+
+ArkhamHorror dry-run full output:
+```text
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror-Apple#5 for task-1
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror-Apple#2 for task-1.1
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror-Apple#3 for task-1.2
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror-Apple#75 for task-1.2.1
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror-Apple#4 for task-1.4
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror#5 for task-2
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror#1 for task-2.1
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror#2 for task-2.2
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror#3 for task-2.3
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror#4 for task-2.4
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror#28 for task-2.5
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror#37 for task-2.6
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror#39 for task-2.7
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror#88 for task-2.8
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror-Linux#5 for task-3
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror-Linux#1 for task-3.1
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror-Linux#2 for task-3.2
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror-Linux#17 for task-3.2.1
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror-Linux#23 for task-3.2.4
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror-Linux#3 for task-3.3
+2026-09-30T22:56:11-04:00 adopt referenced issue djensenius/ArkhamHorror-Linux#4 for task-3.4
+2026-09-30T22:56:11-04:00 would create label "area:ui" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:low" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create issue task-1.10: Apple: renderer follow-ups (German string, shared test helpers) in djensenius/ArkhamHorror-Apple
+2026-09-30T22:56:11-04:00 would create label "area:contract" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "area:ui" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create issue task-1.2.10: Apple: in-game deck and campaign prompts in djensenius/ArkhamHorror-Apple
+2026-09-30T22:56:11-04:00 would create label "area:ui" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create issue task-1.2.11: Apple: campaign log, resolutions and XP upgrades in djensenius/ArkhamHorror-Apple
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:high" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "type:test" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create issue task-1.2.12: Apple: Night of the Zealot playthrough with each core investigator in djensenius/ArkhamHorror-Apple
+2026-09-30T22:56:11-04:00 would create label "area:ui" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create issue task-1.2.2: Apple: native create-game flow in djensenius/ArkhamHorror-Apple
+2026-09-30T22:56:11-04:00 would create label "area:contract" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "area:ui" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create issue task-1.2.3: Apple: deck management, ArkhamDB import and deck choice in djensenius/ArkhamHorror-Apple
+2026-09-30T22:56:11-04:00 would create label "area:ui" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create issue task-1.2.4: Apple: render board cards and link prompt choices in djensenius/ArkhamHorror-Apple
+2026-09-30T22:56:11-04:00 would create label "area:contract" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create issue task-1.2.5: Apple: repin contract to schema 0.1.46 in djensenius/ArkhamHorror-Apple
+2026-09-30T22:56:11-04:00 would create label "area:contract" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create issue task-1.2.6: Apple: repin to 0.1.47 and decode generic question presentations (v2) in djensenius/ArkhamHorror-Apple
+2026-09-30T22:56:11-04:00 would create label "area:a11y" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "area:ui" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:high" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create issue task-1.2.7: Apple: generic single-choice renderer in djensenius/ArkhamHorror-Apple
+2026-09-30T22:56:11-04:00 would create label "area:ui" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create issue task-1.2.8: Apple: multi-select prompt UX (pick counter and Done) in djensenius/ArkhamHorror-Apple
+2026-09-30T22:56:11-04:00 would create label "area:contract" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "area:ui" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:high" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create issue task-1.2.9: Apple: amounts, payment and exchange answers in djensenius/ArkhamHorror-Apple
+2026-09-30T22:56:11-04:00 would create label "area:a11y" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "area:input" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create issue task-1.3: Apple: board keyboard/controller focus for cards and enemies in djensenius/ArkhamHorror-Apple
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:low" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "type:test" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create issue task-1.5: Apple: follow-ups from PR #76 in djensenius/ArkhamHorror-Apple
+2026-09-30T22:56:11-04:00 would create label "area:ui" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:low" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create issue task-1.6: Apple: deck picker stuck after a rejected deck in djensenius/ArkhamHorror-Apple
+2026-09-30T22:56:11-04:00 would create label "area:ui" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:low" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create issue task-1.7: Apple: board layout follow-ups in djensenius/ArkhamHorror-Apple
+2026-09-30T22:56:11-04:00 would create label "area:infra" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:low" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create issue task-1.8: Apple: replay self-test fails locally (passes in CI) in djensenius/ArkhamHorror-Apple
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:low" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "type:docs" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create issue task-1.9: Apple: TokenCAS.swift doc pointer in djensenius/ArkhamHorror-Apple
+2026-09-30T22:56:11-04:00 would create label "area:infra" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create issue task-2.10: Fork: upstream sync to 7b6f370 (schema 0.1.46) in djensenius/ArkhamHorror
+2026-09-30T22:56:11-04:00 would create label "area:contract" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create issue task-2.11: Fork: complete generic question presentation (schema 0.1.47) in djensenius/ArkhamHorror
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "priority:low" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "type:test" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create issue task-2.12: Fork: ChooseSome1 clamp comment and unit test in djensenius/ArkhamHorror
+2026-09-30T22:56:11-04:00 would create label "area:contract" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "priority:low" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create issue task-2.13: Fork: tighten presentation enums and govern DeckAnswer.overlay in djensenius/ArkhamHorror
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "priority:low" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "type:test" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create issue task-2.14: Fork: legacy-save decode test and documented replay-fixture regeneration in djensenius/ArkhamHorror
+2026-09-30T22:56:11-04:00 would create label "area:infra" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "priority:low" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create issue task-2.15: Fork: replay-attestation generator in djensenius/ArkhamHorror
+2026-09-30T22:56:11-04:00 would create label "area:infra" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "priority:low" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create issue task-2.16: Fork: decouple locale-catalog tooling provenance from schemaRevision in djensenius/ArkhamHorror
+2026-09-30T22:56:11-04:00 would create label "area:infra" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "priority:low" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create issue task-2.17: Fork: trim fork-only server machinery in djensenius/ArkhamHorror
+2026-09-30T22:56:11-04:00 would create label "area:infra" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "priority:low" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create issue task-2.18: Fork: locale generator follow-ups in djensenius/ArkhamHorror
+2026-09-30T22:56:11-04:00 would create label "area:infra" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create issue task-2.9: Fork: cleanup (restore upstream offline/, Python identity, Haskell toolchain opt-in) in djensenius/ArkhamHorror
+2026-09-30T22:56:11-04:00 would create label "area:assets" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create issue task-3.2.2: Linux: fetch /site-settings.assetHost for the image provider in djensenius/ArkhamHorror-Linux
+2026-09-30T22:56:11-04:00 would create label "area:contract" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "priority:high" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create issue task-3.2.3: Linux: repin to schema 0.1.47 in djensenius/ArkhamHorror-Linux
+2026-09-30T22:56:11-04:00 would create label "area:contract" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "priority:low" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create issue task-3.2.5: Linux: tolerant response-decoding policy in djensenius/ArkhamHorror-Linux
+2026-09-30T22:56:11-04:00 would create label "area:assets" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "area:ui" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create issue task-3.3.1: Linux: card UI and mutated-art mapping in djensenius/ArkhamHorror-Linux
+2026-09-30T22:56:11-04:00 would create label "area:infra" in djensenius/ArkhamHorror-Project if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Project if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Project if missing
+2026-09-30T22:56:11-04:00 would create issue task-4: Project housekeeping in djensenius/ArkhamHorror-Project
+2026-09-30T22:56:11-04:00 would create label "area:infra" in djensenius/ArkhamHorror-Project if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Project if missing
+2026-09-30T22:56:11-04:00 would create label "priority:high" in djensenius/ArkhamHorror-Project if missing
+2026-09-30T22:56:11-04:00 would create issue task-4.1: Migrate tracking to Backlog.md and mirror to a GitHub Project in djensenius/ArkhamHorror-Project
+2026-09-30T22:56:11-04:00 would create label "area:infra" in djensenius/ArkhamHorror-Project if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Project if missing
+2026-09-30T22:56:11-04:00 would create label "priority:high" in djensenius/ArkhamHorror-Project if missing
+2026-09-30T22:56:11-04:00 would create issue task-4.1.1: Meta: adopt canadian-ham's generic backlog-sync for the GitHub Project mirror in djensenius/ArkhamHorror-Project
+2026-09-30T22:56:11-04:00 would create label "area:infra" in djensenius/ArkhamHorror-Project if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Project if missing
+2026-09-30T22:56:11-04:00 would create label "priority:low" in djensenius/ArkhamHorror-Project if missing
+2026-09-30T22:56:11-04:00 would create issue task-4.2: Triage Dependabot PRs across the three repos in djensenius/ArkhamHorror-Project
+2026-09-30T22:56:11-04:00 would create label "area:infra" in djensenius/ArkhamHorror-Project if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Project if missing
+2026-09-30T22:56:11-04:00 would create label "priority:low" in djensenius/ArkhamHorror-Project if missing
+2026-09-30T22:56:11-04:00 would create issue task-4.3: Clean up merged local branches and stray worktrees in djensenius/ArkhamHorror-Project
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Project if missing
+2026-09-30T22:56:11-04:00 would create label "owner" in djensenius/ArkhamHorror-Project if missing
+2026-09-30T22:56:11-04:00 would create label "priority:high" in djensenius/ArkhamHorror-Project if missing
+2026-09-30T22:56:11-04:00 would create issue task-4.4: Owner: deploy fork f3a0acb (schema 0.1.47) before the next Apple build in djensenius/ArkhamHorror-Project
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:high" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "roadmap" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror-Apple#5 fields: title, body, labels
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror-Apple#5 to project
+2026-09-30T22:56:11-04:00 would create label "accessibility" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "area:a11y" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "area:assets" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "area:contract" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "area:input" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "assets" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "contract" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "controller" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "phase" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror-Apple#2 fields: title, body, labels, state
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror-Apple#2 to project
+2026-09-30T22:56:11-04:00 would add new issue for task-1.10 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-1.10 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-1.10 to "low"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-1.10 to "Later"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-1.10 to "apple"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-1.10 to "task-1.10"
+2026-09-30T22:56:11-04:00 would create label "area:contract" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "area:ui" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "contract" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "controller" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "phase" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:high" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror-Apple#3 fields: title, body, labels
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror-Apple#3 to project
+2026-09-30T22:56:11-04:00 would create label "area:contract" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "area:input" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "contract" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "controller" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror-Apple#75 fields: title, body, labels, state
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror-Apple#75 to project
+2026-09-30T22:56:11-04:00 would add new issue for task-1.2.10 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-1.2.10 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-1.2.10 to "M1: Night of the Zealot on Apple"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-1.2.10 to "apple"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-1.2.10 to "task-1.2.10"
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-1.2.10 to "medium"
+2026-09-30T22:56:11-04:00 would add new issue for task-1.2.11 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-1.2.11 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-1.2.11 to "medium"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-1.2.11 to "M1: Night of the Zealot on Apple"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-1.2.11 to "apple"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-1.2.11 to "task-1.2.11"
+2026-09-30T22:56:11-04:00 would add new issue for task-1.2.12 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-1.2.12 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-1.2.12 to "M1: Night of the Zealot on Apple"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-1.2.12 to "apple"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-1.2.12 to "task-1.2.12"
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-1.2.12 to "high"
+2026-09-30T22:56:11-04:00 would add new issue for task-1.2.2 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-1.2.2 <unset>→Done
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-1.2.2 to "apple"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-1.2.2 to "task-1.2.2"
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-1.2.2 to "medium"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-1.2.2 to "M1: Night of the Zealot on Apple"
+2026-09-30T22:56:11-04:00 would add new issue for task-1.2.3 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-1.2.3 <unset>→Done
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-1.2.3 to "M1: Night of the Zealot on Apple"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-1.2.3 to "apple"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-1.2.3 to "task-1.2.3"
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-1.2.3 to "medium"
+2026-09-30T22:56:11-04:00 would add new issue for task-1.2.4 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-1.2.4 <unset>→Done
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-1.2.4 to "medium"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-1.2.4 to "M1: Night of the Zealot on Apple"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-1.2.4 to "apple"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-1.2.4 to "task-1.2.4"
+2026-09-30T22:56:11-04:00 would add new issue for task-1.2.5 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-1.2.5 <unset>→Done
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-1.2.5 to "medium"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-1.2.5 to "M1: Night of the Zealot on Apple"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-1.2.5 to "apple"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-1.2.5 to "task-1.2.5"
+2026-09-30T22:56:11-04:00 would add new issue for task-1.2.6 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-1.2.6 <unset>→Done
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-1.2.6 to "medium"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-1.2.6 to "M1: Night of the Zealot on Apple"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-1.2.6 to "apple"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-1.2.6 to "task-1.2.6"
+2026-09-30T22:56:11-04:00 would add new issue for task-1.2.7 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-1.2.7 <unset>→In Progress
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-1.2.7 to "high"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-1.2.7 to "M1: Night of the Zealot on Apple"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-1.2.7 to "apple"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-1.2.7 to "task-1.2.7"
+2026-09-30T22:56:11-04:00 would add new issue for task-1.2.8 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-1.2.8 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-1.2.8 to "medium"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-1.2.8 to "M1: Night of the Zealot on Apple"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-1.2.8 to "apple"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-1.2.8 to "task-1.2.8"
+2026-09-30T22:56:11-04:00 would add new issue for task-1.2.9 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-1.2.9 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-1.2.9 to "high"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-1.2.9 to "M1: Night of the Zealot on Apple"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-1.2.9 to "apple"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-1.2.9 to "task-1.2.9"
+2026-09-30T22:56:11-04:00 would add new issue for task-1.3 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-1.3 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-1.3 to "medium"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-1.3 to "Later"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-1.3 to "apple"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-1.3 to "task-1.3"
+2026-09-30T22:56:11-04:00 would create label "accessibility" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "area:a11y" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "area:assets" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "area:input" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "assets" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "controller" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "gaming-mats" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "phase" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Apple if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror-Apple#4 fields: title, body, labels
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror-Apple#4 to project
+2026-09-30T22:56:11-04:00 would add new issue for task-1.5 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-1.5 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-1.5 to "low"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-1.5 to "Later"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-1.5 to "apple"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-1.5 to "task-1.5"
+2026-09-30T22:56:11-04:00 would add new issue for task-1.6 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-1.6 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-1.6 to "low"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-1.6 to "Later"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-1.6 to "apple"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-1.6 to "task-1.6"
+2026-09-30T22:56:11-04:00 would add new issue for task-1.7 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-1.7 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-1.7 to "low"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-1.7 to "Later"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-1.7 to "apple"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-1.7 to "task-1.7"
+2026-09-30T22:56:11-04:00 would add new issue for task-1.8 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-1.8 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-1.8 to "low"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-1.8 to "Later"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-1.8 to "apple"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-1.8 to "task-1.8"
+2026-09-30T22:56:11-04:00 would add new issue for task-1.9 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-1.9 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-1.9 to "Later"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-1.9 to "apple"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-1.9 to "task-1.9"
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-1.9 to "low"
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "contract" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "priority:high" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "roadmap" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "upstream-candidate" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror#5 fields: title, body, labels
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror#5 to project
+2026-09-30T22:56:11-04:00 would create label "area:contract" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "contract" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "phase" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "upstream-candidate" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror#1 fields: title, body, labels, state
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror#1 to project
+2026-09-30T22:56:11-04:00 would add new issue for task-2.10 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-2.10 <unset>→Done
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-2.10 to "medium"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-2.10 to "fork"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-2.10 to "task-2.10"
+2026-09-30T22:56:11-04:00 would add new issue for task-2.11 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-2.11 <unset>→Done
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-2.11 to "fork"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-2.11 to "task-2.11"
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-2.11 to "medium"
+2026-09-30T22:56:11-04:00 would add new issue for task-2.12 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-2.12 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-2.12 to "low"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-2.12 to "Later"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-2.12 to "fork"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-2.12 to "task-2.12"
+2026-09-30T22:56:11-04:00 would add new issue for task-2.13 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-2.13 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-2.13 to "task-2.13"
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-2.13 to "low"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-2.13 to "Later"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-2.13 to "fork"
+2026-09-30T22:56:11-04:00 would add new issue for task-2.14 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-2.14 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-2.14 to "low"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-2.14 to "Later"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-2.14 to "fork"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-2.14 to "task-2.14"
+2026-09-30T22:56:11-04:00 would add new issue for task-2.15 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-2.15 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-2.15 to "low"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-2.15 to "Later"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-2.15 to "fork"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-2.15 to "task-2.15"
+2026-09-30T22:56:11-04:00 would add new issue for task-2.16 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-2.16 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-2.16 to "low"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-2.16 to "Later"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-2.16 to "fork"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-2.16 to "task-2.16"
+2026-09-30T22:56:11-04:00 would add new issue for task-2.17 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-2.17 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-2.17 to "low"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-2.17 to "Later"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-2.17 to "fork"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-2.17 to "task-2.17"
+2026-09-30T22:56:11-04:00 would add new issue for task-2.18 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-2.18 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-2.18 to "low"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-2.18 to "Later"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-2.18 to "fork"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-2.18 to "task-2.18"
+2026-09-30T22:56:11-04:00 would create label "area:contract" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "contract" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "phase" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "upstream-candidate" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror#2 fields: title, body, labels, state
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror#2 to project
+2026-09-30T22:56:11-04:00 would create label "area:contract" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "contract" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "phase" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "upstream-candidate" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror#3 fields: title, body, labels
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror#3 to project
+2026-09-30T22:56:11-04:00 would create label "area:contract" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "contract" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "phase" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "priority:low" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "upstream-candidate" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror#4 fields: title, body, labels
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror#4 to project
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "bug" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "type:bug" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "upstream-candidate" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror#28 fields: title, body, labels
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror#28 to project
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "bug" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "type:bug" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "upstream-candidate" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror#37 fields: title, body, labels
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror#37 to project
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "bug" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "type:bug" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "upstream-candidate" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror#39 fields: title, body, labels
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror#39 to project
+2026-09-30T22:56:11-04:00 would create label "area:contract" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror#88 fields: title, body, labels, state
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror#88 to project
+2026-09-30T22:56:11-04:00 would add new issue for task-2.9 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-2.9 <unset>→Done
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-2.9 to "medium"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-2.9 to "fork"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-2.9 to "task-2.9"
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "roadmap" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror-Linux#5 fields: title, body, labels
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror-Linux#5 to project
+2026-09-30T22:56:11-04:00 would create label "area:infra" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "ci" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "phase" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "type:ci" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror-Linux#1 fields: title, body, labels, state
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror-Linux#1 to project
+2026-09-30T22:56:11-04:00 would create label "accessibility" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "area:assets" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "area:contract" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "area:input" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "assets" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "contract" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "controller" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "phase" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror-Linux#2 fields: title, body, labels
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror-Linux#2 to project
+2026-09-30T22:56:11-04:00 would create label "area:assets" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "assets" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "phase" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror-Linux#17 fields: title, body, labels, state
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror-Linux#17 to project
+2026-09-30T22:56:11-04:00 would add new issue for task-3.2.2 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-3.2.2 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-3.2.2 to "medium"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-3.2.2 to "M2: Linux contract parity"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-3.2.2 to "linux"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-3.2.2 to "task-3.2.2"
+2026-09-30T22:56:11-04:00 would add new issue for task-3.2.3 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-3.2.3 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-3.2.3 to "high"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-3.2.3 to "M2: Linux contract parity"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-3.2.3 to "linux"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-3.2.3 to "task-3.2.3"
+2026-09-30T22:56:11-04:00 would create label "area:contract" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "phase" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror-Linux#23 fields: title, body, labels
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror-Linux#23 to project
+2026-09-30T22:56:11-04:00 would add new issue for task-3.2.5 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-3.2.5 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-3.2.5 to "low"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-3.2.5 to "M2: Linux contract parity"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-3.2.5 to "linux"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-3.2.5 to "task-3.2.5"
+2026-09-30T22:56:11-04:00 would create label "area:contract" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "area:ui" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "contract" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "controller" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "phase" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror-Linux#3 fields: title, body, labels
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror-Linux#3 to project
+2026-09-30T22:56:11-04:00 would add new issue for task-3.3.1 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-3.3.1 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-3.3.1 to "medium"
+2026-09-30T22:56:11-04:00 would set project field "Backlog milestone" for new issue task-3.3.1 to "Later"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-3.3.1 to "linux"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-3.3.1 to "task-3.3.1"
+2026-09-30T22:56:11-04:00 would create label "accessibility" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "area:a11y" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "area:packaging" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "assets" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "backlog" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "controller" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "gaming-mats" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "phase" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would create label "priority:medium" in djensenius/ArkhamHorror-Linux if missing
+2026-09-30T22:56:11-04:00 would update issue djensenius/ArkhamHorror-Linux#4 fields: title, body, labels
+2026-09-30T22:56:11-04:00 would add issue djensenius/ArkhamHorror-Linux#4 to project
+2026-09-30T22:56:11-04:00 would add new issue for task-4 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-4 <unset>→In Progress
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-4 to "meta"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-4 to "task-4"
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-4 to "medium"
+2026-09-30T22:56:11-04:00 would add new issue for task-4.1 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-4.1 <unset>→In Progress
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-4.1 to "task-4.1"
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-4.1 to "high"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-4.1 to "meta"
+2026-09-30T22:56:11-04:00 would add new issue for task-4.1.1 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-4.1.1 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-4.1.1 to "high"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-4.1.1 to "meta"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-4.1.1 to "task-4.1.1"
+2026-09-30T22:56:11-04:00 would add new issue for task-4.2 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-4.2 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-4.2 to "low"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-4.2 to "meta"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-4.2 to "task-4.2"
+2026-09-30T22:56:11-04:00 would add new issue for task-4.3 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-4.3 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-4.3 to "low"
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-4.3 to "meta"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-4.3 to "task-4.3"
+2026-09-30T22:56:11-04:00 would add new issue for task-4.4 to project
+2026-09-30T22:56:11-04:00 would set project status for new issue task-4.4 <unset>→To Do
+2026-09-30T22:56:11-04:00 would set project field "Area" for new issue task-4.4 to "meta"
+2026-09-30T22:56:11-04:00 would set project field "Task ID" for new issue task-4.4 to "task-4.4"
+2026-09-30T22:56:11-04:00 would set project field "Priority" for new issue task-4.4 to "high"
+2026-09-30T22:56:12-04:00 would link djensenius/ArkhamHorror-Apple#2 under parent djensenius/ArkhamHorror-Apple#5
+2026-09-30T22:56:12-04:00 would link djensenius/ArkhamHorror-Apple#3 under parent djensenius/ArkhamHorror-Apple#5
+2026-09-30T22:56:13-04:00 would link djensenius/ArkhamHorror-Apple#75 under parent djensenius/ArkhamHorror-Apple#3
+2026-09-30T22:56:13-04:00 would link djensenius/ArkhamHorror-Apple#4 under parent djensenius/ArkhamHorror-Apple#5
+2026-09-30T22:56:13-04:00 would link djensenius/ArkhamHorror#1 under parent djensenius/ArkhamHorror#5
+2026-09-30T22:56:14-04:00 would link djensenius/ArkhamHorror#2 under parent djensenius/ArkhamHorror#5
+2026-09-30T22:56:14-04:00 would link djensenius/ArkhamHorror#3 under parent djensenius/ArkhamHorror#5
+2026-09-30T22:56:15-04:00 would link djensenius/ArkhamHorror#4 under parent djensenius/ArkhamHorror#5
+2026-09-30T22:56:15-04:00 would link djensenius/ArkhamHorror#28 under parent djensenius/ArkhamHorror#5
+2026-09-30T22:56:16-04:00 would link djensenius/ArkhamHorror#37 under parent djensenius/ArkhamHorror#5
+2026-09-30T22:56:16-04:00 would link djensenius/ArkhamHorror#39 under parent djensenius/ArkhamHorror#5
+2026-09-30T22:56:17-04:00 would link djensenius/ArkhamHorror#88 under parent djensenius/ArkhamHorror#5
+2026-09-30T22:56:17-04:00 would link djensenius/ArkhamHorror-Linux#1 under parent djensenius/ArkhamHorror-Linux#5
+2026-09-30T22:56:17-04:00 would link djensenius/ArkhamHorror-Linux#2 under parent djensenius/ArkhamHorror-Linux#5
+2026-09-30T22:56:18-04:00 would link djensenius/ArkhamHorror-Linux#17 under parent djensenius/ArkhamHorror-Linux#2
+2026-09-30T22:56:18-04:00 would link djensenius/ArkhamHorror-Linux#23 under parent djensenius/ArkhamHorror-Linux#2
+2026-09-30T22:56:19-04:00 would link djensenius/ArkhamHorror-Linux#3 under parent djensenius/ArkhamHorror-Linux#5
+2026-09-30T22:56:19-04:00 would link djensenius/ArkhamHorror-Linux#4 under parent djensenius/ArkhamHorror-Linux#5
+2026-09-30T22:56:19-04:00 sync complete: 38 created, 21 updated, 38 status changes, 0 imported
+```
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
