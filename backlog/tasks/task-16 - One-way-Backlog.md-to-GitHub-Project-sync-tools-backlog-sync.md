@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:33'
-updated_date: '2026-10-01 02:46'
+updated_date: '2026-10-01 02:48'
 labels:
   - ci
   - tooling
@@ -29,6 +29,14 @@ We moved tracking to Backlog.md, but the owner wants to see work on GitHub, and 
 - [x] #5 Inbox: open issues labelled 'inbox' become new To Do tasks (create only), then the label is removed and the marker added
 - [x] #6 launchd plist and install steps are documented, and logs go to a file
 - [x] #7 Go unit tests cover resolution, rendering, marker matching, diffing and inbox import without network access
+- [ ] #8 ArkhamHorror multi-repo placement maps Backlog project values to configured issue repos, searches all configured repos for existing markers, refuses all GitHub reads/writes outside the allowlist, and never duplicates issues when a task moves repos.
+- [ ] #9 Nested task IDs such as TASK-1.2.7 normalize consistently for markers, title prefixes, branch ownership and matching.
+- [ ] #10 Referenced GitHub issues can be adopted behind adoptReferencedIssues without adopting pull requests, mismatched repos, or issues carrying a different marker.
+- [ ] #11 Managed-label sync supports exact/prefix/* allowlists, addAlways, priority labels, case-insensitive comparison, missing-label creation, and never touches the inbox label or unmanaged labels.
+- [ ] #12 Optional extra Project fields for priority, milestone title, area, task ID and branch are updated only when configured and safe, with absent fields/options handled without data loss.
+- [ ] #13 Configured sub-issues link child issues under parent issues when needed and warn once on unsupported cross-repo linking.
+- [ ] #14 Inbox import scans every configured repo, guards against existing references before creating tasks, writes only from a clean main worktree, removes inbox labels, marks imported issues, and pushes main only when configured.
+- [ ] #15 One binary works for multiple config files with per-config launchd install and per-config locking so independent configs can run side by side.
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -41,6 +49,8 @@ We moved tracking to Backlog.md, but the owner wants to see work on GitHub, and 
 5. Validate with go vet, go test, go build, and one read-only dry run; then update Backlog task evidence without marking coordinator-only real-run/install evidence complete.
 
 6. Fix review blockers and correctness/test gaps, generalize configuration for reuse in other repos, validate with tests/build/vet plus one read-only dry run, then leave task-16 In Progress for coordinator real-run evidence.
+
+7. Generalize backlog-sync around JSON configuration, multi-repo allowlists, task-prefix normalization, managed labels/fields/sub-issues/inbox behavior, per-config locking and launchd install, then validate with unit tests/build/vet and read-only dry runs only.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -51,6 +61,8 @@ Read-only dry-run against /Users/david/Developer/canadian-ham and GitHub Project
 Coordinator follow-up after review: perform the real GitHub sync and install/bootstrap the launchd plist if desired; I did not perform real writes or install launchd.
 
 Fix round 2 workflow correction: AC #3 and #4 are unchecked and remain pending until the coordinator performs a real GitHub sync/no-op verification; this round will provide only read-only dry-run evidence.
+
+Round 2 start: AC #3 and #4 remain unchecked pending the coordinator's real-run status/no-op evidence. ArkhamHorror scope is owner-approved; adding explicit ACs before implementation.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
