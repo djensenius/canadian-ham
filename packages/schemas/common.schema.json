@@ -16,16 +16,15 @@
       "const": "basic-2025-07-15"
     },
     "categoryId": {
-      "type": "string",
-      "pattern": "^B-\\d{3}$"
+      "enum": ["B-001", "B-002", "B-003", "B-004", "B-005", "B-006", "B-007", "B-008"]
     },
     "subsectionId": {
       "type": "string",
-      "pattern": "^B-\\d{3}-\\d{3}$"
+      "pattern": "^B-00[1-8]-\\d{3}$"
     },
     "questionId": {
       "type": "string",
-      "pattern": "^B-\\d{3}-\\d{3}-\\d{3}$"
+      "pattern": "^B-00[1-8]-\\d{3}-\\d{3}$"
     },
     "lessonId": {
       "type": "string",
@@ -105,14 +104,69 @@
         "subsectionId": { "$ref": "#/$defs/subsectionId" },
         "sourceOrder": {
           "type": "integer",
-          "minimum": 1
+          "minimum": 1,
+          "maximum": 984
         },
         "text": { "$ref": "#/$defs/localizedText" },
         "answers": {
           "type": "array",
           "minItems": 4,
           "maxItems": 4,
-          "items": { "$ref": "#/$defs/answer" }
+          "prefixItems": [
+            {
+              "allOf": [
+                { "$ref": "#/$defs/answer" },
+                {
+                  "type": "object",
+                  "required": ["sourceIndex", "isCorrect"],
+                  "properties": {
+                    "sourceIndex": { "const": 0 },
+                    "isCorrect": { "const": true }
+                  }
+                }
+              ]
+            },
+            {
+              "allOf": [
+                { "$ref": "#/$defs/answer" },
+                {
+                  "type": "object",
+                  "required": ["sourceIndex", "isCorrect"],
+                  "properties": {
+                    "sourceIndex": { "const": 1 },
+                    "isCorrect": { "const": false }
+                  }
+                }
+              ]
+            },
+            {
+              "allOf": [
+                { "$ref": "#/$defs/answer" },
+                {
+                  "type": "object",
+                  "required": ["sourceIndex", "isCorrect"],
+                  "properties": {
+                    "sourceIndex": { "const": 2 },
+                    "isCorrect": { "const": false }
+                  }
+                }
+              ]
+            },
+            {
+              "allOf": [
+                { "$ref": "#/$defs/answer" },
+                {
+                  "type": "object",
+                  "required": ["sourceIndex", "isCorrect"],
+                  "properties": {
+                    "sourceIndex": { "const": 3 },
+                    "isCorrect": { "const": false }
+                  }
+                }
+              ]
+            }
+          ],
+          "items": false
         }
       },
       "additionalProperties": false
@@ -150,22 +204,27 @@
         "categoryId": { "$ref": "#/$defs/categoryId" },
         "questionIds": {
           "type": "array",
+          "minItems": 4,
+          "maxItems": 11,
+          "uniqueItems": true,
           "items": { "$ref": "#/$defs/questionId" }
         },
         "questionCount": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 4,
+          "maximum": 11
         },
         "lessonIds": {
           "type": "array",
+          "maxItems": 0,
           "items": { "$ref": "#/$defs/lessonId" }
         },
         "title": {
           "type": "object",
           "required": ["en", "fr"],
           "properties": {
-            "en": { "type": ["string", "null"] },
-            "fr": { "type": ["string", "null"] }
+            "en": { "const": null },
+            "fr": { "const": null }
           },
           "additionalProperties": false
         }

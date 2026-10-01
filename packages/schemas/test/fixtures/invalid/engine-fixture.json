@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "kind": "scoring",
+  "cases": [
+    {
+      "id": "bad-question-id",
+      "input": {
+        "items": [
+          {
+            "questionId": "B-009-001-001",
+            "categoryId": "B-009",
+            "subsectionId": "B-009-001",
+            "selectedSourceIndex": 4
+          }
+        ]
+      },
+      "expectedOutput": {
+        "correct": 1,
+        "total": 1,
+        "percent": 101,
+        "passed": false,
+        "honours": false,
+        "categoryBreakdown": [],
+        "incorrectQuestionIds": [],
+        "weakSubsectionIds": []
+      }
+    }
+  ]
+}

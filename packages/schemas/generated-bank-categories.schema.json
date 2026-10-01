@@ -3,5 +3,113 @@
   "$id": "generated-bank-categories.schema.json",
   "title": "Generated ISED Basic bank categories",
   "type": "array",
-  "items": { "$ref": "common.schema.json#/$defs/generatedCategory" }
+  "minItems": 8,
+  "maxItems": 8,
+  "items": {
+    "allOf": [
+      { "$ref": "common.schema.json#/$defs/generatedCategory" },
+      {
+        "oneOf": [
+          { "$ref": "#/$defs/B-001" },
+          { "$ref": "#/$defs/B-002" },
+          { "$ref": "#/$defs/B-003" },
+          { "$ref": "#/$defs/B-004" },
+          { "$ref": "#/$defs/B-005" },
+          { "$ref": "#/$defs/B-006" },
+          { "$ref": "#/$defs/B-007" },
+          { "$ref": "#/$defs/B-008" }
+        ]
+      }
+    ]
+  },
+  "$defs": {
+    "B-001": { "$ref": "#/$defs/categoryB001" },
+    "B-002": { "$ref": "#/$defs/categoryB002" },
+    "B-003": { "$ref": "#/$defs/categoryB003" },
+    "B-004": { "$ref": "#/$defs/categoryB004" },
+    "B-005": { "$ref": "#/$defs/categoryB005" },
+    "B-006": { "$ref": "#/$defs/categoryB006" },
+    "B-007": { "$ref": "#/$defs/categoryB007" },
+    "B-008": { "$ref": "#/$defs/categoryB008" },
+    "categoryB001": {
+      "type": "object",
+      "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"],
+      "properties": {
+        "id": { "const": "B-001" },
+        "questionCount": { "const": 199 },
+        "subsectionCount": { "const": 25 },
+        "examQuestionCount": { "const": 25 }
+      }
+    },
+    "categoryB002": {
+      "type": "object",
+      "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"],
+      "properties": {
+        "id": { "const": "B-002" },
+        "questionCount": { "const": 99 },
+        "subsectionCount": { "const": 9 },
+        "examQuestionCount": { "const": 9 }
+      }
+    },
+    "categoryB003": {
+      "type": "object",
+      "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"],
+      "properties": {
+        "id": { "const": "B-003" },
+        "questionCount": { "const": 199 },
+        "subsectionCount": { "const": 21 },
+        "examQuestionCount": { "const": 21 }
+      }
+    },
+    "categoryB004": {
+      "type": "object",
+      "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"],
+      "properties": {
+        "id": { "const": "B-004" },
+        "questionCount": { "const": 63 },
+        "subsectionCount": { "const": 6 },
+        "examQuestionCount": { "const": 6 }
+      }
+    },
+    "categoryB005": {
+      "type": "object",
+      "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"],
+      "properties": {
+        "id": { "const": "B-005" },
+        "questionCount": { "const": 142 },
+        "subsectionCount": { "const": 13 },
+        "examQuestionCount": { "const": 13 }
+      }
+    },
+    "categoryB006": {
+      "type": "object",
+      "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"],
+      "properties": {
+        "id": { "const": "B-006" },
+        "questionCount": { "const": 140 },
+        "subsectionCount": { "const": 13 },
+        "examQuestionCount": { "const": 13 }
+      }
+    },
+    "categoryB007": {
+      "type": "object",
+      "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"],
+      "properties": {
+        "id": { "const": "B-007" },
+        "questionCount": { "const": 87 },
+        "subsectionCount": { "const": 8 },
+        "examQuestionCount": { "const": 8 }
+      }
+    },
+    "categoryB008": {
+      "type": "object",
+      "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"],
+      "properties": {
+        "id": { "const": "B-008" },
+        "questionCount": { "const": 55 },
+        "subsectionCount": { "const": 5 },
+        "examQuestionCount": { "const": 5 }
+      }
+    }
+  }
 }

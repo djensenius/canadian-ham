@@ -1,0 +1,9 @@
+{
+  "schema": "canadian-ham.progress-export",
+  "version": 1,
+  "exportedAt": "2026-02-31T25:61:61.000Z",
+  "bankId": "basic-2025-07-15",
+  "questionProgress": [],
+  "examAttempts": [],
+  "preferences": { "practiceMode": "invalid", "examTimerEnabled": false }
+}

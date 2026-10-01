@@ -1,7 +1,12 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 
 import { parseLessonFrontMatter, validateDataAgainstSchema } from "./validate.mjs";
+
+const fixturesDir = path.join(path.dirname(fileURLToPath(import.meta.url)), "test/fixtures/valid");
 
 const validLessonFrontMatter = {
   type: "lesson",
@@ -93,3 +98,58 @@ test("front matter parser rejects duplicate nested keys", () => {
     /duplicate nested key en/,
   );
 });
+
+test("generated bank manifest rejects importer contract drift", () => {
+  const manifest = readValidFixture("generated-bank-manifest.json");
+  assertSchemaRejects(
+    { ...manifest, source: { ...manifest.source, lineEndings: "LF" } },
+    "generated-bank-manifest.schema.json",
+    "$.source.lineEndings: expected const \"CRLF\"",
+  );
+  assertSchemaRejects(
+    { ...manifest, counts: { ...manifest.counts, questions: 983 } },
+    "generated-bank-manifest.schema.json",
+    "$.counts.questions: expected const 984",
+  );
+});
+
+test("generated bank questions reject importer answer ordering and sourceOrder drift", () => {
+  const [question] = readValidFixture("generated-bank-questions.json");
+  assertSchemaRejects(
+    [{ ...question, sourceOrder: 985 }],
+    "generated-bank-questions.schema.json",
+    "$[0].sourceOrder: expected number <= 984",
+  );
+  assertSchemaRejects(
+    [{ ...question, answers: [{ ...question.answers[0], sourceIndex: 1 }, ...question.answers.slice(1)] }],
+    "generated-bank-questions.schema.json",
+    "$[0].answers[0].sourceIndex: expected const 0",
+  );
+});
+
+test("generated bank categories reject authoritative count drift", () => {
+  const categories = readValidFixture("generated-bank-categories.json");
+  assertSchemaRejects(
+    [{ ...categories[0], questionCount: 198 }, ...categories.slice(1)],
+    "generated-bank-categories.schema.json",
+    "$[0].questionCount: expected const 199",
+  );
+});
+
+test("generated bank subsections reject non-importer lesson and title fields", () => {
+  const [subsection] = readValidFixture("generated-bank-subsections.json");
+  assertSchemaRejects(
+    [{ ...subsection, lessonIds: ["L-001-01"] }],
+    "generated-bank-subsections.schema.json",
+    "$[0].lessonIds: expected at most 0 item(s)",
+  );
+  assertSchemaRejects(
+    [{ ...subsection, title: { en: "Draft title", fr: null } }],
+    "generated-bank-subsections.schema.json",
+    "$[0].title.en: expected const null",
+  );
+});
+
+function readValidFixture(fixture) {
+  return JSON.parse(fs.readFileSync(path.join(fixturesDir, fixture), "utf8"));
+}
