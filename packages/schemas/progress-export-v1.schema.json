@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "progress-export-v1.schema.json",
+  "title": "Canadian Ham progress export v1",
+  "type": "object",
+  "required": ["schema", "version", "exportedAt", "bankId", "questionProgress", "examAttempts", "preferences"],
+  "properties": {
+    "schema": { "const": "canadian-ham.progress-export" },
+    "version": { "const": 1 },
+    "exportedAt": { "$ref": "common.schema.json#/$defs/canonicalUtcTimestamp" },
+    "bankId": { "$ref": "common.schema.json#/$defs/bankId" },
+    "questionProgress": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/questionProgressRecord" }
+    },
+    "examAttempts": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/progressExamAttempt" }
+    },
+    "lessonProgress": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/lessonProgressRecord" }
+    },
+    "lessonQuizAttempts": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/lessonQuizAttempt" }
+    },
+    "preferences": { "$ref": "common.schema.json#/$defs/webPreferences" }
+  },
+  "additionalProperties": false
+}

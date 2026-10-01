@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lesson-module-front-matter.schema.json",
+  "title": "Lesson module Markdown front matter",
+  "type": "object",
+  "required": ["type", "id", "categoryId", "order", "title", "lessonIds", "status"],
+  "properties": {
+    "type": { "const": "module" },
+    "id": { "$ref": "common.schema.json#/$defs/moduleId" },
+    "categoryId": { "$ref": "common.schema.json#/$defs/categoryId" },
+    "order": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "title": { "$ref": "common.schema.json#/$defs/nullableLocalizedText" },
+    "lessonIds": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/lessonId" }
+    },
+    "status": { "enum": ["draft", "outline"] }
+  },
+  "additionalProperties": false
+}

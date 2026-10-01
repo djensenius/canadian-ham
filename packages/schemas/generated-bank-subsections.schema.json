@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "generated-bank-subsections.schema.json",
+  "title": "Generated ISED Basic bank subsections",
+  "type": "array",
+  "items": { "$ref": "common.schema.json#/$defs/generatedSubsection" }
+}

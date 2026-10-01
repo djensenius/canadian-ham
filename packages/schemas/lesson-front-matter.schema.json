@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lesson-front-matter.schema.json",
+  "title": "Lesson Markdown front matter",
+  "type": "object",
+  "required": ["type", "id", "moduleId", "categoryIds", "title", "covers", "objectives", "prerequisites", "estimatedMinutes", "quizIds", "status"],
+  "properties": {
+    "type": { "const": "lesson" },
+    "id": { "$ref": "common.schema.json#/$defs/lessonId" },
+    "moduleId": { "$ref": "common.schema.json#/$defs/moduleId" },
+    "categoryIds": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/categoryId" }
+    },
+    "title": { "$ref": "common.schema.json#/$defs/nullableLocalizedText" },
+    "covers": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/subsectionId" }
+    },
+    "objectives": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "prerequisites": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/lessonId" }
+    },
+    "estimatedMinutes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "quizIds": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/quizId" }
+    },
+    "status": { "enum": ["draft", "outline"] }
+  },
+  "additionalProperties": false
+}

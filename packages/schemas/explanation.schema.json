@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "explanation.schema.json",
+  "title": "Question explanation JSON",
+  "type": "object",
+  "required": ["id", "questionId", "bankId", "status", "body", "citations", "licenseClass"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^EXP-B-\\d{3}-\\d{3}-\\d{3}$"
+    },
+    "questionId": { "$ref": "common.schema.json#/$defs/questionId" },
+    "bankId": { "$ref": "common.schema.json#/$defs/bankId" },
+    "status": { "enum": ["draft", "outline"] },
+    "body": { "$ref": "common.schema.json#/$defs/nullableLocalizedText" },
+    "citations": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["type", "id"],
+            "properties": {
+              "type": { "const": "lesson" },
+              "id": { "$ref": "common.schema.json#/$defs/lessonId" }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": ["type", "id"],
+            "properties": {
+              "type": { "const": "question" },
+              "id": { "$ref": "common.schema.json#/$defs/questionId" }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": ["type", "url"],
+            "properties": {
+              "type": { "enum": ["rbr-4"] },
+              "url": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "licenseClass": { "const": "original" }
+  },
+  "additionalProperties": false
+}
