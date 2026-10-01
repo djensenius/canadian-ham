@@ -1,5 +1,5 @@
 import categoriesJson from "../../../../content/generated/basic-2025-07-15/categories.json";
-import manifestJson from "../../../../content/generated/basic-2025-07-15/manifest.json";
+import { bankId as manifestBankId, counts as manifestCounts, effectiveDate as manifestEffectiveDate } from "../../../../content/generated/basic-2025-07-15/manifest.json";
 import questionsJsonUrl from "../../../../content/generated/basic-2025-07-15/questions.json?url";
 import subsectionsJson from "../../../../content/generated/basic-2025-07-15/subsections.json";
 import subsectionTitlesJson from "../../../../content/subsection-titles.json";
@@ -73,7 +73,11 @@ export interface BankManifest {
   };
 }
 
-export const manifest = manifestJson as BankManifest;
+export const manifest: BankManifest = {
+  bankId: manifestBankId,
+  effectiveDate: manifestEffectiveDate,
+  counts: manifestCounts,
+};
 export const categories = categoriesJson as readonly Category[];
 export const subsections = subsectionsJson as readonly Subsection[];
 export const subsectionTitles = subsectionTitlesJson as readonly SubsectionTitle[];

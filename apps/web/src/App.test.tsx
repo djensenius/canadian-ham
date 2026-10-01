@@ -11,7 +11,7 @@ import { IDBFactory } from "fake-indexeddb";
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
 
 import { App, AppErrorBoundary, CitationLink, ExplanationPanel } from "./App";
-import { bankId, loadQuestions, loadQuestionsFromUrl, type Question } from "./data/bank";
+import { bankId, loadQuestions, loadQuestionsFromUrl, type Answer, type Question } from "./data/bank";
 import { explanationForQuestion, parseChoiceNotes } from "./data/explanations";
 import { lessonQuizzesById, buildLessonQuizItems } from "./data/quizzes";
 import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExportV1, type WebPreferences } from "./lib/progressStore";
@@ -237,7 +237,7 @@ function assertChoiceNoteMapping(quizId: string): void {
     assert.ok(notes.length > 0);
     for (const note of notes) {
       const displayedIndex = officialItem.choicePermutation.findIndex((sourceIndex) => sourceIndex === note.sourceIndex);
-      const answer = question.answers.find((candidate) => candidate.sourceIndex === note.sourceIndex);
+      const answer: Answer | undefined = question.answers.find((candidate) => candidate.sourceIndex === note.sourceIndex);
       assert.ok(displayedIndex >= 0, `${officialItem.questionId} sourceIndex ${note.sourceIndex} is displayed`);
       assert.ok(answer, `${officialItem.questionId} sourceIndex ${note.sourceIndex} has an answer`);
       assert.match(note.note, new RegExp(escapeRegExp(answer.text.en.slice(0, 12))));

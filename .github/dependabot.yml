@@ -13,12 +13,18 @@ updates:
     # current range fail with security_update_not_possible.
     versioning-strategy: increase
     groups:
-      npm-production:
+      npm-production-minor-patch:
         dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
         patterns:
           - "*"
-      npm-development:
+      npm-development-minor-patch:
         dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
         patterns:
           - "*"
 
@@ -31,6 +37,9 @@ updates:
       timezone: "America/Toronto"
     open-pull-requests-limit: 2
     groups:
-      github-actions:
+      github-actions-minor-patch:
+        update-types:
+          - "minor"
+          - "patch"
         patterns:
           - "*"
