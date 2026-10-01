@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:33'
-updated_date: '2026-10-01 02:35'
+updated_date: '2026-10-01 02:36'
 labels:
   - ci
   - tooling
@@ -30,3 +30,13 @@ We moved tracking to Backlog.md, but the owner wants to see work on GitHub, and 
 - [ ] #6 launchd plist and install steps are documented, and logs go to a file
 - [ ] #7 Go unit tests cover resolution, rendering, marker matching, diffing and inbox import without network access
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Add a standard-library-only Go module under tools/backlog-sync with CLI flag parsing, timestamped logging, subprocess adapters for gh/backlog/git, cross-worktree task collection and deterministic task resolution.
+2. Implement issue body rendering, strict marker matching, REST issue/label diffing, project-v2 GraphQL status synchronization, dry-run/no-op behavior, and guarded inbox import through backlog task create.
+3. Add unit tests with fakes for resolution, rendering, marker parsing, diff/idempotency, issue state/project status changes, inbox import/guards, and empty-main abort safety.
+4. Add README and launchd plist documenting flags, cross-branch behavior, build/install/operation, and log file paths.
+5. Validate with go vet, go test, go build, and one read-only dry run; then update Backlog task evidence without marking coordinator-only real-run/install evidence complete.
+<!-- SECTION:PLAN:END -->
