@@ -3,6 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { parseFrontMatter as parseCanonicalLessonFrontMatter } from "../content-tools/src/check-lesson-coverage.ts";
+
 const schemasDir = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(schemasDir, "../..");
 const schemaCache = new Map();
@@ -41,7 +43,10 @@ const supportedSchemaKeywords = new Set([
   "minLength",
   "maxLength",
   "pattern",
+  "canonicalUtcTimestamp",
 ]);
+
+const canonicalUtcTimestampPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/u;
 
 let validationCount = 0;
 const failures = [];
@@ -58,12 +63,15 @@ validateJsonFile("content/subsection-titles.json", "subsection-titles.schema.jso
 
 for (const file of walk(path.join(projectRoot, "content/lessons"), ".md")) {
   const relative = path.relative(projectRoot, file);
-  const frontMatter = parseFrontMatter(fs.readFileSync(file, "utf8"), relative);
-  if (frontMatter === null) {
-    if (path.basename(relative) === "README.md") {
+  let frontMatter;
+  try {
+    frontMatter = parseLessonFrontMatter(fs.readFileSync(file, "utf8"), relative);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (path.basename(relative) === "README.md" && message.includes("missing opening front matter delimiter")) {
       continue;
     }
-    failures.push(`${relative}: missing opening front matter block`);
+    failures.push(`${relative}: ${message}`);
     continue;
   }
   if (frontMatter.type === "module") {
@@ -109,11 +117,14 @@ function validateJsonFile(relativePath, schemaFile) {
 
 function validateData(label, data, schemaFile) {
   validationCount += 1;
-  const schema = loadSchema(schemaFile);
-  const errors = validateAgainstSchema(schema, data, { documentId: schemaFile, path: "$" });
-  for (const error of errors) {
+  for (const error of validateDataAgainstSchema(data, schemaFile)) {
     failures.push(`${label}: ${error}`);
   }
+}
+
+export function validateDataAgainstSchema(data, schemaFile) {
+  const schema = loadSchema(schemaFile);
+  return validateAgainstSchema(schema, data, { documentId: schemaFile, path: "$" });
 }
 
 function loadSchema(schemaFile) {
@@ -190,6 +201,9 @@ function validateAgainstSchema(schema, data, context) {
     }
     if (typeof schema.pattern === "string" && !(new RegExp(schema.pattern, "u").test(data))) {
       errors.push(`${context.path}: expected string to match /${schema.pattern}/, got ${JSON.stringify(data)}`);
+    }
+    if (schema.canonicalUtcTimestamp === true && !isCanonicalUtcTimestamp(data)) {
+      errors.push(`${context.path}: expected canonical UTC timestamp YYYY-MM-DDTHH:MM:SS.sssZ, got ${JSON.stringify(data)}`);
     }
   }
 
@@ -273,6 +287,10 @@ function validateSchemaKeywords(schema, schemaFile, schemaPath) {
     }
   }
 
+  if (Object.hasOwn(schema, "canonicalUtcTimestamp") && schema.canonicalUtcTimestamp !== true) {
+    throw new Error(`${schemaFile}: schema keyword "canonicalUtcTimestamp" at ${schemaPath} must be true`);
+  }
+
   if (Object.hasOwn(schema, "$ref")) {
     for (const keyword of Object.keys(schema)) {
       if (keyword !== "$ref") {
@@ -353,6 +371,16 @@ function deepEqual(a, b) {
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
+// Mirrors the engine/importer timestamp contract: the literal canonical UTC
+// millisecond shape must also round-trip through the calendar/time parser.
+function isCanonicalUtcTimestamp(value) {
+  if (!canonicalUtcTimestampPattern.test(value)) {
+    return false;
+  }
+  const epochMilliseconds = Date.parse(value);
+  return !Number.isNaN(epochMilliseconds) && new Date(epochMilliseconds).toISOString() === value;
+}
+
 function walk(directory, extension) {
   const results = [];
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
@@ -366,70 +394,8 @@ function walk(directory, extension) {
   return results.sort((a, b) => a.localeCompare(b));
 }
 
-function parseFrontMatter(raw, label) {
-  const normalized = raw.replace(/^\uFEFF/, "").replace(/\r\n/g, "\n");
-  const match = /^---\n([\s\S]*?)\n---\n?/.exec(normalized);
-  if (match === null) {
-    return null;
-  }
-  const source = match[1];
-  const lines = source.split("\n");
-  const result = {};
-  for (let index = 0; index < lines.length; index += 1) {
-    const line = lines[index];
-    if (line.trim() === "") {
-      continue;
-    }
-    const scalarMatch = /^([A-Za-z][A-Za-z0-9]*):(?:\s*(.*))?$/.exec(line);
-    if (scalarMatch === null) {
-      throw new Error(`${label}: unsupported front matter line ${JSON.stringify(line)}`);
-    }
-    const key = scalarMatch[1];
-    const rest = scalarMatch[2] ?? "";
-    if (rest.trim() !== "") {
-      result[key] = parseScalar(rest);
-      continue;
-    }
-
-    const block = [];
-    while (index + 1 < lines.length && /^  /.test(lines[index + 1])) {
-      block.push(lines[index + 1].slice(2));
-      index += 1;
-    }
-    result[key] = parseBlock(block, label, key);
-  }
-  return result;
-}
-
-function parseBlock(block, label, key) {
-  const significant = block.filter((line) => line.trim() !== "");
-  if (significant.length === 0) {
-    return [];
-  }
-  if (significant.length === 1 && significant[0].trim() === "[]") {
-    return [];
-  }
-  if (significant.every((line) => line.trimStart().startsWith("- "))) {
-    return significant.map((line) => parseScalar(line.trimStart().slice(2)));
-  }
-  const object = {};
-  for (const line of significant) {
-    const match = /^([A-Za-z][A-Za-z0-9]*):\s*(.*)$/.exec(line);
-    if (match === null) {
-      throw new Error(`${label}: unsupported front matter block line for ${key}: ${JSON.stringify(line)}`);
-    }
-    object[match[1]] = parseScalar(match[2]);
-  }
-  return object;
-}
-
-function parseScalar(raw) {
-  const trimmed = raw.trim();
-  if (trimmed === "null") return null;
-  if (trimmed === "[]") return [];
-  if (/^-?\d+$/.test(trimmed)) return Number(trimmed);
-  const quoted = /^"([\s\S]*)"$/.exec(trimmed);
-  return quoted === null ? trimmed : quoted[1].replace(/\\"/g, "\"");
+export function parseLessonFrontMatter(raw, label) {
+  return parseCanonicalLessonFrontMatter(raw, label);
 }
 
 function progressExportSamples() {

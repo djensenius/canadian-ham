@@ -30,7 +30,7 @@ Run the zero-dependency validator from the repository root:
 node packages/schemas/validate.mjs
 ```
 
-The script validates the real generated bank JSON, subsection titles, lesson front matter, explanation JSON, engine fixtures, and two progress-export samples that cover the current full export shape and the optional-field import compatibility accepted by both platforms, including non-negative fractional exam timer values.
+The script validates the real generated bank JSON, subsection titles, lesson front matter, explanation JSON, engine fixtures, and two progress-export samples that cover the current full export shape and the optional-field import compatibility accepted by both platforms, including non-negative fractional exam timer values. Lesson front matter is parsed through the canonical `packages/content-tools` parser before schema validation.
 
 Expected success output:
 
@@ -51,6 +51,7 @@ Validated generated bank JSON, subsection titles, lesson front matter, explanati
 - `items`, `minItems`, `maxItems`, `uniqueItems`
 - `minimum`, `maximum`
 - `minLength`, `maxLength`, `pattern`
+- `canonicalUtcTimestamp: true`, a project-specific assertion that the existing canonical timestamp pattern also round-trips through the calendar/time parser used by the engine/import contracts
 
 Schema metadata such as `$schema`, `$id`, `title`, and `$defs` is supported as data needed for resolution or ignored when it does not affect validation. Schemas fail during loading if they use any keyword outside this subset or place sibling keywords next to `$ref`, because this validator forbids rather than silently ignoring unsupported constraints.
 

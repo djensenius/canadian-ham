@@ -9,8 +9,8 @@ const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const DEFAULT_LESSON_ROOT = path.join(REPO_ROOT, "content/lessons");
 const DEFAULT_SUBSECTIONS_PATH = path.join(REPO_ROOT, ACTIVE_GENERATED_DIR, "subsections.json");
 
-type FrontMatterValue = string | number | null | string[] | Record<string, string | null>;
-type FrontMatter = Record<string, FrontMatterValue>;
+export type FrontMatterValue = string | number | null | string[] | Record<string, string | null>;
+export type FrontMatter = Record<string, FrontMatterValue>;
 
 type ContentStatus = "outline" | "draft" | "review" | "published";
 
@@ -110,7 +110,7 @@ function parseScalar(raw: string, filePath: string, lineNumber: number): string 
   throw new Error(`${filePath}:${lineNumber}: quote scalar values containing spaces or punctuation`);
 }
 
-function parseFrontMatter(markdown: string, filePath: string): FrontMatter {
+export function parseFrontMatter(markdown: string, filePath: string): FrontMatter {
   const normalized = markdown.replace(/\r\n/g, "\n");
   const lines = normalized.split("\n");
   if (lines[0] !== "---") {
