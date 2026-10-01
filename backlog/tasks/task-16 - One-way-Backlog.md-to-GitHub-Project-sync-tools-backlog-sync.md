@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:33'
-updated_date: '2026-10-01 02:56'
+updated_date: '2026-10-01 03:03'
 labels:
   - ci
   - tooling
@@ -51,6 +51,8 @@ We moved tracking to Backlog.md, but the owner wants to see work on GitHub, and 
 6. Fix review blockers and correctness/test gaps, generalize configuration for reuse in other repos, validate with tests/build/vet plus one read-only dry run, then leave task-16 In Progress for coordinator real-run evidence.
 
 7. Generalize backlog-sync around JSON configuration, multi-repo allowlists, task-prefix normalization, managed labels/fields/sub-issues/inbox behavior, per-config locking and launchd install, then validate with unit tests/build/vet and read-only dry runs only.
+
+Round 3: fix claimed-issue ownership across markers/inbox/adoption, sub-issue allowlist parent handling, cfg.TaskPrefix-derived parsing, dry-run field reporting/zero-write guards, and review should-fix items; then add targeted fake/parser/fixture tests and validate with vet, tests, build, and both read-only dry runs.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -810,6 +812,8 @@ ArkhamHorror dry-run full output:
 2026-09-30T22:56:19-04:00 would link djensenius/ArkhamHorror-Linux#4 under parent djensenius/ArkhamHorror-Linux#5
 2026-09-30T22:56:19-04:00 sync complete: 38 created, 21 updated, 38 status changes, 0 imported
 ```
+
+Round 3 started in /Users/david/Developer/canadian-ham-task-16 on branch task-16-backlog-sync after reading AGENTS.md, backlog task-execution, /tmp/ch-reviews/sync2.md, and /tmp/ch-backlog-sync-round2.md.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
