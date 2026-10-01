@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 22:38'
+updated_date: '2026-10-01 22:48'
 labels:
   - docs
 milestone: m-1
@@ -41,4 +41,6 @@ Verify the claims in the Morse trainer research brief against the current ISED R
 Committed draft prepared in docs/proposals/morse-trainer.md with docs/proposals/README.md index. Validation passed: pnpm check:links. Verification summary claim counts: Corrected 3; Corrected (narrower than stated) 1; Corrected (project rule) 1; ISED wording verified/arithmetic does not support 5 wpm 1; Partly corrected 1; Partly verified 1; Unclear 1; Unverified 2; Verified family 23; total 34.
 
 Open owner decisions (AC #3 remains unchecked): scope integrated module vs separate app; default character speed 12 wpm vs 15–18 wpm; sending evaluation microphone pitch detection vs tap timing; exam timing profile PARIS-calibrated 12/5 vs RIC-1 literal/harder option; haptics scope on supportsHaptics-capable devices only.
+
+Addressed Copilot comment 4161264976 by correcting the WCAG 2.3.1 flash-area threshold (21,824 CSS px), adding red-flash/general-flash threshold guidance, merging origin/main's advanced-course proposal index entry, and rerunning pnpm check:links (passed).
 <!-- SECTION:NOTES:END -->
