@@ -64,6 +64,10 @@ func (a *App) Run(ctx context.Context, cfg Config) (Counters, error) {
 		}
 	}
 	var counters Counters
+	recordTaskFailure := func(taskID, operation string, err error) {
+		counters.Failed++
+		a.Logf("error: %s %s failed: %v", CanonicalTaskID(taskID), operation, err)
+	}
 	if cfg.Inbox.Enabled && !cfg.NoInbox {
 		imported, linked, err := a.processInbox(ctx, cfg, allIssues, markerIssues, issueByTaskID, claimedIssues, resolved)
 		if err != nil {
@@ -86,6 +90,7 @@ func (a *App) Run(ctx context.Context, cfg Config) (Counters, error) {
 		return counters, err
 	}
 	projectByContent := indexProjectItems(projectItems)
+	failedCreate := map[string]bool{}
 	for _, task := range resolved.Tasks {
 		id := CanonicalTaskID(task.ID)
 		targetRepo := cfg.TargetRepo(task)
@@ -98,18 +103,32 @@ func (a *App) Run(ctx context.Context, cfg Config) (Counters, error) {
 			repo = issue.Repo
 		}
 		if !exists {
+			body := RenderIssueBodyWithOptions(task, RenderOptions{IssueByTaskID: issueByTaskID, TaskByID: resolved.ByID, Milestones: milestones, MainBranch: cfg.MainBranch})
+			if err := validateIssueBodyWithinGitHubLimit(id, body); err != nil {
+				recordTaskFailure(id, "render issue body", err)
+				failedCreate[id] = true
+				continue
+			}
 			labels := DesiredLabels(task, Issue{}, cfg)
+			labelFailed := false
 			for _, label := range labels {
 				if err := a.ensureLabel(ctx, cfg, repo, label); err != nil {
-					return counters, err
+					recordTaskFailure(id, fmt.Sprintf("ensure label %q", label), err)
+					labelFailed = true
+					break
 				}
 			}
-			body := RenderIssueBodyWithOptions(task, RenderOptions{IssueByTaskID: issueByTaskID, TaskByID: resolved.ByID, Milestones: milestones, MainBranch: cfg.MainBranch})
+			if labelFailed {
+				failedCreate[id] = true
+				continue
+			}
 			a.LogAction(cfg.DryRun, "create issue %s in %s", IssueTitle(task), repo)
 			if !cfg.DryRun {
 				created, err := a.GitHub.CreateIssue(ctx, repo, IssueTitle(task), body, labels)
 				if err != nil {
-					return counters, err
+					recordTaskFailure(id, "create issue", err)
+					failedCreate[id] = true
+					continue
 				}
 				issue = created
 				issue.Repo = repo
@@ -133,7 +152,14 @@ func (a *App) Run(ctx context.Context, cfg Config) (Counters, error) {
 	}
 	for _, task := range resolved.Tasks {
 		id := CanonicalTaskID(task.ID)
-		issue := markerIssues[id]
+		if failedCreate[id] {
+			continue
+		}
+		issue, issueOK := markerIssues[id]
+		if !issueOK {
+			recordTaskFailure(id, "find issue mapping", fmt.Errorf("no issue found after create/adopt pass"))
+			continue
+		}
 		repo := issue.Repo
 		if repo == "" {
 			repo = cfg.TargetRepo(task)
@@ -147,19 +173,30 @@ func (a *App) Run(ctx context.Context, cfg Config) (Counters, error) {
 			continue
 		}
 		body := RenderIssueBodyWithOptions(task, RenderOptions{IssueByTaskID: issueByTaskID, TaskByID: resolved.ByID, Milestones: milestones, MainBranch: cfg.MainBranch})
+		if err := validateIssueBodyWithinGitHubLimit(id, body); err != nil {
+			recordTaskFailure(id, "render issue body", err)
+			continue
+		}
 		labels := DesiredLabels(task, issue, cfg)
 		patch, fields := DiffIssue(task, issue, body, labels)
 		if len(fields) > 0 {
+			labelFailed := false
 			for _, label := range labels {
 				if err := a.ensureLabel(ctx, cfg, repo, label); err != nil {
-					return counters, err
+					recordTaskFailure(id, fmt.Sprintf("ensure label %q", label), err)
+					labelFailed = true
+					break
 				}
+			}
+			if labelFailed {
+				continue
 			}
 			a.LogAction(cfg.DryRun, "update issue %s#%d fields: %s", repo, issue.Number, strings.Join(fields, ", "))
 			if !cfg.DryRun {
 				updated, err := a.GitHub.UpdateIssue(ctx, repo, issue.Number, patch)
 				if err != nil {
-					return counters, err
+					recordTaskFailure(id, "update issue", err)
+					continue
 				}
 				updated.Repo = repo
 				issue = updated
@@ -184,7 +221,8 @@ func (a *App) Run(ctx context.Context, cfg Config) (Counters, error) {
 			if !cfg.DryRun {
 				added, err := a.GitHub.AddProjectItem(ctx, project.ID, issue.NodeID)
 				if err != nil {
-					return counters, err
+					recordTaskFailure(id, "add issue to project", err)
+					continue
 				}
 				item = added
 				item.ContentNodeID = issue.NodeID
@@ -195,16 +233,22 @@ func (a *App) Run(ctx context.Context, cfg Config) (Counters, error) {
 			counters.ProjectAdded++
 		}
 		changed, err := a.syncProjectFields(ctx, cfg, project, item, task, milestones, issue)
-		if err != nil {
-			return counters, err
-		}
 		counters.StatusChanges += changed.status
 		counters.FieldChanges += changed.fields
+		if err != nil {
+			recordTaskFailure(id, "sync project fields", err)
+			continue
+		}
 	}
 	if cfg.SubIssues {
-		counters.SubIssueLinks += a.syncSubIssues(ctx, cfg, resolved, issueByTaskID)
+		linked, failed := a.syncSubIssues(ctx, cfg, resolved, issueByTaskID)
+		counters.SubIssueLinks += linked
+		counters.Failed += failed
 	}
-	a.Logf("sync complete: %d created, %d updated, %d status changes, %d imported", counters.Created, counters.Updated, counters.StatusChanges, counters.Imported)
+	a.Logf("sync complete: %d created, %d updated, %d status changes, %d imported, %d failed operations", counters.Created, counters.Updated, counters.StatusChanges, counters.Imported, counters.Failed)
+	if counters.Failed > 0 {
+		return counters, fmt.Errorf("%d task sync operation(s) failed", counters.Failed)
+	}
 	return counters, nil
 }
 
@@ -727,6 +771,14 @@ func optionIDCaseInsensitive(options map[string]string, name string) string {
 	return ""
 }
 
+func validateIssueBodyWithinGitHubLimit(taskID, body string) error {
+	chars := countCharacters(body)
+	if chars <= githubIssueBodyCharacterLimit {
+		return nil
+	}
+	return fmt.Errorf("rendered issue body is %d characters after truncation; GitHub hard limit is %d", chars, githubIssueBodyCharacterLimit)
+}
+
 func (a *App) logDryRunFieldSets(cfg Config, project ProjectInfo, task Task, milestones map[string]string) int {
 	count := 0
 	for _, desired := range desiredProjectFieldValues(cfg, task, milestones) {
@@ -742,14 +794,14 @@ func (a *App) logDryRunFieldSets(cfg Config, project ProjectInfo, task Task, mil
 	return count
 }
 
-func (a *App) syncSubIssues(ctx context.Context, cfg Config, resolved ResolvedTasks, issueByTaskID map[string]Issue) int {
+func (a *App) syncSubIssues(ctx context.Context, cfg Config, resolved ResolvedTasks, issueByTaskID map[string]Issue) (linked int, failed int) {
 	warned := map[string]bool{}
-	linked := 0
 	for _, task := range resolved.Tasks {
+		id := CanonicalTaskID(task.ID)
 		if task.ParentTaskID == nil || strings.TrimSpace(*task.ParentTaskID) == "" {
 			continue
 		}
-		child, ok := issueByTaskID[CanonicalTaskID(task.ID)]
+		child, ok := issueByTaskID[id]
 		if !ok || child.NodeID == "" || child.DatabaseID == 0 {
 			continue
 		}
@@ -759,7 +811,8 @@ func (a *App) syncSubIssues(ctx context.Context, cfg Config, resolved ResolvedTa
 		}
 		current, err := a.GitHub.IssueParent(ctx, child.NodeID)
 		if err != nil {
-			a.warnOnce(warned, "parent-read", "warning: read sub-issue parent failed: %v", err)
+			failed++
+			a.Logf("error: %s read sub-issue parent failed: %v", id, err)
 			continue
 		}
 		if current.ID == parent.NodeID {
@@ -776,18 +829,37 @@ func (a *App) syncSubIssues(ctx context.Context, cfg Config, resolved ResolvedTa
 		if !cfg.DryRun {
 			if current.ID != "" {
 				if err := a.GitHub.RemoveSubIssue(ctx, current.ID, child.NodeID); err != nil {
-					a.warnOnce(warned, "remove-"+current.Repo, "warning: remove sub-issue parent failed for %s#%d from %s#%d: %v", child.Repo, child.Number, current.Repo, current.Number, err)
+					failed++
+					a.Logf("error: %s remove sub-issue parent %s#%d failed: %v", id, current.Repo, current.Number, err)
 					continue
 				}
 			}
 			if err := a.GitHub.AddSubIssue(ctx, parent.Repo, parent.Number, child.DatabaseID); err != nil {
-				a.warnOnce(warned, "add-"+parent.Repo, "warning: sub-issue link failed for %s#%d under %s#%d: %v", child.Repo, child.Number, parent.Repo, parent.Number, err)
+				if isExpectedSubIssueLinkRejection(err) {
+					a.warnOnce(warned, "add-sub-issue-"+strings.ToLower(err.Error()), "warning: sub-issue links are not supported for %s#%d under %s#%d; skipping link: %v", child.Repo, child.Number, parent.Repo, parent.Number, err)
+					continue
+				}
+				failed++
+				a.Logf("error: %s add sub-issue under %s#%d failed: %v", id, parent.Repo, parent.Number, err)
 				continue
 			}
 		}
 		linked++
 	}
-	return linked
+	return linked, failed
+}
+
+func isExpectedSubIssueLinkRejection(err error) bool {
+	if err == nil {
+		return false
+	}
+	msg := strings.ToLower(err.Error())
+	for _, part := range []string{"unsupported", "not supported", "not support", "cross-repo", "cross repo", "different repositories", "same repository"} {
+		if strings.Contains(msg, part) {
+			return true
+		}
+	}
+	return false
 }
 
 func (a *App) ensureLabel(ctx context.Context, cfg Config, repo, label string) error {

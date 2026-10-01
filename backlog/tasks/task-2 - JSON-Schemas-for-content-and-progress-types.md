@@ -1,10 +1,11 @@
 ---
 id: TASK-2
 title: JSON Schemas for content and progress types
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@pi-coordinator'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 02:34'
+updated_date: '2026-10-01 13:04'
 labels:
   - content
   - 'legacy:T-003'

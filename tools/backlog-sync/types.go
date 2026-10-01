@@ -199,6 +199,8 @@ type Counters struct {
 	ProjectAdded  int
 	FieldChanges  int
 	SubIssueLinks int
+	// Failed counts failed write operations, not unique tasks.
+	Failed int
 }
 
 func (cfg Config) Normalized() Config {
