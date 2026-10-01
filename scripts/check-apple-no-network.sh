@@ -175,11 +175,15 @@ if [[ ${#swift_files[@]} -gt 0 ]]; then
 fi
 
 if [[ ${#plist_files[@]} -gt 0 ]]; then
-  for file in "${plist_files[@]}"; do
-    if ! plutil -lint "$file" >/dev/null; then
-      report_issue "plist lint failed for $file"
-    fi
-  done
+  if command -v plutil >/dev/null 2>&1; then
+    for file in "${plist_files[@]}"; do
+      if ! plutil -lint "$file" >/dev/null; then
+        report_issue "plist lint failed for $file"
+      fi
+    done
+  else
+    printf 'apple-no-network: skipping plist format lint because plutil is not available on this platform; still scanning plist/privacy text for forbidden network keys.\n' >&2
+  fi
 
   entitlement_pattern='com\.apple\.security\.network\.(client|server)|com\.apple\.developer\.(icloud|ubiquity|aps-environment)|com\.apple\.developer\.icloud|NSUbiquitous|NSPersistentCloudKitContainer|CloudKit|NSLocalNetworkUsageDescription|NSBonjourServices|NSAppTransportSecurity|NSAllowsArbitraryLoads|NSAllowsLocalNetworking|WKAppBoundDomains'
   print_grep_matches "forbidden network client/server, iCloud, local-network, or transport-security entitlement/Info key" "$entitlement_pattern" "${plist_files[@]}"

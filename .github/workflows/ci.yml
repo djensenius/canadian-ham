@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: Node and content checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      # actions/checkout v4.4.0
+      - name: Check out repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      # pnpm/action-setup v4.4.0
+      - name: Set up pnpm
+        uses: pnpm/action-setup@a15d269cd4658e1107c09f1fabf4cbd7bd1f308a
+        with:
+          version: 12.6.0
+          run_install: false
+
+      # actions/setup-node v4.4.0
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 26
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
+
+      - name: Import check
+        run: pnpm import:check
+
+      - name: Link check
+        run: pnpm check:links
+
+      - name: Content checkers
+        run: |
+          node packages/content-tools/src/check-explanations.ts
+          node packages/content-tools/src/check-quizzes.ts
+          node packages/content-tools/src/check-lesson-coverage.ts
+          for module_dir in content/lessons/*; do
+            if [ -d "$module_dir" ]; then
+              node packages/content-tools/src/check-lesson-originality.ts "$module_dir"
+            fi
+          done
+
+      - name: Build web
+        run: pnpm build:web
+
+      - name: Audit web build URLs
+        run: pnpm --filter @canadian-ham/web audit:urls
+
+      - name: Test Apple no-network checker
+        run: pnpm test:apple-network
+
+      - name: Apple no-network check
+        run: pnpm check:apple-network
+
+      # scripts/check-engine-parity.sh also invokes Swift/xbuild, so GitHub CI
+      # skips it; Apple and Swift suites remain local-only per AGENTS.md.

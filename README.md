@@ -44,6 +44,10 @@ canadian-ham/
 
 Use `xbuild` for all Apple builds and tests. Never call `xcodebuild` directly.
 
+## Continuous integration
+
+GitHub Actions CI for the private `djensenius/canadian-ham` repository runs on Ubuntu for pushes to `main` and pull requests. It installs the pinned pnpm workspace on Node 26, then runs TypeScript, Node/content, web build, URL-audit, and Apple no-network grep checks. Apple platform build and test suites stay local via `xbuild` and are not run on GitHub-hosted macOS runners.
+
 ## Commands
 
 Install the workspace dependencies with the pinned pnpm version from `package.json`:
