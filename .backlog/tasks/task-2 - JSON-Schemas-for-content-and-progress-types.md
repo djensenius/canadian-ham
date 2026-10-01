@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 16:55'
+updated_date: '2026-10-01 16:56'
 labels:
   - content
   - 'legacy:T-003'
@@ -30,8 +30,8 @@ Content and progress data cross several boundaries: the ISED importer writes gen
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Inventory the existing TS types and generated JSON shapes (questions, categories, subsections, lessons front matter, explanations, progress export, engine fixtures).
-2. Write JSON Schema (draft 2020-12) files in packages/schemas/.
-3. Validate the real data against them with a zero-dependency check (follow-up task-3 adds CI tests).
-4. Document in packages/schemas/README.md.
+1. Add draft 2020-12 JSON Schema files under packages/schemas for generated bank arrays/manifests, lesson/module front matter, explanations, progress exports, and engine fixtures, using shared definitions for IDs, localized text, timestamps, progress records, exam attempts, and fixture records.
+2. Add a zero-dependency Node validation script in packages/schemas that implements the limited JSON Schema keywords used, parses lesson front matter into JSON, validates all real content/generated/basic-2025-07-15 JSON, content/lessons front matter, content/explanations JSON, fixtures/engine JSON, and representative progress exports covering web/Apple-compatible required and optional fields.
+3. Document the schema inventory, draft/version, validator keyword subset, and validation command in packages/schemas/README.md.
+4. Run the schema validation script plus pnpm typecheck, pnpm test, and pnpm check:links; then record evidence, check satisfied acceptance criteria, and finalize the task if all pass.
 <!-- SECTION:PLAN:END -->
