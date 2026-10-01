@@ -1,6 +1,6 @@
 # canadian-ham
 
-`canadian-ham` is a Canadian Amateur Radio Operator Certificate, Basic Qualification learning system. The planned product is a static web app plus an offline Apple app for iPhone, iPad, and Mac. Both apps use the same platform-neutral lessons, question data, explanations, schemas, and fixtures.
+`canadian-ham` is a Canadian Amateur Radio Operator Certificate, Basic Qualification learning system. The planned product is a static web app plus an offline Apple app for iPhone, iPad, Mac, Apple TV, and Apple Vision Pro with OS 27 minimums. Both apps use the same platform-neutral lessons, question data, explanations, schemas, and fixtures.
 
 ## Private repository notice
 

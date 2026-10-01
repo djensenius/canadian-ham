@@ -2,10 +2,10 @@ name: CanadianHam
 options:
   bundleIdPrefix: com.djensenius
   deploymentTarget:
-    iOS: "18.0"
-    macOS: "15.0"
-    tvOS: "18.0"
-    visionOS: "2.0"
+    iOS: "27.0"
+    macOS: "27.0"
+    tvOS: "27.0"
+    visionOS: "27.0"
   developmentLanguage: en
   knownRegions: [en, fr, fr-CA]
   createIntermediateGroups: true
@@ -20,10 +20,10 @@ settings:
     MARKETING_VERSION: 0.1.0
     SWIFT_VERSION: 6.0
     SWIFT_STRICT_CONCURRENCY: complete
-    IPHONEOS_DEPLOYMENT_TARGET: "18.0"
-    MACOSX_DEPLOYMENT_TARGET: "15.0"
-    TVOS_DEPLOYMENT_TARGET: "18.0"
-    XROS_DEPLOYMENT_TARGET: "2.0"
+    IPHONEOS_DEPLOYMENT_TARGET: "27.0"
+    MACOSX_DEPLOYMENT_TARGET: "27.0"
+    TVOS_DEPLOYMENT_TARGET: "27.0"
+    XROS_DEPLOYMENT_TARGET: "27.0"
     TARGETED_DEVICE_FAMILY: "1,2"
     SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
     SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
@@ -151,7 +151,7 @@ targets:
   CanadianHamTV:
     type: application
     platform: tvOS
-    deploymentTarget: "18.0"
+    deploymentTarget: "27.0"
     sources:
       - path: Platforms/tvOS
       - path: CanadianHam/Models/QuestionBankModels.swift
@@ -198,7 +198,7 @@ targets:
   CanadianHamTVTests:
     type: bundle.unit-test
     platform: tvOS
-    deploymentTarget: "18.0"
+    deploymentTarget: "27.0"
     sources:
       - path: CanadianHamTVTests
       - path: CanadianHam/Models/QuestionBankModels.swift
@@ -232,7 +232,7 @@ targets:
   CanadianHamTVUITests:
     type: bundle.ui-testing
     platform: tvOS
-    deploymentTarget: "18.0"
+    deploymentTarget: "27.0"
     sources:
       - path: CanadianHamTVUITests
     dependencies:
@@ -246,7 +246,7 @@ targets:
   CanadianHamVision:
     type: application
     platform: visionOS
-    deploymentTarget: "2.0"
+    deploymentTarget: "27.0"
     sources:
       - path: Platforms/visionOS
       - path: CanadianHam/Models/QuestionBankModels.swift
@@ -293,7 +293,7 @@ targets:
   CanadianHamVisionTests:
     type: bundle.unit-test
     platform: visionOS
-    deploymentTarget: "2.0"
+    deploymentTarget: "27.0"
     sources:
       - path: CanadianHamVisionTests
       - path: CanadianHam/Models/QuestionBankModels.swift
@@ -327,7 +327,7 @@ targets:
   CanadianHamVisionUITests:
     type: bundle.ui-testing
     platform: visionOS
-    deploymentTarget: "2.0"
+    deploymentTarget: "27.0"
     sources:
       - path: CanadianHamVisionUITests
     dependencies:

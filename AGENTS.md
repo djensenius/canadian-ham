@@ -40,6 +40,7 @@
 - Active question bank is only ISED Basic 2025-07-15; delimited TXT SHA-256 `34c7cd7967addfde648c566d0ecf25bf3d1e071c603b5101cfecc7bd0cbc284f`.
 - Preserve ISED EN/FR question text verbatim; original lessons/explanations stay separate from official data.
 - The repo stays private until T-009, which requires T-007 permission records and T-607 release checks; never make it public, deploy, or distribute builds before then; see `docs/content-licensing.md`.
+- Apple app targets iOS/iPadOS 27.0, macOS 27.0, tvOS 27.0, and visionOS 27.0 minimums.
 - Apple app must work fully offline and collect no data; no networking code, third-party SDKs, analytics, or iCloud sync in v1.
 - Use `xbuild` for Apple builds/tests; never call `xcodebuild` directly.
 
