@@ -3,11 +3,11 @@ id: TASK-17
 title: >-
   backlog-sync: fit issue bodies within GitHub's size limit and isolate per-task
   failures
-status: Done
+status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 12:57'
-updated_date: '2026-10-01 13:16'
+updated_date: '2026-10-01 13:17'
 labels:
   - ci
   - tooling
@@ -48,6 +48,8 @@ Implemented tools/backlog-sync issue-body truncation using a 60,000-rune budget 
 Fix round 2 implemented: sections that cannot fit at minimum stay marker-only/truncation-note-only while later sections shrink in fixed order; rendered bodies over GitHub's hard limit are per-task failures that skip issue writes; truncation closes open backtick fences; expected sub-issue link rejections now warn once per run; summary labels failed operations. Validation passed: cd tools/backlog-sync && go vet ./... && go test ./... && go build -o /tmp/backlog-sync-17b .; dry-run saved to /tmp/ch-dry-task17b.txt with summary 'sync complete: 10 created, 4 updated, 27 status changes, 0 imported, 0 failed operations'. AC #4 remains unchecked and task remains In Progress.
 
 Coordinator real-run evidence (2026-10-01): after merge 71b5aea, real run: 'sync complete: 10 created, 5 updated, 27 status changes, 0 imported, 0 failed operations' (exit 0; task-16's issue created with a truncated body). Second run: 'sync complete: 0 created, 0 updated, 0 status changes, 0 imported, 0 failed operations' (exit 0). Review notes A-F tracked as follow-ups.
+
+Coordinator reopen test for task-16 AC #3: temporarily reopened, synced, then set back to Done.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
