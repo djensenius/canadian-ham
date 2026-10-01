@@ -2,8 +2,10 @@
 id: TASK-1.1
 title: 'Record ISED permission (reference number, date, scope)'
 status: To Do
-assignee: []
+assignee:
+  - '@djensenius'
 created_date: '2026-10-01 02:27'
+updated_date: '2026-10-01 02:34'
 labels:
   - release
   - blocked
