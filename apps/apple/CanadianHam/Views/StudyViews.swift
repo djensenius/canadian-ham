@@ -606,6 +606,7 @@ struct MockExamView: View {
     @State private var isSubmitting = false
     @State private var timerStatus = String(localized: "Timer off")
     @State private var showingNavigator = false
+    @State private var shouldFocusResultsHeading = false
     @AccessibilityFocusState private var resultFocus: MockExamAccessibilityFocus?
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -632,6 +633,7 @@ struct MockExamView: View {
             }
             .pagePadding()
         }
+        .id(result?.id ?? "mock-exam-active")
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Mock exam")
         .sheet(isPresented: $showingNavigator) {
@@ -988,7 +990,10 @@ struct MockExamView: View {
                     .font(DesignTokens.FontScale.headline.weight(.bold))
                     .foregroundStyle(attempt.score.passed ? DesignTokens.Colors.correctText : DesignTokens.Colors.warningText)
                     .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("mock-results-heading")
+                    .accessibilityLabel(Text(mockExamSubmissionAnnouncement(for: attempt))) // l10n: localized
                     .accessibilityFocused($resultFocus, equals: .resultsHeading)
+                    .onAppear { focusResultsHeadingAfterLayout() }
                 Text("Score: \(attempt.score.correct) / \(attempt.score.total) (\(attempt.score.percent, format: .number.precision(.fractionLength(0...1)))%). Pass is 70%; honours is 80%.")
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
@@ -1095,14 +1100,10 @@ struct MockExamView: View {
             }
             try progressStore.saveExamAttempt(attempt)
             try progressStore.saveQuestionProgress(progress)
+            shouldFocusResultsHeading = true
             result = attempt
             timerRunning = false
             onDataChanged()
-            let announcement = mockExamSubmissionAnnouncement(for: attempt)
-            Task { @MainActor in
-                resultFocus = .resultsHeading
-                AccessibilityNotification.Announcement(announcement).post()
-            }
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to save mock exam: \("")"), detail: error)
         }
@@ -1116,6 +1117,15 @@ struct MockExamView: View {
             Int64(attempt.score.correct),
             Int64(attempt.score.total)
         )
+    }
+
+    private func focusResultsHeadingAfterLayout() {
+        guard shouldFocusResultsHeading else { return }
+        Task { @MainActor in
+            await Task.yield()
+            resultFocus = .resultsHeading
+            shouldFocusResultsHeading = false
+        }
     }
 
     private func toggleFlag(_ questionId: String) {
@@ -1612,7 +1622,7 @@ struct LocalizedErrorMessageText: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             Text(parts.summary) // l10n: localized
             if let detail = parts.detail {
-                Text(verbatim: detail) // l10n: verbatim
+                Text(localized(detail, language: .english)) // l10n: content(en)
             }
         }
     }

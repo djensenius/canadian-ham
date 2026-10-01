@@ -43,6 +43,7 @@ final class CanadianHamTVUITests: XCTestCase {
         assertNextQuestionIsSeparateButton(nextQuestion, feedback: feedback)
         waitForFocus(on: nextQuestion)
         XCTAssertTrue(nextQuestion.hasFocus, "Next question should receive tvOS focus after answering before Select is pressed")
+        attachFocusedNextQuestionScreenshot(nextQuestion, in: app)
 
         remote.press(.select)
         waitForElementToDisappear(feedback, timeout: 5, message: "Feedback should disappear after advancing to the next question with the remote")
@@ -144,6 +145,25 @@ final class CanadianHamTVUITests: XCTestCase {
     private func waitForFocus(on element: XCUIElement) {
         for _ in 0..<10 where !element.hasFocus {
             RunLoop.current.run(until: Date().addingTimeInterval(0.2))
+        }
+    }
+
+    private func attachFocusedNextQuestionScreenshot(_ element: XCUIElement, in app: XCUIApplication) {
+        XCTAssertTrue(element.hasFocus, "Next question must be focused before capturing focus-ring evidence")
+        RunLoop.current.run(until: Date().addingTimeInterval(1.0))
+        let screenshot = XCUIScreen.main.screenshot()
+        let attachment = XCTAttachment(screenshot: screenshot)
+        attachment.name = "tvos-next-question-focus-ring"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+
+        guard let evidencePath = ProcessInfo.processInfo.environment["CANADIAN_HAM_TV_FOCUS_EVIDENCE_PATH"], !evidencePath.isEmpty else { return }
+        do {
+            let url = URL(fileURLWithPath: evidencePath)
+            try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: nil)
+            try screenshot.pngRepresentation.write(to: url, options: .atomic)
+        } catch {
+            XCTFail("Unable to write tvOS focus evidence screenshot: \(error)")
         }
     }
 

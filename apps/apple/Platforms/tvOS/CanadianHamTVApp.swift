@@ -756,7 +756,7 @@ private struct LocalizedErrorMessageText: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             Text(parts.summary) // l10n: localized
             if let detail = parts.detail {
-                Text(verbatim: detail) // l10n: verbatim
+                Text(english(detail)) // l10n: content(en)
             }
         }
     }

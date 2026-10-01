@@ -249,6 +249,35 @@ final class CanadianHamPracticeUITests: XCTestCase {
         assertMockExamResultVisible(in: app)
     }
 
+    func testMockExamResultHeadingCarriesVoiceOverSubmissionSummary() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamMockExamSeed", "ui-results-heading-announcement",
+            "-CanadianHamMockExamLimit", "1"
+        ])
+
+        openMockExamStart(in: app)
+        XCTAssertTrue(app.staticTexts["Question 1 of 1"].waitForExistence(timeout: 10))
+        answerFirstVisibleAnswer(in: app)
+        scrollAndTap("Submit exam", in: app)
+        submitMockExamAlert(in: app)
+
+        let heading = app.staticTexts["mock-results-heading"].firstMatch
+        XCTAssertTrue(heading.waitForExistence(timeout: 10), "Mock results should expose a deterministic heading for VoiceOver focus")
+        XCTAssertEqual(heading.elementType, .staticText, "Results focus target should be an accessibility static text heading")
+        XCTAssertTrue(heading.label.hasPrefix("Mock exam submitted. "), "Heading accessibility label should carry the submission announcement text, got: \(heading.label)")
+        XCTAssertTrue(
+            heading.label.contains("Basic with Honours") || heading.label.contains("Pass") || heading.label.contains("Needs review"),
+            "Heading accessibility label should include the result status, got: \(heading.label)"
+        )
+        XCTAssertTrue(heading.label.contains(" of 1."), "Heading accessibility label should include the score total, got: \(heading.label)")
+        XCTAssertTrue(
+            isPartiallyVisibleBelowNavigationBar(heading, in: app),
+            "Results heading should be visible after submission so VoiceOver can move focus to it. Frame: \(frameDescription(heading.frame))"
+        )
+    }
+
     func testSettingsResetClearsSavedMockExamProgress() throws {
         XCUIDevice.shared.appearance = .light
         var app = launchApp(arguments: [
@@ -628,11 +657,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func assertMockExamResultVisible(in app: XCUIApplication) {
+        let heading = app.staticTexts["mock-results-heading"].firstMatch
+        XCTAssertTrue(heading.waitForExistence(timeout: 10), "Expected mock exam results heading to remain visible")
         XCTAssertTrue(
-            app.staticTexts["Needs review"].waitForExistence(timeout: 10)
-            || app.staticTexts["Pass"].waitForExistence(timeout: 1)
-            || app.staticTexts["Basic with Honours"].waitForExistence(timeout: 1),
-            "Expected mock exam results to remain visible"
+            heading.label.contains("Needs review")
+            || heading.label.contains("Pass")
+            || heading.label.contains("Basic with Honours"),
+            "Expected mock exam results status in heading label, got: \(heading.label)"
         )
     }
 
