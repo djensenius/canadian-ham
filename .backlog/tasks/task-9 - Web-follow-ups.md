@@ -4,6 +4,7 @@ title: Web follow-ups
 status: To Do
 assignee: []
 created_date: '2026-10-01 02:27'
+updated_date: '2026-10-01 02:34'
 labels:
   - web
   - accessibility
@@ -15,7 +16,7 @@ ordinal: 16000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-Non-blocking review notes from the web accessibility and stale-load race lanes.
+Reviews of the web accessibility and stale-load race lanes approved the work but left smaller defects: docs that contradict the answer-choice decision, a skip link skipped in development because of StrictMode, an error-screen skip link that pollutes the URL, a misleading 'Theme saved' after a superseded failed save, and a slow axe test close to the timeout that could become flaky again.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria

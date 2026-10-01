@@ -28,7 +28,8 @@ canadian-ham/
     engine-swift/         SwiftPM quiz/exam engine package
     schemas/              Schema definitions
   docs/                   Requirements, architecture, privacy, and licensing docs
-  tasks/                  Running implementation plan
+  .backlog/               Backlog.md tasks, milestones, and config
+  tasks/                  Legacy task pointer and ID map
 ```
 
 ## Key docs
@@ -38,7 +39,7 @@ canadian-ham/
 - [Exam facts](docs/exam-facts.md)
 - [Privacy plan](docs/privacy.md)
 - [Content licensing and attribution plan](docs/content-licensing.md)
-- Work tracking: [Backlog.md](backlog/) (`backlog board`; see [AGENTS.md](AGENTS.md))
+- Work tracking: [Backlog.md](.backlog/) (`backlog board`; see [AGENTS.md](AGENTS.md)); the live GitHub Project mirror is maintained by [`djensenius/backlog-sync`](https://github.com/djensenius/backlog-sync)
 
 ## Build rule
 
@@ -46,7 +47,7 @@ Use `xbuild` for all Apple builds and tests. Never call `xcodebuild` directly.
 
 ## Continuous integration
 
-GitHub Actions CI for the private `djensenius/canadian-ham` repository runs on Ubuntu for pushes to `main` and pull requests. It installs the pinned pnpm workspace on Node 26, then runs workspace typechecks, package tests, engine fixture generation checks, design-token contrast and generation checks, content checkers, web build, URL audit, Apple SwiftUI text-source checks, and the Apple no-network grep checks. The Swift engine half of `scripts/check-engine-parity.sh`, Apple suites via `xbuild`, and `scripts/check-apple-localizations.sh` stay local-only because they require Xcode/Xcode simulator tooling.
+GitHub Actions CI for the private `djensenius/canadian-ham` repository runs on Ubuntu for pushes to `main` and pull requests. Pull requests that change only `.backlog/` task-tracking files take a fast success path after a job-level change classification; all other changes install the pinned pnpm workspace on Node 26, then run workspace typechecks, package tests, engine fixture generation checks, design-token contrast and generation checks, content checkers, web build, URL audit, Apple SwiftUI text-source checks, and the Apple no-network grep checks. The Swift engine half of `scripts/check-engine-parity.sh`, Apple suites via `xbuild`, and `scripts/check-apple-localizations.sh` stay local-only because they require Xcode/Xcode simulator tooling.
 
 ## Commands
 

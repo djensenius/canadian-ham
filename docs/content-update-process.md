@@ -16,7 +16,7 @@ Do not replace the active `content/generated/basic-2025-07-15/` bank in place. C
 
 1. Confirm the repository is still allowed to vendor the new official artifacts under [content licensing](content-licensing.md). If T-007 permission scope does not cover the future bank, treat the update as blocked until the owner records the needed permission or approves a private-development-only handling decision.
 2. Create a dedicated worker branch for the bank update.
-3. Find or create the bank-update task with the `backlog` CLI (`backlog search`, `backlog task create`) and follow the Backlog.md workflow in `AGENTS.md`; never edit files in `backlog/` by hand.
+3. Find or create the bank-update task with the `backlog` CLI (`backlog search`, `backlog task create`) and follow the Backlog.md workflow in `AGENTS.md`; never edit files in `.backlog/` by hand.
 4. Choose a bank ID from the effective date or other official version marker, for example `basic-2026-01-01`. Use one spelling everywhere.
 
 ## 1. Obtain the official ZIP and source PDFs

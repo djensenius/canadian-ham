@@ -4,6 +4,7 @@ title: Release candidate pass
 status: To Do
 assignee: []
 created_date: '2026-10-01 02:27'
+updated_date: '2026-10-01 02:34'
 labels:
   - release
   - 'legacy:T-607'
@@ -20,7 +21,7 @@ ordinal: 7000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-Run the full release candidate pass on a single commit: all web and content checks (CI), all four Apple suites via xbuild, link checks, privacy checks, accessibility checks (automated and manual), the offline smoke tests and the licensing checklist. Legacy: T-607.
+Release readiness is spread across CI (Linux checks), local-only Apple suites run through xbuild, and several manual checklists. Without one pass on a single commit, a release could ship a combination that was never verified together. Legacy: T-607.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria

@@ -2,8 +2,10 @@
 id: TASK-4
 title: Final app icon artwork approval
 status: To Do
-assignee: []
+assignee:
+  - '@djensenius'
 created_date: '2026-10-01 02:27'
+updated_date: '2026-10-01 02:34'
 labels:
   - design
   - blocked

@@ -1,0 +1,17 @@
+{
+  "projectOwner": "djensenius",
+  "projectOwnerType": "user",
+  "projectNumber": 8,
+  "repos": {},
+  "defaultRepo": "djensenius/canadian-ham",
+  "mainBranch": "main",
+  "statusMap": {},
+  "inbox": { "enabled": true, "label": "inbox", "mode": "manual" },
+  "adoptReferencedIssues": false,
+  "labels": {
+    "managed": ["*"],
+    "addAlways": []
+  },
+  "subIssues": true,
+  "timeoutSeconds": 60
+}

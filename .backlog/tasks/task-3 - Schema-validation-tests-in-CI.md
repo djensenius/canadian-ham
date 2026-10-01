@@ -4,6 +4,7 @@ title: Schema validation tests in CI
 status: To Do
 assignee: []
 created_date: '2026-10-01 02:27'
+updated_date: '2026-10-01 02:34'
 labels:
   - content
   - ci
@@ -17,7 +18,7 @@ ordinal: 10000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-Validate the real generated data and small synthetic fixtures against the JSON Schemas, with zero runtime dependencies (Node test runner), and run them in CI. Legacy: T-004.
+Schemas only protect us if something runs them. Validating the committed generated bank, explanations, lesson front matter and progress-export samples on every push catches drift before it reaches either app, and synthetic invalid fixtures prove the schemas actually reject bad data. Legacy: T-004.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria

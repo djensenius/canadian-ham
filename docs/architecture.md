@@ -38,10 +38,10 @@ canadian-ham/
     architecture.md
     privacy.md
     content-licensing.md
-  backlog/
+  .backlog/
     (Backlog.md tasks, milestones and config; managed only with the backlog CLI)
   tasks/
-    PLAN.md  (pointer to backlog/ and legacy ID map)
+    PLAN.md  (pointer to .backlog/ and legacy ID map)
 ```
 
 Notes:
