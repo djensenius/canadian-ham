@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import path from "node:path";
+import { spawnSync } from "node:child_process";
 import { afterEach, beforeEach, describe, it } from "vitest";
 import { IDBFactory } from "fake-indexeddb";
 
@@ -100,6 +102,16 @@ function createStore(name: string): ProgressStore {
   return store;
 }
 
+function assertProgressExportMatchesSchema(exported: ProgressExportV1): void {
+  const validatorPath = path.resolve(process.cwd(), "../../packages/schemas/validate-stdin.mjs");
+  const result = spawnSync(process.execPath, [validatorPath, "progress-export-v1.schema.json"], {
+    input: JSON.stringify(exported),
+    encoding: "utf8",
+  });
+  assert.equal(result.status, 0, `${result.stdout}${result.stderr}`);
+  assert.match(result.stdout, /Schema validation passed for stdin against progress-export-v1\.schema\.json/);
+}
+
 async function createVersion2Database(name: string): Promise<void> {
   const request = indexedDB.open(name, 2);
   await new Promise<void>((resolve, reject) => {
@@ -132,6 +144,7 @@ describe("ProgressStore", () => {
     assert.deepEqual(exported.lessonProgress, [lessonProgressRecord]);
     assert.deepEqual(exported.lessonQuizAttempts, [lessonQuizAttempt]);
     assert.deepEqual(exported.preferences, { practiceMode: "review-later", examTimerEnabled: true, theme: "dark" });
+    assertProgressExportMatchesSchema(exported);
 
     const validation = validateProgressImport(JSON.parse(JSON.stringify(exported)) as unknown);
     assert.equal(validation.ok, true);

@@ -235,6 +235,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
 
+  packages/schemas: {}
+
 packages:
 
   '@asamuzakjp/css-color@7.1.2':

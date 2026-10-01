@@ -2,7 +2,7 @@
 
 JSON Schemas for Canadian Ham content, engine fixtures, and progress interchange contracts.
 
-All schema files use JSON Schema draft 2020-12 and are intentionally data-only: they add no runtime dependencies and are not wired into CI by this task. Task-3 owns CI integration.
+All schema files use JSON Schema draft 2020-12 and are intentionally data-only: they add no runtime dependencies. CI runs the schemas in `.github/workflows/ci.yml`, job `ci` (`Node and content checks`), step `Schema checks`, via `pnpm check:schemas` whenever full checks run.
 
 ## Schema inventory
 
@@ -24,11 +24,13 @@ The progress schema describes version `1` of `canadian-ham.progress-export`. It 
 
 ## Validation
 
-Run the zero-dependency validator from the repository root:
+Run the zero-dependency validator from the repository root through the same script used by CI:
 
 ```sh
-node packages/schemas/validate.mjs
+pnpm check:schemas
 ```
+
+For direct debugging, the validator entry point is `node packages/schemas/validate.mjs`.
 
 The script validates the real generated bank JSON, subsection titles, lesson front matter, explanation JSON, engine fixtures, and two progress-export samples that cover the current full export shape and the optional-field import compatibility accepted by both platforms, including non-negative fractional exam timer values. Lesson front matter is parsed through the canonical `packages/content-tools` parser before schema validation.
 
@@ -41,19 +43,34 @@ Validated generated bank JSON, subsection titles, lesson front matter, explanati
 
 ## Validator keyword subset
 
-`validate.mjs` is deliberately small so this package stays dependency-free. The schemas therefore use only this documented subset:
+`validate.mjs` is deliberately small so this package stays dependency-free. The schemas therefore use only these supported keywords:
 
+- `$schema`
+- `$id`
+- `title`
+- `$defs`
 - `$ref` for local and sibling schema-file references
 - `type` including union arrays and `integer`
-- `const`, `enum`
+- `const`
+- `enum`
 - `oneOf`
-- `properties`, `required`, `additionalProperties`
-- `items`, `minItems`, `maxItems`, `uniqueItems`
-- `minimum`, `maximum`
-- `minLength`, `maxLength`, `pattern`
+- `allOf`
+- `properties`
+- `required`
+- `additionalProperties`
+- `items`
+- `prefixItems`
+- `minItems`
+- `maxItems`
+- `uniqueItems`
+- `minimum`
+- `maximum`
+- `minLength`
+- `maxLength`
+- `pattern`
 - `canonicalUtcTimestamp: true`, a project-specific assertion that the existing canonical timestamp pattern also round-trips through the calendar/time parser used by the engine/import contracts
 
-Schema metadata such as `$schema`, `$id`, `title`, and `$defs` is supported as data needed for resolution or ignored when it does not affect validation. Schemas fail during loading if they use any keyword outside this subset or place sibling keywords next to `$ref`, because this validator forbids rather than silently ignoring unsupported constraints.
+Schema metadata such as `$schema`, `$id`, `title`, and `$defs` is supported as data needed for resolution or ignored when it does not affect validation. Schemas fail during loading if they use any keyword outside this list or place sibling keywords next to `$ref`, because this validator forbids rather than silently ignoring unsupported constraints.
 
 ## Scope notes
 

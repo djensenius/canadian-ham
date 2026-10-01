@@ -1,0 +1,13 @@
+{
+  "type": "lesson",
+  "id": "L-001-01",
+  "moduleId": "M1",
+  "categoryIds": ["B-001"],
+  "title": { "en": "Lesson", "fr": null },
+  "covers": ["B-001-001"],
+  "objectives": ["Learn the rule"],
+  "prerequisites": [],
+  "estimatedMinutes": 1,
+  "quizIds": ["QZ-L-001-01-A"],
+  "status": "draft"
+}

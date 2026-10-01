@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "kind": "scoring",
+  "cases": [
+    {
+      "id": "one-correct",
+      "input": {
+        "items": [
+          {
+            "questionId": "B-001-001-001",
+            "categoryId": "B-001",
+            "subsectionId": "B-001-001",
+            "selectedSourceIndex": 0
+          }
+        ]
+      },
+      "expectedOutput": {
+        "correct": 1,
+        "total": 1,
+        "percent": 100,
+        "passed": false,
+        "honours": false,
+        "categoryBreakdown": [
+          { "categoryId": "B-001", "correct": 1, "total": 1, "percent": 100 }
+        ],
+        "incorrectQuestionIds": [],
+        "weakSubsectionIds": []
+      }
+    }
+  ]
+}

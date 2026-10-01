@@ -31,10 +31,12 @@ const supportedSchemaKeywords = new Set([
   "const",
   "enum",
   "oneOf",
+  "allOf",
   "properties",
   "required",
   "additionalProperties",
   "items",
+  "prefixItems",
   "minItems",
   "maxItems",
   "uniqueItems",
@@ -123,8 +125,14 @@ function validateData(label, data, schemaFile) {
 }
 
 export function validateDataAgainstSchema(data, schemaFile) {
-  const schema = loadSchema(schemaFile);
-  return validateAgainstSchema(schema, data, { documentId: schemaFile, path: "$" });
+  const [rawDocument, pointer = ""] = schemaFile.split("#");
+  const documentId = path.basename(rawDocument);
+  let schema = loadSchema(documentId);
+  if (pointer !== "" && pointer !== "/") {
+    const resolved = resolveRef(`#${pointer}`, documentId);
+    schema = resolved.schema;
+  }
+  return validateAgainstSchema(schema, data, { documentId, path: "$" });
 }
 
 function loadSchema(schemaFile) {
@@ -169,6 +177,12 @@ function validateAgainstSchema(schema, data, context) {
   }
 
   const errors = [];
+
+  if (Array.isArray(schema.allOf)) {
+    for (const branch of schema.allOf) {
+      errors.push(...validateAgainstSchema(branch, data, context));
+    }
+  }
 
   if (Array.isArray(schema.oneOf)) {
     const branchResults = schema.oneOf.map((branch) => validateAgainstSchema(branch, data, context));
@@ -234,9 +248,19 @@ function validateAgainstSchema(schema, data, context) {
         seen.add(serialized);
       }
     }
+    const prefixItemCount = Array.isArray(schema.prefixItems) ? schema.prefixItems.length : 0;
+    if (Array.isArray(schema.prefixItems)) {
+      schema.prefixItems.forEach((itemSchema, index) => {
+        if (index < data.length) {
+          errors.push(...validateAgainstSchema(itemSchema, data[index], { documentId: context.documentId, path: `${context.path}[${index}]` }));
+        }
+      });
+    }
     if (schema.items !== undefined) {
       data.forEach((item, index) => {
-        errors.push(...validateAgainstSchema(schema.items, item, { documentId: context.documentId, path: `${context.path}[${index}]` }));
+        if (prefixItemCount === 0 || index >= prefixItemCount) {
+          errors.push(...validateAgainstSchema(schema.items, item, { documentId: context.documentId, path: `${context.path}[${index}]` }));
+        }
       });
     }
   }
@@ -324,6 +348,24 @@ function validateSchemaKeywords(schema, schemaFile, schemaPath) {
     }
     schema.oneOf.forEach((branch, index) => {
       validateSchemaKeywords(branch, schemaFile, `${schemaPath}.oneOf[${index}]`);
+    });
+  }
+
+  if (Object.hasOwn(schema, "allOf")) {
+    if (!Array.isArray(schema.allOf)) {
+      throw new Error(`${schemaFile}: schema keyword "allOf" at ${schemaPath} must be an array`);
+    }
+    schema.allOf.forEach((branch, index) => {
+      validateSchemaKeywords(branch, schemaFile, `${schemaPath}.allOf[${index}]`);
+    });
+  }
+
+  if (Object.hasOwn(schema, "prefixItems")) {
+    if (!Array.isArray(schema.prefixItems)) {
+      throw new Error(`${schemaFile}: schema keyword "prefixItems" at ${schemaPath} must be an array`);
+    }
+    schema.prefixItems.forEach((itemSchema, index) => {
+      validateSchemaKeywords(itemSchema, schemaFile, `${schemaPath}.prefixItems[${index}]`);
     });
   }
 
