@@ -4,6 +4,7 @@ title: Apple accessibility follow-ups
 status: To Do
 assignee: []
 created_date: '2026-10-01 02:27'
+updated_date: '2026-10-01 02:34'
 labels:
   - apple
   - accessibility
@@ -15,7 +16,7 @@ ordinal: 15000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-Non-blocking review notes from the Apple accessibility and French interface lanes.
+Reviews of the Apple accessibility and French interface lanes approved the work but noted issues that automated audits can't catch: a VoiceOver announcement that may be cut off when focus moves to the results heading, a tvOS focus ring that has only been proven in code (not seen), and English error detail read in a French voice. They need manual or targeted verification so v1 doesn't ship with them.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
