@@ -8,6 +8,10 @@ updates:
       time: "10:00"
       timezone: "America/Toronto"
     open-pull-requests-limit: 5
+    # Raise manifest ranges (e.g. ^3.2.0 -> ^4.1.11) when the fix or update
+    # needs a new major version; without this, security updates outside the
+    # current range fail with security_update_not_possible.
+    versioning-strategy: increase
     groups:
       npm-production:
         dependency-type: "production"
