@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 17:27'
+updated_date: '2026-10-01 17:32'
 labels:
   - content
   - 'legacy:T-003'
@@ -48,6 +48,8 @@ Copilot PR #54 fix round: read all six review comments, align schemas/validator 
 Implemented draft 2020-12 schemas and zero-dependency validator in packages/schemas. Validation evidence: node packages/schemas/validate.mjs -> Schema validation passed: 1042 validation target(s). Validated generated bank JSON, subsection titles, lesson front matter, explanations, engine fixtures, and progress export samples. pnpm typecheck, pnpm test, and pnpm check:links passed.
 
 Review fix round: aligned lesson/module/subsection status schema values with check-lesson-coverage, kept explanation status as any non-empty string to match check-explanations, added schema-load rejection for unsupported keywords and $ref sibling keywords, switched object property checks to Object.hasOwn, loosened exam timer fields to non-negative numbers, rejected empty nullable French strings, and made non-README lesson Markdown without front matter fail validation. Validation passed: node packages/schemas/validate.mjs (1042 targets), pnpm typecheck, pnpm test, pnpm check:links.
+
+Copilot PR #54 fix round: added semantic canonical timestamp validation, non-empty lesson/module array bounds, module order maximum 8, canonical content-tools front matter parsing reuse, and negative schema/parser checks. Validation passed with node packages/schemas/validate.mjs, node --test packages/schemas/validate-negative.test.mjs, pnpm typecheck, pnpm test, pnpm check:links, and git diff --check.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
