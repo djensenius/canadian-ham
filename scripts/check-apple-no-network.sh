@@ -26,15 +26,23 @@ report_issue() {
 print_grep_matches() {
   local label=$1
   shift
-  local had_match=0
+  local output
+  local status
+  output=$(grep -nE -- "$@" 2>&1)
+  status=$?
+  if [[ $status -eq 1 ]]; then
+    return
+  fi
+  if [[ $status -gt 1 ]]; then
+    report_issue "grep failed while checking $label"
+  else
+    report_issue "$label"
+  fi
   local line
   while IFS= read -r line; do
-    if [[ $had_match -eq 0 ]]; then
-      report_issue "$label"
-      had_match=1
-    fi
+    [[ -n "$line" ]] || continue
     printf '  %s\n' "$line" >&2
-  done < <(grep -nE "$@" 2>/dev/null)
+  done <<< "$output"
 }
 
 normalize_detected_content_reference() {

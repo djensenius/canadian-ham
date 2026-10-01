@@ -46,7 +46,7 @@ Use `xbuild` for all Apple builds and tests. Never call `xcodebuild` directly.
 
 ## Continuous integration
 
-GitHub Actions CI for the private `djensenius/canadian-ham` repository runs on Ubuntu for pushes to `main` and pull requests. It installs the pinned pnpm workspace on Node 26, then runs TypeScript, Node/content, web build, URL-audit, and Apple no-network grep checks. Apple platform build and test suites stay local via `xbuild` and are not run on GitHub-hosted macOS runners.
+GitHub Actions CI for the private `djensenius/canadian-ham` repository runs on Ubuntu for pushes to `main` and pull requests. It installs the pinned pnpm workspace on Node 26, then runs workspace typechecks, package tests, engine fixture generation checks, design-token contrast and generation checks, content checkers, web build, URL audit, Apple SwiftUI text-source checks, and the Apple no-network grep checks. The Swift engine half of `scripts/check-engine-parity.sh`, Apple suites via `xbuild`, and `scripts/check-apple-localizations.sh` stay local-only because they require Xcode/Xcode simulator tooling.
 
 ## Commands
 
@@ -60,9 +60,13 @@ Common checks:
 
 ```sh
 pnpm test
+pnpm --filter @canadian-ham/engine-ts test
+pnpm --filter @canadian-ham/engine-ts generate-fixtures:check
+pnpm --filter @canadian-ham/design-tokens test
+pnpm --filter @canadian-ham/design-tokens generate:check
 pnpm import:check
 pnpm check:links
-pnpm -r typecheck
+pnpm typecheck
 pnpm build:web
 ```
 
