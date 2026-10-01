@@ -1,9 +1,11 @@
 ---
 id: TASK-11.1
 title: Source-check the Advanced course brief and record decisions
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@pi-worker'
 created_date: '2026-10-01 02:27'
+updated_date: '2026-10-01 22:37'
 labels:
   - content
   - docs
@@ -25,3 +27,9 @@ Verify the claims and citations in the Advanced course research brief (bank form
 - [ ] #2 The brief is committed under docs/proposals/
 - [ ] #3 The owner's decisions are recorded in the parent task notes
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Copy the source-checked Advanced brief into docs/proposals with only light formatting/link cleanup.\n2. Ensure proposals README exists and links to the brief without breaking existing links.\n3. Run pnpm check:links, record verification summary/open owner decisions in task notes, check only proven ACs, and commit the changes.
+<!-- SECTION:PLAN:END -->
