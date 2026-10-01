@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 22:43'
+updated_date: '2026-10-01 22:48'
 labels:
   - apple
   - accessibility
@@ -23,8 +23,8 @@ Reviews of the Apple accessibility and French interface lanes approved the work 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [ ] #1 After mock exam submission, focus moves to the results heading on appear and the announcement isn't cut off (verified with VoiceOver)
-- [x] #2 The tvOS 'Next question' focus ring visibly renders (screenshot or manual check recorded)
-- [x] #3 English system error details (e.g. QuestionBankLoadError) are tagged en or localised in the French UI
+- [ ] #2 The tvOS 'Next question' focus ring visibly renders (screenshot or manual check recorded)
+- [ ] #3 English system error details (e.g. QuestionBankLoadError) are tagged en or localised in the French UI
 <!-- AC:END -->
 
 ## Implementation Plan
