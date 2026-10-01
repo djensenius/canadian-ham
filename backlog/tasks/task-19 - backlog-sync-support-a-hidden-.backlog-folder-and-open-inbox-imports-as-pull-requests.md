@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 13:51'
-updated_date: '2026-10-01 14:19'
+updated_date: '2026-10-01 14:24'
 labels:
   - ci
   - tooling
@@ -61,6 +61,8 @@ Round 2 fixes implemented: PR mode now keeps the inbox label while an import PR 
 Owner decision (2026-10-01): replace the 'pr' inbox mode with a report-only 'manual' mode after three review rounds (reviews t19-1 and t19-2 in ~/.cache/canadian-ham-reviews). The coordinator triages inbox issues at session start into normal task PRs.
 
 Round 4 rescope implemented: removed the failed inbox 'pr' mode and its temp-worktree/branch/PR helpers and tests; added inbox.mode manual as report-only triage logging plus summary counts while preserving push mode. Validation passed: cd tools/backlog-sync && go vet ./... && go test ./... && go build -o /tmp/backlog-sync-19d .; read-only dry run against /Users/david/Developer/canadian-ham saved to /tmp/ch-dry-task19d.txt (0 current inbox issues, summary reports 0 inbox issues need triage). Verified git diff main -- tools/backlog-sync has no pr-mode helper terms.
+
+Review cleanup: merged main, removed dead sync_test scaffolding, clarified manual inbox triage label handling, and reran Go validation.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
