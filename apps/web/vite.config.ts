@@ -3,8 +3,8 @@ import { join, relative } from "node:path";
 import { defineConfig } from "vitest/config";
 import type { Plugin } from "vite";
 
-import { createPrecacheManifest, createServiceWorkerSource, createWebAppManifest } from "./src/lib/pwa";
-import { computePwaVersion } from "./src/lib/pwaVersion";
+import { createPrecacheManifest, createServiceWorkerSource, createWebAppManifest } from "./src/lib/pwa.ts";
+import { computePwaVersion } from "./src/lib/pwaVersion.ts";
 
 function allowDevInlineStyles(): Plugin {
   return {

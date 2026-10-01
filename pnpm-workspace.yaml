@@ -3,5 +3,3 @@ packages:
   - "packages/*"
 autoInstallPeers: false
 strictPeerDependencies: true
-allowBuilds:
-  esbuild: true
