@@ -3,7 +3,8 @@
 ## Coordinator rules (the Pi session in the root pane)
 - You are the coordinator. Plan and delegate; do not edit source files yourself.
 - Break work into small, independent tasks with clear acceptance criteria.
-- Keep the running plan in `tasks/PLAN.md`; update it as tasks complete.
+- Track all work in Backlog.md (see "Backlog.md task workflow" below); `tasks/PLAN.md` is only a
+  pointer and legacy ID map. The coordinator creates tasks and keeps their status current.
 - Use a `scout` subagent to investigate before assigning implementation.
 - Use a `worker` subagent for implementation, one at a time. Before each
   worker, create a persistent branch and worktree
@@ -52,6 +53,33 @@
   `cd apps/apple && /opt/homebrew/bin/xcodegen generate --spec project.yml`
 - Check regeneration determinism by running the XcodeGen command twice and confirming `git diff -- apps/apple/CanadianHam.xcodeproj` is empty.
 - Commit both `apps/apple/project.yml` and the generated `apps/apple/CanadianHam.xcodeproj` so Xcode can open the project without XcodeGen.
+
+## Backlog.md task workflow (all agents)
+Backlog.md (`backlog/`) is the single source of truth for work. The GitHub Project and issues are a
+read-only mirror produced by `tools/backlog-sync`; never track work there (except the `inbox` label, below).
+
+- Always use the `backlog` CLI to read and change tasks, with `--plain` for output meant for agents
+  (`backlog task list --plain`, `backlog task view task-12 --plain`, `backlog board`).
+  Never create or edit files in `backlog/` directly.
+- Task changes are auto-committed (`autoCommit: true`) on the branch you run the CLI on, and the board
+  reads every active branch (`checkActiveBranches: true`). Run task updates for branch work from that
+  task's worktree so the status travels with the branch.
+- Before creating a task, search first (`backlog search "<words>" --plain`) and don't duplicate an
+  existing task; extend it or ask instead. New tasks need a clear description and acceptance criteria
+  (`--ac`), and use `--dep` for dependencies and `-p` for subtasks.
+- Before starting work: pick a `To Do` task whose dependencies are all `Done`, then
+  `backlog task edit task-12 -s "In Progress" -a @<your-name>`.
+- Before writing code, add a short implementation plan: `backlog task edit task-12 --plan "1. ..."`.
+- Put the task ID in the branch name and PR title, e.g. branch `task-12-short-slug`, worktree
+  `../canadian-ham-task-12`, PR "task-12: Short title".
+- While working, record progress with `--append-notes`. Scope outside the acceptance criteria needs a
+  follow-up task or the owner's OK; don't silently expand a task.
+- When finished: verify each acceptance criterion with real evidence, then check it
+  (`--check-ac <n>`), add implementation notes, write `--final-summary`, and move the task to `Done`.
+- If you're blocked: say so in the task notes (`--append-notes "Blocked: ..."`), leave the task
+  `In Progress`, and tell the owner (subagents tell the coordinator).
+- Issues the owner opens on GitHub with the label `inbox` are imported as new `To Do` tasks by the sync;
+  triage them like any other task.
 
 <!-- BACKLOG.MD GUIDELINES START -->
 <!-- backlog.md-instructions-version: 1.53.0 -->
