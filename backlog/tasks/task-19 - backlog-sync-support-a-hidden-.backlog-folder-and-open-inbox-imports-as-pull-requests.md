@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 13:51'
-updated_date: '2026-10-01 14:58'
+updated_date: '2026-10-01 15:06'
 labels:
   - ci
   - tooling
@@ -71,6 +71,8 @@ Second Copilot review fix: removed bounded Backlog directory search, aligned dis
 Copilot third review fix: manual inbox mode now skips marked inbox issues and claims unmarked inbox issues so adoption never writes to them.
 
 Follow-up review notes: restored manual inbox label guidance, skipped sub-issue writes for manual inbox triage parents, and added project-add/test coverage.
+
+Copilot comment 4156953569 fix: Backlog directory discovery now resolves symlinked worktree/candidate paths, rejects external targets, and passes go vet/test/build.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
