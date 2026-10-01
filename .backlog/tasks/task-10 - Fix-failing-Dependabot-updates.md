@@ -21,8 +21,8 @@ GitHub's default Dependabot security updates for vitest in apps/web failed twice
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 The cause of the failed Dependabot runs is documented in this task's notes
-- [ ] #2 .github/dependabot.yml exists for the npm/pnpm workspaces and GitHub Actions
+- [x] #1 The cause of the failed Dependabot runs is documented in this task's notes
+- [x] #2 .github/dependabot.yml exists for the npm/pnpm workspaces and GitHub Actions
 - [ ] #3 The next Dependabot run succeeds or opens a PR that passes CI
 <!-- AC:END -->
 
