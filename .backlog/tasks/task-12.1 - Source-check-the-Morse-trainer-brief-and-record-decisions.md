@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 22:37'
+updated_date: '2026-10-01 22:38'
 labels:
   - docs
 milestone: m-1
@@ -30,5 +30,7 @@ Verify the claims in the Morse trainer research brief against the current ISED R
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Copy the source-checked Morse brief into docs/proposals/ with only formatting/link/project-scope cleanup.\n2. Verify the brief's claim-status summary and open owner decisions without changing verified facts.\n3. Run pnpm check:links, check only supported acceptance criteria, record notes, and commit the task updates plus docs.
+1. Copy the source-checked Morse brief into docs/proposals/ with only formatting/link/project-scope cleanup.
+2. Preserve verified facts while adding the proposals index and relative project links.
+3. Run pnpm check:links, check only the supported acceptance criteria, record open owner decisions, and commit.
 <!-- SECTION:PLAN:END -->
