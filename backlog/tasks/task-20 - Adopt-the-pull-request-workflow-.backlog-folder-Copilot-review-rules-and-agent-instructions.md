@@ -3,9 +3,11 @@ id: TASK-20
 title: >-
   Adopt the pull-request workflow: .backlog folder, Copilot review rules and
   agent instructions
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@pi-worker'
 created_date: '2026-10-01 13:51'
+updated_date: '2026-10-01 15:53'
 labels:
   - ci
   - docs
