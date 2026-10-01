@@ -3,7 +3,7 @@ id: TASK-19
 title: >-
   backlog-sync: support a hidden .backlog folder and open inbox imports as pull
   requests
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 13:51'
