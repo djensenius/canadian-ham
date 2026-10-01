@@ -1,5 +1,7 @@
 # Backlog Sync
 
+> Canonical home: `backlog-sync` now lives in [`djensenius/backlog-sync`](https://github.com/djensenius/backlog-sync). Use that repository for syncer development, review follow-ups, releases, and its Backlog tasks; this in-repo copy is historical.
+
 `backlog-sync` mirrors local Backlog.md tasks to GitHub Issues and GitHub Project v2. Backlog.md remains the source of truth; GitHub edits are overwritten on the next sync except for the narrow `inbox` push import path.
 
 The binary is consumer-neutral. All repo/project choices come from a JSON config selected with `--config <path>` (default: `<root>/.backlog-sync.json`). Flags only override config fields for local testing.
@@ -140,7 +142,7 @@ All log lines are written to stdout with an RFC3339 timestamp prefix. Flag error
 Requires Go 1.27 or newer and the standard library only.
 
 ```bash
-cd /Users/david/Developer/canadian-ham/tools/backlog-sync
+cd /Users/david/Developer/backlog-sync
 go test ./...
 go vet ./...
 go build -o ~/bin/backlog-sync .
@@ -187,13 +189,13 @@ ArkhamHorror uses the same binary with a temporary or private config, for exampl
 Use `install-launchd.sh` to render one LaunchAgent plist per config. It does not call `launchctl` unless `--load` is passed.
 
 ```bash
-tools/backlog-sync/install-launchd.sh \
+/Users/david/Developer/backlog-sync/install-launchd.sh \
   --config /Users/david/Developer/canadian-ham/.backlog-sync.json \
   --label com.djensenius.canadian-ham.backlog-sync \
   --log /Users/david/Library/Logs/canadian-ham-backlog-sync.log \
   --binary /Users/david/bin/backlog-sync
 
-tools/backlog-sync/install-launchd.sh \
+/Users/david/Developer/backlog-sync/install-launchd.sh \
   --config /Users/david/Developer/ArkhamHorror/.backlog-sync.json \
   --label com.djensenius.arkham-backlog-sync \
   --log /Users/david/Library/Logs/arkham-backlog-sync.log \

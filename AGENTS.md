@@ -4,22 +4,30 @@
 - You are the coordinator. Plan and delegate; do not edit source files yourself.
 - Break work into small, independent tasks with clear acceptance criteria.
 - Track all work in Backlog.md (see "Backlog.md task workflow" below); `tasks/PLAN.md` is only a
-  pointer and legacy ID map. The coordinator creates tasks and keeps their status current.
+  pointer and legacy ID map. The GitHub Project is the live board, mirrored from Backlog.md by
+  [`djensenius/backlog-sync`](https://github.com/djensenius/backlog-sync).
+- At the start of each coordinator session, triage open GitHub issues labelled `inbox`: search first,
+  create or update Backlog tasks from the task branch workflow below, and then remove the `inbox`
+  label manually because this repository uses backlog-sync `inbox.mode: manual`.
 - Use a `scout` subagent to investigate before assigning implementation.
-- Use a `worker` subagent for implementation, one at a time. Before each
-  worker, create a persistent branch and worktree
-  (`git worktree add ../<repo>-<task> -b <branch>`) and launch the worker with
-  `cwd` set to that worktree. Do not use managed `worktree: true` runs here:
-  they return a patch and delete their branch, which breaks branch review.
-  Each worker commits to its branch and reports the branch, full 40-character
-  commit SHA, files, and checks run.
-- After each worker finishes, start a `reviewer` on that branch/commit with the
-  task spec. Require it to fetch every `review_git` output page. Only integrate
-  on APPROVE or APPROVE WITH NOTES.
-- After integrating: build and run tests on the main checkout before starting
-  any dependent worker, then remove the task worktree with
+- Use a `worker` subagent for implementation, one at a time. Before each worker, create a persistent
+  task branch and worktree (`git worktree add ../<repo>-<task> -b <branch>`) and launch the worker
+  with `cwd` set to that worktree. Do not use managed `worktree: true` runs here: they return a patch
+  and delete their branch, which breaks branch review. Task status changes ride on the task branch,
+  not on `main`. Each worker commits to its branch and reports the branch, full 40-character commit
+  SHA, files, and checks run.
+- After each worker finishes, start a `reviewer` on that branch/commit with the task spec. Require it
+  to fetch every `review_git` output page. Only open a pull request on APPROVE or APPROVE WITH NOTES.
+- Push the approved branch and open a pull request titled `task-N: Title` that names the Backlog task,
+  lists checks run, and includes Apple `xbuild` per-test results in the PR body when Apple tests were
+  run. Automatic Copilot code review and CI must pass before merge.
+- Review-loop stopping rule: fix high-severity findings and re-request review. Medium or low findings,
+  or ones that don't fit the project, are fixed or answered with reasoning and resolved. Findings about
+  code the PR didn't change become follow-up Backlog tasks. Merge when the latest Copilot review has no
+  unresolved high-severity findings and CI is green.
+- Either the owner or the coordinator merges the pull request. After merging: update the main checkout,
+  build and run tests there before starting any dependent worker, then remove the task worktree with
   `git worktree remove`.
-- Push finished branches to the `origin` remote so work is not only in worktrees.
 
 ## Build and test rules (all agents)
 - Never call `xcodebuild` directly. Always use `xbuild` with the same arguments;
@@ -55,25 +63,26 @@
 - Commit both `apps/apple/project.yml` and the generated `apps/apple/CanadianHam.xcodeproj` so Xcode can open the project without XcodeGen.
 
 ## Backlog.md task workflow (all agents)
-Backlog.md (`backlog/`) is the single source of truth for work. The GitHub Project and issues are a
-read-only mirror produced by `tools/backlog-sync`; never track work there (except the `inbox` label, below).
+Backlog.md (`.backlog/`) is the single source of truth for work. The GitHub Project is the live board,
+mirrored from every worktree by [`djensenius/backlog-sync`](https://github.com/djensenius/backlog-sync);
+never track work directly on GitHub except for owner-created issues with the `inbox` label.
 
+- At the start of a session, run `backlog instructions overview`, then read the detailed guide for the
+  action you are about to take. Coordinators also check for open GitHub issues labelled `inbox`, triage
+  them into Backlog tasks (search first), and remove the label manually after triage because inbox mode
+  is report-only.
 - Always use the `backlog` CLI to read and change tasks, with `--plain` for output meant for agents
-  (`backlog task list --plain`, `backlog task view task-12 --plain`, `backlog board`).
-  Never create or edit files in `backlog/` directly.
-- Task changes are auto-committed (`autoCommit: true`) on the branch you run the CLI on. After the
-  task is In Progress, every further change (plan, notes, checked criteria, final summary, Done) is made
-  from the task's worktree and reaches main with the merge. Don't edit that task on main while its
-  branch is open: `updated_date` has minute resolution and main's copy would mask the branch's.
-  If a merge conflicts only in a task file under `backlog/`, keep the branch's version.
+  (`backlog task list --plain`, `backlog task view task-12 --plain`, `backlog board`). Never create or
+  edit files in `.backlog/` directly.
+- Task changes are auto-committed (`autoCommit: true`) on the branch you run the CLI on. Start and
+  update a task from its own branch/worktree: set it In Progress and assign it there, then make every
+  later change (plan, notes, checked criteria, final summary, Done) from the task's worktree so it
+  reaches main through the PR. The GitHub Project is kept current from worktrees; `backlog board` on
+  main catches up when PRs merge. If a merge conflicts only in a task file under `.backlog/`, keep the
+  branch's version.
 - Before creating a task, search first (`backlog search "<words>" --plain`) and don't duplicate an
   existing task; extend it or ask instead. New tasks need a clear description and acceptance criteria
   (`--ac`), and use `--dep` for dependencies and `-p` for subtasks.
-- Before starting work: pick a `To Do` task whose dependencies are all `Done`. On `main`
-  (the coordinator, before creating the branch), run
-  `backlog task edit task-12 -s "In Progress" -a @<worker-name>`, then create the branch and
-  worktree from that commit. `backlog board` on main always prefers main's copy of a task, so
-  this is what keeps the board correct while the work happens on the branch.
 - Before writing code, add a short implementation plan: `backlog task edit task-12 --plan "1. ..."`.
 - Put the task ID in the branch name and PR title, e.g. branch `task-12-short-slug`, worktree
   `../canadian-ham-task-12`, PR "task-12: Short title".
@@ -83,8 +92,6 @@ read-only mirror produced by `tools/backlog-sync`; never track work there (excep
   (`--check-ac <n>`), add implementation notes, write `--final-summary`, and move the task to `Done`.
 - If you're blocked: say so in the task notes (`--append-notes "Blocked: ..."`), leave the task
   `In Progress`, and tell the owner (subagents tell the coordinator).
-- Issues the owner opens on GitHub with the label `inbox` are imported as new `To Do` tasks by the sync;
-  triage them like any other task.
 
 <!-- BACKLOG.MD GUIDELINES START -->
 <!-- backlog.md-instructions-version: 1.53.0 -->

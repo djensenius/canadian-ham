@@ -14,10 +14,13 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  ci:
-    name: Node and content checks
+  changes:
+    name: Change classification
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 5
+    outputs:
+      full_checks: ${{ steps.classify.outputs.full_checks }}
+      backlog_only: ${{ steps.classify.outputs.backlog_only }}
 
     steps:
       # actions/checkout v7.0.1
@@ -25,15 +28,80 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
+          fetch-depth: 0
+
+      - name: Classify changed files
+        id: classify
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+
+          if [[ "${EVENT_NAME}" != "pull_request" ]]; then
+            echo "full_checks=true" >> "${GITHUB_OUTPUT}"
+            echo "backlog_only=false" >> "${GITHUB_OUTPUT}"
+            echo "Non-PR event: running full checks."
+            exit 0
+          fi
+
+          changed_files="$(git diff --name-only "${BASE_SHA}" "${HEAD_SHA}")"
+          if [[ -z "${changed_files}" ]]; then
+            echo "full_checks=true" >> "${GITHUB_OUTPUT}"
+            echo "backlog_only=false" >> "${GITHUB_OUTPUT}"
+            echo "No changed files detected: running full checks."
+            exit 0
+          fi
+
+          full_checks=false
+          while IFS= read -r changed_file; do
+            [[ -z "${changed_file}" ]] && continue
+            if [[ "${changed_file}" != .backlog/* ]]; then
+              full_checks=true
+              break
+            fi
+          done <<< "${changed_files}"
+
+          if [[ "${full_checks}" == "true" ]]; then
+            echo "full_checks=true" >> "${GITHUB_OUTPUT}"
+            echo "backlog_only=false" >> "${GITHUB_OUTPUT}"
+            echo "Source or documentation files changed: running full checks."
+          else
+            echo "full_checks=false" >> "${GITHUB_OUTPUT}"
+            echo "backlog_only=true" >> "${GITHUB_OUTPUT}"
+            echo "Only .backlog/ files changed: full checks are not required."
+          fi
+
+  ci:
+    name: Node and content checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: changes
+
+    steps:
+      - name: Report .backlog-only pull request
+        if: needs.changes.outputs.backlog_only == 'true'
+        run: echo "Only .backlog/ files changed; full Node/content checks intentionally skipped."
+
+      # actions/checkout v7.0.1
+      - name: Check out repository
+        if: needs.changes.outputs.full_checks == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
 
       # pnpm/action-setup v6.1.0
       - name: Set up pnpm
+        if: needs.changes.outputs.full_checks == 'true'
         uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413
         with:
           run_install: false
 
       # actions/setup-node v7.0.0
       - name: Set up Node.js
+        if: needs.changes.outputs.full_checks == 'true'
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: 26
@@ -41,33 +109,43 @@ jobs:
           cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
+        if: needs.changes.outputs.full_checks == 'true'
         run: pnpm install --frozen-lockfile
 
       - name: Typecheck
+        if: needs.changes.outputs.full_checks == 'true'
         run: pnpm typecheck
 
       - name: Test
+        if: needs.changes.outputs.full_checks == 'true'
         run: pnpm test
 
       - name: Test engine-ts
+        if: needs.changes.outputs.full_checks == 'true'
         run: pnpm --filter @canadian-ham/engine-ts test
 
       - name: Check engine fixtures
+        if: needs.changes.outputs.full_checks == 'true'
         run: pnpm --filter @canadian-ham/engine-ts generate-fixtures:check
 
       - name: Test design tokens
+        if: needs.changes.outputs.full_checks == 'true'
         run: pnpm --filter @canadian-ham/design-tokens test
 
       - name: Check generated design tokens
+        if: needs.changes.outputs.full_checks == 'true'
         run: pnpm --filter @canadian-ham/design-tokens generate:check
 
       - name: Import check
+        if: needs.changes.outputs.full_checks == 'true'
         run: pnpm import:check
 
       - name: Link check
+        if: needs.changes.outputs.full_checks == 'true'
         run: pnpm check:links
 
       - name: Content checkers
+        if: needs.changes.outputs.full_checks == 'true'
         run: |
           node packages/content-tools/src/check-explanations.ts
           node packages/content-tools/src/check-quizzes.ts
@@ -75,21 +153,27 @@ jobs:
           node packages/content-tools/src/check-lesson-originality.ts --all
 
       - name: Build web
+        if: needs.changes.outputs.full_checks == 'true'
         run: pnpm build:web
 
       - name: Audit web build URLs
+        if: needs.changes.outputs.full_checks == 'true'
         run: pnpm --filter @canadian-ham/web audit:urls
 
       - name: Test Apple text-source checker
+        if: needs.changes.outputs.full_checks == 'true'
         run: node scripts/check-apple-text-sources.ts --self-test
 
       - name: Apple text-source check
+        if: needs.changes.outputs.full_checks == 'true'
         run: node scripts/check-apple-text-sources.ts
 
       - name: Test Apple no-network checker
+        if: needs.changes.outputs.full_checks == 'true'
         run: pnpm test:apple-network
 
       - name: Apple no-network check
+        if: needs.changes.outputs.full_checks == 'true'
         run: pnpm check:apple-network
 
       # Local-only checks not run in GitHub CI: the Swift engine half of

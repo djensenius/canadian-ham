@@ -1,7 +1,7 @@
 # Moved to Backlog.md
 
-Work is tracked in [`backlog/`](../backlog/) with the [Backlog.md](https://github.com/MrLesk/Backlog.md) CLI.
-Use `backlog board`, `backlog task list --plain` and `backlog search <query>`; never edit files in `backlog/` by hand.
+Work is tracked in [`.backlog/`](../.backlog/) with the [Backlog.md](https://github.com/MrLesk/Backlog.md) CLI.
+Use `backlog board`, `backlog task list --plain` and `backlog search <query>`; never edit files in `.backlog/` by hand.
 See the Backlog.md workflow in [`AGENTS.md`](../AGENTS.md).
 
 The previous running plan (tasks T-000 to T-706, 73 of them done before the migration) is preserved in git history:
