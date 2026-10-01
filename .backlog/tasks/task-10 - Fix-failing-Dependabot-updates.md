@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 17:00'
+updated_date: '2026-10-01 17:07'
 labels:
   - ci
 milestone: m-0
@@ -43,6 +43,8 @@ Dependabot diagnosis: gh run list --workflow 'Dependabot Updates' showed two fai
 Validation passed: pnpm install --frozen-lockfile; pnpm typecheck; pnpm test (content-tools 93 passed, web 10 files/78 tests passed); pnpm build:web; go run github.com/rhysd/actionlint/cmd/actionlint@latest; ruby YAML parse for .github/dependabot.yml. AC #3 remains unchecked because the next Dependabot run can only be verified after this branch is merged and Dependabot runs on main.
 
 Residual risk for AC #3: GitHub Docs currently list Dependabot pnpm support for pnpm v7-v10 under package-ecosystem npm, while this repository declares packageManager pnpm@12.6.0 and uses pnpm-lock.yaml lockfileVersion 9.0. I did not downgrade or otherwise change the repository package manager because that would widen this task's configuration scope; the next Dependabot run must confirm whether GitHub's updater accepts the current pnpm 12 workspace.
+
+Coordinator diagnosis (2026-10-01): both failed Dependabot runs (2026-09-29 01:41Z and 02:05Z) ran while apps/web/package.json pinned "vitest": "^3.2.0" (since 66bd785). The fix (lowest patched 4.1.11) needed a major bump outside that range, so the security update reported security_update_not_possible (latest resolvable 3.2.7). The manual bump to ^4.1.11 landed later in 3566fee (2026-09-29 02:21Z) and resolved alert #1. Second risk for AC #3: the repo uses packageManager pnpm@12.6.0, whose pnpm-lock.yaml is a two-document YAML file (two lockfileVersion '9.0' documents); Dependabot documents pnpm support only up to v10, so the next run may fail to parse it. If it does, open a follow-up task (e.g. pin the lockfile format or document the limitation) rather than widening this one. Security updates are not covered by the version-update groups (applies-to: version-updates); acceptable for now.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
