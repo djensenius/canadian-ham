@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 13:51'
-updated_date: '2026-10-01 13:53'
+updated_date: '2026-10-01 13:55'
 labels:
   - ci
   - docs
@@ -30,7 +30,9 @@ Every change now goes through a pull request with Copilot code review, and task 
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Verify GitHub custom-instructions and content-exclusion docs.\n2. Add Copilot instruction files scoped to Backlog task paths and repository-wide review context.\n3. Run link checks, record validation and content-exclusion finding, then finalize task.
+1. Verify GitHub's applyTo syntax for path-specific Copilot instructions.
+2. Add .github/instructions/backlog.instructions.md and .github/copilot-instructions.md.
+3. Record whether content exclusion is available on the owner's plan, then run pnpm check:links.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
