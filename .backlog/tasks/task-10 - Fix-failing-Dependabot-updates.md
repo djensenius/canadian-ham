@@ -1,9 +1,11 @@
 ---
 id: TASK-10
 title: Fix failing Dependabot updates
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@pi-worker'
 created_date: '2026-10-01 02:27'
+updated_date: '2026-10-01 16:55'
 labels:
   - ci
 milestone: m-0
