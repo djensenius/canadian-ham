@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 13:51'
-updated_date: '2026-10-01 13:51'
+updated_date: '2026-10-01 13:52'
 labels:
   - ci
   - tooling
@@ -30,3 +30,9 @@ The owner moved to a pull-request-only workflow: nothing may be pushed to main d
 - [ ] #4 canadian-ham's .backlog-sync.json uses 'pr' mode; the README documents both modes and the dry-run output shows the planned PR
 - [ ] #5 go test covers both modes, including the crash-replay case for 'pr' mode, without network access
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Teach backlog-sync to discover the Backlog data directory per worktree from Backlog.md config (supporting backlog/, .backlog/, and custom paths) and cover scanning with tests.\n2. Replace the legacy inbox push boolean with a configurable inbox.mode that preserves push mode and adds pr mode using temporary worktrees, explicit allowed gh repos, duplicate-PR detection, branch push, PR creation, and cleanup.\n3. Update Canadian Ham config and README examples for pr mode; add no-network fake tests for push/pr/crash-replay behavior and dry-run PR logging.\n4. Validate with go vet, go test ./..., go build, and one read-only Canadian Ham dry run saved to /tmp/ch-dry-task19.txt, then finalize task-19.
+<!-- SECTION:PLAN:END -->
