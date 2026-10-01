@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 17:21'
+updated_date: '2026-10-01 17:27'
 labels:
   - content
   - 'legacy:T-003'
@@ -38,6 +38,8 @@ Content and progress data cross several boundaries: the ISED importer writes gen
 Fix review findings before task-3: align lesson and explanation status enums with content-tool behavior, make validate.mjs reject unsupported schema keywords and  siblings at load time, replace inherited property checks with Object.hasOwn, loosen exam timer fields to non-negative numbers, and apply small schema/validator low-note fixes before rerunning validation/type/test/link checks.
 
 Clarification for this fix round: validate.mjs will reject sibling keywords next to $ref instead of silently dropping them, and the schemas will stay within the enforced supported keyword subset.
+
+Copilot PR #54 fix round: read all six review comments, align schemas/validator with existing content contracts for semantic timestamps, non-empty lesson arrays, module order bounds, and front matter parsing, add negative regression checks for the six rejected cases, rerun validation/type/test/link checks, commit/push, reply to comments, and request a fresh Copilot review.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
