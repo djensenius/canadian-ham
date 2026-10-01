@@ -6,12 +6,12 @@ title: >-
 status: To Do
 assignee: []
 created_date: '2026-10-01 12:57'
+updated_date: '2026-10-01 12:57'
 labels:
   - ci
   - tooling
 milestone: m-0
-dependencies:
-  - TASK-16
+dependencies: []
 ordinal: 27000
 ---
 
