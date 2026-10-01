@@ -22,8 +22,8 @@ Verify the claims in the Morse trainer research brief against the current ISED R
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 The test format and pass criteria are confirmed from ISED documents
-- [ ] #2 The brief is committed under docs/proposals/
+- [x] #1 The test format and pass criteria are confirmed from ISED documents
+- [x] #2 The brief is committed under docs/proposals/
 - [ ] #3 The owner's decisions are recorded in the parent task notes
 <!-- AC:END -->
 
