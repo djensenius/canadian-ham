@@ -6,7 +6,7 @@
   "defaultRepo": "djensenius/canadian-ham",
   "mainBranch": "main",
   "statusMap": {},
-  "inbox": { "enabled": true, "label": "inbox", "mode": "pr" },
+  "inbox": { "enabled": true, "label": "inbox", "mode": "manual" },
   "adoptReferencedIssues": false,
   "labels": {
     "managed": ["*"],
