@@ -1122,7 +1122,8 @@ struct MockExamView: View {
     private func focusResultsHeadingAfterLayout() {
         guard shouldFocusResultsHeading else { return }
         Task { @MainActor in
-            await Task.yield()
+            // Let SwiftUI finish replacing the active exam view before requesting VoiceOver focus.
+            try? await Task.sleep(nanoseconds: 150_000_000)
             resultFocus = .resultsHeading
             shouldFocusResultsHeading = false
         }
@@ -1622,7 +1623,7 @@ struct LocalizedErrorMessageText: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             Text(parts.summary) // l10n: localized
             if let detail = parts.detail {
-                Text(localized(detail, language: .english)) // l10n: content(en)
+                Text(detail) // l10n: localized
             }
         }
     }

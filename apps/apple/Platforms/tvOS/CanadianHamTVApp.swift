@@ -257,56 +257,63 @@ private struct TVPracticeView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-                TVTopBar(
-                    title: localized(category.name.text(for: language), language: language),
-                    subtitle: Text(localizedCorrectOutOfAnswered(correct: session.correctCount, answered: session.answeredCount)), // l10n: localized
-                    language: $language,
-                    onAbout: onAbout,
-                    leadingAction: ("Categories", onCategories)
-                )
+        ScrollViewReader { scrollProxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                    TVTopBar(
+                        title: localized(category.name.text(for: language), language: language),
+                        subtitle: Text(localizedCorrectOutOfAnswered(correct: session.correctCount, answered: session.answeredCount)), // l10n: localized
+                        language: $language,
+                        onAbout: onAbout,
+                        leadingAction: ("Categories", onCategories)
+                    )
 
-                if let errorMessage = session.errorMessage {
-                    TVMessageView(title: "Practice unavailable", message: errorMessage, systemImage: "exclamationmark.triangle.fill")
-                } else if let currentQuestion = session.currentQuestion {
-                    HStack(alignment: .top, spacing: DesignTokens.Spacing.xxl) {
-                        TVQuestionPanel(question: currentQuestion, category: category, language: language)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-                            Text("Answers")
-                                .font(DesignTokens.FontScale.title.weight(.bold))
-                                .foregroundStyle(DesignTokens.Colors.ink)
-                                .accessibilityAddTraits(.isHeader)
-                            ForEach(session.shuffledAnswers) { answer in
-                                TVAnswerButton(
-                                    answer: answer,
-                                    displayLetter: displayLetter(for: answer.displayIndex),
-                                    language: language,
-                                    selectedSourceIndex: session.selectedSourceIndex,
-                                    action: { select(answer) }
-                                )
+                    if let errorMessage = session.errorMessage {
+                        TVMessageView(title: "Practice unavailable", message: errorMessage, systemImage: "exclamationmark.triangle.fill")
+                    } else if let currentQuestion = session.currentQuestion {
+                        HStack(alignment: .top, spacing: DesignTokens.Spacing.xxl) {
+                            TVQuestionPanel(question: currentQuestion, category: category, language: language)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                                Text("Answers")
+                                    .font(DesignTokens.FontScale.title.weight(.bold))
+                                    .foregroundStyle(DesignTokens.Colors.ink)
+                                    .accessibilityAddTraits(.isHeader)
+                                ForEach(session.shuffledAnswers) { answer in
+                                    TVAnswerButton(
+                                        answer: answer,
+                                        displayLetter: displayLetter(for: answer.displayIndex),
+                                        language: language,
+                                        selectedSourceIndex: session.selectedSourceIndex,
+                                        action: { select(answer) }
+                                    )
+                                }
                             }
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    }
 
-                    if let selectedAnswer, let correctAnswer {
-                        TVFeedbackBar(
-                            selectedAnswer: selectedAnswer,
-                            correctAnswer: correctAnswer,
-                            category: category,
-                            question: currentQuestion,
-                            language: language,
-                            onNext: loadNextQuestion
-                        )
+                        if let selectedAnswer, let correctAnswer {
+                            TVFeedbackBar(
+                                selectedAnswer: selectedAnswer,
+                                correctAnswer: correctAnswer,
+                                category: category,
+                                question: currentQuestion,
+                                language: language,
+                                onNext: loadNextQuestion
+                            )
+                            .id(Self.feedbackAnchorID)
+                        }
+                    } else {
+                        TVMessageView(title: "No questions", message: String(localized: "This category has no bundled questions."), systemImage: "questionmark.circle")
                     }
-                } else {
-                    TVMessageView(title: "No questions", message: String(localized: "This category has no bundled questions."), systemImage: "questionmark.circle")
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.bottom, DesignTokens.Spacing.xxl)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.bottom, DesignTokens.Spacing.xxl)
+            .onChange(of: session.selectedSourceIndex) { _, selectedSourceIndex in
+                guard selectedSourceIndex != nil else { return }
+                scrollFeedbackIntoView(with: scrollProxy)
+            }
         }
         .onAppear {
             session.resetIfNeeded(for: category.id)
@@ -315,6 +322,17 @@ private struct TVPracticeView: View {
             }
         }
         .accessibilityIdentifier("tv-practice-screen")
+    }
+
+    private static let feedbackAnchorID = "tv-feedback-anchor"
+
+    private func scrollFeedbackIntoView(with proxy: ScrollViewProxy) {
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 150_000_000)
+            withAnimation(reduceMotion ? nil : .easeInOut(duration: DesignTokens.Motion.fast)) {
+                proxy.scrollTo(Self.feedbackAnchorID, anchor: .bottom)
+            }
+        }
     }
 
     private func select(_ answer: ShuffledAnswer) {
@@ -756,7 +774,7 @@ private struct LocalizedErrorMessageText: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             Text(parts.summary) // l10n: localized
             if let detail = parts.detail {
-                Text(english(detail)) // l10n: content(en)
+                Text(detail) // l10n: localized
             }
         }
     }

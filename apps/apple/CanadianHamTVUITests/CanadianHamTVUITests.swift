@@ -43,7 +43,8 @@ final class CanadianHamTVUITests: XCTestCase {
         assertNextQuestionIsSeparateButton(nextQuestion, feedback: feedback)
         waitForFocus(on: nextQuestion)
         XCTAssertTrue(nextQuestion.hasFocus, "Next question should receive tvOS focus after answering before Select is pressed")
-        attachFocusedNextQuestionScreenshot(nextQuestion, in: app)
+        assertFocusedNextQuestionIsOnScreen(nextQuestion, in: app)
+        attachFocusedNextQuestionScreenshot(nextQuestion)
 
         remote.press(.select)
         waitForElementToDisappear(feedback, timeout: 5, message: "Feedback should disappear after advancing to the next question with the remote")
@@ -148,7 +149,27 @@ final class CanadianHamTVUITests: XCTestCase {
         }
     }
 
-    private func attachFocusedNextQuestionScreenshot(_ element: XCUIElement, in app: XCUIApplication) {
+    private func assertFocusedNextQuestionIsOnScreen(
+        _ element: XCUIElement,
+        in app: XCUIApplication,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        XCTAssertTrue(element.exists, "Next question must exist before capturing focus-ring evidence", file: file, line: line)
+        XCTAssertTrue(element.isHittable, "Focused Next question button must be hittable before capturing focus-ring evidence", file: file, line: line)
+
+        let window = app.windows.firstMatch
+        XCTAssertTrue(window.waitForExistence(timeout: 5), "App window should exist before capturing focus-ring evidence", file: file, line: line)
+        XCTAssertFalse(element.frame.isEmpty, "Next question frame should be non-empty before capture", file: file, line: line)
+        XCTAssertTrue(
+            window.frame.insetBy(dx: -1, dy: -1).contains(element.frame),
+            "Focused Next question frame \(element.frame) should be inside the app window \(window.frame) before capture",
+            file: file,
+            line: line
+        )
+    }
+
+    private func attachFocusedNextQuestionScreenshot(_ element: XCUIElement) {
         XCTAssertTrue(element.hasFocus, "Next question must be focused before capturing focus-ring evidence")
         RunLoop.current.run(until: Date().addingTimeInterval(1.0))
         let screenshot = XCUIScreen.main.screenshot()
@@ -156,15 +177,6 @@ final class CanadianHamTVUITests: XCTestCase {
         attachment.name = "tvos-next-question-focus-ring"
         attachment.lifetime = .keepAlways
         add(attachment)
-
-        guard let evidencePath = ProcessInfo.processInfo.environment["CANADIAN_HAM_TV_FOCUS_EVIDENCE_PATH"], !evidencePath.isEmpty else { return }
-        do {
-            let url = URL(fileURLWithPath: evidencePath)
-            try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true, attributes: nil)
-            try screenshot.pngRepresentation.write(to: url, options: .atomic)
-        } catch {
-            XCTFail("Unable to write tvOS focus evidence screenshot: \(error)")
-        }
     }
 
     private func waitForElementToDisappear(
