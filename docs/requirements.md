@@ -72,10 +72,10 @@ Needs:
 | DEC-WEB-001 | The web app is fully static: no server, no accounts, no analytics, no third-party requests, and self-hosted fonts/assets. | Supports privacy, low hosting cost, and offline PWA. |
 | DEC-WEB-002 | Use Vite + React + TypeScript for the static web app, with pnpm as the package manager. | Owner confirmed this stack on 2026-09-28; it is straightforward for interactive quizzes and the planned offline PWA. |
 | DEC-TOOLING-001 | Run importer and content tooling as TypeScript directly in Node using Node >= 23.6 type stripping; use `node:test`; keep the importer at zero runtime dependencies. | Owner confirmed this on 2026-09-28; the development machine has Node 26, and the importer should stay small and reproducible. |
-| DEC-APPLE-001 | Apple app is SwiftUI multiplatform for iOS, iPadOS, macOS, visionOS 2.0+, and tvOS 18.0+ in v1; watchOS remains later. | Native offline UX, shared SwiftUI code, owner-approved platform expansion, and platform-appropriate layouts/focus/windowing. |
+| DEC-APPLE-001 | Apple app is SwiftUI multiplatform for iOS/iPadOS 27.0+, macOS 27.0+, visionOS 27.0+, and tvOS 27.0+ in v1; watchOS remains later. | Native offline UX, shared SwiftUI code, owner-approved platform expansion, and platform-appropriate layouts/focus/windowing. |
 | DEC-APPLE-002 | Use SwiftData for local progress. | Native local persistence with no remote service. |
 | DEC-APPLE-003 | No third-party SDKs, no networking code, and no iCloud sync in v1. | Minimizes privacy risk and supports App Store Data Not Collected. iCloud sync may be reconsidered later only with a privacy review. |
-| DEC-APPLE-004 | Minimum Apple OS versions are iOS/iPadOS 18.0 and macOS 15.0. | Matches the first SwiftUI multiplatform Apple slice and keeps the initial offline app focused on currently supported Apple platforms. |
+| DEC-APPLE-004 | Minimum Apple OS versions are iOS/iPadOS 27.0, macOS 27.0, tvOS 27.0, and visionOS 27.0. | Matches the first SwiftUI multiplatform Apple slice and keeps the initial offline app focused on currently supported Apple platforms. |
 | DEC-BILINGUAL-001 | Schema stores English and French from day one. UI ships English first; French UI comes in P6 using official ISED French question text. | Avoids schema migration later and prevents unofficial translations of ISED questions. |
 | DEC-BUILD-001 | Builds and tests use `xbuild`; never call `xcodebuild` directly. | Required by AGENTS.md to serialize builds and clean up simulators. |
 
@@ -326,7 +326,7 @@ Acceptance criteria:
 
 #### REQ-APPLE-001: SwiftUI multiplatform app
 
-The Apple app shall target iOS, iPadOS, macOS, visionOS 2.0+, and tvOS 18.0+ using SwiftUI.
+The Apple app shall target iOS/iPadOS 27.0+, macOS 27.0+, visionOS 27.0+, and tvOS 27.0+ using SwiftUI.
 
 Acceptance criteria:
 
@@ -367,7 +367,7 @@ Acceptance criteria:
 
 #### REQ-APPLE-005: Basic visionOS app
 
-The Apple app shall include a native visionOS 2.0+ window app in v1.
+The Apple app shall include a native visionOS 27.0+ window app in v1.
 
 Acceptance criteria:
 
@@ -379,7 +379,7 @@ Acceptance criteria:
 
 #### REQ-APPLE-006: Basic tvOS app
 
-The Apple app shall include a native tvOS 18.0+ app in v1.
+The Apple app shall include a native tvOS 27.0+ app in v1.
 
 Acceptance criteria:
 

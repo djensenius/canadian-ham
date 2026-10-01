@@ -140,12 +140,8 @@ final class CanadianHamVisionUITests: XCTestCase {
         return app
     }
 
-    private func performAudit(on app: XCUIApplication, context: String) throws {
-        if #available(visionOS 1.0, *) {
-            try app.performAccessibilityAudit()
-        } else {
-            throw XCTSkip("performAccessibilityAudit is unavailable for \(context).")
-        }
+    private func performAudit(on app: XCUIApplication, context _: String) throws {
+        try app.performAccessibilityAudit()
     }
 
     private func assertNextQuestionIsSeparateButton(

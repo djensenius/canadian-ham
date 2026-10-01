@@ -1,13 +1,13 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.4
 import PackageDescription
 
 let package = Package(
     name: "CanadianHamContent",
     platforms: [
-        .iOS(.v18),
-        .macOS(.v15),
-        .visionOS(.v2),
-        .tvOS(.v18),
+        .iOS(.v27),
+        .macOS(.v27),
+        .visionOS(.v27),
+        .tvOS(.v27),
     ],
     products: [
         .library(
