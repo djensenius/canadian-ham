@@ -44,5 +44,5 @@ Implemented Apple follow-ups and validation. Mock exam results heading now owns 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented mock-results focus/announcement exposure, tvOS focus-ring evidence capture, and English error-detail language tagging. Verified AC2 with exported tvOS screenshot evidence and AC3 with pnpm check:apple-l10n plus full Apple xbuild suites. AC1 remains In Progress pending the owner\'s documented 3-step VoiceOver listening check.
+Implemented mock-results focus/announcement exposure, tvOS focus-ring evidence capture, and English error-detail language tagging. Verified AC2 with exported tvOS screenshot evidence and AC3 with pnpm check:apple-l10n plus full Apple xbuild suites. AC1 remains In Progress pending the owner manual 3-step VoiceOver listening check.
 <!-- SECTION:FINAL_SUMMARY:END -->
