@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 16:56'
+updated_date: '2026-10-01 17:00'
 labels:
   - web
   - accessibility
@@ -32,5 +32,9 @@ Reviews of the web accessibility and stale-load race lanes approved the work but
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Align docs/accessibility.md keyboard/screen-reader guidance with the existing toggle-button answer-choice decision.\n2. Update App focus handling so initial route focus is skipped under React StrictMode, and wire the error-boundary skip link through the same preventDefault/focus behavior.\n3. Adjust preference-save status handling so only the latest successful save announces a theme-saved status; add a regression for a superseded failed save.\n4. Tighten the lesson quiz axe regression to scan the lesson quiz section only with cheaper DOM queries.\n5. Add focused tests for StrictMode skip-link tab order, error-boundary skip-link hash preservation/focus, stale preference saves, and the optimized lesson quiz axe path; then run the required checks.
+1. Align docs/accessibility.md keyboard/screen-reader guidance with the existing toggle-button answer-choice decision.
+2. Update App focus handling so initial route focus is skipped under React StrictMode, and wire the error-boundary skip link through the same preventDefault/focus behavior.
+3. Adjust preference-save status handling so only the latest successful save announces a theme-saved status; add a regression for a superseded failed save.
+4. Tighten the lesson quiz axe regression to scan the lesson quiz section only with cheaper DOM queries.
+5. Add focused tests for StrictMode skip-link tab order, error-boundary skip-link hash preservation/focus, stale preference saves, and the optimized lesson quiz axe path; then run the required checks.
 <!-- SECTION:PLAN:END -->
