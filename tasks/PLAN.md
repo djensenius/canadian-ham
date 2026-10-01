@@ -116,6 +116,7 @@ Owner-type is `worker` unless a future task explicitly needs coordinator action.
 | T-702 | Later | todo | worker | v1 release | Investigate Morse 5 wpm trainer as separate module. |
 | T-703 | Later | todo | worker | v1 release | Investigate watchOS companion only after Apple v1 privacy posture is stable. |
 | T-705 | Later | todo | worker | v1 release | Revisit optional iCloud sync as a privacy-review item, not as a default feature. |
+| T-706 | P7 | todo | worker | T-511 | Prepare the Apple app for iPhone Duo (foldable; announced 2026-09-09, ships 2026-10-23): build with Xcode 27.1+, confirm UIScene lifecycle, freely resizable adaptive layouts (compact outer / regular inner display, posed states), no UIScreen.main assumptions, reserved regions and asymmetric safe areas, state preserved across fold/unfold mid-practice/exam; extend UI tests and accessibility audits to the iPhone Duo simulator. Ref: https://developer.apple.com/iphone-duo/ |
 
 ## Current branch review checklist for T-001
 
