@@ -22,11 +22,11 @@ Reviews of the web accessibility and stale-load race lanes approved the work but
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 docs/accessibility.md no longer says answer choices use radio groups (it matches the toggle-button decision)
-- [ ] #2 The skip link is the first Tab stop in development (StrictMode) as well as production
-- [ ] #3 The error-screen skip link moves focus without leaving #main in the URL
-- [ ] #4 A superseded failed preference save doesn't show 'Theme saved'
-- [ ] #5 The lesson quiz axe test runs comfortably under the default timeout (scan only the quiz section, cheaper queries)
+- [x] #1 docs/accessibility.md no longer says answer choices use radio groups (it matches the toggle-button decision)
+- [x] #2 The skip link is the first Tab stop in development (StrictMode) as well as production
+- [x] #3 The error-screen skip link moves focus without leaving #main in the URL
+- [x] #4 A superseded failed preference save doesn't show 'Theme saved'
+- [x] #5 The lesson quiz axe test runs comfortably under the default timeout (scan only the quiz section, cheaper queries)
 <!-- AC:END -->
 
 ## Implementation Plan
