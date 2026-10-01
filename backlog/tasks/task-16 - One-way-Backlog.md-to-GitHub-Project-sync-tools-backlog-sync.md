@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:33'
-updated_date: '2026-10-01 03:03'
+updated_date: '2026-10-01 03:14'
 labels:
   - ci
   - tooling
@@ -814,6 +814,8 @@ ArkhamHorror dry-run full output:
 ```
 
 Round 3 started in /Users/david/Developer/canadian-ham-task-16 on branch task-16-backlog-sync after reading AGENTS.md, backlog task-execution, /tmp/ch-reviews/sync2.md, and /tmp/ch-backlog-sync-round2.md.
+
+Round 3 implementation slice complete: added claimed-issue tracking across marker/inbox/adoption paths, prefix-derived marker/ID/branch handling, dry-run project field reporting for adopted issues, sub-issue parent repo allowlist checks, no-optional-locks status, help handling, option docs, and expanded fake/parser/fixture tests. Local go vet/go test/go build passed in tools/backlog-sync.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
