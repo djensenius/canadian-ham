@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 22:48'
+updated_date: '2026-10-01 22:56'
 labels:
   - apple
   - accessibility
@@ -23,8 +23,8 @@ Reviews of the Apple accessibility and French interface lanes approved the work 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [ ] #1 After mock exam submission, focus moves to the results heading on appear and the announcement isn't cut off (verified with VoiceOver)
-- [ ] #2 The tvOS 'Next question' focus ring visibly renders (screenshot or manual check recorded)
-- [ ] #3 English system error details (e.g. QuestionBankLoadError) are tagged en or localised in the French UI
+- [x] #2 The tvOS 'Next question' focus ring visibly renders (screenshot or manual check recorded)
+- [x] #3 English system error details (e.g. QuestionBankLoadError) are tagged en or localised in the French UI
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -41,6 +41,8 @@ Fix review round: merge origin/main, restore AC #2/#3 to unchecked while correct
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented Apple follow-ups and validation. Mock exam results heading now owns the spoken summary and is focused after the result view appears; XCUITest verifies the heading identifier/label, but the actual VoiceOver listening check remains manual for the owner per docs/accessibility.md. tvOS focus evidence exported to docs/evidence/tvos-next-question-focus-ring.png with manifest at docs/evidence/tvos-next-question-focus-ring-xcresult/manifest.json. English error details are tagged with English language attributes in shared Apple and tvOS LocalizedErrorMessageText. Validation passed: pnpm check:apple-l10n; full iOS, macOS, tvOS, and visionOS xbuild suites.
+
+Review round fixes: AC2 revalidated by CanadianHamTVUITests/testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances with an on-screen/hittable/window-frame assertion before capture; docs/evidence/tvos-next-question-focus-ring.png was recaptured from the passing xcresult and manually opened/confirmed to show the focused Next question button and ring. Removed the duplicate docs/evidence/tvos-next-question-focus-ring-xcresult copy. AC3 revalidated by localizing app-owned QuestionBankLoadError and the debug ProgressStoreError.openFailed test message in Localizable.xcstrings, leaving Foundation/SwiftData/system error details untagged in StudyViews, tvOS, and visionOS; pnpm check:apple-l10n passed after the text-source gate and tvOS/visionOS localization builds.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
