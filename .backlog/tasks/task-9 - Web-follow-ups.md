@@ -38,3 +38,9 @@ Reviews of the web accessibility and stale-load race lanes approved the work but
 4. Tighten the lesson quiz axe regression to scan the lesson quiz section only with cheaper DOM queries.
 5. Add focused tests for StrictMode skip-link tab order, error-boundary skip-link hash preservation/focus, stale preference saves, and the optimized lesson quiz axe path; then run the required checks.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented web follow-ups in apps/web/src/App.tsx, apps/web/src/App.test.tsx, and docs/accessibility.md. Evidence: docs now describe answer-choice toggle buttons with aria-pressed; App.test covers StrictMode skip-link first tab, recovery skip-link focus/hash preservation, superseded failed preference save status suppression, and lesson quiz axe scanning only .lesson-quiz. Validation passed: pnpm typecheck; pnpm test three consecutive runs; pnpm build:web; pnpm --filter @canadian-ham/web audit:urls.
+<!-- SECTION:NOTES:END -->
