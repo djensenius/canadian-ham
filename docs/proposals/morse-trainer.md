@@ -246,7 +246,7 @@ Both use plain language at a speed of not less than 5 wpm. Examiners send at a *
 - **Settings:**
   - Tone frequency: 400–900 Hz (default 650 Hz).
   - Character speed: 12–25 wpm (default 15).
-  - Effective speed: 5–20 wpm.
+  - Effective speed: 5 wpm up to the selected character speed (never faster). Farnsworth spacing only stretches the gaps between characters and words, so an effective speed above the character speed would need negative gaps under the Bloom formula; the setting is clamped to the character speed.
   - Exam timing mode: PARIS-calibrated or RIC-1 literal.
   - Trainer volume separate from system volume.
 
