@@ -4,7 +4,7 @@ Purpose: schema definitions for content, generated bank records, progress record
 
 Belongs here:
 
-- JSON Schema or TypeScript schema definitions once T-003 is implemented.
+- JSON Schema or TypeScript schema definitions once task-2 (legacy T-003) is implemented.
 - Schema tests and examples that do not duplicate official source artifacts.
 
 Must not go here:

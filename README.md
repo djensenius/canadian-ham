@@ -38,7 +38,7 @@ canadian-ham/
 - [Exam facts](docs/exam-facts.md)
 - [Privacy plan](docs/privacy.md)
 - [Content licensing and attribution plan](docs/content-licensing.md)
-- [Running plan](tasks/PLAN.md)
+- Work tracking: [Backlog.md](backlog/) (`backlog board`; see [AGENTS.md](AGENTS.md))
 
 ## Build rule
 
