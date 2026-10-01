@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 21:58'
+updated_date: '2026-10-01 21:59'
 labels:
   - ci
 milestone: m-0
@@ -27,3 +27,9 @@ Reviews of the no-network audit and CI lanes left non-blocking gaps where a chec
 - [ ] #4 The lesson URL scan is case-insensitive (HTTPS://, WWW.)
 - [ ] #5 The import-kind rule has a sample that only that rule can match (e.g. import enum WebKit.WKNavigationType)
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Harden scripts/check-apple-no-network.sh so Swift URL grep failures report as audit issues and lesson content URL detection catches uppercase HTTPS/WWW references without changing allowed citation rules.\n2. Extend scripts/test-check-apple-no-network.sh with fixtures for URL-grep failure, plutil-unavailable skip output, uppercase lesson links, and a single import-kind sample that only the import-kind rule can match.\n3. Update packages/content-tools/src/check-lesson-originality.ts and tests so --all/required full-bank runs fail when zero lesson files are checked.\n4. Run required bash, pnpm, and originality validation, then record evidence before finalizing task-7.
+<!-- SECTION:PLAN:END -->
