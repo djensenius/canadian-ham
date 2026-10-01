@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 13:51'
-updated_date: '2026-10-01 14:13'
+updated_date: '2026-10-01 14:14'
 labels:
   - ci
   - tooling
@@ -47,6 +47,8 @@ Round 3 fix steps:
 1. Resolve symlink-real temp/worktree paths and remove leftover PR-mode inbox worktrees before collection, with macOS-style symlink tests.
 2. Harden inbox branch fetch/push leases using ls-remote SHAs/empty leases and + refspecs, and isolate per-issue PR-mode failures so sync continues.
 3. Prevent checked-out PR branches from linking issues before merge, check new task IDs against origin/main before PR creation, document collision/rejection behavior, and revalidate with Go checks plus Canadian Ham dry run.
+
+Round 4 rescope steps: 1. Remove all inbox pr-mode implementation, config fields, tests, and README text while preserving existing push behavior and Backlog data-dir discovery. 2. Add report-only inbox.mode manual that logs each open inbox-labelled issue as needing triage, summarizes the count, and performs zero writes for those issues; reject invalid modes. 3. Update Canadian Ham config to manual and README mode docs, add no-network tests for manual zero-writes/reporting plus unchanged push behavior, then run requested validation and finalize with evidence.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
