@@ -4,6 +4,7 @@ title: JSON Schemas for content and progress types
 status: To Do
 assignee: []
 created_date: '2026-10-01 02:27'
+updated_date: '2026-10-01 02:34'
 labels:
   - content
   - 'legacy:T-003'
@@ -15,7 +16,7 @@ ordinal: 9000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-Define initial JSON Schemas for Question, Category, Subsection, Lesson front matter, Explanation, ExamAttempt, QuestionProgress and EngineFixture, matching the generated data and the TypeScript types. Put them in packages/schemas. Legacy: T-003.
+Content and progress data cross several boundaries: the ISED importer writes generated JSON, lessons and explanations are hand-written, and the web and Apple apps exchange progress through a shared export format. Today only scattered TypeScript types and ad-hoc checks guard those shapes, so a drifting field (e.g. an importer change or an export change on one platform) can break the other side silently. Explicit JSON Schemas give one contract that both platforms and the content tools can validate against. Legacy: T-003.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
