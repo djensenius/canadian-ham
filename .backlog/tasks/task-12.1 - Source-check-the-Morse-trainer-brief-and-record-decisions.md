@@ -1,9 +1,11 @@
 ---
 id: TASK-12.1
 title: Source-check the Morse trainer brief and record decisions
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@pi-worker'
 created_date: '2026-10-01 02:27'
+updated_date: '2026-10-01 22:37'
 labels:
   - docs
 milestone: m-1
@@ -24,3 +26,9 @@ Verify the claims in the Morse trainer research brief against the current ISED R
 - [ ] #2 The brief is committed under docs/proposals/
 - [ ] #3 The owner's decisions are recorded in the parent task notes
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Copy the source-checked Morse brief into docs/proposals/ with only formatting/link/project-scope cleanup.\n2. Verify the brief's claim-status summary and open owner decisions without changing verified facts.\n3. Run pnpm check:links, check only supported acceptance criteria, record notes, and commit the task updates plus docs.
+<!-- SECTION:PLAN:END -->
