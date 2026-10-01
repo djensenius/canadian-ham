@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 13:51'
-updated_date: '2026-10-01 14:11'
+updated_date: '2026-10-01 14:13'
 labels:
   - ci
   - tooling
@@ -25,10 +25,6 @@ The owner moved to a pull-request-only workflow: nothing may be pushed to main d
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 Worktree scanning finds the Backlog folder wherever the project's Backlog.md config puts it (backlog/, .backlog/ or a custom path), using the CLI or the config file read-only, with tests
-- [x] #2 A config option selects the inbox mode: 'push' (current behaviour) or 'pr' (create the task on a new branch such as inbox/<repo>-<N> from origin's main in a temporary worktree, push the branch, open a PR titled '<task-id>: <title>', then link and unlabel the issue)
-- [ ] #3 In 'pr' mode nothing is committed to or pushed to main, the temporary worktree is removed, and a re-run never opens a second PR for the same issue (it finds the open PR or the task reference)
-- [ ] #4 canadian-ham's .backlog-sync.json uses 'pr' mode; the README documents both modes and the dry-run output shows the planned PR
-- [x] #5 go test covers both modes, including the crash-replay case for 'pr' mode, without network access
 <!-- AC:END -->
 
 ## Implementation Plan
