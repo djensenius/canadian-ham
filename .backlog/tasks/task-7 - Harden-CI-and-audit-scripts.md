@@ -21,11 +21,11 @@ Reviews of the no-network audit and CI lanes left non-blocking gaps where a chec
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 The Swift URL-literal scan treats grep exit 2 as an error, not as no matches
-- [ ] #2 The self-test covers the grep-error branch and the plutil-missing skip branch
-- [ ] #3 check-lesson-originality --all fails when it checks zero files
-- [ ] #4 The lesson URL scan is case-insensitive (HTTPS://, WWW.)
-- [ ] #5 The import-kind rule has a sample that only that rule can match (e.g. import enum WebKit.WKNavigationType)
+- [x] #1 The Swift URL-literal scan treats grep exit 2 as an error, not as no matches
+- [x] #2 The self-test covers the grep-error branch and the plutil-missing skip branch
+- [x] #3 check-lesson-originality --all fails when it checks zero files
+- [x] #4 The lesson URL scan is case-insensitive (HTTPS://, WWW.)
+- [x] #5 The import-kind rule has a sample that only that rule can match (e.g. import enum WebKit.WKNavigationType)
 <!-- AC:END -->
 
 ## Implementation Plan
