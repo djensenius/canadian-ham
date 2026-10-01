@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 17:02'
+updated_date: '2026-10-01 17:17'
 labels:
   - content
   - 'legacy:T-003'
@@ -34,6 +34,8 @@ Content and progress data cross several boundaries: the ISED importer writes gen
 2. Add a zero-dependency Node validation script in packages/schemas that implements the limited JSON Schema keywords used, parses lesson front matter into JSON, validates all real content/generated/basic-2025-07-15 JSON, content/lessons front matter, content/explanations JSON, fixtures/engine JSON, and representative progress exports covering web/Apple-compatible required and optional fields.
 3. Document the schema inventory, draft/version, validator keyword subset, and validation command in packages/schemas/README.md.
 4. Run the schema validation script plus pnpm typecheck, pnpm test, and pnpm check:links; then record evidence, check satisfied acceptance criteria, and finalize the task if all pass.
+
+Fix review findings before task-3: align lesson and explanation status enums with content-tool behavior, make validate.mjs reject unsupported schema keywords and  siblings at load time, replace inherited property checks with Object.hasOwn, loosen exam timer fields to non-negative numbers, and apply small schema/validator low-note fixes before rerunning validation/type/test/link checks.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
