@@ -1,9 +1,11 @@
 ---
 id: TASK-23
 title: Raise the Apple apps to OS 27 minimums and Swift tools 6.4
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@pi-worker'
 created_date: '2026-10-01 18:11'
+updated_date: '2026-10-01 18:12'
 labels:
   - apple
 milestone: m-0
