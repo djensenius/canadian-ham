@@ -37,7 +37,12 @@ The owner wants every change to reach main through a pull request with Copilot c
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Move the Backlog.md data folder from backlog/ to .backlog/ with git mv and verify backlog board, task list, and doctor.\n2. Update AGENTS.md for the PR workflow, live GitHub Project board, Copilot review-loop stopping rule, inbox triage, and .backlog task-file conflict guidance while removing the main-before-branching rule.\n3. Update CI to detect .backlog-only pull requests with a job-level changes check and run only a quick success path for those PRs while preserving full checks for all other changes.\n4. Update README/docs/tasks references from backlog/ to .backlog/ and point backlog-sync references at djensenius/backlog-sync where appropriate; verify Copilot skip instructions already include .backlog/** and record that evidence.\n5. Close task-18 as Done with notes/final summary that all AC follow-ups moved to djensenius/backlog-sync task-8, leaving ACs unchecked unless the CLI refuses Done.\n6. Run the requested validation, check task-20 ACs 1-5 with evidence, leave AC 6 unchecked and task-20 In Progress, then commit logical changes without pushing.
+1. Move the Backlog.md data folder from backlog/ to .backlog/ with git mv and verify backlog board, task list, and doctor.
+2. Update AGENTS.md for the PR workflow, live GitHub Project board, Copilot review-loop stopping rule, inbox triage, and .backlog task-file conflict guidance while removing the main-before-branching rule.
+3. Update CI to detect .backlog-only pull requests with a job-level changes check and run only a quick success path for those PRs while preserving full checks for all other changes.
+4. Update README/docs/tasks references from backlog/ to .backlog/ and point backlog-sync references at djensenius/backlog-sync where appropriate; verify Copilot skip instructions already include .backlog/** and record that evidence.
+5. Close task-18 as Done with notes/final summary that all AC follow-ups moved to djensenius/backlog-sync task-8, leaving ACs unchecked unless the CLI refuses Done.
+6. Run the requested validation, check task-20 ACs 1-5 with evidence, leave AC 6 unchecked and task-20 In Progress, then commit logical changes without pushing.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
