@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 16:56'
+updated_date: '2026-10-01 17:02'
 labels:
   - content
   - 'legacy:T-003'
@@ -22,9 +22,9 @@ Content and progress data cross several boundaries: the ISED importer writes gen
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Schemas exist in packages/schemas for every listed type
-- [ ] #2 The schemas match the current generated bank JSON, the lesson front matter, the explanation JSON and the progress export format
-- [ ] #3 The schemas are documented in packages/schemas/README.md
+- [x] #1 Schemas exist in packages/schemas for every listed type
+- [x] #2 The schemas match the current generated bank JSON, the lesson front matter, the explanation JSON and the progress export format
+- [x] #3 The schemas are documented in packages/schemas/README.md
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -35,3 +35,9 @@ Content and progress data cross several boundaries: the ISED importer writes gen
 3. Document the schema inventory, draft/version, validator keyword subset, and validation command in packages/schemas/README.md.
 4. Run the schema validation script plus pnpm typecheck, pnpm test, and pnpm check:links; then record evidence, check satisfied acceptance criteria, and finalize the task if all pass.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented draft 2020-12 schemas and zero-dependency validator in packages/schemas. Validation evidence: node packages/schemas/validate.mjs -> Schema validation passed: 1042 validation target(s). Validated generated bank JSON, subsection titles, lesson front matter, explanations, engine fixtures, and progress export samples. pnpm typecheck, pnpm test, and pnpm check:links passed.
+<!-- SECTION:NOTES:END -->
