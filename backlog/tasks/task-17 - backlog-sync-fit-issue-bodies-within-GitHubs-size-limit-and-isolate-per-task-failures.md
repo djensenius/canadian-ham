@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 12:57'
-updated_date: '2026-10-01 13:07'
+updated_date: '2026-10-01 13:10'
 labels:
   - ci
   - tooling
@@ -44,4 +44,6 @@ Fix round 2: adjust section truncation so minimum sections stay minimized and re
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented tools/backlog-sync issue-body truncation using a 60,000-rune budget with deterministic shrink order (implementation notes, plan, description, final summary) and task-view markers. Isolated per-task sync write failures with task-ID logs, failure counts in the summary, and non-zero return when failures occur. Validation passed: cd tools/backlog-sync && go vet ./... && go test ./... && go build -o /tmp/backlog-sync-17 .; dry-run saved to /tmp/ch-dry-task17.txt with summary 'sync complete: 10 created, 4 updated, 27 status changes, 0 imported, 0 failed'. AC #4 intentionally left unchecked for the coordinator's real run.
+
+Fix round 2 implemented: sections that cannot fit at minimum stay marker-only/truncation-note-only while later sections shrink in fixed order; rendered bodies over GitHub's hard limit are per-task failures that skip issue writes; truncation closes open backtick fences; expected sub-issue link rejections now warn once per run; summary labels failed operations. Validation passed: cd tools/backlog-sync && go vet ./... && go test ./... && go build -o /tmp/backlog-sync-17b .; dry-run saved to /tmp/ch-dry-task17b.txt with summary 'sync complete: 10 created, 4 updated, 27 status changes, 0 imported, 0 failed operations'. AC #4 remains unchecked and task remains In Progress.
 <!-- SECTION:NOTES:END -->
