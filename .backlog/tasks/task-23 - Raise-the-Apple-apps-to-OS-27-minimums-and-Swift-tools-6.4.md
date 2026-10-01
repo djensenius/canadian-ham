@@ -27,3 +27,9 @@ The owner decided to target only the latest Apple platforms: iOS/iPadOS 27, macO
 - [ ] #4 Docs that state the minimum OS versions (AGENTS.md project notes, docs/requirements.md, docs/architecture.md, apps/apple/README.md and any others) say OS 27
 - [ ] #5 pnpm check:apple-network and pnpm check:apple-l10n still pass
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Update Apple project configuration and Swift package manifests to Swift tools 6.4 with OS 27 deployment/platform minimums, then regenerate apps/apple/CanadianHam.xcodeproj twice with XcodeGen and confirm the second generation is deterministic. 2. Remove obsolete pre-OS-27 availability fallbacks and update all minimum-OS documentation references. 3. Run package validation, pnpm Apple policy checks, warning scan, and final xbuild suites for iOS, macOS, tvOS, and visionOS using the documented destinations; record evidence before checking acceptance criteria.
+<!-- SECTION:PLAN:END -->
