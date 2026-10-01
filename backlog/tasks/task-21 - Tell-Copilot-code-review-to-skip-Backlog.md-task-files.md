@@ -22,9 +22,9 @@ Every change now goes through a pull request with Copilot code review, and task 
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 `.github/instructions/backlog.instructions.md` has `applyTo` frontmatter covering both `backlog/**` and `.backlog/**` and tells Copilot code review not to review or comment on those files
-- [ ] #2 `.github/copilot-instructions.md` states the same rule repository-wide (and briefly that task files are managed with the backlog CLI)
-- [ ] #3 The owner's plan support for repository content exclusion (Settings → Copilot → Content exclusion) is checked and recorded in the task notes, with the path to add if it is available
+- [x] #1 `.github/instructions/backlog.instructions.md` has `applyTo` frontmatter covering both `backlog/**` and `.backlog/**` and tells Copilot code review not to review or comment on those files
+- [x] #2 `.github/copilot-instructions.md` states the same rule repository-wide (and briefly that task files are managed with the backlog CLI)
+- [x] #3 The owner's plan support for repository content exclusion (Settings → Copilot → Content exclusion) is checked and recorded in the task notes, with the path to add if it is available
 <!-- AC:END -->
 
 ## Implementation Plan
