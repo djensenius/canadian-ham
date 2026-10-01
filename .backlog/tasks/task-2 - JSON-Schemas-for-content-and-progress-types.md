@@ -36,6 +36,8 @@ Content and progress data cross several boundaries: the ISED importer writes gen
 4. Run the schema validation script plus pnpm typecheck, pnpm test, and pnpm check:links; then record evidence, check satisfied acceptance criteria, and finalize the task if all pass.
 
 Fix review findings before task-3: align lesson and explanation status enums with content-tool behavior, make validate.mjs reject unsupported schema keywords and  siblings at load time, replace inherited property checks with Object.hasOwn, loosen exam timer fields to non-negative numbers, and apply small schema/validator low-note fixes before rerunning validation/type/test/link checks.
+
+Clarification for this fix round: validate.mjs will reject sibling keywords next to $ref instead of silently dropping them, and the schemas will stay within the enforced supported keyword subset.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
