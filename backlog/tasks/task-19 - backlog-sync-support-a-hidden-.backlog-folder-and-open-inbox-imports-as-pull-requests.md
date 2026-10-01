@@ -3,11 +3,11 @@ id: TASK-19
 title: >-
   backlog-sync: support a hidden .backlog folder and open inbox imports as pull
   requests
-status: Done
+status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 13:51'
-updated_date: '2026-10-01 14:07'
+updated_date: '2026-10-01 14:11'
 labels:
   - ci
   - tooling
@@ -26,7 +26,7 @@ The owner moved to a pull-request-only workflow: nothing may be pushed to main d
 <!-- AC:BEGIN -->
 - [x] #1 Worktree scanning finds the Backlog folder wherever the project's Backlog.md config puts it (backlog/, .backlog/ or a custom path), using the CLI or the config file read-only, with tests
 - [x] #2 A config option selects the inbox mode: 'push' (current behaviour) or 'pr' (create the task on a new branch such as inbox/<repo>-<N> from origin's main in a temporary worktree, push the branch, open a PR titled '<task-id>: <title>', then link and unlabel the issue)
-- [x] #3 In 'pr' mode nothing is committed to or pushed to main, the temporary worktree is removed, and a re-run never opens a second PR for the same issue (it finds the open PR or the task reference)
+- [ ] #3 In 'pr' mode nothing is committed to or pushed to main, the temporary worktree is removed, and a re-run never opens a second PR for the same issue (it finds the open PR or the task reference)
 - [ ] #4 canadian-ham's .backlog-sync.json uses 'pr' mode; the README documents both modes and the dry-run output shows the planned PR
 - [x] #5 go test covers both modes, including the crash-replay case for 'pr' mode, without network access
 <!-- AC:END -->
@@ -44,6 +44,11 @@ Round 2 fix steps:
 2. Make PR-mode crash replay safe: prune stale worktrees, use detached temp worktrees from origin/<main>, push HEAD to the inbox branch with --force-with-lease, reuse existing remote branches without PRs, delete stale local branches, and skip temp inbox worktrees during collection.
 3. Add focused tests for invalid inbox.mode, non-allowlisted origins, temp cleanup failure paths, stale local branch handling, start point/base selection, and PR lookup by branch/marker.
 4. Document the autoCommit expectation/failure behavior, validate with the requested Go checks and one read-only dry run to /tmp/ch-dry-task19b.txt, then check only evidence-backed ACs and finalize appropriately.
+
+Round 3 fix steps:
+1. Resolve symlink-real temp/worktree paths and remove leftover PR-mode inbox worktrees before collection, with macOS-style symlink tests.
+2. Harden inbox branch fetch/push leases using ls-remote SHAs/empty leases and + refspecs, and isolate per-issue PR-mode failures so sync continues.
+3. Prevent checked-out PR branches from linking issues before merge, check new task IDs against origin/main before PR creation, document collision/rejection behavior, and revalidate with Go checks plus Canadian Ham dry run.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
