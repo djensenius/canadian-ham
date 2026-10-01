@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 22:06'
+updated_date: '2026-10-01 22:24'
 labels:
   - content
   - ci
@@ -39,6 +39,8 @@ Schemas only protect us if something runs them. Validating the committed generat
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented @canadian-ham/schemas workspace tests with small valid/invalid fixtures for shared/common definitions and every data schema; tightened Basic generated-bank schemas for active-bank IDs, manifest constants/counts, category counts, question answer/sourceOrder contracts, and subsection importer-only fields. Validation evidence: pnpm check:schemas passed with 32 schema tests and reported Schema validation passed: 1042 validation target(s); pnpm install --frozen-lockfile, pnpm typecheck, pnpm test, pnpm check:links, and go run github.com/rhysd/actionlint/cmd/actionlint@latest all passed.
+
+Addressed Copilot PR #62 comments 4161106062 and 4161106116: generated-bank categories now validate the importer-sorted B-001 through B-008 order with prefixItems/items:false, duplicate/reordered category fixtures were added, and the schema README now documents all supported keywords plus CI job/step coverage. Validation: pnpm check:schemas, pnpm test, pnpm typecheck, pnpm check:links, and git diff --check passed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
