@@ -1,10 +1,11 @@
 ---
 id: TASK-8
 title: Apple accessibility follow-ups
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 02:34'
+updated_date: '2026-10-01 21:58'
 labels:
   - apple
   - accessibility
