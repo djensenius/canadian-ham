@@ -19,6 +19,29 @@ const schemaFiles = [
   "progress-export-v1.schema.json",
   "engine-fixture.schema.json",
 ];
+const supportedSchemaKeywords = new Set([
+  "$schema",
+  "$id",
+  "title",
+  "$defs",
+  "$ref",
+  "type",
+  "const",
+  "enum",
+  "oneOf",
+  "properties",
+  "required",
+  "additionalProperties",
+  "items",
+  "minItems",
+  "maxItems",
+  "uniqueItems",
+  "minimum",
+  "maximum",
+  "minLength",
+  "maxLength",
+  "pattern",
+]);
 
 let validationCount = 0;
 const failures = [];
@@ -37,6 +60,10 @@ for (const file of walk(path.join(projectRoot, "content/lessons"), ".md")) {
   const relative = path.relative(projectRoot, file);
   const frontMatter = parseFrontMatter(fs.readFileSync(file, "utf8"), relative);
   if (frontMatter === null) {
+    if (path.basename(relative) === "README.md") {
+      continue;
+    }
+    failures.push(`${relative}: missing opening front matter block`);
     continue;
   }
   if (frontMatter.type === "module") {
@@ -95,6 +122,7 @@ function loadSchema(schemaFile) {
     return schemaCache.get(normalized);
   }
   const schema = JSON.parse(fs.readFileSync(path.join(schemasDir, normalized), "utf8"));
+  validateSchemaKeywords(schema, normalized, "$");
   schemaCache.set(normalized, schema);
   return schema;
 }
@@ -108,7 +136,7 @@ function resolveRef(ref, currentDocumentId) {
   }
   const tokens = pointer.replace(/^\//, "").split("/").map((token) => token.replace(/~1/g, "/").replace(/~0/g, "~"));
   for (const token of tokens) {
-    if (!isObject(target) || !(token in target)) {
+    if (!isObject(target) || !Object.hasOwn(target, token)) {
       throw new Error(`Unresolvable $ref ${ref} from ${currentDocumentId}`);
     }
     target = target[token];
@@ -203,25 +231,25 @@ function validateAgainstSchema(schema, data, context) {
     const properties = isObject(schema.properties) ? schema.properties : {};
     if (Array.isArray(schema.required)) {
       for (const key of schema.required) {
-        if (!(key in data)) {
+        if (!Object.hasOwn(data, key)) {
           errors.push(`${context.path}: missing required property ${key}`);
         }
       }
     }
     for (const [key, propertySchema] of Object.entries(properties)) {
-      if (key in data) {
+      if (Object.hasOwn(data, key)) {
         errors.push(...validateAgainstSchema(propertySchema, data[key], { documentId: context.documentId, path: `${context.path}.${key}` }));
       }
     }
     if (schema.additionalProperties === false) {
       for (const key of Object.keys(data)) {
-        if (!(key in properties)) {
+        if (!Object.hasOwn(properties, key)) {
           errors.push(`${context.path}: unexpected property ${key}`);
         }
       }
     } else if (isObject(schema.additionalProperties)) {
       for (const [key, value] of Object.entries(data)) {
-        if (!(key in properties)) {
+        if (!Object.hasOwn(properties, key)) {
           errors.push(...validateAgainstSchema(schema.additionalProperties, value, { documentId: context.documentId, path: `${context.path}.${key}` }));
         }
       }
@@ -229,6 +257,69 @@ function validateAgainstSchema(schema, data, context) {
   }
 
   return errors;
+}
+
+function validateSchemaKeywords(schema, schemaFile, schemaPath) {
+  if (typeof schema === "boolean") {
+    return;
+  }
+  if (!isObject(schema)) {
+    throw new Error(`${schemaFile}: schema at ${schemaPath} must be an object or boolean`);
+  }
+
+  for (const keyword of Object.keys(schema)) {
+    if (!supportedSchemaKeywords.has(keyword)) {
+      throw new Error(`${schemaFile}: unsupported schema keyword ${JSON.stringify(keyword)} at ${schemaPath}`);
+    }
+  }
+
+  if (Object.hasOwn(schema, "$ref")) {
+    for (const keyword of Object.keys(schema)) {
+      if (keyword !== "$ref") {
+        throw new Error(`${schemaFile}: unsupported $ref sibling keyword ${JSON.stringify(keyword)} at ${schemaPath}`);
+      }
+    }
+    return;
+  }
+
+  if (Object.hasOwn(schema, "$defs")) {
+    if (!isObject(schema.$defs)) {
+      throw new Error(`${schemaFile}: schema keyword "$defs" at ${schemaPath} must be an object`);
+    }
+    for (const [name, childSchema] of Object.entries(schema.$defs)) {
+      validateSchemaKeywords(childSchema, schemaFile, `${schemaPath}.$defs.${escapeSchemaPathSegment(name)}`);
+    }
+  }
+
+  if (Object.hasOwn(schema, "properties")) {
+    if (!isObject(schema.properties)) {
+      throw new Error(`${schemaFile}: schema keyword "properties" at ${schemaPath} must be an object`);
+    }
+    for (const [name, propertySchema] of Object.entries(schema.properties)) {
+      validateSchemaKeywords(propertySchema, schemaFile, `${schemaPath}.properties.${escapeSchemaPathSegment(name)}`);
+    }
+  }
+
+  if (Object.hasOwn(schema, "oneOf")) {
+    if (!Array.isArray(schema.oneOf)) {
+      throw new Error(`${schemaFile}: schema keyword "oneOf" at ${schemaPath} must be an array`);
+    }
+    schema.oneOf.forEach((branch, index) => {
+      validateSchemaKeywords(branch, schemaFile, `${schemaPath}.oneOf[${index}]`);
+    });
+  }
+
+  if (Object.hasOwn(schema, "items")) {
+    validateSchemaKeywords(schema.items, schemaFile, `${schemaPath}.items`);
+  }
+
+  if (isObject(schema.additionalProperties)) {
+    validateSchemaKeywords(schema.additionalProperties, schemaFile, `${schemaPath}.additionalProperties`);
+  }
+}
+
+function escapeSchemaPathSegment(segment) {
+  return /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(segment) ? segment : JSON.stringify(segment);
 }
 
 function matchesType(value, expected) {
@@ -381,6 +472,12 @@ function progressExportSamples() {
       weakSubsectionIds: [],
     },
   };
+  const fractionalTimerExamAttempt = {
+    ...examAttempt,
+    id: "attempt-fractional-timer",
+    submittedAt: "2026-01-02T03:15:00.000Z",
+    timer: { enabled: true, secondsAllowed: 3600.5, secondsElapsed: 12.5 },
+  };
   return [
     {
       name: "progress-export-v1 full web/apple export sample",
@@ -415,7 +512,7 @@ function progressExportSamples() {
         exportedAt: "2026-01-02T04:00:00.000Z",
         bankId: "basic-2025-07-15",
         questionProgress: [questionProgress],
-        examAttempts: [examAttempt],
+        examAttempts: [fractionalTimerExamAttempt],
         preferences: { practiceMode: "immediate", examTimerEnabled: false },
       },
     },

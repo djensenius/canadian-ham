@@ -11,7 +11,7 @@
     },
     "questionId": { "$ref": "common.schema.json#/$defs/questionId" },
     "bankId": { "$ref": "common.schema.json#/$defs/bankId" },
-    "status": { "enum": ["draft", "outline"] },
+    "status": { "$ref": "common.schema.json#/$defs/explanationStatus" },
     "body": { "$ref": "common.schema.json#/$defs/nullableLocalizedText" },
     "citations": {
       "type": "array",

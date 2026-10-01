@@ -57,10 +57,17 @@
       "properties": {
         "en": { "$ref": "#/$defs/nonEmptyString" },
         "fr": {
-          "type": ["string", "null"]
+          "type": ["string", "null"],
+          "minLength": 1
         }
       },
       "additionalProperties": false
+    },
+    "contentStatus": {
+      "enum": ["outline", "draft", "review", "published"]
+    },
+    "explanationStatus": {
+      "$ref": "#/$defs/nonEmptyString"
     },
     "choicePermutation": {
       "type": "array",
@@ -170,7 +177,7 @@
       "properties": {
         "id": { "$ref": "#/$defs/subsectionId" },
         "title": { "$ref": "#/$defs/nullableLocalizedText" },
-        "status": { "enum": ["draft", "outline"] }
+        "status": { "$ref": "#/$defs/contentStatus" }
       },
       "additionalProperties": false
     },
@@ -290,11 +297,11 @@
       "properties": {
         "enabled": { "type": "boolean" },
         "secondsAllowed": {
-          "type": ["integer", "null"],
+          "type": ["number", "null"],
           "minimum": 0
         },
         "secondsElapsed": {
-          "type": "integer",
+          "type": "number",
           "minimum": 0
         }
       },

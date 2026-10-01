@@ -20,7 +20,7 @@ All schema files use JSON Schema draft 2020-12 and are intentionally data-only: 
 | `engine-fixture.schema.json` | `fixtures/engine/*.json` language-neutral engine fixtures |
 | `common.schema.json` | Shared `$defs` for IDs, localized strings, timestamps, progress records, exam attempts, and fixture records |
 
-The progress schema describes version `1` of `canadian-ham.progress-export`. It keeps `lessonProgress`, `lessonQuizAttempts`, and `preferences.theme` optional because both current importers accept older compatible files without those keys, while current web and Apple exports include them.
+The progress schema describes version `1` of `canadian-ham.progress-export`. It keeps `lessonProgress`, `lessonQuizAttempts`, and `preferences.theme` optional because both current importers accept older compatible files without those keys, while current web and Apple exports include them. Exam timer durations allow non-negative numbers (not just integers) to match the web importer and Apple's fractional-value rounding import path.
 
 ## Validation
 
@@ -30,7 +30,7 @@ Run the zero-dependency validator from the repository root:
 node packages/schemas/validate.mjs
 ```
 
-The script validates the real generated bank JSON, subsection titles, lesson front matter, explanation JSON, engine fixtures, and two progress-export samples that cover the current full export shape and the optional-field import compatibility accepted by both platforms.
+The script validates the real generated bank JSON, subsection titles, lesson front matter, explanation JSON, engine fixtures, and two progress-export samples that cover the current full export shape and the optional-field import compatibility accepted by both platforms, including non-negative fractional exam timer values.
 
 Expected success output:
 
@@ -52,10 +52,11 @@ Validated generated bank JSON, subsection titles, lesson front matter, explanati
 - `minimum`, `maximum`
 - `minLength`, `maxLength`, `pattern`
 
-Schema metadata such as `$schema`, `$id`, `title`, and `$defs` is supported as data needed for resolution or ignored when it does not affect validation.
+Schema metadata such as `$schema`, `$id`, `title`, and `$defs` is supported as data needed for resolution or ignored when it does not affect validation. Schemas fail during loading if they use any keyword outside this subset or place sibling keywords next to `$ref`, because this validator forbids rather than silently ignoring unsupported constraints.
 
 ## Scope notes
 
 - The generated bank schemas target the active ISED Basic 2025-07-15 bank (`basic-2025-07-15`).
+- Lesson and module status values use the same `outline`, `draft`, `review`, and `published` lifecycle accepted by `check-lesson-coverage.ts`; explanation status is any non-empty string because `check-explanations.ts` only enforces presence/non-emptiness today.
 - Lesson schemas validate the front matter contract only; Markdown body content is checked by existing content tools.
 - The schemas do not enforce cross-file referential integrity such as “this question ID exists in `questions.json`.” Existing content checks and app import validation cover those semantic relationships; these schemas cover JSON shape, scalar domains, and ID/timestamp formats.

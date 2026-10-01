@@ -33,7 +33,7 @@
       "type": "array",
       "items": { "$ref": "common.schema.json#/$defs/quizId" }
     },
-    "status": { "enum": ["draft", "outline"] }
+    "status": { "$ref": "common.schema.json#/$defs/contentStatus" }
   },
   "additionalProperties": false
 }
