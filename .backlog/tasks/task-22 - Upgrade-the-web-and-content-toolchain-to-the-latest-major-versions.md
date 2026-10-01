@@ -1,7 +1,7 @@
 ---
 id: TASK-22
 title: Upgrade the web and content toolchain to the latest major versions
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 18:11'
