@@ -1,0 +1,464 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "engine-fixture.schema.json",
+  "title": "Language-neutral engine fixture",
+  "oneOf": [
+    { "$ref": "#/$defs/examGenerationFixture" },
+    { "$ref": "#/$defs/leitnerFixture" },
+    { "$ref": "#/$defs/readinessFixture" },
+    { "$ref": "#/$defs/rngVectorsFixture" },
+    { "$ref": "#/$defs/scoringFixture" },
+    { "$ref": "#/$defs/weakSubsectionsFixture" }
+  ],
+  "$defs": {
+    "fixtureId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rng": {
+      "type": "object",
+      "required": ["algorithm", "seed"],
+      "properties": {
+        "algorithm": { "const": "fnv1a64-pcg32-xsh-rr" },
+        "seed": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "examSubsection": {
+      "type": "object",
+      "required": ["id", "questionIds"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/subsectionId" },
+        "questionIds": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "common.schema.json#/$defs/questionId" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "categoryCounts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "examGenerationFixture": {
+      "type": "object",
+      "required": ["schemaVersion", "kind", "id", "bankId", "rng", "input", "expectedOutput"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "kind": { "const": "exam-generation" },
+        "id": { "$ref": "#/$defs/fixtureId" },
+        "bankId": { "$ref": "common.schema.json#/$defs/bankId" },
+        "rng": { "$ref": "#/$defs/rng" },
+        "input": {
+          "type": "object",
+          "required": ["subsections", "answerSourceIndexes"],
+          "properties": {
+            "sourceQuestionBankPath": { "type": "string", "minLength": 1 },
+            "subsections": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "$ref": "#/$defs/examSubsection" }
+            },
+            "answerSourceIndexes": { "$ref": "common.schema.json#/$defs/choicePermutation" },
+            "requireFullMockExam": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        },
+        "expectedOutput": {
+          "type": "object",
+          "required": ["items", "examQuestionCount", "oneQuestionPerInputSubsection", "choicePermutationDefinition", "categoryCounts"],
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": { "$ref": "common.schema.json#/$defs/generatedExamItem" }
+            },
+            "examQuestionCount": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "oneQuestionPerInputSubsection": { "type": "boolean" },
+            "choicePermutationDefinition": { "type": "string", "minLength": 1 },
+            "categoryCounts": { "$ref": "#/$defs/categoryCounts" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "answerCase": {
+      "type": "object",
+      "required": ["id", "input", "expectedOutput"],
+      "properties": {
+        "id": { "$ref": "#/$defs/fixtureId" },
+        "input": {
+          "type": "object",
+          "required": ["existing", "update"],
+          "properties": {
+            "existing": {
+              "oneOf": [
+                { "type": "null" },
+                { "$ref": "common.schema.json#/$defs/questionProgressRecord" }
+              ]
+            },
+            "update": { "$ref": "common.schema.json#/$defs/answerUpdate" }
+          },
+          "additionalProperties": false
+        },
+        "expectedOutput": {
+          "type": "object",
+          "required": ["record"],
+          "properties": {
+            "record": { "$ref": "common.schema.json#/$defs/questionProgressRecord" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "sequenceCase": {
+      "type": "object",
+      "required": ["id", "input", "expectedOutput"],
+      "properties": {
+        "id": { "$ref": "#/$defs/fixtureId" },
+        "input": {
+          "type": "object",
+          "required": ["initialRecords", "updates"],
+          "properties": {
+            "initialRecords": {
+              "type": "array",
+              "items": { "$ref": "common.schema.json#/$defs/questionProgressRecord" }
+            },
+            "updates": {
+              "type": "array",
+              "items": { "$ref": "common.schema.json#/$defs/answerUpdate" }
+            }
+          },
+          "additionalProperties": false
+        },
+        "expectedOutput": {
+          "type": "object",
+          "required": ["records"],
+          "properties": {
+            "records": {
+              "type": "array",
+              "items": { "$ref": "common.schema.json#/$defs/questionProgressRecord" }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "dueCase": {
+      "type": "object",
+      "required": ["id", "input", "expectedOutput"],
+      "properties": {
+        "id": { "$ref": "#/$defs/fixtureId" },
+        "input": {
+          "type": "object",
+          "required": ["records", "now"],
+          "properties": {
+            "records": {
+              "type": "array",
+              "items": { "$ref": "common.schema.json#/$defs/questionProgressRecord" }
+            },
+            "now": { "$ref": "common.schema.json#/$defs/canonicalUtcTimestamp" }
+          },
+          "additionalProperties": false
+        },
+        "expectedOutput": {
+          "type": "object",
+          "required": ["dueQuestionIds", "dueCount"],
+          "properties": {
+            "dueQuestionIds": {
+              "type": "array",
+              "items": { "$ref": "common.schema.json#/$defs/questionId" }
+            },
+            "dueCount": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "leitnerFixture": {
+      "type": "object",
+      "required": ["schemaVersion", "kind", "answerCases", "sequenceCases", "dueCases"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "kind": { "const": "leitner" },
+        "answerCases": { "type": "array", "items": { "$ref": "#/$defs/answerCase" } },
+        "sequenceCases": { "type": "array", "items": { "$ref": "#/$defs/sequenceCase" } },
+        "dueCases": { "type": "array", "items": { "$ref": "#/$defs/dueCase" } }
+      },
+      "additionalProperties": false
+    },
+    "scoreInputItem": {
+      "type": "object",
+      "required": ["questionId", "categoryId", "subsectionId", "selectedSourceIndex"],
+      "properties": {
+        "questionId": { "$ref": "common.schema.json#/$defs/questionId" },
+        "categoryId": { "$ref": "common.schema.json#/$defs/categoryId" },
+        "subsectionId": { "$ref": "common.schema.json#/$defs/subsectionId" },
+        "selectedSourceIndex": {
+          "type": ["integer", "null"],
+          "minimum": 0,
+          "maximum": 3
+        }
+      },
+      "additionalProperties": false
+    },
+    "scoringCase": {
+      "type": "object",
+      "required": ["id", "input", "expectedOutput"],
+      "properties": {
+        "id": { "$ref": "#/$defs/fixtureId" },
+        "input": {
+          "type": "object",
+          "required": ["items"],
+          "properties": {
+            "items": { "type": "array", "items": { "$ref": "#/$defs/scoreInputItem" } }
+          },
+          "additionalProperties": false
+        },
+        "expectedOutput": {
+          "type": "object",
+          "required": ["correct", "total", "percent", "passed", "honours", "categoryBreakdown", "incorrectQuestionIds", "weakSubsectionIds"],
+          "properties": {
+            "correct": { "type": "integer", "minimum": 0 },
+            "total": { "type": "integer", "minimum": 0 },
+            "percent": { "type": "number", "minimum": 0, "maximum": 100 },
+            "passed": { "type": "boolean" },
+            "honours": { "type": "boolean" },
+            "categoryBreakdown": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/categoryBreakdownEntry" } },
+            "incorrectQuestionIds": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/questionId" } },
+            "weakSubsectionIds": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/subsectionId" } }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "scoringFixture": {
+      "type": "object",
+      "required": ["schemaVersion", "kind", "cases"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "kind": { "const": "scoring" },
+        "cases": { "type": "array", "items": { "$ref": "#/$defs/scoringCase" } }
+      },
+      "additionalProperties": false
+    },
+    "readinessExamAttempt": {
+      "type": "object",
+      "required": ["submittedAt", "score", "categoryBreakdown"],
+      "properties": {
+        "submittedAt": { "$ref": "common.schema.json#/$defs/canonicalUtcTimestamp" },
+        "score": {
+          "type": "object",
+          "required": ["correct", "total", "percent"],
+          "properties": {
+            "correct": { "type": "integer", "minimum": 0 },
+            "total": { "type": "integer", "minimum": 0 },
+            "percent": { "type": "number", "minimum": 0, "maximum": 100 }
+          },
+          "additionalProperties": false
+        },
+        "categoryBreakdown": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/categoryBreakdownEntry" } }
+      },
+      "additionalProperties": false
+    },
+    "readinessReason": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["type", "completedExamCount"],
+          "properties": {
+            "type": { "const": "not-enough-exams" },
+            "completedExamCount": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["type", "categoryIds"],
+          "properties": {
+            "type": { "const": "weak-categories" },
+            "categoryIds": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/categoryId" } }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["type", "dueReviewCount"],
+          "properties": {
+            "type": { "const": "due-review" },
+            "dueReviewCount": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["type", "threshold", "countAtOrAbove"],
+          "properties": {
+            "type": { "const": "exam-threshold" },
+            "threshold": { "enum": [70, 80] },
+            "countAtOrAbove": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "readinessCase": {
+      "type": "object",
+      "required": ["id", "input", "expectedOutput"],
+      "properties": {
+        "id": { "$ref": "#/$defs/fixtureId" },
+        "input": {
+          "type": "object",
+          "required": ["completedExams", "dueReviewCount"],
+          "properties": {
+            "completedExams": { "type": "array", "items": { "$ref": "#/$defs/readinessExamAttempt" } },
+            "dueReviewCount": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "expectedOutput": {
+          "type": "object",
+          "required": ["state", "consideredExamCount", "consideredSubmittedAt", "reasons"],
+          "properties": {
+            "state": { "enum": ["not-enough-data", "needs-review", "pass-ready", "honours-ready"] },
+            "consideredExamCount": { "type": "integer", "minimum": 0 },
+            "consideredSubmittedAt": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/canonicalUtcTimestamp" } },
+            "reasons": { "type": "array", "items": { "$ref": "#/$defs/readinessReason" } }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "readinessFixture": {
+      "type": "object",
+      "required": ["schemaVersion", "kind", "cases"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "kind": { "const": "readiness" },
+        "cases": { "type": "array", "items": { "$ref": "#/$defs/readinessCase" } }
+      },
+      "additionalProperties": false
+    },
+    "rngVectorsFixture": {
+      "type": "object",
+      "required": ["schemaVersion", "kind", "cases"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "kind": { "const": "rng-vectors" },
+        "cases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "rng", "expectedOutput"],
+            "properties": {
+              "id": { "$ref": "#/$defs/fixtureId" },
+              "rng": { "$ref": "#/$defs/rng" },
+              "expectedOutput": {
+                "type": "object",
+                "required": ["first8Uint32"],
+                "properties": {
+                  "first8Uint32": {
+                    "type": "array",
+                    "minItems": 8,
+                    "maxItems": 8,
+                    "items": { "type": "integer", "minimum": 0 }
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "latestExamItem": {
+      "type": "object",
+      "required": ["questionId", "subsectionId", "selectedSourceIndex"],
+      "properties": {
+        "questionId": { "$ref": "common.schema.json#/$defs/questionId" },
+        "subsectionId": { "$ref": "common.schema.json#/$defs/subsectionId" },
+        "selectedSourceIndex": {
+          "type": ["integer", "null"],
+          "minimum": 0,
+          "maximum": 3
+        }
+      },
+      "additionalProperties": false
+    },
+    "weakSubsectionsCase": {
+      "type": "object",
+      "required": ["id", "input", "expectedOutput"],
+      "properties": {
+        "id": { "$ref": "#/$defs/fixtureId" },
+        "input": {
+          "type": "object",
+          "required": ["records", "latestExamItems"],
+          "properties": {
+            "records": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/questionProgressRecord" } },
+            "latestExamItems": { "type": "array", "items": { "$ref": "#/$defs/latestExamItem" } }
+          },
+          "additionalProperties": false
+        },
+        "expectedOutput": {
+          "type": "object",
+          "required": ["weakSubsectionIds"],
+          "properties": {
+            "weakSubsectionIds": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/subsectionId" } }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "recentResultCase": {
+      "type": "object",
+      "required": ["id", "input", "expectedOutput"],
+      "properties": {
+        "id": { "$ref": "#/$defs/fixtureId" },
+        "input": {
+          "type": "object",
+          "required": ["existing", "newest"],
+          "properties": {
+            "existing": { "type": "array", "items": { "type": "boolean" } },
+            "newest": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        },
+        "expectedOutput": {
+          "type": "object",
+          "required": ["recentResults"],
+          "properties": {
+            "recentResults": { "type": "array", "maxItems": 5, "items": { "type": "boolean" } }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "weakSubsectionsFixture": {
+      "type": "object",
+      "required": ["schemaVersion", "kind", "recentResultCases", "cases"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "kind": { "const": "weak-subsections" },
+        "recentResultCases": { "type": "array", "items": { "$ref": "#/$defs/recentResultCase" } },
+        "cases": { "type": "array", "items": { "$ref": "#/$defs/weakSubsectionsCase" } }
+      },
+      "additionalProperties": false
+    }
+  }
+}

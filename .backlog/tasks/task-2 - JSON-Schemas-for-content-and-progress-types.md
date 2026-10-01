@@ -1,11 +1,11 @@
 ---
 id: TASK-2
 title: JSON Schemas for content and progress types
-status: In Progress
+status: Done
 assignee:
-  - '@pi-coordinator'
+  - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 13:04'
+updated_date: '2026-10-01 17:32'
 labels:
   - content
   - 'legacy:T-003'
@@ -22,7 +22,38 @@ Content and progress data cross several boundaries: the ISED importer writes gen
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Schemas exist in packages/schemas for every listed type
-- [ ] #2 The schemas match the current generated bank JSON, the lesson front matter, the explanation JSON and the progress export format
-- [ ] #3 The schemas are documented in packages/schemas/README.md
+- [x] #1 Schemas exist in packages/schemas for every listed type
+- [x] #2 The schemas match the current generated bank JSON, the lesson front matter, the explanation JSON and the progress export format
+- [x] #3 The schemas are documented in packages/schemas/README.md
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Add draft 2020-12 JSON Schema files under packages/schemas for generated bank arrays/manifests, lesson/module front matter, explanations, progress exports, and engine fixtures, using shared definitions for IDs, localized text, timestamps, progress records, exam attempts, and fixture records.
+2. Add a zero-dependency Node validation script in packages/schemas that implements the limited JSON Schema keywords used, parses lesson front matter into JSON, validates all real content/generated/basic-2025-07-15 JSON, content/lessons front matter, content/explanations JSON, fixtures/engine JSON, and representative progress exports covering web/Apple-compatible required and optional fields.
+3. Document the schema inventory, draft/version, validator keyword subset, and validation command in packages/schemas/README.md.
+4. Run the schema validation script plus pnpm typecheck, pnpm test, and pnpm check:links; then record evidence, check satisfied acceptance criteria, and finalize the task if all pass.
+
+Fix review findings before task-3: align lesson and explanation status enums with content-tool behavior, make validate.mjs reject unsupported schema keywords and  siblings at load time, replace inherited property checks with Object.hasOwn, loosen exam timer fields to non-negative numbers, and apply small schema/validator low-note fixes before rerunning validation/type/test/link checks.
+
+Clarification for this fix round: validate.mjs will reject sibling keywords next to $ref instead of silently dropping them, and the schemas will stay within the enforced supported keyword subset.
+
+Copilot PR #54 fix round: read all six review comments, align schemas/validator with existing content contracts for semantic timestamps, non-empty lesson arrays, module order bounds, and front matter parsing, add negative regression checks for the six rejected cases, rerun validation/type/test/link checks, commit/push, reply to comments, and request a fresh Copilot review.
+<!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented draft 2020-12 schemas and zero-dependency validator in packages/schemas. Validation evidence: node packages/schemas/validate.mjs -> Schema validation passed: 1042 validation target(s). Validated generated bank JSON, subsection titles, lesson front matter, explanations, engine fixtures, and progress export samples. pnpm typecheck, pnpm test, and pnpm check:links passed.
+
+Review fix round: aligned lesson/module/subsection status schema values with check-lesson-coverage, kept explanation status as any non-empty string to match check-explanations, added schema-load rejection for unsupported keywords and $ref sibling keywords, switched object property checks to Object.hasOwn, loosened exam timer fields to non-negative numbers, rejected empty nullable French strings, and made non-README lesson Markdown without front matter fail validation. Validation passed: node packages/schemas/validate.mjs (1042 targets), pnpm typecheck, pnpm test, pnpm check:links.
+
+Copilot PR #54 fix round: added semantic canonical timestamp validation, non-empty lesson/module array bounds, module order maximum 8, canonical content-tools front matter parsing reuse, and negative schema/parser checks. Validation passed with node packages/schemas/validate.mjs, node --test packages/schemas/validate-negative.test.mjs, pnpm typecheck, pnpm test, pnpm check:links, and git diff --check.
+<!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Added draft 2020-12 JSON Schemas for generated bank content, lesson/module front matter, explanations, progress export v1, subsection titles, and engine fixtures under packages/schemas. Added packages/schemas/validate.mjs, a zero-dependency validator for the documented keyword subset; the review fix round now aligns status/timer/string constraints with content tools/importers, rejects unsupported schema keywords and $ref sibling keywords at load time, uses Object.hasOwn for property checks, and fails non-README lesson Markdown that lacks front matter. Documented inventory, usage, keyword limits, and status/timer rationale in packages/schemas/README.md. Verified with node packages/schemas/validate.mjs (1042 validation targets), pnpm typecheck, pnpm test, and pnpm check:links.
+<!-- SECTION:FINAL_SUMMARY:END -->
