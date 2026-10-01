@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 13:51'
-updated_date: '2026-10-01 15:57'
+updated_date: '2026-10-01 16:02'
 labels:
   - ci
   - docs
@@ -51,6 +51,8 @@ The owner wants every change to reach main through a pull request with Copilot c
 Research: backlog init --help supports --backlog-dir with backlog, .backlog, or custom project-relative path; Backlog.md 1.53.0 README says project data may live in backlog/, .backlog/, or a custom path, and config discovery checks backlog.config.yml then backlog/config.yml or .backlog/config.yml. Therefore git mv backlog .backlog with the existing config.yml inside the folder is CLI-supported and requires no .backlog-sync.json change because task-19 made the syncer discover the active Backlog directory.
 
 Implementation/validation evidence: moved Backlog.md data with git mv backlog .backlog. CLI support evidence: backlog init --help documents --backlog-dir accepting backlog, .backlog, or custom project-relative paths; Backlog.md 1.53.0 README says settings resolve from backlog.config.yml, then backlog/config.yml or .backlog/config.yml. Post-move commands passed: backlog task list --plain, backlog doctor, and backlog board. Copilot skip verification: task-21 completed .github/instructions/backlog.instructions.md with applyTo covering backlog/**,.backlog/** plus .github/copilot-instructions.md; task-21 notes record no personal/user-owned Copilot Pro/Pro+ repository content-exclusion support found, with /.backlog/** and /backlog/** fallback paths if it becomes available. CI now has a Change classification job and keeps the Node/content status green quickly for .backlog-only PRs while running full checks otherwise. AGENTS.md now documents task-branch PR workflow, branch-local task status changes, PR title format, automatic Copilot review and CI, owner/coordinator merge, Apple xbuild per-test PR-body expectation, inbox manual triage, the GitHub Project live board, and the copied Copilot review-loop stopping rule. README/docs/tasks references now point to .backlog/ and the syncer docs point to djensenius/backlog-sync. Validation passed: pnpm typecheck; pnpm test; pnpm check:links; pnpm check:apple-network; backlog task list --plain; backlog doctor; backlog board. actionlint was not available on PATH. AC #6 is intentionally left unchecked for coordinator follow-up after merge.
+
+Fix round: addressed reviewer medium/low notes by making Node and content checks run when not cancelled and fail first if change classification is not success; changed classification to git diff --name-only --no-renames BASE...HEAD; clarified that new tasks, including inbox triage, are created on a branch and land through a PR because main is PR-only; aligned inbox wording with backlog-sync inbox.mode: manual. Validation passed: pnpm check:links; go run github.com/rhysd/actionlint/cmd/actionlint@latest.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
