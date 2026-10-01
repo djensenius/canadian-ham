@@ -1,7 +1,7 @@
 ---
 id: TASK-21
 title: Tell Copilot code review to skip Backlog.md task files
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 13:51'
