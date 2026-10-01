@@ -4,6 +4,7 @@ title: One-way Backlog.md to GitHub Project sync (tools/backlog-sync)
 status: To Do
 assignee: []
 created_date: '2026-10-01 02:33'
+updated_date: '2026-10-01 02:34'
 labels:
   - ci
   - tooling
@@ -15,7 +16,7 @@ ordinal: 26000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-Go command that mirrors Backlog.md tasks one-way to GitHub issues and Project #8 (users/djensenius/projects/8), plus an inbox import path (issues labelled 'inbox' become new tasks). Runs on this machine via launchd every few minutes. Backlog.md is the source of truth; the tool never writes into backlog/ except creating inbox tasks through the CLI.
+We moved tracking to Backlog.md, but the owner wants to see work on GitHub, and Backlog.md's own cross-branch view is limited: task list/view read only the current checkout, and backlog board lets the current checkout's copy win, so an In Progress task in another worktree still shows as To Do on main. A small local sync gives a GitHub Project that reflects the real state of every worktree on this machine, while keeping Backlog.md the single source of truth. GitHub stays read-only except for one narrow inbox path for proposing new tasks. Target: users/djensenius/projects/8.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
