@@ -4,7 +4,7 @@ SwiftPM implementation of the Canadian Ham engine. It is intentionally offline-o
 
 ## Product
 
-The package exposes the library product `CanadianHamEngine` for iOS 18, macOS 15, visionOS 2, and tvOS 18. Public `Sendable` value types mirror the shared fixture shapes and are `Codable` where fixture or app persistence needs JSON round trips.
+The package exposes the library product `CanadianHamEngine` for iOS/iPadOS 27, macOS 27, visionOS 27, and tvOS 27. Public `Sendable` value types mirror the shared fixture shapes and are `Codable` where fixture or app persistence needs JSON round trips.
 
 Core APIs:
 

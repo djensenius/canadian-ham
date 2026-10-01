@@ -115,12 +115,8 @@ final class CanadianHamTVUITests: XCTestCase {
         return app
     }
 
-    private func performAudit(on app: XCUIApplication, context: String) throws {
-        if #available(tvOS 17.0, *) {
-            try app.performAccessibilityAudit()
-        } else {
-            throw XCTSkip("performAccessibilityAudit is unavailable before tvOS 17 for \(context).")
-        }
+    private func performAudit(on app: XCUIApplication, context _: String) throws {
+        try app.performAccessibilityAudit()
     }
 
     private func pressRemote(_ buttons: [XCUIRemote.Button], remote: XCUIRemote) {

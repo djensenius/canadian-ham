@@ -1,6 +1,6 @@
 # packages/content-swift
 
-SwiftPM content loader for the Canadian Ham Apple apps. The package exposes the library product `CanadianHamContent` for iOS 18, macOS 15, visionOS 2, and tvOS 18. It has no third-party dependencies and uses Foundation only.
+SwiftPM content loader for the Canadian Ham Apple apps. The package exposes the library product `CanadianHamContent` for iOS/iPadOS 27, macOS 27, visionOS 27, and tvOS 27. It has no third-party dependencies and uses Foundation only.
 
 ## API overview
 

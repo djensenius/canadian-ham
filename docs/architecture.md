@@ -617,7 +617,7 @@ Web app components:
 
 Apple app components:
 
-- SwiftUI multiplatform target for iOS, iPadOS, macOS, visionOS 2.0+, and tvOS 18.0+. watchOS remains later.
+- SwiftUI multiplatform target for iOS/iPadOS 27.0+, macOS 27.0+, visionOS 27.0+, and tvOS 27.0+. watchOS remains later.
 - Shared practice, lessons, mock exams, progress, and settings adapt per platform: navigation/window layout on iOS, iPadOS, macOS, and visionOS; focus-engine navigation, large type, and overscan-safe margins on tvOS.
 - Bundled generated content, design tokens, and layered icon artwork; reference PDFs are not shipped in the apps, and release bundles must satisfy the [public-release gate](content-licensing.md#public-release-gate).
 - Native Swift engine matching fixtures.

@@ -1,6 +1,6 @@
 # Canadian Ham Apple app
 
-SwiftUI multiplatform first slice for iPhone, iPad, and Mac. The app is generated with XcodeGen and the generated `CanadianHam.xcodeproj` is committed so Xcode can open it directly.
+SwiftUI multiplatform first slice for iPhone, iPad, Mac, Apple TV, and Apple Vision Pro. The Apple app targets iOS/iPadOS 27.0, macOS 27.0, tvOS 27.0, and visionOS 27.0 minimums. The app is generated with XcodeGen and the generated `CanadianHam.xcodeproj` is committed so Xcode can open it directly.
 
 ## Structure
 
