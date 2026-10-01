@@ -1,7 +1,7 @@
 ---
 id: TASK-3
 title: Schema validation tests in CI
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
