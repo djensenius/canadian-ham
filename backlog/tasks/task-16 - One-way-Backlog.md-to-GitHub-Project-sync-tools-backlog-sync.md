@@ -1,16 +1,17 @@
 ---
 id: TASK-16
 title: One-way Backlog.md to GitHub Project sync (tools/backlog-sync)
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:33'
-updated_date: '2026-10-01 03:16'
+updated_date: '2026-10-01 13:18'
 labels:
   - ci
   - tooling
 milestone: m-0
-dependencies: []
+dependencies:
+  - TASK-17
 ordinal: 26000
 ---
 
@@ -24,8 +25,8 @@ We moved tracking to Backlog.md, but the owner wants to see work on GitHub, and 
 <!-- AC:BEGIN -->
 - [x] #1 Reads task state through the backlog CLI across all local worktrees and picks the most recently updated copy of each task
 - [x] #2 Creates or updates one issue per task, matched by a hidden <!-- backlog:task-N --> marker plus a 'task-N:' title prefix
-- [ ] #3 Sets the Project Status field via GraphQL; Done closes the issue and reopening a task reopens it
-- [ ] #4 Idempotent (a second run changes nothing) with a --dry-run flag
+- [x] #3 Sets the Project Status field via GraphQL; Done closes the issue and reopening a task reopens it
+- [x] #4 Idempotent (a second run changes nothing) with a --dry-run flag
 - [x] #5 Inbox: open issues labelled 'inbox' become new To Do tasks (create only), then the label is removed and the marker added
 - [x] #6 launchd plist and install steps are documented, and logs go to a file
 - [x] #7 Go unit tests cover resolution, rendering, marker matching, diffing and inbox import without network access
@@ -818,10 +819,14 @@ Round 3 started in /Users/david/Developer/canadian-ham-task-16 on branch task-16
 Round 3 implementation slice complete: added claimed-issue tracking across marker/inbox/adoption paths, prefix-derived marker/ID/branch handling, dry-run project field reporting for adopted issues, sub-issue parent repo allowlist checks, no-optional-locks status, help handling, option docs, and expanded fake/parser/fixture tests. Local go vet/go test/go build passed in tools/backlog-sync.
 
 Round 3 validation passed: from tools/backlog-sync, go vet ./..., go test ./..., and go build all succeeded. Read-only dry runs saved full output to /tmp/ch-backlog-sync-canadian-dryrun2.txt (143 lines; sync complete: 26 created, 0 updated, 26 status changes, 0 imported) and /tmp/ch-backlog-sync-arkham-dryrun2.txt (684 lines; sync complete: 38 created, 21 updated, 59 status changes, 0 imported, including adopted issue status/field reporting). ArkhamHorror remained clean: git status --porcelain empty and .git/index mtime stayed 1790824246 before/after.
+
+First real run (2026-10-01 08:56) created issues #17-#33 for task-1..task-15, then aborted on task-16: the rendered body exceeded GitHub's 65,536-character limit (HTTP 422; the notes alone are ~75k chars). Fix tracked in task-17; AC #3/#4 wait on it.
+
+Coordinator real-run evidence (2026-10-01, after task-17 fix): real run 'sync complete: 10 created, 5 updated, 27 status changes, 0 imported, 0 failed operations'; second run '0 created, 0 updated, 0 status changes, 0 imported, 0 failed operations'. Project #8 matched backlog board for 27/27 tasks incl. task-2 In Progress on branch task-2-json-schemas (issue body shows Branch). task-17 Done closed #35 (Project In Progress→Done); temporarily reopening task-17 reopened #35 (Done→In Progress), and Done closed it again (CLOSED COMPLETED). Follow-ups: sync3 review notes 1-8 and task-17 review notes A-F.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Round 3 fixed the review blockers and should-fix items for the generic backlog-sync: one claimed issue per task/run across markers, inbox and adoption; cfg.TaskPrefix-driven markers/titles/branch/CreateTask parsing; sub-issue parent repo allowlist checks and remove-error handling; dry-run reporting for adopted issues; zero-write/dedup/pagination/no-optional-locks/help/deferred-push fixes; expanded fake/parser/fixture coverage; and documented Project v2 option preservation risk. Verified with go vet ./..., go test ./..., go build, and saved canadian-ham/ArkhamHorror dry-run outputs under /tmp.
+Added tools/backlog-sync, a generic Go (stdlib-only) one-way mirror from Backlog.md to GitHub issues and a Project v2: reads every local worktree through the backlog CLI (own-branch copy wins, then latest update, then most progressed), one issue per task matched by a hidden marker, Project Status and optional fields via GraphQL, Done closes and reopening reopens, multi-repo placement with a strict allowlist, nested IDs, opt-in adoption of referenced issues, managed labels, native sub-issues, a multi-repo inbox import, per-config locking and launchd install. Verified with go tests, dry runs for canadian-ham and ArkhamHorror, a real run, a no-op second run, a Project vs backlog board comparison, and a real close/reopen cycle.
 <!-- SECTION:FINAL_SUMMARY:END -->
