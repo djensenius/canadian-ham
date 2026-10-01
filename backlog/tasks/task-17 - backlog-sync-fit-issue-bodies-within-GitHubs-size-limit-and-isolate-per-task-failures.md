@@ -3,7 +3,7 @@ id: TASK-17
 title: >-
   backlog-sync: fit issue bodies within GitHub's size limit and isolate per-task
   failures
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 12:57'
