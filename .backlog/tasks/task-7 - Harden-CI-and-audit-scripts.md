@@ -39,3 +39,9 @@ Reviews of the no-network audit and CI lanes left non-blocking gaps where a chec
 <!-- SECTION:NOTES:BEGIN -->
 Implemented CI audit hardening. Validation passed: /bin/bash scripts/check-apple-no-network.sh -> apple-no-network: passed (41 Swift files, 2 plist/privacy files, 2 project config files); /bin/bash scripts/test-check-apple-no-network.sh -> apple-no-network-test: passed self-test fixtures.; /opt/homebrew/bin/bash scripts/check-apple-no-network.sh -> same pass summary; /opt/homebrew/bin/bash scripts/test-check-apple-no-network.sh -> self-test passed; pnpm check:apple-network -> same pass summary; pnpm test:apple-network -> self-test passed; pnpm --filter @canadian-ham/content-tools check:lesson-originality:all -> Lesson files checked: 36 / Originality issues: 0; zero-file CLI probe -> check-lesson-originality: no lesson Markdown files were checked and status 1; pnpm test -> content-tools 94 passed and web 10 files/81 tests passed; pnpm check:links -> Markdown relative links verified.; pnpm --filter @canadian-ham/content-tools typecheck -> tsc --noEmit passed.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Hardened Apple no-network and lesson-originality gates: Swift URL grep errors now fail, no-network self-tests cover synthetic grep failures and missing plutil skips, lesson links catch uppercase HTTPS/WWW, the import-kind fixture uses import enum WebKit.WKNavigationType, and originality --all/required runs fail on zero checked lesson files. Verified with both /bin/bash and Homebrew bash audit scripts, pnpm apple-network checks, originality normal and zero-file probes, pnpm test, pnpm check:links, and content-tools typecheck.
+<!-- SECTION:FINAL_SUMMARY:END -->
