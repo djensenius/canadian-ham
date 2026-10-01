@@ -46,7 +46,7 @@
 | 29 | Web Audio: schedule on `audioContext.currentTime` and use AudioParam ramps | **Verified, plus an omission** | MDN Best practices ([URL](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Best_practices)): "if your website or application requires timing and scheduling, it's best to stick with the AudioParam methods". **Omission:** the browser autoplay rule says "Create or resume context from inside a user gesture". The trainer needs an explicit Start tap. |
 | 30 | AVAudioEngine and AVAudioSourceNode run on iOS, iPadOS, macOS, tvOS and visionOS | **Verified** | Apple documentation JSON. AVAudioEngine: iOS 8.0, macOS 10.10, tvOS 9.0, visionOS 1.0. AVAudioSourceNode: iOS 13.0, macOS 10.15, tvOS 13.0, visionOS 1.0. Both are far below the project's 27.0 minimums. |
 | 31 | Haptics via `UIImpactFeedbackGenerator` or Core Haptics on iOS/iPadOS | **Corrected (narrower than stated)** | Apple: `UIImpactFeedbackGenerator` platforms are only "iOS 10.0, iPadOS 10.0, Mac Catalyst 13.1", so not tvOS, visionOS or native macOS. `CHHapticEngine` exists on iOS/iPadOS/macOS/tvOS 14/visionOS, but hardware support has to be checked at runtime with `CHHapticDeviceCapability.supportsHaptics` ("whether the device supports haptic event playback"). That in practice it works mainly on iPhone is my inference; Apple's pages don't list devices. |
-| 32 | A high-contrast flashing lamp meets WCAG "Guideline 2.3 (Three Flashes…)", or fades are enough | **Corrected** | The requirement is **Success Criterion 2.3.1** ([URL](https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html)): content may not flash "more than three times in any one second period, or the flash is below the general flash and red flash thresholds". **Inference:** at a 12 wpm character speed a dot plus its gap takes 0.2 s, so H, S, 5 and similar give 4–5 flashes per second. A large high-contrast lamp would fail. The lamp must stay within the area limit (combined flashing area ≤ a 341×256 CSS-px block) or keep the luminance change under the 10% threshold. Smooth fades alone don't satisfy 2.3.1. |
+| 32 | A high-contrast flashing lamp meets WCAG "Guideline 2.3 (Three Flashes…)", or fades are enough | **Corrected** | The requirement is **Success Criterion 2.3.1** ([URL](https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html)): content may not flash "more than three times in any one second period, or the flash is below the general flash and red flash thresholds". W3C's Understanding note defines the area threshold as more than 25% of any 10-degree visual field, equivalent to 25% of a 341×256 CSS-pixel rectangle, or **21,824 CSS px**. A general flash also depends on a ≥10% relative-luminance change (with the darker state below 0.80), and saturated-red transitions have their own red-flash threshold. **Inference:** at a 12 wpm character speed a dot plus its gap takes 0.2 s, so H, S, 5 and similar give 4–5 flashes per second. A large high-contrast or saturated-red lamp would fail. The default visual beacon must stay below both thresholds: keep the combined flashing area under 21,824 CSS px and avoid saturated red, or cap the beacon at ≤3 flashes/s; also keep luminance changes below the general-flash threshold where possible. Smooth fades alone don't satisfy 2.3.1. |
 | 33 | Track the work as "rows to add to `tasks/PLAN.md`" | **Corrected (project rule)** | Repo [`AGENTS.md`](../../AGENTS.md): "Track all work in Backlog.md … `tasks/PLAN.md` is only a pointer and legacy ID map." New work should be Backlog tasks created with the `backlog` CLI. |
 | 34 | Pedagogy defaults (15–18 wpm characters, 650 Hz tone, 5 ms ramps) and the IndexedDB/SwiftData schema | **Unverified (design choices)** | These are engineering or teaching judgments, not facts with an authority behind them. I didn't check them against the codebase's existing persistence layer. |
 
@@ -95,7 +95,7 @@ The core regulatory facts are all supported by current primary ISED text (high c
 The recommendation to build an offline Koch/Farnsworth trainer with a simulated ISED exam still stands. The changes:
 - **(a)** The timing engine must offer a PARIS-calibrated 12/5 mode (letter gap 1.405 s, word gap 3.279 s). The literal RIC-1 7/17-dot spacing can be an optional, harder mode. This adds a new owner decision.
 - **(b)** Grading: ≤5 errors passes for both receiving and sending. Each figure or punctuation mark counts as 1 error. The sending test passes only if the whole text (at least 75 weighted characters) is sent within 3 minutes.
-- **(c)** Haptics only where `supportsHaptics` is true; the lamp follows WCAG 2.3.1 limits on area or contrast.
+- **(c)** Haptics only where `supportsHaptics` is true; the visual beacon follows WCAG 2.3.1 by staying small, avoiding saturated red, reducing luminance change, or limiting flash cadence.
 - **(d)** Create Backlog tasks instead of `PLAN.md` rows.
 - **(e)** Fix the history wording.
 
@@ -119,7 +119,7 @@ Both use plain language at a speed of not less than 5 wpm. Examiners send at a *
 **Recommendation.** Build a self-contained, offline Morse trainer:
 - Koch method with Farnsworth timing;
 - Web Audio API on the web and AVAudioEngine/AVAudioSourceNode on Apple platforms;
-- a WCAG 2.3.1-compliant visual lamp and capability-gated haptics;
+- a WCAG 2.3.1-compliant visual beacon and capability-gated haptics;
 - a 3-minute simulated receiving exam with ISED-faithful grading, plus keyboard/touch sending practice;
 - local-only persistence, consistent with the zero-telemetry design.
 
@@ -251,10 +251,10 @@ Both use plain language at a speed of not less than 5 wpm. Examiners send at a *
   - Trainer volume separate from system volume.
 
 #### D. Accessibility and multimodal delivery
-- **Visual lamp:**
+- **Visual beacon:**
   - Synchronized with the tone; essential for deaf and hard-of-hearing users.
-  - **Constraint (corrected):** it must meet **WCAG 2.2 SC 2.3.1**. Morse at 12+ wpm character speed flashes more than 3 times per second, so the lamp must either keep its combined flashing area below the threshold (≤ a 341×256 CSS-px block) or keep its luminance change below the general-flash threshold (<10% relative luminance).
-  - Fades alone don't satisfy 2.3.1.
+  - **Constraint (corrected):** it must meet **WCAG 2.2 SC 2.3.1**. Morse at 12+ wpm character speed can exceed 3 flashes per second, so the default beacon should be small enough to keep the combined flashing area under the threshold (**≤21,824 CSS px**, 25% of a 341×256 CSS-pixel 10-degree field) and should avoid saturated red. Larger or high-contrast alternatives must be capped at ≤3 flashes/s or held below the general-flash luminance threshold.
+  - Fades alone don't satisfy 2.3.1, and saturated-red flashes are checked against the separate red-flash threshold.
   - Offer a non-flashing alternative: a scrolling dot/dash "tape" display.
 - **Haptics (corrected):**
   - Use Core Haptics (`CHHapticEngine`) only when `CHHapticEngine.capabilitiesForHardware().supportsHaptics` is true.
@@ -302,7 +302,7 @@ Both use plain language at a speed of not less than 5 wpm. Examiners send at a *
 8. **ARRL / J. Bloom KE3Z, "A Standard for Morse Timing Using the Farnsworth Technique" (QEX, April 1990).** Farnsworth formulas. [URL](https://www.arrl.org/files/file/Technology/x9004008.pdf)
 9. **Apple Developer documentation:** AVAudioEngine, AVAudioSourceNode, CHHapticEngine, CHHapticDeviceCapability.supportsHaptics, UIImpactFeedbackGenerator (platform availability). [URL](https://developer.apple.com/documentation/avfaudio/avaudioengine)
 10. **MDN, Web Audio API best practices.** Autoplay rules and AudioParam scheduling. [URL](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Best_practices)
-11. **W3C, Understanding WCAG 2.2 SC 2.3.1.** [URL](https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html)
+11. **W3C, Understanding WCAG 2.2 SC 2.3.1.** Three-flashes rule, general-flash luminance threshold, red-flash threshold and 10-degree-field area threshold. [URL](https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html)
 
 ### Kept (secondary)
 - **RAC requirements and examiners pages.** Confirm that accredited examiners give Morse exams. Dated, and silent on virtual exams. [URL](https://www.rac.ca/requirements/), [URL](https://www.rac.ca/examiners/)
@@ -336,7 +336,7 @@ Both use plain language at a speed of not less than 5 wpm. Examiners send at a *
 - Web Audio driver: `OscillatorNode` with about 5 ms gain ramps, started by a user gesture.
 - AVAudioEngine/AVAudioSourceNode driver for all Apple platforms.
 - Settings for tone, character speed, effective speed and timing mode.
-- A visual lamp that meets WCAG 2.3.1 (limited area or contrast), plus a non-flashing "tape" display.
+- A visual beacon that meets WCAG 2.3.1 (small area, no saturated red, luminance/cadence limits), plus a non-flashing "tape" display.
 - Core Haptics gated on `supportsHaptics`.
 - **Rough effort:** 3–4 days.
 
@@ -373,7 +373,7 @@ Per [`AGENTS.md`](../../AGENTS.md), track this work in Backlog.md, not `tasks/PL
 |---|---|---|
 | T-702a | v1 release | Morse engine spec and shared fixtures: Farnsworth timing with `isedParis` (12/5, Bloom formula: 1.405 s / 3.279 s) and `ric1Literal` (0.7 s / 1.7 s) profiles; element mapping limited to RIC-1 §8.2 characters; PARIS fixtures (12.0 s / 7.6 s); word weighting (figures and punctuation = 2); error scoring per RIC-1 §8.7 / RIC-3 §5.2 (each character = 1 error; ≤5 errors = 100% pass). TS and Swift packages. |
 | T-702b | T-702a | Audio drivers: Web Audio oscillator/gain envelope with a user-gesture start; AVAudioEngine/AVAudioSourceNode for iOS, iPadOS, macOS, tvOS and visionOS; no third-party audio dependencies. |
-| T-702c | T-702b | Visual lamp meeting WCAG 2.2 SC 2.3.1 (area or contrast limited), a non-flashing tape alternative, Core Haptics gated on `supportsHaptics`, and VoiceOver/ARIA coordination during playback. |
+| T-702c | T-702b | Visual beacon meeting WCAG 2.2 SC 2.3.1 (small area, no saturated red, luminance/cadence limits), a non-flashing tape alternative, Core Haptics gated on `supportsHaptics`, and VoiceOver/ARIA coordination during playback. |
 | T-702d | T-702b | Koch curriculum (G4FON order adapted to ISED characters, 40 lessons, 90% unlock) and drill UI for web and Apple; local persistence of character progress. |
 | T-702e | T-702a, T-702b | Canadian 5 wpm mock exam: RIC-1 §8.2 text generator (≥75 weighted characters, ≥180 s), uninterrupted playback, 2-minute review, grading of ≤5 errors = PASS (100%), diff view, timing-profile selector. |
 | T-702f | T-702e | Sending practice: keyboard/touch straight key and paddle emulation, dot/dash ratio feedback, exam-style check (whole text within 3:00, 8-dot error signal and resend accepted, ≤5 errors); no microphone permission. |
