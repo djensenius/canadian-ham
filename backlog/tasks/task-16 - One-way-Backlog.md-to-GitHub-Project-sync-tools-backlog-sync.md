@@ -44,11 +44,9 @@ We moved tracking to Backlog.md, but the owner wants to see work on GitHub, and 
 ## Implementation Notes
 
 <!-- SECTION:NOTES:BEGIN -->
-Implemented tools/backlog-sync in commit 8cf6f84281c2b4e3d7ed95de05cdfad8362668de. Validation passed: cd tools/backlog-sync && go test ./...; go vet ./...; go build -o /tmp/backlog-sync .
+Implemented tools/backlog-sync in code commit 8cf6f8488aa62ab39146524f623fce407f4890e7; Backlog finalization commits follow it on branch task-16-backlog-sync. Validation passed: cd tools/backlog-sync && go test ./...; go vet ./...; go build -o /tmp/backlog-sync .
 Read-only dry-run against /Users/david/Developer/canadian-ham and GitHub Project 8 succeeded. Representative output: "would create issue task-1: v1 release", "would add new issue for task-1 to project", "would set project status for new issue task-16 <unset>→In Progress". Summary line: "sync complete: 26 created, 0 updated, 26 status changes, 0 imported".
 Coordinator follow-up after review: perform the real GitHub sync and install/bootstrap the launchd plist if desired; I did not perform real writes or install launchd.
-
-Correction: implementation commit SHA is 8cf6f8488aa62ab39146524f623fce407f4890e7; final task-update commit SHA is adfbc9b290642477a751e1f1bb3b831766345b4e.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
