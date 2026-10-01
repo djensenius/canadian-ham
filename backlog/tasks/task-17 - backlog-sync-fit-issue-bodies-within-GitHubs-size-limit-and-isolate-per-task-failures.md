@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 12:57'
-updated_date: '2026-10-01 13:04'
+updated_date: '2026-10-01 13:10'
 labels:
   - ci
   - tooling
@@ -24,8 +24,26 @@ The first real sync run aborted at task-16: its implementation notes (about 75,0
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Rendered issue bodies never exceed GitHub's limit: long sections (notes first, then plan, then description) are truncated deterministically with a visible note pointing to 'backlog task view <id>', so the output is identical on every run
-- [ ] #2 A failure on one task (create, update, project or field write) is logged with the task ID and the run continues with the other tasks; the run still exits non-zero and reports the failure count in the summary line
-- [ ] #3 Unit tests cover the truncation boundary (exactly at, just over and far over the limit, including multi-byte characters) and per-task failure isolation
+- [x] #1 Rendered issue bodies never exceed GitHub's limit: long sections (notes first, then plan, then description) are truncated deterministically with a visible note pointing to 'backlog task view <id>', so the output is identical on every run
+- [x] #2 A failure on one task (create, update, project or field write) is logged with the task ID and the run continues with the other tasks; the run still exits non-zero and reports the failure count in the summary line
+- [x] #3 Unit tests cover the truncation boundary (exactly at, just over and far over the limit, including multi-byte characters) and per-task failure isolation
 - [ ] #4 A real run against canadian-ham completes, and a second run reports 0 created, 0 updated and 0 status changes
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Add deterministic issue-body fitting in tools/backlog-sync/render.go using a 60,000-rune budget so GitHub's 65,536-character body limit has margin; keep the marker/metadata/acceptance criteria intact and shrink implementation notes, then plan, then description, then final summary at line boundaries where possible with a visible omitted-character marker pointing to backlog task view <id> --plain.
+2. Update tools/backlog-sync/sync.go to isolate per-task write failures during create/update/project field/sub-issue work: log each failure with the task ID, count it, continue remaining tasks, include the failure count in the summary, and return a non-zero error after the run when failures occurred while keeping pre-write global errors aborting.
+3. Add unit tests for truncation boundaries including multi-byte runes and for one task create failure not blocking other tasks; run gofmt, go test ./..., go vet ./..., go build, and the required dry-run only.
+
+Fix round 2: adjust section truncation so minimum sections stay minimized and remaining sections shrink in order; add a final hard-limit guard that records per-task failures before writes; downgrade expected sub-issue link rejections to once-per-run warnings; expand regression tests for multi-section truncation, determinism, metadata overflow, and update/project isolation; validate with Go checks and one read-only dry-run.
+<!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented tools/backlog-sync issue-body truncation using a 60,000-rune budget with deterministic shrink order (implementation notes, plan, description, final summary) and task-view markers. Isolated per-task sync write failures with task-ID logs, failure counts in the summary, and non-zero return when failures occur. Validation passed: cd tools/backlog-sync && go vet ./... && go test ./... && go build -o /tmp/backlog-sync-17 .; dry-run saved to /tmp/ch-dry-task17.txt with summary 'sync complete: 10 created, 4 updated, 27 status changes, 0 imported, 0 failed'. AC #4 intentionally left unchecked for the coordinator's real run.
+
+Fix round 2 implemented: sections that cannot fit at minimum stay marker-only/truncation-note-only while later sections shrink in fixed order; rendered bodies over GitHub's hard limit are per-task failures that skip issue writes; truncation closes open backtick fences; expected sub-issue link rejections now warn once per run; summary labels failed operations. Validation passed: cd tools/backlog-sync && go vet ./... && go test ./... && go build -o /tmp/backlog-sync-17b .; dry-run saved to /tmp/ch-dry-task17b.txt with summary 'sync complete: 10 created, 4 updated, 27 status changes, 0 imported, 0 failed operations'. AC #4 remains unchecked and task remains In Progress.
+<!-- SECTION:NOTES:END -->
