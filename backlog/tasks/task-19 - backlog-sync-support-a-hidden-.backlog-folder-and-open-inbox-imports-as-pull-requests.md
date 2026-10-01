@@ -1,8 +1,6 @@
 ---
 id: TASK-19
-title: >-
-  backlog-sync: support a hidden .backlog folder and open inbox imports as pull
-  requests
+title: 'backlog-sync: support a hidden .backlog folder and a manual inbox mode'
 status: In Progress
 assignee:
   - '@pi-worker'
@@ -19,12 +17,16 @@ ordinal: 29000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-The owner moved to a pull-request-only workflow: nothing may be pushed to main directly, and every change goes through Copilot review and CI. The syncer's inbox import currently commits a new task on main and pushes it, which would bypass that. The project is also moving its Backlog folder from backlog/ to .backlog/, and the syncer currently assumes a 'backlog/' directory when it scans worktrees. ArkhamHorror (a separate meta repo with direct commits) still needs the existing push behaviour, so the mode must be configurable.
+The owner moved to a pull-request-only workflow: nothing may be pushed to main directly. The syncer's inbox import commits a new task on main and pushes it, which would bypass that. An automated 'open the import as a PR' mode was tried over three review rounds and kept failing on crash recovery (temporary worktrees, stale remote refs, ID collisions), so the owner chose the simpler design: in PR-only repos the syncer only reports inbox issues and the coordinator triages them into normal task PRs. The project is also moving its Backlog folder from backlog/ to .backlog/, which the syncer must find. ArkhamHorror (a meta repo with direct commits) keeps the existing push mode.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 Worktree scanning finds the Backlog folder wherever the project's Backlog.md config puts it (backlog/, .backlog/ or a custom path), using the CLI or the config file read-only, with tests
+- [ ] #2 inbox.mode accepts 'push' (current behaviour, unchanged for ArkhamHorror) and 'manual' (report open inbox-labelled issues in the log and summary, and never write anything for them: no task, label, marker, branch or push); invalid modes are rejected
+- [ ] #3 All 'pr'-mode code, config and docs from earlier rounds are removed
+- [ ] #4 canadian-ham's .backlog-sync.json uses 'manual' mode; the README documents both modes, and a dry run lists any open inbox issues as 'needs triage'
+- [ ] #5 go test covers both modes (manual mode makes zero writes with an inbox issue present) without network access
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -53,6 +55,8 @@ Round 3 fix steps:
 Implemented Backlog directory discovery for backlog/, .backlog/, and custom Backlog data dirs; added inbox.mode push/pr with temp-worktree PR imports, explicit root repo allowlist checks, duplicate PR detection, and cleanup. Validation passed: cd tools/backlog-sync && go vet ./... && go test ./... && go build -o /tmp/backlog-sync-19 .; read-only dry run saved to /tmp/ch-dry-task19.txt (no current inbox issues, so no real planned PR; unit test covers planned PR dry-run output).
 
 Round 2 fixes implemented: PR mode now keeps the inbox label while an import PR is open, links/retitles/unlabels the original issue after the task reaches main, reuses existing open PRs, recovers by opening a PR from an already-pushed inbox branch, prunes stale worktrees, skips temp inbox worktrees during collection, creates detached temp worktrees from origin/<main>, pushes HEAD:refs/heads/<branch> with --force-with-lease, deletes stale local inbox branches, and fails clearly if Backlog autoCommit leaves temp-worktree changes. Added no-network tests for merge linking/no duplicate issue, branch-pushed/no-PR replay, stale local branch cleanup, temp cleanup on failure, invalid inbox.mode, origin allowlist refusal, temp worktree skipping, ambiguous non-root Backlog folders, start point/base selection, and PR lookup by head plus marker. Validation passed: cd tools/backlog-sync && go vet ./... && go test ./... && go build -o /tmp/backlog-sync-19b . && /tmp/backlog-sync-19b --config /Users/david/Developer/canadian-ham/.backlog-sync.json --dry-run > /tmp/ch-dry-task19b.txt. The live dry run had no inbox issue, so it could not show a planned PR line for AC #4; /tmp/ch-dry-task19b.txt records the read-only run and AC #4 live planned-PR evidence is left for the coordinator.
+
+Owner decision (2026-10-01): replace the 'pr' inbox mode with a report-only 'manual' mode after three review rounds (reviews t19-1 and t19-2 in ~/.cache/canadian-ham-reviews). The coordinator triages inbox issues at session start into normal task PRs.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
