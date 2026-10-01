@@ -33,6 +33,8 @@ Reviews of the Apple accessibility and French interface lanes approved the work 
 1. Update mock exam results so the results heading owns the spoken submission summary and receives VoiceOver focus from onAppear after SwiftUI has laid out the result view, avoiding a separate announcement that focus could interrupt; cover the exposed heading label in XCUITest and document the remaining manual VoiceOver smoke check.
 2. Extend tvOS UI coverage to capture a screenshot after the Next question button receives focus, save exported evidence under docs/evidence, and verify the focus ring remains rendered.
 3. Tag English error detail text with the English language identifier in the shared Apple LocalizedErrorMessageText pattern (including tvOS), then run apple l10n and affected/full xbuild checks before finalizing.
+
+Fix review round: merge origin/main, restore AC #2/#3 to unchecked while correcting evidence and localization, add an on-screen tvOS focus assertion before capture, keep a single docs/evidence PNG after confirming the focused Next question button ring is visible, localize app-owned error descriptions without tagging system errors as English across iOS/macOS/tvOS/visionOS, then re-run the affected and final platform test suites before re-checking AC #2/#3 with evidence.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
