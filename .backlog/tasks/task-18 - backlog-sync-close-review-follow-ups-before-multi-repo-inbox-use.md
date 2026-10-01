@@ -1,9 +1,10 @@
 ---
 id: TASK-18
 title: 'backlog-sync: close review follow-ups before multi-repo inbox use'
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-10-01 13:20'
+updated_date: '2026-10-01 15:56'
 labels:
   - ci
   - tooling
@@ -31,3 +32,15 @@ The task-16 and task-17 reviews approved the syncer with non-blocking notes. Mos
 - [ ] #6 Tests cover the remove-error path, a real captured task list --json fixture (pagination fields) and a line-boundary truncation case that would fail without the line-boundary logic
 - [ ] #7 A dry run is confirmed to write nothing to git (FETCH_HEAD and refs), or the README documents the backlog CLI fetch behaviour
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Owner decision for this repository: all acceptance criteria/follow-ups for this task moved to the standalone djensenius/backlog-sync repository as task-8, so this Canadian Ham task is closed without checking its criteria here.
+<!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Closed without local implementation because all backlog-sync follow-ups moved to djensenius/backlog-sync task-8; acceptance criteria remain unchecked in this repository by owner instruction.
+<!-- SECTION:FINAL_SUMMARY:END -->
