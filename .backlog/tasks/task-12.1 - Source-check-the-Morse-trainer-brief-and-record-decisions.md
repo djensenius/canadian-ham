@@ -34,3 +34,11 @@ Verify the claims in the Morse trainer research brief against the current ISED R
 2. Preserve verified facts while adding the proposals index and relative project links.
 3. Run pnpm check:links, check only the supported acceptance criteria, record open owner decisions, and commit.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Committed draft prepared in docs/proposals/morse-trainer.md with docs/proposals/README.md index. Validation passed: pnpm check:links. Verification summary claim counts: Corrected 3; Corrected (narrower than stated) 1; Corrected (project rule) 1; ISED wording verified/arithmetic does not support 5 wpm 1; Partly corrected 1; Partly verified 1; Unclear 1; Unverified 2; Verified family 23; total 34.
+
+Open owner decisions (AC #3 remains unchecked): scope integrated module vs separate app; default character speed 12 wpm vs 15–18 wpm; sending evaluation microphone pitch detection vs tap timing; exam timing profile PARIS-calibrated 12/5 vs RIC-1 literal/harder option; haptics scope on supportsHaptics-capable devices only.
+<!-- SECTION:NOTES:END -->
