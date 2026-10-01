@@ -1,9 +1,11 @@
 ---
 id: TASK-22
 title: Upgrade the web and content toolchain to the latest major versions
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@pi-worker'
 created_date: '2026-10-01 18:11'
+updated_date: '2026-10-01 18:12'
 labels:
   - ci
   - web
