@@ -1,0 +1,13 @@
+{
+  "id": "EXP-B-001-001-001",
+  "questionId": "B-001-001-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": { "en": "Original explanation.", "fr": null },
+  "citations": [
+    { "type": "lesson", "id": "L-001-01" },
+    { "type": "question", "id": "B-001-001-001" },
+    { "type": "rbr-4", "url": "https://example.test/source" }
+  ],
+  "licenseClass": "original"
+}

@@ -1,0 +1,21 @@
+{
+  "bankId": "basic-2025-07-15",
+  "certificate": "canadian-amateur-basic",
+  "effectiveDate": "2025-07-15",
+  "source": {
+    "path": "content/sources/ised/basic-2025-07-15/questions/amat_basic_quest_delim.txt",
+    "sha256": "34c7cd7967addfde648c566d0ecf25bf3d1e071c603b5101cfecc7bd0cbc284f",
+    "url": "https://apc-cap.ic.gc.ca/datafiles/amat_basic_quest.zip#amat_basic_quest_delim.txt",
+    "encoding": "UTF-8",
+    "lineEndings": "LF"
+  },
+  "importer": {
+    "name": "packages/content-tools/src/import-basic.ts",
+    "version": "1"
+  },
+  "counts": {
+    "questions": 983,
+    "categories": 8,
+    "subsections": 100
+  }
+}

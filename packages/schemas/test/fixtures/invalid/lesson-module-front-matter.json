@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "id": "M1",
+  "categoryId": "B-009",
+  "order": 9,
+  "title": { "en": "Module", "fr": null },
+  "lessonIds": [],
+  "status": "draft"
+}

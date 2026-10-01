@@ -17,6 +17,41 @@ fail() {
   failures=$((failures + 1))
 }
 
+make_fake_grep_error_path() {
+  local name=$1
+  local fake_bin="$tmp_root/$name-bin"
+  local real_grep
+  real_grep=$(command -v grep) || return 1
+  mkdir -p "$fake_bin"
+  cat > "$fake_bin/grep" <<SH
+#!/usr/bin/env bash
+for arg in "\$@"; do
+  case "\$arg" in
+    *'https?://'*)
+      printf 'grep: synthetic URL scan failure\n' >&2
+      exit 2
+      ;;
+  esac
+done
+exec "$real_grep" "\$@"
+SH
+  chmod +x "$fake_bin/grep"
+  printf '%s:%s\n' "$fake_bin" "$PATH"
+}
+
+make_path_without_plutil() {
+  local name=$1
+  local fake_bin="$tmp_root/$name-bin"
+  local tool
+  local tool_path
+  mkdir -p "$fake_bin"
+  for tool in dirname find grep sort; do
+    tool_path=$(command -v "$tool") || return 1
+    ln -s "$tool_path" "$fake_bin/$tool"
+  done
+  printf '%s\n' "$fake_bin"
+}
+
 make_fixture() {
   local name=$1
   local root="$tmp_root/$name"
@@ -33,7 +68,8 @@ SWIFT
 
 run_audit() {
   local root=$1
-  APPLE_NO_NETWORK_ROOT="$root" "$BASH" "$audit_script" 2>&1
+  shift
+  env APPLE_NO_NETWORK_ROOT="$root" "$@" "$BASH" "$audit_script" 2>&1
 }
 
 assert_passes() {
@@ -157,7 +193,7 @@ assert_swift_sample_fails_with_label "import-firebase" "import FirebaseCore" "$s
 assert_swift_sample_fails_with_label "import-analytics" "import StudyAnalytics" "$source_symbol_label"
 assert_swift_sample_fails_with_label "import-attributed" "@preconcurrency import WebKit" "$source_symbol_label"
 assert_swift_sample_fails_with_label "import-implementation-only" "@_implementationOnly import Network" "$source_symbol_label"
-assert_swift_sample_fails_with_label "import-kind" "import struct Network.NWConnection" "$source_symbol_label"
+assert_swift_sample_fails_with_label "import-kind" "import enum WebKit.WKNavigationType" "$source_symbol_label"
 
 url_label="unexpected URL literal in Swift source"
 assert_swift_sample_fails_with_label "url-mailto" "let supportEmail = \"mailto:help@example.test\"" "$url_label"
@@ -165,9 +201,23 @@ assert_swift_sample_fails_with_label "url-tel" "let supportPhone = \"tel:+180055
 assert_swift_sample_fails_with_label "url-sms" "let supportSms = \"sms:+18005550100\"" "$url_label"
 assert_swift_sample_fails_with_label "url-custom-scheme" "let customDeepLink = \"canadianham://practice\"" "$url_label"
 
+grep_error_root=$(make_fixture grep-error)
+grep_error_path=$(make_fake_grep_error_path grep-error)
+grep_error_output=$(run_audit "$grep_error_root" "PATH=$grep_error_path")
+grep_error_status=$?
+if [[ $grep_error_status -eq 0 ]]; then
+  fail "grep-error expected failure but passed: $grep_error_output"
+fi
+case "$grep_error_output" in
+  *"apple-no-network: grep failed while checking Swift URL literals"*) ;;
+  *) fail "grep-error output missed Swift URL grep failure label: $grep_error_output" ;;
+esac
+
 assert_lesson_sample_fails_with_label "lesson-disallowed-url" "The allowed RBR-4 link remains acceptable: <$rbr4_url>. This disallowed URL must fail: https://example.test/resource."
+assert_lesson_sample_fails_with_label "lesson-uppercase-https" "An uppercase scheme must fail: HTTPS://example.test/resource."
 assert_lesson_sample_fails_with_label "lesson-email" "Contact instructor@example.test for help."
 assert_lesson_sample_fails_with_label "lesson-www" "Visit www.example.test/path for details."
+assert_lesson_sample_fails_with_label "lesson-uppercase-www" "Visit WWW.example.test/path for details."
 
 explanation_root=$(make_fixture explanation-url)
 mkdir -p "$explanation_root/content/explanations/b-001"
@@ -195,6 +245,28 @@ cat > "$plist_root/apps/apple/App.entitlements" <<'PLIST'
 PLIST
 assert_fails_with_labels "forbidden plist entitlement" "$plist_root" \
   "forbidden network client/server, iCloud, local-network, or transport-security entitlement/Info key"
+
+plutil_missing_root=$(make_fixture plutil-missing)
+cat > "$plutil_missing_root/apps/apple/Clean.plist" <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>OfflineOnly</key>
+  <true/>
+</dict>
+</plist>
+PLIST
+plutil_missing_path=$(make_path_without_plutil plutil-missing)
+plutil_missing_output=$(run_audit "$plutil_missing_root" "PATH=$plutil_missing_path")
+plutil_missing_status=$?
+if [[ $plutil_missing_status -ne 0 ]]; then
+  fail "plutil-missing expected pass but exited $plutil_missing_status: $plutil_missing_output"
+fi
+case "$plutil_missing_output" in
+  *"apple-no-network: skipping plist format lint because plutil is not available on this platform"*) ;;
+  *) fail "plutil-missing output missed skip message: $plutil_missing_output" ;;
+esac
 
 config_root=$(make_fixture project-config)
 cat > "$config_root/apps/apple/project.yml" <<'YAML'

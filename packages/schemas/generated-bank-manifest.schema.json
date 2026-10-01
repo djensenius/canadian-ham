@@ -7,22 +7,16 @@
   "properties": {
     "bankId": { "$ref": "common.schema.json#/$defs/bankId" },
     "certificate": { "const": "canadian-amateur-basic" },
-    "effectiveDate": {
-      "type": "string",
-      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-    },
+    "effectiveDate": { "const": "2025-07-15" },
     "source": {
       "type": "object",
       "required": ["path", "sha256", "url", "encoding", "lineEndings"],
       "properties": {
-        "path": { "type": "string", "minLength": 1 },
-        "sha256": {
-          "type": "string",
-          "pattern": "^[0-9a-f]{64}$"
-        },
-        "url": { "type": "string", "minLength": 1 },
+        "path": { "const": "content/sources/ised/basic-2025-07-15/questions/amat_basic_quest_delim.txt" },
+        "sha256": { "const": "34c7cd7967addfde648c566d0ecf25bf3d1e071c603b5101cfecc7bd0cbc284f" },
+        "url": { "const": "https://apc-cap.ic.gc.ca/datafiles/amat_basic_quest.zip#amat_basic_quest_delim.txt" },
         "encoding": { "const": "UTF-8" },
-        "lineEndings": { "enum": ["CRLF", "LF"] }
+        "lineEndings": { "const": "CRLF" }
       },
       "additionalProperties": false
     },
@@ -30,8 +24,8 @@
       "type": "object",
       "required": ["name", "version"],
       "properties": {
-        "name": { "type": "string", "minLength": 1 },
-        "version": { "type": "string", "minLength": 1 }
+        "name": { "const": "packages/content-tools/src/import-basic.ts" },
+        "version": { "const": "1" }
       },
       "additionalProperties": false
     },
@@ -39,9 +33,9 @@
       "type": "object",
       "required": ["questions", "categories", "subsections"],
       "properties": {
-        "questions": { "type": "integer", "minimum": 0 },
-        "categories": { "type": "integer", "minimum": 0 },
-        "subsections": { "type": "integer", "minimum": 0 }
+        "questions": { "const": 984 },
+        "categories": { "const": 8 },
+        "subsections": { "const": 100 }
       },
       "additionalProperties": false
     }

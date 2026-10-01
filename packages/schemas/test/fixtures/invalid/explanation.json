@@ -1,0 +1,11 @@
+{
+  "id": "EXP-B-001-001-001",
+  "questionId": "B-009-001-001",
+  "bankId": "basic-2025-07-15",
+  "status": "draft",
+  "body": { "en": "Original explanation.", "fr": null },
+  "citations": [
+    { "type": "unknown", "id": "L-001-01" }
+  ],
+  "licenseClass": "copied"
+}

@@ -1,0 +1,11 @@
+{
+  "name": "@canadian-ham/schemas",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test ./*.test.mjs",
+    "validate": "node validate.mjs",
+    "typecheck": "echo '@canadian-ham/schemas has no TypeScript sources'"
+  }
+}

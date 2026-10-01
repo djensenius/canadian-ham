@@ -1,0 +1,16 @@
+[
+  {
+    "id": "B-001-001-001",
+    "bankId": "basic-2025-07-15",
+    "categoryId": "B-001",
+    "subsectionId": "B-001-001",
+    "sourceOrder": 985,
+    "text": { "en": "Question?", "fr": "Question?" },
+    "answers": [
+      { "sourceIndex": 1, "isCorrect": true, "text": { "en": "Correct", "fr": "Correcte" } },
+      { "sourceIndex": 0, "isCorrect": false, "text": { "en": "Wrong 1", "fr": "Mauvaise 1" } },
+      { "sourceIndex": 2, "isCorrect": false, "text": { "en": "Wrong 2", "fr": "Mauvaise 2" } },
+      { "sourceIndex": 3, "isCorrect": false, "text": { "en": "Wrong 3", "fr": "Mauvaise 3" } }
+    ]
+  }
+]

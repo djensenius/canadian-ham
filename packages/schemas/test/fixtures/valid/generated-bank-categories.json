@@ -1,0 +1,82 @@
+[
+  {
+    "id": "B-001",
+    "bankId": "basic-2025-07-15",
+    "name": { "en": "One", "fr": null },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 199,
+    "subsectionCount": 25,
+    "examQuestionCount": 25,
+    "nameSource": "synthetic"
+  },
+  {
+    "id": "B-002",
+    "bankId": "basic-2025-07-15",
+    "name": { "en": "Two", "fr": null },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 99,
+    "subsectionCount": 9,
+    "examQuestionCount": 9,
+    "nameSource": "synthetic"
+  },
+  {
+    "id": "B-003",
+    "bankId": "basic-2025-07-15",
+    "name": { "en": "Three", "fr": null },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 199,
+    "subsectionCount": 21,
+    "examQuestionCount": 21,
+    "nameSource": "synthetic"
+  },
+  {
+    "id": "B-004",
+    "bankId": "basic-2025-07-15",
+    "name": { "en": "Four", "fr": null },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 63,
+    "subsectionCount": 6,
+    "examQuestionCount": 6,
+    "nameSource": "synthetic"
+  },
+  {
+    "id": "B-005",
+    "bankId": "basic-2025-07-15",
+    "name": { "en": "Five", "fr": null },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 142,
+    "subsectionCount": 13,
+    "examQuestionCount": 13,
+    "nameSource": "synthetic"
+  },
+  {
+    "id": "B-006",
+    "bankId": "basic-2025-07-15",
+    "name": { "en": "Six", "fr": null },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 140,
+    "subsectionCount": 13,
+    "examQuestionCount": 13,
+    "nameSource": "synthetic"
+  },
+  {
+    "id": "B-007",
+    "bankId": "basic-2025-07-15",
+    "name": { "en": "Seven", "fr": null },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 87,
+    "subsectionCount": 8,
+    "examQuestionCount": 8,
+    "nameSource": "synthetic"
+  },
+  {
+    "id": "B-008",
+    "bankId": "basic-2025-07-15",
+    "name": { "en": "Eight", "fr": null },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 55,
+    "subsectionCount": 5,
+    "examQuestionCount": 5,
+    "nameSource": "synthetic"
+  }
+]
