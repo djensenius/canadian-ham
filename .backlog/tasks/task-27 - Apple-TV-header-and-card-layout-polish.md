@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 03:45'
-updated_date: '2026-10-02 05:46'
+updated_date: '2026-10-02 05:54'
 labels:
   - apple
   - tvos
@@ -48,6 +48,8 @@ Implemented tvOS header/card polish in apps/apple/Platforms/tvOS/CanadianHamTVAp
 Review-round fix: replaced the 280 pt category cards with 380 pt top-aligned cards using a smaller serif title font, four title lines, no minimumScaleFactor, and a compact inline top bar only for the category grid. SwiftUI on this tvOS target does not expose a compiling hyphenationFactor modifier, so the no-mid-word-hyphenation evidence depends on the current three-column width/default text size; captured top/lower full-screen category-grid evidence includes B-007/B-008 in en/fr light/dark. Opened the task-27 layout PNGs under docs/evidence and checked edge-by-edge: category text stays inside card borders, focused B-001/B-007 rings remain unclipped at 1.04 scale, row cards share height, titles do not hyphenate mid-word, and practice headers are one line in English and two lines in French. Validation passed: node scripts/check-apple-text-sources.ts; focused layout evidence UI test passed; full tvOS xbuild suite passed with 3 CanadianHamTVTests and 7 CanadianHamTVUITests, including category/practice/about accessibility audits.
 
 Evidence-only round: merged origin/main, replaced stitched category-grid composites with separate top/lower full-screen captures, refreshed practice header crops plus task-24 focus-ring PNGs, and added docs/accessibility.md captions for the grid captures while leaving task-27 Done.
+
+Correction: the final tvOS suite has 3 CanadianHamTVTests plus 7 CanadianHamTVUITests (including testLayoutEvidenceScreenshots), not 6.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
