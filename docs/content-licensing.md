@@ -24,7 +24,7 @@ Record the written permission here when available in project records.
 | ISED reference number | Pending: fill in permission reference number |
 | Permission date | Pending: fill in permission date |
 | Permission scope | Pending: paste concise scope from written permission |
-| Covered source artifacts | Pending request scope: 2025 Basic question bank delimited TXT and EN/FR PDF; Advanced bank delimited TXT and EN/FR PDFs (current edition and future revisions); electronic app data with shuffled choices; publication of question text in public source code; future ISED bank revisions. Not requested: reference sheets/reference PDFs, commercial use, revision, or translation |
+| Covered source artifacts | Pending request scope: 2025 Basic question bank delimited TXT and EN/FR PDF; Advanced bank delimited TXT and EN/FR PDFs (current edition and future revisions); purpose Reproduction and Adaptation; non-commercial; electronic app data (the form's material details described verbatim text stored as structured data with answer choices in random order and questions grouped by topic); publication of question text in public source code; future ISED bank revisions. Not requested: reference sheets/reference PDFs, commercial use, revision, or translation |
 | Covers verbatim question text as app data | Pending: `yes` only if the written permission explicitly covers bundling the verbatim EN/FR question text as data in the web and Apple apps |
 | Storage location for permission evidence | Pending: private owner records; do not commit private correspondence unless approved |
 | Release review status | Blocked until reference number/date/scope are recorded and the scope explicitly covers the release artifacts |
