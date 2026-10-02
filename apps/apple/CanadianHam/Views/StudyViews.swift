@@ -9,8 +9,10 @@ struct HomeView: View {
     @ObservedObject var progressStore: ProgressStoreService
     let language: BankLanguage
     let revision: Int
+    let morseEnabled: Bool
     let startPractice: (PracticeScope) -> Void
     let openMockExam: () -> Void
+    let openMorse: () -> Void
 
     @State private var summary: HomeSummary?
     @State private var errorMessage: String?
@@ -32,6 +34,9 @@ struct HomeView: View {
                     HStack {
                         tokenButton("Start practice") { startPractice(.all) }
                         tokenButton("Mock exam") { openMockExam() }
+                        if morseEnabled {
+                            tokenButton("Morse trainer (preview)") { openMorse() }
+                        }
                     }
                 }
                 .paperCard()
@@ -1147,6 +1152,8 @@ struct MockExamView: View {
 struct SettingsView: View {
     let bank: QuestionBank
     @ObservedObject var progressStore: ProgressStoreService
+    @Binding var morseSettings: MorseTrainerSettings
+    let openMorse: () -> Void
     let onDataChanged: () -> Void
 
     @State private var statusMessage: String?
@@ -1200,6 +1207,11 @@ struct SettingsView: View {
                             }
                         }
                     }
+                }
+                .paperCard()
+
+                MorseSettingsSection(settings: $morseSettings, openMorse: openMorse) { _ in
+                    onDataChanged()
                 }
                 .paperCard()
 
@@ -1321,6 +1333,8 @@ struct SettingsView: View {
     private func resetAllData() {
         do {
             try progressStore.resetAllData()
+            MorseTrainerSettings.reset()
+            morseSettings = .default
             statusMessage = String(localized: "All local progress was reset.")
             errorMessage = nil
             onDataChanged()

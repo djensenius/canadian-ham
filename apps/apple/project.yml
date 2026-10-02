@@ -14,6 +14,8 @@ packages:
     path: ../../packages/engine-swift
   CanadianHamContent:
     path: ../../packages/content-swift
+  CanadianHamMorseEngine:
+    path: ../../packages/morse-swift
 settings:
   base:
     CURRENT_PROJECT_VERSION: 1
@@ -67,6 +69,8 @@ targets:
         product: CanadianHamEngine
       - package: CanadianHamContent
         product: CanadianHamContent
+      - package: CanadianHamMorseEngine
+        product: CanadianHamMorseEngine
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.djensenius.CanadianHam
@@ -120,6 +124,8 @@ targets:
         product: CanadianHamEngine
       - package: CanadianHamContent
         product: CanadianHamContent
+      - package: CanadianHamMorseEngine
+        product: CanadianHamMorseEngine
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.djensenius.CanadianHamTests
@@ -157,6 +163,8 @@ targets:
       - path: CanadianHam/Models/QuestionBankModels.swift
       - path: CanadianHam/Services/QuestionBankStore.swift
       - path: CanadianHam/Practice/EngineShuffle.swift
+      - path: CanadianHam/Morse/MorseTrainerSettings.swift
+      - path: CanadianHam/Morse/MorseAudioDriver.swift
       - path: CanadianHam/Design/Tokens.swift
       - path: CanadianHam/Support/LaunchArguments.swift
       - path: CanadianHam/Resources/Localizable.xcstrings
@@ -184,6 +192,8 @@ targets:
     dependencies:
       - package: CanadianHamEngine
         product: CanadianHamEngine
+      - package: CanadianHamMorseEngine
+        product: CanadianHamMorseEngine
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.djensenius.CanadianHam.TV
@@ -204,6 +214,8 @@ targets:
       - path: CanadianHam/Models/QuestionBankModels.swift
       - path: CanadianHam/Services/QuestionBankStore.swift
       - path: CanadianHam/Practice/EngineShuffle.swift
+      - path: CanadianHam/Morse/MorseTrainerSettings.swift
+      - path: CanadianHam/Morse/MorseAudioDriver.swift
       - path: ../../content/generated/basic-2025-07-15/questions.json
         type: file
         buildPhase: resources
@@ -223,6 +235,8 @@ targets:
     dependencies:
       - package: CanadianHamEngine
         product: CanadianHamEngine
+      - package: CanadianHamMorseEngine
+        product: CanadianHamMorseEngine
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.djensenius.CanadianHamTVTests
@@ -252,6 +266,8 @@ targets:
       - path: CanadianHam/Models/QuestionBankModels.swift
       - path: CanadianHam/Services/QuestionBankStore.swift
       - path: CanadianHam/Practice/EngineShuffle.swift
+      - path: CanadianHam/Morse/MorseTrainerSettings.swift
+      - path: CanadianHam/Morse/MorseAudioDriver.swift
       - path: CanadianHam/Design/Tokens.swift
       - path: CanadianHam/Support/LaunchArguments.swift
       - path: CanadianHam/Resources/Localizable.xcstrings
@@ -279,6 +295,8 @@ targets:
     dependencies:
       - package: CanadianHamEngine
         product: CanadianHamEngine
+      - package: CanadianHamMorseEngine
+        product: CanadianHamMorseEngine
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.djensenius.CanadianHam.Vision
@@ -299,6 +317,8 @@ targets:
       - path: CanadianHam/Models/QuestionBankModels.swift
       - path: CanadianHam/Services/QuestionBankStore.swift
       - path: CanadianHam/Practice/EngineShuffle.swift
+      - path: CanadianHam/Morse/MorseTrainerSettings.swift
+      - path: CanadianHam/Morse/MorseAudioDriver.swift
       - path: ../../content/generated/basic-2025-07-15/questions.json
         type: file
         buildPhase: resources
@@ -318,6 +338,8 @@ targets:
     dependencies:
       - package: CanadianHamEngine
         product: CanadianHamEngine
+      - package: CanadianHamMorseEngine
+        product: CanadianHamMorseEngine
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.djensenius.CanadianHamVisionTests

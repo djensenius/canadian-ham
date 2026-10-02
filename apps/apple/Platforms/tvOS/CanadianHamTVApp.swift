@@ -66,6 +66,7 @@ private enum TVEvidenceFocus: String {
 private enum PlatformScreen: String {
     case categories
     case practice
+    case morse
     case about
 }
 
@@ -147,6 +148,7 @@ private struct CanadianHamTVRootView: View {
     @State private var screen: PlatformScreen
     @State private var selectedCategoryID: String
     @State private var language: BankLanguage
+    @State private var morseSettings = MorseTrainerSettings.load()
     @State private var practiceSession = TVPracticeSessionState()
 
     init(launchOptions: TVLaunchOptions) {
@@ -190,6 +192,7 @@ private struct CanadianHamTVRootView: View {
                 bank: bank,
                 language: $language,
                 evidenceFocus: launchOptions.evidenceFocus,
+                morseSettings: $morseSettings,
                 onSelectCategory: { category in
                     if selectedCategoryID != category.id {
                         practiceSession.reset(for: category.id)
@@ -197,6 +200,7 @@ private struct CanadianHamTVRootView: View {
                     selectedCategoryID = category.id
                     screen = .practice
                 },
+                onMorse: { screen = .morse },
                 onAbout: { screen = .about }
             )
         case .practice:
@@ -216,6 +220,9 @@ private struct CanadianHamTVRootView: View {
             } else {
                 TVMessageView(title: "No categories", message: String(localized: "The bundled question bank has no practice categories."), systemImage: "questionmark.folder")
             }
+        case .morse:
+            TVMorseView(settings: $morseSettings, onCategories: { screen = .categories })
+                .onExitCommand { screen = .categories }
         case .about:
             TVAboutView(bank: bank, onCategories: { screen = .categories })
                 .onExitCommand { screen = .categories }
@@ -236,7 +243,9 @@ private struct TVCategoryGridView: View {
     let bank: QuestionBank
     @Binding var language: BankLanguage
     let evidenceFocus: TVEvidenceFocus?
+    @Binding var morseSettings: MorseTrainerSettings
     let onSelectCategory: (BankCategory) -> Void
+    let onMorse: () -> Void
     let onAbout: () -> Void
 
     private let columns = Array(repeating: GridItem(.flexible(), spacing: DesignTokens.Spacing.xxl), count: 3)
@@ -252,6 +261,24 @@ private struct TVCategoryGridView: View {
                     onAbout: onAbout,
                     layout: .inline
                 )
+
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    Toggle("Enable Morse trainer preview", isOn: Binding(
+                        get: { morseSettings.isEnabled },
+                        set: { enabled in
+                            var next = morseSettings
+                            next.isEnabled = enabled
+                            morseSettings = next.normalized()
+                            morseSettings.save()
+                        }
+                    )) // l10n: localized
+                    .font(DesignTokens.FontScale.bodyLarge.weight(.semibold))
+                    if morseSettings.isEnabled {
+                        Button("Morse trainer (preview)", action: onMorse) // l10n: localized
+                            .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                            .buttonStyle(TVSecondaryButtonStyle())
+                    }
+                }
 
                 Text("Practice categories")
                     .font(DesignTokens.FontScale.display.weight(.bold))
@@ -989,6 +1016,79 @@ private struct TVTopBar: View {
             .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
             .buttonStyle(TVSecondaryButtonStyle())
             .accessibilityHint(Text("Returns to the category grid")) // l10n: localized
+    }
+}
+
+private struct TVMorseView: View {
+    @Binding var settings: MorseTrainerSettings
+    let onCategories: () -> Void
+
+    @State private var driver = MorseAudioDriver()
+    @State private var isPlaying = false
+    @State private var revealed = false
+    @State private var status = ""
+    @State private var stopTask: Task<Void, Never>?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+            Button("Categories", action: onCategories) // l10n: localized
+                .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                .buttonStyle(TVSecondaryButtonStyle())
+            Text("Morse trainer (preview)") // l10n: localized
+                .font(DesignTokens.FontScale.display.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .accessibilityAddTraits(.isHeader)
+            Text("Play a short practice group. The text is revealed only after playback.") // l10n: localized
+                .font(DesignTokens.FontScale.bodyLarge)
+                .foregroundStyle(DesignTokens.Colors.ink)
+            HStack(spacing: DesignTokens.Spacing.xl) {
+                Button("Play") { play() } // l10n: localized
+                    .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                    .buttonStyle(TVSecondaryButtonStyle())
+                    .disabled(isPlaying)
+                Button("Stop") { stop(reveal: false, message: String(localized: "Morse playback stopped.")) } // l10n: localized
+                    .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                    .buttonStyle(TVSecondaryButtonStyle())
+                    .disabled(!isPlaying)
+            }
+            Text(status) // l10n: localized
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
+            if revealed {
+                Text(verbatim: "KMRSU PARIS") // l10n: verbatim
+                    .font(.system(.title, design: .monospaced).weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+            } else {
+                Text("Hidden until playback finishes.") // l10n: localized
+                    .font(.system(.title, design: .monospaced).weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+            }
+        }
+    }
+
+    private func play() {
+        do {
+            revealed = false
+            let duration = try driver.play(text: "KMRSU PARIS", settings: settings.normalized())
+            isPlaying = true
+            status = String(localized: "Morse playback started.")
+            stopTask?.cancel()
+            stopTask = Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(Int((duration * 1000).rounded(.up)) + 60))
+                guard !Task.isCancelled else { return }
+                stop(reveal: true, message: String(localized: "Morse playback finished."))
+            }
+        } catch {
+            status = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
+        }
+    }
+
+    private func stop(reveal: Bool, message: String) {
+        stopTask?.cancel()
+        driver.stop()
+        isPlaying = false
+        if reveal { revealed = true }
+        status = message
     }
 }
 

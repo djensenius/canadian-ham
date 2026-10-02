@@ -7,6 +7,7 @@ private enum SidebarSelection: Hashable {
     case practiceHub
     case practice(PracticeScope)
     case mockExam
+    case morse
     case settings
     case about
 }
@@ -24,6 +25,7 @@ struct RootView: View {
     @State private var progressStoreError: String?
     @State private var selection: SidebarSelection = .home
     @State private var language: BankLanguage = .english
+    @State private var morseSettings = MorseTrainerSettings.load()
     @State private var dataRevision = 0
     @State private var navigationPath: [LearnRoute] = []
     @State private var didApplyLaunchNavigation = false
@@ -147,6 +149,11 @@ struct RootView: View {
                     SidebarButton(selection: .mockExam, current: selection) {
                         Label("Mock exam", systemImage: "doc.text.magnifyingglass")
                     } action: { selection = .mockExam }
+                    if morseSettings.isEnabled {
+                        SidebarButton(selection: .morse, current: selection) {
+                            Label("Morse trainer (preview)", systemImage: "waveform")
+                        } action: { selection = .morse }
+                    }
                     SidebarButton(selection: .settings, current: selection) {
                         Label("Settings", systemImage: "gearshape")
                     } action: { selection = .settings }
@@ -213,10 +220,12 @@ struct RootView: View {
     private func detailView(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
         switch selection {
         case .home:
-            HomeView(bank: bank, progressStore: progressStore, language: language, revision: dataRevision) { scope in
+            HomeView(bank: bank, progressStore: progressStore, language: language, revision: dataRevision, morseEnabled: morseSettings.isEnabled) { scope in
                 selection = .practice(scope)
             } openMockExam: {
                 selection = .mockExam
+            } openMorse: {
+                selection = .morse
             }
         case .learn:
             LearnView(
@@ -245,8 +254,18 @@ struct RootView: View {
             MockExamView(bank: bank, progressStore: progressStore, language: language) {
                 dataRevision += 1
             }
+        case .morse:
+            if morseSettings.isEnabled {
+                MorseTrainerView(settings: $morseSettings) { nextSettings in
+                    morseSettings = nextSettings
+                }
+            } else {
+                SettingsView(bank: bank, progressStore: progressStore, morseSettings: $morseSettings, openMorse: { selection = .morse }) {
+                    dataRevision += 1
+                }
+            }
         case .settings:
-            SettingsView(bank: bank, progressStore: progressStore) {
+            SettingsView(bank: bank, progressStore: progressStore, morseSettings: $morseSettings, openMorse: { selection = .morse }) {
                 dataRevision += 1
             }
         case .about:
@@ -305,6 +324,7 @@ struct RootView: View {
             }
             if ProcessInfo.processInfo.arguments.contains("-CanadianHamResetDataOnLaunch") {
                 ProgressStoreService.resetPersistentStoreFiles()
+                MorseTrainerSettings.reset()
             }
 #endif
             progressStore = try ProgressStoreService.open()
@@ -361,6 +381,7 @@ struct RootView: View {
             case "learn": selection = .learn
             case "practice": selection = .practiceHub
             case "mock": selection = .mockExam
+            case "morse": selection = morseSettings.isEnabled ? .morse : .settings
             case "settings": selection = .settings
             case "about": selection = .about
             default: break
