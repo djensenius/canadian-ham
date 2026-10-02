@@ -10,6 +10,8 @@ labels:
   - 'legacy:T-009'
 milestone: m-0
 dependencies:
+  - TASK-1.1
+  - TASK-1.6
   - TASK-1.8
 parent_task_id: TASK-1
 ordinal: 8000
