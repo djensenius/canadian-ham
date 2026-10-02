@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 03:45'
-updated_date: '2026-10-02 04:29'
+updated_date: '2026-10-02 04:40'
 labels:
   - apple
   - tvos
@@ -32,5 +32,8 @@ Why: task-24 screenshots show the tvOS practice header using about a third of th
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Adjust tvOS category grid/card sizing so category titles wrap at word boundaries without mid-word hyphenation and row cards share a consistent height while preserving task-24 focus-ring clearance.\n2. Rework the tvOS practice header layout so the category title receives priority, wraps to at most two non-hyphenated lines in English and French, and controls remain accessible.\n3. Add/adjust UI-test coverage where useful, then capture lean light/dark English/French PNG evidence for category grid and practice header under docs/evidence and manually open each image.\n4. Run Apple text-source checking and the full tvOS xbuild suite including accessibility audits, then record evidence, check ACs, summarize, mark task-27 Done, and leave the branch clean.
+1. Adjust tvOS category grid/card sizing so category titles wrap at word boundaries without mid-word hyphenation and row cards share a consistent height while preserving task-24 focus-ring clearance.
+2. Rework the tvOS practice header layout so the category title receives priority, wraps to at most two non-hyphenated lines in English and French, and controls remain accessible.
+3. Capture lean light/dark English/French PNG evidence for category grid and practice header under docs/evidence and manually open each image.
+4. Run Apple text-source checking and the full tvOS xbuild suite including accessibility audits, then record evidence, check ACs, summarize, mark task-27 Done, and leave the branch clean.
 <!-- SECTION:PLAN:END -->
