@@ -3,12 +3,11 @@ id: TASK-4
 title: Final app icon artwork approval
 status: Done
 assignee:
-  - '@pi-worker'
+  - '@djensenius'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 03:10'
+updated_date: '2026-10-02 03:16'
 labels:
   - design
-  - blocked
   - 'legacy:T-011b'
 milestone: m-0
 dependencies: []
