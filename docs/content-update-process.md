@@ -105,6 +105,8 @@ Concrete files to touch or review during the importer/content migration:
 
 ## 5. Run validation checks
 
+For release-day source/content verification, use the consolidated [release checklist](release/release-checklist.md#content) alongside this validation checklist.
+
 After importing the new bank, run the content-tool checks before touching app bundles:
 
 ```sh
@@ -133,6 +135,8 @@ Expected validation review:
 If the source format changed, stop and review the importer contract before accepting the bank. Do not silently relax parsing rules.
 
 ## 6. Generate a bank diff report
+
+For release-day source/content verification, use the consolidated [release checklist](release/release-checklist.md#content) alongside this bank diff checklist.
 
 Use the zero-dependency diff script to compare the active generated bank with the candidate generated bank:
 
