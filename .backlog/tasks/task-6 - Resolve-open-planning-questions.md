@@ -26,3 +26,12 @@ Open questions carried over from tasks/PLAN.md. Already resolved: minimum Apple 
 - [ ] #2 The official Basic exam time limit is verified and recorded in docs/exam-facts.md, or marked unknown with a source
 - [ ] #3 The minimum supported browser versions are decided and recorded in docs/requirements.md
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Update importer source data for the eight official French Basic category names and regenerate content/generated/basic-2025-07-15 rather than editing generated JSON by hand.
+2. Update requirements/exam-facts documentation with cited ISED category names, no-time-limit guidance, information-circular status, and Vite 8.3.x browser target details after confirming the web build target.
+3. Check French category display strings in web and Apple UI catalogues and replace any unofficial names with the official ISED names.
+4. Run the requested pnpm checks and Apple xbuild suites if Apple strings or Swift change, then finalize task-6 with evidence.
+<!-- SECTION:PLAN:END -->
