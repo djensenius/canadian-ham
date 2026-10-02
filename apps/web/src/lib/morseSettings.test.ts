@@ -30,11 +30,26 @@ describe("Morse trainer settings", () => {
     assert.ok(Math.abs(timing.interCharacterGapSeconds - 1.4052631579) < 1e-9);
   });
 
-  it("uses RIC-1 literal spacing from the selected character dot length", () => {
-    const timing = morseTimingFromPreferences(normalizeMorsePreferences({ characterWpm: 12, effectiveWpm: 5, timingProfile: "ric1Literal" }));
+  it("uses fixed exam timing profiles from the Morse engine", () => {
+    const ised = morseTimingFromPreferences(normalizeMorsePreferences({ characterWpm: 25, effectiveWpm: 25, timingProfile: "isedParis" }));
+    const ric1 = morseTimingFromPreferences(normalizeMorsePreferences({ characterWpm: 25, effectiveWpm: 25, timingProfile: "ric1Literal" }));
 
-    assert.ok(Math.abs(timing.dotSeconds - 0.1) < 1e-12);
-    assert.ok(Math.abs(timing.interCharacterGapSeconds - 0.7) < 1e-12);
-    assert.ok(Math.abs(timing.wordGapSeconds - 1.7) < 1e-12);
+    assert.equal(ised.characterWpm, 12);
+    assert.equal(ised.effectiveWpm, 5);
+    assert.ok(Math.abs(ised.interCharacterGapSeconds - 1.4052631579) < 1e-9);
+    assert.equal(ric1.characterWpm, 12);
+    assert.ok(Math.abs(ric1.effectiveWpm - (60 / 7.6)) < 1e-12);
+    assert.ok(Math.abs(ric1.dotSeconds - 0.1) < 1e-12);
+    assert.ok(Math.abs(ric1.interCharacterGapSeconds - 0.7) < 1e-12);
+    assert.ok(Math.abs(ric1.wordGapSeconds - 1.7) < 1e-12);
+  });
+
+  it("uses the user's Farnsworth speed settings for the general profile", () => {
+    const timing = morseTimingFromPreferences(normalizeMorsePreferences({ characterWpm: 20, effectiveWpm: 10, timingProfile: "general" }));
+
+    assert.equal(timing.name, undefined);
+    assert.equal(timing.characterWpm, 20);
+    assert.equal(timing.effectiveWpm, 10);
+    assert.ok(Math.abs(timing.dotSeconds - 0.06) < 1e-12);
   });
 });

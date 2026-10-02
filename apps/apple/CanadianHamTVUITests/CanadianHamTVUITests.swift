@@ -19,6 +19,21 @@ final class CanadianHamTVUITests: XCTestCase {
         try auditScreen(.about)
     }
 
+    func testMorseAccessibilityAuditLightAndDark() throws {
+        try auditScreen(.morse)
+    }
+
+    func testMorseScreenShowsPlaybackControls() throws {
+        let app = configuredApp(screen: .morse, appearance: "light")
+        app.launch()
+        defer { app.terminate() }
+
+        XCTAssertTrue(PlatformAuditScreen.morse.waitElement(in: app).waitForExistence(timeout: 15))
+        XCTAssertTrue(app.buttons["Play"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Stop"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Hidden until playback finishes."].firstMatch.exists)
+    }
+
     func testAboutShowsReleaseAttributionDisclaimerAndBankVersion() throws {
         let app = configuredApp(screen: .about, appearance: "light")
         app.launch()
@@ -494,6 +509,7 @@ final class CanadianHamTVUITests: XCTestCase {
 private enum PlatformAuditScreen: String {
     case categories
     case practice
+    case morse
     case about
 
     @MainActor
@@ -503,6 +519,8 @@ private enum PlatformAuditScreen: String {
             app.staticTexts["Practice categories"].firstMatch
         case .practice:
             app.staticTexts["An Amateur Radio Operator Certificate is valid for:"].firstMatch
+        case .morse:
+            app.descendants(matching: .any)["tv-morse-screen"].firstMatch
         case .about:
             app.staticTexts["About Canadian Ham"].firstMatch
         }

@@ -64,6 +64,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(morseButton.waitForExistence(timeout: 5), "Morse screen entry should appear after enabling the preview")
         scrollAndTap("Morse trainer (preview)", in: app)
         XCTAssertTrue(app.staticTexts["Hidden until playback finishes."].firstMatch.waitForExistence(timeout: 5))
+        try app.performAccessibilityAudit()
     }
 
     func testAboutShowsReleaseAttributionDisclaimerAndBankVersion() throws {

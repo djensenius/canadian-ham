@@ -60,22 +60,11 @@ struct MorseTrainerSettings: Codable, Equatable, Sendable {
         let settings = normalized()
         switch settings.timingProfile {
         case .isedParis:
-            let base = try farnsworthTiming(characterWpm: Double(settings.characterWpm), effectiveWpm: Double(settings.effectiveWpm))
-            return MorseTimingProfile(name: .isedParis, base: base)
+            return profileForName(.isedParis)
         case .general:
             return try farnsworthTiming(characterWpm: Double(settings.characterWpm), effectiveWpm: Double(settings.effectiveWpm))
         case .ric1Literal:
-            let dot = 1.2 / Double(settings.characterWpm)
-            return MorseTimingProfile(
-                name: .ric1Literal,
-                characterWpm: Double(settings.characterWpm),
-                effectiveWpm: Double(settings.effectiveWpm),
-                dotSeconds: dot,
-                dashSeconds: 3 * dot,
-                intraCharacterGapSeconds: dot,
-                interCharacterGapSeconds: 7 * dot,
-                wordGapSeconds: 17 * dot
-            )
+            return profileForName(.ric1Literal)
         }
     }
 

@@ -951,7 +951,7 @@ describe("App accessibility and flows", () => {
     window.location.hash = "#/settings";
     const store = createStore("morse-toggle");
     const user = userEvent.setup();
-    render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-toggle-seed"} />);
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-toggle-seed"} />);
 
     await screen.findByRole("heading", { name: "Settings and local data" });
     assert.equal(screen.queryByRole("button", { name: "Morse" }), null);
@@ -964,6 +964,41 @@ describe("App accessibility and flows", () => {
     await user.click(screen.getByRole("button", { name: "Morse" }));
     await screen.findByRole("heading", { name: "Morse trainer (preview)" });
     assert.equal(screen.getByText("Hidden until playback finishes.").textContent, "Hidden until playback finishes.");
+    await expectNoAxeViolations(container);
+  });
+
+  it("redirects #/morse to Settings when the Morse preview is disabled", async () => {
+    window.location.hash = "#/morse";
+    const store = createStore("morse-disabled-redirect");
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-disabled-seed"} />);
+
+    await screen.findByRole("heading", { name: "Settings and local data" });
+    await waitFor(() => assert.equal(window.location.hash, "#/settings"));
+  });
+
+  it("lets Morse number inputs accept multi-digit drafts before committing", async () => {
+    window.location.hash = "#/settings";
+    const store = createStore("morse-number-drafts");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-drafts-seed"} />);
+
+    await screen.findByRole("heading", { name: "Settings and local data" });
+    const tone = screen.getByLabelText("Tone") as HTMLInputElement;
+    await user.clear(tone);
+    await user.type(tone, "700");
+    assert.equal(tone.value, "700");
+    assert.equal((await store.getPreferences()).morse.toneHz, 650);
+    await user.keyboard("{Enter}");
+    await waitFor(async () => assert.equal((await store.getPreferences()).morse.toneHz, 700));
+
+    await user.selectOptions(screen.getByLabelText("Timing profile"), "general");
+    await waitFor(async () => assert.equal((await store.getPreferences()).morse.timingProfile, "general"));
+    const characterSpeed = screen.getByLabelText("Character speed") as HTMLInputElement;
+    await user.clear(characterSpeed);
+    await user.type(characterSpeed, "20");
+    assert.equal(characterSpeed.value, "20");
+    await user.keyboard("{Enter}");
+    await waitFor(async () => assert.equal((await store.getPreferences()).morse.characterWpm, 20));
   });
 
   it("renders Settings theme controls and no axe violations", async () => {

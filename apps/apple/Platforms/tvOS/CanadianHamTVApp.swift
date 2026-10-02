@@ -1064,6 +1064,8 @@ private struct TVMorseView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
             }
         }
+        .accessibilityIdentifier("tv-morse-screen")
+        .onDisappear { stop(reveal: false, message: "") }
     }
 
     private func play() {
@@ -1072,6 +1074,7 @@ private struct TVMorseView: View {
             let duration = try driver.play(text: "KMRSU PARIS", settings: settings.normalized())
             isPlaying = true
             status = String(localized: "Morse playback started.")
+            AccessibilityNotification.Announcement(status).post()
             stopTask?.cancel()
             stopTask = Task { @MainActor in
                 try? await Task.sleep(for: .milliseconds(Int((duration * 1000).rounded(.up)) + 60))
@@ -1089,6 +1092,9 @@ private struct TVMorseView: View {
         isPlaying = false
         if reveal { revealed = true }
         status = message
+        if !message.isEmpty {
+            AccessibilityNotification.Announcement(message).post()
+        }
     }
 }
 

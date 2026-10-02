@@ -1,4 +1,4 @@
-import { farnsworthTiming, type MorseTimingProfile } from "@canadian-ham/morse-engine";
+import { farnsworthTiming, profileForName, type MorseTimingProfile } from "@canadian-ham/morse-engine";
 
 export type WebMorseTimingProfileName = "isedParis" | "ric1Literal" | "general";
 
@@ -38,20 +38,10 @@ export function morseISEDExamPreset(current: WebMorsePreferences): WebMorsePrefe
 
 export function morseTimingFromPreferences(preferences: WebMorsePreferences): MorseTimingProfile {
   const normalized = normalizeMorsePreferences(preferences);
-  if (normalized.timingProfile === "ric1Literal") {
-    const dotSeconds = 1.2 / normalized.characterWpm;
-    return {
-      name: "ric1Literal",
-      characterWpm: normalized.characterWpm,
-      effectiveWpm: normalized.effectiveWpm,
-      dotSeconds,
-      dashSeconds: 3 * dotSeconds,
-      intraCharacterGapSeconds: dotSeconds,
-      interCharacterGapSeconds: 7 * dotSeconds,
-      wordGapSeconds: 17 * dotSeconds,
-    };
+  if (normalized.timingProfile === "isedParis" || normalized.timingProfile === "ric1Literal") {
+    return profileForName(normalized.timingProfile);
   }
-  return { ...farnsworthTiming({ characterWpm: normalized.characterWpm, effectiveWpm: normalized.effectiveWpm }), name: normalized.timingProfile === "isedParis" ? "isedParis" : undefined };
+  return farnsworthTiming({ characterWpm: normalized.characterWpm, effectiveWpm: normalized.effectiveWpm });
 }
 
 function isTimingProfile(value: unknown): value is WebMorseTimingProfileName {

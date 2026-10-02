@@ -6,12 +6,18 @@ import { MORSE_AUDIO_RAMP_SECONDS, WebMorsePlayer, scheduleMorseSequence, type W
 import { normalizeMorsePreferences } from "./morseSettings";
 
 class MockAudioParam {
-  readonly events: Array<{ readonly type: "set" | "linear"; readonly value: number; readonly time: number }> = [];
+  readonly events: Array<{ readonly type: "set" | "linear" | "cancel" | "hold"; readonly value?: number; readonly time: number }> = [];
   setValueAtTime(value: number, time: number): void {
     this.events.push({ type: "set", value, time });
   }
   linearRampToValueAtTime(value: number, time: number): void {
     this.events.push({ type: "linear", value, time });
+  }
+  cancelScheduledValues(time: number): void {
+    this.events.push({ type: "cancel", time });
+  }
+  cancelAndHoldAtTime(time: number): void {
+    this.events.push({ type: "hold", time });
   }
 }
 
@@ -39,11 +45,30 @@ class MockAudioContext implements WebMorseAudioContextLike {
   readonly oscillator = new MockOscillatorNode();
   readonly gain = new MockGainNode();
   resumeCount = 0;
+  closeCount = 0;
+  private resumePromise: Promise<void> | null = null;
+  private resumeResolve: (() => void) | null = null;
   createOscillator(): OscillatorNode { return this.oscillator as unknown as OscillatorNode; }
   createGain(): GainNode { return this.gain as unknown as GainNode; }
+  delayResume(): void {
+    this.resumePromise = new Promise((resolve) => {
+      this.resumeResolve = resolve;
+    });
+  }
+  resolveResume(): void {
+    this.state = "running";
+    this.resumeResolve?.();
+  }
   async resume(): Promise<void> {
     this.resumeCount += 1;
+    if (this.resumePromise !== null) {
+      await this.resumePromise;
+      return;
+    }
     this.state = "running";
+  }
+  async close(): Promise<void> {
+    this.closeCount += 1;
   }
 }
 
@@ -90,5 +115,43 @@ describe("WebMorsePlayer", () => {
       { type: "set", value: 0.4, time: 10.02 + 0.1 - MORSE_AUDIO_RAMP_SECONDS },
       { type: "linear", value: 0, time: 10.12 },
     ]);
+  });
+
+  it("ramps gain down before manual stop", () => {
+    const context = new MockAudioContext();
+    context.state = "running";
+    const handle = scheduleMorseSequence(context, textToTimedMorse("E"), normalizeMorsePreferences({ volume: 0.5 }));
+
+    handle.stop();
+
+    assert.deepEqual(context.gain.gain.events.slice(-2), [
+      { type: "hold", time: 10 },
+      { type: "linear", value: 0, time: 10 + MORSE_AUDIO_RAMP_SECONDS },
+    ]);
+    assert.equal(context.oscillator.stops.at(-1), 10 + MORSE_AUDIO_RAMP_SECONDS);
+  });
+
+  it("cancels scheduling when stopped during AudioContext resume", async () => {
+    const context = new MockAudioContext();
+    context.delayResume();
+    const player = new WebMorsePlayer(() => context);
+    const playPromise = player.playText("E", normalizeMorsePreferences());
+
+    assert.equal(context.resumeCount, 1);
+    player.stop();
+    context.resolveResume();
+
+    await assert.rejects(playPromise, /cancelled/);
+    assert.deepEqual(context.oscillator.starts, []);
+    assert.deepEqual(context.oscillator.stops, []);
+  });
+
+  it("closes the AudioContext when the route leaves", async () => {
+    const context = new MockAudioContext();
+    const player = new WebMorsePlayer(() => context);
+    await player.playText("E", normalizeMorsePreferences());
+    await player.close();
+
+    assert.equal(context.closeCount, 1);
   });
 });

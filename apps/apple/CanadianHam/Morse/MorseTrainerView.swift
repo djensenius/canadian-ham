@@ -1,3 +1,4 @@
+import Accessibility
 import CanadianHamMorseEngine
 import SwiftUI
 
@@ -77,10 +78,11 @@ struct MorseTrainerView: View {
     }
 
     private var settingsSummary: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: DesignTokens.Spacing.md)], spacing: DesignTokens.Spacing.md) {
+        let profile = (try? normalizedSettings.timingProfileValue()) ?? profileForName(.isedParis)
+        return LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: DesignTokens.Spacing.md)], spacing: DesignTokens.Spacing.md) {
             summaryItem(title: String(localized: "Tone"), value: "\(normalizedSettings.toneHz) Hz")
-            summaryItem(title: String(localized: "Character speed"), value: String.localizedStringWithFormat(String(localized: "%lld wpm"), Int64(normalizedSettings.characterWpm)))
-            summaryItem(title: String(localized: "Effective speed"), value: String.localizedStringWithFormat(String(localized: "%lld wpm"), Int64(normalizedSettings.effectiveWpm)))
+            summaryItem(title: String(localized: "Character speed"), value: formattedWpm(profile.characterWpm))
+            summaryItem(title: String(localized: "Effective speed"), value: formattedWpm(profile.effectiveWpm))
         }
     }
 
@@ -105,6 +107,7 @@ struct MorseTrainerView: View {
             let duration = try driver.play(text: morsePracticeText, settings: normalizedSettings)
             isPlaying = true
             statusMessage = String(localized: "Morse playback started.")
+            AccessibilityNotification.Announcement(statusMessage).post()
             errorMessage = nil
             stopTask?.cancel()
             stopTask = Task { @MainActor in
@@ -124,7 +127,22 @@ struct MorseTrainerView: View {
         isPlaying = false
         if reveal { isRevealed = true }
         statusMessage = message
+        if !message.isEmpty {
+            AccessibilityNotification.Announcement(message).post()
+        }
     }
+}
+
+private func formattedWpm(_ wpm: Double) -> String {
+    if wpm.rounded() == wpm {
+        return String.localizedStringWithFormat(String(localized: "%lld wpm"), Int64(wpm))
+    }
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .decimal
+    formatter.maximumFractionDigits = 1
+    formatter.minimumFractionDigits = 1
+    let value = formatter.string(from: NSNumber(value: wpm)) ?? String(format: "%.1f", wpm)
+    return String.localizedStringWithFormat(String(localized: "%@ wpm"), value)
 }
 
 @MainActor
@@ -147,6 +165,17 @@ struct MorseSettingsSection: View {
     let openMorse: () -> Void
     let onChange: (MorseTrainerSettings) -> Void
 
+    private var fixedTimingDescription: String? {
+        let normalized = settings.normalized()
+        guard normalized.timingProfile != .general,
+              let profile = try? normalized.timingProfileValue() else { return nil }
+        return String.localizedStringWithFormat(
+            String(localized: "This exam timing profile fixes speed controls at %@ character speed and %@ effective speed. Choose General Farnsworth to edit speed settings."),
+            formattedWpm(profile.characterWpm),
+            formattedWpm(profile.effectiveWpm)
+        )
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Text("Morse trainer (preview)") // l10n: localized
@@ -167,19 +196,26 @@ struct MorseSettingsSection: View {
             Stepper(value: binding(\.characterWpm), in: 12...25, step: 1) {
                 HStack {
                     Text("Character speed") // l10n: localized
-                    Text(verbatim: "\(settings.normalized().characterWpm) wpm") // l10n: verbatim
+                    Text(String.localizedStringWithFormat(String(localized: "%lld wpm"), Int64(settings.normalized().characterWpm))) // l10n: localized
                 }
             }
+            .disabled(settings.normalized().timingProfile != .general)
             Stepper(value: binding(\.effectiveWpm), in: 5...settings.normalized().characterWpm, step: 1) {
                 HStack {
                     Text("Effective speed") // l10n: localized
-                    Text(verbatim: "\(settings.normalized().effectiveWpm) wpm") // l10n: verbatim
+                    Text(String.localizedStringWithFormat(String(localized: "%lld wpm"), Int64(settings.normalized().effectiveWpm))) // l10n: localized
                 }
             }
+            .disabled(settings.normalized().timingProfile != .general)
             Picker("Timing profile", selection: binding(\.timingProfile)) { // l10n: localized
                 ForEach(MorseTrainerSettings.TimingProfile.allCases) { profile in
                     Text(profile.localizedLabel).tag(profile) // l10n: localized
                 }
+            }
+            if let fixedTimingDescription {
+                Text(fixedTimingDescription) // l10n: localized
+                    .font(DesignTokens.FontScale.caption)
+                    .foregroundStyle(DesignTokens.Colors.inkMuted)
             }
             Slider(value: binding(\.volume), in: 0...1, step: 0.05) {
                 Text("Trainer volume") // l10n: localized

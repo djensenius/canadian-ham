@@ -30,57 +30,102 @@ struct MorseAudioSchedule: Equatable, Sendable {
         }
     }
 
-    func amplitude(at frame: AVAudioFramePosition) -> Double {
+    func amplitude(at frame: AVAudioFramePosition, stopRampStartFrame: AVAudioFramePosition? = nil) -> Double {
         guard let segment = segments.first(where: { frame >= $0.startFrame && frame < $0.endFrame }) else { return 0 }
         let framesIntoSegment = frame - segment.startFrame
         let framesUntilEnd = segment.endFrame - frame
         let edgeFrames = min(rampFrames, max(1, (segment.endFrame - segment.startFrame) / 2))
         let envelope = min(1, Double(min(framesIntoSegment, framesUntilEnd)) / Double(edgeFrames))
-        return volume * max(0, envelope)
+        let stopEnvelope: Double
+        if let stopRampStartFrame, frame >= stopRampStartFrame {
+            stopEnvelope = max(0, 1 - (Double(frame - stopRampStartFrame) / Double(rampFrames)))
+        } else {
+            stopEnvelope = 1
+        }
+        return volume * max(0, envelope) * stopEnvelope
     }
 }
 
-final class MorseAudioDriver {
-    private let engine = AVAudioEngine()
-    private var sourceNode: AVAudioSourceNode?
+private final class MorseAudioRenderState {
+    private let lock = NSLock()
     private var schedule: MorseAudioSchedule?
     private var currentFrame: AVAudioFramePosition = 0
     private var phase = 0.0
+    private var stopRampStartFrame: AVAudioFramePosition?
 
-    var isPlaying: Bool { engine.isRunning }
+    func configure(schedule: MorseAudioSchedule) {
+        lock.withLock {
+            self.schedule = schedule
+            currentFrame = 0
+            phase = 0
+            stopRampStartFrame = nil
+        }
+    }
 
-    func play(text: String, settings: MorseTrainerSettings) throws -> TimeInterval {
-        stop()
-        let sequence = try textToTimedMorse(text, profile: settings.timingProfileValue())
-        let outputFormat = engine.outputNode.outputFormat(forBus: 0)
-        let sampleRate = outputFormat.sampleRate > 0 ? outputFormat.sampleRate : 48_000
-        let nextSchedule = MorseAudioSchedule(sequence: sequence, settings: settings, sampleRate: sampleRate)
-        schedule = nextSchedule
-        currentFrame = 0
-        phase = 0
+    func requestStopRamp() -> TimeInterval? {
+        lock.withLock {
+            guard let schedule else { return nil }
+            if stopRampStartFrame == nil {
+                stopRampStartFrame = currentFrame
+            }
+            return Double(schedule.rampFrames) / schedule.sampleRate
+        }
+    }
 
-#if !os(macOS)
-        let session = AVAudioSession.sharedInstance()
-        try session.setCategory(.playback, mode: .default, options: [])
-        try session.setActive(true)
-#endif
+    func reset() {
+        lock.withLock {
+            schedule = nil
+            currentFrame = 0
+            phase = 0
+            stopRampStartFrame = nil
+        }
+    }
 
-        let node = AVAudioSourceNode { [weak self] _, _, frameCount, audioBufferList -> OSStatus in
-            guard let self, let schedule = self.schedule else { return noErr }
+    func render(frameCount: AVAudioFrameCount, audioBufferList: UnsafeMutablePointer<AudioBufferList>) -> OSStatus {
+        lock.withLock {
+            guard let schedule else { return noErr }
             let abl = UnsafeMutableAudioBufferListPointer(audioBufferList)
             for frameOffset in 0..<Int(frameCount) {
-                let frame = self.currentFrame + AVAudioFramePosition(frameOffset)
-                let amplitude = schedule.amplitude(at: frame)
-                let sample = Float(sin(self.phase) * amplitude)
-                self.phase += (2 * Double.pi * schedule.frequency) / schedule.sampleRate
-                if self.phase > 2 * Double.pi { self.phase -= 2 * Double.pi }
+                let frame = currentFrame + AVAudioFramePosition(frameOffset)
+                let amplitude = schedule.amplitude(at: frame, stopRampStartFrame: stopRampStartFrame)
+                let sample = Float(sin(phase) * amplitude)
+                phase += (2 * Double.pi * schedule.frequency) / schedule.sampleRate
+                if phase > 2 * Double.pi { phase -= 2 * Double.pi }
                 for buffer in abl {
                     let pointer = buffer.mData?.assumingMemoryBound(to: Float.self)
                     pointer?[frameOffset] = sample
                 }
             }
-            self.currentFrame += AVAudioFramePosition(frameCount)
+            currentFrame += AVAudioFramePosition(frameCount)
             return noErr
+        }
+    }
+}
+
+final class MorseAudioDriver {
+    private let engine = AVAudioEngine()
+    private let renderState = MorseAudioRenderState()
+    private var sourceNode: AVAudioSourceNode?
+    private var pendingStopWorkItem: DispatchWorkItem?
+
+    var isPlaying: Bool { engine.isRunning }
+
+    func play(text: String, settings: MorseTrainerSettings) throws -> TimeInterval {
+        stopImmediately()
+        let sequence = try textToTimedMorse(text, profile: settings.timingProfileValue())
+        let outputFormat = engine.outputNode.outputFormat(forBus: 0)
+        let sampleRate = outputFormat.sampleRate > 0 ? outputFormat.sampleRate : 48_000
+        let nextSchedule = MorseAudioSchedule(sequence: sequence, settings: settings, sampleRate: sampleRate)
+        renderState.configure(schedule: nextSchedule)
+
+#if !os(macOS)
+        let session = AVAudioSession.sharedInstance()
+        try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+        try session.setActive(true)
+#endif
+
+        let node = AVAudioSourceNode { [weak self] _, _, frameCount, audioBufferList -> OSStatus in
+            self?.renderState.render(frameCount: frameCount, audioBufferList: audioBufferList) ?? noErr
         }
         sourceNode = node
         engine.attach(node)
@@ -91,15 +136,36 @@ final class MorseAudioDriver {
     }
 
     func stop() {
+        pendingStopWorkItem?.cancel()
+        guard engine.isRunning else {
+            cleanupStoppedEngine()
+            return
+        }
+        let rampDuration = renderState.requestStopRamp() ?? 0.005
+        let workItem = DispatchWorkItem { [weak self] in
+            self?.stopImmediately()
+        }
+        pendingStopWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + rampDuration, execute: workItem)
+    }
+
+    private func stopImmediately() {
+        pendingStopWorkItem?.cancel()
+        pendingStopWorkItem = nil
         if engine.isRunning {
             engine.stop()
         }
+        cleanupStoppedEngine()
+    }
+
+    private func cleanupStoppedEngine() {
         if let sourceNode {
             engine.detach(sourceNode)
         }
         sourceNode = nil
-        schedule = nil
-        currentFrame = 0
-        phase = 0
+        renderState.reset()
+#if !os(macOS)
+        try? AVAudioSession.sharedInstance().setActive(false, options: [.notifyOthersOnDeactivation])
+#endif
     }
 }

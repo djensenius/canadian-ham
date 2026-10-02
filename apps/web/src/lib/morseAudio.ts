@@ -18,6 +18,7 @@ export interface WebMorseAudioContextLike {
   createOscillator(): OscillatorNode;
   createGain(): GainNode;
   resume?(): Promise<void>;
+  close?(): Promise<void>;
 }
 
 export type WebMorseAudioContextFactory = () => WebMorseAudioContextLike;
@@ -25,6 +26,7 @@ export type WebMorseAudioContextFactory = () => WebMorseAudioContextLike;
 export class WebMorsePlayer {
   #context: WebMorseAudioContextLike | null = null;
   #active: MorsePlaybackHandle | null = null;
+  #generation = 0;
 
   constructor(private readonly createContext: WebMorseAudioContextFactory = defaultAudioContextFactory) {}
 
@@ -33,6 +35,7 @@ export class WebMorsePlayer {
   }
 
   async playText(text: string, preferences: WebMorsePreferences): Promise<MorsePlaybackHandle> {
+    const generation = ++this.#generation;
     const normalizedPreferences = normalizeMorsePreferences(preferences);
     const sequence = textToTimedMorse(text, morseTimingFromPreferences(normalizedPreferences));
     const context = this.#context ?? this.createContext();
@@ -40,15 +43,29 @@ export class WebMorsePlayer {
     if (context.state === "suspended") {
       await context.resume?.();
     }
+    if (generation !== this.#generation) {
+      throw new Error("Morse playback was cancelled.");
+    }
     this.#active?.stop();
+    if (generation !== this.#generation) {
+      throw new Error("Morse playback was cancelled.");
+    }
     const handle = scheduleMorseSequence(context, sequence, normalizedPreferences);
     this.#active = handle;
     return handle;
   }
 
   stop(): void {
+    this.#generation += 1;
     this.#active?.stop();
     this.#active = null;
+  }
+
+  async close(): Promise<void> {
+    this.stop();
+    const context = this.#context;
+    this.#context = null;
+    await context?.close?.();
   }
 }
 
@@ -91,13 +108,23 @@ export function scheduleMorseSequence(context: WebMorseAudioContextLike, sequenc
         return;
       }
       stopped = true;
+      const stopStartedAt = context.currentTime;
+      const stopAt = stopStartedAt + MORSE_AUDIO_RAMP_SECONDS;
       try {
-        oscillator.stop();
+        gain.gain.cancelAndHoldAtTime?.(stopStartedAt);
+        if (gain.gain.cancelAndHoldAtTime === undefined) {
+          gain.gain.cancelScheduledValues(stopStartedAt);
+          gain.gain.setValueAtTime(0, stopStartedAt);
+        }
+        gain.gain.linearRampToValueAtTime(0, stopAt);
+        oscillator.stop(stopAt);
       } catch {
         // Some Web Audio implementations throw if stop() has already been scheduled or called.
       }
-      oscillator.disconnect();
-      gain.disconnect();
+      globalThis.setTimeout(() => {
+        oscillator.disconnect();
+        gain.disconnect();
+      }, Math.ceil(MORSE_AUDIO_RAMP_SECONDS * 1000) + 20);
     },
   };
 }

@@ -6586,13 +6586,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lisez un court groupe d’exercice. Le texte est révélé seulement après la lecture afin que vous puissiez d’abord copier à l’oreille."
+            "value" : "Écoutez un court groupe d’exercice. Le texte est révélé seulement après la lecture afin que vous puissiez d’abord copier à l’oreille."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lisez un court groupe d’exercice. Le texte est révélé seulement après la lecture afin que vous puissiez d’abord copier à l’oreille."
+            "value" : "Écoutez un court groupe d’exercice. Le texte est révélé seulement après la lecture afin que vous puissiez d’abord copier à l’oreille."
           }
         }
       }
@@ -6608,13 +6608,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lisez un court groupe d’exercice. Le texte est révélé seulement après la lecture."
+            "value" : "Écoutez un court groupe d’exercice. Le texte est révélé seulement après la lecture."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lisez un court groupe d’exercice. Le texte est révélé seulement après la lecture."
+            "value" : "Écoutez un court groupe d’exercice. Le texte est révélé seulement après la lecture."
           }
         }
       }
@@ -6901,6 +6901,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vitesse effective"
+          }
+        }
+      }
+    },
+    "%@ wpm" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ wpm"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ mots/min"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ mots/min"
+          }
+        }
+      }
+    },
+    "This exam timing profile fixes speed controls at %@ character speed and %@ effective speed. Choose General Farnsworth to edit speed settings." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This exam timing profile fixes speed controls at %@ character speed and %@ effective speed. Choose General Farnsworth to edit speed settings."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce profil de minutage d’examen fixe les vitesses à %@ pour les caractères et %@ en vitesse effective. Choisissez Farnsworth général pour modifier les vitesses."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce profil de minutage d’examen fixe les vitesses à %@ pour les caractères et %@ en vitesse effective. Choisissez Farnsworth général pour modifier les vitesses."
           }
         }
       }
