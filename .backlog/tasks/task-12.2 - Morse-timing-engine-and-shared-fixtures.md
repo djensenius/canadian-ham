@@ -1,9 +1,11 @@
 ---
 id: TASK-12.2
 title: Morse timing engine and shared fixtures
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@pi-worker'
 created_date: '2026-10-02 01:12'
+updated_date: '2026-10-02 11:51'
 labels:
   - web
   - apple
@@ -28,3 +30,15 @@ Why: every Morse feature (audio, drills, exam, sending) depends on exact, testab
 - [ ] #2 The character set is limited to RIC-1 section 8.2; figures and punctuation weigh 2 for word counts
 - [ ] #3 Shared fixtures in fixtures/morse/ (PARIS 12.0 s isedParis and 7.6 s ric1Literal, the RIC-1 section 8.3 sample = 78 weighted characters, error scoring with 5 errors = pass and 6 = fail, insertions) pass in both languages
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Mirror packages/engine-ts and packages/engine-swift conventions for new Morse packages without wiring them into apps.\n2. Add shared fixtures under fixtures/morse/ for timing, word weighting, validation, and grading.\n3. Implement TypeScript timing/validation/weighting/grading APIs and tests against the shared fixtures; wire the package into root pnpm test/typecheck.\n4. Implement matching SwiftPM library and tests against the same shared fixtures.\n5. Update CI only for the new TS package and document Swift local test status because existing CI has no macOS/Swift job.\n6. Run requested checks, record evidence, check ACs, finalize task, and commit logical slices.
+<!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Owner override: task-12.2 formally depends on task-1 (v1 release), but the owner asked to start implementation now.
+<!-- SECTION:NOTES:END -->
