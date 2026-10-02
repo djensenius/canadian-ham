@@ -304,6 +304,19 @@ test("imports and validates the committed Basic 2025 source bank", async () => {
       ["B-008", 55, 5],
     ],
   );
+  assert.deepEqual(
+    bank.categories.map((category) => [category.id, category.name.fr, category.frenchNameStatus]),
+    [
+      ["B-001", "Règlements et politiques", "verified"],
+      ["B-002", "Exploitation et procédures", "verified"],
+      ["B-003", "Montage d'une station, pratique et sécurité", "verified"],
+      ["B-004", "Composants des circuits", "verified"],
+      ["B-005", "Éléments et théorie de l'électronique", "verified"],
+      ["B-006", "Descentes d'antenne et systèmes d'antenne", "verified"],
+      ["B-007", "Propagation des ondes radioélectriques", "verified"],
+      ["B-008", "Brouillage et suppression", "verified"],
+    ],
+  );
   for (const subsection of bank.subsections) {
     assert.ok(subsection.questionCount >= 4, `${subsection.id} has too few questions`);
     assert.ok(subsection.questionCount <= 11, `${subsection.id} has too many questions`);
