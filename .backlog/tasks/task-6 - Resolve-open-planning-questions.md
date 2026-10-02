@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 01:48'
+updated_date: '2026-10-02 01:49'
 labels:
   - docs
   - needs-decision
@@ -22,9 +22,9 @@ Open questions carried over from tasks/PLAN.md. Already resolved: minimum Apple 
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 The official French category names are verified, or the gap is documented (see docs/requirements.md)
-- [ ] #2 The official Basic exam time limit is verified and recorded in docs/exam-facts.md, or marked unknown with a source
-- [ ] #3 The minimum supported browser versions are decided and recorded in docs/requirements.md
+- [x] #1 The official French category names are verified, or the gap is documented (see docs/requirements.md)
+- [x] #2 The official Basic exam time limit is verified and recorded in docs/exam-facts.md, or marked unknown with a source
+- [x] #3 The minimum supported browser versions are decided and recorded in docs/requirements.md
 <!-- AC:END -->
 
 ## Implementation Plan
