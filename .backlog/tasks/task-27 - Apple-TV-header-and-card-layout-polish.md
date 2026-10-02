@@ -1,7 +1,7 @@
 ---
 id: TASK-27
 title: Apple TV header and card layout polish
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 03:45'
