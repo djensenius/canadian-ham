@@ -59,7 +59,7 @@ Implementation rules:
 
 ## Web no-data design
 
-The web app is a fully static site. Static hosting still means the host may see client IP addresses and user-agent data in ordinary HTTP request logs for app assets; the project does not add application-level tracking or server-side progress storage.
+The web app is a fully static site. Static hosting still means the host may see client IP addresses and user-agent data in ordinary HTTP request logs for app assets; the project does not add application-level tracking or server-side progress storage. The prepared GitHub Pages deployment notes and release-time retention confirmation are in [release/web-deploy.md](release/web-deploy.md#host-logging-and-retention).
 
 Allowed local data:
 
@@ -171,7 +171,7 @@ Verification targets:
 - Service worker caches only same-origin app shell, content JSON, Markdown, and app assets; reference PDFs are not shipped in the web app or PWA cache.
 - Fonts are self-hosted.
 - Content Security Policy blocks unexpected `connect-src`, `script-src`, `img-src`, and `font-src` third-party origins; if host response headers are unavailable, document and test the fallback CSP `<meta>` tag.
-- Hosting configuration disables optional access logs or uses the shortest retention available; any unavoidable host logs are treated as hosting operations data, not application analytics.
+- Hosting configuration disables optional access logs or uses the shortest retention available where the host provides such a project-level control. GitHub Pages does not expose a project-level access-log setting for this repository; any unavoidable host logs are treated as hosting operations data, not application analytics, and retention remains to confirm before release.
 
 ## Verification checklist
 
