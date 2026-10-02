@@ -1,11 +1,11 @@
 ---
 id: TASK-11.3
 title: Multi-bank engine and schema plumbing
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-02 11:51'
+updated_date: '2026-10-02 12:46'
 labels:
   - content
   - web
@@ -26,10 +26,10 @@ Why: Advanced has 549 questions, 7 categories, 50 subsections, 50-question exams
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 bankId is a parameter in content-tools, engine-ts and CanadianHamEngine, with per-bank subsection count (50/100), category set and Honours flag
-- [ ] #2 Mock exams draw one question per subsection for the active bank; Honours and honours-ready are suppressed when the bank has no Honours
-- [ ] #3 Scores, progress records and the progress export carry bankId, with JSON Schemas and shared TS/Swift fixtures updated and existing Basic exports still importing
-- [ ] #4 All web tests, schema checks and the iOS and macOS xbuild suites pass
+- [x] #1 bankId is a parameter in content-tools, engine-ts and CanadianHamEngine, with per-bank subsection count (50/100), category set and Honours flag
+- [x] #2 Mock exams draw one question per subsection for the active bank; Honours and honours-ready are suppressed when the bank has no Honours
+- [x] #3 Scores, progress records and the progress export carry bankId, with JSON Schemas and shared TS/Swift fixtures updated and existing Basic exports still importing
+- [x] #4 All web tests, schema checks and the iOS and macOS xbuild suites pass
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -42,4 +42,12 @@ Why: Advanced has 549 questions, 7 categories, 50 subsections, 50-question exams
 
 <!-- SECTION:NOTES:BEGIN -->
 Owner override noted: task-11.3 formally depends on task-1 (v1 release), but the owner asked to start multi-bank engine/schema plumbing now.
+
+Validation on final commit e593b2863d7f0b2d87843058835a535f32b9cf77: pnpm typecheck; pnpm test; pnpm build:web; pnpm import:check; pnpm check:schemas; pnpm check:links; pnpm --filter @canadian-ham/engine-ts test; cd packages/engine-swift && DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test; iOS xbuild suite passed on iPhone 17 Pro with 28 UI/unit tests; macOS xbuild suite passed with 23 unit tests.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Implemented multi-bank engine/schema plumbing while keeping apps on the Basic bank. Added Basic/Advanced bank rules across content-tools, engine-ts and CanadianHamEngine, parameterized mock-exam subsection counts and no-Honours scoring/readiness for Advanced, added bankId to scores/progress exports with legacy Basic import defaults, refreshed shared TS/Swift fixtures and JSON Schemas, and verified with the requested pnpm, SwiftPM and xbuild checks.
+<!-- SECTION:FINAL_SUMMARY:END -->
