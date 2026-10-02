@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 01:34'
+updated_date: '2026-10-02 01:48'
 labels:
   - docs
   - needs-decision
@@ -35,3 +35,9 @@ Open questions carried over from tasks/PLAN.md. Already resolved: minimum Apple 
 3. Check French category display strings in web and Apple UI catalogues and replace any unofficial names with the official ISED names.
 4. Run the requested pnpm checks and Apple xbuild suites if Apple strings or Swift change, then finalize task-6 with evidence.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented task-6 source updates: official French category names are stored in content/categories.json, regenerated into content/generated/basic-2025-07-15/categories.json, and validated by importer/schema tests; docs/requirements.md and docs/exam-facts.md now cite ISED CIR/RIC sources for French categories and no fixed Basic exam time limit; apps/web uses verified French category names in French UI and timer copy now states no fixed ISED time limit. Confirmed apps/web/vite.config.ts has no build.target override, so Vite 8.3.x default baseline-widely-available applies. Validation passed: pnpm typecheck; pnpm test; pnpm build:web; pnpm import:check; pnpm check:schemas; pnpm check:links; pnpm check:apple-l10n. iOS/macOS xbuild suites were not run because no Apple Swift or string-catalog files changed.
+<!-- SECTION:NOTES:END -->
