@@ -1,11 +1,11 @@
 ---
 id: TASK-4
 title: Final app icon artwork approval
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 02:06'
+updated_date: '2026-10-02 03:10'
 labels:
   - design
   - blocked
@@ -24,8 +24,8 @@ Owner task. The current generated icon draft (design/app-icon/exports) is wired 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 The owner has approved the final icon artwork
-- [ ] #2 The exports in design/app-icon/exports are replaced
-- [ ] #3 The icon assets are updated in every Apple target and the web manifest
+- [x] #2 The exports in design/app-icon/exports are replaced
+- [x] #3 The icon assets are updated in every Apple target and the web manifest
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -46,4 +46,14 @@ Round 2 steering: added owner-requested 05-hex-beam concept, expanded comparison
 Round 3: replaced the round-2 concept folders with four hex-beam studies, regenerated comparison/closeups, and recorded three render-critique passes. Task remains In Progress for owner artwork review.
 
 Owner decision (2026-10-02): approved round-3 concept 1, design/app-icon/concepts/01-hex-top, the top-down hex beam with brushed hexagon perimeter, six straight dry-brush spreaders, hub dot, and pale zigzag W/M wire elements.
+
+Final icon pass: promoted owner-approved design/app-icon/concepts/01-hex-top into design/app-icon/render_icon.py, regenerated design/app-icon/exports, installed Apple asset-catalog PNGs for iOS/macOS/tvOS/visionOS, copied web icons into apps/web/public, and updated web favicon references/precache coverage. Visual review opened preview-sheet.png, app-icon-1024.png, app-icon-60.png, favicon-32.png, and favicon-16.png: 1024 preserves the brushed hex beam and pale W/M wires; 60 px reduces to a clear hex/spoke mark; 32 px favicon shows simplified perimeter/spokes/hub; 16 px drops fine wire detail for legibility.
+
+Validation passed: python3 design/app-icon/render_icon.py; ImageMagick identify confirmed export dimensions/channel contracts; pnpm build:web; pnpm test; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild iOS CanadianHam test on iPhone 17 Pro; xbuild macOS CanadianHam unit tests with CanadianHamUITests skipped; xbuild tvOS CanadianHamTV test; xbuild visionOS CanadianHamVision test. apps/apple/project.yml and target membership were unchanged, so XcodeGen regeneration was not required.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Owner approved round-3 concept 1 (01-hex-top). Promoted it to the production app icon renderer, regenerated and installed all export/Apple/web icon assets, documented the source-of-truth renderer and iteration history, and verified with web tests plus iOS/macOS/tvOS/visionOS xbuild runs.
+<!-- SECTION:FINAL_SUMMARY:END -->
