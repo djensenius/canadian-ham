@@ -1,5 +1,6 @@
 import Accessibility
 import SwiftUI
+import UIKit
 
 @main
 struct CanadianHamTVApp: App {
@@ -20,6 +21,7 @@ private struct TVLaunchOptions {
     let answeredSourceIndex: Int?
     let colorScheme: ColorScheme?
     let initialLanguage: BankLanguage
+    let evidenceFocus: TVEvidenceFocus?
 
     init(arguments: [String] = ProcessInfo.processInfo.arguments) {
         initialScreen = PlatformScreen(rawValue: AppLaunchArguments.value(after: "-CanadianHamPlatformInitialScreen", in: arguments) ?? "categories") ?? .categories
@@ -32,13 +34,76 @@ private struct TVLaunchOptions {
         default: colorScheme = nil
         }
         initialLanguage = BankLanguage(rawValue: AppLaunchArguments.value(after: "-CanadianHamLanguage", in: arguments) ?? "en") ?? .english
+        evidenceFocus = AppLaunchArguments.value(after: "-CanadianHamTVEvidenceFocus", in: arguments).flatMap(TVEvidenceFocus.init(rawValue:))
     }
+}
+
+private enum TVEvidenceFocus: String {
+    case category
+    case answer
 }
 
 private enum PlatformScreen: String {
     case categories
     case practice
     case about
+}
+
+private enum TVFocusIndicator {
+    static let outerStroke = DesignTokens.Colors.ink
+    static let innerStroke = Color.tvDynamicToken(
+        light: DesignTokens.RGB(red: 1.000000, green: 0.972549, blue: 0.917647),
+        dark: DesignTokens.RGB(red: 0.125490, green: 0.105882, blue: 0.086275)
+    )
+
+    static let outerLineWidth: CGFloat = 12
+    static let innerLineWidth: CGFloat = 4
+}
+
+private extension Color {
+    static func tvDynamicToken(light: DesignTokens.RGB, dark: DesignTokens.RGB) -> Color {
+        Color(UIColor { traits in
+            let color = traits.userInterfaceStyle == .dark ? dark : light
+            return UIColor(red: color.red, green: color.green, blue: color.blue, alpha: 1)
+        })
+    }
+}
+
+private struct TVFocusRingModifier<S: InsettableShape>: ViewModifier {
+    let shape: S
+    let isFocused: Bool
+    let unfocusedColor: Color
+    let unfocusedLineWidth: CGFloat
+
+    func body(content: Content) -> some View {
+        content.overlay {
+            if isFocused {
+                shape
+                    .stroke(TVFocusIndicator.outerStroke, lineWidth: TVFocusIndicator.outerLineWidth)
+                shape
+                    .strokeBorder(TVFocusIndicator.innerStroke, lineWidth: TVFocusIndicator.innerLineWidth)
+            } else {
+                shape
+                    .strokeBorder(unfocusedColor, lineWidth: unfocusedLineWidth)
+            }
+        }
+    }
+}
+
+private extension View {
+    func tvFocusRing<S: InsettableShape>(
+        _ shape: S,
+        isFocused: Bool,
+        unfocusedColor: Color,
+        unfocusedLineWidth: CGFloat
+    ) -> some View {
+        modifier(TVFocusRingModifier(
+            shape: shape,
+            isFocused: isFocused,
+            unfocusedColor: unfocusedColor,
+            unfocusedLineWidth: unfocusedLineWidth
+        ))
+    }
 }
 
 private struct CanadianHamTVRootView: View {
@@ -91,6 +156,7 @@ private struct CanadianHamTVRootView: View {
             TVCategoryGridView(
                 bank: bank,
                 language: $language,
+                evidenceFocus: launchOptions.evidenceFocus,
                 onSelectCategory: { category in
                     if selectedCategoryID != category.id {
                         practiceSession.reset(for: category.id)
@@ -109,6 +175,7 @@ private struct CanadianHamTVRootView: View {
                     answeredSourceIndex: launchOptions.answeredSourceIndex,
                     language: $language,
                     session: $practiceSession,
+                    evidenceFocus: launchOptions.evidenceFocus,
                     onCategories: { screen = .categories },
                     onAbout: { screen = .about }
                 )
@@ -135,6 +202,7 @@ private struct CanadianHamTVRootView: View {
 private struct TVCategoryGridView: View {
     let bank: QuestionBank
     @Binding var language: BankLanguage
+    let evidenceFocus: TVEvidenceFocus?
     let onSelectCategory: (BankCategory) -> Void
     let onAbout: () -> Void
 
@@ -152,7 +220,11 @@ private struct TVCategoryGridView: View {
 
                 LazyVGrid(columns: columns, alignment: .leading, spacing: DesignTokens.Spacing.xl) {
                     ForEach(bank.categories) { category in
-                        TVCategoryButton(category: category, language: language) {
+                        TVCategoryButton(
+                            category: category,
+                            language: language,
+                            requestsEvidenceFocus: evidenceFocus == .category && category.id == bank.categories.first?.id
+                        ) {
                             onSelectCategory(category)
                         }
                     }
@@ -168,8 +240,10 @@ private struct TVCategoryGridView: View {
 private struct TVCategoryButton: View {
     let category: BankCategory
     let language: BankLanguage
+    let requestsEvidenceFocus: Bool
     let action: () -> Void
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @FocusState private var isFocused: Bool
 
     private var categoryAccessibilityLabel: AttributedString {
@@ -194,16 +268,24 @@ private struct TVCategoryButton: View {
             .padding(DesignTokens.Spacing.xl)
             .frame(maxWidth: .infinity, minHeight: 190, alignment: .leading)
             .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous)
-                    .strokeBorder(isFocused ? DesignTokens.Colors.focus : DesignTokens.Colors.border, lineWidth: isFocused ? 6 : 2)
+            .tvFocusRing(
+                RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous),
+                isFocused: isFocused,
+                unfocusedColor: DesignTokens.Colors.border,
+                unfocusedLineWidth: 2
             )
-            .scaleEffect(isFocused ? 1.04 : 1)
+            .scaleEffect(!reduceMotion && isFocused ? 1.04 : 1)
         }
         .buttonStyle(.plain)
         .focused($isFocused)
         .accessibilityLabel(Text(categoryAccessibilityLabel)) // l10n: content(question)
+        .accessibilityIdentifier("category-\(category.id)-button")
         .accessibilityHint(Text("Starts practice for this category")) // l10n: localized
+        .onAppear {
+            if requestsEvidenceFocus {
+                isFocused = true
+            }
+        }
     }
 }
 
@@ -242,6 +324,7 @@ private struct TVPracticeView: View {
     let answeredSourceIndex: Int?
     @Binding var language: BankLanguage
     @Binding var session: TVPracticeSessionState
+    let evidenceFocus: TVEvidenceFocus?
     let onCategories: () -> Void
     let onAbout: () -> Void
 
@@ -285,6 +368,7 @@ private struct TVPracticeView: View {
                                         displayLetter: displayLetter(for: answer.displayIndex),
                                         language: language,
                                         selectedSourceIndex: session.selectedSourceIndex,
+                                        requestsEvidenceFocus: evidenceFocus == .answer && answer.displayIndex == 0,
                                         action: { select(answer) }
                                     )
                                 }
@@ -437,8 +521,10 @@ private struct TVAnswerButton: View {
     let displayLetter: String
     let language: BankLanguage
     let selectedSourceIndex: Int?
+    let requestsEvidenceFocus: Bool
     let action: () -> Void
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @FocusState private var isFocused: Bool
 
     private var isSelected: Bool { selectedSourceIndex == answer.sourceIndex }
@@ -471,11 +557,13 @@ private struct TVAnswerButton: View {
             .padding(DesignTokens.Spacing.lg)
             .frame(maxWidth: .infinity, minHeight: 106, alignment: .leading)
             .background(background, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous)
-                    .strokeBorder(isFocused ? DesignTokens.Colors.focus : border, lineWidth: isFocused ? 6 : (isSelected || semantic ? 4 : 2))
+            .tvFocusRing(
+                RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous),
+                isFocused: isFocused,
+                unfocusedColor: border,
+                unfocusedLineWidth: isSelected || semantic ? 4 : 2
             )
-            .scaleEffect(isFocused ? 1.025 : 1)
+            .scaleEffect(!reduceMotion && isFocused ? 1.025 : 1)
         }
         .buttonStyle(.plain)
         .focused($isFocused)
@@ -484,6 +572,11 @@ private struct TVAnswerButton: View {
         .accessibilityIdentifier("answer-\(displayLetter)-button")
         .accessibilityHint(isAnswered ? Text("Question already answered. Use Next question to continue.") : Text("Selects this answer")) // l10n: localized
         .accessibilityAddTraits(isSelected ? .isSelected : [])
+        .onAppear {
+            if requestsEvidenceFocus {
+                isFocused = true
+            }
+        }
     }
 
     private var semantic: Bool { isAnswered && (answer.isCorrect || isSelected) }
@@ -533,6 +626,7 @@ private struct TVAnswerButton: View {
 }
 
 private struct TVPrimaryButtonStyle: ButtonStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.isEnabled) private var isEnabled
     @Environment(\.isFocused) private var isFocused
 
@@ -544,15 +638,87 @@ private struct TVPrimaryButtonStyle: ButtonStyle {
             .padding(.vertical, DesignTokens.Spacing.lg)
             .frame(minHeight: 72)
             .background(isEnabled ? DesignTokens.Colors.accent : DesignTokens.Colors.paperInset, in: Capsule())
-            .overlay {
-                Capsule()
-                    .strokeBorder(
-                        isFocused ? DesignTokens.Colors.focus : isEnabled ? DesignTokens.Colors.accent : DesignTokens.Colors.inkMuted,
-                        style: StrokeStyle(lineWidth: isFocused ? 6 : 2, dash: isEnabled ? [] : [6, 5])
-                    )
-            }
+            .tvFocusRing(
+                Capsule(),
+                isFocused: isFocused,
+                unfocusedColor: isEnabled ? DesignTokens.Colors.accent : DesignTokens.Colors.inkMuted,
+                unfocusedLineWidth: 2
+            )
             .contentShape(Capsule())
-            .scaleEffect(isFocused ? 1.04 : (configuration.isPressed ? 0.97 : 1))
+            .scaleEffect(!reduceMotion && isFocused ? 1.04 : (configuration.isPressed ? 0.97 : 1))
+    }
+}
+
+private struct TVSecondaryButtonStyle: ButtonStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.isFocused) private var isFocused
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundStyle(DesignTokens.Colors.ink)
+            .multilineTextAlignment(.center)
+            .padding(.horizontal, DesignTokens.Spacing.xl)
+            .padding(.vertical, DesignTokens.Spacing.lg)
+            .frame(minHeight: 64)
+            .background(DesignTokens.Colors.paperInset, in: Capsule())
+            .tvFocusRing(
+                Capsule(),
+                isFocused: isFocused,
+                unfocusedColor: isEnabled ? DesignTokens.Colors.border : DesignTokens.Colors.inkMuted,
+                unfocusedLineWidth: 2
+            )
+            .contentShape(Capsule())
+            .scaleEffect(!reduceMotion && isFocused ? 1.035 : (configuration.isPressed ? 0.97 : 1))
+            .opacity(isEnabled ? 1 : 0.75)
+    }
+}
+
+private struct TVLanguageButtonStyle: ButtonStyle {
+    let isSelected: Bool
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.isFocused) private var isFocused
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+            .foregroundStyle(isSelected ? DesignTokens.Colors.paper : DesignTokens.Colors.ink)
+            .frame(minWidth: 150, minHeight: 64)
+            .background(isSelected ? DesignTokens.Colors.accent : DesignTokens.Colors.paperInset, in: Capsule())
+            .tvFocusRing(
+                Capsule(),
+                isFocused: isFocused,
+                unfocusedColor: isSelected ? DesignTokens.Colors.accent : DesignTokens.Colors.border,
+                unfocusedLineWidth: 2
+            )
+            .contentShape(Capsule())
+            .scaleEffect(!reduceMotion && isFocused ? 1.035 : (configuration.isPressed ? 0.97 : 1))
+    }
+}
+
+private struct TVLanguageToggle: View {
+    @Binding var language: BankLanguage
+
+    var body: some View {
+        HStack(spacing: DesignTokens.Spacing.md) {
+            languageButton(.english)
+            languageButton(.french)
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(Text("Question language")) // l10n: localized
+        .accessibilityIdentifier("question-language-picker")
+    }
+
+    private func languageButton(_ option: BankLanguage) -> some View {
+        Button {
+            language = option
+        } label: {
+            Text(localized(option.displayName, language: option)) // l10n: content(en/fr)
+        }
+        .buttonStyle(TVLanguageButtonStyle(isSelected: language == option))
+        .accessibilityAddTraits(language == option ? .isSelected : [])
+        .accessibilityIdentifier("question-language-\(option.rawValue)-button")
     }
 }
 
@@ -651,7 +817,7 @@ private struct TVTopBar: View {
             if let leadingAction {
                 Button(leadingAction.title, action: leadingAction.action) // l10n: localized
                     .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                    .buttonStyle(.bordered)
+                    .buttonStyle(TVSecondaryButtonStyle())
                     .accessibilityHint(Text("Returns to the category grid")) // l10n: localized
             }
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
@@ -664,23 +830,11 @@ private struct TVTopBar: View {
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
             }
             Spacer()
-            Picker("Question language", selection: $language) {
-                ForEach(BankLanguage.allCases) { language in
-                    switch language {
-                    case .english:
-                        Text(localized(language.displayName, language: .english)).tag(language) // l10n: content(en)
-                    case .french:
-                        Text(localized(language.displayName, language: .french)).tag(language) // l10n: content(fr)
-                    }
-                }
-            }
-            .pickerStyle(.segmented)
-            .frame(width: 420)
-            .accessibilityLabel(Text("Question language")) // l10n: localized
-            .accessibilityIdentifier("question-language-picker")
+            TVLanguageToggle(language: $language)
+                .frame(width: 420)
             Button("About", action: onAbout)
                 .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                .buttonStyle(.bordered)
+                .buttonStyle(TVSecondaryButtonStyle())
                 .accessibilityLabel(Text("About Canadian Ham")) // l10n: localized
         }
     }
@@ -696,7 +850,7 @@ private struct TVAboutView: View {
                 HStack {
                     Button("Categories", action: onCategories)
                         .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                        .buttonStyle(.bordered)
+                        .buttonStyle(TVSecondaryButtonStyle())
                     Spacer()
                 }
 

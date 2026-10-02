@@ -26,10 +26,12 @@ final class CanadianHamTVUITests: XCTestCase {
         XCTAssertTrue(PlatformAuditScreen.practice.waitElement(in: app).waitForExistence(timeout: 15), "Expected fixed practice question")
 
         let remote = XCUIRemote.shared
+        let frenchLanguage = app.buttons["question-language-fr-button"].firstMatch
+        XCTAssertTrue(frenchLanguage.waitForExistence(timeout: 5), "French language button should exist")
         pressRemote([.right, .select, .right, .select], remote: remote)
         XCTAssertTrue(
             app.staticTexts[Self.fixedFrenchQuestionText].firstMatch.waitForExistence(timeout: 5),
-            "Fixed question should switch to French through remote interaction"
+            "Fixed question should switch to French through tvOS interaction"
         )
 
         let firstAnswer = app.descendants(matching: .any)["answer-A-button"].firstMatch
@@ -43,8 +45,7 @@ final class CanadianHamTVUITests: XCTestCase {
         assertNextQuestionIsSeparateButton(nextQuestion, feedback: feedback)
         waitForFocus(on: nextQuestion)
         XCTAssertTrue(nextQuestion.hasFocus, "Next question should receive tvOS focus after answering before Select is pressed")
-        assertFocusedNextQuestionIsOnScreen(nextQuestion, in: app)
-        attachFocusedNextQuestionScreenshot(nextQuestion)
+        assertFocusedElementIsOnScreen(nextQuestion, in: app, description: "Next question")
 
         remote.press(.select)
         waitForElementToDisappear(feedback, timeout: 5, message: "Feedback should disappear after advancing to the next question with the remote")
@@ -56,6 +57,30 @@ final class CanadianHamTVUITests: XCTestCase {
         let reenabledAnswer = app.buttons["answer-A-button"].firstMatch
         XCTAssertTrue(reenabledAnswer.waitForExistence(timeout: 5), "A new answer should be visible after advancing")
         XCTAssertTrue(reenabledAnswer.isEnabled, "Answers should be re-enabled after advancing to the next question")
+    }
+
+    func testFocusRingEvidenceScreenshots() throws {
+        try captureFocusRingEvidence(
+            screen: .categories,
+            appearance: "light",
+            targetIdentifier: "category-B-001-button",
+            evidenceFocus: "category",
+            attachmentName: "tvos-category-focus-ring"
+        )
+        try captureFocusRingEvidence(
+            screen: .practice,
+            appearance: "light",
+            targetIdentifier: "answer-A-button",
+            evidenceFocus: "answer",
+            attachmentName: "tvos-answer-focus-ring"
+        )
+        try captureFocusRingEvidence(
+            screen: .practice,
+            appearance: "light",
+            targetIdentifier: "next-question-button",
+            answeredSourceIndex: 0,
+            attachmentName: "tvos-primary-focus-ring"
+        )
     }
 
     func testRemoteMenuReturnsPracticeAndAboutToCategoryGrid() throws {
@@ -102,7 +127,8 @@ final class CanadianHamTVUITests: XCTestCase {
         appearance: String,
         categoryID: String = "B-001",
         questionID: String = "B-001-002-002",
-        answeredSourceIndex: Int? = nil
+        answeredSourceIndex: Int? = nil,
+        evidenceFocus: String? = nil
     ) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = [
@@ -114,11 +140,51 @@ final class CanadianHamTVUITests: XCTestCase {
         if let answeredSourceIndex {
             app.launchArguments += ["-CanadianHamPlatformAnsweredSourceIndex", "\(answeredSourceIndex)"]
         }
+        if let evidenceFocus {
+            app.launchArguments += ["-CanadianHamTVEvidenceFocus", evidenceFocus]
+        }
         return app
     }
 
     private func performAudit(on app: XCUIApplication, context _: String) throws {
         try app.performAccessibilityAudit()
+    }
+
+    private func captureFocusRingEvidence(
+        screen: PlatformAuditScreen,
+        appearance: String,
+        targetIdentifier: String,
+        evidenceFocus: String? = nil,
+        answeredSourceIndex: Int? = nil,
+        attachmentName: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) throws {
+        let app = configuredApp(
+            screen: screen,
+            appearance: appearance,
+            answeredSourceIndex: answeredSourceIndex,
+            evidenceFocus: evidenceFocus
+        )
+        app.launch()
+        defer { app.terminate() }
+
+        XCTAssertTrue(screen.waitElement(in: app).waitForExistence(timeout: 15), "Expected \(screen.rawValue) before capturing \(attachmentName)", file: file, line: line)
+        if answeredSourceIndex != nil {
+            XCTAssertTrue(
+                app.descendants(matching: .any)["answer-feedback"].firstMatch.waitForExistence(timeout: 5),
+                "Expected answered feedback before capturing \(attachmentName)",
+                file: file,
+                line: line
+            )
+        }
+
+        let target = app.descendants(matching: .any)[targetIdentifier].firstMatch
+        XCTAssertTrue(target.waitForExistence(timeout: 5), "Expected \(targetIdentifier) before capturing \(attachmentName)", file: file, line: line)
+        waitForFocus(on: target)
+        XCTAssertTrue(target.hasFocus, "Expected \(targetIdentifier) to hold tvOS focus before capturing \(attachmentName)", file: file, line: line)
+        assertFocusedElementIsOnScreen(target, in: app, description: targetIdentifier, file: file, line: line)
+        attachFocusedScreenshot(target, name: attachmentName)
     }
 
     private func pressRemote(_ buttons: [XCUIRemote.Button], remote: XCUIRemote) {
@@ -149,32 +215,33 @@ final class CanadianHamTVUITests: XCTestCase {
         }
     }
 
-    private func assertFocusedNextQuestionIsOnScreen(
+    private func assertFocusedElementIsOnScreen(
         _ element: XCUIElement,
         in app: XCUIApplication,
+        description: String,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        XCTAssertTrue(element.exists, "Next question must exist before capturing focus-ring evidence", file: file, line: line)
-        XCTAssertTrue(element.isHittable, "Focused Next question button must be hittable before capturing focus-ring evidence", file: file, line: line)
+        XCTAssertTrue(element.exists, "\(description) must exist before capturing focus-ring evidence", file: file, line: line)
+        XCTAssertTrue(element.isHittable, "Focused \(description) must be hittable before capturing focus-ring evidence", file: file, line: line)
 
         let window = app.windows.firstMatch
         XCTAssertTrue(window.waitForExistence(timeout: 5), "App window should exist before capturing focus-ring evidence", file: file, line: line)
-        XCTAssertFalse(element.frame.isEmpty, "Next question frame should be non-empty before capture", file: file, line: line)
+        XCTAssertFalse(element.frame.isEmpty, "\(description) frame should be non-empty before capture", file: file, line: line)
         XCTAssertTrue(
             window.frame.insetBy(dx: -1, dy: -1).contains(element.frame),
-            "Focused Next question frame \(element.frame) should be inside the app window \(window.frame) before capture",
+            "Focused \(description) frame \(element.frame) should be inside the app window \(window.frame) before capture",
             file: file,
             line: line
         )
     }
 
-    private func attachFocusedNextQuestionScreenshot(_ element: XCUIElement) {
-        XCTAssertTrue(element.hasFocus, "Next question must be focused before capturing focus-ring evidence")
+    private func attachFocusedScreenshot(_ element: XCUIElement, name: String) {
+        XCTAssertTrue(element.hasFocus, "\(name) must be focused before capturing focus-ring evidence")
         RunLoop.current.run(until: Date().addingTimeInterval(1.0))
         let screenshot = XCUIScreen.main.screenshot()
         let attachment = XCTAttachment(screenshot: screenshot)
-        attachment.name = "tvos-next-question-focus-ring"
+        attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)
     }

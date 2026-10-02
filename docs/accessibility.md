@@ -27,6 +27,25 @@ A UI change is done only when all applicable items are true:
 - Disabled controls remain understandable. If a disabled action blocks progress, provide explanatory text.
 - tvOS uses the focus engine: focused cards/buttons must be visibly distinct via scale/border/material and must not depend on hover.
 
+### tvOS focus indicator contrast
+
+The tvOS app uses a two-stroke custom focus indicator on every app-owned focusable control: category cards, answer choices, primary actions, secondary navigation/actions, and the language toggle. The outer 12 pt stroke is `DesignTokens.Colors.ink` (`#1F1A14` in light mode, `#F3E8D2` in dark mode). The inner 4 pt stroke is `#FFF8EA` in light mode and `#201B16` in dark mode. Focus scale is disabled when Reduce Motion is enabled; the two-stroke indicator remains present and does not rely on scale.
+
+Contrast ratios below were computed from the actual sRGB token values in `apps/apple/CanadianHam/Design/Tokens.swift` and `apps/apple/Platforms/tvOS/CanadianHamTVApp.swift`, using WCAG relative luminance. Each row records the focus-indicator stroke segment that provides the qualifying contrast against the unfocused state and the adjacent background.
+
+| tvOS control/state | Mode | Indicator contrast against unfocused state | Indicator contrast against adjacent background |
+| --- | --- | ---: | ---: |
+| Primary action (`Next question`) on accent `#A53A2A` / `#FF8A70` | Light | 6.13:1 (inner `#FFF8EA` vs accent) | 13.80:1 minimum (outer `#1F1A14` vs incorrect feedback bg `#F4E2DE`; correct bg is 14.85:1) |
+| Primary action (`Next question`) on accent `#A53A2A` / `#FF8A70` | Dark | 7.42:1 (inner `#201B16` vs accent) | 11.11:1 minimum (outer `#F3E8D2` vs correct feedback bg `#1F3323`; incorrect bg is 12.20:1) |
+| Answer choice and category card on elevated paper | Light | 3.98:1 minimum (outer `#1F1A14` vs unfocused border `#8C7656`; elevated fill is 16.34:1) | 14.95:1 (outer `#1F1A14` vs paper bg `#F6EEDC`) |
+| Answer choice and category card on elevated paper | Dark | 3.55:1 minimum (outer `#F3E8D2` vs unfocused border `#8A7759`; elevated fill is 12.63:1) | 14.05:1 (outer `#F3E8D2` vs paper bg `#201B16`) |
+| Secondary actions and unselected language option on inset paper | Light | 3.98:1 minimum (outer `#1F1A14` vs unfocused border `#8C7656`; inset fill is 13.58:1) | 14.95:1 (outer `#1F1A14` vs paper bg `#F6EEDC`) |
+| Secondary actions and unselected language option on inset paper | Dark | 3.55:1 minimum (outer `#F3E8D2` vs unfocused border `#8A7759`; inset fill is 15.08:1) | 14.05:1 (outer `#F3E8D2` vs paper bg `#201B16`) |
+| Selected language option on accent `#A53A2A` / `#FF8A70` | Light | 6.13:1 (inner `#FFF8EA` vs accent) | 14.95:1 (outer `#1F1A14` vs paper bg `#F6EEDC`) |
+| Selected language option on accent `#A53A2A` / `#FF8A70` | Dark | 7.42:1 (inner `#201B16` vs accent) | 14.05:1 (outer `#F3E8D2` vs paper bg `#201B16`) |
+
+Screenshot evidence captured through tvOS UI-test `xcresult` attachments is committed under `docs/evidence/` as one PNG per state: focused category, focused answer, and focused primary action.
+
 ## Screen readers
 
 - Primary validation: VoiceOver on iOS, iPadOS, macOS, visionOS, and tvOS as applicable.
