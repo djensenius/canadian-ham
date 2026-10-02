@@ -1,4 +1,12 @@
 export {
+  ADVANCED_BANK_RULES,
+  BASIC_BANK_ID,
+  BASIC_BANK_RULES,
+  SYNTHETIC_ADVANCED_BANK_ID,
+  rulesForBankId,
+  type BankRules,
+} from "./banks.ts";
+export {
   RNG_ALGORITHM,
   Pcg32,
   firstUint32Values,
@@ -24,6 +32,7 @@ export {
   scoreExam,
   type CategoryBreakdownEntry,
   type ExamScore,
+  type ScoreExamOptions,
   type ScoreInputItem,
 } from "./scoring.ts";
 export {

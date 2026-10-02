@@ -1,3 +1,4 @@
+import { BASIC_BANK_ID, rulesForBankId } from "./banks.ts";
 import { categoryIdFromQuestionId, subsectionIdFromQuestionId } from "./exam.ts";
 import { compareOrdinal } from "./ordinal.ts";
 
@@ -16,6 +17,7 @@ export interface CategoryBreakdownEntry {
 }
 
 export interface ExamScore {
+  readonly bankId: string;
   readonly correct: number;
   readonly total: number;
   readonly percent: number;
@@ -26,7 +28,13 @@ export interface ExamScore {
   readonly weakSubsectionIds: readonly string[];
 }
 
-export function scoreExam(items: readonly ScoreInputItem[]): ExamScore {
+export interface ScoreExamOptions {
+  readonly bankId?: string;
+}
+
+export function scoreExam(items: readonly ScoreInputItem[], options: ScoreExamOptions | string = {}): ExamScore {
+  const bankId = typeof options === "string" ? options : options.bankId ?? BASIC_BANK_ID;
+  const bankRules = rulesForBankId(bankId);
   const categoryTotals = new Map<string, { correct: number; total: number }>();
   const incorrectQuestionIds: string[] = [];
   const weakSubsectionIds = new Set<string>();
@@ -63,11 +71,12 @@ export function scoreExam(items: readonly ScoreInputItem[]): ExamScore {
     }));
 
   return {
+    bankId,
     correct,
     total,
     percent,
-    passed: percent >= 70,
-    honours: percent >= 80,
+    passed: percent >= bankRules.passPercent,
+    honours: bankRules.hasHonours && bankRules.honoursPercent !== null && percent >= bankRules.honoursPercent,
     categoryBreakdown,
     incorrectQuestionIds,
     weakSubsectionIds: [...weakSubsectionIds].toSorted(compareOrdinal),

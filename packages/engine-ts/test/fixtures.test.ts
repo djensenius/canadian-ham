@@ -105,7 +105,7 @@ function validateExamGeneration(fixture: any): void {
 
 function validateScoring(fixture: any): void {
   for (const testCase of fixture.cases) {
-    assert.deepEqual(scoreExam(testCase.input.items), testCase.expectedOutput, testCase.id);
+    assert.deepEqual(scoreExam(testCase.input.items, { bankId: testCase.input.bankId }), testCase.expectedOutput, testCase.id);
   }
 }
 

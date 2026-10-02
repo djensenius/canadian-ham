@@ -113,7 +113,7 @@ enum AppleStudyEngine {
         generatedItems: [GeneratedExamItem],
         selectedByQuestionId: [String: Int?],
         flaggedQuestionIds: Set<String>
-    ) -> StoredExamAttempt {
+    ) throws -> StoredExamAttempt {
         let items = generatedItems.map { item in
             let selected = selectedByQuestionId[item.questionId] ?? nil
             return StoredExamAttemptItem(
@@ -127,14 +127,14 @@ enum AppleStudyEngine {
                 flagged: flaggedQuestionIds.contains(item.questionId)
             )
         }
-        let score = scoreExam(items.map {
+        let score = try scoreExam(items.map {
             ScoreInputItem(
                 questionId: $0.questionId,
                 categoryId: $0.categoryId,
                 subsectionId: $0.subsectionId,
                 selectedSourceIndex: $0.selectedSourceIndex
             )
-        })
+        }, bankId: bank.manifest.bankId)
         return StoredExamAttempt(
             id: "attempt-\(submittedAt)-local-\(seed)",
             bankId: bank.manifest.bankId,
@@ -145,6 +145,7 @@ enum AppleStudyEngine {
             timer: StoredExamTimer(enabled: timerEnabled, secondsAllowed: nil, secondsElapsed: secondsElapsed),
             items: items,
             score: StoredExamScore(
+                bankId: score.bankId,
                 correct: score.correct,
                 total: score.total,
                 percent: score.percent,
@@ -156,7 +157,7 @@ enum AppleStudyEngine {
         )
     }
 
-    static func readiness(progress: [QuestionProgressRecord], attempts: [StoredExamAttempt], now: String) throws -> ReadinessResult {
+    static func readiness(bank: QuestionBank, progress: [QuestionProgressRecord], attempts: [StoredExamAttempt], now: String) throws -> ReadinessResult {
         let readinessAttempts = attempts.map { attempt in
             ReadinessExamAttempt(
                 submittedAt: attempt.submittedAt,
@@ -165,6 +166,7 @@ enum AppleStudyEngine {
             )
         }
         return try computeReadiness(ReadinessInput(
+            bankId: bank.manifest.bankId,
             completedExams: readinessAttempts,
             dueReviewCount: dueCount(records: progress, now: now)
         ))

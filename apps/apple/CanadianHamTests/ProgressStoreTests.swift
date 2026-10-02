@@ -21,7 +21,7 @@ final class ProgressStoreTests: XCTestCase {
         try store.updatePreferences(preferences)
 
         let generated = try AppleStudyEngine.generatedMockExam(bank: bank, seed: "progress-store-round-trip")
-        let attempt = AppleStudyEngine.buildExamAttempt(
+        let attempt = try AppleStudyEngine.buildExamAttempt(
             bank: bank,
             seed: "progress-store-round-trip",
             startedAt: "2026-01-02T03:04:05.000Z",
@@ -53,6 +53,71 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(try importedStore.questionProgressRecords().count, 0)
         XCTAssertEqual(try importedStore.examAttempts().count, 0)
         XCTAssertEqual(importedStore.preferences, .default)
+    }
+
+    func testDecodesLegacyBasicExportWithoutBankIdFields() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let json = """
+        {
+          "schema": "canadian-ham.progress-export",
+          "version": 1,
+          "exportedAt": "2026-01-02T05:04:05.000Z",
+          "questionProgress": [
+            { "questionId": "B-001-001-001", "attempts": 1, "correctAttempts": 1, "lastAttemptedAt": "2026-01-02T04:00:00.000Z", "lastResult": "correct", "recentResults": [true], "leitner": { "box": 1, "dueAt": "2026-01-03T04:00:00.000Z" }, "notes": null }
+          ],
+          "examAttempts": [
+            { "id": "legacy-attempt", "mode": "mock-exam", "seed": "legacy", "startedAt": "2026-01-02T03:00:00.000Z", "submittedAt": "2026-01-02T04:00:00.000Z", "timer": { "enabled": false, "secondsAllowed": null, "secondsElapsed": 0 }, "items": [], "score": { "correct": 0, "total": 0, "percent": 0, "passed": false, "honours": false, "categoryBreakdown": [], "weakSubsectionIds": [] } }
+          ],
+          "preferences": { "practiceMode": "immediate", "examTimerEnabled": false }
+        }
+        """
+
+        let decoded = try JSONDecoder().decode(ProgressExportV1.self, from: Data(json.utf8))
+
+        XCTAssertEqual(decoded.bankId, bank.manifest.bankId)
+        XCTAssertEqual(decoded.questionProgress.first?.bankId, bank.manifest.bankId)
+        XCTAssertEqual(decoded.examAttempts.first?.bankId, bank.manifest.bankId)
+        XCTAssertEqual(decoded.examAttempts.first?.score.bankId, bank.manifest.bankId)
+        XCTAssertTrue(try ProgressStoreService.inMemoryForTests().validate(decoded, bank: bank).isEmpty)
+    }
+
+    func testImportValidationRejectsMismatchedScoreBankId() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let data = ProgressExportV1(
+            schema: "canadian-ham.progress-export",
+            version: 1,
+            exportedAt: "2026-01-02T05:04:05.000Z",
+            bankId: bank.manifest.bankId,
+            questionProgress: [],
+            examAttempts: [StoredExamAttempt(
+                id: "mismatched-score-bank",
+                bankId: bank.manifest.bankId,
+                mode: "mock-exam",
+                seed: "seed",
+                startedAt: "2026-01-02T03:00:00.000Z",
+                submittedAt: "2026-01-02T04:00:00.000Z",
+                timer: StoredExamTimer(enabled: false, secondsAllowed: nil, secondsElapsed: 0),
+                items: [],
+                score: StoredExamScore(
+                    bankId: syntheticAdvancedBankId,
+                    correct: 0,
+                    total: 0,
+                    percent: 0,
+                    passed: false,
+                    honours: false,
+                    categoryBreakdown: [],
+                    weakSubsectionIds: []
+                )
+            )],
+            lessonProgress: [],
+            lessonQuizAttempts: [],
+            preferences: ExportedPreferences(practiceMode: "immediate", examTimerEnabled: false, theme: "system")
+        )
+
+        let errors = try ProgressStoreService.inMemoryForTests().validate(data, bank: bank)
+
+        XCTAssertTrue(errors.contains { $0.contains("examAttempts[0].score.bankId must be \(bank.manifest.bankId)") })
+        XCTAssertThrowsError(try ProgressStoreService.inMemoryForTests().importData(data, bank: bank))
     }
 
     func testDecodesWebLegacyExportWithOptionalLessonStoresAndTheme() throws {
@@ -188,7 +253,7 @@ final class ProgressStoreTests: XCTestCase {
         )
         try store.saveLessonQuizAttempt(originalLessonQuizAttempt, questionProgress: [originalRecord])
         let generated = try AppleStudyEngine.generatedMockExam(bank: bank, seed: "import-rollback-original")
-        let originalExamAttempt = AppleStudyEngine.buildExamAttempt(
+        let originalExamAttempt = try AppleStudyEngine.buildExamAttempt(
             bank: bank,
             seed: "import-rollback-original",
             startedAt: "2026-01-02T03:30:00.000Z",
@@ -264,7 +329,7 @@ final class ProgressStoreTests: XCTestCase {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let store = try ProgressStoreService.inMemoryForTests()
         let generated = try AppleStudyEngine.generatedMockExam(bank: bank, seed: "validation")
-        let attempt = AppleStudyEngine.buildExamAttempt(
+        let attempt = try AppleStudyEngine.buildExamAttempt(
             bank: bank,
             seed: "validation",
             startedAt: "2026-01-02T03:04:05.000Z",
@@ -309,13 +374,35 @@ final class ProgressStoreTests: XCTestCase {
 }
 
 final class ReadinessAndScoringTests: XCTestCase {
-    func testExamScoringBoundaries() {
+    func testExamScoringBoundaries() throws {
         for (correct, passed, honours) in [(69, false, false), (70, true, false), (79, true, false), (80, true, true)] {
-            let score = scoreExam(makeScoreItems(correct: correct, total: 100))
+            let score = try scoreExam(makeScoreItems(correct: correct, total: 100))
             XCTAssertEqual(score.correct, correct)
             XCTAssertEqual(score.passed, passed, "Boundary \(correct) pass")
             XCTAssertEqual(score.honours, honours, "Boundary \(correct) honours")
         }
+    }
+
+    func testAdvancedScoringAndReadinessSuppressHonours() throws {
+        let advancedItems = (1...50).map { index in
+            ScoreInputItem(
+                questionId: "A-001-001-\(String(format: "%03d", index))",
+                categoryId: "A-001",
+                subsectionId: "A-001-001",
+                selectedSourceIndex: index <= 40 ? 0 : 1
+            )
+        }
+        let score = try scoreExam(advancedItems, bankId: syntheticAdvancedBankId)
+        XCTAssertEqual(score.bankId, syntheticAdvancedBankId)
+        XCTAssertTrue(score.passed)
+        XCTAssertFalse(score.honours)
+
+        let fullBreakdown = [CategoryBreakdownEntry(categoryId: "A-001", correct: 40, total: 50, percent: 80)]
+        let readiness = try computeReadiness(ReadinessInput(bankId: syntheticAdvancedBankId, completedExams: [
+            ReadinessExamAttempt(submittedAt: "2026-01-03T00:00:00.000Z", score: ReadinessScore(correct: 40, total: 50, percent: 80), categoryBreakdown: fullBreakdown),
+            ReadinessExamAttempt(submittedAt: "2026-01-02T00:00:00.000Z", score: ReadinessScore(correct: 45, total: 50, percent: 90), categoryBreakdown: fullBreakdown),
+        ], dueReviewCount: 0))
+        XCTAssertEqual(readiness.state, .passReady)
     }
 
     func testReadinessStates() throws {
@@ -354,7 +441,7 @@ final class ReadinessAndScoringTests: XCTestCase {
         let bank = try QuestionBankStore.load(from: Bundle(for: ProgressStoreTests.self))
         let store = try ProgressStoreService.inMemoryForTests()
         let generated = try AppleStudyEngine.generatedMockExam(bank: bank, seed: "double-submit")
-        let attempt = AppleStudyEngine.buildExamAttempt(
+        let attempt = try AppleStudyEngine.buildExamAttempt(
             bank: bank,
             seed: "double-submit",
             startedAt: "2026-01-02T03:04:05.000Z",
@@ -365,7 +452,7 @@ final class ReadinessAndScoringTests: XCTestCase {
             selectedByQuestionId: [:],
             flaggedQuestionIds: []
         )
-        let duplicateSubmitAttempt = AppleStudyEngine.buildExamAttempt(
+        let duplicateSubmitAttempt = try AppleStudyEngine.buildExamAttempt(
             bank: bank,
             seed: "double-submit-second-tap",
             startedAt: "2026-01-02T03:04:05.000Z",

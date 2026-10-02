@@ -2012,6 +2012,7 @@ function hasUnsubmittedReviewAnswers(session: PracticeSession | null): boolean {
 
 function buildReadiness(progress: readonly QuestionProgressRecord[], attempts: readonly ExamAttempt[], now: string): ReadinessResult {
   return computeReadiness({
+    bankId,
     completedExams: attempts.map((attempt) => ({
       submittedAt: attempt.submittedAt,
       score: attempt.score,

@@ -3,10 +3,10 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { TextDecoder } from "node:util";
 
-import { ACTIVE_BANK_ID, ACTIVE_GENERATED_DIR, ACTIVE_SOURCE_DIR } from "./active-bank.ts";
+import { ACTIVE_BANK_ID, ACTIVE_BANK_RULES, ACTIVE_GENERATED_DIR, ACTIVE_SOURCE_DIR } from "./active-bank.ts";
 
 export const BANK_ID = ACTIVE_BANK_ID;
-export const BANK_EFFECTIVE_DATE = "2025-07-15";
+export const BANK_EFFECTIVE_DATE = ACTIVE_BANK_RULES.effectiveDate ?? "";
 export const IMPORTER_VERSION = "1";
 
 export const SOURCE_DIR = ACTIVE_SOURCE_DIR;
@@ -31,16 +31,11 @@ export const EXPECTED_HEADERS = [
   "incorrect_answer_3_french",
 ] as const;
 
-const EXPECTED_CATEGORY_COUNTS = new Map([
-  ["B-001", { questionCount: 199, subsectionCount: 25, examQuestionCount: 25 }],
-  ["B-002", { questionCount: 99, subsectionCount: 9, examQuestionCount: 9 }],
-  ["B-003", { questionCount: 199, subsectionCount: 21, examQuestionCount: 21 }],
-  ["B-004", { questionCount: 63, subsectionCount: 6, examQuestionCount: 6 }],
-  ["B-005", { questionCount: 142, subsectionCount: 13, examQuestionCount: 13 }],
-  ["B-006", { questionCount: 140, subsectionCount: 13, examQuestionCount: 13 }],
-  ["B-007", { questionCount: 87, subsectionCount: 8, examQuestionCount: 8 }],
-  ["B-008", { questionCount: 55, subsectionCount: 5, examQuestionCount: 5 }],
-]);
+const EXPECTED_CATEGORY_COUNTS = new Map(ACTIVE_BANK_RULES.categoryRules.map((category) => [category.id, {
+  questionCount: category.questionCount,
+  subsectionCount: category.subsectionCount,
+  examQuestionCount: category.examQuestionCount,
+}]));
 
 export const EXPECTED_PRIVILEGE_ANSWER_TEXT = new Map([
   ["B-001-004-001", "There are no age limits"],
@@ -54,7 +49,7 @@ export const EXPECTED_PRIVILEGE_ANSWER_TEXT = new Map([
   ["B-001-017-010", "190 watts"],
 ]);
 
-const ID_PATTERN = /^B-\d{3}-\d{3}-\d{3}$/;
+const ID_PATTERN = new RegExp(`^${ACTIVE_BANK_RULES.questionIdPrefix}-\\d{3}-\\d{3}-\\d{3}$`);
 const POSITION_DEPENDENT_PATTERNS = [
   /all of the above/i,
   /none of the above/i,
@@ -149,7 +144,7 @@ export interface GeneratedCategory {
 
 export interface GeneratedManifest {
   readonly bankId: string;
-  readonly certificate: string;
+  readonly certificate: "canadian-amateur-basic" | "canadian-amateur-advanced";
   readonly effectiveDate: string;
   readonly source: {
     readonly path: string;
@@ -401,8 +396,8 @@ function deriveSubsections(questions: readonly Question[]): Subsection[] {
 }
 
 function validateQuestions(questionsInSourceOrder: readonly Question[], subsections: readonly Subsection[]): ValidationMetrics {
-  if (questionsInSourceOrder.length !== 984) {
-    fail(`expected 984 questions, found ${questionsInSourceOrder.length}`);
+  if (questionsInSourceOrder.length !== ACTIVE_BANK_RULES.questionCount) {
+    fail(`expected ${ACTIVE_BANK_RULES.questionCount} questions, found ${questionsInSourceOrder.length}`);
   }
   if (questionsInSourceOrder[0]?.id !== "B-001-001-001") {
     fail(`expected first question ID B-001-001-001, found ${questionsInSourceOrder[0]?.id ?? "none"}`);
@@ -430,8 +425,8 @@ function validateQuestions(questionsInSourceOrder: readonly Question[], subsecti
   if (emptyLocalizedFieldCount !== 0) {
     fail(`expected 0 empty English/French fields, found ${emptyLocalizedFieldCount}`);
   }
-  if (subsections.length !== 100) {
-    fail(`expected 100 subsections, found ${subsections.length}`);
+  if (subsections.length !== ACTIVE_BANK_RULES.subsectionCount) {
+    fail(`expected ${ACTIVE_BANK_RULES.subsectionCount} subsections, found ${subsections.length}`);
   }
   for (const subsection of subsections) {
     if (subsection.questionCount < 4 || subsection.questionCount > 11) {
@@ -499,8 +494,8 @@ function deriveCategories(
   questions: readonly Question[],
   subsections: readonly Subsection[],
 ): GeneratedCategory[] {
-  if (handCategories.length !== 8) {
-    fail(`${HAND_CATEGORIES_PATH} expected 8 categories, found ${handCategories.length}`);
+  if (handCategories.length !== ACTIVE_BANK_RULES.categoryCount) {
+    fail(`${HAND_CATEGORIES_PATH} expected ${ACTIVE_BANK_RULES.categoryCount} categories, found ${handCategories.length}`);
   }
 
   const questionCounts = countQuestionsByCategory(questions);
@@ -658,7 +653,7 @@ export async function importBasicQuestionBank(rootDir = process.cwd()): Promise<
 
   const manifest: GeneratedManifest = {
     bankId: BANK_ID,
-    certificate: "canadian-amateur-basic",
+    certificate: ACTIVE_BANK_RULES.certificate,
     effectiveDate: BANK_EFFECTIVE_DATE,
     source: {
       path: SOURCE_TXT_PATH,

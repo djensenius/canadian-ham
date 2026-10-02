@@ -15,6 +15,7 @@ import {
   parseDelimitedQuestionBank,
   writeGeneratedFiles,
 } from "../src/basic-importer.ts";
+import { BASIC_BANK_ID, SYNTHETIC_ADVANCED_BANK_ID, contentRulesForBankId } from "../src/banks.ts";
 import type { Question } from "../src/basic-importer.ts";
 
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
@@ -57,6 +58,22 @@ const SYNTHETIC_CATEGORY_COUNTS = [
 ] as const;
 
 type SyntheticRow = string[];
+
+test("content bank rules expose Basic and Advanced exam shapes", () => {
+  const basic = contentRulesForBankId(BASIC_BANK_ID);
+  assert.equal(basic.subsectionCount, 100);
+  assert.equal(basic.examQuestionCount, 100);
+  assert.equal(basic.categoryRules.length, 8);
+  assert.equal(basic.hasHonours, true);
+  assert.equal(basic.honoursPercent, 80);
+
+  const advanced = contentRulesForBankId(SYNTHETIC_ADVANCED_BANK_ID);
+  assert.equal(advanced.subsectionCount, 50);
+  assert.equal(advanced.examQuestionCount, 50);
+  assert.deepEqual(advanced.categoryRules.map((category) => category.id), ["A-001", "A-002", "A-003", "A-004", "A-005", "A-006", "A-007"]);
+  assert.equal(advanced.hasHonours, false);
+  assert.equal(advanced.honoursPercent, null);
+});
 
 type SyntheticCategory = {
   id: string;

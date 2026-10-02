@@ -13,18 +13,21 @@
       "canonicalUtcTimestamp": true
     },
     "bankId": {
-      "const": "basic-2025-07-15"
+      "oneOf": [
+        { "const": "basic-2025-07-15" },
+        { "type": "string", "pattern": "^advanced-[a-z0-9-]+$" }
+      ]
     },
     "categoryId": {
-      "enum": ["B-001", "B-002", "B-003", "B-004", "B-005", "B-006", "B-007", "B-008"]
+      "enum": ["B-001", "B-002", "B-003", "B-004", "B-005", "B-006", "B-007", "B-008", "A-001", "A-002", "A-003", "A-004", "A-005", "A-006", "A-007"]
     },
     "subsectionId": {
       "type": "string",
-      "pattern": "^B-00[1-8]-\\d{3}$"
+      "pattern": "^(?:B-00[1-8]|A-00[1-7])-\\d{3}$"
     },
     "questionId": {
       "type": "string",
-      "pattern": "^B-00[1-8]-\\d{3}-\\d{3}$"
+      "pattern": "^(?:B-00[1-8]|A-00[1-7])-\\d{3}-\\d{3}$"
     },
     "lessonId": {
       "type": "string",
@@ -307,7 +310,7 @@
     },
     "questionProgressRecord": {
       "type": "object",
-      "required": ["questionId", "bankId", "attempts", "correctAttempts", "lastAttemptedAt", "lastResult", "recentResults", "leitner"],
+      "required": ["questionId", "attempts", "correctAttempts", "lastAttemptedAt", "lastResult", "recentResults", "leitner"],
       "properties": {
         "questionId": { "$ref": "#/$defs/questionId" },
         "bankId": { "$ref": "#/$defs/bankId" },
@@ -401,6 +404,7 @@
       "type": "object",
       "required": ["correct", "total", "percent", "passed", "honours", "categoryBreakdown", "weakSubsectionIds"],
       "properties": {
+        "bankId": { "$ref": "#/$defs/bankId" },
         "correct": {
           "type": "integer",
           "minimum": 0
@@ -429,7 +433,7 @@
     },
     "progressExamAttempt": {
       "type": "object",
-      "required": ["id", "bankId", "mode", "seed", "startedAt", "submittedAt", "timer", "items", "score"],
+      "required": ["id", "mode", "seed", "startedAt", "submittedAt", "timer", "items", "score"],
       "properties": {
         "id": { "$ref": "#/$defs/nonEmptyString" },
         "bankId": { "$ref": "#/$defs/bankId" },
