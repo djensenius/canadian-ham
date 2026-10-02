@@ -1,0 +1,84 @@
+name: Deploy web to GitHub Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  release-permission-gate:
+    name: ISED permission gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    steps:
+      # actions/checkout v7.0.1
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Block deployment until ISED permission is recorded
+        run: node scripts/check-release-permission.mjs
+
+  deploy:
+    name: Build and deploy GitHub Pages artifact
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: release-permission-gate
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      # actions/checkout v7.0.1
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      # actions/setup-node v7.0.0
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26
+
+      - name: Set up pnpm from packageManager
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # actions/configure-pages v5.0.0
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b
+
+      - name: Build web app for the GitHub Pages project site
+        env:
+          CANADIAN_HAM_WEB_BASE_PATH: /${{ github.event.repository.name }}/
+        run: pnpm build:web
+
+      - name: Audit built web URLs and CSP
+        run: pnpm --filter @canadian-ham/web audit:urls
+
+      # actions/upload-pages-artifact v4.0.0
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b
+        with:
+          path: apps/web/dist
+
+      # actions/deploy-pages v4.0.5
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e

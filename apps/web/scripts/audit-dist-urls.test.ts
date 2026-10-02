@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, describe, it } from "vitest";
 
-import { auditDistUrls, isAllowedUrl, OFFICIAL_SOURCE_CITATION_URLS } from "./audit-dist-urls";
+import { auditDistCsp, auditDistUrls, isAllowedUrl, OFFICIAL_SOURCE_CITATION_URLS } from "./audit-dist-urls";
 
 const officialSourceUrls = [...OFFICIAL_SOURCE_CITATION_URLS];
 const questionBankSourceUrl = "https://apc-cap.ic.gc.ca/datafiles/amat_basic_quest.zip#amat_basic_quest_delim.txt";
@@ -49,6 +49,25 @@ describe("dist URL audit", () => {
     assert.deepEqual(await auditDistUrls(distDir), [{ file: "app.js", line: 1, url: "https://example.com/api" }]);
   });
 
+  it("passes the built-index CSP when it contains only self, none, data, and script hash sources", async () => {
+    const distDir = await mkdtemp(join(tmpdir(), "canadian-ham-csp-audit-"));
+    tempDirs.push(distDir);
+    await writeFile(join(distDir, "index.html"), `<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'none'; connect-src 'self'; img-src 'self' data:; font-src 'self'; script-src 'self' 'sha256-E77amc0CnFRHG8inr16ONddkqQaLnAfKqxm96My0KQs='; style-src 'self'">`, "utf8");
+
+    assert.deepEqual(await auditDistCsp(distDir), []);
+  });
+
+  it("reports CSP source expressions that could allow third-party origins", async () => {
+    const distDir = await mkdtemp(join(tmpdir(), "canadian-ham-csp-audit-third-party-"));
+    tempDirs.push(distDir);
+    await writeFile(join(distDir, "index.html"), `<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' cdn.example; connect-src 'self' https://api.example.test">`, "utf8");
+
+    assert.deepEqual(await auditDistCsp(distDir), [
+      { file: "index.html", line: 1, directive: "script-src", source: "cdn.example" },
+      { file: "index.html", line: 1, directive: "connect-src", source: "https://api.example.test" },
+    ]);
+  });
+
   it("fails when dist contains a PDF file", async () => {
     const distDir = await mkdtemp(join(tmpdir(), "canadian-ham-url-audit-pdf-"));
     tempDirs.push(distDir);
@@ -66,6 +85,17 @@ describe("dist URL audit", () => {
 
     assert.equal(result.status, 1);
     assert.match(result.stderr, /index\.html:1: unexpected URL https:\/\/example\.com\/api/);
+  });
+
+  it("runs the CSP audit from the CLI", async () => {
+    const distDir = await mkdtemp(join(tmpdir(), "canadian-ham-csp-audit-cli-"));
+    tempDirs.push(distDir);
+    await writeFile(join(distDir, "index.html"), `<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' cdn.example">`, "utf8");
+
+    const result = spawnSync(process.execPath, [scriptPath, distDir], { encoding: "utf8" });
+
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /index\.html:1: unexpected CSP source cdn\.example in script-src/);
   });
 
   it("runs from the CLI through a symlink and scans the requested dist directory", async () => {
