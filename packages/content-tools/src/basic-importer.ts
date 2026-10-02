@@ -118,13 +118,15 @@ export interface Subsection {
   };
 }
 
+type FrenchNameStatus = "pending verification" | "verified";
+
 export interface HandCategory {
   readonly id: string;
   readonly name: {
     readonly en: string;
-    readonly fr: null;
+    readonly fr: string | null;
   };
-  readonly frenchNameStatus: "pending verification";
+  readonly frenchNameStatus: FrenchNameStatus;
   readonly expectedQuestionCount: number;
   readonly expectedSubsectionCount: number;
   readonly examQuestionCount: number;
@@ -136,9 +138,9 @@ export interface GeneratedCategory {
   readonly bankId: string;
   readonly name: {
     readonly en: string;
-    readonly fr: null;
+    readonly fr: string | null;
   };
-  readonly frenchNameStatus: "pending verification";
+  readonly frenchNameStatus: FrenchNameStatus;
   readonly questionCount: number;
   readonly subsectionCount: number;
   readonly examQuestionCount: number;
@@ -472,15 +474,17 @@ function loadHandCategories(jsonText: string): HandCategory[] {
     const name = asObject(object.name, `${label}.name`);
     if (typeof object.id !== "string") fail(`${label}.id must be a string`);
     if (typeof name.en !== "string") fail(`${label}.name.en must be a string`);
-    if (name.fr !== null) fail(`${label}.name.fr must be null until verified`);
-    if (object.frenchNameStatus !== "pending verification") fail(`${label}.frenchNameStatus must be pending verification`);
+    if (name.fr !== null && (typeof name.fr !== "string" || name.fr.length === 0)) fail(`${label}.name.fr must be null or a non-empty string`);
+    if (object.frenchNameStatus !== "pending verification" && object.frenchNameStatus !== "verified") fail(`${label}.frenchNameStatus must be pending verification or verified`);
+    if (object.frenchNameStatus === "pending verification" && name.fr !== null) fail(`${label}.name.fr must be null while frenchNameStatus is pending verification`);
+    if (object.frenchNameStatus === "verified" && name.fr === null) fail(`${label}.name.fr must be a string when frenchNameStatus is verified`);
     if (typeof object.expectedQuestionCount !== "number") fail(`${label}.expectedQuestionCount must be a number`);
     if (typeof object.expectedSubsectionCount !== "number") fail(`${label}.expectedSubsectionCount must be a number`);
     if (typeof object.examQuestionCount !== "number") fail(`${label}.examQuestionCount must be a number`);
     if (typeof object.nameSource !== "string") fail(`${label}.nameSource must be a string`);
     return {
       id: object.id,
-      name: { en: name.en, fr: null },
+      name: { en: name.en, fr: name.fr },
       frenchNameStatus: object.frenchNameStatus,
       expectedQuestionCount: object.expectedQuestionCount,
       expectedSubsectionCount: object.expectedSubsectionCount,

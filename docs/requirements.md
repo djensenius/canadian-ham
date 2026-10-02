@@ -115,10 +115,25 @@ The system shall store hand-maintained category metadata and derived subsection 
 
 Acceptance criteria:
 
-- Category metadata includes the eight English names and counts from [exam-facts.md](exam-facts.md).
-- French category names are empty or marked pending until verified.
+- Category metadata includes the eight English and official French category names and counts from [exam-facts.md](exam-facts.md).
+- French category names are marked verified after matching ISED CIR-3 §5.1.1–5.1.8 and the French Exam Generator category dropdown.
 - Subsections are derived from question IDs and linked to lesson coverage.
 - Build validation fails if any expected subsection is missing from content coverage or if lesson coverage names an unknown subsection ID.
+
+Official French category names, verified for task-6 on 2026-10-02 from [ISED CIR-3 §5.1.1–5.1.8](https://www.ised-isde.canada.ca/site/gestion-spectre-telecommunications/fr/licences-certificats/circulaires-dinformation-radiocom-cir/cir-3-renseignements-service-radioamateur) and the [French Exam Generator](https://apc-cap.ic.gc.ca/pls/apc_anon_f/apeg_study.study_questions_intro), are:
+
+| ID | Official French name |
+|---|---|
+| `B-001` | Règlements et politiques |
+| `B-002` | Exploitation et procédures |
+| `B-003` | Montage d'une station, pratique et sécurité |
+| `B-004` | Composants des circuits |
+| `B-005` | Éléments et théorie de l'électronique |
+| `B-006` | Descentes d'antenne et systèmes d'antenne |
+| `B-007` | Propagation des ondes radioélectriques |
+| `B-008` | Brouillage et suppression |
+
+Both checked ISED sources use straight ASCII apostrophes in `d'une`, `l'électronique`, and `d'antenne`; preserve those characters exactly.
 
 #### REQ-CONTENT-004: Lesson curriculum coverage
 
@@ -277,7 +292,7 @@ Acceptance criteria:
 
 - New mock exam starts with timer disabled by default.
 - If enabled, timer state is local to the attempt.
-- Documentation explains that the official time limit is unverified.
+- Documentation explains that ISED information circulars specify no fixed Basic exam time limit, quote the normal completion guidance, and distinguish circular guidance from law.
 
 #### REQ-EXAM-004: Reference sheet context
 
@@ -321,6 +336,16 @@ Acceptance criteria:
 - Progress uses IndexedDB or localStorage, with IndexedDB preferred for larger records.
 - Export/import JSON and reset all data are visible in settings.
 - Clearing browser storage removes progress.
+
+#### REQ-WEB-004: Minimum supported browsers
+
+The web app shall rely on Vite 8's default production build target unless a later reviewed task changes `build.target` explicitly.
+
+Acceptance criteria:
+
+- `apps/web/vite.config.ts` does not override `build.target`; therefore the support floor is Vite 8's default `baseline-widely-available` target.
+- As checked on 2026-10-02 with the project using Vite 8.3.x (`package.json` `^8.3.0`, lockfile 8.3.1), Vite documents `baseline-widely-available` for this major as Baseline Widely Available on 2026-01-01.
+- Minimum browsers are Chrome 111, Edge 111, Firefox 114, Safari 16.4, and iOS Safari 16.4. Sources: Vite [build options (`build.target`)](https://vite.dev/config/build-options#build-target) and [build guide browser compatibility](https://vite.dev/guide/build#browser-compatibility) documentation.
 
 ### Apple app
 
@@ -446,7 +471,7 @@ Acceptance criteria:
 - Question, answer, category, lesson metadata, and explanation schemas support language-keyed fields.
 - Official French question text is used from ISED, not translated by the project.
 - French UI is planned in P6 and does not block English-first MVP.
-- Missing official French category or reference material names are tracked as open questions.
+- Official French category names are stored in the bank metadata; missing official French reference material remains tracked as an open question.
 
 ## Non-functional requirements
 
@@ -518,8 +543,5 @@ Coverage check requirement:
 
 ## Open questions
 
-- Verify official French category names.
 - Locate or confirm absence of French 2025 Basic reference material.
-- Verify the official Basic exam time limit, if any.
 - ISED permission status: requested scope drafted, pending; not yet sent or granted as of the 2026-09-28 owner decision. Fill in the reference number, date, and scope in T-007 before public release; reference PDFs are retained as source artifacts and are not shipped in the apps.
-- Decide minimum supported browser versions during implementation planning.

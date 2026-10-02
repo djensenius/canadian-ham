@@ -15,12 +15,17 @@ Source facts were verified by the coordinator on 2026-09-28. Do not add regulato
 | Reference material, training version | Same ZIP as above | `Reference Material for Amateur Radio Training Basic EN 2025.pdf`; labelled study aid. SHA-256: `2e0bf5e30a621852db0bf3c1e3954bbd60f906b19c531d97eab9b35c8f1a831e`. Not shipped in the apps. |
 | ISED downloads page | <https://www.ised-isde.canada.ca/site/amateur-radio-operator-certificate-services/en/downloads> | Used to locate official downloads and the 2025-07-15 availability date for reference material. |
 | ISED exam generator | <https://ised-isde.canada.ca/site/amateur-radio-operator-certificate-services/en/amateur-radio-exam-generator> | Official exam generator page. |
+| ISED French Exam Generator study page | <https://apc-cap.ic.gc.ca/pls/apc_anon_f/apeg_study.study_questions_intro> | Category dropdown lists the official French Basic category names. Checked for task-6 on 2026-10-02. |
 | ISED online practice exam | <https://apc-cap.ic.gc.ca/pls/apc_anon/apeg_practice.practice_form?lang=en> | Practice exam states 100 questions from all categories. |
 | RAC Basic requirements | <https://www.rac.ca/requirements/> | Used for pass and honours thresholds and examiner/district-office path. |
 | RAC Basic and Advanced course page | <https://www.rac.ca/rac-basic-and-advanced-courses-fall-2026-register-now/> | Used only to flag RAC-stated Advanced extras; lessons must verify those items against RBR-4/RIC-3 before publishing. |
 | RAC/HamStudy 2025 bank notes | <https://hamstudy.com/2025/lesson/changes-to-hamstudy-and-the-basic-question-bank/> | Used for exam structure corroboration. |
 | SCARCS test summary | <https://scarcs.ca/hambasics/aboutthetest> | Used for exam structure corroboration. |
 | RBR-4 operating standards | <https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service> | Used for privileges content, including RBR-4 section 10 power wording. |
+| CIR-1, 8th edition, May 2025 | <https://ised-isde.canada.ca/site/gestion-spectre-telecommunications/fr/licences-certificats/circulaires-dinformation-radiocom-cir/cir-1-guide-lintention-examinateurs-accredites-charges-dadministrer-examens-menant-lobtention> | §7.2 says no exam time limit is fixed and gives normal completion-time guidance. Checked for task-6 on 2026-10-02. |
+| RIC-1, Issue 8, May 2025 | <https://www.ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/radiocom-information-circulars-ric/ric-1-guide-examiners-accredited-conduct-examinations-amateur-radio-operator-certificates> | §7.2 says no exam time limit is specified and gives normal completion-time guidance. Checked for task-6 on 2026-10-02. |
+| CIR-3, 5th edition, March 2022 | <https://www.ised-isde.canada.ca/site/gestion-spectre-telecommunications/fr/licences-certificats/circulaires-dinformation-radiocom-cir/cir-3-renseignements-service-radioamateur> | §5.1 lists the French Basic category names; §5.4 says no time limit is fixed. Checked for task-6 on 2026-10-02. |
+| RIC-3, Issue 5, March 2022 | <https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/radiocom-information-circulars-ric/ric-3-information-amateur-radio-service> | §5.4 says no time limit is specified; preface says the circulars have no status in law. Checked for task-6 on 2026-10-02. |
 | ISED terms and conditions | <https://ised-isde.canada.ca/site/ised/en/terms-and-conditions> | Licensing reference. |
 | ISED copyright written permission | <https://www.ised-isde.canada.ca/site/ised/en/copyright-written-permission> | Licensing reference. |
 
@@ -79,20 +84,20 @@ Header fields, exactly as present before trimming:
 | Questions per subsection | 4 to 11 | Coordinator validation of official delimited TXT. |
 | Category names in TXT | Not present. Store category names in a hand-maintained categories file. | Official delimited TXT. |
 | English category-name source | ISED/RAC materials. | ISED/RAC source review recorded by coordinator. |
-| French category names | Open question until verified from an official source. | Project verification status. |
+| French category names | Verified official names from ISED CIR-3 §5.1.1–5.1.8 and the French Exam Generator category dropdown. The source text uses straight ASCII apostrophes in `d'une`, `l'électronique`, and `d'antenne`. | Task-6 source check, 2026-10-02. |
 | Figures in questions | No questions require a figure. | Coordinator scan of all official question text, 2026-09-28. |
 | Reference-sheet context | Some questions involve formulas/block diagrams that appear on ISED's reference sheet; lessons should teach that context. | ISED reference material and coordinator scan of official question text. |
 
-| Category ID | English category name | Questions | Subsections | Mock-exam count | Source |
-|---|---|---:|---:|---:|---|
-| `B-001` | Regulations and Policies | 199 | 25 | 25 | Coordinator validation of official TXT counts; English name from verified ISED/RAC materials. |
-| `B-002` | Operating and Procedures | 99 | 9 | 9 | Coordinator validation of official TXT counts; English name from verified ISED/RAC materials. |
-| `B-003` | Station Assembly, Practice and Safety | 199 | 21 | 21 | Coordinator validation of official TXT counts; English name from verified ISED/RAC materials. |
-| `B-004` | Circuit Components | 63 | 6 | 6 | Coordinator validation of official TXT counts; English name from verified ISED/RAC materials. |
-| `B-005` | Basic Electronics and Theory | 142 | 13 | 13 | Coordinator validation of official TXT counts; English name from verified ISED/RAC materials. |
-| `B-006` | Feedlines and Antenna Systems | 140 | 13 | 13 | Coordinator validation of official TXT counts; English name from verified ISED/RAC materials. |
-| `B-007` | Radio Wave Propagation | 87 | 8 | 8 | Coordinator validation of official TXT counts; English name from verified ISED/RAC materials. |
-| `B-008` | Interference and Suppression | 55 | 5 | 5 | Coordinator validation of official TXT counts; English name from verified ISED/RAC materials. |
+| Category ID | English category name | French category name | Questions | Subsections | Mock-exam count | Source |
+|---|---|---|---:|---:|---:|---|
+| `B-001` | Regulations and Policies | Règlements et politiques | 199 | 25 | 25 | Counts from official TXT; French name from ISED CIR-3 §5.1.1 and French Exam Generator. |
+| `B-002` | Operating and Procedures | Exploitation et procédures | 99 | 9 | 9 | Counts from official TXT; French name from ISED CIR-3 §5.1.2 and French Exam Generator. |
+| `B-003` | Station Assembly, Practice and Safety | Montage d'une station, pratique et sécurité | 199 | 21 | 21 | Counts from official TXT; French name from ISED CIR-3 §5.1.3 and French Exam Generator. |
+| `B-004` | Circuit Components | Composants des circuits | 63 | 6 | 6 | Counts from official TXT; French name from ISED CIR-3 §5.1.4 and French Exam Generator. |
+| `B-005` | Basic Electronics and Theory | Éléments et théorie de l'électronique | 142 | 13 | 13 | Counts from official TXT; French name from ISED CIR-3 §5.1.5 and French Exam Generator. |
+| `B-006` | Feedlines and Antenna Systems | Descentes d'antenne et systèmes d'antenne | 140 | 13 | 13 | Counts from official TXT; French name from ISED CIR-3 §5.1.6 and French Exam Generator. |
+| `B-007` | Radio Wave Propagation | Propagation des ondes radioélectriques | 87 | 8 | 8 | Counts from official TXT; French name from ISED CIR-3 §5.1.7 and French Exam Generator. |
+| `B-008` | Interference and Suppression | Brouillage et suppression | 55 | 5 | 5 | Counts from official TXT; French name from ISED CIR-3 §5.1.8 and French Exam Generator. |
 
 ## Exam rules
 
@@ -106,7 +111,9 @@ Header fields, exactly as present before trimming:
 | Basic with Honours is 80% or more: at least 80 correct answers out of 100. | RAC Basic requirements. |
 | Exams are given by Accredited Examiners (RIC-1) or by an ISED district office. | RAC Basic requirements. |
 | The unlabelled formula and block-diagram reference sheet may be used during the exam. | ISED reference material ZIP and exam-version PDF. |
-| Time limit is unverified. Mock-exam timer must be optional and default off until verified. | Open verification status; no cited official time-limit source yet. |
+| No fixed time limit is specified for the Basic exam. RIC-1 §7.2 says: "There is no specified time limit for the examinations. Most examinations are completed within one (1) hour and would normally not take more than two (2) hours to complete. Examiners will use their discretion in ensuring that reasonable time is made available for the examination." CIR-3 §5.4 likewise says: « Aucune limite de temps n'est fixée pour compléter les examens. La majorité des candidats finissent l'examen en moins d'une heure, et les autres ne devraient pas prendre plus de deux heures pour le terminer. Les examinateurs useront de jugement pour allouer suffisamment de temps pour compléter l'examen. » | RIC-1 §7.2 and CIR-1 §7.2, Issue/8th edition May 2025; RIC-3 §5.4 and CIR-3 §5.4, Issue/5th edition March 2022. |
+| Time-limit guidance is in ISED information circulars, not regulations; RIC-3 states that these circulars "have no status in law". | RIC-3 preface. |
+| Mock-exam timer must remain optional and default off. An optional elapsed-time timer is product guidance only, not an ISED time limit. | Product decision based on the no-fixed-time-limit guidance above. |
 
 ## Privileges for learning content
 
@@ -143,7 +150,5 @@ These privilege facts are course content, not application authorization logic. L
 
 ## Open questions
 
-- French names for the eight category headings are not yet verified from an official source.
 - A French version of the 2025 Basic reference material ZIP/PDF has not yet been located.
-- The Basic exam time limit is unverified.
 - ISED permission request is pending; see [content licensing](content-licensing.md) for the interim policy, public-release gate, and pending record fields.

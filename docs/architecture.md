@@ -178,9 +178,9 @@ Official ISED text is stored separately from original explanation content. Answe
   "bankId": "basic-2025-07-15",
   "name": {
     "en": "Regulations and Policies",
-    "fr": null
+    "fr": "Règlements et politiques"
   },
-  "frenchNameStatus": "pending verification",
+  "frenchNameStatus": "verified",
   "questionCount": 199,
   "subsectionCount": 25,
   "examQuestionCount": 25,
@@ -694,6 +694,4 @@ print duplicate coverage for author review
 
 ## Open architecture questions
 
-- Decide exact JSON Schema tooling.
-- Decide minimum supported Apple OS versions and browser versions.
 - Confirm T-007 permission scope covers public bundling of verbatim question text as app data before publication or distribution; reference PDFs remain source artifacts and are not shipped in the apps.
