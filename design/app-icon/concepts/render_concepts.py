@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Deterministic sumi-e app icon concept renderer.
 
-Round 2 uses a filled-stroke construction instead of round-1 bristle polylines:
-each brush mark is a single opaque ink body built by offsetting a centreline with
-an explicit pressure profile. Dry-brush hihaku is cut back through the tail with
-even-odd cutouts so the lift-off breaks into bristle tips.
+Round 3 keeps the filled sumi-e construction from round 2 and focuses the set on
+hex-beam antennas. Each brush mark is a single opaque ink body built by
+offsetting a centreline with an explicit pressure profile, then cutting hihaku
+dry-brush gaps through the lift-off tail.
 """
 from __future__ import annotations
 
@@ -30,19 +30,17 @@ BG_INNER = (255, 247, 232)  # #FFF7E8 from src/background.svg
 BG_OUTER = (246, 238, 220)  # #F6EEDC from src/background.svg
 
 CONCEPTS = [
-    ("01-yagi-beam", "Yagi beam on a mast: six bold sumi-e strokes form a mast, boom, and elements with no broadcast arcs."),
-    ("02-radio-tower", "Radio tower with Yagi: a narrow two-leg tower, three quick cross strokes, and a compact beam on top."),
-    ("03-ground-plane", "Vertical ground-plane: one tall radiator and three sloping radials, with a single pale wash for depth."),
-    ("04-enso-yagi", "Ensō Yagi: an open dry-brush Zen circle frames a small Yagi-on-mast painted inside."),
-    ("05-hex-beam", "Hex beam on a mast: six spreaders rise from a hub with light ink-wash wire strokes tracing the hexagon."),
+    ("01-hex-top", "Top-down hex beam: straight sumi-e spreaders, a closed hexagon perimeter, pressed hub, and two light zigzag wire elements."),
+    ("02-hex-top-enso", "Top-down hex beam framed by a thinner open ensō circle with a dry-brush gap."),
+    ("03-hex-top-minimal", "Minimal top-down hex beam: bold hexagon perimeter, six straight spreaders, and a pressed centre hub only."),
+    ("04-hex-side", "Side-view hex beam: mast, hub, six thin umbrella-like spreaders, and a flattened hexagon wire outline."),
 ]
 
 CLOSEUP_CROPS = {
-    "01-yagi-beam": (230, 240),
-    "02-radio-tower": (260, 190),
-    "03-ground-plane": (255, 250),
-    "04-enso-yagi": (250, 215),
-    "05-hex-beam": (255, 235),
+    "01-hex-top": (250, 250),
+    "02-hex-top-enso": (244, 244),
+    "03-hex-top-minimal": (244, 244),
+    "04-hex-side": (220, 260),
 }
 
 
@@ -181,7 +179,7 @@ class SumiDrawing:
     ) -> list[tuple[float, float]]:
         nx, ny = -ty, tx
         pts: list[tuple[float, float]] = []
-        n = 22
+        n = 36
         # Put most of the blob behind the starting point so it feels like a brush landing.
         cx = x - tx * length * 0.18
         cy = y - ty * length * 0.18
@@ -192,7 +190,7 @@ class SumiDrawing:
             # Superellipse-ish: flatter sides than a perfect oval.
             ex = math.copysign(abs(ca) ** (2.0 / squareness), ca) * length * 0.5
             ey = math.copysign(abs(sa) ** (2.0 / squareness), sa) * width * 0.55
-            j = self.rng.uniform(-1.8, 1.8)
+            j = self.rng.uniform(-0.9, 0.9)
             pts.append((cx + tx * ex + nx * (ey + j), cy + ty * ex + ny * (ey + j)))
         return pts
 
@@ -240,7 +238,7 @@ class SumiDrawing:
         splatter: int = 4,
     ) -> None:
         lengths, total = polyline_lengths(points)
-        samples = max(22, int(total / 16))
+        samples = max(32, int(total / 10))
         left, right, sampled = self._outline(points, widths, samples, edge_noise, press)
         body = left + list(reversed(right))
         start_x, start_y, start_tx, start_ty, start_w = sampled[0]
@@ -253,7 +251,8 @@ class SumiDrawing:
         for i, off in enumerate(offsets[:dry_gaps]):
             t0 = min(0.86, dry_start + self.rng.uniform(-0.035, 0.10) + i * 0.012)
             t1 = 0.955 + self.rng.uniform(0.000, 0.030)
-            gap_w = self.rng.uniform(widths[1] * 0.040, widths[1] * 0.090) * (1.0 + i * 0.08)
+            gap_source = max(widths)
+            gap_w = self.rng.uniform(gap_source * 0.040, gap_source * 0.090) * (1.0 + i * 0.08)
             dry_gap_paths.append(self._dry_gap(points, off, t0, t1, widths, gap_w, edge_noise * 0.36))
 
         # Open a few shorter skips within the tail so it reads as dry hihaku, not a highlight.
@@ -305,7 +304,7 @@ class SumiDrawing:
                 self.draw.append(f"ellipse {x + nx * d:.1f},{y + ny * d:.1f} {rx:.1f},{ry:.1f} 0,360")
 
     def wash_stroke(self, points: list[tuple[float, float]], width: float = 88) -> None:
-        left, right, _ = self._outline(points, (width * 0.60, width, width * 0.38), max(22, int(polyline_lengths(points)[1] / 18)), 8.0, 0.10)
+        left, right, _ = self._outline(points, (width * 0.60, width, width * 0.38), max(28, int(polyline_lengths(points)[1] / 14)), 5.0, 0.10)
         self.draw.append("stroke none")
         self.draw.append("fill-rule nonzero")
         self.draw.append(f"fill {WASH}")
@@ -313,24 +312,39 @@ class SumiDrawing:
 
     def light_stroke(self, points: list[tuple[float, float]], widths: tuple[float, float, float], alpha: float = 0.45) -> None:
         """A translucent filled brush body for thinner antenna wires, not a stroked hairline."""
-        left, right, _ = self._outline(points, widths, max(18, int(polyline_lengths(points)[1] / 20)), 2.8, 0.18)
+        left, right, _ = self._outline(points, widths, max(24, int(polyline_lengths(points)[1] / 12)), 1.7, 0.18)
         self.draw.append("stroke none")
         self.draw.append("fill-rule nonzero")
         self.draw.append(f"fill rgba(21,18,15,{alpha:.3f})")
         self.draw.append(f"path '{path_from(left + list(reversed(right)), close=True)}'")
 
-    def enso(self, cx: float, cy: float, rx: float, ry: float) -> None:
-        # Classic open ensō: one clockwise near-circle, heavy landing, dry gap near lower right.
+    def ink_dot(self, cx: float, cy: float, rx: float, ry: float, alpha: float = 1.0) -> None:
+        """Pressed hub dot with a smoother irregular edge than the line landings."""
+        pts: list[tuple[float, float]] = []
+        phase = self.rng.uniform(0.0, math.tau)
+        for i in range(40):
+            a = math.tau * i / 40
+            r = 1.0 + 0.030 * math.sin(a * 3.0 + phase) + self.rng.uniform(-0.025, 0.025)
+            pts.append((cx + math.cos(a) * rx * r, cy + math.sin(a) * ry * r))
+        self.draw.append("stroke none")
+        self.draw.append("fill-rule nonzero")
+        self.draw.append(f"fill rgba(21,18,15,{0.16 * alpha:.3f})")
+        self.draw.append(f"path '{path_from(pts, close=True)}'")
+        self.draw.append(f"fill rgba(21,18,15,{alpha:.3f})")
+        self.draw.append(f"path '{path_from(pts, close=True)}'")
+
+    def enso(self, cx: float, cy: float, rx: float, ry: float, widths: tuple[float, float, float] = (42, 26, 14)) -> None:
+        # Classic open ensō: one clockwise near-circle, thinner than round 2 so it frames rather than dominates.
         points: list[tuple[float, float]] = []
         start = math.radians(224)
         end = math.radians(522)  # Leaves an open gap of roughly 60 degrees.
-        steps = 54
+        steps = 72
         for i in range(steps + 1):
             u = i / steps
             a = start + (end - start) * u
-            wobble = 1.0 + 0.030 * math.sin(u * math.tau * 2.0 + 0.6) + 0.018 * math.sin(u * math.tau * 5.0)
+            wobble = 1.0 + 0.018 * math.sin(u * math.tau * 2.0 + 0.6) + 0.010 * math.sin(u * math.tau * 5.0)
             points.append((cx + math.cos(a) * rx * wobble, cy + math.sin(a) * ry * wobble))
-        self.brush_stroke(points, (70, 92, 30), dry_start=0.56, dry_gaps=8, edge_noise=7.5, press=0.85, splatter=7)
+        self.brush_stroke(points, widths, dry_start=0.56, dry_gaps=8, edge_noise=4.0, press=0.62, splatter=4)
 
     def save(self, path: Path) -> None:
         path.write_text("\n".join(self.draw) + "\n", encoding="utf-8")
@@ -359,81 +373,139 @@ def render_texture_test(output: Path, tmp: Path) -> None:
     render_drawing(drawing, output, tmp, "texture-test")
 
 
+def lerp_point(a: tuple[float, float], b: tuple[float, float], t: float) -> tuple[float, float]:
+    return (a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t)
+
+
+def hex_points(cx: float, cy: float, radius: float, rotation_deg: float = -90.0) -> list[tuple[float, float]]:
+    return [
+        (cx + math.cos(math.radians(rotation_deg + 60 * i)) * radius, cy + math.sin(math.radians(rotation_deg + 60 * i)) * radius)
+        for i in range(6)
+    ]
+
+
+def brush_from_hub(
+    drawing: SumiDrawing,
+    hub: tuple[float, float],
+    tip: tuple[float, float],
+    widths: tuple[float, float, float],
+    *,
+    inset: float,
+    edge_noise: float,
+    dry_gaps: int,
+    press: float,
+    splatter: int,
+) -> None:
+    start = lerp_point(hub, tip, inset)
+    drawing.brush_stroke([start, tip], widths, dry_start=0.72, dry_gaps=dry_gaps, edge_noise=edge_noise, press=press, splatter=splatter)
+
+
+def paint_hex_perimeter(drawing: SumiDrawing, corners: list[tuple[float, float]], widths: tuple[float, float, float], edge_noise: float) -> None:
+    # Three overlapping, confident perimeter strokes: closed hex silhouette without a signal-arc read.
+    for pts in ([corners[5], corners[0], corners[1]], [corners[1], corners[2], corners[3]], [corners[3], corners[4], corners[5]]):
+        drawing.brush_stroke(list(pts), widths, dry_start=0.74, dry_gaps=5, edge_noise=edge_noise, press=0.34, splatter=1)
+
+
+def paint_hex_wires(drawing: SumiDrawing, corners: list[tuple[float, float]], cx: float, cy: float, radius: float, scale: float = 1.0) -> None:
+    # Two pale W/M wire elements only. Keeping them separated avoids a spider-web or snowflake read.
+    upper = [
+        lerp_point(corners[5], corners[0], 0.08),
+        (cx - radius * 0.50, cy - radius * 0.56),
+        (cx - radius * 0.25, cy - radius * 0.34),
+        (cx, cy - radius * 0.50),
+        (cx + radius * 0.25, cy - radius * 0.34),
+        (cx + radius * 0.50, cy - radius * 0.56),
+        lerp_point(corners[0], corners[1], 0.92),
+    ]
+    lower = [
+        lerp_point(corners[4], corners[3], 0.08),
+        (cx - radius * 0.50, cy + radius * 0.56),
+        (cx - radius * 0.25, cy + radius * 0.34),
+        (cx, cy + radius * 0.50),
+        (cx + radius * 0.25, cy + radius * 0.34),
+        (cx + radius * 0.50, cy + radius * 0.56),
+        lerp_point(corners[3], corners[2], 0.08),
+    ]
+    wire_widths = (11 * scale, 5 * scale, 9 * scale)
+    drawing.light_stroke(upper, wire_widths, alpha=0.36)
+    drawing.light_stroke(lower, wire_widths, alpha=0.34)
+
+
+def paint_top_hex_beam(
+    drawing: SumiDrawing,
+    *,
+    cx: float,
+    cy: float,
+    radius: float,
+    spoke_widths: tuple[float, float, float],
+    perimeter_widths: tuple[float, float, float],
+    include_wires: bool,
+    hub_radius: float,
+    edge_noise: float,
+) -> None:
+    corners = hex_points(cx, cy, radius)
+    hub = (cx, cy)
+    for tip in corners:
+        brush_from_hub(drawing, hub, tip, spoke_widths, inset=0.060, edge_noise=edge_noise, dry_gaps=5, press=0.26, splatter=1)
+    paint_hex_perimeter(drawing, corners, perimeter_widths, edge_noise=edge_noise)
+    if include_wires:
+        paint_hex_wires(drawing, corners, cx, cy, radius, scale=radius / 340.0)
+    drawing.ink_dot(cx, cy, hub_radius, hub_radius * 0.92, alpha=0.98)
+
+
+def paint_side_hex_beam(drawing: SumiDrawing) -> None:
+    hub = (512, 642)
+    tips = [(168, 558), (276, 390), (420, 300), (604, 300), (748, 390), (856, 558)]
+    drawing.wash_stroke([(210, 660), (512, 626), (814, 660)], width=48)
+    drawing.brush_stroke([(502, 874), (508, 748), hub], (42, 8, 34), dry_start=0.68, dry_gaps=5, edge_noise=2.0, press=0.62, splatter=3)
+    drawing.light_stroke(tips + [tips[0]], (14, 5, 12), alpha=0.48)
+    for tip in tips:
+        brush_from_hub(drawing, hub, tip, (21, 5, 18), inset=0.055, edge_noise=1.35, dry_gaps=4, press=0.20, splatter=0)
+    drawing.ink_dot(hub[0], hub[1], 25, 22, alpha=0.96)
+
+
 def render_concept(slug: str, idx: int, out_dir: Path, tmp: Path) -> None:
     drawing = SumiDrawing(seed=4200 + idx * 311)
 
     if idx == 1:
-        # Yagi beam on mast: 1 mast, 1 boom, 4 elements (6 strokes).
-        drawing.brush_stroke([(394, 856), (438, 653), (504, 361)], (58, 76, 36), dry_start=0.64, dry_gaps=6, edge_noise=5.2, press=0.70, splatter=5)
-        boom = [(218, 422), (499, 367), (845, 299)]
-        drawing.brush_stroke(boom, (47, 64, 30), dry_start=0.58, dry_gaps=7, edge_noise=5.2, press=0.70, splatter=5)
-        boom_dir = (845 - 218, 299 - 422)
-        perp = (-boom_dir[1], boom_dir[0])
-        for c, length, w in [((290, 408), 300, 40), ((444, 378), 374, 45), ((609, 345), 317, 40), ((763, 315), 232, 34)]:
-            drawing.brush_stroke(line_around(c, perp, length), (w * 0.76, w, w * 0.48), dry_start=0.55, dry_gaps=4, edge_noise=3.5, press=0.48, splatter=2)
-
+        paint_top_hex_beam(
+            drawing,
+            cx=512,
+            cy=512,
+            radius=342,
+            spoke_widths=(34, 6, 29),
+            perimeter_widths=(38, 8, 34),
+            include_wires=True,
+            hub_radius=27,
+            edge_noise=2.0,
+        )
     elif idx == 2:
-        # Radio tower with compact Yagi: narrow, no hydro-pylon crossarms.
-        drawing.brush_stroke([(360, 830), (425, 605), (485, 310)], (55, 68, 32), dry_start=0.66, dry_gaps=6, edge_noise=4.8, press=0.70, splatter=4)
-        drawing.brush_stroke([(650, 830), (585, 605), (520, 310)], (55, 68, 32), dry_start=0.66, dry_gaps=6, edge_noise=4.8, press=0.70, splatter=4)
-        for pts, w in [
-            ([(390, 720), (505, 675), (622, 720)], 32),
-            ([(420, 590), (505, 545), (590, 590)], 30),
-            ([(455, 455), (505, 420), (555, 455)], 26),
-        ]:
-            drawing.brush_stroke(pts, (w * 0.75, w, w * 0.50), dry_start=0.52, dry_gaps=4, edge_noise=3.2, press=0.48, splatter=2)
-        drawing.brush_stroke([(300, 268), (512, 266), (732, 262)], (39, 52, 26), dry_start=0.58, dry_gaps=6, edge_noise=4.0, press=0.62, splatter=4)
-        for c, length, w in [((365, 267), 160, 27), ((510, 265), 205, 31), ((655, 263), 150, 27)]:
-            drawing.brush_stroke([(c[0], c[1] - length / 2), (c[0], c[1] + length / 2)], (w * 0.72, w, w * 0.48), dry_start=0.55, dry_gaps=3, edge_noise=2.8, press=0.42, splatter=1)
-
+        drawing.enso(512, 516, 366, 354, widths=(38, 22, 13))
+        paint_top_hex_beam(
+            drawing,
+            cx=512,
+            cy=512,
+            radius=282,
+            spoke_widths=(27, 5, 23),
+            perimeter_widths=(30, 6, 27),
+            include_wires=True,
+            hub_radius=22,
+            edge_noise=1.7,
+        )
     elif idx == 3:
-        # Vertical ground-plane: 1 radiator, 3 radials, and one light wash.
-        drawing.wash_stroke([(358, 250), (500, 485), (640, 815)], width=120)
-        drawing.brush_stroke([(515, 724), (506, 430), (512, 180)], (68, 86, 28), dry_start=0.62, dry_gaps=7, edge_noise=5.8, press=0.78, splatter=5)
-        for pts, w in [
-            ([(512, 718), (350, 806), (170, 890)], 52),
-            ([(512, 724), (512, 835), (512, 945)], 45),
-            ([(512, 718), (675, 806), (855, 890)], 52),
-        ]:
-            drawing.brush_stroke(pts, (w * 0.78, w, w * 0.45), dry_start=0.57, dry_gaps=5, edge_noise=4.2, press=0.55, splatter=3)
-
+        paint_top_hex_beam(
+            drawing,
+            cx=512,
+            cy=512,
+            radius=356,
+            spoke_widths=(44, 8, 39),
+            perimeter_widths=(49, 10, 43),
+            include_wires=False,
+            hub_radius=35,
+            edge_noise=2.2,
+        )
     elif idx == 4:
-        # Ensō framing a compact Yagi-on-mast: open circle plus 5 small antenna strokes.
-        drawing.enso(512, 528, 352, 346)
-        drawing.brush_stroke([(505, 690), (512, 545), (526, 404)], (34, 47, 24), dry_start=0.62, dry_gaps=4, edge_noise=3.2, press=0.52, splatter=2)
-        drawing.brush_stroke([(374, 432), (526, 406), (682, 382)], (30, 41, 21), dry_start=0.58, dry_gaps=4, edge_noise=3.0, press=0.50, splatter=2)
-        boom_dir = (682 - 374, 382 - 432)
-        perp = (-boom_dir[1], boom_dir[0])
-        for c, length, w in [((415, 425), 120, 22), ((526, 407), 152, 25), ((635, 390), 110, 21)]:
-            drawing.brush_stroke(line_around(c, perp, length), (w * 0.72, w, w * 0.45), dry_start=0.54, dry_gaps=3, edge_noise=2.2, press=0.42, splatter=1)
-
-    elif idx == 5:
-        # Hex beam on a mast: side/below view with six spreaders and readable hex wire outline.
-        hub = (512, 615)
-        tips = [(192, 610), (272, 390), (425, 250), (605, 250), (760, 390), (838, 610)]
-        drawing.wash_stroke([(280, 710), (510, 596), (750, 704)], width=76)
-        drawing.brush_stroke([(493, 880), (505, 735), hub], (58, 74, 34), dry_start=0.64, dry_gaps=6, edge_noise=5.0, press=0.74, splatter=5)
-        for a, b, c in [
-            (tips[0], (210, 540), tips[1]),
-            (tips[1], (335, 305), tips[2]),
-            (tips[2], (515, 224), tips[3]),
-            (tips[3], (695, 305), tips[4]),
-            (tips[4], (815, 540), tips[5]),
-            (tips[5], (512, 690), tips[0]),
-        ]:
-            drawing.light_stroke([a, b, c], (17, 22, 14), alpha=0.54)
-        # A single inner wire cue: enough to say hex beam without becoming a hairline tangle.
-        drawing.light_stroke([(292, 410), (426, 485), (512, 430), (604, 485), (740, 410)], (12, 17, 10), alpha=0.42)
-        for tip, mid, w in [
-            (tips[0], (318, 608), 40),
-            (tips[1], (372, 505), 38),
-            (tips[2], (466, 425), 36),
-            (tips[3], (556, 425), 36),
-            (tips[4], (652, 505), 38),
-            (tips[5], (706, 608), 40),
-        ]:
-            drawing.brush_stroke([hub, mid, tip], (w * 0.86, w, w * 0.34), dry_start=0.55, dry_gaps=4, edge_noise=3.8, press=0.44, splatter=2)
-
+        paint_side_hex_beam(drawing)
     else:
         raise ValueError(idx)
 
@@ -516,12 +588,19 @@ def make_closeups(tmp: Path) -> None:
 
 def write_descriptions() -> None:
     current = {slug for slug, _desc in CONCEPTS}
-    for old_slug in ("02-lattice-tower", "04-wire-dipole"):
+    retired_slugs = {
+        "01-yagi-beam",
+        "02-radio-tower",
+        "02-lattice-tower",
+        "03-ground-plane",
+        "04-enso-yagi",
+        "04-wire-dipole",
+        "05-hex-beam",
+    }
+    for old_slug in retired_slugs:
         old_dir = ROOT / old_slug
         if old_dir.exists() and old_slug not in current:
-            for child in old_dir.iterdir():
-                child.unlink()
-            old_dir.rmdir()
+            shutil.rmtree(old_dir)
     for slug, desc in CONCEPTS:
         d = ROOT / slug
         d.mkdir(parents=True, exist_ok=True)
