@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-02 13:58'
+updated_date: '2026-10-02 14:03'
 labels:
   - web
   - apple
@@ -60,6 +60,8 @@ Validation evidence:
 - pnpm check:links passed.
 
 Review round started from /Users/david/.cache/canadian-ham-reviews/t12.2.md. The current RIC-1 §8.3 weighting fixture is a synthetic stand-in pending the official sample text.
+
+Review round completed: scoreMorseCopy now validates expected copy strictly while treating invalid received characters as grading errors per RIC-1 §8.7; TS and Swift validation use Unicode code point/scalar indexes and reject non-ASCII before uppercasing. Added shared fixtures for invalid received copy, decomposed accent with CRLF, dotless ı/long ſ, PARIS symbol order/start times, timing/weighting error paths, empty input, lowercase input, and the 15/5 owner-default Farnsworth case. Created follow-up TASK-12.8 for recording the official RIC-1 §8.3 sample and replacing the synthetic stand-in. Validation passed: pnpm install --frozen-lockfile, pnpm typecheck, pnpm test, pnpm check:links, mise x actionlint@1.7.12 -- actionlint .github/workflows/ci.yml, and DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/morse-swift.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
