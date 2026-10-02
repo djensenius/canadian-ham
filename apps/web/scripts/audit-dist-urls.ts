@@ -44,6 +44,7 @@ interface CspFinding {
 const CSP_META_PATTERN = /<meta\b(?=[^>]*\bhttp-equiv\s*=\s*(["'])Content-Security-Policy\1)[^>]*>/iu;
 const CSP_CONTENT_PATTERN = /\bcontent\s*=\s*"([^"]*)"/iu;
 const ALLOWED_CSP_SOURCES = new Set(["'self'", "'none'"]);
+const ALLOWED_DEFAULT_SRC_SOURCES = new Set(["'self'", "'none'"]);
 const CSP_HASH_PATTERN = /^'sha(?:256|384|512)-[A-Za-z0-9+/=]+'$/u;
 
 function currentModulePath(): string {
@@ -140,10 +141,16 @@ export async function auditDistCsp(distDir = DIST_DIR): Promise<CspFinding[]> {
   }
 
   const findings: CspFinding[] = [];
+  let defaultSrcSources: readonly string[] | undefined;
+  const cspLine = lineNumberForOffset(indexHtml, cspMetaMatch.index);
   for (const directiveText of contentMatch[1].split(";")) {
     const tokens = directiveText.trim().split(/\s+/u).filter((token) => token.length > 0);
     const [directive, ...sources] = tokens;
     if (directive === undefined) {
+      continue;
+    }
+    if (directive === "default-src") {
+      defaultSrcSources = sources;
       continue;
     }
     for (const source of sources) {
@@ -152,13 +159,25 @@ export async function auditDistCsp(distDir = DIST_DIR): Promise<CspFinding[]> {
       }
       findings.push({
         file: "index.html",
-        line: lineNumberForOffset(indexHtml, cspMetaMatch.index),
+        line: cspLine,
         directive,
         source,
       });
     }
   }
+
+  if (defaultSrcSources === undefined) {
+    findings.push({ file: "index.html", line: cspLine, directive: "default-src", source: "missing default-src directive" });
+  } else if (!hasRequiredDefaultSrc(defaultSrcSources)) {
+    findings.push({ file: "index.html", line: cspLine, directive: "default-src", source: defaultSrcSources.join(" ") || "missing source" });
+  }
+
   return findings;
+}
+
+function hasRequiredDefaultSrc(sources: readonly string[]): boolean {
+  const source = sources[0];
+  return sources.length === 1 && source !== undefined && ALLOWED_DEFAULT_SRC_SOURCES.has(source);
 }
 
 function isAllowedCspSource(directive: string, source: string): boolean {

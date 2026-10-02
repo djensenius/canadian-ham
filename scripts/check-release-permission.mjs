@@ -59,8 +59,40 @@ export function checkReleasePermission(markdown) {
 }
 
 function isGrantedStatus(value) {
-  const normalized = value.toLowerCase();
-  return /\bgranted\b/u.test(normalized) && !/\bgranted\s*:\s*pending\b/u.test(normalized) && !/\bnot\s+granted\b/u.test(normalized);
+  const normalized = value.trim().toLowerCase();
+  if (/\bnot\s+(?:yet\s+)?granted\b/u.test(normalized)) {
+    return false;
+  }
+
+  const grantMatch = normalized.match(/\bgranted\s*:\s*(yes|\d{4}-\d{2}-\d{2})\b/u);
+  if (grantMatch === null) {
+    return false;
+  }
+
+  const grantedValue = grantMatch[1];
+  return grantedValue === "yes" || isValidIsoDate(grantedValue);
+}
+
+function isValidIsoDate(value) {
+  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/u);
+  if (match === null) {
+    return false;
+  }
+
+  const [, yearText, monthText, dayText] = match;
+  const year = Number(yearText);
+  const month = Number(monthText);
+  const day = Number(dayText);
+  if (month < 1 || month > 12) {
+    return false;
+  }
+
+  const daysInMonth = [31, isLeapYear(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1];
+  return day >= 1 && day <= daysInMonth;
+}
+
+function isLeapYear(year) {
+  return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
 }
 
 function isConcreteValue(value) {
@@ -104,16 +136,42 @@ function runSelfTest() {
     ],
   });
 
-  const granted = permissionRecord({
+  assert.deepEqual(checkReleasePermission(permissionRecord({
     status: "Granted: yes (written permission received)",
-    reference: "ISED-ABC-12345",
-    date: "2026-10-02",
-  });
-  assert.deepEqual(checkReleasePermission(granted), { ok: true, errors: [] });
+    reference: VALID_REFERENCE,
+    date: VALID_PERMISSION_DATE,
+  })), { ok: true, errors: [] });
+
+  assert.deepEqual(checkReleasePermission(permissionRecord({
+    status: "Granted: 2026-10-02 (written permission received)",
+    reference: VALID_REFERENCE,
+    date: VALID_PERMISSION_DATE,
+  })), { ok: true, errors: [] });
+
+  for (const status of [
+    "Granted: no",
+    "Granted: refused",
+    "Granted: denied",
+    "Granted: pending",
+    "Granted: TBD",
+    "Not yet granted",
+    "Not granted",
+    "Permission requested; awaiting reply",
+    "Granted: 2026-02-30",
+  ]) {
+    assert.deepEqual(checkReleasePermission(permissionRecord({
+      status,
+      reference: VALID_REFERENCE,
+      date: VALID_PERMISSION_DATE,
+    })), {
+      ok: false,
+      errors: ["Request status must record ISED permission as granted."],
+    });
+  }
 
   const missingDate = permissionRecord({
     status: "Granted: yes",
-    reference: "ISED-ABC-12345",
+    reference: VALID_REFERENCE,
     date: "October 2, 2026",
   });
   assert.deepEqual(checkReleasePermission(missingDate), {
@@ -121,6 +179,9 @@ function runSelfTest() {
     errors: ["Permission date must be recorded in YYYY-MM-DD form."],
   });
 }
+
+const VALID_REFERENCE = "ISED-ABC-12345";
+const VALID_PERMISSION_DATE = "2026-10-02";
 
 function permissionRecord({ status, reference, date }) {
   return `# Content licensing and attribution plan\n\n## Permission record\n\n| Field | Value |\n|---|---|\n| Permission holder | Owner / project maintainer |\n| Request status | ${status} |\n| ISED reference number | ${reference} |\n| Permission date | ${date} |\n\n## Interim private-development policy\n`;

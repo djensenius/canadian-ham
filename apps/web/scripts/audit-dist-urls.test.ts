@@ -68,6 +68,16 @@ describe("dist URL audit", () => {
     ]);
   });
 
+  it("requires default-src to be self or none in the built index CSP", async () => {
+    const distDir = await mkdtemp(join(tmpdir(), "canadian-ham-csp-audit-default-src-"));
+    tempDirs.push(distDir);
+    await writeFile(join(distDir, "index.html"), `<meta http-equiv="Content-Security-Policy" content="script-src 'self'; connect-src 'self'">`, "utf8");
+
+    assert.deepEqual(await auditDistCsp(distDir), [
+      { file: "index.html", line: 1, directive: "default-src", source: "missing default-src directive" },
+    ]);
+  });
+
   it("fails when dist contains a PDF file", async () => {
     const distDir = await mkdtemp(join(tmpdir(), "canadian-ham-url-audit-pdf-"));
     tempDirs.push(distDir);

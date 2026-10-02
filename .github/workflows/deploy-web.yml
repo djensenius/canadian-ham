@@ -48,25 +48,51 @@ jobs:
         with:
           persist-credentials: false
 
+      # pnpm/action-setup v6.1.0
+      - name: Set up pnpm
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413
+        with:
+          run_install: false
+
       # actions/setup-node v7.0.0
       - name: Set up Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: 26
-
-      - name: Set up pnpm from packageManager
-        run: corepack enable
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       # actions/configure-pages v5.0.0
       - name: Configure GitHub Pages
+        id: pages
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b
 
-      - name: Build web app for the GitHub Pages project site
+      - name: Resolve GitHub Pages base path
+        id: pages-base
+        shell: bash
         env:
-          CANADIAN_HAM_WEB_BASE_PATH: /${{ github.event.repository.name }}/
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+        run: |
+          set -euo pipefail
+
+          case "${BASE_PATH}" in
+            ""|"/") resolved_base_path="/" ;;
+            /*/) resolved_base_path="${BASE_PATH}" ;;
+            /*) resolved_base_path="${BASE_PATH}/" ;;
+            *)
+              echo "configure-pages returned an invalid base_path: ${BASE_PATH}" >&2
+              exit 1
+              ;;
+          esac
+
+          echo "base_path=${resolved_base_path}" >> "${GITHUB_OUTPUT}"
+
+      - name: Build web app for the GitHub Pages site
+        env:
+          CANADIAN_HAM_WEB_BASE_PATH: ${{ steps.pages-base.outputs.base_path }}
         run: pnpm build:web
 
       - name: Audit built web URLs and CSP
