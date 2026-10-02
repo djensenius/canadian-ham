@@ -72,11 +72,11 @@ Alternative contingency: use `git filter-repo` to purge already-committed out-of
 
 Use this attribution near question-bank acknowledgements after T-007/task-1.1 records permission, adjusted only after legal/owner review:
 
-> Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank and, where included, Advanced Qualification question bank, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page.
+> Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page.
 
 Short form for app settings or about page after T-007/task-1.1 records permission:
 
-> ISED question-bank material reproduced with permission. Original lessons and explanations are by the canadian-ham project.
+> ISED Basic question-bank material reproduced with permission. Original lessons and explanations are by the canadian-ham project.
 
 During private development before T-007 is complete, internal documentation and manifests must not claim that written permission has been granted.
 
