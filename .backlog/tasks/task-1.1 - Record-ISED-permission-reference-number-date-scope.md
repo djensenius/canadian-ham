@@ -1,11 +1,11 @@
 ---
 id: TASK-1.1
 title: 'Record ISED permission (reference number, date, scope)'
-status: To Do
+status: In Progress
 assignee:
   - '@djensenius'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 02:34'
+updated_date: '2026-10-02 12:37'
 labels:
   - release
   - blocked
@@ -29,3 +29,9 @@ Owner task. The permission request letter (covering the Basic and Advanced banks
 - [ ] #2 The written permission reference number, date and scope are recorded in docs/content-licensing.md
 - [ ] #3 The recorded scope explicitly covers bundling verbatim EN/FR question text in the web and Apple apps
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Record the 2026-10-02 ISED online Crown copyright clearance submission facts in the task notes and mark only AC #1 as satisfied.\n2. Update licensing documentation, requirements, content manifest, and About-page strings/tests to reflect request submitted but permission not granted.\n3. Run web/content/localization/network checks plus Apple xbuild suites, then record validation while leaving task-1.1 In Progress until written permission exists.
+<!-- SECTION:PLAN:END -->
