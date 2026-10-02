@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:10'
-updated_date: '2026-10-02 01:13'
+updated_date: '2026-10-02 02:05'
 labels:
   - apple
   - accessibility
@@ -32,5 +32,9 @@ Why: the task-8 review found the tvOS focus ring (#8F2E1D) sits on the #A53A2A p
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Inspect tvOS button/focus styling and existing accessibility docs/evidence conventions.\n2. Update shared tvOS focus indicator styling to preserve the cream ink-brush look while adding a high-contrast, non-scale-only ring across focusable tvOS controls.\n3. Add or update tvOS UI coverage to capture one focused primary, answer, and category state PNG under docs/evidence and verify visibility.\n4. Record computed light/dark contrast ratios from actual colors in docs/accessibility.md.\n5. Run the task-required tvOS xbuild checks and final touched-platform suites, then check acceptance criteria, summarize, set Done, and commit task metadata last.
+1. Inspect tvOS button/focus styling and existing accessibility docs/evidence conventions.
+2. Update shared tvOS focus indicator styling to preserve the cream ink-brush look while adding a high-contrast, non-scale-only ring across focusable tvOS controls.
+3. Add tvOS UI coverage to capture one focused primary, answer, and category state PNG under docs/evidence and verify visibility.
+4. Record computed light/dark contrast ratios from actual colors in docs/accessibility.md.
+5. Run the required tvOS xbuild suite/audit, then check acceptance criteria, summarize, and set Done as the final task change.
 <!-- SECTION:PLAN:END -->
