@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@djensenius'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 12:37'
+updated_date: '2026-10-02 15:27'
 labels:
   - release
   - blocked
@@ -20,7 +20,7 @@ ordinal: 2000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-Owner task. The permission request letter (covering the Basic and Advanced banks) is drafted but not yet sent. Once ISED grants written permission, record the reference number, date and exact scope (including bundling verbatim question text as app data) in docs/content-licensing.md. Blocks every public-release step. Legacy: T-007.
+Owner task. The ISED Crown copyright clearance request (Basic and Advanced banks) was submitted through ISED's online form on 2026-10-02 at 08:34 and is awaiting a reply. Once ISED grants written permission, record the reference number, date and exact scope (including bundling verbatim question text as app data) in docs/content-licensing.md. Blocks every public-release step. Legacy: T-007.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
@@ -33,7 +33,10 @@ Owner task. The permission request letter (covering the Basic and Advanced banks
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Record the 2026-10-02 ISED online Crown copyright clearance submission facts in the task notes and mark only AC #1 as satisfied.\n2. Update licensing documentation, requirements, content manifest, and About-page strings/tests to reflect request submitted but permission not granted.\n3. Run web/content/localization/network checks plus Apple xbuild suites, then record validation while leaving task-1.1 In Progress until written permission exists.
+1. Record the 2026-10-02 online-form submission and the submitted scope in docs/content-licensing.md, docs/requirements.md and the Basic source manifest.
+2. Replace the stage-by-stage About status with stable "requested, not yet granted" wording on web, iOS/macOS, tvOS and visionOS.
+3. Validate the docs, web and all four Apple platforms; check AC #1 only.
+4. When ISED replies: record the reference number, date and scope, then check AC #2 and #3.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
