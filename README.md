@@ -39,7 +39,7 @@ canadian-ham/
 - [Exam facts](docs/exam-facts.md)
 - [Privacy plan](docs/privacy.md)
 - [Content licensing and attribution plan](docs/content-licensing.md)
-- Work tracking: [Backlog.md](.backlog/) (`backlog board`; see [AGENTS.md](AGENTS.md)); the live GitHub Project mirror is maintained by [`djensenius/backlog-sync`](https://github.com/djensenius/backlog-sync)
+- Work tracking: [Backlog.md](.backlog/) (`backlog board`; see [AGENTS.md](AGENTS.md)); the live GitHub Project mirror is maintained by the released [`djensenius/backlog-sync`](https://github.com/djensenius/backlog-sync) binary installed from `djensenius/tap/backlog-sync`
 
 ## Build rule
 
