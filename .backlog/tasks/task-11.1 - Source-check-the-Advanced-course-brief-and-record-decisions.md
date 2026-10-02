@@ -1,11 +1,11 @@
 ---
 id: TASK-11.1
 title: Source-check the Advanced course brief and record decisions
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 22:38'
+updated_date: '2026-10-02 01:11'
 labels:
   - content
   - docs
@@ -25,7 +25,7 @@ Verify the claims and citations in the Advanced course research brief (bank form
 <!-- AC:BEGIN -->
 - [x] #1 Every factual claim in the brief has a verified source or is marked unverified
 - [x] #2 The brief is committed under docs/proposals/
-- [ ] #3 The owner's decisions are recorded in the parent task notes
+- [x] #3 The owner's decisions are recorded in the parent task notes
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -40,4 +40,12 @@ Verify the claims and citations in the Advanced course research brief (bank form
 
 <!-- SECTION:NOTES:BEGIN -->
 Validation: committed docs/proposals/advanced-course.md and docs/proposals/README.md in commit 0a43865; pnpm check:links passed. Verification summary table has 38 claims: Verified 22, Corrected 10, Unverified 4, New finding 1, Not applicable 1. Open owner decisions (AC #3 left unchecked): launch timing vs ISED rewrite/review date; one app with course switcher vs separate Advanced app; confirm and send ISED permission-request scope for current/future Advanced and adapted/structured formats; approve or decline extending the interim private-development policy to Advanced source files.
+
+2026-10-02: the owner accepted all recommendations; the decisions are recorded in the parent task notes.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Source-checked the brief and committed it as docs/proposals/advanced-course.md (PR #63, after Copilot review rounds; pnpm check:links passed). The owner's decisions (all recommendations accepted on 2026-10-02) are recorded in the parent task notes.
+<!-- SECTION:FINAL_SUMMARY:END -->

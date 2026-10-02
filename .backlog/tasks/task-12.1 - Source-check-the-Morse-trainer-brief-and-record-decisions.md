@@ -1,11 +1,11 @@
 ---
 id: TASK-12.1
 title: Source-check the Morse trainer brief and record decisions
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 22:48'
+updated_date: '2026-10-02 01:11'
 labels:
   - docs
 milestone: m-1
@@ -24,7 +24,7 @@ Verify the claims in the Morse trainer research brief against the current ISED R
 <!-- AC:BEGIN -->
 - [x] #1 The test format and pass criteria are confirmed from ISED documents
 - [x] #2 The brief is committed under docs/proposals/
-- [ ] #3 The owner's decisions are recorded in the parent task notes
+- [x] #3 The owner's decisions are recorded in the parent task notes
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -43,4 +43,12 @@ Committed draft prepared in docs/proposals/morse-trainer.md with docs/proposals/
 Open owner decisions (AC #3 remains unchecked): scope integrated module vs separate app; default character speed 12 wpm vs 15–18 wpm; sending evaluation microphone pitch detection vs tap timing; exam timing profile PARIS-calibrated 12/5 vs RIC-1 literal/harder option; haptics scope on supportsHaptics-capable devices only.
 
 Addressed Copilot comment 4161264976 by correcting the WCAG 2.3.1 flash-area threshold (21,824 CSS px), adding red-flash/general-flash threshold guidance, merging origin/main's advanced-course proposal index entry, and rerunning pnpm check:links (passed).
+
+2026-10-02: the owner accepted all recommendations; the decisions are recorded in the parent task notes.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Source-checked the brief and committed it as docs/proposals/morse-trainer.md (PRs #64, after Copilot review rounds; pnpm check:links passed). The owner's decisions (all recommendations accepted on 2026-10-02) are recorded in the parent task notes.
+<!-- SECTION:FINAL_SUMMARY:END -->
