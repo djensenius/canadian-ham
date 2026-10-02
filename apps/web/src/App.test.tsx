@@ -947,6 +947,25 @@ describe("App accessibility and flows", () => {
     await expectNoAxeViolations(container);
   });
 
+  it("keeps Morse trainer hidden until the preview setting is enabled", async () => {
+    window.location.hash = "#/settings";
+    const store = createStore("morse-toggle");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-toggle-seed"} />);
+
+    await screen.findByRole("heading", { name: "Settings and local data" });
+    assert.equal(screen.queryByRole("button", { name: "Morse" }), null);
+    const toggle = screen.getByLabelText("Enable Morse trainer preview") as HTMLInputElement;
+    assert.equal(toggle.checked, false);
+
+    await user.click(toggle);
+
+    await waitFor(async () => assert.equal((await store.getPreferences()).morse.enabled, true));
+    await user.click(screen.getByRole("button", { name: "Morse" }));
+    await screen.findByRole("heading", { name: "Morse trainer (preview)" });
+    assert.equal(screen.getByText("Hidden until playback finishes.").textContent, "Hidden until playback finishes.");
+  });
+
   it("renders Settings theme controls and no axe violations", async () => {
     window.location.hash = "#/settings";
     const store = createStore("settings-axe");

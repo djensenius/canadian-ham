@@ -1,6 +1,7 @@
 import { dueCount, type CategoryBreakdownEntry, type QuestionProgressRecord } from "@canadian-ham/engine-ts";
 
 import { bankId, categories, knownQuestionIds, subsections } from "../data/bank";
+import { defaultMorsePreferences, normalizeMorsePreferences, type WebMorsePreferences } from "./morseSettings";
 import { lessonsById } from "../data/lessons";
 import { lessonQuizzesById } from "../data/quizzes";
 
@@ -12,6 +13,7 @@ export interface WebPreferences {
   readonly practiceMode: PracticeMode;
   readonly examTimerEnabled: boolean;
   readonly theme: ThemePreference;
+  readonly morse: WebMorsePreferences;
 }
 
 export interface ExamAttemptItem {
@@ -91,6 +93,7 @@ export const defaultPreferences: WebPreferences = {
   practiceMode: "immediate",
   examTimerEnabled: false,
   theme: "system",
+  morse: defaultMorsePreferences,
 };
 
 const DB_VERSION = 3;
@@ -165,7 +168,7 @@ export class ProgressStore {
     const record = await requestToPromise<StoredPreferenceRecord | undefined>(
       db.transaction("preferences", "readonly").objectStore("preferences").get(PREFERENCES_KEY),
     );
-    return { ...defaultPreferences, ...(record?.value ?? {}) };
+    return normalizePreferences(record?.value);
   }
 
   async putPreferences(preferences: WebPreferences): Promise<void> {
@@ -210,7 +213,7 @@ export class ProgressStore {
       for (const attempt of data.lessonQuizAttempts ?? []) {
         quizAttemptStore.put(attempt);
       }
-      transaction.objectStore("preferences").put({ key: PREFERENCES_KEY, value: { ...defaultPreferences, ...data.preferences } });
+      transaction.objectStore("preferences").put({ key: PREFERENCES_KEY, value: normalizePreferences(data.preferences) });
     });
   }
 
@@ -406,7 +409,7 @@ export function validateProgressImport(raw: unknown): ImportValidationResult {
       examAttempts: examAttempts.map(normalizeExamAttempt) as ExamAttempt[],
       lessonProgress: lessonProgress as LessonProgressRecord[],
       lessonQuizAttempts: lessonQuizAttempts as LessonQuizAttempt[],
-      preferences: { ...defaultPreferences, ...(raw.preferences as WebPreferences) },
+      preferences: normalizePreferences(raw.preferences),
     },
   };
 }
@@ -449,11 +452,34 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+function normalizePreferences(value: unknown): WebPreferences {
+  if (!isRecord(value)) {
+    return defaultPreferences;
+  }
+  return {
+    practiceMode: value.practiceMode === "review-later" ? "review-later" : "immediate",
+    examTimerEnabled: typeof value.examTimerEnabled === "boolean" ? value.examTimerEnabled : defaultPreferences.examTimerEnabled,
+    theme: value.theme === "light" || value.theme === "dark" || value.theme === "system" ? value.theme : defaultPreferences.theme,
+    morse: normalizeMorsePreferences(isRecord(value.morse) ? value.morse : undefined),
+  };
+}
+
 function isPreferences(value: unknown): value is WebPreferences {
   return isRecord(value)
     && (value.practiceMode === "immediate" || value.practiceMode === "review-later")
     && typeof value.examTimerEnabled === "boolean"
-    && (value.theme === undefined || value.theme === "system" || value.theme === "light" || value.theme === "dark");
+    && (value.theme === undefined || value.theme === "system" || value.theme === "light" || value.theme === "dark")
+    && (value.morse === undefined || isMorsePreferences(value.morse));
+}
+
+function isMorsePreferences(value: unknown): value is WebMorsePreferences {
+  return isRecord(value)
+    && (value.enabled === undefined || typeof value.enabled === "boolean")
+    && (value.toneHz === undefined || typeof value.toneHz === "number")
+    && (value.characterWpm === undefined || typeof value.characterWpm === "number")
+    && (value.effectiveWpm === undefined || typeof value.effectiveWpm === "number")
+    && (value.timingProfile === undefined || value.timingProfile === "isedParis" || value.timingProfile === "ric1Literal" || value.timingProfile === "general")
+    && (value.volume === undefined || typeof value.volume === "number");
 }
 
 function validateQuestionProgressRecord(value: unknown, index: number): string[] {

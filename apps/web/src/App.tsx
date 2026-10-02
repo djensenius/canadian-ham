@@ -8,6 +8,8 @@ import {
 import { Component, createRef, useEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode, type RefObject } from "react";
 
 import { LanguageToggle } from "./components/LanguageToggle";
+import { textToTimedMorse } from "@canadian-ham/morse-engine";
+
 import { MarkdownContent } from "./components/MarkdownContent";
 import { PwaStatus } from "./components/PwaStatus";
 import {
@@ -49,6 +51,8 @@ import {
   t,
   type InterfaceLanguage,
 } from "./lib/i18n";
+import { WebMorsePlayer } from "./lib/morseAudio";
+import { morseISEDExamPreset, morseTimingFromPreferences, normalizeMorsePreferences, type WebMorseTimingProfileName } from "./lib/morseSettings";
 import { applyThemePreference, mirrorThemePreference, readStoredThemePreference } from "./lib/theme";
 import {
   applyPracticeAnswer,
@@ -61,7 +65,7 @@ import {
   type PracticeScope,
 } from "./lib/studyEngine";
 
-type Route = "home" | "learn" | "module" | "lesson" | "practice" | "mock" | "results" | "settings" | "about";
+type Route = "home" | "learn" | "module" | "lesson" | "practice" | "mock" | "results" | "morse" | "settings" | "about";
 type View = Route;
 type PreferencesPatch = Partial<WebPreferences>;
 
@@ -204,7 +208,7 @@ function hashSegments(hash = globalThis.location?.hash ?? ""): readonly string[]
 }
 
 function isRoute(value: string): value is Route {
-  return value === "home" || value === "learn" || value === "practice" || value === "mock" || value === "results" || value === "settings" || value === "about";
+  return value === "home" || value === "learn" || value === "practice" || value === "mock" || value === "results" || value === "morse" || value === "settings" || value === "about";
 }
 
 export function App(props: AppProps) {
@@ -341,6 +345,12 @@ function AppContent({
   }, [interfaceLanguage]);
 
   useEffect(() => {
+    if (route === "morse" && !preferences.morse.enabled) {
+      navigate("settings");
+    }
+  }, [preferences.morse.enabled, route]);
+
+  useEffect(() => {
     applyThemePreference(preferences.theme);
     mirrorThemePreference(preferences.theme);
     if (preferences.theme !== "system") {
@@ -377,10 +387,11 @@ function AppContent({
   }
 
   function navigate(nextRoute: Route): void {
-    const nextHash = `#/${nextRoute}`;
+    const allowedRoute = nextRoute === "morse" && !preferences.morse.enabled ? "settings" : nextRoute;
+    const nextHash = `#/${allowedRoute}`;
     updateRouteForHash(nextHash);
     if (window.location.hash !== nextHash) {
-      window.location.hash = `/${nextRoute}`;
+      window.location.hash = `/${allowedRoute}`;
     }
   }
 
@@ -551,6 +562,7 @@ function AppContent({
         <button type="button" disabled={!initialStoreLoaded} aria-current={route === "learn" || route === "module" || route === "lesson" ? "page" : undefined} onClick={() => navigate("learn")}>{t(interfaceLanguage, "navLearn")}</button>
         <button type="button" disabled={!initialStoreLoaded} aria-current={route === "practice" ? "page" : undefined} onClick={() => practiceSession === null ? startPractice(practiceScope) : navigate("practice")}>{t(interfaceLanguage, "navPractice")}</button>
         <button type="button" disabled={!initialStoreLoaded} aria-current={route === "mock" ? "page" : undefined} onClick={() => navigate("mock")}>{t(interfaceLanguage, "navMockExam")}</button>
+        {preferences.morse.enabled ? <button type="button" disabled={!initialStoreLoaded} aria-current={route === "morse" ? "page" : undefined} onClick={() => navigate("morse")}>{t(interfaceLanguage, "navMorse")}</button> : null}
         <button type="button" disabled={!initialStoreLoaded} aria-current={route === "settings" ? "page" : undefined} onClick={() => navigate("settings")}>{t(interfaceLanguage, "navSettings")}</button>
         <button type="button" disabled={!initialStoreLoaded} aria-current={route === "about" ? "page" : undefined} onClick={() => navigate("about")}>{t(interfaceLanguage, "navAbout")}</button>
       </nav>
@@ -633,6 +645,9 @@ function AppContent({
         ) : null}
         {initialStoreLoaded && route === "results" ? (
           <Results attempt={latestResult ?? latestAttempt} interfaceLanguage={interfaceLanguage} language={language} onStartPractice={startPractice} questionsById={bankQuestionsById} />
+        ) : null}
+        {initialStoreLoaded && route === "morse" && preferences.morse.enabled ? (
+          <MorseTrainerPreview interfaceLanguage={interfaceLanguage} preferences={preferences} />
         ) : null}
         {initialStoreLoaded && route === "settings" ? (
           <Settings
@@ -1758,6 +1773,74 @@ function About({ interfaceLanguage }: { readonly interfaceLanguage: InterfaceLan
   );
 }
 
+const MORSE_PRACTICE_TEXT = "KMRSU PARIS";
+
+function MorseTrainerPreview({ interfaceLanguage, preferences }: { readonly interfaceLanguage: InterfaceLanguage; readonly preferences: WebPreferences }) {
+  const playerRef = useRef<WebMorsePlayer | null>(null);
+  const revealTimerRef = useRef<number | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [revealed, setRevealed] = useState(false);
+  const [status, setStatus] = useState("");
+  const morsePreferences = preferences.morse;
+  const sequence = useMemo(() => textToTimedMorse(MORSE_PRACTICE_TEXT, morseTimingFromPreferences(morsePreferences)), [morsePreferences]);
+
+  useEffect(() => () => {
+    playerRef.current?.stop();
+    if (revealTimerRef.current !== null) {
+      window.clearTimeout(revealTimerRef.current);
+    }
+  }, []);
+
+  async function play(): Promise<void> {
+    playerRef.current ??= new WebMorsePlayer();
+    setRevealed(false);
+    setPlaying(true);
+    setStatus(t(interfaceLanguage, "morsePlaybackStarted"));
+    const handle = await playerRef.current.playText(MORSE_PRACTICE_TEXT, morsePreferences);
+    if (revealTimerRef.current !== null) {
+      window.clearTimeout(revealTimerRef.current);
+    }
+    revealTimerRef.current = window.setTimeout(() => {
+      setPlaying(false);
+      setRevealed(true);
+      setStatus(t(interfaceLanguage, "morsePlaybackFinished"));
+    }, Math.ceil(handle.durationSeconds * 1000) + 60);
+  }
+
+  function stop(): void {
+    playerRef.current?.stop();
+    if (revealTimerRef.current !== null) {
+      window.clearTimeout(revealTimerRef.current);
+      revealTimerRef.current = null;
+    }
+    setPlaying(false);
+    setStatus(t(interfaceLanguage, "morsePlaybackStopped"));
+  }
+
+  return (
+    <section className="card morse-trainer" aria-labelledby="morse-title">
+      <p className="eyebrow">{t(interfaceLanguage, "morseEyebrow")}</p>
+      <h2 id="morse-title">{t(interfaceLanguage, "morseTitle")}</h2>
+      <p>{t(interfaceLanguage, "morseIntro")}</p>
+      <dl className="morse-settings-summary">
+        <div><dt>{t(interfaceLanguage, "morseTone")}</dt><dd>{t(interfaceLanguage, "morseHertz", morsePreferences.toneHz)}</dd></div>
+        <div><dt>{t(interfaceLanguage, "morseCharacterSpeed")}</dt><dd>{t(interfaceLanguage, "morseWpm", morsePreferences.characterWpm)}</dd></div>
+        <div><dt>{t(interfaceLanguage, "morseEffectiveSpeed")}</dt><dd>{t(interfaceLanguage, "morseWpm", morsePreferences.effectiveWpm)}</dd></div>
+      </dl>
+      <div className="action-row">
+        <button type="button" className="primary-button" disabled={playing} onClick={() => void play()} aria-label={t(interfaceLanguage, "morsePlayPracticeAria")}>{t(interfaceLanguage, "morsePlay")}</button>
+        <button type="button" disabled={!playing} onClick={stop} aria-label={t(interfaceLanguage, "morseStopPracticeAria")}>{t(interfaceLanguage, "morseStop")}</button>
+      </div>
+      <p className="morse-duration">{t(interfaceLanguage, "morseDuration", sequence.totalDurationSeconds.toFixed(1))}</p>
+      <div aria-live="polite" aria-atomic="true">{status ? <p>{status}</p> : null}</div>
+      <section className="morse-copy-card" aria-labelledby="morse-copy-title">
+        <h3 id="morse-copy-title">{t(interfaceLanguage, "morsePracticeTextTitle")}</h3>
+        {revealed ? <p className="morse-copy" lang="en">{sequence.normalizedText}</p> : <p>{t(interfaceLanguage, "morseTextHidden")}</p>}
+      </section>
+    </section>
+  );
+}
+
 interface SettingsProps {
   readonly interfaceLanguage: InterfaceLanguage;
   readonly store: ProgressStore;
@@ -1882,6 +1965,20 @@ function Settings({ interfaceLanguage, store, now, preferences, statusMessage, o
     }
   }
 
+  async function saveMorsePreference(patch: Partial<WebPreferences["morse"]>): Promise<void> {
+    try {
+      const nextMorse = normalizeMorsePreferences({ ...preferences.morse, ...patch });
+      const savedLatestRequest = await onSetPreferences({ morse: nextMorse });
+      if (!savedLatestRequest) {
+        return;
+      }
+      setErrors([]);
+      setMessage(t(interfaceLanguage, "morseSettingsSaved"));
+    } catch (error) {
+      setErrors([t(interfaceLanguage, "errorSavePreferences", formatError(error))]);
+    }
+  }
+
   return (
     <section className="card settings" aria-labelledby="settings-title">
       <h2 id="settings-title">{t(interfaceLanguage, "settingsTitle")}</h2>
@@ -1898,6 +1995,23 @@ function Settings({ interfaceLanguage, store, now, preferences, statusMessage, o
         <label><input type="radio" name="interface-language" checked={interfaceLanguage === "en"} onChange={() => chooseInterfaceLanguage("en")} /> <span lang={englishTextLang(interfaceLanguage)}>{t(interfaceLanguage, "languageEnglish")}</span></label>
         <label><input type="radio" name="interface-language" checked={interfaceLanguage === "fr"} onChange={() => chooseInterfaceLanguage("fr")} /> <span lang="fr">{t(interfaceLanguage, "languageFrench")}</span></label>
       </fieldset>
+      <section className="settings-panel" aria-labelledby="morse-settings-title">
+        <h3 id="morse-settings-title">{t(interfaceLanguage, "morseSettingsTitle")}</h3>
+        <p>{t(interfaceLanguage, "morseSettingsIntro")}</p>
+        <label className="stacked-control"><span>{t(interfaceLanguage, "morsePreviewToggle")}</span><input type="checkbox" checked={preferences.morse.enabled} onChange={(event) => void saveMorsePreference({ enabled: event.currentTarget.checked })} /></label>
+        <div className="settings-grid">
+          <label className="stacked-control"><span>{t(interfaceLanguage, "morseTone")}</span><input type="number" min="400" max="900" step="1" value={preferences.morse.toneHz} onChange={(event) => void saveMorsePreference({ toneHz: event.currentTarget.valueAsNumber })} /></label>
+          <label className="stacked-control"><span>{t(interfaceLanguage, "morseCharacterSpeed")}</span><input type="number" min="12" max="25" step="1" value={preferences.morse.characterWpm} onChange={(event) => void saveMorsePreference({ characterWpm: event.currentTarget.valueAsNumber })} /></label>
+          <label className="stacked-control"><span>{t(interfaceLanguage, "morseEffectiveSpeed")}</span><input type="number" min="5" max={preferences.morse.characterWpm} step="1" value={preferences.morse.effectiveWpm} onChange={(event) => void saveMorsePreference({ effectiveWpm: event.currentTarget.valueAsNumber })} /></label>
+          <label className="stacked-control"><span>{t(interfaceLanguage, "morseVolume")}</span><input type="range" min="0" max="1" step="0.05" value={preferences.morse.volume} onChange={(event) => void saveMorsePreference({ volume: event.currentTarget.valueAsNumber })} /></label>
+          <label className="stacked-control"><span>{t(interfaceLanguage, "morseTimingProfile")}</span><select value={preferences.morse.timingProfile} onChange={(event) => void saveMorsePreference({ timingProfile: event.currentTarget.value as WebMorseTimingProfileName })}>
+            <option value="isedParis">{t(interfaceLanguage, "morseTimingISEDParis")}</option>
+            <option value="ric1Literal">{t(interfaceLanguage, "morseTimingRIC1Literal")}</option>
+            <option value="general">{t(interfaceLanguage, "morseTimingGeneral")}</option>
+          </select></label>
+        </div>
+        <button type="button" onClick={() => void onSetPreferences({ morse: morseISEDExamPreset(preferences.morse) }).then((saved) => { if (saved) setMessage(t(interfaceLanguage, "morsePresetApplied")); })}>{t(interfaceLanguage, "morseISEDExamPreset")}</button>
+      </section>
       <div className="action-row">
         <button type="button" onClick={() => void exportProgress()}>{t(interfaceLanguage, "exportProgress")}</button>
         <label className="file-control">
