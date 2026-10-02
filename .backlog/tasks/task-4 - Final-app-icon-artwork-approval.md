@@ -31,7 +31,10 @@ Owner task. The current generated icon draft (design/app-icon/exports) is wired 
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Promote the owner-approved round-3 01-hex-top hex-beam mark into a deterministic production renderer and retire obsolete antenna SVG/Swift sources.\n2. Regenerate the export contract in design/app-icon/exports, including layered Apple stacks, tvOS Top Shelf art, web icons, and the preview sheet.\n3. Install regenerated outputs into Apple asset catalogues and the web public assets without changing target membership.\n4. Inspect preview/small renders, run web and Apple validation, then check remaining acceptance criteria and mark task Done.
+1. Promote the owner-approved round-3 01-hex-top hex-beam mark into a deterministic production renderer and retire obsolete antenna SVG/Swift sources.
+2. Regenerate the export contract in design/app-icon/exports, including layered Apple stacks, tvOS Top Shelf art, web icons, and the preview sheet.
+3. Install regenerated outputs into Apple asset catalogues and the web public assets without changing target membership.
+4. Inspect preview/small renders, run web and Apple validation, then check remaining acceptance criteria and mark task Done.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
