@@ -67,11 +67,21 @@ final class LocalizationCatalogTests: XCTestCase {
             String(format: missingResourceFormat, locale: locale, "manifest"),
             "Ressource intégrée manquante : manifest.json"
         )
-        XCTAssertEqual(
-            frenchBundle.localizedString(forKey: "Forced store open failure for UI testing.", value: nil, table: nil),
-            "Échec forcé de l’ouverture du stockage pour les tests d’interface."
-        )
         XCTAssertEqual(localizedAnsweredOutOfTotal(answered: 3, total: 100), "Answered 3 of 100")
+    }
+
+    func testQuestionBankLoadErrorDescriptionUsesFrenchLocale() throws {
+        let error = QuestionBankLoadError.missingResource("manifest")
+        XCTAssertEqual(error.errorDescription, error.localizedMessage(bundle: .main))
+
+        for localeIdentifier in ["fr", "fr-CA"] {
+            let bundle = try localizationBundle(for: localeIdentifier)
+            XCTAssertEqual(
+                error.localizedMessage(bundle: bundle),
+                "Ressource intégrée manquante : manifest.json",
+                "QuestionBankLoadError should use the French runtime localization for \(localeIdentifier)."
+            )
+        }
     }
 
     func testLocalizedNullableTextAndLanguageFallsBackToEnglish() {
@@ -110,21 +120,12 @@ final class LocalizationCatalogTests: XCTestCase {
         return true
     }
 
-    private func frenchLocalizationBundle() throws -> Bundle {
-        var bundleCandidates = [Bundle.main.bundleURL, Bundle(for: type(of: self)).bundleURL]
-        for parent in bundleCandidates.map({ $0.deletingLastPathComponent() }) {
-            if let appBundles = try? FileManager.default.contentsOfDirectory(
-                at: parent,
-                includingPropertiesForKeys: nil
-            ).filter({ $0.pathExtension == "app" }) {
-                bundleCandidates.append(contentsOf: appBundles)
-            }
-        }
-
+    private func localizationBundle(for localeIdentifier: String) throws -> Bundle {
+        let bundleCandidates = try localizedResourceBundleCandidates()
         for bundleURL in bundleCandidates {
             let lprojCandidates = [
-                bundleURL.appendingPathComponent("fr.lproj", isDirectory: true),
-                bundleURL.appendingPathComponent("Contents/Resources/fr.lproj", isDirectory: true)
+                bundleURL.appendingPathComponent("\(localeIdentifier).lproj", isDirectory: true),
+                bundleURL.appendingPathComponent("Contents/Resources/\(localeIdentifier).lproj", isDirectory: true)
             ]
             for lprojURL in lprojCandidates {
                 let stringsURL = lprojURL.appendingPathComponent("Localizable.strings")
@@ -136,7 +137,25 @@ final class LocalizationCatalogTests: XCTestCase {
             }
         }
 
-        XCTFail("Could not find fr.lproj with compiled Localizable resources. Candidates: \(bundleCandidates.map(\.path).joined(separator: ", "))")
+        XCTFail("Could not find \(localeIdentifier).lproj with compiled Localizable resources. Candidates: \(bundleCandidates.map(\.path).joined(separator: ", "))")
         throw CocoaError(.fileNoSuchFile)
+    }
+
+    private func frenchLocalizationBundle() throws -> Bundle {
+        try localizationBundle(for: "fr")
+    }
+
+    private func localizedResourceBundleCandidates() throws -> [URL] {
+        var bundleCandidates = [Bundle.main.bundleURL, Bundle(for: type(of: self)).bundleURL]
+        for parent in bundleCandidates.map({ $0.deletingLastPathComponent() }) {
+            if let appBundles = try? FileManager.default.contentsOfDirectory(
+                at: parent,
+                includingPropertiesForKeys: nil
+            ).filter({ $0.pathExtension == "app" }) {
+                bundleCandidates.append(contentsOf: appBundles)
+            }
+        }
+
+        return bundleCandidates
     }
 }

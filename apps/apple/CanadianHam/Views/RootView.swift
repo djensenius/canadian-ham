@@ -301,7 +301,7 @@ struct RootView: View {
         do {
 #if DEBUG
             if ProcessInfo.processInfo.arguments.contains("-CanadianHamForceStoreOpenError") {
-                throw ProgressStoreError.openFailed(localizedForcedStoreOpenFailureForUITesting())
+                throw ProgressStoreError.openFailed(forcedStoreOpenFailureForUITesting())
             }
             if ProcessInfo.processInfo.arguments.contains("-CanadianHamResetDataOnLaunch") {
                 ProgressStoreService.resetPersistentStoreFiles()
@@ -432,10 +432,12 @@ private func localizedSubsectionCount(_ count: Int) -> String {
     String.localizedStringWithFormat(String(localized: "%lld subsections"), count)
 }
 
-private func localizedForcedStoreOpenFailureForUITesting() -> String {
-    String(localized: "Forced store open failure for UI testing.")
+#if DEBUG
+private func forcedStoreOpenFailureForUITesting() -> String {
+    "Forced store open failure for UI testing."
 }
 
+#endif
 private struct StoreRecoveryView: View {
     let message: String
     let reset: () -> Void
