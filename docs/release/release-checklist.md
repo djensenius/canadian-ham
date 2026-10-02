@@ -10,7 +10,7 @@ Record the commit SHA, date, tester, and pass/fail notes for every checked item.
 - [ ] Complete `task-1.1`: record the ISED written permission reference number, date, and exact scope in [`docs/content-licensing.md`](../content-licensing.md), including explicit permission to bundle verbatim EN/FR question text as web and Apple app data.
 - [ ] Confirm the permission scope covers every release artifact: generated question JSON, bundled Apple resources, web static assets/PWA cache, and any release notes or About text that mention ISED material.
 - [ ] Complete `task-1.2`: update [`docs/release/privacy-label-evidence.md`](privacy-label-evidence.md) with fresh release-commit evidence and check its release-commit follow-up commands.
-- [ ] Complete `task-1.3`: add static web deploy/CSP/host-log documentation and the post-deploy offline smoke test. The planned paths from `task-1.3` are `docs/release/web-deploy.md` and `docs/release/web-offline-smoke-test.md`; they are intentionally plain code paths until task-1.3 creates them so `pnpm check:links` can pass on this branch.
+- [ ] Complete `task-1.3`: add static web deploy/CSP/host-log documentation in [`docs/release/web-deploy.md`](web-deploy.md) and the post-deploy offline smoke test in [`docs/release/web-offline-smoke-test.md`](web-offline-smoke-test.md).
 - [ ] Complete `task-1.4`: replace all draft/pending About-page attribution with the exact wording approved by the recorded ISED permission, and resolve or document legal-review/French-translation status.
 - [ ] Complete `task-1.5`: keep this consolidated checklist current with the release evidence.
 - [ ] Complete `task-1.6`: run the release-candidate pass on one commit and record CI, Apple `xbuild`, consolidated checklist, and accepted-failure evidence.
@@ -58,10 +58,10 @@ Record the commit SHA, date, tester, and pass/fail notes for every checked item.
 
 ## Offline web
 
-- [ ] Complete `task-1.3` before public deployment. Its deployment documentation will live at `docs/release/web-deploy.md` and its post-deploy offline smoke test will live at `docs/release/web-offline-smoke-test.md`; these are plain code paths on this branch because task-1.3 will add the files.
+- [ ] Complete `task-1.3` before public deployment, including [`docs/release/web-deploy.md`](web-deploy.md) and [`docs/release/web-offline-smoke-test.md`](web-offline-smoke-test.md).
 - [ ] Before deployment, confirm `task-1.1` permission is recorded and [`docs/content-licensing.md` public-release gate](../content-licensing.md#public-release-gate) is satisfied; `task-1.3` AC #4 forbids deployment before then.
-- [ ] Follow `docs/release/web-deploy.md` from `task-1.3` to verify static hosting configuration, CSP that blocks third-party origins, and host log-retention documentation.
-- [ ] Follow `docs/release/web-offline-smoke-test.md` from `task-1.3` after deployment: load the app, install/open PWA if applicable, go offline, practise, complete a mock exam, export/import progress, reset, and confirm no third-party requests.
+- [ ] Follow [`docs/release/web-deploy.md`](web-deploy.md) from `task-1.3` to verify static hosting configuration, CSP that blocks third-party origins, and host log-retention documentation.
+- [ ] Follow [`docs/release/web-offline-smoke-test.md`](web-offline-smoke-test.md) from `task-1.3` after deployment: load the app, install/open PWA if applicable, go offline, practise, complete a mock exam, export/import progress, reset, and confirm no third-party requests.
 - [ ] Record deployment URL, commit SHA, CSP evidence, host log-retention setting, browser/devtools request evidence, service-worker/cache readiness, and smoke-test pass/fail notes.
 
 ## Store submission

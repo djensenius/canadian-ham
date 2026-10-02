@@ -24,6 +24,24 @@ function allowDevInlineStyles(): Plugin {
   };
 }
 
+export function resolveWebBase(env: NodeJS.ProcessEnv = process.env): string {
+  const configuredBase = env.CANADIAN_HAM_WEB_BASE_PATH;
+  if (configuredBase === undefined || configuredBase.trim() === "") {
+    return "./";
+  }
+
+  if (configuredBase === "./") {
+    return configuredBase;
+  }
+  if (!configuredBase.startsWith("/") || !configuredBase.endsWith("/")) {
+    throw new Error("CANADIAN_HAM_WEB_BASE_PATH must be './' or an absolute path that starts and ends with '/'.");
+  }
+  if (configuredBase.includes("//") || configuredBase.includes("..")) {
+    throw new Error("CANADIAN_HAM_WEB_BASE_PATH must not contain empty path segments or '..'.");
+  }
+  return configuredBase;
+}
+
 function canadianHamPwa(): Plugin {
   let root = process.cwd();
   return {
@@ -91,7 +109,7 @@ function walkPublicDir(directory: string): string[] {
 }
 
 export default defineConfig({
-  base: "./",
+  base: resolveWebBase(),
   plugins: [allowDevInlineStyles(), canadianHamPwa()],
   test: {
     environment: "jsdom",
