@@ -1,9 +1,11 @@
 ---
 id: TASK-12.3
 title: Morse audio drivers and settings
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@pi-worker'
 created_date: '2026-10-02 01:12'
+updated_date: '2026-10-02 15:47'
 labels:
   - web
   - apple
@@ -28,3 +30,9 @@ Why: learners must hear clean, click-free Morse offline on every platform, with 
 - [ ] #2 Settings for tone (400-900 Hz, default 650), character speed (12-25, default 15), effective speed (5 up to the character speed, default 5), timing profile and trainer volume, plus a one-tap ISED exam preset (12/5)
 - [ ] #3 The Morse feature stays off by default until v1 Basic ships; no network or new permissions; tests pass on web and all four Apple platforms
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inspect existing web and Apple settings/navigation/persistence/test patterns plus the merged Morse engine APIs.\n2. Add local Morse settings with default-off preview toggle, clamping, ISED preset, and localized EN/FR UI copy.\n3. Implement web Web Audio scheduling/playback UI behind the toggle and tests for scheduling/gesture/settings.\n4. Wire packages/morse-swift into Apple targets, add AVAudioEngine/AVAudioSourceNode playback and reachable Morse UI behind the toggle on each platform.\n5. Add Apple unit/UI tests, regenerate the Xcode project twice, then run required web, localization, network, and xbuild checks before finalizing.
+<!-- SECTION:PLAN:END -->
