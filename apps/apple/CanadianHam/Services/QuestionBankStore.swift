@@ -4,9 +4,13 @@ enum QuestionBankLoadError: Error, LocalizedError, Sendable {
     case missingResource(String)
 
     var errorDescription: String? {
+        localizedMessage(bundle: .main)
+    }
+
+    func localizedMessage(bundle: Bundle) -> String {
         switch self {
         case .missingResource(let name):
-            String(localized: "Missing bundled resource: \(name).json")
+            String(localized: "Missing bundled resource: \(name).json", bundle: bundle)
         }
     }
 }

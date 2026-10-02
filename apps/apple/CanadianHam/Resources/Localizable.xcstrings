@@ -2903,28 +2903,6 @@
         }
       }
     },
-    "Forced store open failure for UI testing." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Forced store open failure for UI testing."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Échec forcé de l’ouverture du stockage pour les tests d’interface."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Échec forcé de l’ouverture du stockage pour les tests d’interface."
-          }
-        }
-      }
-    },
     "Generate 100 questions: one from each subsection, mixed into a repeatable order. The optional timer is off by default." : {
       "localizations" : {
         "fr" : {
