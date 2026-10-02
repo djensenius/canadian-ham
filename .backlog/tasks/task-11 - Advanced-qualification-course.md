@@ -4,7 +4,7 @@ title: Advanced qualification course
 status: To Do
 assignee: []
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 01:11'
+updated_date: '2026-10-02 01:12'
 labels:
   - content
   - 'legacy:T-701'
@@ -23,7 +23,7 @@ Investigate and later build an Advanced qualification course as a separate scope
 <!-- AC:BEGIN -->
 - [x] #1 The research is source-checked and committed under docs/proposals/
 - [x] #2 The owner's decisions on timing and packaging are recorded
-- [ ] #3 Implementation subtasks are created from the approved plan
+- [x] #3 Implementation subtasks are created from the approved plan
 <!-- AC:END -->
 
 ## Implementation Notes
@@ -34,4 +34,6 @@ Owner decisions (2026-10-02, owner accepted all recommendations in docs/proposal
 2. Packaging: one app with a course switcher (web and Apple), not a separate Advanced app.
 3. ISED permission scope: the request covers the current Advanced bank (TXT and PDFs), future revisions and the structured offline format; it already names these (task-1.1 tracks sending it).
 4. Interim private-development policy: approved in principle to extend to verbatim Advanced source files under content/sources/ised/advanced-*/; the docs/content-licensing.md change is its own subtask and gates Advanced ingestion.
+
+2026-10-02: implementation subtasks created from the approved plan (see Subtasks).
 <!-- SECTION:NOTES:END -->
