@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:10'
-updated_date: '2026-10-02 03:17'
+updated_date: '2026-10-02 03:35'
 labels:
   - apple
   - accessibility
@@ -48,6 +48,8 @@ Implemented tvOS two-stroke focus rings for app-owned controls: category cards, 
 Evidence for AC1: docs/accessibility.md records WCAG contrast calculations from actual sRGB token values for light and dark modes; recorded minima are >=3:1 against unfocused border/fill and adjacent backgrounds (lowest recorded ratio 3.55:1).
 Evidence for AC2: focus indication is a 12 pt outer stroke plus 4 pt inner stroke and remains visible when Reduce Motion disables focus scale via accessibilityReduceMotion guards.
 Evidence for AC3: committed one PNG per state under docs/evidence (tvos-category-focus-ring.png, tvos-answer-focus-ring.png, tvos-primary-focus-ring.png). Opened each PNG and confirmed the ring is visible and the focused control is on screen. Final validation command passed: DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamTV -destination platform=tvOS Simulator,name=Apple TV 4K (3rd generation) -resultBundlePath /tmp/canadian-ham-task-24-tvos-final.xcresult test CODE_SIGNING_ALLOWED=NO. Per-test: 3 CanadianHamTVTests passed and 6 CanadianHamTVUITests passed, including light/dark accessibility-audit tests and focus-ring screenshot evidence test.
+
+Review round fix: task-8's old docs/evidence/tvos-next-question-focus-ring.png reference is superseded for this task by docs/evidence/tvos-primary-focus-ring.png. Implemented unclipped/crowding-safe tvOS focus rings, added light/dark/category/answer/primary/language PNG evidence plus a Reduce Motion launch-argument evidence state, and manually opened all nine PNGs to confirm the focused rings are fully visible, unclipped, and not crowded.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
