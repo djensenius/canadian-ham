@@ -1,9 +1,11 @@
 ---
 id: TASK-11.2
 title: Extend the interim content policy to Advanced source files
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@pi-worker'
 created_date: '2026-10-02 01:12'
+updated_date: '2026-10-02 11:51'
 labels:
   - content
   - docs
@@ -26,3 +28,12 @@ Why: the owner approved (2026-10-02) extending the interim private-development p
 - [ ] #2 AGENTS.md project notes no longer say the Basic 2025 bank is the only allowed source, and name the Advanced exception
 - [ ] #3 pnpm check:links passes
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Review the approved Advanced-course decisions and current licensing/project-note wording.
+2. Update docs/content-licensing.md to extend the private-development policy and content-class table to Advanced source directories without changing public-release gates.
+3. Update AGENTS.md project notes to keep Basic active while naming the Advanced vendoring exception.
+4. Run pnpm check:links, then record evidence, check acceptance criteria, summarize, and mark Done.
+<!-- SECTION:PLAN:END -->
