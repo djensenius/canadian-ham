@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-02 11:56'
+updated_date: '2026-10-02 13:58'
 labels:
   - web
   - apple
@@ -40,6 +40,8 @@ Why: every Morse feature (audio, drills, exam, sending) depends on exact, testab
 4. Implement matching SwiftPM library and tests against the same shared fixtures.
 5. Update CI only for the new TS package and document Swift local test status because existing CI has no macOS/Swift job.
 6. Run requested checks, record evidence, check ACs, finalize task, and commit logical slices.
+
+Review round: align TS/Swift character validation/scoring with RIC-1 §8.7, expand shared fixtures for code-point validation, timing/error edge cases (including 15/5), update process notes/follow-up task, and rerun requested checks.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -56,6 +58,8 @@ Validation evidence:
 - pnpm typecheck passed after installing workspace dependencies.
 - pnpm test passed (content-tools 95 tests, morse-engine 5 tests, web 83 tests).
 - pnpm check:links passed.
+
+Review round started from /Users/david/.cache/canadian-ham-reviews/t12.2.md. The current RIC-1 §8.3 weighting fixture is a synthetic stand-in pending the official sample text.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
