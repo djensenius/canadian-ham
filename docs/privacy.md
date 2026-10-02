@@ -59,7 +59,7 @@ Implementation rules:
 
 ## Web no-data design
 
-The web app is a fully static site. Static hosting still means the host may see client IP addresses and user-agent data in ordinary HTTP request logs for app assets; the project does not add application-level tracking or server-side progress storage.
+The web app is a fully static site. Static hosting still means the host may see client IP addresses and user-agent data in ordinary HTTP request logs for app assets; the project does not add application-level tracking or server-side progress storage. The prepared GitHub Pages deployment notes and release-time retention confirmation are in [release/web-deploy.md](release/web-deploy.md#host-logging-and-retention).
 
 Allowed local data:
 
