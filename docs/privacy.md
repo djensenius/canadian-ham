@@ -146,7 +146,7 @@ Policy: no network use by app features in v1.
 Verification targets:
 
 - No app networking module.
-- No remote URLs in runtime configuration except non-clickable attribution or source text where appropriate.
+- No remote URLs in runtime configuration except non-clickable attribution or source text, and the single RBR-4 citation link in lessons, which opens in the system browser only when tapped (the app makes no request itself).
 - No code paths using URL loading for remote resources.
 - No app entitlements for iCloud sync or push notifications.
 - Runtime smoke test in airplane mode covers first launch, lesson reading, practice, mock exam, progress persistence, export, import, and reset.

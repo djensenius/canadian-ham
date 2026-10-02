@@ -24,7 +24,7 @@ No web access was used while preparing this document. Exact App Store Connect sc
 
 ## Snapshot and command evidence
 
-Commands were run from `/Users/david/Developer/canadian-ham-task-1.2` at Git commit `788b49f95f8387525da42bacb4b7c81d2cbb4331` with a clean working tree. Final release validation must be re-run on the release commit.
+Commands were run from the repository root at Git commit `788b49f95f8387525da42bacb4b7c81d2cbb4331` with a clean working tree. Final release validation must be re-run on the release commit.
 
 | Evidence | Result |
 |---|---|
@@ -74,12 +74,14 @@ Supporting rationale from [`docs/privacy.md`](../privacy.md): the Apple app has 
 | Sensitive Info | Not collected | No sensitive-information feature exists; `docs/privacy.md` permits only local study progress/preferences and user-initiated JSON import/export. |
 | Contacts | Not collected | No contacts capability is documented or detected; `NSPrivacyCollectedDataTypes` is empty. |
 | User Content: emails or text messages, photos or videos, audio data, gameplay content, customer support, other user content | Not collected | The app has no account/customer-support upload flow and no media/user-content upload flow; user-initiated progress export remains a local JSON file unless the user takes it elsewhere outside the app. |
-| Browsing History | Not collected | Apple app is fully offline with no browser/webview feature; `pnpm check:apple-network` scans for browser/network symbols and passed. |
+| Browsing History | Not collected | The Apple app has no browser or web view and makes no network requests; `pnpm check:apple-network` scans for browser/network symbols and passed. Its only external URL is the RBR-4 citation link in lessons (`apps/apple/CanadianHam/Views/LearnViews.swift`), which opens in the system browser only when tapped; the app itself sends nothing and records nothing about the tap. |
 | Search History | Not collected | No server-side search exists; app content is bundled and offline; `NSPrivacyCollectedDataTypes` is empty. |
 | Identifiers: user ID, device ID | Not collected | No accounts, analytics, ads, tracking, third-party SDKs, or networking code; `NSPrivacyCollectedDataTypes` is empty and `pnpm check:apple-network` passed. |
 | Purchases: purchase history | Not collected | No purchase or subscription feature exists; `NSPrivacyCollectedDataTypes` is empty. |
 | Usage Data: product interaction, advertising data, other usage data | Not collected | Local study progress is not transmitted; docs disallow analytics, telemetry, advertising identifiers, and remote progress sync; `pnpm check:apple-network` passed. |
 | Diagnostics: crash data, performance data, other diagnostic data | Not collected | `docs/privacy.md` disallows automatic crash or diagnostic upload; no crash-reporting SDK is present; `pnpm check:apple-network` passed. |
+| Body: hands, head (visionOS) | Not collected | The visionOS target uses no ARKit, hand-tracking or head-tracking APIs and declares no such data in `PrivacyInfo.xcprivacy`; confirm this category list in App Store Connect at submission. |
+| Surroundings: environment scanning (visionOS) | Not collected | No ARKit scene reconstruction, world sensing or environment-scanning code exists in any target; confirm this category list in App Store Connect at submission. |
 | Other Data | Not collected | No other collected data is declared; `NSPrivacyCollectedDataTypes` is empty. |
 
 Because the answer is **Data Not Collected**, no App Store privacy label purposes are selected for analytics, advertising, third-party advertising, developer advertising or marketing, product personalization, app functionality, or other purposes. Confirm the exact follow-up flow in App Store Connect before release.

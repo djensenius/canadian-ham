@@ -470,7 +470,7 @@ export const frMessages = defineMessages({
   questionTextLoading: "Le texte de la question se charge depuis la banque incluse.",
   loading: "Chargement",
   settingsTitle: "Réglages et données locales",
-  settingsPrivacyCopy: "L’app n’utilise aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucune requête à des tiers ni aucun stockage côté serveur de la progression. La progression reste dans IndexedDB sur cet appareil, sauf si vous l’exportez; l’hébergeur statique peut tout de même journaliser les requêtes ordinaires d’actifs.",
+  settingsPrivacyCopy: "L’application n’utilise aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucune requête à des tiers ni aucun stockage côté serveur de la progression. La progression reste dans IndexedDB sur cet appareil, sauf si vous l’exportez; l’hébergeur statique peut tout de même journaliser les requêtes ordinaires de fichiers.",
   activeBank: (id: string, effectiveDate: string) => `Banque active : ${id}, en vigueur le ${effectiveDate}. L’exportation, l’importation et la réinitialisation sont déclenchées par l’utilisateur.`,
   themeLegend: "Thème",
   themeSystem: "Système",
