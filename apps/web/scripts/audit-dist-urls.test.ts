@@ -78,6 +78,16 @@ describe("dist URL audit", () => {
     ]);
   });
 
+  it("rejects duplicate CSP directives, which browsers would resolve to the first occurrence", async () => {
+    const distDir = await mkdtemp(join(tmpdir(), "canadian-ham-csp-audit-duplicate-"));
+    tempDirs.push(distDir);
+    await writeFile(join(distDir, "index.html"), `<meta http-equiv="Content-Security-Policy" content="default-src *; default-src 'self'; script-src 'self'">`, "utf8");
+
+    const findings = await auditDistCsp(distDir);
+    assert.ok(findings.some((finding) => finding.directive === "default-src" && finding.source === "duplicate directive"));
+    assert.ok(findings.some((finding) => finding.directive === "default-src" && finding.source.includes("*")), JSON.stringify(findings));
+  });
+
   it("fails when dist contains a PDF file", async () => {
     const distDir = await mkdtemp(join(tmpdir(), "canadian-ham-url-audit-pdf-"));
     tempDirs.push(distDir);

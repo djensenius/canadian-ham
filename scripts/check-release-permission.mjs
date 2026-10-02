@@ -50,6 +50,7 @@ export function checkReleasePermission(markdown) {
   const permissionDate = fields.get("Permission date") ?? "";
   const permissionScope = fields.get("Permission scope") ?? "";
   const coveredArtifacts = fields.get("Covered source artifacts") ?? "";
+  const coversAppData = fields.get("Covers verbatim question text as app data") ?? "";
   const evidenceLocation = fields.get("Storage location for permission evidence") ?? "";
   const releaseReview = fields.get("Release review status") ?? "";
 
@@ -64,8 +65,11 @@ export function checkReleasePermission(markdown) {
   if (!isConcreteValue(permissionDate) || permissionDateMatch === null || !isValidIsoDate(permissionDateMatch[1])) {
     errors.push("Permission date must be recorded in YYYY-MM-DD form.");
   }
-  if (!isConcreteValue(permissionScope) || !/\bquestion/iu.test(permissionScope)) {
-    errors.push("Permission scope must be recorded and cover the question-bank text.");
+  if (!isConcreteValue(permissionScope)) {
+    errors.push("Permission scope must be recorded.");
+  }
+  if (!/^yes$/iu.test(coversAppData.trim())) {
+    errors.push("'Covers verbatim question text as app data' must be exactly 'yes'.");
   }
   if (!isConcreteValue(coveredArtifacts)) {
     errors.push("Covered source artifacts must be recorded.");
@@ -230,8 +234,10 @@ function runSelfTest() {
   assert.match(checkReleasePermission(duplicateStatus).errors.join("\n"), /duplicate 'Request status' row/u);
 
   for (const [field, overrides, message] of [
-    ["scope", { scope: "Pending: paste concise scope from written permission" }, "Permission scope must be recorded and cover the question-bank text."],
-    ["scope", { scope: "Reference sheets only" }, "Permission scope must be recorded and cover the question-bank text."],
+    ["scope", { scope: "Pending: paste concise scope from written permission" }, "Permission scope must be recorded."],
+    ["app data", { coversAppData: "Pending" }, "'Covers verbatim question text as app data' must be exactly 'yes'."],
+    ["app data", { coversAppData: "no" }, "'Covers verbatim question text as app data' must be exactly 'yes'."],
+    ["app data", { coversAppData: "yes, except the apps" }, "'Covers verbatim question text as app data' must be exactly 'yes'."],
     ["artifacts", { artifacts: "Pending scope: request includes the Basic bank" }, "Covered source artifacts must be recorded."],
     ["evidence", { evidence: "Pending: private owner records" }, "Storage location for permission evidence must be recorded."],
     ["review", { review: "Blocked until scope is recorded" }, "Release review status must be recorded as cleared, not blocked."],
@@ -275,10 +281,11 @@ function permissionRecord({
   date,
   scope = "Reproduce the ISED Basic and Advanced question-bank text verbatim (EN/FR) as structured app data in the web and Apple apps, including future revisions",
   artifacts = "Basic 2025 question bank TXT and PDF; Advanced question bank",
+  coversAppData = "yes",
   evidence = "Owner's private records",
   review = "Cleared on 2026-10-03 against the recorded scope",
 }) {
-  return `# Content licensing and attribution plan\n\n## Permission record\n\n| Field | Value |\n|---|---|\n| Permission holder | Owner / project maintainer |\n| Request status | ${status} |\n| ISED reference number | ${reference} |\n| Permission date | ${date} |\n| Permission scope | ${scope} |\n| Covered source artifacts | ${artifacts} |\n| Storage location for permission evidence | ${evidence} |\n| Release review status | ${review} |\n\n## Interim private-development policy\n`;
+  return `# Content licensing and attribution plan\n\n## Permission record\n\n| Field | Value |\n|---|---|\n| Permission holder | Owner / project maintainer |\n| Request status | ${status} |\n| ISED reference number | ${reference} |\n| Permission date | ${date} |\n| Permission scope | ${scope} |\n| Covered source artifacts | ${artifacts} |\n| Covers verbatim question text as app data | ${coversAppData} |\n| Storage location for permission evidence | ${evidence} |\n| Release review status | ${review} |\n\n## Interim private-development policy\n`;
 }
 
 function isDirectCliInvocation() {

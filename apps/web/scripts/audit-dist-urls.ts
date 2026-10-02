@@ -142,6 +142,7 @@ export async function auditDistCsp(distDir = DIST_DIR): Promise<CspFinding[]> {
 
   const findings: CspFinding[] = [];
   let defaultSrcSources: readonly string[] | undefined;
+  const seenDirectives = new Set<string>();
   const cspLine = lineNumberForOffset(indexHtml, cspMetaMatch.index);
   for (const directiveText of contentMatch[1].split(";")) {
     const tokens = directiveText.trim().split(/\s+/u).filter((token) => token.length > 0);
@@ -149,6 +150,13 @@ export async function auditDistCsp(distDir = DIST_DIR): Promise<CspFinding[]> {
     if (directive === undefined) {
       continue;
     }
+    const directiveName = directive.toLowerCase();
+    if (seenDirectives.has(directiveName)) {
+      // Browsers honour only the first occurrence of a directive, so a duplicate can hide a weaker policy.
+      findings.push({ file: "index.html", line: cspLine, directive, source: "duplicate directive" });
+      continue;
+    }
+    seenDirectives.add(directiveName);
     if (directive === "default-src") {
       defaultSrcSources = sources;
       continue;
