@@ -1,9 +1,11 @@
 ---
 id: TASK-1.4
 title: Release About pages (web and Apple)
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@pi-worker'
 created_date: '2026-10-01 02:27'
+updated_date: '2026-10-02 05:57'
 labels:
   - release
   - web
