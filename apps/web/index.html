@@ -11,6 +11,9 @@
     <script>(()=>{const k="canadian-ham.theme-preference",c={light:"#F6EEDC",dark:"#201B16"};let t="system";try{const s=localStorage.getItem(k);if(s==="light"||s==="dark")t=s}catch{}const r=t==="dark"||t==="system"&&window.matchMedia?.("(prefers-color-scheme: dark)").matches?"dark":"light";if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;document.querySelector('meta[name="theme-color"]')?.setAttribute("content",c[r])})();</script>
     <link rel="manifest" href="%BASE_URL%manifest.webmanifest" />
     <link rel="icon" href="%BASE_URL%favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="%BASE_URL%favicon-16.png" sizes="16x16" type="image/png" />
+    <link rel="icon" href="%BASE_URL%favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="%BASE_URL%favicon-64.png" sizes="64x64" type="image/png" />
     <link rel="apple-touch-icon" href="%BASE_URL%apple-touch-icon-180.png" />
     <title>Canadian Ham</title>
   </head>

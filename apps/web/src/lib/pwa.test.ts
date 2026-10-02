@@ -26,6 +26,10 @@ describe("PWA manifest and service worker assets", () => {
     assert.ok(precache.includes("./"));
     assert.ok(precache.includes("./index.html"));
     assert.ok(precache.includes("./manifest.webmanifest"));
+    assert.ok(precache.includes("./favicon.svg"));
+    assert.ok(precache.includes("./favicon-16.png"));
+    assert.ok(precache.includes("./favicon-32.png"));
+    assert.ok(precache.includes("./favicon-64.png"));
     assert.ok(precache.includes("./pwa-icon-192.png"));
     assert.ok(precache.includes("./assets/questions-def456.json"));
     assert.ok(precache.every((entry) => !entry.endsWith(".map")));

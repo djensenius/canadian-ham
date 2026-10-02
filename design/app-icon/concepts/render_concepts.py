@@ -26,8 +26,8 @@ FONT = "/System/Library/Fonts/Helvetica.ttc"
 INK = "#15120F"
 INK_SOFT = "rgba(21,18,15,0.18)"
 WASH = "rgba(48,44,38,0.14)"
-BG_INNER = (255, 247, 232)  # #FFF7E8 from src/background.svg
-BG_OUTER = (246, 238, 220)  # #F6EEDC from src/background.svg
+BG_INNER = (255, 247, 232)  # #FFF7E8 warm cream centre
+BG_OUTER = (246, 238, 220)  # #F6EEDC warm cream edge
 
 CONCEPTS = [
     ("01-hex-top", "Top-down hex beam: straight sumi-e spreaders, a closed hexagon perimeter, pressed hub, and two light zigzag wire elements."),
