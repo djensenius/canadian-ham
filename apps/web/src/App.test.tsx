@@ -11,7 +11,7 @@ import { IDBFactory } from "fake-indexeddb";
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
 
 import { App, AppErrorBoundary, CitationLink, ExplanationPanel } from "./App";
-import { bankId, loadQuestions, loadQuestionsFromUrl, type Answer, type Question } from "./data/bank";
+import { bankId, categories, loadQuestions, loadQuestionsFromUrl, type Answer, type Category, type Question } from "./data/bank";
 import { explanationForQuestion, parseChoiceNotes } from "./data/explanations";
 import { lessonQuizzesById, buildLessonQuizItems } from "./data/quizzes";
 import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExportV1, type WebPreferences } from "./lib/progressStore";
@@ -348,6 +348,25 @@ describe("App accessibility and flows", () => {
     await user.tab();
 
     assert.equal(document.activeElement, skipLink);
+  });
+
+  it("marks English fallback category names with lang=en in the French interface", async () => {
+    window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
+    const category = categories[0]!;
+    const originalCategory: Category = { ...category, name: { ...category.name } };
+    try {
+      Object.assign(category, {
+        name: { ...category.name, fr: null },
+        frenchNameStatus: "pending verification",
+      });
+      const store = createStore("french-category-fallback-language");
+      render(<App store={store} now={() => fixedNow} seedFactory={() => "category-fallback-seed"} />);
+
+      const fallbackName = await screen.findByText(category.name.en);
+      assert.equal(fallbackName.getAttribute("lang"), "en");
+    } finally {
+      Object.assign(category, originalCategory);
+    }
   });
 
   it("renders main screens in French, sets document language, and has no axe violations", async () => {

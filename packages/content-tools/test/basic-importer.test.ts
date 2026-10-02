@@ -58,6 +58,16 @@ const SYNTHETIC_CATEGORY_COUNTS = [
 
 type SyntheticRow = string[];
 
+type SyntheticCategory = {
+  id: string;
+  name: { en: string; fr: string | null };
+  frenchNameStatus: string;
+  expectedQuestionCount: number;
+  expectedSubsectionCount: number;
+  examQuestionCount: number;
+  nameSource: string;
+};
+
 function sha256Hex(bytes: Uint8Array): string {
   return createHash("sha256").update(bytes).digest("hex");
 }
@@ -109,7 +119,23 @@ function syntheticExamFactsText(): string {
   return `# Synthetic exam facts\n\n## Privileges for learning content\n\n${citations}\n\n## How to re-verify when ISED updates the bank\n`;
 }
 
-async function writeSyntheticBankRoot(root: string, mutateRows?: (rows: SyntheticRow[]) => void): Promise<void> {
+function buildSyntheticCategories(): SyntheticCategory[] {
+  return SYNTHETIC_CATEGORY_COUNTS.map((category) => ({
+    id: category.id,
+    name: { en: `Category ${category.id}`, fr: null },
+    frenchNameStatus: "pending verification",
+    expectedQuestionCount: category.questionCount,
+    expectedSubsectionCount: category.subsectionCount,
+    examQuestionCount: category.examQuestionCount,
+    nameSource: "synthetic test fixture",
+  }));
+}
+
+async function writeSyntheticBankRoot(
+  root: string,
+  mutateRows?: (rows: SyntheticRow[]) => void,
+  mutateCategories?: (categories: SyntheticCategory[]) => void,
+): Promise<void> {
   const rows = buildSyntheticRows();
   mutateRows?.(rows);
   const sourceText = `${fixtureHeader()}${rows.map((row) => row.join(";")).join("\r\n")}\r\n`;
@@ -133,15 +159,9 @@ async function writeSyntheticBankRoot(root: string, mutateRows?: (rows: Syntheti
     }],
   }, null, 2)}\n`, "utf8");
   await writeFile(path.join(sourceDir, "SHA256SUMS"), `${sourceSha256}  questions/amat_basic_quest_delim.txt\n`, "utf8");
-  await writeFile(path.join(root, "content/categories.json"), `${JSON.stringify(SYNTHETIC_CATEGORY_COUNTS.map((category) => ({
-    id: category.id,
-    name: { en: `Category ${category.id}`, fr: null },
-    frenchNameStatus: "pending verification",
-    expectedQuestionCount: category.questionCount,
-    expectedSubsectionCount: category.subsectionCount,
-    examQuestionCount: category.examQuestionCount,
-    nameSource: "synthetic test fixture",
-  })), null, 2)}\n`, "utf8");
+  const categories = buildSyntheticCategories();
+  mutateCategories?.(categories);
+  await writeFile(path.join(root, "content/categories.json"), `${JSON.stringify(categories, null, 2)}\n`, "utf8");
   await writeFile(path.join(root, "docs/exam-facts.md"), syntheticExamFactsText(), "utf8");
 }
 
@@ -402,6 +422,52 @@ test("import fails on duplicate IDs, empty French fields, and position-dependent
     const root = await mkdtemp(path.join(tmpdir(), `canadian-ham-importer-${fixtureCase.name.replace(/\W/g, "-")}-`));
     try {
       await writeSyntheticBankRoot(root, fixtureCase.mutateRows);
+      await assert.rejects(
+        () => importBasicQuestionBank(root),
+        fixtureCase.expected,
+      );
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  }
+});
+
+test("import fails with clear errors for invalid category French-name status combinations", async () => {
+  const cases = [
+    {
+      name: "pending-with-name",
+      mutateCategories: (categories: SyntheticCategory[]) => {
+        categories[0]!.name.fr = "Nom en attente";
+      },
+      expected: /content\/categories\.json\[0\]\.name\.fr must be null while frenchNameStatus is pending verification/,
+    },
+    {
+      name: "verified-with-null",
+      mutateCategories: (categories: SyntheticCategory[]) => {
+        categories[0]!.frenchNameStatus = "verified";
+      },
+      expected: /content\/categories\.json\[0\]\.name\.fr must be a string when frenchNameStatus is verified/,
+    },
+    {
+      name: "empty-string",
+      mutateCategories: (categories: SyntheticCategory[]) => {
+        categories[0]!.name.fr = "";
+      },
+      expected: /content\/categories\.json\[0\]\.name\.fr must be null or a non-empty string/,
+    },
+    {
+      name: "unknown-status",
+      mutateCategories: (categories: SyntheticCategory[]) => {
+        categories[0]!.frenchNameStatus = "machine translated";
+      },
+      expected: /content\/categories\.json\[0\]\.frenchNameStatus must be pending verification or verified/,
+    },
+  ] as const;
+
+  for (const fixtureCase of cases) {
+    const root = await mkdtemp(path.join(tmpdir(), `canadian-ham-importer-${fixtureCase.name}-`));
+    try {
+      await writeSyntheticBankRoot(root, undefined, fixtureCase.mutateCategories);
       await assert.rejects(
         () => importBasicQuestionBank(root),
         fixtureCase.expected,
