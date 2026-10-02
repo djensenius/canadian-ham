@@ -192,8 +192,9 @@ jobs:
         run: pnpm check:apple-network
 
       # Local-only checks not run in GitHub CI: the Swift engine half of
-      # scripts/check-engine-parity.sh stays local-only because it requires
-      # xbuild/Xcode; Apple suites via xbuild stay local-only because they
-      # require Xcode simulators and AGENTS.md keeps Apple builds/tests local;
+      # scripts/check-engine-parity.sh and packages/morse-swift stay local-only
+      # because they require xbuild/Xcode; Apple suites via xbuild stay
+      # local-only because they require Xcode simulators and AGENTS.md keeps
+      # Apple builds/tests local;
       # scripts/check-apple-localizations.sh stays local-only because it
       # requires Xcode localization tooling.

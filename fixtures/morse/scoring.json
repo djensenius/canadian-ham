@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "kind": "morse-scoring",
+  "cases": [
+    {
+      "id": "five-errors-is-100-percent-pass",
+      "input": {
+        "expected": "ABCDEFGHIJ",
+        "received": "AXCYEZGHQR"
+      },
+      "expectedOutput": {
+        "errors": 5,
+        "wrong": 5,
+        "missing": 0,
+        "inserted": 0,
+        "passed": true,
+        "markPercent": 100,
+        "expectedLength": 10,
+        "receivedLength": 10
+      }
+    },
+    {
+      "id": "six-errors-is-99-percent-fail",
+      "input": {
+        "expected": "ABCDEFGHIJ",
+        "received": "AXCYEZPHQR"
+      },
+      "expectedOutput": {
+        "errors": 6,
+        "wrong": 6,
+        "missing": 0,
+        "inserted": 0,
+        "passed": false,
+        "markPercent": 99,
+        "expectedLength": 10,
+        "receivedLength": 10
+      }
+    },
+    {
+      "id": "inserted-extra-character-counts-as-one-error",
+      "input": {
+        "expected": "ABC",
+        "received": "ABXC"
+      },
+      "expectedOutput": {
+        "errors": 1,
+        "wrong": 0,
+        "missing": 0,
+        "inserted": 1,
+        "passed": true,
+        "markPercent": 100,
+        "expectedLength": 3,
+        "receivedLength": 4
+      }
+    },
+    {
+      "id": "missing-character-counts-as-one-error",
+      "input": {
+        "expected": "ABC",
+        "received": "AC"
+      },
+      "expectedOutput": {
+        "errors": 1,
+        "wrong": 0,
+        "missing": 1,
+        "inserted": 0,
+        "passed": true,
+        "markPercent": 100,
+        "expectedLength": 3,
+        "receivedLength": 2
+      }
+    },
+    {
+      "id": "figures-and-punctuation-count-one-error-each-when-graded",
+      "input": {
+        "expected": "A1/.",
+        "received": "A2/,"
+      },
+      "expectedOutput": {
+        "errors": 2,
+        "wrong": 2,
+        "missing": 0,
+        "inserted": 0,
+        "passed": true,
+        "markPercent": 100,
+        "expectedLength": 4,
+        "receivedLength": 4
+      }
+    },
+    {
+      "id": "invalid-received-character-counts-as-wrong-not-throw",
+      "input": {
+        "expected": "ABC",
+        "received": "ABÉ"
+      },
+      "expectedOutput": {
+        "errors": 1,
+        "wrong": 1,
+        "missing": 0,
+        "inserted": 0,
+        "passed": true,
+        "markPercent": 100,
+        "expectedLength": 3,
+        "receivedLength": 3
+      }
+    },
+    {
+      "id": "invalid-received-character-counts-as-inserted-not-throw",
+      "input": {
+        "expected": "ABC",
+        "received": "AB+C"
+      },
+      "expectedOutput": {
+        "errors": 1,
+        "wrong": 0,
+        "missing": 0,
+        "inserted": 1,
+        "passed": true,
+        "markPercent": 100,
+        "expectedLength": 3,
+        "receivedLength": 4
+      }
+    },
+    {
+      "id": "invalid-expected-copy-is-rejected",
+      "input": {
+        "expected": "AB+",
+        "received": "ABX"
+      },
+      "expectedError": {
+        "type": "invalidCharacters",
+        "invalidCharacters": [
+          {
+            "character": "+",
+            "index": 2
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,517 @@
+{
+  "schemaVersion": 1,
+  "kind": "morse-timing",
+  "cases": [
+    {
+      "id": "paris-ised-paris-12-5-lasts-12-seconds",
+      "input": {
+        "text": "PARIS",
+        "profile": {
+          "name": "isedParis"
+        }
+      },
+      "expectedOutput": {
+        "normalizedText": "PARIS",
+        "totalDurationSeconds": 12.0,
+        "durationsSeconds": {
+          "dot": 0.1,
+          "dash": 0.3,
+          "intraCharacterGap": 0.1,
+          "interCharacterGap": 1.4052631578947368,
+          "wordGap": 3.2789473684210524
+        },
+        "effectiveWpm": 5.0,
+        "symbolCounts": {
+          "dot": 10,
+          "dash": 4,
+          "intraCharacterGap": 9,
+          "interCharacterGap": 4,
+          "wordGap": 1
+        },
+        "lastSymbolKind": "wordGap",
+        "symbols": [
+          {
+            "kind": "dot",
+            "startSeconds": 0.0,
+            "character": "P"
+          },
+          {
+            "kind": "intraCharacterGap",
+            "startSeconds": 0.1,
+            "character": "P"
+          },
+          {
+            "kind": "dash",
+            "startSeconds": 0.2,
+            "character": "P"
+          },
+          {
+            "kind": "intraCharacterGap",
+            "startSeconds": 0.5,
+            "character": "P"
+          },
+          {
+            "kind": "dash",
+            "startSeconds": 0.6,
+            "character": "P"
+          },
+          {
+            "kind": "intraCharacterGap",
+            "startSeconds": 0.9,
+            "character": "P"
+          },
+          {
+            "kind": "dot",
+            "startSeconds": 1.0,
+            "character": "P"
+          },
+          {
+            "kind": "interCharacterGap",
+            "startSeconds": 1.1
+          },
+          {
+            "kind": "dot",
+            "startSeconds": 2.5052631578947366,
+            "character": "A"
+          },
+          {
+            "kind": "intraCharacterGap",
+            "startSeconds": 2.6052631578947367,
+            "character": "A"
+          },
+          {
+            "kind": "dash",
+            "startSeconds": 2.705263157894737,
+            "character": "A"
+          },
+          {
+            "kind": "interCharacterGap",
+            "startSeconds": 3.0052631578947366
+          },
+          {
+            "kind": "dot",
+            "startSeconds": 4.410526315789474,
+            "character": "R"
+          },
+          {
+            "kind": "intraCharacterGap",
+            "startSeconds": 4.510526315789473,
+            "character": "R"
+          },
+          {
+            "kind": "dash",
+            "startSeconds": 4.610526315789474,
+            "character": "R"
+          },
+          {
+            "kind": "intraCharacterGap",
+            "startSeconds": 4.910526315789474,
+            "character": "R"
+          },
+          {
+            "kind": "dot",
+            "startSeconds": 5.010526315789473,
+            "character": "R"
+          },
+          {
+            "kind": "interCharacterGap",
+            "startSeconds": 5.110526315789474
+          },
+          {
+            "kind": "dot",
+            "startSeconds": 6.515789473684211,
+            "character": "I"
+          },
+          {
+            "kind": "intraCharacterGap",
+            "startSeconds": 6.61578947368421,
+            "character": "I"
+          },
+          {
+            "kind": "dot",
+            "startSeconds": 6.71578947368421,
+            "character": "I"
+          },
+          {
+            "kind": "interCharacterGap",
+            "startSeconds": 6.815789473684211
+          },
+          {
+            "kind": "dot",
+            "startSeconds": 8.221052631578948,
+            "character": "S"
+          },
+          {
+            "kind": "intraCharacterGap",
+            "startSeconds": 8.321052631578947,
+            "character": "S"
+          },
+          {
+            "kind": "dot",
+            "startSeconds": 8.421052631578947,
+            "character": "S"
+          },
+          {
+            "kind": "intraCharacterGap",
+            "startSeconds": 8.521052631578947,
+            "character": "S"
+          },
+          {
+            "kind": "dot",
+            "startSeconds": 8.621052631578948,
+            "character": "S"
+          },
+          {
+            "kind": "wordGap",
+            "startSeconds": 8.721052631578948
+          }
+        ]
+      }
+    },
+    {
+      "id": "paris-ric1-literal-lasts-7-6-seconds",
+      "input": {
+        "text": "PARIS",
+        "profile": {
+          "name": "ric1Literal"
+        }
+      },
+      "expectedOutput": {
+        "normalizedText": "PARIS",
+        "totalDurationSeconds": 7.6,
+        "durationsSeconds": {
+          "dot": 0.1,
+          "dash": 0.3,
+          "intraCharacterGap": 0.1,
+          "interCharacterGap": 0.7,
+          "wordGap": 1.7
+        },
+        "effectiveWpm": 7.894736842105263,
+        "symbolCounts": {
+          "dot": 10,
+          "dash": 4,
+          "intraCharacterGap": 9,
+          "interCharacterGap": 4,
+          "wordGap": 1
+        },
+        "lastSymbolKind": "wordGap",
+        "symbols": [
+          {
+            "kind": "dot",
+            "startSeconds": 0.0,
+            "character": "P"
+          },
+          {
+            "kind": "intraCharacterGap",
+            "startSeconds": 0.1,
+            "character": "P"
+          },
+          {
+            "kind": "dash",
+            "startSeconds": 0.2,
+            "character": "P"
+          },
+          {
+            "kind": "intraCharacterGap",
+            "startSeconds": 0.5,
+            "character": "P"
+          },
+          {
+            "kind": "dash",
+            "startSeconds": 0.6,
+            "character": "P"
+          },
+          {
+            "kind": "intraCharacterGap",
+            "startSeconds": 0.9,
+            "character": "P"
+          },
+          {
+            "kind": "dot",
+            "startSeconds": 1.0,
+            "character": "P"
+          },
+          {
+            "kind": "interCharacterGap",
+            "startSeconds": 1.1
+          },
+          {
+            "kind": "dot",
+            "startSeconds": 1.8,
+            "character": "A"
+          },
+          {
+            "kind": "intraCharacterGap",
+            "startSeconds": 1.9,
+            "character": "A"
+          },
+          {
+            "kind": "dash",
+            "startSeconds": 2.0,
+            "character": "A"
+          },
+          {
+            "kind": "interCharacterGap",
+            "startSeconds": 2.3
+          },
+          {
+            "kind": "dot",
+            "startSeconds": 3.0,
+            "character": "R"
+          },
+          {
+            "kind": "intraCharacterGap",
+            "startSeconds": 3.1,
+            "character": "R"
+          },
+          {
+            "kind": "dash",
+            "startSeconds": 3.2,
+            "character": "R"
+          },
+          {
+            "kind": "intraCharacterGap",
+            "startSeconds": 3.5,
+            "character": "R"
+          },
+          {
+            "kind": "dot",
+            "startSeconds": 3.6,
+            "character": "R"
+          },
+          {
+            "kind": "interCharacterGap",
+            "startSeconds": 3.7
+          },
+          {
+            "kind": "dot",
+            "startSeconds": 4.4,
+            "character": "I"
+          },
+          {
+            "kind": "intraCharacterGap",
+            "startSeconds": 4.5,
+            "character": "I"
+          },
+          {
+            "kind": "dot",
+            "startSeconds": 4.6,
+            "character": "I"
+          },
+          {
+            "kind": "interCharacterGap",
+            "startSeconds": 4.7
+          },
+          {
+            "kind": "dot",
+            "startSeconds": 5.4,
+            "character": "S"
+          },
+          {
+            "kind": "intraCharacterGap",
+            "startSeconds": 5.5,
+            "character": "S"
+          },
+          {
+            "kind": "dot",
+            "startSeconds": 5.6,
+            "character": "S"
+          },
+          {
+            "kind": "intraCharacterGap",
+            "startSeconds": 5.7,
+            "character": "S"
+          },
+          {
+            "kind": "dot",
+            "startSeconds": 5.8,
+            "character": "S"
+          },
+          {
+            "kind": "wordGap",
+            "startSeconds": 5.9
+          }
+        ]
+      }
+    },
+    {
+      "id": "owner-default-farnsworth-15-5-paris-lasts-12-seconds",
+      "input": {
+        "text": "PARIS",
+        "profile": {
+          "characterWpm": 15.0,
+          "effectiveWpm": 5.0
+        }
+      },
+      "expectedOutput": {
+        "normalizedText": "PARIS",
+        "totalDurationSeconds": 12.0,
+        "durationsSeconds": {
+          "dot": 0.08,
+          "dash": 0.24,
+          "intraCharacterGap": 0.08,
+          "interCharacterGap": 1.503157894736842,
+          "wordGap": 3.5073684210526315
+        },
+        "effectiveWpm": 5.0,
+        "symbolCounts": {
+          "dot": 10,
+          "dash": 4,
+          "intraCharacterGap": 9,
+          "interCharacterGap": 4,
+          "wordGap": 1
+        },
+        "lastSymbolKind": "wordGap"
+      }
+    },
+    {
+      "id": "general-farnsworth-clamps-effective-speed-to-character-speed",
+      "input": {
+        "text": "EE",
+        "profile": {
+          "characterWpm": 12.0,
+          "effectiveWpm": 18.0
+        }
+      },
+      "expectedOutput": {
+        "normalizedText": "EE",
+        "totalDurationSeconds": 1.2,
+        "durationsSeconds": {
+          "dot": 0.1,
+          "dash": 0.3,
+          "intraCharacterGap": 0.1,
+          "interCharacterGap": 0.3,
+          "wordGap": 0.7
+        },
+        "effectiveWpm": 12.0,
+        "symbolCounts": {
+          "dot": 2,
+          "dash": 0,
+          "intraCharacterGap": 0,
+          "interCharacterGap": 1,
+          "wordGap": 1
+        },
+        "lastSymbolKind": "wordGap"
+      }
+    },
+    {
+      "id": "empty-string-produces-no-symbols",
+      "input": {
+        "text": "",
+        "profile": {
+          "name": "isedParis"
+        }
+      },
+      "expectedOutput": {
+        "normalizedText": "",
+        "totalDurationSeconds": 0.0,
+        "durationsSeconds": {
+          "dot": 0.1,
+          "dash": 0.3,
+          "intraCharacterGap": 0.1,
+          "interCharacterGap": 1.4052631578947368,
+          "wordGap": 3.2789473684210524
+        },
+        "effectiveWpm": 5.0,
+        "symbolCounts": {
+          "dot": 0,
+          "dash": 0,
+          "intraCharacterGap": 0,
+          "interCharacterGap": 0,
+          "wordGap": 0
+        },
+        "lastSymbolKind": null,
+        "symbols": []
+      }
+    },
+    {
+      "id": "lowercase-input-normalizes-before-timing",
+      "input": {
+        "text": "paris",
+        "profile": {
+          "name": "ric1Literal"
+        }
+      },
+      "expectedOutput": {
+        "normalizedText": "PARIS",
+        "totalDurationSeconds": 7.6,
+        "durationsSeconds": {
+          "dot": 0.1,
+          "dash": 0.3,
+          "intraCharacterGap": 0.1,
+          "interCharacterGap": 0.7,
+          "wordGap": 1.7
+        },
+        "effectiveWpm": 7.894736842105263,
+        "symbolCounts": {
+          "dot": 10,
+          "dash": 4,
+          "intraCharacterGap": 9,
+          "interCharacterGap": 4,
+          "wordGap": 1
+        },
+        "lastSymbolKind": "wordGap"
+      }
+    },
+    {
+      "id": "timing-rejects-invalid-text",
+      "input": {
+        "text": "HI!",
+        "profile": {
+          "name": "isedParis"
+        }
+      },
+      "expectedError": {
+        "type": "invalidCharacters",
+        "invalidCharacters": [
+          {
+            "character": "!",
+            "index": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "timing-rejects-zero-character-speed",
+      "input": {
+        "text": "E",
+        "profile": {
+          "characterWpm": 0.0,
+          "effectiveWpm": 5.0
+        }
+      },
+      "expectedError": {
+        "type": "invalidSpeed",
+        "messageContains": "characterWpm"
+      }
+    },
+    {
+      "id": "timing-rejects-negative-effective-speed",
+      "input": {
+        "text": "E",
+        "profile": {
+          "characterWpm": 12.0,
+          "effectiveWpm": -5.0
+        }
+      },
+      "expectedError": {
+        "type": "invalidSpeed",
+        "messageContains": "effectiveWpm"
+      }
+    },
+    {
+      "id": "timing-rejects-nan-character-speed",
+      "input": {
+        "text": "E",
+        "profile": {
+          "characterWpm": "NaN",
+          "effectiveWpm": 5.0
+        }
+      },
+      "expectedError": {
+        "type": "invalidSpeed",
+        "messageContains": "characterWpm"
+      }
+    }
+  ]
+}

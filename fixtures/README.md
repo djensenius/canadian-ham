@@ -5,6 +5,7 @@ Purpose: shared JSON fixtures that define cross-platform behaviour.
 Belongs here:
 
 - Engine fixtures under [`engine/`](engine/) that both TypeScript and Swift implementations must pass.
+- Morse timing and grading fixtures under [`morse/`](morse/) that both Morse implementations must pass.
 - Importer fixtures under [`importer/`](importer/) for source parsing and validation edge cases.
 
 Must not go here:
@@ -14,6 +15,17 @@ Must not go here:
 - Fixtures that depend on localized UI strings instead of stable IDs and invariants.
 
 Relevant docs: [`../docs/architecture.md`](../docs/architecture.md), [`../docs/requirements.md`](../docs/requirements.md).
+
+## Morse fixture contract
+
+All Morse fixtures are plain JSON and have `schemaVersion: 1` with one of these `kind` values:
+
+- `morse-timing`: text-to-timed-symbol profiles, including PARIS at `isedParis` (12.0 s), PARIS at `ric1Literal` (7.6 s), and effective-speed clamping.
+- `morse-word-weighting`: RIC-1 section 8.2 weighted character counts. The RIC-1 section 8.3 fixture is deliberately marked as a synthetic stand-in because [`../docs/proposals/morse-trainer.md`](../docs/proposals/morse-trainer.md) contains only a partial official sample with an ellipsis.
+- `morse-scoring`: RIC-1 section 8.7 / RIC-3 section 5.2 grading boundaries, including 5 errors passing, 6 failing, and inserted characters counting as errors.
+- `morse-validation`: the RIC-1 section 8.2 character set (`A-Z`, `0-9`, `.`, `,`, `?`, `-`, `/`) and rejection cases.
+
+The TypeScript Morse package and SwiftPM Morse package both load every JSON file under [`morse/`](morse/).
 
 ## Engine fixture contract
 
