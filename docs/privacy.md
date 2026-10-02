@@ -1,6 +1,6 @@
 # Privacy and no-data design
 
-The privacy goal is simple: the Apple app collects no data, and the web app has no accounts, no analytics, no third-party requests, and no server-side progress storage.
+The privacy goal is simple: the Apple app collects no data, and the web app has no accounts, no analytics and no server-side progress storage, and makes no third-party requests itself (citation links open another site only when the user follows them).
 
 This document supports [requirements.md](requirements.md) and [architecture.md](architecture.md). Licensing and attribution rules are in [content-licensing.md](content-licensing.md).
 

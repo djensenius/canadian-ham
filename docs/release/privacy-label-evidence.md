@@ -110,14 +110,14 @@ Because the answer is **Data Not Collected**, no App Store privacy label purpose
 
 ## Web privacy summary evidence
 
-[`docs/privacy.md`](../privacy.md) says the web app has no accounts, no analytics, no third-party requests, and no server-side progress storage. It also notes that static hosting may still expose client IP addresses and user-agent data to ordinary HTTP request logs for app assets.
+[`docs/privacy.md`](../privacy.md) says the web app has no accounts, no analytics and no server-side progress storage, and makes no third-party requests itself (citation links open another site only when the user follows them). It also notes that static hosting may still expose client IP addresses and user-agent data to ordinary HTTP request logs for app assets.
 
 The web Settings privacy copy now mirrors that summary:
 
 | Locale | Settings copy in `apps/web/src/lib/i18n.ts` |
 |---|---|
-| English | “No accounts, analytics, telemetry, ads, third-party requests, or server-side progress storage are used. Progress stays in IndexedDB on this device unless you export it; the static host may still log ordinary asset requests.” |
-| French | “L’app n’utilise aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucune requête à des tiers ni aucun stockage côté serveur de la progression. La progression reste dans IndexedDB sur cet appareil, sauf si vous l’exportez; l’hébergeur statique peut tout de même journaliser les requêtes ordinaires d’actifs.” |
+| English | “No accounts, analytics, telemetry, ads, or server-side progress storage are used, and the app sends no requests to third parties; citation links open another site only when you choose them. Progress stays in IndexedDB on this device unless you export it; the static host may still log ordinary asset requests.” |
+| French | “L’application n’utilise aucun compte, aucune analytique, aucune télémétrie, aucune publicité ni aucun stockage côté serveur de la progression, et n’envoie aucune requête à des tiers; les liens de référence n’ouvrent un autre site que si vous les choisissez. La progression reste dans IndexedDB sur cet appareil, sauf si vous l’exportez; l’hébergeur statique peut tout de même journaliser les requêtes ordinaires de fichiers.” |
 
 French copy follows [`docs/french-style.md`](../french-style.md): the only colon-sensitive nearby Settings copy continues to use a no-break space before `:`, and this privacy copy does not introduce a colon.
 
