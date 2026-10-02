@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:10'
-updated_date: '2026-10-02 01:13'
+updated_date: '2026-10-02 01:14'
 labels:
   - apple
   - l10n
@@ -27,3 +27,9 @@ Why: two small gaps from the task-8 review. (1) The French error tests only look
 - [ ] #2 The forced store-failure test string and its code path compile only in DEBUG or UI-testing builds and are absent from the Release build, verified by a Release build plus a check that the string is not in the built app's strings
 - [ ] #3 pnpm check:apple-l10n and the iOS and macOS xbuild suites pass
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Add a unit test that evaluates QuestionBankLoadError.missingResource("manifest").errorDescription with French language settings for fr and fr-CA and asserts the exact French text. 2. Gate the forced store-open failure launch argument and localized helper so they are only compiled for Debug/UI-test-capable builds and do not emit the forced-failure string into Release. 3. Validate with pnpm check:apple-l10n, iOS and macOS xbuild test suites, and a Release xbuild plus built-app string scan for the forced-failure text before checking acceptance criteria.
+<!-- SECTION:PLAN:END -->
