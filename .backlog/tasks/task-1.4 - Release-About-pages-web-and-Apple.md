@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 07:28'
+updated_date: '2026-10-02 08:06'
 labels:
   - release
   - web
@@ -51,4 +51,6 @@ Implemented About content ahead of task-1.1 using the current docs/content-licen
 Validation evidence for AC #1/#2: web About route passed App.test About coverage and axe in pnpm test; pnpm build:web and web dist URL audit passed with official source URL allowlist. Apple About content passed iOS, macOS, tvOS, and visionOS xbuild suites on the implementation tip; iOS rerun passed 27 UI/unit tests after one transient failure in testCanPracticeInFrenchAndSeeFeedback, and the targeted retry also passed. Apple localization, text-source, and no-network checks passed. AC #3 remains unchecked pending task-1.1 recorded ISED permission. AC #4 remains unchecked pending human legal review of English-only legal text/French localization decision.
 
 Fix round: relabelled the draft ISED attribution as not in effect with request status drafted; sent: pending; granted: pending across web, Apple and Localizable.xcstrings. Restored explicit pending-permission wording without claiming the request was sent or granted. tvOS About cards are focusable with a visible focus ring; targeted tvOS UI test testAboutLowerSectionsReachableWithRemote passed and docs/evidence/tvos-about-lower-sections-focus.png was opened/confirmed to show lower Disclaimer and Privacy sections with Privacy focused. Added iOS and visionOS UI reachability assertions for lower About text, plus an iOS French About test confirming legal text remains English. Updated release/privacy evidence docs to note RBR-4 and question-bank URLs are non-clickable About text. AC #3 and #4 remain unchecked pending task-1.1 and legal review.
+
+Full validation at tip 8f64831 (code commit 2893289): pnpm typecheck; pnpm test (content-tools 95/95, web 83/83); pnpm build:web; web dist URL audit; pnpm check:links; pnpm check:apple-l10n; node scripts/check-apple-text-sources.ts; pnpm check:apple-network; xbuild iOS 49/49 (incl. testFrenchAboutKeepsLegalTextInEnglish, testAboutShowsReleaseAttributionDisclaimerAndBankVersion and accessibility audits), macOS 21/21, tvOS 12/12 (incl. testAboutLowerSectionsReachableWithRemote, testAboutAccessibilityAuditLightAndDark), visionOS 9/9. All passed. Follow-up: task-29 (VoiceOver reading of combined tvOS About cards).
 <!-- SECTION:NOTES:END -->
