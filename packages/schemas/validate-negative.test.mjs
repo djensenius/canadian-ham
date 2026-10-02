@@ -137,6 +137,19 @@ test("generated bank categories reject authoritative count drift", () => {
   );
 });
 
+test("generated bank categories require verified French names to be non-empty", () => {
+  assertSchemaRejects(
+    readInvalidFixture("generated-bank-categories-verified-null.json"),
+    "generated-bank-categories.schema.json",
+    "expected exactly one oneOf branch to match",
+  );
+  assertSchemaRejects(
+    readInvalidFixture("generated-bank-categories-verified-empty.json"),
+    "generated-bank-categories.schema.json",
+    "$[0].name.fr: expected string length >= 1",
+  );
+});
+
 test("generated bank categories reject duplicate and reordered category IDs", () => {
   assertSchemaRejects(
     readInvalidFixture("generated-bank-categories-duplicate-id.json"),

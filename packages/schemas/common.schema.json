@@ -193,7 +193,37 @@
         },
         "nameSource": { "$ref": "#/$defs/nonEmptyString" }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["name", "frenchNameStatus"],
+          "properties": {
+            "frenchNameStatus": { "const": "pending verification" },
+            "name": {
+              "type": "object",
+              "required": ["fr"],
+              "properties": {
+                "fr": { "const": null }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["name", "frenchNameStatus"],
+          "properties": {
+            "frenchNameStatus": { "const": "verified" },
+            "name": {
+              "type": "object",
+              "required": ["fr"],
+              "properties": {
+                "fr": { "$ref": "#/$defs/nonEmptyString" }
+              }
+            }
+          }
+        }
+      ]
     },
     "generatedSubsection": {
       "type": "object",

@@ -14,9 +14,9 @@ import {
   allQuestionCount,
   bankId,
   categories,
-  categoryName,
+  categoryNameWithLanguage,
   loadQuestions,
-  localizedCategoryName,
+  localizedCategoryNameWithLanguage,
   manifest,
   questionsById,
   subsectionTitle,
@@ -725,9 +725,10 @@ function Home({ interfaceLanguage, readiness, weakSubsections, dueReviewCount, e
         <p>{t(interfaceLanguage, "readinessDueCount")} <strong>{dueReviewCount}</strong></p>
         <p>{t(interfaceLanguage, "readinessCompletedExams")} <strong>{examAttempts.length}</strong></p>
         {weakCategories.size > 0 ? (
-          <p>{t(interfaceLanguage, "readinessWeakCategories")} {[...weakCategories].map((categoryId, index) => (
-            <span key={categoryId}>{index > 0 ? ", " : null}<span lang={languageTag(interfaceLanguage)}>{categoryName(categoryId, interfaceLanguage)}</span></span>
-          ))}</p>
+          <p>{t(interfaceLanguage, "readinessWeakCategories")} {[...weakCategories].map((categoryId, index) => {
+            const name = categoryNameWithLanguage(categoryId, interfaceLanguage);
+            return <span key={categoryId}>{index > 0 ? ", " : null}<span lang={languageTag(name.language)}>{name.text}</span></span>;
+          })}</p>
         ) : <p>{t(interfaceLanguage, "readinessNoWeakCategory")}</p>}
         {weakSubsections.length > 0 ? (
           <details>
@@ -752,13 +753,16 @@ function Home({ interfaceLanguage, readiness, weakSubsections, dueReviewCount, e
           <strong>{allQuestionCount}</strong>
           <small>{t(interfaceLanguage, "mixedAllCategories")}</small>
         </button>
-        {categories.map((category) => (
-          <button className="category-card" type="button" key={category.id} onClick={() => onStartPractice({ type: "category", categoryId: category.id })}>
-            <span lang={languageTag(interfaceLanguage)}>{localizedCategoryName(category, interfaceLanguage)}</span>
-            <strong>{category.questionCount}</strong>
-            <small>{t(interfaceLanguage, "subsectionCount", category.subsectionCount)}</small>
-          </button>
-        ))}
+        {categories.map((category) => {
+          const name = localizedCategoryNameWithLanguage(category, interfaceLanguage);
+          return (
+            <button className="category-card" type="button" key={category.id} onClick={() => onStartPractice({ type: "category", categoryId: category.id })}>
+              <span lang={languageTag(name.language)}>{name.text}</span>
+              <strong>{category.questionCount}</strong>
+              <small>{t(interfaceLanguage, "subsectionCount", category.subsectionCount)}</small>
+            </button>
+          );
+        })}
       </div>
     </section>
   );
@@ -1237,7 +1241,10 @@ function Practice({
           <label>
             {t(interfaceLanguage, "category")}
             <select value={categoryId} onChange={(event) => setCategoryId(event.currentTarget.value)}>
-              {categories.map((category) => <option key={category.id} lang={languageTag(interfaceLanguage)} value={category.id}>{localizedCategoryName(category, interfaceLanguage)}</option>)}
+              {categories.map((category) => {
+                const name = localizedCategoryNameWithLanguage(category, interfaceLanguage);
+                return <option key={category.id} lang={languageTag(name.language)} value={category.id}>{name.text}</option>;
+              })}
             </select>
           </label>
         ) : null}
@@ -1667,7 +1674,7 @@ function Results({ attempt, interfaceLanguage, language, onStartPractice, questi
       <h3>{t(interfaceLanguage, "categoryBreakdown")}</h3>
       <ul>
         {attempt.score.categoryBreakdown.map((entry) => (
-          <li key={entry.categoryId}><span lang={languageTag(interfaceLanguage)}>{categoryName(entry.categoryId, interfaceLanguage)}</span>{colonSeparator(interfaceLanguage)}{entry.correct}/{entry.total} ({entry.percent.toFixed(0)}{interfaceLanguage === "fr" ? " %" : "%"})</li>
+          <li key={entry.categoryId}><CategoryNameText categoryId={entry.categoryId} interfaceLanguage={interfaceLanguage} />{colonSeparator(interfaceLanguage)}{entry.correct}/{entry.total} ({entry.percent.toFixed(0)}{interfaceLanguage === "fr" ? " %" : "%"})</li>
         ))}
       </ul>
       <button type="button" onClick={() => onStartPractice({ type: "weak" })}>{t(interfaceLanguage, "readinessPracticeWeak")}</button>
@@ -1929,9 +1936,14 @@ function controlsFromScope(scope: PracticeScope): { scopeKind: string; categoryI
   };
 }
 
+function CategoryNameText({ categoryId, interfaceLanguage }: { readonly categoryId: string; readonly interfaceLanguage: InterfaceLanguage }) {
+  const name = categoryNameWithLanguage(categoryId, interfaceLanguage);
+  return <span lang={languageTag(name.language)}>{name.text}</span>;
+}
+
 function ScopeValue({ interfaceLanguage, scope }: { readonly interfaceLanguage: InterfaceLanguage; readonly scope: PracticeScope }) {
   if (scope.type === "category") {
-    return <span lang={languageTag(interfaceLanguage)}>{categoryName(scope.categoryId, interfaceLanguage)}</span>;
+    return <CategoryNameText categoryId={scope.categoryId} interfaceLanguage={interfaceLanguage} />;
   }
   if (scope.type === "subsection") {
     return <>{scope.subsectionId}{colonSeparator(interfaceLanguage)}<span lang={englishTextLang(interfaceLanguage)}>{subsectionTitle(scope.subsectionId)}</span></>;
