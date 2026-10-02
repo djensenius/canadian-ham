@@ -156,6 +156,8 @@ The mock exam timer is optional and off by default.
 
 ## Manual release checklist
 
+For release-day execution, use the consolidated [release checklist](release/release-checklist.md#accessibility) alongside this manual accessibility checklist.
+
 - Keyboard-only web walkthrough completed.
 - macOS keyboard walkthrough completed with Full Keyboard Access enabled: open System Settings > Accessibility > Keyboard, turn on Full Keyboard Access, launch Canadian Ham, then use Tab/Shift-Tab, arrow keys, Space, Enter, and Escape to traverse Home, Practice, Mock exam, Results, Learn, Settings, import/export, and reset without a pointer; confirm focus remains visible, ordered, and trap-free.
 - VoiceOver walkthrough completed on at least one iOS/iPadOS device or simulator and macOS.

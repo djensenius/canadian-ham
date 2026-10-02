@@ -51,6 +51,8 @@ This interim policy is the owner's risk decision and is not legal advice. This p
 
 ## Public-release gate
 
+For release-day execution, use the consolidated [release checklist](release/release-checklist.md#gates) alongside this gate.
+
 All of the following actions are blocked until T-007 records written ISED permission with the reference number, date, scope, and explicit confirmation that the scope covers bundling verbatim question text as app data. The reference PDFs remain source artifacts and are not shipped in the apps:
 
 - making the GitHub repository public or adding outside collaborators;
@@ -167,6 +169,8 @@ When ISED updates the bank, follow the detailed [content update process](content
 8. Complete the [public-release gate](#public-release-gate) before any public exposure or distribution.
 
 ## Release checklist
+
+For release-day execution, use the consolidated [release checklist](release/release-checklist.md#content) and keep this source checklist as the licensing authority.
 
 Before any public release:
 

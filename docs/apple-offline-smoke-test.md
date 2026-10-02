@@ -4,6 +4,8 @@ This manual plan verifies the Apple app remains usable with no network path and 
 
 Run this plan after the relevant `xbuild` command for the platform under test and after `pnpm check:apple-network` passes.
 
+For release-day execution, use the consolidated [release checklist](release/release-checklist.md#offline-apple) alongside this Apple offline smoke test plan.
+
 ## Test setup
 
 1. Install a fresh build on the device or simulator under test.
