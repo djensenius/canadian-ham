@@ -175,6 +175,8 @@ Verification targets:
 
 ## Verification checklist
 
+For release-day execution, use the consolidated [release checklist](release/release-checklist.md#privacy) alongside this privacy verification checklist.
+
 Run before release and when dependencies change:
 
 1. Review dependencies for forbidden categories.

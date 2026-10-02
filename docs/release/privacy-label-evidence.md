@@ -2,6 +2,8 @@
 
 Prepared for Backlog `task-1.2` on 2026-10-02 UTC, before the release commit and before the ISED permission dependency is complete. This is a pre-release evidence snapshot; re-run the checks on the release commit before checking AC #3.
 
+For release-day execution, use the consolidated [release checklist](release-checklist.md#privacy) alongside this privacy-label evidence.
+
 ## Scope
 
 - Apple application targets under `apps/apple`: `CanadianHam` (iOS/iPadOS/macOS), `CanadianHamTV`, and `CanadianHamVision`.
