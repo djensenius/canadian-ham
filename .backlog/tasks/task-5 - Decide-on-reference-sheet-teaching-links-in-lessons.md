@@ -1,9 +1,11 @@
 ---
 id: TASK-5
 title: Decide on reference-sheet teaching links in lessons
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@coordinator'
 created_date: '2026-10-01 02:27'
+updated_date: '2026-10-02 02:15'
 labels:
   - content
   - needs-decision
@@ -24,3 +26,9 @@ The reference PDFs were dropped from both apps (owner decision). Lessons already
 - [ ] #1 The owner has decided between prose-only and explicit links
 - [ ] #2 The decision is recorded in this task's notes, and lessons are updated if needed
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Record the owner's decision. 2. Confirm lessons already reference the sheet in prose. 3. Close the task.
+<!-- SECTION:PLAN:END -->
