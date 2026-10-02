@@ -24,9 +24,9 @@ Why: the task-8 review found the tvOS focus ring (#8F2E1D) sits on the #A53A2A p
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Every focusable tvOS control's focus indicator has at least 3:1 contrast against both the unfocused state and the adjacent background, in light and dark modes, with the measured values recorded in docs/accessibility.md
-- [ ] #2 The indicator does not rely on scale alone (for example a light outer ring or a contrasting outline) and still works with Reduce Motion on
-- [ ] #3 tvOS UI tests and the tvOS accessibility audit pass via xbuild, and updated screenshots of focused primary, answer and category buttons are committed under docs/evidence
+- [x] #1 Every focusable tvOS control's focus indicator has at least 3:1 contrast against both the unfocused state and the adjacent background, in light and dark modes, with the measured values recorded in docs/accessibility.md
+- [x] #2 The indicator does not rely on scale alone (for example a light outer ring or a contrasting outline) and still works with Reduce Motion on
+- [x] #3 tvOS UI tests and the tvOS accessibility audit pass via xbuild, and updated screenshots of focused primary, answer and category buttons are committed under docs/evidence
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -50,10 +50,12 @@ Evidence for AC2: focus indication is a 12 pt outer stroke plus 4 pt inner strok
 Evidence for AC3: committed one PNG per state under docs/evidence (tvos-category-focus-ring.png, tvos-answer-focus-ring.png, tvos-primary-focus-ring.png). Opened each PNG and confirmed the ring is visible and the focused control is on screen. Final validation command passed: DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamTV -destination platform=tvOS Simulator,name=Apple TV 4K (3rd generation) -resultBundlePath /tmp/canadian-ham-task-24-tvos-final.xcresult test CODE_SIGNING_ALLOWED=NO. Per-test: 3 CanadianHamTVTests passed and 6 CanadianHamTVUITests passed, including light/dark accessibility-audit tests and focus-ring screenshot evidence test.
 
 Review round fix: task-8's old docs/evidence/tvos-next-question-focus-ring.png reference is superseded for this task by docs/evidence/tvos-primary-focus-ring.png. Implemented unclipped/crowding-safe tvOS focus rings, added light/dark/category/answer/primary/language PNG evidence plus a Reduce Motion launch-argument evidence state, and manually opened all nine PNGs to confirm the focused rings are fully visible, unclipped, and not crowded.
+
+Review-round validation passed: DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamTV -destination "platform=tvOS Simulator,name=Apple TV 4K (3rd generation)" -resultBundlePath /tmp/canadian-ham-task-24-tvos-review.xcresult test CODE_SIGNING_ALLOWED=NO. Per-test result: all 3 CanadianHamTVTests and all 6 CanadianHamTVUITests passed. Exported the focus-ring attachments from that xcresult into docs/evidence as PNG-only evidence for light/dark category, answer, primary, language, plus one Reduce Motion answer state; opened each PNG and confirmed the full ring is visible, unclipped, and not crowded.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Added a reusable two-stroke tvOS focus indicator that preserves the ink-on-cream visual style while meeting non-text contrast requirements across primary, answer, category, secondary, and language controls. Documented measured light/dark contrast ratios in docs/accessibility.md, committed one evidence PNG for focused category/answer/primary states, and verified with the full CanadianHamTV xbuild test suite plus tvOS accessibility audits.
+Fixed the task-24 review findings by adding scroll-content clearance for focus-scale/ring overflow, replacing plain tvOS buttons with a custom no-system-focus style for cards/answers, widening and spacing the language toggle, restoring a dashed disabled primary cue, documenting the three rendered ring bands, and expanding UI evidence/tests. Verified with xbuild CanadianHamTV full suite (3 unit tests + 6 UI tests passed), light/dark PNG evidence for category/answer/primary/language controls, and a Reduce Motion launch-argument screenshot.
 <!-- SECTION:FINAL_SUMMARY:END -->
