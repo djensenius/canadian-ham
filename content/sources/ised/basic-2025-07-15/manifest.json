@@ -2,7 +2,7 @@
   "manifestVersion": 1,
   "bankEffectiveDate": "2025-07-15",
   "publisher": "ISED",
-  "licensingStatus": "permission request submitted 2026-10-02, not granted",
+  "licensingStatus": "private-development interim policy; ISED permission request submitted 2026-10-02 for the question-bank files (TXT and PDF) only, not the reference/ PDFs, which were excluded from the request; not granted",
   "licensingPolicyDocument": "../../../../docs/content-licensing.md",
   "pathsRelativeTo": "content/sources/ised/basic-2025-07-15/",
   "retrievalNotes": "All listed source artifacts were fetched fresh from ISED hosts on 2026-09-29; ZIP archives were used only for extraction and are not committed.",
