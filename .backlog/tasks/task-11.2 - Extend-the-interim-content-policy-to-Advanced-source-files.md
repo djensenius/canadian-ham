@@ -1,7 +1,7 @@
 ---
 id: TASK-11.2
 title: Extend the interim content policy to Advanced source files
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:12'
