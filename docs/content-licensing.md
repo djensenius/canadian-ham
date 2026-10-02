@@ -25,6 +25,7 @@ Record the written permission here when available in project records.
 | Permission date | Pending: fill in permission date |
 | Permission scope | Pending: paste concise scope from written permission |
 | Covered source artifacts | Pending scope: request includes 2025 Basic question bank delimited TXT; 2025 Basic question bank PDF; 2025 English Basic reference PDFs; Advanced question bank; commercial use; future revisions; structured app-data format with shuffled choices |
+| Covers verbatim question text as app data | Pending: `yes` only if the written permission explicitly covers bundling the verbatim EN/FR question text as data in the web and Apple apps |
 | Storage location for permission evidence | Pending: private owner records; do not commit private correspondence unless approved |
 | Release review status | Blocked until reference number/date/scope are recorded and the scope explicitly covers the release artifacts |
 

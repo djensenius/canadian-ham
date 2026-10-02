@@ -34,6 +34,19 @@ interface UrlFinding {
   readonly url: string;
 }
 
+interface CspFinding {
+  readonly file: string;
+  readonly line: number;
+  readonly directive: string;
+  readonly source: string;
+}
+
+const CSP_META_PATTERN = /<meta\b(?=[^>]*\bhttp-equiv\s*=\s*(["'])Content-Security-Policy\1)[^>]*>/iu;
+const CSP_CONTENT_PATTERN = /\bcontent\s*=\s*"([^"]*)"/iu;
+const ALLOWED_CSP_SOURCES = new Set(["'self'", "'none'"]);
+const ALLOWED_DEFAULT_SRC_SOURCES = new Set(["'self'", "'none'"]);
+const CSP_HASH_PATTERN = /^'sha(?:256|384|512)-[A-Za-z0-9+/=]+'$/u;
+
 function currentModulePath(): string {
   const moduleUrl = new URL(import.meta.url);
   if (moduleUrl.protocol === "file:") {
@@ -113,16 +126,87 @@ export async function auditDistUrls(distDir = DIST_DIR): Promise<UrlFinding[]> {
   return findings;
 }
 
+export async function auditDistCsp(distDir = DIST_DIR): Promise<CspFinding[]> {
+  const indexPath = path.join(distDir, "index.html");
+  const indexHtml = await readFile(indexPath, "utf8");
+  const cspMetaMatch = indexHtml.match(CSP_META_PATTERN);
+  if (cspMetaMatch === null || cspMetaMatch.index === undefined) {
+    return [{ file: "index.html", line: 1, directive: "meta", source: "missing Content-Security-Policy meta tag" }];
+  }
+
+  const cspMeta = cspMetaMatch[0];
+  const contentMatch = cspMeta.match(CSP_CONTENT_PATTERN);
+  if (contentMatch === null) {
+    return [{ file: "index.html", line: lineNumberForOffset(indexHtml, cspMetaMatch.index), directive: "meta", source: "missing content attribute" }];
+  }
+
+  const findings: CspFinding[] = [];
+  let defaultSrcSources: readonly string[] | undefined;
+  const seenDirectives = new Set<string>();
+  const cspLine = lineNumberForOffset(indexHtml, cspMetaMatch.index);
+  for (const directiveText of contentMatch[1].split(";")) {
+    const tokens = directiveText.trim().split(/\s+/u).filter((token) => token.length > 0);
+    const [directive, ...sources] = tokens;
+    if (directive === undefined) {
+      continue;
+    }
+    const directiveName = directive.toLowerCase();
+    if (seenDirectives.has(directiveName)) {
+      // Browsers honour only the first occurrence of a directive, so a duplicate can hide a weaker policy.
+      findings.push({ file: "index.html", line: cspLine, directive, source: "duplicate directive" });
+      continue;
+    }
+    seenDirectives.add(directiveName);
+    if (directive === "default-src") {
+      defaultSrcSources = sources;
+      continue;
+    }
+    for (const source of sources) {
+      if (isAllowedCspSource(directive, source)) {
+        continue;
+      }
+      findings.push({
+        file: "index.html",
+        line: cspLine,
+        directive,
+        source,
+      });
+    }
+  }
+
+  if (defaultSrcSources === undefined) {
+    findings.push({ file: "index.html", line: cspLine, directive: "default-src", source: "missing default-src directive" });
+  } else if (!hasRequiredDefaultSrc(defaultSrcSources)) {
+    findings.push({ file: "index.html", line: cspLine, directive: "default-src", source: defaultSrcSources.join(" ") || "missing source" });
+  }
+
+  return findings;
+}
+
+function hasRequiredDefaultSrc(sources: readonly string[]): boolean {
+  const source = sources[0];
+  return sources.length === 1 && source !== undefined && ALLOWED_DEFAULT_SRC_SOURCES.has(source);
+}
+
+function isAllowedCspSource(directive: string, source: string): boolean {
+  return ALLOWED_CSP_SOURCES.has(source) || (directive === "img-src" && source === "data:") || CSP_HASH_PATTERN.test(source);
+}
+
 async function main(distDirArg = process.argv[2]): Promise<void> {
-  const findings = await auditDistUrls(distDirArg === undefined ? DIST_DIR : path.resolve(distDirArg));
-  if (findings.length > 0) {
-    for (const finding of findings) {
+  const distDir = distDirArg === undefined ? DIST_DIR : path.resolve(distDirArg);
+  const urlFindings = await auditDistUrls(distDir);
+  const cspFindings = await auditDistCsp(distDir);
+  if (urlFindings.length > 0 || cspFindings.length > 0) {
+    for (const finding of urlFindings) {
       console.error(`${finding.file}:${finding.line}: unexpected URL ${finding.url}`);
+    }
+    for (const finding of cspFindings) {
+      console.error(`${finding.file}:${finding.line}: unexpected CSP source ${finding.source} in ${finding.directive}`);
     }
     process.exitCode = 1;
     return;
   }
-  console.log("dist URL audit passed.");
+  console.log("dist URL and CSP audit passed.");
 }
 
 function isDirectCliInvocation(): boolean {
