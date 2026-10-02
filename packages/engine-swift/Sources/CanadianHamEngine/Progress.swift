@@ -67,6 +67,19 @@ public struct QuestionProgressRecord: Codable, Equatable, Sendable {
         self.notes = notes
     }
 
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        questionId = try container.decode(String.self, forKey: .questionId)
+        bankId = try container.decodeIfPresent(String.self, forKey: .bankId) ?? basicBankId
+        attempts = try container.decode(Int.self, forKey: .attempts)
+        correctAttempts = try container.decode(Int.self, forKey: .correctAttempts)
+        lastAttemptedAt = try container.decode(String.self, forKey: .lastAttemptedAt)
+        lastResult = try container.decode(AnswerResult.self, forKey: .lastResult)
+        recentResults = try container.decode([Bool].self, forKey: .recentResults)
+        leitner = try container.decode(LeitnerState.self, forKey: .leitner)
+        notes = try container.decodeIfPresent(String.self, forKey: .notes)
+    }
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(questionId, forKey: .questionId)

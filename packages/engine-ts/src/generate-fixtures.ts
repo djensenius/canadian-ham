@@ -4,6 +4,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import {
   RNG_ALGORITHM,
+  SYNTHETIC_ADVANCED_BANK_ID,
   applyAnswer,
   applyAnswerSequence,
   appendRecentResult,
@@ -80,6 +81,7 @@ async function buildFixtures(): Promise<Map<string, unknown>> {
     ["fixtures/engine/rng-vectors.json", buildRngVectorsFixture()],
     ["fixtures/engine/exam-generation-small.json", buildSmallExamFixture()],
     ["fixtures/engine/exam-generation-full-bank-basic-2025-07-15.json", buildFullExamFixture(fullSubsections, fullExam)],
+    ["fixtures/engine/exam-generation-advanced-synthetic.json", buildAdvancedExamFixture()],
     ["fixtures/engine/scoring.json", buildScoringFixture()],
     ["fixtures/engine/weak-subsections.json", buildWeakSubsectionsFixture()],
     ["fixtures/engine/leitner.json", buildLeitnerFixture()],
@@ -127,6 +129,44 @@ function buildSmallExamFixture(): unknown {
   };
 }
 
+function buildAdvancedExamFixture(): unknown {
+  const subsections = buildAdvancedSubsections();
+  const generated = generateExam({
+    bankId: SYNTHETIC_ADVANCED_BANK_ID,
+    seed: fixtureSeed,
+    subsections,
+    answerSourceIndexes: [0, 1, 2, 3],
+    requireFullMockExam: true,
+  });
+  return {
+    schemaVersion: 1,
+    kind: "exam-generation",
+    id: "exam-generation-advanced-synthetic-fixture-001",
+    bankId: SYNTHETIC_ADVANCED_BANK_ID,
+    rng: { algorithm: RNG_ALGORITHM, seed: fixtureSeed },
+    input: {
+      subsections,
+      answerSourceIndexes: [0, 1, 2, 3],
+      requireFullMockExam: true,
+    },
+    expectedOutput: {
+      items: generated.items,
+      examQuestionCount: 50,
+      oneQuestionPerInputSubsection: true,
+      choicePermutationDefinition: "choicePermutation[displayIndex] = sourceIndex; sourceIndex 0 is the correct answer",
+      categoryCounts: {
+        "A-001": 5,
+        "A-002": 12,
+        "A-003": 6,
+        "A-004": 4,
+        "A-005": 9,
+        "A-006": 5,
+        "A-007": 9,
+      },
+    },
+  };
+}
+
 function buildFullExamFixture(subsections: ReturnType<typeof buildSubsectionsFromQuestions>, generated: ReturnType<typeof generateExam>): unknown {
   return {
     schemaVersion: 1,
@@ -165,8 +205,8 @@ function buildScoringFixture(): unknown {
     const items = makeBoundaryItems(correctCount);
     return {
       id: `scoring-boundary-${correctCount}`,
-      input: { items },
-      expectedOutput: scoreExam(items),
+      input: { bankId, items },
+      expectedOutput: scoreExam(items, { bankId }),
     };
   });
 
@@ -180,8 +220,15 @@ function buildScoringFixture(): unknown {
   ];
   cases.push({
     id: "scoring-unanswered-and-category-breakdown",
-    input: { items: unansweredItems },
-    expectedOutput: scoreExam(unansweredItems),
+    input: { bankId, items: unansweredItems },
+    expectedOutput: scoreExam(unansweredItems, { bankId }),
+  });
+
+  const advancedItems = makeAdvancedBoundaryItems(40);
+  cases.push({
+    id: "scoring-advanced-has-no-honours-at-eighty-percent",
+    input: { bankId: SYNTHETIC_ADVANCED_BANK_ID, items: advancedItems },
+    expectedOutput: scoreExam(advancedItems, { bankId: SYNTHETIC_ADVANCED_BANK_ID }),
   });
 
   return {
@@ -375,6 +422,12 @@ function buildReadinessFixture(): unknown {
       [makeAttempt("2026-01-05T00:00:00.000Z", 69), makeAttempt("2026-01-04T00:00:00.000Z", 65)],
       0,
     ),
+    makeReadinessCase(
+      "readiness-advanced-suppresses-honours-ready-at-eighty-percent",
+      [makeAdvancedAttempt("2026-01-05T00:00:00.000Z", 45), makeAdvancedAttempt("2026-01-04T00:00:00.000Z", 40)],
+      0,
+      SYNTHETIC_ADVANCED_BANK_ID,
+    ),
   ];
 
   return {
@@ -382,6 +435,33 @@ function buildReadinessFixture(): unknown {
     kind: "readiness",
     cases,
   };
+}
+
+function buildAdvancedSubsections(): ReturnType<typeof buildSubsectionsFromQuestions> {
+  const categorySubsectionCounts = [
+    ["A-001", 5],
+    ["A-002", 12],
+    ["A-003", 6],
+    ["A-004", 4],
+    ["A-005", 9],
+    ["A-006", 5],
+    ["A-007", 9],
+  ] as const;
+  const questions: QuestionJson[] = [];
+  for (const [categoryId, subsectionCount] of categorySubsectionCounts) {
+    for (let subsectionIndex = 1; subsectionIndex <= subsectionCount; subsectionIndex += 1) {
+      const subsectionId = `${categoryId}-${String(subsectionIndex).padStart(3, "0")}`;
+      for (let questionIndex = 1; questionIndex <= 2; questionIndex += 1) {
+        questions.push({
+          id: `${subsectionId}-${String(questionIndex).padStart(3, "0")}`,
+          bankId: SYNTHETIC_ADVANCED_BANK_ID,
+          categoryId,
+          subsectionId,
+        });
+      }
+    }
+  }
+  return buildSubsectionsFromQuestions(questions);
 }
 
 function makeBoundaryItems(correctCount: number): ScoreInputItem[] {
@@ -408,6 +488,15 @@ function makeBoundaryItems(correctCount: number): ScoreInputItem[] {
     }
   }
   return items;
+}
+
+function makeAdvancedBoundaryItems(correctCount: number): ScoreInputItem[] {
+  return buildAdvancedSubsections().map((subsection, index) => ({
+    questionId: subsection.questionIds[0]!,
+    categoryId: subsection.id.slice(0, 5),
+    subsectionId: subsection.id,
+    selectedSourceIndex: index < correctCount ? 0 : 1,
+  }));
 }
 
 function makeProgress(questionId: string, recentResults: readonly boolean[]): QuestionProgressRecord {
@@ -463,8 +552,22 @@ function makeAttempt(
   };
 }
 
-function makeReadinessCase(id: string, completedExams: readonly ReadinessExamAttempt[], dueReviewCount: number): unknown {
-  const input = { completedExams, dueReviewCount };
+function makeAdvancedAttempt(submittedAt: string, correct: number): ReadinessExamAttempt {
+  const categoryBreakdown = ["A-001", "A-002", "A-003", "A-004", "A-005", "A-006", "A-007"].map((categoryId) => ({
+    categoryId,
+    correct: 8,
+    total: 10,
+    percent: 80,
+  }));
+  return {
+    submittedAt,
+    score: { correct, total: 50, percent: (correct / 50) * 100 },
+    categoryBreakdown,
+  };
+}
+
+function makeReadinessCase(id: string, completedExams: readonly ReadinessExamAttempt[], dueReviewCount: number, readinessBankId = bankId): unknown {
+  const input = { bankId: readinessBankId, completedExams, dueReviewCount };
   return { id, input, expectedOutput: computeReadiness(input) };
 }
 

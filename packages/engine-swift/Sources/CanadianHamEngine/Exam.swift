@@ -114,8 +114,9 @@ public func generateExam(_ input: ExamGenerationInput) throws -> GeneratedExam {
         ExamSubsectionInput(id: subsection.id, questionIds: subsection.questionIds.sortedOrdinal())
     }.sorted { OrdinalSort.ascending($0.id, $1.id) }
 
-    if input.requireFullMockExam == true, sortedSubsections.count != 100 {
-        throw EngineError("full mock exam generation requires exactly 100 subsections; received \(sortedSubsections.count)")
+    let bankRules = try rulesForBankId(input.bankId)
+    if input.requireFullMockExam == true, sortedSubsections.count != bankRules.subsectionCount {
+        throw EngineError("full mock exam generation for \(input.bankId) requires exactly \(bankRules.subsectionCount) subsections; received \(sortedSubsections.count)")
     }
 
     var uniqueSubsectionIds = Set<String>()

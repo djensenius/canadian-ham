@@ -1,3 +1,4 @@
+import { rulesForBankId } from "./banks.ts";
 import { compareOrdinal } from "./ordinal.ts";
 import { Pcg32, RNG_ALGORITHM, shuffled } from "./rng.ts";
 
@@ -70,8 +71,9 @@ export function generateExam(input: ExamGenerationInput): GeneratedExam {
     }))
     .toSorted((a, b) => compareOrdinal(a.id, b.id));
 
-  if (input.requireFullMockExam && sortedSubsections.length !== 100) {
-    throw new Error(`full mock exam generation requires exactly 100 subsections; received ${sortedSubsections.length}`);
+  const bankRules = rulesForBankId(input.bankId);
+  if (input.requireFullMockExam && sortedSubsections.length !== bankRules.subsectionCount) {
+    throw new Error(`full mock exam generation for ${input.bankId} requires exactly ${bankRules.subsectionCount} subsections; received ${sortedSubsections.length}`);
   }
 
   const uniqueSubsectionIds = new Set<string>();

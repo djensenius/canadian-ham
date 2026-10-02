@@ -5,6 +5,7 @@
     {
       "id": "readiness-new-user-not-enough-data-and-due-count-zero",
       "input": {
+        "bankId": "basic-2025-07-15",
         "completedExams": [],
         "dueReviewCount": 0
       },
@@ -23,6 +24,7 @@
     {
       "id": "readiness-one-exam-not-enough-data",
       "input": {
+        "bankId": "basic-2025-07-15",
         "completedExams": [
           {
             "submittedAt": "2026-01-03T00:00:00.000Z",
@@ -102,6 +104,7 @@
     {
       "id": "readiness-last-three-aggregation-ignores-older-exam-and-sorts-shuffled-input",
       "input": {
+        "bankId": "basic-2025-07-15",
         "completedExams": [
           {
             "submittedAt": "2026-01-04T00:00:00.000Z",
@@ -358,6 +361,7 @@
     {
       "id": "readiness-category-weakness-precedes-due-review",
       "input": {
+        "bankId": "basic-2025-07-15",
         "completedExams": [
           {
             "submittedAt": "2026-01-05T00:00:00.000Z",
@@ -498,6 +502,7 @@
     {
       "id": "readiness-due-review-precedes-pass-or-honours-ready",
       "input": {
+        "bankId": "basic-2025-07-15",
         "completedExams": [
           {
             "submittedAt": "2026-01-05T00:00:00.000Z",
@@ -636,6 +641,7 @@
     {
       "id": "readiness-due-review-count-four-still-allows-honours-ready",
       "input": {
+        "bankId": "basic-2025-07-15",
         "completedExams": [
           {
             "submittedAt": "2026-01-05T00:00:00.000Z",
@@ -775,6 +781,7 @@
     {
       "id": "readiness-honours-ready-with-two-of-last-three-at-or-above-eighty",
       "input": {
+        "bankId": "basic-2025-07-15",
         "completedExams": [
           {
             "submittedAt": "2026-01-05T00:00:00.000Z",
@@ -973,6 +980,7 @@
     {
       "id": "readiness-pass-ready-with-two-of-last-three-at-or-above-seventy",
       "input": {
+        "bankId": "basic-2025-07-15",
         "completedExams": [
           {
             "submittedAt": "2026-01-05T00:00:00.000Z",
@@ -1171,6 +1179,7 @@
     {
       "id": "readiness-needs-review-when-exam-thresholds-not-met",
       "input": {
+        "bankId": "basic-2025-07-15",
         "completedExams": [
           {
             "submittedAt": "2026-01-05T00:00:00.000Z",
@@ -1299,6 +1308,134 @@
           "2026-01-04T00:00:00.000Z"
         ],
         "reasons": []
+      }
+    },
+    {
+      "id": "readiness-advanced-suppresses-honours-ready-at-eighty-percent",
+      "input": {
+        "bankId": "advanced-synthetic",
+        "completedExams": [
+          {
+            "submittedAt": "2026-01-05T00:00:00.000Z",
+            "score": {
+              "correct": 45,
+              "total": 50,
+              "percent": 90
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "A-001",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-002",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-003",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-004",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-005",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-006",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-007",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              }
+            ]
+          },
+          {
+            "submittedAt": "2026-01-04T00:00:00.000Z",
+            "score": {
+              "correct": 40,
+              "total": 50,
+              "percent": 80
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "A-001",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-002",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-003",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-004",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-005",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-006",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-007",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              }
+            ]
+          }
+        ],
+        "dueReviewCount": 0
+      },
+      "expectedOutput": {
+        "state": "pass-ready",
+        "consideredExamCount": 2,
+        "consideredSubmittedAt": [
+          "2026-01-05T00:00:00.000Z",
+          "2026-01-04T00:00:00.000Z"
+        ],
+        "reasons": [
+          {
+            "type": "exam-threshold",
+            "threshold": 70,
+            "countAtOrAbove": 2
+          }
+        ]
       }
     }
   ]

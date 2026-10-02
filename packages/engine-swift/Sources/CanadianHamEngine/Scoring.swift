@@ -27,6 +27,7 @@ public struct CategoryBreakdownEntry: Codable, Equatable, Sendable {
 }
 
 public struct ExamScore: Codable, Equatable, Sendable {
+    public let bankId: String
     public let correct: Int
     public let total: Int
     public let percent: Double
@@ -37,6 +38,7 @@ public struct ExamScore: Codable, Equatable, Sendable {
     public let weakSubsectionIds: [String]
 
     public init(
+        bankId: String = basicBankId,
         correct: Int,
         total: Int,
         percent: Double,
@@ -46,6 +48,7 @@ public struct ExamScore: Codable, Equatable, Sendable {
         incorrectQuestionIds: [String],
         weakSubsectionIds: [String]
     ) {
+        self.bankId = bankId
         self.correct = correct
         self.total = total
         self.percent = percent
@@ -57,7 +60,8 @@ public struct ExamScore: Codable, Equatable, Sendable {
     }
 }
 
-public func scoreExam(_ items: [ScoreInputItem]) -> ExamScore {
+public func scoreExam(_ items: [ScoreInputItem], bankId: String = basicBankId) -> ExamScore {
+    let bankRules = try! rulesForBankId(bankId)
     var categoryTotals: [String: (correct: Int, total: Int)] = [:]
     var incorrectQuestionIds: [String] = []
     var weakSubsectionIds = Set<String>()
@@ -94,12 +98,14 @@ public func scoreExam(_ items: [ScoreInputItem]) -> ExamScore {
         )
     }
 
+    let honours = bankRules.hasHonours && bankRules.honoursPercent.map { percent >= $0 } == true
     return ExamScore(
+        bankId: bankId,
         correct: correct,
         total: total,
         percent: percent,
-        passed: percent >= 70,
-        honours: percent >= 80,
+        passed: percent >= bankRules.passPercent,
+        honours: honours,
         categoryBreakdown: breakdown,
         incorrectQuestionIds: incorrectQuestionIds,
         weakSubsectionIds: Array(weakSubsectionIds).sorted(by: OrdinalSort.ascending)

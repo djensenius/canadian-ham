@@ -5,6 +5,7 @@
     {
       "id": "one-correct",
       "input": {
+        "bankId": "basic-2025-07-15",
         "items": [
           {
             "questionId": "B-001-001-001",
@@ -15,6 +16,7 @@
         ]
       },
       "expectedOutput": {
+        "bankId": "basic-2025-07-15",
         "correct": 1,
         "total": 1,
         "percent": 100,

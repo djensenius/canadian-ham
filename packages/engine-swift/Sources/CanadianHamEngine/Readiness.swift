@@ -30,10 +30,12 @@ public struct ReadinessExamAttempt: Codable, Equatable, Sendable {
 }
 
 public struct ReadinessInput: Codable, Equatable, Sendable {
+    public let bankId: String?
     public let completedExams: [ReadinessExamAttempt]
     public let dueReviewCount: Int
 
-    public init(completedExams: [ReadinessExamAttempt], dueReviewCount: Int) {
+    public init(bankId: String? = nil, completedExams: [ReadinessExamAttempt], dueReviewCount: Int) {
+        self.bankId = bankId
         self.completedExams = completedExams
         self.dueReviewCount = dueReviewCount
     }
@@ -109,6 +111,7 @@ public enum ReadinessReason: Codable, Equatable, Sendable {
 }
 
 public func computeReadiness(_ input: ReadinessInput) throws -> ReadinessResult {
+    let bankRules = try rulesForBankId(input.bankId ?? basicBankId)
     try assertUniqueSubmittedAt(input.completedExams)
     let completed = try input.completedExams.sorted { lhs, rhs in
         try CanonicalTimestamp.epochMilliseconds(lhs.submittedAt, fieldName: "submittedAt") > CanonicalTimestamp.epochMilliseconds(rhs.submittedAt, fieldName: "submittedAt")
@@ -143,17 +146,19 @@ public func computeReadiness(_ input: ReadinessInput) throws -> ReadinessResult 
         )
     }
 
-    let honoursCount = considered.filter { scorePercent($0) >= 80 }.count
-    if honoursCount >= 2 {
-        return ReadinessResult(
-            state: .honoursReady,
-            consideredExamCount: considered.count,
-            consideredSubmittedAt: considered.map(\.submittedAt),
-            reasons: [.examThreshold(threshold: 80, countAtOrAbove: honoursCount)]
-        )
+    if bankRules.hasHonours, let honoursPercent = bankRules.honoursPercent {
+        let honoursCount = considered.filter { scorePercent($0) >= honoursPercent }.count
+        if honoursCount >= 2 {
+            return ReadinessResult(
+                state: .honoursReady,
+                consideredExamCount: considered.count,
+                consideredSubmittedAt: considered.map(\.submittedAt),
+                reasons: [.examThreshold(threshold: 80, countAtOrAbove: honoursCount)]
+            )
+        }
     }
 
-    let passCount = considered.filter { scorePercent($0) >= 70 }.count
+    let passCount = considered.filter { scorePercent($0) >= bankRules.passPercent }.count
     if passCount >= 2 {
         return ReadinessResult(
             state: .passReady,
