@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 12:05'
+updated_date: '2026-10-02 12:10'
 labels:
   - release
   - web
@@ -58,6 +58,8 @@ Review fix round: tightened scripts/check-release-permission.mjs so only explici
 Merged origin/main after confirming PR #100 was present in 'git log origin/main --oneline -3' (0f31fcc Merge pull request #100 from djensenius/task-1.5-release-checklist), then converted the task-1.3 docs paths in docs/release/release-checklist.md into relative links.
 
 Validation passed: pnpm typecheck; pnpm test; pnpm build:web; pnpm --filter @canadian-ham/web audit:urls; pnpm check:links; go run github.com/rhysd/actionlint/cmd/actionlint@latest. Expected gate failure confirmed: node scripts/check-release-permission.mjs exited 1 today with pending request status/reference/date errors.
+
+Coordinator follow-up from review: the gate now requires exactly one ';'-separated status part that is wholly 'granted: yes' or 'granted: YYYY-MM-DD' (optional bracketed note), rejects revocation words, and validates the permission date as a real calendar date; self-test covers the bypass wordings. Realistic future records still pass; today's record still fails.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
