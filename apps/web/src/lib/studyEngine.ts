@@ -110,7 +110,7 @@ export function buildExamAttempt(input: {
       flagged: input.flaggedQuestionIds.has(item.questionId),
     };
   });
-  const score = scoreExam(items);
+  const score = scoreExam(items, { bankId });
   return {
     id: `attempt-${input.submittedAt}-local-${input.seed}`,
     bankId,
@@ -125,6 +125,7 @@ export function buildExamAttempt(input: {
     },
     items,
     score: {
+      bankId: score.bankId,
       correct: score.correct,
       total: score.total,
       percent: score.percent,

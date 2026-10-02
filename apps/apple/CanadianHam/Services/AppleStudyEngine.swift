@@ -134,7 +134,7 @@ enum AppleStudyEngine {
                 subsectionId: $0.subsectionId,
                 selectedSourceIndex: $0.selectedSourceIndex
             )
-        })
+        }, bankId: bank.manifest.bankId)
         return StoredExamAttempt(
             id: "attempt-\(submittedAt)-local-\(seed)",
             bankId: bank.manifest.bankId,
@@ -145,6 +145,7 @@ enum AppleStudyEngine {
             timer: StoredExamTimer(enabled: timerEnabled, secondsAllowed: nil, secondsElapsed: secondsElapsed),
             items: items,
             score: StoredExamScore(
+                bankId: score.bankId,
                 correct: score.correct,
                 total: score.total,
                 percent: score.percent,
@@ -165,6 +166,7 @@ enum AppleStudyEngine {
             )
         }
         return try computeReadiness(ReadinessInput(
+            bankId: bank.manifest.bankId,
             completedExams: readinessAttempts,
             dueReviewCount: dueCount(records: progress, now: now)
         ))

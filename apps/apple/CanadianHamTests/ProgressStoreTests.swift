@@ -55,6 +55,32 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(importedStore.preferences, .default)
     }
 
+    func testDecodesLegacyBasicExportWithoutBankIdFields() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let json = """
+        {
+          "schema": "canadian-ham.progress-export",
+          "version": 1,
+          "exportedAt": "2026-01-02T05:04:05.000Z",
+          "questionProgress": [
+            { "questionId": "B-001-001-001", "attempts": 1, "correctAttempts": 1, "lastAttemptedAt": "2026-01-02T04:00:00.000Z", "lastResult": "correct", "recentResults": [true], "leitner": { "box": 1, "dueAt": "2026-01-03T04:00:00.000Z" }, "notes": null }
+          ],
+          "examAttempts": [
+            { "id": "legacy-attempt", "mode": "mock-exam", "seed": "legacy", "startedAt": "2026-01-02T03:00:00.000Z", "submittedAt": "2026-01-02T04:00:00.000Z", "timer": { "enabled": false, "secondsAllowed": null, "secondsElapsed": 0 }, "items": [], "score": { "correct": 0, "total": 0, "percent": 0, "passed": false, "honours": false, "categoryBreakdown": [], "weakSubsectionIds": [] } }
+          ],
+          "preferences": { "practiceMode": "immediate", "examTimerEnabled": false }
+        }
+        """
+
+        let decoded = try JSONDecoder().decode(ProgressExportV1.self, from: Data(json.utf8))
+
+        XCTAssertEqual(decoded.bankId, bank.manifest.bankId)
+        XCTAssertEqual(decoded.questionProgress.first?.bankId, bank.manifest.bankId)
+        XCTAssertEqual(decoded.examAttempts.first?.bankId, bank.manifest.bankId)
+        XCTAssertEqual(decoded.examAttempts.first?.score.bankId, bank.manifest.bankId)
+        XCTAssertTrue(try ProgressStoreService.inMemoryForTests().validate(decoded, bank: bank).isEmpty)
+    }
+
     func testDecodesWebLegacyExportWithOptionalLessonStoresAndTheme() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let json = """
@@ -316,6 +342,28 @@ final class ReadinessAndScoringTests: XCTestCase {
             XCTAssertEqual(score.passed, passed, "Boundary \(correct) pass")
             XCTAssertEqual(score.honours, honours, "Boundary \(correct) honours")
         }
+    }
+
+    func testAdvancedScoringAndReadinessSuppressHonours() throws {
+        let advancedItems = (1...50).map { index in
+            ScoreInputItem(
+                questionId: "A-001-001-\(String(format: "%03d", index))",
+                categoryId: "A-001",
+                subsectionId: "A-001-001",
+                selectedSourceIndex: index <= 40 ? 0 : 1
+            )
+        }
+        let score = scoreExam(advancedItems, bankId: syntheticAdvancedBankId)
+        XCTAssertEqual(score.bankId, syntheticAdvancedBankId)
+        XCTAssertTrue(score.passed)
+        XCTAssertFalse(score.honours)
+
+        let fullBreakdown = [CategoryBreakdownEntry(categoryId: "A-001", correct: 40, total: 50, percent: 80)]
+        let readiness = try computeReadiness(ReadinessInput(bankId: syntheticAdvancedBankId, completedExams: [
+            ReadinessExamAttempt(submittedAt: "2026-01-03T00:00:00.000Z", score: ReadinessScore(correct: 40, total: 50, percent: 80), categoryBreakdown: fullBreakdown),
+            ReadinessExamAttempt(submittedAt: "2026-01-02T00:00:00.000Z", score: ReadinessScore(correct: 45, total: 50, percent: 90), categoryBreakdown: fullBreakdown),
+        ], dueReviewCount: 0))
+        XCTAssertEqual(readiness.state, .passReady)
     }
 
     func testReadinessStates() throws {
