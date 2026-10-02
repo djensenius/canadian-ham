@@ -28,3 +28,9 @@ Why: the task-8 review found the tvOS focus ring (#8F2E1D) sits on the #A53A2A p
 - [ ] #2 The indicator does not rely on scale alone (for example a light outer ring or a contrasting outline) and still works with Reduce Motion on
 - [ ] #3 tvOS UI tests and the tvOS accessibility audit pass via xbuild, and updated screenshots of focused primary, answer and category buttons are committed under docs/evidence
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inspect tvOS button/focus styling and existing accessibility docs/evidence conventions.\n2. Update shared tvOS focus indicator styling to preserve the cream ink-brush look while adding a high-contrast, non-scale-only ring across focusable tvOS controls.\n3. Add or update tvOS UI coverage to capture one focused primary, answer, and category state PNG under docs/evidence and verify visibility.\n4. Record computed light/dark contrast ratios from actual colors in docs/accessibility.md.\n5. Run the task-required tvOS xbuild checks and final touched-platform suites, then check acceptance criteria, summarize, set Done, and commit task metadata last.
+<!-- SECTION:PLAN:END -->
