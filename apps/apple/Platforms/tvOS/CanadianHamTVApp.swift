@@ -239,7 +239,7 @@ private struct TVCategoryGridView: View {
     let onSelectCategory: (BankCategory) -> Void
     let onAbout: () -> Void
 
-    private let columns = Array(repeating: GridItem(.flexible(), spacing: DesignTokens.Spacing.xl), count: 4)
+    private let columns = Array(repeating: GridItem(.flexible(), spacing: DesignTokens.Spacing.xxl), count: 3)
 
     var body: some View {
         ScrollView {
@@ -257,7 +257,7 @@ private struct TVCategoryGridView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
 
-                LazyVGrid(columns: columns, alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                LazyVGrid(columns: columns, alignment: .leading, spacing: DesignTokens.Spacing.xxl) {
                     ForEach(bank.categories) { category in
                         TVCategoryButton(
                             category: category,
@@ -304,12 +304,17 @@ private struct TVCategoryButton: View {
                 Text(localized(category.name.text(for: language), language: language)) // l10n: content(question)
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(3)
+                    .minimumScaleFactor(0.86)
+                    .allowsTightening(true)
+                    .fixedSize(horizontal: false, vertical: true)
                 Text(verbatim: "\(localizedQuestionCount(category.questionCount)) • \(localizedSubsectionCount(category.subsectionCount))") // l10n: verbatim
                     .font(DesignTokens.FontScale.body.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
             }
             .padding(DesignTokens.Spacing.xl)
-            .frame(maxWidth: .infinity, minHeight: 190, alignment: .leading)
+            .frame(maxWidth: .infinity, minHeight: 280, maxHeight: 280, alignment: .leading)
             .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous))
             .tvFocusRing(
                 RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous),
@@ -910,28 +915,38 @@ private struct TVTopBar: View {
     var leadingAction: (title: LocalizedStringKey, action: () -> Void)? = nil
 
     var body: some View {
-        HStack(spacing: DesignTokens.Spacing.xl) {
-            if let leadingAction {
-                Button(leadingAction.title, action: leadingAction.action) // l10n: localized
-                    .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                    .buttonStyle(TVSecondaryButtonStyle())
-                    .accessibilityHint(Text("Returns to the category grid")) // l10n: localized
-            }
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                 Text(title) // l10n: content(question)
                     .font(DesignTokens.FontScale.headline.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.86)
+                    .allowsTightening(true)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .layoutPriority(1)
                     .accessibilityAddTraits(.isHeader)
                 subtitle
                     .font(DesignTokens.FontScale.body.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
             }
-            Spacer()
-            TVLanguageToggle(language: $language, evidenceFocus: evidenceFocus)
-            Button("About", action: onAbout)
-                .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                .buttonStyle(TVSecondaryButtonStyle())
-                .accessibilityLabel(Text("About Canadian Ham")) // l10n: localized
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            HStack(spacing: DesignTokens.Spacing.xl) {
+                if let leadingAction {
+                    Button(leadingAction.title, action: leadingAction.action) // l10n: localized
+                        .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                        .buttonStyle(TVSecondaryButtonStyle())
+                        .accessibilityHint(Text("Returns to the category grid")) // l10n: localized
+                }
+                Spacer()
+                TVLanguageToggle(language: $language, evidenceFocus: evidenceFocus)
+                Button("About", action: onAbout)
+                    .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                    .buttonStyle(TVSecondaryButtonStyle())
+                    .accessibilityLabel(Text("About Canadian Ham")) // l10n: localized
+            }
         }
     }
 }
