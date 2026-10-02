@@ -76,6 +76,8 @@ Short form for app settings or about page after T-007 records permission:
 
 During private development before T-007 is complete, internal documentation and manifests must not claim that written permission has been granted.
 
+TODO before public release: replace any release About-page draft attribution text with the exact wording from the recorded ISED permission in T-007/task-1.1. Do not add a permission reference number, date, or scope here until the written permission record is available.
+
 ## Disclaimer
 
 Use this disclaimer in the app/site about page, documentation, and any public release notes that mention ISED material:
@@ -131,7 +133,8 @@ Original content must not:
 
 - Use official ISED French question and answer text from the delimited file.
 - Do not create project translations of ISED question text.
-- French UI is planned later and may be translated by the project because it is original interface copy, not official ISED question text.
+- French UI may be translated by the project because it is original interface copy, not official ISED question text.
+- Keep attribution, disclaimer, and other legal-review footer/About text English-only in the French UI with `lang="en"` / English accessibility-language tagging until T-007/task-1.1 and the release legal review approve localized legal copy. This avoids presenting unreviewed French drafts as legal wording.
 - French category names are open until verified from an official source.
 - French reference material has not yet been located; do not claim it exists.
 

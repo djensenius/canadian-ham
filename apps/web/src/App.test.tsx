@@ -11,7 +11,7 @@ import { IDBFactory } from "fake-indexeddb";
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
 
 import { App, AppErrorBoundary, CitationLink, ExplanationPanel } from "./App";
-import { bankId, categories, loadQuestions, loadQuestionsFromUrl, type Answer, type Category, type Question } from "./data/bank";
+import { bankId, categories, loadQuestions, loadQuestionsFromUrl, manifest, type Answer, type Category, type Question } from "./data/bank";
 import { explanationForQuestion, parseChoiceNotes } from "./data/explanations";
 import { lessonQuizzesById, buildLessonQuizItems } from "./data/quizzes";
 import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExportV1, type WebPreferences } from "./lib/progressStore";
@@ -910,6 +910,28 @@ describe("App accessibility and flows", () => {
     await user.click(screen.getByRole("button", { name: "Submit practice set" }));
     await screen.findByRole("heading", { name: "Practice set review" });
     assert.equal((await store.getQuestionProgress()).length, 10);
+  });
+
+  it("renders About content with source, bank, legal language tags, and no axe violations", async () => {
+    window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
+    window.location.hash = "#/about";
+    const store = createStore("about-content");
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "about-seed"} />);
+
+    await screen.findByRole("heading", { name: "À propos de Canadian Ham" });
+    assert.equal(document.documentElement.lang, "fr-CA");
+    assert.ok(screen.getByText((text) => text.includes(bankId) && text.includes(manifest.effectiveDate)));
+    assert.ok(screen.getByText((text) => text.includes(manifest.source.url)));
+    assert.ok(screen.getByText((text) => text.includes("RBR-4") && text.includes("ised-isde.canada.ca")));
+    assert.ok(screen.getByText(/ISDE fournit la feuille de référence de l’examen de base/));
+    assert.ok(screen.getByText(/aucun compte, aucune analytique, aucune télémétrie, aucune publicité/));
+    const attribution = screen.getByText(/used with permission/);
+    assert.equal(attribution.closest("section")?.getAttribute("lang"), "en");
+    const disclaimer = screen.getAllByText(/canadian-ham is an independent study tool/).find((element) => element.closest("section")?.id !== undefined || element.closest("section")?.getAttribute("aria-labelledby") === "about-disclaimer-heading");
+    assert.equal(disclaimer?.closest("section")?.getAttribute("lang"), "en");
+    assert.ok(screen.getByText(/TODO before public release/));
+    assert.equal(container.querySelectorAll("main section[aria-labelledby]").length >= 6, true);
+    await expectNoAxeViolations(container);
   });
 
   it("renders Settings theme controls and no axe violations", async () => {
