@@ -1,7 +1,7 @@
 ---
 id: TASK-24
 title: Apple TV focus indicator contrast
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:10'
