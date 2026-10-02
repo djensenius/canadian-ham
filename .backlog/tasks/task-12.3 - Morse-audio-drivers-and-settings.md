@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-02 17:03'
+updated_date: '2026-10-02 18:42'
 labels:
   - web
   - apple
@@ -48,6 +48,8 @@ Why: learners must hear clean, click-free Morse offline on every platform, with 
 Implemented Morse preview behind default-off settings toggle for web/iOS/macOS/tvOS/visionOS with Web Audio OscillatorNode scheduling and AVAudioEngine/AVAudioSourceNode playback. Validation passed: pnpm typecheck, pnpm test, pnpm build:web, web URL audit, check-links, check-apple-l10n, check-apple-text-sources, check-apple-network, and iOS/macOS/tvOS/visionOS xbuild test suites.
 
 Review round started after owner request to start before v1; keeping Morse off by default until v1 while fixing task-12.3 review findings.
+
+Review round fixes implemented. Key validation on code tip e046697: pnpm typecheck passed; pnpm test passed (content-tools 98, morse-engine 6, web 105 tests); pnpm build:web passed; web dist URL/CSP audit passed; pnpm check:links passed; pnpm check:apple-l10n passed; node scripts/check-apple-text-sources.ts passed; pnpm check:apple-network passed. Xbuild per-test summaries: iOS CanadianHam on iPhone 17 Pro passed 57/57 test cases (28 unit + 29 UI including Morse accessibility audit); macOS CanadianHam unit-only passed 28/28; tvOS CanadianHamTV passed 14/14 (3 unit + 11 UI including Morse accessibility audit and Morse controls); visionOS CanadianHamVision passed 11/11 (3 unit + 8 UI including Morse accessibility audit and Morse controls). XcodeGen determinism not run because project.yml was not changed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
