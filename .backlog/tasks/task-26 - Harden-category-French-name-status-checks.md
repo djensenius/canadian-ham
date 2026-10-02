@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:52'
-updated_date: '2026-10-02 04:24'
+updated_date: '2026-10-02 04:27'
 labels:
   - content
   - web
@@ -33,3 +33,9 @@ Why: the task-6 review found gaps around the new category frenchNameStatus field
 <!-- SECTION:PLAN:BEGIN -->
 1. Inspect existing category import/schema/web handling and tests.\n2. Add importer negative tests for frenchNameStatus edge cases and adjust messages only if needed.\n3. Tighten common JSON Schema and add schema fixtures/tests for verified French names.\n4. Update web category-name fallback language tagging and unit tests.\n5. Run required validation commands, then finalize task with evidence.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented importer negative coverage for category frenchNameStatus/name.fr combinations, tightened generatedCategory JSON Schema with oneOf status/name rules plus fixtures, and updated web category-name rendering to carry the actual fallback language.
+<!-- SECTION:NOTES:END -->
