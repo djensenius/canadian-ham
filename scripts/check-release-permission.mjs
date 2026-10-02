@@ -48,7 +48,8 @@ export function checkReleasePermission(markdown) {
   if (!isConcreteValue(referenceNumber)) {
     errors.push("ISED reference number must be recorded.");
   }
-  if (!isConcreteValue(permissionDate) || !/\b\d{4}-\d{2}-\d{2}\b/u.test(permissionDate)) {
+  const permissionDateMatch = permissionDate.match(/\b(\d{4}-\d{2}-\d{2})\b/u);
+  if (!isConcreteValue(permissionDate) || permissionDateMatch === null || !isValidIsoDate(permissionDateMatch[1])) {
     errors.push("Permission date must be recorded in YYYY-MM-DD form.");
   }
 
@@ -63,8 +64,22 @@ function isGrantedStatus(value) {
   if (/\bnot\s+(?:yet\s+)?granted\b/u.test(normalized)) {
     return false;
   }
+  if (/\b(revoked|withdrawn|rescinded|cancell?ed|expired|suspended)\b/u.test(normalized)) {
+    return false;
+  }
 
-  const grantMatch = normalized.match(/\bgranted\s*:\s*(yes|\d{4}-\d{2}-\d{2})\b/u);
+  // The status cell has several `;`-separated parts (e.g. "Drafted (...); sent: ...; granted: ...").
+  // Exactly one part may mention a grant, and it must be the whole part: "granted: yes" or
+  // "granted: YYYY-MM-DD", optionally followed by one bracketed note.
+  const grantParts = normalized
+    .split(";")
+    .map((part) => part.trim())
+    .filter((part) => /\bgranted\b/u.test(part));
+  if (grantParts.length !== 1) {
+    return false;
+  }
+
+  const grantMatch = grantParts[0].match(/^granted\s*:\s*(yes|\d{4}-\d{2}-\d{2})(?:\s*\([^)]*\))?$/u);
   if (grantMatch === null) {
     return false;
   }
@@ -159,6 +174,11 @@ function runSelfTest() {
     "Not granted",
     "Permission requested; awaiting reply",
     "Granted: 2026-02-30",
+    "Granted: yes but revoked 2026-11-01",
+    "Sent: yes; granted: pending; granted: yes",
+    "Granted: yes-ish",
+    "Granted: 2026-10-02-revoked",
+    "Granted: yes; later withdrawn",
   ]) {
     assert.deepEqual(checkReleasePermission(permissionRecord({
       status,
@@ -169,6 +189,16 @@ function runSelfTest() {
       errors: ["Request status must record ISED permission as granted."],
     });
   }
+
+  const impossibleDate = permissionRecord({
+    status: "Granted: yes",
+    reference: VALID_REFERENCE,
+    date: "2026-13-40",
+  });
+  assert.deepEqual(checkReleasePermission(impossibleDate), {
+    ok: false,
+    errors: ["Permission date must be recorded in YYYY-MM-DD form."],
+  });
 
   const missingDate = permissionRecord({
     status: "Granted: yes",
