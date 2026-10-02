@@ -41,3 +41,9 @@ Open questions carried over from tasks/PLAN.md. Already resolved: minimum Apple 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented task-6 source updates: official French category names are stored in content/categories.json, regenerated into content/generated/basic-2025-07-15/categories.json, and validated by importer/schema tests; docs/requirements.md and docs/exam-facts.md now cite ISED CIR/RIC sources for French categories and no fixed Basic exam time limit; apps/web uses verified French category names in French UI and timer copy now states no fixed ISED time limit. Confirmed apps/web/vite.config.ts has no build.target override, so Vite 8.3.x default baseline-widely-available applies. Validation passed: pnpm typecheck; pnpm test; pnpm build:web; pnpm import:check; pnpm check:schemas; pnpm check:links; pnpm check:apple-l10n. iOS/macOS xbuild suites were not run because no Apple Swift or string-catalog files changed.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Resolved task-6 open planning questions. The Basic bank now carries verified official French category names from ISED CIR-3 §5.1 and the French Exam Generator via content/categories.json and regenerated generated content; docs now record the category sources, the ISED circular no-fixed-time-limit guidance with quoted normal completion guidance and circulars-not-law caveat, and the Vite 8.3.x default browser floor. Web French UI now reads category names from the verified bank metadata and timer copy no longer says the time limit is unverified. Verified with pnpm typecheck, pnpm test, pnpm build:web, pnpm import:check, pnpm check:schemas, pnpm check:links, and pnpm check:apple-l10n.
+<!-- SECTION:FINAL_SUMMARY:END -->
