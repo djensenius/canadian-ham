@@ -1,11 +1,11 @@
 ---
 id: TASK-8
 title: Apple accessibility follow-ups
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-01 22:56'
+updated_date: '2026-10-02 01:10'
 labels:
   - apple
   - accessibility
@@ -22,7 +22,7 @@ Reviews of the Apple accessibility and French interface lanes approved the work 
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 After mock exam submission, focus moves to the results heading on appear and the announcement isn't cut off (verified with VoiceOver)
+- [x] #1 After mock exam submission, focus moves to the results heading on appear and the announcement isn't cut off (verified with VoiceOver)
 - [x] #2 The tvOS 'Next question' focus ring visibly renders (screenshot or manual check recorded)
 - [x] #3 English system error details (e.g. QuestionBankLoadError) are tagged en or localised in the French UI
 <!-- AC:END -->
@@ -43,10 +43,12 @@ Fix review round: merge origin/main, restore AC #2/#3 to unchecked while correct
 Implemented Apple follow-ups and validation. Mock exam results heading now owns the spoken summary and is focused after the result view appears; XCUITest verifies the heading identifier/label, but the actual VoiceOver listening check remains manual for the owner per docs/accessibility.md. tvOS focus evidence exported to docs/evidence/tvos-next-question-focus-ring.png with manifest at docs/evidence/tvos-next-question-focus-ring-xcresult/manifest.json. English error details are tagged with English language attributes in shared Apple and tvOS LocalizedErrorMessageText. Validation passed: pnpm check:apple-l10n; full iOS, macOS, tvOS, and visionOS xbuild suites.
 
 Review round fixes: AC2 revalidated by CanadianHamTVUITests/testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances with an on-screen/hittable/window-frame assertion before capture; docs/evidence/tvos-next-question-focus-ring.png was recaptured from the passing xcresult and manually opened/confirmed to show the focused Next question button and ring. Removed the duplicate docs/evidence/tvos-next-question-focus-ring-xcresult copy. AC3 revalidated by localizing app-owned QuestionBankLoadError and the debug ProgressStoreError.openFailed test message in Localizable.xcstrings, leaving Foundation/SwiftData/system error details untagged in StudyViews, tvOS, and visionOS; pnpm check:apple-l10n passed after the text-source gate and tvOS/visionOS localization builds.
+
+2026-10-02: Owner instructed the coordinator to close task-8. AC #1 is checked on that instruction. Automated evidence: iOS UI test testMockExamResultHeadingCarriesVoiceOverSubmissionSummary passed (heading carries the spoken summary and gains accessibility focus after layout). No separate VoiceOver listening result was recorded; the 3-step manual check stays in docs/accessibility.md for the release-candidate pass.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented mock-results focus/announcement exposure, tvOS focus-ring evidence capture, and English error-detail language tagging. Verified AC2 with exported tvOS screenshot evidence and AC3 with pnpm check:apple-l10n plus full Apple xbuild suites. AC1 remains In Progress pending the owner manual 3-step VoiceOver listening check.
+Mock exam results heading now carries the spoken summary and receives VoiceOver focus after layout; tvOS practice scrolls the focused Next-question button into view (real bug found by the evidence check), with an on-screen UI-test assertion and a screenshot in docs/evidence; the app's own errors are localised (EN/FR) on iOS/macOS, tvOS and visionOS and system errors are no longer mis-tagged as English. Verified with full iOS, macOS, tvOS and visionOS xbuild suites and pnpm check:apple-l10n; merged in PR #66; closed on the owner's instruction (see notes on AC #1).
 <!-- SECTION:FINAL_SUMMARY:END -->
