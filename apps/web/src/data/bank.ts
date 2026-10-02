@@ -113,13 +113,29 @@ export function subsectionTitle(subsectionId: string): string {
   return subsectionTitlesById.get(subsectionId)?.title.en ?? subsectionId;
 }
 
+export interface LocalizedCategoryName {
+  readonly text: string;
+  readonly language: Language;
+}
+
+export function localizedCategoryNameWithLanguage(category: Category, language: Language): LocalizedCategoryName {
+  const localizedName = category.name[language];
+  return localizedName === null
+    ? { text: category.name.en, language: "en" }
+    : { text: localizedName, language };
+}
+
 export function localizedCategoryName(category: Category, language: Language): string {
-  return category.name[language] ?? category.name.en;
+  return localizedCategoryNameWithLanguage(category, language).text;
+}
+
+export function categoryNameWithLanguage(categoryId: string, language: Language = "en"): LocalizedCategoryName {
+  const category = categoriesById.get(categoryId);
+  return category === undefined ? { text: categoryId, language: "en" } : localizedCategoryNameWithLanguage(category, language);
 }
 
 export function categoryName(categoryId: string, language: Language = "en"): string {
-  const category = categoriesById.get(categoryId);
-  return category === undefined ? categoryId : localizedCategoryName(category, language);
+  return categoryNameWithLanguage(categoryId, language).text;
 }
 
 async function loadQuestionsFromAsset(): Promise<readonly Question[]> {

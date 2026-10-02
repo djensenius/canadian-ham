@@ -1,6 +1,6 @@
 # Privacy and no-data design
 
-The privacy goal is simple: the Apple app collects no data, and the web app has no accounts, no analytics, no third-party requests, and no server-side progress storage.
+The privacy goal is simple: the Apple app collects no data, and the web app has no accounts, no analytics and no server-side progress storage, and makes no third-party requests itself (citation links open another site only when the user follows them).
 
 This document supports [requirements.md](requirements.md) and [architecture.md](architecture.md). Licensing and attribution rules are in [content-licensing.md](content-licensing.md).
 
@@ -135,7 +135,7 @@ Evidence to keep for review:
 - Airplane-mode smoke test results.
 - Settings screenshots showing export/import/reset are user-initiated.
 
-If any future feature transmits data, the privacy label must be revisited before release.
+Release evidence for the current App Store privacy-label answers and web privacy summary is tracked in [release/privacy-label-evidence.md](release/privacy-label-evidence.md). If any future feature transmits data, the privacy label must be revisited before release.
 
 ## Network policy
 
@@ -146,7 +146,7 @@ Policy: no network use by app features in v1.
 Verification targets:
 
 - No app networking module.
-- No remote URLs in runtime configuration except non-clickable attribution or source text where appropriate.
+- No remote URLs in runtime configuration except non-clickable attribution or source text, and the single RBR-4 citation link on the answer-explanation panel (`ExplanationPanelView`), which opens in the system browser only when tapped (the app makes no request itself). The panel appears after answering in lesson quizzes, practice sessions and review, and mock-exam review.
 - No code paths using URL loading for remote resources.
 - No app entitlements for iCloud sync or push notifications.
 - Runtime smoke test in airplane mode covers first launch, lesson reading, practice, mock exam, progress persistence, export, import, and reset.
