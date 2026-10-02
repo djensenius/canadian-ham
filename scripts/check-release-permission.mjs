@@ -28,6 +28,9 @@ export function extractPermissionRecord(markdown) {
       .split("|")
       .map((cell) => cell.trim());
     if (cells.length >= 2) {
+      if (fields.has(cells[0])) {
+        throw new Error(`Permission record has a duplicate '${cells[0]}' row; keep exactly one row per field.`);
+      }
       fields.set(cells[0], cells.slice(1).join(" | "));
     }
   }
@@ -36,7 +39,12 @@ export function extractPermissionRecord(markdown) {
 }
 
 export function checkReleasePermission(markdown) {
-  const fields = extractPermissionRecord(markdown);
+  let fields;
+  try {
+    fields = extractPermissionRecord(markdown);
+  } catch (error) {
+    return { ok: false, errors: [error instanceof Error ? error.message : String(error)] };
+  }
   const requestStatus = fields.get("Request status") ?? "";
   const referenceNumber = fields.get("ISED reference number") ?? "";
   const permissionDate = fields.get("Permission date") ?? "";
@@ -189,6 +197,14 @@ function runSelfTest() {
       errors: ["Request status must record ISED permission as granted."],
     });
   }
+
+  const duplicateStatus = permissionRecord({
+    status: "Granted: no",
+    reference: VALID_REFERENCE,
+    date: VALID_PERMISSION_DATE,
+  }).replace("| Request status | Granted: no |", "| Request status | Granted: no |\n| Request status | Granted: yes |");
+  assert.equal(checkReleasePermission(duplicateStatus).ok, false);
+  assert.match(checkReleasePermission(duplicateStatus).errors.join("\n"), /duplicate 'Request status' row/u);
 
   const impossibleDate = permissionRecord({
     status: "Granted: yes",

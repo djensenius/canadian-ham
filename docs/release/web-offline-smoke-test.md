@@ -32,6 +32,7 @@ Before starting:
 - [ ] Start and finish a mock exam while offline.
 - [ ] Export progress JSON while offline or after returning online only if the browser blocks downloads offline; note which behaviour occurred.
 - [ ] Import the exported progress JSON and confirm progress is restored.
+- [ ] Reset all local progress from Settings, confirm the confirmation prompt appears and progress is cleared after a reload, then import the exported JSON again to restore it.
 - [ ] Switch the UI to French and confirm French interface text renders.
 - [ ] Open the About page and confirm the privacy/no-analytics/local-progress summary and ISED disclaimer/attribution state match the release documents.
 - [ ] In DevTools Network, verify there were no third-party requests during load, install, offline reload, practice, lesson, mock exam, export/import, French UI, or About-page checks. User-clicked external citation links are out of scope for this no-automatic-request check.
