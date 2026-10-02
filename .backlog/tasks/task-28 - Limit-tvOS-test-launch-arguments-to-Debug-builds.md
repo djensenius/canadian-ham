@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 03:45'
-updated_date: '2026-10-02 04:28'
+updated_date: '2026-10-02 04:48'
 labels:
   - apple
   - tvos
@@ -30,7 +30,10 @@ Why: TVLaunchOptions parses test-only launch arguments (-CanadianHamReduceMotion
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Wrap tvOS TVLaunchOptions launch-argument parsing in #if DEBUG and keep Release defaults free of test flag strings.\n2. Run the tvOS UI test path that depends on launch arguments to confirm Debug tests still work.\n3. Build the tvOS app for Release and scan the built binary to prove the test launch-argument names are absent.\n4. Record objective evidence, check accepted criteria, summarize, and mark task-28 Done before starting task-27.
+1. Wrap tvOS TVLaunchOptions launch-argument parsing in #if DEBUG and keep Release defaults free of test flag strings.
+2. Run the tvOS UI test path that depends on launch arguments to confirm Debug tests still work.
+3. Build the tvOS app for Release and scan the built binary to prove the test launch-argument names are absent.
+4. Record objective evidence, check accepted criteria, summarize, and mark task-28 Done before starting task-27.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
