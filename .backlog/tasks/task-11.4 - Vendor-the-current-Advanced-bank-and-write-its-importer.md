@@ -33,7 +33,11 @@ Why: multi-course practice needs the official Advanced bank as generated data, i
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Re-read the Advanced proposal/licensing constraints and current Basic importer/schema wiring.\n2. Fetch the live ISED Advanced ZIP and EN/FR PDFs, determine the PDF title-page date from extracted text/strings, and vendor verbatim artifacts with checksums and manifest metadata.\n3. Add Advanced category metadata and an importer path that explicitly decodes the source encoding, skips the header row, validates 549 questions / 7 categories / 50 subsections, and emits content/generated/advanced-<date>/ without changing the active Basic bank.\n4. Wire import:advanced:check into pnpm import:check, update schemas/docs and add real-bank Advanced engine/scoring fixtures.\n5. Run requested validation, update Backlog notes/ACs/final summary, and commit logical changes without pushing.
+1. Re-read the Advanced proposal/licensing constraints and current Basic importer/schema wiring.
+2. Fetch the live ISED Advanced ZIP and EN/FR PDFs, determine the PDF title-page date from extracted text/strings, and vendor verbatim artifacts with checksums and manifest metadata.
+3. Add Advanced category metadata and an importer path that explicitly decodes the source encoding, skips the header row, validates 549 questions / 7 categories / 50 subsections, and emits content/generated/advanced-<date>/ without changing the active Basic bank.
+4. Wire import:advanced:check into pnpm import:check, update schemas/docs and add real-bank Advanced engine/scoring fixtures.
+5. Run requested validation, update Backlog notes/ACs/final summary, and commit logical changes without pushing.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
