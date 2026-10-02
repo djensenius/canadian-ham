@@ -33,6 +33,8 @@ final class CanadianHamTVUITests: XCTestCase {
             app.staticTexts[Self.fixedFrenchQuestionText].firstMatch.waitForExistence(timeout: 5),
             "Fixed question should switch to French through tvOS interaction"
         )
+        waitForSelection(on: frenchLanguage)
+        XCTAssertTrue(frenchLanguage.isSelected, "French language button should become selected after switching languages")
 
         let firstAnswer = app.descendants(matching: .any)["answer-A-button"].firstMatch
         XCTAssertTrue(firstAnswer.waitForExistence(timeout: 5), "First answer should exist")
@@ -60,26 +62,46 @@ final class CanadianHamTVUITests: XCTestCase {
     }
 
     func testFocusRingEvidenceScreenshots() throws {
-        try captureFocusRingEvidence(
-            screen: .categories,
-            appearance: "light",
-            targetIdentifier: "category-B-001-button",
-            evidenceFocus: "category",
-            attachmentName: "tvos-category-focus-ring"
-        )
+        for appearance in ["light", "dark"] {
+            let suffix = appearance == "light" ? "" : "-dark"
+            try captureFocusRingEvidence(
+                screen: .categories,
+                appearance: appearance,
+                targetIdentifier: "category-B-001-button",
+                evidenceFocus: "category",
+                attachmentName: "tvos-category-focus-ring\(suffix)"
+            )
+            try captureFocusRingEvidence(
+                screen: .practice,
+                appearance: appearance,
+                targetIdentifier: "answer-A-button",
+                evidenceFocus: "answer",
+                attachmentName: "tvos-answer-focus-ring\(suffix)"
+            )
+            try captureFocusRingEvidence(
+                screen: .practice,
+                appearance: appearance,
+                targetIdentifier: "next-question-button",
+                answeredSourceIndex: 0,
+                attachmentName: "tvos-primary-focus-ring\(suffix)"
+            )
+            try captureFocusRingEvidence(
+                screen: .categories,
+                appearance: appearance,
+                targetIdentifier: "question-language-fr-button",
+                language: "fr",
+                evidenceFocus: "language",
+                attachmentName: "tvos-language-focus-ring\(suffix)"
+            )
+        }
+
         try captureFocusRingEvidence(
             screen: .practice,
             appearance: "light",
             targetIdentifier: "answer-A-button",
             evidenceFocus: "answer",
-            attachmentName: "tvos-answer-focus-ring"
-        )
-        try captureFocusRingEvidence(
-            screen: .practice,
-            appearance: "light",
-            targetIdentifier: "next-question-button",
-            answeredSourceIndex: 0,
-            attachmentName: "tvos-primary-focus-ring"
+            reduceMotion: true,
+            attachmentName: "tvos-answer-focus-ring-reduce-motion"
         )
     }
 
@@ -128,7 +150,9 @@ final class CanadianHamTVUITests: XCTestCase {
         categoryID: String = "B-001",
         questionID: String = "B-001-002-002",
         answeredSourceIndex: Int? = nil,
-        evidenceFocus: String? = nil
+        language: String? = nil,
+        evidenceFocus: String? = nil,
+        reduceMotion: Bool = false
     ) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = [
@@ -140,8 +164,14 @@ final class CanadianHamTVUITests: XCTestCase {
         if let answeredSourceIndex {
             app.launchArguments += ["-CanadianHamPlatformAnsweredSourceIndex", "\(answeredSourceIndex)"]
         }
+        if let language {
+            app.launchArguments += ["-CanadianHamLanguage", language]
+        }
         if let evidenceFocus {
             app.launchArguments += ["-CanadianHamTVEvidenceFocus", evidenceFocus]
+        }
+        if reduceMotion {
+            app.launchArguments += ["-CanadianHamReduceMotion", "enabled"]
         }
         return app
     }
@@ -154,8 +184,10 @@ final class CanadianHamTVUITests: XCTestCase {
         screen: PlatformAuditScreen,
         appearance: String,
         targetIdentifier: String,
+        language: String? = nil,
         evidenceFocus: String? = nil,
         answeredSourceIndex: Int? = nil,
+        reduceMotion: Bool = false,
         attachmentName: String,
         file: StaticString = #filePath,
         line: UInt = #line
@@ -164,7 +196,9 @@ final class CanadianHamTVUITests: XCTestCase {
             screen: screen,
             appearance: appearance,
             answeredSourceIndex: answeredSourceIndex,
-            evidenceFocus: evidenceFocus
+            language: language,
+            evidenceFocus: evidenceFocus,
+            reduceMotion: reduceMotion
         )
         app.launch()
         defer { app.terminate() }
@@ -211,6 +245,12 @@ final class CanadianHamTVUITests: XCTestCase {
 
     private func waitForFocus(on element: XCUIElement) {
         for _ in 0..<10 where !element.hasFocus {
+            RunLoop.current.run(until: Date().addingTimeInterval(0.2))
+        }
+    }
+
+    private func waitForSelection(on element: XCUIElement) {
+        for _ in 0..<10 where !element.isSelected {
             RunLoop.current.run(until: Date().addingTimeInterval(0.2))
         }
     }
