@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 05:57'
+updated_date: '2026-10-02 06:07'
 labels:
   - release
   - web
@@ -40,3 +40,9 @@ Complete the About pages on web and Apple with attribution, disclaimer, the sour
 3. Record the required TODO/status in docs/content-licensing.md and Backlog notes: attribution must be replaced after task-1.1 records ISED permission; legal French remains English-only with lang/accessibility tagging per docs/french-style.md pending human legal review.
 4. Add or update web and Apple UI tests for About attribution, disclaimer, active bank version/effective date, and platform accessibility audits, then run requested pnpm checks plus DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild suites where possible.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented About content ahead of task-1.1 using the current docs/content-licensing.md draft attribution as a clearly marked draft/TODO. It must be replaced with the exact wording from recorded ISED permission before AC #3 can be checked; no permission reference/date/scope was invented. French choice: legal attribution/disclaimer/TODO text remains English-only in the French UI with web lang="en" and Apple English accessibility labels, per docs/french-style.md/content-licensing.md, pending human legal review, so AC #4 remains unchecked.
+<!-- SECTION:NOTES:END -->
