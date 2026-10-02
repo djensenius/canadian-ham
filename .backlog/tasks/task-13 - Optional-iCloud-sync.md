@@ -4,7 +4,7 @@ title: Optional iCloud sync
 status: To Do
 assignee: []
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 01:11'
+updated_date: '2026-10-02 01:12'
 labels:
   - apple
   - privacy
@@ -24,7 +24,7 @@ Privacy-review item: optional, opt-in iCloud sync of learning progress via Swift
 <!-- AC:BEGIN -->
 - [x] #1 The research is source-checked and committed under docs/proposals/
 - [x] #2 The owner's decisions (timing, sync scope, opt-in default off) are recorded
-- [ ] #3 If approved, implementation subtasks are created and the AGENTS.md v1 iCloud rule is revisited
+- [x] #3 If approved, implementation subtasks are created and the AGENTS.md v1 iCloud rule is revisited
 <!-- AC:END -->
 
 ## Implementation Notes
@@ -36,4 +36,6 @@ Owner decisions (2026-10-02, owner accepted all recommendations in docs/proposal
 3. Default: strictly opt-in, OFF until the user turns it on.
 4. Container and platforms: explicit container iCloud.com.djensenius.CanadianHam (confirm the exact ID when the capability is added); tvOS and visionOS sync only after those targets get progress storage.
 5. Privacy docs: approved in principle, after v1, a scoped exception in docs/privacy.md for CloudKit, Push Notifications and the remote-notification background mode (opt-in only), plus a CloudKit Console log no-retention policy. The AGENTS.md rule 'no iCloud sync in v1' stays unchanged; the privacy-review subtask revisits AGENTS.md, privacy.md and REQ-APPLE-003/004 when post-v1 work starts.
+
+2026-10-02: implementation subtasks task-13.2 to task-13.5 created. AGENTS.md v1 iCloud rule revisited: it stays as is for v1 (owner decision); task-13.2 updates it together with docs/privacy.md when post-v1 work starts.
 <!-- SECTION:NOTES:END -->
