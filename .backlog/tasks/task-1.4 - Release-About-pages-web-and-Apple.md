@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 06:07'
+updated_date: '2026-10-02 07:14'
 labels:
   - release
   - web
@@ -26,8 +26,8 @@ Complete the About pages on web and Apple with attribution, disclaimer, the sour
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 The web app has an About page with attribution, disclaimer, sources, privacy summary and the bank version
-- [ ] #2 The Apple About screens match the same content on iOS/macOS, tvOS and visionOS
+- [x] #1 The web app has an About page with attribution, disclaimer, sources, privacy summary and the bank version
+- [x] #2 The Apple About screens match the same content on iOS/macOS, tvOS and visionOS
 - [ ] #3 The attribution wording matches the recorded ISED permission
 - [ ] #4 The legal text has been reviewed, and French translations are added or the English-only decision is documented
 <!-- AC:END -->
@@ -45,4 +45,6 @@ Complete the About pages on web and Apple with attribution, disclaimer, the sour
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented About content ahead of task-1.1 using the current docs/content-licensing.md draft attribution as a clearly marked draft/TODO. It must be replaced with the exact wording from recorded ISED permission before AC #3 can be checked; no permission reference/date/scope was invented. French choice: legal attribution/disclaimer/TODO text remains English-only in the French UI with web lang="en" and Apple English accessibility labels, per docs/french-style.md/content-licensing.md, pending human legal review, so AC #4 remains unchecked.
+
+Validation evidence for AC #1/#2: web About route passed App.test About coverage and axe in pnpm test; pnpm build:web and web dist URL audit passed with official source URL allowlist. Apple About content passed iOS, macOS, tvOS, and visionOS xbuild suites on the implementation tip; iOS rerun passed 27 UI/unit tests after one transient failure in testCanPracticeInFrenchAndSeeFeedback, and the targeted retry also passed. Apple localization, text-source, and no-network checks passed. AC #3 remains unchecked pending task-1.1 recorded ISED permission. AC #4 remains unchecked pending human legal review of English-only legal text/French localization decision.
 <!-- SECTION:NOTES:END -->
