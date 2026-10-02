@@ -61,7 +61,7 @@ import {
   type PracticeScope,
 } from "./lib/studyEngine";
 
-type Route = "home" | "learn" | "module" | "lesson" | "practice" | "mock" | "results" | "settings";
+type Route = "home" | "learn" | "module" | "lesson" | "practice" | "mock" | "results" | "settings" | "about";
 type View = Route;
 type PreferencesPatch = Partial<WebPreferences>;
 
@@ -204,7 +204,7 @@ function hashSegments(hash = globalThis.location?.hash ?? ""): readonly string[]
 }
 
 function isRoute(value: string): value is Route {
-  return value === "home" || value === "learn" || value === "practice" || value === "mock" || value === "results" || value === "settings";
+  return value === "home" || value === "learn" || value === "practice" || value === "mock" || value === "results" || value === "settings" || value === "about";
 }
 
 export function App(props: AppProps) {
@@ -552,6 +552,7 @@ function AppContent({
         <button type="button" disabled={!initialStoreLoaded} aria-current={route === "practice" ? "page" : undefined} onClick={() => practiceSession === null ? startPractice(practiceScope) : navigate("practice")}>{t(interfaceLanguage, "navPractice")}</button>
         <button type="button" disabled={!initialStoreLoaded} aria-current={route === "mock" ? "page" : undefined} onClick={() => navigate("mock")}>{t(interfaceLanguage, "navMockExam")}</button>
         <button type="button" disabled={!initialStoreLoaded} aria-current={route === "settings" ? "page" : undefined} onClick={() => navigate("settings")}>{t(interfaceLanguage, "navSettings")}</button>
+        <button type="button" disabled={!initialStoreLoaded} aria-current={route === "about" ? "page" : undefined} onClick={() => navigate("about")}>{t(interfaceLanguage, "navAbout")}</button>
       </nav>
 
       <main id="main" ref={mainRef} tabIndex={-1}>
@@ -676,6 +677,7 @@ function AppContent({
             store={store}
           />
         ) : null}
+        {initialStoreLoaded && route === "about" ? <About interfaceLanguage={interfaceLanguage} /> : null}
       </main>
 
       <Footer interfaceLanguage={interfaceLanguage} />
@@ -1704,6 +1706,53 @@ function Results({ attempt, interfaceLanguage, language, onStartPractice, questi
             })}
           </ol>
         )}
+      </section>
+    </section>
+  );
+}
+
+const rbr4CitationUrl = "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service";
+
+function About({ interfaceLanguage }: { readonly interfaceLanguage: InterfaceLanguage }) {
+  const legalLang = englishTextLang(interfaceLanguage);
+
+  return (
+    <section className="card about" aria-labelledby="about-title">
+      <p className="eyebrow">{t(interfaceLanguage, "navAbout")}</p>
+      <h2 id="about-title">{t(interfaceLanguage, "aboutTitle")}</h2>
+      <p>{t(interfaceLanguage, "aboutIntro")}</p>
+
+      <section aria-labelledby="about-bank-heading">
+        <h3 id="about-bank-heading">{t(interfaceLanguage, "aboutBankHeading")}</h3>
+        <p>{t(interfaceLanguage, "aboutBankVersion", bankId, manifest.effectiveDate)}</p>
+        <p>{t(interfaceLanguage, "aboutQuestionBankCounts", manifest.counts.questions, manifest.counts.categories, manifest.counts.subsections)}</p>
+      </section>
+
+      <section aria-labelledby="about-sources-heading">
+        <h3 id="about-sources-heading">{t(interfaceLanguage, "aboutSourcesHeading")}</h3>
+        <ul>
+          <li>{t(interfaceLanguage, "aboutQuestionBankSource", manifest.effectiveDate, manifest.source.url)}</li>
+          <li>{t(interfaceLanguage, "aboutRbr4Source", rbr4CitationUrl)}</li>
+          <li>{t(interfaceLanguage, "aboutReferenceSheetSource")}</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="about-attribution-heading">
+        <h3 id="about-attribution-heading">{t(interfaceLanguage, "aboutAttributionHeading")}</h3>
+        <p className="legal-status" lang={legalLang}>{t(interfaceLanguage, "aboutLegalStatus")}</p>
+        <blockquote lang={legalLang}>
+          <p>{t(interfaceLanguage, "aboutAttributionText")}</p>
+        </blockquote>
+      </section>
+
+      <section aria-labelledby="about-disclaimer-heading">
+        <h3 id="about-disclaimer-heading">{t(interfaceLanguage, "aboutDisclaimerHeading")}</h3>
+        <p lang={legalLang}>{t(interfaceLanguage, "aboutDisclaimerText")}</p>
+      </section>
+
+      <section aria-labelledby="about-privacy-heading">
+        <h3 id="about-privacy-heading">{t(interfaceLanguage, "aboutPrivacyHeading")}</h3>
+        <p>{t(interfaceLanguage, "settingsPrivacyCopy")}</p>
       </section>
     </section>
   );

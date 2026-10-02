@@ -49,6 +49,32 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try performAudit(on: app, context: "French practice question")
     }
 
+    func testAboutShowsReleaseAttributionDisclaimerAndBankVersion() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "about"])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.staticTexts["About Canadian Ham"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "Active bank: basic-2025-07-15, effective 2025-07-15."), "Expected active bank version and effective date on About")
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "Contains information reproduced from Innovation, Science and Economic Development Canada"), "Expected ISED attribution on About")
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "canadian-ham is an independent study tool"), "Expected disclaimer on About")
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "Draft attribution, not in effect"), "Expected visible draft-attribution warning on About")
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "sent: pending; granted: pending"), "Expected pending permission status on About")
+        assertAboutLowerSectionsReachable(in: app, platformName: "iOS")
+    }
+
+    func testFrenchAboutKeepsLegalTextInEnglish() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: ["-AppleLanguages", "(fr)", "-AppleLocale", "fr_CA", "-CanadianHamInitialScreen", "about"])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.staticTexts["À propos de Canadian Ham"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Banque"].firstMatch.waitForExistence(timeout: 5), "Expected localized French About section heading")
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "Draft attribution, not in effect"), "Expected English legal status in French About")
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "Contains information reproduced from Innovation, Science and Economic Development Canada"), "Expected English attribution text in French About")
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "canadian-ham is an independent study tool"), "Expected English disclaimer text in French About")
+    }
+
     func testCanPracticeInFrenchAndSeeFeedback() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
@@ -779,6 +805,33 @@ final class CanadianHamPracticeUITests: XCTestCase {
     private func anyVisibleLabel(in app: XCUIApplication, contains needle: String) -> Bool {
         let predicate = NSPredicate(format: "label CONTAINS[c] %@", needle)
         return app.staticTexts.matching(predicate).firstMatch.exists
+    }
+
+    private func assertAboutLowerSectionsReachable(
+        in app: XCUIApplication,
+        platformName: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let disclaimer = app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "canadian-ham is an independent study tool")).firstMatch
+        XCTAssertTrue(disclaimer.waitForExistence(timeout: 5), "Expected About disclaimer text on \(platformName)", file: file, line: line)
+        scrollUntilPartiallyVisible(disclaimer, in: app, maxSwipes: 10)
+        XCTAssertTrue(
+            isPartiallyVisibleBelowNavigationBar(disclaimer, in: app),
+            "About disclaimer text should be on screen on \(platformName), not merely present off screen. Frame: \(frameDescription(disclaimer.frame))",
+            file: file,
+            line: line
+        )
+
+        let privacy = app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "works fully offline with bundled content")).firstMatch
+        XCTAssertTrue(privacy.waitForExistence(timeout: 5), "Expected About privacy text on \(platformName)", file: file, line: line)
+        scrollUntilPartiallyVisible(privacy, in: app, maxSwipes: 10)
+        XCTAssertTrue(
+            isPartiallyVisibleBelowNavigationBar(privacy, in: app),
+            "About privacy text should be on screen on \(platformName), not merely present off screen. Frame: \(frameDescription(privacy.frame))",
+            file: file,
+            line: line
+        )
     }
 
     private func scrollUntilHittable(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {

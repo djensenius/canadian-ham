@@ -16,10 +16,12 @@ const XML_NAMESPACE_URLS = new Set([
 ]);
 
 // Official ISED/Government of Canada source URLs are allowed in dist only as
-// bundled citation href values rendered by the app as user-activated external
-// links. Keep this allowlist exact; unexpected external URLs must still fail
-// the audit rather than being hidden behind a broader network exception.
+// bundled source/citation text or href values that are not fetched, preloaded,
+// or cached automatically. Keep this allowlist exact; unexpected external URLs
+// must still fail the audit rather than being hidden behind a broader network
+// exception.
 export const OFFICIAL_SOURCE_CITATION_URLS = new Set([
+  "https://apc-cap.ic.gc.ca/datafiles/amat_basic_quest.zip#amat_basic_quest_delim.txt",
   "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service",
 ]);
 

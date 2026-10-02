@@ -18,6 +18,21 @@ final class CanadianHamVisionUITests: XCTestCase {
         try auditScreen(.about)
     }
 
+    func testAboutShowsReleaseAttributionDisclaimerAndBankVersion() throws {
+        let app = configuredApp(screen: .about, appearance: "light")
+        app.launch()
+        defer { app.terminate() }
+
+        XCTAssertTrue(PlatformAuditScreen.about.waitElement(in: app).waitForExistence(timeout: 15))
+        XCTAssertTrue(anyLabel(in: app, contains: "Active bank: basic-2025-07-15, effective 2025-07-15."), "Expected active bank version and effective date on visionOS About")
+        XCTAssertTrue(anyLabel(in: app, contains: "Contains information reproduced from Innovation, Science and Economic Development Canada"), "Expected ISED attribution on visionOS About")
+        XCTAssertTrue(anyLabel(in: app, contains: "canadian-ham is an independent study tool"), "Expected disclaimer on visionOS About")
+        XCTAssertTrue(anyLabel(in: app, contains: "Practice sessions are kept only while the app is open"), "Expected ephemeral practice-session privacy copy on visionOS About")
+        XCTAssertTrue(anyLabel(in: app, contains: "Draft attribution, not in effect"), "Expected visible draft-attribution warning on visionOS About")
+        XCTAssertTrue(anyLabel(in: app, contains: "sent: pending; granted: pending"), "Expected pending permission status on visionOS About")
+        assertAboutLowerSectionsReachable(in: app, platformName: "visionOS")
+    }
+
     func testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances() throws {
         let app = configuredApp(screen: .practice, appearance: "light")
         app.launch()
@@ -195,6 +210,51 @@ final class CanadianHamVisionUITests: XCTestCase {
         }
     }
 
+    private func assertAboutLowerSectionsReachable(
+        in app: XCUIApplication,
+        platformName: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let disclaimer = app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "canadian-ham is an independent study tool")).firstMatch
+        XCTAssertTrue(disclaimer.waitForExistence(timeout: 5), "Expected About disclaimer text on \(platformName)", file: file, line: line)
+        scrollUntilOnScreen(disclaimer, in: app, maxSwipes: 10)
+        XCTAssertTrue(
+            isOnScreen(disclaimer, in: app),
+            "About disclaimer text should be on screen on \(platformName), not merely present off screen. Frame: \(frameDescription(disclaimer.frame))",
+            file: file,
+            line: line
+        )
+
+        let privacy = app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "Practice sessions are kept only while the app is open")).firstMatch
+        XCTAssertTrue(privacy.waitForExistence(timeout: 5), "Expected About privacy text on \(platformName)", file: file, line: line)
+        scrollUntilOnScreen(privacy, in: app, maxSwipes: 10)
+        XCTAssertTrue(
+            isOnScreen(privacy, in: app),
+            "About privacy text should be on screen on \(platformName), not merely present off screen. Frame: \(frameDescription(privacy.frame))",
+            file: file,
+            line: line
+        )
+    }
+
+    private func scrollUntilOnScreen(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
+        let scrollView = app.scrollViews.firstMatch
+        guard scrollView.waitForExistence(timeout: 1) else { return }
+        for _ in 0..<maxSwipes where !isOnScreen(element, in: app) {
+            if element.frame.maxY <= app.windows.firstMatch.frame.minY {
+                scrollView.swipeDown()
+            } else {
+                scrollView.swipeUp()
+            }
+            RunLoop.current.run(until: Date().addingTimeInterval(0.2))
+        }
+    }
+
+    private func isOnScreen(_ element: XCUIElement, in app: XCUIApplication) -> Bool {
+        guard element.exists else { return false }
+        return app.windows.firstMatch.frame.insetBy(dx: 16, dy: 16).intersects(element.frame)
+    }
+
     private func waitForElementToDisappear(
         _ element: XCUIElement,
         timeout: TimeInterval,
@@ -206,6 +266,14 @@ final class CanadianHamVisionUITests: XCTestCase {
         let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
         let result = XCTWaiter.wait(for: [expectation], timeout: timeout)
         XCTAssertEqual(result, .completed, message, file: file, line: line)
+    }
+
+    private func anyLabel(in app: XCUIApplication, contains needle: String) -> Bool {
+        app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", needle)).firstMatch.exists
+    }
+
+    private func frameDescription(_ frame: CGRect) -> String {
+        "x: \(frame.origin.x), y: \(frame.origin.y), width: \(frame.size.width), height: \(frame.size.height)"
     }
 
     private static let fixedFrenchQuestionText = "Le certificat d'opérateur radioamateur est valide pour:"

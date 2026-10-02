@@ -659,6 +659,8 @@ private struct VisionFeedbackPanel: View {
     }
 }
 
+private let visionAboutRBR4CitationURL = "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service"
+
 private struct VisionAboutView: View {
     let bank: QuestionBank
     let onCategories: () -> Void
@@ -677,18 +679,30 @@ private struct VisionAboutView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
 
-                HStack(alignment: .top, spacing: DesignTokens.Spacing.lg) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                     VisionPaperSection(title: "Bank") {
-                        Text("Active bank: \(bank.manifest.bankId)")
-                        Text("Effective date: \(bank.manifest.effectiveDate)")
-                        Text("Questions: \(bank.questions.count) • Categories: \(bank.categories.count) • Subsections: \(bank.subsections.count)") // l10n: localized
+                        Text("Active bank: \(bank.manifest.bankId), effective \(bank.manifest.effectiveDate).")
+                        Text("Questions: \(bank.questions.count); categories: \(bank.categories.count); subsections: \(bank.subsections.count).") // l10n: localized
+                    }
+                    VisionPaperSection(title: "Sources") {
+                        Text("ISED Amateur Radio Operator Certificate Basic Qualification question bank, effective \(bank.manifest.effectiveDate).")
+                        Text("Question bank source URL: \(verbatimVisionText(bank.manifest.source.url))")
+                        Text("RBR-4, Standards for the Operation of Radio Stations in the Amateur Radio Service: \(verbatimVisionText(visionAboutRBR4CitationURL))")
+                        Text("ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps.")
                     }
                     VisionPaperSection(title: "Attribution") {
-                        Text(englishVision("Question-bank material is sourced from Innovation, Science and Economic Development Canada Amateur Radio Operator Certificate Basic Qualification materials.")) // l10n: content(en)
-                        Text(englishVision("Canadian Ham is independent and not affiliated with, sponsored by, or endorsed by ISED, RAC, or any accredited examiner.")) // l10n: content(en)
+                        // TODO(task-1.1): Replace this draft attribution with the exact wording from the recorded ISED permission before public release. Permission remains pending: request drafted; sent pending; granted pending.
+                        Text("Draft attribution, not in effect: ISED written permission is pending (request status: drafted; sent: pending; granted: pending). Replace this draft with the wording from the recorded permission (task-1.1) before public release.")
+                            .accessibilityLabel(Text(englishVision("Draft attribution, not in effect: ISED written permission is pending (request status: drafted; sent: pending; granted: pending). Replace this draft with the wording from the recorded permission (task-1.1) before public release."))) // l10n: content(en)
+                        Text("Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page.")
+                            .accessibilityLabel(Text(englishVision("Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page."))) // l10n: content(en)
+                    }
+                    VisionPaperSection(title: "Disclaimer") {
+                        Text("canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner.")
+                            .accessibilityLabel(Text(englishVision("canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner."))) // l10n: content(en)
                     }
                     VisionPaperSection(title: "Privacy") {
-                        Text("This visionOS app works offline with bundled content, includes no networking code, no analytics, no telemetry, and no iCloud sync.")
+                        Text("This Apple Vision Pro app works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent.")
                     }
                 }
             }
@@ -798,6 +812,10 @@ private func localizedVision(_ string: String, language: BankLanguage) -> Attrib
     var attributedString = AttributedString(string)
     attributedString.languageIdentifier = language.accessibilityLanguageCode
     return attributedString
+}
+
+private func verbatimVisionText(_ string: String) -> Text {
+    Text(verbatim: string) // l10n: verbatim
 }
 
 private func englishVision(_ string: String) -> AttributedString {

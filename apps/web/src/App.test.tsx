@@ -11,7 +11,7 @@ import { IDBFactory } from "fake-indexeddb";
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
 
 import { App, AppErrorBoundary, CitationLink, ExplanationPanel } from "./App";
-import { bankId, categories, loadQuestions, loadQuestionsFromUrl, type Answer, type Category, type Question } from "./data/bank";
+import { bankId, categories, loadQuestions, loadQuestionsFromUrl, manifest, type Answer, type Category, type Question } from "./data/bank";
 import { explanationForQuestion, parseChoiceNotes } from "./data/explanations";
 import { lessonQuizzesById, buildLessonQuizItems } from "./data/quizzes";
 import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExportV1, type WebPreferences } from "./lib/progressStore";
@@ -910,6 +910,40 @@ describe("App accessibility and flows", () => {
     await user.click(screen.getByRole("button", { name: "Submit practice set" }));
     await screen.findByRole("heading", { name: "Practice set review" });
     assert.equal((await store.getQuestionProgress()).length, 10);
+  });
+
+  it("renders About content with source, bank, legal language tags, and no axe violations", async () => {
+    window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
+    window.location.hash = "#/about";
+    const store = createStore("about-content");
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "about-seed"} />);
+
+    await screen.findByRole("heading", { name: "À propos de Canadian Ham" });
+    assert.equal(document.documentElement.lang, "fr-CA");
+    assert.ok(screen.getByText((text) => text.includes(bankId) && text.includes(manifest.effectiveDate)));
+    const questionBankSource = screen.getByText((text) => text.includes(manifest.source.url));
+    assert.equal(questionBankSource.closest("a"), null);
+    const rbr4Source = screen.getByText((text) => text.includes("RBR-4") && text.includes("ised-isde.canada.ca"));
+    assert.equal(rbr4Source.closest("a"), null);
+    assert.ok(screen.getByText(/ISDE fournit la feuille de référence de l’examen de compétence de base/));
+    assert.ok(screen.getByText(/aucun compte, aucune analytique, aucune télémétrie, aucune publicité/));
+    const attributionHeading = screen.getByRole("heading", { name: "Attribution" });
+    assert.equal(attributionHeading.getAttribute("lang"), null);
+    const attributionSection = attributionHeading.closest("section");
+    assert.ok(attributionSection);
+    const attribution = within(attributionSection).getByText(/used with permission/);
+    assert.equal(attribution.closest("blockquote")?.getAttribute("lang"), "en");
+    const disclaimerHeading = screen.getByRole("heading", { name: "Avis de non-responsabilité" });
+    assert.equal(disclaimerHeading.getAttribute("lang"), null);
+    const disclaimerSection = disclaimerHeading.closest("section");
+    assert.ok(disclaimerSection);
+    const disclaimer = within(disclaimerSection).getByText(/canadian-ham is an independent study tool/);
+    assert.equal(disclaimer.getAttribute("lang"), "en");
+    const legalStatus = within(attributionSection).getByText(/Draft attribution, not in effect/);
+    assert.equal(legalStatus.getAttribute("lang"), "en");
+    assert.match(legalStatus.textContent ?? "", /sent: pending; granted: pending/);
+    assert.equal(container.querySelectorAll("main section[aria-labelledby]").length >= 6, true);
+    await expectNoAxeViolations(container);
   });
 
   it("renders Settings theme controls and no axe violations", async () => {

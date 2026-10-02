@@ -1,5 +1,5 @@
 import categoriesJson from "../../../../content/generated/basic-2025-07-15/categories.json";
-import { bankId as manifestBankId, counts as manifestCounts, effectiveDate as manifestEffectiveDate } from "../../../../content/generated/basic-2025-07-15/manifest.json";
+import { bankId as manifestBankId, counts as manifestCounts, effectiveDate as manifestEffectiveDate, source as manifestSource } from "../../../../content/generated/basic-2025-07-15/manifest.json";
 import questionsJsonUrl from "../../../../content/generated/basic-2025-07-15/questions.json?url";
 import subsectionsJson from "../../../../content/generated/basic-2025-07-15/subsections.json";
 import subsectionTitlesJson from "../../../../content/subsection-titles.json";
@@ -71,12 +71,22 @@ export interface BankManifest {
     readonly categories: number;
     readonly subsections: number;
   };
+  readonly source: {
+    readonly path: string;
+    readonly sha256: string;
+    readonly url: string;
+  };
 }
 
 export const manifest: BankManifest = {
   bankId: manifestBankId,
   effectiveDate: manifestEffectiveDate,
   counts: manifestCounts,
+  source: {
+    path: manifestSource.path,
+    sha256: manifestSource.sha256,
+    url: manifestSource.url,
+  },
 };
 export const categories = categoriesJson as readonly Category[];
 export const subsections = subsectionsJson as readonly Subsection[];
