@@ -359,6 +359,8 @@ describe("App accessibility and flows", () => {
 
     await screen.findByRole("heading", { name: "Prêt pour la compétence de base avec distinction?" });
     assert.equal(document.documentElement.lang, "fr-CA");
+    assert.ok(screen.getByText("Règlements et politiques"));
+    assert.ok(screen.getByText("Descentes d'antenne et systèmes d'antenne"));
     assert.ok(screen.getByRole("link", { name: "Aller au contenu principal" }));
     await expectNoAxeViolations(container);
 
@@ -381,6 +383,7 @@ describe("App accessibility and flows", () => {
     window.location.hash = "#/results";
     window.dispatchEvent(new HashChangeEvent("hashchange"));
     await screen.findByRole("heading", { name: "Résultats de l’examen simulé" });
+    assert.ok(screen.getByText(/Brouillage et suppression/));
 
     await user.click(within(primaryNav).getByRole("button", { name: "Réglages" }));
     await screen.findByRole("heading", { name: "Réglages et données locales" });

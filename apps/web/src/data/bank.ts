@@ -34,7 +34,7 @@ export interface Category {
     readonly en: string;
     readonly fr: string | null;
   };
-  readonly frenchNameStatus: "pending verification";
+  readonly frenchNameStatus: "pending verification" | "verified";
   readonly questionCount: number;
   readonly subsectionCount: number;
   readonly examQuestionCount: number;
@@ -113,8 +113,13 @@ export function subsectionTitle(subsectionId: string): string {
   return subsectionTitlesById.get(subsectionId)?.title.en ?? subsectionId;
 }
 
-export function categoryName(categoryId: string): string {
-  return categoriesById.get(categoryId)?.name.en ?? categoryId;
+export function localizedCategoryName(category: Category, language: Language): string {
+  return category.name[language] ?? category.name.en;
+}
+
+export function categoryName(categoryId: string, language: Language = "en"): string {
+  const category = categoriesById.get(categoryId);
+  return category === undefined ? categoryId : localizedCategoryName(category, language);
 }
 
 async function loadQuestionsFromAsset(): Promise<readonly Question[]> {
