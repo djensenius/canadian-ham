@@ -1,9 +1,11 @@
 ---
 id: TASK-26
 title: Harden category French-name status checks
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@pi-worker'
 created_date: '2026-10-02 01:52'
+updated_date: '2026-10-02 04:24'
 labels:
   - content
   - web
@@ -25,3 +27,9 @@ Why: the task-6 review found gaps around the new category frenchNameStatus field
 - [ ] #2 The JSON Schema rejects verified with a null or empty French name (oneOf/if-then), with valid and invalid fixtures
 - [ ] #3 When the web falls back to the English category name, the element is tagged lang=en, with a unit test
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inspect existing category import/schema/web handling and tests.\n2. Add importer negative tests for frenchNameStatus edge cases and adjust messages only if needed.\n3. Tighten common JSON Schema and add schema fixtures/tests for verified French names.\n4. Update web category-name fallback language tagging and unit tests.\n5. Run required validation commands, then finalize task with evidence.
+<!-- SECTION:PLAN:END -->
