@@ -77,6 +77,11 @@ const fixtureCases = [
   },
 ];
 
+test("progress export v1: valid legacy Basic fixture without bankId fields validates", () => {
+  const data = readJsonFixture("valid", "progress-export-v1-legacy-without-bankid.json");
+  assert.deepEqual(validateDataAgainstSchema(data, "progress-export-v1.schema.json"), []);
+});
+
 for (const fixtureCase of fixtureCases) {
   test(`${fixtureCase.name}: valid synthetic fixture validates`, () => {
     const data = readJsonFixture("valid", fixtureCase.fixture);

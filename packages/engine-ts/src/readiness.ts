@@ -1,3 +1,4 @@
+import { BASIC_BANK_ID, rulesForBankId } from "./banks.ts";
 import { compareOrdinal } from "./ordinal.ts";
 import { percentFor, type CategoryBreakdownEntry } from "./scoring.ts";
 import { parseCanonicalUtcTimestamp, requireCanonicalUtcTimestamp } from "./timestamps.ts";
@@ -15,6 +16,7 @@ export interface ReadinessExamAttempt {
 }
 
 export interface ReadinessInput {
+  readonly bankId?: string;
   readonly completedExams: readonly ReadinessExamAttempt[];
   readonly dueReviewCount: number;
 }
@@ -33,6 +35,8 @@ export type ReadinessReason =
   | { readonly type: "exam-threshold"; readonly threshold: 70 | 80; readonly countAtOrAbove: number };
 
 export function computeReadiness(input: ReadinessInput): ReadinessResult {
+  const bankId = input.bankId ?? BASIC_BANK_ID;
+  const bankRules = rulesForBankId(bankId);
   assertUniqueSubmittedAt(input.completedExams);
   const completed = [...input.completedExams].toSorted(
     (a, b) => parseCanonicalUtcTimestamp(b.submittedAt, "submittedAt") - parseCanonicalUtcTimestamp(a.submittedAt, "submittedAt"),
@@ -66,17 +70,20 @@ export function computeReadiness(input: ReadinessInput): ReadinessResult {
     };
   }
 
-  const honoursCount = considered.filter((attempt) => scorePercent(attempt) >= 80).length;
-  if (honoursCount >= 2) {
-    return {
-      state: "honours-ready",
-      consideredExamCount: considered.length,
-      consideredSubmittedAt: considered.map((attempt) => attempt.submittedAt),
-      reasons: [{ type: "exam-threshold", threshold: 80, countAtOrAbove: honoursCount }],
-    };
+  const honoursPercent = bankRules.hasHonours ? bankRules.honoursPercent : null;
+  if (honoursPercent !== null) {
+    const honoursCount = considered.filter((attempt) => scorePercent(attempt) >= honoursPercent).length;
+    if (honoursCount >= 2) {
+      return {
+        state: "honours-ready",
+        consideredExamCount: considered.length,
+        consideredSubmittedAt: considered.map((attempt) => attempt.submittedAt),
+        reasons: [{ type: "exam-threshold", threshold: 80, countAtOrAbove: honoursCount }],
+      };
+    }
   }
 
-  const passCount = considered.filter((attempt) => scorePercent(attempt) >= 70).length;
+  const passCount = considered.filter((attempt) => scorePercent(attempt) >= bankRules.passPercent).length;
   if (passCount >= 2) {
     return {
       state: "pass-ready",

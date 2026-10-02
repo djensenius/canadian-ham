@@ -83,7 +83,7 @@ final class FixtureTests: XCTestCase {
         let fixture = try JSONDecoder().decode(ScoringFixture.self, from: data)
         let expectedOutputs = try caseExpectedOutputs(in: fixtureJSON, arrayKey: "cases")
         for (index, testCase) in fixture.cases.enumerated() {
-            try assertFixtureOutput(scoreExam(testCase.input.items), equals: expectedOutputs[index], testCase.id)
+            try assertFixtureOutput(try scoreExam(testCase.input.items, bankId: testCase.input.bankId), equals: expectedOutputs[index], testCase.id)
         }
     }
 
@@ -384,6 +384,7 @@ private struct ExamGenerationFixture: Decodable {
 private struct ScoringFixture: Decodable {
     struct Case: Decodable {
         struct Input: Decodable {
+            let bankId: String
             let items: [ScoreInputItem]
         }
         let id: String

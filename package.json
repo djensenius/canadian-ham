@@ -4,7 +4,7 @@
   "private": true,
   "packageManager": "pnpm@12.8.2",
   "scripts": {
-    "test": "pnpm test:release-permission && pnpm --filter @canadian-ham/content-tools test && pnpm --filter @canadian-ham/web test",
+    "test": "pnpm test:release-permission && pnpm --filter @canadian-ham/content-tools test && pnpm --filter @canadian-ham/morse-engine test && pnpm --filter @canadian-ham/web test",
     "test:release-permission": "node scripts/check-release-permission.mjs --self-test",
     "import:check": "pnpm --filter @canadian-ham/content-tools import:basic:check",
     "diff:banks": "pnpm --filter @canadian-ham/content-tools diff:banks",

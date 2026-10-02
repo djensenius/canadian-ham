@@ -219,16 +219,18 @@
         "id": { "$ref": "#/$defs/fixtureId" },
         "input": {
           "type": "object",
-          "required": ["items"],
+          "required": ["bankId", "items"],
           "properties": {
+            "bankId": { "$ref": "common.schema.json#/$defs/bankId" },
             "items": { "type": "array", "items": { "$ref": "#/$defs/scoreInputItem" } }
           },
           "additionalProperties": false
         },
         "expectedOutput": {
           "type": "object",
-          "required": ["correct", "total", "percent", "passed", "honours", "categoryBreakdown", "incorrectQuestionIds", "weakSubsectionIds"],
+          "required": ["bankId", "correct", "total", "percent", "passed", "honours", "categoryBreakdown", "incorrectQuestionIds", "weakSubsectionIds"],
           "properties": {
+            "bankId": { "$ref": "common.schema.json#/$defs/bankId" },
             "correct": { "type": "integer", "minimum": 0 },
             "total": { "type": "integer", "minimum": 0 },
             "percent": { "type": "number", "minimum": 0, "maximum": 100 },
@@ -320,8 +322,9 @@
         "id": { "$ref": "#/$defs/fixtureId" },
         "input": {
           "type": "object",
-          "required": ["completedExams", "dueReviewCount"],
+          "required": ["bankId", "completedExams", "dueReviewCount"],
           "properties": {
+            "bankId": { "$ref": "common.schema.json#/$defs/bankId" },
             "completedExams": { "type": "array", "items": { "$ref": "#/$defs/readinessExamAttempt" } },
             "dueReviewCount": { "type": "integer", "minimum": 0 }
           },

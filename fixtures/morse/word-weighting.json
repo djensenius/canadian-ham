@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "kind": "morse-word-weighting",
+  "cases": [
+    {
+      "id": "ric1-section-8-3-sample-stand-in-is-78-weighted-characters",
+      "notes": "docs/proposals/morse-trainer.md contains only the partial RIC-1 section 8.3 sample text with an ellipsis, so this fixture uses a clearly synthetic stand-in until the complete official sample is recorded.",
+      "input": {
+        "text": "SYNTHETIC SAMPLE TEXT FOR MORSE FIXTURE CANADIAN RADIO ABCD QSJ 1962 / 7531 - OK?"
+      },
+      "expectedOutput": {
+        "weightedCharacters": 78,
+        "unweightedCharacters": 67,
+        "needsOfficialRic1Section83Sample": true
+      }
+    },
+    {
+      "id": "figures-and-punctuation-weigh-two-letters-weigh-one",
+      "input": {
+        "text": "A 1 / ."
+      },
+      "expectedOutput": {
+        "weightedCharacters": 7,
+        "unweightedCharacters": 4,
+        "needsOfficialRic1Section83Sample": false
+      }
+    },
+    {
+      "id": "weighting-rejects-invalid-text",
+      "input": {
+        "text": "A!"
+      },
+      "expectedError": {
+        "type": "invalidCharacters",
+        "invalidCharacters": [
+          {
+            "character": "!",
+            "index": 1
+          }
+        ]
+      }
+    }
+  ]
+}

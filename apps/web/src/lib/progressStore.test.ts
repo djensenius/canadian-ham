@@ -58,6 +58,7 @@ const attempt: ExamAttempt = {
     flagged: false,
   }],
   score: {
+    bankId,
     correct: 1,
     total: 1,
     percent: 100,
@@ -225,6 +226,36 @@ describe("ProgressStore", () => {
     assert.equal(validation.ok, true);
     assert.deepEqual(validation.data?.lessonProgress, []);
     assert.deepEqual(validation.data?.lessonQuizAttempts, []);
+  });
+
+  it("rejects imports whose score bankId does not match the active bank", () => {
+    const validation = validateProgressImport(validExport({
+      examAttempts: [{ ...attempt, score: { ...attempt.score, bankId: "advanced-synthetic" } }],
+    }));
+
+    assert.equal(validation.ok, false);
+    assert.match(validation.errors.join("\n"), /examAttempts\[0\]\.score\.bankId must be basic-2025-07-15/);
+  });
+
+  it("accepts legacy Basic exports without bankId fields and normalizes them", () => {
+    const { bankId: _exportBankId, questionProgress, examAttempts, ...legacy } = validExport();
+    const legacyQuestionProgress = questionProgress.map(({ bankId: _recordBankId, ...recordWithoutBankId }) => recordWithoutBankId);
+    const legacyExamAttempts = examAttempts.map(({ bankId: _attemptBankId, score, ...attemptWithoutBankId }) => {
+      const { bankId: _scoreBankId, ...scoreWithoutBankId } = score;
+      return { ...attemptWithoutBankId, score: scoreWithoutBankId };
+    });
+
+    const validation = validateProgressImport({
+      ...legacy,
+      questionProgress: legacyQuestionProgress,
+      examAttempts: legacyExamAttempts,
+    });
+
+    assert.equal(validation.ok, true, validation.errors.join("\n"));
+    assert.equal(validation.data?.bankId, bankId);
+    assert.equal(validation.data?.questionProgress[0]?.bankId, bankId);
+    assert.equal(validation.data?.examAttempts[0]?.bankId, bankId);
+    assert.equal(validation.data?.examAttempts[0]?.score.bankId, bankId);
   });
 
   it("migrates an existing v2 IndexedDB database to v3 lesson stores", async () => {

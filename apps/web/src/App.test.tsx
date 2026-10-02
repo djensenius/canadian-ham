@@ -205,6 +205,7 @@ function readinessAttempt(seed: string, submittedAt: string, percent: number): E
     ...allCorrectAttempt(seed, submittedAt),
     items: [],
     score: {
+      bankId,
       correct: percent,
       total: 100,
       percent,

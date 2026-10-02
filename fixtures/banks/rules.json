@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "banks": [
+    {
+      "bankId": "basic-2025-07-15",
+      "categoryIds": ["B-001", "B-002", "B-003", "B-004", "B-005", "B-006", "B-007", "B-008"],
+      "mockExamQuestionCount": 100,
+      "subsectionCount": 100,
+      "passPercent": 70,
+      "hasHonours": true,
+      "honoursPercent": 80
+    },
+    {
+      "bankId": "advanced-synthetic",
+      "categoryIds": ["A-001", "A-002", "A-003", "A-004", "A-005", "A-006", "A-007"],
+      "mockExamQuestionCount": 50,
+      "subsectionCount": 50,
+      "passPercent": 70,
+      "hasHonours": false,
+      "honoursPercent": null
+    }
+  ]
+}

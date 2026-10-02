@@ -39,6 +39,7 @@ export interface ExamAttempt {
   };
   readonly items: readonly ExamAttemptItem[];
   readonly score: {
+    readonly bankId: string;
     readonly correct: number;
     readonly total: number;
     readonly percent: number;
@@ -324,7 +325,7 @@ export function validateProgressImport(raw: unknown): ImportValidationResult {
   if (raw.version !== 1) {
     errors.push("Import file version must be 1.");
   }
-  if (raw.bankId !== bankId) {
+  if (raw.bankId !== undefined && raw.bankId !== bankId) {
     errors.push(`Import bankId must be ${bankId}.`);
   }
   if (typeof raw.exportedAt !== "string") {
@@ -401,13 +402,25 @@ export function validateProgressImport(raw: unknown): ImportValidationResult {
       version: 1,
       exportedAt: raw.exportedAt as string,
       bankId,
-      questionProgress: questionProgress as QuestionProgressRecord[],
-      examAttempts: examAttempts as ExamAttempt[],
+      questionProgress: questionProgress.map(normalizeQuestionProgressRecord) as QuestionProgressRecord[],
+      examAttempts: examAttempts.map(normalizeExamAttempt) as ExamAttempt[],
       lessonProgress: lessonProgress as LessonProgressRecord[],
       lessonQuizAttempts: lessonQuizAttempts as LessonQuizAttempt[],
       preferences: { ...defaultPreferences, ...(raw.preferences as WebPreferences) },
     },
   };
+}
+
+function normalizeQuestionProgressRecord(record: unknown): unknown {
+  return isRecord(record) ? { ...record, bankId: record.bankId ?? bankId } : record;
+}
+
+function normalizeExamAttempt(attempt: unknown): unknown {
+  if (!isRecord(attempt)) {
+    return attempt;
+  }
+  const score = isRecord(attempt.score) ? { ...attempt.score, bankId: attempt.score.bankId ?? bankId } : attempt.score;
+  return { ...attempt, bankId: attempt.bankId ?? bankId, score };
 }
 
 function requestToPromise<T>(request: IDBRequest<T>): Promise<T> {
@@ -452,7 +465,7 @@ function validateQuestionProgressRecord(value: unknown, index: number): string[]
   if (typeof value.questionId !== "string" || !knownQuestionIds.has(value.questionId)) {
     errors.push(`${prefix}.questionId must be a known question ID.`);
   }
-  if (value.bankId !== bankId) {
+  if (value.bankId !== undefined && value.bankId !== bankId) {
     errors.push(`${prefix}.bankId must be ${bankId}.`);
   }
   if (!isNonNegativeInteger(value.attempts)) {
@@ -579,7 +592,7 @@ function validateExamAttempt(value: unknown, index: number): string[] {
   if (typeof value.id !== "string" || value.id.length === 0) {
     errors.push(`${prefix}.id must be a non-empty string.`);
   }
-  if (value.bankId !== bankId) {
+  if (value.bankId !== undefined && value.bankId !== bankId) {
     errors.push(`${prefix}.bankId must be ${bankId}.`);
   }
   if (value.mode !== "mock-exam") {
@@ -632,6 +645,9 @@ function validateScore(value: unknown, prefix: string): string[] {
     return [`${prefix} must be an object.`];
   }
   const errors: string[] = [];
+  if (value.bankId !== undefined && value.bankId !== bankId) {
+    errors.push(`${prefix}.bankId must be ${bankId}.`);
+  }
   if (!isNonNegativeInteger(value.correct)) {
     errors.push(`${prefix}.correct must be a non-negative integer.`);
   }

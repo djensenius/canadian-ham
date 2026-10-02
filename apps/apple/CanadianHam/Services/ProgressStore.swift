@@ -79,7 +79,7 @@ struct ProgressExportV1: Codable, Equatable, Sendable {
         schema = try container.decode(String.self, forKey: .schema)
         version = try container.decode(Int.self, forKey: .version)
         exportedAt = try container.decode(String.self, forKey: .exportedAt)
-        bankId = try container.decode(String.self, forKey: .bankId)
+        bankId = try container.decodeIfPresent(String.self, forKey: .bankId) ?? basicBankId
         questionProgress = try container.decode([QuestionProgressRecord].self, forKey: .questionProgress)
         examAttempts = try container.decode([StoredExamAttempt].self, forKey: .examAttempts)
         lessonProgress = try container.decodeIfPresent([ArchivedJSON].self, forKey: .lessonProgress) ?? []
@@ -244,6 +244,7 @@ struct StoredExamTimer: Codable, Equatable, Sendable {
 }
 
 struct StoredExamScore: Codable, Equatable, Sendable {
+    let bankId: String
     let correct: Int
     let total: Int
     let percent: Double
@@ -251,6 +252,49 @@ struct StoredExamScore: Codable, Equatable, Sendable {
     let honours: Bool
     let categoryBreakdown: [CategoryBreakdownEntry]
     let weakSubsectionIds: [String]
+
+    private enum CodingKeys: String, CodingKey {
+        case bankId
+        case correct
+        case total
+        case percent
+        case passed
+        case honours
+        case categoryBreakdown
+        case weakSubsectionIds
+    }
+
+    init(
+        bankId: String,
+        correct: Int,
+        total: Int,
+        percent: Double,
+        passed: Bool,
+        honours: Bool,
+        categoryBreakdown: [CategoryBreakdownEntry],
+        weakSubsectionIds: [String]
+    ) {
+        self.bankId = bankId
+        self.correct = correct
+        self.total = total
+        self.percent = percent
+        self.passed = passed
+        self.honours = honours
+        self.categoryBreakdown = categoryBreakdown
+        self.weakSubsectionIds = weakSubsectionIds
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        bankId = try container.decodeIfPresent(String.self, forKey: .bankId) ?? basicBankId
+        correct = try container.decode(Int.self, forKey: .correct)
+        total = try container.decode(Int.self, forKey: .total)
+        percent = try container.decode(Double.self, forKey: .percent)
+        passed = try container.decode(Bool.self, forKey: .passed)
+        honours = try container.decode(Bool.self, forKey: .honours)
+        categoryBreakdown = try container.decode([CategoryBreakdownEntry].self, forKey: .categoryBreakdown)
+        weakSubsectionIds = try container.decode([String].self, forKey: .weakSubsectionIds)
+    }
 }
 
 struct StoredExamAttempt: Codable, Equatable, Sendable, Identifiable {
@@ -263,6 +307,53 @@ struct StoredExamAttempt: Codable, Equatable, Sendable, Identifiable {
     let timer: StoredExamTimer
     let items: [StoredExamAttemptItem]
     let score: StoredExamScore
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case bankId
+        case mode
+        case seed
+        case startedAt
+        case submittedAt
+        case timer
+        case items
+        case score
+    }
+
+    init(
+        id: String,
+        bankId: String,
+        mode: String,
+        seed: String,
+        startedAt: String,
+        submittedAt: String,
+        timer: StoredExamTimer,
+        items: [StoredExamAttemptItem],
+        score: StoredExamScore
+    ) {
+        self.id = id
+        self.bankId = bankId
+        self.mode = mode
+        self.seed = seed
+        self.startedAt = startedAt
+        self.submittedAt = submittedAt
+        self.timer = timer
+        self.items = items
+        self.score = score
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        bankId = try container.decodeIfPresent(String.self, forKey: .bankId) ?? basicBankId
+        mode = try container.decode(String.self, forKey: .mode)
+        seed = try container.decode(String.self, forKey: .seed)
+        startedAt = try container.decode(String.self, forKey: .startedAt)
+        submittedAt = try container.decode(String.self, forKey: .submittedAt)
+        timer = try container.decode(StoredExamTimer.self, forKey: .timer)
+        items = try container.decode([StoredExamAttemptItem].self, forKey: .items)
+        score = try container.decode(StoredExamScore.self, forKey: .score)
+    }
 }
 
 enum ProgressStoreError: LocalizedError, Equatable {
@@ -575,7 +666,7 @@ final class ProgressStoreService: ObservableObject {
             if !submittedAt.insert(attempt.submittedAt).inserted { errors.append(String(localized: "\(prefix).submittedAt duplicates another exam attempt.")) }
             if attempt.timer.secondsAllowed != nil && attempt.timer.secondsAllowed! < 0 { errors.append(String(localized: "\(prefix).timer.secondsAllowed must be null or non-negative.")) }
             if attempt.timer.secondsElapsed < 0 { errors.append(String(localized: "\(prefix).timer.secondsElapsed must be non-negative.")) }
-            validateScore(attempt.score, prefix: "\(prefix).score", knownCategoryIds: knownCategoryIds, knownSubsectionIds: knownSubsectionIds, errors: &errors)
+            validateScore(attempt.score, prefix: "\(prefix).score", bankId: bank.manifest.bankId, knownCategoryIds: knownCategoryIds, knownSubsectionIds: knownSubsectionIds, errors: &errors)
             for (itemIndex, item) in attempt.items.enumerated() {
                 validateAttemptItem(item, prefix: "\(prefix).items[\(itemIndex)]", knownQuestionIds: knownQuestionIds, knownCategoryIds: knownCategoryIds, knownSubsectionIds: knownSubsectionIds, errors: &errors)
             }
@@ -754,10 +845,12 @@ private func appendTimestampError(_ errors: inout [String], value: String, field
 private func validateScore(
     _ score: StoredExamScore,
     prefix: String,
+    bankId: String,
     knownCategoryIds: Set<String>,
     knownSubsectionIds: Set<String>,
     errors: inout [String]
 ) {
+    if score.bankId != bankId { errors.append(String(localized: "\(prefix).bankId must be \(bankId).")) }
     if score.correct < 0 { errors.append(String(localized: "\(prefix).correct must be non-negative.")) }
     if score.total < 0 { errors.append(String(localized: "\(prefix).total must be non-negative.")) }
     if score.correct > score.total { errors.append(String(localized: "\(prefix).correct must not exceed total.")) }
