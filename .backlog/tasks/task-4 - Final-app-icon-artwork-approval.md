@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 01:32'
+updated_date: '2026-10-02 01:40'
 labels:
   - design
   - blocked
@@ -41,4 +41,6 @@ Owner task. The current generated icon draft (design/app-icon/exports) is wired 
 
 <!-- SECTION:NOTES:BEGIN -->
 Generated four isolated app icon concepts under design/app-icon/concepts with deterministic raster brush script, descriptions, comparison sheet, and three README-recorded render/critique passes. Left task In Progress because AC #1 requires owner approval before exports/assets are replaced.
+
+Round 2: replaced the hairline concept renderer with filled sumi-e stroke construction, regenerated four antenna concepts plus comparison/closeups, and recorded texture-test plus three render/critique passes. Task remains In Progress for owner review.
 <!-- SECTION:NOTES:END -->
