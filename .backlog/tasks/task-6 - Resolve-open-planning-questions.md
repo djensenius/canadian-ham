@@ -1,9 +1,11 @@
 ---
 id: TASK-6
 title: Resolve open planning questions
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@pi-worker'
 created_date: '2026-10-01 02:27'
+updated_date: '2026-10-02 01:34'
 labels:
   - docs
   - needs-decision
