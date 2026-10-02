@@ -24,6 +24,21 @@
         "unweightedCharacters": 4,
         "needsOfficialRic1Section83Sample": false
       }
+    },
+    {
+      "id": "weighting-rejects-invalid-text",
+      "input": {
+        "text": "A!"
+      },
+      "expectedError": {
+        "type": "invalidCharacters",
+        "invalidCharacters": [
+          {
+            "character": "!",
+            "index": 1
+          }
+        ]
+      }
     }
   ]
 }

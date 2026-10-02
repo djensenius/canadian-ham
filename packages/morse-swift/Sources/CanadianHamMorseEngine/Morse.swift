@@ -68,7 +68,7 @@ public struct TimedMorseSequence: Codable, Equatable, Sendable {
 
 public struct InvalidMorseCharacter: Codable, Equatable, Sendable {
     public let character: String
-    /// Zero-based Swift `Character` index in the input string.
+    /// Zero-based Unicode scalar index in the input string.
     public let index: Int
 }
 
@@ -206,12 +206,12 @@ public func profileForName(_ name: MorseProfileName) -> MorseTimingProfile {
 
 public func validateMorseText(_ text: String) -> ValidationResult {
     var invalidCharacters: [InvalidMorseCharacter] = []
-    for (index, character) in text.enumerated() {
-        if character.isMorseWhitespace {
+    for (index, scalar) in text.unicodeScalars.enumerated() {
+        if scalar.isMorseWhitespace {
             continue
         }
-        guard let normalized = normalizeMorseCharacter(character), allowedCharacters.contains(normalized) else {
-            invalidCharacters.append(InvalidMorseCharacter(character: String(character), index: index))
+        guard let normalized = normalizeMorseScalar(scalar), allowedCharacters.contains(normalized) else {
+            invalidCharacters.append(InvalidMorseCharacter(character: String(scalar), index: index))
             continue
         }
     }
@@ -223,8 +223,8 @@ public func canonicalMorseCharacters(_ text: String) throws -> [String] {
     guard validation.valid else {
         throw MorseEngineError.invalidCharacters(validation.invalidCharacters)
     }
-    return text.compactMap { character in
-        character.isMorseWhitespace ? nil : normalizeMorseCharacter(character)
+    return text.unicodeScalars.compactMap { scalar in
+        scalar.isMorseWhitespace ? nil : normalizeMorseScalar(scalar)
     }
 }
 
@@ -284,7 +284,7 @@ public func textToTimedMorse(_ text: String, profile: MorseTimingProfile = profi
 
 public func scoreMorseCopy(expected: String, received: String) throws -> MorseExamScore {
     let expectedCharacters = try canonicalMorseCharacters(expected)
-    let receivedCharacters = try canonicalMorseCharacters(received)
+    let receivedCharacters = receivedMorseCopyCharacters(received)
     let rows = expectedCharacters.count + 1
     let columns = receivedCharacters.count + 1
     var dp = Array(repeating: Array(repeating: 0, count: columns), count: rows)
@@ -373,15 +373,15 @@ private func canonicalMorseWords(_ text: String) throws -> [[String]] {
 
     var words: [[String]] = []
     var currentWord: [String] = []
-    for character in text {
-        if character.isMorseWhitespace {
+    for scalar in text.unicodeScalars {
+        if scalar.isMorseWhitespace {
             if !currentWord.isEmpty {
                 words.append(currentWord)
                 currentWord = []
             }
             continue
         }
-        if let normalized = normalizeMorseCharacter(character) {
+        if let normalized = normalizeMorseScalar(scalar) {
             currentWord.append(normalized)
         }
     }
@@ -391,14 +391,28 @@ private func canonicalMorseWords(_ text: String) throws -> [[String]] {
     return words
 }
 
-private func normalizeMorseCharacter(_ character: Character) -> String? {
-    let normalized = String(character).uppercased()
-    return normalized.count == 1 ? normalized : nil
+private func receivedMorseCopyCharacters(_ text: String) -> [String] {
+    text.unicodeScalars.compactMap { scalar in
+        if scalar.isMorseWhitespace {
+            return nil
+        }
+        if let normalized = normalizeMorseScalar(scalar), allowedCharacters.contains(normalized) {
+            return normalized
+        }
+        return String(scalar)
+    }
 }
 
-private extension Character {
+private func normalizeMorseScalar(_ scalar: Unicode.Scalar) -> String? {
+    guard scalar.value <= 0x7f else {
+        return nil
+    }
+    return String(scalar).uppercased()
+}
+
+private extension Unicode.Scalar {
     var isMorseWhitespace: Bool {
-        unicodeScalars.allSatisfy { CharacterSet.whitespacesAndNewlines.contains($0) }
+        CharacterSet.whitespacesAndNewlines.contains(self)
     }
 }
 

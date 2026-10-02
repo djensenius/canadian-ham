@@ -30,7 +30,7 @@ export interface TimedMorseSequence {
 
 export interface InvalidMorseCharacter {
   readonly character: string;
-  /** Zero-based Unicode Character index in the input string. */
+  /** Zero-based Unicode code point index in the input string. */
   readonly index: number;
 }
 
@@ -235,7 +235,7 @@ export function textToTimedMorse(text: string, profile: MorseTimingProfile = MOR
 
 export function scoreMorseCopy(expected: string, received: string): MorseExamScore {
   const expectedCharacters = canonicalMorseCharacters(expected);
-  const receivedCharacters = canonicalMorseCharacters(received);
+  const receivedCharacters = receivedMorseCopyCharacters(received);
   const rows = expectedCharacters.length + 1;
   const columns = receivedCharacters.length + 1;
   const dp = Array.from({ length: rows }, () => Array.from({ length: columns }, () => 0));
@@ -333,9 +333,22 @@ function canonicalMorseWords(text: string): string[][] {
   return words;
 }
 
+function receivedMorseCopyCharacters(text: string): string[] {
+  return Array.from(text).flatMap((character) => {
+    if (isWhitespace(character)) {
+      return [];
+    }
+    const normalized = normalizeCharacter(character);
+    return normalized !== undefined && allowedCharacters.has(normalized) ? [normalized] : [character];
+  });
+}
+
 function normalizeCharacter(character: string): string | undefined {
-  const normalized = character.toLocaleUpperCase("en-CA");
-  return Array.from(normalized).length === 1 ? normalized : undefined;
+  const codePoint = character.codePointAt(0);
+  if (codePoint === undefined || codePoint > 0x7f) {
+    return undefined;
+  }
+  return character.toUpperCase();
 }
 
 function isWhitespace(character: string): boolean {

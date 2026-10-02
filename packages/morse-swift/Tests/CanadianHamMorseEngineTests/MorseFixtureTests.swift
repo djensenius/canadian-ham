@@ -28,34 +28,72 @@ final class MorseFixtureTests: XCTestCase {
     private func validateTimingFixture(_ data: Data) throws {
         let fixture = try JSONDecoder().decode(TimingFixture.self, from: data)
         for testCase in fixture.cases {
+            if let expectedError = testCase.expectedError {
+                assertExpectedError(expectedError, testCase.id) {
+                    let profile = try profile(from: testCase.input.profile)
+                    _ = try textToTimedMorse(testCase.input.text, profile: profile)
+                }
+                continue
+            }
+
+            guard let expectedOutput = testCase.expectedOutput else {
+                XCTFail("missing expectedOutput for \(testCase.id)")
+                continue
+            }
             let profile = try profile(from: testCase.input.profile)
             let sequence = try textToTimedMorse(testCase.input.text, profile: profile)
-            XCTAssertEqual(sequence.totalDurationSeconds, testCase.expectedOutput.totalDurationSeconds, accuracy: 1e-9, testCase.id)
-            XCTAssertEqual(sequence.profile.effectiveWpm, testCase.expectedOutput.effectiveWpm, accuracy: 1e-12, testCase.id)
-            XCTAssertEqual(sequence.profile.dotSeconds, testCase.expectedOutput.durationsSeconds.dot, accuracy: 1e-12, testCase.id)
-            XCTAssertEqual(sequence.profile.dashSeconds, testCase.expectedOutput.durationsSeconds.dash, accuracy: 1e-12, testCase.id)
-            XCTAssertEqual(sequence.profile.intraCharacterGapSeconds, testCase.expectedOutput.durationsSeconds.intraCharacterGap, accuracy: 1e-12, testCase.id)
-            XCTAssertEqual(sequence.profile.interCharacterGapSeconds, testCase.expectedOutput.durationsSeconds.interCharacterGap, accuracy: 1e-12, testCase.id)
-            XCTAssertEqual(sequence.profile.wordGapSeconds, testCase.expectedOutput.durationsSeconds.wordGap, accuracy: 1e-12, testCase.id)
-            XCTAssertEqual(symbolCounts(sequence.symbols), testCase.expectedOutput.symbolCounts, testCase.id)
-            XCTAssertEqual(sequence.symbols.last?.kind.rawValue, testCase.expectedOutput.lastSymbolKind, testCase.id)
+            XCTAssertEqual(sequence.normalizedText, expectedOutput.normalizedText, testCase.id)
+            XCTAssertEqual(sequence.totalDurationSeconds, expectedOutput.totalDurationSeconds, accuracy: 1e-9, testCase.id)
+            XCTAssertEqual(sequence.profile.effectiveWpm, expectedOutput.effectiveWpm, accuracy: 1e-12, testCase.id)
+            XCTAssertEqual(sequence.profile.dotSeconds, expectedOutput.durationsSeconds.dot, accuracy: 1e-12, testCase.id)
+            XCTAssertEqual(sequence.profile.dashSeconds, expectedOutput.durationsSeconds.dash, accuracy: 1e-12, testCase.id)
+            XCTAssertEqual(sequence.profile.intraCharacterGapSeconds, expectedOutput.durationsSeconds.intraCharacterGap, accuracy: 1e-12, testCase.id)
+            XCTAssertEqual(sequence.profile.interCharacterGapSeconds, expectedOutput.durationsSeconds.interCharacterGap, accuracy: 1e-12, testCase.id)
+            XCTAssertEqual(sequence.profile.wordGapSeconds, expectedOutput.durationsSeconds.wordGap, accuracy: 1e-12, testCase.id)
+            XCTAssertEqual(symbolCounts(sequence.symbols), expectedOutput.symbolCounts, testCase.id)
+            XCTAssertEqual(sequence.symbols.last?.kind.rawValue, expectedOutput.lastSymbolKind, testCase.id)
+            if let expectedSymbols = expectedOutput.symbols {
+                assertSymbols(sequence.symbols, expectedSymbols, testCase.id)
+            }
         }
     }
 
     private func validateWordWeightingFixture(_ data: Data) throws {
         let fixture = try JSONDecoder().decode(WordWeightingFixture.self, from: data)
         for testCase in fixture.cases {
+            if let expectedError = testCase.expectedError {
+                assertExpectedError(expectedError, testCase.id) {
+                    _ = try weightedCharacterCount(testCase.input.text)
+                }
+                continue
+            }
+
+            guard let expectedOutput = testCase.expectedOutput else {
+                XCTFail("missing expectedOutput for \(testCase.id)")
+                continue
+            }
             let output = try weightedCharacterCount(testCase.input.text)
-            XCTAssertEqual(output.weightedCharacters, testCase.expectedOutput.weightedCharacters, testCase.id)
-            XCTAssertEqual(output.unweightedCharacters, testCase.expectedOutput.unweightedCharacters, testCase.id)
+            XCTAssertEqual(output.weightedCharacters, expectedOutput.weightedCharacters, testCase.id)
+            XCTAssertEqual(output.unweightedCharacters, expectedOutput.unweightedCharacters, testCase.id)
         }
     }
 
     private func validateScoringFixture(_ data: Data) throws {
         let fixture = try JSONDecoder().decode(ScoringFixture.self, from: data)
         for testCase in fixture.cases {
+            if let expectedError = testCase.expectedError {
+                assertExpectedError(expectedError, testCase.id) {
+                    _ = try scoreMorseCopy(expected: testCase.input.expected, received: testCase.input.received)
+                }
+                continue
+            }
+
+            guard let expectedOutput = testCase.expectedOutput else {
+                XCTFail("missing expectedOutput for \(testCase.id)")
+                continue
+            }
             let output = try scoreMorseCopy(expected: testCase.input.expected, received: testCase.input.received)
-            XCTAssertEqual(output, testCase.expectedOutput, testCase.id)
+            XCTAssertEqual(output, expectedOutput, testCase.id)
         }
     }
 
@@ -67,6 +105,34 @@ final class MorseFixtureTests: XCTestCase {
         }
     }
 
+    private func assertExpectedError(_ expectedError: ExpectedError, _ testCaseId: String, action: () throws -> Void) {
+        do {
+            try action()
+            XCTFail("\(testCaseId) should have thrown \(expectedError.type)")
+        } catch MorseEngineError.invalidCharacters(let characters) {
+            XCTAssertEqual(expectedError.type, "invalidCharacters", testCaseId)
+            if let expectedCharacters = expectedError.invalidCharacters {
+                XCTAssertEqual(characters, expectedCharacters, testCaseId)
+            }
+        } catch MorseEngineError.invalidSpeed(let message) {
+            XCTAssertEqual(expectedError.type, "invalidSpeed", testCaseId)
+            if let messageContains = expectedError.messageContains {
+                XCTAssertTrue(message.contains(messageContains), "\(testCaseId) message was: \(message)")
+            }
+        } catch {
+            XCTFail("\(testCaseId) threw unsupported error: \(error)")
+        }
+    }
+
+    private func assertSymbols(_ actual: [TimedMorseSymbol], _ expected: [ExpectedSymbol], _ testCaseId: String) {
+        XCTAssertEqual(actual.count, expected.count, testCaseId)
+        for (index, pair) in zip(actual, expected).enumerated() {
+            XCTAssertEqual(pair.0.kind.rawValue, pair.1.kind, "\(testCaseId) symbol \(index) kind")
+            XCTAssertEqual(pair.0.character, pair.1.character, "\(testCaseId) symbol \(index) character")
+            XCTAssertEqual(pair.0.startSeconds, pair.1.startSeconds, accuracy: 1e-12, "\(testCaseId) symbol \(index) startSeconds")
+        }
+    }
+
     private func profile(from input: TimingProfileInput) throws -> MorseTimingProfile {
         if let name = input.name {
             guard let profileName = MorseProfileName(rawValue: name) else {
@@ -74,7 +140,7 @@ final class MorseFixtureTests: XCTestCase {
             }
             return profileForName(profileName)
         }
-        guard let characterWpm = input.characterWpm, let effectiveWpm = input.effectiveWpm else {
+        guard let characterWpm = input.characterWpm?.value, let effectiveWpm = input.effectiveWpm?.value else {
             throw MorseEngineError.invalidSpeed("fixture profile must name a profile or provide characterWpm/effectiveWpm")
         }
         return try farnsworthTiming(characterWpm: characterWpm, effectiveWpm: effectiveWpm)
@@ -93,7 +159,8 @@ private struct TimingFixture: Decodable {
 private struct TimingCase: Decodable {
     let id: String
     let input: TimingInput
-    let expectedOutput: TimingOutput
+    let expectedOutput: TimingOutput?
+    let expectedError: ExpectedError?
 }
 
 private struct TimingInput: Decodable {
@@ -103,16 +170,24 @@ private struct TimingInput: Decodable {
 
 private struct TimingProfileInput: Decodable {
     let name: String?
-    let characterWpm: Double?
-    let effectiveWpm: Double?
+    let characterWpm: FixtureNumber?
+    let effectiveWpm: FixtureNumber?
 }
 
 private struct TimingOutput: Decodable {
+    let normalizedText: String
     let totalDurationSeconds: Double
     let durationsSeconds: TimingDurations
     let effectiveWpm: Double
     let symbolCounts: SymbolCounts
-    let lastSymbolKind: String
+    let lastSymbolKind: String?
+    let symbols: [ExpectedSymbol]?
+}
+
+private struct ExpectedSymbol: Decodable {
+    let kind: String
+    let startSeconds: Double
+    let character: String?
 }
 
 private struct TimingDurations: Decodable {
@@ -138,7 +213,8 @@ private struct WordWeightingFixture: Decodable {
 private struct WordWeightingCase: Decodable {
     let id: String
     let input: TextInput
-    let expectedOutput: WordWeightingOutput
+    let expectedOutput: WordWeightingOutput?
+    let expectedError: ExpectedError?
 }
 
 private struct TextInput: Decodable {
@@ -158,7 +234,8 @@ private struct ScoringFixture: Decodable {
 private struct ScoringCase: Decodable {
     let id: String
     let input: ScoringInput
-    let expectedOutput: MorseExamScore
+    let expectedOutput: MorseExamScore?
+    let expectedError: ExpectedError?
 }
 
 private struct ScoringInput: Decodable {
@@ -174,6 +251,39 @@ private struct ValidationCase: Decodable {
     let id: String
     let input: TextInput
     let expectedOutput: ValidationResult
+}
+
+private struct ExpectedError: Decodable {
+    let type: String
+    let messageContains: String?
+    let invalidCharacters: [InvalidMorseCharacter]?
+}
+
+private enum FixtureNumber: Decodable {
+    case number(Double)
+    case nan
+
+    var value: Double {
+        switch self {
+        case let .number(value):
+            return value
+        case .nan:
+            return .nan
+        }
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let value = try? container.decode(Double.self) {
+            self = .number(value)
+            return
+        }
+        let value = try container.decode(String.self)
+        guard value == "NaN" else {
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "unsupported fixture number: \(value)")
+        }
+        self = .nan
+    }
 }
 
 private func symbolCounts(_ symbols: [TimedMorseSymbol]) -> SymbolCounts {

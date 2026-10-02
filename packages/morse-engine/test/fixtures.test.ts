@@ -3,6 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
+  MorseValidationError,
   farnsworthTiming,
   profileForName,
   scoreMorseCopy,
@@ -66,8 +67,17 @@ function validateFixture(fixture: any): void {
 
 function validateTimingFixture(fixture: any): void {
   for (const testCase of fixture.cases) {
+    if (testCase.expectedError !== undefined) {
+      expectFixtureError(() => {
+        const profile = profileFromFixture(testCase.input.profile);
+        textToTimedMorse(testCase.input.text, profile);
+      }, testCase.expectedError, testCase.id);
+      continue;
+    }
+
     const profile = profileFromFixture(testCase.input.profile);
     const sequence = textToTimedMorse(testCase.input.text, profile);
+    expect(sequence.normalizedText, testCase.id).toBe(testCase.expectedOutput.normalizedText);
     expect(round(sequence.totalDurationSeconds, 9), testCase.id).toBeCloseTo(testCase.expectedOutput.totalDurationSeconds, 9);
     expect(round(sequence.profile.effectiveWpm, 12), testCase.id).toBeCloseTo(testCase.expectedOutput.effectiveWpm, 12);
     expect(round(sequence.profile.dotSeconds, 12), testCase.id).toBeCloseTo(testCase.expectedOutput.durationsSeconds.dot, 12);
@@ -76,12 +86,20 @@ function validateTimingFixture(fixture: any): void {
     expect(round(sequence.profile.interCharacterGapSeconds, 12), testCase.id).toBeCloseTo(testCase.expectedOutput.durationsSeconds.interCharacterGap, 12);
     expect(round(sequence.profile.wordGapSeconds, 12), testCase.id).toBeCloseTo(testCase.expectedOutput.durationsSeconds.wordGap, 12);
     expect(symbolCounts(sequence.symbols), testCase.id).toEqual(testCase.expectedOutput.symbolCounts);
-    expect(sequence.symbols.at(-1)?.kind, testCase.id).toBe(testCase.expectedOutput.lastSymbolKind);
+    expect(sequence.symbols.at(-1)?.kind ?? null, testCase.id).toBe(testCase.expectedOutput.lastSymbolKind);
+    if (testCase.expectedOutput.symbols !== undefined) {
+      expectSymbols(sequence.symbols, testCase.expectedOutput.symbols, testCase.id);
+    }
   }
 }
 
 function validateWordWeightingFixture(fixture: any): void {
   for (const testCase of fixture.cases) {
+    if (testCase.expectedError !== undefined) {
+      expectFixtureError(() => weightedCharacterCount(testCase.input.text), testCase.expectedError, testCase.id);
+      continue;
+    }
+
     expect(weightedCharacterCount(testCase.input.text), testCase.id).toEqual({
       weightedCharacters: testCase.expectedOutput.weightedCharacters,
       unweightedCharacters: testCase.expectedOutput.unweightedCharacters,
@@ -91,6 +109,11 @@ function validateWordWeightingFixture(fixture: any): void {
 
 function validateScoringFixture(fixture: any): void {
   for (const testCase of fixture.cases) {
+    if (testCase.expectedError !== undefined) {
+      expectFixtureError(() => scoreMorseCopy(testCase.input.expected, testCase.input.received), testCase.expectedError, testCase.id);
+      continue;
+    }
+
     expect(scoreMorseCopy(testCase.input.expected, testCase.input.received), testCase.id).toEqual(testCase.expectedOutput);
   }
 }
@@ -101,14 +124,18 @@ function validateValidationFixture(fixture: any): void {
   }
 }
 
-function profileFromFixture(input: { readonly name?: MorseProfileName; readonly characterWpm?: number; readonly effectiveWpm?: number }): MorseTimingProfile {
+function profileFromFixture(input: { readonly name?: MorseProfileName; readonly characterWpm?: number | "NaN"; readonly effectiveWpm?: number | "NaN" }): MorseTimingProfile {
   if (input.name !== undefined) {
     return profileForName(input.name);
   }
   if (input.characterWpm === undefined || input.effectiveWpm === undefined) {
     throw new Error("fixture profile must name a profile or provide characterWpm/effectiveWpm");
   }
-  return farnsworthTiming({ characterWpm: input.characterWpm, effectiveWpm: input.effectiveWpm });
+  return farnsworthTiming({ characterWpm: fixtureNumber(input.characterWpm), effectiveWpm: fixtureNumber(input.effectiveWpm) });
+}
+
+function fixtureNumber(value: number | "NaN"): number {
+  return value === "NaN" ? Number.NaN : value;
 }
 
 function symbolCounts(symbols: readonly { readonly kind: MorseSymbolKind }[]): Record<MorseSymbolKind, number> {
@@ -119,6 +146,39 @@ function symbolCounts(symbols: readonly { readonly kind: MorseSymbolKind }[]): R
     interCharacterGap: symbols.filter((symbol) => symbol.kind === "interCharacterGap").length,
     wordGap: symbols.filter((symbol) => symbol.kind === "wordGap").length,
   };
+}
+
+function expectSymbols(
+  actual: readonly { readonly kind: MorseSymbolKind; readonly startSeconds: number; readonly character?: string }[],
+  expected: readonly { readonly kind: MorseSymbolKind; readonly startSeconds: number; readonly character?: string }[],
+  testCaseId: string,
+): void {
+  expect(actual.length, testCaseId).toBe(expected.length);
+  actual.forEach((symbol, index) => {
+    const expectedSymbol = expected[index]!;
+    expect(symbol.kind, `${testCaseId} symbol ${index} kind`).toBe(expectedSymbol.kind);
+    expect(symbol.character, `${testCaseId} symbol ${index} character`).toBe(expectedSymbol.character);
+    expect(round(symbol.startSeconds, 12), `${testCaseId} symbol ${index} startSeconds`).toBeCloseTo(expectedSymbol.startSeconds, 12);
+  });
+}
+
+function expectFixtureError(action: () => unknown, expectedError: any, testCaseId: string): void {
+  try {
+    action();
+  } catch (error) {
+    if (expectedError.type === "invalidCharacters") {
+      expect(error, testCaseId).toBeInstanceOf(MorseValidationError);
+      expect((error as MorseValidationError).invalidCharacters, testCaseId).toEqual(expectedError.invalidCharacters);
+      return;
+    }
+    if (expectedError.type === "invalidSpeed") {
+      expect(error, testCaseId).toBeInstanceOf(RangeError);
+      expect((error as Error).message, testCaseId).toContain(expectedError.messageContains);
+      return;
+    }
+    throw new Error(`unsupported expected error type: ${expectedError.type}`);
+  }
+  throw new Error(`${testCaseId} should have thrown ${expectedError.type}`);
 }
 
 function round(value: number, places: number): number {

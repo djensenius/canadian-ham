@@ -13,6 +13,16 @@
       }
     },
     {
+      "id": "lowercase-ascii-letters-are-accepted",
+      "input": {
+        "text": "abc xyz"
+      },
+      "expectedOutput": {
+        "valid": true,
+        "invalidCharacters": []
+      }
+    },
+    {
       "id": "accented-letters-are-rejected",
       "input": {
         "text": "CAFE É"
@@ -20,7 +30,44 @@
       "expectedOutput": {
         "valid": false,
         "invalidCharacters": [
-          { "character": "É", "index": 5 }
+          {
+            "character": "É",
+            "index": 5
+          }
+        ]
+      }
+    },
+    {
+      "id": "decomposed-accent-reports-combining-mark-by-code-point-with-crlf",
+      "input": {
+        "text": "É\r\nA"
+      },
+      "expectedOutput": {
+        "valid": false,
+        "invalidCharacters": [
+          {
+            "character": "́",
+            "index": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "non-ascii-characters-are-rejected-before-uppercasing",
+      "input": {
+        "text": "ı ſ"
+      },
+      "expectedOutput": {
+        "valid": false,
+        "invalidCharacters": [
+          {
+            "character": "ı",
+            "index": 0
+          },
+          {
+            "character": "ſ",
+            "index": 2
+          }
         ]
       }
     },
@@ -32,7 +79,10 @@
       "expectedOutput": {
         "valid": false,
         "invalidCharacters": [
-          { "character": "+", "index": 4 }
+          {
+            "character": "+",
+            "index": 4
+          }
         ]
       }
     }

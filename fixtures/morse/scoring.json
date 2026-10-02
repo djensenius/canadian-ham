@@ -86,6 +86,56 @@
         "expectedLength": 4,
         "receivedLength": 4
       }
+    },
+    {
+      "id": "invalid-received-character-counts-as-wrong-not-throw",
+      "input": {
+        "expected": "ABC",
+        "received": "ABÉ"
+      },
+      "expectedOutput": {
+        "errors": 1,
+        "wrong": 1,
+        "missing": 0,
+        "inserted": 0,
+        "passed": true,
+        "markPercent": 100,
+        "expectedLength": 3,
+        "receivedLength": 3
+      }
+    },
+    {
+      "id": "invalid-received-character-counts-as-inserted-not-throw",
+      "input": {
+        "expected": "ABC",
+        "received": "AB+C"
+      },
+      "expectedOutput": {
+        "errors": 1,
+        "wrong": 0,
+        "missing": 0,
+        "inserted": 1,
+        "passed": true,
+        "markPercent": 100,
+        "expectedLength": 3,
+        "receivedLength": 4
+      }
+    },
+    {
+      "id": "invalid-expected-copy-is-rejected",
+      "input": {
+        "expected": "AB+",
+        "received": "ABX"
+      },
+      "expectedError": {
+        "type": "invalidCharacters",
+        "invalidCharacters": [
+          {
+            "character": "+",
+            "index": 2
+          }
+        ]
+      }
     }
   ]
 }
