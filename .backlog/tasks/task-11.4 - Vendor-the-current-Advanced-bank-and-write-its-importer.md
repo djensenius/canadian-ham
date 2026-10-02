@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-02 15:56'
+updated_date: '2026-10-02 17:02'
 labels:
   - content
 milestone: m-1
@@ -38,12 +38,16 @@ Why: multi-course practice needs the official Advanced bank as generated data, i
 3. Add Advanced category metadata and an importer path that explicitly decodes the source encoding, skips the header row, validates 549 questions / 7 categories / 50 subsections, and emits content/generated/advanced-<date>/ without changing the active Basic bank.
 4. Wire import:advanced:check into pnpm import:check, update schemas/docs and add real-bank Advanced engine/scoring fixtures.
 5. Run requested validation, update Backlog notes/ACs/final summary, and commit logical changes without pushing.
+
+6. Fix review-round findings: restore schema negative-test specificity, keep Advanced generated content out of Apple bundles, cover Advanced engine fixtures in fixture generation, tighten checksum/docs/licensing coverage, create the requested French category-name follow-up, and rerun the requested validation.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented Advanced bank ingestion for bank advanced-2025-02-04. Fetched fresh from HTTPS ISED URLs for ZIP and EN/FR PDFs, extracted title-page date 04 February/février 2025 from PDF streams, recorded SHA-256 checksums, and generated 549-question / 7-category / 50-subsection output. Validation passed: pnpm typecheck; pnpm test; pnpm import:check; pnpm check:schemas; pnpm check:links; content/sources/ised/advanced-2025-02-04 shasum -a 256 -c SHA256SUMS; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/engine-swift. Confirmed git status shows no apps/apple or apps/web changes.
+
+2026-10-02 review round: owner asked to start before v1; keeping task Done while fixing review findings because acceptance criteria remain intended to hold after the fixes.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
