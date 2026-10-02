@@ -17,7 +17,7 @@ ordinal: 13000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-Open questions carried over from tasks/PLAN.md. Already resolved: minimum Apple OS (iOS 18, macOS 15, visionOS 2, tvOS 18) and the French reference material (PDFs dropped). ISED permission is tracked in its own task.
+Open questions carried over from tasks/PLAN.md. Already resolved: minimum Apple OS (iOS/iPadOS 27.0, macOS 27.0, tvOS 27.0, visionOS 27.0, per task-23) and the French reference material (PDFs dropped). ISED permission is tracked in its own task.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
