@@ -42,8 +42,20 @@ targets:
       - path: CanadianHam/Resources/Localizable.xcstrings
         type: file
         buildPhase: resources
-      - path: ../../content/generated
-        type: folder
+      - path: ../../content/generated/basic-2025-07-15/questions.json
+        type: file
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/generated/basic-2025-07-15/subsections.json
+        type: file
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/generated/basic-2025-07-15/categories.json
+        type: file
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/generated/basic-2025-07-15/manifest.json
+        type: file
         buildPhase: resources
         createIntermediateGroups: false
       - path: ../../content/lessons
@@ -94,8 +106,20 @@ targets:
       - path: CanadianHam/Services/AppleStudyEngine.swift
       - path: CanadianHam/Models/ProgressModels.swift
       - path: CanadianHam/Practice/EngineShuffle.swift
-      - path: ../../content/generated
-        type: folder
+      - path: ../../content/generated/basic-2025-07-15/questions.json
+        type: file
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/generated/basic-2025-07-15/subsections.json
+        type: file
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/generated/basic-2025-07-15/categories.json
+        type: file
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../content/generated/basic-2025-07-15/manifest.json
+        type: file
         buildPhase: resources
         createIntermediateGroups: false
       - path: ../../content/lessons
