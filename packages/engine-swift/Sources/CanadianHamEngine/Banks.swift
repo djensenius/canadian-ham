@@ -49,11 +49,21 @@ public let advancedBankRules = BankRules(
     honoursPercent: nil
 )
 
+/// Matches packages/schemas/common.schema.json (`^advanced-[a-z0-9-]+$`): the whole id, not just the prefix.
+func isValidAdvancedBankId(_ bankId: String) -> Bool {
+    let prefix = "advanced-"
+    guard bankId.hasPrefix(prefix) else { return false }
+    let rest = bankId.dropFirst(prefix.count)
+    return !rest.isEmpty && rest.unicodeScalars.allSatisfy { scalar in
+        ("a"..."z").contains(scalar) || ("0"..."9").contains(scalar) || scalar == "-"
+    }
+}
+
 public func rulesForBankId(_ bankId: String = basicBankId) throws -> BankRules {
     if bankId == basicBankId {
         return basicBankRules
     }
-    if bankId == syntheticAdvancedBankId || bankId.hasPrefix("advanced-") {
+    if bankId == syntheticAdvancedBankId || isValidAdvancedBankId(bankId) {
         return BankRules(
             bankId: bankId,
             categoryIds: advancedBankRules.categoryIds,

@@ -70,11 +70,14 @@ export const ADVANCED_BANK_RULES: ContentBankRules = {
   ],
 };
 
+// Matches packages/schemas/common.schema.json: the whole id, not just the prefix.
+const ADVANCED_BANK_ID_PATTERN = /^advanced-[a-z0-9-]+$/u;
+
 export function contentRulesForBankId(bankId: string = BASIC_BANK_ID): ContentBankRules {
   if (bankId === BASIC_BANK_ID) {
     return BASIC_BANK_RULES;
   }
-  if (bankId === SYNTHETIC_ADVANCED_BANK_ID || bankId.startsWith("advanced-")) {
+  if (bankId === SYNTHETIC_ADVANCED_BANK_ID || ADVANCED_BANK_ID_PATTERN.test(bankId)) {
     return { ...ADVANCED_BANK_RULES, bankId };
   }
   throw new Error(`unsupported bankId ${bankId}`);

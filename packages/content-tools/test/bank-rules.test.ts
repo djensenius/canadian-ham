@@ -47,3 +47,10 @@ test("shared bank-rule fixture agrees with content-tools and engine-ts", async (
     assert.deepEqual(engineRules, expected, `engine-ts ${expected.bankId}`);
   }
 });
+
+test("content-tools bank rules accept only schema-valid Advanced ids", () => {
+  assert.equal(contentRulesForBankId("advanced-2026-01-15").bankId, "advanced-2026-01-15");
+  for (const bankId of ["advanced-", "advanced-X", "advanced-2026_01"]) {
+    assert.throws(() => contentRulesForBankId(bankId), new RegExp(`unsupported bankId ${bankId}`));
+  }
+});

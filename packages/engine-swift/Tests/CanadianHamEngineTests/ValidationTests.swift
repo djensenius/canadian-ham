@@ -66,6 +66,15 @@ final class ValidationTests: XCTestCase {
         }
     }
 
+    func testBankRulesAcceptOnlySchemaValidAdvancedIds() throws {
+        XCTAssertEqual(try rulesForBankId("advanced-2026-01-15").bankId, "advanced-2026-01-15")
+        for bankId in ["advanced-", "advanced-X", "advanced-2026_01", "advanced-2026 01"] {
+            XCTAssertThrowsError(try rulesForBankId(bankId)) { error in
+                XCTAssertEqual((error as? EngineError)?.message, "unsupported bankId \(bankId)")
+            }
+        }
+    }
+
     func testScoreExamRejectsUnsupportedBankIds() {
         XCTAssertThrowsError(try scoreExam([ScoreInputItem(questionId: "B-001-001-001", selectedSourceIndex: 0)], bankId: "unknown-bank")) { error in
             XCTAssertEqual((error as? EngineError)?.message, "unsupported bankId unknown-bank")

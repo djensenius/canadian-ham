@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { applyAnswer, computeReadiness, generateExam, scoreExam, SYNTHETIC_ADVANCED_BANK_ID, type ExamSubsectionInput } from "../src/index.ts";
+import { applyAnswer, computeReadiness, generateExam, rulesForBankId, scoreExam, SYNTHETIC_ADVANCED_BANK_ID, type ExamSubsectionInput } from "../src/index.ts";
 import { compareOrdinal } from "../src/ordinal.ts";
 
 const oneSubsection = [{ id: "B-001-001", questionIds: ["B-001-001-001"] }];
@@ -44,6 +44,13 @@ test("practice exam generation does not require known bank rules unless a full m
     () => generateExam({ bankId: "unknown-bank", seed: "seed", subsections: oneSubsection, requireFullMockExam: true }),
     /unsupported bankId unknown-bank/,
   );
+});
+
+test("bank rules accept only schema-valid Advanced ids", () => {
+  assert.equal(rulesForBankId("advanced-2026-01-15").bankId, "advanced-2026-01-15");
+  for (const bankId of ["advanced-", "advanced-X", "advanced-2026_01", "advanced-2026 01"]) {
+    assert.throws(() => rulesForBankId(bankId), new RegExp(`unsupported bankId ${bankId}`));
+  }
 });
 
 test("scoreExam rejects unsupported bankIds", () => {
