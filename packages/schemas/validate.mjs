@@ -57,10 +57,12 @@ for (const file of schemaFiles) {
   loadSchema(file);
 }
 
-validateJsonFile("content/generated/basic-2025-07-15/manifest.json", "generated-bank-manifest.schema.json");
-validateJsonFile("content/generated/basic-2025-07-15/categories.json", "generated-bank-categories.schema.json");
-validateJsonFile("content/generated/basic-2025-07-15/questions.json", "generated-bank-questions.schema.json");
-validateJsonFile("content/generated/basic-2025-07-15/subsections.json", "generated-bank-subsections.schema.json");
+for (const bankId of ["basic-2025-07-15", "advanced-2025-02-04"]) {
+  validateJsonFile(`content/generated/${bankId}/manifest.json`, "generated-bank-manifest.schema.json");
+  validateJsonFile(`content/generated/${bankId}/categories.json`, "generated-bank-categories.schema.json");
+  validateJsonFile(`content/generated/${bankId}/questions.json`, "generated-bank-questions.schema.json");
+  validateJsonFile(`content/generated/${bankId}/subsections.json`, "generated-bank-subsections.schema.json");
+}
 validateJsonFile("content/subsection-titles.json", "subsection-titles.schema.json");
 
 for (const file of walk(path.join(projectRoot, "content/lessons"), ".md")) {

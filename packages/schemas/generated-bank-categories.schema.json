@@ -1,149 +1,57 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "generated-bank-categories.schema.json",
-  "title": "Generated ISED Basic bank categories",
-  "type": "array",
-  "minItems": 8,
-  "maxItems": 8,
-  "prefixItems": [
-    {
-      "allOf": [
-        { "$ref": "common.schema.json#/$defs/generatedCategory" },
-        { "$ref": "#/$defs/B-001" }
-      ]
-    },
-    {
-      "allOf": [
-        { "$ref": "common.schema.json#/$defs/generatedCategory" },
-        { "$ref": "#/$defs/B-002" }
-      ]
-    },
-    {
-      "allOf": [
-        { "$ref": "common.schema.json#/$defs/generatedCategory" },
-        { "$ref": "#/$defs/B-003" }
-      ]
-    },
-    {
-      "allOf": [
-        { "$ref": "common.schema.json#/$defs/generatedCategory" },
-        { "$ref": "#/$defs/B-004" }
-      ]
-    },
-    {
-      "allOf": [
-        { "$ref": "common.schema.json#/$defs/generatedCategory" },
-        { "$ref": "#/$defs/B-005" }
-      ]
-    },
-    {
-      "allOf": [
-        { "$ref": "common.schema.json#/$defs/generatedCategory" },
-        { "$ref": "#/$defs/B-006" }
-      ]
-    },
-    {
-      "allOf": [
-        { "$ref": "common.schema.json#/$defs/generatedCategory" },
-        { "$ref": "#/$defs/B-007" }
-      ]
-    },
-    {
-      "allOf": [
-        { "$ref": "common.schema.json#/$defs/generatedCategory" },
-        { "$ref": "#/$defs/B-008" }
-      ]
-    }
+  "title": "Generated ISED bank categories",
+  "oneOf": [
+    { "$ref": "#/$defs/basicCategories" },
+    { "$ref": "#/$defs/advancedCategories" }
   ],
-  "items": false,
   "$defs": {
-    "B-001": { "$ref": "#/$defs/categoryB001" },
-    "B-002": { "$ref": "#/$defs/categoryB002" },
-    "B-003": { "$ref": "#/$defs/categoryB003" },
-    "B-004": { "$ref": "#/$defs/categoryB004" },
-    "B-005": { "$ref": "#/$defs/categoryB005" },
-    "B-006": { "$ref": "#/$defs/categoryB006" },
-    "B-007": { "$ref": "#/$defs/categoryB007" },
-    "B-008": { "$ref": "#/$defs/categoryB008" },
-    "categoryB001": {
-      "type": "object",
-      "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"],
-      "properties": {
-        "id": { "const": "B-001" },
-        "questionCount": { "const": 199 },
-        "subsectionCount": { "const": 25 },
-        "examQuestionCount": { "const": 25 }
-      }
+    "basicCategories": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "prefixItems": [
+        { "allOf": [{ "$ref": "common.schema.json#/$defs/generatedCategory" }, { "$ref": "#/$defs/categoryB001" }] },
+        { "allOf": [{ "$ref": "common.schema.json#/$defs/generatedCategory" }, { "$ref": "#/$defs/categoryB002" }] },
+        { "allOf": [{ "$ref": "common.schema.json#/$defs/generatedCategory" }, { "$ref": "#/$defs/categoryB003" }] },
+        { "allOf": [{ "$ref": "common.schema.json#/$defs/generatedCategory" }, { "$ref": "#/$defs/categoryB004" }] },
+        { "allOf": [{ "$ref": "common.schema.json#/$defs/generatedCategory" }, { "$ref": "#/$defs/categoryB005" }] },
+        { "allOf": [{ "$ref": "common.schema.json#/$defs/generatedCategory" }, { "$ref": "#/$defs/categoryB006" }] },
+        { "allOf": [{ "$ref": "common.schema.json#/$defs/generatedCategory" }, { "$ref": "#/$defs/categoryB007" }] },
+        { "allOf": [{ "$ref": "common.schema.json#/$defs/generatedCategory" }, { "$ref": "#/$defs/categoryB008" }] }
+      ],
+      "items": false
     },
-    "categoryB002": {
-      "type": "object",
-      "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"],
-      "properties": {
-        "id": { "const": "B-002" },
-        "questionCount": { "const": 99 },
-        "subsectionCount": { "const": 9 },
-        "examQuestionCount": { "const": 9 }
-      }
+    "advancedCategories": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "prefixItems": [
+        { "allOf": [{ "$ref": "common.schema.json#/$defs/generatedCategory" }, { "$ref": "#/$defs/categoryA001" }] },
+        { "allOf": [{ "$ref": "common.schema.json#/$defs/generatedCategory" }, { "$ref": "#/$defs/categoryA002" }] },
+        { "allOf": [{ "$ref": "common.schema.json#/$defs/generatedCategory" }, { "$ref": "#/$defs/categoryA003" }] },
+        { "allOf": [{ "$ref": "common.schema.json#/$defs/generatedCategory" }, { "$ref": "#/$defs/categoryA004" }] },
+        { "allOf": [{ "$ref": "common.schema.json#/$defs/generatedCategory" }, { "$ref": "#/$defs/categoryA005" }] },
+        { "allOf": [{ "$ref": "common.schema.json#/$defs/generatedCategory" }, { "$ref": "#/$defs/categoryA006" }] },
+        { "allOf": [{ "$ref": "common.schema.json#/$defs/generatedCategory" }, { "$ref": "#/$defs/categoryA007" }] }
+      ],
+      "items": false
     },
-    "categoryB003": {
-      "type": "object",
-      "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"],
-      "properties": {
-        "id": { "const": "B-003" },
-        "questionCount": { "const": 199 },
-        "subsectionCount": { "const": 21 },
-        "examQuestionCount": { "const": 21 }
-      }
-    },
-    "categoryB004": {
-      "type": "object",
-      "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"],
-      "properties": {
-        "id": { "const": "B-004" },
-        "questionCount": { "const": 63 },
-        "subsectionCount": { "const": 6 },
-        "examQuestionCount": { "const": 6 }
-      }
-    },
-    "categoryB005": {
-      "type": "object",
-      "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"],
-      "properties": {
-        "id": { "const": "B-005" },
-        "questionCount": { "const": 142 },
-        "subsectionCount": { "const": 13 },
-        "examQuestionCount": { "const": 13 }
-      }
-    },
-    "categoryB006": {
-      "type": "object",
-      "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"],
-      "properties": {
-        "id": { "const": "B-006" },
-        "questionCount": { "const": 140 },
-        "subsectionCount": { "const": 13 },
-        "examQuestionCount": { "const": 13 }
-      }
-    },
-    "categoryB007": {
-      "type": "object",
-      "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"],
-      "properties": {
-        "id": { "const": "B-007" },
-        "questionCount": { "const": 87 },
-        "subsectionCount": { "const": 8 },
-        "examQuestionCount": { "const": 8 }
-      }
-    },
-    "categoryB008": {
-      "type": "object",
-      "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"],
-      "properties": {
-        "id": { "const": "B-008" },
-        "questionCount": { "const": 55 },
-        "subsectionCount": { "const": 5 },
-        "examQuestionCount": { "const": 5 }
-      }
-    }
+    "categoryB001": { "type": "object", "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"], "properties": { "id": { "const": "B-001" }, "questionCount": { "const": 199 }, "subsectionCount": { "const": 25 }, "examQuestionCount": { "const": 25 } } },
+    "categoryB002": { "type": "object", "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"], "properties": { "id": { "const": "B-002" }, "questionCount": { "const": 99 }, "subsectionCount": { "const": 9 }, "examQuestionCount": { "const": 9 } } },
+    "categoryB003": { "type": "object", "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"], "properties": { "id": { "const": "B-003" }, "questionCount": { "const": 199 }, "subsectionCount": { "const": 21 }, "examQuestionCount": { "const": 21 } } },
+    "categoryB004": { "type": "object", "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"], "properties": { "id": { "const": "B-004" }, "questionCount": { "const": 63 }, "subsectionCount": { "const": 6 }, "examQuestionCount": { "const": 6 } } },
+    "categoryB005": { "type": "object", "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"], "properties": { "id": { "const": "B-005" }, "questionCount": { "const": 142 }, "subsectionCount": { "const": 13 }, "examQuestionCount": { "const": 13 } } },
+    "categoryB006": { "type": "object", "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"], "properties": { "id": { "const": "B-006" }, "questionCount": { "const": 140 }, "subsectionCount": { "const": 13 }, "examQuestionCount": { "const": 13 } } },
+    "categoryB007": { "type": "object", "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"], "properties": { "id": { "const": "B-007" }, "questionCount": { "const": 87 }, "subsectionCount": { "const": 8 }, "examQuestionCount": { "const": 8 } } },
+    "categoryB008": { "type": "object", "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"], "properties": { "id": { "const": "B-008" }, "questionCount": { "const": 55 }, "subsectionCount": { "const": 5 }, "examQuestionCount": { "const": 5 } } },
+    "categoryA001": { "type": "object", "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"], "properties": { "id": { "const": "A-001" }, "questionCount": { "const": 54 }, "subsectionCount": { "const": 5 }, "examQuestionCount": { "const": 5 } } },
+    "categoryA002": { "type": "object", "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"], "properties": { "id": { "const": "A-002" }, "questionCount": { "const": 132 }, "subsectionCount": { "const": 12 }, "examQuestionCount": { "const": 12 } } },
+    "categoryA003": { "type": "object", "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"], "properties": { "id": { "const": "A-003" }, "questionCount": { "const": 66 }, "subsectionCount": { "const": 6 }, "examQuestionCount": { "const": 6 } } },
+    "categoryA004": { "type": "object", "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"], "properties": { "id": { "const": "A-004" }, "questionCount": { "const": 44 }, "subsectionCount": { "const": 4 }, "examQuestionCount": { "const": 4 } } },
+    "categoryA005": { "type": "object", "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"], "properties": { "id": { "const": "A-005" }, "questionCount": { "const": 99 }, "subsectionCount": { "const": 9 }, "examQuestionCount": { "const": 9 } } },
+    "categoryA006": { "type": "object", "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"], "properties": { "id": { "const": "A-006" }, "questionCount": { "const": 55 }, "subsectionCount": { "const": 5 }, "examQuestionCount": { "const": 5 } } },
+    "categoryA007": { "type": "object", "required": ["id", "questionCount", "subsectionCount", "examQuestionCount"], "properties": { "id": { "const": "A-007" }, "questionCount": { "const": 99 }, "subsectionCount": { "const": 9 }, "examQuestionCount": { "const": 9 } } }
   }
 }

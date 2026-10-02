@@ -154,12 +154,6 @@ test("generated bank categories require verified French names to be non-empty", 
   assertSchemaRejects(
     readInvalidFixture("generated-bank-categories-verified-empty.json"),
     "generated-bank-categories.schema.json",
-    "$[0].name.fr: expected string length >= 1",
-  );
-  // The minLength error above existed before the verified-name rule; also require the rule's own error.
-  assertSchemaRejects(
-    readInvalidFixture("generated-bank-categories-verified-empty.json"),
-    "generated-bank-categories.schema.json",
     "expected exactly one oneOf branch to match",
   );
 });

@@ -1,0 +1,93 @@
+[
+  {
+    "id": "A-001",
+    "bankId": "advanced-2025-02-04",
+    "name": {
+      "en": "Advanced Theory",
+      "fr": null
+    },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 54,
+    "subsectionCount": 5,
+    "examQuestionCount": 5,
+    "nameSource": "hand-maintained from verified ISED RIC-3 §5.3.1 English syllabus heading; French category display name pending separate verification"
+  },
+  {
+    "id": "A-002",
+    "bankId": "advanced-2025-02-04",
+    "name": {
+      "en": "Advanced Components and Circuits",
+      "fr": null
+    },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 132,
+    "subsectionCount": 12,
+    "examQuestionCount": 12,
+    "nameSource": "hand-maintained from verified ISED RIC-3 §5.3.2 English syllabus heading; French category display name pending separate verification"
+  },
+  {
+    "id": "A-003",
+    "bankId": "advanced-2025-02-04",
+    "name": {
+      "en": "Measurements",
+      "fr": null
+    },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 66,
+    "subsectionCount": 6,
+    "examQuestionCount": 6,
+    "nameSource": "hand-maintained from verified ISED RIC-3 §5.3.3 English syllabus heading; French category display name pending separate verification"
+  },
+  {
+    "id": "A-004",
+    "bankId": "advanced-2025-02-04",
+    "name": {
+      "en": "Power Supplies",
+      "fr": null
+    },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 44,
+    "subsectionCount": 4,
+    "examQuestionCount": 4,
+    "nameSource": "hand-maintained from verified ISED RIC-3 §5.3.4 English syllabus heading; French category display name pending separate verification"
+  },
+  {
+    "id": "A-005",
+    "bankId": "advanced-2025-02-04",
+    "name": {
+      "en": "Transmitters, Modulation and Processing",
+      "fr": null
+    },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 99,
+    "subsectionCount": 9,
+    "examQuestionCount": 9,
+    "nameSource": "hand-maintained from verified ISED RIC-3 §5.3.5 English syllabus heading; French category display name pending separate verification"
+  },
+  {
+    "id": "A-006",
+    "bankId": "advanced-2025-02-04",
+    "name": {
+      "en": "Receivers",
+      "fr": null
+    },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 55,
+    "subsectionCount": 5,
+    "examQuestionCount": 5,
+    "nameSource": "hand-maintained from verified ISED RIC-3 §5.3.6 English syllabus heading; French category display name pending separate verification"
+  },
+  {
+    "id": "A-007",
+    "bankId": "advanced-2025-02-04",
+    "name": {
+      "en": "Feedlines - Matching and Antenna Systems",
+      "fr": null
+    },
+    "frenchNameStatus": "pending verification",
+    "questionCount": 99,
+    "subsectionCount": 9,
+    "examQuestionCount": 9,
+    "nameSource": "hand-maintained from verified ISED RIC-3 §5.3.7 English syllabus heading; French category display name pending separate verification"
+  }
+]

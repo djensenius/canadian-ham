@@ -1,0 +1,390 @@
+{
+  "schemaVersion": 1,
+  "kind": "scoring",
+  "cases": [
+    {
+      "id": "scoring-advanced-2025-02-04-80-percent-no-honours",
+      "input": {
+        "bankId": "advanced-2025-02-04",
+        "items": [
+          {
+            "questionId": "A-003-005-003",
+            "categoryId": "A-003",
+            "subsectionId": "A-003-005",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-007-009-010",
+            "categoryId": "A-007",
+            "subsectionId": "A-007-009",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-006-001-009",
+            "categoryId": "A-006",
+            "subsectionId": "A-006-001",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-005-001-007",
+            "categoryId": "A-005",
+            "subsectionId": "A-005-001",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-003-003-009",
+            "categoryId": "A-003",
+            "subsectionId": "A-003-003",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-002-002-003",
+            "categoryId": "A-002",
+            "subsectionId": "A-002-002",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-006-003-004",
+            "categoryId": "A-006",
+            "subsectionId": "A-006-003",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-002-009-006",
+            "categoryId": "A-002",
+            "subsectionId": "A-002-009",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-001-002-003",
+            "categoryId": "A-001",
+            "subsectionId": "A-001-002",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-001-003-006",
+            "categoryId": "A-001",
+            "subsectionId": "A-001-003",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-001-005-003",
+            "categoryId": "A-001",
+            "subsectionId": "A-001-005",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-007-001-009",
+            "categoryId": "A-007",
+            "subsectionId": "A-007-001",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-002-003-010",
+            "categoryId": "A-002",
+            "subsectionId": "A-002-003",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-005-008-005",
+            "categoryId": "A-005",
+            "subsectionId": "A-005-008",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-002-005-008",
+            "categoryId": "A-002",
+            "subsectionId": "A-002-005",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-002-001-007",
+            "categoryId": "A-002",
+            "subsectionId": "A-002-001",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-002-011-004",
+            "categoryId": "A-002",
+            "subsectionId": "A-002-011",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-003-002-007",
+            "categoryId": "A-003",
+            "subsectionId": "A-003-002",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-001-004-004",
+            "categoryId": "A-001",
+            "subsectionId": "A-001-004",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-006-004-006",
+            "categoryId": "A-006",
+            "subsectionId": "A-006-004",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-004-002-008",
+            "categoryId": "A-004",
+            "subsectionId": "A-004-002",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-007-008-006",
+            "categoryId": "A-007",
+            "subsectionId": "A-007-008",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-002-004-010",
+            "categoryId": "A-002",
+            "subsectionId": "A-002-004",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-003-004-010",
+            "categoryId": "A-003",
+            "subsectionId": "A-003-004",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-005-002-001",
+            "categoryId": "A-005",
+            "subsectionId": "A-005-002",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-004-004-004",
+            "categoryId": "A-004",
+            "subsectionId": "A-004-004",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-003-001-004",
+            "categoryId": "A-003",
+            "subsectionId": "A-003-001",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-002-012-001",
+            "categoryId": "A-002",
+            "subsectionId": "A-002-012",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-005-009-002",
+            "categoryId": "A-005",
+            "subsectionId": "A-005-009",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-005-004-006",
+            "categoryId": "A-005",
+            "subsectionId": "A-005-004",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-006-005-002",
+            "categoryId": "A-006",
+            "subsectionId": "A-006-005",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-005-007-001",
+            "categoryId": "A-005",
+            "subsectionId": "A-005-007",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-003-006-008",
+            "categoryId": "A-003",
+            "subsectionId": "A-003-006",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-007-003-010",
+            "categoryId": "A-007",
+            "subsectionId": "A-007-003",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-002-006-011",
+            "categoryId": "A-002",
+            "subsectionId": "A-002-006",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-002-010-004",
+            "categoryId": "A-002",
+            "subsectionId": "A-002-010",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-007-007-011",
+            "categoryId": "A-007",
+            "subsectionId": "A-007-007",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-007-005-001",
+            "categoryId": "A-007",
+            "subsectionId": "A-007-005",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-004-001-002",
+            "categoryId": "A-004",
+            "subsectionId": "A-004-001",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-007-006-005",
+            "categoryId": "A-007",
+            "subsectionId": "A-007-006",
+            "selectedSourceIndex": 0
+          },
+          {
+            "questionId": "A-007-002-008",
+            "categoryId": "A-007",
+            "subsectionId": "A-007-002",
+            "selectedSourceIndex": 1
+          },
+          {
+            "questionId": "A-006-002-010",
+            "categoryId": "A-006",
+            "subsectionId": "A-006-002",
+            "selectedSourceIndex": 1
+          },
+          {
+            "questionId": "A-005-006-001",
+            "categoryId": "A-005",
+            "subsectionId": "A-005-006",
+            "selectedSourceIndex": 1
+          },
+          {
+            "questionId": "A-001-001-010",
+            "categoryId": "A-001",
+            "subsectionId": "A-001-001",
+            "selectedSourceIndex": 1
+          },
+          {
+            "questionId": "A-005-003-009",
+            "categoryId": "A-005",
+            "subsectionId": "A-005-003",
+            "selectedSourceIndex": 1
+          },
+          {
+            "questionId": "A-007-004-005",
+            "categoryId": "A-007",
+            "subsectionId": "A-007-004",
+            "selectedSourceIndex": 1
+          },
+          {
+            "questionId": "A-002-007-008",
+            "categoryId": "A-002",
+            "subsectionId": "A-002-007",
+            "selectedSourceIndex": 1
+          },
+          {
+            "questionId": "A-002-008-010",
+            "categoryId": "A-002",
+            "subsectionId": "A-002-008",
+            "selectedSourceIndex": 1
+          },
+          {
+            "questionId": "A-005-005-003",
+            "categoryId": "A-005",
+            "subsectionId": "A-005-005",
+            "selectedSourceIndex": 1
+          },
+          {
+            "questionId": "A-004-003-010",
+            "categoryId": "A-004",
+            "subsectionId": "A-004-003",
+            "selectedSourceIndex": 1
+          }
+        ]
+      },
+      "expectedOutput": {
+        "bankId": "advanced-2025-02-04",
+        "correct": 40,
+        "total": 50,
+        "percent": 80,
+        "passed": true,
+        "honours": false,
+        "categoryBreakdown": [
+          {
+            "categoryId": "A-001",
+            "correct": 4,
+            "total": 5,
+            "percent": 80
+          },
+          {
+            "categoryId": "A-002",
+            "correct": 10,
+            "total": 12,
+            "percent": 83.33333333333334
+          },
+          {
+            "categoryId": "A-003",
+            "correct": 6,
+            "total": 6,
+            "percent": 100
+          },
+          {
+            "categoryId": "A-004",
+            "correct": 3,
+            "total": 4,
+            "percent": 75
+          },
+          {
+            "categoryId": "A-005",
+            "correct": 6,
+            "total": 9,
+            "percent": 66.66666666666666
+          },
+          {
+            "categoryId": "A-006",
+            "correct": 4,
+            "total": 5,
+            "percent": 80
+          },
+          {
+            "categoryId": "A-007",
+            "correct": 7,
+            "total": 9,
+            "percent": 77.77777777777779
+          }
+        ],
+        "incorrectQuestionIds": [
+          "A-007-002-008",
+          "A-006-002-010",
+          "A-005-006-001",
+          "A-001-001-010",
+          "A-005-003-009",
+          "A-007-004-005",
+          "A-002-007-008",
+          "A-002-008-010",
+          "A-005-005-003",
+          "A-004-003-010"
+        ],
+        "weakSubsectionIds": [
+          "A-001-001",
+          "A-002-007",
+          "A-002-008",
+          "A-004-003",
+          "A-005-003",
+          "A-005-005",
+          "A-005-006",
+          "A-006-002",
+          "A-007-002",
+          "A-007-004"
+        ]
+      }
+    }
+  ]
+}

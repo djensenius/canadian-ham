@@ -1,0 +1,21 @@
+{
+  "bankId": "advanced-2025-02-04",
+  "certificate": "canadian-amateur-advanced",
+  "effectiveDate": "2025-02-04",
+  "source": {
+    "path": "content/sources/ised/advanced-2025-02-04/questions/amat_adv_quest_delim.txt",
+    "sha256": "a8e7760fb6828ad3b8af3d53d16e1b8f34acbf3c961e11eeffadd89ef0789fd7",
+    "url": "https://apc-cap.ic.gc.ca/datafiles/amat_adv_quest.zip#amat_adv_quest_delim.txt",
+    "encoding": "UTF-8",
+    "lineEndings": "CRLF"
+  },
+  "importer": {
+    "name": "packages/content-tools/src/import-advanced.ts",
+    "version": "1"
+  },
+  "counts": {
+    "questions": 549,
+    "categories": 7,
+    "subsections": 50
+  }
+}
