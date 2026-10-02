@@ -1737,17 +1737,17 @@ function About({ interfaceLanguage }: { readonly interfaceLanguage: InterfaceLan
         </ul>
       </section>
 
-      <section aria-labelledby="about-attribution-heading" lang={legalLang}>
+      <section aria-labelledby="about-attribution-heading">
         <h3 id="about-attribution-heading">{t(interfaceLanguage, "aboutAttributionHeading")}</h3>
-        <p className="legal-status">{t(interfaceLanguage, "aboutLegalStatus")}</p>
-        <blockquote>
+        <p className="legal-status" lang={legalLang}>{t(interfaceLanguage, "aboutLegalStatus")}</p>
+        <blockquote lang={legalLang}>
           <p>{t(interfaceLanguage, "aboutAttributionText")}</p>
         </blockquote>
       </section>
 
-      <section aria-labelledby="about-disclaimer-heading" lang={legalLang}>
+      <section aria-labelledby="about-disclaimer-heading">
         <h3 id="about-disclaimer-heading">{t(interfaceLanguage, "aboutDisclaimerHeading")}</h3>
-        <p>{t(interfaceLanguage, "aboutDisclaimerText")}</p>
+        <p lang={legalLang}>{t(interfaceLanguage, "aboutDisclaimerText")}</p>
       </section>
 
       <section aria-labelledby="about-privacy-heading">

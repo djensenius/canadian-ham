@@ -76,7 +76,7 @@ Short form for app settings or about page after T-007 records permission:
 
 During private development before T-007 is complete, internal documentation and manifests must not claim that written permission has been granted.
 
-TODO before public release: replace any release About-page draft attribution text with the exact wording from the recorded ISED permission in T-007/task-1.1. Do not add a permission reference number, date, or scope here until the written permission record is available.
+TODO before public release: label any release About-page draft attribution as not in effect while the request status remains drafted; sent: pending; granted: pending, then replace it with the exact wording from the recorded ISED permission in T-007/task-1.1. Do not add a permission reference number, date, or scope here until the written permission record is available.
 
 ## Disclaimer
 

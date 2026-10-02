@@ -3376,13 +3376,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ISDE fournit la feuille de référence de l’examen de base, avec les formules et les schémas fonctionnels, pendant l’examen; les PDF de référence sont des sources et ne sont pas inclus dans les applications."
+            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base, avec les formules et les schémas fonctionnels, pendant l’examen; les PDF de référence sont des sources et ne sont pas inclus dans les applications."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ISDE fournit la feuille de référence de l’examen de base, avec les formules et les schémas fonctionnels, pendant l’examen; les PDF de référence sont des sources et ne sont pas inclus dans les applications."
+            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base, avec les formules et les schémas fonctionnels, pendant l’examen; les PDF de référence sont des sources et ne sont pas inclus dans les applications."
           }
         }
       }
@@ -4904,13 +4904,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "RBR-4, Normes sur l’exploitation de stations radio autorisées dans le service de radioamateur : %1$@"
+            "value" : "RBR-4, Normes relatives à l’exploitation des stations radio du service de radioamateur : %1$@"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "RBR-4, Normes sur l’exploitation de stations radio autorisées dans le service de radioamateur : %1$@"
+            "value" : "RBR-4, Normes relatives à l’exploitation des stations radio du service de radioamateur : %1$@"
           }
         }
       }
@@ -6199,24 +6199,24 @@
         }
       }
     },
-    "TODO before public release: replace this draft attribution with the exact wording from the recorded ISED permission in task-1.1. Written permission details are not recorded yet." : {
+    "Draft attribution, not in effect: ISED written permission is pending (request status: drafted; sent: pending; granted: pending). Replace this draft with the wording from the recorded permission (task-1.1) before public release." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "TODO before public release: replace this draft attribution with the exact wording from the recorded ISED permission in task-1.1. Written permission details are not recorded yet."
+            "value" : "Draft attribution, not in effect: ISED written permission is pending (request status: drafted; sent: pending; granted: pending). Replace this draft with the wording from the recorded permission (task-1.1) before public release."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "TODO before public release: replace this draft attribution with the exact wording from the recorded ISED permission in task-1.1. Written permission details are not recorded yet."
+            "value" : "Draft attribution, not in effect: ISED written permission is pending (request status: drafted; sent: pending; granted: pending). Replace this draft with the wording from the recorded permission (task-1.1) before public release."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "TODO before public release: replace this draft attribution with the exact wording from the recorded ISED permission in task-1.1. Written permission details are not recorded yet."
+            "value" : "Draft attribution, not in effect: ISED written permission is pending (request status: drafted; sent: pending; granted: pending). Replace this draft with the wording from the recorded permission (task-1.1) before public release."
           }
         }
       }

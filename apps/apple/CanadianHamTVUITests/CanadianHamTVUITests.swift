@@ -28,6 +28,31 @@ final class CanadianHamTVUITests: XCTestCase {
         XCTAssertTrue(anyLabel(in: app, contains: "Active bank: basic-2025-07-15, effective 2025-07-15."), "Expected active bank version and effective date on tvOS About")
         XCTAssertTrue(anyLabel(in: app, contains: "Contains information reproduced from Innovation, Science and Economic Development Canada"), "Expected ISED attribution on tvOS About")
         XCTAssertTrue(anyLabel(in: app, contains: "canadian-ham is an independent study tool"), "Expected disclaimer on tvOS About")
+        XCTAssertTrue(anyLabel(in: app, contains: "Draft attribution, not in effect"), "Expected visible draft-attribution warning on tvOS About")
+        XCTAssertTrue(anyLabel(in: app, contains: "sent: pending; granted: pending"), "Expected pending permission status on tvOS About")
+    }
+
+    func testAboutLowerSectionsReachableWithRemote() throws {
+        let app = configuredApp(screen: .about, appearance: "light")
+        app.launch()
+        defer { app.terminate() }
+
+        XCTAssertTrue(PlatformAuditScreen.about.waitElement(in: app).waitForExistence(timeout: 15))
+        let remote = XCUIRemote.shared
+        let disclaimer = app.descendants(matching: .any)["tv-about-disclaimer-section"].firstMatch
+        XCTAssertTrue(disclaimer.waitForExistence(timeout: 5), "Expected focusable tvOS About disclaimer section")
+        pressDownUntilFocused(disclaimer, remote: remote, maxPresses: 8)
+        XCTAssertTrue(disclaimer.hasFocus, "Remote focus should reach the About disclaimer section")
+        XCTAssertTrue(disclaimer.label.localizedCaseInsensitiveContains("canadian-ham is an independent study tool"), "Focusable disclaimer section should expose its legal text")
+        assertFocusedElementIsOnScreen(disclaimer, in: app, description: "tvOS About disclaimer section")
+
+        let privacy = app.descendants(matching: .any)["tv-about-privacy-section"].firstMatch
+        XCTAssertTrue(privacy.waitForExistence(timeout: 5), "Expected focusable tvOS About privacy section")
+        pressDownUntilFocused(privacy, remote: remote, maxPresses: 4)
+        XCTAssertTrue(privacy.hasFocus, "Remote focus should reach the About privacy section")
+        XCTAssertTrue(privacy.label.localizedCaseInsensitiveContains("works fully offline with bundled content"), "Focusable privacy section should expose its privacy text")
+        assertFocusedElementIsOnScreen(privacy, in: app, description: "tvOS About privacy section")
+        attachScreenScreenshot(name: "tvos-about-lower-sections-focus")
     }
 
     func testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances() throws {
@@ -314,6 +339,20 @@ final class CanadianHamTVUITests: XCTestCase {
         }
     }
 
+    private func pressDownUntilFocused(
+        _ element: XCUIElement,
+        remote: XCUIRemote,
+        maxPresses: Int,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        for _ in 0..<maxPresses where !element.hasFocus {
+            remote.press(.down)
+            RunLoop.current.run(until: Date().addingTimeInterval(0.3))
+        }
+        XCTAssertTrue(element.hasFocus, "Expected remote down presses to focus \(element.identifier)", file: file, line: line)
+    }
+
     private func assertNextQuestionIsSeparateButton(
         _ nextQuestion: XCUIElement,
         feedback: XCUIElement,
@@ -445,7 +484,7 @@ final class CanadianHamTVUITests: XCTestCase {
     }
 
     private func anyLabel(in app: XCUIApplication, contains needle: String) -> Bool {
-        app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", needle)).firstMatch.exists
+        app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", needle)).firstMatch.exists
     }
 
     private static let fixedFrenchQuestionText = "Le certificat d'opérateur radioamateur est valide pour:"

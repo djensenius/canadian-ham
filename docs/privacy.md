@@ -146,7 +146,7 @@ Policy: no network use by app features in v1.
 Verification targets:
 
 - No app networking module.
-- No remote URLs in runtime configuration except non-clickable attribution or source text, and the single RBR-4 citation link on the answer-explanation panel (`ExplanationPanelView`), which opens in the system browser only when tapped (the app makes no request itself). The panel appears after answering in lesson quizzes, practice sessions and review, and mock-exam review.
+- No remote URLs in runtime configuration except non-clickable attribution or source text (including the About screens' RBR-4 and active ISED question-bank source URLs), and the single RBR-4 citation link on the answer-explanation panel (`ExplanationPanelView`), which opens in the system browser only when tapped (the app makes no request itself). The panel appears after answering in lesson quizzes, practice sessions and review, and mock-exam review.
 - No code paths using URL loading for remote resources.
 - No app entitlements for iCloud sync or push notifications.
 - Runtime smoke test in airplane mode covers first launch, lesson reading, practice, mock exam, progress persistence, export, import, and reset.

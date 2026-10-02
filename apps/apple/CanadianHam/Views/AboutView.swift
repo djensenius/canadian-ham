@@ -20,19 +20,19 @@ struct AboutView: View {
 
                 paperSection("Sources") {
                     Text("ISED Amateur Radio Operator Certificate Basic Qualification question bank, effective \(bank.manifest.effectiveDate).")
-                    Text("Question bank source URL: \(bank.manifest.source.url)")
+                    Text("Question bank source URL: \(verbatimText(bank.manifest.source.url))")
                         .font(DesignTokens.FontScale.caption)
                         .textSelection(.enabled)
-                    Text("RBR-4, Standards for the Operation of Radio Stations in the Amateur Radio Service: \(aboutRBR4CitationURL)")
+                    Text("RBR-4, Standards for the Operation of Radio Stations in the Amateur Radio Service: \(verbatimText(aboutRBR4CitationURL))")
                         .font(DesignTokens.FontScale.caption)
                         .textSelection(.enabled)
                     Text("ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps.")
                 }
 
                 paperSection("Attribution") {
-                    // TODO(task-1.1): Replace this draft attribution with the exact wording from the recorded ISED permission before public release. Do not add permission details until task-1.1 records them.
-                    Text("TODO before public release: replace this draft attribution with the exact wording from the recorded ISED permission in task-1.1. Written permission details are not recorded yet.")
-                        .accessibilityLabel(Text(english("TODO before public release: replace this draft attribution with the exact wording from the recorded ISED permission in task-1.1. Written permission details are not recorded yet."))) // l10n: content(en)
+                    // TODO(task-1.1): Replace this draft attribution with the exact wording from the recorded ISED permission before public release. Permission remains pending: request drafted; sent pending; granted pending.
+                    Text("Draft attribution, not in effect: ISED written permission is pending (request status: drafted; sent: pending; granted: pending). Replace this draft with the wording from the recorded permission (task-1.1) before public release.")
+                        .accessibilityLabel(Text(english("Draft attribution, not in effect: ISED written permission is pending (request status: drafted; sent: pending; granted: pending). Replace this draft with the wording from the recorded permission (task-1.1) before public release."))) // l10n: content(en)
                     Text("Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page.")
                         .accessibilityLabel(Text(english("Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page."))) // l10n: content(en)
                 }
@@ -74,6 +74,10 @@ struct AboutView: View {
                 .strokeBorder(DesignTokens.Colors.border, lineWidth: 1)
         )
     }
+}
+
+private func verbatimText(_ string: String) -> Text {
+    Text(verbatim: string) // l10n: verbatim
 }
 
 private func english(_ string: String) -> AttributedString {
