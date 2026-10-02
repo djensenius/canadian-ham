@@ -4,7 +4,11 @@ title: Record official RIC-1 section 8.3 sample
 status: To Do
 assignee: []
 created_date: '2026-10-02 13:58'
-labels: []
+updated_date: '2026-10-02 14:52'
+labels:
+  - web
+  - apple
+  - morse
 milestone: m-1
 dependencies: []
 parent_task_id: TASK-12
