@@ -31,7 +31,11 @@ Why: the task-6 review found gaps around the new category frenchNameStatus field
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Inspect existing category import/schema/web handling and tests.\n2. Add importer negative tests for frenchNameStatus edge cases and adjust messages only if needed.\n3. Tighten common JSON Schema and add schema fixtures/tests for verified French names.\n4. Update web category-name fallback language tagging and unit tests.\n5. Run required validation commands, then finalize task with evidence.
+1. Inspect existing category import/schema/web handling and tests.
+2. Add importer negative tests for frenchNameStatus edge cases and adjust messages only if needed.
+3. Tighten common JSON Schema and add schema fixtures/tests for verified French names.
+4. Update web category-name fallback language tagging and unit tests.
+5. Run required validation commands, then finalize task with evidence.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
