@@ -68,7 +68,7 @@ final class CanadianHamTVUITests: XCTestCase {
                 try captureCategoryGridLayoutEvidence(
                     appearance: appearance,
                     language: language,
-                    attachmentName: "tvos-category-grid-\(language)-\(appearance)"
+                    attachmentNamePrefix: "tvos-category-grid-\(language)-\(appearance)"
                 )
                 try capturePracticeHeaderLayoutEvidence(
                     appearance: appearance,
@@ -201,7 +201,7 @@ final class CanadianHamTVUITests: XCTestCase {
     private func captureCategoryGridLayoutEvidence(
         appearance: String,
         language: String,
-        attachmentName: String,
+        attachmentNamePrefix: String,
         file: StaticString = #filePath,
         line: UInt = #line
     ) throws {
@@ -214,22 +214,21 @@ final class CanadianHamTVUITests: XCTestCase {
         app.launch()
         defer { app.terminate() }
 
-        XCTAssertTrue(PlatformAuditScreen.categories.waitElement(in: app).waitForExistence(timeout: 15), "Expected category grid before capturing \(attachmentName)", file: file, line: line)
+        XCTAssertTrue(PlatformAuditScreen.categories.waitElement(in: app).waitForExistence(timeout: 15), "Expected category grid before capturing \(attachmentNamePrefix)", file: file, line: line)
         let firstCategory = app.descendants(matching: .any)["category-B-001-button"].firstMatch
-        XCTAssertTrue(firstCategory.waitForExistence(timeout: 5), "Expected first category before capturing \(attachmentName)", file: file, line: line)
+        XCTAssertTrue(firstCategory.waitForExistence(timeout: 5), "Expected first category before capturing \(attachmentNamePrefix)-top", file: file, line: line)
         waitForFocus(on: firstCategory)
         XCTAssertTrue(firstCategory.hasFocus, "Expected first category to hold focus before top capture", file: file, line: line)
-        let topScreenshot = XCUIScreen.main.screenshot()
+        assertFocusedElementIsOnScreen(firstCategory, in: app, description: "category-B-001-button", file: file, line: line)
+        attachScreenScreenshot(name: "\(attachmentNamePrefix)-top")
 
         let lowerCategory = app.descendants(matching: .any)["category-B-007-button"].firstMatch
         pressRemote([.down, .down], remote: XCUIRemote.shared)
         waitForFocus(on: lowerCategory)
-        XCTAssertTrue(lowerCategory.waitForExistence(timeout: 5), "Expected lower category before capturing \(attachmentName)", file: file, line: line)
+        XCTAssertTrue(lowerCategory.waitForExistence(timeout: 5), "Expected lower category before capturing \(attachmentNamePrefix)-lower", file: file, line: line)
         XCTAssertTrue(lowerCategory.hasFocus, "Expected lower category to hold focus before lower capture", file: file, line: line)
         assertFocusedElementIsOnScreen(lowerCategory, in: app, description: "category-B-007-button", file: file, line: line)
-        let lowerScreenshot = XCUIScreen.main.screenshot()
-
-        try attachVerticalComposite(top: topScreenshot, bottom: lowerScreenshot, name: attachmentName)
+        attachScreenScreenshot(name: "\(attachmentNamePrefix)-lower")
     }
 
     private func capturePracticeHeaderLayoutEvidence(
@@ -250,8 +249,10 @@ final class CanadianHamTVUITests: XCTestCase {
 
         let expectedTitle = language == "fr" ? "Montage d'une station, pratique et sécurité" : "Station Assembly, Practice and Safety"
         XCTAssertTrue(app.descendants(matching: .any)["tv-practice-screen"].firstMatch.waitForExistence(timeout: 15), "Expected practice screen before capturing \(attachmentName)", file: file, line: line)
-        XCTAssertTrue(app.staticTexts[expectedTitle].firstMatch.waitForExistence(timeout: 5), "Expected practice title before capturing \(attachmentName)", file: file, line: line)
-        try attachTopCroppedScreenshot(name: attachmentName, heightRatio: language == "fr" ? 0.324 : 0.241)
+        let title = app.staticTexts[expectedTitle].firstMatch
+        XCTAssertTrue(title.waitForExistence(timeout: 5), "Expected practice title before capturing \(attachmentName)", file: file, line: line)
+        assertPracticeHeaderTitleFitsTwoLines(title, file: file, line: line)
+        try attachTopCroppedScreenshot(name: attachmentName, heightRatio: language == "fr" ? 0.44 : 0.36)
     }
 
     private func captureFocusRingEvidence(
@@ -386,34 +387,21 @@ final class CanadianHamTVUITests: XCTestCase {
         add(attachment)
     }
 
-    private func attachVerticalComposite(top: XCUIScreenshot, bottom: XCUIScreenshot, name: String) throws {
-        let topImage = try XCTUnwrap(UIImage(data: top.pngRepresentation), "Expected top screenshot PNG data")
-        let bottomImage = try XCTUnwrap(UIImage(data: bottom.pngRepresentation), "Expected bottom screenshot PNG data")
-        let topCropHeight = topImage.size.height * 0.73
-        let bottomCropStart = bottomImage.size.height * 0.12
-        let bottomCropHeight = bottomImage.size.height - bottomCropStart
-        let width = max(topImage.size.width, bottomImage.size.width)
-        let height = topCropHeight + bottomCropHeight
-        let format = UIGraphicsImageRendererFormat.preferred()
-        format.scale = topImage.scale
-        let renderer = UIGraphicsImageRenderer(size: CGSize(width: width, height: height), format: format)
-        let image = renderer.image { context in
-            UIColor.black.setFill()
-            context.fill(CGRect(x: 0, y: 0, width: width, height: height))
-            context.cgContext.saveGState()
-            context.cgContext.clip(to: CGRect(x: 0, y: 0, width: width, height: topCropHeight))
-            topImage.draw(in: CGRect(origin: .zero, size: topImage.size))
-            context.cgContext.restoreGState()
-            context.cgContext.saveGState()
-            context.cgContext.clip(to: CGRect(x: 0, y: topCropHeight, width: width, height: bottomCropHeight))
-            bottomImage.draw(in: CGRect(x: 0, y: topCropHeight - bottomCropStart, width: bottomImage.size.width, height: bottomImage.size.height))
-            context.cgContext.restoreGState()
-        }
-        let pngData = try XCTUnwrap(image.pngData(), "Expected composite screenshot PNG data")
-        let attachment = XCTAttachment(data: pngData, uniformTypeIdentifier: "public.png")
-        attachment.name = name
-        attachment.lifetime = .keepAlways
-        add(attachment)
+    private func assertPracticeHeaderTitleFitsTwoLines(
+        _ title: XCUIElement,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        XCTAssertFalse(title.frame.isEmpty, "Practice title frame should be non-empty before capture", file: file, line: line)
+        let lineHeight = UIFont.preferredFont(forTextStyle: .title1).lineHeight
+        let maximumTwoLineHeight = (lineHeight * 2.0).rounded(.up) + 8.0
+        XCTAssertLessThanOrEqual(
+            title.frame.height,
+            maximumTwoLineHeight,
+            "Practice title height \(title.frame.height) should fit within two title line heights \(maximumTwoLineHeight)",
+            file: file,
+            line: line
+        )
     }
 
     private func waitForElementToDisappear(

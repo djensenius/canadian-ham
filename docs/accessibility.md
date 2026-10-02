@@ -52,6 +52,17 @@ Contrast ratios below were computed from the actual sRGB token values in `apps/a
 
 Screenshot evidence captured through tvOS UI-test `xcresult` attachments is committed under `docs/evidence/` as one PNG per state: `tvos-category-focus-ring.png`, `tvos-category-focus-ring-dark.png`, `tvos-answer-focus-ring.png`, `tvos-answer-focus-ring-dark.png`, `tvos-primary-focus-ring.png`, `tvos-primary-focus-ring-dark.png`, `tvos-language-focus-ring.png`, `tvos-language-focus-ring-dark.png`, and `tvos-answer-focus-ring-reduce-motion.png`. The Reduce Motion screenshot uses the app's `-CanadianHamReduceMotion enabled` launch argument (the same override the app's scale effects check), not the system accessibility setting.
 
+Category-grid layout evidence uses separate full-screen top and lower captures rather than stitched composites:
+
+- `tvos-category-grid-en-light-top.png` — English/light top grid with B-001 focused and the first row visible.
+- `tvos-category-grid-en-light-lower.png` — English/light lower grid with B-007 focused and lower categories visible.
+- `tvos-category-grid-fr-light-top.png` — French/light top grid with B-001 focused and long French category names visible.
+- `tvos-category-grid-fr-light-lower.png` — French/light lower grid with B-007 focused and lower French category names visible.
+- `tvos-category-grid-en-dark-top.png` — English/dark top grid with B-001 focused and the first row visible.
+- `tvos-category-grid-en-dark-lower.png` — English/dark lower grid with B-007 focused and lower categories visible.
+- `tvos-category-grid-fr-dark-top.png` — French/dark top grid with B-001 focused and long French category names visible.
+- `tvos-category-grid-fr-dark-lower.png` — French/dark lower grid with B-007 focused and lower French category names visible.
+
 ## Screen readers
 
 - Primary validation: VoiceOver on iOS, iPadOS, macOS, visionOS, and tvOS as applicable.
