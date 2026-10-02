@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "kind": "morse-timing",
+  "cases": [
+    {
+      "id": "paris-ised-paris-12-5-lasts-12-seconds",
+      "input": {
+        "text": "PARIS",
+        "profile": { "name": "isedParis" }
+      },
+      "expectedOutput": {
+        "totalDurationSeconds": 12.0,
+        "durationsSeconds": {
+          "dot": 0.1,
+          "dash": 0.3,
+          "intraCharacterGap": 0.1,
+          "interCharacterGap": 1.4052631578947368,
+          "wordGap": 3.2789473684210524
+        },
+        "effectiveWpm": 5.0,
+        "symbolCounts": {
+          "dot": 10,
+          "dash": 4,
+          "intraCharacterGap": 9,
+          "interCharacterGap": 4,
+          "wordGap": 1
+        },
+        "lastSymbolKind": "wordGap"
+      }
+    },
+    {
+      "id": "paris-ric1-literal-lasts-7-6-seconds",
+      "input": {
+        "text": "PARIS",
+        "profile": { "name": "ric1Literal" }
+      },
+      "expectedOutput": {
+        "totalDurationSeconds": 7.6,
+        "durationsSeconds": {
+          "dot": 0.1,
+          "dash": 0.3,
+          "intraCharacterGap": 0.1,
+          "interCharacterGap": 0.7,
+          "wordGap": 1.7
+        },
+        "effectiveWpm": 7.894736842105263,
+        "symbolCounts": {
+          "dot": 10,
+          "dash": 4,
+          "intraCharacterGap": 9,
+          "interCharacterGap": 4,
+          "wordGap": 1
+        },
+        "lastSymbolKind": "wordGap"
+      }
+    },
+    {
+      "id": "general-farnsworth-clamps-effective-speed-to-character-speed",
+      "input": {
+        "text": "EE",
+        "profile": { "characterWpm": 12.0, "effectiveWpm": 18.0 }
+      },
+      "expectedOutput": {
+        "totalDurationSeconds": 1.2,
+        "durationsSeconds": {
+          "dot": 0.1,
+          "dash": 0.3,
+          "intraCharacterGap": 0.1,
+          "interCharacterGap": 0.3,
+          "wordGap": 0.7
+        },
+        "effectiveWpm": 12.0,
+        "symbolCounts": {
+          "dot": 2,
+          "dash": 0,
+          "intraCharacterGap": 0,
+          "interCharacterGap": 1,
+          "wordGap": 1
+        },
+        "lastSymbolKind": "wordGap"
+      }
+    }
+  ]
+}

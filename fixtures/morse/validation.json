@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "kind": "morse-validation",
+  "cases": [
+    {
+      "id": "ric1-section-8-2-allows-letters-figures-and-five-punctuation-signs",
+      "input": {
+        "text": "ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 . , ? - /"
+      },
+      "expectedOutput": {
+        "valid": true,
+        "invalidCharacters": []
+      }
+    },
+    {
+      "id": "accented-letters-are-rejected",
+      "input": {
+        "text": "CAFE É"
+      },
+      "expectedOutput": {
+        "valid": false,
+        "invalidCharacters": [
+          { "character": "É", "index": 5 }
+        ]
+      }
+    },
+    {
+      "id": "unsupported-prosign-symbols-are-rejected",
+      "input": {
+        "text": "SOS + AR"
+      },
+      "expectedOutput": {
+        "valid": false,
+        "invalidCharacters": [
+          { "character": "+", "index": 4 }
+        ]
+      }
+    }
+  ]
+}
