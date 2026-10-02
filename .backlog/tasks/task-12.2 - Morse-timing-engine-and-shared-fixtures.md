@@ -1,7 +1,7 @@
 ---
 id: TASK-12.2
 title: Morse timing engine and shared fixtures
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:12'
@@ -26,9 +26,9 @@ Why: every Morse feature (audio, drills, exam, sending) depends on exact, testab
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 @canadian-ham/morse-engine (TS) and CanadianHamMorseEngine (SwiftPM) turn text into timed symbols with general Farnsworth timing and the isedParis (12/5, 1.405 s / 3.279 s) and ric1Literal (0.7 s / 1.7 s) profiles; effective speed is clamped to at most the character speed
-- [ ] #2 The character set is limited to RIC-1 section 8.2; figures and punctuation weigh 2 for word counts
-- [ ] #3 Shared fixtures in fixtures/morse/ (PARIS 12.0 s isedParis and 7.6 s ric1Literal, the RIC-1 section 8.3 sample = 78 weighted characters, error scoring with 5 errors = pass and 6 = fail, insertions) pass in both languages
+- [x] #1 @canadian-ham/morse-engine (TS) and CanadianHamMorseEngine (SwiftPM) turn text into timed symbols with general Farnsworth timing and the isedParis (12/5, 1.405 s / 3.279 s) and ric1Literal (0.7 s / 1.7 s) profiles; effective speed is clamped to at most the character speed
+- [x] #2 The character set is limited to RIC-1 section 8.2; figures and punctuation weigh 2 for word counts
+- [x] #3 Shared fixtures in fixtures/morse/ (PARIS 12.0 s isedParis and 7.6 s ric1Literal, the RIC-1 section 8.3 sample = 78 weighted characters, error scoring with 5 errors = pass and 6 = fail, insertions) pass in both languages
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -48,4 +48,18 @@ Why: every Morse feature (audio, drills, exam, sending) depends on exact, testab
 Owner override: task-12.2 formally depends on task-1 (v1 release), but the owner asked to start implementation now.
 
 Implemented Morse TS and Swift packages plus shared fixtures. CI has no macOS/Swift job and engine-swift is local-only there, so packages/morse-swift/README.md documents DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test instead of adding a CI step.
+
+Validation evidence:
+- pnpm --filter @canadian-ham/morse-engine typecheck passed.
+- pnpm --filter @canadian-ham/morse-engine test passed (5 fixture tests).
+- DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test from packages/morse-swift passed (1 XCTest fixture runner, 0 failures).
+- pnpm typecheck passed after installing workspace dependencies.
+- pnpm test passed (content-tools 95 tests, morse-engine 5 tests, web 83 tests).
+- pnpm check:links passed.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Implemented shared Morse timing and grading engines in TypeScript and SwiftPM, backed by fixtures/morse for PARIS timing, RIC-1 character validation, word weighting, and edit-distance exam scoring. The TypeScript package is included in root pnpm test/typecheck; Swift remains local-only because CI has no macOS/Swift job and the package README documents the DEVELOPER_DIR swift test command. Verified with TS package tests/typecheck, SwiftPM tests, root pnpm typecheck/test, and link checks.
+<!-- SECTION:FINAL_SUMMARY:END -->
