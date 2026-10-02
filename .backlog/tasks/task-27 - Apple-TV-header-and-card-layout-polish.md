@@ -1,11 +1,11 @@
 ---
 id: TASK-27
 title: Apple TV header and card layout polish
-status: Done
+status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 03:45'
-updated_date: '2026-10-02 04:40'
+updated_date: '2026-10-02 04:48'
 labels:
   - apple
   - tvos
@@ -25,8 +25,8 @@ Why: task-24 screenshots show the tvOS practice header using about a third of th
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 The practice header title fits on at most two lines in English and French without mid-word hyphenation at the default text size (e.g. layoutPriority, or controls stacked below the title)
-- [x] #2 Category card titles don't hyphenate mid-word, and cards in the same row share a height
-- [x] #3 Updated light/dark screenshots in docs/evidence and the tvOS suite (including accessibility audits) pass via xbuild
+- [ ] #2 Category card titles don't hyphenate mid-word, and cards in the same row share a height
+- [ ] #3 Updated light/dark screenshots in docs/evidence and the tvOS suite (including accessibility audits) pass via xbuild
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -36,6 +36,8 @@ Why: task-24 screenshots show the tvOS practice header using about a third of th
 2. Rework the tvOS practice header layout so the category title receives priority, wraps to at most two non-hyphenated lines in English and French, and controls remain accessible.
 3. Capture lean light/dark English/French PNG evidence for category grid and practice header under docs/evidence and manually open each image.
 4. Run Apple text-source checking and the full tvOS xbuild suite including accessibility audits, then record evidence, check ACs, summarize, mark task-27 Done, and leave the branch clean.
+
+Review round: resize tvOS category cards so each row fits the tallest title/content without clipping, make/no-note hyphenation behaviour explicit with lower-grid evidence captures, keep the category grid top bar compact, rerun text checks and the full tvOS xbuild suite before re-finalizing.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
