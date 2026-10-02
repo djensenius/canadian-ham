@@ -77,7 +77,7 @@ export function checkReleasePermission(markdown) {
   if (!isConcreteValue(evidenceLocation)) {
     errors.push("Storage location for permission evidence must be recorded.");
   }
-  if (!isConcreteValue(releaseReview) || /\bblocked\b/iu.test(releaseReview)) {
+  if (!/^cleared\b/iu.test(releaseReview.trim()) || /\b(blocked|not|denied|refused|pending|conditional)\b/iu.test(releaseReview)) {
     errors.push("Release review status must be recorded as cleared, not blocked.");
   }
 
@@ -241,6 +241,10 @@ function runSelfTest() {
     ["artifacts", { artifacts: "Pending scope: request includes the Basic bank" }, "Covered source artifacts must be recorded."],
     ["evidence", { evidence: "Pending: private owner records" }, "Storage location for permission evidence must be recorded."],
     ["review", { review: "Blocked until scope is recorded" }, "Release review status must be recorded as cleared, not blocked."],
+    ["review", { review: "Not cleared" }, "Release review status must be recorded as cleared, not blocked."],
+    ["review", { review: "Denied" }, "Release review status must be recorded as cleared, not blocked."],
+    ["review", { review: "Ready pending approval" }, "Release review status must be recorded as cleared, not blocked."],
+    ["review", { review: "Cleared pending legal review" }, "Release review status must be recorded as cleared, not blocked."],
   ]) {
     const result = checkReleasePermission(permissionRecord({
       status: "Granted: yes",
