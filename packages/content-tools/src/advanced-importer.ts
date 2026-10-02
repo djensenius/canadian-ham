@@ -417,12 +417,41 @@ function validateSourceManifest(sourceManifest: SourceManifest, sourceSha256: st
   return sourceFile;
 }
 
-function validateSha256Sums(sha256SumsText: string, sourceSha256: string): void {
-  const sourceRelativePath = "questions/amat_adv_quest_delim.txt";
-  const expectedLine = `${sourceSha256}  ${sourceRelativePath}`;
+async function validateSha256Sums(rootDir: string, sourceManifest: SourceManifest, sha256SumsText: string): Promise<void> {
+  const manifestFiles = new Map(sourceManifest.files.map((file) => [file.path, file]));
+  const seenPaths = new Set<string>();
   const lines = sha256SumsText.split(/\r?\n/).filter((line) => line.length > 0);
-  if (!lines.includes(expectedLine)) {
-    fail(`${SOURCE_SHA256SUMS_PATH}: missing line ${expectedLine}`);
+
+  for (const [index, line] of lines.entries()) {
+    const match = /^(?<sha256>[a-f0-9]{64})  (?<relativePath>.+)$/u.exec(line);
+    if (match?.groups === undefined) {
+      fail(`${SOURCE_SHA256SUMS_PATH}: line ${index + 1} must be '<sha256>  <path>'`);
+    }
+    const relativePath = match.groups.relativePath;
+    if (seenPaths.has(relativePath)) {
+      fail(`${SOURCE_SHA256SUMS_PATH}: duplicate checksum line for ${relativePath}`);
+    }
+    seenPaths.add(relativePath);
+
+    const manifestFile = manifestFiles.get(relativePath);
+    if (manifestFile === undefined) {
+      fail(`${SOURCE_SHA256SUMS_PATH}: ${relativePath} is not listed in ${SOURCE_MANIFEST_PATH}`);
+    }
+    if (match.groups.sha256 !== manifestFile.sha256) {
+      fail(`${SOURCE_SHA256SUMS_PATH}: ${relativePath} expected manifest SHA-256 ${manifestFile.sha256}, found ${match.groups.sha256}`);
+    }
+
+    const bytes = await readFile(path.join(rootDir, SOURCE_DIR, relativePath));
+    const actualSha256 = sha256Hex(bytes);
+    if (actualSha256 !== match.groups.sha256) {
+      fail(`${SOURCE_DIR}/${relativePath}: SHA-256 mismatch against ${SOURCE_SHA256SUMS_PATH}; expected ${match.groups.sha256}, found ${actualSha256}`);
+    }
+  }
+
+  for (const manifestFile of sourceManifest.files) {
+    if (!seenPaths.has(manifestFile.path)) {
+      fail(`${SOURCE_SHA256SUMS_PATH}: missing line for ${manifestFile.path}`);
+    }
   }
 }
 
@@ -438,7 +467,7 @@ export async function importAdvancedQuestionBank(rootDir = process.cwd()): Promi
 
   const sourceManifest = JSON.parse(sourceManifestText) as SourceManifest;
   const sourceFile = validateSourceManifest(sourceManifest, sourceSha256, sourceBytes.byteLength, parseResult.encoding);
-  validateSha256Sums(sha256SumsText, sourceSha256);
+  await validateSha256Sums(rootDir, sourceManifest, sha256SumsText);
 
   const handCategoriesText = await readFile(path.join(rootDir, HAND_CATEGORIES_PATH), "utf8");
 

@@ -133,8 +133,34 @@ export function validateDataAgainstSchema(data, schemaFile) {
   if (pointer !== "" && pointer !== "/") {
     const resolved = resolveRef(`#${pointer}`, documentId);
     schema = resolved.schema;
+  } else if (documentId === "generated-bank-categories.schema.json") {
+    schema = selectGeneratedBankCategoriesSchema(data, documentId) ?? schema;
   }
   return validateAgainstSchema(schema, data, { documentId, path: "$" });
+}
+
+function selectGeneratedBankCategoriesSchema(data, documentId) {
+  if (!Array.isArray(data) || data.length === 0) {
+    return null;
+  }
+  const bankIds = new Set();
+  for (const item of data) {
+    if (!isObject(item) || typeof item.bankId !== "string") {
+      return null;
+    }
+    bankIds.add(item.bankId);
+  }
+  if (bankIds.size !== 1) {
+    return null;
+  }
+  const [bankId] = bankIds;
+  if (bankId === "basic-2025-07-15") {
+    return resolveRef("#/$defs/basicCategories", documentId).schema;
+  }
+  if (bankId === "advanced-2025-02-04") {
+    return resolveRef("#/$defs/advancedCategories", documentId).schema;
+  }
+  return null;
 }
 
 function loadSchema(schemaFile) {
@@ -187,11 +213,16 @@ function validateAgainstSchema(schema, data, context) {
   }
 
   if (Array.isArray(schema.oneOf)) {
-    const branchResults = schema.oneOf.map((branch) => validateAgainstSchema(branch, data, context));
-    const passing = branchResults.filter((branchErrors) => branchErrors.length === 0).length;
-    if (passing !== 1) {
-      const firstReason = branchResults.find((branchErrors) => branchErrors.length > 0)?.[0];
-      errors.push(`${context.path}: expected exactly one oneOf branch to match, got ${passing}${firstReason ? `; first mismatch: ${firstReason}` : ""}`);
+    const selectedBranch = selectOneOfBranchByConstDiscriminator(schema.oneOf, data);
+    if (selectedBranch !== null) {
+      errors.push(...validateAgainstSchema(selectedBranch, data, context));
+    } else {
+      const branchResults = schema.oneOf.map((branch) => validateAgainstSchema(branch, data, context));
+      const passing = branchResults.filter((branchErrors) => branchErrors.length === 0).length;
+      if (passing !== 1) {
+        const firstReason = branchResults.find((branchErrors) => branchErrors.length > 0)?.[0];
+        errors.push(`${context.path}: expected exactly one oneOf branch to match, got ${passing}${firstReason ? `; first mismatch: ${firstReason}` : ""}`);
+      }
     }
   }
 
@@ -297,6 +328,24 @@ function validateAgainstSchema(schema, data, context) {
   }
 
   return errors;
+}
+
+function selectOneOfBranchByConstDiscriminator(branches, data) {
+  if (!isObject(data)) {
+    return null;
+  }
+  const matchingBranches = branches.filter((branch) => {
+    if (!isObject(branch) || !isObject(branch.properties)) {
+      return false;
+    }
+    return Object.entries(branch.properties).some(([key, propertySchema]) => (
+      isObject(propertySchema)
+      && Object.hasOwn(propertySchema, "const")
+      && Object.hasOwn(data, key)
+      && deepEqual(data[key], propertySchema.const)
+    ));
+  });
+  return matchingBranches.length === 1 ? matchingBranches[0] : null;
 }
 
 function validateSchemaKeywords(schema, schemaFile, schemaPath) {

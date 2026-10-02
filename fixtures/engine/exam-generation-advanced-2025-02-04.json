@@ -8,7 +8,7 @@
     "seed": "advanced-2025-02-04-real-bank-fixture-001"
   },
   "input": {
-    "sourceQuestionBankPath": "content/generated/advanced-2025-02-04/subsections.json",
+    "sourceQuestionBankPath": "content/generated/advanced-2025-02-04/questions.json",
     "subsections": [
       {
         "id": "A-001-001",
