@@ -154,6 +154,7 @@ function runSelfTest() {
     "Granted: denied",
     "Granted: pending",
     "Granted: TBD",
+    "Granted: not yet",
     "Not yet granted",
     "Not granted",
     "Permission requested; awaiting reply",
