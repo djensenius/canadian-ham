@@ -24,7 +24,7 @@ No web access was used while preparing this document. Exact App Store Connect sc
 
 ## Snapshot and command evidence
 
-Commands were run from `/Users/david/Developer/canadian-ham-task-1.2` at Git commit `e506a0b88a11e8e2869e18377fde5ba02a46b93d` with the web privacy copy change in the working tree. Final release validation must be re-run on the release commit.
+Commands were run from `/Users/david/Developer/canadian-ham-task-1.2` at Git commit `788b49f95f8387525da42bacb4b7c81d2cbb4331` with a clean working tree. Final release validation must be re-run on the release commit.
 
 | Evidence | Result |
 |---|---|
@@ -124,7 +124,7 @@ Build and URL-audit evidence:
 ```text
 pnpm build:web
 vite v8.3.1 building client environment for production...
-✓ built in 364ms
+✓ built in 267ms
 [plugin builtin:vite-reporter] (!) Some chunks are larger than 500 kB after minification. ...
 
 pnpm --filter @canadian-ham/web audit:urls
