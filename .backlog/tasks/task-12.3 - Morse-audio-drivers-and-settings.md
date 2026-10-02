@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-02 16:56'
+updated_date: '2026-10-02 17:03'
 labels:
   - web
   - apple
@@ -34,13 +34,20 @@ Why: learners must hear clean, click-free Morse offline on every platform, with 
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Inspect existing web and Apple settings/navigation/persistence/test patterns plus the merged Morse engine APIs.\n2. Add local Morse settings with default-off preview toggle, clamping, ISED preset, and localized EN/FR UI copy.\n3. Implement web Web Audio scheduling/playback UI behind the toggle and tests for scheduling/gesture/settings.\n4. Wire packages/morse-swift into Apple targets, add AVAudioEngine/AVAudioSourceNode playback and reachable Morse UI behind the toggle on each platform.\n5. Add Apple unit/UI tests, regenerate the Xcode project twice, then run required web, localization, network, and xbuild checks before finalizing.
+1. Inspect existing web and Apple settings/navigation/persistence/test patterns plus the merged Morse engine APIs.
+2. Add local Morse settings with default-off preview toggle, clamping, ISED preset, and localized EN/FR UI copy.
+3. Implement web Web Audio scheduling/playback UI behind the toggle and tests for scheduling/gesture/settings.
+4. Wire packages/morse-swift into Apple targets, add AVAudioEngine/AVAudioSourceNode playback and reachable Morse UI behind the toggle on each platform.
+5. Add Apple unit/UI tests, regenerate the Xcode project twice, then run required web, localization, network, and xbuild checks before finalizing.
+6. Fix review findings for task-12.3: accessibility announcements, cancellable web playback, fixed timing profiles, click-free stop ramps, localization, cleanup/focus, and requested tests/check notes.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented Morse preview behind default-off settings toggle for web/iOS/macOS/tvOS/visionOS with Web Audio OscillatorNode scheduling and AVAudioEngine/AVAudioSourceNode playback. Validation passed: pnpm typecheck, pnpm test, pnpm build:web, web URL audit, check-links, check-apple-l10n, check-apple-text-sources, check-apple-network, and iOS/macOS/tvOS/visionOS xbuild test suites.
+
+Review round started after owner request to start before v1; keeping Morse off by default until v1 while fixing task-12.3 review findings.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
