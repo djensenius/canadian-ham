@@ -1,11 +1,11 @@
 ---
 id: TASK-28
 title: Limit tvOS test launch arguments to Debug builds
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 03:45'
-updated_date: '2026-10-02 04:24'
+updated_date: '2026-10-02 04:28'
 labels:
   - apple
   - tvos
@@ -23,8 +23,8 @@ Why: TVLaunchOptions parses test-only launch arguments (-CanadianHamReduceMotion
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Test-only tvOS launch arguments are parsed only under #if DEBUG, and the UI tests that use them still pass
-- [ ] #2 A Release tvOS build plus a string scan shows the argument names are absent from the binary
+- [x] #1 Test-only tvOS launch arguments are parsed only under #if DEBUG, and the UI tests that use them still pass
+- [x] #2 A Release tvOS build plus a string scan shows the argument names are absent from the binary
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -32,3 +32,15 @@ Why: TVLaunchOptions parses test-only launch arguments (-CanadianHamReduceMotion
 <!-- SECTION:PLAN:BEGIN -->
 1. Wrap tvOS TVLaunchOptions launch-argument parsing in #if DEBUG and keep Release defaults free of test flag strings.\n2. Run the tvOS UI test path that depends on launch arguments to confirm Debug tests still work.\n3. Build the tvOS app for Release and scan the built binary to prove the test launch-argument names are absent.\n4. Record objective evidence, check accepted criteria, summarize, and mark task-28 Done before starting task-27.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented #if DEBUG launch-argument parsing in TVLaunchOptions; Release builds now use fixed defaults. Validation: xbuild tvOS UI test CanadianHamTVUITests/testFocusRingEvidenceScreenshots passed, exercising -CanadianHamTVEvidenceFocus, -CanadianHamReduceMotion, -CanadianHamLanguage, answered state, appearance, screen, category and question launch arguments. Release validation: xbuild Release tvOS Simulator build passed at /tmp/canadian-ham-task-28-release, and strings scan of CanadianHamTV binary reported all launch-argument names absent.
+<!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Wrapped tvOS test-only launch-argument parsing in #if DEBUG while keeping Debug UI tests working. Verified with the focused tvOS UI test and a Release tvOS Simulator build plus binary strings scan showing the argument names absent.
+<!-- SECTION:FINAL_SUMMARY:END -->
