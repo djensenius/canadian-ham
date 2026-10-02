@@ -31,7 +31,7 @@ From the repository root:
 python3 design/app-icon/render_icon.py
 ```
 
-The script is deterministic and uses ImageMagick (`/opt/homebrew/bin/magick` when available). It rewrites `design/app-icon/exports/`, installs matching PNGs into the Apple asset catalogues, and copies web icons into `apps/web/public/`. It does not change `apps/apple/project.yml` or target membership.
+The script is deterministic for a given ImageMagick version and macOS system fonts (Georgia and Helvetica for the Top Shelf wordmark and preview labels); exports were last rendered with ImageMagick 7.1.2-32. Production renders differ very slightly from the round-3 concept PNG (wire layer order and a 0.6% wire scale), so the files are not byte-identical. It uses ImageMagick (`/opt/homebrew/bin/magick` when available). It rewrites `design/app-icon/exports/`, installs matching PNGs into the Apple asset catalogues, and copies web icons into `apps/web/public/`. It does not change `apps/apple/project.yml` or target membership.
 
 ## Exports
 
@@ -68,7 +68,7 @@ The Top Shelf formats place the hex mark on the left with generous cream space a
 ### Web
 
 - `favicon.svg`: simplified adaptive vector hex with perimeter, spokes, hub, and `prefers-color-scheme` dark support.
-- `favicon-16.png`, `favicon-32.png`, and `favicon-64.png`: opaque light-mode PNG favicons; the 16 px render omits fine wire detail for legibility.
+- `favicon-16.png`, `favicon-32.png`, and `favicon-64.png`: opaque light-mode PNG favicons; no PNG favicon draws the wires, and the 16 px render also drops the spokes, leaving the hex outline and hub for legibility.
 - `apple-touch-icon-180.png`.
 - `pwa-icon-192.png` and `pwa-icon-512.png`.
 
