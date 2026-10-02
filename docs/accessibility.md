@@ -63,6 +63,11 @@ Category-grid layout evidence uses separate full-screen top and lower captures r
 - `tvos-category-grid-fr-dark-top.png` — French/dark top grid with B-001 focused and long French category names visible.
 - `tvos-category-grid-fr-dark-lower.png` — French/dark lower grid with B-007 focused and lower French category names visible.
 
+Practice-header layout evidence (crops of the practice screen showing the title, subtitle and control row):
+
+- `tvos-practice-header-en-light.png` and `tvos-practice-header-en-dark.png` — English title on one line.
+- `tvos-practice-header-fr-light.png` and `tvos-practice-header-fr-dark.png` — the longer French title on two lines, wrapping at a word boundary.
+
 ## Screen readers
 
 - Primary validation: VoiceOver on iOS, iPadOS, macOS, visionOS, and tvOS as applicable.
