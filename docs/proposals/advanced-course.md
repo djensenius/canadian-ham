@@ -1,5 +1,7 @@
 # Research (source-checked): ISED Advanced Qualification Course Investigation (T-701)
 
+> **Status snapshot (2026-10-01):** permission statements in this brief predate the request. The ISED request was submitted on 2026-10-02 and is awaiting a reply; see the [permission record](../content-licensing.md#permission-record) for the current status.
+
 Checked 2026-10-01. Original brief: `advanced.md`. Status labels used here: **Verified** (official or authoritative source, with the supporting passage), **Corrected** (the right fact, with its source), **Unverified** (what was searched). Statements marked *Inference* or *Estimate* are mine or the original author's and are not sourced facts.
 
 ## Verification summary

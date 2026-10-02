@@ -544,4 +544,4 @@ Coverage check requirement:
 ## Open questions
 
 - Locate or confirm absence of French 2025 Basic reference material.
-- ISED permission status: requested scope drafted, pending; not yet sent or granted as of the 2026-09-28 owner decision. Fill in the reference number, date, and scope in T-007 before public release; reference PDFs are retained as source artifacts and are not shipped in the apps.
+- ISED permission status: request submitted 2026-10-02 through ISED's online Crown copyright clearance form; not yet granted. Fill in the reference number, date, and scope in T-007 before public release; reference PDFs are retained as source artifacts and are not shipped in the apps.

@@ -2,7 +2,7 @@
 
 This document defines how `canadian-ham` separates official ISED data from original project content and how it records permission, attribution, and disclaimers.
 
-The ISED permission request has been drafted but not yet sent or granted. The requested scope covers the Basic 2025 question-bank TXT and PDF, the Basic 2025 English reference PDFs, the Advanced question bank, commercial use, future revisions, and structured app-data formats with shuffled choices. Written permission is tracked by task-1.1 and remains pending; no permission has been granted or recorded yet.
+The ISED permission request was submitted on 2026-10-02 at 08:34 local time through ISED's online Apply for Crown Copyright Clearance form and is awaiting ISED's reply; no confirmation or reference number has been reported yet. The request used purpose Reproduction and Adaptation, languages English and French using ISED's own versions, Electronic-only format, Non-commercial end use, one electronic edition, and price 0.00 CAD. The requested scope covers the Basic 2025 question bank (delimited TXT and EN/FR PDF), the Advanced bank (delimited TXT and EN/FR PDFs, current edition and future revisions), electronic app data with shuffled choices, publication of the question text in the app's public source code, and future ISED bank revisions; it did not request reference sheets/reference PDFs, commercial use, revision, or translation. Written permission is tracked by task-1.1 and remains pending; no permission has been granted or recorded yet.
 
 Until written permission is recorded, the GitHub repository `djensenius/canadian-ham` remains private. ISED's published terms allow reproduction for personal, non-commercial purposes without permission, including the [general terms and conditions](https://ised-isde.canada.ca/site/ised/en/terms-and-conditions) and [copyright written permission guidance](https://www.ised-isde.canada.ca/site/ised/en/copyright-written-permission). The owner has approved committing official ISED source artifacts for private, non-distributed development under the interim policy below as the owner's risk decision, not as legal advice. Public exposure or distribution does not fit that interim rationale and is blocked by the [public-release gate](#public-release-gate).
 
@@ -20,11 +20,11 @@ Record the written permission here when available in project records.
 | Field | Value |
 |---|---|
 | Permission holder | Owner / project maintainer |
-| Request status | Drafted (2026-09-28 owner decision); sent: pending; granted: pending |
+| Request status | Drafted (2026-09-28 owner decision); sent: 2026-10-02 (ISED online Crown copyright clearance form, 08:34); granted: pending |
 | ISED reference number | Pending: fill in permission reference number |
 | Permission date | Pending: fill in permission date |
 | Permission scope | Pending: paste concise scope from written permission |
-| Covered source artifacts | Pending scope: request includes 2025 Basic question bank delimited TXT; 2025 Basic question bank PDF; 2025 English Basic reference PDFs; Advanced question bank; commercial use; future revisions; structured app-data format with shuffled choices |
+| Covered source artifacts | Pending request scope: 2025 Basic question bank delimited TXT and EN/FR PDF; Advanced bank delimited TXT and EN/FR PDFs (current edition and future revisions); purpose Reproduction and Adaptation; non-commercial; electronic app data (the form's material details described verbatim text stored as structured data with answer choices in random order and questions grouped by topic); publication of question text in public source code; future ISED bank revisions. Not requested: reference sheets/reference PDFs, commercial use, revision, or translation |
 | Covers verbatim question text as app data | Pending: `yes` only if the written permission explicitly covers bundling the verbatim EN/FR question text as data in the web and Apple apps |
 | Storage location for permission evidence | Pending: private owner records; do not commit private correspondence unless approved |
 | Release review status | Blocked until reference number/date/scope are recorded and the scope explicitly covers the release artifacts |
@@ -81,7 +81,7 @@ Short form for app settings or about page after T-007/task-1.1 records permissio
 
 During private development before T-007 is complete, internal documentation and manifests must not claim that written permission has been granted.
 
-TODO before public release: label any release About-page draft attribution as not in effect while the request status remains drafted; sent: pending; granted: pending, then replace it with the exact wording from the recorded ISED permission in T-007/task-1.1. Do not add a permission reference number, date, or scope here until the written permission record is available.
+TODO before public release: use the release About-page legal status "Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release." until it can be replaced with the exact wording from the recorded ISED permission in T-007/task-1.1. Do not add a permission reference number, date, or scope here until the written permission record is available.
 
 ## Disclaimer
 

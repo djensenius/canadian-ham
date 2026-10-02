@@ -30,9 +30,9 @@ struct AboutView: View {
                 }
 
                 paperSection("Attribution") {
-                    // TODO(task-1.1): Replace this draft attribution with the exact wording from the recorded ISED permission before public release. Permission remains pending: request drafted; sent pending; granted pending.
-                    Text("Draft attribution, not in effect: ISED written permission is pending (request status: drafted; sent: pending; granted: pending). Replace this draft with the wording from the recorded permission (task-1.1) before public release.")
-                        .accessibilityLabel(Text(english("Draft attribution, not in effect: ISED written permission is pending (request status: drafted; sent: pending; granted: pending). Replace this draft with the wording from the recorded permission (task-1.1) before public release."))) // l10n: content(en)
+                    // TODO(task-1.1): Replace this draft attribution with the exact wording from the recorded ISED permission before public release. Permission remains pending: requested 2026-10-02; granted pending.
+                    Text("Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release.")
+                        .accessibilityLabel(Text(english("Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release."))) // l10n: content(en)
                     Text("Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page.")
                         .accessibilityLabel(Text(english("Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page."))) // l10n: content(en)
                 }
