@@ -921,8 +921,10 @@ describe("App accessibility and flows", () => {
     await screen.findByRole("heading", { name: "À propos de Canadian Ham" });
     assert.equal(document.documentElement.lang, "fr-CA");
     assert.ok(screen.getByText((text) => text.includes(bankId) && text.includes(manifest.effectiveDate)));
-    assert.ok(screen.getByText((text) => text.includes(manifest.source.url)));
-    assert.ok(screen.getByText((text) => text.includes("RBR-4") && text.includes("ised-isde.canada.ca")));
+    const questionBankSource = screen.getByText((text) => text.includes(manifest.source.url));
+    assert.equal(questionBankSource.closest("a"), null);
+    const rbr4Source = screen.getByText((text) => text.includes("RBR-4") && text.includes("ised-isde.canada.ca"));
+    assert.equal(rbr4Source.closest("a"), null);
     assert.ok(screen.getByText(/ISDE fournit la feuille de référence de l’examen de compétence de base/));
     assert.ok(screen.getByText(/aucun compte, aucune analytique, aucune télémétrie, aucune publicité/));
     const attributionHeading = screen.getByRole("heading", { name: "Attribution" });

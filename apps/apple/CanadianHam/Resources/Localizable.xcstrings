@@ -5967,46 +5967,46 @@
         }
       }
     },
-    "This tvOS app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it." : {
+    "This Apple TV app works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This tvOS app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it."
+            "value" : "This Apple TV app works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cette application tvOS fonctionne entièrement hors ligne avec du contenu intégré; elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers, et conserve la progression seulement sur cet appareil, sauf si vous l’exportez."
+            "value" : "Cette application Apple TV fonctionne entièrement hors ligne avec du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers. Les séances d’exercice sont conservées seulement pendant que l’application est ouverte; rien n’est enregistré ni envoyé."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cette application tvOS fonctionne entièrement hors ligne avec du contenu intégré; elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers, et conserve la progression seulement sur cet appareil, sauf si vous l’exportez."
+            "value" : "Cette application Apple TV fonctionne entièrement hors ligne avec du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers. Les séances d’exercice sont conservées seulement pendant que l’application est ouverte; rien n’est enregistré ni envoyé."
           }
         }
       }
     },
-    "This visionOS app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it." : {
+    "This Apple Vision Pro app works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This visionOS app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it."
+            "value" : "This Apple Vision Pro app works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cette application visionOS fonctionne entièrement hors ligne avec du contenu intégré; elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers, et conserve la progression seulement sur cet appareil, sauf si vous l’exportez."
+            "value" : "Cette application Apple Vision Pro fonctionne entièrement hors ligne avec du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers. Les séances d’exercice sont conservées seulement pendant que l’application est ouverte; rien n’est enregistré ni envoyé."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cette application visionOS fonctionne entièrement hors ligne avec du contenu intégré; elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers, et conserve la progression seulement sur cet appareil, sauf si vous l’exportez."
+            "value" : "Cette application Apple Vision Pro fonctionne entièrement hors ligne avec du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers. Les séances d’exercice sont conservées seulement pendant que l’application est ouverte; rien n’est enregistré ni envoyé."
           }
         }
       }

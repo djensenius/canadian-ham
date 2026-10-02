@@ -27,6 +27,7 @@ final class CanadianHamVisionUITests: XCTestCase {
         XCTAssertTrue(anyLabel(in: app, contains: "Active bank: basic-2025-07-15, effective 2025-07-15."), "Expected active bank version and effective date on visionOS About")
         XCTAssertTrue(anyLabel(in: app, contains: "Contains information reproduced from Innovation, Science and Economic Development Canada"), "Expected ISED attribution on visionOS About")
         XCTAssertTrue(anyLabel(in: app, contains: "canadian-ham is an independent study tool"), "Expected disclaimer on visionOS About")
+        XCTAssertTrue(anyLabel(in: app, contains: "Practice sessions are kept only while the app is open"), "Expected ephemeral practice-session privacy copy on visionOS About")
         XCTAssertTrue(anyLabel(in: app, contains: "Draft attribution, not in effect"), "Expected visible draft-attribution warning on visionOS About")
         XCTAssertTrue(anyLabel(in: app, contains: "sent: pending; granted: pending"), "Expected pending permission status on visionOS About")
         assertAboutLowerSectionsReachable(in: app, platformName: "visionOS")
@@ -225,7 +226,7 @@ final class CanadianHamVisionUITests: XCTestCase {
             line: line
         )
 
-        let privacy = app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "works fully offline with bundled content")).firstMatch
+        let privacy = app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "Practice sessions are kept only while the app is open")).firstMatch
         XCTAssertTrue(privacy.waitForExistence(timeout: 5), "Expected About privacy text on \(platformName)", file: file, line: line)
         scrollUntilOnScreen(privacy, in: app, maxSwipes: 10)
         XCTAssertTrue(

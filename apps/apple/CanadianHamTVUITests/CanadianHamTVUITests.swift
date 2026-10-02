@@ -28,6 +28,7 @@ final class CanadianHamTVUITests: XCTestCase {
         XCTAssertTrue(anyLabel(in: app, contains: "Active bank: basic-2025-07-15, effective 2025-07-15."), "Expected active bank version and effective date on tvOS About")
         XCTAssertTrue(anyLabel(in: app, contains: "Contains information reproduced from Innovation, Science and Economic Development Canada"), "Expected ISED attribution on tvOS About")
         XCTAssertTrue(anyLabel(in: app, contains: "canadian-ham is an independent study tool"), "Expected disclaimer on tvOS About")
+        XCTAssertTrue(anyLabel(in: app, contains: "Practice sessions are kept only while the app is open"), "Expected ephemeral practice-session privacy copy on tvOS About")
         XCTAssertTrue(anyLabel(in: app, contains: "Draft attribution, not in effect"), "Expected visible draft-attribution warning on tvOS About")
         XCTAssertTrue(anyLabel(in: app, contains: "sent: pending; granted: pending"), "Expected pending permission status on tvOS About")
     }
@@ -50,7 +51,7 @@ final class CanadianHamTVUITests: XCTestCase {
         XCTAssertTrue(privacy.waitForExistence(timeout: 5), "Expected focusable tvOS About privacy section")
         pressDownUntilFocused(privacy, remote: remote, maxPresses: 4)
         XCTAssertTrue(privacy.hasFocus, "Remote focus should reach the About privacy section")
-        XCTAssertTrue(privacy.label.localizedCaseInsensitiveContains("works fully offline with bundled content"), "Focusable privacy section should expose its privacy text")
+        XCTAssertTrue(privacy.label.localizedCaseInsensitiveContains("Practice sessions are kept only while the app is open"), "Focusable privacy section should expose its privacy text")
         assertFocusedElementIsOnScreen(privacy, in: app, description: "tvOS About privacy section")
         attachScreenScreenshot(name: "tvos-about-lower-sections-focus")
     }

@@ -1036,7 +1036,7 @@ private struct TVAboutView: View {
                             .accessibilityLabel(Text(english("canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner."))) // l10n: content(en)
                     }
                     TVPaperSection(title: "Privacy", accessibilityIdentifier: "tv-about-privacy-section") {
-                        Text("This tvOS app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it.")
+                        Text("This Apple TV app works fully offline with bundled content and has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs. Practice sessions are kept only while the app is open; nothing is saved or sent.")
                     }
                 }
             }

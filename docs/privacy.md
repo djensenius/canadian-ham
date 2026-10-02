@@ -15,13 +15,14 @@ This document supports [requirements.md](requirements.md) and [architecture.md](
 - No iCloud sync in v1.
 - No networking code in the Apple app.
 - Web progress remains in browser storage unless the user explicitly exports it.
-- Apple progress remains in local app storage unless the user explicitly exports it.
+- On iOS, iPadOS and macOS, Apple progress remains in local app storage unless the user explicitly exports it.
+- On tvOS and visionOS, practice sessions are kept only while the app is open; nothing is saved or sent.
 
 ## Apple no-data design
 
-The Apple app is a fully offline SwiftUI multiplatform app for iOS, iPadOS, macOS, visionOS, and tvOS.
+The Apple app is a fully offline SwiftUI multiplatform app for iOS, iPadOS, macOS, visionOS, and tvOS. The iOS, iPadOS and macOS app persists local progress and supports user-initiated export/import/reset. The tvOS and visionOS apps keep practice sessions in memory only while the app is open; they do not save progress and do not export it.
 
-Allowed local data:
+Allowed local data on platforms that implement persistence, currently iOS, iPadOS and macOS:
 
 - Question progress.
 - Lesson progress.
@@ -30,6 +31,11 @@ Allowed local data:
 - Local preferences such as selected language and theme.
 - User-initiated imported progress JSON.
 - User-initiated exported progress JSON.
+
+Allowed in-memory state on tvOS and visionOS:
+
+- Current practice session state while the app is open.
+- Current UI choices needed by the open session.
 
 Disallowed data flows:
 
@@ -44,7 +50,7 @@ Disallowed data flows:
 
 Implementation rules:
 
-- Store progress in SwiftData local stores.
+- When a platform persists progress, store it in SwiftData local stores.
 - Bundle all content needed for runtime use.
 - Do not add networking code for app features.
 - Do not add entitlements for network-dependent capabilities unless a future privacy review approves a new scope.
@@ -133,7 +139,7 @@ Evidence to keep for review:
 - Source search showing no networking APIs used by app features.
 - Entitlement review showing no iCloud sync and no push notification capability.
 - Airplane-mode smoke test results.
-- Settings screenshots showing export/import/reset are user-initiated.
+- iOS, iPadOS and macOS Settings screenshots showing export/import/reset are user-initiated, and tvOS/visionOS About screenshots showing sessions are in-memory only.
 
 Release evidence for the current App Store privacy-label answers and web privacy summary is tracked in [release/privacy-label-evidence.md](release/privacy-label-evidence.md). If any future feature transmits data, the privacy label must be revisited before release.
 
@@ -149,7 +155,7 @@ Verification targets:
 - No remote URLs in runtime configuration except non-clickable attribution or source text (including the About screens' RBR-4 and active ISED question-bank source URLs), and the single RBR-4 citation link on the answer-explanation panel (`ExplanationPanelView`), which opens in the system browser only when tapped (the app makes no request itself). The panel appears after answering in lesson quizzes, practice sessions and review, and mock-exam review.
 - No code paths using URL loading for remote resources.
 - No app entitlements for iCloud sync or push notifications.
-- Runtime smoke test in airplane mode covers first launch, lesson reading, practice, mock exam, progress persistence, export, import, and reset.
+- Runtime smoke tests in airplane mode cover first launch, lesson reading, practice, mock exam, progress persistence, export, import, and reset on iOS, iPadOS and macOS; tvOS and visionOS smoke tests cover first launch and practice with in-memory sessions only.
 
 The project may still contain source URLs in documentation and source manifests for attribution and verification. Those URLs are not runtime network dependencies.
 
@@ -176,7 +182,7 @@ Run before release and when dependencies change:
 3. Confirm Apple entitlements do not include iCloud sync or push notifications.
 4. Confirm no Apple target links third-party SDKs.
 5. Build and test Apple app with `xbuild`.
-6. Launch Apple app in airplane mode and complete a lesson, practice quiz, mock exam, export, import, and reset.
+6. Launch Apple app in airplane mode. On iOS, iPadOS and macOS, complete a lesson, practice quiz, mock exam, export, import, and reset; on tvOS and visionOS, complete the available offline practice flow and confirm no progress is saved or exported.
 7. Build static web app.
 8. Load web app with browser dev tools open and confirm no third-party requests.
 9. Put web app offline after PWA cache readiness and complete a lesson, practice quiz, mock exam, export, import, and reset.
@@ -208,13 +214,15 @@ These strings can appear in docs or tests. Findings in runtime app code require 
 
 ## User controls
 
-Settings must include:
+Settings on platforms with persistent local progress must include:
 
 - Export progress JSON.
 - Import progress JSON.
 - Reset all data.
 - Display active bank version and source date.
 - Display privacy summary: no accounts, no analytics, local progress only.
+
+The tvOS and visionOS About screens must instead state that practice sessions are kept only while the app is open and nothing is saved or sent.
 
 Reset semantics:
 
