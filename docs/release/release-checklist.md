@@ -29,6 +29,7 @@ Record the commit SHA, date, tester, and pass/fail notes for every checked item.
 - [ ] Run `pnpm --filter @canadian-ham/content-tools check:lesson-originality:all` (the `check-lesson-originality --all` checker).
 - [ ] If the release includes a bank update, follow [`docs/content-update-process.md`](../content-update-process.md) and run `pnpm --silent diff:banks -- content/generated/basic-2025-07-15 content/generated/<new-bank-id> > /tmp/basic-bank-diff.md` plus the JSON parse check described there; if there is no bank update, record this item as not applicable with the active bank ID.
 - [ ] Confirm generated data and app-visible bank version are from the same active bank before building web or Apple artifacts.
+- [ ] Run the repository-wide checks on the release commit: `pnpm typecheck`, `pnpm test` (includes `pnpm --filter @canadian-ham/content-tools test`), and `pnpm check:links`.
 
 ## Privacy
 
@@ -43,7 +44,7 @@ Record the commit SHA, date, tester, and pass/fail notes for every checked item.
 ## Accessibility
 
 - [ ] Follow the [`docs/accessibility.md` manual release checklist](../accessibility.md#manual-release-checklist): keyboard-only web, macOS Full Keyboard Access, VoiceOver iOS/iPadOS/macOS, mock-exam results VoiceOver, tvOS focus, visionOS readability, 200% zoom/320 px reflow, largest Dynamic Type, Reduced Motion, colour independence, and privacy/network regression review.
-- [ ] Run the relevant automated accessibility suites for the release candidate, including web tests with axe coverage and Apple UI tests through `xbuild` only.
+- [ ] Run the automated accessibility suites on the release candidate: `pnpm --filter @canadian-ham/web test` (axe coverage) and the iOS, macOS, tvOS and visionOS test commands in [`AGENTS.md`](../../AGENTS.md#apple-builds) (through `xbuild` only; the iOS, tvOS and visionOS UI suites include the accessibility audits).
 - [ ] Complete and record `task-29` tvOS VoiceOver checks in [`docs/accessibility.md`](../accessibility.md): each focusable About card title/body reads correctly and English legal text in the French UI is spoken with an English voice.
 - [ ] Confirm no UI change introduced remote fonts, remote assets, telemetry, analytics, or third-party runtime SDKs while satisfying accessibility requirements.
 
@@ -67,7 +68,7 @@ Record the commit SHA, date, tester, and pass/fail notes for every checked item.
 
 - [ ] Do not submit to TestFlight external testing or App Store until [`docs/content-licensing.md` public-release gate](../content-licensing.md#public-release-gate), `task-1.1`, `task-1.2`, `task-1.4`, and `task-1.6` are complete.
 - [ ] Use [`docs/release/privacy-label-evidence.md`](privacy-label-evidence.md) to fill App Store Connect privacy answers and confirm **Data Not Collected** is still accurate on the release commit.
-- [ ] Confirm Apple application targets include the shared `PrivacyInfo.xcprivacy` and no target links third-party runtime SDKs.
+- [ ] Confirm Apple application targets include the shared `PrivacyInfo.xcprivacy` and no target links third-party runtime SDKs, using the `plutil -p` and `git grep` checks in [`docs/release/privacy-label-evidence.md`](privacy-label-evidence.md).
 - [ ] Confirm app metadata, screenshots, About/settings text, release notes, attribution, and disclaimer match the recorded ISED permission scope and do not claim affiliation, sponsorship, or endorsement.
 - [ ] Archive the completed Apple offline smoke-test notes and `xbuild` command results with the release evidence before submission.
 
