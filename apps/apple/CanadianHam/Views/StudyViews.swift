@@ -108,7 +108,7 @@ struct HomeView: View {
             let progress = try progressStore.questionProgressRecords()
             let attempts = try progressStore.examAttempts()
             let now = try AppleStudyEngine.canonicalNow()
-            let readiness = try AppleStudyEngine.readiness(progress: progress, attempts: attempts, now: now)
+            let readiness = try AppleStudyEngine.readiness(bank: bank, progress: progress, attempts: attempts, now: now)
             let weak = AppleStudyEngine.weakSubsections(progress: progress, latestExam: attempts.sorted { $0.submittedAt > $1.submittedAt }.first)
             summary = HomeSummary(readiness: readiness, dueReviewCount: try dueCount(records: progress, now: now), weakSubsectionCount: weak.count, completedExamCount: attempts.count)
             errorMessage = nil

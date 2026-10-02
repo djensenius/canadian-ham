@@ -157,7 +157,7 @@ enum AppleStudyEngine {
         )
     }
 
-    static func readiness(progress: [QuestionProgressRecord], attempts: [StoredExamAttempt], now: String) throws -> ReadinessResult {
+    static func readiness(bank: QuestionBank, progress: [QuestionProgressRecord], attempts: [StoredExamAttempt], now: String) throws -> ReadinessResult {
         let readinessAttempts = attempts.map { attempt in
             ReadinessExamAttempt(
                 submittedAt: attempt.submittedAt,
