@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 03:45'
-updated_date: '2026-10-02 05:26'
+updated_date: '2026-10-02 05:46'
 labels:
   - apple
   - tvos
@@ -43,9 +43,11 @@ Review round: resize tvOS category cards so each row fits the tallest title/cont
 ## Implementation Notes
 
 <!-- SECTION:NOTES:BEGIN -->
-Implemented tvOS header/card polish in apps/apple/Platforms/tvOS/CanadianHamTVApp.swift: TVTopBar now gives the title full width above controls with a two-line limit; category grid uses three columns, fixed 280-point card height, and up to three word-wrapped title lines. Evidence captured under docs/evidence for category grid and practice header in en/fr and light/dark; opened all eight PNGs and confirmed practice header titles are one line in English and two lines in French with no mid-word hyphenation, category card titles wrap at word boundaries, focused B-001 ring remains unclipped, and first-row cards share height. Validation passed: node scripts/check-apple-text-sources.ts; full tvOS xbuild suite passed with 3 CanadianHamTVTests plus 6 CanadianHamTVUITests including category/practice/about accessibility audits.
+Implemented tvOS header/card polish in apps/apple/Platforms/tvOS/CanadianHamTVApp.swift: TVTopBar gives the practice title full width above controls with a two-line limit; the category grid keeps a compact inline top bar and uses three columns with 380 pt top-aligned cards, a smaller serif title font, four title lines, and no minimumScaleFactor. Evidence under docs/evidence covers category grid top/lower and practice header in en/fr and light/dark; opened the current PNGs and confirmed practice header titles are one line in English and two lines in French with no mid-word hyphenation, category card titles wrap at word boundaries, focused B-001/B-007 rings remain unclipped, and row cards share height. Validation passed: node scripts/check-apple-text-sources.ts; full tvOS xbuild suite passed with 3 CanadianHamTVTests plus 6 CanadianHamTVUITests including category/practice/about accessibility audits.
 
-Review-round fix: replaced the 280 pt category cards with 380 pt top-aligned cards using a smaller serif title font, four title lines, no minimumScaleFactor, and a compact inline top bar only for the category grid. SwiftUI on this tvOS target does not expose a compiling hyphenationFactor modifier, so the no-mid-word-hyphenation evidence depends on the current three-column width/default text size; captured full-grid stitched evidence includes B-007/B-008 in en/fr light/dark. Opened all eight task-27 PNGs under docs/evidence and checked edge-by-edge: category text stays inside card borders, focused B-001/B-007 rings remain unclipped at 1.04 scale, row cards share height, titles do not hyphenate mid-word, and practice headers are one line in English and two lines in French. Validation passed: node scripts/check-apple-text-sources.ts; focused layout evidence UI test passed; full tvOS xbuild suite passed with 3 CanadianHamTVTests and 7 CanadianHamTVUITests, including category/practice/about accessibility audits.
+Review-round fix: replaced the 280 pt category cards with 380 pt top-aligned cards using a smaller serif title font, four title lines, no minimumScaleFactor, and a compact inline top bar only for the category grid. SwiftUI on this tvOS target does not expose a compiling hyphenationFactor modifier, so the no-mid-word-hyphenation evidence depends on the current three-column width/default text size; captured top/lower full-screen category-grid evidence includes B-007/B-008 in en/fr light/dark. Opened the task-27 layout PNGs under docs/evidence and checked edge-by-edge: category text stays inside card borders, focused B-001/B-007 rings remain unclipped at 1.04 scale, row cards share height, titles do not hyphenate mid-word, and practice headers are one line in English and two lines in French. Validation passed: node scripts/check-apple-text-sources.ts; focused layout evidence UI test passed; full tvOS xbuild suite passed with 3 CanadianHamTVTests and 7 CanadianHamTVUITests, including category/practice/about accessibility audits.
+
+Evidence-only round: merged origin/main, replaced stitched category-grid composites with separate top/lower full-screen captures, refreshed practice header crops plus task-24 focus-ring PNGs, and added docs/accessibility.md captions for the grid captures while leaving task-27 Done.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
