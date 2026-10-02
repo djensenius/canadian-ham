@@ -4,7 +4,7 @@
 Round 2 uses a filled-stroke construction instead of round-1 bristle polylines:
 each brush mark is a single opaque ink body built by offsetting a centreline with
 an explicit pressure profile. Dry-brush hihaku is cut back through the tail with
-background-coloured gaps so the lift-off breaks into bristle tips.
+even-odd cutouts so the lift-off breaks into bristle tips.
 """
 from __future__ import annotations
 
@@ -26,7 +26,6 @@ FONT = "/System/Library/Fonts/Helvetica.ttc"
 INK = "#15120F"
 INK_SOFT = "rgba(21,18,15,0.18)"
 WASH = "rgba(48,44,38,0.14)"
-DRY_GAP = "#FAF2E3"
 BG_INNER = (255, 247, 232)  # #FFF7E8 from src/background.svg
 BG_OUTER = (246, 238, 220)  # #F6EEDC from src/background.svg
 
@@ -35,6 +34,7 @@ CONCEPTS = [
     ("02-radio-tower", "Radio tower with Yagi: a narrow two-leg tower, three quick cross strokes, and a compact beam on top."),
     ("03-ground-plane", "Vertical ground-plane: one tall radiator and three sloping radials, with a single pale wash for depth."),
     ("04-enso-yagi", "Ensō Yagi: an open dry-brush Zen circle frames a small Yagi-on-mast painted inside."),
+    ("05-hex-beam", "Hex beam on a mast: six spreaders rise from a hub with light ink-wash wire strokes tracing the hexagon."),
 ]
 
 CLOSEUP_CROPS = {
@@ -42,6 +42,7 @@ CLOSEUP_CROPS = {
     "02-radio-tower": (260, 190),
     "03-ground-plane": (255, 250),
     "04-enso-yagi": (250, 215),
+    "05-hex-beam": (255, 235),
 }
 
 
@@ -244,15 +245,40 @@ class SumiDrawing:
         body = left + list(reversed(right))
         start_x, start_y, start_tx, start_ty, start_w = sampled[0]
 
-        # Soft bleed halo below the hard opaque core; this is not an outline.
+        dry_gap_paths: list[list[tuple[float, float]]] = []
+        offsets = [0.0]
+        for i in range(dry_gaps - 1):
+            mag = 0.18 + 0.16 * i + self.rng.uniform(-0.04, 0.04)
+            offsets.append(mag if i % 2 == 0 else -mag)
+        for i, off in enumerate(offsets[:dry_gaps]):
+            t0 = min(0.86, dry_start + self.rng.uniform(-0.035, 0.10) + i * 0.012)
+            t1 = 0.955 + self.rng.uniform(0.000, 0.030)
+            gap_w = self.rng.uniform(widths[1] * 0.040, widths[1] * 0.090) * (1.0 + i * 0.08)
+            dry_gap_paths.append(self._dry_gap(points, off, t0, t1, widths, gap_w, edge_noise * 0.36))
+
+        # Open a few shorter skips within the tail so it reads as dry hihaku, not a highlight.
+        for _ in range(max(1, dry_gaps // 2)):
+            off = self.rng.uniform(-0.42, 0.42)
+            t0 = self.rng.uniform(max(0.55, dry_start - 0.06), 0.77)
+            t1 = self.rng.uniform(0.82, 0.95)
+            dry_gap_paths.append(self._dry_gap(points, off, t0, t1, widths, self.rng.uniform(3.0, 7.0), edge_noise * 0.28))
+
+        body_with_holes = " ".join([path_from(body, close=True), *(path_from(gap, close=True) for gap in dry_gap_paths)])
+
+        # Soft bleed halo below the hard opaque core; this is not an outline. The same even-odd
+        # cutouts are used for the core and halo so hihaku reads as actual gaps in the ink body.
         self.draw.append("stroke none")
+        self.draw.append("fill-rule evenodd")
         self.draw.append(f"fill {INK_SOFT}")
-        self.draw.append(f"path '{path_from(body, close=True)}'")
+        self.draw.append(f"path '{body_with_holes}'")
         blob = self._superellipse_blob(start_x, start_y, start_tx, start_ty, start_w * 1.08, start_w * 1.28, 3.2)
+        self.draw.append("fill-rule nonzero")
         self.draw.append(f"path '{path_from(blob, close=True)}'")
 
+        self.draw.append("fill-rule evenodd")
         self.draw.append(f"fill {INK}")
-        self.draw.append(f"path '{path_from(body, close=True)}'")
+        self.draw.append(f"path '{body_with_holes}'")
+        self.draw.append("fill-rule nonzero")
         self.draw.append(f"path '{path_from(blob, close=True)}'")
 
         # A small hook or pressure twist at some entries, still part of the same landing mark.
@@ -264,27 +290,6 @@ class SumiDrawing:
                 (start_x - start_tx * start_w * 0.25 - nx * start_w * 0.38, start_y - start_ty * start_w * 0.25 - ny * start_w * 0.38),
             ]
             self.draw.append(f"path '{path_from(hook, close=True)}'")
-
-        # Dry brush cuts: background-coloured holes along the lift-off direction, increasing toward the tail.
-        self.draw.append(f"fill {DRY_GAP}")
-        offsets = [0.0]
-        for i in range(dry_gaps - 1):
-            mag = 0.18 + 0.16 * i + self.rng.uniform(-0.04, 0.04)
-            offsets.append(mag if i % 2 == 0 else -mag)
-        for i, off in enumerate(offsets[:dry_gaps]):
-            t0 = min(0.86, dry_start + self.rng.uniform(-0.035, 0.10) + i * 0.012)
-            t1 = 0.955 + self.rng.uniform(0.000, 0.030)
-            gap_w = self.rng.uniform(widths[1] * 0.040, widths[1] * 0.090) * (1.0 + i * 0.08)
-            gap = self._dry_gap(points, off, t0, t1, widths, gap_w, edge_noise * 0.36)
-            self.draw.append(f"path '{path_from(gap, close=True)}'")
-
-        # Open a few shorter skips within the tail so it reads as dry hihaku, not a highlight.
-        for _ in range(max(1, dry_gaps // 2)):
-            off = self.rng.uniform(-0.42, 0.42)
-            t0 = self.rng.uniform(max(0.55, dry_start - 0.06), 0.77)
-            t1 = self.rng.uniform(0.82, 0.95)
-            gap = self._dry_gap(points, off, t0, t1, widths, self.rng.uniform(3.0, 7.0), edge_noise * 0.28)
-            self.draw.append(f"path '{path_from(gap, close=True)}'")
 
         if splatter:
             for _ in range(splatter):
@@ -302,7 +307,16 @@ class SumiDrawing:
     def wash_stroke(self, points: list[tuple[float, float]], width: float = 88) -> None:
         left, right, _ = self._outline(points, (width * 0.60, width, width * 0.38), max(22, int(polyline_lengths(points)[1] / 18)), 8.0, 0.10)
         self.draw.append("stroke none")
+        self.draw.append("fill-rule nonzero")
         self.draw.append(f"fill {WASH}")
+        self.draw.append(f"path '{path_from(left + list(reversed(right)), close=True)}'")
+
+    def light_stroke(self, points: list[tuple[float, float]], widths: tuple[float, float, float], alpha: float = 0.45) -> None:
+        """A translucent filled brush body for thinner antenna wires, not a stroked hairline."""
+        left, right, _ = self._outline(points, widths, max(18, int(polyline_lengths(points)[1] / 20)), 2.8, 0.18)
+        self.draw.append("stroke none")
+        self.draw.append("fill-rule nonzero")
+        self.draw.append(f"fill rgba(21,18,15,{alpha:.3f})")
         self.draw.append(f"path '{path_from(left + list(reversed(right)), close=True)}'")
 
     def enso(self, cx: float, cy: float, rx: float, ry: float) -> None:
@@ -393,6 +407,33 @@ def render_concept(slug: str, idx: int, out_dir: Path, tmp: Path) -> None:
         for c, length, w in [((415, 425), 120, 22), ((526, 407), 152, 25), ((635, 390), 110, 21)]:
             drawing.brush_stroke(line_around(c, perp, length), (w * 0.72, w, w * 0.45), dry_start=0.54, dry_gaps=3, edge_noise=2.2, press=0.42, splatter=1)
 
+    elif idx == 5:
+        # Hex beam on a mast: side/below view with six spreaders and readable hex wire outline.
+        hub = (512, 615)
+        tips = [(192, 610), (272, 390), (425, 250), (605, 250), (760, 390), (838, 610)]
+        drawing.wash_stroke([(280, 710), (510, 596), (750, 704)], width=76)
+        drawing.brush_stroke([(493, 880), (505, 735), hub], (58, 74, 34), dry_start=0.64, dry_gaps=6, edge_noise=5.0, press=0.74, splatter=5)
+        for a, b, c in [
+            (tips[0], (210, 540), tips[1]),
+            (tips[1], (335, 305), tips[2]),
+            (tips[2], (515, 224), tips[3]),
+            (tips[3], (695, 305), tips[4]),
+            (tips[4], (815, 540), tips[5]),
+            (tips[5], (512, 690), tips[0]),
+        ]:
+            drawing.light_stroke([a, b, c], (17, 22, 14), alpha=0.54)
+        # A single inner wire cue: enough to say hex beam without becoming a hairline tangle.
+        drawing.light_stroke([(292, 410), (426, 485), (512, 430), (604, 485), (740, 410)], (12, 17, 10), alpha=0.42)
+        for tip, mid, w in [
+            (tips[0], (318, 608), 40),
+            (tips[1], (372, 505), 38),
+            (tips[2], (466, 425), 36),
+            (tips[3], (556, 425), 36),
+            (tips[4], (652, 505), 38),
+            (tips[5], (706, 608), 40),
+        ]:
+            drawing.brush_stroke([hub, mid, tip], (w * 0.86, w, w * 0.34), dry_start=0.55, dry_gaps=4, edge_noise=3.8, press=0.44, splatter=2)
+
     else:
         raise ValueError(idx)
 
@@ -470,11 +511,7 @@ def make_closeups(tmp: Path) -> None:
         crop = tmp / f"{slug}-closeup.png"
         run([MAGICK, str(src), "-crop", f"512x512+{x}+{y}", "+repage", "-strip", str(crop)])
         crops.append(crop)
-    row1 = tmp / "closeup-row-1.png"
-    row2 = tmp / "closeup-row-2.png"
-    run([MAGICK, str(crops[0]), str(crops[1]), "+append", str(row1)])
-    run([MAGICK, str(crops[2]), str(crops[3]), "+append", str(row2)])
-    run([MAGICK, str(row1), str(row2), "-append", "-strip", "-define", "png:compression-level=9", str(ROOT / "closeups.png")])
+    run([MAGICK, *map(str, crops), "+append", "-strip", "-define", "png:compression-level=9", str(ROOT / "closeups.png")])
 
 
 def write_descriptions() -> None:
@@ -501,7 +538,7 @@ def render_all() -> None:
             render_concept(slug, idx, ROOT / slug, tmp)
         make_comparison(tmp)
         make_closeups(tmp)
-    print("Rendered 4 concept PNGs, comparison.png, and closeups.png")
+    print(f"Rendered {len(CONCEPTS)} concept PNGs, comparison.png, and closeups.png")
 
 
 def main() -> None:
