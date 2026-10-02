@@ -60,8 +60,8 @@ public struct ExamScore: Codable, Equatable, Sendable {
     }
 }
 
-public func scoreExam(_ items: [ScoreInputItem], bankId: String = basicBankId) -> ExamScore {
-    let bankRules = try! rulesForBankId(bankId)
+public func scoreExam(_ items: [ScoreInputItem], bankId: String = basicBankId) throws -> ExamScore {
+    let bankRules = try rulesForBankId(bankId)
     var categoryTotals: [String: (correct: Int, total: Int)] = [:]
     var incorrectQuestionIds: [String] = []
     var weakSubsectionIds = Set<String>()

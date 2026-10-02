@@ -228,6 +228,15 @@ describe("ProgressStore", () => {
     assert.deepEqual(validation.data?.lessonQuizAttempts, []);
   });
 
+  it("rejects imports whose score bankId does not match the active bank", () => {
+    const validation = validateProgressImport(validExport({
+      examAttempts: [{ ...attempt, score: { ...attempt.score, bankId: "advanced-synthetic" } }],
+    }));
+
+    assert.equal(validation.ok, false);
+    assert.match(validation.errors.join("\n"), /examAttempts\[0\]\.score\.bankId must be basic-2025-07-15/);
+  });
+
   it("accepts legacy Basic exports without bankId fields and normalizes them", () => {
     const { bankId: _exportBankId, questionProgress, examAttempts, ...legacy } = validExport();
     const legacyQuestionProgress = questionProgress.map(({ bankId: _recordBankId, ...recordWithoutBankId }) => recordWithoutBankId);

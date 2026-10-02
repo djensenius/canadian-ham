@@ -113,7 +113,7 @@ enum AppleStudyEngine {
         generatedItems: [GeneratedExamItem],
         selectedByQuestionId: [String: Int?],
         flaggedQuestionIds: Set<String>
-    ) -> StoredExamAttempt {
+    ) throws -> StoredExamAttempt {
         let items = generatedItems.map { item in
             let selected = selectedByQuestionId[item.questionId] ?? nil
             return StoredExamAttemptItem(
@@ -127,7 +127,7 @@ enum AppleStudyEngine {
                 flagged: flaggedQuestionIds.contains(item.questionId)
             )
         }
-        let score = scoreExam(items.map {
+        let score = try scoreExam(items.map {
             ScoreInputItem(
                 questionId: $0.questionId,
                 categoryId: $0.categoryId,

@@ -71,9 +71,11 @@ export function generateExam(input: ExamGenerationInput): GeneratedExam {
     }))
     .toSorted((a, b) => compareOrdinal(a.id, b.id));
 
-  const bankRules = rulesForBankId(input.bankId);
-  if (input.requireFullMockExam && sortedSubsections.length !== bankRules.subsectionCount) {
-    throw new Error(`full mock exam generation for ${input.bankId} requires exactly ${bankRules.subsectionCount} subsections; received ${sortedSubsections.length}`);
+  if (input.requireFullMockExam) {
+    const bankRules = rulesForBankId(input.bankId);
+    if (sortedSubsections.length !== bankRules.subsectionCount) {
+      throw new Error(`full mock exam generation for ${input.bankId} requires exactly ${bankRules.subsectionCount} subsections; received ${sortedSubsections.length}`);
+    }
   }
 
   const uniqueSubsectionIds = new Set<string>();

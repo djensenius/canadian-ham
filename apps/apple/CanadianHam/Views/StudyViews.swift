@@ -1081,7 +1081,7 @@ struct MockExamView: View {
         defer { isSubmitting = false }
         do {
             let submittedAt = try AppleStudyEngine.canonicalNow()
-            let attempt = AppleStudyEngine.buildExamAttempt(
+            let attempt = try AppleStudyEngine.buildExamAttempt(
                 bank: bank,
                 seed: seed,
                 startedAt: startedAt,

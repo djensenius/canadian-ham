@@ -1,3 +1,4 @@
+import Foundation
 import XCTest
 @testable import CanadianHamEngine
 
@@ -21,6 +22,85 @@ final class ValidationTests: XCTestCase {
             answerSourceIndexes: [0, 5, 6, 7]
         ))) { error in
             XCTAssertEqual((error as? EngineError)?.message, "answerSourceIndexes must be exactly [0,1,2,3]")
+        }
+    }
+
+    func testFullMockExamGenerationUsesActiveBankSubsectionCount() {
+        XCTAssertThrowsError(try generateExam(ExamGenerationInput(
+            bankId: syntheticAdvancedBankId,
+            seed: "seed",
+            subsections: makeSubsections(prefix: "A", count: 100),
+            requireFullMockExam: true
+        ))) { error in
+            XCTAssertEqual(
+                (error as? EngineError)?.message,
+                "full mock exam generation for advanced-synthetic requires exactly 50 subsections; received 100"
+            )
+        }
+
+        XCTAssertThrowsError(try generateExam(ExamGenerationInput(
+            bankId: basicBankId,
+            seed: "seed",
+            subsections: makeSubsections(prefix: "B", count: 50),
+            requireFullMockExam: true
+        ))) { error in
+            XCTAssertEqual(
+                (error as? EngineError)?.message,
+                "full mock exam generation for basic-2025-07-15 requires exactly 100 subsections; received 50"
+            )
+        }
+    }
+
+    func testPracticeExamGenerationDoesNotRequireKnownBankRulesUnlessFullMockIsRequested() throws {
+        let generated = try generateExam(ExamGenerationInput(bankId: "unknown-bank", seed: "seed", subsections: oneSubsection))
+        XCTAssertEqual(generated.bankId, "unknown-bank")
+        XCTAssertEqual(generated.items.count, 1)
+
+        XCTAssertThrowsError(try generateExam(ExamGenerationInput(
+            bankId: "unknown-bank",
+            seed: "seed",
+            subsections: oneSubsection,
+            requireFullMockExam: true
+        ))) { error in
+            XCTAssertEqual((error as? EngineError)?.message, "unsupported bankId unknown-bank")
+        }
+    }
+
+    func testScoreExamRejectsUnsupportedBankIds() {
+        XCTAssertThrowsError(try scoreExam([ScoreInputItem(questionId: "B-001-001-001", selectedSourceIndex: 0)], bankId: "unknown-bank")) { error in
+            XCTAssertEqual((error as? EngineError)?.message, "unsupported bankId unknown-bank")
+        }
+    }
+
+    func testAdvancedReadinessTreatsSeventyPercentPassThresholdAsInclusive() throws {
+        let categoryBreakdown = [CategoryBreakdownEntry(categoryId: "A-001", correct: 50, total: 50, percent: 100)]
+        let result = try computeReadiness(ReadinessInput(
+            bankId: syntheticAdvancedBankId,
+            completedExams: [
+                ReadinessExamAttempt(submittedAt: "2026-01-03T00:00:00.000Z", score: ReadinessScore(correct: 35, total: 50, percent: 70), categoryBreakdown: categoryBreakdown),
+                ReadinessExamAttempt(submittedAt: "2026-01-02T00:00:00.000Z", score: ReadinessScore(correct: 34, total: 50, percent: 68), categoryBreakdown: categoryBreakdown),
+            ],
+            dueReviewCount: 0
+        ))
+
+        XCTAssertEqual(result.state, .needsReview)
+        XCTAssertEqual(result.consideredExamCount, 2)
+        XCTAssertEqual(result.consideredSubmittedAt, ["2026-01-03T00:00:00.000Z", "2026-01-02T00:00:00.000Z"])
+        XCTAssertEqual(result.reasons, [])
+    }
+
+    func testSharedBankRulesFixtureAgreesWithSwiftEngine() throws {
+        let fixture = try JSONDecoder().decode(SharedBankRulesFixture.self, from: Data(contentsOf: sharedBankRulesFixtureURL()))
+        XCTAssertEqual(fixture.schemaVersion, 1)
+        for expected in fixture.banks {
+            let actual = try rulesForBankId(expected.bankId)
+            XCTAssertEqual(actual.bankId, expected.bankId)
+            XCTAssertEqual(actual.categoryIds, expected.categoryIds)
+            XCTAssertEqual(actual.mockExamQuestionCount, expected.mockExamQuestionCount)
+            XCTAssertEqual(actual.subsectionCount, expected.subsectionCount)
+            XCTAssertEqual(actual.passPercent, expected.passPercent)
+            XCTAssertEqual(actual.hasHonours, expected.hasHonours)
+            XCTAssertEqual(actual.honoursPercent, expected.honoursPercent)
         }
     }
 
@@ -105,6 +185,14 @@ final class ValidationTests: XCTestCase {
         }
     }
 
+    private func makeSubsections(prefix: String, count: Int) -> [ExamSubsectionInput] {
+        (1...count).map { index in
+            let ordinal = String(format: "%03d", index)
+            let subsectionId = "\(prefix)-001-\(ordinal)"
+            return ExamSubsectionInput(id: subsectionId, questionIds: ["\(subsectionId)-001"])
+        }
+    }
+
     private func assertInvalidTimestamp(_ value: String, file: StaticString = #filePath, line: UInt = #line) {
         XCTAssertThrowsError(try CanonicalTimestamp.require(value, fieldName: "timestamp"), file: file, line: line) { error in
             XCTAssertEqual(
@@ -128,4 +216,35 @@ final class ValidationTests: XCTestCase {
             leitner: LeitnerState(box: box, dueAt: "2026-01-02T00:00:00.000Z")
         )
     }
+}
+
+private struct SharedBankRulesFixture: Decodable {
+    let schemaVersion: Int
+    let banks: [SharedBankRules]
+}
+
+private struct SharedBankRules: Decodable {
+    let bankId: String
+    let categoryIds: [String]
+    let mockExamQuestionCount: Int
+    let subsectionCount: Int
+    let passPercent: Double
+    let hasHonours: Bool
+    let honoursPercent: Double?
+}
+
+private func sharedBankRulesFixtureURL() throws -> URL {
+    var cursor = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+    for _ in 0..<10 {
+        let candidate = cursor.appending(path: "fixtures/banks/rules.json")
+        if FileManager.default.fileExists(atPath: candidate.path(percentEncoded: false)) {
+            return candidate
+        }
+        let parent = cursor.deletingLastPathComponent()
+        if parent.path(percentEncoded: false) == cursor.path(percentEncoded: false) {
+            break
+        }
+        cursor = parent
+    }
+    throw EngineError("could not resolve fixtures/banks/rules.json relative to #filePath")
 }
