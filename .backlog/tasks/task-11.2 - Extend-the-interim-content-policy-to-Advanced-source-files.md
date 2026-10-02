@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-02 11:52'
+updated_date: '2026-10-02 13:58'
 labels:
   - content
   - docs
@@ -42,6 +42,8 @@ Why: the owner approved (2026-10-02) extending the interim private-development p
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented documentation-only policy update in AGENTS.md and docs/content-licensing.md. Evidence: docs/content-licensing.md now names content/sources/ised/advanced-<title-page-date>/ under the interim private-development policy with private-repo constraints, verbatim storage, SHA-256 source manifests, attribution/disclaimer, and T-007/task-1.1 permission tracking; AGENTS.md keeps Basic 2025-07-15 as the active app bank and names the Advanced vendoring exception with no active Advanced app bank. Validation passed: pnpm check:links; git diff --check origin/main...HEAD; no files under content/sources/ised/advanced* in this branch.
+
+Review follow-up: reverted the attribution wording to the owner-approved text (changing legal text needs owner/legal review; the About pages use the original). The Advanced PDFs note is now accurate: the request submitted on 2026-10-02 names amat_adv_quest.zip and the English/French Advanced PDFs (recorded in task-1.1). Generated Advanced data paths are covered by task-11.4.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
