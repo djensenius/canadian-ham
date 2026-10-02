@@ -792,7 +792,7 @@ private struct TVLanguageButton: View {
         Button {
             language = option
         } label: {
-            Text(localized(option.displayName, language: option)) // l10n: content(en/fr)
+            Text(localized(option.displayName, language: option)) // l10n: localized
         }
         .buttonStyle(TVLanguageButtonStyle(isSelected: language == option))
         .focused($isFocused)
