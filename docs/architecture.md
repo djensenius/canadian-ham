@@ -695,5 +695,4 @@ print duplicate coverage for author review
 ## Open architecture questions
 
 - Decide exact JSON Schema tooling.
-- Decide minimum supported Apple OS versions and browser versions.
 - Confirm T-007 permission scope covers public bundling of verbatim question text as app data before publication or distribution; reference PDFs remain source artifacts and are not shipped in the apps.
