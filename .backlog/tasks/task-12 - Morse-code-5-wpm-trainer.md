@@ -4,7 +4,7 @@ title: Morse code 5 wpm trainer
 status: To Do
 assignee: []
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 01:11'
+updated_date: '2026-10-02 01:12'
 labels:
   - web
   - apple
@@ -24,7 +24,7 @@ Investigate and later build a Morse code 5 wpm trainer module (Koch/Farnsworth d
 <!-- AC:BEGIN -->
 - [x] #1 The research is source-checked and committed under docs/proposals/
 - [x] #2 The owner's decisions on placement, default speed and sending input are recorded
-- [ ] #3 Implementation subtasks are created from the approved plan
+- [x] #3 Implementation subtasks are created from the approved plan
 <!-- AC:END -->
 
 ## Implementation Notes
@@ -36,4 +36,6 @@ Owner decisions (2026-10-02, owner accepted all recommendations in docs/proposal
 3. Sending input: tap timing on keyboard or touch; no microphone permission.
 4. Exam timing: default the mock exam to the PARIS-calibrated 12/5 profile (isedParis), with 'RIC-1 literal spacing (about 7.9 wpm, harder)' as an option.
 5. Haptics: only where supportsHaptics is true (in practice iPhone); no haptic UI on tvOS or visionOS.
+
+2026-10-02: implementation subtasks created from the approved plan (see Subtasks).
 <!-- SECTION:NOTES:END -->
