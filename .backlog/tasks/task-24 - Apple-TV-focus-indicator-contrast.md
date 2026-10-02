@@ -1,11 +1,11 @@
 ---
 id: TASK-24
 title: Apple TV focus indicator contrast
-status: Done
+status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:10'
-updated_date: '2026-10-02 02:06'
+updated_date: '2026-10-02 03:17'
 labels:
   - apple
   - accessibility
@@ -24,9 +24,9 @@ Why: the task-8 review found the tvOS focus ring (#8F2E1D) sits on the #A53A2A p
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [x] #1 Every focusable tvOS control's focus indicator has at least 3:1 contrast against both the unfocused state and the adjacent background, in light and dark modes, with the measured values recorded in docs/accessibility.md
-- [x] #2 The indicator does not rely on scale alone (for example a light outer ring or a contrasting outline) and still works with Reduce Motion on
-- [x] #3 tvOS UI tests and the tvOS accessibility audit pass via xbuild, and updated screenshots of focused primary, answer and category buttons are committed under docs/evidence
+- [ ] #1 Every focusable tvOS control's focus indicator has at least 3:1 contrast against both the unfocused state and the adjacent background, in light and dark modes, with the measured values recorded in docs/accessibility.md
+- [ ] #2 The indicator does not rely on scale alone (for example a light outer ring or a contrasting outline) and still works with Reduce Motion on
+- [ ] #3 tvOS UI tests and the tvOS accessibility audit pass via xbuild, and updated screenshots of focused primary, answer and category buttons are committed under docs/evidence
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -37,6 +37,8 @@ Why: the task-8 review found the tvOS focus ring (#8F2E1D) sits on the #A53A2A p
 3. Add tvOS UI coverage to capture one focused primary, answer, and category state PNG under docs/evidence and verify visibility.
 4. Record computed light/dark contrast ratios from actual colors in docs/accessibility.md.
 5. Run the required tvOS xbuild suite/audit, then check acceptance criteria, summarize, and set Done as the final task change.
+
+6. Fix review findings: prevent edge clipping/crowding, remove tvOS system focus effects from app-owned controls, restore disabled button non-colour cue, update docs/tests/evidence for light, dark, language, and Reduce Motion states.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
