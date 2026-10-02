@@ -55,7 +55,7 @@ export interface MorseExamScore {
   readonly receivedLength: number;
 }
 
-export const MORSE_CODE_TABLE = {
+export const MORSE_CODE_TABLE = Object.freeze({
   A: ".-",
   B: "-...",
   C: "-.-.",
@@ -97,7 +97,7 @@ export const MORSE_CODE_TABLE = {
   "?": "..--..",
   "-": "-....-",
   "/": "-..-.",
-} as const;
+} as const);
 
 export const ALLOWED_RIC1_CHARACTERS = Object.freeze(Object.keys(MORSE_CODE_TABLE));
 

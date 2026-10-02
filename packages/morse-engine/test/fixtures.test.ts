@@ -3,6 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
+  MORSE_CODE_TABLE,
   MorseValidationError,
   farnsworthTiming,
   profileForName,
@@ -18,6 +19,12 @@ import {
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "../../..");
 const fixturesRoot = join(repoRoot, "fixtures/morse");
 const fixturePaths = await jsonFiles(fixturesRoot);
+
+describe("public tables", () => {
+  it("freezes the Morse code table so consumers can't change mappings at runtime", () => {
+    expect(Object.isFrozen(MORSE_CODE_TABLE)).toBe(true);
+  });
+});
 
 describe("shared fixtures/morse", () => {
   it("has fixture JSON files", () => {
