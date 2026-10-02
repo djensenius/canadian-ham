@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 11:49'
+updated_date: '2026-10-02 11:56'
 labels:
   - release
   - web
@@ -37,5 +37,9 @@ Add the static hosting configuration for apps/web, document host logging and the
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Add a permission-gate script with tests/self-test that reads docs/content-licensing.md and fails until ISED permission is recorded with granted status, reference number, and date.\n2. Configure Vite/GitHub Pages project-site base handling without breaking local dev, manifest scope/start_url, or service worker registration; add/audit build output checks including CSP third-party-origin validation.\n3. Add a workflow_dispatch-only GitHub Pages deployment workflow using official pinned actions, minimal permissions, the permission gate, pnpm build:web, and the dist URL audit before artifact upload.\n4. Document GitHub Pages host choice, gate, workflow usage, base path, CSP/meta limitations, host logs/retention caveat, and the post-deploy offline smoke checklist; run local preview smoke once and record it as non-deployment.\n5. Validate with pnpm typecheck, pnpm test, pnpm build:web, dist URL audit, pnpm check:links, actionlint, and the permission gate expected failure; check only AC #1, #2, and #4 with evidence and leave AC #3 unchecked/In Progress.
+1. Add a permission-gate script with tests/self-test that reads docs/content-licensing.md and fails until ISED permission is recorded with granted status, reference number, and date.
+2. Configure Vite/GitHub Pages project-site base handling without breaking local dev, manifest scope/start_url, or service worker registration; add/audit build output checks including CSP third-party-origin validation.
+3. Add a workflow_dispatch-only GitHub Pages deployment workflow using official pinned actions, minimal permissions, the permission gate, pnpm build:web, and the dist URL audit before artifact upload.
+4. Document GitHub Pages host choice, gate, workflow usage, base path, CSP/meta limitations, host logs/retention caveat, and the post-deploy offline smoke checklist; run local preview smoke once and record it as non-deployment.
+5. Validate with pnpm typecheck, pnpm test, pnpm build:web, dist URL audit, pnpm check:links, actionlint, and the permission gate expected failure; check only AC #1, #2, and #4 with evidence and leave AC #3 unchecked/In Progress.
 <!-- SECTION:PLAN:END -->
