@@ -59,7 +59,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(anyVisibleLabel(in: app, contains: "Contains information reproduced from Innovation, Science and Economic Development Canada"), "Expected ISED attribution on About")
         XCTAssertTrue(anyVisibleLabel(in: app, contains: "canadian-ham is an independent study tool"), "Expected disclaimer on About")
         XCTAssertTrue(anyVisibleLabel(in: app, contains: "Draft attribution, not in effect"), "Expected visible draft-attribution warning on About")
-        XCTAssertTrue(anyVisibleLabel(in: app, contains: "sent: pending; granted: pending"), "Expected pending permission status on About")
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "has not yet been granted"), "Expected pending permission status on About")
         assertAboutLowerSectionsReachable(in: app, platformName: "iOS")
     }
 

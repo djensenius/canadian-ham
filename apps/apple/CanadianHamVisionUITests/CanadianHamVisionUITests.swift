@@ -29,7 +29,7 @@ final class CanadianHamVisionUITests: XCTestCase {
         XCTAssertTrue(anyLabel(in: app, contains: "canadian-ham is an independent study tool"), "Expected disclaimer on visionOS About")
         XCTAssertTrue(anyLabel(in: app, contains: "Practice sessions are kept only while the app is open"), "Expected ephemeral practice-session privacy copy on visionOS About")
         XCTAssertTrue(anyLabel(in: app, contains: "Draft attribution, not in effect"), "Expected visible draft-attribution warning on visionOS About")
-        XCTAssertTrue(anyLabel(in: app, contains: "sent: pending; granted: pending"), "Expected pending permission status on visionOS About")
+        XCTAssertTrue(anyLabel(in: app, contains: "has not yet been granted"), "Expected pending permission status on visionOS About")
         assertAboutLowerSectionsReachable(in: app, platformName: "visionOS")
     }
 

@@ -941,7 +941,7 @@ describe("App accessibility and flows", () => {
     assert.equal(disclaimer.getAttribute("lang"), "en");
     const legalStatus = within(attributionSection).getByText(/Draft attribution, not in effect/);
     assert.equal(legalStatus.getAttribute("lang"), "en");
-    assert.match(legalStatus.textContent ?? "", /sent: pending; granted: pending/);
+    assert.match(legalStatus.textContent ?? "", /has not yet been granted/);
     assert.equal(container.querySelectorAll("main section[aria-labelledby]").length >= 6, true);
     await expectNoAxeViolations(container);
   });

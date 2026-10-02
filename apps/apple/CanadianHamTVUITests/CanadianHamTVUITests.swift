@@ -30,7 +30,7 @@ final class CanadianHamTVUITests: XCTestCase {
         XCTAssertTrue(anyLabel(in: app, contains: "canadian-ham is an independent study tool"), "Expected disclaimer on tvOS About")
         XCTAssertTrue(anyLabel(in: app, contains: "Practice sessions are kept only while the app is open"), "Expected ephemeral practice-session privacy copy on tvOS About")
         XCTAssertTrue(anyLabel(in: app, contains: "Draft attribution, not in effect"), "Expected visible draft-attribution warning on tvOS About")
-        XCTAssertTrue(anyLabel(in: app, contains: "sent: pending; granted: pending"), "Expected pending permission status on tvOS About")
+        XCTAssertTrue(anyLabel(in: app, contains: "has not yet been granted"), "Expected pending permission status on tvOS About")
     }
 
     func testAboutLowerSectionsReachableWithRemote() throws {
