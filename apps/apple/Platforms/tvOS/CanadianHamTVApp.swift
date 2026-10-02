@@ -26,6 +26,7 @@ private struct TVLaunchOptions {
     let evidenceFocus: TVEvidenceFocus?
 
     init(arguments: [String] = ProcessInfo.processInfo.arguments) {
+        #if DEBUG
         initialScreen = PlatformScreen(rawValue: AppLaunchArguments.value(after: "-CanadianHamPlatformInitialScreen", in: arguments) ?? "categories") ?? .categories
         initialCategoryID = AppLaunchArguments.value(after: "-CanadianHamPlatformCategoryID", in: arguments) ?? "B-001"
         practiceQuestionID = AppLaunchArguments.value(after: "-CanadianHamPlatformQuestionID", in: arguments)
@@ -42,6 +43,17 @@ private struct TVLaunchOptions {
         }
         initialLanguage = BankLanguage(rawValue: AppLaunchArguments.value(after: "-CanadianHamLanguage", in: arguments) ?? "en") ?? .english
         evidenceFocus = AppLaunchArguments.value(after: "-CanadianHamTVEvidenceFocus", in: arguments).flatMap(TVEvidenceFocus.init(rawValue:))
+        #else
+        _ = arguments
+        initialScreen = .categories
+        initialCategoryID = "B-001"
+        practiceQuestionID = nil
+        answeredSourceIndex = nil
+        colorScheme = nil
+        reduceMotionOverride = nil
+        initialLanguage = .english
+        evidenceFocus = nil
+        #endif
     }
 }
 
