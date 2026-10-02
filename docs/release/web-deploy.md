@@ -6,7 +6,7 @@ This runbook prepares `apps/web` for a future static deployment. It does not app
 
 - Host for v1 preparation: GitHub Pages. A Pages site built from a private repository is still publicly reachable on standard GitHub plans; repository privacy does not make the Pages site private. The owner may redirect or change the public hostname later.
 - The repository-level rule in [`AGENTS.md`](../../AGENTS.md) still applies: nothing is deployed, distributed, or made public until the T-009/T-607 release gates and the ISED permission record allow it.
-- Deployment is blocked until task-1.1 records written ISED permission in [`docs/content-licensing.md`](../content-licensing.md) with `granted: yes` or `granted: YYYY-MM-DD`, an ISED reference number, and a permission date.
+- Deployment is blocked until task-1.1 records written ISED permission in [`docs/content-licensing.md`](../content-licensing.md) with exactly one `granted: yes` or `granted: YYYY-MM-DD` status part (an optional bracketed note may not contain denial, pending or revocation words), an ISED reference number, a valid permission date, a permission scope that covers the question-bank text, the covered source artifacts, the evidence storage location, and a release review status that is no longer blocked. Each field must appear exactly once.
 - The workflow is manual only: `.github/workflows/deploy-web.yml` uses `workflow_dispatch` and intentionally has no `push`, `pull_request`, or scheduled trigger.
 - The first job runs `node scripts/check-release-permission.mjs`. In the current repository state this gate fails because the permission record is still pending.
 

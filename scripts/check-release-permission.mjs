@@ -48,6 +48,10 @@ export function checkReleasePermission(markdown) {
   const requestStatus = fields.get("Request status") ?? "";
   const referenceNumber = fields.get("ISED reference number") ?? "";
   const permissionDate = fields.get("Permission date") ?? "";
+  const permissionScope = fields.get("Permission scope") ?? "";
+  const coveredArtifacts = fields.get("Covered source artifacts") ?? "";
+  const evidenceLocation = fields.get("Storage location for permission evidence") ?? "";
+  const releaseReview = fields.get("Release review status") ?? "";
 
   const errors = [];
   if (!isGrantedStatus(requestStatus)) {
@@ -59,6 +63,18 @@ export function checkReleasePermission(markdown) {
   const permissionDateMatch = permissionDate.match(/\b(\d{4}-\d{2}-\d{2})\b/u);
   if (!isConcreteValue(permissionDate) || permissionDateMatch === null || !isValidIsoDate(permissionDateMatch[1])) {
     errors.push("Permission date must be recorded in YYYY-MM-DD form.");
+  }
+  if (!isConcreteValue(permissionScope) || !/\bquestion/iu.test(permissionScope)) {
+    errors.push("Permission scope must be recorded and cover the question-bank text.");
+  }
+  if (!isConcreteValue(coveredArtifacts)) {
+    errors.push("Covered source artifacts must be recorded.");
+  }
+  if (!isConcreteValue(evidenceLocation)) {
+    errors.push("Storage location for permission evidence must be recorded.");
+  }
+  if (!isConcreteValue(releaseReview) || /\bblocked\b/iu.test(releaseReview)) {
+    errors.push("Release review status must be recorded as cleared, not blocked.");
   }
 
   return {
@@ -87,8 +103,12 @@ function isGrantedStatus(value) {
     return false;
   }
 
-  const grantMatch = grantParts[0].match(/^granted\s*:\s*(yes|\d{4}-\d{2}-\d{2})(?:\s*\([^)]*\))?$/u);
+  const grantMatch = grantParts[0].match(/^granted\s*:\s*(yes|\d{4}-\d{2}-\d{2})(?:\s*\(([^)]*)\))?$/u);
   if (grantMatch === null) {
+    return false;
+  }
+  const note = grantMatch[2] ?? "";
+  if (/\b(denied|refused|rejected|declined|pending|not|no|revoked|withdrawn|rescinded|conditional|partial)\b/u.test(note)) {
     return false;
   }
 
@@ -187,6 +207,9 @@ function runSelfTest() {
     "Granted: yes-ish",
     "Granted: 2026-10-02-revoked",
     "Granted: yes; later withdrawn",
+    "Granted: yes (permission denied)",
+    "Granted: yes (pending confirmation)",
+    "Granted: 2026-10-02 (not for public release)",
   ]) {
     assert.deepEqual(checkReleasePermission(permissionRecord({
       status,
@@ -205,6 +228,22 @@ function runSelfTest() {
   }).replace("| Request status | Granted: no |", "| Request status | Granted: no |\n| Request status | Granted: yes |");
   assert.equal(checkReleasePermission(duplicateStatus).ok, false);
   assert.match(checkReleasePermission(duplicateStatus).errors.join("\n"), /duplicate 'Request status' row/u);
+
+  for (const [field, overrides, message] of [
+    ["scope", { scope: "Pending: paste concise scope from written permission" }, "Permission scope must be recorded and cover the question-bank text."],
+    ["scope", { scope: "Reference sheets only" }, "Permission scope must be recorded and cover the question-bank text."],
+    ["artifacts", { artifacts: "Pending scope: request includes the Basic bank" }, "Covered source artifacts must be recorded."],
+    ["evidence", { evidence: "Pending: private owner records" }, "Storage location for permission evidence must be recorded."],
+    ["review", { review: "Blocked until scope is recorded" }, "Release review status must be recorded as cleared, not blocked."],
+  ]) {
+    const result = checkReleasePermission(permissionRecord({
+      status: "Granted: yes",
+      reference: VALID_REFERENCE,
+      date: VALID_PERMISSION_DATE,
+      ...overrides,
+    }));
+    assert.deepEqual(result, { ok: false, errors: [message] }, `${field} override should fail`);
+  }
 
   const impossibleDate = permissionRecord({
     status: "Granted: yes",
@@ -230,8 +269,16 @@ function runSelfTest() {
 const VALID_REFERENCE = "ISED-ABC-12345";
 const VALID_PERMISSION_DATE = "2026-10-02";
 
-function permissionRecord({ status, reference, date }) {
-  return `# Content licensing and attribution plan\n\n## Permission record\n\n| Field | Value |\n|---|---|\n| Permission holder | Owner / project maintainer |\n| Request status | ${status} |\n| ISED reference number | ${reference} |\n| Permission date | ${date} |\n\n## Interim private-development policy\n`;
+function permissionRecord({
+  status,
+  reference,
+  date,
+  scope = "Reproduce the ISED Basic and Advanced question-bank text verbatim (EN/FR) as structured app data in the web and Apple apps, including future revisions",
+  artifacts = "Basic 2025 question bank TXT and PDF; Advanced question bank",
+  evidence = "Owner's private records",
+  review = "Cleared on 2026-10-03 against the recorded scope",
+}) {
+  return `# Content licensing and attribution plan\n\n## Permission record\n\n| Field | Value |\n|---|---|\n| Permission holder | Owner / project maintainer |\n| Request status | ${status} |\n| ISED reference number | ${reference} |\n| Permission date | ${date} |\n| Permission scope | ${scope} |\n| Covered source artifacts | ${artifacts} |\n| Storage location for permission evidence | ${evidence} |\n| Release review status | ${review} |\n\n## Interim private-development policy\n`;
 }
 
 function isDirectCliInvocation() {
