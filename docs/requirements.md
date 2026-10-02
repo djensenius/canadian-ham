@@ -420,7 +420,7 @@ The product shall maintain source artwork and exports for Apple and web icons fr
 
 Acceptance criteria:
 
-- Icon sources are layered under `design/app-icon/src/` and documented in `design/app-icon/README.md`.
+- Icon sources are the layered brush commands in `design/app-icon/render_icon.py` (using the brush code in `design/app-icon/concepts/render_concepts.py`), documented in `design/app-icon/README.md`.
 - Apple exports include a flattened 1024 PNG for iOS/iPadOS/macOS, a visionOS 3-layer image stack, tvOS 2-5-layer image stacks plus Top Shelf images, and web favicon/touch/PWA PNGs.
 - Artwork follows [design.md](design.md): sumi-e black ink on warm cream, readable at 60 px, no remote assets.
 

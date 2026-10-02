@@ -1,5 +1,8 @@
 export const PWA_PUBLIC_ASSETS = [
   "./favicon.svg",
+  "./favicon-16.png",
+  "./favicon-32.png",
+  "./favicon-64.png",
   "./apple-touch-icon-180.png",
   "./pwa-icon-192.png",
   "./pwa-icon-512.png",

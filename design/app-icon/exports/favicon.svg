@@ -1,15 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <style>
     .paper { fill: #f6eedc; }
-    .ink { fill: none; stroke: #000; stroke-linecap: round; stroke-linejoin: round; }
+    .ink { fill: none; stroke: #15120f; stroke-linecap: round; stroke-linejoin: round; }
+    .perimeter { stroke-width: 4.0; }
+    .spoke { stroke-width: 2.4; }
+    .hub { fill: #15120f; stroke: none; }
     @media (prefers-color-scheme: dark) {
-      .paper { fill: #201b16; }
+      .paper { fill: #201B16; }
       .ink { stroke: #f3e8d2; }
+      .hub { fill: #f3e8d2; }
     }
   </style>
   <rect width="64" height="64" rx="14" class="paper"/>
-  <path class="ink" stroke-width="6.0" d="M19 55 C20 44 23 33 27 23"/>
-  <path class="ink" stroke-width="2.2" d="M35 18 C38 23 40 29 39 36"/>
-  <path class="ink" stroke-width="2.6" d="M45 11 C49 19 50 29 48 42"/>
-  <path class="ink" stroke-width="3.0" d="M56 5 C62 17 63 31 59 48"/>
+  <polygon class="ink perimeter" points="32.00,10.50 50.62,21.25 50.62,42.75 32.00,53.50 13.38,42.75 13.38,21.25" fill="none" stroke="#15120F" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink spoke" d="M32 32 L32.00 10.50" fill="none" stroke="#15120F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink spoke" d="M32 32 L50.62 21.25" fill="none" stroke="#15120F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink spoke" d="M32 32 L50.62 42.75" fill="none" stroke="#15120F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink spoke" d="M32 32 L32.00 53.50" fill="none" stroke="#15120F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink spoke" d="M32 32 L13.38 42.75" fill="none" stroke="#15120F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink spoke" d="M32 32 L13.38 21.25" fill="none" stroke="#15120F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="hub" cx="32" cy="32" r="3.4" fill="#15120F"/>
 </svg>
