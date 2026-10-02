@@ -6,6 +6,9 @@ import { fileURLToPath } from "node:url";
 
 const DEFAULT_PERMISSION_PATH = "docs/content-licensing.md";
 
+// Words that negate, delay or undo a grant or a release review wherever they appear.
+const NEGATING_WORDS = /\b(blocked|not|no|denied|refused|rejected|declined|pending|conditional|partial|revoked|withdrawn|rescinded|cancell?ed|expired|suspended)\b/iu;
+
 export function extractPermissionRecord(markdown) {
   const headingMatch = markdown.match(/^## Permission record\s*$/mu);
   if (headingMatch === null || headingMatch.index === undefined) {
@@ -77,7 +80,7 @@ export function checkReleasePermission(markdown) {
   if (!isConcreteValue(evidenceLocation)) {
     errors.push("Storage location for permission evidence must be recorded.");
   }
-  if (!/^cleared\b/iu.test(releaseReview.trim()) || /\b(blocked|not|denied|refused|pending|conditional)\b/iu.test(releaseReview)) {
+  if (!/^cleared\b/iu.test(releaseReview.trim()) || NEGATING_WORDS.test(releaseReview)) {
     errors.push("Release review status must be recorded as cleared, not blocked.");
   }
 
@@ -245,6 +248,8 @@ function runSelfTest() {
     ["review", { review: "Denied" }, "Release review status must be recorded as cleared, not blocked."],
     ["review", { review: "Ready pending approval" }, "Release review status must be recorded as cleared, not blocked."],
     ["review", { review: "Cleared pending legal review" }, "Release review status must be recorded as cleared, not blocked."],
+    ["review", { review: "Cleared on 2026-10-02; later revoked" }, "Release review status must be recorded as cleared, not blocked."],
+    ["review", { review: "Cleared on 2026-10-02 (withdrawn)" }, "Release review status must be recorded as cleared, not blocked."],
   ]) {
     const result = checkReleasePermission(permissionRecord({
       status: "Granted: yes",
