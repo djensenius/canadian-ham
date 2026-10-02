@@ -1,9 +1,11 @@
 ---
 id: TASK-25
 title: Apple localisation and release-hygiene clean-ups from task-8
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@pi-worker'
 created_date: '2026-10-02 01:10'
+updated_date: '2026-10-02 01:13'
 labels:
   - apple
   - l10n
