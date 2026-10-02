@@ -18,6 +18,17 @@ final class CanadianHamVisionUITests: XCTestCase {
         try auditScreen(.about)
     }
 
+    func testAboutShowsReleaseAttributionDisclaimerAndBankVersion() throws {
+        let app = configuredApp(screen: .about, appearance: "light")
+        app.launch()
+        defer { app.terminate() }
+
+        XCTAssertTrue(PlatformAuditScreen.about.waitElement(in: app).waitForExistence(timeout: 15))
+        XCTAssertTrue(anyLabel(in: app, contains: "Active bank: basic-2025-07-15, effective 2025-07-15."), "Expected active bank version and effective date on visionOS About")
+        XCTAssertTrue(anyLabel(in: app, contains: "Contains information reproduced from Innovation, Science and Economic Development Canada"), "Expected ISED attribution on visionOS About")
+        XCTAssertTrue(anyLabel(in: app, contains: "canadian-ham is an independent study tool"), "Expected disclaimer on visionOS About")
+    }
+
     func testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances() throws {
         let app = configuredApp(screen: .practice, appearance: "light")
         app.launch()
@@ -206,6 +217,10 @@ final class CanadianHamVisionUITests: XCTestCase {
         let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
         let result = XCTWaiter.wait(for: [expectation], timeout: timeout)
         XCTAssertEqual(result, .completed, message, file: file, line: line)
+    }
+
+    private func anyLabel(in app: XCUIApplication, contains needle: String) -> Bool {
+        app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", needle)).firstMatch.exists
     }
 
     private static let fixedFrenchQuestionText = "Le certificat d'opérateur radioamateur est valide pour:"

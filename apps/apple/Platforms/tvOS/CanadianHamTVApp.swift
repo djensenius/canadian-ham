@@ -992,6 +992,8 @@ private struct TVTopBar: View {
     }
 }
 
+private let tvAboutRBR4CitationURL = "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service"
+
 private struct TVAboutView: View {
     let bank: QuestionBank
     let onCategories: () -> Void
@@ -1011,18 +1013,30 @@ private struct TVAboutView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
 
-                HStack(alignment: .top, spacing: DesignTokens.Spacing.xl) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                     TVPaperSection(title: "Bank") {
-                        Text("Active bank: \(bank.manifest.bankId)")
-                        Text("Effective date: \(bank.manifest.effectiveDate)")
-                        Text("Questions: \(bank.questions.count) • Categories: \(bank.categories.count) • Subsections: \(bank.subsections.count)") // l10n: localized
+                        Text("Active bank: \(bank.manifest.bankId), effective \(bank.manifest.effectiveDate).")
+                        Text("Questions: \(bank.questions.count); categories: \(bank.categories.count); subsections: \(bank.subsections.count).") // l10n: localized
+                    }
+                    TVPaperSection(title: "Sources") {
+                        Text("ISED Amateur Radio Operator Certificate Basic Qualification question bank, effective \(bank.manifest.effectiveDate).")
+                        Text("Question bank source URL: \(bank.manifest.source.url)")
+                        Text("RBR-4, Standards for the Operation of Radio Stations in the Amateur Radio Service: \(tvAboutRBR4CitationURL)")
+                        Text("ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps.")
                     }
                     TVPaperSection(title: "Attribution") {
-                        Text(english("Question-bank material is sourced from Innovation, Science and Economic Development Canada Amateur Radio Operator Certificate Basic Qualification materials.")) // l10n: content(en)
-                        Text(english("Canadian Ham is independent and not affiliated with, sponsored by, or endorsed by ISED, RAC, or any accredited examiner.")) // l10n: content(en)
+                        // TODO(task-1.1): Replace this draft attribution with the exact wording from the recorded ISED permission before public release. Do not add permission details until task-1.1 records them.
+                        Text("TODO before public release: replace this draft attribution with the exact wording from the recorded ISED permission in task-1.1. Written permission details are not recorded yet.")
+                            .accessibilityLabel(Text(english("TODO before public release: replace this draft attribution with the exact wording from the recorded ISED permission in task-1.1. Written permission details are not recorded yet."))) // l10n: content(en)
+                        Text("Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page.")
+                            .accessibilityLabel(Text(english("Contains information reproduced from Innovation, Science and Economic Development Canada (ISED) Amateur Radio Operator Certificate Basic Qualification question bank, used with permission. Source materials are available from ISED's Amateur Radio Operator Certificate Services downloads page."))) // l10n: content(en)
+                    }
+                    TVPaperSection(title: "Disclaimer") {
+                        Text("canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner.")
+                            .accessibilityLabel(Text(english("canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner."))) // l10n: content(en)
                     }
                     TVPaperSection(title: "Privacy") {
-                        Text("This tvOS app works offline with bundled content, includes no networking code, no analytics, no telemetry, and no iCloud sync.")
+                        Text("This tvOS app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it.")
                     }
                 }
             }

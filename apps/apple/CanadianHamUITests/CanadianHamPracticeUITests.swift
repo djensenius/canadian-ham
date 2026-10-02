@@ -49,6 +49,18 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try performAudit(on: app, context: "French practice question")
     }
 
+    func testAboutShowsReleaseAttributionDisclaimerAndBankVersion() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "about"])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.staticTexts["About Canadian Ham"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "Active bank: basic-2025-07-15, effective 2025-07-15."), "Expected active bank version and effective date on About")
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "Contains information reproduced from Innovation, Science and Economic Development Canada"), "Expected ISED attribution on About")
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "canadian-ham is an independent study tool"), "Expected disclaimer on About")
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "task-1.1"), "Expected visible attribution TODO on About")
+    }
+
     func testCanPracticeInFrenchAndSeeFeedback() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
