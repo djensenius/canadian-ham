@@ -325,6 +325,7 @@ struct RootView: View {
             if ProcessInfo.processInfo.arguments.contains("-CanadianHamResetDataOnLaunch") {
                 ProgressStoreService.resetPersistentStoreFiles()
                 MorseTrainerSettings.reset()
+                morseSettings = .default
             }
 #endif
             progressStore = try ProgressStoreService.open()

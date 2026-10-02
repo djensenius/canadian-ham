@@ -296,11 +296,11 @@ private struct VisionMorseView: View {
                 .foregroundStyle(DesignTokens.Colors.ink)
             if revealed {
                 Text(verbatim: "KMRSU PARIS") // l10n: verbatim
-                    .font(.system(.title, design: .monospaced).weight(.bold))
+                    .font(.title.weight(.bold).monospaced())
                     .foregroundStyle(DesignTokens.Colors.ink)
             } else {
                 Text("Hidden until playback finishes.") // l10n: localized
-                    .font(.system(.title, design: .monospaced).weight(.bold))
+                    .font(.title.weight(.bold).monospaced())
                     .foregroundStyle(DesignTokens.Colors.ink)
             }
         }

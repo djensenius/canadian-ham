@@ -31,7 +31,6 @@ struct MorseTrainerView: View {
                     Text("Play a short practice group. The text is revealed only after playback so you can copy by ear first.") // l10n: localized
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
-                    settingsSummary
                     HStack {
                         morseTokenButton("Play") { play() }
                             .disabled(isPlaying)
@@ -55,7 +54,7 @@ struct MorseTrainerView: View {
                         .accessibilityAddTraits(.isHeader)
                     if isRevealed {
                         Text(verbatim: morsePracticeText) // l10n: verbatim
-                            .font(.system(.title, design: .monospaced).weight(.bold))
+                            .font(.title.weight(.bold).monospaced())
                             .foregroundStyle(DesignTokens.Colors.ink)
                             .textSelection(.enabled)
                     } else {
@@ -75,30 +74,6 @@ struct MorseTrainerView: View {
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Morse trainer")
         .onDisappear { stopPlayback(reveal: false, message: "") }
-    }
-
-    private var settingsSummary: some View {
-        let profile = (try? normalizedSettings.timingProfileValue()) ?? profileForName(.isedParis)
-        return LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: DesignTokens.Spacing.md)], spacing: DesignTokens.Spacing.md) {
-            summaryItem(title: String(localized: "Tone"), value: "\(normalizedSettings.toneHz) Hz")
-            summaryItem(title: String(localized: "Character speed"), value: formattedWpm(profile.characterWpm))
-            summaryItem(title: String(localized: "Effective speed"), value: formattedWpm(profile.effectiveWpm))
-        }
-    }
-
-    private func summaryItem(title: String, value: String) -> some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            Text(title) // l10n: localized
-                .font(DesignTokens.FontScale.caption.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.inkMuted)
-            Text(verbatim: value) // l10n: verbatim
-                .font(DesignTokens.FontScale.body.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(DesignTokens.Spacing.md)
-        .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
     }
 
     private func play() {
