@@ -5,11 +5,10 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 11:50'
+updated_date: '2026-10-02 11:52'
 labels:
   - release
   - docs
-  - on-hold
   - 'legacy:T-006'
 milestone: m-0
 dependencies: []
