@@ -135,7 +135,7 @@ Evidence to keep for review:
 - Airplane-mode smoke test results.
 - Settings screenshots showing export/import/reset are user-initiated.
 
-If any future feature transmits data, the privacy label must be revisited before release.
+Release evidence for the current App Store privacy-label answers and web privacy summary is tracked in [release/privacy-label-evidence.md](release/privacy-label-evidence.md). If any future feature transmits data, the privacy label must be revisited before release.
 
 ## Network policy
 
