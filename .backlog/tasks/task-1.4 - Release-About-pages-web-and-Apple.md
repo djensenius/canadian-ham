@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 07:14'
+updated_date: '2026-10-02 07:19'
 labels:
   - release
   - web
@@ -27,7 +27,7 @@ Complete the About pages on web and Apple with attribution, disclaimer, the sour
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 The web app has an About page with attribution, disclaimer, sources, privacy summary and the bank version
-- [x] #2 The Apple About screens match the same content on iOS/macOS, tvOS and visionOS
+- [ ] #2 The Apple About screens match the same content on iOS/macOS, tvOS and visionOS
 - [ ] #3 The attribution wording matches the recorded ISED permission
 - [ ] #4 The legal text has been reviewed, and French translations are added or the English-only decision is documented
 <!-- AC:END -->
@@ -39,6 +39,8 @@ Complete the About pages on web and Apple with attribution, disclaimer, the sour
 2. Update the existing Apple About screens (shared iOS/macOS plus tvOS and visionOS) through Localizable.xcstrings-backed strings, preserving the no-network rule and showing source URLs as text except the existing RBR-4 citation behavior elsewhere.
 3. Record the required TODO/status in docs/content-licensing.md and Backlog notes: attribution must be replaced after task-1.1 records ISED permission; legal French remains English-only with lang/accessibility tagging per docs/french-style.md pending human legal review.
 4. Add or update web and Apple UI tests for About attribution, disclaimer, active bank version/effective date, and platform accessibility audits, then run requested pnpm checks plus DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild suites where possible.
+
+Fix review round: restore pending-permission wording across web/Apple docs/task notes, make tvOS/iOS/visionOS lower About content visibly reachable and tested, narrow web lang attributes/selectors, document non-clickable source URLs, fix French wording/RBR-4 title handling, then rerun requested pnpm/node/xbuild validation and capture tvOS evidence.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
