@@ -3,96 +3,96 @@
     "id": "B-001",
     "name": {
       "en": "Regulations and Policies",
-      "fr": null
+      "fr": "Règlements et politiques"
     },
-    "frenchNameStatus": "pending verification",
+    "frenchNameStatus": "verified",
     "expectedQuestionCount": 199,
     "expectedSubsectionCount": 25,
     "examQuestionCount": 25,
-    "nameSource": "hand-maintained from verified ISED/RAC materials"
+    "nameSource": "hand-maintained from verified ISED/RAC materials; official French names verified from ISED CIR-3 §5.1 and the French Exam Generator"
   },
   {
     "id": "B-002",
     "name": {
       "en": "Operating and Procedures",
-      "fr": null
+      "fr": "Exploitation et procédures"
     },
-    "frenchNameStatus": "pending verification",
+    "frenchNameStatus": "verified",
     "expectedQuestionCount": 99,
     "expectedSubsectionCount": 9,
     "examQuestionCount": 9,
-    "nameSource": "hand-maintained from verified ISED/RAC materials"
+    "nameSource": "hand-maintained from verified ISED/RAC materials; official French names verified from ISED CIR-3 §5.1 and the French Exam Generator"
   },
   {
     "id": "B-003",
     "name": {
       "en": "Station Assembly, Practice and Safety",
-      "fr": null
+      "fr": "Montage d'une station, pratique et sécurité"
     },
-    "frenchNameStatus": "pending verification",
+    "frenchNameStatus": "verified",
     "expectedQuestionCount": 199,
     "expectedSubsectionCount": 21,
     "examQuestionCount": 21,
-    "nameSource": "hand-maintained from verified ISED/RAC materials"
+    "nameSource": "hand-maintained from verified ISED/RAC materials; official French names verified from ISED CIR-3 §5.1 and the French Exam Generator"
   },
   {
     "id": "B-004",
     "name": {
       "en": "Circuit Components",
-      "fr": null
+      "fr": "Composants des circuits"
     },
-    "frenchNameStatus": "pending verification",
+    "frenchNameStatus": "verified",
     "expectedQuestionCount": 63,
     "expectedSubsectionCount": 6,
     "examQuestionCount": 6,
-    "nameSource": "hand-maintained from verified ISED/RAC materials"
+    "nameSource": "hand-maintained from verified ISED/RAC materials; official French names verified from ISED CIR-3 §5.1 and the French Exam Generator"
   },
   {
     "id": "B-005",
     "name": {
       "en": "Basic Electronics and Theory",
-      "fr": null
+      "fr": "Éléments et théorie de l'électronique"
     },
-    "frenchNameStatus": "pending verification",
+    "frenchNameStatus": "verified",
     "expectedQuestionCount": 142,
     "expectedSubsectionCount": 13,
     "examQuestionCount": 13,
-    "nameSource": "hand-maintained from verified ISED/RAC materials"
+    "nameSource": "hand-maintained from verified ISED/RAC materials; official French names verified from ISED CIR-3 §5.1 and the French Exam Generator"
   },
   {
     "id": "B-006",
     "name": {
       "en": "Feedlines and Antenna Systems",
-      "fr": null
+      "fr": "Descentes d'antenne et systèmes d'antenne"
     },
-    "frenchNameStatus": "pending verification",
+    "frenchNameStatus": "verified",
     "expectedQuestionCount": 140,
     "expectedSubsectionCount": 13,
     "examQuestionCount": 13,
-    "nameSource": "hand-maintained from verified ISED/RAC materials"
+    "nameSource": "hand-maintained from verified ISED/RAC materials; official French names verified from ISED CIR-3 §5.1 and the French Exam Generator"
   },
   {
     "id": "B-007",
     "name": {
       "en": "Radio Wave Propagation",
-      "fr": null
+      "fr": "Propagation des ondes radioélectriques"
     },
-    "frenchNameStatus": "pending verification",
+    "frenchNameStatus": "verified",
     "expectedQuestionCount": 87,
     "expectedSubsectionCount": 8,
     "examQuestionCount": 8,
-    "nameSource": "hand-maintained from verified ISED/RAC materials"
+    "nameSource": "hand-maintained from verified ISED/RAC materials; official French names verified from ISED CIR-3 §5.1 and the French Exam Generator"
   },
   {
     "id": "B-008",
     "name": {
       "en": "Interference and Suppression",
-      "fr": null
+      "fr": "Brouillage et suppression"
     },
-    "frenchNameStatus": "pending verification",
+    "frenchNameStatus": "verified",
     "expectedQuestionCount": 55,
     "expectedSubsectionCount": 5,
     "examQuestionCount": 5,
-    "nameSource": "hand-maintained from verified ISED/RAC materials"
+    "nameSource": "hand-maintained from verified ISED/RAC materials; official French names verified from ISED CIR-3 §5.1 and the French Exam Generator"
   }
 ]

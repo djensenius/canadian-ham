@@ -178,9 +178,9 @@ Official ISED text is stored separately from original explanation content. Answe
   "bankId": "basic-2025-07-15",
   "name": {
     "en": "Regulations and Policies",
-    "fr": null
+    "fr": "Règlements et politiques"
   },
-  "frenchNameStatus": "pending verification",
+  "frenchNameStatus": "verified",
   "questionCount": 199,
   "subsectionCount": 25,
   "examQuestionCount": 25,
