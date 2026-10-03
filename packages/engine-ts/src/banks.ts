@@ -1,4 +1,5 @@
 export const BASIC_BANK_ID = "basic-2025-07-15";
+export const ADVANCED_BANK_ID = "advanced-2025-02-04";
 export const SYNTHETIC_ADVANCED_BANK_ID = "advanced-synthetic";
 
 export interface BankRules {
@@ -22,7 +23,7 @@ export const BASIC_BANK_RULES: BankRules = {
 };
 
 export const ADVANCED_BANK_RULES: BankRules = {
-  bankId: SYNTHETIC_ADVANCED_BANK_ID,
+  bankId: ADVANCED_BANK_ID,
   categoryIds: ["A-001", "A-002", "A-003", "A-004", "A-005", "A-006", "A-007"],
   mockExamQuestionCount: 50,
   subsectionCount: 50,

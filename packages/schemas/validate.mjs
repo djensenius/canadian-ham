@@ -57,10 +57,12 @@ for (const file of schemaFiles) {
   loadSchema(file);
 }
 
-validateJsonFile("content/generated/basic-2025-07-15/manifest.json", "generated-bank-manifest.schema.json");
-validateJsonFile("content/generated/basic-2025-07-15/categories.json", "generated-bank-categories.schema.json");
-validateJsonFile("content/generated/basic-2025-07-15/questions.json", "generated-bank-questions.schema.json");
-validateJsonFile("content/generated/basic-2025-07-15/subsections.json", "generated-bank-subsections.schema.json");
+for (const bankId of ["basic-2025-07-15", "advanced-2025-02-04"]) {
+  validateJsonFile(`content/generated/${bankId}/manifest.json`, "generated-bank-manifest.schema.json");
+  validateJsonFile(`content/generated/${bankId}/categories.json`, "generated-bank-categories.schema.json");
+  validateJsonFile(`content/generated/${bankId}/questions.json`, "generated-bank-questions.schema.json");
+  validateJsonFile(`content/generated/${bankId}/subsections.json`, "generated-bank-subsections.schema.json");
+}
 validateJsonFile("content/subsection-titles.json", "subsection-titles.schema.json");
 
 for (const file of walk(path.join(projectRoot, "content/lessons"), ".md")) {
@@ -131,8 +133,34 @@ export function validateDataAgainstSchema(data, schemaFile) {
   if (pointer !== "" && pointer !== "/") {
     const resolved = resolveRef(`#${pointer}`, documentId);
     schema = resolved.schema;
+  } else if (documentId === "generated-bank-categories.schema.json") {
+    schema = selectGeneratedBankCategoriesSchema(data, documentId) ?? schema;
   }
   return validateAgainstSchema(schema, data, { documentId, path: "$" });
+}
+
+function selectGeneratedBankCategoriesSchema(data, documentId) {
+  if (!Array.isArray(data) || data.length === 0) {
+    return null;
+  }
+  const bankIds = new Set();
+  for (const item of data) {
+    if (!isObject(item) || typeof item.bankId !== "string") {
+      return null;
+    }
+    bankIds.add(item.bankId);
+  }
+  if (bankIds.size !== 1) {
+    return null;
+  }
+  const [bankId] = bankIds;
+  if (bankId === "basic-2025-07-15") {
+    return resolveRef("#/$defs/basicCategories", documentId).schema;
+  }
+  if (bankId === "advanced-2025-02-04") {
+    return resolveRef("#/$defs/advancedCategories", documentId).schema;
+  }
+  return null;
 }
 
 function loadSchema(schemaFile) {
@@ -185,11 +213,26 @@ function validateAgainstSchema(schema, data, context) {
   }
 
   if (Array.isArray(schema.oneOf)) {
-    const branchResults = schema.oneOf.map((branch) => validateAgainstSchema(branch, data, context));
-    const passing = branchResults.filter((branchErrors) => branchErrors.length === 0).length;
-    if (passing !== 1) {
-      const firstReason = branchResults.find((branchErrors) => branchErrors.length > 0)?.[0];
-      errors.push(`${context.path}: expected exactly one oneOf branch to match, got ${passing}${firstReason ? `; first mismatch: ${firstReason}` : ""}`);
+    const selectedBranch = selectOneOfBranchByConstDiscriminator(schema.oneOf, data);
+    if (selectedBranch !== null) {
+      // Report the selected branch's own errors (clearer than a generic oneOf message), but keep
+      // oneOf's "exactly one" rule: no other branch may also validate.
+      const selectedErrors = validateAgainstSchema(selectedBranch, data, context);
+      errors.push(...selectedErrors);
+      const otherPassing = schema.oneOf
+        .filter((branch) => branch !== selectedBranch)
+        .filter((branch) => validateAgainstSchema(branch, data, context).length === 0).length;
+      if (otherPassing > 0) {
+        const passing = otherPassing + (selectedErrors.length === 0 ? 1 : 0);
+        errors.push(`${context.path}: expected exactly one oneOf branch to match, got ${passing}`);
+      }
+    } else {
+      const branchResults = schema.oneOf.map((branch) => validateAgainstSchema(branch, data, context));
+      const passing = branchResults.filter((branchErrors) => branchErrors.length === 0).length;
+      if (passing !== 1) {
+        const firstReason = branchResults.find((branchErrors) => branchErrors.length > 0)?.[0];
+        errors.push(`${context.path}: expected exactly one oneOf branch to match, got ${passing}${firstReason ? `; first mismatch: ${firstReason}` : ""}`);
+      }
     }
   }
 
@@ -295,6 +338,30 @@ function validateAgainstSchema(schema, data, context) {
   }
 
   return errors;
+}
+
+// Returns the single branch selected by a true discriminator: a property that every branch
+// requires and pins with `const`. Anything looser falls back to plain oneOf evaluation.
+export function selectOneOfBranchByConstDiscriminator(branches, data) {
+  if (!isObject(data) || branches.length === 0 || !branches.every((branch) => isObject(branch) && isObject(branch.properties))) {
+    return null;
+  }
+  const discriminatorKeys = Object.keys(branches[0].properties).filter((key) => branches.every((branch) => (
+    Array.isArray(branch.required)
+    && branch.required.includes(key)
+    && isObject(branch.properties[key])
+    && Object.hasOwn(branch.properties[key], "const")
+  )));
+  for (const key of discriminatorKeys) {
+    if (!Object.hasOwn(data, key)) {
+      continue;
+    }
+    const matchingBranches = branches.filter((branch) => deepEqual(data[key], branch.properties[key].const));
+    if (matchingBranches.length === 1) {
+      return matchingBranches[0];
+    }
+  }
+  return null;
 }
 
 function validateSchemaKeywords(schema, schemaFile, schemaPath) {

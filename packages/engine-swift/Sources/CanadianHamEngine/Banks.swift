@@ -1,4 +1,5 @@
 public let basicBankId = "basic-2025-07-15"
+public let advancedBankId = "advanced-2025-02-04"
 public let syntheticAdvancedBankId = "advanced-synthetic"
 
 public struct BankRules: Equatable, Sendable {
@@ -40,7 +41,7 @@ public let basicBankRules = BankRules(
 )
 
 public let advancedBankRules = BankRules(
-    bankId: syntheticAdvancedBankId,
+    bankId: advancedBankId,
     categoryIds: ["A-001", "A-002", "A-003", "A-004", "A-005", "A-006", "A-007"],
     mockExamQuestionCount: 50,
     subsectionCount: 50,

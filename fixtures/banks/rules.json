@@ -11,7 +11,7 @@
       "honoursPercent": 80
     },
     {
-      "bankId": "advanced-synthetic",
+      "bankId": "advanced-2025-02-04",
       "categoryIds": ["A-001", "A-002", "A-003", "A-004", "A-005", "A-006", "A-007"],
       "mockExamQuestionCount": 50,
       "subsectionCount": 50,
