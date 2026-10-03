@@ -21,14 +21,35 @@ struct MorseTrainerView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    Text("Morse trainer preview") // l10n: localized
-                        .font(DesignTokens.FontScale.caption.weight(.semibold))
-                        .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    Text("Morse trainer (preview)") // l10n: localized
-                        .font(DesignTokens.FontScale.headline.weight(.bold))
+                    HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
+                        Text("Morse") // l10n: localized
+                            .font(DesignTokens.FontScale.headline.weight(.bold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .accessibilityAddTraits(.isHeader)
+                        Text("Preview") // l10n: localized
+                            .font(DesignTokens.FontScale.caption.weight(.bold))
+                            .foregroundStyle(DesignTokens.Colors.inkMuted)
+                            .padding(.horizontal, DesignTokens.Spacing.sm)
+                            .padding(.vertical, DesignTokens.Spacing.xs)
+                            .background(DesignTokens.Colors.paperInset, in: Capsule())
+                    }
+                    Text("Learn and practise Morse code offline. Course, copy practice, and exam drills are coming soon.") // l10n: localized
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                        MorseHomePlaceholder(title: "Learn (course)", message: "Coming soon.")
+                        MorseHomePlaceholder(title: "Copy practice", message: "Coming soon with copy-practice drills.")
+                        MorseHomePlaceholder(title: "Exam", message: "Coming soon with the simulated 5 wpm exam.")
+                    }
+                }
+                .paperCard()
+
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    Text("Quick listen") // l10n: localized
+                        .font(DesignTokens.FontScale.title.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
-                    Text("Play a short practice group. The text is revealed only after playback so you can copy by ear first.") // l10n: localized
+                    Text("Preview the current player with a short practice group. The text is revealed only after playback so you can copy by ear first.") // l10n: localized
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                     HStack {
@@ -65,6 +86,27 @@ struct MorseTrainerView: View {
                 }
                 .paperCard()
 
+#if os(macOS)
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    Text("Morse settings") // l10n: localized
+                        .font(DesignTokens.FontScale.title.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityAddTraits(.isHeader)
+                    Text("Use Settings to change Morse tone, timing, and playback volume.") // l10n: localized
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                    SettingsLink {
+                        Text("Open Morse settings") // l10n: localized
+                    }
+                }
+                .paperCard()
+#else
+                MorseSettingsSection(settings: $settings, openMorse: {}) { nextSettings in
+                    onSettingsChanged(nextSettings)
+                }
+                .paperCard()
+#endif
+
                 if let errorMessage {
                     MessagePanel(title: "Morse error", message: errorMessage, kind: .warning)
                 }
@@ -72,7 +114,7 @@ struct MorseTrainerView: View {
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
-        .navigationTitle("Morse trainer")
+        .navigationTitle("Morse")
         .onDisappear { stopPlayback(reveal: false, message: "") }
     }
 
@@ -104,6 +146,26 @@ struct MorseTrainerView: View {
         if !message.isEmpty {
             AccessibilityNotification.Announcement(message).post()
         }
+    }
+}
+
+private struct MorseHomePlaceholder: View {
+    let title: LocalizedStringKey
+    let message: LocalizedStringKey
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            Text(title) // l10n: localized
+                .font(DesignTokens.FontScale.body.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+            Text(message) // l10n: localized
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.inkMuted)
+        }
+        .padding(DesignTokens.Spacing.md)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
     }
 }
 
@@ -166,15 +228,13 @@ struct MorseSettingsSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Text("Morse trainer (preview)") // l10n: localized
+            Text("Morse settings") // l10n: localized
                 .font(DesignTokens.FontScale.title.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
-            Text("The preview stays off by default. When enabled, a local Morse screen appears and plays practice audio without network access.") // l10n: localized
+            Text("These local settings control Morse tone, timing, and playback volume without network access.") // l10n: localized
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
-            Toggle("Enable Morse trainer preview", isOn: binding(\.isEnabled)) // l10n: localized
-                .accessibilityIdentifier("morse-preview-toggle")
             Stepper(value: binding(\.toneHz), in: 400...900, step: 10) {
                 HStack {
                     Text("Tone") // l10n: localized
@@ -207,9 +267,6 @@ struct MorseSettingsSection: View {
             }
             Slider(value: binding(\.volume), in: 0...1, step: 0.05) {
                 Text("Trainer volume") // l10n: localized
-            }
-            if settings.normalized().isEnabled {
-                morseTokenButton("Morse trainer (preview)", action: openMorse)
             }
             morseTokenButton("ISED exam preset") {
                 update(settings.applyingISEDExamPreset())

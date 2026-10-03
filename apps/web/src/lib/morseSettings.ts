@@ -3,7 +3,6 @@ import { farnsworthTiming, profileForName, type MorseTimingProfile } from "@cana
 export type WebMorseTimingProfileName = "isedParis" | "ric1Literal" | "general";
 
 export interface WebMorsePreferences {
-  readonly enabled: boolean;
   readonly toneHz: number;
   readonly characterWpm: number;
   readonly effectiveWpm: number;
@@ -12,7 +11,6 @@ export interface WebMorsePreferences {
 }
 
 export const defaultMorsePreferences: WebMorsePreferences = Object.freeze({
-  enabled: false,
   toneHz: 650,
   characterWpm: 15,
   effectiveWpm: 5,
@@ -20,10 +18,11 @@ export const defaultMorsePreferences: WebMorsePreferences = Object.freeze({
   volume: 0.6,
 });
 
-export function normalizeMorsePreferences(value: Partial<WebMorsePreferences> = {}): WebMorsePreferences {
+type StoredWebMorsePreferences = Partial<WebMorsePreferences> & { readonly enabled?: unknown };
+
+export function normalizeMorsePreferences(value: StoredWebMorsePreferences = {}): WebMorsePreferences {
   const characterWpm = clampInteger(value.characterWpm, 12, 25, defaultMorsePreferences.characterWpm);
   return {
-    enabled: typeof value.enabled === "boolean" ? value.enabled : defaultMorsePreferences.enabled,
     toneHz: clampInteger(value.toneHz, 400, 900, defaultMorsePreferences.toneHz),
     characterWpm,
     effectiveWpm: clampInteger(value.effectiveWpm, 5, characterWpm, Math.min(defaultMorsePreferences.effectiveWpm, characterWpm)),

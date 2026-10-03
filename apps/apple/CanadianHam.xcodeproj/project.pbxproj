@@ -22,6 +22,7 @@
 		25678E1090022805FCCE403B /* subsections.json in Resources */ = {isa = PBXBuildFile; fileRef = 73750B729415D5254CB490A4 /* subsections.json */; };
 		27736D9704E4F326B1A87197 /* ProgressStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DED9AA3F205BE249BD8DC23 /* ProgressStore.swift */; };
 		28317960AC8BC1A6966291EF /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 641771DDA6C72AE924365999 /* manifest.json */; };
+		28F2DC98A7E9840A41F7C1E4 /* NativeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6371F966C8468DA937092E2 /* NativeSettingsView.swift */; };
 		28F9BCBD442B78C68AEB1ED2 /* CanadianHamEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 3AB128F5CC3D7010118FF2AB /* CanadianHamEngine */; };
 		29093220F5952D4EEFCB3282 /* EngineShuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */; };
 		29EF8E659FEF66CC21404A08 /* QuestionBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */; };
@@ -97,6 +98,7 @@
 		C36A6BEF7CD1655C4C09136A /* AccessibleSecondaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658B2A641A5BBF5D6B65B2DD /* AccessibleSecondaryButtonStyle.swift */; };
 		C67627A6755066FA8F2B034E /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543DA6642D20EAF6FA88693D /* Tokens.swift */; };
 		C79F4B014C66CBB77F1CECDF /* EngineShuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */; };
+		CB82AC4522910B6DBBE8E338 /* AppSettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72C0FA8ECBD6EAFA6A5D34F /* AppSettingsModel.swift */; };
 		CBBD854076689D0E6F2EE822 /* lessons in Resources */ = {isa = PBXBuildFile; fileRef = EF0A093E186AB771F904629B /* lessons */; };
 		CBC1FACE31E263275CCC7AE3 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
 		CD240E737A75D41970CA2028 /* MorseTrainerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEEF26B42EFF8EC647A3971 /* MorseTrainerSettings.swift */; };
@@ -192,9 +194,11 @@
 		8D63616999E30A9A60763F71 /* CanadianHam.macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CanadianHam.macOS.entitlements; sourceTree = "<group>"; };
 		A235069367EFC3776ADEE826 /* questions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = questions.json; sourceTree = "<group>"; };
 		A387AB9BF7A49146142C4A66 /* ProgressStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStoreTests.swift; sourceTree = "<group>"; };
+		A6371F966C8468DA937092E2 /* NativeSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeSettingsView.swift; sourceTree = "<group>"; };
 		A95CB0755CA0A698D6A006B9 /* content-swift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "content-swift"; path = "../../packages/content-swift"; sourceTree = SOURCE_ROOT; };
 		AE3801936961090D211F5292 /* CanadianHamVisionUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CanadianHamVisionUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1D63C824E4C00165C3F4961 /* CanadianHam-InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "CanadianHam-InfoPlist.strings"; path = "fr-CA.lproj/CanadianHam-InfoPlist.strings"; sourceTree = "<group>"; };
+		B72C0FA8ECBD6EAFA6A5D34F /* AppSettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsModel.swift; sourceTree = "<group>"; };
 		BB023709CD1B8683292D109F /* ProgressModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressModels.swift; sourceTree = "<group>"; };
 		C28A9D49438EBAC030569D6E /* CanadianHamVisionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamVisionTests.swift; sourceTree = "<group>"; };
 		C5F42909CFD2242DE9CFD019 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -390,6 +394,7 @@
 			isa = PBXGroup;
 			children = (
 				76177BE24F1B7915BB916C63 /* AppleStudyEngine.swift */,
+				B72C0FA8ECBD6EAFA6A5D34F /* AppSettingsModel.swift */,
 				1DED9AA3F205BE249BD8DC23 /* ProgressStore.swift */,
 				31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */,
 			);
@@ -420,6 +425,7 @@
 			children = (
 				140A13D95FE054984DF26281 /* AboutView.swift */,
 				3E31A65DF43C45C6F15475C7 /* LearnViews.swift */,
+				A6371F966C8468DA937092E2 /* NativeSettingsView.swift */,
 				4EF15EA3BC012EB6FC4367D8 /* RootView.swift */,
 				0390C2BF7D07DEAD8A246557 /* StudyViews.swift */,
 			);
@@ -1031,6 +1037,7 @@
 			files = (
 				6EE8F69155AFDCD869C6D68F /* AboutView.swift in Sources */,
 				C36A6BEF7CD1655C4C09136A /* AccessibleSecondaryButtonStyle.swift in Sources */,
+				CB82AC4522910B6DBBE8E338 /* AppSettingsModel.swift in Sources */,
 				02D2C3FC60500A28C043164F /* AppleStudyEngine.swift in Sources */,
 				1C042178F4987890B4904111 /* CanadianHamApp.swift in Sources */,
 				7E2869C0EF3CD0A21C072580 /* EngineShuffle.swift in Sources */,
@@ -1039,6 +1046,7 @@
 				59EC5C3A19D8FF6609993C84 /* MorseAudioDriver.swift in Sources */,
 				F29D97E65744F19D2C1D0D8E /* MorseTrainerSettings.swift in Sources */,
 				5DF5007F39C2EFC48596AD6F /* MorseTrainerView.swift in Sources */,
+				28F2DC98A7E9840A41F7C1E4 /* NativeSettingsView.swift in Sources */,
 				3C5EF20558CB56EAB8005430 /* ProgressModels.swift in Sources */,
 				27736D9704E4F326B1A87197 /* ProgressStore.swift in Sources */,
 				2C8F5043E3CA9DA4C9220BCF /* QuestionBankModels.swift in Sources */,

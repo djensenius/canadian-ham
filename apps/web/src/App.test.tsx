@@ -215,8 +215,8 @@ function stubMorseAudioContext(): void {
   vi.stubGlobal("webkitAudioContext", undefined);
 }
 
-function morsePreferences(enabled = true): WebPreferences {
-  return { ...defaultPreferences, morse: { ...defaultPreferences.morse, enabled } };
+function morsePreferences(_enabled = true): WebPreferences {
+  return { ...defaultPreferences, morse: { ...defaultPreferences.morse } };
 }
 
 function webIndexHtml(): string {
@@ -1014,22 +1014,23 @@ describe("App accessibility and flows", () => {
     await expectNoAxeViolations(container);
   });
 
-  it("keeps Morse trainer hidden until the preview setting is enabled", async () => {
-    window.location.hash = "#/settings";
-    const store = createStore("morse-toggle");
+  it("makes Morse reachable as a top-level section with settings and placeholders", async () => {
+    window.location.hash = "#/home";
+    const store = createStore("morse-top-level");
     const user = userEvent.setup();
-    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-toggle-seed"} />);
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-top-level-seed"} />);
 
-    await screen.findByRole("heading", { name: "Settings and local data" });
-    assert.equal(screen.queryByRole("button", { name: "Morse" }), null);
-    const toggle = screen.getByLabelText("Enable Morse trainer preview") as HTMLInputElement;
-    assert.equal(toggle.checked, false);
+    await screen.findByRole("heading", { name: "Ready for Basic with Honours?" });
+    const primaryNav = screen.getByRole("navigation", { name: "Primary" });
+    await user.click(within(primaryNav).getByRole("button", { name: "Morse" }));
 
-    await user.click(toggle);
-
-    await waitFor(async () => assert.equal((await store.getPreferences()).morse.enabled, true));
-    await user.click(screen.getByRole("button", { name: "Morse" }));
-    await screen.findByRole("heading", { name: "Morse trainer (preview)" });
+    await screen.findByRole("heading", { name: "Quick listen" });
+    assert.equal(window.location.hash, "#/morse");
+    assert.ok(screen.getByText("Preview"));
+    assert.ok(screen.getByRole("heading", { name: "Learn (course)" }));
+    assert.ok(screen.getByRole("heading", { name: "Copy practice" }));
+    assert.ok(screen.getByRole("heading", { name: "Exam" }));
+    assert.ok(screen.getByRole("heading", { name: "Morse settings" }));
     assert.equal(screen.getByText("Hidden until playback finishes.").textContent, "Hidden until playback finishes.");
     await expectNoAxeViolations(container);
   });
@@ -1042,7 +1043,7 @@ describe("App accessibility and flows", () => {
     const user = userEvent.setup();
     const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-visual-start-seed"} />);
 
-    await screen.findByRole("heading", { name: "Morse trainer (preview)" });
+    await screen.findByRole("heading", { name: "Quick listen" });
     await user.click(screen.getByRole("button", { name: "Play Morse practice audio" }));
 
     assert.match(container.querySelector(".morse-playback-status")?.textContent ?? "", /Morse playback started\./);
@@ -1058,7 +1059,7 @@ describe("App accessibility and flows", () => {
     stubMorseAudioContext();
     const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-finished-seed"} />);
 
-    await screen.findByRole("heading", { name: "Morse trainer (preview)" });
+    await screen.findByRole("heading", { name: "Quick listen" });
     vi.useFakeTimers();
     try {
       fireEvent.click(screen.getByRole("button", { name: "Play Morse practice audio" }));
@@ -1074,16 +1075,16 @@ describe("App accessibility and flows", () => {
     }
   });
 
-  it("redirects #/morse to Settings when the Morse preview is disabled", async () => {
+  it("opens #/morse directly without waiting on retired preview gating", async () => {
     window.location.hash = "#/morse";
-    const store = createStore("morse-disabled-redirect");
-    render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-disabled-seed"} />);
+    const store = createStore("morse-direct");
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-direct-seed"} />);
 
-    await screen.findByRole("heading", { name: "Settings and local data" });
-    await waitFor(() => assert.equal(window.location.hash, "#/settings"));
+    await screen.findByRole("heading", { name: "Quick listen" });
+    assert.equal(window.location.hash, "#/morse");
   });
 
-  it("waits for stored Morse preferences before redirecting #/morse", async () => {
+  it("waits for stored Morse preferences before rendering #/morse", async () => {
     window.location.hash = "#/morse";
     const store = new DelayedInitialPreferencesStore("morse-stored-enabled-redirect");
     stores.push(store);
@@ -1095,17 +1096,17 @@ describe("App accessibility and flows", () => {
     store.releaseInitialPreferences();
     await store.initialPreferencesReturned;
 
-    await screen.findByRole("heading", { name: "Morse trainer (preview)" });
+    await screen.findByRole("heading", { name: "Quick listen" });
     assert.equal(window.location.hash, "#/morse");
   });
 
   it("lets Morse number inputs accept multi-digit drafts before committing", async () => {
-    window.location.hash = "#/settings";
+    window.location.hash = "#/morse";
     const store = createStore("morse-number-drafts");
     const user = userEvent.setup();
     render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-drafts-seed"} />);
 
-    await screen.findByRole("heading", { name: "Settings and local data" });
+    await screen.findByRole("heading", { name: "Morse settings" });
     const tone = screen.getByLabelText("Tone") as HTMLInputElement;
     await user.clear(tone);
     await user.type(tone, "700");
@@ -1127,13 +1128,13 @@ describe("App accessibility and flows", () => {
   });
 
   it("reverts empty or invalid Morse number drafts and does not save unchanged values", async () => {
-    window.location.hash = "#/settings";
+    window.location.hash = "#/morse";
     const store = new CountingPreferencesStore("morse-invalid-drafts");
     stores.push(store);
     const user = userEvent.setup();
     render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-invalid-seed"} />);
 
-    await screen.findByRole("heading", { name: "Settings and local data" });
+    await screen.findByRole("heading", { name: "Morse settings" });
     const tone = screen.getByLabelText("Tone") as HTMLInputElement;
     await user.clear(tone);
     fireEvent.blur(tone);

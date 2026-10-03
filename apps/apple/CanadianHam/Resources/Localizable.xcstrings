@@ -197,6 +197,28 @@
         }
       }
     },
+    "%@ wpm" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ wpm"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ mots/min"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ mots/min"
+          }
+        }
+      }
+    },
     "%@: " : {
       "localizations" : {
         "en" : {
@@ -1887,6 +1909,28 @@
         }
       }
     },
+    "%lld wpm" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld wpm"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld mots/min"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld mots/min"
+          }
+        }
+      }
+    },
     "%lld." : {
       "localizations" : {
         "fr" : {
@@ -2131,6 +2175,28 @@
         }
       }
     },
+    "Appearance" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appearance"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apparence"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apparence"
+          }
+        }
+      }
+    },
     "At least two recent mock exams meet the 70% pass threshold. Keep working toward 80% for Basic with Honours." : {
       "localizations" : {
         "fr" : {
@@ -2319,6 +2385,28 @@
         }
       }
     },
+    "Character speed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Character speed"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vitesse des caractères"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vitesse des caractères"
+          }
+        }
+      }
+    },
     "Choose an answer before continuing" : {
       "localizations" : {
         "fr" : {
@@ -2363,6 +2451,66 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "À venir"
+          }
+        }
+      }
+    },
+    "Coming soon with copy-practice drills." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coming soon with copy-practice drills."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À venir avec les exercices de copie."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À venir avec les exercices de copie."
+          }
+        }
+      }
+    },
+    "Coming soon with the simulated 5 wpm exam." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coming soon with the simulated 5 wpm exam."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À venir avec l’examen simulé à 5 mots/min."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À venir avec l’examen simulé à 5 mots/min."
+          }
+        }
+      }
+    },
+    "Coming soon." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À venir."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À venir."
           }
         }
       }
@@ -2433,6 +2581,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Continue sans rétroaction jusqu’à la révision"
+          }
+        }
+      }
+    },
+    "Copy practice" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy practice"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copie"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copie"
           }
         }
       }
@@ -2533,6 +2703,28 @@
         }
       }
     },
+    "Data" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Données"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Données"
+          }
+        }
+      }
+    },
     "Deletes local progress and preferences, then attempts to reopen the store" : {
       "localizations" : {
         "fr" : {
@@ -2561,6 +2753,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Supprime la progression locale, les examens simulés et les préférences. Le contenu intégré reste installé."
+          }
+        }
+      }
+    },
+    "Discard this in-progress mock exam and return to the start screen." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discard this in-progress mock exam and return to the start screen."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abandonne cet examen simulé en cours et revient à l’écran de départ."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abandonne cet examen simulé en cours et revient à l’écran de départ."
           }
         }
       }
@@ -2621,6 +2835,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Terminé"
+          }
+        }
+      }
+    },
+    "Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release."
           }
         }
       }
@@ -2765,6 +3001,28 @@
         }
       }
     },
+    "Effective speed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effective speed"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vitesse effective"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vitesse effective"
+          }
+        }
+      }
+    },
     "Enable optional mock-exam timer" : {
       "localizations" : {
         "fr" : {
@@ -2777,6 +3035,72 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Activer la minuterie facultative de l’examen simulé"
+          }
+        }
+      }
+    },
+    "End exam" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "End exam"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettre fin à l’examen"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettre fin à l’examen"
+          }
+        }
+      }
+    },
+    "End mock exam?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "End mock exam?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettre fin à l’examen simulé?"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettre fin à l’examen simulé?"
+          }
+        }
+      }
+    },
+    "Exam" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exam"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Examen"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Examen"
           }
         }
       }
@@ -2845,6 +3169,28 @@
         }
       }
     },
+    "Export…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exporter…"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exporter…"
+          }
+        }
+      }
+    },
     "Finish session" : {
       "localizations" : {
         "fr" : {
@@ -2893,6 +3239,50 @@
         }
       }
     },
+    "General" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "General"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Général"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Général"
+          }
+        }
+      }
+    },
+    "General Farnsworth" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "General Farnsworth"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Farnsworth général"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Farnsworth général"
+          }
+        }
+      }
+    },
     "Generate 100 questions: one from each subsection, mixed into a repeatable order. The optional timer is off by default." : {
       "localizations" : {
         "fr" : {
@@ -2921,6 +3311,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aller au questionnaire"
+          }
+        }
+      }
+    },
+    "Hidden until playback finishes." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hidden until playback finishes."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Masqué jusqu’à la fin de la lecture."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Masqué jusqu’à la fin de la lecture."
           }
         }
       }
@@ -3295,6 +3707,28 @@
         }
       }
     },
+    "Import…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importer…"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importer…"
+          }
+        }
+      }
+    },
     "In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it." : {
       "localizations" : {
         "fr" : {
@@ -3343,6 +3777,28 @@
         }
       }
     },
+    "ISED 5 wpm (PARIS-calibrated)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISED 5 wpm (PARIS-calibrated)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISDE 5 mots/min (étalonné sur PARIS)"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISDE 5 mots/min (étalonné sur PARIS)"
+          }
+        }
+      }
+    },
     "ISED Amateur Radio Operator Certificate Basic Qualification question bank, effective %@." : {
       "localizations" : {
         "en" : {
@@ -3361,6 +3817,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Banque de questions d’ISDE pour le certificat d’opérateur radioamateur avec compétence de base, en vigueur le %1$@."
+          }
+        }
+      }
+    },
+    "ISED exam preset" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISED exam preset"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Préréglage d’examen ISDE"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Préréglage d’examen ISDE"
           }
         }
       }
@@ -3421,6 +3899,44 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Apprendre"
+          }
+        }
+      }
+    },
+    "Learn (course)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Learn (course)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apprendre (cours)"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apprendre (cours)"
+          }
+        }
+      }
+    },
+    "Learn and practise Morse code offline. Course, copy practice, and exam drills are coming soon." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apprenez le code Morse et exercez-vous hors ligne. Le cours, la copie et les exercices d’examen arriveront bientôt."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apprenez le code Morse et exercez-vous hors ligne. Le cours, la copie et les exercices d’examen arriveront bientôt."
           }
         }
       }
@@ -3985,6 +4501,138 @@
         }
       }
     },
+    "Morse" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Morse"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Morse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Morse"
+          }
+        }
+      }
+    },
+    "Morse error" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Morse error"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur Morse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur Morse"
+          }
+        }
+      }
+    },
+    "Morse playback finished." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Morse playback finished."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecture Morse terminée."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecture Morse terminée."
+          }
+        }
+      }
+    },
+    "Morse playback started." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Morse playback started."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecture Morse commencée."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecture Morse commencée."
+          }
+        }
+      }
+    },
+    "Morse playback stopped." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Morse playback stopped."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecture Morse arrêtée."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecture Morse arrêtée."
+          }
+        }
+      }
+    },
+    "Morse settings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Morse settings"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglages Morse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglages Morse"
+          }
+        }
+      }
+    },
     "Needs review" : {
       "localizations" : {
         "fr" : {
@@ -4365,6 +5013,28 @@
         }
       }
     },
+    "Open a Canadian Ham window to load settings." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open a Canadian Ham window to load settings."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrez une fenêtre Canadian Ham pour charger les réglages."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrez une fenêtre Canadian Ham pour charger les réglages."
+          }
+        }
+      }
+    },
     "Open lesson %@" : {
       "localizations" : {
         "fr" : {
@@ -4393,6 +5063,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ouvrir le module"
+          }
+        }
+      }
+    },
+    "Open Morse settings" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir les réglages Morse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir les réglages Morse"
           }
         }
       }
@@ -4457,6 +5143,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mettre la minuterie en pause"
+          }
+        }
+      }
+    },
+    "Play" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lire"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lire"
+          }
+        }
+      }
+    },
+    "Play Morse practice audio" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play Morse practice audio"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lire l’audio d’exercice Morse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lire l’audio d’exercice Morse"
           }
         }
       }
@@ -4557,6 +5287,28 @@
         }
       }
     },
+    "Practice text" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Practice text"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Texte d’exercice"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Texte d’exercice"
+          }
+        }
+      }
+    },
     "Practice unavailable" : {
       "localizations" : {
         "fr" : {
@@ -4607,6 +5359,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Préférences enregistrées localement."
+          }
+        }
+      }
+    },
+    "Preview" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preview"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aperçu"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aperçu"
+          }
+        }
+      }
+    },
+    "Preview the current player with a short practice group. The text is revealed only after playback so you can copy by ear first." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preview the current player with a short practice group. The text is revealed only after playback so you can copy by ear first."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essayez le lecteur actuel avec un court groupe d’exercice. Le texte est révélé seulement après la lecture afin que vous puissiez d’abord copier à l’oreille."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essayez le lecteur actuel avec un court groupe d’exercice. Le texte est révélé seulement après la lecture afin que vous puissiez d’abord copier à l’oreille."
           }
         }
       }
@@ -4893,6 +5689,50 @@
         }
       }
     },
+    "Quick listen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quick listen"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Écoute rapide"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Écoute rapide"
+          }
+        }
+      }
+    },
+    "Quick listen plays a short practice group. The text is revealed only after playback." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quick listen plays a short practice group. The text is revealed only after playback."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’écoute rapide lit un court groupe d’exercice. Le texte est révélé seulement après la lecture."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’écoute rapide lit un court groupe d’exercice. Le texte est révélé seulement après la lecture."
+          }
+        }
+      }
+    },
     "RBR-4, Standards for the Operation of Radio Stations in the Amateur Radio Service: %@" : {
       "localizations" : {
         "en" : {
@@ -5059,6 +5899,28 @@
         }
       }
     },
+    "Reset…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réinitialiser…"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réinitialiser…"
+          }
+        }
+      }
+    },
     "Resume timer" : {
       "localizations" : {
         "fr" : {
@@ -5135,6 +5997,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réviser plus tard"
+          }
+        }
+      }
+    },
+    "RIC-1 literal spacing" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RIC-1 literal spacing"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espacement littéral RIC-1"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espacement littéral RIC-1"
           }
         }
       }
@@ -5677,6 +6561,50 @@
         }
       }
     },
+    "Stop" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrêter"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrêter"
+          }
+        }
+      }
+    },
+    "Stop Morse practice audio" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop Morse practice audio"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrêter l’audio d’exercice Morse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrêter l’audio d’exercice Morse"
+          }
+        }
+      }
+    },
     "Structured lessons" : {
       "localizations" : {
         "fr" : {
@@ -5907,6 +6835,28 @@
         }
       }
     },
+    "These local settings control Morse tone, timing, and playback volume without network access." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "These local settings control Morse tone, timing, and playback volume without network access."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ces réglages locaux contrôlent la tonalité, le minutage et le volume de lecture Morse sans accès réseau."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ces réglages locaux contrôlent la tonalité, le minutage et le volume de lecture Morse sans accès réseau."
+          }
+        }
+      }
+    },
     "This Apple app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it." : {
       "localizations" : {
         "en" : {
@@ -5925,44 +6875,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cette application Apple fonctionne entièrement hors ligne avec du contenu intégré; elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers, et conserve la progression seulement sur cet appareil, sauf si vous l’exportez."
-          }
-        }
-      }
-    },
-    "This category has no bundled questions." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "This category has no bundled questions."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette catégorie ne contient aucune question intégrée."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette catégorie ne contient aucune question intégrée."
-          }
-        }
-      }
-    },
-    "This outline is bundled so module order and objectives remain visible offline while the full lesson is authored." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ce plan est intégré afin que l’ordre des modules et les objectifs restent visibles hors ligne pendant la rédaction de la leçon complète."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ce plan est intégré afin que l’ordre des modules et les objectifs restent visibles hors ligne pendant la rédaction de la leçon complète."
           }
         }
       }
@@ -6007,6 +6919,66 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cette application Apple Vision Pro fonctionne entièrement hors ligne avec du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers. Les séances d’exercice sont conservées seulement pendant que l’application est ouverte; rien n’est enregistré ni envoyé."
+          }
+        }
+      }
+    },
+    "This category has no bundled questions." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "This category has no bundled questions."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette catégorie ne contient aucune question intégrée."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette catégorie ne contient aucune question intégrée."
+          }
+        }
+      }
+    },
+    "This exam timing profile fixes speed controls at %@ character speed and %@ effective speed. Choose General Farnsworth to edit speed settings." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This exam timing profile fixes speed controls at %@ character speed and %@ effective speed. Choose General Farnsworth to edit speed settings."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce profil de minutage d’examen fixe les vitesses à %@ pour les caractères et %@ en vitesse effective. Choisissez Farnsworth général pour modifier les vitesses."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce profil de minutage d’examen fixe les vitesses à %@ pour les caractères et %@ en vitesse effective. Choisissez Farnsworth général pour modifier les vitesses."
+          }
+        }
+      }
+    },
+    "This outline is bundled so module order and objectives remain visible offline while the full lesson is authored." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce plan est intégré afin que l’ordre des modules et les objectifs restent visibles hors ligne pendant la rédaction de la leçon complète."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce plan est intégré afin que l’ordre des modules et les objectifs restent visibles hors ligne pendant la rédaction de la leçon complète."
           }
         }
       }
@@ -6199,24 +7171,46 @@
         }
       }
     },
-    "Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release." : {
+    "Timing profile" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release."
+            "value" : "Timing profile"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release."
+            "value" : "Profil de minutage"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release."
+            "value" : "Profil de minutage"
+          }
+        }
+      }
+    },
+    "Tone" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tone"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tonalité"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tonalité"
           }
         }
       }
@@ -6233,6 +7227,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Outils"
+          }
+        }
+      }
+    },
+    "Trainer volume" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trainer volume"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volume de l’entraîneur"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volume de l’entraîneur"
           }
         }
       }
@@ -6429,6 +7445,22 @@
         }
       }
     },
+    "Use Settings to change Morse tone, timing, and playback volume." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisez Réglages pour modifier la tonalité, le minutage et le volume de lecture Morse."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilisez Réglages pour modifier la tonalité, le minutage et le volume de lecture Morse."
+          }
+        }
+      }
+    },
     "Weak areas" : {
       "localizations" : {
         "fr" : {
@@ -6505,644 +7537,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Votre progression locale indique des catégories faibles, des questions à réviser ou moins d’examens simulés réussis que nécessaire. Révisez les questions faibles et les questions à réviser avant de vous fier à votre préparation à l’examen."
-          }
-        }
-      }
-    },
-    "Morse trainer (preview)" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Morse trainer (preview)"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entraîneur Morse (aperçu)"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entraîneur Morse (aperçu)"
-          }
-        }
-      }
-    },
-    "Morse trainer preview" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Morse trainer preview"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aperçu de l’entraîneur Morse"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aperçu de l’entraîneur Morse"
-          }
-        }
-      }
-    },
-    "Morse trainer" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Morse trainer"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entraîneur Morse"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entraîneur Morse"
-          }
-        }
-      }
-    },
-    "Play a short practice group. The text is revealed only after playback so you can copy by ear first." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Play a short practice group. The text is revealed only after playback so you can copy by ear first."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Écoutez un court groupe d’exercice. Le texte est révélé seulement après la lecture afin que vous puissiez d’abord copier à l’oreille."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Écoutez un court groupe d’exercice. Le texte est révélé seulement après la lecture afin que vous puissiez d’abord copier à l’oreille."
-          }
-        }
-      }
-    },
-    "Play a short practice group. The text is revealed only after playback." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Play a short practice group. The text is revealed only after playback."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Écoutez un court groupe d’exercice. Le texte est révélé seulement après la lecture."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Écoutez un court groupe d’exercice. Le texte est révélé seulement après la lecture."
-          }
-        }
-      }
-    },
-    "Play" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Play"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lire"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lire"
-          }
-        }
-      }
-    },
-    "Stop" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stop"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arrêter"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arrêter"
-          }
-        }
-      }
-    },
-    "Play Morse practice audio" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Play Morse practice audio"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lire l’audio d’exercice Morse"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lire l’audio d’exercice Morse"
-          }
-        }
-      }
-    },
-    "Stop Morse practice audio" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stop Morse practice audio"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arrêter l’audio d’exercice Morse"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arrêter l’audio d’exercice Morse"
-          }
-        }
-      }
-    },
-    "Morse playback started." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Morse playback started."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lecture Morse commencée."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lecture Morse commencée."
-          }
-        }
-      }
-    },
-    "Morse playback stopped." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Morse playback stopped."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lecture Morse arrêtée."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lecture Morse arrêtée."
-          }
-        }
-      }
-    },
-    "Morse playback finished." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Morse playback finished."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lecture Morse terminée."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lecture Morse terminée."
-          }
-        }
-      }
-    },
-    "Practice text" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Practice text"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Texte d’exercice"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Texte d’exercice"
-          }
-        }
-      }
-    },
-    "Hidden until playback finishes." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hidden until playback finishes."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Masqué jusqu’à la fin de la lecture."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Masqué jusqu’à la fin de la lecture."
-          }
-        }
-      }
-    },
-    "Morse error" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Morse error"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erreur Morse"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erreur Morse"
-          }
-        }
-      }
-    },
-    "Tone" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tone"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tonalité"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tonalité"
-          }
-        }
-      }
-    },
-    "Character speed" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Character speed"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vitesse des caractères"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vitesse des caractères"
-          }
-        }
-      }
-    },
-    "Effective speed" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Effective speed"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vitesse effective"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vitesse effective"
-          }
-        }
-      }
-    },
-    "%@ wpm" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ wpm"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ mots/min"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ mots/min"
-          }
-        }
-      }
-    },
-    "This exam timing profile fixes speed controls at %@ character speed and %@ effective speed. Choose General Farnsworth to edit speed settings." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This exam timing profile fixes speed controls at %@ character speed and %@ effective speed. Choose General Farnsworth to edit speed settings."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ce profil de minutage d’examen fixe les vitesses à %@ pour les caractères et %@ en vitesse effective. Choisissez Farnsworth général pour modifier les vitesses."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ce profil de minutage d’examen fixe les vitesses à %@ pour les caractères et %@ en vitesse effective. Choisissez Farnsworth général pour modifier les vitesses."
-          }
-        }
-      }
-    },
-    "%lld wpm" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld wpm"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld mots/min"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld mots/min"
-          }
-        }
-      }
-    },
-    "The preview stays off by default. When enabled, a local Morse screen appears and plays practice audio without network access." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The preview stays off by default. When enabled, a local Morse screen appears and plays practice audio without network access."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’aperçu reste désactivé par défaut. Une fois activé, un écran Morse local apparaît et lit l’audio d’exercice sans accès réseau."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’aperçu reste désactivé par défaut. Une fois activé, un écran Morse local apparaît et lit l’audio d’exercice sans accès réseau."
-          }
-        }
-      }
-    },
-    "Enable Morse trainer preview" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enable Morse trainer preview"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activer l’aperçu de l’entraîneur Morse"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activer l’aperçu de l’entraîneur Morse"
-          }
-        }
-      }
-    },
-    "Timing profile" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Timing profile"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Profil de minutage"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Profil de minutage"
-          }
-        }
-      }
-    },
-    "Trainer volume" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Trainer volume"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Volume de l’entraîneur"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Volume de l’entraîneur"
-          }
-        }
-      }
-    },
-    "ISED exam preset" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISED exam preset"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Préréglage d’examen ISDE"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Préréglage d’examen ISDE"
-          }
-        }
-      }
-    },
-    "ISED 5 wpm (PARIS-calibrated)" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISED 5 wpm (PARIS-calibrated)"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISDE 5 mots/min (étalonné sur PARIS)"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISDE 5 mots/min (étalonné sur PARIS)"
-          }
-        }
-      }
-    },
-    "RIC-1 literal spacing" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "RIC-1 literal spacing"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Espacement littéral RIC-1"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Espacement littéral RIC-1"
-          }
-        }
-      }
-    },
-    "General Farnsworth" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "General Farnsworth"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Farnsworth général"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Farnsworth général"
           }
         }
       }

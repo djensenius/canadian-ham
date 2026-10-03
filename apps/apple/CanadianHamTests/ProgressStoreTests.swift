@@ -1,9 +1,109 @@
+@testable import CanadianHam
 import CanadianHamEngine
+import Combine
 import SwiftData
+import SwiftUI
 import XCTest
 
 @MainActor
 final class ProgressStoreTests: XCTestCase {
+    func testMockExamTimerRefreshPreservesFractionalRemainder() throws {
+        let state = MockExamState()
+        state.generatedItems = [GeneratedExamItem(
+            position: 1,
+            questionId: "B-001-002-002",
+            subsectionId: "B-001-002",
+            categoryId: "B-001",
+            choicePermutation: [0, 1, 2, 3]
+        )]
+        let startedAt = Date(timeIntervalSince1970: 1_000)
+        state.secondsElapsed = 4
+        state.timerRunning = true
+        state.timerRunStartedAt = startedAt
+
+        state.refreshTimer(now: startedAt.addingTimeInterval(1.75), timerEnabled: true)
+
+        XCTAssertEqual(state.secondsElapsed, 5)
+        var timerRunStartedAt = try XCTUnwrap(state.timerRunStartedAt)
+        XCTAssertEqual(timerRunStartedAt.timeIntervalSince1970, startedAt.addingTimeInterval(1).timeIntervalSince1970, accuracy: 0.000_001)
+
+        state.refreshTimer(now: startedAt.addingTimeInterval(2.25), timerEnabled: true)
+
+        XCTAssertEqual(state.secondsElapsed, 6)
+        timerRunStartedAt = try XCTUnwrap(state.timerRunStartedAt)
+        XCTAssertEqual(timerRunStartedAt.timeIntervalSince1970, startedAt.addingTimeInterval(2).timeIntervalSince1970, accuracy: 0.000_001)
+    }
+
+    func testSharedAppleSettingsModelAppliesLivePreferenceUpdates() throws {
+        let store = try CanadianHam.ProgressStoreService.inMemoryForTests()
+        let appSettings = CanadianHam.AppSettingsModel()
+        appSettings.progressStore = store
+        let initialRevision = appSettings.dataRevision
+        let publishExpectation = expectation(description: "AppSettingsModel publishes forwarded progress-store changes")
+        let revisionExpectation = expectation(description: "AppSettingsModel advances its data revision")
+        let objectChangeCancellable = appSettings.objectWillChange.sink { publishExpectation.fulfill() }
+        let revisionCancellable = appSettings.$dataRevision.dropFirst().sink { revision in
+            if revision > initialRevision {
+                revisionExpectation.fulfill()
+            }
+        }
+
+        var preferences = store.preferences
+        preferences.language = .french
+        preferences.theme = .dark
+        preferences.practiceMode = .reviewLater
+        try store.updatePreferences(preferences)
+
+        wait(for: [publishExpectation, revisionExpectation], timeout: 2)
+        let observedStore = try XCTUnwrap(appSettings.progressStore)
+        XCTAssertEqual(observedStore.preferences.language, .french)
+        XCTAssertEqual(observedStore.preferences.theme, .dark)
+        XCTAssertEqual(observedStore.preferences.practiceMode, .reviewLater)
+        XCTAssertGreaterThan(appSettings.dataRevision, initialRevision)
+        objectChangeCancellable.cancel()
+        revisionCancellable.cancel()
+    }
+
+#if os(macOS)
+    func testNativeSettingsGeneralBindingsUpdatePracticePreferences() throws {
+        let store = try CanadianHam.ProgressStoreService.inMemoryForTests()
+        var saveCount = 0
+        var failedError: Error?
+        let bindings = NativeSettingsPreferenceBindings(
+            progressStore: store,
+            didSave: { saveCount += 1 },
+            didFail: { failedError = $0 }
+        )
+
+        bindings.practiceMode.wrappedValue = .reviewLater
+        bindings.examTimerEnabled.wrappedValue = true
+
+        XCTAssertEqual(store.preferences.practiceMode, .reviewLater)
+        XCTAssertTrue(store.preferences.examTimerEnabled)
+        XCTAssertEqual(saveCount, 2)
+        XCTAssertNil(failedError)
+    }
+#endif
+
+    func testAppSettingsModelPublishesMorseSettingsForRootViewSync() throws {
+        let appSettings = CanadianHam.AppSettingsModel(morseSettings: .default)
+        var publishedSettings: CanadianHam.MorseTrainerSettings?
+        let cancellable = appSettings.$morseSettings.dropFirst().sink { publishedSettings = $0 }
+        let next = CanadianHam.MorseTrainerSettings(
+            toneHz: 700,
+            characterWpm: 18,
+            effectiveWpm: 8,
+            timingProfile: .general,
+            volume: 0.4
+        )
+
+        appSettings.morseSettings = next
+
+        XCTAssertEqual(publishedSettings, next)
+        XCTAssertEqual(appSettings.morseSettings, next)
+        cancellable.cancel()
+    }
+
     func testProgressStoreRoundTripExportImportReset() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let store = try ProgressStoreService.inMemoryForTests()

@@ -53,6 +53,7 @@ Record the commit SHA, date, tester, and pass/fail notes for every checked item.
 - [ ] Run the platform `xbuild` commands from [`AGENTS.md`](../../AGENTS.md) for iOS, macOS, tvOS, and visionOS on the release-candidate commit; never call `xcodebuild` directly.
 - [ ] Run [`docs/apple-offline-smoke-test.md`](../apple-offline-smoke-test.md) after the relevant `xbuild` command and after `pnpm check:apple-network` passes.
 - [ ] For each Apple platform under test (iPhone, iPad, Mac, Apple TV, Apple Vision Pro), record device/runtime, build commit, network-off method, launch baseline, practice, mock exam, Learn, lesson quiz, export/import, reset, and any unexpected prompts or missing features.
+- [ ] On macOS, manually verify the native Settings Data tab can export progress to a user-selected file and import it back while running under the app sandbox.
 - [ ] Confirm bundled question-bank, lessons, quizzes, explanations, progress screens, export/import, and reset work without network access; approved platform-specific gaps must be tracked before release.
 - [ ] Confirm no prompts appear for network access, local-network discovery, push notifications, analytics consent, account login, or iCloud sync.
 

@@ -958,10 +958,39 @@ input[type="checkbox"]:checked::after {
 }
 
 .settings-panel,
+.morse-section,
+.morse-home-card,
 .morse-trainer,
 .morse-copy-card {
   display: grid;
   gap: var(--ch-space-md);
+}
+
+.preview-label {
+  display: inline-flex;
+  align-items: center;
+  margin-inline-start: var(--ch-space-sm);
+  padding: 0.15rem 0.55rem;
+  border: 1px solid var(--ch-color-border);
+  border-radius: var(--ch-radius-pill);
+  background: var(--ch-color-paper-inset);
+  color: var(--ch-color-ink-muted);
+  font-size: var(--ch-type-caption-size);
+  font-weight: 800;
+  vertical-align: middle;
+}
+
+.morse-home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: var(--ch-space-md);
+}
+
+.morse-home-card {
+  padding: var(--ch-space-md);
+  border: 1px solid var(--ch-color-border);
+  border-radius: var(--ch-radius-md);
+  background: var(--ch-color-paper-inset);
 }
 
 .settings-panel {

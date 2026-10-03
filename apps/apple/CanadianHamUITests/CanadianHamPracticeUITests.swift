@@ -49,21 +49,103 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try performAudit(on: app, context: "French practice question")
     }
 
-    func testMorsePreviewToggleIsOffByDefaultAndShowsScreenWhenEnabled() throws {
+    func testMorseSectionIsTopLevelAndShowsSettings() throws {
         XCUIDevice.shared.appearance = .light
-        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "settings"])
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse"])
         defer { app.terminate() }
 
-        XCTAssertTrue(app.staticTexts["Settings"].firstMatch.waitForExistence(timeout: 10))
-        let toggle = app.switches["morse-preview-toggle"].firstMatch
-        XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Morse preview toggle should exist in Settings")
-        XCTAssertEqual(toggle.value as? String, "0", "Morse trainer preview should be off by default")
-        toggle.tap()
-
-        let morseButton = app.buttons["Morse trainer (preview)"].firstMatch
-        XCTAssertTrue(morseButton.waitForExistence(timeout: 5), "Morse screen entry should appear after enabling the preview")
-        scrollAndTap("Morse trainer (preview)", in: app)
+        XCTAssertTrue(app.staticTexts["Morse"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Preview"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Learn (course)"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Copy practice"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Exam"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Morse settings"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Hidden until playback finishes."].firstMatch.waitForExistence(timeout: 5))
+    }
+
+    func testCompactTopLevelListPushesMorseThenLearn() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp()
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.buttons["Morse"].firstMatch.waitForExistence(timeout: 10), "Compact iPhone navigation should expose Morse in the root list")
+        tap("Morse", in: app)
+        XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
+        tapCompactBack(in: app)
+        tap("Learn", in: app)
+        XCTAssertTrue(app.staticTexts["Structured lessons"].firstMatch.waitForExistence(timeout: 10), "Expected a Learn-only element after returning to the compact root list")
+    }
+
+    func testCompactRootNavigationPreservesPracticeSessionState() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "home"])
+        defer { app.terminate() }
+
+        tap("Start practice", in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["practice-session-tally"].firstMatch.waitForExistence(timeout: 10))
+        answerFirstVisibleAnswer(in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["answer-feedback-title"].firstMatch.waitForExistence(timeout: 5))
+
+        tapCompactBack(in: app)
+        tapCompactBack(in: app)
+        tap("Morse", in: app)
+        XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
+        tapCompactBack(in: app)
+        tap("Practice", in: app)
+        let allQuestions = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", "Start all questions")).firstMatch
+        XCTAssertTrue(allQuestions.waitForExistence(timeout: 5), "Expected the all-questions practice button")
+        allQuestions.tap()
+
+        XCTAssertTrue(app.descendants(matching: .any)["practice-session-tally"].firstMatch.waitForExistence(timeout: 10), "Expected the practice session to reopen from the compact root list")
+        XCTAssertTrue(app.descendants(matching: .any)["answer-feedback-title"].firstMatch.waitForExistence(timeout: 5), "Expected selected-answer feedback to survive compact Back navigation")
+    }
+
+    func testCompactRootNavigationPreservesMockExamState() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamMockExamQuestionID", "B-001-002-002",
+            "-CanadianHamMockExamLimit", "1"
+        ])
+        defer { app.terminate() }
+
+        tap("Start mock exam", in: app)
+        XCTAssertTrue(app.staticTexts["Question 1 of 1"].firstMatch.waitForExistence(timeout: 10))
+        answerFirstVisibleAnswer(in: app)
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", "Selected")).firstMatch.waitForExistence(timeout: 5))
+
+        tapCompactBack(in: app)
+        tapCompactBack(in: app)
+        tap("Morse", in: app)
+        XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
+        tapCompactBack(in: app)
+        tap("Home", in: app)
+        tap("Mock exam", in: app)
+
+        XCTAssertTrue(app.staticTexts["Question 1 of 1"].firstMatch.waitForExistence(timeout: 10), "Expected the mock exam question to reopen from Home after compact Back navigation")
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", "Selected")).firstMatch.waitForExistence(timeout: 5), "Expected the selected mock-exam answer to survive compact Back navigation")
+    }
+
+    func testCompactHomeStartPracticeAndMockExamBackReturnToHome() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "home",
+            "-CanadianHamPracticeLimit", "1",
+            "-CanadianHamMockExamLimit", "1"
+        ])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.staticTexts["Ready for Basic with Honours?"].firstMatch.waitForExistence(timeout: 10))
+        tap("Start practice", in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["question-identifier"].firstMatch.waitForExistence(timeout: 10))
+        tapCompactBack(in: app)
+        XCTAssertTrue(app.staticTexts["Ready for Basic with Honours?"].firstMatch.waitForExistence(timeout: 10), "Back from Start practice should return to Home")
+
+        tap("Mock exam", in: app)
+        XCTAssertTrue(app.buttons["Start mock exam"].firstMatch.waitForExistence(timeout: 10))
+        tapCompactBack(in: app)
+        XCTAssertTrue(app.staticTexts["Ready for Basic with Honours?"].firstMatch.waitForExistence(timeout: 10), "Back from Mock exam should return to Home")
     }
 
     func testAboutShowsReleaseAttributionDisclaimerAndBankVersion() throws {
@@ -138,6 +220,21 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
     }
 
+    func testLanguagePickerExistsOnCompactHomeLearnMorseAndMockExam() throws {
+        XCUIDevice.shared.appearance = .light
+        for (screen, expectedText) in [
+            ("home", "Ready for Basic with Honours?"),
+            ("learn", "Structured lessons"),
+            ("morse", "Quick listen"),
+            ("mock", "Mock exam")
+        ] {
+            let app = launchApp(arguments: ["-CanadianHamInitialScreen", screen])
+            assertSingleLanguagePicker(in: app, context: screen)
+            XCTAssertTrue(app.staticTexts[expectedText].firstMatch.waitForExistence(timeout: 10), "Expected \(screen) screen content")
+            app.terminate()
+        }
+    }
+
     func testLearnOpensLessonAndShowsFirstHeading() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: ["-CanadianHamInitialLessonID", "L-006-03"])
@@ -210,6 +307,111 @@ final class CanadianHamPracticeUITests: XCTestCase {
         assertQuestion(app, showsQuestionID: "B-001-002-002", message: "Saving progress must not reload the practice session")
         XCTAssertTrue(app.buttons["Next question"].firstMatch.exists, "Immediate feedback controls should remain after saving progress")
         XCTAssertTrue(app.descendants(matching: .any)["answer-feedback"].firstMatch.exists, "Feedback should remain after saving progress")
+    }
+
+    func testPracticeModeChangeReopensCachedSessionFresh() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "home",
+            "-CanadianHamPracticeLimit", "1",
+            "-CanadianHamPracticeSeed", "ui-mode-change-cache"
+        ])
+        defer { app.terminate() }
+
+        tap("Start practice", in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["question-identifier"].firstMatch.waitForExistence(timeout: 10))
+        answerFirstVisibleAnswer(in: app)
+        _ = waitForAnswerFeedback(in: app)
+
+        tapCompactBack(in: app)
+        tapCompactBack(in: app)
+        tap("Settings", in: app)
+        let practiceModePicker = app.segmentedControls["practice-mode-picker"].firstMatch
+        XCTAssertTrue(practiceModePicker.waitForExistence(timeout: 10), "Settings should expose the practice mode picker")
+        let reviewLater = practiceModePicker.buttons["Review later"].firstMatch
+        XCTAssertTrue(reviewLater.waitForExistence(timeout: 5), "Practice mode picker should expose Review later")
+        reviewLater.tap()
+
+        tapCompactBack(in: app)
+        tap("Home", in: app)
+        tap("Start practice", in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["question-identifier"].firstMatch.waitForExistence(timeout: 10))
+        waitForPracticeTally(containing: "Answered 0 of 1", in: app)
+        XCTAssertFalse(app.descendants(matching: .any)["answer-feedback"].firstMatch.exists, "Changing practice mode should reopen a fresh session without stale immediate feedback")
+
+        answerFirstVisibleAnswer(in: app)
+        waitForPracticeTally(containing: "Answered 1 of 1", in: app)
+        XCTAssertFalse(anyVisibleLabel(in: app, contains: "Correct answer"), "Fresh review-later session should not reveal correctness before submit")
+        scrollAndTap("Submit for review", in: app)
+        XCTAssertTrue(app.staticTexts["Practice review"].waitForExistence(timeout: 10), "Fresh review-later session should submit through review mode")
+    }
+
+    func testWeakAreasImmediateSessionKeepsFeedbackPositionAndTallyAfterAnswers() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "practice",
+            "-CanadianHamSeedPracticeProgressFixture", "weak-due",
+            "-CanadianHamPracticeMode", "immediate",
+            "-CanadianHamPracticeLimit", "2",
+            "-CanadianHamPracticeSeed", "ui-weak-immediate-stability"
+        ])
+        defer { app.terminate() }
+
+        tapButton(containing: "Start weak areas", in: app)
+        let questionIdentifier = app.descendants(matching: .any)["question-identifier"].firstMatch
+        XCTAssertTrue(questionIdentifier.waitForExistence(timeout: 10))
+        let firstQuestionID = questionIdentifier.label
+
+        answerFirstVisibleAnswer(in: app)
+        _ = waitForAnswerFeedback(in: app)
+        waitForPracticeTally(containing: "1 answered question", in: app)
+        XCTAssertEqual(questionIdentifier.label, firstQuestionID, "Weak-area immediate save should not reload away from the answered question")
+        XCTAssertTrue(app.buttons["Next question"].firstMatch.waitForExistence(timeout: 5), "Immediate feedback controls should remain after the first weak-area answer")
+
+        scrollAndTap("Next question", in: app)
+        scrollToTop(in: app)
+        XCTAssertNotEqual(questionIdentifier.label, firstQuestionID, "Next question should advance within the same weak-area session")
+        let secondQuestionID = questionIdentifier.label
+        answerFirstVisibleAnswer(in: app)
+        _ = waitForAnswerFeedback(in: app)
+        waitForPracticeTally(containing: "2 answered questions", in: app)
+        XCTAssertEqual(questionIdentifier.label, secondQuestionID, "Weak-area immediate save should keep the second answered position")
+        XCTAssertTrue(app.descendants(matching: .any)["answer-feedback"].firstMatch.exists, "Second-answer feedback should remain after saving progress")
+    }
+
+    func testDueReviewLaterSessionKeepsPositionTallyAndReviewAfterSubmit() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "practice",
+            "-CanadianHamSeedPracticeProgressFixture", "weak-due",
+            "-CanadianHamPracticeMode", "review-later",
+            "-CanadianHamPracticeLimit", "2",
+            "-CanadianHamPracticeSeed", "ui-due-review-later-stability"
+        ])
+        defer { app.terminate() }
+
+        tapButton(containing: "Start due review", in: app)
+        let questionIdentifier = app.descendants(matching: .any)["question-identifier"].firstMatch
+        XCTAssertTrue(questionIdentifier.waitForExistence(timeout: 10))
+        let firstQuestionID = questionIdentifier.label
+
+        answerFirstVisibleAnswer(in: app)
+        waitForPracticeTally(containing: "Answered 1 of 2", in: app)
+        scrollAndTap("Next question", in: app)
+        scrollToTop(in: app)
+        XCTAssertNotEqual(questionIdentifier.label, firstQuestionID, "Due review-later Next should advance instead of reloading question one")
+        let secondQuestionID = questionIdentifier.label
+
+        answerFirstVisibleAnswer(in: app)
+        waitForPracticeTally(containing: "Answered 2 of 2", in: app)
+        XCTAssertEqual(questionIdentifier.label, secondQuestionID, "Due review-later selection should keep the second question position before submit")
+        scrollAndTap("Submit for review", in: app)
+
+        XCTAssertTrue(app.staticTexts["Practice review"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.descendants(matching: .any)["answer-feedback"].firstMatch.waitForExistence(timeout: 5), "Due review-later submit should keep review feedback visible after saving progress")
+        waitForPracticeTally(containing: "2 answered questions", in: app)
+        waitBriefly(1.0)
+        XCTAssertTrue(app.staticTexts["Practice review"].exists, "Saving due review-later progress must not reset the review screen")
     }
 
     func testMockExamDoesNotShowCorrectnessBeforeSubmit() throws {
@@ -292,6 +494,28 @@ final class CanadianHamPracticeUITests: XCTestCase {
         assertMockExamResultVisible(in: app)
     }
 
+    func testRegularWidthMockExamEndExamDiscardsInProgressSession() throws {
+        XCUIDevice.shared.appearance = .light
+#if os(iOS)
+        XCUIDevice.shared.orientation = .landscapeLeft
+        defer { XCUIDevice.shared.orientation = .portrait }
+#endif
+        let app = launchApp(arguments: [
+            "-CanadianHamForceRegularHorizontalSizeClass",
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamMockExamSeed", "ui-regular-end-exam",
+            "-CanadianHamMockExamLimit", "1"
+        ])
+        defer { app.terminate() }
+        XCTAssertTrue(app.descendants(matching: .any)["root-sidebar"].firstMatch.waitForExistence(timeout: 10), "Regular-width launch argument should force the split-view sidebar on iPhone simulators")
+        openMockExamStart(in: app)
+        XCTAssertTrue(app.staticTexts["Question 1 of 1"].firstMatch.waitForExistence(timeout: 10))
+        scrollAndTap("End exam", in: app)
+        confirmEndExamAlert(in: app)
+        XCTAssertTrue(app.buttons["Start mock exam"].firstMatch.waitForExistence(timeout: 10), "End exam should return regular width to the mock-exam start screen")
+        XCTAssertFalse(app.staticTexts["Question 1 of 1"].firstMatch.exists, "End exam should discard the regular-width in-progress mock exam")
+    }
+
     func testMockExamResultHeadingCarriesVoiceOverSubmissionSummary() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [
@@ -346,6 +570,48 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app = launchApp(arguments: ["-CanadianHamInitialScreen", "home"], resetData: false)
         XCTAssertTrue(app.staticTexts["Ready for Basic with Honours?"].waitForExistence(timeout: 10))
         XCTAssertTrue(anyVisibleLabel(in: app, contains: "Completed mock exams: 0"), "Reset should clear previously saved mock exam attempts")
+    }
+
+    func testSettingsResetClearsCompactMockExamCacheWithoutRelaunch() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamMockExamSeed", "ui-reset-clears-cache",
+            "-CanadianHamMockExamLimit", "1"
+        ])
+        openMockExamStart(in: app)
+        XCTAssertTrue(app.staticTexts["Question 1 of 1"].firstMatch.waitForExistence(timeout: 10))
+        answerFirstVisibleAnswer(in: app)
+
+        tapCompactBack(in: app)
+        tapCompactBack(in: app)
+        tap("Settings", in: app)
+        XCTAssertTrue(app.staticTexts["Settings"].firstMatch.waitForExistence(timeout: 10))
+        scrollAndTap("Reset all data", in: app)
+        confirmResetAlert(in: app)
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "All local progress was reset."), "Reset should show a success status")
+
+        tapCompactBack(in: app)
+        tap("Home", in: app)
+        tap("Mock exam", in: app)
+        XCTAssertTrue(app.buttons["Start mock exam"].firstMatch.waitForExistence(timeout: 10), "Reset should discard the in-memory compact mock exam without relaunching")
+        XCTAssertFalse(app.staticTexts["Question 1 of 1"].firstMatch.exists, "The stale in-progress mock exam question should not remain after reset")
+    }
+
+    func testCompactMockExamEndExamDiscardsInProgressSession() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamMockExamSeed", "ui-end-exam",
+            "-CanadianHamMockExamLimit", "1"
+        ])
+        openMockExamStart(in: app)
+        XCTAssertTrue(app.staticTexts["Question 1 of 1"].firstMatch.waitForExistence(timeout: 10))
+        answerFirstVisibleAnswer(in: app)
+        scrollAndTap("End exam", in: app)
+        confirmEndExamAlert(in: app)
+        XCTAssertTrue(app.buttons["Start mock exam"].firstMatch.waitForExistence(timeout: 10), "End exam should return to the mock-exam start screen")
+        XCTAssertFalse(app.staticTexts["Question 1 of 1"].firstMatch.exists, "End exam should discard the in-progress mock exam")
     }
 
     func testSubsectionPracticeOpensFromHubAndShowsReviewScreen() throws {
@@ -493,7 +759,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func auditCoreScreens(appearance: AuditAppearance) throws {
-        var app = launchApp(arguments: ["-CanadianHamInitialScreen", "home"])
+        var app = launchApp()
+        XCTAssertTrue(app.descendants(matching: .any)["compact-root-list"].firstMatch.waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "\(appearance.rawValue) compact root list")
+        app.terminate()
+
+        app = launchApp(arguments: ["-CanadianHamInitialScreen", "home"])
         XCTAssertTrue(app.staticTexts["Ready for Basic with Honours?"].waitForExistence(timeout: 10))
         try performAudit(on: app, context: "\(appearance.rawValue) home")
         app.terminate()
@@ -516,13 +787,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app = launchApp(arguments: ["-CanadianHamInitialScreen", "settings"])
         XCTAssertTrue(app.staticTexts["Settings"].waitForExistence(timeout: 10))
         try performAudit(on: app, context: "\(appearance.rawValue) settings")
-        let toggle = app.switches["morse-preview-toggle"].firstMatch
-        XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Morse preview toggle should exist before auditing Morse")
-        if toggle.value as? String == "0" {
-            toggle.tap()
-        }
-        scrollAndTap("Morse trainer (preview)", in: app)
-        XCTAssertTrue(app.staticTexts["Hidden until playback finishes."].firstMatch.waitForExistence(timeout: 5))
+        app.terminate()
+
+        app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse"])
+        XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
         try performAudit(on: app, context: "\(appearance.rawValue) morse")
         app.terminate()
 
@@ -684,6 +952,22 @@ final class CanadianHamPracticeUITests: XCTestCase {
         button.tap()
     }
 
+    private func tapButton(containing labelFragment: String, in app: XCUIApplication) {
+        let button = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", labelFragment)).firstMatch
+        XCTAssertTrue(button.waitForExistence(timeout: 5), "Expected button containing \(labelFragment)")
+        scrollUntilHittable(button, in: app, maxSwipes: 10)
+        XCTAssertTrue(button.isHittable, "Expected button containing \(labelFragment) to be hittable")
+        button.tap()
+    }
+
+    private func tapCompactBack(in app: XCUIApplication) {
+        let navigationBar = app.navigationBars.firstMatch
+        XCTAssertTrue(navigationBar.waitForExistence(timeout: 5), "Expected a navigation bar with a compact Back button")
+        let backButton = navigationBar.buttons.element(boundBy: 0)
+        XCTAssertTrue(backButton.waitForExistence(timeout: 5), "Expected compact Back button")
+        backButton.tap()
+    }
+
     private func scrollAndTap(_ label: String, in app: XCUIApplication) {
         let button = app.buttons[label].firstMatch
         XCTAssertTrue(button.waitForExistence(timeout: 5), "Expected button \(label)")
@@ -705,6 +989,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let alert = app.alerts["Reset all local data?"].firstMatch
         XCTAssertTrue(alert.waitForExistence(timeout: 5))
         alert.buttons["Reset"].tap()
+    }
+
+    private func confirmEndExamAlert(in app: XCUIApplication) {
+        let alert = app.alerts["End mock exam?"].firstMatch
+        XCTAssertTrue(alert.waitForExistence(timeout: 5))
+        alert.buttons["End exam"].tap()
     }
 
     private func assertMockExamResultVisible(in app: XCUIApplication) {
@@ -830,6 +1120,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
     private func anyVisibleLabel(in app: XCUIApplication, contains needle: String) -> Bool {
         let predicate = NSPredicate(format: "label CONTAINS[c] %@", needle)
         return app.staticTexts.matching(predicate).firstMatch.exists
+    }
+
+    private func waitForPracticeTally(containing needle: String, in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
+        let predicate = NSPredicate(format: "label CONTAINS[c] %@", needle)
+        let tally = app.descendants(matching: .any).matching(predicate).firstMatch
+        XCTAssertTrue(tally.waitForExistence(timeout: 5), "Expected practice tally containing \(needle)", file: file, line: line)
     }
 
     private func assertAboutLowerSectionsReachable(

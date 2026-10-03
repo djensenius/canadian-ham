@@ -34,6 +34,22 @@ final class CanadianHamTVUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Hidden until playback finishes."].firstMatch.exists)
     }
 
+    func testCategoryGridNavigatesToMorse() throws {
+        let app = configuredApp(screen: .categories, appearance: "light")
+        app.launch()
+        defer { app.terminate() }
+
+        XCTAssertTrue(PlatformAuditScreen.categories.waitElement(in: app).waitForExistence(timeout: 15))
+        let morseButton = app.buttons["tv-morse-button"].firstMatch
+        XCTAssertTrue(morseButton.waitForExistence(timeout: 5), "Category grid should expose Morse")
+        let remote = XCUIRemote.shared
+        pressUntilFocused(morseButton, remote: remote, buttons: [.up, .up, .left, .right, .down], maxCycles: 3)
+        remote.press(.select)
+        XCTAssertTrue(PlatformAuditScreen.morse.waitElement(in: app).waitForExistence(timeout: 10), "Morse should be reachable from the category grid")
+        remote.press(.menu)
+        XCTAssertTrue(PlatformAuditScreen.categories.waitElement(in: app).waitForExistence(timeout: 5), "Menu should return Morse to the category grid")
+    }
+
     func testAboutShowsReleaseAttributionDisclaimerAndBankVersion() throws {
         let app = configuredApp(screen: .about, appearance: "light")
         app.launch()
@@ -367,6 +383,23 @@ final class CanadianHamTVUITests: XCTestCase {
             RunLoop.current.run(until: Date().addingTimeInterval(0.3))
         }
         XCTAssertTrue(element.hasFocus, "Expected remote down presses to focus \(element.identifier)", file: file, line: line)
+    }
+
+    private func pressUntilFocused(
+        _ element: XCUIElement,
+        remote: XCUIRemote,
+        buttons: [XCUIRemote.Button],
+        maxCycles: Int,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        for _ in 0..<maxCycles where !element.hasFocus {
+            for button in buttons where !element.hasFocus {
+                remote.press(button)
+                RunLoop.current.run(until: Date().addingTimeInterval(0.3))
+            }
+        }
+        XCTAssertTrue(element.hasFocus, "Expected remote presses to focus \(element.identifier)", file: file, line: line)
     }
 
     private func assertNextQuestionIsSeparateButton(

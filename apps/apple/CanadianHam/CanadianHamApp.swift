@@ -2,18 +2,26 @@ import SwiftUI
 
 @main
 struct CanadianHamApp: App {
+    @StateObject private var appSettings = AppSettingsModel()
+
     var body: some Scene {
         WindowGroup {
 #if DEBUG && os(iOS)
-            RootView()
+            RootView(appSettings: appSettings)
                 .forceRegularHorizontalSizeClassForUITestsIfNeeded()
 #else
-            RootView()
+            RootView(appSettings: appSettings)
 #endif
         }
         #if os(macOS)
         .defaultSize(width: 1_080, height: 760)
         #endif
+
+#if os(macOS)
+        Settings {
+            NativeSettingsView(appSettings: appSettings)
+        }
+#endif
     }
 }
 
