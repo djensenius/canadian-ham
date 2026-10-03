@@ -1,9 +1,11 @@
 ---
 id: TASK-12.12
 title: Make Morse a top-level section
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-03 12:03'
+updated_date: '2026-10-03 12:04'
 labels:
   - web
   - apple
@@ -30,3 +32,9 @@ Why: the owner tried the preview and doesn't want Morse buried behind a Settings
 - [ ] #3 The section has a Morse home that will host Learn (course), Practice (copy) and Exam entries; for now it hosts the existing player, labelled Preview
 - [ ] #4 Accessibility audits (axe on web; light and dark Apple audits on iOS, tvOS and visionOS), French UI, and the web and four Apple xbuild suites pass
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Remove Morse preview-toggle gating and migrate stored preferences without the enabled flag.\n2. Promote Morse to a top-level destination on web and all Apple platforms, with a preview-labelled Morse home, placeholders, and platform-appropriate settings placement.\n3. Update launch-argument handling and UI/unit tests, then validate web and Apple checks before finalizing.
+<!-- SECTION:PLAN:END -->
