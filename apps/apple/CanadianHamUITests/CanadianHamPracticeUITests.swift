@@ -70,14 +70,60 @@ final class CanadianHamPracticeUITests: XCTestCase {
         defer { app.terminate() }
 
         XCTAssertTrue(app.staticTexts["Ready for Basic with Honours?"].firstMatch.waitForExistence(timeout: 10))
-        let morseTab = app.buttons["Morse"].firstMatch
-        XCTAssertTrue(morseTab.waitForExistence(timeout: 5), "Compact iPhone navigation should expose a Morse tab")
+        let tabBar = app.tabBars.firstMatch
+        XCTAssertTrue(tabBar.waitForExistence(timeout: 5), "Compact iPhone navigation should expose a tab bar")
+        let morseTab = tabBar.buttons["Morse"].firstMatch
+        XCTAssertTrue(morseTab.waitForExistence(timeout: 5), "Compact iPhone navigation should expose a Morse tab item")
         morseTab.tap()
         XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
-        app.buttons["Home"].firstMatch.tap()
+        tabBar.buttons["Home"].firstMatch.tap()
         XCTAssertTrue(app.staticTexts["Ready for Basic with Honours?"].firstMatch.waitForExistence(timeout: 10))
-        app.buttons["Learn"].firstMatch.tap()
-        XCTAssertTrue(app.staticTexts["Learn"].firstMatch.waitForExistence(timeout: 10))
+        tabBar.buttons["Learn"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["Structured lessons"].firstMatch.waitForExistence(timeout: 10), "Expected a Learn-only element after returning via the compact tab bar")
+    }
+
+    func testCompactTabSwitchingPreservesPracticeSessionState() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "home"])
+        defer { app.terminate() }
+
+        tap("Start practice", in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["practice-session-tally"].firstMatch.waitForExistence(timeout: 10))
+        answerFirstVisibleAnswer(in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["answer-feedback-title"].firstMatch.waitForExistence(timeout: 5))
+
+        let tabBar = app.tabBars.firstMatch
+        XCTAssertTrue(tabBar.waitForExistence(timeout: 5), "Compact iPhone practice should keep the tab bar available")
+        tabBar.buttons["Morse"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
+        tabBar.buttons["Practice"].firstMatch.tap()
+
+        XCTAssertTrue(app.descendants(matching: .any)["practice-session-tally"].firstMatch.waitForExistence(timeout: 10), "Expected the practice session to remain on the Practice tab")
+        XCTAssertTrue(app.descendants(matching: .any)["answer-feedback-title"].firstMatch.waitForExistence(timeout: 5), "Expected selected-answer feedback to survive switching tabs")
+    }
+
+    func testCompactTabSwitchingPreservesMockExamState() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamMockExamQuestionID", "B-001-002-002",
+            "-CanadianHamMockExamLimit", "1"
+        ])
+        defer { app.terminate() }
+
+        tap("Start mock exam", in: app)
+        XCTAssertTrue(app.staticTexts["Question 1 of 1"].firstMatch.waitForExistence(timeout: 10))
+        answerFirstVisibleAnswer(in: app)
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", "Selected")).firstMatch.waitForExistence(timeout: 5))
+
+        let tabBar = app.tabBars.firstMatch
+        XCTAssertTrue(tabBar.waitForExistence(timeout: 5), "Compact iPhone mock exam should keep the tab bar available")
+        tabBar.buttons["Morse"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
+        tabBar.buttons["Practice"].firstMatch.tap()
+
+        XCTAssertTrue(app.staticTexts["Question 1 of 1"].firstMatch.waitForExistence(timeout: 10), "Expected the mock exam question to remain on the Practice tab")
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", "Selected")).firstMatch.waitForExistence(timeout: 5), "Expected the selected mock-exam answer to survive switching tabs")
     }
 
     func testAboutShowsReleaseAttributionDisclaimerAndBankVersion() throws {

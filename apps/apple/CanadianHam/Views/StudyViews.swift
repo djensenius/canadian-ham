@@ -14,6 +14,9 @@ struct HomeView: View {
     let openMockExam: () -> Void
     let openMorse: () -> Void
 
+#if os(iOS)
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+#endif
     @State private var summary: HomeSummary?
     @State private var errorMessage: String?
 
@@ -95,9 +98,8 @@ struct HomeView: View {
             }
             .font(DesignTokens.FontScale.body.weight(.bold))
             .foregroundStyle(summary.tint)
-            HStack {
-                tokenButton("Practice weak areas") { startPractice(.weak) }
-                tokenButton("Review due questions") { startPractice(.due) }
+            if usesCompactReadinessActionPlacement {
+                readinessActionButtons
             }
             Text(summary.message) // l10n: localized
                 .font(DesignTokens.FontScale.body)
@@ -105,9 +107,28 @@ struct HomeView: View {
             Text("Due review: \(summary.dueReviewCount). Weak subsections: \(summary.weakSubsectionCount). Completed mock exams: \(summary.completedExamCount).")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
+            if !usesCompactReadinessActionPlacement {
+                readinessActionButtons
+            }
         }
         .paperCard()
         .accessibilityIdentifier("readiness-card")
+    }
+
+    @ViewBuilder
+    private var readinessActionButtons: some View {
+        HStack {
+            tokenButton("Practice weak areas") { startPractice(.weak) }
+            tokenButton("Review due questions") { startPractice(.due) }
+        }
+    }
+
+    private var usesCompactReadinessActionPlacement: Bool {
+#if os(iOS)
+        horizontalSizeClass == .compact
+#else
+        false
+#endif
     }
 
     private func categoryPracticeAccessibilityLabel(_ category: BankCategory) -> AttributedString {
@@ -305,6 +326,7 @@ struct PracticeSessionView: View {
     @State private var selectedByQuestionId: [String: Int] = [:]
     @State private var committedQuestionIds: Set<String> = []
     @State private var reviewSubmitted = false
+    @State private var loadedScope: PracticeScope?
     @State private var answeredCount = 0
     @State private var correctCount = 0
     @State private var errorMessage: String?
@@ -328,7 +350,7 @@ struct PracticeSessionView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle(Text(scopeTitleAttributed)) // l10n: localized
-        .task(id: scope) { loadSession() }
+        .task(id: scope) { loadSessionIfNeeded() }
     }
 
     private var header: some View {
@@ -480,6 +502,11 @@ struct PracticeSessionView: View {
         }
     }
 
+    private func loadSessionIfNeeded() {
+        guard loadedScope != scope || items.isEmpty else { return }
+        loadSession()
+    }
+
     private func loadSession() {
         do {
             var progress = try progressStore.questionProgressRecords()
@@ -508,6 +535,7 @@ struct PracticeSessionView: View {
             // Touch progress so Swift does not warn about the explicit engine-record load in this flow.
             progress.sort { $0.questionId < $1.questionId }
             items = loaded
+            loadedScope = scope
             currentIndex = 0
             selectedByQuestionId = [:]
             committedQuestionIds = []
@@ -518,6 +546,7 @@ struct PracticeSessionView: View {
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
             items = []
+            loadedScope = nil
         }
     }
 

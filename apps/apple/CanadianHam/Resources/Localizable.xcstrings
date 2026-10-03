@@ -7097,24 +7097,24 @@
         }
       }
     },
-    "Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft before public release." : {
+    "Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft before public release."
+            "value" : "Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft before public release."
+            "value" : "Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft before public release."
+            "value" : "Draft attribution, not in effect: ISED written permission has been requested and has not yet been granted. Replace this draft with the wording from the recorded permission (task-1.1) before public release."
           }
         }
       }

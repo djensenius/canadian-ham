@@ -1,8 +1,5 @@
 import CanadianHamContent
 import SwiftUI
-#if os(iOS)
-import UIKit
-#endif
 
 private enum SidebarSelection: Hashable {
     case home
@@ -23,9 +20,19 @@ private enum CompactTab: Hashable {
     case morse
     case settings
 }
+
+private enum CompactPracticeRoute: Hashable {
+    case practice(PracticeScope)
+    case mockExam
+}
+
+private enum CompactSettingsRoute: Hashable {
+    case about
+}
 #endif
 
 struct RootView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @StateObject private var appSettings: AppSettingsModel
 #if os(iOS)
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
@@ -42,29 +49,16 @@ struct RootView: View {
     @State private var morseSettings = MorseTrainerSettings.load()
     @State private var dataRevision = 0
     @State private var navigationPath: [LearnRoute] = []
+#if os(iOS)
+    @State private var compactSelection: CompactTab = .home
+    @State private var compactLearnNavigationPath: [LearnRoute] = []
+    @State private var compactPracticeNavigationPath: [CompactPracticeRoute] = []
+    @State private var compactSettingsNavigationPath: [CompactSettingsRoute] = []
+#endif
     @State private var didApplyLaunchNavigation = false
 
-    init(appSettings: AppSettingsModel = AppSettingsModel()) {
+    init(appSettings: AppSettingsModel) {
         _appSettings = StateObject(wrappedValue: appSettings)
-#if os(iOS)
-        let tabBarAppearance = UITabBarAppearance()
-        tabBarAppearance.configureWithOpaqueBackground()
-        tabBarAppearance.backgroundColor = .systemBackground
-        for itemAppearance in [
-            tabBarAppearance.stackedLayoutAppearance,
-            tabBarAppearance.inlineLayoutAppearance,
-            tabBarAppearance.compactInlineLayoutAppearance,
-        ] {
-            itemAppearance.normal.iconColor = .black
-            itemAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.black]
-            itemAppearance.selected.iconColor = .black
-            itemAppearance.selected.titleTextAttributes = [.foregroundColor: UIColor.black]
-        }
-        UITabBar.appearance().standardAppearance = tabBarAppearance
-        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
-        UITabBar.appearance().tintColor = .black
-        UITabBar.appearance().unselectedItemTintColor = .black
-#endif
     }
 
     var body: some View {
@@ -131,90 +125,79 @@ struct RootView: View {
     }
 
 #if os(iOS)
-    private var compactTab: CompactTab {
-        switch selection {
-        case .home:
-            .home
-        case .learn:
-            .learn
-        case .practiceHub, .practice, .mockExam:
-            .practice
-        case .morse:
-            .morse
-        case .settings, .about:
-            .settings
-        }
-    }
-
-    private var compactTabBinding: Binding<CompactTab> {
-        Binding(
-            get: { compactTab },
-            set: { tab in
-                switch tab {
-                case .home: selection = .home
-                case .learn: selection = .learn
-                case .practice: selection = .practiceHub
-                case .morse: selection = .morse
-                case .settings: selection = .settings
-                }
-                if tab != .learn {
-                    navigationPath.removeAll()
-                }
-            }
-        )
-    }
-
     @ViewBuilder
     private func compactTabContent(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
-        TabView(selection: compactTabBinding) {
+        TabView(selection: $compactSelection) {
             NavigationStack {
-                compactHomeView(bank: bank, progressStore: progressStore)
-                    .background(DesignTokens.Colors.paper)
-                    .toolbar { languageToolbarItem(progressStore: progressStore) }
+                compactTabUnderlay {
+                    compactHomeView(bank: bank, progressStore: progressStore)
+                        .background(DesignTokens.Colors.paper)
+                }
+                .toolbar { languageToolbarItem(progressStore: progressStore) }
             }
+            .compactTabBarChrome(background: compactTabBarBackground)
             .tabItem { Label("Home", systemImage: "house") }
             .tag(CompactTab.home)
 
-            NavigationStack(path: $navigationPath) {
-                compactLearnView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
-                    .background(DesignTokens.Colors.paper)
-                    .toolbar { languageToolbarItem(progressStore: progressStore) }
-                    .navigationDestination(for: LearnRoute.self) { route in
-                        learnDestination(route, bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
-                    }
+            NavigationStack(path: $compactLearnNavigationPath) {
+                compactTabUnderlay {
+                    compactLearnView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+                        .background(DesignTokens.Colors.paper)
+                }
+                .toolbar { languageToolbarItem(progressStore: progressStore) }
+                .navigationDestination(for: LearnRoute.self) { route in
+                    learnDestination(route, bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+                }
             }
+            .compactTabBarChrome(background: compactTabBarBackground)
             .tabItem { Label("Learn", systemImage: "book.closed") }
             .tag(CompactTab.learn)
 
-            NavigationStack {
-                compactPracticeView(bank: bank, progressStore: progressStore)
-                    .background(DesignTokens.Colors.paper)
-                    .toolbar { languageToolbarItem(progressStore: progressStore) }
+            NavigationStack(path: $compactPracticeNavigationPath) {
+                compactTabUnderlay {
+                    compactPracticeView(bank: bank, progressStore: progressStore)
+                        .background(DesignTokens.Colors.paper)
+                }
+                .toolbar { languageToolbarItem(progressStore: progressStore) }
+                .navigationDestination(for: CompactPracticeRoute.self) { route in
+                    compactPracticeDestination(route, bank: bank, progressStore: progressStore)
+                }
             }
+            .compactTabBarChrome(background: compactTabBarBackground)
             .tabItem { Label("Practice", systemImage: "checklist") }
             .tag(CompactTab.practice)
 
             NavigationStack {
-                MorseTrainerView(settings: $morseSettings) { nextSettings in
-                    morseSettings = nextSettings
+                compactTabUnderlay {
+                    MorseTrainerView(settings: $morseSettings) { nextSettings in
+                        morseSettings = nextSettings
+                    }
+                    .background(DesignTokens.Colors.paper)
                 }
-                .background(DesignTokens.Colors.paper)
                 .toolbar { languageToolbarItem(progressStore: progressStore) }
             }
-            .tabItem { Label("Morse", systemImage: "waveform") }
-            .tag(CompactTab.morse)
-            .accessibilityIdentifier("compact-top-level-morse-tab")
-
-            NavigationStack {
-                compactSettingsView(bank: bank, progressStore: progressStore)
-                    .background(DesignTokens.Colors.paper)
-                    .toolbar { languageToolbarItem(progressStore: progressStore) }
+            .compactTabBarChrome(background: compactTabBarBackground)
+            .tabItem {
+                Label("Morse", systemImage: "waveform")
+                    .accessibilityIdentifier("compact-top-level-morse-tab")
             }
+            .tag(CompactTab.morse)
+
+            NavigationStack(path: $compactSettingsNavigationPath) {
+                compactTabUnderlay {
+                    compactSettingsView(bank: bank, progressStore: progressStore)
+                        .background(DesignTokens.Colors.paper)
+                }
+                .toolbar { languageToolbarItem(progressStore: progressStore) }
+                .navigationDestination(for: CompactSettingsRoute.self) { route in
+                    compactSettingsDestination(route, bank: bank)
+                }
+            }
+            .compactTabBarChrome(background: compactTabBarBackground)
             .tabItem { Label("Settings", systemImage: "gearshape") }
             .tag(CompactTab.settings)
         }
-        .toolbarBackground(DesignTokens.Colors.paper, for: .tabBar)
-        .toolbarBackground(.visible, for: .tabBar)
+        .tint(DesignTokens.Colors.ink)
         .onAppear {
             language = progressStore.preferences.language
             applyLaunchNavigation(bank: bank, contentLibrary: contentLibrary)
@@ -224,15 +207,28 @@ struct RootView: View {
         }
     }
 
+    @ViewBuilder
+    private func compactTabUnderlay<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        ZStack(alignment: .bottom) {
+            content()
+            compactTabBarBackground
+                .frame(height: 96)
+                .frame(maxHeight: .infinity, alignment: .bottom)
+                .ignoresSafeArea(edges: .bottom)
+                .allowsHitTesting(false)
+                .accessibilityHidden(true)
+        }
+    }
 
     @ViewBuilder
     private func compactHomeView(bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
         HomeView(bank: bank, progressStore: progressStore, language: language, revision: combinedDataRevision, morseEnabled: true) { scope in
-            selection = .practice(scope)
+            openCompactPractice(scope)
         } openMockExam: {
-            selection = .mockExam
+            openCompactMockExam()
         } openMorse: {
             selection = .morse
+            compactSelection = .morse
         }
     }
 
@@ -251,7 +247,15 @@ struct RootView: View {
 
     @ViewBuilder
     private func compactPracticeView(bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
-        switch selection {
+        PracticeHubView(bank: bank, progressStore: progressStore, language: language, revision: combinedDataRevision) { scope in
+            compactPracticeNavigationPath.append(.practice(scope))
+            selection = .practice(scope)
+        }
+    }
+
+    @ViewBuilder
+    private func compactPracticeDestination(_ route: CompactPracticeRoute, bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
+        switch route {
         case .practice(let scope):
             PracticeSessionView(
                 bank: bank,
@@ -265,29 +269,50 @@ struct RootView: View {
             MockExamView(bank: bank, progressStore: progressStore, language: language) {
                 recordDataChanged()
             }
-        default:
-            PracticeHubView(bank: bank, progressStore: progressStore, language: language, revision: combinedDataRevision) { scope in
-                selection = .practice(scope)
-            }
         }
     }
 
     @ViewBuilder
     private func compactSettingsView(bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
-        switch selection {
+        SettingsView(
+            bank: bank,
+            progressStore: progressStore,
+            morseSettings: $morseSettings,
+            openMorse: {
+                selection = .morse
+                compactSelection = .morse
+            },
+            openAbout: {
+                compactSettingsNavigationPath.append(.about)
+                selection = .about
+            }
+        ) {
+            recordDataChanged()
+        }
+    }
+
+    @ViewBuilder
+    private func compactSettingsDestination(_ route: CompactSettingsRoute, bank: QuestionBank) -> some View {
+        switch route {
         case .about:
             AboutView(bank: bank)
-        default:
-            SettingsView(
-                bank: bank,
-                progressStore: progressStore,
-                morseSettings: $morseSettings,
-                openMorse: { selection = .morse },
-                openAbout: { selection = .about }
-            ) {
-                recordDataChanged()
-            }
         }
+    }
+
+    private func openCompactPractice(_ scope: PracticeScope) {
+        selection = .practice(scope)
+        compactSelection = .practice
+        compactPracticeNavigationPath = [.practice(scope)]
+    }
+
+    private func openCompactMockExam() {
+        selection = .mockExam
+        compactSelection = .practice
+        compactPracticeNavigationPath = [.mockExam]
+    }
+
+    private var compactTabBarBackground: Color {
+        colorScheme == .dark ? DesignTokens.Colors.paperInset : DesignTokens.Colors.ink
     }
 #endif
 
@@ -572,36 +597,87 @@ struct RootView: View {
            let quiz = contentLibrary.quizzesById[initialQuizID] {
             selection = .learn
             navigationPath = [.lesson(quiz.lessonId), .lessonQuiz(initialQuizID)]
+#if os(iOS)
+            compactSelection = .learn
+            compactLearnNavigationPath = [.lesson(quiz.lessonId), .lessonQuiz(initialQuizID)]
+#endif
         } else if let initialLessonID = AppLaunchArguments.value(after: "-CanadianHamInitialLessonID") {
             selection = .learn
             navigationPath = [.lesson(initialLessonID)]
+#if os(iOS)
+            compactSelection = .learn
+            compactLearnNavigationPath = [.lesson(initialLessonID)]
+#endif
         }
         if let screen = AppLaunchArguments.value(after: "-CanadianHamInitialScreen") {
             switch screen {
-            case "home": selection = .home
-            case "learn": selection = .learn
-            case "practice": selection = .practiceHub
-            case "mock": selection = .mockExam
-            case "morse": selection = .morse
+            case "home":
+                selection = .home
+#if os(iOS)
+                compactSelection = .home
+#endif
+            case "learn":
+                selection = .learn
+#if os(iOS)
+                compactSelection = .learn
+#endif
+            case "practice":
+                selection = .practiceHub
+#if os(iOS)
+                compactSelection = .practice
+                compactPracticeNavigationPath = []
+#endif
+            case "mock":
+                selection = .mockExam
+#if os(iOS)
+                compactSelection = .practice
+                compactPracticeNavigationPath = [.mockExam]
+#endif
+            case "morse":
+                selection = .morse
+#if os(iOS)
+                compactSelection = .morse
+#endif
             case "settings":
 #if os(macOS)
                 selection = .home
 #else
                 selection = .settings
 #endif
-            case "about": selection = .about
+#if os(iOS)
+                compactSelection = .settings
+                compactSettingsNavigationPath = []
+#endif
+            case "about":
+                selection = .about
+#if os(iOS)
+                compactSelection = .settings
+                compactSettingsNavigationPath = [.about]
+#endif
             default: break
             }
         }
 #endif
         if ProcessInfo.processInfo.arguments.contains("-CanadianHamShowCategoryList") {
             selection = .practiceHub
+#if os(iOS)
+            compactSelection = .practice
+            compactPracticeNavigationPath = []
+#endif
         } else if let requestedSubsectionID = AppLaunchArguments.value(after: "-CanadianHamInitialSubsectionID"),
                   bank.subsectionsById[requestedSubsectionID] != nil {
             selection = .practice(.subsection(requestedSubsectionID))
+#if os(iOS)
+            compactSelection = .practice
+            compactPracticeNavigationPath = [.practice(.subsection(requestedSubsectionID))]
+#endif
         } else if let requestedCategoryID = AppLaunchArguments.value(after: "-CanadianHamInitialCategoryID"),
                   bank.categories.contains(where: { $0.id == requestedCategoryID }) {
             selection = .practice(.category(requestedCategoryID))
+#if os(iOS)
+            compactSelection = .practice
+            compactPracticeNavigationPath = [.practice(.category(requestedCategoryID))]
+#endif
         }
     }
 
@@ -645,6 +721,16 @@ struct RootView: View {
         }
     }
 }
+
+#if os(iOS)
+private extension View {
+    func compactTabBarChrome(background: Color) -> some View {
+        toolbarBackground(background, for: .tabBar)
+            .toolbarBackground(.visible, for: .tabBar)
+            .toolbarColorScheme(.dark, for: .tabBar)
+    }
+}
+#endif
 
 private func localized(_ string: String, language: BankLanguage) -> AttributedString {
     var attributed = AttributedString(string)
