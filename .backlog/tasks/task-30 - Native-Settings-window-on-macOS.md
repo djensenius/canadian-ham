@@ -1,11 +1,11 @@
 ---
 id: TASK-30
 title: Native Settings window on macOS
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-03 12:03'
-updated_date: '2026-10-03 15:21'
+updated_date: '2026-10-03 15:29'
 labels:
   - apple
   - macos
@@ -26,8 +26,8 @@ Why: the owner wants the Mac app to feel native: app settings belong in the stan
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 macOS uses a SwiftUI Settings scene (Command-comma) with tabs for General (language, appearance), Data (export, import, reset) and Morse (all Morse settings); the in-app Settings page/sidebar entry is removed on macOS only
-- [x] #2 All settings behave identically to iOS (same storage, live updates to open windows), with keyboard navigation and VoiceOver labels; Full Keyboard Access works
-- [x] #3 macOS unit tests cover the shared settings model; iOS/iPadOS in-app Settings is unchanged and its UI tests pass; the macOS and iOS xbuild suites pass
+- [ ] #2 All settings behave identically to iOS (same storage, live updates to open windows), with keyboard navigation and VoiceOver labels; Full Keyboard Access works
+- [ ] #3 macOS unit tests cover the shared settings model; iOS/iPadOS in-app Settings is unchanged and its UI tests pass; the macOS and iOS xbuild suites pass
 <!-- AC:END -->
 
 ## Implementation Plan
