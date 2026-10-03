@@ -92,7 +92,18 @@ struct RootView: View {
             NavigationStack(path: $navigationPath) {
                 detailView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
                     .background(DesignTokens.Colors.paper)
-                    .toolbar { languageToolbarItem(progressStore: progressStore) }
+                    .toolbar {
+                        languageToolbarItem(progressStore: progressStore)
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button {
+                                selection = .morse
+                            } label: {
+                                Label("Morse", systemImage: "waveform")
+                            }
+                            .accessibilityIdentifier("compact-top-level-morse")
+                            .accessibilityAddTraits(selection == .morse ? .isSelected : [])
+                        }
+                    }
                     .navigationDestination(for: LearnRoute.self) { route in
                         learnDestination(route, bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
                     }
@@ -105,6 +116,11 @@ struct RootView: View {
             }
             .onChange(of: progressStore.preferences.language) { _, next in
                 language = next
+            }
+            .onChange(of: selection) { _, next in
+                if next != .learn {
+                    navigationPath.removeAll()
+                }
             }
         } else {
             splitContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
