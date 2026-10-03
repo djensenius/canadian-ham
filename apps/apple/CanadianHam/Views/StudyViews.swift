@@ -14,9 +14,6 @@ struct HomeView: View {
     let openMockExam: () -> Void
     let openMorse: () -> Void
 
-#if os(iOS)
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-#endif
     @State private var summary: HomeSummary?
     @State private var errorMessage: String?
 
@@ -98,18 +95,13 @@ struct HomeView: View {
             }
             .font(DesignTokens.FontScale.body.weight(.bold))
             .foregroundStyle(summary.tint)
-            if usesCompactReadinessActionPlacement {
-                readinessActionButtons
-            }
             Text(summary.message) // l10n: localized
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
             Text("Due review: \(summary.dueReviewCount). Weak subsections: \(summary.weakSubsectionCount). Completed mock exams: \(summary.completedExamCount).")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
-            if !usesCompactReadinessActionPlacement {
-                readinessActionButtons
-            }
+            readinessActionButtons
         }
         .paperCard()
         .accessibilityIdentifier("readiness-card")
@@ -121,14 +113,6 @@ struct HomeView: View {
             tokenButton("Practice weak areas") { startPractice(.weak) }
             tokenButton("Review due questions") { startPractice(.due) }
         }
-    }
-
-    private var usesCompactReadinessActionPlacement: Bool {
-#if os(iOS)
-        horizontalSizeClass == .compact
-#else
-        false
-#endif
     }
 
     private func categoryPracticeAccessibilityLabel(_ category: BankCategory) -> AttributedString {
@@ -314,36 +298,68 @@ struct PracticeHubView: View {
     }
 }
 
+@MainActor
+final class PracticeSessionState: ObservableObject {
+    @Published var items: [PracticeQuestionItem] = []
+    @Published var currentIndex = 0
+    @Published var selectedByQuestionId: [String: Int] = [:]
+    @Published var committedQuestionIds: Set<String> = []
+    @Published var reviewSubmitted = false
+    @Published var loadedScope: PracticeScope?
+    @Published var answeredCount = 0
+    @Published var correctCount = 0
+    @Published var errorMessage: String?
+}
+
+@MainActor
+final class PracticeSessionStateCache: ObservableObject {
+    private var states: [PracticeScope: PracticeSessionState] = [:]
+
+    func state(for scope: PracticeScope) -> PracticeSessionState {
+        if let state = states[scope] { return state }
+        let state = PracticeSessionState()
+        states[scope] = state
+        return state
+    }
+}
+
 struct PracticeSessionView: View {
     let bank: QuestionBank
     @ObservedObject var progressStore: ProgressStoreService
     let scope: PracticeScope
     @Binding var language: BankLanguage
+    @StateObject private var state: PracticeSessionState
     let onDataChanged: () -> Void
 
-    @State private var items: [PracticeQuestionItem] = []
-    @State private var currentIndex = 0
-    @State private var selectedByQuestionId: [String: Int] = [:]
-    @State private var committedQuestionIds: Set<String> = []
-    @State private var reviewSubmitted = false
-    @State private var loadedScope: PracticeScope?
-    @State private var answeredCount = 0
-    @State private var correctCount = 0
-    @State private var errorMessage: String?
+    init(
+        bank: QuestionBank,
+        progressStore: ProgressStoreService,
+        scope: PracticeScope,
+        language: Binding<BankLanguage>,
+        state: PracticeSessionState = PracticeSessionState(),
+        onDataChanged: @escaping () -> Void
+    ) {
+        self.bank = bank
+        self.progressStore = progressStore
+        self.scope = scope
+        _language = language
+        _state = StateObject(wrappedValue: state)
+        self.onDataChanged = onDataChanged
+    }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
                 header
-                if let errorMessage {
+                if let errorMessage = state.errorMessage {
                     MessagePanel(title: "Practice unavailable", message: errorMessage, kind: .warning)
-                } else if items.isEmpty {
+                } else if state.items.isEmpty {
                     ContentUnavailableView("No questions found", systemImage: "tray", description: Text(emptyMessage)) // l10n: localized
                         .foregroundStyle(DesignTokens.Colors.ink)
-                } else if reviewSubmitted {
+                } else if state.reviewSubmitted {
                     practiceReview
                 } else {
-                    questionView(items[currentIndex])
+                    questionView(state.items[state.currentIndex])
                 }
             }
             .pagePadding()
@@ -381,15 +397,15 @@ struct PracticeSessionView: View {
 
     private var sessionProgressText: String {
         let mode = progressStore.preferences.practiceMode.localizedString
-        let tally = localizedCorrectOutOfAnswered(correct: correctCount, answered: answeredCount)
+        let tally = localizedCorrectOutOfAnswered(correct: state.correctCount, answered: state.answeredCount)
         switch progressStore.preferences.practiceMode {
         case .immediate:
             return String(localized: "Mode: \(mode). Session tally: \(tally).")
         case .reviewLater:
-            if reviewSubmitted {
+            if state.reviewSubmitted {
                 return String(localized: "Mode: \(mode). Review complete: \(tally).")
             } else {
-                let progress = localizedAnsweredOutOfTotal(answered: answeredCount, total: items.count)
+                let progress = localizedAnsweredOutOfTotal(answered: state.answeredCount, total: state.items.count)
                 return String(localized: "Mode: \(mode). \(progress); results are hidden until review.")
             }
         }
@@ -433,7 +449,7 @@ struct PracticeSessionView: View {
 
     private func questionView(_ item: PracticeQuestionItem) -> some View {
         let question = item.question
-        let selected = selectedByQuestionId[question.id]
+        let selected = state.selectedByQuestionId[question.id]
         return VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             QuestionCard(question: question, language: language)
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -459,7 +475,7 @@ struct PracticeSessionView: View {
             }
             if let selected, progressStore.preferences.practiceMode == .immediate {
                 PracticeFeedback(question: question, selectedSourceIndex: selected, language: language, choicePermutation: item.choicePermutation)
-                Button(currentIndex + 1 == items.count ? "Finish session" : "Next question") { // l10n: localized
+                Button(state.currentIndex + 1 == state.items.count ? "Finish session" : "Next question") { // l10n: localized
                     advanceOrFinish()
                 }
                 .buttonStyle(.bordered)
@@ -467,7 +483,7 @@ struct PracticeSessionView: View {
                 .frame(minHeight: 44)
                 .accessibilityIdentifier("next-question-button")
             } else if progressStore.preferences.practiceMode == .reviewLater {
-                Button(currentIndex + 1 == items.count ? "Submit for review" : "Next question") { // l10n: localized
+                Button(state.currentIndex + 1 == state.items.count ? "Submit for review" : "Next question") { // l10n: localized
                     advanceReviewLater()
                 }
                 .buttonStyle(.bordered)
@@ -484,14 +500,14 @@ struct PracticeSessionView: View {
                 .font(DesignTokens.FontScale.title.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
-            ForEach(items) { item in
+            ForEach(state.items) { item in
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                     Text(item.question.id) // l10n: verbatim
                         .font(DesignTokens.FontScale.body.monospaced())
                     Text(localized(item.question.text.text(for: language), language: language)) // l10n: content(question)
                         .font(DesignTokens.FontScale.body.weight(.semibold))
                         .foregroundStyle(DesignTokens.Colors.ink)
-                    PracticeFeedback(question: item.question, selectedSourceIndex: selectedByQuestionId[item.question.id], language: language, choicePermutation: item.choicePermutation)
+                    PracticeFeedback(question: item.question, selectedSourceIndex: state.selectedByQuestionId[item.question.id], language: language, choicePermutation: item.choicePermutation)
                     Text("Category \(item.question.categoryId) • Subsection \(item.question.subsectionId).") // l10n: localized
                         .font(DesignTokens.FontScale.caption)
                         .foregroundStyle(DesignTokens.Colors.inkMuted)
@@ -503,7 +519,7 @@ struct PracticeSessionView: View {
     }
 
     private func loadSessionIfNeeded() {
-        guard loadedScope != scope || items.isEmpty else { return }
+        guard state.loadedScope != scope || state.items.isEmpty else { return }
         loadSession()
     }
 
@@ -534,19 +550,19 @@ struct PracticeSessionView: View {
             }
             // Touch progress so Swift does not warn about the explicit engine-record load in this flow.
             progress.sort { $0.questionId < $1.questionId }
-            items = loaded
-            loadedScope = scope
-            currentIndex = 0
-            selectedByQuestionId = [:]
-            committedQuestionIds = []
-            reviewSubmitted = false
-            answeredCount = 0
-            correctCount = 0
-            errorMessage = nil
+            state.items = loaded
+            state.loadedScope = scope
+            state.currentIndex = 0
+            state.selectedByQuestionId = [:]
+            state.committedQuestionIds = []
+            state.reviewSubmitted = false
+            state.answeredCount = 0
+            state.correctCount = 0
+            state.errorMessage = nil
         } catch {
-            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
-            items = []
-            loadedScope = nil
+            state.errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
+            state.items = []
+            state.loadedScope = nil
         }
     }
 
@@ -569,17 +585,17 @@ struct PracticeSessionView: View {
     }
 
     private func select(sourceIndex: Int, question: BankQuestion) {
-        if let previous = selectedByQuestionId[question.id] {
+        if let previous = state.selectedByQuestionId[question.id] {
             guard progressStore.preferences.practiceMode == .reviewLater else { return }
-            selectedByQuestionId[question.id] = sourceIndex
-            if previous == 0, sourceIndex != 0 { correctCount -= 1 }
-            if previous != 0, sourceIndex == 0 { correctCount += 1 }
+            state.selectedByQuestionId[question.id] = sourceIndex
+            if previous == 0, sourceIndex != 0 { state.correctCount -= 1 }
+            if previous != 0, sourceIndex == 0 { state.correctCount += 1 }
             AccessibilityNotification.Announcement(String(localized: "Selected answer updated")).post()
             return
         }
-        selectedByQuestionId[question.id] = sourceIndex
-        answeredCount += 1
-        if sourceIndex == 0 { correctCount += 1 }
+        state.selectedByQuestionId[question.id] = sourceIndex
+        state.answeredCount += 1
+        if sourceIndex == 0 { state.correctCount += 1 }
         if progressStore.preferences.practiceMode == .immediate {
             commitAnswer(question: question, sourceIndex: sourceIndex)
             let announcement = sourceIndex == 0 ? String(localized: "Correct") : String(localized: "Incorrect")
@@ -588,69 +604,88 @@ struct PracticeSessionView: View {
     }
 
     private func commitAnswer(question: BankQuestion, sourceIndex: Int) {
-        guard !committedQuestionIds.contains(question.id) else { return }
+        guard !state.committedQuestionIds.contains(question.id) else { return }
         do {
             let now = try AppleStudyEngine.canonicalNow()
             let progress = try progressStore.questionProgressRecords()
             let next = try AppleStudyEngine.applyPracticeAnswer(progress: progress, question: question, selectedSourceIndex: sourceIndex, now: now)
             try progressStore.saveQuestionProgress(next)
-            committedQuestionIds.insert(question.id)
+            state.committedQuestionIds.insert(question.id)
             onDataChanged()
         } catch {
-            errorMessage = localizedErrorMessage(String(localized: "Unable to save progress locally: \("")"), detail: error)
+            state.errorMessage = localizedErrorMessage(String(localized: "Unable to save progress locally: \("")"), detail: error)
         }
     }
 
     private func advanceOrFinish() {
-        if currentIndex + 1 < items.count {
-            currentIndex += 1
+        if state.currentIndex + 1 < state.items.count {
+            state.currentIndex += 1
         } else {
             loadSession()
         }
     }
 
     private func advanceReviewLater() {
-        if currentIndex + 1 < items.count {
-            currentIndex += 1
+        if state.currentIndex + 1 < state.items.count {
+            state.currentIndex += 1
             return
         }
         do {
             var progress = try progressStore.questionProgressRecords()
             let now = try AppleStudyEngine.canonicalNow()
-            for item in items {
-                guard let selected = selectedByQuestionId[item.question.id] else { continue }
+            for item in state.items {
+                guard let selected = state.selectedByQuestionId[item.question.id] else { continue }
                 progress = try AppleStudyEngine.applyPracticeAnswer(progress: progress, question: item.question, selectedSourceIndex: selected, now: now)
             }
             try progressStore.saveQuestionProgress(progress)
-            reviewSubmitted = true
+            state.reviewSubmitted = true
             onDataChanged()
         } catch {
-            errorMessage = localizedErrorMessage(String(localized: "Unable to save review-later progress: \("")"), detail: error)
+            state.errorMessage = localizedErrorMessage(String(localized: "Unable to save review-later progress: \("")"), detail: error)
         }
     }
+}
+
+@MainActor
+final class MockExamState: ObservableObject {
+    @Published var seed = ""
+    @Published var startedAt = ""
+    @Published var generatedItems: [GeneratedExamItem] = []
+    @Published var currentIndex = 0
+    @Published var selectedByQuestionId: [String: Int?] = [:]
+    @Published var flagged: Set<String> = []
+    @Published var secondsElapsed = 0
+    @Published var timerRunning = false
+    @Published var result: StoredExamAttempt?
+    @Published var errorMessage: String?
+    @Published var confirmingSubmit = false
+    @Published var isSubmitting = false
+    @Published var timerStatus = String(localized: "Timer off")
+    @Published var showingNavigator = false
+    @Published var shouldFocusResultsHeading = false
 }
 
 struct MockExamView: View {
     let bank: QuestionBank
     @ObservedObject var progressStore: ProgressStoreService
     let language: BankLanguage
+    @StateObject private var state: MockExamState
     let onDataChanged: () -> Void
 
-    @State private var seed = ""
-    @State private var startedAt = ""
-    @State private var generatedItems: [GeneratedExamItem] = []
-    @State private var currentIndex = 0
-    @State private var selectedByQuestionId: [String: Int?] = [:]
-    @State private var flagged: Set<String> = []
-    @State private var secondsElapsed = 0
-    @State private var timerRunning = false
-    @State private var result: StoredExamAttempt?
-    @State private var errorMessage: String?
-    @State private var confirmingSubmit = false
-    @State private var isSubmitting = false
-    @State private var timerStatus = String(localized: "Timer off")
-    @State private var showingNavigator = false
-    @State private var shouldFocusResultsHeading = false
+    init(
+        bank: QuestionBank,
+        progressStore: ProgressStoreService,
+        language: BankLanguage,
+        state: MockExamState = MockExamState(),
+        onDataChanged: @escaping () -> Void
+    ) {
+        self.bank = bank
+        self.progressStore = progressStore
+        self.language = language
+        _state = StateObject(wrappedValue: state)
+        self.onDataChanged = onDataChanged
+    }
+
     @AccessibilityFocusState private var resultFocus: MockExamAccessibilityFocus?
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -664,26 +699,26 @@ struct MockExamView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-                if let result {
+                if let result = state.result {
                     examResults(result)
-                } else if generatedItems.isEmpty {
+                } else if state.generatedItems.isEmpty {
                     startCard
-                } else if let currentItem = generatedItems[safe: currentIndex], let question = bank.question(id: currentItem.questionId) {
+                } else if let currentItem = state.generatedItems[safe: state.currentIndex], let question = bank.question(id: currentItem.questionId) {
                     examQuestion(item: currentItem, question: question)
                 }
-                if let errorMessage {
+                if let errorMessage = state.errorMessage {
                     MessagePanel(title: "Mock exam unavailable", message: errorMessage, kind: .warning)
                 }
             }
             .pagePadding()
         }
-        .id(result?.id ?? "mock-exam-active")
+        .id(state.result?.id ?? "mock-exam-active")
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Mock exam")
-        .sheet(isPresented: $showingNavigator) {
+        .sheet(isPresented: $state.showingNavigator) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 navigator
-                Button { showingNavigator = false } label: {
+                Button { state.showingNavigator = false } label: {
                     AccessibleSecondaryButtonLabel(title: "Done")
                 }
                 .buttonStyle(AccessibleSecondaryButtonStyle())
@@ -692,12 +727,12 @@ struct MockExamView: View {
             .background(DesignTokens.Colors.paper)
         }
         .onReceive(timer) { _ in
-            if timerRunning {
-                secondsElapsed += 1
-                timerStatus = String(localized: "Timer running, \(secondsElapsed) seconds elapsed")
+            if state.timerRunning {
+                state.secondsElapsed += 1
+                state.timerStatus = String(localized: "Timer running, \(state.secondsElapsed) seconds elapsed")
             }
         }
-        .alert("Submit mock exam?", isPresented: $confirmingSubmit) {
+        .alert("Submit mock exam?", isPresented: $state.confirmingSubmit) {
             Button("Cancel", role: .cancel) {}
             Button("Submit", role: .destructive) { submitExam() }
         } message: {
@@ -726,16 +761,16 @@ struct MockExamView: View {
     private func examQuestion(item: GeneratedExamItem, question: BankQuestion) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Text("Exam code: \(seed)")
+                Text("Exam code: \(state.seed)")
                     .font(DesignTokens.FontScale.caption.monospaced())
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .textSelection(.enabled)
                     .accessibilityIdentifier("mock-exam-seed")
-                Text("Question \(currentIndex + 1) of \(generatedItems.count)")
+                Text("Question \(state.currentIndex + 1) of \(state.generatedItems.count)")
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
-                Text("\(localizedAnsweredOutOfTotal(answered: selectedByQuestionId.count, total: generatedItems.count)). \(timerStatus).") // l10n: localized
+                Text("\(localizedAnsweredOutOfTotal(answered: state.selectedByQuestionId.count, total: state.generatedItems.count)). \(state.timerStatus).") // l10n: localized
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
                 examHeaderControls(questionID: question.id)
@@ -760,27 +795,27 @@ struct MockExamView: View {
                             answer: answer,
                             displayIndex: displayIndex,
                             language: language,
-                            selectedSourceIndex: selectedByQuestionId[question.id] ?? nil,
+                            selectedSourceIndex: state.selectedByQuestionId[question.id] ?? nil,
                             showCorrectness: false,
                             disabled: false
                         ) {
-                            selectedByQuestionId[question.id] = sourceIndex
+                            state.selectedByQuestionId[question.id] = sourceIndex
                         }
                     }
                 }
             }
 
             HStack {
-                Button { currentIndex = max(0, currentIndex - 1) } label: {
+                Button { state.currentIndex = max(0, state.currentIndex - 1) } label: {
                     AccessibleSecondaryButtonLabel(title: "Previous")
                 }
-                .disabled(currentIndex == 0)
+                .disabled(state.currentIndex == 0)
                 .buttonStyle(AccessibleSecondaryButtonStyle())
                 .accessibilityIdentifier("mock-previous-button")
-                Button { currentIndex = min(generatedItems.count - 1, currentIndex + 1) } label: {
+                Button { state.currentIndex = min(state.generatedItems.count - 1, state.currentIndex + 1) } label: {
                     AccessibleSecondaryButtonLabel(title: "Next")
                 }
-                .disabled(currentIndex + 1 >= generatedItems.count)
+                .disabled(state.currentIndex + 1 >= state.generatedItems.count)
                 .buttonStyle(AccessibleSecondaryButtonStyle())
                 .accessibilityIdentifier("mock-next-button")
             }
@@ -789,9 +824,9 @@ struct MockExamView: View {
                 navigator
             }
 
-            Button("Submit exam") { confirmingSubmit = true }
+            Button("Submit exam") { state.confirmingSubmit = true }
                 .buttonStyle(AccessiblePrimaryButtonStyle())
-                .disabled(isSubmitting)
+                .disabled(state.isSubmitting)
                 .accessibilityIdentifier("submit-mock-exam-button")
         }
     }
@@ -851,7 +886,7 @@ struct MockExamView: View {
 
     private func flagButton(questionID: String) -> some View {
         Button { toggleFlag(questionID) } label: {
-            AccessibleSecondaryButtonLabel(title: flagged.contains(questionID) ? "Flagged for review" : "Flag for review")
+            AccessibleSecondaryButtonLabel(title: state.flagged.contains(questionID) ? "Flagged for review" : "Flag for review")
         }
         .buttonStyle(AccessibleSecondaryButtonStyle())
         .accessibilityIdentifier("mock-flag-button")
@@ -860,7 +895,7 @@ struct MockExamView: View {
     @ViewBuilder
     private var questionsButton: some View {
         if usesNavigatorSheet {
-            Button { showingNavigator = true } label: {
+            Button { state.showingNavigator = true } label: {
                 AccessibleSecondaryButtonLabel(title: "Questions")
             }
             .buttonStyle(AccessibleSecondaryButtonStyle())
@@ -911,11 +946,11 @@ struct MockExamView: View {
     private var timerControls: some View {
         if progressStore.preferences.examTimerEnabled {
             HStack {
-                let buttonTitle: LocalizedStringKey = timerRunning ? "Pause timer" : secondsElapsed == 0 ? "Start timer" : "Resume timer"
+                let buttonTitle: LocalizedStringKey = state.timerRunning ? "Pause timer" : state.secondsElapsed == 0 ? "Start timer" : "Resume timer"
                 tokenButton(buttonTitle) {
-                    timerRunning.toggle()
-                    timerStatus = timerRunning ? String(localized: "Timer running, \(secondsElapsed) seconds elapsed") : String(localized: "Timer paused, \(secondsElapsed) seconds elapsed")
-                    AccessibilityNotification.Announcement(timerStatus).post()
+                    state.timerRunning.toggle()
+                    state.timerStatus = state.timerRunning ? String(localized: "Timer running, \(state.secondsElapsed) seconds elapsed") : String(localized: "Timer paused, \(state.secondsElapsed) seconds elapsed")
+                    AccessibilityNotification.Announcement(state.timerStatus).post()
                 }
             }
         } else {
@@ -933,16 +968,16 @@ struct MockExamView: View {
                 .accessibilityAddTraits(.isHeader)
             quickJumpControls
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 48), spacing: DesignTokens.Spacing.sm)], spacing: DesignTokens.Spacing.sm) {
-                ForEach(generatedItems.indices, id: \.self) { index in
-                    let item = generatedItems[index]
-                    Button { currentIndex = index } label: {
+                ForEach(state.generatedItems.indices, id: \.self) { index in
+                    let item = state.generatedItems[index]
+                    Button { state.currentIndex = index } label: {
                         Text(navigatorLabel(for: index, item: item)) // l10n: verbatim
                             .font(DesignTokens.FontScale.body.monospaced().weight(.semibold))
                             .foregroundStyle(DesignTokens.Colors.ink)
                             .frame(minWidth: 48, minHeight: 44)
                             .padding(.horizontal, DesignTokens.Spacing.xs)
                             .background(navigatorBackground(for: item), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous))
-                            .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous).strokeBorder(navigatorBorder(for: index, item: item), lineWidth: index == currentIndex ? 2 : 1))
+                            .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous).strokeBorder(navigatorBorder(for: index, item: item), lineWidth: index == state.currentIndex ? 2 : 1))
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(mockNavigatorAccessibilityLabel(for: index, item: item)) // l10n: localized
@@ -954,26 +989,26 @@ struct MockExamView: View {
 
     private func navigatorLabel(for index: Int, item: GeneratedExamItem) -> String {
         var label = "\(index + 1)"
-        if index == currentIndex { label += " ●" }
-        if selectedByQuestionId[item.questionId] != nil { label += " ✓" }
-        if flagged.contains(item.questionId) { label += " ⚑" }
+        if index == state.currentIndex { label += " ●" }
+        if state.selectedByQuestionId[item.questionId] != nil { label += " ✓" }
+        if state.flagged.contains(item.questionId) { label += " ⚑" }
         return label
     }
 
     private func mockNavigatorAccessibilityLabel(for index: Int, item: GeneratedExamItem) -> Text {
-        let answerState = selectedByQuestionId[item.questionId] != nil ? String(localized: "answered") : String(localized: "unanswered")
+        let answerState = state.selectedByQuestionId[item.questionId] != nil ? String(localized: "answered") : String(localized: "unanswered")
         var label = String(localized: "Question \(index + 1), \(answerState)")
-        if flagged.contains(item.questionId) { label += String(localized: ", flagged") }
-        if index == currentIndex { label += String(localized: ", current") }
+        if state.flagged.contains(item.questionId) { label += String(localized: ", flagged") }
+        if index == state.currentIndex { label += String(localized: ", current") }
         return Text(label) // l10n: localized
     }
 
     private func navigatorBackground(for item: GeneratedExamItem) -> Color {
-        selectedByQuestionId[item.questionId] != nil ? DesignTokens.Colors.paperInset : DesignTokens.Colors.paperElevated
+        state.selectedByQuestionId[item.questionId] != nil ? DesignTokens.Colors.paperInset : DesignTokens.Colors.paperElevated
     }
 
     private func navigatorBorder(for index: Int, item: GeneratedExamItem) -> Color {
-        if index == currentIndex || selectedByQuestionId[item.questionId] != nil || flagged.contains(item.questionId) {
+        if index == state.currentIndex || state.selectedByQuestionId[item.questionId] != nil || state.flagged.contains(item.questionId) {
             return DesignTokens.Colors.inkMuted
         }
         return DesignTokens.Colors.border
@@ -981,21 +1016,21 @@ struct MockExamView: View {
 
     private var nextUnansweredIndex: Int? {
         nextIndex { item in
-            selectedByQuestionId[item.questionId] == nil
+            state.selectedByQuestionId[item.questionId] == nil
         }
     }
 
     private var nextFlaggedIndex: Int? {
         nextIndex { item in
-            flagged.contains(item.questionId)
+            state.flagged.contains(item.questionId)
         }
     }
 
     private func nextIndex(matching predicate: (GeneratedExamItem) -> Bool) -> Int? {
-        guard !generatedItems.isEmpty else { return nil }
-        for offset in 1..<generatedItems.count {
-            let index = (currentIndex + offset) % generatedItems.count
-            if predicate(generatedItems[index]) {
+        guard !state.generatedItems.isEmpty else { return nil }
+        for offset in 1..<state.generatedItems.count {
+            let index = (state.currentIndex + offset) % state.generatedItems.count
+            if predicate(state.generatedItems[index]) {
                 return index
             }
         }
@@ -1004,20 +1039,20 @@ struct MockExamView: View {
 
     private func jumpToNextUnanswered() {
         if let nextUnansweredIndex {
-            currentIndex = nextUnansweredIndex
-            showingNavigator = false
+            state.currentIndex = nextUnansweredIndex
+            state.showingNavigator = false
         }
     }
 
     private func jumpToNextFlagged() {
         if let nextFlaggedIndex {
-            currentIndex = nextFlaggedIndex
-            showingNavigator = false
+            state.currentIndex = nextFlaggedIndex
+            state.showingNavigator = false
         }
     }
 
     private var submitConfirmationText: String {
-        let unanswered = generatedItems.filter { selectedByQuestionId[$0.questionId] == nil }
+        let unanswered = state.generatedItems.filter { state.selectedByQuestionId[$0.questionId] == nil }
         let listed = unanswered.prefix(10).map { String($0.position) }.joined(separator: ", ")
         if unanswered.isEmpty {
             return String(localized: "All questions are answered. You can submit now.")
@@ -1089,52 +1124,52 @@ struct MockExamView: View {
 
     private func startExam() {
         do {
-            seed = AppLaunchArguments.value(after: "-CanadianHamMockExamSeed") ?? "mock-exam/\(UUID().uuidString)"
-            startedAt = try AppleStudyEngine.canonicalNow()
-            generatedItems = try AppleStudyEngine.generatedMockExam(bank: bank, seed: seed).items
+            state.seed = AppLaunchArguments.value(after: "-CanadianHamMockExamSeed") ?? "mock-exam/\(UUID().uuidString)"
+            state.startedAt = try AppleStudyEngine.canonicalNow()
+            state.generatedItems = try AppleStudyEngine.generatedMockExam(bank: bank, seed: state.seed).items
 #if DEBUG
             if let forcedQuestionID = AppLaunchArguments.value(after: "-CanadianHamMockExamQuestionID"), let question = bank.question(id: forcedQuestionID) {
                 let forcedAnswers = try AppleQuestionShuffle.shuffledAnswers(for: question, seed: "mock-answers/\(question.id)/ui-test")
                 let forced = GeneratedExamItem(position: 1, questionId: question.id, subsectionId: question.subsectionId, categoryId: question.categoryId, choicePermutation: forcedAnswers.map(\.sourceIndex))
-                generatedItems.removeAll { $0.questionId == question.id }
-                generatedItems.insert(forced, at: 0)
-                generatedItems = generatedItems.enumerated().map { index, item in
+                state.generatedItems.removeAll { $0.questionId == question.id }
+                state.generatedItems.insert(forced, at: 0)
+                state.generatedItems = state.generatedItems.enumerated().map { index, item in
                     GeneratedExamItem(position: index + 1, questionId: item.questionId, subsectionId: item.subsectionId, categoryId: item.categoryId, choicePermutation: item.choicePermutation)
                 }
             }
             if let value = AppLaunchArguments.value(after: "-CanadianHamMockExamLimit"), let limit = Int(value), limit > 0 {
-                generatedItems = Array(generatedItems.prefix(limit))
+                state.generatedItems = Array(state.generatedItems.prefix(limit))
             }
 #endif
-            currentIndex = 0
-            selectedByQuestionId = [:]
-            flagged = []
-            secondsElapsed = 0
-            timerRunning = progressStore.preferences.examTimerEnabled
-            timerStatus = progressStore.preferences.examTimerEnabled ? String(localized: "Timer running, 0 seconds elapsed") : String(localized: "Timer off")
-            result = nil
-            errorMessage = nil
+            state.currentIndex = 0
+            state.selectedByQuestionId = [:]
+            state.flagged = []
+            state.secondsElapsed = 0
+            state.timerRunning = progressStore.preferences.examTimerEnabled
+            state.timerStatus = progressStore.preferences.examTimerEnabled ? String(localized: "Timer running, 0 seconds elapsed") : String(localized: "Timer off")
+            state.result = nil
+            state.errorMessage = nil
         } catch {
-            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
+            state.errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 
     private func submitExam() {
-        guard result == nil, !isSubmitting else { return }
-        isSubmitting = true
-        defer { isSubmitting = false }
+        guard state.result == nil, !state.isSubmitting else { return }
+        state.isSubmitting = true
+        defer { state.isSubmitting = false }
         do {
             let submittedAt = try AppleStudyEngine.canonicalNow()
             let attempt = try AppleStudyEngine.buildExamAttempt(
                 bank: bank,
-                seed: seed,
-                startedAt: startedAt,
+                seed: state.seed,
+                startedAt: state.startedAt,
                 submittedAt: submittedAt,
                 timerEnabled: progressStore.preferences.examTimerEnabled,
-                secondsElapsed: secondsElapsed,
-                generatedItems: generatedItems,
-                selectedByQuestionId: selectedByQuestionId,
-                flaggedQuestionIds: flagged
+                secondsElapsed: state.secondsElapsed,
+                generatedItems: state.generatedItems,
+                selectedByQuestionId: state.selectedByQuestionId,
+                flaggedQuestionIds: state.flagged
             )
             var progress = try progressStore.questionProgressRecords()
             for item in attempt.items {
@@ -1144,12 +1179,12 @@ struct MockExamView: View {
             }
             try progressStore.saveExamAttempt(attempt)
             try progressStore.saveQuestionProgress(progress)
-            shouldFocusResultsHeading = true
-            result = attempt
-            timerRunning = false
+            state.shouldFocusResultsHeading = true
+            state.result = attempt
+            state.timerRunning = false
             onDataChanged()
         } catch {
-            errorMessage = localizedErrorMessage(String(localized: "Unable to save mock exam: \("")"), detail: error)
+            state.errorMessage = localizedErrorMessage(String(localized: "Unable to save mock exam: \("")"), detail: error)
         }
     }
 
@@ -1164,27 +1199,27 @@ struct MockExamView: View {
     }
 
     private func focusResultsHeadingAfterLayout() {
-        guard shouldFocusResultsHeading else { return }
+        guard state.shouldFocusResultsHeading else { return }
         Task { @MainActor in
             // Let SwiftUI finish replacing the active exam view before requesting VoiceOver focus.
             try? await Task.sleep(nanoseconds: 150_000_000)
             resultFocus = .resultsHeading
-            shouldFocusResultsHeading = false
+            state.shouldFocusResultsHeading = false
         }
     }
 
     private func toggleFlag(_ questionId: String) {
-        if flagged.contains(questionId) { flagged.remove(questionId) } else { flagged.insert(questionId) }
+        if state.flagged.contains(questionId) { state.flagged.remove(questionId) } else { state.flagged.insert(questionId) }
     }
 
     private func resetExam() {
-        seed = ""
-        startedAt = ""
-        generatedItems = []
-        result = nil
-        selectedByQuestionId = [:]
-        flagged = []
-        currentIndex = 0
+        state.seed = ""
+        state.startedAt = ""
+        state.generatedItems = []
+        state.result = nil
+        state.selectedByQuestionId = [:]
+        state.flagged = []
+        state.currentIndex = 0
     }
 }
 

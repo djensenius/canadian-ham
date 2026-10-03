@@ -64,25 +64,20 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Hidden until playback finishes."].firstMatch.waitForExistence(timeout: 5))
     }
 
-    func testCompactTopLevelTabsReachMorseHomeAndLearn() throws {
+    func testCompactTopLevelListPushesMorseHomeAndLearn() throws {
         XCUIDevice.shared.appearance = .light
-        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "home"])
+        let app = launchApp()
         defer { app.terminate() }
 
-        XCTAssertTrue(app.staticTexts["Ready for Basic with Honours?"].firstMatch.waitForExistence(timeout: 10))
-        let tabBar = app.tabBars.firstMatch
-        XCTAssertTrue(tabBar.waitForExistence(timeout: 5), "Compact iPhone navigation should expose a tab bar")
-        let morseTab = tabBar.buttons["Morse"].firstMatch
-        XCTAssertTrue(morseTab.waitForExistence(timeout: 5), "Compact iPhone navigation should expose a Morse tab item")
-        morseTab.tap()
+        XCTAssertTrue(app.buttons["Morse"].firstMatch.waitForExistence(timeout: 10), "Compact iPhone navigation should expose Morse in the root list")
+        tap("Morse", in: app)
         XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
-        tabBar.buttons["Home"].firstMatch.tap()
-        XCTAssertTrue(app.staticTexts["Ready for Basic with Honours?"].firstMatch.waitForExistence(timeout: 10))
-        tabBar.buttons["Learn"].firstMatch.tap()
-        XCTAssertTrue(app.staticTexts["Structured lessons"].firstMatch.waitForExistence(timeout: 10), "Expected a Learn-only element after returning via the compact tab bar")
+        tapCompactBack(in: app)
+        tap("Learn", in: app)
+        XCTAssertTrue(app.staticTexts["Structured lessons"].firstMatch.waitForExistence(timeout: 10), "Expected a Learn-only element after returning to the compact root list")
     }
 
-    func testCompactTabSwitchingPreservesPracticeSessionState() throws {
+    func testCompactRootNavigationPreservesPracticeSessionState() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: ["-CanadianHamInitialScreen", "home"])
         defer { app.terminate() }
@@ -92,17 +87,21 @@ final class CanadianHamPracticeUITests: XCTestCase {
         answerFirstVisibleAnswer(in: app)
         XCTAssertTrue(app.descendants(matching: .any)["answer-feedback-title"].firstMatch.waitForExistence(timeout: 5))
 
-        let tabBar = app.tabBars.firstMatch
-        XCTAssertTrue(tabBar.waitForExistence(timeout: 5), "Compact iPhone practice should keep the tab bar available")
-        tabBar.buttons["Morse"].firstMatch.tap()
+        tapCompactBack(in: app)
+        tapCompactBack(in: app)
+        tap("Morse", in: app)
         XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
-        tabBar.buttons["Practice"].firstMatch.tap()
+        tapCompactBack(in: app)
+        tap("Practice", in: app)
+        let allQuestions = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", "Start all questions")).firstMatch
+        XCTAssertTrue(allQuestions.waitForExistence(timeout: 5), "Expected the all-questions practice button")
+        allQuestions.tap()
 
-        XCTAssertTrue(app.descendants(matching: .any)["practice-session-tally"].firstMatch.waitForExistence(timeout: 10), "Expected the practice session to remain on the Practice tab")
-        XCTAssertTrue(app.descendants(matching: .any)["answer-feedback-title"].firstMatch.waitForExistence(timeout: 5), "Expected selected-answer feedback to survive switching tabs")
+        XCTAssertTrue(app.descendants(matching: .any)["practice-session-tally"].firstMatch.waitForExistence(timeout: 10), "Expected the practice session to reopen from the compact root list")
+        XCTAssertTrue(app.descendants(matching: .any)["answer-feedback-title"].firstMatch.waitForExistence(timeout: 5), "Expected selected-answer feedback to survive compact Back navigation")
     }
 
-    func testCompactTabSwitchingPreservesMockExamState() throws {
+    func testCompactRootNavigationPreservesMockExamState() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "mock",
@@ -116,14 +115,16 @@ final class CanadianHamPracticeUITests: XCTestCase {
         answerFirstVisibleAnswer(in: app)
         XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", "Selected")).firstMatch.waitForExistence(timeout: 5))
 
-        let tabBar = app.tabBars.firstMatch
-        XCTAssertTrue(tabBar.waitForExistence(timeout: 5), "Compact iPhone mock exam should keep the tab bar available")
-        tabBar.buttons["Morse"].firstMatch.tap()
+        tapCompactBack(in: app)
+        tapCompactBack(in: app)
+        tap("Morse", in: app)
         XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
-        tabBar.buttons["Practice"].firstMatch.tap()
+        tapCompactBack(in: app)
+        tap("Home", in: app)
+        tap("Mock exam", in: app)
 
-        XCTAssertTrue(app.staticTexts["Question 1 of 1"].firstMatch.waitForExistence(timeout: 10), "Expected the mock exam question to remain on the Practice tab")
-        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", "Selected")).firstMatch.waitForExistence(timeout: 5), "Expected the selected mock-exam answer to survive switching tabs")
+        XCTAssertTrue(app.staticTexts["Question 1 of 1"].firstMatch.waitForExistence(timeout: 10), "Expected the mock exam question to reopen from Home after compact Back navigation")
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", "Selected")).firstMatch.waitForExistence(timeout: 5), "Expected the selected mock-exam answer to survive compact Back navigation")
     }
 
     func testAboutShowsReleaseAttributionDisclaimerAndBankVersion() throws {
@@ -739,6 +740,14 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let button = app.buttons[label].firstMatch
         XCTAssertTrue(button.waitForExistence(timeout: 5), "Expected button \(label)")
         button.tap()
+    }
+
+    private func tapCompactBack(in app: XCUIApplication) {
+        let navigationBar = app.navigationBars.firstMatch
+        XCTAssertTrue(navigationBar.waitForExistence(timeout: 5), "Expected a navigation bar with a compact Back button")
+        let backButton = navigationBar.buttons.element(boundBy: 0)
+        XCTAssertTrue(backButton.waitForExistence(timeout: 5), "Expected compact Back button")
+        backButton.tap()
     }
 
     private func scrollAndTap(_ label: String, in app: XCUIApplication) {
