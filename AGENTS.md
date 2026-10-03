@@ -48,8 +48,8 @@ platform) and share one build lock, so don't run them by reflex.
   - Apple code: decide by target membership in `apps/apple/project.yml`, not by folder. Run
     the suite of every platform whose target compiles a changed file or links a changed Swift
     package. iOS and macOS share the `CanadianHam` target; tvOS and visionOS also compile some
-    files from `apps/apple/CanadianHam/` and link `packages/engine-swift`, `content-swift` and
-    `morse-swift`, so changes there usually need their suites too. Code only under
+    files from `apps/apple/CanadianHam/` and link `packages/engine-swift` and
+    `packages/morse-swift`, so changes there usually need their suites too. Code only under
     `apps/apple/Platforms/<platform>/` or a platform's test target needs only that platform.
   - Swift package: `swift test` in the package (or its `xbuild` scheme), plus the suites of
     every app target that links it.
