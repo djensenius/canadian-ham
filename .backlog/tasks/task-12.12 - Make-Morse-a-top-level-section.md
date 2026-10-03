@@ -43,6 +43,8 @@ Fix review round: replace compact iPhone one-way Morse toolbar with a compact ta
 Review round 3: remove compact tab UIKit appearance customization, restore main's ISED draft-attribution wording, preserve compact per-tab navigation state, tighten iPhone tab UI tests, revert unrelated Home ordering, add release-checklist coverage, then run targeted checks followed by final platform suites.
 
 Fix round 4: Step A (plain system TabView) still failed the iOS core accessibility audits, so compact iPhone now uses the native collapsed-sidebar NavigationStack root list. Preserve compact practice/mock in-progress state by hoisting their state above pushed views; keep language controls in content where needed instead of tab-bar chrome.
+
+Fix round 5: audit the compact root list in light/dark, move transient mock-exam UI flags back to local view state, clear cached compact sessions on data revision changes, restore iPhone language pickers/timer/navigation behavior, update tests, and rerun targeted then final affected-platform validation.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
