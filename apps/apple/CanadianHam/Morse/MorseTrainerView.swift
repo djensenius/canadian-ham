@@ -82,7 +82,6 @@ struct MorseTrainerView: View {
             let duration = try driver.play(text: morsePracticeText, settings: normalizedSettings)
             isPlaying = true
             statusMessage = String(localized: "Morse playback started.")
-            AccessibilityNotification.Announcement(statusMessage).post()
             errorMessage = nil
             stopTask?.cancel()
             stopTask = Task { @MainActor in

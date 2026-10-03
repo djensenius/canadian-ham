@@ -345,10 +345,13 @@ function AppContent({
   }, [interfaceLanguage]);
 
   useEffect(() => {
+    if (!initialStoreLoaded) {
+      return;
+    }
     if (route === "morse" && !preferences.morse.enabled) {
       navigate("settings");
     }
-  }, [preferences.morse.enabled, route]);
+  }, [initialStoreLoaded, preferences.morse.enabled, route]);
 
   useEffect(() => {
     applyThemePreference(preferences.theme);
@@ -1786,6 +1789,7 @@ function MorseTrainerPreview({ interfaceLanguage, preferences }: { readonly inte
   const [playing, setPlaying] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const [status, setStatus] = useState("");
+  const [liveStatus, setLiveStatus] = useState("");
   const morsePreferences = preferences.morse;
   const timingProfile = useMemo(() => morseTimingFromPreferences(morsePreferences), [morsePreferences]);
   const sequence = useMemo(() => textToTimedMorse(MORSE_PRACTICE_TEXT, timingProfile), [timingProfile]);
@@ -1821,6 +1825,7 @@ function MorseTrainerPreview({ interfaceLanguage, preferences }: { readonly inte
     setRevealed(false);
     setPlaying(true);
     setStatus(t(interfaceLanguage, "morsePlaybackStarted"));
+    setLiveStatus("");
     if (revealTimerRef.current !== null) {
       window.clearTimeout(revealTimerRef.current);
       revealTimerRef.current = null;
@@ -1838,7 +1843,9 @@ function MorseTrainerPreview({ interfaceLanguage, preferences }: { readonly inte
         setPlaying(false);
         setRevealed(true);
         focusPlayAfterStopRef.current = document.activeElement === stopButtonRef.current;
-        setStatus(t(interfaceLanguage, "morsePlaybackFinished"));
+        const finishedStatus = t(interfaceLanguage, "morsePlaybackFinished");
+        setStatus(finishedStatus);
+        setLiveStatus(finishedStatus);
       }, Math.ceil(handle.durationSeconds * 1000) + 60);
     } catch (error) {
       if (generation !== playbackGenerationRef.current) {
@@ -1846,7 +1853,9 @@ function MorseTrainerPreview({ interfaceLanguage, preferences }: { readonly inte
       }
       setPlaying(false);
       focusPlayAfterStopRef.current = document.activeElement === stopButtonRef.current;
-      setStatus(t(interfaceLanguage, "morsePlaybackError", formatError(error)));
+      const errorStatus = t(interfaceLanguage, "morsePlaybackError", formatError(error));
+      setStatus(errorStatus);
+      setLiveStatus(errorStatus);
     }
   }
 
@@ -1859,7 +1868,9 @@ function MorseTrainerPreview({ interfaceLanguage, preferences }: { readonly inte
       revealTimerRef.current = null;
     }
     setPlaying(false);
-    setStatus(t(interfaceLanguage, "morsePlaybackStopped"));
+    const stoppedStatus = t(interfaceLanguage, "morsePlaybackStopped");
+    setStatus(stoppedStatus);
+    setLiveStatus(stoppedStatus);
   }
 
   return (
@@ -1877,7 +1888,8 @@ function MorseTrainerPreview({ interfaceLanguage, preferences }: { readonly inte
         <button type="button" ref={stopButtonRef} disabled={!playing} onClick={stop} aria-label={t(interfaceLanguage, "morseStopPracticeAria")}>{t(interfaceLanguage, "morseStop")}</button>
       </div>
       <p className="morse-duration">{t(interfaceLanguage, "morseDuration", formattedDuration)}</p>
-      <div aria-live="polite" aria-atomic="true">{status ? <p>{status}</p> : null}</div>
+      <div className="morse-playback-status">{status ? <p>{status}</p> : null}</div>
+      <div className="sr-only morse-live-status" role="status" aria-live="polite" aria-atomic="true">{liveStatus}</div>
       <section className="morse-copy-card" aria-labelledby="morse-copy-title">
         <h3 id="morse-copy-title">{t(interfaceLanguage, "morsePracticeTextTitle")}</h3>
         {revealed ? <p className="morse-copy" lang="en">{sequence.normalizedText}</p> : <p>{t(interfaceLanguage, "morseTextHidden")}</p>}

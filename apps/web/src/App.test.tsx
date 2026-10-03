@@ -161,6 +161,64 @@ class DelayedPreferencesStore extends ProgressStore {
   }
 }
 
+class MockMorseAudioParam {
+  setValueAtTime(): this {
+    return this;
+  }
+
+  linearRampToValueAtTime(): this {
+    return this;
+  }
+}
+
+class MockMorseAudioNode {
+  connect(): AudioNode {
+    return this as unknown as AudioNode;
+  }
+
+  disconnect(): void {}
+}
+
+class MockMorseOscillatorNode extends MockMorseAudioNode {
+  type: OscillatorType = "sine";
+  readonly frequency = new MockMorseAudioParam();
+
+  start(): void {}
+
+  stop(): void {}
+}
+
+class MockMorseGainNode extends MockMorseAudioNode {
+  readonly gain = new MockMorseAudioParam();
+}
+
+function stubMorseAudioContext(): void {
+  class MockMorseAudioContext {
+    readonly currentTime = 0;
+    readonly destination = new MockMorseAudioNode() as unknown as AudioDestinationNode;
+    readonly state: AudioContextState = "running";
+
+    createOscillator(): OscillatorNode {
+      return new MockMorseOscillatorNode() as unknown as OscillatorNode;
+    }
+
+    createGain(): GainNode {
+      return new MockMorseGainNode() as unknown as GainNode;
+    }
+
+    async resume(): Promise<void> {}
+
+    async close(): Promise<void> {}
+  }
+
+  vi.stubGlobal("AudioContext", MockMorseAudioContext);
+  vi.stubGlobal("webkitAudioContext", undefined);
+}
+
+function morsePreferences(enabled = true): WebPreferences {
+  return { ...defaultPreferences, morse: { ...defaultPreferences.morse, enabled } };
+}
+
 function webIndexHtml(): string {
   const moduleUrl = new URL(import.meta.url);
   const modulePath = moduleUrl.protocol === "file:"
@@ -976,6 +1034,46 @@ describe("App accessibility and flows", () => {
     await expectNoAxeViolations(container);
   });
 
+  it("shows Morse start status visually without placing it in the live region", async () => {
+    window.location.hash = "#/morse";
+    const store = createStore("morse-visual-start-status");
+    await store.putPreferences(morsePreferences(true));
+    stubMorseAudioContext();
+    const user = userEvent.setup();
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-visual-start-seed"} />);
+
+    await screen.findByRole("heading", { name: "Morse trainer (preview)" });
+    await user.click(screen.getByRole("button", { name: "Play Morse practice audio" }));
+
+    assert.match(container.querySelector(".morse-playback-status")?.textContent ?? "", /Morse playback started\./);
+    assert.equal(container.querySelector(".morse-live-status")?.textContent, "");
+    await user.click(screen.getByRole("button", { name: "Stop Morse practice audio" }));
+    assert.match(container.querySelector(".morse-live-status")?.textContent ?? "", /Morse playback stopped\./);
+  });
+
+  it("announces Morse finish after playback completes", async () => {
+    window.location.hash = "#/morse";
+    const store = createStore("morse-finished-status");
+    await store.putPreferences(morsePreferences(true));
+    stubMorseAudioContext();
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-finished-seed"} />);
+
+    await screen.findByRole("heading", { name: "Morse trainer (preview)" });
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Play Morse practice audio" }));
+      assert.match(container.querySelector(".morse-playback-status")?.textContent ?? "", /Morse playback started\./);
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(120_000);
+      });
+
+      assert.match(container.querySelector(".morse-live-status")?.textContent ?? "", /Morse playback finished\./);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("redirects #/morse to Settings when the Morse preview is disabled", async () => {
     window.location.hash = "#/morse";
     const store = createStore("morse-disabled-redirect");
@@ -983,6 +1081,22 @@ describe("App accessibility and flows", () => {
 
     await screen.findByRole("heading", { name: "Settings and local data" });
     await waitFor(() => assert.equal(window.location.hash, "#/settings"));
+  });
+
+  it("waits for stored Morse preferences before redirecting #/morse", async () => {
+    window.location.hash = "#/morse";
+    const store = new DelayedInitialPreferencesStore("morse-stored-enabled-redirect");
+    stores.push(store);
+    await store.putPreferences(morsePreferences(true));
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-stored-enabled-seed"} />);
+
+    await store.initialPreferencesReadStarted;
+    assert.equal(window.location.hash, "#/morse");
+    store.releaseInitialPreferences();
+    await store.initialPreferencesReturned;
+
+    await screen.findByRole("heading", { name: "Morse trainer (preview)" });
+    assert.equal(window.location.hash, "#/morse");
   });
 
   it("lets Morse number inputs accept multi-digit drafts before committing", async () => {

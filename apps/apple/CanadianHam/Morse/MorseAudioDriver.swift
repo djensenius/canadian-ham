@@ -142,7 +142,12 @@ final class MorseAudioDriver {
         engine.attach(node)
         let format = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: max(1, outputFormat.channelCount))
         engine.connect(node, to: [AVAudioConnectionPoint(node: engine.mainMixerNode, bus: 0)], fromBus: 0, format: format)
-        try engine.start()
+        do {
+            try engine.start()
+        } catch {
+            cleanupStoppedEngine()
+            throw error
+        }
         return sequence.totalDurationSeconds
     }
 
@@ -154,8 +159,8 @@ final class MorseAudioDriver {
         }
         let rampDuration = renderState.requestStopRamp() ?? 0.005
         let stopDelay = MorseAudioStopTiming.stopDelay(rampDuration: rampDuration)
-        let workItem = DispatchWorkItem { [weak self] in
-            self?.stopImmediately()
+        let workItem = DispatchWorkItem {
+            self.stopImmediately()
         }
         pendingStopWorkItem = workItem
         DispatchQueue.main.asyncAfter(deadline: .now() + stopDelay, execute: workItem)
