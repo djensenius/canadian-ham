@@ -43,4 +43,6 @@ Why: the owner tried the preview and doesn't want Morse buried behind a Settings
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented Morse as an always-visible top-level destination on web and Apple platforms; removed web/Apple preview-toggle UI and setting gates; moved web/iOS Morse settings into the Morse section; added Morse placeholders and Quick listen; updated tests and localization. Validation so far: web focused tests, pnpm test, web build, apple text-source check, apple l10n, macOS xbuild passed; iOS/tvOS/visionOS xbuild runs timed out before completion after many tests passed.
+
+Validation gap: full iOS xbuild suite was rerun after fixing home-action clipping, but it timed out at 1200s while still executing UI tests; earlier failing clipping audits were fixed and the Morse UI test passed. tvOS and visionOS xbuild suites also timed out during UI tests after unit tests and several UI tests passed. AC4 remains unchecked pending full platform suite completion.
 <!-- SECTION:NOTES:END -->
