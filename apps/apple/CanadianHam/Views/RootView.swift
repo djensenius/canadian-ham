@@ -184,7 +184,6 @@ struct RootView: View {
         .scrollContentBackground(.hidden)
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Canadian Ham")
-        .toolbar { languageToolbarItem(progressStore: progressStore) }
         .accessibilityIdentifier("compact-root-list")
     }
 
@@ -194,25 +193,22 @@ struct RootView: View {
         case .home:
             compactHomeView(bank: bank, progressStore: progressStore)
                 .background(DesignTokens.Colors.paper)
-                .toolbar { languageToolbarItem(progressStore: progressStore) }
         case .learn:
             compactLearnView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
                 .background(DesignTokens.Colors.paper)
-                .toolbar { languageToolbarItem(progressStore: progressStore) }
         case .practice:
-            compactPracticeView(bank: bank, progressStore: progressStore)
-                .background(DesignTokens.Colors.paper)
-                .toolbar { languageToolbarItem(progressStore: progressStore) }
+            compactPracticeContainer(progressStore: progressStore) {
+                compactPracticeView(bank: bank, progressStore: progressStore)
+                    .background(DesignTokens.Colors.paper)
+            }
         case .morse:
             MorseTrainerView(settings: $morseSettings) { nextSettings in
                 morseSettings = nextSettings
             }
             .background(DesignTokens.Colors.paper)
-            .toolbar { languageToolbarItem(progressStore: progressStore) }
         case .settings:
             compactSettingsView(bank: bank, progressStore: progressStore)
                 .background(DesignTokens.Colors.paper)
-                .toolbar { languageToolbarItem(progressStore: progressStore) }
         }
     }
 
@@ -241,6 +237,17 @@ struct RootView: View {
         }
     }
 
+    private func compactPracticeContainer<Content: View>(progressStore: ProgressStoreService, @ViewBuilder content: () -> Content) -> some View {
+        VStack(spacing: 0) {
+            questionLanguagePicker(progressStore: progressStore)
+                .padding(.horizontal, DesignTokens.Spacing.lg)
+                .padding(.top, DesignTokens.Spacing.md)
+                .padding(.bottom, DesignTokens.Spacing.sm)
+            content()
+        }
+        .background(DesignTokens.Colors.paper)
+    }
+
     @ViewBuilder
     private func compactPracticeView(bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
         PracticeHubView(bank: bank, progressStore: progressStore, language: language, revision: combinedDataRevision) { scope in
@@ -253,14 +260,16 @@ struct RootView: View {
     private func compactPracticeDestination(_ route: CompactPracticeRoute, bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
         switch route {
         case .practice(let scope):
-            PracticeSessionView(
-                bank: bank,
-                progressStore: progressStore,
-                scope: scope,
-                language: $language,
-                state: compactPracticeSessionStates.state(for: scope)
-            ) {
-                recordDataChanged()
+            compactPracticeContainer(progressStore: progressStore) {
+                PracticeSessionView(
+                    bank: bank,
+                    progressStore: progressStore,
+                    scope: scope,
+                    language: $language,
+                    state: compactPracticeSessionStates.state(for: scope)
+                ) {
+                    recordDataChanged()
+                }
             }
         case .mockExam:
             MockExamView(bank: bank, progressStore: progressStore, language: language, state: compactMockExamState) {
@@ -678,28 +687,32 @@ struct RootView: View {
 
     private func languageToolbarItem(progressStore: ProgressStoreService) -> some ToolbarContent {
         ToolbarItem(placement: .automatic) {
-            Picker("Question language", selection: Binding(
-                get: { language },
-                set: { next in
-                    language = next
-                    var preferences = progressStore.preferences
-                    preferences.language = next
-                    try? progressStore.updatePreferences(preferences)
-                }
-            )) {
-                ForEach(BankLanguage.allCases) { language in
-                    switch language {
-                    case .english:
-                        Text(localized(language.displayName, language: .english)).tag(language) // l10n: content(en)
-                    case .french:
-                        Text(localized(language.displayName, language: .french)).tag(language) // l10n: content(fr)
-                    }
+            questionLanguagePicker(progressStore: progressStore)
+        }
+    }
+
+    private func questionLanguagePicker(progressStore: ProgressStoreService) -> some View {
+        Picker("Question language", selection: Binding(
+            get: { language },
+            set: { next in
+                language = next
+                var preferences = progressStore.preferences
+                preferences.language = next
+                try? progressStore.updatePreferences(preferences)
+            }
+        )) {
+            ForEach(BankLanguage.allCases) { language in
+                switch language {
+                case .english:
+                    Text(localized(language.displayName, language: .english)).tag(language) // l10n: content(en)
+                case .french:
+                    Text(localized(language.displayName, language: .french)).tag(language) // l10n: content(fr)
                 }
             }
-            .pickerStyle(.segmented)
-            .accessibilityLabel("Question language")
-            .accessibilityIdentifier("question-language-picker")
         }
+        .pickerStyle(.segmented)
+        .accessibilityLabel("Question language")
+        .accessibilityIdentifier("question-language-picker")
     }
 
     private func categoryAccessibilityLabel(_ category: BankCategory) -> AttributedString {

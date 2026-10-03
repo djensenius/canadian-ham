@@ -14,6 +14,9 @@ struct HomeView: View {
     let openMockExam: () -> Void
     let openMorse: () -> Void
 
+#if os(iOS)
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+#endif
     @State private var summary: HomeSummary?
     @State private var errorMessage: String?
 
@@ -40,14 +43,7 @@ struct HomeView: View {
                     Text("Study with the bundled ISED Basic 2025-07-15 question bank on iPhone, iPad, and Mac. Progress stays on this device unless you export it.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
-                    ViewThatFits(in: .horizontal) {
-                        HStack {
-                            homeActionButtons
-                        }
-                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                            homeActionButtons
-                        }
-                    }
+                    homeActionLayout
                 }
                 .paperCard()
 
@@ -79,6 +75,32 @@ struct HomeView: View {
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Home")
         .task(id: revision) { loadSummary() }
+    }
+
+    @ViewBuilder
+    private var homeActionLayout: some View {
+        if usesCompactHomeActions {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                homeActionButtons
+            }
+        } else {
+            ViewThatFits(in: .horizontal) {
+                HStack {
+                    homeActionButtons
+                }
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                    homeActionButtons
+                }
+            }
+        }
+    }
+
+    private var usesCompactHomeActions: Bool {
+#if os(iOS)
+        horizontalSizeClass == .compact
+#else
+        false
+#endif
     }
 
     @ViewBuilder
