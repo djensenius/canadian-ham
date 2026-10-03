@@ -1,10 +1,11 @@
 ---
 id: TASK-12.5
 title: Duolingo-style Morse course (Koch method) with local progress
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@pi-worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-03 12:04'
+updated_date: '2026-10-03 23:34'
 labels:
   - web
   - apple
@@ -31,3 +32,9 @@ Why: the owner wants formal, Duolingo-like training where you really learn Morse
 - [ ] #4 Per-character mastery and course progress are stored locally (IndexedDB on web, the Apple progress store) and included in progress export/import with schema and shared TS/Swift fixture updates
 - [ ] #5 Fully accessible: keyboard and VoiceOver/screen-reader operable, announcements don't talk over audio, Reduce Motion respected, French UI; web axe and Apple light/dark audits pass on web, iOS/iPadOS, macOS (unit) , tvOS and visionOS (tvOS/visionOS may offer a simplified lesson flow)
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inspect existing Morse web/Apple entry points, settings/audio/progress stores, schemas and shared fixture/package patterns.\n2. Add a shared Morse course fixture (40 Koch lessons/units) and TS/Swift loaders with parity and unlock/weakest-character tests.\n3. Implement local course progress persistence and export/import schema compatibility on web and Apple.\n4. Add accessible course path, lesson and review flows using existing Morse audio/settings; wire from the Morse home with minimal touches.\n5. Add targeted web, Swift and UI tests, run required checks, update task notes/ACs/final summary, and commit logical changes.
+<!-- SECTION:PLAN:END -->
