@@ -488,14 +488,7 @@ struct PracticeSessionView: View {
     }
 
     private var sessionReloadKey: String {
-        "\(scope.title)/\(dataRevision)/\(localDataReplacementRevision)"
-    }
-
-    private var reloadsQuestionsAfterProgressChanges: Bool {
-        switch scope {
-        case .weak, .due: true
-        case .all, .category, .subsection: false
-        }
+        "\(scope.title)/\(localDataReplacementRevision)"
     }
 
     private func questionView(_ item: PracticeQuestionItem) -> some View {
@@ -571,8 +564,7 @@ struct PracticeSessionView: View {
 
     private func loadSessionIfNeeded() {
         let localDataWasReplaced = state.loadedLocalDataReplacementRevision != localDataReplacementRevision
-        let scopedQuestionListChanged = reloadsQuestionsAfterProgressChanges && state.loadedDataRevision != dataRevision
-        guard state.loadedScope != scope || state.items.isEmpty || localDataWasReplaced || scopedQuestionListChanged else { return }
+        guard state.loadedScope != scope || state.items.isEmpty || localDataWasReplaced else { return }
         loadSession()
     }
 
@@ -733,6 +725,32 @@ final class MockExamState: ObservableObject {
         errorMessage = nil
         timerStatus = String(localized: "Timer off")
         loadedLocalDataReplacementRevision = localDataReplacementRevision
+    }
+
+    func refreshTimer(now: Date = Date(), timerEnabled: Bool) {
+        guard !generatedItems.isEmpty, result == nil else { return }
+        guard timerEnabled else {
+            timerRunning = false
+            timerRunStartedAt = nil
+            timerStatus = String(localized: "Timer off")
+            return
+        }
+        guard timerRunning else {
+            timerRunStartedAt = nil
+            timerStatus = String(localized: "Timer paused, \(secondsElapsed) seconds elapsed")
+            return
+        }
+        guard let timerRunStartedAt else {
+            self.timerRunStartedAt = now
+            timerStatus = String(localized: "Timer running, \(secondsElapsed) seconds elapsed")
+            return
+        }
+        let additionalSeconds = max(0, Int(now.timeIntervalSince(timerRunStartedAt)))
+        if additionalSeconds > 0 {
+            secondsElapsed += additionalSeconds
+            self.timerRunStartedAt = timerRunStartedAt.addingTimeInterval(TimeInterval(additionalSeconds))
+        }
+        timerStatus = String(localized: "Timer running, \(secondsElapsed) seconds elapsed")
     }
 }
 
@@ -913,11 +931,9 @@ struct MockExamView: View {
                 .disabled(isSubmitting)
                 .accessibilityIdentifier("submit-mock-exam-button")
 
-            if usesNavigatorSheet {
-                Button("End exam", role: .destructive) { confirmingEndExam = true }
-                    .buttonStyle(AccessibleSecondaryButtonStyle())
-                    .accessibilityIdentifier("end-mock-exam-button")
-            }
+            Button("End exam", role: .destructive) { confirmingEndExam = true }
+                .buttonStyle(AccessibleSecondaryButtonStyle())
+                .accessibilityIdentifier("end-mock-exam-button")
         }
     }
 
@@ -1222,29 +1238,7 @@ struct MockExamView: View {
     }
 
     private func refreshForCurrentTimerState(now: Date = Date()) {
-        guard !state.generatedItems.isEmpty, state.result == nil else { return }
-        guard progressStore.preferences.examTimerEnabled else {
-            state.timerRunning = false
-            state.timerRunStartedAt = nil
-            state.timerStatus = String(localized: "Timer off")
-            return
-        }
-        guard state.timerRunning else {
-            state.timerRunStartedAt = nil
-            state.timerStatus = String(localized: "Timer paused, \(state.secondsElapsed) seconds elapsed")
-            return
-        }
-        guard let timerRunStartedAt = state.timerRunStartedAt else {
-            state.timerRunStartedAt = now
-            state.timerStatus = String(localized: "Timer running, \(state.secondsElapsed) seconds elapsed")
-            return
-        }
-        let additionalSeconds = max(0, Int(now.timeIntervalSince(timerRunStartedAt)))
-        if additionalSeconds > 0 {
-            state.secondsElapsed += additionalSeconds
-            state.timerRunStartedAt = now
-        }
-        state.timerStatus = String(localized: "Timer running, \(state.secondsElapsed) seconds elapsed")
+        state.refreshTimer(now: now, timerEnabled: progressStore.preferences.examTimerEnabled)
     }
 
     private func toggleTimer() {

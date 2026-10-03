@@ -184,9 +184,7 @@ struct RootView: View {
     }
 
     private func compactRootButton(_ title: LocalizedStringKey, systemImage: String, destination: CompactSection) -> some View {
-        Button {
-            compactNavigationPath.append(destination)
-        } label: {
+        NavigationLink(value: destination) {
             HStack(spacing: DesignTokens.Spacing.md) {
                 Image(systemName: systemImage)
                     .font(DesignTokens.FontScale.body)
@@ -620,6 +618,7 @@ struct RootView: View {
             }
 #if DEBUG
             applyPreferenceLaunchArguments()
+            applyPracticeProgressFixtureLaunchArguments()
 #endif
             progressStoreError = nil
             language = progressStore?.preferences.language ?? .english
@@ -649,6 +648,22 @@ struct RootView: View {
         }
         if changed {
             try? progressStore.updatePreferences(preferences)
+        }
+    }
+
+    private func applyPracticeProgressFixtureLaunchArguments() {
+        guard AppLaunchArguments.value(after: "-CanadianHamSeedPracticeProgressFixture") == "weak-due",
+              let progressStore,
+              let firstQuestion = bank?.question(id: "B-001-002-001"),
+              let secondQuestion = bank?.question(id: "B-001-002-002")
+        else { return }
+        do {
+            let now = try AppleStudyEngine.canonicalNow()
+            let first = try AppleStudyEngine.applyPracticeAnswer(progress: [], question: firstQuestion, selectedSourceIndex: 1, now: now)
+            let seeded = try AppleStudyEngine.applyPracticeAnswer(progress: first, question: secondQuestion, selectedSourceIndex: 1, now: now)
+            try progressStore.saveQuestionProgress(seeded)
+        } catch {
+            assertionFailure("Unable to seed weak/due practice fixture: \(error)")
         }
     }
 #endif

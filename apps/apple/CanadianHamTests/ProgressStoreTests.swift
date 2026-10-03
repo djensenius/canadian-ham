@@ -6,6 +6,33 @@ import XCTest
 
 @MainActor
 final class ProgressStoreTests: XCTestCase {
+    func testMockExamTimerRefreshPreservesFractionalRemainder() throws {
+        let state = MockExamState()
+        state.generatedItems = [GeneratedExamItem(
+            position: 1,
+            questionId: "B-001-002-002",
+            subsectionId: "B-001-002",
+            categoryId: "B-001",
+            choicePermutation: [0, 1, 2, 3]
+        )]
+        let startedAt = Date(timeIntervalSince1970: 1_000)
+        state.secondsElapsed = 4
+        state.timerRunning = true
+        state.timerRunStartedAt = startedAt
+
+        state.refreshTimer(now: startedAt.addingTimeInterval(1.75), timerEnabled: true)
+
+        XCTAssertEqual(state.secondsElapsed, 5)
+        var timerRunStartedAt = try XCTUnwrap(state.timerRunStartedAt)
+        XCTAssertEqual(timerRunStartedAt.timeIntervalSince1970, startedAt.addingTimeInterval(1).timeIntervalSince1970, accuracy: 0.000_001)
+
+        state.refreshTimer(now: startedAt.addingTimeInterval(2.25), timerEnabled: true)
+
+        XCTAssertEqual(state.secondsElapsed, 6)
+        timerRunStartedAt = try XCTUnwrap(state.timerRunStartedAt)
+        XCTAssertEqual(timerRunStartedAt.timeIntervalSince1970, startedAt.addingTimeInterval(2).timeIntervalSince1970, accuracy: 0.000_001)
+    }
+
     func testSharedAppleSettingsModelAppliesLivePreferenceUpdates() throws {
         let store = try CanadianHam.ProgressStoreService.inMemoryForTests()
         let appSettings = CanadianHam.AppSettingsModel()
