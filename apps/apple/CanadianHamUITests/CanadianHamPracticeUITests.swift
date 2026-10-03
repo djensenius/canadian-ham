@@ -49,20 +49,18 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try performAudit(on: app, context: "French practice question")
     }
 
-    func testMorsePreviewToggleIsOffByDefaultAndShowsScreenWhenEnabled() throws {
+    func testMorseSectionIsTopLevelAndShowsSettings() throws {
         XCUIDevice.shared.appearance = .light
-        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "settings"])
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse"])
         defer { app.terminate() }
 
-        XCTAssertTrue(app.staticTexts["Settings"].firstMatch.waitForExistence(timeout: 10))
-        let toggle = app.switches["morse-preview-toggle"].firstMatch
-        XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Morse preview toggle should exist in Settings")
-        XCTAssertEqual(toggle.value as? String, "0", "Morse trainer preview should be off by default")
-        toggle.tap()
-
-        let morseButton = app.buttons["Morse trainer (preview)"].firstMatch
-        XCTAssertTrue(morseButton.waitForExistence(timeout: 5), "Morse screen entry should appear after enabling the preview")
-        scrollAndTap("Morse trainer (preview)", in: app)
+        XCTAssertTrue(app.staticTexts["Morse"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Preview"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Learn (course)"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Copy practice"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Exam"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Morse settings"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Hidden until playback finishes."].firstMatch.waitForExistence(timeout: 5))
     }
 
@@ -516,13 +514,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app = launchApp(arguments: ["-CanadianHamInitialScreen", "settings"])
         XCTAssertTrue(app.staticTexts["Settings"].waitForExistence(timeout: 10))
         try performAudit(on: app, context: "\(appearance.rawValue) settings")
-        let toggle = app.switches["morse-preview-toggle"].firstMatch
-        XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Morse preview toggle should exist before auditing Morse")
-        if toggle.value as? String == "0" {
-            toggle.tap()
-        }
-        scrollAndTap("Morse trainer (preview)", in: app)
-        XCTAssertTrue(app.staticTexts["Hidden until playback finishes."].firstMatch.waitForExistence(timeout: 5))
+        app.terminate()
+
+        app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse"])
+        XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
         try performAudit(on: app, context: "\(appearance.rawValue) morse")
         app.terminate()
 

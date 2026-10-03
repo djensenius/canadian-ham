@@ -13,6 +13,7 @@ private enum SidebarSelection: Hashable {
 }
 
 struct RootView: View {
+    @ObservedObject private var appSettings: AppSettingsModel
 #if os(iOS)
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 #endif
@@ -29,6 +30,10 @@ struct RootView: View {
     @State private var dataRevision = 0
     @State private var navigationPath: [LearnRoute] = []
     @State private var didApplyLaunchNavigation = false
+
+    init(appSettings: AppSettingsModel = AppSettingsModel()) {
+        self.appSettings = appSettings
+    }
 
     var body: some View {
         Group {
@@ -69,6 +74,14 @@ struct RootView: View {
             loadBankIfNeeded()
             loadContentIfNeeded()
             reloadStoreIfNeeded()
+        }
+        .onReceive(appSettings.$morseSettings) { next in
+            guard next != morseSettings else { return }
+            morseSettings = next
+        }
+        .onChange(of: morseSettings) { _, next in
+            guard appSettings.morseSettings != next else { return }
+            appSettings.morseSettings = next
         }
     }
 
@@ -149,14 +162,14 @@ struct RootView: View {
                     SidebarButton(selection: .mockExam, current: selection) {
                         Label("Mock exam", systemImage: "doc.text.magnifyingglass")
                     } action: { selection = .mockExam }
-                    if morseSettings.isEnabled {
-                        SidebarButton(selection: .morse, current: selection) {
-                            Label("Morse trainer (preview)", systemImage: "waveform")
-                        } action: { selection = .morse }
-                    }
+                    SidebarButton(selection: .morse, current: selection) {
+                        Label("Morse", systemImage: "waveform")
+                    } action: { selection = .morse }
+#if !os(macOS)
                     SidebarButton(selection: .settings, current: selection) {
                         Label("Settings", systemImage: "gearshape")
                     } action: { selection = .settings }
+#endif
                     SidebarButton(selection: .about, current: selection) {
                         Label("About", systemImage: "info.circle")
                     } action: { selection = .about }
@@ -220,7 +233,7 @@ struct RootView: View {
     private func detailView(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
         switch selection {
         case .home:
-            HomeView(bank: bank, progressStore: progressStore, language: language, revision: dataRevision, morseEnabled: morseSettings.isEnabled) { scope in
+            HomeView(bank: bank, progressStore: progressStore, language: language, revision: dataRevision, morseEnabled: true) { scope in
                 selection = .practice(scope)
             } openMockExam: {
                 selection = .mockExam
@@ -255,14 +268,8 @@ struct RootView: View {
                 dataRevision += 1
             }
         case .morse:
-            if morseSettings.isEnabled {
-                MorseTrainerView(settings: $morseSettings) { nextSettings in
-                    morseSettings = nextSettings
-                }
-            } else {
-                SettingsView(bank: bank, progressStore: progressStore, morseSettings: $morseSettings, openMorse: { selection = .morse }) {
-                    dataRevision += 1
-                }
+            MorseTrainerView(settings: $morseSettings) { nextSettings in
+                morseSettings = nextSettings
             }
         case .settings:
             SettingsView(bank: bank, progressStore: progressStore, morseSettings: $morseSettings, openMorse: { selection = .morse }) {
@@ -293,6 +300,7 @@ struct RootView: View {
             } else {
                 bank = loaded
             }
+            appSettings.bank = bank
         } catch {
             bankLoadError = localizedErrorMessage(String(localized: "Unable to load question bank: \("")"), detail: error)
         }
@@ -305,6 +313,7 @@ struct RootView: View {
             contentLibrary = loaded
             if let bank {
                 self.bank = bank.withKnownLessonIds(Set(loaded.lessons.map(\.id)))
+                appSettings.bank = self.bank
             }
         } catch {
             contentLoadError = localizedErrorMessage(String(localized: "Unable to load lesson content: \("")"), detail: error)
@@ -329,6 +338,7 @@ struct RootView: View {
             }
 #endif
             progressStore = try ProgressStoreService.open()
+            appSettings.progressStore = progressStore
 #if DEBUG
             applyPreferenceLaunchArguments()
 #endif
@@ -336,6 +346,7 @@ struct RootView: View {
             language = progressStore?.preferences.language ?? .english
         } catch {
             progressStore = nil
+            appSettings.progressStore = nil
             progressStoreError = localizedErrorMessage(String(localized: "Unable to open the local progress store: \("")"), detail: error)
         }
     }
@@ -382,8 +393,13 @@ struct RootView: View {
             case "learn": selection = .learn
             case "practice": selection = .practiceHub
             case "mock": selection = .mockExam
-            case "morse": selection = morseSettings.isEnabled ? .morse : .settings
-            case "settings": selection = .settings
+            case "morse": selection = .morse
+            case "settings":
+#if os(macOS)
+                selection = .home
+#else
+                selection = .settings
+#endif
             case "about": selection = .about
             default: break
             }

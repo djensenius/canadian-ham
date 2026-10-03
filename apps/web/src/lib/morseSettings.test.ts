@@ -4,12 +4,17 @@ import { describe, it } from "vitest";
 import { morseISEDExamPreset, morseTimingFromPreferences, normalizeMorsePreferences } from "./morseSettings";
 
 describe("Morse trainer settings", () => {
-  it("defaults the preview off and clamps local settings", () => {
+  it("drops the retired preview toggle flag and clamps local settings", () => {
     const settings = normalizeMorsePreferences({ enabled: true, toneHz: 1200, characterWpm: 26, effectiveWpm: 30, volume: 2, timingProfile: "general" });
 
-    assert.equal(normalizeMorsePreferences().enabled, false);
+    assert.deepEqual(normalizeMorsePreferences(), {
+      toneHz: 650,
+      characterWpm: 15,
+      effectiveWpm: 5,
+      timingProfile: "isedParis",
+      volume: 0.6,
+    });
     assert.deepEqual(settings, {
-      enabled: true,
       toneHz: 900,
       characterWpm: 25,
       effectiveWpm: 25,

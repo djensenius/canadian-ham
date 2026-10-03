@@ -17,6 +17,15 @@ struct HomeView: View {
     @State private var summary: HomeSummary?
     @State private var errorMessage: String?
 
+    @ViewBuilder
+    private var homeActionButtons: some View {
+        tokenButton("Start practice") { startPractice(.all) }
+        tokenButton("Mock exam") { openMockExam() }
+        if morseEnabled {
+            tokenButton("Morse") { openMorse() }
+        }
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
@@ -31,11 +40,12 @@ struct HomeView: View {
                     Text("Study with the bundled ISED Basic 2025-07-15 question bank on iPhone, iPad, and Mac. Progress stays on this device unless you export it.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
-                    HStack {
-                        tokenButton("Start practice") { startPractice(.all) }
-                        tokenButton("Mock exam") { openMockExam() }
-                        if morseEnabled {
-                            tokenButton("Morse trainer (preview)") { openMorse() }
+                    ViewThatFits(in: .horizontal) {
+                        HStack {
+                            homeActionButtons
+                        }
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                            homeActionButtons
                         }
                     }
                 }
@@ -1207,11 +1217,6 @@ struct SettingsView: View {
                             }
                         }
                     }
-                }
-                .paperCard()
-
-                MorseSettingsSection(settings: $morseSettings, openMorse: openMorse) { _ in
-                    onDataChanged()
                 }
                 .paperCard()
 

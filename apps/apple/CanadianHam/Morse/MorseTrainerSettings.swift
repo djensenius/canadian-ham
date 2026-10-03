@@ -18,7 +18,6 @@ struct MorseTrainerSettings: Codable, Equatable, Sendable {
         }
     }
 
-    var isEnabled: Bool
     var toneHz: Int
     var characterWpm: Int
     var effectiveWpm: Int
@@ -26,7 +25,6 @@ struct MorseTrainerSettings: Codable, Equatable, Sendable {
     var volume: Double
 
     static let `default` = MorseTrainerSettings(
-        isEnabled: false,
         toneHz: 650,
         characterWpm: 15,
         effectiveWpm: 5,
@@ -39,7 +37,6 @@ struct MorseTrainerSettings: Codable, Equatable, Sendable {
     func normalized() -> MorseTrainerSettings {
         let normalizedCharacterWpm = Self.clamp(characterWpm, min: 12, max: 25)
         return MorseTrainerSettings(
-            isEnabled: isEnabled,
             toneHz: Self.clamp(toneHz, min: 400, max: 900),
             characterWpm: normalizedCharacterWpm,
             effectiveWpm: Self.clamp(effectiveWpm, min: 5, max: normalizedCharacterWpm),

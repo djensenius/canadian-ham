@@ -192,7 +192,6 @@ private struct CanadianHamTVRootView: View {
                 bank: bank,
                 language: $language,
                 evidenceFocus: launchOptions.evidenceFocus,
-                morseSettings: $morseSettings,
                 onSelectCategory: { category in
                     if selectedCategoryID != category.id {
                         practiceSession.reset(for: category.id)
@@ -243,7 +242,6 @@ private struct TVCategoryGridView: View {
     let bank: QuestionBank
     @Binding var language: BankLanguage
     let evidenceFocus: TVEvidenceFocus?
-    @Binding var morseSettings: MorseTrainerSettings
     let onSelectCategory: (BankCategory) -> Void
     let onMorse: () -> Void
     let onAbout: () -> Void
@@ -262,23 +260,9 @@ private struct TVCategoryGridView: View {
                     layout: .inline
                 )
 
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    Toggle("Enable Morse trainer preview", isOn: Binding(
-                        get: { morseSettings.isEnabled },
-                        set: { enabled in
-                            var next = morseSettings
-                            next.isEnabled = enabled
-                            morseSettings = next.normalized()
-                            morseSettings.save()
-                        }
-                    )) // l10n: localized
-                    .font(DesignTokens.FontScale.bodyLarge.weight(.semibold))
-                    if morseSettings.isEnabled {
-                        Button("Morse trainer (preview)", action: onMorse) // l10n: localized
-                            .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
-                            .buttonStyle(TVSecondaryButtonStyle())
-                    }
-                }
+                Button("Morse", action: onMorse) // l10n: localized
+                    .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                    .buttonStyle(TVSecondaryButtonStyle())
 
                 Text("Practice categories")
                     .font(DesignTokens.FontScale.display.weight(.bold))
@@ -1034,11 +1018,16 @@ private struct TVMorseView: View {
             Button("Categories", action: onCategories) // l10n: localized
                 .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
                 .buttonStyle(TVSecondaryButtonStyle())
-            Text("Morse trainer (preview)") // l10n: localized
-                .font(DesignTokens.FontScale.display.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .accessibilityAddTraits(.isHeader)
-            Text("Play a short practice group. The text is revealed only after playback.") // l10n: localized
+            HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.md) {
+                Text("Morse") // l10n: localized
+                    .font(DesignTokens.FontScale.display.weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .accessibilityAddTraits(.isHeader)
+                Text("Preview") // l10n: localized
+                    .font(DesignTokens.FontScale.body.weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.inkMuted)
+            }
+            Text("Quick listen plays a short practice group. The text is revealed only after playback.") // l10n: localized
                 .font(DesignTokens.FontScale.bodyLarge)
                 .foregroundStyle(DesignTokens.Colors.ink)
             HStack(spacing: DesignTokens.Spacing.xl) {

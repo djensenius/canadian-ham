@@ -23,6 +23,7 @@ private struct VisionLaunchOptions {
     let initialLanguage: BankLanguage
 
     init(arguments: [String] = ProcessInfo.processInfo.arguments) {
+#if DEBUG
         initialScreen = VisionScreen(rawValue: AppLaunchArguments.value(after: "-CanadianHamPlatformInitialScreen", in: arguments) ?? "categories") ?? .categories
         initialCategoryID = AppLaunchArguments.value(after: "-CanadianHamPlatformCategoryID", in: arguments) ?? "B-001"
         practiceQuestionID = AppLaunchArguments.value(after: "-CanadianHamPlatformQuestionID", in: arguments)
@@ -33,6 +34,15 @@ private struct VisionLaunchOptions {
         default: colorScheme = nil
         }
         initialLanguage = BankLanguage(rawValue: AppLaunchArguments.value(after: "-CanadianHamLanguage", in: arguments) ?? "en") ?? .english
+#else
+        _ = arguments
+        initialScreen = .categories
+        initialCategoryID = "B-001"
+        practiceQuestionID = nil
+        answeredSourceIndex = nil
+        colorScheme = nil
+        initialLanguage = .english
+#endif
     }
 }
 
@@ -92,7 +102,6 @@ private struct CanadianHamVisionRootView: View {
             VisionCategoryGridView(
                 bank: bank,
                 language: language,
-                morseSettings: $morseSettings,
                 onSelectCategory: { category in
                     if selectedCategoryID != category.id {
                         practiceSession.reset(for: category.id)
@@ -161,7 +170,6 @@ private struct VisionLanguageOrnament: View {
 private struct VisionCategoryGridView: View {
     let bank: QuestionBank
     let language: BankLanguage
-    @Binding var morseSettings: MorseTrainerSettings
     let onSelectCategory: (BankCategory) -> Void
     let onMorse: () -> Void
     let onAbout: () -> Void
@@ -182,26 +190,14 @@ private struct VisionCategoryGridView: View {
                             .foregroundStyle(DesignTokens.Colors.inkMuted)
                     }
                     Spacer()
+                    Button("Morse", action: onMorse) // l10n: localized
+                        .buttonStyle(.borderedProminent)
+                        .font(DesignTokens.FontScale.body.weight(.semibold))
+                        .accessibilityLabel(Text("Morse")) // l10n: localized
                     Button("About", action: onAbout)
                         .buttonStyle(.bordered)
                         .font(DesignTokens.FontScale.body.weight(.semibold))
                         .accessibilityLabel(Text("About Canadian Ham")) // l10n: localized
-                }
-
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    Toggle("Enable Morse trainer preview", isOn: Binding(
-                        get: { morseSettings.isEnabled },
-                        set: { enabled in
-                            var next = morseSettings
-                            next.isEnabled = enabled
-                            morseSettings = next.normalized()
-                            morseSettings.save()
-                        }
-                    )) // l10n: localized
-                    if morseSettings.isEnabled {
-                        Button("Morse trainer (preview)", action: onMorse) // l10n: localized
-                            .buttonStyle(.borderedProminent)
-                    }
                 }
 
                 Text("Practice categories")
@@ -278,11 +274,16 @@ private struct VisionMorseView: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
             Button("Categories", action: onCategories) // l10n: localized
                 .buttonStyle(.bordered)
-            Text("Morse trainer (preview)") // l10n: localized
-                .font(DesignTokens.FontScale.display.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .accessibilityAddTraits(.isHeader)
-            Text("Play a short practice group. The text is revealed only after playback.") // l10n: localized
+            HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.md) {
+                Text("Morse") // l10n: localized
+                    .font(DesignTokens.FontScale.display.weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .accessibilityAddTraits(.isHeader)
+                Text("Preview") // l10n: localized
+                    .font(DesignTokens.FontScale.body.weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.inkMuted)
+            }
+            Text("Quick listen plays a short practice group. The text is revealed only after playback.") // l10n: localized
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
             HStack {

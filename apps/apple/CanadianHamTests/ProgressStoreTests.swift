@@ -4,6 +4,20 @@ import XCTest
 
 @MainActor
 final class ProgressStoreTests: XCTestCase {
+    func testSharedAppleSettingsModelAppliesLivePreferenceUpdates() throws {
+        let store = try ProgressStoreService.inMemoryForTests()
+
+        var preferences = store.preferences
+        preferences.language = .french
+        preferences.theme = .dark
+        preferences.practiceMode = .reviewLater
+        try store.updatePreferences(preferences)
+
+        XCTAssertEqual(store.preferences.language, .french)
+        XCTAssertEqual(store.preferences.theme, .dark)
+        XCTAssertEqual(store.preferences.practiceMode, .reviewLater)
+    }
+
     func testProgressStoreRoundTripExportImportReset() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let store = try ProgressStoreService.inMemoryForTests()
