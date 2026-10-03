@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-03 12:03'
-updated_date: '2026-10-03 16:50'
+updated_date: '2026-10-03 16:57'
 labels:
   - apple
   - macos
@@ -36,6 +36,8 @@ Why: the owner wants the Mac app to feel native: app settings belong in the stan
 1. Add a macOS SwiftUI Settings scene wired to shared progress and Morse settings models.\n2. Move macOS settings out of the in-app sidebar while keeping iPhone/iPad in-app settings.\n3. Add model coverage and run macOS/iOS validation.
 
 Fix review round: make macOS settings/main windows observe shared progress-store changes live through AppSettingsModel revisions, surface data-action errors, verify sandbox import/export entitlement, and add model/root synchronization tests.
+
+Review round 3: keep macOS settings scope unchanged, restore shared legal wording, add sandbox export/import release-checklist coverage with owner manual verification note, and close only after required final validation passes.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
