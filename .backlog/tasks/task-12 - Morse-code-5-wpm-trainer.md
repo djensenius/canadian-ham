@@ -4,7 +4,7 @@ title: Morse code 5 wpm trainer
 status: To Do
 assignee: []
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 01:12'
+updated_date: '2026-10-03 12:03'
 labels:
   - web
   - apple
@@ -38,4 +38,6 @@ Owner decisions (2026-10-02, owner accepted all recommendations in docs/proposal
 5. Haptics: only where supportsHaptics is true (in practice iPhone); no haptic UI on tvOS or visionOS.
 
 2026-10-02: implementation subtasks created from the approved plan (see Subtasks).
+
+Owner decisions (2026-10-02, after trying the preview): (1) Morse becomes its own top-level section on every platform instead of a Settings toggle; this replaces 'off by default until v1 Basic ships'. (2) On macOS, settings move to the native Settings window. (3) Expand learning into a Duolingo-style course (task-12.5) and add listen-and-type copy practice alongside the exam (task-12.6).
 <!-- SECTION:NOTES:END -->
