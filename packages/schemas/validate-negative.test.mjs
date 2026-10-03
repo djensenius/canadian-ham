@@ -4,7 +4,7 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { parseLessonFrontMatter, validateDataAgainstSchema } from "./validate.mjs";
+import { parseLessonFrontMatter, selectOneOfBranchByConstDiscriminator, validateDataAgainstSchema } from "./validate.mjs";
 
 const schemasDir = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(schemasDir, "../..");
@@ -218,3 +218,18 @@ function readInvalidFixture(fixture) {
 function readProjectJson(relativePath) {
   return JSON.parse(fs.readFileSync(path.join(projectRoot, relativePath), "utf8"));
 }
+
+test("oneOf discriminator shortcut applies only to a required const property in every branch", () => {
+  const a = { type: "object", required: ["kind"], properties: { kind: { const: "a" }, n: { type: "number" } } };
+  const b = { type: "object", required: ["kind"], properties: { kind: { const: "b" }, n: { type: "string" } } };
+  assert.equal(selectOneOfBranchByConstDiscriminator([a, b], { kind: "b", n: "x" }), b);
+
+  // Not required in every branch: no shortcut, so plain oneOf evaluation applies.
+  const looseA = { type: "object", properties: { kind: { const: "a" } } };
+  const looseB = { type: "object", required: ["kind"], properties: { kind: { const: "b" } } };
+  assert.equal(selectOneOfBranchByConstDiscriminator([looseA, looseB], { kind: "a" }), null);
+
+  // Const in only one branch: no shortcut.
+  const noConst = { type: "object", required: ["kind"], properties: { kind: { type: "string" } } };
+  assert.equal(selectOneOfBranchByConstDiscriminator([a, noConst], { kind: "a" }), null);
+});

@@ -215,7 +215,17 @@ function validateAgainstSchema(schema, data, context) {
   if (Array.isArray(schema.oneOf)) {
     const selectedBranch = selectOneOfBranchByConstDiscriminator(schema.oneOf, data);
     if (selectedBranch !== null) {
-      errors.push(...validateAgainstSchema(selectedBranch, data, context));
+      // Report the selected branch's own errors (clearer than a generic oneOf message), but keep
+      // oneOf's "exactly one" rule: no other branch may also validate.
+      const selectedErrors = validateAgainstSchema(selectedBranch, data, context);
+      errors.push(...selectedErrors);
+      const otherPassing = schema.oneOf
+        .filter((branch) => branch !== selectedBranch)
+        .filter((branch) => validateAgainstSchema(branch, data, context).length === 0).length;
+      if (otherPassing > 0) {
+        const passing = otherPassing + (selectedErrors.length === 0 ? 1 : 0);
+        errors.push(`${context.path}: expected exactly one oneOf branch to match, got ${passing}`);
+      }
     } else {
       const branchResults = schema.oneOf.map((branch) => validateAgainstSchema(branch, data, context));
       const passing = branchResults.filter((branchErrors) => branchErrors.length === 0).length;
@@ -330,22 +340,28 @@ function validateAgainstSchema(schema, data, context) {
   return errors;
 }
 
-function selectOneOfBranchByConstDiscriminator(branches, data) {
-  if (!isObject(data)) {
+// Returns the single branch selected by a true discriminator: a property that every branch
+// requires and pins with `const`. Anything looser falls back to plain oneOf evaluation.
+export function selectOneOfBranchByConstDiscriminator(branches, data) {
+  if (!isObject(data) || branches.length === 0 || !branches.every((branch) => isObject(branch) && isObject(branch.properties))) {
     return null;
   }
-  const matchingBranches = branches.filter((branch) => {
-    if (!isObject(branch) || !isObject(branch.properties)) {
-      return false;
+  const discriminatorKeys = Object.keys(branches[0].properties).filter((key) => branches.every((branch) => (
+    Array.isArray(branch.required)
+    && branch.required.includes(key)
+    && isObject(branch.properties[key])
+    && Object.hasOwn(branch.properties[key], "const")
+  )));
+  for (const key of discriminatorKeys) {
+    if (!Object.hasOwn(data, key)) {
+      continue;
     }
-    return Object.entries(branch.properties).some(([key, propertySchema]) => (
-      isObject(propertySchema)
-      && Object.hasOwn(propertySchema, "const")
-      && Object.hasOwn(data, key)
-      && deepEqual(data[key], propertySchema.const)
-    ));
-  });
-  return matchingBranches.length === 1 ? matchingBranches[0] : null;
+    const matchingBranches = branches.filter((branch) => deepEqual(data[key], branch.properties[key].const));
+    if (matchingBranches.length === 1) {
+      return matchingBranches[0];
+    }
+  }
+  return null;
 }
 
 function validateSchemaKeywords(schema, schemaFile, schemaPath) {
