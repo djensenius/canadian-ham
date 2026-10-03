@@ -26,14 +26,43 @@
   code the PR didn't change become follow-up Backlog tasks. Merge when the latest Copilot review has no
   unresolved high-severity findings and CI is green.
 - Either the owner or the coordinator merges the pull request. After merging: update the main checkout,
-  build and run tests there before starting any dependent worker, then remove the task worktree with
-  `git worktree remove`.
+  run the quick checks there (`pnpm typecheck`, `pnpm test`, and the checks for what merged; full Apple
+  suites only if the merge combined Apple changes from more than one branch) before starting any
+  dependent worker, then remove the task worktree with `git worktree remove`.
 
 ## Build and test rules (all agents)
 - Never call `xcodebuild` directly. Always use `xbuild` with the same arguments;
   it serializes builds across all agents and cleans up simulators.
 - Prefer one simulator destination per run; do not boot extra simulators.
 - If a build is waiting on the lock, wait. Do not kill other builds.
+
+## Testing policy (all agents)
+Test what changed, once, at the right level. Full Apple suites are slow (20-40 min per
+platform) and share one build lock, so don't run them by reflex.
+- **While iterating:** run only what you touched: the relevant web/package tests, Apple unit
+  tests, and the specific UI test classes or methods with `-only-testing:` (one platform).
+- **Once per PR, before review:** run the full suite only for each platform whose code changed:
+  - web or TS package changes: `pnpm typecheck`, `pnpm test`, plus the checks for what changed
+    (`pnpm build:web` and the URL/CSP audit for web; `pnpm check:schemas` and `pnpm import:check`
+    for content and schemas).
+  - Apple code: decide by target membership in `apps/apple/project.yml`, not by folder. Run
+    the suite of every platform whose target compiles a changed file or links a changed Swift
+    package. iOS and macOS share the `CanadianHam` target; tvOS and visionOS also compile some
+    files from `apps/apple/CanadianHam/` and link `packages/engine-swift` and
+    `packages/morse-swift`, so changes there usually need their suites too. Code only under
+    `apps/apple/Platforms/<platform>/` or a platform's test target needs only that platform.
+  - Swift package: `swift test` in the package (or its `xbuild` scheme), plus the suites of
+    every app target that links it.
+  - String catalogue or SwiftUI text: `pnpm check:apple-l10n` and
+    `node scripts/check-apple-text-sources.ts`, plus the affected platforms.
+- **No Apple suites** for web-only, docs-only or Backlog-only changes, and never rerun suites
+  after a commit that only changes `.backlog/` or docs.
+- **Fix rounds:** rerun the failing or changed tests with `-only-testing:`, then one final full
+  run of the affected platforms only.
+- **Release candidate (task-1.6):** the full four-platform run with every accessibility audit,
+  plus the manual checks in `docs/release/release-checklist.md`.
+- Record per-test results for the full runs you did in the task notes and PR body, and say
+  which platforms you skipped and why.
 
 ## Project notes
 - Monorepo layout planned as `content/`, `apps/web/`, `apps/apple/`, `packages/`, `fixtures/`, `docs/`, and `tasks/`.
