@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-03 12:03'
-updated_date: '2026-10-03 13:30'
+updated_date: '2026-10-03 15:21'
 labels:
   - apple
   - macos
@@ -25,9 +25,9 @@ Why: the owner wants the Mac app to feel native: app settings belong in the stan
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 macOS uses a SwiftUI Settings scene (Command-comma) with tabs for General (language, appearance), Data (export, import, reset) and Morse (all Morse settings); the in-app Settings page/sidebar entry is removed on macOS only
-- [ ] #2 All settings behave identically to iOS (same storage, live updates to open windows), with keyboard navigation and VoiceOver labels; Full Keyboard Access works
-- [ ] #3 macOS unit tests cover the shared settings model; iOS/iPadOS in-app Settings is unchanged and its UI tests pass; the macOS and iOS xbuild suites pass
+- [x] #1 macOS uses a SwiftUI Settings scene (Command-comma) with tabs for General (language, appearance), Data (export, import, reset) and Morse (all Morse settings); the in-app Settings page/sidebar entry is removed on macOS only
+- [x] #2 All settings behave identically to iOS (same storage, live updates to open windows), with keyboard navigation and VoiceOver labels; Full Keyboard Access works
+- [x] #3 macOS unit tests cover the shared settings model; iOS/iPadOS in-app Settings is unchanged and its UI tests pass; the macOS and iOS xbuild suites pass
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -42,4 +42,12 @@ Why: the owner wants the Mac app to feel native: app settings belong in the stan
 Implemented a native macOS Settings scene with General, Data, and Morse tabs backed by the shared ProgressStoreService and MorseTrainerSettings state; removed the macOS in-app Settings sidebar entry.
 
 Validation gap: macOS xbuild suite passed and shared settings-model unit coverage was added. Full iOS suite timed out before completion, so AC3 remains unchecked pending a completed iOS run.
+
+Final validation (2026-10-03): iOS `CanadianHam` full suite passed after confirming the compact iPhone Morse top-level navigation (`CanadianHamTests`: 30 tests, 0 failures; `CanadianHamUITests`: 30 tests, 0 failures; log `/tmp/task-12.12-ios-final.log`). Prior branch validation already recorded the macOS xbuild suite passing and shared settings-model unit coverage. iOS in-app Settings remained covered by the full iOS UI suite.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+macOS settings now live in a native SwiftUI Settings scene with General, Data, and Morse tabs backed by shared models; the macOS in-app Settings sidebar entry is removed while iOS/iPadOS in-app Settings remains covered. Verified by prior macOS xbuild validation and the full iOS xbuild suite passing on 2026-10-03.
+<!-- SECTION:FINAL_SUMMARY:END -->
