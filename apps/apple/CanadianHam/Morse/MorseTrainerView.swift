@@ -16,6 +16,7 @@ struct MorseTrainerView: View {
     @State private var stopTask: Task<Void, Never>?
 
     private var normalizedSettings: MorseTrainerSettings { settings.normalized() }
+    private var playbackTimingProfile: MorseTimingProfile? { try? normalizedSettings.timingProfileValue() }
 
     var body: some View {
         ScrollView {
@@ -31,6 +32,30 @@ struct MorseTrainerView: View {
                     Text("Play a short practice group. The text is revealed only after playback so you can copy by ear first.") // l10n: localized
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
+                    if let playbackTimingProfile {
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                            HStack {
+                                Text("Tone") // l10n: localized
+                                Spacer()
+                                Text(verbatim: "\(normalizedSettings.toneHz) Hz") // l10n: verbatim
+                            }
+                            .accessibilityElement(children: .combine)
+                            HStack {
+                                Text("Character speed") // l10n: localized
+                                Spacer()
+                                Text(formattedWpm(playbackTimingProfile.characterWpm)) // l10n: localized
+                            }
+                            .accessibilityElement(children: .combine)
+                            HStack {
+                                Text("Effective speed") // l10n: localized
+                                Spacer()
+                                Text(formattedWpm(playbackTimingProfile.effectiveWpm)) // l10n: localized
+                            }
+                            .accessibilityElement(children: .combine)
+                        }
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                    }
                     HStack {
                         morseTokenButton("Play") { play() }
                             .disabled(isPlaying)
@@ -140,6 +165,20 @@ struct MorseSettingsSection: View {
     let openMorse: () -> Void
     let onChange: (MorseTrainerSettings) -> Void
 
+    private var displayedCharacterWpm: Double {
+        let normalized = settings.normalized()
+        guard normalized.timingProfile != .general,
+              let profile = try? normalized.timingProfileValue() else { return Double(normalized.characterWpm) }
+        return profile.characterWpm
+    }
+
+    private var displayedEffectiveWpm: Double {
+        let normalized = settings.normalized()
+        guard normalized.timingProfile != .general,
+              let profile = try? normalized.timingProfileValue() else { return Double(normalized.effectiveWpm) }
+        return profile.effectiveWpm
+    }
+
     private var fixedTimingDescription: String? {
         let normalized = settings.normalized()
         guard normalized.timingProfile != .general,
@@ -171,14 +210,14 @@ struct MorseSettingsSection: View {
             Stepper(value: binding(\.characterWpm), in: 12...25, step: 1) {
                 HStack {
                     Text("Character speed") // l10n: localized
-                    Text(String.localizedStringWithFormat(String(localized: "%lld wpm"), Int64(settings.normalized().characterWpm))) // l10n: localized
+                    Text(formattedWpm(displayedCharacterWpm)) // l10n: localized
                 }
             }
             .disabled(settings.normalized().timingProfile != .general)
             Stepper(value: binding(\.effectiveWpm), in: 5...settings.normalized().characterWpm, step: 1) {
                 HStack {
                     Text("Effective speed") // l10n: localized
-                    Text(String.localizedStringWithFormat(String(localized: "%lld wpm"), Int64(settings.normalized().effectiveWpm))) // l10n: localized
+                    Text(formattedWpm(displayedEffectiveWpm)) // l10n: localized
                 }
             }
             .disabled(settings.normalized().timingProfile != .general)
@@ -217,6 +256,9 @@ struct MorseSettingsSection: View {
 
     private func update(_ next: MorseTrainerSettings) {
         let normalized = next.normalized()
+        if normalized == settings.normalized() {
+            return
+        }
         settings = normalized
         normalized.save()
         onChange(normalized)

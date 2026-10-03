@@ -42,6 +42,11 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(schedule.amplitude(at: 55, stopRampStartFrame: 50), 0, accuracy: 0.000_001)
     }
 
+    func testMorseStopDelayDrainsFadeBeforeStoppingEngine() throws {
+        XCTAssertEqual(MorseAudioStopTiming.stopDelay(rampDuration: 0.005), 0.1, accuracy: 0.000_001)
+        XCTAssertEqual(MorseAudioStopTiming.stopDelay(rampDuration: 0.12), 0.12, accuracy: 0.000_001)
+    }
+
     func testFixedTimingProfilesUseEngineValues() throws {
         let ised = try MorseTrainerSettings(
             isEnabled: true,

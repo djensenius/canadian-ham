@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { textToTimedMorse } from "@canadian-ham/morse-engine";
-import { describe, it } from "vitest";
+import { describe, it, vi } from "vitest";
 
 import { MORSE_AUDIO_RAMP_SECONDS, WebMorsePlayer, scheduleMorseSequence, type WebMorseAudioContextLike } from "./morseAudio";
 import { normalizeMorsePreferences } from "./morseSettings";
@@ -43,13 +43,19 @@ class MockAudioContext implements WebMorseAudioContextLike {
   destination = {} as AudioNode;
   state: AudioContextState = "suspended";
   readonly oscillator = new MockOscillatorNode();
-  readonly gain = new MockGainNode();
+  readonly gains: MockGainNode[] = [];
   resumeCount = 0;
   closeCount = 0;
   private resumePromise: Promise<void> | null = null;
   private resumeResolve: (() => void) | null = null;
+  get toneGain(): MockGainNode { return this.gains[0]!; }
+  get outputGain(): MockGainNode { return this.gains[1]!; }
   createOscillator(): OscillatorNode { return this.oscillator as unknown as OscillatorNode; }
-  createGain(): GainNode { return this.gain as unknown as GainNode; }
+  createGain(): GainNode {
+    const gain = new MockGainNode();
+    this.gains.push(gain);
+    return gain as unknown as GainNode;
+  }
   delayResume(): void {
     this.resumePromise = new Promise((resolve) => {
       this.resumeResolve = resolve;
@@ -109,23 +115,40 @@ describe("WebMorsePlayer", () => {
     assert.equal(handle.startedAtSeconds, 10.02);
     assert.deepEqual(context.oscillator.starts, [10.02]);
     assert.equal(context.oscillator.frequency.events[0]?.value, 700);
-    assert.deepEqual(context.gain.gain.events.slice(1, 5), [
+    assert.deepEqual(context.toneGain.gain.events.slice(1, 5), [
       { type: "set", value: 0, time: 10.02 },
       { type: "linear", value: 0.4, time: 10.02 + MORSE_AUDIO_RAMP_SECONDS },
       { type: "set", value: 0.4, time: 10.02 + 0.1 - MORSE_AUDIO_RAMP_SECONDS },
       { type: "linear", value: 0, time: 10.12 },
     ]);
+    assert.deepEqual(context.outputGain.gain.events, [{ type: "set", value: 1, time: 10 }]);
   });
 
-  it("ramps gain down before manual stop", () => {
+  it("ramps the unscheduled output gain down before manual stop", () => {
     const context = new MockAudioContext();
     context.state = "running";
     const handle = scheduleMorseSequence(context, textToTimedMorse("E"), normalizeMorsePreferences({ volume: 0.5 }));
 
     handle.stop();
 
-    assert.deepEqual(context.gain.gain.events.slice(-2), [
-      { type: "hold", time: 10 },
+    assert.deepEqual(context.outputGain.gain.events.slice(-2), [
+      { type: "set", value: 1, time: 10 },
+      { type: "linear", value: 0, time: 10 + MORSE_AUDIO_RAMP_SECONDS },
+    ]);
+    assert.deepEqual(context.toneGain.gain.events.filter((event) => event.type === "hold" || event.type === "cancel"), []);
+    assert.equal(context.oscillator.stops.at(-1), 10 + MORSE_AUDIO_RAMP_SECONDS);
+  });
+
+  it("does not require cancelAndHoldAtTime when stopping", () => {
+    const context = new MockAudioContext();
+    context.state = "running";
+    const handle = scheduleMorseSequence(context, textToTimedMorse("E"), normalizeMorsePreferences({ volume: 0.5 }));
+    Object.defineProperty(context.outputGain.gain, "cancelAndHoldAtTime", { value: undefined, configurable: true });
+
+    handle.stop();
+
+    assert.deepEqual(context.outputGain.gain.events.slice(-2), [
+      { type: "set", value: 1, time: 10 },
       { type: "linear", value: 0, time: 10 + MORSE_AUDIO_RAMP_SECONDS },
     ]);
     assert.equal(context.oscillator.stops.at(-1), 10 + MORSE_AUDIO_RAMP_SECONDS);
@@ -146,12 +169,22 @@ describe("WebMorsePlayer", () => {
     assert.deepEqual(context.oscillator.stops, []);
   });
 
-  it("closes the AudioContext when the route leaves", async () => {
-    const context = new MockAudioContext();
-    const player = new WebMorsePlayer(() => context);
-    await player.playText("E", normalizeMorsePreferences());
-    await player.close();
+  it("closes the AudioContext after the stop fade when the route leaves", async () => {
+    vi.useFakeTimers();
+    try {
+      const context = new MockAudioContext();
+      const player = new WebMorsePlayer(() => context);
+      await player.playText("E", normalizeMorsePreferences());
+      const closePromise = player.close();
 
-    assert.equal(context.closeCount, 1);
+      await vi.advanceTimersByTimeAsync(Math.ceil(MORSE_AUDIO_RAMP_SECONDS * 1000) - 1);
+      assert.equal(context.closeCount, 0);
+      await vi.advanceTimersByTimeAsync(1);
+      await closePromise;
+
+      assert.equal(context.closeCount, 1);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

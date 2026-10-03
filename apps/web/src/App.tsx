@@ -1901,6 +1901,34 @@ function morseDraftsFromPreferences(preferences: WebPreferences["morse"]): Morse
   };
 }
 
+function morseNumberInputValue(value: number): string {
+  return Number.isInteger(value) ? String(value) : value.toFixed(1);
+}
+
+function morsePreferencesEqual(left: WebPreferences["morse"], right: WebPreferences["morse"]): boolean {
+  return left.enabled === right.enabled &&
+    left.toneHz === right.toneHz &&
+    left.characterWpm === right.characterWpm &&
+    left.effectiveWpm === right.effectiveWpm &&
+    left.timingProfile === right.timingProfile &&
+    left.volume === right.volume;
+}
+
+function isValidMorseNumberDraft(field: keyof MorseNumberDrafts, value: number, preferences: WebPreferences["morse"]): boolean {
+  if (!Number.isFinite(value) || !Number.isInteger(value)) {
+    return false;
+  }
+  const normalized = normalizeMorsePreferences(preferences);
+  switch (field) {
+    case "toneHz":
+      return value >= 400 && value <= 900;
+    case "characterWpm":
+      return value >= 12 && value <= 25;
+    case "effectiveWpm":
+      return value >= 5 && value <= normalized.characterWpm;
+  }
+}
+
 interface SettingsProps {
   readonly interfaceLanguage: InterfaceLanguage;
   readonly store: ProgressStore;
@@ -1927,6 +1955,8 @@ function Settings({ interfaceLanguage, store, now, preferences, statusMessage, o
   const localeTag = interfaceLanguageTag(interfaceLanguage);
   const fixedCharacterWpm = useMemo(() => formatLocaleNumber(morseTimingProfile.characterWpm, localeTag, 1), [localeTag, morseTimingProfile.characterWpm]);
   const fixedEffectiveWpm = useMemo(() => formatLocaleNumber(morseTimingProfile.effectiveWpm, localeTag, 1), [localeTag, morseTimingProfile.effectiveWpm]);
+  const characterWpmInputValue = morseSpeedControlsDisabled ? morseNumberInputValue(morseTimingProfile.characterWpm) : morseNumberDrafts.characterWpm;
+  const effectiveWpmInputValue = morseSpeedControlsDisabled ? morseNumberInputValue(morseTimingProfile.effectiveWpm) : morseNumberDrafts.effectiveWpm;
 
   useEffect(() => {
     setMessage(statusMessage);
@@ -2037,7 +2067,11 @@ function Settings({ interfaceLanguage, store, now, preferences, statusMessage, o
 
   async function saveMorsePreference(patch: Partial<WebPreferences["morse"]>): Promise<void> {
     try {
+      const currentMorse = normalizeMorsePreferences(preferences.morse);
       const nextMorse = normalizeMorsePreferences({ ...preferences.morse, ...patch });
+      if (morsePreferencesEqual(currentMorse, nextMorse)) {
+        return;
+      }
       const savedLatestRequest = await onSetPreferences({ morse: nextMorse });
       if (!savedLatestRequest) {
         return;
@@ -2061,7 +2095,12 @@ function Settings({ interfaceLanguage, store, now, preferences, statusMessage, o
   }
 
   async function commitMorseNumberDraft(field: keyof MorseNumberDrafts): Promise<void> {
-    const numericValue = Number(morseNumberDrafts[field]);
+    const draft = morseNumberDrafts[field].trim();
+    const numericValue = Number(draft);
+    if (draft === "" || !isValidMorseNumberDraft(field, numericValue, preferences.morse)) {
+      setMorseNumberDrafts(morseDraftsFromPreferences(preferences.morse));
+      return;
+    }
     const patch = { [field]: numericValue } as Partial<WebPreferences["morse"]>;
     const nextMorse = normalizeMorsePreferences({ ...preferences.morse, ...patch });
     setMorseNumberDrafts(morseDraftsFromPreferences(nextMorse));
@@ -2070,7 +2109,12 @@ function Settings({ interfaceLanguage, store, now, preferences, statusMessage, o
 
   async function applyMorsePreset(): Promise<void> {
     try {
-      const savedLatestRequest = await onSetPreferences({ morse: morseISEDExamPreset(preferences.morse) });
+      const currentMorse = normalizeMorsePreferences(preferences.morse);
+      const nextMorse = morseISEDExamPreset(preferences.morse);
+      if (morsePreferencesEqual(currentMorse, nextMorse)) {
+        return;
+      }
+      const savedLatestRequest = await onSetPreferences({ morse: nextMorse });
       if (!savedLatestRequest) {
         return;
       }
@@ -2103,8 +2147,8 @@ function Settings({ interfaceLanguage, store, now, preferences, statusMessage, o
         <label className="stacked-control"><span>{t(interfaceLanguage, "morsePreviewToggle")}</span><input type="checkbox" checked={preferences.morse.enabled} onChange={(event) => void saveMorsePreference({ enabled: event.currentTarget.checked })} /></label>
         <div className="settings-grid">
           <label className="stacked-control"><span>{t(interfaceLanguage, "morseTone")}</span><input type="number" min="400" max="900" step="1" value={morseNumberDrafts.toneHz} onChange={(event) => updateMorseNumberDraft("toneHz", event.currentTarget.value)} onBlur={() => void commitMorseNumberDraft("toneHz")} onKeyDown={(event) => handleMorseNumberKeyDown(event, "toneHz")} /></label>
-          <label className="stacked-control"><span>{t(interfaceLanguage, "morseCharacterSpeed")}</span><input type="number" min="12" max="25" step="1" value={morseNumberDrafts.characterWpm} disabled={morseSpeedControlsDisabled} onChange={(event) => updateMorseNumberDraft("characterWpm", event.currentTarget.value)} onBlur={() => void commitMorseNumberDraft("characterWpm")} onKeyDown={(event) => handleMorseNumberKeyDown(event, "characterWpm")} /></label>
-          <label className="stacked-control"><span>{t(interfaceLanguage, "morseEffectiveSpeed")}</span><input type="number" min="5" max={preferences.morse.characterWpm} step="1" value={morseNumberDrafts.effectiveWpm} disabled={morseSpeedControlsDisabled} onChange={(event) => updateMorseNumberDraft("effectiveWpm", event.currentTarget.value)} onBlur={() => void commitMorseNumberDraft("effectiveWpm")} onKeyDown={(event) => handleMorseNumberKeyDown(event, "effectiveWpm")} /></label>
+          <label className="stacked-control"><span>{t(interfaceLanguage, "morseCharacterSpeed")}</span><input type="number" min="12" max="25" step="1" value={characterWpmInputValue} disabled={morseSpeedControlsDisabled} onChange={(event) => updateMorseNumberDraft("characterWpm", event.currentTarget.value)} onBlur={() => void commitMorseNumberDraft("characterWpm")} onKeyDown={(event) => handleMorseNumberKeyDown(event, "characterWpm")} /></label>
+          <label className="stacked-control"><span>{t(interfaceLanguage, "morseEffectiveSpeed")}</span><input type="number" min="5" max={morseSpeedControlsDisabled ? characterWpmInputValue : preferences.morse.characterWpm} step="1" value={effectiveWpmInputValue} disabled={morseSpeedControlsDisabled} onChange={(event) => updateMorseNumberDraft("effectiveWpm", event.currentTarget.value)} onBlur={() => void commitMorseNumberDraft("effectiveWpm")} onKeyDown={(event) => handleMorseNumberKeyDown(event, "effectiveWpm")} /></label>
           <label className="stacked-control"><span>{t(interfaceLanguage, "morseVolume")}</span><input type="range" min="0" max="1" step="0.05" value={preferences.morse.volume} onChange={(event) => void saveMorsePreference({ volume: event.currentTarget.valueAsNumber })} /></label>
           <label className="stacked-control"><span>{t(interfaceLanguage, "morseTimingProfile")}</span><select value={preferences.morse.timingProfile} onChange={(event) => void saveMorsePreference({ timingProfile: event.currentTarget.value as WebMorseTimingProfileName })}>
             <option value="isedParis">{t(interfaceLanguage, "morseTimingISEDParis")}</option>

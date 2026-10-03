@@ -125,6 +125,15 @@ class FailingPreferencesStore extends ProgressStore {
   }
 }
 
+class CountingPreferencesStore extends ProgressStore {
+  putPreferencesCount = 0;
+
+  override async putPreferences(preferences: WebPreferences): Promise<void> {
+    this.putPreferencesCount += 1;
+    await super.putPreferences(preferences);
+  }
+}
+
 class DelayedPreferencesStore extends ProgressStore {
   readonly pendingPreferenceSaves: Array<{
     readonly preferences: WebPreferences;
@@ -991,6 +1000,8 @@ describe("App accessibility and flows", () => {
     await user.keyboard("{Enter}");
     await waitFor(async () => assert.equal((await store.getPreferences()).morse.toneHz, 700));
 
+    assert.equal((screen.getByLabelText("Character speed") as HTMLInputElement).value, "12");
+    assert.equal((screen.getByLabelText("Effective speed") as HTMLInputElement).value, "5");
     await user.selectOptions(screen.getByLabelText("Timing profile"), "general");
     await waitFor(async () => assert.equal((await store.getPreferences()).morse.timingProfile, "general"));
     const characterSpeed = screen.getByLabelText("Character speed") as HTMLInputElement;
@@ -999,6 +1010,35 @@ describe("App accessibility and flows", () => {
     assert.equal(characterSpeed.value, "20");
     await user.keyboard("{Enter}");
     await waitFor(async () => assert.equal((await store.getPreferences()).morse.characterWpm, 20));
+  });
+
+  it("reverts empty or invalid Morse number drafts and does not save unchanged values", async () => {
+    window.location.hash = "#/settings";
+    const store = new CountingPreferencesStore("morse-invalid-drafts");
+    stores.push(store);
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-invalid-seed"} />);
+
+    await screen.findByRole("heading", { name: "Settings and local data" });
+    const tone = screen.getByLabelText("Tone") as HTMLInputElement;
+    await user.clear(tone);
+    fireEvent.blur(tone);
+    assert.equal(tone.value, "650");
+    assert.equal((await store.getPreferences()).morse.toneHz, 650);
+    assert.equal(store.putPreferencesCount, 0);
+
+    await user.clear(tone);
+    await user.type(tone, "999");
+    fireEvent.blur(tone);
+    assert.equal(tone.value, "650");
+    assert.equal((await store.getPreferences()).morse.toneHz, 650);
+    assert.equal(store.putPreferencesCount, 0);
+
+    await user.clear(tone);
+    await user.type(tone, "650");
+    await user.keyboard("{Enter}");
+    assert.equal(store.putPreferencesCount, 0);
+    assert.equal(screen.queryByText("Morse settings saved."), null);
   });
 
   it("renders Settings theme controls and no axe violations", async () => {

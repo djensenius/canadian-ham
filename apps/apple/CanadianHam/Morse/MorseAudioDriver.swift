@@ -2,6 +2,14 @@ import AVFoundation
 import CanadianHamMorseEngine
 import Foundation
 
+private let morseMinimumStopDrainSeconds: TimeInterval = 0.1
+
+struct MorseAudioStopTiming: Equatable, Sendable {
+    static func stopDelay(rampDuration: TimeInterval) -> TimeInterval {
+        max(morseMinimumStopDrainSeconds, rampDuration)
+    }
+}
+
 struct MorseAudioSegment: Equatable, Sendable {
     let startFrame: AVAudioFramePosition
     let endFrame: AVAudioFramePosition
@@ -47,6 +55,9 @@ struct MorseAudioSchedule: Equatable, Sendable {
 }
 
 private final class MorseAudioRenderState {
+    // NSLock is intentionally kept instead of os_unfair_lock: this shared render state is tiny,
+    // cross-platform XCTest coverage can exercise it without platform-specific wrappers, and the
+    // lock only guards constant-time reads/writes around AVAudioSourceNode callbacks.
     private let lock = NSLock()
     private var schedule: MorseAudioSchedule?
     private var currentFrame: AVAudioFramePosition = 0
@@ -142,11 +153,12 @@ final class MorseAudioDriver {
             return
         }
         let rampDuration = renderState.requestStopRamp() ?? 0.005
+        let stopDelay = MorseAudioStopTiming.stopDelay(rampDuration: rampDuration)
         let workItem = DispatchWorkItem { [weak self] in
             self?.stopImmediately()
         }
         pendingStopWorkItem = workItem
-        DispatchQueue.main.asyncAfter(deadline: .now() + rampDuration, execute: workItem)
+        DispatchQueue.main.asyncAfter(deadline: .now() + stopDelay, execute: workItem)
     }
 
     private func stopImmediately() {

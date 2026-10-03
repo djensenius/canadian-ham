@@ -62,9 +62,13 @@ export class WebMorsePlayer {
   }
 
   async close(): Promise<void> {
+    const hadActivePlayback = this.#active !== null;
     this.stop();
     const context = this.#context;
     this.#context = null;
+    if (hadActivePlayback) {
+      await sleep(Math.ceil(MORSE_AUDIO_RAMP_SECONDS * 1000));
+    }
     await context?.close?.();
   }
 }
@@ -72,16 +76,19 @@ export class WebMorsePlayer {
 export function scheduleMorseSequence(context: WebMorseAudioContextLike, sequence: TimedMorseSequence, preferences: WebMorsePreferences): MorsePlaybackHandle {
   const normalizedPreferences = normalizeMorsePreferences(preferences);
   const oscillator = context.createOscillator();
-  const gain = context.createGain();
+  const toneGain = context.createGain();
+  const outputGain = context.createGain();
   const startedAtSeconds = context.currentTime + MORSE_AUDIO_START_DELAY_SECONDS;
   const volume = normalizedPreferences.volume;
 
   oscillator.type = "sine";
   oscillator.frequency.setValueAtTime(normalizedPreferences.toneHz, context.currentTime);
-  gain.gain.setValueAtTime(0, context.currentTime);
+  toneGain.gain.setValueAtTime(0, context.currentTime);
+  outputGain.gain.setValueAtTime(1, context.currentTime);
 
-  oscillator.connect(gain);
-  gain.connect(context.destination);
+  oscillator.connect(toneGain);
+  toneGain.connect(outputGain);
+  outputGain.connect(context.destination);
 
   for (const symbol of sequence.symbols) {
     if (symbol.kind !== "dot" && symbol.kind !== "dash") {
@@ -90,10 +97,10 @@ export function scheduleMorseSequence(context: WebMorseAudioContextLike, sequenc
     const start = startedAtSeconds + symbol.startSeconds;
     const end = start + symbol.durationSeconds;
     const ramp = Math.min(MORSE_AUDIO_RAMP_SECONDS, symbol.durationSeconds / 2);
-    gain.gain.setValueAtTime(0, start);
-    gain.gain.linearRampToValueAtTime(volume, start + ramp);
-    gain.gain.setValueAtTime(volume, Math.max(start + ramp, end - ramp));
-    gain.gain.linearRampToValueAtTime(0, end);
+    toneGain.gain.setValueAtTime(0, start);
+    toneGain.gain.linearRampToValueAtTime(volume, start + ramp);
+    toneGain.gain.setValueAtTime(volume, Math.max(start + ramp, end - ramp));
+    toneGain.gain.linearRampToValueAtTime(0, end);
   }
 
   oscillator.start(startedAtSeconds);
@@ -111,19 +118,16 @@ export function scheduleMorseSequence(context: WebMorseAudioContextLike, sequenc
       const stopStartedAt = context.currentTime;
       const stopAt = stopStartedAt + MORSE_AUDIO_RAMP_SECONDS;
       try {
-        gain.gain.cancelAndHoldAtTime?.(stopStartedAt);
-        if (gain.gain.cancelAndHoldAtTime === undefined) {
-          gain.gain.cancelScheduledValues(stopStartedAt);
-          gain.gain.setValueAtTime(0, stopStartedAt);
-        }
-        gain.gain.linearRampToValueAtTime(0, stopAt);
+        outputGain.gain.setValueAtTime(1, stopStartedAt);
+        outputGain.gain.linearRampToValueAtTime(0, stopAt);
         oscillator.stop(stopAt);
       } catch {
         // Some Web Audio implementations throw if stop() has already been scheduled or called.
       }
       globalThis.setTimeout(() => {
         oscillator.disconnect();
-        gain.disconnect();
+        toneGain.disconnect();
+        outputGain.disconnect();
       }, Math.ceil(MORSE_AUDIO_RAMP_SECONDS * 1000) + 20);
     },
   };
@@ -135,6 +139,10 @@ function defaultAudioContextFactory(): WebMorseAudioContextLike {
     throw new Error("Web Audio is not available in this browser.");
   }
   return new AudioContextCtor();
+}
+
+function sleep(milliseconds: number): Promise<void> {
+  return new Promise((resolve) => globalThis.setTimeout(resolve, milliseconds));
 }
 
 declare global {
