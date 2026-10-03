@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-03 12:03'
-updated_date: '2026-10-03 22:36'
+updated_date: '2026-10-03 22:47'
 labels:
   - web
   - apple
@@ -47,6 +47,8 @@ Fix round 4: Step A (plain system TabView) still failed the iOS core accessibili
 Fix round 5: audit the compact root list in light/dark, move transient mock-exam UI flags back to local view state, clear cached compact sessions on data revision changes, restore iPhone language pickers/timer/navigation behavior, update tests, and rerun targeted then final affected-platform validation.
 
 Fix round 6: scope practice session reloads to data-replacement revisions/scope changes, expose End exam on regular widths, preserve timer fractions, restore catalogue newline, improve compact Back/navigation accessibility, add targeted tests, then rerun iOS/macOS full suites and l10n/text checks.
+
+Review fix round 7: expose practice-mode and mock-exam timer in macOS native Settings using the shared preference store; make cached practice sessions reload on practice-mode changes without reloading per-answer saves; add macOS binding and iOS session-mode regression tests; rerun targeted checks followed by final iOS/macOS suites and l10n/text checks.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
