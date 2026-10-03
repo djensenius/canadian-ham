@@ -1,10 +1,11 @@
 ---
 id: TASK-12.6
 title: Morse copy practice and simulated Canadian 5 wpm exam
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@pi-worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-03 12:03'
+updated_date: '2026-10-03 23:35'
 labels:
   - web
   - apple
@@ -30,3 +31,9 @@ Why: learners need to listen to whole passages and type what they hear, and cand
 - [ ] #3 Web and Apple tests cover generation, timing and grading with the shared fixtures
 - [ ] #4 Copy practice: listen to a full passage (plain-language sentences or QSO-style text) at the user's settings, type it, and see a character-level diff with wrong, missing and inserted characters highlighted, accessible to screen readers
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Add shared Morse copy/exam generation and diff support to packages/morse-engine and packages/morse-swift with shared fixtures for timing/weighted constraints.\n2. Add web copy-practice and simulated-exam UI in new apps/web/src/morse/copyExam files, wiring only the Morse home placeholders and using the existing WebMorsePlayer/settings.\n3. Add Apple iOS/macOS copy-practice and exam views in new apps/apple/CanadianHam/Morse/CopyExam files, using the existing MorseAudioDriver/settings with DEBUG launch-argument timing overrides for UI tests.\n4. Add focused TS, Swift unit, web component, iOS UI, localization/text-source, accessibility, and affected-platform validation per testing policy; keep results in task notes before finalization.
+<!-- SECTION:PLAN:END -->
