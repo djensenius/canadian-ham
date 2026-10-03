@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-03 03:24'
+updated_date: '2026-10-03 04:47'
 labels:
   - web
   - apple
@@ -64,6 +64,8 @@ tvOS CanadianHamTV: CanadianHamTVTests.CanadianHamTVTests testBundledQuestionBan
 visionOS CanadianHamVision: CanadianHamVisionTests.CanadianHamVisionTests testBundledQuestionBankLoadsForVisionApp PASS; CanadianHamVisionTests.CanadianHamVisionTests testVisionPracticeQuestionDrawStaysInCategoryAndShufflesAnswers PASS; CanadianHamVisionTests.CanadianHamVisionTests testVisionPracticeSeedsVaryAcrossSessionIDs PASS; CanadianHamVisionUITests.CanadianHamVisionUITests testAboutAccessibilityAuditLightAndDark PASS; CanadianHamVisionUITests.CanadianHamVisionUITests testAboutShowsReleaseAttributionDisclaimerAndBankVersion PASS; CanadianHamVisionUITests.CanadianHamVisionUITests testCategoryGridAccessibilityAuditLightAndDark PASS; CanadianHamVisionUITests.CanadianHamVisionUITests testLongestQuestionSupportsLargestDynamicType PASS; CanadianHamVisionUITests.CanadianHamVisionUITests testMorseAccessibilityAuditLightAndDark PASS; CanadianHamVisionUITests.CanadianHamVisionUITests testMorseScreenShowsPlaybackControls PASS; CanadianHamVisionUITests.CanadianHamVisionUITests testPracticeAccessibilityAuditLightAndDark PASS; CanadianHamVisionUITests.CanadianHamVisionUITests testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances PASS. Total 11 tests, 11 passed.
 
 PR #116 Copilot follow-up round started after merging origin/main; keeping task Done while addressing requested audio cleanup, delayed-stop retention, start announcement, and web redirect fixes.
+
+PR #116 follow-up: removed an unused MorseTimingProfile initializer (engine owns profile construction); macOS suite 29/29. Scope clarified: per the owner decision that tvOS and visionOS stay basic, those targets expose the preview toggle and Play/Stop with the default settings (ISED exam profile, 650 Hz); the full Morse settings are on web and iOS/iPadOS/macOS.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
