@@ -1,7 +1,7 @@
 ---
 id: TASK-30
 title: Native Settings window on macOS
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-03 12:03'
