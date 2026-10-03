@@ -33,6 +33,20 @@ final class CanadianHamVisionUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Hidden until playback finishes."].firstMatch.exists)
     }
 
+    func testCategoryGridNavigatesToMorse() throws {
+        let app = configuredApp(screen: .categories, appearance: "light")
+        app.launch()
+        defer { app.terminate() }
+
+        XCTAssertTrue(PlatformAuditScreen.categories.waitElement(in: app).waitForExistence(timeout: 15))
+        let morseButton = app.buttons["vision-morse-button"].firstMatch
+        XCTAssertTrue(morseButton.waitForExistence(timeout: 5), "Category grid should expose Morse")
+        morseButton.tap()
+        XCTAssertTrue(PlatformAuditScreen.morse.waitElement(in: app).waitForExistence(timeout: 10), "Morse should be reachable from the category grid")
+        app.buttons["Categories"].firstMatch.tap()
+        XCTAssertTrue(PlatformAuditScreen.categories.waitElement(in: app).waitForExistence(timeout: 5), "Categories should return Morse to the category grid")
+    }
+
     func testAboutShowsReleaseAttributionDisclaimerAndBankVersion() throws {
         let app = configuredApp(screen: .about, appearance: "light")
         app.launch()

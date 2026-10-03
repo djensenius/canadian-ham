@@ -33,11 +33,11 @@ struct MorseTrainerView: View {
                             .padding(.vertical, DesignTokens.Spacing.xs)
                             .background(DesignTokens.Colors.paperInset, in: Capsule())
                     }
-                    Text("Learn and practise Morse code offline. Course, copy practice, and exam drills are placeholders until the next Morse tasks land.") // l10n: localized
+                    Text("Learn and practise Morse code offline. Course, copy practice, and exam drills are coming soon.") // l10n: localized
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                        MorseHomePlaceholder(title: "Learn (course)", message: "Coming soon in the Morse course task.")
+                        MorseHomePlaceholder(title: "Learn (course)", message: "Coming soon.")
                         MorseHomePlaceholder(title: "Copy practice", message: "Coming soon with copy-practice drills.")
                         MorseHomePlaceholder(title: "Exam", message: "Coming soon with the simulated 5 wpm exam.")
                     }
@@ -86,7 +86,21 @@ struct MorseTrainerView: View {
                 }
                 .paperCard()
 
-#if !os(macOS)
+#if os(macOS)
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    Text("Morse settings") // l10n: localized
+                        .font(DesignTokens.FontScale.title.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityAddTraits(.isHeader)
+                    Text("Use Settings to change Morse tone, timing, and playback volume.") // l10n: localized
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                    SettingsLink {
+                        Text("Open Morse settings") // l10n: localized
+                    }
+                }
+                .paperCard()
+#else
                 MorseSettingsSection(settings: $settings, openMorse: {}) { nextSettings in
                     onSettingsChanged(nextSettings)
                 }

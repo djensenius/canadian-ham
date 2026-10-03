@@ -64,16 +64,20 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Hidden until playback finishes."].firstMatch.waitForExistence(timeout: 5))
     }
 
-    func testCompactTopLevelNavigationExposesMorse() throws {
+    func testCompactTopLevelTabsReachMorseHomeAndLearn() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: ["-CanadianHamInitialScreen", "home"])
         defer { app.terminate() }
 
         XCTAssertTrue(app.staticTexts["Ready for Basic with Honours?"].firstMatch.waitForExistence(timeout: 10))
-        let morseNavigationButton = app.buttons["compact-top-level-morse"].firstMatch
-        XCTAssertTrue(morseNavigationButton.waitForExistence(timeout: 5), "Expected Morse as compact iPhone top-level navigation")
-        morseNavigationButton.tap()
+        let tabBar = app.tabBars.firstMatch
+        XCTAssertTrue(tabBar.waitForExistence(timeout: 5), "Compact iPhone navigation should expose a tab bar")
+        tabBar.buttons["Morse"].tap()
         XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
+        tabBar.buttons["Home"].tap()
+        XCTAssertTrue(app.staticTexts["Ready for Basic with Honours?"].firstMatch.waitForExistence(timeout: 10))
+        tabBar.buttons["Learn"].tap()
+        XCTAssertTrue(app.staticTexts["Learn"].firstMatch.waitForExistence(timeout: 10))
     }
 
     func testAboutShowsReleaseAttributionDisclaimerAndBankVersion() throws {

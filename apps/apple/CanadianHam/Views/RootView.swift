@@ -12,8 +12,18 @@ private enum SidebarSelection: Hashable {
     case about
 }
 
+#if os(iOS)
+private enum CompactTab: Hashable {
+    case home
+    case learn
+    case practice
+    case morse
+    case settings
+}
+#endif
+
 struct RootView: View {
-    @ObservedObject private var appSettings: AppSettingsModel
+    @StateObject private var appSettings: AppSettingsModel
 #if os(iOS)
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 #endif
@@ -32,7 +42,7 @@ struct RootView: View {
     @State private var didApplyLaunchNavigation = false
 
     init(appSettings: AppSettingsModel = AppSettingsModel()) {
-        self.appSettings = appSettings
+        _appSettings = StateObject(wrappedValue: appSettings)
     }
 
     var body: some View {
@@ -89,39 +99,7 @@ struct RootView: View {
     private func appContent(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
 #if os(iOS)
         if effectiveHorizontalSizeClass == .compact {
-            NavigationStack(path: $navigationPath) {
-                detailView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
-                    .background(DesignTokens.Colors.paper)
-                    .toolbar {
-                        languageToolbarItem(progressStore: progressStore)
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Button {
-                                selection = .morse
-                            } label: {
-                                Label("Morse", systemImage: "waveform")
-                            }
-                            .accessibilityIdentifier("compact-top-level-morse")
-                            .accessibilityAddTraits(selection == .morse ? .isSelected : [])
-                        }
-                    }
-                    .navigationDestination(for: LearnRoute.self) { route in
-                        learnDestination(route, bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
-                    }
-            }
-            .toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .onAppear {
-                language = progressStore.preferences.language
-                applyLaunchNavigation(bank: bank, contentLibrary: contentLibrary)
-            }
-            .onChange(of: progressStore.preferences.language) { _, next in
-                language = next
-            }
-            .onChange(of: selection) { _, next in
-                if next != .learn {
-                    navigationPath.removeAll()
-                }
-            }
+            compactTabContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
         } else {
             splitContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
         }
@@ -129,6 +107,159 @@ struct RootView: View {
         splitContent(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
 #endif
     }
+
+#if os(iOS)
+    private var compactTab: CompactTab {
+        switch selection {
+        case .home:
+            .home
+        case .learn:
+            .learn
+        case .practiceHub, .practice, .mockExam:
+            .practice
+        case .morse:
+            .morse
+        case .settings, .about:
+            .settings
+        }
+    }
+
+    private var compactTabBinding: Binding<CompactTab> {
+        Binding(
+            get: { compactTab },
+            set: { tab in
+                switch tab {
+                case .home: selection = .home
+                case .learn: selection = .learn
+                case .practice: selection = .practiceHub
+                case .morse: selection = .morse
+                case .settings: selection = .settings
+                }
+                if tab != .learn {
+                    navigationPath.removeAll()
+                }
+            }
+        )
+    }
+
+    @ViewBuilder
+    private func compactTabContent(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
+        TabView(selection: compactTabBinding) {
+            NavigationStack {
+                compactHomeView(bank: bank, progressStore: progressStore)
+                    .background(DesignTokens.Colors.paper)
+            }
+            .tabItem { Label("Home", systemImage: "house") }
+            .tag(CompactTab.home)
+
+            NavigationStack(path: $navigationPath) {
+                compactLearnView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+                    .background(DesignTokens.Colors.paper)
+                    .navigationDestination(for: LearnRoute.self) { route in
+                        learnDestination(route, bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+                    }
+            }
+            .tabItem { Label("Learn", systemImage: "book.closed") }
+            .tag(CompactTab.learn)
+
+            NavigationStack {
+                compactPracticeView(bank: bank, progressStore: progressStore)
+                    .background(DesignTokens.Colors.paper)
+            }
+            .tabItem { Label("Practice", systemImage: "checklist") }
+            .tag(CompactTab.practice)
+
+            NavigationStack {
+                MorseTrainerView(settings: $morseSettings) { nextSettings in
+                    morseSettings = nextSettings
+                }
+                .background(DesignTokens.Colors.paper)
+            }
+            .tabItem { Label("Morse", systemImage: "waveform") }
+            .tag(CompactTab.morse)
+            .accessibilityIdentifier("compact-top-level-morse-tab")
+
+            NavigationStack {
+                compactSettingsView(bank: bank, progressStore: progressStore)
+                    .background(DesignTokens.Colors.paper)
+            }
+            .tabItem { Label("Settings", systemImage: "gearshape") }
+            .tag(CompactTab.settings)
+        }
+        .onAppear {
+            language = progressStore.preferences.language
+            applyLaunchNavigation(bank: bank, contentLibrary: contentLibrary)
+        }
+        .onChange(of: progressStore.preferences.language) { _, next in
+            language = next
+        }
+    }
+
+    @ViewBuilder
+    private func compactHomeView(bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
+        HomeView(bank: bank, progressStore: progressStore, language: language, revision: combinedDataRevision, morseEnabled: true) { scope in
+            selection = .practice(scope)
+        } openMockExam: {
+            selection = .mockExam
+        } openMorse: {
+            selection = .morse
+        }
+    }
+
+    @ViewBuilder
+    private func compactLearnView(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
+        LearnView(
+            library: contentLibrary,
+            bank: bank,
+            progressStore: progressStore,
+            language: language,
+            revision: combinedDataRevision
+        ) {
+            recordDataChanged()
+        }
+    }
+
+    @ViewBuilder
+    private func compactPracticeView(bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
+        switch selection {
+        case .practice(let scope):
+            PracticeSessionView(
+                bank: bank,
+                progressStore: progressStore,
+                scope: scope,
+                language: $language
+            ) {
+                recordDataChanged()
+            }
+        case .mockExam:
+            MockExamView(bank: bank, progressStore: progressStore, language: language) {
+                recordDataChanged()
+            }
+        default:
+            PracticeHubView(bank: bank, progressStore: progressStore, language: language, revision: combinedDataRevision) { scope in
+                selection = .practice(scope)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func compactSettingsView(bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
+        switch selection {
+        case .about:
+            AboutView(bank: bank)
+        default:
+            SettingsView(
+                bank: bank,
+                progressStore: progressStore,
+                morseSettings: $morseSettings,
+                openMorse: { selection = .morse },
+                openAbout: { selection = .about }
+            ) {
+                recordDataChanged()
+            }
+        }
+    }
+#endif
 
     @ViewBuilder
     private func splitContent(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
@@ -232,6 +363,15 @@ struct RootView: View {
         }
     }
 
+    private var combinedDataRevision: Int {
+        dataRevision + appSettings.dataRevision
+    }
+
+    private func recordDataChanged() {
+        dataRevision += 1
+        appSettings.recordDataChanged()
+    }
+
     @ViewBuilder
     private func learnDestination(_ route: LearnRoute, bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
         LearnRouteDestinationView(
@@ -241,7 +381,7 @@ struct RootView: View {
             progressStore: progressStore,
             language: language
         ) {
-            dataRevision += 1
+            recordDataChanged()
         }
     }
 
@@ -249,7 +389,7 @@ struct RootView: View {
     private func detailView(bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
         switch selection {
         case .home:
-            HomeView(bank: bank, progressStore: progressStore, language: language, revision: dataRevision, morseEnabled: true) { scope in
+            HomeView(bank: bank, progressStore: progressStore, language: language, revision: combinedDataRevision, morseEnabled: true) { scope in
                 selection = .practice(scope)
             } openMockExam: {
                 selection = .mockExam
@@ -262,12 +402,12 @@ struct RootView: View {
                 bank: bank,
                 progressStore: progressStore,
                 language: language,
-                revision: dataRevision
+                revision: combinedDataRevision
             ) {
-                dataRevision += 1
+                recordDataChanged()
             }
         case .practiceHub:
-            PracticeHubView(bank: bank, progressStore: progressStore, language: language, revision: dataRevision) { scope in
+            PracticeHubView(bank: bank, progressStore: progressStore, language: language, revision: combinedDataRevision) { scope in
                 selection = .practice(scope)
             }
         case .practice(let scope):
@@ -277,19 +417,19 @@ struct RootView: View {
                 scope: scope,
                 language: $language
             ) {
-                dataRevision += 1
+                recordDataChanged()
             }
         case .mockExam:
             MockExamView(bank: bank, progressStore: progressStore, language: language) {
-                dataRevision += 1
+                recordDataChanged()
             }
         case .morse:
             MorseTrainerView(settings: $morseSettings) { nextSettings in
                 morseSettings = nextSettings
             }
         case .settings:
-            SettingsView(bank: bank, progressStore: progressStore, morseSettings: $morseSettings, openMorse: { selection = .morse }) {
-                dataRevision += 1
+            SettingsView(bank: bank, progressStore: progressStore, morseSettings: $morseSettings, openMorse: { selection = .morse }, openAbout: { selection = .about }) {
+                recordDataChanged()
             }
         case .about:
             AboutView(bank: bank)
@@ -353,8 +493,12 @@ struct RootView: View {
                 morseSettings = .default
             }
 #endif
-            progressStore = try ProgressStoreService.open()
-            appSettings.progressStore = progressStore
+            if let sharedStore = appSettings.progressStore {
+                progressStore = sharedStore
+            } else {
+                progressStore = try ProgressStoreService.open()
+                appSettings.progressStore = progressStore
+            }
 #if DEBUG
             applyPreferenceLaunchArguments()
 #endif
@@ -402,7 +546,6 @@ struct RootView: View {
             selection = .learn
             navigationPath = [.lesson(initialLessonID)]
         }
-#endif
         if let screen = AppLaunchArguments.value(after: "-CanadianHamInitialScreen") {
             switch screen {
             case "home": selection = .home
@@ -420,6 +563,7 @@ struct RootView: View {
             default: break
             }
         }
+#endif
         if ProcessInfo.processInfo.arguments.contains("-CanadianHamShowCategoryList") {
             selection = .practiceHub
         } else if let requestedSubsectionID = AppLaunchArguments.value(after: "-CanadianHamInitialSubsectionID"),

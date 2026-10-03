@@ -21,6 +21,8 @@ struct NativeSettingsView: View {
 
 private struct NativeGeneralSettingsTab: View {
     @ObservedObject var appSettings: AppSettingsModel
+    @State private var statusMessage = ""
+    @State private var errorMessage = ""
 
     var body: some View {
         Form {
@@ -49,8 +51,17 @@ private struct NativeGeneralSettingsTab: View {
                     }
                 }
                 .accessibilityLabel(Text("Appearance")) // l10n: localized
+                if !statusMessage.isEmpty {
+                    Text(statusMessage) // l10n: localized
+                        .foregroundStyle(DesignTokens.Colors.correctText)
+                }
+                if !errorMessage.isEmpty {
+                    Text(errorMessage) // l10n: localized
+                        .foregroundStyle(DesignTokens.Colors.warningText)
+                }
             } else {
-                ProgressView("Open a Canadian Ham window to load settings.") // l10n: localized
+                Text("Open a Canadian Ham window to load settings.") // l10n: localized
+                    .foregroundStyle(DesignTokens.Colors.inkMuted)
             }
         }
         .formStyle(.grouped)
@@ -60,7 +71,14 @@ private struct NativeGeneralSettingsTab: View {
     private func save(_ progressStore: ProgressStoreService, mutate: (inout ApplePreferences) -> Void) {
         var next = progressStore.preferences
         mutate(&next)
-        try? progressStore.updatePreferences(next)
+        do {
+            try progressStore.updatePreferences(next)
+            appSettings.recordDataChanged()
+            statusMessage = String(localized: "Preferences saved locally.")
+            errorMessage = ""
+        } catch {
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
+        }
     }
 }
 
@@ -87,6 +105,7 @@ private struct NativeDataSettingsTab: View {
                 Button("Reset…", role: .destructive) { confirmingReset = true } // l10n: localized
                     .accessibilityLabel(Text("Reset all data")) // l10n: localized
             }
+            .disabled(appSettings.progressStore == nil || appSettings.bank == nil)
             if let bank = appSettings.bank {
                 Text("Active bank: \(bank.manifest.bankId), effective \(bank.manifest.effectiveDate).") // l10n: localized
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
@@ -126,7 +145,10 @@ private struct NativeDataSettingsTab: View {
     }
 
     private func prepareExport() {
-        guard let progressStore = appSettings.progressStore, let bank = appSettings.bank else { return }
+        guard let progressStore = appSettings.progressStore, let bank = appSettings.bank else {
+            errorMessage = String(localized: "Open a Canadian Ham window to load settings.")
+            return
+        }
         do {
             let text = try progressStore.serializedExport(bank: bank, exportedAt: AppleStudyEngine.canonicalNow())
             exportDocument = ProgressExportDocument(text: text)
@@ -137,7 +159,10 @@ private struct NativeDataSettingsTab: View {
     }
 
     private func handleImport(_ result: Result<URL, Error>) {
-        guard let progressStore = appSettings.progressStore, let bank = appSettings.bank else { return }
+        guard let progressStore = appSettings.progressStore, let bank = appSettings.bank else {
+            errorMessage = String(localized: "Open a Canadian Ham window to load settings.")
+            return
+        }
         do {
             let url = try result.get()
             let didStart = url.startAccessingSecurityScopedResource()
@@ -157,9 +182,13 @@ private struct NativeDataSettingsTab: View {
     }
 
     private func confirmImport() {
-        guard let progressStore = appSettings.progressStore, let bank = appSettings.bank, let pendingImport else { return }
+        guard let progressStore = appSettings.progressStore, let bank = appSettings.bank, let pendingImport else {
+            errorMessage = String(localized: "Open a Canadian Ham window to load settings.")
+            return
+        }
         do {
             try progressStore.importData(pendingImport, bank: bank)
+            appSettings.recordDataChanged()
             self.pendingImport = nil
             statusMessage = String(localized: "Progress imported.")
             errorMessage = ""
@@ -169,11 +198,15 @@ private struct NativeDataSettingsTab: View {
     }
 
     private func resetAllData() {
-        guard let progressStore = appSettings.progressStore else { return }
+        guard let progressStore = appSettings.progressStore else {
+            errorMessage = String(localized: "Open a Canadian Ham window to load settings.")
+            return
+        }
         do {
             try progressStore.resetAllData()
             MorseTrainerSettings.reset()
             appSettings.morseSettings = .default
+            appSettings.recordDataChanged()
             statusMessage = String(localized: "All local progress was reset.")
             errorMessage = ""
         } catch {

@@ -1164,6 +1164,7 @@ struct SettingsView: View {
     @ObservedObject var progressStore: ProgressStoreService
     @Binding var morseSettings: MorseTrainerSettings
     let openMorse: () -> Void
+    let openAbout: () -> Void
     let onDataChanged: () -> Void
 
     @State private var statusMessage: String?
@@ -1247,6 +1248,7 @@ struct SettingsView: View {
                     Text("No accounts, networking, analytics, telemetry, third-party SDKs, or iCloud sync. Import and export use local files you choose.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
+                    tokenButton("About Canadian Ham") { openAbout() }
                 }
                 .paperCard()
 

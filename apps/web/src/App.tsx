@@ -1774,7 +1774,7 @@ function MorseSection({ interfaceLanguage, preferences, onSetPreferences }: { re
       <p className="eyebrow">{t(interfaceLanguage, "morseEyebrow")}</p>
       <h2 id="morse-section-title">{t(interfaceLanguage, "morseSectionTitle")} <span className="preview-label">{t(interfaceLanguage, "previewLabel")}</span></h2>
       <p>{t(interfaceLanguage, "morseSectionIntro")}</p>
-      <div className="morse-home-grid" aria-label={t(interfaceLanguage, "morseHomeEntriesAria")}>
+      <div className="morse-home-grid" role="group" aria-label={t(interfaceLanguage, "morseHomeEntriesAria")}>
         <section className="morse-home-card" aria-labelledby="morse-learn-title">
           <h3 id="morse-learn-title">{t(interfaceLanguage, "morseLearnTitle")}</h3>
           <p>{t(interfaceLanguage, "morseLearnPlaceholder")}</p>
@@ -1890,9 +1890,8 @@ function MorseTrainerPreview({ interfaceLanguage, preferences }: { readonly inte
   }
 
   return (
-    <section className="card morse-trainer" aria-labelledby="morse-title">
-      <p className="eyebrow">{t(interfaceLanguage, "morseEyebrow")}</p>
-      <h2 id="morse-title">{t(interfaceLanguage, "morseTitle")}</h2>
+    <section className="morse-trainer" aria-labelledby="morse-title">
+      <h3 id="morse-title">{t(interfaceLanguage, "morseTitle")}</h3>
       <p>{t(interfaceLanguage, "morseIntro")}</p>
       <dl className="morse-settings-summary">
         <div><dt>{t(interfaceLanguage, "morseTone")}</dt><dd>{t(interfaceLanguage, "morseHertz", morsePreferences.toneHz)}</dd></div>
@@ -2075,22 +2074,10 @@ function Settings({ interfaceLanguage, store, now, preferences, statusMessage, o
   const resetButtonRef = useRef<HTMLButtonElement>(null);
   const resetDialogRef = useRef<HTMLDivElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
-  const [morseNumberDrafts, setMorseNumberDrafts] = useState(() => morseDraftsFromPreferences(preferences.morse));
-  const morseTimingProfile = useMemo(() => morseTimingFromPreferences(preferences.morse), [preferences.morse]);
-  const morseSpeedControlsDisabled = preferences.morse.timingProfile !== "general";
-  const localeTag = interfaceLanguageTag(interfaceLanguage);
-  const fixedCharacterWpm = useMemo(() => formatLocaleNumber(morseTimingProfile.characterWpm, localeTag, 1), [localeTag, morseTimingProfile.characterWpm]);
-  const fixedEffectiveWpm = useMemo(() => formatLocaleNumber(morseTimingProfile.effectiveWpm, localeTag, 1), [localeTag, morseTimingProfile.effectiveWpm]);
-  const characterWpmInputValue = morseSpeedControlsDisabled ? morseNumberInputValue(morseTimingProfile.characterWpm) : morseNumberDrafts.characterWpm;
-  const effectiveWpmInputValue = morseSpeedControlsDisabled ? morseNumberInputValue(morseTimingProfile.effectiveWpm) : morseNumberDrafts.effectiveWpm;
 
   useEffect(() => {
     setMessage(statusMessage);
   }, [statusMessage]);
-
-  useEffect(() => {
-    setMorseNumberDrafts(morseDraftsFromPreferences(preferences.morse));
-  }, [preferences.morse]);
 
   useEffect(() => {
     if (confirmReset) {
@@ -2191,65 +2178,6 @@ function Settings({ interfaceLanguage, store, now, preferences, statusMessage, o
     }
   }
 
-  async function saveMorsePreference(patch: Partial<WebPreferences["morse"]>): Promise<void> {
-    try {
-      const currentMorse = normalizeMorsePreferences(preferences.morse);
-      const nextMorse = normalizeMorsePreferences({ ...preferences.morse, ...patch });
-      if (morsePreferencesEqual(currentMorse, nextMorse)) {
-        return;
-      }
-      const savedLatestRequest = await onSetPreferences({ morse: nextMorse });
-      if (!savedLatestRequest) {
-        return;
-      }
-      setErrors([]);
-      setMessage(t(interfaceLanguage, "morseSettingsSaved"));
-    } catch (error) {
-      setErrors([t(interfaceLanguage, "errorSavePreferences", formatError(error))]);
-    }
-  }
-
-  function updateMorseNumberDraft(field: keyof MorseNumberDrafts, value: string): void {
-    setMorseNumberDrafts((drafts) => ({ ...drafts, [field]: value }));
-  }
-
-  function handleMorseNumberKeyDown(event: KeyboardEvent<HTMLInputElement>, field: keyof MorseNumberDrafts): void {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      void commitMorseNumberDraft(field);
-    }
-  }
-
-  async function commitMorseNumberDraft(field: keyof MorseNumberDrafts): Promise<void> {
-    const draft = morseNumberDrafts[field].trim();
-    const numericValue = Number(draft);
-    if (draft === "" || !isValidMorseNumberDraft(field, numericValue, preferences.morse)) {
-      setMorseNumberDrafts(morseDraftsFromPreferences(preferences.morse));
-      return;
-    }
-    const patch = { [field]: numericValue } as Partial<WebPreferences["morse"]>;
-    const nextMorse = normalizeMorsePreferences({ ...preferences.morse, ...patch });
-    setMorseNumberDrafts(morseDraftsFromPreferences(nextMorse));
-    await saveMorsePreference(patch);
-  }
-
-  async function applyMorsePreset(): Promise<void> {
-    try {
-      const currentMorse = normalizeMorsePreferences(preferences.morse);
-      const nextMorse = morseISEDExamPreset(preferences.morse);
-      if (morsePreferencesEqual(currentMorse, nextMorse)) {
-        return;
-      }
-      const savedLatestRequest = await onSetPreferences({ morse: nextMorse });
-      if (!savedLatestRequest) {
-        return;
-      }
-      setErrors([]);
-      setMessage(t(interfaceLanguage, "morsePresetApplied"));
-    } catch (error) {
-      setErrors([t(interfaceLanguage, "errorSavePreferences", formatError(error))]);
-    }
-  }
 
   return (
     <section className="card settings" aria-labelledby="settings-title">

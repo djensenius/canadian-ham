@@ -80,6 +80,27 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(general.effectiveWpm, 10, accuracy: 0.000_001)
     }
 
+    func testMorseSettingsDecodesLegacyPayloadWithIsEnabled() throws {
+        let json = #"""
+        {
+          "isEnabled": false,
+          "toneHz": 720,
+          "characterWpm": 16,
+          "effectiveWpm": 7,
+          "timingProfile": "general",
+          "volume": 0.45
+        }
+        """#
+
+        let decoded = try JSONDecoder().decode(MorseTrainerSettings.self, from: Data(json.utf8))
+
+        XCTAssertEqual(decoded.toneHz, 720)
+        XCTAssertEqual(decoded.characterWpm, 16)
+        XCTAssertEqual(decoded.effectiveWpm, 7)
+        XCTAssertEqual(decoded.timingProfile, .general)
+        XCTAssertEqual(decoded.volume, 0.45)
+    }
+
     func testMorseSettingsRoundTripThroughUserDefaults() throws {
         let suiteName = "MorseTrainerTests.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))

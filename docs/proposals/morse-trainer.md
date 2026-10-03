@@ -358,7 +358,7 @@ Both use plain language at a speed of not less than 5 wpm. Examiners send at a *
 ---
 
 ## Owner decisions needed
-1. **Scope:** an integrated module or a separate app? **Recommendation (unchanged):** keep it in the monorepo as its own route or tab (`canadian-ham/morse`), turned off by default until v1 Basic ships.
+1. **Scope:** an integrated module or a separate app? **Recommendation (updated 2026-10-03):** keep it in the monorepo as its own route or tab (`canadian-ham/morse`). The Morse section is now a visible top-level preview; course, copy-practice, and exam drills remain coming soon until their Backlog work lands.
 2. **Default character speed:** 12 wpm (the ISED exam's character speed) or 15–18 wpm (usual Koch practice)? **Recommendation (unchanged):** 15 wpm characters at 5 wpm effective, with a one-tap "ISED exam" preset at 12/5.
 3. **Sending evaluation:** microphone pitch detection or tap timing? **Recommendation (unchanged):** tap timing on keyboard or touch. No microphone permission, which keeps the no-permissions, no-data design.
 4. **(New) Exam timing profile:** RIC-1's spacing text ("≈7 / ≈17 dots") and its PARIS check disagree (≈7.9 wpm vs 5 wpm). **Recommendation:** default the exam to the **PARIS-calibrated 12/5** profile, which meets RIC-1's own speed check. Offer "RIC-1 literal spacing (≈7.9 wpm, harder)" as an option so candidates have a margin if an examiner's file runs faster. Optionally ask ISED's Amateur Radio Service Centre or RAC which spacing examiners' software actually uses.
