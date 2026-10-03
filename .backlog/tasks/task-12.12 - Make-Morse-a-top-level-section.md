@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-03 12:03'
-updated_date: '2026-10-03 21:51'
+updated_date: '2026-10-03 22:35'
 labels:
   - web
   - apple
@@ -30,7 +30,7 @@ Why: the owner tried the preview and doesn't want Morse buried behind a Settings
 - [x] #1 Morse is a top-level section on every platform: web top navigation (#/morse), iOS/iPadOS tab or sidebar, macOS sidebar, tvOS and visionOS menu entry; the preview toggle and its gating/redirect code are removed, and task-12.10 is closed as obsolete with a note
 - [x] #2 Morse settings (tone, speeds, timing profile, volume, ISED exam preset) live inside the Morse section on web and iOS/iPadOS; existing stored Morse preferences migrate without loss
 - [x] #3 The section has a Morse home that will host Learn (course), Practice (copy) and Exam entries; for now it hosts the existing player, labelled Preview
-- [ ] #4 Accessibility audits (axe on web; light and dark Apple audits on iOS, tvOS and visionOS), French UI, and the web and four Apple xbuild suites pass
+- [x] #4 Accessibility audits (axe on web; light and dark Apple audits on iOS, tvOS and visionOS), French UI, and the web and four Apple xbuild suites pass
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -169,6 +169,122 @@ Fix round 5 final validation (commit aa35ea4b0b8ab1d1f172a858d7755b37517630e7):
   - CanadianHamTests/ReadinessAndScoringTests/testExamScoringBoundaries: PASSED
   - CanadianHamTests/ReadinessAndScoringTests/testReadinessStates: PASSED
   - CanadianHamTests/ReadinessAndScoringTests/testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate: PASSED
+
+Fix round 6 final validation (implementation commit 047bc4f85911a46ee5a3ed01c13be144ec287140):
+- Scoped Weak areas and Due review sessions now reload only on scope/data-REPLACEMENT (`localDataReplacementRevision`) changes, not on per-answer data revisions; UI coverage answers two questions in weak immediate mode and due review-later mode and verifies feedback/position/tally persist.
+- End exam is available with confirmation on compact and regular widths; regular-width iOS UI coverage confirms it discards an in-progress exam.
+- Mock exam timer arithmetic advances `timerRunStartedAt` by exactly whole seconds added so fractional remainder is preserved; unit coverage verifies the arithmetic.
+- Compact root rows use value-based NavigationLink rows so VoiceOver sees navigation semantics; Home Start practice/Mock exam Back behavior is covered. Light/dark iOS accessibility audits passed in the final full iOS suite.
+- Restored the trailing newline in `Localizable.xcstrings`; ISED legal text was not touched.
+- tvOS/visionOS suites were skipped this round because the shared catalogue change remains a key sort plus three iPhone-only keys (with this round only restoring the trailing newline); `pnpm check:apple-l10n` covers the shared catalogue, and AC4 tvOS/visionOS xbuild evidence is the round-4 full runs (`/tmp/task-12.12-r4-tvos-full-final.log` and `/tmp/task-12.12-r4-visionos-full-final.log`).
+- Commands passed: targeted iOS xbuild for new/changed unit and UI tests after the regular-width End exam test adjustment; `pnpm check:apple-l10n`; `node scripts/check-apple-text-sources.ts`; full iOS xbuild `/tmp/task-12.12-r6-ios-full.log`; full macOS xbuild `/tmp/task-12.12-r6-macos-full.log`.
+- iOS full xbuild (CanadianHam, iPhone 17 Pro): 72 tests, 0 failures.
+  - CanadianHamTests.LocalizationCatalogTests/testEveryCatalogKeyHasFrenchTranslations: PASSED
+  - CanadianHamTests.LocalizationCatalogTests/testFrenchRuntimeBundleLocalizesCompilerKeysAndPluralCatalogEntries: PASSED
+  - CanadianHamTests.LocalizationCatalogTests/testLocalizedNullableTextAndLanguageFallsBackToEnglish: PASSED
+  - CanadianHamTests.LocalizationCatalogTests/testQuestionBankLoadErrorDescriptionUsesFrenchLocale: PASSED
+  - CanadianHamTests.MorseTrainerTests/testFixedTimingProfilesUseEngineValues: PASSED
+  - CanadianHamTests.MorseTrainerTests/testMorseAudioScheduleUsesEngineTimingsAndFiveMillisecondRamp: PASSED
+  - CanadianHamTests.MorseTrainerTests/testMorseSettingsClampAndPreset: PASSED
+  - CanadianHamTests.MorseTrainerTests/testMorseSettingsDecodesLegacyPayloadWithIsEnabled: PASSED
+  - CanadianHamTests.MorseTrainerTests/testMorseSettingsRoundTripThroughUserDefaults: PASSED
+  - CanadianHamTests.MorseTrainerTests/testMorseStopDelayDrainsFadeBeforeStoppingEngine: PASSED
+  - CanadianHamTests.ProgressStoreTests/testAppSettingsModelPublishesMorseSettingsForRootViewSync: PASSED
+  - CanadianHamTests.ProgressStoreTests/testDecodesLegacyBasicExportWithoutBankIdFields: PASSED
+  - CanadianHamTests.ProgressStoreTests/testDecodesWebLegacyExportWithOptionalLessonStoresAndTheme: PASSED
+  - CanadianHamTests.ProgressStoreTests/testImportRollbackKeepsExistingDataWhenReplacementFails: PASSED
+  - CanadianHamTests.ProgressStoreTests/testImportsRealisticWebExportWithKnownLessonProgressAndQuizAttempt: PASSED
+  - CanadianHamTests.ProgressStoreTests/testImportTimerDecodingRejectsHugeNumbersAndRoundsFractionalWebValues: PASSED
+  - CanadianHamTests.ProgressStoreTests/testImportValidationChecksLessonRecordShapeKnownIdsAndDuplicates: PASSED
+  - CanadianHamTests.ProgressStoreTests/testImportValidationRejectsMismatchedScoreBankId: PASSED
+  - CanadianHamTests.ProgressStoreTests/testImportValidationRejectsUnknownIdsBadTimestampsBadBoxAndDuplicateSubmittedAt: PASSED
+  - CanadianHamTests.ProgressStoreTests/testLessonQuizAttemptSaveRollsBackAttemptAndProgressOnFailure: PASSED
+  - CanadianHamTests.ProgressStoreTests/testMockExamTimerRefreshPreservesFractionalRemainder: PASSED
+  - CanadianHamTests.ProgressStoreTests/testProgressStoreRoundTripExportImportReset: PASSED
+  - CanadianHamTests.ProgressStoreTests/testSharedAppleSettingsModelAppliesLivePreferenceUpdates: PASSED
+  - CanadianHamTests.QuestionBankTests/testBundledJSONDecodesExpectedCounts: PASSED
+  - CanadianHamTests.QuestionBankTests/testBundledLessonsAndExplanationsLoadThroughContentLibrary: PASSED
+  - CanadianHamTests.QuestionBankTests/testEngineQuestionDrawKeepsQuestionInsideRequestedCategory: PASSED
+  - CanadianHamTests.QuestionBankTests/testEngineShufflePreservesAnswerInvariantsForEveryBundledQuestion: PASSED
+  - CanadianHamTests.QuestionBankTests/testKnownLessonIdsComeFromSubsectionLessonMappingsWithoutQuizzes: PASSED
+  - CanadianHamTests.QuestionBankTests/testRealBundleKnownLessonIdsCoverBundledContentLibraryLessons: PASSED
+  - CanadianHamTests.ReadinessAndScoringTests/testAdvancedScoringAndReadinessSuppressHonours: PASSED
+  - CanadianHamTests.ReadinessAndScoringTests/testExamScoringBoundaries: PASSED
+  - CanadianHamTests.ReadinessAndScoringTests/testReadinessStates: PASSED
+  - CanadianHamTests.ReadinessAndScoringTests/testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testAboutShowsReleaseAttributionDisclaimerAndBankVersion: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testAccessibilityAuditCoreScreensDark: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testAccessibilityAuditCoreScreensLight: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testAccessibilityAuditLearnFlowDark: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testAccessibilityAuditLearnFlowLight: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testAccessibilityAuditMockExamFlowDark: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testAccessibilityAuditMockExamFlowLight: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testAccessibilityAuditPracticeSessionDark: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testAccessibilityAuditPracticeSessionLight: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testCanPracticeInFrenchAndSeeFeedback: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testCompactHomeStartPracticeAndMockExamBackReturnToHome: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testCompactMockExamEndExamDiscardsInProgressSession: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testCompactRootNavigationPreservesMockExamState: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testCompactRootNavigationPreservesPracticeSessionState: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testCompactTopLevelListPushesMorseThenLearn: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testDueReviewLaterSessionKeepsPositionTallyAndReviewAfterSubmit: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testExplanationAppearsAfterAnsweringInPractice: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testFrenchAboutKeepsLegalTextInEnglish: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testFrenchSystemLanguageNavigatesMainScreensAndAuditsHomeAndPractice: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testLanguagePickerExistsOnCategoryListAndPractice: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testLanguagePickerExistsOnCompactHomeLearnMorseAndMockExam: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testLearnOpensLessonAndShowsFirstHeading: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testLearnUserNavigationOpensLessonQuiz: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testLessonQuizResultPersistsAfterRelaunch: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testLongestAnswerWrapsAtLargestAccessibilityTextSize: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testMockExamDoesNotShowCorrectnessBeforeSubmit: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testMockExamHeaderControlsSupportLargestAccessibilityTextSize: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testMockExamNextUnansweredJumpsAfterAnsweringFirstQuestion: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testMockExamResultHeadingCarriesVoiceOverSubmissionSummary: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testMorseSectionIsTopLevelAndShowsSettings: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testPracticeFlowSupportsLargestAccessibilityTextSize: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testPracticeImmediateFeedbackKeepsStateAfterFirstAnswer: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testRegularWidthMockExamEndExamDiscardsInProgressSession: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testRegularWidthMockExamResultPersistsAfterSubmit: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testReviewLaterHidesCorrectnessUntilSubmitAndResultsSurviveSave: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testSettingsResetClearsCompactMockExamCacheWithoutRelaunch: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testSettingsResetClearsSavedMockExamProgress: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testSubsectionPracticeOpensFromHubAndShowsReviewScreen: PASSED
+  - CanadianHamUITests.CanadianHamPracticeUITests/testWeakAreasImmediateSessionKeepsFeedbackPositionAndTallyAfterAnswers: PASSED
+- macOS full xbuild (CanadianHam, macOS arm64, UI tests skipped): 33 tests, 0 failures.
+  - CanadianHamTests.LocalizationCatalogTests/testEveryCatalogKeyHasFrenchTranslations: PASSED
+  - CanadianHamTests.LocalizationCatalogTests/testFrenchRuntimeBundleLocalizesCompilerKeysAndPluralCatalogEntries: PASSED
+  - CanadianHamTests.LocalizationCatalogTests/testLocalizedNullableTextAndLanguageFallsBackToEnglish: PASSED
+  - CanadianHamTests.LocalizationCatalogTests/testQuestionBankLoadErrorDescriptionUsesFrenchLocale: PASSED
+  - CanadianHamTests.MorseTrainerTests/testFixedTimingProfilesUseEngineValues: PASSED
+  - CanadianHamTests.MorseTrainerTests/testMorseAudioScheduleUsesEngineTimingsAndFiveMillisecondRamp: PASSED
+  - CanadianHamTests.MorseTrainerTests/testMorseSettingsClampAndPreset: PASSED
+  - CanadianHamTests.MorseTrainerTests/testMorseSettingsDecodesLegacyPayloadWithIsEnabled: PASSED
+  - CanadianHamTests.MorseTrainerTests/testMorseSettingsRoundTripThroughUserDefaults: PASSED
+  - CanadianHamTests.MorseTrainerTests/testMorseStopDelayDrainsFadeBeforeStoppingEngine: PASSED
+  - CanadianHamTests.ProgressStoreTests/testAppSettingsModelPublishesMorseSettingsForRootViewSync: PASSED
+  - CanadianHamTests.ProgressStoreTests/testDecodesLegacyBasicExportWithoutBankIdFields: PASSED
+  - CanadianHamTests.ProgressStoreTests/testDecodesWebLegacyExportWithOptionalLessonStoresAndTheme: PASSED
+  - CanadianHamTests.ProgressStoreTests/testImportRollbackKeepsExistingDataWhenReplacementFails: PASSED
+  - CanadianHamTests.ProgressStoreTests/testImportsRealisticWebExportWithKnownLessonProgressAndQuizAttempt: PASSED
+  - CanadianHamTests.ProgressStoreTests/testImportTimerDecodingRejectsHugeNumbersAndRoundsFractionalWebValues: PASSED
+  - CanadianHamTests.ProgressStoreTests/testImportValidationChecksLessonRecordShapeKnownIdsAndDuplicates: PASSED
+  - CanadianHamTests.ProgressStoreTests/testImportValidationRejectsMismatchedScoreBankId: PASSED
+  - CanadianHamTests.ProgressStoreTests/testImportValidationRejectsUnknownIdsBadTimestampsBadBoxAndDuplicateSubmittedAt: PASSED
+  - CanadianHamTests.ProgressStoreTests/testLessonQuizAttemptSaveRollsBackAttemptAndProgressOnFailure: PASSED
+  - CanadianHamTests.ProgressStoreTests/testMockExamTimerRefreshPreservesFractionalRemainder: PASSED
+  - CanadianHamTests.ProgressStoreTests/testProgressStoreRoundTripExportImportReset: PASSED
+  - CanadianHamTests.ProgressStoreTests/testSharedAppleSettingsModelAppliesLivePreferenceUpdates: PASSED
+  - CanadianHamTests.QuestionBankTests/testBundledJSONDecodesExpectedCounts: PASSED
+  - CanadianHamTests.QuestionBankTests/testBundledLessonsAndExplanationsLoadThroughContentLibrary: PASSED
+  - CanadianHamTests.QuestionBankTests/testEngineQuestionDrawKeepsQuestionInsideRequestedCategory: PASSED
+  - CanadianHamTests.QuestionBankTests/testEngineShufflePreservesAnswerInvariantsForEveryBundledQuestion: PASSED
+  - CanadianHamTests.QuestionBankTests/testKnownLessonIdsComeFromSubsectionLessonMappingsWithoutQuizzes: PASSED
+  - CanadianHamTests.QuestionBankTests/testRealBundleKnownLessonIdsCoverBundledContentLibraryLessons: PASSED
+  - CanadianHamTests.ReadinessAndScoringTests/testAdvancedScoringAndReadinessSuppressHonours: PASSED
+  - CanadianHamTests.ReadinessAndScoringTests/testExamScoringBoundaries: PASSED
+  - CanadianHamTests.ReadinessAndScoringTests/testReadinessStates: PASSED
+  - CanadianHamTests.ReadinessAndScoringTests/testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate: PASSED
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
