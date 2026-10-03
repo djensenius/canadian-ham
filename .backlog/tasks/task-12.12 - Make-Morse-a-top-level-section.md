@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-03 12:03'
-updated_date: '2026-10-03 21:46'
+updated_date: '2026-10-03 21:47'
 labels:
   - web
   - apple
@@ -30,7 +30,7 @@ Why: the owner tried the preview and doesn't want Morse buried behind a Settings
 - [x] #1 Morse is a top-level section on every platform: web top navigation (#/morse), iOS/iPadOS tab or sidebar, macOS sidebar, tvOS and visionOS menu entry; the preview toggle and its gating/redirect code are removed, and task-12.10 is closed as obsolete with a note
 - [x] #2 Morse settings (tone, speeds, timing profile, volume, ISED exam preset) live inside the Morse section on web and iOS/iPadOS; existing stored Morse preferences migrate without loss
 - [x] #3 The section has a Morse home that will host Learn (course), Practice (copy) and Exam entries; for now it hosts the existing player, labelled Preview
-- [ ] #4 Accessibility audits (axe on web; light and dark Apple audits on iOS, tvOS and visionOS), French UI, and the web and four Apple xbuild suites pass
+- [x] #4 Accessibility audits (axe on web; light and dark Apple audits on iOS, tvOS and visionOS), French UI, and the web and four Apple xbuild suites pass
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -172,5 +172,5 @@ Fix round 5 final validation (commit aa35ea4b0b8ab1d1f172a858d7755b37517630e7):
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Morse remains a top-level section across web and all Apple platforms. Round 4 replaced the failing compact iPhone tab bar with a native collapsed-sidebar root list, preserved compact practice/mock state across Back navigation, kept Morse reachable from the root list, and restored Home content order while using compact-only vertical Home actions to avoid French clipping. Verified on f7bcbaaf7ee19004aced3bcfcd703efa87377243 with web checks, Apple localization/text/network checks, and full iOS/macOS/tvOS/visionOS xbuild suites; per-test names are in the recorded logs.
+Fix round 5 audited the compact root screen in light/dark, moved transient mock-exam UI flags back to local view state, invalidated cached compact practice/mock sessions on data replacement, restored compact language pickers and push-style Back behavior, added End exam, and updated UI coverage. Verified on aa35ea4b0b8ab1d1f172a858d7755b37517630e7 with pnpm check:apple-l10n, node scripts/check-apple-text-sources.ts, full iOS xbuild (67 tests), and full macOS xbuild (32 tests); tvOS/visionOS skipped because changed Swift files are not compiled by those targets.
 <!-- SECTION:FINAL_SUMMARY:END -->
