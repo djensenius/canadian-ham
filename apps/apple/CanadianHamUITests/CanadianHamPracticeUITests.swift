@@ -64,7 +64,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Hidden until playback finishes."].firstMatch.waitForExistence(timeout: 5))
     }
 
-    func testCompactTopLevelListPushesMorseHomeAndLearn() throws {
+    func testCompactTopLevelListPushesMorseThenLearn() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp()
         defer { app.terminate() }
@@ -197,6 +197,21 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app = launchApp(arguments: ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
         assertSingleLanguagePicker(in: app, context: "practice")
         XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
+    }
+
+    func testLanguagePickerExistsOnCompactHomeLearnMorseAndMockExam() throws {
+        XCUIDevice.shared.appearance = .light
+        for (screen, expectedText) in [
+            ("home", "Ready for Basic with Honours?"),
+            ("learn", "Structured lessons"),
+            ("morse", "Quick listen"),
+            ("mock", "Mock exam")
+        ] {
+            let app = launchApp(arguments: ["-CanadianHamInitialScreen", screen])
+            assertSingleLanguagePicker(in: app, context: screen)
+            XCTAssertTrue(app.staticTexts[expectedText].firstMatch.waitForExistence(timeout: 10), "Expected \(screen) screen content")
+            app.terminate()
+        }
     }
 
     func testLearnOpensLessonAndShowsFirstHeading() throws {
@@ -409,6 +424,48 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(anyVisibleLabel(in: app, contains: "Completed mock exams: 0"), "Reset should clear previously saved mock exam attempts")
     }
 
+    func testSettingsResetClearsCompactMockExamCacheWithoutRelaunch() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamMockExamSeed", "ui-reset-clears-cache",
+            "-CanadianHamMockExamLimit", "1"
+        ])
+        openMockExamStart(in: app)
+        XCTAssertTrue(app.staticTexts["Question 1 of 1"].firstMatch.waitForExistence(timeout: 10))
+        answerFirstVisibleAnswer(in: app)
+
+        tapCompactBack(in: app)
+        tapCompactBack(in: app)
+        tap("Settings", in: app)
+        XCTAssertTrue(app.staticTexts["Settings"].firstMatch.waitForExistence(timeout: 10))
+        scrollAndTap("Reset all data", in: app)
+        confirmResetAlert(in: app)
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "All local progress was reset."), "Reset should show a success status")
+
+        tapCompactBack(in: app)
+        tap("Home", in: app)
+        tap("Mock exam", in: app)
+        XCTAssertTrue(app.buttons["Start mock exam"].firstMatch.waitForExistence(timeout: 10), "Reset should discard the in-memory compact mock exam without relaunching")
+        XCTAssertFalse(app.staticTexts["Question 1 of 1"].firstMatch.exists, "The stale in-progress mock exam question should not remain after reset")
+    }
+
+    func testCompactMockExamEndExamDiscardsInProgressSession() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamMockExamSeed", "ui-end-exam",
+            "-CanadianHamMockExamLimit", "1"
+        ])
+        openMockExamStart(in: app)
+        XCTAssertTrue(app.staticTexts["Question 1 of 1"].firstMatch.waitForExistence(timeout: 10))
+        answerFirstVisibleAnswer(in: app)
+        scrollAndTap("End exam", in: app)
+        confirmEndExamAlert(in: app)
+        XCTAssertTrue(app.buttons["Start mock exam"].firstMatch.waitForExistence(timeout: 10), "End exam should return to the mock-exam start screen")
+        XCTAssertFalse(app.staticTexts["Question 1 of 1"].firstMatch.exists, "End exam should discard the in-progress mock exam")
+    }
+
     func testSubsectionPracticeOpensFromHubAndShowsReviewScreen() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [
@@ -554,7 +611,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func auditCoreScreens(appearance: AuditAppearance) throws {
-        var app = launchApp(arguments: ["-CanadianHamInitialScreen", "home"])
+        var app = launchApp()
+        XCTAssertTrue(app.descendants(matching: .any)["compact-root-list"].firstMatch.waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "\(appearance.rawValue) compact root list")
+        app.terminate()
+
+        app = launchApp(arguments: ["-CanadianHamInitialScreen", "home"])
         XCTAssertTrue(app.staticTexts["Ready for Basic with Honours?"].waitForExistence(timeout: 10))
         try performAudit(on: app, context: "\(appearance.rawValue) home")
         app.terminate()
@@ -771,6 +833,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let alert = app.alerts["Reset all local data?"].firstMatch
         XCTAssertTrue(alert.waitForExistence(timeout: 5))
         alert.buttons["Reset"].tap()
+    }
+
+    private func confirmEndExamAlert(in app: XCUIApplication) {
+        let alert = app.alerts["End mock exam?"].firstMatch
+        XCTAssertTrue(alert.waitForExistence(timeout: 5))
+        alert.buttons["End exam"].tap()
     }
 
     private func assertMockExamResultVisible(in app: XCUIApplication) {

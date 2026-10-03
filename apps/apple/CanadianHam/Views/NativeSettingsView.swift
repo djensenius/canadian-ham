@@ -188,7 +188,7 @@ private struct NativeDataSettingsTab: View {
         }
         do {
             try progressStore.importData(pendingImport, bank: bank)
-            appSettings.recordDataChanged()
+            appSettings.recordDataChanged(replacesLocalData: true)
             self.pendingImport = nil
             statusMessage = String(localized: "Progress imported.")
             errorMessage = ""
@@ -206,7 +206,7 @@ private struct NativeDataSettingsTab: View {
             try progressStore.resetAllData()
             MorseTrainerSettings.reset()
             appSettings.morseSettings = .default
-            appSettings.recordDataChanged()
+            appSettings.recordDataChanged(replacesLocalData: true)
             statusMessage = String(localized: "All local progress was reset.")
             errorMessage = ""
         } catch {

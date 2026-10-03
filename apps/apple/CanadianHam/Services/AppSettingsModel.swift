@@ -9,6 +9,7 @@ final class AppSettingsModel: ObservableObject {
     }
     @Published var morseSettings: MorseTrainerSettings
     @Published private(set) var dataRevision = 0
+    @Published private(set) var localDataReplacementRevision = 0
 
     private var progressStoreCancellable: AnyCancellable?
 
@@ -16,8 +17,11 @@ final class AppSettingsModel: ObservableObject {
         self.morseSettings = morseSettings
     }
 
-    func recordDataChanged() {
+    func recordDataChanged(replacesLocalData: Bool = false) {
         dataRevision += 1
+        if replacesLocalData {
+            localDataReplacementRevision += 1
+        }
     }
 
     private func bindProgressStore() {

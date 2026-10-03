@@ -48,10 +48,10 @@ struct RootView: View {
     @State private var morseSettings = MorseTrainerSettings.load()
     @State private var dataRevision = 0
     @State private var navigationPath: [LearnRoute] = []
+    @StateObject private var practiceSessionStates = PracticeSessionStateCache()
+    @StateObject private var mockExamState = MockExamState()
 #if os(iOS)
     @State private var compactNavigationPath = NavigationPath()
-    @StateObject private var compactPracticeSessionStates = PracticeSessionStateCache()
-    @StateObject private var compactMockExamState = MockExamState()
 #endif
     @State private var didApplyLaunchNavigation = false
 
@@ -150,62 +150,90 @@ struct RootView: View {
     }
 
     private func compactRootList(progressStore: ProgressStoreService) -> some View {
-        List {
-            Section {
-                NavigationLink(value: CompactSection.home) {
-                    Label("Home", systemImage: "house")
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                compactRootSection("Study") {
+                    compactRootButton("Home", systemImage: "house", destination: .home)
+                    compactRootButton("Learn", systemImage: "book.closed", destination: .learn)
+                    compactRootButton("Practice", systemImage: "checklist", destination: .practice)
                 }
-                NavigationLink(value: CompactSection.learn) {
-                    Label("Learn", systemImage: "book.closed")
-                }
-                NavigationLink(value: CompactSection.practice) {
-                    Label("Practice", systemImage: "checklist")
-                }
-            } header: {
-                Text("Study")
-                    .textCase(nil)
-                    .accessibilityAddTraits(.isHeader)
-            }
 
-            Section {
-                NavigationLink(value: CompactSection.morse) {
-                    Label("Morse", systemImage: "waveform")
+                compactRootSection("Tools") {
+                    compactRootButton("Morse", systemImage: "waveform", destination: .morse)
+                    compactRootButton("Settings", systemImage: "gearshape", destination: .settings)
                 }
-                NavigationLink(value: CompactSection.settings) {
-                    Label("Settings", systemImage: "gearshape")
-                }
-            } header: {
-                Text("Tools")
-                    .textCase(nil)
-                    .accessibilityAddTraits(.isHeader)
             }
+            .pagePadding()
         }
-        .listStyle(.insetGrouped)
-        .scrollContentBackground(.hidden)
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Canadian Ham")
         .accessibilityIdentifier("compact-root-list")
+    }
+
+    private func compactRootSection<Content: View>(_ title: LocalizedStringKey, @ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            Text(title) // l10n: localized
+                .font(DesignTokens.FontScale.caption.weight(.semibold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .textCase(nil)
+                .accessibilityAddTraits(.isHeader)
+            VStack(spacing: DesignTokens.Spacing.sm) {
+                content()
+            }
+        }
+    }
+
+    private func compactRootButton(_ title: LocalizedStringKey, systemImage: String, destination: CompactSection) -> some View {
+        Button {
+            compactNavigationPath.append(destination)
+        } label: {
+            HStack(spacing: DesignTokens.Spacing.md) {
+                Image(systemName: systemImage)
+                    .font(DesignTokens.FontScale.body)
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .frame(width: 28)
+                Text(title) // l10n: localized
+                    .font(DesignTokens.FontScale.body)
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Image(systemName: "chevron.right")
+                    .font(DesignTokens.FontScale.caption.weight(.semibold))
+                    .foregroundStyle(DesignTokens.Colors.inkMuted)
+            }
+            .padding(DesignTokens.Spacing.md)
+            .frame(maxWidth: .infinity, minHeight: 56, alignment: .leading)
+            .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(title)) // l10n: localized
     }
 
     @ViewBuilder
     private func compactSectionDestination(_ section: CompactSection, bank: QuestionBank, contentLibrary: ContentLibrary, progressStore: ProgressStoreService) -> some View {
         switch section {
         case .home:
-            compactHomeView(bank: bank, progressStore: progressStore)
-                .background(DesignTokens.Colors.paper)
+            compactLanguageContainer(progressStore: progressStore) {
+                compactHomeView(bank: bank, progressStore: progressStore)
+                    .background(DesignTokens.Colors.paper)
+            }
         case .learn:
-            compactLearnView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
-                .background(DesignTokens.Colors.paper)
+            compactLanguageContainer(progressStore: progressStore) {
+                compactLearnView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
+                    .background(DesignTokens.Colors.paper)
+            }
         case .practice:
-            compactPracticeContainer(progressStore: progressStore) {
+            compactLanguageContainer(progressStore: progressStore) {
                 compactPracticeView(bank: bank, progressStore: progressStore)
                     .background(DesignTokens.Colors.paper)
             }
         case .morse:
-            MorseTrainerView(settings: $morseSettings) { nextSettings in
-                morseSettings = nextSettings
+            compactLanguageContainer(progressStore: progressStore) {
+                MorseTrainerView(settings: $morseSettings) { nextSettings in
+                    morseSettings = nextSettings
+                }
+                .background(DesignTokens.Colors.paper)
             }
-            .background(DesignTokens.Colors.paper)
         case .settings:
             compactSettingsView(bank: bank, progressStore: progressStore)
                 .background(DesignTokens.Colors.paper)
@@ -220,7 +248,7 @@ struct RootView: View {
             openCompactMockExam()
         } openMorse: {
             selection = .morse
-            compactNavigationPath = compactPath(to: .morse)
+            compactNavigationPath.append(CompactSection.morse)
         }
     }
 
@@ -237,7 +265,7 @@ struct RootView: View {
         }
     }
 
-    private func compactPracticeContainer<Content: View>(progressStore: ProgressStoreService, @ViewBuilder content: () -> Content) -> some View {
+    private func compactLanguageContainer<Content: View>(progressStore: ProgressStoreService, @ViewBuilder content: () -> Content) -> some View {
         VStack(spacing: 0) {
             questionLanguagePicker(progressStore: progressStore)
                 .padding(DesignTokens.Spacing.sm)
@@ -267,14 +295,24 @@ struct RootView: View {
                 progressStore: progressStore,
                 scope: scope,
                 language: $language,
-                state: compactPracticeSessionStates.state(for: scope),
+                state: practiceSessionStates.state(for: scope),
+                dataRevision: combinedDataRevision,
+                localDataReplacementRevision: appSettings.localDataReplacementRevision,
                 headerAccessory: AnyView(questionLanguagePicker(progressStore: progressStore))
             ) {
                 recordDataChanged()
             }
         case .mockExam:
-            MockExamView(bank: bank, progressStore: progressStore, language: language, state: compactMockExamState) {
-                recordDataChanged()
+            compactLanguageContainer(progressStore: progressStore) {
+                MockExamView(
+                    bank: bank,
+                    progressStore: progressStore,
+                    language: language,
+                    state: mockExamState,
+                    localDataReplacementRevision: appSettings.localDataReplacementRevision
+                ) {
+                    recordDataChanged()
+                }
             }
         }
     }
@@ -287,14 +325,14 @@ struct RootView: View {
             morseSettings: $morseSettings,
             openMorse: {
                 selection = .morse
-                compactNavigationPath = compactPath(to: .morse)
+                compactNavigationPath.append(CompactSection.morse)
             },
             openAbout: {
                 compactNavigationPath.append(CompactSettingsRoute.about)
                 selection = .about
             }
-        ) {
-            recordDataChanged()
+        ) { replacesLocalData in
+            recordDataChanged(replacesLocalData: replacesLocalData)
         }
     }
 
@@ -308,12 +346,12 @@ struct RootView: View {
 
     private func openCompactPractice(_ scope: PracticeScope) {
         selection = .practice(scope)
-        compactNavigationPath = compactPath(to: .practice, appending: CompactPracticeRoute.practice(scope))
+        compactNavigationPath.append(CompactPracticeRoute.practice(scope))
     }
 
     private func openCompactMockExam() {
         selection = .mockExam
-        compactNavigationPath = compactPath(to: .practice, appending: CompactPracticeRoute.mockExam)
+        compactNavigationPath.append(CompactPracticeRoute.mockExam)
     }
 
     private func compactPath(to section: CompactSection) -> NavigationPath {
@@ -435,9 +473,13 @@ struct RootView: View {
         dataRevision + appSettings.dataRevision
     }
 
-    private func recordDataChanged() {
+    private func recordDataChanged(replacesLocalData: Bool = false) {
         dataRevision += 1
-        appSettings.recordDataChanged()
+        appSettings.recordDataChanged(replacesLocalData: replacesLocalData)
+        if replacesLocalData {
+            practiceSessionStates.clear()
+            mockExamState.resetSession(localDataReplacementRevision: appSettings.localDataReplacementRevision)
+        }
     }
 
     @ViewBuilder
@@ -483,12 +525,21 @@ struct RootView: View {
                 bank: bank,
                 progressStore: progressStore,
                 scope: scope,
-                language: $language
+                language: $language,
+                state: practiceSessionStates.state(for: scope),
+                dataRevision: combinedDataRevision,
+                localDataReplacementRevision: appSettings.localDataReplacementRevision
             ) {
                 recordDataChanged()
             }
         case .mockExam:
-            MockExamView(bank: bank, progressStore: progressStore, language: language) {
+            MockExamView(
+                bank: bank,
+                progressStore: progressStore,
+                language: language,
+                state: mockExamState,
+                localDataReplacementRevision: appSettings.localDataReplacementRevision
+            ) {
                 recordDataChanged()
             }
         case .morse:
@@ -496,8 +547,8 @@ struct RootView: View {
                 morseSettings = nextSettings
             }
         case .settings:
-            SettingsView(bank: bank, progressStore: progressStore, morseSettings: $morseSettings, openMorse: { selection = .morse }, openAbout: { selection = .about }) {
-                recordDataChanged()
+            SettingsView(bank: bank, progressStore: progressStore, morseSettings: $morseSettings, openMorse: { selection = .morse }, openAbout: { selection = .about }) { replacesLocalData in
+                recordDataChanged(replacesLocalData: replacesLocalData)
             }
         case .about:
             AboutView(bank: bank)

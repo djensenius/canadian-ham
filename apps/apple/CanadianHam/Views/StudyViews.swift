@@ -328,6 +328,8 @@ final class PracticeSessionState: ObservableObject {
     @Published var committedQuestionIds: Set<String> = []
     @Published var reviewSubmitted = false
     @Published var loadedScope: PracticeScope?
+    @Published var loadedDataRevision = 0
+    @Published var loadedLocalDataReplacementRevision = 0
     @Published var answeredCount = 0
     @Published var correctCount = 0
     @Published var errorMessage: String?
@@ -343,6 +345,10 @@ final class PracticeSessionStateCache: ObservableObject {
         states[scope] = state
         return state
     }
+
+    func clear() {
+        states.removeAll()
+    }
 }
 
 struct PracticeSessionView: View {
@@ -350,7 +356,9 @@ struct PracticeSessionView: View {
     @ObservedObject var progressStore: ProgressStoreService
     let scope: PracticeScope
     @Binding var language: BankLanguage
-    @StateObject private var state: PracticeSessionState
+    @ObservedObject private var state: PracticeSessionState
+    let dataRevision: Int
+    let localDataReplacementRevision: Int
     let headerAccessory: AnyView?
     let onDataChanged: () -> Void
 
@@ -359,7 +367,9 @@ struct PracticeSessionView: View {
         progressStore: ProgressStoreService,
         scope: PracticeScope,
         language: Binding<BankLanguage>,
-        state: PracticeSessionState = PracticeSessionState(),
+        state: PracticeSessionState,
+        dataRevision: Int,
+        localDataReplacementRevision: Int,
         headerAccessory: AnyView? = nil,
         onDataChanged: @escaping () -> Void
     ) {
@@ -367,7 +377,9 @@ struct PracticeSessionView: View {
         self.progressStore = progressStore
         self.scope = scope
         _language = language
-        _state = StateObject(wrappedValue: state)
+        self.state = state
+        self.dataRevision = dataRevision
+        self.localDataReplacementRevision = localDataReplacementRevision
         self.headerAccessory = headerAccessory
         self.onDataChanged = onDataChanged
     }
@@ -394,7 +406,7 @@ struct PracticeSessionView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle(Text(scopeTitleAttributed)) // l10n: localized
-        .task(id: scope) { loadSessionIfNeeded() }
+        .task(id: sessionReloadKey) { loadSessionIfNeeded() }
     }
 
     private var header: some View {
@@ -475,6 +487,17 @@ struct PracticeSessionView: View {
         }
     }
 
+    private var sessionReloadKey: String {
+        "\(scope.title)/\(dataRevision)/\(localDataReplacementRevision)"
+    }
+
+    private var reloadsQuestionsAfterProgressChanges: Bool {
+        switch scope {
+        case .weak, .due: true
+        case .all, .category, .subsection: false
+        }
+    }
+
     private func questionView(_ item: PracticeQuestionItem) -> some View {
         let question = item.question
         let selected = state.selectedByQuestionId[question.id]
@@ -547,7 +570,9 @@ struct PracticeSessionView: View {
     }
 
     private func loadSessionIfNeeded() {
-        guard state.loadedScope != scope || state.items.isEmpty else { return }
+        let localDataWasReplaced = state.loadedLocalDataReplacementRevision != localDataReplacementRevision
+        let scopedQuestionListChanged = reloadsQuestionsAfterProgressChanges && state.loadedDataRevision != dataRevision
+        guard state.loadedScope != scope || state.items.isEmpty || localDataWasReplaced || scopedQuestionListChanged else { return }
         loadSession()
     }
 
@@ -580,6 +605,8 @@ struct PracticeSessionView: View {
             progress.sort { $0.questionId < $1.questionId }
             state.items = loaded
             state.loadedScope = scope
+            state.loadedDataRevision = dataRevision
+            state.loadedLocalDataReplacementRevision = localDataReplacementRevision
             state.currentIndex = 0
             state.selectedByQuestionId = [:]
             state.committedQuestionIds = []
@@ -591,6 +618,8 @@ struct PracticeSessionView: View {
             state.errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
             state.items = []
             state.loadedScope = nil
+            state.loadedDataRevision = dataRevision
+            state.loadedLocalDataReplacementRevision = localDataReplacementRevision
         }
     }
 
@@ -684,37 +713,59 @@ final class MockExamState: ObservableObject {
     @Published var flagged: Set<String> = []
     @Published var secondsElapsed = 0
     @Published var timerRunning = false
+    @Published var timerRunStartedAt: Date?
     @Published var result: StoredExamAttempt?
     @Published var errorMessage: String?
-    @Published var confirmingSubmit = false
-    @Published var isSubmitting = false
     @Published var timerStatus = String(localized: "Timer off")
-    @Published var showingNavigator = false
-    @Published var shouldFocusResultsHeading = false
+    @Published var loadedLocalDataReplacementRevision = 0
+
+    func resetSession(localDataReplacementRevision: Int) {
+        seed = ""
+        startedAt = ""
+        generatedItems = []
+        currentIndex = 0
+        selectedByQuestionId = [:]
+        flagged = []
+        secondsElapsed = 0
+        timerRunning = false
+        timerRunStartedAt = nil
+        result = nil
+        errorMessage = nil
+        timerStatus = String(localized: "Timer off")
+        loadedLocalDataReplacementRevision = localDataReplacementRevision
+    }
 }
 
 struct MockExamView: View {
     let bank: QuestionBank
     @ObservedObject var progressStore: ProgressStoreService
     let language: BankLanguage
-    @StateObject private var state: MockExamState
+    @ObservedObject private var state: MockExamState
+    let localDataReplacementRevision: Int
     let onDataChanged: () -> Void
 
     init(
         bank: QuestionBank,
         progressStore: ProgressStoreService,
         language: BankLanguage,
-        state: MockExamState = MockExamState(),
+        state: MockExamState,
+        localDataReplacementRevision: Int,
         onDataChanged: @escaping () -> Void
     ) {
         self.bank = bank
         self.progressStore = progressStore
         self.language = language
-        _state = StateObject(wrappedValue: state)
+        self.state = state
+        self.localDataReplacementRevision = localDataReplacementRevision
         self.onDataChanged = onDataChanged
     }
 
     @AccessibilityFocusState private var resultFocus: MockExamAccessibilityFocus?
+    @State private var confirmingSubmit = false
+    @State private var confirmingEndExam = false
+    @State private var isSubmitting = false
+    @State private var showingNavigator = false
+    @State private var shouldFocusResultsHeading = false
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
@@ -743,10 +794,10 @@ struct MockExamView: View {
         .id(state.result?.id ?? "mock-exam-active")
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Mock exam")
-        .sheet(isPresented: $state.showingNavigator) {
+        .sheet(isPresented: $showingNavigator) {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 navigator
-                Button { state.showingNavigator = false } label: {
+                Button { showingNavigator = false } label: {
                     AccessibleSecondaryButtonLabel(title: "Done")
                 }
                 .buttonStyle(AccessibleSecondaryButtonStyle())
@@ -754,17 +805,22 @@ struct MockExamView: View {
             .pagePadding()
             .background(DesignTokens.Colors.paper)
         }
+        .onAppear { refreshForCurrentTimerState() }
+        .task(id: localDataReplacementRevision) { resetIfLocalDataWasReplaced() }
         .onReceive(timer) { _ in
-            if state.timerRunning {
-                state.secondsElapsed += 1
-                state.timerStatus = String(localized: "Timer running, \(state.secondsElapsed) seconds elapsed")
-            }
+            refreshForCurrentTimerState()
         }
-        .alert("Submit mock exam?", isPresented: $state.confirmingSubmit) {
+        .alert("Submit mock exam?", isPresented: $confirmingSubmit) {
             Button("Cancel", role: .cancel) {}
             Button("Submit", role: .destructive) { submitExam() }
         } message: {
             Text(submitConfirmationText) // l10n: localized
+        }
+        .alert("End mock exam?", isPresented: $confirmingEndExam) {
+            Button("Cancel", role: .cancel) {}
+            Button("End exam", role: .destructive) { resetExam() }
+        } message: {
+            Text("Discard this in-progress mock exam and return to the start screen.")
         }
     }
 
@@ -852,10 +908,16 @@ struct MockExamView: View {
                 navigator
             }
 
-            Button("Submit exam") { state.confirmingSubmit = true }
+            Button("Submit exam") { confirmingSubmit = true }
                 .buttonStyle(AccessiblePrimaryButtonStyle())
-                .disabled(state.isSubmitting)
+                .disabled(isSubmitting)
                 .accessibilityIdentifier("submit-mock-exam-button")
+
+            if usesNavigatorSheet {
+                Button("End exam", role: .destructive) { confirmingEndExam = true }
+                    .buttonStyle(AccessibleSecondaryButtonStyle())
+                    .accessibilityIdentifier("end-mock-exam-button")
+            }
         }
     }
 
@@ -923,7 +985,7 @@ struct MockExamView: View {
     @ViewBuilder
     private var questionsButton: some View {
         if usesNavigatorSheet {
-            Button { state.showingNavigator = true } label: {
+            Button { showingNavigator = true } label: {
                 AccessibleSecondaryButtonLabel(title: "Questions")
             }
             .buttonStyle(AccessibleSecondaryButtonStyle())
@@ -976,8 +1038,7 @@ struct MockExamView: View {
             HStack {
                 let buttonTitle: LocalizedStringKey = state.timerRunning ? "Pause timer" : state.secondsElapsed == 0 ? "Start timer" : "Resume timer"
                 tokenButton(buttonTitle) {
-                    state.timerRunning.toggle()
-                    state.timerStatus = state.timerRunning ? String(localized: "Timer running, \(state.secondsElapsed) seconds elapsed") : String(localized: "Timer paused, \(state.secondsElapsed) seconds elapsed")
+                    toggleTimer()
                     AccessibilityNotification.Announcement(state.timerStatus).post()
                 }
             }
@@ -1068,14 +1129,14 @@ struct MockExamView: View {
     private func jumpToNextUnanswered() {
         if let nextUnansweredIndex {
             state.currentIndex = nextUnansweredIndex
-            state.showingNavigator = false
+            showingNavigator = false
         }
     }
 
     private func jumpToNextFlagged() {
         if let nextFlaggedIndex {
             state.currentIndex = nextFlaggedIndex
-            state.showingNavigator = false
+            showingNavigator = false
         }
     }
 
@@ -1150,6 +1211,55 @@ struct MockExamView: View {
         }
     }
 
+    private func resetIfLocalDataWasReplaced() {
+        guard state.loadedLocalDataReplacementRevision != localDataReplacementRevision else { return }
+        state.resetSession(localDataReplacementRevision: localDataReplacementRevision)
+        confirmingSubmit = false
+        confirmingEndExam = false
+        showingNavigator = false
+        shouldFocusResultsHeading = false
+        isSubmitting = false
+    }
+
+    private func refreshForCurrentTimerState(now: Date = Date()) {
+        guard !state.generatedItems.isEmpty, state.result == nil else { return }
+        guard progressStore.preferences.examTimerEnabled else {
+            state.timerRunning = false
+            state.timerRunStartedAt = nil
+            state.timerStatus = String(localized: "Timer off")
+            return
+        }
+        guard state.timerRunning else {
+            state.timerRunStartedAt = nil
+            state.timerStatus = String(localized: "Timer paused, \(state.secondsElapsed) seconds elapsed")
+            return
+        }
+        guard let timerRunStartedAt = state.timerRunStartedAt else {
+            state.timerRunStartedAt = now
+            state.timerStatus = String(localized: "Timer running, \(state.secondsElapsed) seconds elapsed")
+            return
+        }
+        let additionalSeconds = max(0, Int(now.timeIntervalSince(timerRunStartedAt)))
+        if additionalSeconds > 0 {
+            state.secondsElapsed += additionalSeconds
+            state.timerRunStartedAt = now
+        }
+        state.timerStatus = String(localized: "Timer running, \(state.secondsElapsed) seconds elapsed")
+    }
+
+    private func toggleTimer() {
+        refreshForCurrentTimerState()
+        if state.timerRunning {
+            state.timerRunning = false
+            state.timerRunStartedAt = nil
+            state.timerStatus = String(localized: "Timer paused, \(state.secondsElapsed) seconds elapsed")
+        } else {
+            state.timerRunning = true
+            state.timerRunStartedAt = Date()
+            state.timerStatus = String(localized: "Timer running, \(state.secondsElapsed) seconds elapsed")
+        }
+    }
+
     private func startExam() {
         do {
             state.seed = AppLaunchArguments.value(after: "-CanadianHamMockExamSeed") ?? "mock-exam/\(UUID().uuidString)"
@@ -1174,7 +1284,9 @@ struct MockExamView: View {
             state.flagged = []
             state.secondsElapsed = 0
             state.timerRunning = progressStore.preferences.examTimerEnabled
+            state.timerRunStartedAt = progressStore.preferences.examTimerEnabled ? Date() : nil
             state.timerStatus = progressStore.preferences.examTimerEnabled ? String(localized: "Timer running, 0 seconds elapsed") : String(localized: "Timer off")
+            state.loadedLocalDataReplacementRevision = localDataReplacementRevision
             state.result = nil
             state.errorMessage = nil
         } catch {
@@ -1183,9 +1295,10 @@ struct MockExamView: View {
     }
 
     private func submitExam() {
-        guard state.result == nil, !state.isSubmitting else { return }
-        state.isSubmitting = true
-        defer { state.isSubmitting = false }
+        guard state.result == nil, !isSubmitting else { return }
+        refreshForCurrentTimerState()
+        isSubmitting = true
+        defer { isSubmitting = false }
         do {
             let submittedAt = try AppleStudyEngine.canonicalNow()
             let attempt = try AppleStudyEngine.buildExamAttempt(
@@ -1207,9 +1320,10 @@ struct MockExamView: View {
             }
             try progressStore.saveExamAttempt(attempt)
             try progressStore.saveQuestionProgress(progress)
-            state.shouldFocusResultsHeading = true
+            shouldFocusResultsHeading = true
             state.result = attempt
             state.timerRunning = false
+            state.timerRunStartedAt = nil
             onDataChanged()
         } catch {
             state.errorMessage = localizedErrorMessage(String(localized: "Unable to save mock exam: \("")"), detail: error)
@@ -1227,12 +1341,12 @@ struct MockExamView: View {
     }
 
     private func focusResultsHeadingAfterLayout() {
-        guard state.shouldFocusResultsHeading else { return }
+        guard shouldFocusResultsHeading else { return }
         Task { @MainActor in
             // Let SwiftUI finish replacing the active exam view before requesting VoiceOver focus.
             try? await Task.sleep(nanoseconds: 150_000_000)
             resultFocus = .resultsHeading
-            state.shouldFocusResultsHeading = false
+            shouldFocusResultsHeading = false
         }
     }
 
@@ -1241,13 +1355,12 @@ struct MockExamView: View {
     }
 
     private func resetExam() {
-        state.seed = ""
-        state.startedAt = ""
-        state.generatedItems = []
-        state.result = nil
-        state.selectedByQuestionId = [:]
-        state.flagged = []
-        state.currentIndex = 0
+        state.resetSession(localDataReplacementRevision: localDataReplacementRevision)
+        confirmingSubmit = false
+        confirmingEndExam = false
+        showingNavigator = false
+        shouldFocusResultsHeading = false
+        isSubmitting = false
     }
 }
 
@@ -1257,7 +1370,7 @@ struct SettingsView: View {
     @Binding var morseSettings: MorseTrainerSettings
     let openMorse: () -> Void
     let openAbout: () -> Void
-    let onDataChanged: () -> Void
+    let onDataChanged: (_ replacesLocalData: Bool) -> Void
 
     @State private var statusMessage: String?
     @State private var errorMessage: String?
@@ -1381,7 +1494,7 @@ struct SettingsView: View {
             try progressStore.updatePreferences(next)
             statusMessage = String(localized: "Preferences saved locally.")
             errorMessage = nil
-            onDataChanged()
+            onDataChanged(false)
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
@@ -1423,7 +1536,7 @@ struct SettingsView: View {
             self.pendingImport = nil
             statusMessage = String(localized: "Progress imported.")
             errorMessage = nil
-            onDataChanged()
+            onDataChanged(true)
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
@@ -1436,7 +1549,7 @@ struct SettingsView: View {
             morseSettings = .default
             statusMessage = String(localized: "All local progress was reset.")
             errorMessage = nil
-            onDataChanged()
+            onDataChanged(true)
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
