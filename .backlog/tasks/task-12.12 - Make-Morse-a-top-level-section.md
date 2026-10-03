@@ -290,5 +290,5 @@ Fix round 6 final validation (implementation commit 047bc4f85911a46ee5a3ed01c13b
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Fix round 5 audited the compact root screen in light/dark, moved transient mock-exam UI flags back to local view state, invalidated cached compact practice/mock sessions on data replacement, restored compact language pickers and push-style Back behavior, added End exam, and updated UI coverage. Verified on aa35ea4b0b8ab1d1f172a858d7755b37517630e7 with pnpm check:apple-l10n, node scripts/check-apple-text-sources.ts, full iOS xbuild (67 tests), and full macOS xbuild (32 tests); tvOS/visionOS skipped because changed Swift files are not compiled by those targets.
+Fix round 6 scoped Weak areas/Due review reloads to scope or data-REPLACEMENT changes, exposed confirmed End exam on compact and regular widths, preserved mock-exam timer fractions, restored the Localizable trailing newline, and made compact root rows NavigationLink-based while adding UI/unit coverage. Verified with targeted xbuild while iterating, pnpm check:apple-l10n, node scripts/check-apple-text-sources.ts, full iOS xbuild (72 tests, light/dark audits included) and full macOS xbuild (33 tests); tvOS/visionOS AC4 evidence remains the round-4 full runs because this round skipped those suites as documented in notes.
 <!-- SECTION:FINAL_SUMMARY:END -->
