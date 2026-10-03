@@ -95,16 +95,16 @@ struct HomeView: View {
             }
             .font(DesignTokens.FontScale.body.weight(.bold))
             .foregroundStyle(summary.tint)
+            HStack {
+                tokenButton("Practice weak areas") { startPractice(.weak) }
+                tokenButton("Review due questions") { startPractice(.due) }
+            }
             Text(summary.message) // l10n: localized
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
             Text("Due review: \(summary.dueReviewCount). Weak subsections: \(summary.weakSubsectionCount). Completed mock exams: \(summary.completedExamCount).")
                 .font(DesignTokens.FontScale.caption)
                 .foregroundStyle(DesignTokens.Colors.inkMuted)
-            HStack {
-                tokenButton("Practice weak areas") { startPractice(.weak) }
-                tokenButton("Review due questions") { startPractice(.due) }
-            }
         }
         .paperCard()
         .accessibilityIdentifier("readiness-card")

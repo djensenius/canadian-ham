@@ -70,13 +70,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
         defer { app.terminate() }
 
         XCTAssertTrue(app.staticTexts["Ready for Basic with Honours?"].firstMatch.waitForExistence(timeout: 10))
-        let tabBar = app.tabBars.firstMatch
-        XCTAssertTrue(tabBar.waitForExistence(timeout: 5), "Compact iPhone navigation should expose a tab bar")
-        tabBar.buttons["Morse"].tap()
+        let morseTab = app.buttons["Morse"].firstMatch
+        XCTAssertTrue(morseTab.waitForExistence(timeout: 5), "Compact iPhone navigation should expose a Morse tab")
+        morseTab.tap()
         XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
-        tabBar.buttons["Home"].tap()
+        app.buttons["Home"].firstMatch.tap()
         XCTAssertTrue(app.staticTexts["Ready for Basic with Honours?"].firstMatch.waitForExistence(timeout: 10))
-        tabBar.buttons["Learn"].tap()
+        app.buttons["Learn"].firstMatch.tap()
         XCTAssertTrue(app.staticTexts["Learn"].firstMatch.waitForExistence(timeout: 10))
     }
 

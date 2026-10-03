@@ -1,5 +1,8 @@
 import CanadianHamContent
 import SwiftUI
+#if os(iOS)
+import UIKit
+#endif
 
 private enum SidebarSelection: Hashable {
     case home
@@ -43,6 +46,25 @@ struct RootView: View {
 
     init(appSettings: AppSettingsModel = AppSettingsModel()) {
         _appSettings = StateObject(wrappedValue: appSettings)
+#if os(iOS)
+        let tabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.configureWithOpaqueBackground()
+        tabBarAppearance.backgroundColor = .systemBackground
+        for itemAppearance in [
+            tabBarAppearance.stackedLayoutAppearance,
+            tabBarAppearance.inlineLayoutAppearance,
+            tabBarAppearance.compactInlineLayoutAppearance,
+        ] {
+            itemAppearance.normal.iconColor = .black
+            itemAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.black]
+            itemAppearance.selected.iconColor = .black
+            itemAppearance.selected.titleTextAttributes = [.foregroundColor: UIColor.black]
+        }
+        UITabBar.appearance().standardAppearance = tabBarAppearance
+        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+        UITabBar.appearance().tintColor = .black
+        UITabBar.appearance().unselectedItemTintColor = .black
+#endif
     }
 
     var body: some View {
@@ -148,6 +170,7 @@ struct RootView: View {
             NavigationStack {
                 compactHomeView(bank: bank, progressStore: progressStore)
                     .background(DesignTokens.Colors.paper)
+                    .toolbar { languageToolbarItem(progressStore: progressStore) }
             }
             .tabItem { Label("Home", systemImage: "house") }
             .tag(CompactTab.home)
@@ -155,6 +178,7 @@ struct RootView: View {
             NavigationStack(path: $navigationPath) {
                 compactLearnView(bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
                     .background(DesignTokens.Colors.paper)
+                    .toolbar { languageToolbarItem(progressStore: progressStore) }
                     .navigationDestination(for: LearnRoute.self) { route in
                         learnDestination(route, bank: bank, contentLibrary: contentLibrary, progressStore: progressStore)
                     }
@@ -165,6 +189,7 @@ struct RootView: View {
             NavigationStack {
                 compactPracticeView(bank: bank, progressStore: progressStore)
                     .background(DesignTokens.Colors.paper)
+                    .toolbar { languageToolbarItem(progressStore: progressStore) }
             }
             .tabItem { Label("Practice", systemImage: "checklist") }
             .tag(CompactTab.practice)
@@ -174,6 +199,7 @@ struct RootView: View {
                     morseSettings = nextSettings
                 }
                 .background(DesignTokens.Colors.paper)
+                .toolbar { languageToolbarItem(progressStore: progressStore) }
             }
             .tabItem { Label("Morse", systemImage: "waveform") }
             .tag(CompactTab.morse)
@@ -182,10 +208,13 @@ struct RootView: View {
             NavigationStack {
                 compactSettingsView(bank: bank, progressStore: progressStore)
                     .background(DesignTokens.Colors.paper)
+                    .toolbar { languageToolbarItem(progressStore: progressStore) }
             }
             .tabItem { Label("Settings", systemImage: "gearshape") }
             .tag(CompactTab.settings)
         }
+        .toolbarBackground(DesignTokens.Colors.paper, for: .tabBar)
+        .toolbarBackground(.visible, for: .tabBar)
         .onAppear {
             language = progressStore.preferences.language
             applyLaunchNavigation(bank: bank, contentLibrary: contentLibrary)
@@ -194,6 +223,7 @@ struct RootView: View {
             language = next
         }
     }
+
 
     @ViewBuilder
     private func compactHomeView(bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
