@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-03 12:03'
-updated_date: '2026-10-03 16:50'
+updated_date: '2026-10-03 16:57'
 labels:
   - web
   - apple
@@ -39,6 +39,8 @@ Why: the owner tried the preview and doesn't want Morse buried behind a Settings
 1. Remove Morse preview-toggle gating and migrate stored preferences without the enabled flag.\n2. Promote Morse to a top-level destination on web and all Apple platforms, with a preview-labelled Morse home, placeholders, and platform-appropriate settings placement.\n3. Update launch-argument handling and UI/unit tests, then validate web and Apple checks before finalizing.
 
 Fix review round: replace compact iPhone one-way Morse toolbar with a compact tab interface, add navigation/UI coverage, keep iPad/macOS sidebar behavior, and restore catalogue/web/documentation cleanup requested by review.
+
+Review round 3: remove compact tab UIKit appearance customization, restore main's ISED draft-attribution wording, preserve compact per-tab navigation state, tighten iPhone tab UI tests, revert unrelated Home ordering, add release-checklist coverage, then run targeted checks followed by final platform suites.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
