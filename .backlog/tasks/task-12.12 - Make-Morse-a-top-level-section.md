@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-03 12:03'
-updated_date: '2026-10-03 12:04'
+updated_date: '2026-10-03 13:30'
 labels:
   - web
   - apple
@@ -38,3 +38,9 @@ Why: the owner tried the preview and doesn't want Morse buried behind a Settings
 <!-- SECTION:PLAN:BEGIN -->
 1. Remove Morse preview-toggle gating and migrate stored preferences without the enabled flag.\n2. Promote Morse to a top-level destination on web and all Apple platforms, with a preview-labelled Morse home, placeholders, and platform-appropriate settings placement.\n3. Update launch-argument handling and UI/unit tests, then validate web and Apple checks before finalizing.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented Morse as an always-visible top-level destination on web and Apple platforms; removed web/Apple preview-toggle UI and setting gates; moved web/iOS Morse settings into the Morse section; added Morse placeholders and Quick listen; updated tests and localization. Validation so far: web focused tests, pnpm test, web build, apple text-source check, apple l10n, macOS xbuild passed; iOS/tvOS/visionOS xbuild runs timed out before completion after many tests passed.
+<!-- SECTION:NOTES:END -->
