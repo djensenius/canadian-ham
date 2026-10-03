@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-02 18:42'
+updated_date: '2026-10-03 02:06'
 labels:
   - web
   - apple
@@ -40,6 +40,8 @@ Why: learners must hear clean, click-free Morse offline on every platform, with 
 4. Wire packages/morse-swift into Apple targets, add AVAudioEngine/AVAudioSourceNode playback and reachable Morse UI behind the toggle on each platform.
 5. Add Apple unit/UI tests, regenerate the Xcode project twice, then run required web, localization, network, and xbuild checks before finalizing.
 6. Fix review findings for task-12.3: accessibility announcements, cancellable web playback, fixed timing profiles, click-free stop ramps, localization, cleanup/focus, and requested tests/check notes.
+
+7. Second review fix round: make web/Apple stops wait for audible fade-out, clean up fixed-profile/settings edge cases and accessibility audits, create the requested follow-up, then rerun required web and Apple checks.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
