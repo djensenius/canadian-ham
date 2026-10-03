@@ -40,4 +40,6 @@ Why: the owner wants the Mac app to feel native: app settings belong in the stan
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented a native macOS Settings scene with General, Data, and Morse tabs backed by the shared ProgressStoreService and MorseTrainerSettings state; removed the macOS in-app Settings sidebar entry.
+
+Validation gap: macOS xbuild suite passed and shared settings-model unit coverage was added. Full iOS suite timed out before completion, so AC3 remains unchecked pending a completed iOS run.
 <!-- SECTION:NOTES:END -->
