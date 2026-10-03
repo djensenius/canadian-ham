@@ -1,11 +1,11 @@
 ---
 id: TASK-12.12
 title: Make Morse a top-level section
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-03 12:03'
-updated_date: '2026-10-03 19:35'
+updated_date: '2026-10-03 19:40'
 labels:
   - web
   - apple
@@ -30,7 +30,7 @@ Why: the owner tried the preview and doesn't want Morse buried behind a Settings
 - [x] #1 Morse is a top-level section on every platform: web top navigation (#/morse), iOS/iPadOS tab or sidebar, macOS sidebar, tvOS and visionOS menu entry; the preview toggle and its gating/redirect code are removed, and task-12.10 is closed as obsolete with a note
 - [x] #2 Morse settings (tone, speeds, timing profile, volume, ISED exam preset) live inside the Morse section on web and iOS/iPadOS; existing stored Morse preferences migrate without loss
 - [x] #3 The section has a Morse home that will host Learn (course), Practice (copy) and Exam entries; for now it hosts the existing player, labelled Preview
-- [x] #4 Accessibility audits (axe on web; light and dark Apple audits on iOS, tvOS and visionOS), French UI, and the web and four Apple xbuild suites pass
+- [ ] #4 Accessibility audits (axe on web; light and dark Apple audits on iOS, tvOS and visionOS), French UI, and the web and four Apple xbuild suites pass
 <!-- AC:END -->
 
 ## Implementation Plan
