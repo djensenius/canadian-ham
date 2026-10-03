@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-03 12:03'
-updated_date: '2026-10-03 15:29'
+updated_date: '2026-10-03 16:50'
 labels:
   - web
   - apple
@@ -49,6 +49,8 @@ Implemented Morse as an always-visible top-level destination on web and Apple pl
 Validation gap: full iOS xbuild suite was rerun after fixing home-action clipping, but it timed out at 1200s while still executing UI tests; earlier failing clipping audits were fixed and the Morse UI test passed. tvOS and visionOS xbuild suites also timed out during UI tests after unit tests and several UI tests passed. AC4 remains unchecked pending full platform suite completion.
 
 Final validation (2026-10-03): compact iPhone now exposes Morse from top-level navigation via the `compact-top-level-morse` toolbar button; `CanadianHamPracticeUITests.testCompactTopLevelNavigationExposesMorse` passed in the full iOS suite. Platform xbuild results: iOS `CanadianHam` on iPhone 17 Pro passed (`CanadianHamTests`: 30 tests, 0 failures; `CanadianHamUITests`: 30 tests, 0 failures; log `/tmp/task-12.12-ios-final.log`). tvOS `CanadianHamTV` on Apple TV 4K (3rd generation) passed (`CanadianHamTVTests`: 3 tests, 0 failures; `CanadianHamTVUITests`: 11 tests, 0 failures; log `/tmp/task-12.12-tvos.log`). visionOS `CanadianHamVision` on Apple Vision Pro passed (`CanadianHamVisionTests`: 3 tests, 0 failures; `CanadianHamVisionUITests`: 8 tests, 0 failures; log `/tmp/task-12.12-visionos.log`). Prior branch validation already recorded web focused tests, pnpm test, web build, text-source/l10n checks, and macOS xbuild passing.
+
+Fix round implementation committed through 6d929a0. Web checks passed and targeted Apple tests passed, but final iOS full run exposed accessibility audit failures in compact navigation/home/practice after the TabView change; left task In Progress for follow-up.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
