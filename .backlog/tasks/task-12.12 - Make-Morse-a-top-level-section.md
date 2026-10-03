@@ -1,11 +1,11 @@
 ---
 id: TASK-12.12
 title: Make Morse a top-level section
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-03 12:03'
-updated_date: '2026-10-03 22:35'
+updated_date: '2026-10-03 22:36'
 labels:
   - web
   - apple
