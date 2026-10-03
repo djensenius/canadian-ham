@@ -45,9 +45,14 @@ platform) and share one build lock, so don't run them by reflex.
   - web or TS package changes: `pnpm typecheck`, `pnpm test`, plus the checks for what changed
     (`pnpm build:web` and the URL/CSP audit for web; `pnpm check:schemas` and `pnpm import:check`
     for content and schemas).
-  - shared Apple code (`apps/apple/CanadianHam/`, `packages/*-swift`): iOS and macOS suites.
-  - tvOS or visionOS code (`apps/apple/Platforms/<platform>/`, their test targets): that platform.
-  - Swift package only: `swift test` in the package (or its `xbuild` scheme) plus iOS and macOS.
+  - Apple code: decide by target membership in `apps/apple/project.yml`, not by folder. Run
+    the suite of every platform whose target compiles a changed file or links a changed Swift
+    package. iOS and macOS share the `CanadianHam` target; tvOS and visionOS also compile some
+    files from `apps/apple/CanadianHam/` and link `packages/engine-swift`, `content-swift` and
+    `morse-swift`, so changes there usually need their suites too. Code only under
+    `apps/apple/Platforms/<platform>/` or a platform's test target needs only that platform.
+  - Swift package: `swift test` in the package (or its `xbuild` scheme), plus the suites of
+    every app target that links it.
   - String catalogue or SwiftUI text: `pnpm check:apple-l10n` and
     `node scripts/check-apple-text-sources.ts`, plus the affected platforms.
 - **No Apple suites** for web-only, docs-only or Backlog-only changes, and never rerun suites
