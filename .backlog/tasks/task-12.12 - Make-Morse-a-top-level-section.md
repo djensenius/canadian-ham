@@ -37,6 +37,8 @@ Why: the owner tried the preview and doesn't want Morse buried behind a Settings
 
 <!-- SECTION:PLAN:BEGIN -->
 1. Remove Morse preview-toggle gating and migrate stored preferences without the enabled flag.\n2. Promote Morse to a top-level destination on web and all Apple platforms, with a preview-labelled Morse home, placeholders, and platform-appropriate settings placement.\n3. Update launch-argument handling and UI/unit tests, then validate web and Apple checks before finalizing.
+
+Fix review round: replace compact iPhone one-way Morse toolbar with a compact tab interface, add navigation/UI coverage, keep iPad/macOS sidebar behavior, and restore catalogue/web/documentation cleanup requested by review.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
