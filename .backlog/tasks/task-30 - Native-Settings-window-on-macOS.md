@@ -34,6 +34,8 @@ Why: the owner wants the Mac app to feel native: app settings belong in the stan
 
 <!-- SECTION:PLAN:BEGIN -->
 1. Add a macOS SwiftUI Settings scene wired to shared progress and Morse settings models.\n2. Move macOS settings out of the in-app sidebar while keeping iPhone/iPad in-app settings.\n3. Add model coverage and run macOS/iOS validation.
+
+Fix review round: make macOS settings/main windows observe shared progress-store changes live through AppSettingsModel revisions, surface data-action errors, verify sandbox import/export entitlement, and add model/root synchronization tests.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
