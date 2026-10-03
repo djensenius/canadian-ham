@@ -505,7 +505,19 @@
       "properties": {
         "practiceMode": { "enum": ["immediate", "review-later"] },
         "examTimerEnabled": { "type": "boolean" },
-        "theme": { "enum": ["system", "light", "dark"] }
+        "theme": { "enum": ["system", "light", "dark"] },
+        "morse": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "toneHz": { "type": "integer", "minimum": 400, "maximum": 900 },
+            "characterWpm": { "type": "integer", "minimum": 12, "maximum": 25 },
+            "effectiveWpm": { "type": "integer", "minimum": 5, "maximum": 25 },
+            "timingProfile": { "enum": ["isedParis", "ric1Literal", "general"] },
+            "volume": { "type": "number", "minimum": 0, "maximum": 1 }
+          },
+          "additionalProperties": false
+        }
       },
       "additionalProperties": false
     }

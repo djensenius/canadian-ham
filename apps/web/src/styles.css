@@ -957,6 +957,71 @@ input[type="checkbox"]:checked::after {
   font-weight: 600;
 }
 
+.settings-panel,
+.morse-trainer,
+.morse-copy-card {
+  display: grid;
+  gap: var(--ch-space-md);
+}
+
+.settings-panel {
+  margin-block: var(--ch-space-lg);
+  padding: var(--ch-space-lg);
+  border: 1px solid var(--ch-color-border);
+  border-radius: var(--ch-radius-lg);
+  background: var(--ch-color-paper-inset);
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: var(--ch-space-md);
+}
+
+.stacked-control {
+  display: grid;
+  gap: var(--ch-space-xs);
+  align-content: start;
+  font-weight: 800;
+}
+
+.stacked-control input,
+.stacked-control select {
+  width: 100%;
+}
+
+.morse-settings-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  gap: var(--ch-space-md);
+  margin: 0;
+}
+
+.morse-settings-summary div,
+.morse-copy-card {
+  padding: var(--ch-space-md);
+  border: 1px solid var(--ch-color-border);
+  border-radius: var(--ch-radius-md);
+  background: var(--ch-color-paper-elevated);
+}
+
+.morse-settings-summary dt {
+  color: var(--ch-color-ink-muted);
+  font-size: var(--ch-type-caption-size);
+  font-weight: 800;
+}
+
+.morse-settings-summary dd {
+  margin: 0;
+  font-weight: 800;
+}
+
+.morse-copy {
+  font-family: var(--ch-font-mono);
+  font-size: var(--ch-type-title-size);
+  letter-spacing: 0.08em;
+}
+
 .module-grid,
 .lesson-list {
   display: grid;

@@ -49,6 +49,23 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try performAudit(on: app, context: "French practice question")
     }
 
+    func testMorsePreviewToggleIsOffByDefaultAndShowsScreenWhenEnabled() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "settings"])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.staticTexts["Settings"].firstMatch.waitForExistence(timeout: 10))
+        let toggle = app.switches["morse-preview-toggle"].firstMatch
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Morse preview toggle should exist in Settings")
+        XCTAssertEqual(toggle.value as? String, "0", "Morse trainer preview should be off by default")
+        toggle.tap()
+
+        let morseButton = app.buttons["Morse trainer (preview)"].firstMatch
+        XCTAssertTrue(morseButton.waitForExistence(timeout: 5), "Morse screen entry should appear after enabling the preview")
+        scrollAndTap("Morse trainer (preview)", in: app)
+        XCTAssertTrue(app.staticTexts["Hidden until playback finishes."].firstMatch.waitForExistence(timeout: 5))
+    }
+
     func testAboutShowsReleaseAttributionDisclaimerAndBankVersion() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: ["-CanadianHamInitialScreen", "about"])
@@ -499,6 +516,14 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app = launchApp(arguments: ["-CanadianHamInitialScreen", "settings"])
         XCTAssertTrue(app.staticTexts["Settings"].waitForExistence(timeout: 10))
         try performAudit(on: app, context: "\(appearance.rawValue) settings")
+        let toggle = app.switches["morse-preview-toggle"].firstMatch
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Morse preview toggle should exist before auditing Morse")
+        if toggle.value as? String == "0" {
+            toggle.tap()
+        }
+        scrollAndTap("Morse trainer (preview)", in: app)
+        XCTAssertTrue(app.staticTexts["Hidden until playback finishes."].firstMatch.waitForExistence(timeout: 5))
+        try performAudit(on: app, context: "\(appearance.rawValue) morse")
         app.terminate()
 
         app = launchApp(arguments: ["-CanadianHamInitialScreen", "about"])

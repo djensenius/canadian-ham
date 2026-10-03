@@ -5,9 +5,11 @@ import {
   type QuestionProgressRecord,
   type ReadinessResult,
 } from "@canadian-ham/engine-ts";
-import { Component, createRef, useEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode, type RefObject } from "react";
+import { Component, createRef, useEffect, useMemo, useRef, useState, type KeyboardEvent, type MouseEvent, type ReactNode, type RefObject } from "react";
 
 import { LanguageToggle } from "./components/LanguageToggle";
+import { textToTimedMorse } from "@canadian-ham/morse-engine";
+
 import { MarkdownContent } from "./components/MarkdownContent";
 import { PwaStatus } from "./components/PwaStatus";
 import {
@@ -49,6 +51,8 @@ import {
   t,
   type InterfaceLanguage,
 } from "./lib/i18n";
+import { WebMorsePlayer } from "./lib/morseAudio";
+import { morseISEDExamPreset, morseTimingFromPreferences, normalizeMorsePreferences, type WebMorseTimingProfileName } from "./lib/morseSettings";
 import { applyThemePreference, mirrorThemePreference, readStoredThemePreference } from "./lib/theme";
 import {
   applyPracticeAnswer,
@@ -61,7 +65,7 @@ import {
   type PracticeScope,
 } from "./lib/studyEngine";
 
-type Route = "home" | "learn" | "module" | "lesson" | "practice" | "mock" | "results" | "settings" | "about";
+type Route = "home" | "learn" | "module" | "lesson" | "practice" | "mock" | "results" | "morse" | "settings" | "about";
 type View = Route;
 type PreferencesPatch = Partial<WebPreferences>;
 
@@ -204,7 +208,7 @@ function hashSegments(hash = globalThis.location?.hash ?? ""): readonly string[]
 }
 
 function isRoute(value: string): value is Route {
-  return value === "home" || value === "learn" || value === "practice" || value === "mock" || value === "results" || value === "settings" || value === "about";
+  return value === "home" || value === "learn" || value === "practice" || value === "mock" || value === "results" || value === "morse" || value === "settings" || value === "about";
 }
 
 export function App(props: AppProps) {
@@ -341,6 +345,15 @@ function AppContent({
   }, [interfaceLanguage]);
 
   useEffect(() => {
+    if (!initialStoreLoaded) {
+      return;
+    }
+    if (route === "morse" && !preferences.morse.enabled) {
+      navigate("settings");
+    }
+  }, [initialStoreLoaded, preferences.morse.enabled, route]);
+
+  useEffect(() => {
     applyThemePreference(preferences.theme);
     mirrorThemePreference(preferences.theme);
     if (preferences.theme !== "system") {
@@ -377,10 +390,11 @@ function AppContent({
   }
 
   function navigate(nextRoute: Route): void {
-    const nextHash = `#/${nextRoute}`;
+    const allowedRoute = nextRoute === "morse" && !preferences.morse.enabled ? "settings" : nextRoute;
+    const nextHash = `#/${allowedRoute}`;
     updateRouteForHash(nextHash);
     if (window.location.hash !== nextHash) {
-      window.location.hash = `/${nextRoute}`;
+      window.location.hash = `/${allowedRoute}`;
     }
   }
 
@@ -551,6 +565,7 @@ function AppContent({
         <button type="button" disabled={!initialStoreLoaded} aria-current={route === "learn" || route === "module" || route === "lesson" ? "page" : undefined} onClick={() => navigate("learn")}>{t(interfaceLanguage, "navLearn")}</button>
         <button type="button" disabled={!initialStoreLoaded} aria-current={route === "practice" ? "page" : undefined} onClick={() => practiceSession === null ? startPractice(practiceScope) : navigate("practice")}>{t(interfaceLanguage, "navPractice")}</button>
         <button type="button" disabled={!initialStoreLoaded} aria-current={route === "mock" ? "page" : undefined} onClick={() => navigate("mock")}>{t(interfaceLanguage, "navMockExam")}</button>
+        {preferences.morse.enabled ? <button type="button" disabled={!initialStoreLoaded} aria-current={route === "morse" ? "page" : undefined} onClick={() => navigate("morse")}>{t(interfaceLanguage, "navMorse")}</button> : null}
         <button type="button" disabled={!initialStoreLoaded} aria-current={route === "settings" ? "page" : undefined} onClick={() => navigate("settings")}>{t(interfaceLanguage, "navSettings")}</button>
         <button type="button" disabled={!initialStoreLoaded} aria-current={route === "about" ? "page" : undefined} onClick={() => navigate("about")}>{t(interfaceLanguage, "navAbout")}</button>
       </nav>
@@ -633,6 +648,9 @@ function AppContent({
         ) : null}
         {initialStoreLoaded && route === "results" ? (
           <Results attempt={latestResult ?? latestAttempt} interfaceLanguage={interfaceLanguage} language={language} onStartPractice={startPractice} questionsById={bankQuestionsById} />
+        ) : null}
+        {initialStoreLoaded && route === "morse" && preferences.morse.enabled ? (
+          <MorseTrainerPreview interfaceLanguage={interfaceLanguage} preferences={preferences} />
         ) : null}
         {initialStoreLoaded && route === "settings" ? (
           <Settings
@@ -1758,6 +1776,171 @@ function About({ interfaceLanguage }: { readonly interfaceLanguage: InterfaceLan
   );
 }
 
+const MORSE_PRACTICE_TEXT = "KMRSU PARIS";
+
+function MorseTrainerPreview({ interfaceLanguage, preferences }: { readonly interfaceLanguage: InterfaceLanguage; readonly preferences: WebPreferences }) {
+  const playerRef = useRef<WebMorsePlayer | null>(null);
+  const revealTimerRef = useRef<number | null>(null);
+  const playbackGenerationRef = useRef(0);
+  const playButtonRef = useRef<HTMLButtonElement>(null);
+  const stopButtonRef = useRef<HTMLButtonElement>(null);
+  const focusStopAfterStartRef = useRef(false);
+  const focusPlayAfterStopRef = useRef(false);
+  const [playing, setPlaying] = useState(false);
+  const [revealed, setRevealed] = useState(false);
+  const [status, setStatus] = useState("");
+  const [liveStatus, setLiveStatus] = useState("");
+  const morsePreferences = preferences.morse;
+  const timingProfile = useMemo(() => morseTimingFromPreferences(morsePreferences), [morsePreferences]);
+  const sequence = useMemo(() => textToTimedMorse(MORSE_PRACTICE_TEXT, timingProfile), [timingProfile]);
+  const localeTag = interfaceLanguageTag(interfaceLanguage);
+  const formattedDuration = useMemo(() => formatLocaleNumber(sequence.totalDurationSeconds, localeTag, 1), [localeTag, sequence.totalDurationSeconds]);
+  const formattedCharacterWpm = useMemo(() => formatLocaleNumber(timingProfile.characterWpm, localeTag, 1), [localeTag, timingProfile.characterWpm]);
+  const formattedEffectiveWpm = useMemo(() => formatLocaleNumber(timingProfile.effectiveWpm, localeTag, 1), [localeTag, timingProfile.effectiveWpm]);
+
+  useEffect(() => () => {
+    playbackGenerationRef.current += 1;
+    void playerRef.current?.close();
+    if (revealTimerRef.current !== null) {
+      window.clearTimeout(revealTimerRef.current);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (playing && focusStopAfterStartRef.current) {
+      focusStopAfterStartRef.current = false;
+      window.setTimeout(() => stopButtonRef.current?.focus(), 0);
+    }
+    if (!playing && focusPlayAfterStopRef.current) {
+      focusPlayAfterStopRef.current = false;
+      window.setTimeout(() => playButtonRef.current?.focus(), 0);
+    }
+  }, [playing]);
+
+  async function play(): Promise<void> {
+    const generation = playbackGenerationRef.current + 1;
+    playbackGenerationRef.current = generation;
+    playerRef.current ??= new WebMorsePlayer();
+    focusStopAfterStartRef.current = document.activeElement === playButtonRef.current;
+    setRevealed(false);
+    setPlaying(true);
+    setStatus(t(interfaceLanguage, "morsePlaybackStarted"));
+    setLiveStatus("");
+    if (revealTimerRef.current !== null) {
+      window.clearTimeout(revealTimerRef.current);
+      revealTimerRef.current = null;
+    }
+    try {
+      const handle = await playerRef.current.playText(MORSE_PRACTICE_TEXT, morsePreferences);
+      if (generation !== playbackGenerationRef.current) {
+        handle.stop();
+        return;
+      }
+      revealTimerRef.current = window.setTimeout(() => {
+        if (generation !== playbackGenerationRef.current) {
+          return;
+        }
+        setPlaying(false);
+        setRevealed(true);
+        focusPlayAfterStopRef.current = document.activeElement === stopButtonRef.current;
+        const finishedStatus = t(interfaceLanguage, "morsePlaybackFinished");
+        setStatus(finishedStatus);
+        setLiveStatus(finishedStatus);
+      }, Math.ceil(handle.durationSeconds * 1000) + 60);
+    } catch (error) {
+      if (generation !== playbackGenerationRef.current) {
+        return;
+      }
+      setPlaying(false);
+      focusPlayAfterStopRef.current = document.activeElement === stopButtonRef.current;
+      const errorStatus = t(interfaceLanguage, "morsePlaybackError", formatError(error));
+      setStatus(errorStatus);
+      setLiveStatus(errorStatus);
+    }
+  }
+
+  function stop(): void {
+    playbackGenerationRef.current += 1;
+    focusPlayAfterStopRef.current = document.activeElement === stopButtonRef.current;
+    playerRef.current?.stop();
+    if (revealTimerRef.current !== null) {
+      window.clearTimeout(revealTimerRef.current);
+      revealTimerRef.current = null;
+    }
+    setPlaying(false);
+    const stoppedStatus = t(interfaceLanguage, "morsePlaybackStopped");
+    setStatus(stoppedStatus);
+    setLiveStatus(stoppedStatus);
+  }
+
+  return (
+    <section className="card morse-trainer" aria-labelledby="morse-title">
+      <p className="eyebrow">{t(interfaceLanguage, "morseEyebrow")}</p>
+      <h2 id="morse-title">{t(interfaceLanguage, "morseTitle")}</h2>
+      <p>{t(interfaceLanguage, "morseIntro")}</p>
+      <dl className="morse-settings-summary">
+        <div><dt>{t(interfaceLanguage, "morseTone")}</dt><dd>{t(interfaceLanguage, "morseHertz", morsePreferences.toneHz)}</dd></div>
+        <div><dt>{t(interfaceLanguage, "morseCharacterSpeed")}</dt><dd>{t(interfaceLanguage, "morseWpm", formattedCharacterWpm)}</dd></div>
+        <div><dt>{t(interfaceLanguage, "morseEffectiveSpeed")}</dt><dd>{t(interfaceLanguage, "morseWpm", formattedEffectiveWpm)}</dd></div>
+      </dl>
+      <div className="action-row">
+        <button type="button" className="primary-button" ref={playButtonRef} disabled={playing} onClick={() => void play()} aria-label={t(interfaceLanguage, "morsePlayPracticeAria")}>{t(interfaceLanguage, "morsePlay")}</button>
+        <button type="button" ref={stopButtonRef} disabled={!playing} onClick={stop} aria-label={t(interfaceLanguage, "morseStopPracticeAria")}>{t(interfaceLanguage, "morseStop")}</button>
+      </div>
+      <p className="morse-duration">{t(interfaceLanguage, "morseDuration", formattedDuration)}</p>
+      <div className="morse-playback-status">{status ? <p>{status}</p> : null}</div>
+      <div className="sr-only morse-live-status" role="status" aria-live="polite" aria-atomic="true">{liveStatus}</div>
+      <section className="morse-copy-card" aria-labelledby="morse-copy-title">
+        <h3 id="morse-copy-title">{t(interfaceLanguage, "morsePracticeTextTitle")}</h3>
+        {revealed ? <p className="morse-copy" lang="en">{sequence.normalizedText}</p> : <p>{t(interfaceLanguage, "morseTextHidden")}</p>}
+      </section>
+    </section>
+  );
+}
+
+interface MorseNumberDrafts {
+  readonly toneHz: string;
+  readonly characterWpm: string;
+  readonly effectiveWpm: string;
+}
+
+function morseDraftsFromPreferences(preferences: WebPreferences["morse"]): MorseNumberDrafts {
+  const normalized = normalizeMorsePreferences(preferences);
+  return {
+    toneHz: String(normalized.toneHz),
+    characterWpm: String(normalized.characterWpm),
+    effectiveWpm: String(normalized.effectiveWpm),
+  };
+}
+
+function morseNumberInputValue(value: number): string {
+  return Number.isInteger(value) ? String(value) : value.toFixed(1);
+}
+
+function morsePreferencesEqual(left: WebPreferences["morse"], right: WebPreferences["morse"]): boolean {
+  return left.enabled === right.enabled &&
+    left.toneHz === right.toneHz &&
+    left.characterWpm === right.characterWpm &&
+    left.effectiveWpm === right.effectiveWpm &&
+    left.timingProfile === right.timingProfile &&
+    left.volume === right.volume;
+}
+
+function isValidMorseNumberDraft(field: keyof MorseNumberDrafts, value: number, preferences: WebPreferences["morse"]): boolean {
+  if (!Number.isFinite(value) || !Number.isInteger(value)) {
+    return false;
+  }
+  const normalized = normalizeMorsePreferences(preferences);
+  switch (field) {
+    case "toneHz":
+      return value >= 400 && value <= 900;
+    case "characterWpm":
+      return value >= 12 && value <= 25;
+    case "effectiveWpm":
+      return value >= 5 && value <= normalized.characterWpm;
+  }
+}
+
 interface SettingsProps {
   readonly interfaceLanguage: InterfaceLanguage;
   readonly store: ProgressStore;
@@ -1778,10 +1961,22 @@ function Settings({ interfaceLanguage, store, now, preferences, statusMessage, o
   const resetButtonRef = useRef<HTMLButtonElement>(null);
   const resetDialogRef = useRef<HTMLDivElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
+  const [morseNumberDrafts, setMorseNumberDrafts] = useState(() => morseDraftsFromPreferences(preferences.morse));
+  const morseTimingProfile = useMemo(() => morseTimingFromPreferences(preferences.morse), [preferences.morse]);
+  const morseSpeedControlsDisabled = preferences.morse.timingProfile !== "general";
+  const localeTag = interfaceLanguageTag(interfaceLanguage);
+  const fixedCharacterWpm = useMemo(() => formatLocaleNumber(morseTimingProfile.characterWpm, localeTag, 1), [localeTag, morseTimingProfile.characterWpm]);
+  const fixedEffectiveWpm = useMemo(() => formatLocaleNumber(morseTimingProfile.effectiveWpm, localeTag, 1), [localeTag, morseTimingProfile.effectiveWpm]);
+  const characterWpmInputValue = morseSpeedControlsDisabled ? morseNumberInputValue(morseTimingProfile.characterWpm) : morseNumberDrafts.characterWpm;
+  const effectiveWpmInputValue = morseSpeedControlsDisabled ? morseNumberInputValue(morseTimingProfile.effectiveWpm) : morseNumberDrafts.effectiveWpm;
 
   useEffect(() => {
     setMessage(statusMessage);
   }, [statusMessage]);
+
+  useEffect(() => {
+    setMorseNumberDrafts(morseDraftsFromPreferences(preferences.morse));
+  }, [preferences.morse]);
 
   useEffect(() => {
     if (confirmReset) {
@@ -1882,6 +2077,66 @@ function Settings({ interfaceLanguage, store, now, preferences, statusMessage, o
     }
   }
 
+  async function saveMorsePreference(patch: Partial<WebPreferences["morse"]>): Promise<void> {
+    try {
+      const currentMorse = normalizeMorsePreferences(preferences.morse);
+      const nextMorse = normalizeMorsePreferences({ ...preferences.morse, ...patch });
+      if (morsePreferencesEqual(currentMorse, nextMorse)) {
+        return;
+      }
+      const savedLatestRequest = await onSetPreferences({ morse: nextMorse });
+      if (!savedLatestRequest) {
+        return;
+      }
+      setErrors([]);
+      setMessage(t(interfaceLanguage, "morseSettingsSaved"));
+    } catch (error) {
+      setErrors([t(interfaceLanguage, "errorSavePreferences", formatError(error))]);
+    }
+  }
+
+  function updateMorseNumberDraft(field: keyof MorseNumberDrafts, value: string): void {
+    setMorseNumberDrafts((drafts) => ({ ...drafts, [field]: value }));
+  }
+
+  function handleMorseNumberKeyDown(event: KeyboardEvent<HTMLInputElement>, field: keyof MorseNumberDrafts): void {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      void commitMorseNumberDraft(field);
+    }
+  }
+
+  async function commitMorseNumberDraft(field: keyof MorseNumberDrafts): Promise<void> {
+    const draft = morseNumberDrafts[field].trim();
+    const numericValue = Number(draft);
+    if (draft === "" || !isValidMorseNumberDraft(field, numericValue, preferences.morse)) {
+      setMorseNumberDrafts(morseDraftsFromPreferences(preferences.morse));
+      return;
+    }
+    const patch = { [field]: numericValue } as Partial<WebPreferences["morse"]>;
+    const nextMorse = normalizeMorsePreferences({ ...preferences.morse, ...patch });
+    setMorseNumberDrafts(morseDraftsFromPreferences(nextMorse));
+    await saveMorsePreference(patch);
+  }
+
+  async function applyMorsePreset(): Promise<void> {
+    try {
+      const currentMorse = normalizeMorsePreferences(preferences.morse);
+      const nextMorse = morseISEDExamPreset(preferences.morse);
+      if (morsePreferencesEqual(currentMorse, nextMorse)) {
+        return;
+      }
+      const savedLatestRequest = await onSetPreferences({ morse: nextMorse });
+      if (!savedLatestRequest) {
+        return;
+      }
+      setErrors([]);
+      setMessage(t(interfaceLanguage, "morsePresetApplied"));
+    } catch (error) {
+      setErrors([t(interfaceLanguage, "errorSavePreferences", formatError(error))]);
+    }
+  }
+
   return (
     <section className="card settings" aria-labelledby="settings-title">
       <h2 id="settings-title">{t(interfaceLanguage, "settingsTitle")}</h2>
@@ -1898,6 +2153,24 @@ function Settings({ interfaceLanguage, store, now, preferences, statusMessage, o
         <label><input type="radio" name="interface-language" checked={interfaceLanguage === "en"} onChange={() => chooseInterfaceLanguage("en")} /> <span lang={englishTextLang(interfaceLanguage)}>{t(interfaceLanguage, "languageEnglish")}</span></label>
         <label><input type="radio" name="interface-language" checked={interfaceLanguage === "fr"} onChange={() => chooseInterfaceLanguage("fr")} /> <span lang="fr">{t(interfaceLanguage, "languageFrench")}</span></label>
       </fieldset>
+      <section className="settings-panel" aria-labelledby="morse-settings-title">
+        <h3 id="morse-settings-title">{t(interfaceLanguage, "morseSettingsTitle")}</h3>
+        <p>{t(interfaceLanguage, "morseSettingsIntro")}</p>
+        <label className="stacked-control"><span>{t(interfaceLanguage, "morsePreviewToggle")}</span><input type="checkbox" checked={preferences.morse.enabled} onChange={(event) => void saveMorsePreference({ enabled: event.currentTarget.checked })} /></label>
+        <div className="settings-grid">
+          <label className="stacked-control"><span>{t(interfaceLanguage, "morseTone")}</span><input type="number" min="400" max="900" step="1" value={morseNumberDrafts.toneHz} onChange={(event) => updateMorseNumberDraft("toneHz", event.currentTarget.value)} onBlur={() => void commitMorseNumberDraft("toneHz")} onKeyDown={(event) => handleMorseNumberKeyDown(event, "toneHz")} /></label>
+          <label className="stacked-control"><span>{t(interfaceLanguage, "morseCharacterSpeed")}</span><input type="number" min="12" max="25" step="1" value={characterWpmInputValue} disabled={morseSpeedControlsDisabled} onChange={(event) => updateMorseNumberDraft("characterWpm", event.currentTarget.value)} onBlur={() => void commitMorseNumberDraft("characterWpm")} onKeyDown={(event) => handleMorseNumberKeyDown(event, "characterWpm")} /></label>
+          <label className="stacked-control"><span>{t(interfaceLanguage, "morseEffectiveSpeed")}</span><input type="number" min="5" max={morseSpeedControlsDisabled ? characterWpmInputValue : preferences.morse.characterWpm} step="1" value={effectiveWpmInputValue} disabled={morseSpeedControlsDisabled} onChange={(event) => updateMorseNumberDraft("effectiveWpm", event.currentTarget.value)} onBlur={() => void commitMorseNumberDraft("effectiveWpm")} onKeyDown={(event) => handleMorseNumberKeyDown(event, "effectiveWpm")} /></label>
+          <label className="stacked-control"><span>{t(interfaceLanguage, "morseVolume")}</span><input type="range" min="0" max="1" step="0.05" value={preferences.morse.volume} onChange={(event) => void saveMorsePreference({ volume: event.currentTarget.valueAsNumber })} /></label>
+          <label className="stacked-control"><span>{t(interfaceLanguage, "morseTimingProfile")}</span><select value={preferences.morse.timingProfile} onChange={(event) => void saveMorsePreference({ timingProfile: event.currentTarget.value as WebMorseTimingProfileName })}>
+            <option value="isedParis">{t(interfaceLanguage, "morseTimingISEDParis")}</option>
+            <option value="ric1Literal">{t(interfaceLanguage, "morseTimingRIC1Literal")}</option>
+            <option value="general">{t(interfaceLanguage, "morseTimingGeneral")}</option>
+          </select></label>
+        </div>
+        {morseSpeedControlsDisabled ? <p>{t(interfaceLanguage, "morseFixedTimingDescription", fixedCharacterWpm, fixedEffectiveWpm)}</p> : null}
+        <button type="button" onClick={() => void applyMorsePreset()}>{t(interfaceLanguage, "morseISEDExamPreset")}</button>
+      </section>
       <div className="action-row">
         <button type="button" onClick={() => void exportProgress()}>{t(interfaceLanguage, "exportProgress")}</button>
         <label className="file-control">
@@ -1946,6 +2219,13 @@ function Footer({ interfaceLanguage }: { readonly interfaceLanguage: InterfaceLa
 
 function formatError(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
+}
+
+function formatLocaleNumber(value: number, locale: string, maximumFractionDigits: number): string {
+  return new Intl.NumberFormat(locale, {
+    maximumFractionDigits,
+    minimumFractionDigits: Number.isInteger(value) ? 0 : maximumFractionDigits,
+  }).format(value);
 }
 
 function scopeFromInitialId(scopeId: string): PracticeScope {

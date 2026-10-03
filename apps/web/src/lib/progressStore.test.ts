@@ -137,14 +137,14 @@ describe("ProgressStore", () => {
     await first.putQuestionProgress(record);
     await first.putLessonProgress(lessonProgressRecord);
     await first.putLessonQuizAttempt(lessonQuizAttempt);
-    await first.putPreferences({ practiceMode: "review-later", examTimerEnabled: true, theme: "dark" });
+    await first.putPreferences({ ...defaultPreferences, practiceMode: "review-later", examTimerEnabled: true, theme: "dark" });
 
     const exported = await first.exportData("2026-01-02T04:00:00.000Z");
     assert.equal(exported.bankId, bankId);
     assert.deepEqual(exported.questionProgress, [record]);
     assert.deepEqual(exported.lessonProgress, [lessonProgressRecord]);
     assert.deepEqual(exported.lessonQuizAttempts, [lessonQuizAttempt]);
-    assert.deepEqual(exported.preferences, { practiceMode: "review-later", examTimerEnabled: true, theme: "dark" });
+    assert.deepEqual(exported.preferences, { ...defaultPreferences, practiceMode: "review-later", examTimerEnabled: true, theme: "dark" });
     assertProgressExportMatchesSchema(exported);
 
     const validation = validateProgressImport(JSON.parse(JSON.stringify(exported)) as unknown);
@@ -156,7 +156,7 @@ describe("ProgressStore", () => {
     assert.deepEqual(await second.getQuestionProgress(), [record]);
     assert.deepEqual(await second.getLessonProgress(), [lessonProgressRecord]);
     assert.deepEqual(await second.getLessonQuizAttempts(), [lessonQuizAttempt]);
-    assert.deepEqual(await second.getPreferences(), { practiceMode: "review-later", examTimerEnabled: true, theme: "dark" });
+    assert.deepEqual(await second.getPreferences(), { ...defaultPreferences, practiceMode: "review-later", examTimerEnabled: true, theme: "dark" });
   });
 
   it("rejects invalid import data with clear errors", () => {
@@ -277,7 +277,7 @@ describe("ProgressStore", () => {
     await store.putQuestionProgress(record);
     await store.putLessonProgress(lessonProgressRecord);
     await store.putLessonQuizAttempt(lessonQuizAttempt);
-    await store.putPreferences({ practiceMode: "review-later", examTimerEnabled: true, theme: "light" });
+    await store.putPreferences({ ...defaultPreferences, practiceMode: "review-later", examTimerEnabled: true, theme: "light" });
 
     await store.resetAllData();
 
