@@ -90,18 +90,3 @@ struct MorseTrainerSettings: Codable, Equatable, Sendable {
         Swift.min(upperBound, Swift.max(lowerBound, value))
     }
 }
-
-extension MorseTimingProfile {
-    init(name: MorseProfileName, base: MorseTimingProfile) {
-        self.init(
-            name: name,
-            characterWpm: base.characterWpm,
-            effectiveWpm: base.effectiveWpm,
-            dotSeconds: base.dotSeconds,
-            dashSeconds: base.dashSeconds,
-            intraCharacterGapSeconds: base.intraCharacterGapSeconds,
-            interCharacterGapSeconds: base.interCharacterGapSeconds,
-            wordGapSeconds: base.wordGapSeconds
-        )
-    }
-}
