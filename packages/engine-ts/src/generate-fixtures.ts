@@ -17,6 +17,7 @@ import {
   generateExam,
   scoreExam,
   weakSubsectionIds,
+  type ExamSubsectionInput,
   type QuestionProgressRecord,
   type ReadinessExamAttempt,
   type ScoreInputItem,
@@ -25,6 +26,10 @@ import {
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "../../..");
 const bankPath = "content/generated/basic-2025-07-15/questions.json";
 const bankId = "basic-2025-07-15";
+const advancedBankPath = "content/generated/advanced-2025-02-04/questions.json";
+const advancedSubsectionsPath = "content/generated/advanced-2025-02-04/subsections.json";
+const advancedBankId = "advanced-2025-02-04";
+const advancedFixtureSeed = "advanced-2025-02-04-real-bank-fixture-001";
 const fixtureSeed = "fixture-seed-001";
 
 interface QuestionJson {
@@ -76,13 +81,24 @@ async function buildFixtures(): Promise<Map<string, unknown>> {
     answerSourceIndexes: [0, 1, 2, 3],
     requireFullMockExam: true,
   });
+  const advancedSubsections = (JSON.parse(await readFile(join(repoRoot, advancedSubsectionsPath), "utf8")) as ExamSubsectionInput[])
+    .map((subsection) => ({ id: subsection.id, questionIds: subsection.questionIds }));
+  const advancedExam = generateExam({
+    bankId: advancedBankId,
+    seed: advancedFixtureSeed,
+    subsections: advancedSubsections,
+    answerSourceIndexes: [0, 1, 2, 3],
+    requireFullMockExam: true,
+  });
 
   return new Map([
     ["fixtures/engine/rng-vectors.json", buildRngVectorsFixture()],
     ["fixtures/engine/exam-generation-small.json", buildSmallExamFixture()],
     ["fixtures/engine/exam-generation-full-bank-basic-2025-07-15.json", buildFullExamFixture(fullSubsections, fullExam)],
     ["fixtures/engine/exam-generation-advanced-synthetic.json", buildAdvancedExamFixture()],
+    ["fixtures/engine/exam-generation-advanced-2025-02-04.json", buildRealAdvancedExamFixture(advancedSubsections, advancedExam)],
     ["fixtures/engine/scoring.json", buildScoringFixture()],
+    ["fixtures/engine/scoring-advanced-2025-02-04.json", buildRealAdvancedScoringFixture(advancedExam)],
     ["fixtures/engine/weak-subsections.json", buildWeakSubsectionsFixture()],
     ["fixtures/engine/leitner.json", buildLeitnerFixture()],
     ["fixtures/engine/readiness.json", buildReadinessFixture()],
@@ -196,6 +212,57 @@ function buildFullExamFixture(subsections: ReturnType<typeof buildSubsectionsFro
         "B-008": 5,
       },
     },
+  };
+}
+
+function buildRealAdvancedExamFixture(subsections: readonly ExamSubsectionInput[], generated: ReturnType<typeof generateExam>): unknown {
+  return {
+    schemaVersion: 1,
+    kind: "exam-generation",
+    id: "exam-generation-advanced-2025-02-04-real-bank-001",
+    bankId: advancedBankId,
+    rng: { algorithm: RNG_ALGORITHM, seed: advancedFixtureSeed },
+    input: {
+      sourceQuestionBankPath: advancedBankPath,
+      subsections,
+      answerSourceIndexes: [0, 1, 2, 3],
+      requireFullMockExam: true,
+    },
+    expectedOutput: {
+      items: generated.items,
+      examQuestionCount: 50,
+      oneQuestionPerInputSubsection: true,
+      choicePermutationDefinition: "choicePermutation[displayIndex] = sourceIndex; sourceIndex 0 is the correct answer",
+      categoryCounts: {
+        "A-001": 5,
+        "A-002": 12,
+        "A-003": 6,
+        "A-004": 4,
+        "A-005": 9,
+        "A-006": 5,
+        "A-007": 9,
+      },
+    },
+  };
+}
+
+function buildRealAdvancedScoringFixture(generated: ReturnType<typeof generateExam>): unknown {
+  const items = generated.items.map((item, index) => ({
+    questionId: item.questionId,
+    categoryId: item.categoryId,
+    subsectionId: item.subsectionId,
+    selectedSourceIndex: index < 40 ? 0 : 1,
+  }));
+  return {
+    schemaVersion: 1,
+    kind: "scoring",
+    cases: [
+      {
+        id: "scoring-advanced-2025-02-04-80-percent-no-honours",
+        input: { bankId: advancedBankId, items },
+        expectedOutput: scoreExam(items, { bankId: advancedBankId }),
+      },
+    ],
   };
 }
 

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "pnpm test:release-permission && pnpm --filter @canadian-ham/content-tools test && pnpm --filter @canadian-ham/morse-engine test && pnpm --filter @canadian-ham/web test",
     "test:release-permission": "node scripts/check-release-permission.mjs --self-test",
-    "import:check": "pnpm --filter @canadian-ham/content-tools import:basic:check",
+    "import:check": "pnpm --filter @canadian-ham/content-tools import:basic:check && pnpm --filter @canadian-ham/content-tools import:advanced:check",
     "diff:banks": "pnpm --filter @canadian-ham/content-tools diff:banks",
     "check:links": "node packages/content-tools/src/check-links.ts",
     "check:schemas": "pnpm --filter @canadian-ham/schemas test",

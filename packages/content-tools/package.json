@@ -6,6 +6,8 @@
   "scripts": {
     "import:basic": "node src/import-basic.ts",
     "import:basic:check": "node src/import-basic.ts --check",
+    "import:advanced": "node src/import-advanced.ts",
+    "import:advanced:check": "node src/import-advanced.ts --check",
     "check:links": "node src/check-links.ts",
     "check:coverage": "node src/check-lesson-coverage.ts",
     "check:quizzes": "node src/check-quizzes.ts",

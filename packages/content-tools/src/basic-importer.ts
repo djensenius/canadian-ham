@@ -150,7 +150,7 @@ export interface GeneratedManifest {
     readonly path: string;
     readonly sha256: string;
     readonly url: string;
-    readonly encoding: "UTF-8";
+    readonly encoding: "UTF-8" | "Windows-1252";
     readonly lineEndings: "CRLF";
   };
   readonly importer: {

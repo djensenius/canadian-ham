@@ -4,10 +4,12 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { parseLessonFrontMatter, validateDataAgainstSchema } from "./validate.mjs";
+import { parseLessonFrontMatter, selectOneOfBranchByConstDiscriminator, validateDataAgainstSchema } from "./validate.mjs";
 
-const validFixturesDir = path.join(path.dirname(fileURLToPath(import.meta.url)), "test/fixtures/valid");
-const invalidFixturesDir = path.join(path.dirname(fileURLToPath(import.meta.url)), "test/fixtures/invalid");
+const schemasDir = path.dirname(fileURLToPath(import.meta.url));
+const projectRoot = path.resolve(schemasDir, "../..");
+const validFixturesDir = path.join(schemasDir, "test/fixtures/valid");
+const invalidFixturesDir = path.join(schemasDir, "test/fixtures/invalid");
 
 const validLessonFrontMatter = {
   type: "lesson",
@@ -142,25 +144,39 @@ test("generated bank categories reject a French name while verification is pendi
   const index = categories.findIndex((category) => category.frenchNameStatus === "pending verification");
   assert(index >= 0, "valid categories fixture needs a pending category");
   categories[index] = { ...categories[index], name: { ...categories[index].name, fr: "Nom provisoire" } };
-  assertSchemaRejects(categories, "generated-bank-categories.schema.json", "expected exactly one oneOf branch to match");
+  assertSchemaRejects(categories, "generated-bank-categories.schema.json", `$[${index}].name.fr: expected const null, got "Nom provisoire"`);
 });
 
 test("generated bank categories require verified French names to be non-empty", () => {
   assertSchemaRejects(
     readInvalidFixture("generated-bank-categories-verified-null.json"),
     "generated-bank-categories.schema.json",
-    "expected exactly one oneOf branch to match",
+    "$[0].name.fr: expected type \"string\", got null",
   );
   assertSchemaRejects(
     readInvalidFixture("generated-bank-categories-verified-empty.json"),
     "generated-bank-categories.schema.json",
     "$[0].name.fr: expected string length >= 1",
   );
-  // The minLength error above existed before the verified-name rule; also require the rule's own error.
+});
+
+test("generated Advanced bank categories enforce pending French-name status", () => {
+  const categories = readProjectJson("content/generated/advanced-2025-02-04/categories.json");
+  categories[0] = { ...categories[0], name: { ...categories[0].name, fr: "Nom provisoire" } };
+  assertSchemaRejects(categories, "generated-bank-categories.schema.json", "$[0].name.fr: expected const null, got \"Nom provisoire\"");
+});
+
+test("generated Advanced bank categories require verified French names to be non-empty", () => {
+  const categories = readProjectJson("content/generated/advanced-2025-02-04/categories.json");
   assertSchemaRejects(
-    readInvalidFixture("generated-bank-categories-verified-empty.json"),
+    [{ ...categories[0], frenchNameStatus: "verified" }, ...categories.slice(1)],
     "generated-bank-categories.schema.json",
-    "expected exactly one oneOf branch to match",
+    "$[0].name.fr: expected type \"string\", got null",
+  );
+  assertSchemaRejects(
+    [{ ...categories[0], frenchNameStatus: "verified", name: { ...categories[0].name, fr: "" } }, ...categories.slice(1)],
+    "generated-bank-categories.schema.json",
+    "$[0].name.fr: expected string length >= 1",
   );
 });
 
@@ -198,3 +214,22 @@ function readValidFixture(fixture) {
 function readInvalidFixture(fixture) {
   return JSON.parse(fs.readFileSync(path.join(invalidFixturesDir, fixture), "utf8"));
 }
+
+function readProjectJson(relativePath) {
+  return JSON.parse(fs.readFileSync(path.join(projectRoot, relativePath), "utf8"));
+}
+
+test("oneOf discriminator shortcut applies only to a required const property in every branch", () => {
+  const a = { type: "object", required: ["kind"], properties: { kind: { const: "a" }, n: { type: "number" } } };
+  const b = { type: "object", required: ["kind"], properties: { kind: { const: "b" }, n: { type: "string" } } };
+  assert.equal(selectOneOfBranchByConstDiscriminator([a, b], { kind: "b", n: "x" }), b);
+
+  // Not required in every branch: no shortcut, so plain oneOf evaluation applies.
+  const looseA = { type: "object", properties: { kind: { const: "a" } } };
+  const looseB = { type: "object", required: ["kind"], properties: { kind: { const: "b" } } };
+  assert.equal(selectOneOfBranchByConstDiscriminator([looseA, looseB], { kind: "a" }), null);
+
+  // Const in only one branch: no shortcut.
+  const noConst = { type: "object", required: ["kind"], properties: { kind: { type: "string" } } };
+  assert.equal(selectOneOfBranchByConstDiscriminator([a, noConst], { kind: "a" }), null);
+});

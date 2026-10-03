@@ -1,0 +1,77 @@
+{
+  "manifestVersion": 1,
+  "bankEffectiveDate": "2025-02-04",
+  "publisher": "ISED",
+  "licensingStatus": "private-development interim policy; ISED permission request submitted 2026-10-02 covers the Advanced bank (delimited TXT and EN/FR PDFs, current edition and future revisions); not granted",
+  "licensingPolicyDocument": "../../../../docs/content-licensing.md",
+  "pathsRelativeTo": "content/sources/ised/advanced-2025-02-04/",
+  "retrievalNotes": "All listed source artifacts were fetched fresh from ISED hosts on 2026-10-02. The title-page date was read from the EN and FR PDFs as 04 February/f\u00e9vrier 2025; ZIP archive was used only for extraction and is not committed.",
+  "sourceArchives": [
+    {
+      "url": "https://apc-cap.ic.gc.ca/datafiles/amat_adv_quest.zip",
+      "committed": false
+    }
+  ],
+  "files": [
+    {
+      "path": "questions/amat_adv_quest_delim.txt",
+      "originalFilename": "amat_adv_quest_delim.txt",
+      "sourceUrl": "https://apc-cap.ic.gc.ca/datafiles/amat_adv_quest.zip#amat_adv_quest_delim.txt",
+      "containingZipUrl": "https://apc-cap.ic.gc.ca/datafiles/amat_adv_quest.zip",
+      "sha256": "a8e7760fb6828ad3b8af3d53d16e1b8f34acbf3c961e11eeffadd89ef0789fd7",
+      "bytes": 285434,
+      "retrievedAt": "2026-10-02",
+      "fetchedFresh": true,
+      "encoding": "UTF-8",
+      "lineEndings": "CRLF"
+    },
+    {
+      "path": "questions/readme_adv.txt",
+      "originalFilename": "readme_adv.txt",
+      "sourceUrl": "https://apc-cap.ic.gc.ca/datafiles/amat_adv_quest.zip#readme_adv.txt",
+      "containingZipUrl": "https://apc-cap.ic.gc.ca/datafiles/amat_adv_quest.zip",
+      "sha256": "f9ed94e4e94271250cdfc587f69ebd9d7f280defaad714e6ffa4df214075a977",
+      "bytes": 304,
+      "retrievedAt": "2026-10-02",
+      "fetchedFresh": true,
+      "encoding": "US-ASCII",
+      "lineEndings": "LF"
+    },
+    {
+      "path": "questions/lisezmoi_sup.txt",
+      "originalFilename": "lisezmoi_sup.txt",
+      "sourceUrl": "https://apc-cap.ic.gc.ca/datafiles/amat_adv_quest.zip#lisezmoi_sup.txt",
+      "containingZipUrl": "https://apc-cap.ic.gc.ca/datafiles/amat_adv_quest.zip",
+      "sha256": "e1dd7ad073df57a5347103fa6d9863280a381d758a7b28cfb06e6e9783c1245a",
+      "bytes": 327,
+      "retrievedAt": "2026-10-02",
+      "fetchedFresh": true,
+      "encoding": "Windows-1252",
+      "lineEndings": "LF"
+    },
+    {
+      "path": "amateur_advanced_questions_en_2025-02-04.PDF",
+      "originalFilename": "amateur_advanced_questions_en.PDF",
+      "sourceUrl": "https://apc-cap.ic.gc.ca/datafiles/amateur_advanced_questions_en.PDF",
+      "containingZipUrl": null,
+      "sha256": "5424ee85708de62fcc0f488c82de361853154e49811cd81179290d12c89a0b19",
+      "bytes": 186688,
+      "retrievedAt": "2026-10-02",
+      "fetchedFresh": true,
+      "encoding": "binary",
+      "lineEndings": null
+    },
+    {
+      "path": "amateur_advanced_questions_fr_2025-02-04.PDF",
+      "originalFilename": "amateur_advanced_questions_fr.PDF",
+      "sourceUrl": "https://cap-apc.ic.gc.ca/datafiles/amateur_advanced_questions_fr.PDF",
+      "containingZipUrl": null,
+      "sha256": "174768f2fb2dedd39960273851e82aea9399d46eb0b8bc6195c429a9a7422e3c",
+      "bytes": 208303,
+      "retrievedAt": "2026-10-02",
+      "fetchedFresh": true,
+      "encoding": "binary",
+      "lineEndings": null
+    }
+  ]
+}

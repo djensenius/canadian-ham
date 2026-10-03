@@ -1,4 +1,5 @@
 export const BASIC_BANK_ID = "basic-2025-07-15";
+export const ADVANCED_BANK_ID = "advanced-2025-02-04";
 export const SYNTHETIC_ADVANCED_BANK_ID = "advanced-synthetic";
 
 export interface ContentBankCategoryRules {
@@ -48,10 +49,10 @@ export const BASIC_BANK_RULES: ContentBankRules = {
 };
 
 export const ADVANCED_BANK_RULES: ContentBankRules = {
-  bankId: SYNTHETIC_ADVANCED_BANK_ID,
+  bankId: ADVANCED_BANK_ID,
   certificate: "canadian-amateur-advanced",
   questionIdPrefix: "A",
-  effectiveDate: null,
+  effectiveDate: "2025-02-04",
   questionCount: 549,
   subsectionCount: 50,
   categoryCount: 7,
