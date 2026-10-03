@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-03 12:03'
-updated_date: '2026-10-03 19:35'
+updated_date: '2026-10-03 22:47'
 labels:
   - apple
   - macos
@@ -40,6 +40,8 @@ Fix review round: make macOS settings/main windows observe shared progress-store
 Review round 3: keep macOS settings scope unchanged, restore shared legal wording, add sandbox export/import release-checklist coverage with owner manual verification note, and close only after required final validation passes.
 
 Fix round 4: finalize alongside the compact iPhone navigation/accessibility fix; keep macOS Settings behavior unchanged and verify shared Apple suites.
+
+Review fix round: add practice-mode and mock-exam timer controls to the macOS native Settings General tab with shared live preferences and macOS binding coverage; rerun targeted macOS validation plus final iOS/macOS suites and l10n/text checks.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
