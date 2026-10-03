@@ -1,11 +1,11 @@
 ---
 id: TASK-12.12
 title: Make Morse a top-level section
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-03 12:03'
-updated_date: '2026-10-03 17:22'
+updated_date: '2026-10-03 19:35'
 labels:
   - web
   - apple
@@ -27,7 +27,7 @@ Why: the owner tried the preview and doesn't want Morse buried behind a Settings
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Morse is a top-level section on every platform: web top navigation (#/morse), iOS/iPadOS tab or sidebar, macOS sidebar, tvOS and visionOS menu entry; the preview toggle and its gating/redirect code are removed, and task-12.10 is closed as obsolete with a note
+- [x] #1 Morse is a top-level section on every platform: web top navigation (#/morse), iOS/iPadOS tab or sidebar, macOS sidebar, tvOS and visionOS menu entry; the preview toggle and its gating/redirect code are removed, and task-12.10 is closed as obsolete with a note
 - [x] #2 Morse settings (tone, speeds, timing profile, volume, ISED exam preset) live inside the Morse section on web and iOS/iPadOS; existing stored Morse preferences migrate without loss
 - [x] #3 The section has a Morse home that will host Learn (course), Practice (copy) and Exam entries; for now it hosts the existing player, labelled Preview
 - [x] #4 Accessibility audits (axe on web; light and dark Apple audits on iOS, tvOS and visionOS), French UI, and the web and four Apple xbuild suites pass
@@ -41,6 +41,8 @@ Why: the owner tried the preview and doesn't want Morse buried behind a Settings
 Fix review round: replace compact iPhone one-way Morse toolbar with a compact tab interface, add navigation/UI coverage, keep iPad/macOS sidebar behavior, and restore catalogue/web/documentation cleanup requested by review.
 
 Review round 3: remove compact tab UIKit appearance customization, restore main's ISED draft-attribution wording, preserve compact per-tab navigation state, tighten iPhone tab UI tests, revert unrelated Home ordering, add release-checklist coverage, then run targeted checks followed by final platform suites.
+
+Fix round 4: Step A (plain system TabView) still failed the iOS core accessibility audits, so compact iPhone now uses the native collapsed-sidebar NavigationStack root list. Preserve compact practice/mock in-progress state by hoisting their state above pushed views; keep language controls in content where needed instead of tab-bar chrome.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -55,10 +57,12 @@ Final validation (2026-10-03): compact iPhone now exposes Morse from top-level n
 Fix round implementation committed through 6d929a0. Web checks passed and targeted Apple tests passed, but final iOS full run exposed accessibility audit failures in compact navigation/home/practice after the TabView change; left task In Progress for follow-up.
 
 Fix round 3 progress: restored main's ISED draft-attribution wording, removed global UITabBar.appearance customization, moved compact navigation to per-tab NavigationStack paths, added compact tab preservation UI tests, and kept the Home readiness action placement only for compact iPhone because the tab bar/accessibility audit still overlaps Home content. Targeted tab tests passed, but targeted iOS core accessibility audits still fail on the compact tab bar contrast; task remains In Progress and no final platform runs were attempted.
+
+Fix round 4 final: Step A removed compact tab-bar chrome/tint/underlay but iOS core light/dark audits still failed, so Step B passed with the collapsed-sidebar root list (Home, Learn, Practice, Morse, Settings). No custom tab bar background, unselected colour, or content-covering underlay remains. Home readiness order was reverted; compact Home action buttons use a vertical layout only to avoid French text clipping, not as a tab-bar workaround. ISED legal text was not touched. Evidence on commit f7bcbaaf7ee19004aced3bcfcd703efa87377243: pnpm typecheck; pnpm test; pnpm build:web; pnpm --filter @canadian-ham/web audit:urls; pnpm check:links; pnpm check:apple-l10n; node scripts/check-apple-text-sources.ts; pnpm check:apple-network; full xbuild suites passed for iOS (/tmp/task-12.12-r4-ios-full-final2.log, 64 tests), macOS (/tmp/task-12.12-r4-macos-full-final.log, 32 tests), tvOS (/tmp/task-12.12-r4-tvos-full-final.log, 15 tests), and visionOS (/tmp/task-12.12-r4-visionos-full-final.log, 12 tests). Per-test names are recorded in those logs.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Morse is now always visible as a top-level section across web and Apple platforms, preview gating/toggles are removed, Morse home/settings are in-section where required, macOS uses the native Settings work from task-30, and task-12.10 is closed obsolete. Verified by prior web/mac validation plus full iOS, tvOS, and visionOS xbuild suites passing on 2026-10-03.
+Morse remains a top-level section across web and all Apple platforms. Round 4 replaced the failing compact iPhone tab bar with a native collapsed-sidebar root list, preserved compact practice/mock state across Back navigation, kept Morse reachable from the root list, and restored Home content order while using compact-only vertical Home actions to avoid French clipping. Verified on f7bcbaaf7ee19004aced3bcfcd703efa87377243 with web checks, Apple localization/text/network checks, and full iOS/macOS/tvOS/visionOS xbuild suites; per-test names are in the recorded logs.
 <!-- SECTION:FINAL_SUMMARY:END -->
