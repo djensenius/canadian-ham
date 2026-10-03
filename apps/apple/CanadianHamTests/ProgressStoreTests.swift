@@ -2,6 +2,7 @@
 import CanadianHamEngine
 import Combine
 import SwiftData
+import SwiftUI
 import XCTest
 
 @MainActor
@@ -62,6 +63,27 @@ final class ProgressStoreTests: XCTestCase {
         objectChangeCancellable.cancel()
         revisionCancellable.cancel()
     }
+
+#if os(macOS)
+    func testNativeSettingsGeneralBindingsUpdatePracticePreferences() throws {
+        let store = try CanadianHam.ProgressStoreService.inMemoryForTests()
+        var saveCount = 0
+        var failedError: Error?
+        let bindings = NativeSettingsPreferenceBindings(
+            progressStore: store,
+            didSave: { saveCount += 1 },
+            didFail: { failedError = $0 }
+        )
+
+        bindings.practiceMode.wrappedValue = .reviewLater
+        bindings.examTimerEnabled.wrappedValue = true
+
+        XCTAssertEqual(store.preferences.practiceMode, .reviewLater)
+        XCTAssertTrue(store.preferences.examTimerEnabled)
+        XCTAssertEqual(saveCount, 2)
+        XCTAssertNil(failedError)
+    }
+#endif
 
     func testAppSettingsModelPublishesMorseSettingsForRootViewSync() throws {
         let appSettings = CanadianHam.AppSettingsModel(morseSettings: .default)

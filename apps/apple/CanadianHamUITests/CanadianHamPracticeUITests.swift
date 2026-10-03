@@ -309,6 +309,43 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["answer-feedback"].firstMatch.exists, "Feedback should remain after saving progress")
     }
 
+    func testPracticeModeChangeReopensCachedSessionFresh() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "home",
+            "-CanadianHamPracticeLimit", "1",
+            "-CanadianHamPracticeSeed", "ui-mode-change-cache"
+        ])
+        defer { app.terminate() }
+
+        tap("Start practice", in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["question-identifier"].firstMatch.waitForExistence(timeout: 10))
+        answerFirstVisibleAnswer(in: app)
+        _ = waitForAnswerFeedback(in: app)
+
+        tapCompactBack(in: app)
+        tapCompactBack(in: app)
+        tap("Settings", in: app)
+        let practiceModePicker = app.segmentedControls["practice-mode-picker"].firstMatch
+        XCTAssertTrue(practiceModePicker.waitForExistence(timeout: 10), "Settings should expose the practice mode picker")
+        let reviewLater = practiceModePicker.buttons["Review later"].firstMatch
+        XCTAssertTrue(reviewLater.waitForExistence(timeout: 5), "Practice mode picker should expose Review later")
+        reviewLater.tap()
+
+        tapCompactBack(in: app)
+        tap("Home", in: app)
+        tap("Start practice", in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["question-identifier"].firstMatch.waitForExistence(timeout: 10))
+        waitForPracticeTally(containing: "Answered 0 of 1", in: app)
+        XCTAssertFalse(app.descendants(matching: .any)["answer-feedback"].firstMatch.exists, "Changing practice mode should reopen a fresh session without stale immediate feedback")
+
+        answerFirstVisibleAnswer(in: app)
+        waitForPracticeTally(containing: "Answered 1 of 1", in: app)
+        XCTAssertFalse(anyVisibleLabel(in: app, contains: "Correct answer"), "Fresh review-later session should not reveal correctness before submit")
+        scrollAndTap("Submit for review", in: app)
+        XCTAssertTrue(app.staticTexts["Practice review"].waitForExistence(timeout: 10), "Fresh review-later session should submit through review mode")
+    }
+
     func testWeakAreasImmediateSessionKeepsFeedbackPositionAndTallyAfterAnswers() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [

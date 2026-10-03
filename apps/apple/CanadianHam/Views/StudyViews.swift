@@ -328,6 +328,7 @@ final class PracticeSessionState: ObservableObject {
     @Published var committedQuestionIds: Set<String> = []
     @Published var reviewSubmitted = false
     @Published var loadedScope: PracticeScope?
+    @Published var loadedPracticeMode: ApplePreferences.PracticeMode?
     @Published var loadedDataRevision = 0
     @Published var loadedLocalDataReplacementRevision = 0
     @Published var answeredCount = 0
@@ -393,6 +394,11 @@ struct PracticeSessionView: View {
                 header
                 if let errorMessage = state.errorMessage {
                     MessagePanel(title: "Practice unavailable", message: errorMessage, kind: .warning)
+                } else if hasStalePracticeMode {
+                    ProgressView()
+                        .controlSize(.large)
+                        .accessibilityLabel(Text("Practice")) // l10n: localized
+                        .frame(maxWidth: .infinity, minHeight: 160)
                 } else if state.items.isEmpty {
                     ContentUnavailableView("No questions found", systemImage: "tray", description: Text(emptyMessage)) // l10n: localized
                         .foregroundStyle(DesignTokens.Colors.ink)
@@ -488,7 +494,12 @@ struct PracticeSessionView: View {
     }
 
     private var sessionReloadKey: String {
-        "\(scope.title)/\(localDataReplacementRevision)"
+        "\(scope.title)/\(localDataReplacementRevision)/\(progressStore.preferences.practiceMode.rawValue)"
+    }
+
+    private var hasStalePracticeMode: Bool {
+        guard let loadedPracticeMode = state.loadedPracticeMode else { return false }
+        return loadedPracticeMode != progressStore.preferences.practiceMode && !state.items.isEmpty
     }
 
     private func questionView(_ item: PracticeQuestionItem) -> some View {
@@ -564,7 +575,8 @@ struct PracticeSessionView: View {
 
     private func loadSessionIfNeeded() {
         let localDataWasReplaced = state.loadedLocalDataReplacementRevision != localDataReplacementRevision
-        guard state.loadedScope != scope || state.items.isEmpty || localDataWasReplaced else { return }
+        let practiceModeChanged = state.loadedPracticeMode != progressStore.preferences.practiceMode
+        guard state.loadedScope != scope || state.items.isEmpty || localDataWasReplaced || practiceModeChanged else { return }
         loadSession()
     }
 
@@ -597,6 +609,7 @@ struct PracticeSessionView: View {
             progress.sort { $0.questionId < $1.questionId }
             state.items = loaded
             state.loadedScope = scope
+            state.loadedPracticeMode = progressStore.preferences.practiceMode
             state.loadedDataRevision = dataRevision
             state.loadedLocalDataReplacementRevision = localDataReplacementRevision
             state.currentIndex = 0
@@ -610,6 +623,7 @@ struct PracticeSessionView: View {
             state.errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
             state.items = []
             state.loadedScope = nil
+            state.loadedPracticeMode = nil
             state.loadedDataRevision = dataRevision
             state.loadedLocalDataReplacementRevision = localDataReplacementRevision
         }
@@ -1392,10 +1406,12 @@ struct SettingsView: View {
                         }
                     }
                     .pickerStyle(.segmented)
+                    .accessibilityIdentifier("practice-mode-picker")
                     Toggle("Enable optional mock-exam timer", isOn: Binding(
                         get: { progressStore.preferences.examTimerEnabled },
                         set: { enabled in savePreferences { $0.examTimerEnabled = enabled } }
                     ))
+                    .accessibilityIdentifier("mock-exam-timer-toggle")
                     Picker("Theme", selection: Binding(
                         get: { progressStore.preferences.theme },
                         set: { theme in savePreferences { $0.theme = theme } }

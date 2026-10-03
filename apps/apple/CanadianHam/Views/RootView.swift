@@ -147,6 +147,9 @@ struct RootView: View {
         .onChange(of: progressStore.preferences.language) { _, next in
             language = next
         }
+        .onChange(of: progressStore.preferences.practiceMode) { _, _ in
+            practiceSessionStates.clear()
+        }
     }
 
     private func compactRootList(progressStore: ProgressStoreService) -> some View {
@@ -459,6 +462,9 @@ struct RootView: View {
         }
         .onChange(of: progressStore.preferences.language) { _, next in
             language = next
+        }
+        .onChange(of: progressStore.preferences.practiceMode) { _, _ in
+            practiceSessionStates.clear()
         }
         .onChange(of: selection) { _, next in
             if next != .learn {
