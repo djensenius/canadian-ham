@@ -4,9 +4,13 @@ title: Verify official French Advanced category names
 status: To Do
 assignee: []
 created_date: '2026-10-02 17:03'
-labels: []
+updated_date: '2026-10-03 03:15'
+labels:
+  - content
+  - l10n
 milestone: m-1
-dependencies: []
+dependencies:
+  - TASK-11.4
 parent_task_id: TASK-11
 ordinal: 56000
 ---
