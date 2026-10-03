@@ -1074,7 +1074,6 @@ private struct TVMorseView: View {
             let duration = try driver.play(text: "KMRSU PARIS", settings: settings.normalized())
             isPlaying = true
             status = String(localized: "Morse playback started.")
-            AccessibilityNotification.Announcement(status).post()
             stopTask?.cancel()
             stopTask = Task { @MainActor in
                 try? await Task.sleep(for: .milliseconds(Int((duration * 1000).rounded(.up)) + 60))
