@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-03 12:03'
-updated_date: '2026-10-03 16:57'
+updated_date: '2026-10-03 17:22'
 labels:
   - web
   - apple
@@ -53,6 +53,8 @@ Validation gap: full iOS xbuild suite was rerun after fixing home-action clippin
 Final validation (2026-10-03): compact iPhone now exposes Morse from top-level navigation via the `compact-top-level-morse` toolbar button; `CanadianHamPracticeUITests.testCompactTopLevelNavigationExposesMorse` passed in the full iOS suite. Platform xbuild results: iOS `CanadianHam` on iPhone 17 Pro passed (`CanadianHamTests`: 30 tests, 0 failures; `CanadianHamUITests`: 30 tests, 0 failures; log `/tmp/task-12.12-ios-final.log`). tvOS `CanadianHamTV` on Apple TV 4K (3rd generation) passed (`CanadianHamTVTests`: 3 tests, 0 failures; `CanadianHamTVUITests`: 11 tests, 0 failures; log `/tmp/task-12.12-tvos.log`). visionOS `CanadianHamVision` on Apple Vision Pro passed (`CanadianHamVisionTests`: 3 tests, 0 failures; `CanadianHamVisionUITests`: 8 tests, 0 failures; log `/tmp/task-12.12-visionos.log`). Prior branch validation already recorded web focused tests, pnpm test, web build, text-source/l10n checks, and macOS xbuild passing.
 
 Fix round implementation committed through 6d929a0. Web checks passed and targeted Apple tests passed, but final iOS full run exposed accessibility audit failures in compact navigation/home/practice after the TabView change; left task In Progress for follow-up.
+
+Fix round 3 progress: restored main's ISED draft-attribution wording, removed global UITabBar.appearance customization, moved compact navigation to per-tab NavigationStack paths, added compact tab preservation UI tests, and kept the Home readiness action placement only for compact iPhone because the tab bar/accessibility audit still overlaps Home content. Targeted tab tests passed, but targeted iOS core accessibility audits still fail on the compact tab bar contrast; task remains In Progress and no final platform runs were attempted.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
