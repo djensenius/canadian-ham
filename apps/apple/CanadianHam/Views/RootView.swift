@@ -240,6 +240,8 @@ struct RootView: View {
     private func compactPracticeContainer<Content: View>(progressStore: ProgressStoreService, @ViewBuilder content: () -> Content) -> some View {
         VStack(spacing: 0) {
             questionLanguagePicker(progressStore: progressStore)
+                .padding(DesignTokens.Spacing.sm)
+                .background(Color(.systemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
                 .padding(.horizontal, DesignTokens.Spacing.lg)
                 .padding(.top, DesignTokens.Spacing.md)
                 .padding(.bottom, DesignTokens.Spacing.sm)
@@ -260,16 +262,15 @@ struct RootView: View {
     private func compactPracticeDestination(_ route: CompactPracticeRoute, bank: QuestionBank, progressStore: ProgressStoreService) -> some View {
         switch route {
         case .practice(let scope):
-            compactPracticeContainer(progressStore: progressStore) {
-                PracticeSessionView(
-                    bank: bank,
-                    progressStore: progressStore,
-                    scope: scope,
-                    language: $language,
-                    state: compactPracticeSessionStates.state(for: scope)
-                ) {
-                    recordDataChanged()
-                }
+            PracticeSessionView(
+                bank: bank,
+                progressStore: progressStore,
+                scope: scope,
+                language: $language,
+                state: compactPracticeSessionStates.state(for: scope),
+                headerAccessory: AnyView(questionLanguagePicker(progressStore: progressStore))
+            ) {
+                recordDataChanged()
             }
         case .mockExam:
             MockExamView(bank: bank, progressStore: progressStore, language: language, state: compactMockExamState) {

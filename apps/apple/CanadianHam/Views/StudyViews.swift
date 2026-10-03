@@ -351,6 +351,7 @@ struct PracticeSessionView: View {
     let scope: PracticeScope
     @Binding var language: BankLanguage
     @StateObject private var state: PracticeSessionState
+    let headerAccessory: AnyView?
     let onDataChanged: () -> Void
 
     init(
@@ -359,6 +360,7 @@ struct PracticeSessionView: View {
         scope: PracticeScope,
         language: Binding<BankLanguage>,
         state: PracticeSessionState = PracticeSessionState(),
+        headerAccessory: AnyView? = nil,
         onDataChanged: @escaping () -> Void
     ) {
         self.bank = bank
@@ -366,12 +368,16 @@ struct PracticeSessionView: View {
         self.scope = scope
         _language = language
         _state = StateObject(wrappedValue: state)
+        self.headerAccessory = headerAccessory
         self.onDataChanged = onDataChanged
     }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                if let headerAccessory {
+                    headerAccessory
+                }
                 header
                 if let errorMessage = state.errorMessage {
                     MessagePanel(title: "Practice unavailable", message: errorMessage, kind: .warning)
