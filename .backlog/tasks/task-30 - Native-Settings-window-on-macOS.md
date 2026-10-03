@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-03 12:03'
-updated_date: '2026-10-03 15:29'
+updated_date: '2026-10-03 16:50'
 labels:
   - apple
   - macos
@@ -46,6 +46,8 @@ Implemented a native macOS Settings scene with General, Data, and Morse tabs bac
 Validation gap: macOS xbuild suite passed and shared settings-model unit coverage was added. Full iOS suite timed out before completion, so AC3 remains unchecked pending a completed iOS run.
 
 Final validation (2026-10-03): iOS `CanadianHam` full suite passed after confirming the compact iPhone Morse top-level navigation (`CanadianHamTests`: 30 tests, 0 failures; `CanadianHamUITests`: 30 tests, 0 failures; log `/tmp/task-12.12-ios-final.log`). Prior branch validation already recorded the macOS xbuild suite passing and shared settings-model unit coverage. iOS in-app Settings remained covered by the full iOS UI suite.
+
+Fix round implementation committed through 6d929a0. macOS settings model/live-update changes and targeted tests are in place; final task closure is blocked by the task-12.12 iOS full-suite accessibility failure, so task remains In Progress.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
