@@ -16,7 +16,6 @@ struct MorseTrainerView: View {
     @State private var stopTask: Task<Void, Never>?
 
     private var normalizedSettings: MorseTrainerSettings { settings.normalized() }
-    private var playbackTimingProfile: MorseTimingProfile? { try? normalizedSettings.timingProfileValue() }
 
     var body: some View {
         ScrollView {
@@ -32,30 +31,6 @@ struct MorseTrainerView: View {
                     Text("Play a short practice group. The text is revealed only after playback so you can copy by ear first.") // l10n: localized
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
-                    if let playbackTimingProfile {
-                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                            HStack {
-                                Text("Tone") // l10n: localized
-                                Spacer()
-                                Text(verbatim: "\(normalizedSettings.toneHz) Hz") // l10n: verbatim
-                            }
-                            .accessibilityElement(children: .combine)
-                            HStack {
-                                Text("Character speed") // l10n: localized
-                                Spacer()
-                                Text(formattedWpm(playbackTimingProfile.characterWpm)) // l10n: localized
-                            }
-                            .accessibilityElement(children: .combine)
-                            HStack {
-                                Text("Effective speed") // l10n: localized
-                                Spacer()
-                                Text(formattedWpm(playbackTimingProfile.effectiveWpm)) // l10n: localized
-                            }
-                            .accessibilityElement(children: .combine)
-                        }
-                        .font(DesignTokens.FontScale.body)
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                    }
                     HStack {
                         morseTokenButton("Play") { play() }
                             .disabled(isPlaying)
