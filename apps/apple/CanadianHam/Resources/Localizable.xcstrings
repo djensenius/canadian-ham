@@ -8049,22 +8049,6 @@
         }
       }
     },
-    "The receiving exam plays once without pause or replay, then gives a 2-minute review before grading. Results stay only on this screen." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’examen de réception joue une seule fois, sans pause ni reprise, puis donne 2 minutes de révision avant la correction. Les résultats restent seulement sur cet écran."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’examen de réception joue une seule fois, sans pause ni reprise, puis donne 2 minutes de révision avant la correction. Les résultats restent seulement sur cet écran."
-          }
-        }
-      }
-    },
     "Theme" : {
       "localizations" : {
         "fr" : {
@@ -8939,6 +8923,118 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "La progression n’a pas été enregistrée. Réessayez avant de vous fier à ce résultat."
+          }
+        }
+      }
+    },
+    "Accuracy: %lld%%. Errors: %lld total, %lld wrong, %lld missing, %lld inserted." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exactitude : %lld %%. Erreurs : %lld au total, %lld incorrectes, %lld manquantes, %lld insérées."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exactitude : %lld %%. Erreurs : %lld au total, %lld incorrectes, %lld manquantes, %lld insérées."
+          }
+        }
+      }
+    },
+    "Copy results" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultats de copie"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultats de copie"
+          }
+        }
+      }
+    },
+    "Exam results" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultats de l’examen"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultats de l’examen"
+          }
+        }
+      }
+    },
+    "No copy entered." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune copie saisie."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune copie saisie."
+          }
+        }
+      }
+    },
+    "Start another exam" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commencer un autre examen"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commencer un autre examen"
+          }
+        }
+      }
+    },
+    "The receiving exam plays once without pause or replay, then gives a 2-minute review before grading. Results open on a separate screen after grading." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’examen de réception joue une seule fois, sans pause ni reprise, puis accorde une révision de 2 minutes avant la correction. Les résultats s’ouvrent sur un écran distinct après la correction."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’examen de réception joue une seule fois, sans pause ni reprise, puis accorde une révision de 2 minutes avant la correction. Les résultats s’ouvrent sur un écran distinct après la correction."
+          }
+        }
+      }
+    },
+    "Try another passage" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essayer un autre passage"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essayer un autre passage"
           }
         }
       }
