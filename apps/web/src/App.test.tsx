@@ -1469,6 +1469,8 @@ describe("App accessibility and flows", () => {
     render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-drafts-seed"} />);
 
     await screen.findByRole("heading", { name: "Morse settings" });
+    // Wait until stored preferences have loaded; otherwise the load can refill the field mid-edit.
+    await waitFor(() => assert.equal(screen.getByRole("button", { name: "Morse" }).hasAttribute("disabled"), false));
     const tone = screen.getByLabelText("Tone") as HTMLInputElement;
     await user.clear(tone);
     await user.type(tone, "700");
