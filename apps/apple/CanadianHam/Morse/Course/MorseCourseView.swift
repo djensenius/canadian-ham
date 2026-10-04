@@ -95,13 +95,15 @@ struct MorseCourseView: View {
     }
 
     private func coursePath(course: MorseCourse, progress: MorseCourseProgressExport) -> some View {
-        LazyVStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             ForEach(course.units) { unit in
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Text(String.localizedStringWithFormat(String(localized: "Unit %lld"), Int64(unit.unitNumber))) // l10n: localized
-                        .font(DesignTokens.FontScale.body.weight(.bold))
+                    Text("Unit \(unit.unitNumber)") // l10n: localized
+                        .font(.body.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
-                    LazyVStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                         ForEach(unit.lessonIds, id: \.self) { lessonId in
                             if let lesson = course.lessons.first(where: { $0.id == lessonId }) {
                                 lessonButton(lesson: lesson, state: (try? morseLessonState(course: course, progress: progress, lessonId: lesson.id)) ?? .locked)
@@ -120,26 +122,20 @@ struct MorseCourseView: View {
             guard let course, let progress, state != .locked else { return }
             startLesson(lesson, course: course, progress: progress)
         } label: {
-            VStack(spacing: DesignTokens.Spacing.xs) {
-                Text(String.localizedStringWithFormat(String(localized: "Lesson %lld"), Int64(lesson.lessonNumber))) // l10n: localized
-                    .font(DesignTokens.FontScale.body)
-                    .accessibilityHidden(true)
-                Text(lesson.newCharacters.joined(separator: " ")) // l10n: verbatim
-                    .font(DesignTokens.FontScale.body.weight(.bold))
-                    .accessibilityHidden(true)
-                Text(label(for: state)) // l10n: localized
-                    .font(DesignTokens.FontScale.body)
-                    .accessibilityHidden(true)
-            }
-            .frame(maxWidth: .infinity)
-            .fixedSize(horizontal: false, vertical: true)
-            .foregroundStyle(DesignTokens.Colors.ink)
-            .padding(DesignTokens.Spacing.sm)
-            .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous)
-                    .strokeBorder(DesignTokens.Colors.border, style: StrokeStyle(lineWidth: 1, dash: state == .locked ? [5, 4] : []))
-            }
+            Text(lessonButtonTitle(lesson: lesson, state: state)) // l10n: localized with verbatim characters
+                .font(.body.weight(.semibold))
+                .multilineTextAlignment(.center)
+                .lineSpacing(DesignTokens.Spacing.xs)
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity)
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .padding(DesignTokens.Spacing.sm)
+                .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous)
+                        .strokeBorder(DesignTokens.Colors.border, style: StrokeStyle(lineWidth: 1, dash: state == .locked ? [5, 4] : []))
+                }
         }
         .allowsHitTesting(state != .locked)
         .buttonStyle(.plain)
@@ -338,12 +334,8 @@ struct MorseCourseView: View {
         }
     }
 
-    private func label(for state: MorseLessonState) -> LocalizedStringKey {
-        switch state {
-        case .locked: "Locked"
-        case .current: "Current"
-        case .completed: "Completed"
-        }
+    private func lessonButtonTitle(lesson: MorseCourseLesson, state: MorseLessonState) -> String {
+        String.localizedStringWithFormat(String(localized: "Lesson %lld\n%@\n%@"), Int64(lesson.lessonNumber), lesson.newCharacters.joined(separator: " "), labelText(for: state))
     }
 
     private func labelText(for state: MorseLessonState) -> String {

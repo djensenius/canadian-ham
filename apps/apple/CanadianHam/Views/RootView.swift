@@ -229,14 +229,12 @@ struct RootView: View {
                     .background(DesignTokens.Colors.paper)
             }
         case .morse:
-            compactLanguageContainer(progressStore: progressStore) {
-                MorseTrainerView(settings: $morseSettings, progressStore: progressStore) { nextSettings in
-                    morseSettings = nextSettings
-                } onProgressChanged: {
-                    recordDataChanged()
-                }
-                .background(DesignTokens.Colors.paper)
+            MorseTrainerView(settings: $morseSettings, progressStore: progressStore) { nextSettings in
+                morseSettings = nextSettings
+            } onProgressChanged: {
+                recordDataChanged()
             }
+            .background(DesignTokens.Colors.paper)
         case .settings:
             compactSettingsView(bank: bank, progressStore: progressStore)
                 .background(DesignTokens.Colors.paper)
@@ -764,7 +762,11 @@ struct RootView: View {
 
     private func languageToolbarItem(progressStore: ProgressStoreService) -> some ToolbarContent {
         ToolbarItem(placement: .automatic) {
-            questionLanguagePicker(progressStore: progressStore)
+            if selection == .morse {
+                EmptyView()
+            } else {
+                questionLanguagePicker(progressStore: progressStore)
+            }
         }
     }
 
