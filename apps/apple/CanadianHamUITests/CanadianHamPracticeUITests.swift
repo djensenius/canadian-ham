@@ -64,6 +64,34 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Hidden until playback finishes."].firstMatch.waitForExistence(timeout: 5))
     }
 
+    func testMorseCopyPracticeAndExamFlow() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseCopyPlaybackSeconds", "0.1",
+            "-CanadianHamMorseExamPlaybackSeconds", "0.1",
+            "-CanadianHamMorseExamReviewSeconds", "1"
+        ])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.buttons["morse-copy-start-button"].firstMatch.waitForExistence(timeout: 10))
+        app.buttons["morse-copy-start-button"].firstMatch.tap()
+        let copyEditor = app.textViews["morse-copy-text-editor"].firstMatch
+        XCTAssertTrue(copyEditor.waitForExistence(timeout: 5))
+        copyEditor.tap()
+        copyEditor.typeText("THE NET OPENS AT NOON. QSX")
+        XCTAssertTrue(app.staticTexts["Playback finished. Check your copy when ready."].firstMatch.waitForExistence(timeout: 5))
+        app.buttons["morse-copy-check-button"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["Character diff"].firstMatch.waitForExistence(timeout: 5))
+
+        let examStart = app.buttons["morse-exam-start-button"].firstMatch
+        XCTAssertTrue(examStart.waitForExistence(timeout: 5))
+        scrollUntilHittable(examStart, in: app, maxSwipes: 8)
+        examStart.tap()
+        XCTAssertTrue(app.textViews["morse-exam-text-editor"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "FAIL")).firstMatch.waitForExistence(timeout: 10))
+    }
+
     func testCompactTopLevelListPushesMorseThenLearn() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp()

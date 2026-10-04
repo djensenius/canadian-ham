@@ -33,16 +33,18 @@ struct MorseTrainerView: View {
                             .padding(.vertical, DesignTokens.Spacing.xs)
                             .background(DesignTokens.Colors.paperInset, in: Capsule())
                     }
-                    Text("Learn and practise Morse code offline. Course, copy practice, and exam drills are coming soon.") // l10n: localized
+                    Text("Learn and practise Morse code offline. Copy practice and the simulated receiving exam are available below.") // l10n: localized
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                         MorseHomePlaceholder(title: "Learn (course)", message: "Coming soon.")
-                        MorseHomePlaceholder(title: "Copy practice", message: "Coming soon with copy-practice drills.")
-                        MorseHomePlaceholder(title: "Exam", message: "Coming soon with the simulated 5 wpm exam.")
+                        MorseHomePlaceholder(title: "Copy practice", message: "Listen to full passages and compare your copy below.")
+                        MorseHomePlaceholder(title: "Exam", message: "Try a simulated Canadian 5 wpm receiving exam below.")
                     }
                 }
                 .paperCard()
+
+                MorseCopyExamView(settings: normalizedSettings)
 
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     Text("Quick listen") // l10n: localized
@@ -182,7 +184,7 @@ private func formattedWpm(_ wpm: Double) -> String {
 }
 
 @MainActor
-private func morseTokenButton(_ title: LocalizedStringKey, action: @escaping () -> Void) -> some View {
+func morseTokenButton(_ title: LocalizedStringKey, action: @escaping () -> Void) -> some View {
     Button(action: action) {
         Text(title) // l10n: localized
             .font(DesignTokens.FontScale.body.weight(.semibold))
