@@ -130,8 +130,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(examStart.waitForExistence(timeout: 5))
         scrollUntilHittable(examStart, in: app, maxSwipes: 8)
         examStart.tap()
-        XCTAssertTrue(app.textViews["morse-exam-text-editor"].firstMatch.waitForExistence(timeout: 5))
+        let examEditor = app.textViews["morse-exam-text-editor"].firstMatch
+        XCTAssertTrue(examEditor.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "FAIL")).firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(examStart.exists, "Grading should leave Start simulated exam available for another attempt")
+        XCTAssertTrue(examStart.isEnabled, "Grading should re-enable Start simulated exam")
+        XCTAssertTrue(examEditor.exists, "Grading should keep the user's copy visible")
     }
 
     func testMorseCopyStartResetsAfterAudioStartupFailure() throws {
@@ -920,6 +924,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Character diff"].firstMatch.waitForExistence(timeout: 5))
         let diffTitle = app.staticTexts["Character diff"].firstMatch
         XCTAssertTrue(diffTitle.waitForExistence(timeout: 5), "Expected the graded Morse diff before auditing")
+        // Tapping Start near the navigation chrome can leave the still-visible exam heading clipped.
+        // Nudge the viewport down before the full audit so it samples only unclipped, visible content.
+        app.scrollViews.firstMatch.swipeDown()
+        waitBriefly()
         try app.performAccessibilityAudit()
     }
 
