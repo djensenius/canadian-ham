@@ -155,6 +155,9 @@ struct MorseTrainerView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Morse")
+#if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+#endif
         .onAppear {
             playbackCoordinator.register("quick-listen") {
                 stopPlayback(reveal: false, message: String(localized: "Morse playback stopped."))

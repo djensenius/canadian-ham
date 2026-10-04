@@ -240,9 +240,11 @@ private struct MorseReceivingExamView: View {
                 .font(DesignTokens.FontScale.title.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
+                .accessibilityIdentifier("morse-exam-title")
             Text("The receiving exam plays once without pause or replay, then gives a 2-minute review before grading. Results stay only on this screen.") // l10n: localized
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
+                .accessibilityIdentifier("morse-exam-explanation")
             Picker("Exam timing profile", selection: $selectedProfile) { // l10n: localized
                 Text(MorseTrainerSettings.TimingProfile.isedParis.localizedLabel).tag(MorseTrainerSettings.TimingProfile.isedParis) // l10n: localized
                 Text(MorseTrainerSettings.TimingProfile.ric1Literal.localizedLabel).tag(MorseTrainerSettings.TimingProfile.ric1Literal) // l10n: localized
@@ -255,6 +257,7 @@ private struct MorseReceivingExamView: View {
                 Text(String.localizedStringWithFormat(String(localized: "Generated exam: %lld weighted characters, %@ seconds of audio."), Int64(examText.weightedCharacters), formattedSeconds(examText.durationSeconds))) // l10n: localized
                     .font(DesignTokens.FontScale.caption)
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
+                    .accessibilityIdentifier("morse-exam-generated-summary")
             }
             if stage == .review {
                 Text(String.localizedStringWithFormat(String(localized: "Review time remaining: %lld seconds."), Int64(reviewRemaining))) // l10n: localized
@@ -288,6 +291,7 @@ private struct MorseReceivingExamView: View {
             }
         }
         .paperCard()
+        .accessibilityElement(children: .contain)
         .onAppear {
             playbackCoordinator.register("simulated-exam") {
                 stopExamPlaybackIfPlaying()

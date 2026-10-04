@@ -4663,22 +4663,6 @@
         }
       }
     },
-    "Lesson %lld" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leçon %lld"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leçon %lld"
-          }
-        }
-      }
-    },
     "Lesson %lld session" : {
       "localizations" : {
         "fr" : {
