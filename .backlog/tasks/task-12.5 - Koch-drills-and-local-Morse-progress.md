@@ -68,5 +68,5 @@ macOS unit test names (all passed): LocalizationCatalogTests.testEveryCatalogKey
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented the Morse course with task-12.6 merge compatibility and fixed review blockers: macOS-safe modifiers, catalogue cleanup, deterministic passing course UI tests/audits, learned-only distractors, shared TS/Swift exercise parity, local-date streaks, restart focus, and web/Apple completed-session resubmit no-ops. Verified with web/package checks, Apple localization/text checks, Swift package tests, targeted iOS UI tests, and full iOS/macOS/tvOS/visionOS xbuild suites.
+Implemented the Morse course and final task-12.5 review fixes: timezone-independent web daily activity, full Apple course audits with accessible locked lessons and hints, Apple Morse intro course copy, stronger course completion assertions, and follow-up TASK-12.14 for shared course audio. Verified with TZ=UTC and TZ=America/Toronto pnpm test, pnpm typecheck, Apple localization/text/network checks, targeted iOS course UI/audit tests, full iOS CanadianHam suite (87 tests: 38 unit/49 UI), and full macOS CanadianHam unit suite (39 tests); skipped tvOS/visionOS because only shared unused catalogue keys touched those targets.
 <!-- SECTION:FINAL_SUMMARY:END -->
