@@ -1,7 +1,7 @@
 ---
 id: TASK-12.5
 title: Duolingo-style Morse course (Koch method) with local progress
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:12'
