@@ -14,6 +14,7 @@ struct MorseCourseView: View {
     @State private var statusMessage = ""
     @State private var statusMessageIsCorrective = false
     @State private var errorMessage: String?
+    @State private var progressSaveFailed = false
     @State private var driver = MorseAudioDriver()
     @AccessibilityFocusState private var sessionIsFocused: Bool
 
@@ -166,7 +167,7 @@ struct MorseCourseView: View {
                 Text("Lesson summary") // l10n: localized
                     .font(DesignTokens.FontScale.body.weight(.bold))
                 Text(String.localizedStringWithFormat(String(localized: "Accuracy: %lld%%"), Int64(percent))) // l10n: localized
-                Text(morseCourseSummaryMessage(for: session, percent: percent, course: course)) // l10n: localized
+                Text(morseCourseSummaryMessage(for: session, percent: percent, course: course, progressSaved: !progressSaveFailed)) // l10n: localized
             }
         }
         .padding(DesignTokens.Spacing.md)
@@ -283,6 +284,7 @@ struct MorseCourseView: View {
         typedAnswer = ""
         statusMessage = ""
         statusMessageIsCorrective = false
+        progressSaveFailed = false
     }
 
     private func refocusSession() {
@@ -305,7 +307,7 @@ struct MorseCourseView: View {
             statusMessageIsCorrective = false
         }
         if currentSession.done {
-            save(currentSession)
+            progressSaveFailed = !save(currentSession)
         }
         typedAnswer = ""
         session = currentSession
@@ -314,8 +316,10 @@ struct MorseCourseView: View {
         }
     }
 
-    private func save(_ session: MorseCourseSession) {
-        guard let course, let progress else { return }
+    /// Returns true only when the progress was written; the summary must not claim success otherwise.
+    @discardableResult
+    private func save(_ session: MorseCourseSession) -> Bool {
+        guard let course, let progress else { return false }
         do {
             let nextProgress: MorseCourseProgressExport
             switch session.mode {
@@ -327,8 +331,10 @@ struct MorseCourseView: View {
             try progressStore.saveMorseCourseProgress(nextProgress)
             self.progress = nextProgress
             onProgressChanged()
+            return true
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
+            return false
         }
     }
 
@@ -415,7 +421,10 @@ private extension MorseCourseExercise {
     }
 }
 
-func morseCourseSummaryMessage(for session: MorseCourseSession, percent: Int, course: MorseCourse) -> String {
+func morseCourseSummaryMessage(for session: MorseCourseSession, percent: Int, course: MorseCourse, progressSaved: Bool = true) -> String {
+    guard progressSaved else {
+        return String(localized: "Progress was not saved. Try again before relying on this result.")
+    }
     switch session.mode {
     case .review:
         return String(localized: "Review complete. Practice progress was saved.")

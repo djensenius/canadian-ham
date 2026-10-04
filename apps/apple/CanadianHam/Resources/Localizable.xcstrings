@@ -8920,6 +8920,22 @@
           }
         }
       }
+    },
+    "Progress was not saved. Try again before relying on this result." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La progression n’a pas été enregistrée. Réessayez avant de vous fier à ce résultat."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La progression n’a pas été enregistrée. Réessayez avant de vous fier à ce résultat."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

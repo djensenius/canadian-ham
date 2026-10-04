@@ -153,6 +153,16 @@ final class MorseTrainerTests: XCTestCase {
             morseCourseSummaryMessage(for: MorseCourseSession(mode: .lesson(finalLesson), exercises: [.typeCharacter("K")], done: true), percent: 80, course: course),
             String(localized: "Reach 90% accuracy to complete this lesson.")
         )
+        for session in [
+            MorseCourseSession(mode: .review, exercises: [.typeCharacter("K")], done: true),
+            MorseCourseSession(mode: .lesson(course.lessons[0]), exercises: [.typeCharacter("K")], done: true),
+        ] {
+            XCTAssertEqual(
+                morseCourseSummaryMessage(for: session, percent: 100, course: course, progressSaved: false),
+                String(localized: "Progress was not saved. Try again before relying on this result."),
+                "A failed save must never claim progress was saved or a lesson unlocked"
+            )
+        }
     }
 
     func testMorseCourseLocalDateStringUsesGregorianCalendarInCurrentTimeZone() throws {
