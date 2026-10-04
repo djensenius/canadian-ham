@@ -7,6 +7,7 @@ import { IDBFactory } from "fake-indexeddb";
 import { bankId } from "../data/bank";
 import { ProgressStore, defaultPreferences, validateProgressImport, type ExamAttempt, type LessonProgressRecord, type LessonQuizAttempt, type ProgressExportV1 } from "./progressStore";
 import type { QuestionProgressRecord } from "@canadian-ham/engine-ts";
+import type { MorseCourseProgressExport } from "@canadian-ham/morse-engine";
 
 const record: QuestionProgressRecord = {
   questionId: "B-001-001-001",
@@ -37,6 +38,26 @@ const lessonQuizAttempt: LessonQuizAttempt = {
   officialQuestionIds: ["B-005-001-001"],
   incorrectOfficialQuestionIds: [],
   incorrectConceptCheckIds: ["QZ-L-005-01-A-C1"],
+};
+
+const morseCourseProgress: MorseCourseProgressExport = {
+  courseId: "ised-koch-g4fon-v1",
+  lessonProgress: [{
+    lessonId: "koch-001",
+    attempts: 1,
+    bestAccuracy: 1,
+    lastAccuracy: 1,
+    lastAttemptedAt: "2026-01-02T03:50:00.000Z",
+    completedAt: "2026-01-02T03:50:00.000Z",
+  }],
+  characterStats: [{
+    character: "K",
+    attempts: 1,
+    correctAttempts: 1,
+    recentResults: [true],
+    lastPracticedAt: "2026-01-02T03:50:00.000Z",
+  }],
+  dailyActivity: [{ date: "2026-01-02", lessonsCompleted: 1 }],
 };
 
 const attempt: ExamAttempt = {
@@ -79,6 +100,7 @@ function validExport(overrides: Partial<ProgressExportV1> = {}): ProgressExportV
     examAttempts: [attempt],
     lessonProgress: [lessonProgressRecord],
     lessonQuizAttempts: [lessonQuizAttempt],
+    morseCourseProgress,
     preferences: defaultPreferences,
     ...overrides,
   };
@@ -137,6 +159,7 @@ describe("ProgressStore", () => {
     await first.putQuestionProgress(record);
     await first.putLessonProgress(lessonProgressRecord);
     await first.putLessonQuizAttempt(lessonQuizAttempt);
+    await first.putMorseCourseProgress(morseCourseProgress);
     await first.putPreferences({ ...defaultPreferences, practiceMode: "review-later", examTimerEnabled: true, theme: "dark" });
 
     const exported = await first.exportData("2026-01-02T04:00:00.000Z");
@@ -144,6 +167,7 @@ describe("ProgressStore", () => {
     assert.deepEqual(exported.questionProgress, [record]);
     assert.deepEqual(exported.lessonProgress, [lessonProgressRecord]);
     assert.deepEqual(exported.lessonQuizAttempts, [lessonQuizAttempt]);
+    assert.deepEqual(exported.morseCourseProgress, morseCourseProgress);
     assert.deepEqual(exported.preferences, { ...defaultPreferences, practiceMode: "review-later", examTimerEnabled: true, theme: "dark" });
     assertProgressExportMatchesSchema(exported);
 
@@ -156,6 +180,7 @@ describe("ProgressStore", () => {
     assert.deepEqual(await second.getQuestionProgress(), [record]);
     assert.deepEqual(await second.getLessonProgress(), [lessonProgressRecord]);
     assert.deepEqual(await second.getLessonQuizAttempts(), [lessonQuizAttempt]);
+    assert.deepEqual(await second.getMorseCourseProgress(), morseCourseProgress);
     assert.deepEqual(await second.getPreferences(), { ...defaultPreferences, practiceMode: "review-later", examTimerEnabled: true, theme: "dark" });
   });
 
@@ -277,6 +302,7 @@ describe("ProgressStore", () => {
     await store.putQuestionProgress(record);
     await store.putLessonProgress(lessonProgressRecord);
     await store.putLessonQuizAttempt(lessonQuizAttempt);
+    await store.putMorseCourseProgress(morseCourseProgress);
     await store.putPreferences({ ...defaultPreferences, practiceMode: "review-later", examTimerEnabled: true, theme: "light" });
 
     await store.resetAllData();
@@ -285,6 +311,7 @@ describe("ProgressStore", () => {
     assert.deepEqual(await store.getExamAttempts(), []);
     assert.deepEqual(await store.getLessonProgress(), []);
     assert.deepEqual(await store.getLessonQuizAttempts(), []);
+    assert.equal(await store.getMorseCourseProgress(), undefined);
     assert.deepEqual(await store.getPreferences(), defaultPreferences);
   });
 });

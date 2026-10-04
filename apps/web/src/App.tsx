@@ -9,6 +9,7 @@ import { Component, createRef, useEffect, useMemo, useRef, useState, type Keyboa
 
 import { LanguageToggle } from "./components/LanguageToggle";
 import { textToTimedMorse } from "@canadian-ham/morse-engine";
+import { MorseCoursePanel } from "./morse/course/MorseCoursePanel";
 
 import { MarkdownContent } from "./components/MarkdownContent";
 import { PwaStatus } from "./components/PwaStatus";
@@ -640,7 +641,7 @@ function AppContent({
           <Results attempt={latestResult ?? latestAttempt} interfaceLanguage={interfaceLanguage} language={language} onStartPractice={startPractice} questionsById={bankQuestionsById} />
         ) : null}
         {initialStoreLoaded && route === "morse" ? (
-          <MorseSection interfaceLanguage={interfaceLanguage} onSetPreferences={setPreferences} preferences={preferences} />
+          <MorseSection interfaceLanguage={interfaceLanguage} now={now} onSetPreferences={setPreferences} preferences={preferences} store={store} />
         ) : null}
         {initialStoreLoaded && route === "settings" ? (
           <Settings
@@ -1768,7 +1769,7 @@ function About({ interfaceLanguage }: { readonly interfaceLanguage: InterfaceLan
 
 const MORSE_PRACTICE_TEXT = "KMRSU PARIS";
 
-function MorseSection({ interfaceLanguage, preferences, onSetPreferences }: { readonly interfaceLanguage: InterfaceLanguage; readonly preferences: WebPreferences; readonly onSetPreferences: (preferences: PreferencesPatch) => Promise<boolean> }) {
+function MorseSection({ interfaceLanguage, preferences, onSetPreferences, store, now }: { readonly interfaceLanguage: InterfaceLanguage; readonly preferences: WebPreferences; readonly onSetPreferences: (preferences: PreferencesPatch) => Promise<boolean>; readonly store: ProgressStore; readonly now: () => string }) {
   return (
     <section className="card morse-section" aria-labelledby="morse-section-title">
       <p className="eyebrow">{t(interfaceLanguage, "morseEyebrow")}</p>
@@ -1788,6 +1789,7 @@ function MorseSection({ interfaceLanguage, preferences, onSetPreferences }: { re
           <p>{t(interfaceLanguage, "morseExamPlaceholder")}</p>
         </section>
       </div>
+      <MorseCoursePanel interfaceLanguage={interfaceLanguage} preferences={preferences} store={store} now={now} />
       <MorseTrainerPreview interfaceLanguage={interfaceLanguage} preferences={preferences} />
       <MorseSettingsControls interfaceLanguage={interfaceLanguage} onSetPreferences={onSetPreferences} preferences={preferences} />
     </section>

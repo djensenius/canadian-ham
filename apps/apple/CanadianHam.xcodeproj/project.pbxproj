@@ -86,6 +86,7 @@
 		AC07D876F91D5D2F28ECE3D2 /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 152905B827825A7ACF7591F2 /* CanadianHamMorseEngine */; };
 		AC15C015AB010E727C4989FF /* subsections.json in Resources */ = {isa = PBXBuildFile; fileRef = 73750B729415D5254CB490A4 /* subsections.json */; };
 		AC54AE6D8B9AF2AE8CE61FDE /* CanadianHamTV-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7D22DC6BEB5258264EA424D3 /* CanadianHamTV-InfoPlist.strings */; };
+		AFFA52B1C5ECDFD23A77E6A3 /* MorseCourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AA88F601A0455484A38F9D /* MorseCourseView.swift */; };
 		B00FB34D312F4173BFFCF151 /* CanadianHamEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 2E108B72C914D6F8D1BF0C66 /* CanadianHamEngine */; };
 		B0482ACB36AF22C5E174F05E /* quizzes in Resources */ = {isa = PBXBuildFile; fileRef = 68B2019B8C107CCE6C8C9198 /* quizzes */; };
 		B0C7B7CAC1D226318F0900AC /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 10FA8D954031CD5F553D46A3 /* Localizable.xcstrings */; };
@@ -103,6 +104,7 @@
 		CBC1FACE31E263275CCC7AE3 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
 		CD240E737A75D41970CA2028 /* MorseTrainerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEEF26B42EFF8EC647A3971 /* MorseTrainerSettings.swift */; };
 		CD24F593A0D94F9208BC1616 /* CanadianHamTVTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD219C3080FCB9838E25140 /* CanadianHamTVTests.swift */; };
+		CD41A0E943ED3D0B9276D02A /* course.json in Resources */ = {isa = PBXBuildFile; fileRef = 79F451DA18B5F91DD4DCA5BC /* course.json */; };
 		CD8A5A7802FF75614CC1DA0F /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 5B61FF08B59BD2425E771B49 /* categories.json */; };
 		CE953C0F14D339C6403750C9 /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 5B61FF08B59BD2425E771B49 /* categories.json */; };
 		CF2029D951C519CBB030F40F /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = A93BEFD816B4EDC7F95607AD /* CanadianHamMorseEngine */; };
@@ -113,6 +115,7 @@
 		DA8494DE030F9968C7D5505E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */; };
 		DA99F3691748E29BFE1A90C6 /* CanadianHamVisionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C184EEC11CE4CD529F8D0EA /* CanadianHamVisionUITests.swift */; };
 		E050A0F858C7D6CB9B14B292 /* CanadianHamMorseEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 736AE7B0E0E83BF1142D58FD /* CanadianHamMorseEngine */; };
+		E4193FF2F1A1DE441EFA3160 /* course.json in Resources */ = {isa = PBXBuildFile; fileRef = 79F451DA18B5F91DD4DCA5BC /* course.json */; };
 		E5B8F95402DD487BCC28516E /* CanadianHamEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 1F3F655DC0021680B5931CD5 /* CanadianHamEngine */; };
 		E765FBE19849FC13D6671D61 /* questions.json in Resources */ = {isa = PBXBuildFile; fileRef = A235069367EFC3776ADEE826 /* questions.json */; };
 		E996A2002C10F58E41385C21 /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543DA6642D20EAF6FA88693D /* Tokens.swift */; };
@@ -166,6 +169,7 @@
 		140A13D95FE054984DF26281 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		19D0EE29F4AF58261D7F6B2C /* LocalizationCatalogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationCatalogTests.swift; sourceTree = "<group>"; };
 		1DED9AA3F205BE249BD8DC23 /* ProgressStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStore.swift; sourceTree = "<group>"; };
+		21AA88F601A0455484A38F9D /* MorseCourseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseCourseView.swift; sourceTree = "<group>"; };
 		26CEF53E707EFDB7074F0A99 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		27C0ADA4801D9094289C71DB /* MorseTrainerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseTrainerTests.swift; sourceTree = "<group>"; };
 		2B1FBF49E8AB06030D37A8C7 /* CanadianHamTVTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CanadianHamTVTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -187,6 +191,7 @@
 		73750B729415D5254CB490A4 /* subsections.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = subsections.json; sourceTree = "<group>"; };
 		7590F40AD4D1EA6C52B38F0F /* CanadianHamTVUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CanadianHamTVUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		76177BE24F1B7915BB916C63 /* AppleStudyEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleStudyEngine.swift; sourceTree = "<group>"; };
+		79F451DA18B5F91DD4DCA5BC /* course.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = course.json; sourceTree = "<group>"; };
 		7CD219C3080FCB9838E25140 /* CanadianHamTVTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamTVTests.swift; sourceTree = "<group>"; };
 		7D22DC6BEB5258264EA424D3 /* CanadianHamTV-InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "CanadianHamTV-InfoPlist.strings"; path = "fr.lproj/CanadianHamTV-InfoPlist.strings"; sourceTree = "<group>"; };
 		86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineShuffle.swift; sourceTree = "<group>"; };
@@ -462,6 +467,14 @@
 			path = tvOS;
 			sourceTree = "<group>";
 		};
+		A9442C49EF4D6970D5523F03 /* Course */ = {
+			isa = PBXGroup;
+			children = (
+				21AA88F601A0455484A38F9D /* MorseCourseView.swift */,
+			);
+			path = Course;
+			sourceTree = "<group>";
+		};
 		A9618E17354AA53128D6236B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -483,6 +496,15 @@
 			path = CanadianHamTVUITests;
 			sourceTree = "<group>";
 		};
+		C5C68EEF9884CC3A4238F073 /* morse */ = {
+			isa = PBXGroup;
+			children = (
+				79F451DA18B5F91DD4DCA5BC /* course.json */,
+			);
+			name = morse;
+			path = ../../fixtures/morse;
+			sourceTree = "<group>";
+		};
 		CF3BE42F246B13EDABE2BDBD /* Packages */ = {
 			isa = PBXGroup;
 			children = (
@@ -499,6 +521,7 @@
 				6C8B05EE0C029CA9AE02AC32 /* MorseAudioDriver.swift */,
 				CFEEF26B42EFF8EC647A3971 /* MorseTrainerSettings.swift */,
 				FC95E41AA3E6715FCCBF7956 /* MorseTrainerView.swift */,
+				A9442C49EF4D6970D5523F03 /* Course */,
 			);
 			path = Morse;
 			sourceTree = "<group>";
@@ -535,6 +558,7 @@
 				02938EB3141271AE8408AB82 /* CanadianHamVisionTests */,
 				F4A298E291725E00A795F941 /* CanadianHamVisionUITests */,
 				EBF0E9962FF2249E5EB6BC6B /* content */,
+				C5C68EEF9884CC3A4238F073 /* morse */,
 				CF3BE42F246B13EDABE2BDBD /* Packages */,
 				38F0F47F803846067023DA54 /* Platforms */,
 				341B6A9C6E9775EFC439F872 /* Products */,
@@ -810,6 +834,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4193FF2F1A1DE441EFA3160 /* course.json in Resources */,
 				6C11B3F5053B13833830A44A /* explanations in Resources */,
 				CBBD854076689D0E6F2EE822 /* lessons in Resources */,
 				9DD26BBE2A0EFA8F53C536CF /* quizzes in Resources */,
@@ -850,6 +875,7 @@
 				A4A6DF61C3775C2EEF581B72 /* CanadianHam-InfoPlist.strings in Resources */,
 				7AC3F901ABC1A7ED3D21F3E4 /* Localizable.xcstrings in Resources */,
 				DA8494DE030F9968C7D5505E /* PrivacyInfo.xcprivacy in Resources */,
+				CD41A0E943ED3D0B9276D02A /* course.json in Resources */,
 				3C1B7F75096DB44648DDD167 /* explanations in Resources */,
 				C35F4DB3660A226431C7A5B4 /* lessons in Resources */,
 				B0482ACB36AF22C5E174F05E /* quizzes in Resources */,
@@ -1044,6 +1070,7 @@
 				93A17F0A518F9EFA2B532E3A /* LaunchArguments.swift in Sources */,
 				EA651611EAE395366553C319 /* LearnViews.swift in Sources */,
 				59EC5C3A19D8FF6609993C84 /* MorseAudioDriver.swift in Sources */,
+				AFFA52B1C5ECDFD23A77E6A3 /* MorseCourseView.swift in Sources */,
 				F29D97E65744F19D2C1D0D8E /* MorseTrainerSettings.swift in Sources */,
 				5DF5007F39C2EFC48596AD6F /* MorseTrainerView.swift in Sources */,
 				28F2DC98A7E9840A41F7C1E4 /* NativeSettingsView.swift in Sources */,

@@ -1222,3 +1222,109 @@ input[type="checkbox"]:checked::after {
     position: static;
   }
 }
+
+.morse-course {
+  display: grid;
+  gap: var(--ch-space-lg);
+  margin-block: var(--ch-space-xl);
+  padding: var(--ch-space-lg);
+  border: 1px solid var(--ch-color-border);
+  border-radius: var(--ch-radius-lg);
+  background: var(--ch-color-paper-inset);
+}
+
+.morse-course-header,
+.morse-course-stats,
+.morse-unit-path,
+.morse-choice-grid {
+  display: grid;
+  gap: var(--ch-space-md);
+}
+
+.morse-course-stats {
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  margin: 0;
+}
+
+.morse-course-stats div,
+.morse-summary {
+  padding: var(--ch-space-md);
+  border: 1px solid var(--ch-color-border);
+  border-radius: var(--ch-radius-md);
+  background: var(--ch-color-paper-elevated);
+}
+
+.morse-course-stats dt {
+  color: var(--ch-color-ink-muted);
+  font-weight: 700;
+}
+
+.morse-course-stats dd {
+  margin: 0;
+  font-size: var(--ch-type-title-size);
+  font-weight: 900;
+}
+
+.morse-unit-path {
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+
+.morse-unit ol {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--ch-space-sm);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.morse-lesson-node {
+  width: 100%;
+  min-height: 6.5rem;
+  flex-direction: column;
+  border-radius: 999px;
+  padding: var(--ch-space-sm);
+}
+
+.morse-lesson-node.completed {
+  border-color: var(--ch-color-success);
+}
+
+.morse-lesson-node.current {
+  border-color: var(--ch-color-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ch-color-accent) 20%, transparent);
+}
+
+.morse-lesson-node.locked {
+  opacity: 0.55;
+}
+
+.morse-session,
+.morse-exercise {
+  display: grid;
+  gap: var(--ch-space-md);
+  padding: var(--ch-space-lg);
+  border: 1px solid var(--ch-color-border);
+  border-radius: var(--ch-radius-lg);
+  background: var(--ch-color-paper-elevated);
+}
+
+.morse-code-visual {
+  width: fit-content;
+  padding: var(--ch-space-sm) var(--ch-space-md);
+  border-radius: var(--ch-radius-pill);
+  background: var(--ch-color-paper);
+  font-family: var(--ch-font-mono);
+  font-size: clamp(2rem, 8vw, 4rem);
+  letter-spacing: 0.25em;
+}
+
+.morse-choice-grid {
+  grid-template-columns: repeat(auto-fit, minmax(4rem, 1fr));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .morse-lesson-node {
+    transition: none;
+  }
+}

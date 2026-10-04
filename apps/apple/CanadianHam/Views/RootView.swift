@@ -230,8 +230,10 @@ struct RootView: View {
             }
         case .morse:
             compactLanguageContainer(progressStore: progressStore) {
-                MorseTrainerView(settings: $morseSettings) { nextSettings in
+                MorseTrainerView(settings: $morseSettings, progressStore: progressStore) { nextSettings in
                     morseSettings = nextSettings
+                } onProgressChanged: {
+                    recordDataChanged()
                 }
                 .background(DesignTokens.Colors.paper)
             }
@@ -547,8 +549,10 @@ struct RootView: View {
                 recordDataChanged()
             }
         case .morse:
-            MorseTrainerView(settings: $morseSettings) { nextSettings in
+            MorseTrainerView(settings: $morseSettings, progressStore: progressStore) { nextSettings in
                 morseSettings = nextSettings
+            } onProgressChanged: {
+                recordDataChanged()
             }
         case .settings:
             SettingsView(bank: bank, progressStore: progressStore, morseSettings: $morseSettings, openMorse: { selection = .morse }, openAbout: { selection = .about }) { replacesLocalData in

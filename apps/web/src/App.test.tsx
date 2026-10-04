@@ -1014,7 +1014,7 @@ describe("App accessibility and flows", () => {
     await expectNoAxeViolations(container);
   });
 
-  it("makes Morse reachable as a top-level section with settings and placeholders", async () => {
+  it("makes Morse reachable as a top-level section with the course path and settings", async () => {
     window.location.hash = "#/home";
     const store = createStore("morse-top-level");
     const user = userEvent.setup();
@@ -1024,15 +1024,42 @@ describe("App accessibility and flows", () => {
     const primaryNav = screen.getByRole("navigation", { name: "Primary" });
     await user.click(within(primaryNav).getByRole("button", { name: "Morse" }));
 
-    await screen.findByRole("heading", { name: "Quick listen" });
+    await screen.findByRole("heading", { name: "Morse course path" });
     assert.equal(window.location.hash, "#/morse");
     assert.ok(screen.getByText("Preview"));
     assert.ok(screen.getByRole("heading", { name: "Learn (course)" }));
+    assert.ok(screen.getByRole("button", { name: /Lesson 1K MCurrent/ }));
+    assert.ok(screen.getByRole("button", { name: /Lesson 2RLocked/ }));
     assert.ok(screen.getByRole("heading", { name: "Copy practice" }));
     assert.ok(screen.getByRole("heading", { name: "Exam" }));
     assert.ok(screen.getByRole("heading", { name: "Morse settings" }));
     assert.equal(screen.getByText("Hidden until playback finishes.").textContent, "Hidden until playback finishes.");
     await expectNoAxeViolations(container);
+  });
+
+  it("completes the first Morse lesson and persists unlock progress", async () => {
+    window.location.hash = "#/morse";
+    const store = createStore("morse-course-flow");
+    stubMorseAudioContext();
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-course-flow-seed"} />);
+
+    await screen.findByRole("heading", { name: "Morse course path" });
+    await user.click(screen.getByRole("button", { name: /Lesson 1K MCurrent/ }));
+    const session = await screen.findByRole("region", { name: "Lesson 1 session" });
+    await user.click(within(session).getByRole("button", { name: "Next" }));
+    await user.click(within(session).getByRole("button", { name: "M" }));
+    await user.type(within(session).getByLabelText("Your copy"), "M");
+    await user.click(within(session).getByRole("button", { name: "Check" }));
+    await user.type(within(session).getByLabelText("Your copy"), "KMMMM");
+    await user.click(within(session).getByRole("button", { name: "Check" }));
+
+    await screen.findByText("Great work. The next lesson is unlocked.");
+    const saved = await store.getMorseCourseProgress();
+    assert.equal(saved?.lessonProgress[0]?.lessonId, "koch-001");
+    assert.equal(saved?.lessonProgress[0]?.bestAccuracy, 1);
+    assert.equal(saved?.dailyActivity[0]?.date, "2026-01-02");
+    assert.equal(screen.getByRole("button", { name: /Lesson 2RCurrent/ }).getAttribute("disabled"), null);
   });
 
   it("shows Morse start status visually without placing it in the live region", async () => {

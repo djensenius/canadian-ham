@@ -67,6 +67,9 @@ function validateFixture(fixture: any): void {
     case "morse-validation":
       validateValidationFixture(fixture);
       break;
+    case "morse-course":
+      // The dedicated course test validates the full 40-lesson shape.
+      break;
     default:
       throw new Error(`unsupported fixture kind: ${fixture.kind}`);
   }

@@ -6,7 +6,9 @@ private let morsePracticeText = "KMRSU PARIS"
 
 struct MorseTrainerView: View {
     @Binding var settings: MorseTrainerSettings
+    let progressStore: ProgressStoreService
     let onSettingsChanged: (MorseTrainerSettings) -> Void
+    let onProgressChanged: () -> Void
 
     @State private var driver = MorseAudioDriver()
     @State private var isPlaying = false
@@ -33,16 +35,18 @@ struct MorseTrainerView: View {
                             .padding(.vertical, DesignTokens.Spacing.xs)
                             .background(DesignTokens.Colors.paperInset, in: Capsule())
                     }
-                    Text("Learn and practise Morse code offline. Course, copy practice, and exam drills are coming soon.") // l10n: localized
+                    Text("Learn and practise Morse code offline. Start the Koch course now; copy practice and exam drills are coming soon.") // l10n: localized
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                        MorseHomePlaceholder(title: "Learn (course)", message: "Coming soon.")
+                        MorseHomePlaceholder(title: "Learn (course)", message: "Koch lessons available now.")
                         MorseHomePlaceholder(title: "Copy practice", message: "Coming soon with copy-practice drills.")
                         MorseHomePlaceholder(title: "Exam", message: "Coming soon with the simulated 5 wpm exam.")
                     }
                 }
                 .paperCard()
+
+                MorseCourseView(progressStore: progressStore, settings: $settings, onProgressChanged: onProgressChanged)
 
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     Text("Quick listen") // l10n: localized

@@ -1,5 +1,6 @@
 @testable import CanadianHam
 import CanadianHamEngine
+import CanadianHamMorseEngine
 import Combine
 import SwiftData
 import SwiftUI
@@ -133,6 +134,26 @@ final class ProgressStoreTests: XCTestCase {
             flaggedQuestionIds: [generated.items[0].questionId]
         )
         try store.saveExamAttempt(attempt)
+        let morseProgress = MorseCourseProgressExport(
+            courseId: "ised-koch-g4fon-v1",
+            lessonProgress: [MorseLessonProgressRecord(
+                lessonId: "koch-001",
+                attempts: 1,
+                bestAccuracy: 1,
+                lastAccuracy: 1,
+                lastAttemptedAt: "2026-01-02T04:30:00.000Z",
+                completedAt: "2026-01-02T04:30:00.000Z"
+            )],
+            characterStats: [MorseCharacterStatRecord(
+                character: "K",
+                attempts: 1,
+                correctAttempts: 1,
+                recentResults: [true],
+                lastPracticedAt: "2026-01-02T04:30:00.000Z"
+            )],
+            dailyActivity: [MorseDailyActivityRecord(date: "2026-01-02", lessonsCompleted: 1)]
+        )
+        try store.saveMorseCourseProgress(morseProgress)
 
         let exported = try store.exportData(bank: bank, exportedAt: "2026-01-02T05:04:05.000Z")
         XCTAssertEqual(exported.schema, "canadian-ham.progress-export")
@@ -140,6 +161,7 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(exported.questionProgress.count, 1)
         XCTAssertEqual(exported.examAttempts.count, 1)
         XCTAssertEqual(exported.preferences.practiceMode, "review-later")
+        XCTAssertEqual(exported.morseCourseProgress, morseProgress)
 
         let importedStore = try ProgressStoreService.inMemoryForTests()
         try importedStore.importData(exported, bank: bank)
@@ -148,10 +170,12 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(importedStore.preferences.practiceMode, .reviewLater)
         XCTAssertTrue(importedStore.preferences.examTimerEnabled)
         XCTAssertEqual(importedStore.preferences.theme, .dark)
+        XCTAssertEqual(try importedStore.morseCourseProgress(), morseProgress)
 
         try importedStore.resetAllData()
         XCTAssertEqual(try importedStore.questionProgressRecords().count, 0)
         XCTAssertEqual(try importedStore.examAttempts().count, 0)
+        XCTAssertNil(try importedStore.morseCourseProgress())
         XCTAssertEqual(importedStore.preferences, .default)
     }
 

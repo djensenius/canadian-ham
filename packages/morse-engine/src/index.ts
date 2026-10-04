@@ -20,3 +20,24 @@ export {
   type ValidationResult,
   type WeightCount,
 } from "./morse.ts";
+
+export {
+  dailyStreak,
+  emptyMorseCourseProgress,
+  isLessonCompleted,
+  learnedCharactersForProgress,
+  lessonState,
+  parseMorseCourseFixture,
+  recordMorseCharacterResults,
+  recordMorseLessonAttempt,
+  selectWeakestCharacters,
+  unlockedLessonCount,
+  type MorseCharacterStatRecord,
+  type MorseCourse,
+  type MorseCourseLesson,
+  type MorseCourseProgressExport,
+  type MorseCourseUnit,
+  type MorseDailyActivityRecord,
+  type MorseLessonProgressRecord,
+  type MorseLessonState,
+} from "./course.ts";

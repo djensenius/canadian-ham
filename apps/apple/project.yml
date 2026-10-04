@@ -60,6 +60,10 @@ targets:
         type: file
         buildPhase: resources
         createIntermediateGroups: false
+      - path: ../../fixtures/morse/course.json
+        type: file
+        buildPhase: resources
+        createIntermediateGroups: false
     postBuildScripts:
       - name: Copy Basic generated content
         basedOnDependencyAnalysis: false
@@ -131,6 +135,10 @@ targets:
         buildPhase: resources
         createIntermediateGroups: false
       - path: ../../content/subsection-titles.json
+        type: file
+        buildPhase: resources
+        createIntermediateGroups: false
+      - path: ../../fixtures/morse/course.json
         type: file
         buildPhase: resources
         createIntermediateGroups: false

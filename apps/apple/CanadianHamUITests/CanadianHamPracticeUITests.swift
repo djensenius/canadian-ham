@@ -49,7 +49,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try performAudit(on: app, context: "French practice question")
     }
 
-    func testMorseSectionIsTopLevelAndShowsSettings() throws {
+    func testMorseSectionIsTopLevelShowsCourseAndOpensFirstLesson() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse"])
         defer { app.terminate() }
@@ -59,6 +59,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Learn (course)"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Copy practice"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Exam"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Unit 1"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Morse settings"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Hidden until playback finishes."].firstMatch.waitForExistence(timeout: 5))

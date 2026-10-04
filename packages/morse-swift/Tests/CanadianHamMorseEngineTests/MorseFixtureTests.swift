@@ -19,6 +19,8 @@ final class MorseFixtureTests: XCTestCase {
                 try validateScoringFixture(data)
             case "morse-validation":
                 try validateValidationFixture(data)
+            case "morse-course":
+                try validateCourseFixture(data)
             default:
                 XCTFail("unsupported fixture kind: \(header.kind)")
             }
@@ -103,6 +105,31 @@ final class MorseFixtureTests: XCTestCase {
             let output = validateMorseText(testCase.input.text)
             XCTAssertEqual(output, testCase.expectedOutput, testCase.id)
         }
+    }
+
+    private func validateCourseFixture(_ data: Data) throws {
+        let course = try decodeMorseCourse(data: data)
+        XCTAssertEqual(course.characterOrder, approvedMorseCourseCharacterOrder)
+        XCTAssertEqual(course.units.count, 8)
+        XCTAssertEqual(course.lessons.count, 40)
+        XCTAssertEqual(course.lessons.first?.newCharacters, ["K", "M"])
+        XCTAssertEqual(course.lessons.last?.newCharacters, ["-"])
+
+        var progress = emptyMorseCourseProgress(courseId: course.courseId)
+        XCTAssertEqual(try morseLessonState(course: course, progress: progress, lessonId: "koch-001"), .current)
+        XCTAssertEqual(try morseLessonState(course: course, progress: progress, lessonId: "koch-002"), .locked)
+        progress = try recordMorseLessonAttempt(
+            course: course,
+            progress: progress,
+            lessonId: "koch-001",
+            correct: 9,
+            total: 10,
+            characterResults: [],
+            attemptedAt: "2026-10-03T12:00:00.000Z"
+        )
+        XCTAssertEqual(try morseLessonState(course: course, progress: progress, lessonId: "koch-001"), .completed)
+        XCTAssertEqual(try morseLessonState(course: course, progress: progress, lessonId: "koch-002"), .current)
+        XCTAssertEqual(morseDailyStreak(activity: progress.dailyActivity, todayIso: "2026-10-03T12:05:00.000Z"), 1)
     }
 
     private func assertExpectedError(_ expectedError: ExpectedError, _ testCaseId: String, action: () throws -> Void) {
