@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-04 07:02'
-updated_date: '2026-10-04 12:13'
+updated_date: '2026-10-04 13:22'
 labels:
   - apple
   - accessibility
@@ -47,6 +47,8 @@ Contrast evidence: default audit failure attachments were exported to /Users/dav
 Validation passed: no performAccessibilityAudit handlers/restricted audit-type sets remain (grep over apps/apple UI tests). Targeted iOS runs passed for graded diff light/dark, Morse course lesson/summary light/dark, and the copy/exam flow. Full iOS suite passed 50 tests. Full macOS suite passed 45 tests (UI tests skipped per project macOS command). Localizable.xcstrings was not edited.
 
 Final review round started: correcting graded-diff audit positioning, rerunning l10n/source checks, and preparing final four-platform validation.
+
+Coordinator decision 2026-10-03: the question-bank language picker is removed from the Morse section because Morse content doesn't use the question language; not an audit workaround. Created follow-up TASK-12.17 to replace the -CanadianHamMorseCourseAuditOnly trimmed course-audit layout with real-layout course audits. Targeted validation after final code commit 982347c: graded-diff light and dark audits passed unfiltered; dark Morse course lesson/summary and dark core-screen audits passed unfiltered.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
