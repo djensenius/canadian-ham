@@ -30,7 +30,7 @@ Why: the owner wants formal, Duolingo-like training where you really learn Morse
 - [x] #2 Lessons are short sessions mixing exercise types: meet the character (hear it, see its dits and dahs), listen and choose from options, listen and type single characters, and listen and type 5-character groups at Farnsworth speed, with instant feedback and a lesson summary
 - [x] #3 A review session practises the weakest characters (by recent accuracy) and a local daily streak and lesson count encourage regular practice, with no accounts, notifications or network
 - [x] #4 Per-character mastery and course progress are stored locally (IndexedDB on web, the Apple progress store) and included in progress export/import with schema and shared TS/Swift fixture updates
-- [ ] #5 Fully accessible: keyboard and VoiceOver/screen-reader operable, announcements don't talk over audio, Reduce Motion respected, French UI; web axe and Apple light/dark audits pass on web, iOS/iPadOS, macOS (unit) , tvOS and visionOS (tvOS/visionOS may offer a simplified lesson flow)
+- [x] #5 Fully accessible: keyboard and VoiceOver/screen-reader operable, announcements don't talk over audio, Reduce Motion respected, French UI; web axe and Apple light/dark audits pass on web, iOS/iPadOS, macOS (unit) , tvOS and visionOS (tvOS/visionOS may offer a simplified lesson flow)
 <!-- AC:END -->
 
 ## Implementation Plan
