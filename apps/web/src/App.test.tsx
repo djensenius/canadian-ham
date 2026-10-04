@@ -1028,8 +1028,8 @@ describe("App accessibility and flows", () => {
     assert.equal(window.location.hash, "#/morse");
     assert.ok(screen.getByText("Preview"));
     assert.ok(screen.getByRole("heading", { name: "Learn (course)" }));
-    assert.ok(screen.getByRole("heading", { name: "Copy practice" }));
-    assert.ok(screen.getByRole("heading", { name: "Exam" }));
+    assert.ok(screen.getAllByRole("heading", { name: "Copy practice" }).length >= 1);
+    assert.ok(screen.getAllByRole("heading", { name: "Exam" }).length >= 1);
     assert.ok(screen.getByRole("heading", { name: "Morse settings" }));
     assert.equal(screen.getByText("Hidden until playback finishes.").textContent, "Hidden until playback finishes.");
     await expectNoAxeViolations(container);
@@ -1073,6 +1073,68 @@ describe("App accessibility and flows", () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+
+  it("runs Morse copy practice with typed copy and an accessible diff", async () => {
+    window.location.hash = "#/morse";
+    const store = createStore("morse-copy-practice");
+    await store.putPreferences(morsePreferences(true));
+    stubMorseAudioContext();
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-copy-seed"} />);
+
+    await screen.findByRole("heading", { name: "Quick listen" });
+    const copyHeading = screen.getAllByRole("heading", { name: "Copy practice" }).at(-1);
+    assert.ok(copyHeading);
+    const copySection = copyHeading.closest("section");
+    assert.ok(copySection);
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(within(copySection).getByRole("button", { name: "Start copy practice" }));
+      const copyInput = within(copySection).getByLabelText("Your copy");
+      fireEvent.change(copyInput, { target: { value: "THE NET OPENS AT NOON. QSX" } });
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(90_000);
+      });
+      fireEvent.click(within(copySection).getByRole("button", { name: "Check copy" }));
+    } finally {
+      vi.useRealTimers();
+    }
+
+    assert.ok(within(copySection).getByRole("heading", { name: "Character diff" }));
+    assert.match(copySection.textContent ?? "", /wrong/i);
+    assert.match(copySection.textContent ?? "", /total errors/i);
+    await expectNoAxeViolations(container);
+  });
+
+  it("runs the simulated Morse exam through playback, review, grading, and diff", async () => {
+    window.location.hash = "#/morse";
+    const store = createStore("morse-exam-flow");
+    await store.putPreferences(morsePreferences(true));
+    stubMorseAudioContext();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-exam-seed"} />);
+
+    await screen.findByRole("heading", { name: "Quick listen" });
+    const examHeading = screen.getAllByRole("heading", { name: "Exam" }).at(-1);
+    assert.ok(examHeading);
+    const examSection = examHeading.closest("section");
+    assert.ok(examSection);
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(within(examSection).getByRole("button", { name: "Start simulated exam" }));
+      fireEvent.change(within(examSection).getByLabelText("Your copy"), { target: { value: "ABC" } });
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(260_000);
+      });
+      assert.match(examSection.textContent ?? "", /Review time remaining/);
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(121_000);
+      });
+    } finally {
+      vi.useRealTimers();
+    }
+
+    assert.match(examSection.textContent ?? "", /FAIL/);
+    assert.ok(within(examSection).getByRole("heading", { name: "Character diff" }));
   });
 
   it("opens #/morse directly without waiting on retired preview gating", async () => {

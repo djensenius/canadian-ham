@@ -53,6 +53,7 @@ import {
 } from "./lib/i18n";
 import { WebMorsePlayer } from "./lib/morseAudio";
 import { morseISEDExamPreset, morseTimingFromPreferences, normalizeMorsePreferences, type WebMorseTimingProfileName } from "./lib/morseSettings";
+import { MorseCopyExamSection } from "./morse/copyExam/MorseCopyExamSection";
 import { applyThemePreference, mirrorThemePreference, readStoredThemePreference } from "./lib/theme";
 import {
   applyPracticeAnswer,
@@ -1775,19 +1776,20 @@ function MorseSection({ interfaceLanguage, preferences, onSetPreferences }: { re
       <h2 id="morse-section-title">{t(interfaceLanguage, "morseSectionTitle")} <span className="preview-label">{t(interfaceLanguage, "previewLabel")}</span></h2>
       <p>{t(interfaceLanguage, "morseSectionIntro")}</p>
       <div className="morse-home-grid" role="group" aria-label={t(interfaceLanguage, "morseHomeEntriesAria")}>
-        <section className="morse-home-card" aria-labelledby="morse-learn-title">
+        <div className="morse-home-card">
           <h3 id="morse-learn-title">{t(interfaceLanguage, "morseLearnTitle")}</h3>
           <p>{t(interfaceLanguage, "morseLearnPlaceholder")}</p>
-        </section>
-        <section className="morse-home-card" aria-labelledby="morse-copy-practice-title">
+        </div>
+        <div className="morse-home-card">
           <h3 id="morse-copy-practice-title">{t(interfaceLanguage, "morseCopyPracticeTitle")}</h3>
           <p>{t(interfaceLanguage, "morsePracticePlaceholder")}</p>
-        </section>
-        <section className="morse-home-card" aria-labelledby="morse-exam-title">
+        </div>
+        <div className="morse-home-card">
           <h3 id="morse-exam-title">{t(interfaceLanguage, "morseExamTitle")}</h3>
           <p>{t(interfaceLanguage, "morseExamPlaceholder")}</p>
-        </section>
+        </div>
       </div>
+      <MorseCopyExamSection interfaceLanguage={interfaceLanguage} preferences={preferences} />
       <MorseTrainerPreview interfaceLanguage={interfaceLanguage} preferences={preferences} />
       <MorseSettingsControls interfaceLanguage={interfaceLanguage} onSetPreferences={onSetPreferences} preferences={preferences} />
     </section>
