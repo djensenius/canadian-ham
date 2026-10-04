@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@coordinator'
 created_date: '2026-10-03 13:42'
-updated_date: '2026-10-04 21:00'
+updated_date: '2026-10-03 13:44'
 labels:
   - apple
   - testing
@@ -41,6 +41,4 @@ Why: the owner noted we are overtesting (2026-10-03). Every task ran the full UI
 
 <!-- SECTION:NOTES:BEGIN -->
 AC #1: AGENTS.md now has a 'Testing policy (all agents)' section and the post-merge rule runs quick checks instead of full Apple suites. AC #2/#3 (suite consolidation) are for a later worker.
-
-Flaky web test fixed (2026-10-03): 'lets Morse number inputs accept multi-digit drafts before committing' failed about 1 in 4 runs (650700 vs 700) because the stored-preferences load could refill the field mid-edit. The test now waits for the navigation to enable (initialStoreLoaded) before editing; 12/12 runs passed.
 <!-- SECTION:NOTES:END -->
