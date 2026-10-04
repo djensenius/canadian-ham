@@ -1,11 +1,11 @@
 ---
 id: TASK-12.15
 title: Remove accessibility audit handlers and fix the underlying issues
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-04 07:02'
-updated_date: '2026-10-04 12:06'
+updated_date: '2026-10-04 12:13'
 labels:
   - apple
   - accessibility
@@ -48,6 +48,8 @@ Progress/blocked: removed all performAccessibilityAudit handlers/restricted audi
 Fix round: reverted the graded-exam UX regression by restoring the pre-f49 structure so the heading, explanation, timing picker, Start simulated exam button, generated summary, and user copy remain in the view after grading; the text editor remains visible but non-editable once graded as before. Added UI coverage that grading re-enables Start simulated exam and keeps the user copy visible. Added diff title/summary/rule accessibility identifiers for audit evidence.
 Contrast evidence: default audit failure attachments were exported to /Users/david/.cache/canadian-ham-reviews/t12.15-evidence/. Failing light runs identified clipped/covered SwiftUI text/accessibility nodes rather than low-contrast token pixels: the element screenshot for the explanation/static text used near-black text on #F7F2E8/#F9F3E5; token math measured ink/paper at 14.95:1 light and 14.05:1 dark, ink/warningBg at 14.05:1 light and 11.50:1 dark, and warningBorder/warningBg at 3.83:1 light and 5.94:1 dark. The remaining failure was caused by the audit viewport leaving the still-visible heading/diff title clipped by navigation chrome after tapping Start, not by translucency/materials/opacity or hierarchical foregroundStyle. The audit now nudges the scroll view down before the full default audit so visible graded content is not clipped; no audit handler or filter was added.
 Validation passed: no performAccessibilityAudit handlers/restricted audit-type sets remain (grep over apps/apple UI tests). Targeted iOS runs passed for graded diff light/dark, Morse course lesson/summary light/dark, and the copy/exam flow. Full iOS suite passed 50 tests. Full macOS suite passed 45 tests (UI tests skipped per project macOS command). Localizable.xcstrings was not edited.
+
+Final review round started: correcting graded-diff audit positioning, rerunning l10n/source checks, and preparing final four-platform validation.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
