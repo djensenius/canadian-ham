@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-04 07:02'
-updated_date: '2026-10-04 14:32'
+updated_date: '2026-10-04 14:37'
 labels:
   - apple
   - accessibility
@@ -27,8 +27,8 @@ Why: the project rule is full default accessibility audits with no handlers or e
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 No performAccessibilityAudit call in any UI test target uses an issue handler or a restricted audit-type set; all audits run the full default audit
-- [x] #2 The graded Morse diff tokens meet contrast in light and dark (colours from adaptive design tokens, not colour alone) and the course path passes Dynamic Type without filtering
-- [x] #3 The iOS light and dark audits for the Morse course path, lesson, summary and graded diff pass; the iOS and macOS suites pass
+- [ ] #2 The graded Morse diff tokens meet contrast in light and dark (colours from adaptive design tokens, not colour alone) and the course path passes Dynamic Type without filtering
+- [ ] #3 The iOS light and dark audits for the Morse course path, lesson, summary and graded diff pass; the iOS and macOS suites pass
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -51,6 +51,8 @@ Final review round started: correcting graded-diff audit positioning, rerunning 
 Coordinator decision 2026-10-03: the question-bank language picker is removed from the Morse section because Morse content doesn't use the question language; not an audit workaround. Created follow-up TASK-12.17 to replace the -CanadianHamMorseCourseAuditOnly trimmed course-audit layout with real-layout course audits. Targeted validation after final code commit 982347c: graded-diff light and dark audits passed unfiltered; dark Morse course lesson/summary and dark core-screen audits passed unfiltered.
 
 Blocked after final iOS validation attempt: final full iOS run on code commit 3b94596 executed 94 tests and failed only CanadianHamPracticeUITests/testAccessibilityAuditMorseExamGradedDiffDark. Evidence exported under /tmp/t12-ios-full-failure; failure text said morse-diff-title and morse-diff-token were visible but the positioning helper did not accept the state. After simplifying the helper, targeted dark still failed Contrast, with the audit inspecting morse-exam-explanation. Dark token contrast measured from Tokens.swift passes (ink on paper 14.05:1, ink on paperElevated 12.63:1, inkMuted on paper 9.23:1, inkMuted on paperElevated 8.30:1), so the remaining failure is covered/clipped layout at the audited position. Per coordinator direction, no further feature/layout removal was done without approval.
+
+Correction: the earlier note saying Localizable.xcstrings was not edited was stale/incorrect. This branch includes the approved catalogue cleanup from the required JSON round-trip; no additional catalogue edits are planned in this fix round.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
