@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-04 07:02'
-updated_date: '2026-10-04 09:17'
+updated_date: '2026-10-04 09:57'
 labels:
   - apple
   - accessibility
@@ -39,3 +39,9 @@ Why: the project rule is full default accessibility audits with no handlers or e
 3. Fix the Morse course path Dynamic Type layout by allowing lesson content to wrap/scale without clipping.
 4. Run targeted iOS audits/tests while iterating, then required web/package/check scripts and one final full iOS and macOS run; document per-test results.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Progress/blocked: removed all performAccessibilityAudit handlers/restricted audit-type sets; course path Dynamic Type light audit passed after replacing LazyVStack with VStack and using wrapping lesson button text. Graded diff full default audit still fails Xcode Contrast in light mode after opaque DesignTokens.Colors.paper background + DesignTokens.Colors.ink foreground on diff heading/summary and semantic DesignTokens backgrounds on tokens; xbuild reports failing element as visible high-contrast static text such as “Character diff” / diff summary. No filter added. Last failing command: DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination platform=iOS Simulator,name=iPhone 17 Pro -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditMorseExamGradedDiffLight test CODE_SIGNING_ALLOWED=NO. Need owner/coordinator decision per task instruction before continuing or accepting a system false-positive exception.
+<!-- SECTION:NOTES:END -->
