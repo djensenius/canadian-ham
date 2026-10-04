@@ -856,8 +856,17 @@ final class ProgressStoreService: ObservableObject {
             preferences: preferences,
             archivedLessonProgressData: entity?.archivedLessonProgressData ?? Data("[]".utf8),
             archivedLessonQuizAttemptsData: entity?.archivedLessonQuizAttemptsData ?? Data("[]".utf8),
-            morseCourseProgressData: try? Data(contentsOf: morseCourseProgressURL)
+            morseCourseProgressData: try existingMorseCourseProgressDataForRollback()
         )
+    }
+
+    /// Returns nil only when there is no Morse progress file. Any other read error aborts the
+    /// operation before anything is changed, so a later rollback can always restore the prior bytes.
+    private func existingMorseCourseProgressDataForRollback() throws -> Data? {
+        guard FileManager.default.fileExists(atPath: morseCourseProgressURL.path(percentEncoded: false)) else {
+            return nil
+        }
+        return try Data(contentsOf: morseCourseProgressURL)
     }
 
     private func removeMorseCourseProgressIfPresent() throws {
