@@ -3919,6 +3919,28 @@
         }
       }
     },
+    "Great work. All Morse lessons are complete." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Great work. All Morse lessons are complete."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bravo. Toutes les leçons Morse sont terminées."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bravo. Toutes les leçons Morse sont terminées."
+          }
+        }
+      }
+    },
     "Hidden until playback finishes." : {
       "localizations" : {
         "en" : {
@@ -6839,6 +6861,28 @@
         }
       }
     },
+    "Reach 90% accuracy to complete this lesson." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reach 90% accuracy to complete this lesson."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atteignez 90 % d’exactitude pour terminer cette leçon."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atteignez 90 % d’exactitude pour terminer cette leçon."
+          }
+        }
+      }
+    },
     "Readiness" : {
       "localizations" : {
         "fr" : {
@@ -8851,6 +8895,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Votre progression locale indique des catégories faibles, des questions à réviser ou moins d’examens simulés réussis que nécessaire. Révisez les questions faibles et les questions à réviser avant de vous fier à votre préparation à l’examen."
+          }
+        }
+      }
+    },
+    "Review complete. Practice progress was saved." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review complete. Practice progress was saved."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Révision terminée. La progression de pratique a été enregistrée."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Révision terminée. La progression de pratique a été enregistrée."
           }
         }
       }

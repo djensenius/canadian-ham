@@ -166,7 +166,7 @@ struct MorseCourseView: View {
                 Text("Lesson summary") // l10n: localized
                     .font(DesignTokens.FontScale.body.weight(.bold))
                 Text(String.localizedStringWithFormat(String(localized: "Accuracy: %lld%%"), Int64(percent))) // l10n: localized
-                Text(percent >= 90 ? "Great work. The next lesson is unlocked." : "Reach 90% accuracy to unlock the next lesson.") // l10n: localized
+                Text(morseCourseSummaryMessage(for: session, percent: percent, course: course)) // l10n: localized
             }
         }
         .padding(DesignTokens.Spacing.md)
@@ -415,13 +415,32 @@ private extension MorseCourseExercise {
     }
 }
 
+func morseCourseSummaryMessage(for session: MorseCourseSession, percent: Int, course: MorseCourse) -> String {
+    switch session.mode {
+    case .review:
+        return String(localized: "Review complete. Practice progress was saved.")
+    case .lesson(let lesson):
+        let isFinalLesson = lesson.lessonNumber >= course.lessons.count
+        if percent >= 90 {
+            return isFinalLesson ? String(localized: "Great work. All Morse lessons are complete.") : String(localized: "Great work. The next lesson is unlocked.")
+        }
+        return isFinalLesson ? String(localized: "Reach 90% accuracy to complete this lesson.") : String(localized: "Reach 90% accuracy to unlock the next lesson.")
+    }
+}
+
+func morseCourseLocalDateString(_ date: Date, timeZone: TimeZone = .current) -> String {
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = timeZone
+    let components = calendar.dateComponents([.year, .month, .day], from: date)
+    return String(format: "%04d-%02d-%02d", components.year ?? 1970, components.month ?? 1, components.day ?? 1)
+}
+
 private extension Date {
     var canonicalUTCString: String {
         ISO8601Format(.iso8601(timeZone: .gmt, includingFractionalSeconds: true))
     }
 
     var localDateString: String {
-        let components = Calendar.current.dateComponents([.year, .month, .day], from: self)
-        return String(format: "%04d-%02d-%02d", components.year ?? 1970, components.month ?? 1, components.day ?? 1)
+        morseCourseLocalDateString(self)
     }
 }

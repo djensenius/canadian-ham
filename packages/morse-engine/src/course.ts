@@ -107,7 +107,8 @@ export function parseMorseCourseFixture(value: unknown): MorseCourse {
     if (lesson.unitId !== `unit-${String(Math.floor(index / 5) + 1).padStart(2, "0")}`) throw new Error(`Morse lesson ${lesson.id} has the wrong unit.`);
   });
   units.forEach((unit, index) => {
-    if (unit.unitNumber !== index + 1) throw new Error(`Morse unit ${unit.id} is out of order.`);
+    const expectedUnitId = `unit-${String(index + 1).padStart(2, "0")}`;
+    if (unit.unitNumber !== index + 1 || unit.id !== expectedUnitId) throw new Error(`Morse unit ${unit.id} is out of order.`);
     const expectedLessonIds = lessons.slice(index * 5, index * 5 + 5).map((lesson) => lesson.id);
     if (!arrayEquals(unit.lessonIds, expectedLessonIds)) throw new Error(`Morse unit ${unit.id} lesson IDs are out of order.`);
   });
@@ -224,7 +225,8 @@ export function recordMorseCharacterResults(progress: MorseCourseProgressExport,
 
 export function dailyStreak(activity: readonly MorseDailyActivityRecord[], todayIso: string): number {
   const completedDates = new Set(activity.filter((entry) => entry.lessonsCompleted > 0).map((entry) => entry.date));
-  let cursor = isoDate(todayIso);
+  const today = isoDate(todayIso);
+  let cursor = completedDates.has(today) ? today : shiftIsoDate(today, -1);
   let streak = 0;
   while (completedDates.has(cursor)) {
     streak += 1;

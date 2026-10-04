@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "kind": "morse-course-streak",
+  "cases": [
+    {
+      "id": "counts-from-today-when-today-has-activity",
+      "input": {
+        "todayIso": "2026-10-04T09:30:00.000Z",
+        "activity": [
+          { "date": "2026-10-01", "lessonsCompleted": 1 },
+          { "date": "2026-10-02", "lessonsCompleted": 1 },
+          { "date": "2026-10-03", "lessonsCompleted": 1 },
+          { "date": "2026-10-04", "lessonsCompleted": 1 }
+        ]
+      },
+      "expectedOutput": { "streak": 4 }
+    },
+    {
+      "id": "counts-from-yesterday-before-todays-first-lesson",
+      "input": {
+        "todayIso": "2026-10-04T00:30:00.000Z",
+        "activity": [
+          { "date": "2026-10-01", "lessonsCompleted": 1 },
+          { "date": "2026-10-02", "lessonsCompleted": 1 },
+          { "date": "2026-10-03", "lessonsCompleted": 1 }
+        ]
+      },
+      "expectedOutput": { "streak": 3 }
+    },
+    {
+      "id": "breaks-after-a-missed-yesterday",
+      "input": {
+        "todayIso": "2026-10-04T09:30:00.000Z",
+        "activity": [
+          { "date": "2026-10-02", "lessonsCompleted": 1 },
+          { "date": "2026-10-03", "lessonsCompleted": 0 }
+        ]
+      },
+      "expectedOutput": { "streak": 0 }
+    }
+  ]
+}

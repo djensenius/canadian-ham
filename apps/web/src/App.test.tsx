@@ -13,7 +13,7 @@ import { afterEach, beforeEach, describe, it, vi } from "vitest";
 import { generateMorseExamText, profileForName } from "@canadian-ham/morse-engine";
 
 import { App, AppErrorBoundary, CitationLink, ExplanationPanel } from "./App";
-import { answerMorseCourseSession, type SessionState } from "./morse/course/MorseCoursePanel";
+import { answerMorseCourseSession, morseCourseSummaryMessage, type SessionState } from "./morse/course/MorseCoursePanel";
 import { bankId, categories, loadQuestions, loadQuestionsFromUrl, manifest, type Answer, type Category, type Question } from "./data/bank";
 import { explanationForQuestion, parseChoiceNotes } from "./data/explanations";
 import { lessonQuizzesById, buildLessonQuizItems } from "./data/quizzes";
@@ -1166,7 +1166,7 @@ describe("App accessibility and flows", () => {
 
     const alert = await screen.findByRole("alert");
     assert.match(alert.textContent ?? "", /Unable to save Morse course progress: simulated Morse course save failure/);
-    assert.ok(screen.getByText("Progress was not saved. Try again before relying on the unlock."));
+    assert.ok(screen.getByText("Progress was not saved. Try again before relying on this result."));
     assert.equal(screen.queryByText("Great work. The next lesson is unlocked."), null);
     assert.equal((screen.getByRole("button", { name: /Lesson 2, R, Locked/ }) as HTMLButtonElement).disabled, true);
     assert.equal(await store.getMorseCourseProgress(), undefined);
@@ -1186,6 +1186,26 @@ describe("App accessibility and flows", () => {
     };
 
     assert.equal(answerMorseCourseSession(completedSession, false, [{ character: "K", correct: false }], "en"), completedSession);
+  });
+
+  it("uses Morse course summary copy for review sessions and the final lesson", () => {
+    const course = parseMorseCourseFixture(courseFixture);
+    const reviewSession: SessionState = {
+      mode: "review",
+      lesson: null,
+      exercises: [{ kind: "type-character", character: "K" }],
+      index: 0,
+      correct: 1,
+      total: 1,
+      characterResults: [{ character: "K", correct: true }],
+      feedback: "Correct.",
+      done: true,
+    };
+    const finalLessonSession: SessionState = { ...reviewSession, mode: "lesson", lesson: course.lessons[39]! };
+
+    assert.equal(morseCourseSummaryMessage("en", reviewSession, 100, course.lessons.length), "Review complete. Practice progress was saved.");
+    assert.equal(morseCourseSummaryMessage("en", finalLessonSession, 100, course.lessons.length), "Great work. All Morse lessons are complete.");
+    assert.equal(morseCourseSummaryMessage("en", finalLessonSession, 80, course.lessons.length), "Reach 90% accuracy to complete this lesson.");
   });
 
   it("shows the correct answer on a missed Morse lesson item and keeps summary accessible", async () => {

@@ -24,6 +24,13 @@ describe("Morse Koch course fixture", () => {
     expect(course.lessons[39]?.newCharacters).toEqual(["-"]);
   });
 
+  it("rejects course fixtures with unexpected unit IDs", () => {
+    const invalidFixture = JSON.parse(JSON.stringify(courseFixture));
+    invalidFixture.units[0].id = "unit-99";
+
+    expect(() => parseMorseCourseFixture(invalidFixture)).toThrow(/Morse unit unit-99 is out of order/);
+  });
+
   it("unlocks the next lesson only at 90 percent accuracy", () => {
     const course = parseMorseCourseFixture(courseFixture);
     let progress = emptyMorseCourseProgress(course.courseId);
@@ -38,6 +45,8 @@ describe("Morse Koch course fixture", () => {
     expect(lessonState(course, progress, "koch-001")).toBe("completed");
     expect(lessonState(course, progress, "koch-002")).toBe("current");
     expect(dailyStreak(progress.dailyActivity, "2026-10-03T12:10:00.000Z")).toBe(1);
+    expect(dailyStreak(progress.dailyActivity, "2026-10-04T00:10:00.000Z")).toBe(1);
+    expect(dailyStreak(progress.dailyActivity, "2026-10-05T00:10:00.000Z")).toBe(0);
   });
 
   it("builds seeded real lesson exercises with both lesson-one characters and meaningful scoring", () => {
