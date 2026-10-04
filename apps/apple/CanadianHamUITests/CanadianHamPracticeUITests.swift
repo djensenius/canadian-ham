@@ -1420,13 +1420,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
             }
 
             let auditVisibleFrame = morseAuditVisibleFrame(in: app)
-            let clippedTopElement = firstMorseExamAuditElementClippedByVisibleTop(in: app, visibleTop: auditVisibleFrame.minY, firstDiffToken: firstDiffToken)
-            if isFullyVisible(diffTitle, in: auditVisibleFrame), isFullyVisible(firstDiffToken, in: auditVisibleFrame), clippedTopElement == nil {
+            if isFullyVisible(diffTitle, in: auditVisibleFrame), isFullyVisible(firstDiffToken, in: auditVisibleFrame) {
                 assertMorseDiffAuditElementsDoNotIntersectNavigationBar(in: app, firstDiffToken: firstDiffToken, context: context, file: file, line: line)
                 return
             }
 
-            if clippedTopElement != nil || diffTitle.frame.minY < auditVisibleFrame.minY || firstDiffToken.frame.minY < auditVisibleFrame.minY {
+            if diffTitle.frame.minY < auditVisibleFrame.minY || firstDiffToken.frame.minY < auditVisibleFrame.minY {
                 controlledScrollDown(scrollView)
             } else {
                 controlledScrollUp(scrollView)
