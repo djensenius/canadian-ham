@@ -1,11 +1,11 @@
 ---
 id: TASK-12.5
 title: Duolingo-style Morse course (Koch method) with local progress
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-04 02:16'
+updated_date: '2026-10-04 05:14'
 labels:
   - web
   - apple
@@ -27,10 +27,10 @@ Why: the owner wants formal, Duolingo-like training where you really learn Morse
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 A course path of 40 Koch lessons (G4FON order adapted to the ISED character set) grouped into units, shown as a visual path with locked, current and completed lessons; each lesson introduces 1-2 new characters and unlocks the next at 90% accuracy
-- [ ] #2 Lessons are short sessions mixing exercise types: meet the character (hear it, see its dits and dahs), listen and choose from options, listen and type single characters, and listen and type 5-character groups at Farnsworth speed, with instant feedback and a lesson summary
-- [ ] #3 A review session practises the weakest characters (by recent accuracy) and a local daily streak and lesson count encourage regular practice, with no accounts, notifications or network
-- [ ] #4 Per-character mastery and course progress are stored locally (IndexedDB on web, the Apple progress store) and included in progress export/import with schema and shared TS/Swift fixture updates
-- [ ] #5 Fully accessible: keyboard and VoiceOver/screen-reader operable, announcements don't talk over audio, Reduce Motion respected, French UI; web axe and Apple light/dark audits pass on web, iOS/iPadOS, macOS (unit) , tvOS and visionOS (tvOS/visionOS may offer a simplified lesson flow)
+- [x] #2 Lessons are short sessions mixing exercise types: meet the character (hear it, see its dits and dahs), listen and choose from options, listen and type single characters, and listen and type 5-character groups at Farnsworth speed, with instant feedback and a lesson summary
+- [x] #3 A review session practises the weakest characters (by recent accuracy) and a local daily streak and lesson count encourage regular practice, with no accounts, notifications or network
+- [x] #4 Per-character mastery and course progress are stored locally (IndexedDB on web, the Apple progress store) and included in progress export/import with schema and shared TS/Swift fixture updates
+- [x] #5 Fully accessible: keyboard and VoiceOver/screen-reader operable, announcements don't talk over audio, Reduce Motion respected, French UI; web axe and Apple light/dark audits pass on web, iOS/iPadOS, macOS (unit) , tvOS and visionOS (tvOS/visionOS may offer a simplified lesson flow)
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -49,10 +49,12 @@ Implemented shared Morse course fixture and TS/Swift course logic using the G4FO
 Fix round started from review b68ecf00 vs base 1196c04. Reopened AC #2-#5 pending evidence for lesson depth, local progress import isolation, completed-session answer locking, and required accessibility/platform test runs.
 
 Fix round implementation committed in d6e9061: restored the Apple string catalogue to the 1196c04 base and appended only Morse-course keys (French plurals for existing count strings verified intact; %lld days now has one/other plural variations); added seeded shared TS/Swift Koch lesson generation with 20 scored exercises; hid/disabled completed sessions and made web/Apple answers no-op after done; isolated Apple Morse progress files for in-memory stores and added separate-location export/import tests; added web older-export and IndexedDB v3→v4 tests; added Apple invalid-Morse import tests and progress reload after import; added web and Apple feedback/accessibility refinements. Validation: pnpm typecheck passed; pnpm test passed; pnpm build:web plus apps/web audit:urls passed; pnpm check:schemas passed; node scripts/check-apple-text-sources.ts passed; bash scripts/check-apple-no-network.sh passed; swift test --package-path packages/morse-swift passed; targeted iOS xbuild CanadianHamTests/MorseTrainerTests and ProgressStoreTests passed (21 tests). Apple UI/full platform runs are still pending because xbuild is currently serialized behind other long-running builds; one targeted UI iteration before final fixes failed and the subsequent retry timed out waiting for the xbuild lock.
+
+Fix round 3: fetched origin/main until PR #123/task-12.6 appeared, merged origin/main into task-12.5-morse-course, resolved copy-exam/course conflicts, and preserved 12.6 catalogue keys. Removed stale Morse catalogue keys with the required JSON recipe and made %lld days variations-only. Wrapped iOS-only text input capitalization; added local-date Morse streak recording, learned-only distractors, TS/Swift course-exercise parity fixture, web/Apple completed-session no-op tests, deterministic Apple course UI completion, and course-session audit coverage. Validation passed: pnpm typecheck; pnpm test; pnpm --filter @canadian-ham/morse-engine test; pnpm --filter @canadian-ham/web test -- --runInBand; pnpm check:apple-l10n; node scripts/check-apple-text-sources.ts; swift test --package-path packages/morse-swift; targeted iOS UI tests testCompletesFirstMorseLessonSessionOnIOS, testAccessibilityAuditMorseCourseLessonAndSummaryLight, testAccessibilityAuditMorseCourseLessonAndSummaryDark; full iOS CanadianHam suite (49 UI tests); full macOS CanadianHam unit suite (LocalizationCatalogTests, MorseTrainerTests, ProgressStoreTests, QuestionBankTests, ReadinessAndScoringTests; 39 tests); full tvOS CanadianHamTV suite (12 UI tests); full visionOS CanadianHamVision suite (3 unit tests and 9 UI tests).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented a shared 40-lesson Koch Morse course with local progress on web and Apple. Added fixtures/morse/course.json, TS/Swift course logic/tests, web course path/session/review UI using WebMorsePlayer, Apple course path/session/review UI using MorseAudioDriver, and progress export/import schema/store support. Verified with TS/web/schema/Swift package tests, targeted iOS unit/UI tests, web build URL audit, Apple localization/network checks, and XcodeGen regeneration.
+Implemented the Morse course with task-12.6 merge compatibility and fixed review blockers: macOS-safe modifiers, catalogue cleanup, deterministic passing course UI tests/audits, learned-only distractors, shared TS/Swift exercise parity, local-date streaks, restart focus, and web/Apple completed-session resubmit no-ops. Verified with web/package checks, Apple localization/text checks, Swift package tests, targeted iOS UI tests, and full iOS/macOS/tvOS/visionOS xbuild suites.
 <!-- SECTION:FINAL_SUMMARY:END -->
