@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-04 07:02'
-updated_date: '2026-10-04 19:26'
+updated_date: '2026-10-04 19:27'
 labels:
   - apple
   - accessibility
@@ -57,6 +57,8 @@ Correction: the earlier note saying Localizable.xcstrings was not edited was sta
 Blocked per coordinator stop rule after approved scroll/focus fix: implemented app-side ScrollViewReader scrollTo(anchor: .top) for copy practice and simulated exam results, with no animation under Reduce Motion, plus VoiceOver focus request on the diff heading and UI coverage. Reverted the out-of-scope global UISegmentedControl appearance override and compact language-picker bottom padding; removed the dead Morse audit language-picker branch. Targeted focus/scroll test passed: DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination "platform=iOS Simulator,name=iPhone 17 Pro" -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testMorseExamGradingScrollsToAndFocusesResults test CODE_SIGNING_ALLOWED=NO. Stability attempt then ran the unfiltered graded-diff light/dark audits three times each; all six executions failed Contrast at CanadianHamPracticeUITests.swift:951 (dark run durations ~106.6s, 104.7s, 109.6s; light ~93.2s, 93.8s, 96.8s). Full log: /var/folders/vn/hq32qlg16_5fnfnkl35k6x0r0000gn/T/pi-bash-bc63eddd1bef8249.log. Per the stop rule, no full platform/web validation was run and no further layout/feature removal was attempted. The existing inline Morse navigation title remains from the prior branch state, but this failed stability run does not prove it necessary; revisit before finalizing.
 
 Implemented final owner decision: copy practice and simulated exam grading now push dedicated Copy results / Exam results screens with summary, accessible character diff, user copy, primary action and navigation Back; the ScrollViewReader scroll-to-results path and resultFocusRequested accessibilityValue hook were removed. Catalogue updates used the OrderedDict JSON round-trip. No fallback audit handler or exception was used. Validation passed: node scripts/check-apple-text-sources.ts; pnpm typecheck; TZ=UTC pnpm test; pnpm build:web; pnpm check:apple-network; pnpm check:apple-l10n; targeted iOS Morse copy/exam flow; targeted iOS Morse results light audit 3/3 and dark audit 3/3; full iOS scheme 51 tests; macOS 45 tests with UI tests skipped per project command; tvOS 12 tests; visionOS 3 unit tests + 9 UI tests.
+
+Validation detail correction: the final full iOS scheme log contained 95 total test cases (44 CanadianHamTests unit tests plus 51 CanadianHamPracticeUITests UI tests); macOS contained 45 unit tests with UI skipped per project command; tvOS contained 15 total tests (3 unit + 12 UI); visionOS contained 12 total tests (3 unit + 9 UI).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
