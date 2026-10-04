@@ -273,7 +273,7 @@ struct RootView: View {
                 .background(Color(.systemBackground), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
                 .padding(.horizontal, DesignTokens.Spacing.lg)
                 .padding(.top, DesignTokens.Spacing.md)
-                .padding(.bottom, DesignTokens.Spacing.xl)
+                .padding(.bottom, DesignTokens.Spacing.sm)
             content()
         }
         .background(DesignTokens.Colors.paper)

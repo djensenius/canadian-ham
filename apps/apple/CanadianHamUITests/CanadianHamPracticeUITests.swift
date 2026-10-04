@@ -138,6 +138,27 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(examEditor.exists, "Grading should keep the user's copy visible")
     }
 
+    func testMorseExamGradingScrollsToAndFocusesResults() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseExamPlaybackSeconds", "0.1",
+            "-CanadianHamMorseExamReviewSeconds", "1"
+        ])
+        defer { app.terminate() }
+
+        let examStart = app.buttons["morse-exam-start-button"].firstMatch
+        XCTAssertTrue(examStart.waitForExistence(timeout: 10))
+        scrollUntilHittable(examStart, in: app, maxSwipes: 8)
+        examStart.tap()
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "FAIL")).firstMatch.waitForExistence(timeout: 10))
+
+        let diffTitle = app.descendants(matching: .any)["morse-diff-title"].firstMatch
+        XCTAssertTrue(diffTitle.waitForExistence(timeout: 5), "Grading should show the Morse diff title")
+        assertMorseDiffTitleIsFullyBelowNavigationBar(diffTitle, in: app, context: "graded Morse exam result focus")
+        XCTAssertTrue(waitForAccessibilityValue("1", on: diffTitle, timeout: 4), "Grading should request VoiceOver focus on the Morse diff heading")
+    }
+
     func testMorseCopyStartResetsAfterAudioStartupFailure() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [
@@ -1405,52 +1426,31 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let diffTitle = app.descendants(matching: .any)["morse-diff-title"].firstMatch
         XCTAssertTrue(diffTitle.waitForExistence(timeout: 5), "Expected the graded Morse diff before auditing", file: file, line: line)
 
-        let scrollView = app.scrollViews.firstMatch
-        XCTAssertTrue(scrollView.waitForExistence(timeout: 5), "Expected a scroll view for the graded Morse diff audit", file: file, line: line)
-
         let firstDiffToken = app.descendants(matching: .any)
             .matching(NSPredicate(format: "identifier BEGINSWITH %@", "morse-diff-token-"))
             .firstMatch
 
-        for _ in 0..<28 {
-            if !firstDiffToken.exists {
-                controlledScrollUp(scrollView)
-                waitBriefly()
-                continue
-            }
-
-            let auditVisibleFrame = morseAuditVisibleFrame(in: app)
-            if isFullyVisible(diffTitle, in: auditVisibleFrame), isFullyVisible(firstDiffToken, in: auditVisibleFrame) {
-                assertMorseDiffAuditElementsDoNotIntersectNavigationBar(in: app, firstDiffToken: firstDiffToken, context: context, file: file, line: line)
+        for _ in 0..<20 {
+            if firstDiffToken.exists,
+               isMorseGradedDiffReadyForAudit(in: app, diffTitle: diffTitle, firstDiffToken: firstDiffToken) {
+                assertMorseDiffTitleIsFullyBelowNavigationBar(diffTitle, in: app, context: context, file: file, line: line)
+                assertNoMorseExamAuditElementStraddlesVisibleTop(in: app, firstDiffToken: firstDiffToken, context: context, file: file, line: line)
                 return
-            }
-
-            if diffTitle.frame.minY < auditVisibleFrame.minY || firstDiffToken.frame.minY < auditVisibleFrame.minY {
-                controlledScrollDown(scrollView)
-            } else {
-                controlledScrollUp(scrollView)
             }
             waitBriefly()
         }
 
-        assertMorseDiffAuditElementsDoNotIntersectNavigationBar(in: app, firstDiffToken: firstDiffToken, context: context, file: file, line: line)
+        assertMorseDiffTitleIsFullyBelowNavigationBar(diffTitle, in: app, context: context, file: file, line: line)
+        assertNoMorseExamAuditElementStraddlesVisibleTop(in: app, firstDiffToken: firstDiffToken, context: context, file: file, line: line)
         XCTFail(
-            "Expected morse-diff-title and at least one morse-diff-token-* to be fully visible below the navigation bar before auditing. Title frame: \(frameDescription(diffTitle.frame)); first token frame: \(frameDescription(firstDiffToken.frame))",
+            "Expected morse-diff-title to be fully below the navigation bar and no audited Morse exam element to straddle the bar edge before auditing. Title frame: \(frameDescription(diffTitle.frame)); first token frame: \(frameDescription(firstDiffToken.frame))",
             file: file,
             line: line
         )
     }
 
     private func morseAuditVisibleFrame(in app: XCUIApplication) -> CGRect {
-        let navigationVisibleFrame = visibleFrameExcludingNavigationBar(in: app)
-        let languagePicker = app.segmentedControls["question-language-picker"].firstMatch
-        let protectedTop = languagePicker.exists ? max(navigationVisibleFrame.minY, languagePicker.frame.maxY + 8) : navigationVisibleFrame.minY
-        return CGRect(
-            x: navigationVisibleFrame.minX,
-            y: protectedTop,
-            width: navigationVisibleFrame.width,
-            height: max(0, navigationVisibleFrame.maxY - protectedTop)
-        )
+        visibleFrameExcludingNavigationBar(in: app)
     }
 
     private func isFullyVisible(_ element: XCUIElement, in visibleFrame: CGRect) -> Bool {
@@ -1481,28 +1481,43 @@ final class CanadianHamPracticeUITests: XCTestCase {
         }
     }
 
-    private func assertMorseDiffAuditElementsDoNotIntersectNavigationBar(
+    private func isMorseGradedDiffReadyForAudit(in app: XCUIApplication, diffTitle: XCUIElement, firstDiffToken: XCUIElement) -> Bool {
+        let auditVisibleFrame = morseAuditVisibleFrame(in: app)
+        return isFullyVisible(diffTitle, in: auditVisibleFrame)
+            && firstMorseExamAuditElementClippedByVisibleTop(in: app, visibleTop: auditVisibleFrame.minY, firstDiffToken: firstDiffToken) == nil
+    }
+
+    private func assertMorseDiffTitleIsFullyBelowNavigationBar(
+        _ diffTitle: XCUIElement,
+        in app: XCUIApplication,
+        context: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let auditVisibleFrame = morseAuditVisibleFrame(in: app)
+        XCTAssertTrue(
+            isFullyVisible(diffTitle, in: auditVisibleFrame),
+            "\(context): morse-diff-title should be fully below the navigation bar before auditing. Title frame: \(frameDescription(diffTitle.frame)); visible frame: \(frameDescription(auditVisibleFrame))",
+            file: file,
+            line: line
+        )
+    }
+
+    private func assertNoMorseExamAuditElementStraddlesVisibleTop(
         in app: XCUIApplication,
         firstDiffToken: XCUIElement,
         context: String,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        let auditedElements = [
-            app.descendants(matching: .any)["morse-diff-title"].firstMatch,
-            app.descendants(matching: .any)["morse-diff-summary"].firstMatch,
-            app.descendants(matching: .any)["morse-diff-rule"].firstMatch,
-            firstDiffToken
-        ]
-        let navigationFrame = protectedNavigationFrame(in: app)
-        for element in auditedElements where element.exists {
-            XCTAssertFalse(
-                element.frame.intersects(navigationFrame),
-                "\(context): audited Morse diff text intersects the navigation bar. Identifier: \(element.identifier); label: \(element.label); frame: \(frameDescription(element.frame)); navigation frame: \(frameDescription(navigationFrame))",
-                file: file,
-                line: line
-            )
-        }
+        let visibleTop = morseAuditVisibleFrame(in: app).minY
+        let clippedElement = firstMorseExamAuditElementClippedByVisibleTop(in: app, visibleTop: visibleTop, firstDiffToken: firstDiffToken)
+        XCTAssertNil(
+            clippedElement,
+            "\(context): audited Morse exam element straddles the navigation bar edge. Identifier: \(clippedElement?.identifier ?? "<none>"); label: \(clippedElement?.label ?? "<none>"); frame: \(clippedElement.map { frameDescription($0.frame) } ?? "<none>"); visible top: \(visibleTop)",
+            file: file,
+            line: line
+        )
     }
 
     private func controlledScrollUp(_ scrollView: XCUIElement) {
@@ -1594,6 +1609,15 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     private func waitBriefly(_ seconds: TimeInterval = 0.2) {
         RunLoop.current.run(until: Date().addingTimeInterval(seconds))
+    }
+
+    private func waitForAccessibilityValue(_ expectedValue: String, on element: XCUIElement, timeout: TimeInterval) -> Bool {
+        let deadline = Date().addingTimeInterval(timeout)
+        while Date() < deadline {
+            if element.value as? String == expectedValue { return true }
+            waitBriefly(0.2)
+        }
+        return element.value as? String == expectedValue
     }
 
     private func assertQuestion(_ app: XCUIApplication, showsQuestionID questionID: String, message: String? = nil, file: StaticString = #filePath, line: UInt = #line) {

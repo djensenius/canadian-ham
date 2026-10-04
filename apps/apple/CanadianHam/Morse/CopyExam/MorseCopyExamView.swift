@@ -38,14 +38,20 @@ private let morseCopyPracticeCorpus: [MorseCopyPassageLength: [MorseCopyPractice
     ],
 ]
 
+enum MorseCopyResultTarget: Hashable {
+    case copyPractice
+    case receivingExam
+}
+
 struct MorseCopyExamView: View {
     let settings: MorseTrainerSettings
     let playbackCoordinator: MorsePlaybackCoordinator
+    let onResultsGraded: (MorseCopyResultTarget) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            MorseCopyPracticeView(settings: settings, playbackCoordinator: playbackCoordinator)
-            MorseReceivingExamView(settings: settings, playbackCoordinator: playbackCoordinator)
+            MorseCopyPracticeView(settings: settings, playbackCoordinator: playbackCoordinator, onResultsGraded: onResultsGraded)
+            MorseReceivingExamView(settings: settings, playbackCoordinator: playbackCoordinator, onResultsGraded: onResultsGraded)
         }
     }
 }
@@ -53,6 +59,7 @@ struct MorseCopyExamView: View {
 private struct MorseCopyPracticeView: View {
     let settings: MorseTrainerSettings
     let playbackCoordinator: MorsePlaybackCoordinator
+    let onResultsGraded: (MorseCopyResultTarget) -> Void
 
     @State private var driver = MorseAudioDriver()
     @State private var selectedLength: MorseCopyPassageLength = .short
@@ -65,6 +72,8 @@ private struct MorseCopyPracticeView: View {
     @State private var statusMessage = ""
     @State private var errorMessage: String?
     @State private var finishTask: Task<Void, Never>?
+    @State private var resultFocusRequested = false
+    @AccessibilityFocusState private var resultFocus: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -114,7 +123,7 @@ private struct MorseCopyPracticeView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
             }
             if let diff, let activePassage {
-                MorseDiffView(diff: diff, expectedText: activePassage.text)
+                MorseDiffView(diff: diff, expectedText: activePassage.text, resultID: .copyPractice, resultFocus: $resultFocus, resultFocusRequested: resultFocusRequested)
             }
             if let errorMessage {
                 MessagePanel(title: "Morse error", message: errorMessage, kind: .warning)
@@ -145,6 +154,7 @@ private struct MorseCopyPracticeView: View {
             activeDuration = 0
             userCopy = ""
             diff = nil
+            resultFocusRequested = false
             isPlaying = false
             statusMessage = ""
             errorMessage = nil
@@ -176,6 +186,7 @@ private struct MorseCopyPracticeView: View {
             activeDuration = 0
             userCopy = ""
             diff = nil
+            resultFocusRequested = false
             isPlaying = false
             statusMessage = ""
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: "), detail: error)
@@ -205,8 +216,19 @@ private struct MorseCopyPracticeView: View {
             let errors = diff?.score.errors ?? 0
             statusMessage = String.localizedStringWithFormat(String(localized: "Copy checked: %lld errors."), Int64(errors))
             AccessibilityNotification.Announcement(statusMessage).post()
+            presentResultsAfterLayout(.copyPractice)
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: "), detail: error)
+        }
+    }
+
+    private func presentResultsAfterLayout(_ target: MorseCopyResultTarget) {
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 150_000_000)
+            onResultsGraded(target)
+            try? await Task.sleep(nanoseconds: 300_000_000)
+            resultFocusRequested = true
+            resultFocus = true
         }
     }
 }
@@ -214,6 +236,7 @@ private struct MorseCopyPracticeView: View {
 private struct MorseReceivingExamView: View {
     let settings: MorseTrainerSettings
     let playbackCoordinator: MorsePlaybackCoordinator
+    let onResultsGraded: (MorseCopyResultTarget) -> Void
 
     @State private var driver = MorseAudioDriver()
     @State private var selectedProfile: MorseTrainerSettings.TimingProfile = .isedParis
@@ -226,6 +249,8 @@ private struct MorseReceivingExamView: View {
     @State private var errorMessage: String?
     @State private var playbackTask: Task<Void, Never>?
     @State private var reviewTask: Task<Void, Never>?
+    @State private var resultFocusRequested = false
+    @AccessibilityFocusState private var resultFocus: Bool
 
     enum ExamStage {
         case idle
@@ -284,7 +309,7 @@ private struct MorseReceivingExamView: View {
                     .accessibilityIdentifier("morse-exam-status")
             }
             if let diff, let examText {
-                MorseDiffView(diff: diff, expectedText: examText.text)
+                MorseDiffView(diff: diff, expectedText: examText.text, resultID: .receivingExam, resultFocus: $resultFocus, resultFocusRequested: resultFocusRequested)
             }
             if let errorMessage {
                 MessagePanel(title: "Morse error", message: errorMessage, kind: .warning)
@@ -313,6 +338,7 @@ private struct MorseReceivingExamView: View {
             examText = nil
             userCopy = ""
             diff = nil
+            resultFocusRequested = false
             reviewRemaining = examReviewDuration
             stage = .playing
             statusMessage = ""
@@ -345,6 +371,7 @@ private struct MorseReceivingExamView: View {
             examText = nil
             userCopy = ""
             diff = nil
+            resultFocusRequested = false
             stage = .idle
             statusMessage = ""
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: "), detail: error)
@@ -376,8 +403,19 @@ private struct MorseReceivingExamView: View {
                 ? String.localizedStringWithFormat(String(localized: "PASS, 100%%, with %lld errors."), Int64(score.errors))
                 : String.localizedStringWithFormat(String(localized: "FAIL, %lld%%, with %lld errors."), Int64(score.markPercent), Int64(score.errors))
             AccessibilityNotification.Announcement(statusMessage).post()
+            presentResultsAfterLayout(.receivingExam)
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: "), detail: error)
+        }
+    }
+
+    private func presentResultsAfterLayout(_ target: MorseCopyResultTarget) {
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 150_000_000)
+            onResultsGraded(target)
+            try? await Task.sleep(nanoseconds: 300_000_000)
+            resultFocusRequested = true
+            resultFocus = true
         }
     }
 
@@ -391,6 +429,7 @@ private struct MorseReceivingExamView: View {
         examText = nil
         userCopy = ""
         diff = nil
+        resultFocusRequested = false
         reviewRemaining = examReviewDuration
         stage = .idle
         statusMessage = String(localized: "Morse playback stopped.")
@@ -412,6 +451,9 @@ private struct MorseReceivingExamView: View {
 private struct MorseDiffView: View {
     let diff: MorseCopyDiff
     let expectedText: String
+    let resultID: MorseCopyResultTarget
+    let resultFocus: AccessibilityFocusState<Bool>.Binding
+    let resultFocusRequested: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
@@ -421,6 +463,10 @@ private struct MorseDiffView: View {
                 .background(DesignTokens.Colors.paper)
                 .accessibilityAddTraits(.isHeader)
                 .accessibilityIdentifier("morse-diff-title")
+                .accessibilityFocused(resultFocus)
+#if DEBUG
+                .accessibilityValue(Text(verbatim: resultFocusRequested ? "1" : "0"))
+#endif
             Text(diffSummary) // l10n: localized
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
@@ -453,6 +499,7 @@ private struct MorseDiffView: View {
         .padding(DesignTokens.Spacing.sm)
         .background(DesignTokens.Colors.paper, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+        .id(resultID)
     }
 
     private var diffSummary: String {

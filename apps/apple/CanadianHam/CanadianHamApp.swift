@@ -1,20 +1,8 @@
 import SwiftUI
-#if os(iOS)
-import UIKit
-#endif
 
 @main
 struct CanadianHamApp: App {
     @StateObject private var appSettings = AppSettingsModel()
-
-    init() {
-#if os(iOS)
-        let segmentedControl = UISegmentedControl.appearance()
-        segmentedControl.selectedSegmentTintColor = .label
-        segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.systemBackground], for: .selected)
-        segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.label], for: .normal)
-#endif
-    }
 
     var body: some Scene {
         WindowGroup {

@@ -36,6 +36,7 @@ struct MorseTrainerView: View {
     @State private var errorMessage: String?
     @State private var stopTask: Task<Void, Never>?
     @State private var playbackCoordinator = MorsePlaybackCoordinator()
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var normalizedSettings: MorseTrainerSettings { settings.normalized() }
 
@@ -48,12 +49,13 @@ struct MorseTrainerView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-                if isCourseAuditOnly {
-                    MorseCourseView(progressStore: progressStore, settings: $settings, onProgressChanged: onProgressChanged)
-                } else {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+        ScrollViewReader { scrollProxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                    if isCourseAuditOnly {
+                        MorseCourseView(progressStore: progressStore, settings: $settings, onProgressChanged: onProgressChanged)
+                    } else {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
                         Text("Morse") // l10n: localized
                             .font(DesignTokens.FontScale.headline.weight(.bold))
@@ -79,7 +81,9 @@ struct MorseTrainerView: View {
 
                 MorseCourseView(progressStore: progressStore, settings: $settings, onProgressChanged: onProgressChanged)
 
-                MorseCopyExamView(settings: normalizedSettings, playbackCoordinator: playbackCoordinator)
+                MorseCopyExamView(settings: normalizedSettings, playbackCoordinator: playbackCoordinator) { target in
+                    scrollToMorseResults(target, proxy: scrollProxy)
+                }
 
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     Text("Quick listen") // l10n: localized
@@ -151,21 +155,35 @@ struct MorseTrainerView: View {
                 }
                 }
             }
-            .pagePadding()
-        }
-        .background(DesignTokens.Colors.paper)
-        .navigationTitle("Morse")
+                .pagePadding()
+            }
+            .background(DesignTokens.Colors.paper)
+            .navigationTitle("Morse")
 #if os(iOS)
-        .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.inline)
 #endif
-        .onAppear {
-            playbackCoordinator.register("quick-listen") {
-                stopPlayback(reveal: false, message: String(localized: "Morse playback stopped."))
+            .onAppear {
+                playbackCoordinator.register("quick-listen") {
+                    stopPlayback(reveal: false, message: String(localized: "Morse playback stopped."))
+                }
+            }
+            .onDisappear {
+                playbackCoordinator.unregister("quick-listen")
+                stopPlayback(reveal: false, message: "")
             }
         }
-        .onDisappear {
-            playbackCoordinator.unregister("quick-listen")
-            stopPlayback(reveal: false, message: "")
+    }
+
+    private func scrollToMorseResults(_ target: MorseCopyResultTarget, proxy: ScrollViewProxy) {
+        let scroll = {
+            proxy.scrollTo(target, anchor: .top)
+        }
+        if reduceMotion {
+            scroll()
+        } else {
+            withAnimation(.easeInOut(duration: 0.25)) {
+                scroll()
+            }
         }
     }
 
