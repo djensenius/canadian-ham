@@ -93,6 +93,39 @@ public struct MorseExamScore: Codable, Equatable, Sendable {
     public let receivedLength: Int
 }
 
+public enum MorseCopyDiffKind: String, Codable, Equatable, Sendable {
+    case match
+    case wrong
+    case missing
+    case inserted
+}
+
+public struct MorseCopyDiffOperation: Codable, Equatable, Sendable {
+    public let kind: MorseCopyDiffKind
+    public let expected: String?
+    public let received: String?
+
+    public init(kind: MorseCopyDiffKind, expected: String? = nil, received: String? = nil) {
+        self.kind = kind
+        self.expected = expected
+        self.received = received
+    }
+}
+
+public struct MorseCopyDiff: Codable, Equatable, Sendable {
+    public let score: MorseExamScore
+    public let operations: [MorseCopyDiffOperation]
+}
+
+public struct MorseExamText: Codable, Equatable, Sendable {
+    public let text: String
+    public let normalizedText: String
+    public let weightedCharacters: Int
+    public let unweightedCharacters: Int
+    public let durationSeconds: Double
+    public let profile: MorseTimingProfile
+}
+
 public enum MorseEngineError: Error, Equatable, Sendable, CustomStringConvertible {
     case invalidCharacters([InvalidMorseCharacter])
     case invalidSpeed(String)
@@ -159,6 +192,20 @@ public let allowedRIC1Characters: [String] = Array(morseCodeTable.keys).sorted()
 
 private let allowedCharacters = Set(morseCodeTable.keys)
 private let punctuationAndFigures = Set(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", ",", "?", "-", "/"])
+private let examSentenceCorpus = [
+    "THE RADIO OPERATOR CHECKS THE NORTH ANTENNA.",
+    "WEATHER REPORTS WILL BE SHORT AND CLEAR.",
+    "STATION VE3ABC COPIES YOUR SIGNAL 599.",
+    "QTH IS OTTAWA AND POWER IS 25 WATTS.",
+    "PORTABLE STATION VE7XYZ CALLS CQ AGAIN.",
+    "THE MESSAGE NUMBER IS 42 FOR FIELD DAY.",
+    "QSJ 1962 WAS LOGGED AFTER THE CONTACT.",
+    "PLEASE SEND NAME, QTH, AND RST AGAIN.",
+    "MOBILE UNIT CHECKS IN FROM ROAD 17.",
+    "FORECAST PERIODS WILL BE SHORTENED TODAY.",
+    "CALL VE2HAM/PORTABLE AFTER THE NET.",
+    "QSL THE TEST MESSAGE BEFORE NOON.",
+]
 
 public func farnsworthTiming(characterWpm: Double, effectiveWpm requestedEffectiveWpm: Double) throws -> MorseTimingProfile {
     guard characterWpm.isFinite, characterWpm > 0 else {
@@ -282,7 +329,47 @@ public func textToTimedMorse(_ text: String, profile: MorseTimingProfile = profi
     )
 }
 
+public func generateMorseExamText(
+    seed: String = "morse-copy-exam",
+    profile: MorseTimingProfile = profileForName(.isedParis),
+    minWeightedCharacters: Int = 75,
+    minDurationSeconds: Double = 180
+) throws -> MorseExamText {
+    var random = SeededMorseRandom(seed: seed)
+    let startIndex = Int(floor(random.next() * Double(examSentenceCorpus.count)))
+    var selectedSentences: [String] = []
+    var sentenceIndex = startIndex
+
+    for _ in 0 ..< 200 {
+        selectedSentences.append(examSentenceCorpus[sentenceIndex % examSentenceCorpus.count])
+        sentenceIndex += 1 + Int(floor(random.next() * 3))
+        let candidate = selectedSentences.joined(separator: " ")
+        let weight = try weightedCharacterCount(candidate)
+        let sequence = try textToTimedMorse(candidate, profile: profile)
+        if weight.weightedCharacters >= minWeightedCharacters, sequence.totalDurationSeconds >= minDurationSeconds {
+            return MorseExamText(
+                text: candidate,
+                normalizedText: sequence.normalizedText,
+                weightedCharacters: weight.weightedCharacters,
+                unweightedCharacters: weight.unweightedCharacters,
+                durationSeconds: sequence.totalDurationSeconds,
+                profile: profile
+            )
+        }
+    }
+
+    throw MorseEngineError.invalidSpeed("Unable to generate Morse exam text that satisfies RIC-1 section 8.2 constraints.")
+}
+
 public func scoreMorseCopy(expected: String, received: String) throws -> MorseExamScore {
+    try alignMorseCopy(expected: expected, received: received).score
+}
+
+public func diffMorseCopy(expected: String, received: String) throws -> MorseCopyDiff {
+    try alignMorseCopy(expected: expected, received: received)
+}
+
+private func alignMorseCopy(expected: String, received: String) throws -> MorseCopyDiff {
     let expectedCharacters = try canonicalMorseCharacters(expected)
     let receivedCharacters = receivedMorseCopyCharacters(received)
     let rows = expectedCharacters.count + 1
@@ -318,6 +405,7 @@ public func scoreMorseCopy(expected: String, received: String) throws -> MorseEx
     var wrong = 0
     var missing = 0
     var inserted = 0
+    var operations: [MorseCopyDiffOperation] = []
 
     while row > 0 || column > 0 {
         if row > 0,
@@ -325,6 +413,7 @@ public func scoreMorseCopy(expected: String, received: String) throws -> MorseEx
            expectedCharacters[row - 1] == receivedCharacters[column - 1],
            dp[row][column] == dp[row - 1][column - 1]
         {
+            operations.append(MorseCopyDiffOperation(kind: .match, expected: expectedCharacters[row - 1], received: receivedCharacters[column - 1]))
             row -= 1
             column -= 1
             continue
@@ -334,6 +423,7 @@ public func scoreMorseCopy(expected: String, received: String) throws -> MorseEx
            column > 0,
            dp[row][column] == dp[row - 1][column - 1] + 1
         {
+            operations.append(MorseCopyDiffOperation(kind: .wrong, expected: expectedCharacters[row - 1], received: receivedCharacters[column - 1]))
             wrong += 1
             row -= 1
             column -= 1
@@ -343,25 +433,30 @@ public func scoreMorseCopy(expected: String, received: String) throws -> MorseEx
         if row > 0,
            dp[row][column] == dp[row - 1][column] + 1
         {
+            operations.append(MorseCopyDiffOperation(kind: .missing, expected: expectedCharacters[row - 1]))
             missing += 1
             row -= 1
             continue
         }
 
+        operations.append(MorseCopyDiffOperation(kind: .inserted, received: receivedCharacters[column - 1]))
         inserted += 1
         column -= 1
     }
 
     let errors = dp[expectedCharacters.count][receivedCharacters.count]
-    return MorseExamScore(
-        errors: errors,
-        wrong: wrong,
-        missing: missing,
-        inserted: inserted,
-        passed: errors <= 5,
-        markPercent: errors <= 5 ? 100 : max(0, 105 - errors),
-        expectedLength: expectedCharacters.count,
-        receivedLength: receivedCharacters.count
+    return MorseCopyDiff(
+        score: MorseExamScore(
+            errors: errors,
+            wrong: wrong,
+            missing: missing,
+            inserted: inserted,
+            passed: errors <= 5,
+            markPercent: errors <= 5 ? 100 : max(0, 105 - errors),
+            expectedLength: expectedCharacters.count,
+            receivedLength: receivedCharacters.count
+        ),
+        operations: Array(operations.reversed())
     )
 }
 
@@ -408,6 +503,27 @@ private func normalizeMorseScalar(_ scalar: Unicode.Scalar) -> String? {
         return nil
     }
     return String(scalar).uppercased()
+}
+
+private struct SeededMorseRandom {
+    private var state: UInt32 = 2_166_136_261
+
+    init(seed: String) {
+        for scalar in seed.unicodeScalars {
+            state ^= UInt32(truncatingIfNeeded: scalar.value)
+            state = state &* 16_777_619
+        }
+        if state == 0 {
+            state = 0x9e37_79b9
+        }
+    }
+
+    mutating func next() -> Double {
+        state = ((state ^ (state >> 15)) &* 2_246_822_507)
+        state = ((state ^ (state >> 13)) &* 3_266_489_909)
+        state = state ^ (state >> 16)
+        return Double(state) / 4_294_967_296.0
+    }
 }
 
 private extension Unicode.Scalar {

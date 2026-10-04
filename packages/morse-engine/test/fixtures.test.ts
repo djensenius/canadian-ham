@@ -6,6 +6,7 @@ import {
   MORSE_CODE_TABLE,
   MorseValidationError,
   farnsworthTiming,
+  generateMorseExamText,
   profileForName,
   scoreMorseCopy,
   textToTimedMorse,
@@ -63,6 +64,9 @@ function validateFixture(fixture: any): void {
       break;
     case "morse-scoring":
       validateScoringFixture(fixture);
+      break;
+    case "morse-copy-exam":
+      validateCopyExamFixture(fixture);
       break;
     case "morse-validation":
       validateValidationFixture(fixture);
@@ -122,6 +126,24 @@ function validateScoringFixture(fixture: any): void {
     }
 
     expect(scoreMorseCopy(testCase.input.expected, testCase.input.received), testCase.id).toEqual(testCase.expectedOutput);
+  }
+}
+
+function validateCopyExamFixture(fixture: any): void {
+  for (const testCase of fixture.cases) {
+    const profile = profileFromFixture(testCase.input.profile);
+    const generated = generateMorseExamText({
+      seed: testCase.input.seed,
+      profile,
+      minWeightedCharacters: testCase.input.minWeightedCharacters,
+      minDurationSeconds: testCase.input.minDurationSeconds,
+    });
+    const validation = validateMorseText(generated.text);
+    expect(validation.valid, testCase.id).toBe(true);
+    expect(generated.weightedCharacters, testCase.id).toBeGreaterThanOrEqual(testCase.expectedOutput.minWeightedCharacters);
+    expect(generated.durationSeconds, testCase.id).toBeGreaterThanOrEqual(testCase.expectedOutput.minDurationSeconds);
+    expect(generated.normalizedText, testCase.id).toBe(textToTimedMorse(generated.text, profile).normalizedText);
+    expect(round(generated.durationSeconds, 9), testCase.id).toBeCloseTo(textToTimedMorse(generated.text, profile).totalDurationSeconds, 9);
   }
 }
 

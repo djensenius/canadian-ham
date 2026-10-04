@@ -17,6 +17,8 @@ final class MorseFixtureTests: XCTestCase {
                 try validateWordWeightingFixture(data)
             case "morse-scoring":
                 try validateScoringFixture(data)
+            case "morse-copy-exam":
+                try validateCopyExamFixture(data)
             case "morse-validation":
                 try validateValidationFixture(data)
             default:
@@ -94,6 +96,25 @@ final class MorseFixtureTests: XCTestCase {
             }
             let output = try scoreMorseCopy(expected: testCase.input.expected, received: testCase.input.received)
             XCTAssertEqual(output, expectedOutput, testCase.id)
+        }
+    }
+
+    private func validateCopyExamFixture(_ data: Data) throws {
+        let fixture = try JSONDecoder().decode(CopyExamFixture.self, from: data)
+        for testCase in fixture.cases {
+            let selectedProfile = try profile(from: testCase.input.profile)
+            let generated = try generateMorseExamText(
+                seed: testCase.input.seed,
+                profile: selectedProfile,
+                minWeightedCharacters: testCase.input.minWeightedCharacters,
+                minDurationSeconds: testCase.input.minDurationSeconds
+            )
+            XCTAssertTrue(validateMorseText(generated.text).valid, testCase.id)
+            XCTAssertGreaterThanOrEqual(generated.weightedCharacters, testCase.expectedOutput.minWeightedCharacters, testCase.id)
+            XCTAssertGreaterThanOrEqual(generated.durationSeconds, testCase.expectedOutput.minDurationSeconds, testCase.id)
+            let sequence = try textToTimedMorse(generated.text, profile: selectedProfile)
+            XCTAssertEqual(generated.normalizedText, sequence.normalizedText, testCase.id)
+            XCTAssertEqual(generated.durationSeconds, sequence.totalDurationSeconds, accuracy: 1e-9, testCase.id)
         }
     }
 
@@ -241,6 +262,28 @@ private struct ScoringCase: Decodable {
 private struct ScoringInput: Decodable {
     let expected: String
     let received: String
+}
+
+private struct CopyExamFixture: Decodable {
+    let cases: [CopyExamCase]
+}
+
+private struct CopyExamCase: Decodable {
+    let id: String
+    let input: CopyExamInput
+    let expectedOutput: CopyExamOutput
+}
+
+private struct CopyExamInput: Decodable {
+    let seed: String
+    let profile: TimingProfileInput
+    let minWeightedCharacters: Int
+    let minDurationSeconds: Double
+}
+
+private struct CopyExamOutput: Decodable {
+    let minWeightedCharacters: Int
+    let minDurationSeconds: Double
 }
 
 private struct ValidationFixture: Decodable {

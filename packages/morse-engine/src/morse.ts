@@ -55,6 +55,35 @@ export interface MorseExamScore {
   readonly receivedLength: number;
 }
 
+export type MorseCopyDiffKind = "match" | "wrong" | "missing" | "inserted";
+
+export interface MorseCopyDiffOperation {
+  readonly kind: MorseCopyDiffKind;
+  readonly expected?: string;
+  readonly received?: string;
+}
+
+export interface MorseCopyDiff {
+  readonly score: MorseExamScore;
+  readonly operations: readonly MorseCopyDiffOperation[];
+}
+
+export interface MorseExamTextOptions {
+  readonly seed?: string;
+  readonly profile?: MorseTimingProfile;
+  readonly minWeightedCharacters?: number;
+  readonly minDurationSeconds?: number;
+}
+
+export interface MorseExamText {
+  readonly text: string;
+  readonly normalizedText: string;
+  readonly weightedCharacters: number;
+  readonly unweightedCharacters: number;
+  readonly durationSeconds: number;
+  readonly profile: MorseTimingProfile;
+}
+
 export const MORSE_CODE_TABLE = Object.freeze({
   A: ".-",
   B: "-...",
@@ -117,6 +146,24 @@ export const MORSE_TIMING_PROFILES = Object.freeze({
     wordGapSeconds: 1.7,
   }),
 });
+
+const EXAM_SENTENCE_CORPUS = Object.freeze([
+  "THE RADIO OPERATOR CHECKS THE NORTH ANTENNA.",
+  "WEATHER REPORTS WILL BE SHORT AND CLEAR.",
+  "STATION VE3ABC COPIES YOUR SIGNAL 599.",
+  "QTH IS OTTAWA AND POWER IS 25 WATTS.",
+  "PORTABLE STATION VE7XYZ CALLS CQ AGAIN.",
+  "THE MESSAGE NUMBER IS 42 FOR FIELD DAY.",
+  "QSJ 1962 WAS LOGGED AFTER THE CONTACT.",
+  "PLEASE SEND NAME, QTH, AND RST AGAIN.",
+  "MOBILE UNIT CHECKS IN FROM ROAD 17.",
+  "FORECAST PERIODS WILL BE SHORTENED TODAY.",
+  "CALL VE2HAM/PORTABLE AFTER THE NET.",
+  "QSL THE TEST MESSAGE BEFORE NOON.",
+]);
+
+const DEFAULT_EXAM_MIN_WEIGHTED_CHARACTERS = 75;
+const DEFAULT_EXAM_MIN_DURATION_SECONDS = 180;
 
 export class MorseValidationError extends Error {
   readonly invalidCharacters: readonly InvalidMorseCharacter[];
@@ -233,7 +280,45 @@ export function textToTimedMorse(text: string, profile: MorseTimingProfile = MOR
   };
 }
 
+export function generateMorseExamText(options: MorseExamTextOptions = {}): MorseExamText {
+  const profile = options.profile ?? MORSE_TIMING_PROFILES.isedParis;
+  const minWeightedCharacters = options.minWeightedCharacters ?? DEFAULT_EXAM_MIN_WEIGHTED_CHARACTERS;
+  const minDurationSeconds = options.minDurationSeconds ?? DEFAULT_EXAM_MIN_DURATION_SECONDS;
+  const random = seededRandom(options.seed ?? "morse-copy-exam");
+  const startIndex = Math.floor(random() * EXAM_SENTENCE_CORPUS.length);
+  const selectedSentences: string[] = [];
+  let sentenceIndex = startIndex;
+
+  for (let guard = 0; guard < 200; guard += 1) {
+    selectedSentences.push(EXAM_SENTENCE_CORPUS[sentenceIndex % EXAM_SENTENCE_CORPUS.length]!);
+    sentenceIndex += 1 + Math.floor(random() * 3);
+    const candidate = selectedSentences.join(" ");
+    const weight = weightedCharacterCount(candidate);
+    const sequence = textToTimedMorse(candidate, profile);
+    if (weight.weightedCharacters >= minWeightedCharacters && sequence.totalDurationSeconds >= minDurationSeconds) {
+      return {
+        text: candidate,
+        normalizedText: sequence.normalizedText,
+        weightedCharacters: weight.weightedCharacters,
+        unweightedCharacters: weight.unweightedCharacters,
+        durationSeconds: sequence.totalDurationSeconds,
+        profile,
+      };
+    }
+  }
+
+  throw new Error("Unable to generate Morse exam text that satisfies RIC-1 section 8.2 constraints.");
+}
+
 export function scoreMorseCopy(expected: string, received: string): MorseExamScore {
+  return alignMorseCopy(expected, received).score;
+}
+
+export function diffMorseCopy(expected: string, received: string): MorseCopyDiff {
+  return alignMorseCopy(expected, received);
+}
+
+function alignMorseCopy(expected: string, received: string): MorseCopyDiff {
   const expectedCharacters = canonicalMorseCharacters(expected);
   const receivedCharacters = receivedMorseCopyCharacters(received);
   const rows = expectedCharacters.length + 1;
@@ -263,6 +348,7 @@ export function scoreMorseCopy(expected: string, received: string): MorseExamSco
   let wrong = 0;
   let missing = 0;
   let inserted = 0;
+  const operations: MorseCopyDiffOperation[] = [];
 
   while (row > 0 || column > 0) {
     if (
@@ -271,12 +357,14 @@ export function scoreMorseCopy(expected: string, received: string): MorseExamSco
       expectedCharacters[row - 1] === receivedCharacters[column - 1] &&
       dp[row]![column] === dp[row - 1]![column - 1]
     ) {
+      operations.push({ kind: "match", expected: expectedCharacters[row - 1], received: receivedCharacters[column - 1] });
       row -= 1;
       column -= 1;
       continue;
     }
 
     if (row > 0 && column > 0 && dp[row]![column] === dp[row - 1]![column - 1]! + 1) {
+      operations.push({ kind: "wrong", expected: expectedCharacters[row - 1], received: receivedCharacters[column - 1] });
       wrong += 1;
       row -= 1;
       column -= 1;
@@ -284,25 +372,30 @@ export function scoreMorseCopy(expected: string, received: string): MorseExamSco
     }
 
     if (row > 0 && dp[row]![column] === dp[row - 1]![column]! + 1) {
+      operations.push({ kind: "missing", expected: expectedCharacters[row - 1] });
       missing += 1;
       row -= 1;
       continue;
     }
 
+    operations.push({ kind: "inserted", received: receivedCharacters[column - 1] });
     inserted += 1;
     column -= 1;
   }
 
   const errors = dp[expectedCharacters.length]![receivedCharacters.length]!;
   return {
-    errors,
-    wrong,
-    missing,
-    inserted,
-    passed: errors <= 5,
-    markPercent: errors <= 5 ? 100 : Math.max(0, 105 - errors),
-    expectedLength: expectedCharacters.length,
-    receivedLength: receivedCharacters.length,
+    score: {
+      errors,
+      wrong,
+      missing,
+      inserted,
+      passed: errors <= 5,
+      markPercent: errors <= 5 ? 100 : Math.max(0, 105 - errors),
+      expectedLength: expectedCharacters.length,
+      receivedLength: receivedCharacters.length,
+    },
+    operations: operations.reverse(),
   };
 }
 
@@ -349,6 +442,23 @@ function normalizeCharacter(character: string): string | undefined {
     return undefined;
   }
   return character.toUpperCase();
+}
+
+function seededRandom(seed: string): () => number {
+  let state = 2166136261;
+  for (const character of seed) {
+    state ^= character.codePointAt(0) ?? 0;
+    state = Math.imul(state, 16777619) >>> 0;
+  }
+  if (state === 0) {
+    state = 0x9e3779b9;
+  }
+  return () => {
+    state = Math.imul(state ^ (state >>> 15), 2246822507) >>> 0;
+    state = Math.imul(state ^ (state >>> 13), 3266489909) >>> 0;
+    state = (state ^ (state >>> 16)) >>> 0;
+    return state / 0x100000000;
+  };
 }
 
 function isWhitespace(character: string): boolean {

@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "kind": "morse-copy-exam",
+  "cases": [
+    {
+      "id": "ised-paris-default-receiving-exam",
+      "input": {
+        "seed": "shared-ised-paris-copy-exam",
+        "profile": { "name": "isedParis" },
+        "minWeightedCharacters": 75,
+        "minDurationSeconds": 180
+      },
+      "expectedOutput": {
+        "minWeightedCharacters": 75,
+        "minDurationSeconds": 180
+      }
+    },
+    {
+      "id": "ric1-literal-harder-receiving-exam",
+      "input": {
+        "seed": "shared-ric1-literal-copy-exam",
+        "profile": { "name": "ric1Literal" },
+        "minWeightedCharacters": 75,
+        "minDurationSeconds": 180
+      },
+      "expectedOutput": {
+        "minWeightedCharacters": 75,
+        "minDurationSeconds": 180
+      }
+    }
+  ]
+}
