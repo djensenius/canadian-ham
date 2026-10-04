@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-04 02:36'
+updated_date: '2026-10-04 02:49'
 labels:
   - web
   - apple
@@ -38,6 +38,8 @@ Why: learners need to listen to whole passages and type what they hear, and cand
 1. Add shared Morse copy/exam generation and diff support to packages/morse-engine and packages/morse-swift with shared fixtures for timing/weighted constraints.\n2. Add web copy-practice and simulated-exam UI in new apps/web/src/morse/copyExam files, wiring only the Morse home placeholders and using the existing WebMorsePlayer/settings.\n3. Add Apple iOS/macOS copy-practice and exam views in new apps/apple/CanadianHam/Morse/CopyExam files, using the existing MorseAudioDriver/settings with DEBUG launch-argument timing overrides for UI tests.\n4. Add focused TS, Swift unit, web component, iOS UI, localization/text-source, accessibility, and affected-platform validation per testing policy; keep results in task notes before finalization.
 
 5. Fix review findings: localize web diff screen-reader labels, reset Apple exam state on audio startup failure, add deterministic/shared fixture coverage and accessibility checks, then record per-test Apple full-run names before re-finalizing.
+
+6. Fix Copilot findings for Morse copy/exam audio startup sequencing and one-player-at-a-time playback on web and Apple; add focused failure/overlap tests, then rerun targeted checks plus required final iOS/macOS and web validations.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
