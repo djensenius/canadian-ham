@@ -30,3 +30,12 @@ Why: the project rule is full default accessibility audits with no handlers or e
 - [ ] #2 The graded Morse diff tokens meet contrast in light and dark (colours from adaptive design tokens, not colour alone) and the course path passes Dynamic Type without filtering
 - [ ] #3 The iOS light and dark audits for the Morse course path, lesson, summary and graded diff pass; the iOS and macOS suites pass
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Remove all issue handlers and restricted audit-type arguments from performAccessibilityAudit calls in the UI tests so every audit uses the default full audit.
+2. Fix the underlying Morse diff contrast using adaptive Apple DesignTokens while keeping non-colour cues.
+3. Fix the Morse course path Dynamic Type layout by allowing lesson content to wrap/scale without clipping.
+4. Run targeted iOS audits/tests while iterating, then required web/package/check scripts and one final full iOS and macOS run; document per-test results.
+<!-- SECTION:PLAN:END -->
