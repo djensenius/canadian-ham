@@ -1144,7 +1144,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         if context.contains("morse course path") {
             try app.performAccessibilityAudit { issue in
                 let label = issue.element?.label ?? ""
-                let isCoursePathLessonTextDynamicTypeIssue = issue.auditType == .dynamicType && self.isMorseCoursePathLessonLabel(label)
+                let isCoursePathLessonTextDynamicTypeIssue = issue.auditType.rawValue == 65_536 && self.isMorseCoursePathLessonLabel(label)
                 // Xcode 27 reports dynamic-type false positives for the visible text fragments inside the responsive SwiftUI course path.
                 // Each lesson button exposes one combined label plus the locked-state hint, and non-course-path-label audit issues still fail.
                 return isCoursePathLessonTextDynamicTypeIssue
