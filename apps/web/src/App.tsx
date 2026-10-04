@@ -9,6 +9,7 @@ import { Component, createRef, useEffect, useMemo, useRef, useState, type Keyboa
 
 import { LanguageToggle } from "./components/LanguageToggle";
 import { textToTimedMorse } from "@canadian-ham/morse-engine";
+import { MorseCoursePanel } from "./morse/course/MorseCoursePanel";
 
 import { MarkdownContent } from "./components/MarkdownContent";
 import { PwaStatus } from "./components/PwaStatus";
@@ -641,7 +642,7 @@ function AppContent({
           <Results attempt={latestResult ?? latestAttempt} interfaceLanguage={interfaceLanguage} language={language} onStartPractice={startPractice} questionsById={bankQuestionsById} />
         ) : null}
         {initialStoreLoaded && route === "morse" ? (
-          <MorseSection interfaceLanguage={interfaceLanguage} onSetPreferences={setPreferences} preferences={preferences} seedFactory={seedFactory} />
+          <MorseSection interfaceLanguage={interfaceLanguage} now={now} onSetPreferences={setPreferences} preferences={preferences} seedFactory={seedFactory} store={store} />
         ) : null}
         {initialStoreLoaded && route === "settings" ? (
           <Settings
@@ -1796,7 +1797,7 @@ function useMorsePlaybackRegistration(coordinator: MorsePlaybackCoordinator, own
   useEffect(() => coordinator.register(ownerId, () => stopRef.current()), [coordinator, ownerId]);
 }
 
-function MorseSection({ interfaceLanguage, preferences, onSetPreferences, seedFactory }: { readonly interfaceLanguage: InterfaceLanguage; readonly preferences: WebPreferences; readonly onSetPreferences: (preferences: PreferencesPatch) => Promise<boolean>; readonly seedFactory: () => string }) {
+function MorseSection({ interfaceLanguage, preferences, onSetPreferences, store, now, seedFactory }: { readonly interfaceLanguage: InterfaceLanguage; readonly preferences: WebPreferences; readonly onSetPreferences: (preferences: PreferencesPatch) => Promise<boolean>; readonly store: ProgressStore; readonly now: () => string; readonly seedFactory: () => string }) {
   const playbackCoordinator = useMorsePlaybackCoordinator();
   return (
     <section className="card morse-section" aria-labelledby="morse-section-title">
@@ -1817,6 +1818,7 @@ function MorseSection({ interfaceLanguage, preferences, onSetPreferences, seedFa
           <p>{t(interfaceLanguage, "morseExamPlaceholder")}</p>
         </div>
       </div>
+      <MorseCoursePanel interfaceLanguage={interfaceLanguage} preferences={preferences} store={store} now={now} seedFactory={seedFactory} />
       <MorseCopyExamSection interfaceLanguage={interfaceLanguage} preferences={preferences} examSeedFactory={(profileName) => `web-${profileName}-${seedFactory()}`} playbackCoordinator={playbackCoordinator} />
       <MorseTrainerPreview interfaceLanguage={interfaceLanguage} preferences={preferences} playbackCoordinator={playbackCoordinator} />
       <MorseSettingsControls interfaceLanguage={interfaceLanguage} onSetPreferences={onSetPreferences} preferences={preferences} />

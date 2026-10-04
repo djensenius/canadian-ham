@@ -499,6 +499,64 @@
       },
       "additionalProperties": false
     },
+    "morseCourseProgress": {
+      "type": "object",
+      "required": ["courseId", "lessonProgress", "characterStats", "dailyActivity"],
+      "properties": {
+        "courseId": { "$ref": "#/$defs/nonEmptyString" },
+        "lessonProgress": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/morseLessonProgressRecord" }
+        },
+        "characterStats": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/morseCharacterStatRecord" }
+        },
+        "dailyActivity": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/morseDailyActivityRecord" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "morseLessonProgressRecord": {
+      "type": "object",
+      "required": ["lessonId", "attempts", "bestAccuracy", "lastAccuracy", "lastAttemptedAt"],
+      "properties": {
+        "lessonId": { "type": "string", "pattern": "^koch-[0-9]{3}$" },
+        "attempts": { "type": "integer", "minimum": 1 },
+        "bestAccuracy": { "type": "number", "minimum": 0, "maximum": 1 },
+        "lastAccuracy": { "type": "number", "minimum": 0, "maximum": 1 },
+        "lastAttemptedAt": { "$ref": "#/$defs/canonicalUtcTimestamp" },
+        "completedAt": { "$ref": "#/$defs/canonicalUtcTimestamp" }
+      },
+      "additionalProperties": false
+    },
+    "morseCharacterStatRecord": {
+      "type": "object",
+      "required": ["character", "attempts", "correctAttempts", "recentResults", "lastPracticedAt"],
+      "properties": {
+        "character": { "type": "string", "minLength": 1, "maxLength": 1 },
+        "attempts": { "type": "integer", "minimum": 0 },
+        "correctAttempts": { "type": "integer", "minimum": 0 },
+        "recentResults": {
+          "type": "array",
+          "maxItems": 20,
+          "items": { "type": "boolean" }
+        },
+        "lastPracticedAt": { "$ref": "#/$defs/canonicalUtcTimestamp" }
+      },
+      "additionalProperties": false
+    },
+    "morseDailyActivityRecord": {
+      "type": "object",
+      "required": ["date", "lessonsCompleted"],
+      "properties": {
+        "date": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+        "lessonsCompleted": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
     "webPreferences": {
       "type": "object",
       "required": ["practiceMode", "examTimerEnabled"],

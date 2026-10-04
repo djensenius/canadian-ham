@@ -13,6 +13,7 @@ import { afterEach, beforeEach, describe, it, vi } from "vitest";
 import { generateMorseExamText, profileForName } from "@canadian-ham/morse-engine";
 
 import { App, AppErrorBoundary, CitationLink, ExplanationPanel } from "./App";
+import { answerMorseCourseSession, type SessionState } from "./morse/course/MorseCoursePanel";
 import { bankId, categories, loadQuestions, loadQuestionsFromUrl, manifest, type Answer, type Category, type Question } from "./data/bank";
 import { explanationForQuestion, parseChoiceNotes } from "./data/explanations";
 import { lessonQuizzesById, buildLessonQuizItems } from "./data/quizzes";
@@ -20,6 +21,8 @@ import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExpor
 import { INTERFACE_LANGUAGE_STORAGE_KEY } from "./lib/i18n";
 import { applyThemePreference, readStoredThemePreference, THEME_COLORS, THEME_STORAGE_KEY } from "./lib/theme";
 import { buildExamAttempt, createMockExam } from "./lib/studyEngine";
+import { buildMorseLessonExercises, parseMorseCourseFixture } from "@canadian-ham/morse-engine";
+import courseFixture from "../../../fixtures/morse/course.json";
 
 const fixedNow = "2026-01-02T03:04:05.000Z";
 const referenceSheetNote = "In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.";
@@ -65,6 +68,14 @@ function createMemoryStorage(): Storage {
     removeItem: (key: string) => { values.delete(key); },
     setItem: (key: string, value: string) => { values.set(key, value); },
   };
+}
+
+function localDateString(value: string): string {
+  const date = new Date(value);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 class DelayedInitialPreferencesStore extends ProgressStore {
@@ -133,6 +144,18 @@ class CountingPreferencesStore extends ProgressStore {
   override async putPreferences(preferences: WebPreferences): Promise<void> {
     this.putPreferencesCount += 1;
     await super.putPreferences(preferences);
+  }
+}
+
+class FailingMorseCourseStore extends ProgressStore {
+  failNextMorseCourseSave = true;
+
+  override async putMorseCourseProgress(progress: import("@canadian-ham/morse-engine").MorseCourseProgressExport): Promise<void> {
+    if (this.failNextMorseCourseSave) {
+      this.failNextMorseCourseSave = false;
+      throw new Error("simulated Morse course save failure");
+    }
+    await super.putMorseCourseProgress(progress);
   }
 }
 
@@ -1039,7 +1062,7 @@ describe("App accessibility and flows", () => {
     await expectNoAxeViolations(container);
   });
 
-  it("makes Morse reachable as a top-level section with settings and placeholders", async () => {
+  it("makes Morse reachable as a top-level section with the course path and settings", async () => {
     window.location.hash = "#/home";
     const store = createStore("morse-top-level");
     const user = userEvent.setup();
@@ -1049,14 +1072,145 @@ describe("App accessibility and flows", () => {
     const primaryNav = screen.getByRole("navigation", { name: "Primary" });
     await user.click(within(primaryNav).getByRole("button", { name: "Morse" }));
 
-    await screen.findByRole("heading", { name: "Quick listen" });
+    await screen.findByRole("heading", { name: "Morse course path" });
     assert.equal(window.location.hash, "#/morse");
     assert.ok(screen.getByText("Preview"));
     assert.ok(screen.getByRole("heading", { name: "Learn (course)" }));
+    assert.ok(screen.getByRole("button", { name: /Lesson 1, K M, Current/ }));
+    assert.ok(screen.getByRole("button", { name: /Lesson 2, R, Locked/ }));
     assert.ok(screen.getAllByRole("heading", { name: "Copy practice" }).length >= 1);
     assert.ok(screen.getAllByRole("heading", { name: "Exam" }).length >= 1);
     assert.ok(screen.getByRole("heading", { name: "Morse settings" }));
     assert.equal(screen.getByText("Hidden until playback finishes.").textContent, "Hidden until playback finishes.");
+    await expectNoAxeViolations(container);
+  });
+
+  it("completes the first Morse lesson and persists unlock progress", async () => {
+    window.location.hash = "#/morse";
+    const store = createStore("morse-course-flow");
+    stubMorseAudioContext();
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-course-flow-seed"} />);
+
+    await screen.findByRole("heading", { name: "Morse course path" });
+    const course = parseMorseCourseFixture(courseFixture);
+    const firstLesson = course.lessons[0]!;
+    const exercises = buildMorseLessonExercises({ lesson: firstLesson, seed: "morse-course-flow-seed" });
+    await user.click(screen.getByRole("button", { name: /Lesson 1, K M, Current/ }));
+    const session = await screen.findByRole("region", { name: "Lesson 1 session" });
+    for (const exercise of exercises) {
+      if (exercise.kind === "meet") {
+        await user.click(within(session).getByRole("button", { name: "Next" }));
+      } else if (exercise.kind === "choose") {
+        await user.click(within(session).getByRole("button", { name: exercise.character }));
+      } else {
+        const expected = exercise.kind === "type-character" ? exercise.character : exercise.text;
+        const field = within(session).getByLabelText("Your copy");
+        fireEvent.change(field, { target: { value: expected } });
+        await user.click(within(session).getByRole("button", { name: "Check" }));
+      }
+    }
+
+    await screen.findByText("Great work. The next lesson is unlocked.");
+    const saved = await store.getMorseCourseProgress();
+    assert.equal(saved?.lessonProgress[0]?.lessonId, "koch-001");
+    assert.equal(saved?.lessonProgress[0]?.bestAccuracy, 1);
+    assert.equal(saved?.lessonProgress[0]?.attempts, 1);
+    assert.equal(saved?.dailyActivity[0]?.date, localDateString(fixedNow));
+    assert.equal(screen.getByRole("button", { name: /Lesson 2, R, Current/ }).getAttribute("disabled"), null);
+    assert.equal(within(session).queryByRole("button", { name: "Check" }), null);
+  });
+
+  it("surfaces Morse course playback failures accessibly", async () => {
+    window.location.hash = "#/morse";
+    vi.stubGlobal("AudioContext", undefined);
+    vi.stubGlobal("webkitAudioContext", undefined);
+    const store = createStore("morse-course-playback-failure");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-course-playback-failure-seed"} />);
+
+    await screen.findByRole("heading", { name: "Morse course path" });
+    await user.click(screen.getByRole("button", { name: /Lesson 1, K M, Current/ }));
+    const session = await screen.findByRole("region", { name: "Lesson 1 session" });
+    await user.click(within(session).getByRole("button", { name: "Play character" }));
+
+    const alert = await screen.findByRole("alert");
+    assert.match(alert.textContent ?? "", /Morse playback could not start: Web Audio is not available in this browser\./);
+  });
+
+  it("surfaces Morse course save failures before presenting unlock progress", async () => {
+    window.location.hash = "#/morse";
+    const store = new FailingMorseCourseStore("morse-course-save-failure");
+    stores.push(store);
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-course-save-failure-seed"} />);
+
+    await screen.findByRole("heading", { name: "Morse course path" });
+    const course = parseMorseCourseFixture(courseFixture);
+    const firstLesson = course.lessons[0]!;
+    const exercises = buildMorseLessonExercises({ lesson: firstLesson, seed: "morse-course-save-failure-seed" });
+    await user.click(screen.getByRole("button", { name: /Lesson 1, K M, Current/ }));
+    const session = await screen.findByRole("region", { name: "Lesson 1 session" });
+    for (const exercise of exercises) {
+      if (exercise.kind === "meet") {
+        await user.click(within(session).getByRole("button", { name: "Next" }));
+      } else if (exercise.kind === "choose") {
+        await user.click(within(session).getByRole("button", { name: exercise.character }));
+      } else {
+        const expected = exercise.kind === "type-character" ? exercise.character : exercise.text;
+        const field = within(session).getByLabelText("Your copy");
+        fireEvent.change(field, { target: { value: expected } });
+        await user.click(within(session).getByRole("button", { name: "Check" }));
+      }
+    }
+
+    const alert = await screen.findByRole("alert");
+    assert.match(alert.textContent ?? "", /Unable to save Morse course progress: simulated Morse course save failure/);
+    assert.ok(screen.getByText("Progress was not saved. Try again before relying on the unlock."));
+    assert.equal(screen.queryByText("Great work. The next lesson is unlocked."), null);
+    assert.equal((screen.getByRole("button", { name: /Lesson 2, R, Locked/ }) as HTMLButtonElement).disabled, true);
+    assert.equal(await store.getMorseCourseProgress(), undefined);
+  });
+
+  it("leaves a completed Morse lesson session unchanged when an answer is resubmitted", () => {
+    const completedSession: SessionState = {
+      mode: "lesson",
+      lesson: parseMorseCourseFixture(courseFixture).lessons[0]!,
+      exercises: [{ kind: "type-character", character: "K" }],
+      index: 0,
+      correct: 1,
+      total: 1,
+      characterResults: [{ character: "K", correct: true }],
+      feedback: "Correct.",
+      done: true,
+    };
+
+    assert.equal(answerMorseCourseSession(completedSession, false, [{ character: "K", correct: false }], "en"), completedSession);
+  });
+
+  it("shows the correct answer on a missed Morse lesson item and keeps summary accessible", async () => {
+    window.location.hash = "#/morse";
+    const store = createStore("morse-course-miss");
+    stubMorseAudioContext();
+    const user = userEvent.setup();
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-course-miss-seed"} />);
+
+    await screen.findByRole("heading", { name: "Morse course path" });
+    const course = parseMorseCourseFixture(courseFixture);
+    const firstLesson = course.lessons[0]!;
+    const exercises = buildMorseLessonExercises({ lesson: firstLesson, seed: "morse-course-miss-seed" });
+    await user.click(screen.getByRole("button", { name: /Lesson 1, K M, Current/ }));
+    const session = await screen.findByRole("region", { name: "Lesson 1 session" });
+    for (const exercise of exercises) {
+      if (exercise.kind === "meet") {
+        await user.click(within(session).getByRole("button", { name: "Next" }));
+      } else if (exercise.kind === "choose") {
+        const wrong = exercise.options.find((option) => option !== exercise.character)!;
+        await user.click(within(session).getByRole("button", { name: wrong }));
+        assert.match(session.textContent ?? "", new RegExp(`Correct answer: ${exercise.character.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
+        break;
+      }
+    }
     await expectNoAxeViolations(container);
   });
 

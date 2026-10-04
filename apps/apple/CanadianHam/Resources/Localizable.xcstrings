@@ -307,6 +307,38 @@
         }
       }
     },
+    "%@.attempts must be non-negative." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.attempts doit être non négatif."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.attempts doit être non négatif."
+          }
+        }
+      }
+    },
+    "%@.attempts must be positive." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.attempts doit être positif."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.attempts doit être positif."
+          }
+        }
+      }
+    },
     "%@.bankId must be %@." : {
       "localizations" : {
         "en" : {
@@ -325,6 +357,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@.bankId doit être %2$@."
+          }
+        }
+      }
+    },
+    "%@.bestAccuracy must be between 0 and 1." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.bestAccuracy doit être entre 0 et 1."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.bestAccuracy doit être entre 0 et 1."
           }
         }
       }
@@ -369,6 +417,44 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@.categoryId doit correspondre à la catégorie connue de la question."
+          }
+        }
+      }
+    },
+    "%@.character duplicates another character stat." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.character duplique une autre statistique de caractère."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.character duplique une autre statistique de caractère."
+          }
+        }
+      }
+    },
+    "%@.character must be a single Morse character." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.character must be a single Morse character."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.character doit être un seul caractère Morse."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.character doit être un seul caractère Morse."
           }
         }
       }
@@ -479,6 +565,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@.correctAttempts doit être compris entre 0 et attempts."
+          }
+        }
+      }
+    },
+    "%@.date must be YYYY-MM-DD." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.date doit être AAAA-MM-JJ."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.date doit être AAAA-MM-JJ."
           }
         }
       }
@@ -637,6 +739,22 @@
         }
       }
     },
+    "%@.lastAccuracy must be between 0 and 1." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.lastAccuracy doit être entre 0 et 1."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.lastAccuracy doit être entre 0 et 1."
+          }
+        }
+      }
+    },
     "%@.leitner.box must be an integer between 0 and 5." : {
       "localizations" : {
         "en" : {
@@ -681,6 +799,22 @@
         }
       }
     },
+    "%@.lessonId duplicates another Morse lesson record." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.lessonId duplique un autre enregistrement de leçon Morse."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.lessonId duplique un autre enregistrement de leçon Morse."
+          }
+        }
+      }
+    },
     "%@.lessonId must be a known lesson ID." : {
       "localizations" : {
         "en" : {
@@ -699,6 +833,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@.lessonId doit être un identifiant de leçon connu."
+          }
+        }
+      }
+    },
+    "%@.lessonId must be a Morse lesson ID." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.lessonId doit être un identifiant de leçon Morse."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.lessonId doit être un identifiant de leçon Morse."
           }
         }
       }
@@ -743,6 +893,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@.lessonId doit correspondre au quiz de leçon connu."
+          }
+        }
+      }
+    },
+    "%@.lessonsCompleted must be non-negative." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.lessonsCompleted doit être non négatif."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.lessonsCompleted doit être non négatif."
           }
         }
       }
@@ -1051,6 +1217,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@.readCount doit être un entier positif."
+          }
+        }
+      }
+    },
+    "%@.recentResults must contain at most 20 booleans." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.recentResults doit contenir au plus 20 booléens."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.recentResults doit contenir au plus 20 booléens."
           }
         }
       }
@@ -1415,6 +1597,64 @@
         }
       }
     },
+    "%lld days" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld day"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld days"
+                }
+              }
+            }
+          }
+        },
+        "fr" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld jour"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld jours"
+                }
+              }
+            }
+          }
+        },
+        "fr-CA" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld jour"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld jours"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld due questions; unseen excluded" : {
       "localizations" : {
         "en" : {
@@ -1621,6 +1861,22 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "%lld of %lld" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld sur %lld"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld sur %lld"
           }
         }
       }
@@ -2013,6 +2269,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "À propos de Canadian Ham"
+          }
+        }
+      }
+    },
+    "Accuracy: %lld%%" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exactitude : %lld %%"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exactitude : %lld %%"
           }
         }
       }
@@ -2445,6 +2717,22 @@
         }
       }
     },
+    "Check" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérifier"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérifier"
+          }
+        }
+      }
+    },
     "Check copy" : {
       "localizations" : {
         "fr" : {
@@ -2525,22 +2813,6 @@
         }
       }
     },
-    "Coming soon." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "À venir."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "À venir."
-          }
-        }
-      }
-    },
     "Complete at least two mock exams before Canadian Ham claims pass or honours readiness. Keep practicing by category while you build evidence." : {
       "localizations" : {
         "fr" : {
@@ -2553,6 +2825,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Effectuez au moins deux examens simulés avant que Canadian Ham indique que vous êtes prêt pour la réussite ou la compétence de base avec distinction. Continuez à vous exercer par catégorie pendant que vous accumulez des résultats."
+          }
+        }
+      }
+    },
+    "Complete the previous lesson to unlock this lesson." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminez la leçon précédente pour débloquer celle-ci."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminez la leçon précédente pour débloquer celle-ci."
+          }
+        }
+      }
+    },
+    "Completed" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminée"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminée"
           }
         }
       }
@@ -2713,6 +3017,44 @@
         }
       }
     },
+    "Correct answer: %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Correct answer: %@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réponse correcte : %@."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réponse correcte : %@."
+          }
+        }
+      }
+    },
+    "Correct." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Correct."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Correct."
+          }
+        }
+      }
+    },
     "Correct. Your answer: " : {
       "localizations" : {
         "fr" : {
@@ -2741,6 +3083,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sous-sections couvertes"
+          }
+        }
+      }
+    },
+    "Current" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En cours"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En cours"
+          }
+        }
+      }
+    },
+    "Daily streak" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Série quotidienne"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Série quotidienne"
           }
         }
       }
@@ -3259,6 +3633,22 @@
         }
       }
     },
+    "Exercise %lld of %lld" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exercice %lld sur %lld"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exercice %lld sur %lld"
+          }
+        }
+      }
+    },
     "Expected transcript" : {
       "localizations" : {
         "fr" : {
@@ -3509,6 +3899,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aller au questionnaire"
+          }
+        }
+      }
+    },
+    "Great work. The next lesson is unlocked." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bravo. La leçon suivante est débloquée."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bravo. La leçon suivante est débloquée."
           }
         }
       }
@@ -3787,6 +4193,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Importation : lessonQuizAttempts[%lld]"
+          }
+        }
+      }
+    },
+    "Import morseCourseProgress.courseId must be non-empty." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import morseCourseProgress.courseId ne doit pas être vide."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import morseCourseProgress.courseId ne doit pas être vide."
           }
         }
       }
@@ -4079,6 +4501,38 @@
         }
       }
     },
+    "Koch course" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cours Koch"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cours Koch"
+          }
+        }
+      }
+    },
+    "Koch lessons available now." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçons Koch disponibles maintenant."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçons Koch disponibles maintenant."
+          }
+        }
+      }
+    },
     "Latest result: %lld / %lld (%@%%). Attempts saved: %lld." : {
       "localizations" : {
         "en" : {
@@ -4139,18 +4593,18 @@
         }
       }
     },
-    "Learn and practise Morse code offline. Copy practice and the simulated receiving exam are available below." : {
+    "Learn and practise Morse code offline with the Koch course, copy practice and the simulated receiving exam below." : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apprenez le code Morse et exercez-vous hors ligne. La copie et l’examen simulé de réception sont offerts ci-dessous."
+            "value" : "Apprenez le code Morse et exercez-vous hors ligne avec le cours Koch, la copie et l’examen simulé de réception ci-dessous."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apprenez le code Morse et exercez-vous hors ligne. La copie et l’examen simulé de réception sont offerts ci-dessous."
+            "value" : "Apprenez le code Morse et exercez-vous hors ligne avec le cours Koch, la copie et l’examen simulé de réception ci-dessous."
           }
         }
       }
@@ -4167,6 +4621,70 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Progression des leçons indisponible"
+          }
+        }
+      }
+    },
+    "Learn the ISED Morse character set by ear with 40 short Koch lessons. Each lesson unlocks the next at 90% accuracy." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apprenez à l’oreille les caractères Morse d’ISDE avec 40 courtes leçons Koch. Chaque leçon débloque la suivante à 90 % d’exactitude."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apprenez à l’oreille les caractères Morse d’ISDE avec 40 courtes leçons Koch. Chaque leçon débloque la suivante à 90 % d’exactitude."
+          }
+        }
+      }
+    },
+    "Lesson %lld" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçon %lld"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçon %lld"
+          }
+        }
+      }
+    },
+    "Lesson %lld session" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Séance de la leçon %lld"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Séance de la leçon %lld"
+          }
+        }
+      }
+    },
+    "Lesson %lld, %@, %@" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçon %lld, %@, %@"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçon %lld, %@, %@"
           }
         }
       }
@@ -4283,6 +4801,22 @@
         }
       }
     },
+    "Lesson summary" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résumé de la leçon"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résumé de la leçon"
+          }
+        }
+      }
+    },
     "Lesson table" : {
       "localizations" : {
         "fr" : {
@@ -4315,6 +4849,22 @@
         }
       }
     },
+    "Lessons completed" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçons terminées"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçons terminées"
+          }
+        }
+      }
+    },
     "Light" : {
       "localizations" : {
         "fr" : {
@@ -4327,6 +4877,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Clair"
+          }
+        }
+      }
+    },
+    "Listen and choose the character you heard." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Écoutez et choisissez le caractère entendu."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Écoutez et choisissez le caractère entendu."
+          }
+        }
+      }
+    },
+    "Listen and type the five-character Koch group." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Écoutez et tapez le groupe Koch de cinq caractères."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Écoutez et tapez le groupe Koch de cinq caractères."
+          }
+        }
+      }
+    },
+    "Listen and type the single character." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Écoutez et tapez le caractère seul."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Écoutez et tapez le caractère seul."
           }
         }
       }
@@ -4359,6 +4957,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Chargement de Canadian Ham…"
+          }
+        }
+      }
+    },
+    "Loading Morse course…" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chargement du cours Morse…"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chargement du cours Morse…"
           }
         }
       }
@@ -4439,6 +5053,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stockage local de la progression indisponible"
+          }
+        }
+      }
+    },
+    "Locked" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verrouillée"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verrouillée"
           }
         }
       }
@@ -4579,6 +5209,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Moyen"
+          }
+        }
+      }
+    },
+    "Meet %@. Listen, then notice its dits and dahs." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Découvrez %@. Écoutez, puis observez ses points et traits."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Découvrez %@. Écoutez, puis observez ses points et traits."
           }
         }
       }
@@ -4797,6 +5443,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Morse"
+          }
+        }
+      }
+    },
+    "Morse course error" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur du cours Morse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreur du cours Morse"
+          }
+        }
+      }
+    },
+    "Morse course path" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parcours du cours Morse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parcours du cours Morse"
+          }
+        }
+      }
+    },
+    "Morse course units and lessons" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unités et leçons du cours Morse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unités et leçons du cours Morse"
           }
         }
       }
@@ -5479,6 +6173,22 @@
         }
       }
     },
+    "Play character" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jouer le caractère"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jouer le caractère"
+          }
+        }
+      }
+    },
     "Play Morse practice audio" : {
       "localizations" : {
         "en" : {
@@ -6113,6 +6823,22 @@
         }
       }
     },
+    "Reach 90% accuracy to unlock the next lesson." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atteignez 90 % d’exactitude pour débloquer la leçon suivante."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atteignez 90 % d’exactitude pour débloquer la leçon suivante."
+          }
+        }
+      }
+    },
     "Readiness" : {
       "localizations" : {
         "fr" : {
@@ -6371,6 +7097,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Temps de révision restant : %lld secondes."
+          }
+        }
+      }
+    },
+    "Review weakest characters" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réviser les caractères faibles"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réviser les caractères faibles"
           }
         }
       }
@@ -7723,6 +8465,22 @@
         }
       }
     },
+    "Try again next time." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réessayez la prochaine fois."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réessayez la prochaine fois."
+          }
+        }
+      }
+    },
     "Unable to complete this operation: " : {
       "localizations" : {
         "fr" : {
@@ -7931,6 +8689,22 @@
         }
       }
     },
+    "Unit %lld" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unité %lld"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unité %lld"
+          }
+        }
+      }
+    },
     "Use Settings to change Morse tone, timing, and playback volume." : {
       "localizations" : {
         "fr" : {
@@ -7959,6 +8733,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Points faibles"
+          }
+        }
+      }
+    },
+    "Weak-character review" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Révision des caractères faibles"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Révision des caractères faibles"
           }
         }
       }

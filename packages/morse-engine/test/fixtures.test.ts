@@ -5,9 +5,11 @@ import { describe, expect, it } from "vitest";
 import {
   MORSE_CODE_TABLE,
   MorseValidationError,
+  buildMorseLessonExercises,
   diffMorseCopy,
   farnsworthTiming,
   generateMorseExamText,
+  parseMorseCourseFixture,
   profileForName,
   scoreMorseCopy,
   textToTimedMorse,
@@ -21,6 +23,7 @@ import {
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "../../..");
 const fixturesRoot = join(repoRoot, "fixtures/morse");
 const fixturePaths = await jsonFiles(fixturesRoot);
+const course = parseMorseCourseFixture(JSON.parse(await readFile(join(fixturesRoot, "course.json"), "utf8")));
 
 describe("public tables", () => {
   it("freezes the Morse code table so consumers can't change mappings at runtime", () => {
@@ -74,6 +77,12 @@ function validateFixture(fixture: any): void {
       break;
     case "morse-validation":
       validateValidationFixture(fixture);
+      break;
+    case "morse-course":
+      // The dedicated course test validates the full 40-lesson shape.
+      break;
+    case "morse-course-exercises":
+      validateCourseExercisesFixture(fixture);
       break;
     default:
       throw new Error(`unsupported fixture kind: ${fixture.kind}`);
@@ -180,6 +189,14 @@ function validateCopyDiffFixture(fixture: any): void {
 function validateValidationFixture(fixture: any): void {
   for (const testCase of fixture.cases) {
     expect(validateMorseText(testCase.input.text), testCase.id).toEqual(testCase.expectedOutput);
+  }
+}
+
+function validateCourseExercisesFixture(fixture: any): void {
+  for (const testCase of fixture.cases) {
+    const lesson = course.lessons.find((entry) => entry.id === testCase.input.lessonId);
+    expect(lesson, testCase.id).toBeDefined();
+    expect(buildMorseLessonExercises({ lesson: lesson!, seed: testCase.input.seed }), testCase.id).toEqual(testCase.expectedOutput.exercises);
   }
 }
 

@@ -1,4 +1,5 @@
 import { dueCount, type CategoryBreakdownEntry, type QuestionProgressRecord } from "@canadian-ham/engine-ts";
+import { type MorseCourseProgressExport } from "@canadian-ham/morse-engine";
 
 import { bankId, categories, knownQuestionIds, subsections } from "../data/bank";
 import { defaultMorsePreferences, normalizeMorsePreferences, type WebMorsePreferences } from "./morseSettings";
@@ -80,6 +81,7 @@ export interface ProgressExportV1 {
   readonly examAttempts: readonly ExamAttempt[];
   readonly lessonProgress?: readonly LessonProgressRecord[];
   readonly lessonQuizAttempts?: readonly LessonQuizAttempt[];
+  readonly morseCourseProgress?: MorseCourseProgressExport;
   readonly preferences: WebPreferences;
 }
 
@@ -96,7 +98,7 @@ export const defaultPreferences: WebPreferences = {
   morse: defaultMorsePreferences,
 };
 
-const DB_VERSION = 3;
+const DB_VERSION = 4;
 const DEFAULT_DB_NAME = "canadian-ham-web-progress";
 const PREFERENCES_KEY = "preferences";
 
@@ -152,6 +154,22 @@ export class ProgressStore {
     await this.put("lessonQuizAttempts", attempt);
   }
 
+  async getMorseCourseProgress(): Promise<MorseCourseProgressExport | undefined> {
+    const db = await this.open();
+    const record = await requestToPromise<(MorseCourseProgressExport & { readonly key?: string }) | undefined>(
+      db.transaction("morseCourseProgress", "readonly").objectStore("morseCourseProgress").get("default"),
+    );
+    if (record === undefined) {
+      return undefined;
+    }
+    const { key: _key, ...progress } = record;
+    return progress;
+  }
+
+  async putMorseCourseProgress(progress: MorseCourseProgressExport): Promise<void> {
+    await this.put("morseCourseProgress", { ...progress, key: "default" });
+  }
+
   async putLessonQuizAttemptWithQuestionProgress(attempt: LessonQuizAttempt, records: readonly QuestionProgressRecord[]): Promise<void> {
     const db = await this.open();
     await runTransaction(db, ["lessonQuizAttempts", "questionProgress"], "readwrite", (transaction) => {
@@ -185,22 +203,25 @@ export class ProgressStore {
       examAttempts: await this.getExamAttempts(),
       lessonProgress: await this.getLessonProgress(),
       lessonQuizAttempts: await this.getLessonQuizAttempts(),
+      morseCourseProgress: await this.getMorseCourseProgress(),
       preferences: await this.getPreferences(),
     };
   }
 
   async importData(data: ProgressExportV1): Promise<void> {
     const db = await this.open();
-    await runTransaction(db, ["questionProgress", "examAttempts", "lessonProgress", "lessonQuizAttempts", "preferences"], "readwrite", (transaction) => {
+    await runTransaction(db, ["questionProgress", "examAttempts", "lessonProgress", "lessonQuizAttempts", "morseCourseProgress", "preferences"], "readwrite", (transaction) => {
       transaction.objectStore("questionProgress").clear();
       transaction.objectStore("examAttempts").clear();
       transaction.objectStore("lessonProgress").clear();
       transaction.objectStore("lessonQuizAttempts").clear();
+      transaction.objectStore("morseCourseProgress").clear();
       transaction.objectStore("preferences").clear();
       const questionStore = transaction.objectStore("questionProgress");
       const attemptStore = transaction.objectStore("examAttempts");
       const lessonStore = transaction.objectStore("lessonProgress");
       const quizAttemptStore = transaction.objectStore("lessonQuizAttempts");
+      const morseCourseStore = transaction.objectStore("morseCourseProgress");
       for (const record of data.questionProgress) {
         questionStore.put(record);
       }
@@ -213,17 +234,21 @@ export class ProgressStore {
       for (const attempt of data.lessonQuizAttempts ?? []) {
         quizAttemptStore.put(attempt);
       }
+      if (data.morseCourseProgress !== undefined) {
+        morseCourseStore.put({ ...data.morseCourseProgress, key: "default" });
+      }
       transaction.objectStore("preferences").put({ key: PREFERENCES_KEY, value: normalizePreferences(data.preferences) });
     });
   }
 
   async resetAllData(): Promise<void> {
     const db = await this.open();
-    await runTransaction(db, ["questionProgress", "examAttempts", "lessonProgress", "lessonQuizAttempts", "preferences"], "readwrite", (transaction) => {
+    await runTransaction(db, ["questionProgress", "examAttempts", "lessonProgress", "lessonQuizAttempts", "morseCourseProgress", "preferences"], "readwrite", (transaction) => {
       transaction.objectStore("questionProgress").clear();
       transaction.objectStore("examAttempts").clear();
       transaction.objectStore("lessonProgress").clear();
       transaction.objectStore("lessonQuizAttempts").clear();
+      transaction.objectStore("morseCourseProgress").clear();
       transaction.objectStore("preferences").clear();
     });
   }
@@ -315,6 +340,12 @@ function migrateDatabase(db: IDBDatabase, oldVersion: number, transaction: IDBTr
       store.createIndex("lessonId", "lessonId", { unique: false });
     }
   }
+
+  if (oldVersion < 4) {
+    if (!db.objectStoreNames.contains("morseCourseProgress")) {
+      db.createObjectStore("morseCourseProgress", { keyPath: "key" });
+    }
+  }
 }
 
 export function validateProgressImport(raw: unknown): ImportValidationResult {
@@ -347,6 +378,9 @@ export function validateProgressImport(raw: unknown): ImportValidationResult {
   }
   if (raw.lessonQuizAttempts !== undefined && !Array.isArray(raw.lessonQuizAttempts)) {
     errors.push("Import lessonQuizAttempts must be an array when present.");
+  }
+  if (raw.morseCourseProgress !== undefined) {
+    errors.push(...validateMorseCourseProgress(raw.morseCourseProgress));
   }
   if (!isPreferences(raw.preferences)) {
     errors.push("Import preferences are invalid.");
@@ -409,9 +443,83 @@ export function validateProgressImport(raw: unknown): ImportValidationResult {
       examAttempts: examAttempts.map(normalizeExamAttempt) as ExamAttempt[],
       lessonProgress: lessonProgress as LessonProgressRecord[],
       lessonQuizAttempts: lessonQuizAttempts as LessonQuizAttempt[],
+      morseCourseProgress: raw.morseCourseProgress as MorseCourseProgressExport | undefined,
       preferences: normalizePreferences(raw.preferences),
     },
   };
+}
+
+function validateMorseCourseProgress(value: unknown): string[] {
+  const prefix = "Import morseCourseProgress";
+  const errors: string[] = [];
+  if (!isRecord(value)) {
+    return [`${prefix} must be an object when present.`];
+  }
+  if (typeof value.courseId !== "string" || value.courseId.length === 0) {
+    errors.push(`${prefix}.courseId must be a non-empty string.`);
+  }
+  if (!Array.isArray(value.lessonProgress)) {
+    errors.push(`${prefix}.lessonProgress must be an array.`);
+  } else {
+    const lessonIds = new Set<string>();
+    value.lessonProgress.forEach((record, index) => {
+      const recordPrefix = `${prefix}.lessonProgress[${index}]`;
+      if (!isRecord(record)) {
+        errors.push(`${recordPrefix} must be an object.`);
+        return;
+      }
+      if (typeof record.lessonId !== "string" || !/^koch-\d{3}$/.test(record.lessonId)) {
+        errors.push(`${recordPrefix}.lessonId must be a known Morse lesson ID.`);
+      } else if (lessonIds.has(record.lessonId)) {
+        errors.push(`${recordPrefix}.lessonId duplicates another Morse lesson record.`);
+      }
+      if (typeof record.lessonId === "string") lessonIds.add(record.lessonId);
+      if (!isPositiveInteger(record.attempts)) errors.push(`${recordPrefix}.attempts must be a positive integer.`);
+      if (!isRatio(record.bestAccuracy)) errors.push(`${recordPrefix}.bestAccuracy must be a number between 0 and 1.`);
+      if (!isRatio(record.lastAccuracy)) errors.push(`${recordPrefix}.lastAccuracy must be a number between 0 and 1.`);
+      if (typeof record.lastAttemptedAt !== "string") errors.push(`${recordPrefix}.lastAttemptedAt must be a canonical UTC timestamp string.`);
+      else pushCanonicalTimestampError(errors, record.lastAttemptedAt, `${recordPrefix}.lastAttemptedAt`);
+      if (record.completedAt !== undefined) {
+        if (typeof record.completedAt !== "string") errors.push(`${recordPrefix}.completedAt must be a canonical UTC timestamp string.`);
+        else pushCanonicalTimestampError(errors, record.completedAt, `${recordPrefix}.completedAt`);
+      }
+    });
+  }
+  if (!Array.isArray(value.characterStats)) {
+    errors.push(`${prefix}.characterStats must be an array.`);
+  } else {
+    const characters = new Set<string>();
+    value.characterStats.forEach((record, index) => {
+      const recordPrefix = `${prefix}.characterStats[${index}]`;
+      if (!isRecord(record)) {
+        errors.push(`${recordPrefix} must be an object.`);
+        return;
+      }
+      if (typeof record.character !== "string" || record.character.length !== 1) errors.push(`${recordPrefix}.character must be a single Morse character.`);
+      else if (characters.has(record.character)) errors.push(`${recordPrefix}.character duplicates another character stat.`);
+      if (typeof record.character === "string") characters.add(record.character);
+      if (!isNonNegativeInteger(record.attempts)) errors.push(`${recordPrefix}.attempts must be a non-negative integer.`);
+      if (!isNonNegativeInteger(record.correctAttempts)) errors.push(`${recordPrefix}.correctAttempts must be a non-negative integer.`);
+      if (typeof record.attempts === "number" && typeof record.correctAttempts === "number" && record.correctAttempts > record.attempts) errors.push(`${recordPrefix}.correctAttempts must not exceed attempts.`);
+      if (!Array.isArray(record.recentResults) || !record.recentResults.every((result) => typeof result === "boolean") || record.recentResults.length > 20) errors.push(`${recordPrefix}.recentResults must be an array of up to 20 booleans.`);
+      if (typeof record.lastPracticedAt !== "string") errors.push(`${recordPrefix}.lastPracticedAt must be a canonical UTC timestamp string.`);
+      else pushCanonicalTimestampError(errors, record.lastPracticedAt, `${recordPrefix}.lastPracticedAt`);
+    });
+  }
+  if (!Array.isArray(value.dailyActivity)) {
+    errors.push(`${prefix}.dailyActivity must be an array.`);
+  } else {
+    value.dailyActivity.forEach((record, index) => {
+      const recordPrefix = `${prefix}.dailyActivity[${index}]`;
+      if (!isRecord(record)) {
+        errors.push(`${recordPrefix} must be an object.`);
+        return;
+      }
+      if (typeof record.date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(record.date)) errors.push(`${recordPrefix}.date must be YYYY-MM-DD.`);
+      if (!isNonNegativeInteger(record.lessonsCompleted)) errors.push(`${recordPrefix}.lessonsCompleted must be a non-negative integer.`);
+    });
+  }
+  return errors;
 }
 
 function normalizeQuestionProgressRecord(record: unknown): unknown {
@@ -779,6 +887,10 @@ function isPositiveInteger(value: unknown): value is number {
 
 function isNonNegativeFiniteNumber(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value) && value >= 0;
+}
+
+function isRatio(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 1;
 }
 
 const knownCategoryIds = new Set(categories.map((category) => category.id));

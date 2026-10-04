@@ -126,6 +126,38 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(diff.operations.map(\.kind), [.match, .wrong, .match, .inserted])
     }
 
+    func testCompletedMorseCourseSessionIgnoresResubmittedAnswer() throws {
+        var session = MorseCourseSession(mode: .review, exercises: [.typeCharacter("K")], index: 0, correct: 1, total: 1, characterResults: [(character: "K", correct: true)], done: true)
+
+        XCTAssertFalse(session.applyAnswer(correct: false, results: [("K", false)]))
+        XCTAssertEqual(session.index, 0)
+        XCTAssertEqual(session.correct, 1)
+        XCTAssertEqual(session.total, 1)
+        XCTAssertEqual(session.characterResults.count, 1)
+        XCTAssertTrue(session.done)
+    }
+
+    func testMorseCourseProgressIgnoresStoredProgressForAnotherCourse() throws {
+        let storedProgress = MorseCourseProgressExport(
+            courseId: "other-course",
+            lessonProgress: [MorseLessonProgressRecord(
+                lessonId: "koch-001",
+                attempts: 1,
+                bestAccuracy: 1,
+                lastAccuracy: 1,
+                lastAttemptedAt: "2026-01-02T04:30:00.000Z",
+                completedAt: "2026-01-02T04:30:00.000Z"
+            )],
+            characterStats: [],
+            dailyActivity: []
+        )
+
+        let selectedProgress = morseCourseProgressForBundledCourse(storedProgress, courseId: "ised-koch-g4fon-v1")
+
+        XCTAssertEqual(selectedProgress.courseId, "ised-koch-g4fon-v1")
+        XCTAssertTrue(selectedProgress.lessonProgress.isEmpty)
+    }
+
     func testMorseSettingsRoundTripThroughUserDefaults() throws {
         let suiteName = "MorseTrainerTests.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))

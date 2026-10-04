@@ -55,5 +55,30 @@
     { "lessonId": "L-001-01", "readAt": "2026-01-02T03:01:00.000Z", "readCount": 1 }
   ],
   "lessonQuizAttempts": [],
+  "morseCourseProgress": {
+    "courseId": "ised-koch-g4fon-v1",
+    "lessonProgress": [
+      {
+        "lessonId": "koch-001",
+        "attempts": 1,
+        "bestAccuracy": 1,
+        "lastAccuracy": 1,
+        "lastAttemptedAt": "2026-01-02T03:02:00.000Z",
+        "completedAt": "2026-01-02T03:02:00.000Z"
+      }
+    ],
+    "characterStats": [
+      {
+        "character": "K",
+        "attempts": 1,
+        "correctAttempts": 1,
+        "recentResults": [true],
+        "lastPracticedAt": "2026-01-02T03:02:00.000Z"
+      }
+    ],
+    "dailyActivity": [
+      { "date": "2026-01-02", "lessonsCompleted": 1 }
+    ]
+  },
   "preferences": { "practiceMode": "immediate", "examTimerEnabled": false, "theme": "system" }
 }

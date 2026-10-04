@@ -1,4 +1,5 @@
 import CanadianHamEngine
+import CanadianHamMorseEngine
 import Foundation
 import SwiftData
 
@@ -50,6 +51,7 @@ struct ProgressExportV1: Codable, Equatable, Sendable {
     let examAttempts: [StoredExamAttempt]
     let lessonProgress: [ArchivedJSON]
     let lessonQuizAttempts: [ArchivedJSON]
+    let morseCourseProgress: MorseCourseProgressExport?
     let preferences: ExportedPreferences
 
     init(
@@ -61,6 +63,7 @@ struct ProgressExportV1: Codable, Equatable, Sendable {
         examAttempts: [StoredExamAttempt],
         lessonProgress: [ArchivedJSON],
         lessonQuizAttempts: [ArchivedJSON],
+        morseCourseProgress: MorseCourseProgressExport? = nil,
         preferences: ExportedPreferences
     ) {
         self.schema = schema
@@ -71,6 +74,7 @@ struct ProgressExportV1: Codable, Equatable, Sendable {
         self.examAttempts = examAttempts
         self.lessonProgress = lessonProgress
         self.lessonQuizAttempts = lessonQuizAttempts
+        self.morseCourseProgress = morseCourseProgress
         self.preferences = preferences
     }
 
@@ -84,6 +88,7 @@ struct ProgressExportV1: Codable, Equatable, Sendable {
         examAttempts = try container.decode([StoredExamAttempt].self, forKey: .examAttempts)
         lessonProgress = try container.decodeIfPresent([ArchivedJSON].self, forKey: .lessonProgress) ?? []
         lessonQuizAttempts = try container.decodeIfPresent([ArchivedJSON].self, forKey: .lessonQuizAttempts) ?? []
+        morseCourseProgress = try container.decodeIfPresent(MorseCourseProgressExport.self, forKey: .morseCourseProgress)
         preferences = try container.decode(ExportedPreferences.self, forKey: .preferences)
     }
 }
@@ -373,7 +378,9 @@ enum ProgressStoreError: LocalizedError, Equatable {
 #if DEBUG
 enum ProgressStoreInjectedFailure: Error, Equatable {
     case importAfterDelete
+    case importAfterMorseWrite
     case lessonQuizSave
+    case morseCourseProgressRemoval
 }
 #endif
 
@@ -383,6 +390,7 @@ private struct ProgressStoreSnapshot {
     let preferences: ApplePreferences
     let archivedLessonProgressData: Data
     let archivedLessonQuizAttemptsData: Data
+    let morseCourseProgressData: Data?
 }
 
 @MainActor
@@ -393,14 +401,20 @@ final class ProgressStoreService: ObservableObject {
     private let context: ModelContext
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
+    private let morseCourseProgressURL: URL
 #if DEBUG
+    var morseCourseProgressURLForTesting: URL { morseCourseProgressURL }
     var failNextImportAfterDeleteForTesting = false
+    var failNextImportAfterMorseWriteForTesting = false
     var failNextLessonQuizSaveForTesting = false
+    var failNextMorseCourseProgressRemovalForTesting = false
 #endif
 
-    init(container: ModelContainer) throws {
+    init(container: ModelContainer, morseCourseProgressURL: URL = ProgressStoreService.morseCourseProgressURL) throws {
         self.container = container
         self.context = ModelContext(container)
+        self.morseCourseProgressURL = morseCourseProgressURL
+        try FileManager.default.createDirectory(at: morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
         self.preferences = try loadPreferences()
     }
 
@@ -427,15 +441,27 @@ final class ProgressStoreService: ObservableObject {
         ])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
         let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
-        return try ProgressStoreService(container: container)
+        let directory = FileManager.default.temporaryDirectory
+            .appending(path: "CanadianHamProgressStoreTests", directoryHint: .isDirectory)
+            .appending(path: UUID().uuidString, directoryHint: .isDirectory)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        return try ProgressStoreService(container: container, morseCourseProgressURL: directory.appending(path: "MorseCourseProgress.json"))
     }
 
     static var persistentStoreURL: URL {
+        progressDirectory.appending(path: "Progress.store")
+    }
+
+    static var progressDirectory: URL {
         let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
             ?? FileManager.default.temporaryDirectory
         let directory = base.appending(path: "CanadianHam", directoryHint: .isDirectory)
         try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        return directory.appending(path: "Progress.store")
+        return directory
+    }
+
+    static var morseCourseProgressURL: URL {
+        progressDirectory.appending(path: "MorseCourseProgress.json")
     }
 
     static func resetPersistentStoreFiles() {
@@ -443,6 +469,7 @@ final class ProgressStoreService: ObservableObject {
         for suffix in ["", "-shm", "-wal"] {
             try? FileManager.default.removeItem(at: URL(fileURLWithPath: url.path + suffix))
         }
+        try? FileManager.default.removeItem(at: morseCourseProgressURL)
     }
 
     func questionProgressRecords() throws -> [QuestionProgressRecord] {
@@ -476,6 +503,19 @@ final class ProgressStoreService: ObservableObject {
         let current = try lessonProgressRecords().filter { $0.lessonId != record.lessonId }
         entity.archivedLessonProgressData = try encoder.encode((current + [record]).sorted { $0.lessonId < $1.lessonId })
         try context.save()
+        objectWillChange.send()
+    }
+
+    func morseCourseProgress() throws -> MorseCourseProgressExport? {
+        guard FileManager.default.fileExists(atPath: morseCourseProgressURL.path(percentEncoded: false)) else { return nil }
+        let data = try Data(contentsOf: morseCourseProgressURL)
+        return try decoder.decode(MorseCourseProgressExport.self, from: data)
+    }
+
+    func saveMorseCourseProgress(_ progress: MorseCourseProgressExport) throws {
+        let data = try encoder.encode(progress)
+        try FileManager.default.createDirectory(at: morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try data.write(to: morseCourseProgressURL, options: [.atomic])
         objectWillChange.send()
     }
 
@@ -544,12 +584,20 @@ final class ProgressStoreService: ObservableObject {
     }
 
     func resetAllData() throws {
-        try context.delete(model: QuestionProgressEntity.self)
-        try context.delete(model: ExamAttemptEntity.self)
-        try context.delete(model: PreferencesEntity.self)
-        preferences = .default
-        try context.save()
-        objectWillChange.send()
+        let previousSnapshot = try snapshotForRollback()
+        do {
+            try context.delete(model: QuestionProgressEntity.self)
+            try context.delete(model: ExamAttemptEntity.self)
+            try context.delete(model: PreferencesEntity.self)
+            try removeMorseCourseProgressIfPresent()
+            preferences = .default
+            try context.save()
+            objectWillChange.send()
+        } catch {
+            context.rollback()
+            try restore(previousSnapshot)
+            throw error
+        }
     }
 
     func exportData(bank: QuestionBank, exportedAt: String) throws -> ProgressExportV1 {
@@ -566,6 +614,7 @@ final class ProgressStoreService: ObservableObject {
             examAttempts: try examAttempts(),
             lessonProgress: lessonProgress,
             lessonQuizAttempts: lessonQuizAttempts,
+            morseCourseProgress: try morseCourseProgress(),
             preferences: ExportedPreferences(
                 practiceMode: preferences.practiceMode.rawValue,
                 examTimerEnabled: preferences.examTimerEnabled,
@@ -620,6 +669,18 @@ final class ProgressStoreService: ObservableObject {
             entity.archivedLessonProgressData = try encoder.encode(data.lessonProgress)
             entity.archivedLessonQuizAttemptsData = try encoder.encode(data.lessonQuizAttempts)
             context.insert(entity)
+            if let morseCourseProgress = data.morseCourseProgress {
+                try FileManager.default.createDirectory(at: morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+                try encoder.encode(morseCourseProgress).write(to: morseCourseProgressURL, options: [.atomic])
+            } else {
+                try removeMorseCourseProgressIfPresent()
+            }
+#if DEBUG
+            if failNextImportAfterMorseWriteForTesting {
+                failNextImportAfterMorseWriteForTesting = false
+                throw ProgressStoreInjectedFailure.importAfterMorseWrite
+            }
+#endif
             try context.save()
             preferences = nextPreferences
             objectWillChange.send()
@@ -680,6 +741,9 @@ final class ProgressStoreService: ObservableObject {
             lessonQuizzesById: bank.lessonQuizzesById,
             errors: &errors
         )
+        if let morseCourseProgress = data.morseCourseProgress {
+            validateMorseCourseProgress(morseCourseProgress, errors: &errors)
+        }
 
         if ApplePreferences.PracticeMode(rawValue: data.preferences.practiceMode) == nil {
             errors.append(String(localized: "Import preferences.practiceMode is invalid."))
@@ -791,8 +855,30 @@ final class ProgressStoreService: ObservableObject {
             examAttempts: try examAttempts(),
             preferences: preferences,
             archivedLessonProgressData: entity?.archivedLessonProgressData ?? Data("[]".utf8),
-            archivedLessonQuizAttemptsData: entity?.archivedLessonQuizAttemptsData ?? Data("[]".utf8)
+            archivedLessonQuizAttemptsData: entity?.archivedLessonQuizAttemptsData ?? Data("[]".utf8),
+            morseCourseProgressData: try existingMorseCourseProgressDataForRollback()
         )
+    }
+
+    /// Returns nil only when there is no Morse progress file. Any other read error aborts the
+    /// operation before anything is changed, so a later rollback can always restore the prior bytes.
+    private func existingMorseCourseProgressDataForRollback() throws -> Data? {
+        guard FileManager.default.fileExists(atPath: morseCourseProgressURL.path(percentEncoded: false)) else {
+            return nil
+        }
+        return try Data(contentsOf: morseCourseProgressURL)
+    }
+
+    private func removeMorseCourseProgressIfPresent() throws {
+        if FileManager.default.fileExists(atPath: morseCourseProgressURL.path(percentEncoded: false)) {
+#if DEBUG
+            if failNextMorseCourseProgressRemovalForTesting {
+                failNextMorseCourseProgressRemovalForTesting = false
+                throw ProgressStoreInjectedFailure.morseCourseProgressRemoval
+            }
+#endif
+            try FileManager.default.removeItem(at: morseCourseProgressURL)
+        }
     }
 
     private func restore(_ snapshot: ProgressStoreSnapshot) throws {
@@ -808,6 +894,12 @@ final class ProgressStoreService: ObservableObject {
         entity.archivedLessonProgressData = snapshot.archivedLessonProgressData
         entity.archivedLessonQuizAttemptsData = snapshot.archivedLessonQuizAttemptsData
         context.insert(entity)
+        if let morseCourseProgressData = snapshot.morseCourseProgressData {
+            try FileManager.default.createDirectory(at: morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try morseCourseProgressData.write(to: morseCourseProgressURL, options: [.atomic])
+        } else {
+            try removeMorseCourseProgressIfPresent()
+        }
         for record in snapshot.questionProgress {
             try upsertQuestionProgress(record)
         }
@@ -862,6 +954,39 @@ private func validateScore(
     }
     for id in score.weakSubsectionIds where !knownSubsectionIds.contains(id) {
         errors.append(String(localized: "\(prefix).weakSubsectionIds contains unknown subsection ID \(id)."))
+    }
+}
+
+
+private func validateMorseCourseProgress(_ progress: MorseCourseProgressExport, errors: inout [String]) {
+    if progress.courseId.isEmpty {
+        errors.append(String(localized: "Import morseCourseProgress.courseId must be non-empty."))
+    }
+    var lessonIds = Set<String>()
+    for (index, record) in progress.lessonProgress.enumerated() {
+        let prefix = "Import morseCourseProgress.lessonProgress[\(index)]"
+        if record.lessonId.range(of: #"^koch-\d{3}$"#, options: .regularExpression) == nil { errors.append(String(localized: "\(prefix).lessonId must be a Morse lesson ID.")) }
+        if !lessonIds.insert(record.lessonId).inserted { errors.append(String(localized: "\(prefix).lessonId duplicates another Morse lesson record.")) }
+        if record.attempts < 1 { errors.append(String(localized: "\(prefix).attempts must be positive.")) }
+        if !(0...1).contains(record.bestAccuracy) { errors.append(String(localized: "\(prefix).bestAccuracy must be between 0 and 1.")) }
+        if !(0...1).contains(record.lastAccuracy) { errors.append(String(localized: "\(prefix).lastAccuracy must be between 0 and 1.")) }
+        appendTimestampError(&errors, value: record.lastAttemptedAt, field: "\(prefix).lastAttemptedAt")
+        if let completedAt = record.completedAt { appendTimestampError(&errors, value: completedAt, field: "\(prefix).completedAt") }
+    }
+    var characters = Set<String>()
+    for (index, record) in progress.characterStats.enumerated() {
+        let prefix = "Import morseCourseProgress.characterStats[\(index)]"
+        if record.character.count != 1 { errors.append(String(localized: "\(prefix).character must be a single Morse character.")) }
+        if !characters.insert(record.character).inserted { errors.append(String(localized: "\(prefix).character duplicates another character stat.")) }
+        if record.attempts < 0 { errors.append(String(localized: "\(prefix).attempts must be non-negative.")) }
+        if record.correctAttempts < 0 || record.correctAttempts > record.attempts { errors.append(String(localized: "\(prefix).correctAttempts must be between 0 and attempts.")) }
+        if record.recentResults.count > 20 { errors.append(String(localized: "\(prefix).recentResults must contain at most 20 booleans.")) }
+        appendTimestampError(&errors, value: record.lastPracticedAt, field: "\(prefix).lastPracticedAt")
+    }
+    for (index, record) in progress.dailyActivity.enumerated() {
+        let prefix = "Import morseCourseProgress.dailyActivity[\(index)]"
+        if record.date.range(of: #"^\d{4}-\d{2}-\d{2}$"#, options: .regularExpression) == nil { errors.append(String(localized: "\(prefix).date must be YYYY-MM-DD.")) }
+        if record.lessonsCompleted < 0 { errors.append(String(localized: "\(prefix).lessonsCompleted must be non-negative.")) }
     }
 }
 

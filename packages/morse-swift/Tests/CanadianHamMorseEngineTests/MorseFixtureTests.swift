@@ -23,6 +23,10 @@ final class MorseFixtureTests: XCTestCase {
                 try validateCopyDiffFixture(data)
             case "morse-validation":
                 try validateValidationFixture(data)
+            case "morse-course":
+                try validateCourseFixture(data)
+            case "morse-course-exercises":
+                try validateCourseExercisesFixture(data)
             default:
                 XCTFail("unsupported fixture kind: \(header.kind)")
             }
@@ -160,6 +164,63 @@ final class MorseFixtureTests: XCTestCase {
             let output = validateMorseText(testCase.input.text)
             XCTAssertEqual(output, testCase.expectedOutput, testCase.id)
         }
+    }
+
+    private func validateCourseExercisesFixture(_ data: Data) throws {
+        let fixture = try JSONDecoder().decode(CourseExercisesFixture.self, from: data)
+        let courseData = try Data(contentsOf: try repositoryRoot().appending(path: "fixtures/morse/course.json"))
+        let course = try decodeMorseCourse(data: courseData)
+        for testCase in fixture.cases {
+            let lesson = try XCTUnwrap(course.lessons.first { $0.id == testCase.input.lessonId }, testCase.id)
+            XCTAssertEqual(
+                buildMorseLessonExercises(lesson: lesson, seed: testCase.input.seed),
+                try testCase.expectedOutput.exercises.map { try $0.exercise() },
+                testCase.id
+            )
+        }
+    }
+
+    private func validateCourseFixture(_ data: Data) throws {
+        let course = try decodeMorseCourse(data: data)
+        XCTAssertEqual(course.characterOrder, approvedMorseCourseCharacterOrder)
+        XCTAssertEqual(course.units.count, 8)
+        XCTAssertEqual(course.lessons.count, 40)
+        XCTAssertEqual(course.lessons.first?.newCharacters, ["K", "M"])
+        XCTAssertEqual(course.lessons.last?.newCharacters, ["-"])
+
+        var progress = emptyMorseCourseProgress(courseId: course.courseId)
+        XCTAssertEqual(try morseLessonState(course: course, progress: progress, lessonId: "koch-001"), .current)
+        XCTAssertEqual(try morseLessonState(course: course, progress: progress, lessonId: "koch-002"), .locked)
+        progress = try recordMorseLessonAttempt(
+            course: course,
+            progress: progress,
+            lessonId: "koch-001",
+            correct: 9,
+            total: 10,
+            characterResults: [],
+            attemptedAt: "2026-10-03T12:00:00.000Z"
+        )
+        XCTAssertEqual(try morseLessonState(course: course, progress: progress, lessonId: "koch-001"), .completed)
+        XCTAssertEqual(try morseLessonState(course: course, progress: progress, lessonId: "koch-002"), .current)
+        XCTAssertEqual(morseDailyStreak(activity: progress.dailyActivity, todayIso: "2026-10-03T12:05:00.000Z"), 1)
+
+        let firstLesson = try XCTUnwrap(course.lessons.first)
+        let exercises = buildMorseLessonExercises(lesson: firstLesson, seed: "lesson-one")
+        let scored = exercises.filter { exercise in
+            if case .meet = exercise { return false }
+            return true
+        }
+        XCTAssertEqual(Array(exercises.prefix(2)), [.meet("K"), .meet("M")])
+        XCTAssertGreaterThanOrEqual(scored.count, 15)
+        XCTAssertLessThanOrEqual(scored.count, 25)
+        XCTAssertTrue(exercises.contains { exercise in
+            if case .typeGroup(let text) = exercise {
+                return text.count == 5 && text.allSatisfy { firstLesson.learnedCharacters.contains(String($0)) }
+            }
+            return false
+        })
+        XCTAssertEqual(buildMorseLessonExercises(lesson: firstLesson, seed: "lesson-one"), exercises)
+        XCTAssertNotEqual(buildMorseLessonExercises(lesson: firstLesson, seed: "lesson-one-other"), exercises)
     }
 
     private func assertExpectedError(_ expectedError: ExpectedError, _ testCaseId: String, action: () throws -> Void) {
@@ -346,6 +407,54 @@ private struct ValidationCase: Decodable {
     let id: String
     let input: TextInput
     let expectedOutput: ValidationResult
+}
+
+private struct CourseExercisesFixture: Decodable {
+    let cases: [CourseExercisesCase]
+}
+
+private struct CourseExercisesCase: Decodable {
+    let id: String
+    let input: CourseExercisesInput
+    let expectedOutput: CourseExercisesOutput
+}
+
+private struct CourseExercisesInput: Decodable {
+    let lessonId: String
+    let seed: String
+}
+
+private struct CourseExercisesOutput: Decodable {
+    let exercises: [ExpectedCourseExercise]
+}
+
+private struct ExpectedCourseExercise: Decodable {
+    let kind: String
+    let character: String?
+    let options: [String]?
+    let text: String?
+
+    func exercise() throws -> MorseCourseExercise {
+        switch kind {
+        case "meet":
+            return .meet(try required(character, "character"))
+        case "choose":
+            return .choose(try required(character, "character"), try required(options, "options"))
+        case "type-character":
+            return .typeCharacter(try required(character, "character"))
+        case "type-group":
+            return .typeGroup(try required(text, "text"))
+        default:
+            throw MorseEngineError.invalidSpeed("unsupported Morse course exercise kind: \(kind)")
+        }
+    }
+
+    private func required<T>(_ value: T?, _ field: String) throws -> T {
+        guard let value else {
+            throw MorseEngineError.invalidSpeed("missing \(field) for Morse course exercise")
+        }
+        return value
+    }
 }
 
 private struct ExpectedError: Decodable {

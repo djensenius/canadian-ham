@@ -25,7 +25,9 @@ final class MorsePlaybackCoordinator {
 
 struct MorseTrainerView: View {
     @Binding var settings: MorseTrainerSettings
+    let progressStore: ProgressStoreService
     let onSettingsChanged: (MorseTrainerSettings) -> Void
+    let onProgressChanged: () -> Void
 
     @State private var driver = MorseAudioDriver()
     @State private var isPlaying = false
@@ -37,9 +39,20 @@ struct MorseTrainerView: View {
 
     private var normalizedSettings: MorseTrainerSettings { settings.normalized() }
 
+    private var isCourseAuditOnly: Bool {
+#if DEBUG
+        ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseCourseAuditOnly")
+#else
+        false
+#endif
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
+                if isCourseAuditOnly {
+                    MorseCourseView(progressStore: progressStore, settings: $settings, onProgressChanged: onProgressChanged)
+                } else {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
                         Text("Morse") // l10n: localized
@@ -53,16 +66,18 @@ struct MorseTrainerView: View {
                             .padding(.vertical, DesignTokens.Spacing.xs)
                             .background(DesignTokens.Colors.paperInset, in: Capsule())
                     }
-                    Text("Learn and practise Morse code offline. Copy practice and the simulated receiving exam are available below.") // l10n: localized
+                    Text("Learn and practise Morse code offline with the Koch course, copy practice and the simulated receiving exam below.") // l10n: localized
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                        MorseHomePlaceholder(title: "Learn (course)", message: "Coming soon.")
+                        MorseHomePlaceholder(title: "Learn (course)", message: "Koch lessons available now.")
                         MorseHomePlaceholder(title: "Copy practice", message: "Listen to full passages and compare your copy below.")
                         MorseHomePlaceholder(title: "Exam", message: "Try a simulated Canadian 5 wpm receiving exam below.")
                     }
                 }
                 .paperCard()
+
+                MorseCourseView(progressStore: progressStore, settings: $settings, onProgressChanged: onProgressChanged)
 
                 MorseCopyExamView(settings: normalizedSettings, playbackCoordinator: playbackCoordinator)
 
@@ -133,6 +148,7 @@ struct MorseTrainerView: View {
 
                 if let errorMessage {
                     MessagePanel(title: "Morse error", message: errorMessage, kind: .warning)
+                }
                 }
             }
             .pagePadding()

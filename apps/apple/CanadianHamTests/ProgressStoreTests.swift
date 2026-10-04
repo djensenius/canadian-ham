@@ -1,5 +1,6 @@
 @testable import CanadianHam
 import CanadianHamEngine
+import CanadianHamMorseEngine
 import Combine
 import SwiftData
 import SwiftUI
@@ -107,6 +108,7 @@ final class ProgressStoreTests: XCTestCase {
     func testProgressStoreRoundTripExportImportReset() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let store = try ProgressStoreService.inMemoryForTests()
+        XCTAssertNotEqual(store.morseCourseProgressURLForTesting, ProgressStoreService.morseCourseProgressURL)
         let record = try applyAnswer(existing: nil, update: AnswerUpdate(
             questionId: "B-001-001-001",
             bankId: bank.manifest.bankId,
@@ -133,6 +135,27 @@ final class ProgressStoreTests: XCTestCase {
             flaggedQuestionIds: [generated.items[0].questionId]
         )
         try store.saveExamAttempt(attempt)
+        let morseProgress = MorseCourseProgressExport(
+            courseId: "ised-koch-g4fon-v1",
+            lessonProgress: [MorseLessonProgressRecord(
+                lessonId: "koch-001",
+                attempts: 1,
+                bestAccuracy: 1,
+                lastAccuracy: 1,
+                lastAttemptedAt: "2026-01-02T04:30:00.000Z",
+                completedAt: "2026-01-02T04:30:00.000Z"
+            )],
+            characterStats: [MorseCharacterStatRecord(
+                character: "K",
+                attempts: 1,
+                correctAttempts: 1,
+                recentResults: [true],
+                lastPracticedAt: "2026-01-02T04:30:00.000Z"
+            )],
+            dailyActivity: [MorseDailyActivityRecord(date: "2026-01-02", lessonsCompleted: 1)]
+        )
+        try store.saveMorseCourseProgress(morseProgress)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: store.morseCourseProgressURLForTesting.path(percentEncoded: false)))
 
         let exported = try store.exportData(bank: bank, exportedAt: "2026-01-02T05:04:05.000Z")
         XCTAssertEqual(exported.schema, "canadian-ham.progress-export")
@@ -140,19 +163,88 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(exported.questionProgress.count, 1)
         XCTAssertEqual(exported.examAttempts.count, 1)
         XCTAssertEqual(exported.preferences.practiceMode, "review-later")
+        XCTAssertEqual(exported.morseCourseProgress, morseProgress)
 
         let importedStore = try ProgressStoreService.inMemoryForTests()
+        XCTAssertNotEqual(importedStore.morseCourseProgressURLForTesting, store.morseCourseProgressURLForTesting)
+        XCTAssertNil(try importedStore.morseCourseProgress())
         try importedStore.importData(exported, bank: bank)
         XCTAssertEqual(try importedStore.questionProgressRecords(), exported.questionProgress)
         XCTAssertEqual(try importedStore.examAttempts(), exported.examAttempts)
         XCTAssertEqual(importedStore.preferences.practiceMode, .reviewLater)
         XCTAssertTrue(importedStore.preferences.examTimerEnabled)
         XCTAssertEqual(importedStore.preferences.theme, .dark)
+        XCTAssertEqual(try importedStore.morseCourseProgress(), morseProgress)
 
         try importedStore.resetAllData()
         XCTAssertEqual(try importedStore.questionProgressRecords().count, 0)
         XCTAssertEqual(try importedStore.examAttempts().count, 0)
+        XCTAssertNil(try importedStore.morseCourseProgress())
         XCTAssertEqual(importedStore.preferences, .default)
+    }
+
+    func testImportsOlderExportWithoutMorseCourseProgressAsNoMorseProgress() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let store = try ProgressStoreService.inMemoryForTests()
+        try store.saveMorseCourseProgress(MorseCourseProgressExport(
+            courseId: "ised-koch-g4fon-v1",
+            lessonProgress: [],
+            characterStats: [],
+            dailyActivity: []
+        ))
+        let json = """
+        {
+          "schema": "canadian-ham.progress-export",
+          "version": 1,
+          "exportedAt": "2026-01-02T05:04:05.000Z",
+          "bankId": "\(bank.manifest.bankId)",
+          "questionProgress": [],
+          "examAttempts": [],
+          "lessonProgress": [],
+          "lessonQuizAttempts": [],
+          "preferences": { "practiceMode": "immediate", "examTimerEnabled": false, "theme": "system" }
+        }
+        """
+        let decoded = try JSONDecoder().decode(ProgressExportV1.self, from: Data(json.utf8))
+
+        try store.importData(decoded, bank: bank)
+
+        XCTAssertNil(try store.morseCourseProgress())
+    }
+
+    func testImportValidationRejectsInvalidMorseCourseProgress() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let data = ProgressExportV1(
+            schema: "canadian-ham.progress-export",
+            version: 1,
+            exportedAt: "2026-01-02T05:04:05.000Z",
+            bankId: bank.manifest.bankId,
+            questionProgress: [],
+            examAttempts: [],
+            lessonProgress: [],
+            lessonQuizAttempts: [],
+            morseCourseProgress: MorseCourseProgressExport(
+                courseId: "ised-koch-g4fon-v1",
+                lessonProgress: [
+                    MorseLessonProgressRecord(lessonId: "bad", attempts: 0, bestAccuracy: 2, lastAccuracy: -1, lastAttemptedAt: "2026-01-02T05:04:05Z", completedAt: nil),
+                    MorseLessonProgressRecord(lessonId: "koch-bad", attempts: 1, bestAccuracy: 1, lastAccuracy: 1, lastAttemptedAt: "2026-01-02T05:04:05.000Z", completedAt: nil),
+                ],
+                characterStats: [MorseCharacterStatRecord(character: "KM", attempts: -1, correctAttempts: 2, recentResults: Array(repeating: true, count: 21), lastPracticedAt: "not-a-date")],
+                dailyActivity: [MorseDailyActivityRecord(date: "2026-1-2", lessonsCompleted: -1)]
+            ),
+            preferences: ExportedPreferences(practiceMode: "immediate", examTimerEnabled: false, theme: "system")
+        )
+
+        let errors = try ProgressStoreService.inMemoryForTests().validate(data, bank: bank)
+
+        XCTAssertTrue(errors.contains { $0.contains("lessonProgress[0].lessonId") })
+        XCTAssertTrue(errors.contains { $0.contains("lessonProgress[1].lessonId") })
+        XCTAssertTrue(errors.contains { $0.contains("bestAccuracy") })
+        XCTAssertTrue(errors.contains { $0.contains("lastAccuracy") })
+        XCTAssertTrue(errors.contains { $0.contains("lastAttemptedAt") && $0.contains("canonical UTC") })
+        XCTAssertTrue(errors.contains { $0.contains("characterStats[0].character") && $0.contains("single Morse character") })
+        XCTAssertTrue(errors.contains { $0.contains("dailyActivity[0].date") })
+        XCTAssertThrowsError(try ProgressStoreService.inMemoryForTests().importData(data, bank: bank))
     }
 
     func testDecodesLegacyBasicExportWithoutBankIdFields() throws {
@@ -323,6 +415,73 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertThrowsError(try decoder.decode(StoredExamTimer.self, from: Data(#"{"enabled":true,"secondsAllowed":null,"secondsElapsed":1e300}"#.utf8)))
     }
 
+    func testResetRollsBackWhenMorseProgressRemovalFails() throws {
+        let store = try ProgressStoreService.inMemoryForTests()
+        let originalMorseProgress = sampleMorseCourseProgress()
+        try store.saveMorseCourseProgress(originalMorseProgress)
+        var preferences = store.preferences
+        preferences.theme = .dark
+        try store.updatePreferences(preferences)
+
+        store.failNextMorseCourseProgressRemovalForTesting = true
+        XCTAssertThrowsError(try store.resetAllData()) { error in
+            XCTAssertEqual(error as? ProgressStoreInjectedFailure, .morseCourseProgressRemoval)
+        }
+
+        XCTAssertEqual(try store.morseCourseProgress(), originalMorseProgress)
+        XCTAssertEqual(store.preferences.theme, .dark)
+    }
+
+    func testImportOfOlderExportRollsBackWhenMorseProgressRemovalFails() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let store = try ProgressStoreService.inMemoryForTests()
+        let originalMorseProgress = sampleMorseCourseProgress()
+        try store.saveMorseCourseProgress(originalMorseProgress)
+        let replacement = ProgressExportV1(
+            schema: "canadian-ham.progress-export",
+            version: 1,
+            exportedAt: "2026-01-02T05:04:05.000Z",
+            bankId: bank.manifest.bankId,
+            questionProgress: [],
+            examAttempts: [],
+            lessonProgress: [],
+            lessonQuizAttempts: [],
+            preferences: ExportedPreferences(practiceMode: "immediate", examTimerEnabled: false, theme: "system")
+        )
+
+        store.failNextMorseCourseProgressRemovalForTesting = true
+        XCTAssertThrowsError(try store.importData(replacement, bank: bank)) { error in
+            XCTAssertEqual(error as? ProgressStoreInjectedFailure, .morseCourseProgressRemoval)
+        }
+
+        XCTAssertEqual(try store.morseCourseProgress(), originalMorseProgress)
+    }
+
+    func testImportRollbackPropagatesMorseProgressRemovalFailure() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let store = try ProgressStoreService.inMemoryForTests()
+        let importedMorseProgress = sampleMorseCourseProgress(lessonId: "koch-002")
+        let replacement = ProgressExportV1(
+            schema: "canadian-ham.progress-export",
+            version: 1,
+            exportedAt: "2026-01-02T05:04:05.000Z",
+            bankId: bank.manifest.bankId,
+            questionProgress: [],
+            examAttempts: [],
+            lessonProgress: [],
+            lessonQuizAttempts: [],
+            morseCourseProgress: importedMorseProgress,
+            preferences: ExportedPreferences(practiceMode: "immediate", examTimerEnabled: false, theme: "system")
+        )
+
+        store.failNextImportAfterMorseWriteForTesting = true
+        store.failNextMorseCourseProgressRemovalForTesting = true
+        XCTAssertThrowsError(try store.importData(replacement, bank: bank)) { error in
+            XCTAssertEqual(error as? ProgressStoreInjectedFailure, .morseCourseProgressRemoval)
+        }
+        XCTAssertEqual(try store.morseCourseProgress(), importedMorseProgress)
+    }
+
     func testImportRollbackKeepsExistingDataWhenReplacementFails() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let store = try ProgressStoreService.inMemoryForTests()
@@ -470,6 +629,28 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertTrue(errors.contains { $0.contains("duplicates another exam attempt") })
         XCTAssertTrue(errors.contains { $0.contains("preferences.practiceMode") })
         XCTAssertThrowsError(try store.importData(data, bank: bank))
+    }
+
+    private func sampleMorseCourseProgress(lessonId: String = "koch-001") -> MorseCourseProgressExport {
+        MorseCourseProgressExport(
+            courseId: "ised-koch-g4fon-v1",
+            lessonProgress: [MorseLessonProgressRecord(
+                lessonId: lessonId,
+                attempts: 1,
+                bestAccuracy: 1,
+                lastAccuracy: 1,
+                lastAttemptedAt: "2026-01-02T04:30:00.000Z",
+                completedAt: "2026-01-02T04:30:00.000Z"
+            )],
+            characterStats: [MorseCharacterStatRecord(
+                character: "K",
+                attempts: 1,
+                correctAttempts: 1,
+                recentResults: [true],
+                lastPracticedAt: "2026-01-02T04:30:00.000Z"
+            )],
+            dailyActivity: [MorseDailyActivityRecord(date: "2026-01-02", lessonsCompleted: 1)]
+        )
     }
 }
 
