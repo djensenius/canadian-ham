@@ -40,17 +40,19 @@ private let morseCopyPracticeCorpus: [MorseCopyPassageLength: [MorseCopyPractice
 
 struct MorseCopyExamView: View {
     let settings: MorseTrainerSettings
+    let playbackCoordinator: MorsePlaybackCoordinator
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            MorseCopyPracticeView(settings: settings)
-            MorseReceivingExamView(settings: settings)
+            MorseCopyPracticeView(settings: settings, playbackCoordinator: playbackCoordinator)
+            MorseReceivingExamView(settings: settings, playbackCoordinator: playbackCoordinator)
         }
     }
 }
 
 private struct MorseCopyPracticeView: View {
     let settings: MorseTrainerSettings
+    let playbackCoordinator: MorsePlaybackCoordinator
 
     @State private var driver = MorseAudioDriver()
     @State private var selectedLength: MorseCopyPassageLength = .short
@@ -119,24 +121,44 @@ private struct MorseCopyPracticeView: View {
             }
         }
         .paperCard()
-        .onDisappear { stopPractice(message: "") }
+        .onAppear {
+            playbackCoordinator.register("copy-practice") {
+                stopPracticeIfPlaying()
+            }
+        }
+        .onDisappear {
+            playbackCoordinator.unregister("copy-practice")
+            stopPractice(message: "")
+        }
     }
 
     private func startPractice() {
         let passages = morseCopyPracticeCorpus[selectedLength] ?? []
         guard !passages.isEmpty else { return }
         let passage = passages[passageIndex % passages.count]
-        passageIndex += 1
         do {
+            playbackCoordinator.claim("copy-practice")
             finishTask?.cancel()
-            activePassage = passage
-            let duration = try driver.play(text: passage.text, settings: settings.normalized())
-            activeDuration = duration
+            finishTask = nil
+            driver.stop()
+            activePassage = nil
+            activeDuration = 0
             userCopy = ""
             diff = nil
+            isPlaying = false
+            statusMessage = ""
+            errorMessage = nil
+#if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseFailCopyAudioStartup") {
+                throw NSError(domain: "CanadianHamUITests", code: 1)
+            }
+#endif
+            let duration = try driver.play(text: passage.text, settings: settings.normalized())
+            passageIndex += 1
+            activePassage = passage
+            activeDuration = duration
             isPlaying = true
             statusMessage = String(localized: "Copy practice playback started.")
-            errorMessage = nil
             let waitSeconds = debugCopyPlaybackOverride ?? duration
             finishTask = Task { @MainActor in
                 try? await Task.sleep(for: .milliseconds(Int((waitSeconds * 1000).rounded(.up)) + 60))
@@ -147,6 +169,15 @@ private struct MorseCopyPracticeView: View {
                 AccessibilityNotification.Announcement(statusMessage).post()
             }
         } catch {
+            finishTask?.cancel()
+            finishTask = nil
+            driver.stop()
+            activePassage = nil
+            activeDuration = 0
+            userCopy = ""
+            diff = nil
+            isPlaying = false
+            statusMessage = ""
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: "), detail: error)
         }
     }
@@ -160,6 +191,11 @@ private struct MorseCopyPracticeView: View {
         if !message.isEmpty {
             AccessibilityNotification.Announcement(message).post()
         }
+    }
+
+    private func stopPracticeIfPlaying() {
+        guard isPlaying else { return }
+        stopPractice(message: String(localized: "Morse playback stopped."))
     }
 
     private func gradeCopy() {
@@ -177,6 +213,7 @@ private struct MorseCopyPracticeView: View {
 
 private struct MorseReceivingExamView: View {
     let settings: MorseTrainerSettings
+    let playbackCoordinator: MorsePlaybackCoordinator
 
     @State private var driver = MorseAudioDriver()
     @State private var selectedProfile: MorseTrainerSettings.TimingProfile = .isedParis
@@ -251,20 +288,30 @@ private struct MorseReceivingExamView: View {
             }
         }
         .paperCard()
-        .onDisappear { stopAll() }
+        .onAppear {
+            playbackCoordinator.register("simulated-exam") {
+                stopExamPlaybackIfPlaying()
+            }
+        }
+        .onDisappear {
+            playbackCoordinator.unregister("simulated-exam")
+            stopAll()
+        }
     }
 
     private func startExam() {
         do {
+            playbackCoordinator.claim("simulated-exam")
             stopAll()
             let profileName: MorseProfileName = selectedProfile == .ric1Literal ? .ric1Literal : .isedParis
             let profile = profileForName(profileName)
             let generated = try generateMorseExamText(seed: "apple-\(profileName.rawValue)-\(UUID().uuidString)", profile: profile)
-            examText = generated
+            examText = nil
             userCopy = ""
             diff = nil
+            reviewRemaining = examReviewDuration
             stage = .playing
-            statusMessage = String(localized: "Exam playback started. Audio cannot be paused or replayed.")
+            statusMessage = ""
             errorMessage = nil
             var playbackSettings = settings.normalized()
             playbackSettings.timingProfile = selectedProfile
@@ -276,6 +323,8 @@ private struct MorseReceivingExamView: View {
             }
 #endif
             let duration = try driver.play(text: generated.text, settings: playbackSettings)
+            examText = generated
+            statusMessage = String(localized: "Exam playback started. Audio cannot be paused or replayed.")
             let waitSeconds = debugExamPlaybackOverride ?? duration
             playbackTask = Task { @MainActor in
                 try? await Task.sleep(for: .milliseconds(Int((waitSeconds * 1000).rounded(.up)) + 60))
@@ -290,6 +339,7 @@ private struct MorseReceivingExamView: View {
             reviewTask = nil
             driver.stop()
             examText = nil
+            userCopy = ""
             diff = nil
             stage = .idle
             statusMessage = ""
@@ -325,6 +375,22 @@ private struct MorseReceivingExamView: View {
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: "), detail: error)
         }
+    }
+
+    private func stopExamPlaybackIfPlaying() {
+        guard stage == .playing else { return }
+        playbackTask?.cancel()
+        playbackTask = nil
+        reviewTask?.cancel()
+        reviewTask = nil
+        driver.stop()
+        examText = nil
+        userCopy = ""
+        diff = nil
+        reviewRemaining = examReviewDuration
+        stage = .idle
+        statusMessage = String(localized: "Morse playback stopped.")
+        AccessibilityNotification.Announcement(statusMessage).post()
     }
 
     private func stopAll() {

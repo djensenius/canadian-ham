@@ -217,6 +217,29 @@ function stubMorseAudioContext(): void {
   vi.stubGlobal("webkitAudioContext", undefined);
 }
 
+function stubFailingMorseAudioContext(message = "simulated audio-start failure"): void {
+  class FailingMorseAudioContext {
+    readonly currentTime = 0;
+    readonly destination = new MockMorseAudioNode() as unknown as AudioDestinationNode;
+    readonly state: AudioContextState = "running";
+
+    createOscillator(): OscillatorNode {
+      throw new Error(message);
+    }
+
+    createGain(): GainNode {
+      return new MockMorseGainNode() as unknown as GainNode;
+    }
+
+    async resume(): Promise<void> {}
+
+    async close(): Promise<void> {}
+  }
+
+  vi.stubGlobal("AudioContext", FailingMorseAudioContext);
+  vi.stubGlobal("webkitAudioContext", undefined);
+}
+
 function morsePreferences(_enabled = true): WebPreferences {
   return { ...defaultPreferences, morse: { ...defaultPreferences.morse } };
 }
@@ -1107,6 +1130,74 @@ describe("App accessibility and flows", () => {
     assert.match(copySection.textContent ?? "", /wrong/i);
     assert.match(copySection.textContent ?? "", /total errors/i);
     await expectNoAxeViolations(container);
+  });
+
+  it("clears Morse copy and exam state when audio startup fails", async () => {
+    window.location.hash = "#/morse";
+    const store = createStore("morse-audio-start-failure");
+    await store.putPreferences(morsePreferences(true));
+    stubFailingMorseAudioContext();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-audio-failure-seed"} />);
+
+    await screen.findByRole("heading", { name: "Quick listen" });
+    const copyHeading = screen.getAllByRole("heading", { name: "Copy practice" }).at(-1);
+    assert.ok(copyHeading);
+    const copySection = copyHeading.closest("section");
+    assert.ok(copySection);
+    fireEvent.click(within(copySection).getByRole("button", { name: "Start copy practice" }));
+
+    await waitFor(() => assert.match(copySection.textContent ?? "", /Morse playback could not start: simulated audio-start failure/));
+    const copyInput = within(copySection).getByLabelText("Your copy") as HTMLTextAreaElement;
+    assert.equal(copyInput.value, "");
+    assert.equal(copyInput.disabled, true);
+    assert.equal((within(copySection).getByRole("button", { name: "Check copy" }) as HTMLButtonElement).disabled, true);
+    assert.equal(copySection.querySelector(".morse-duration"), null);
+    assert.equal(within(copySection).queryByRole("heading", { name: "Character diff" }), null);
+
+    const examHeading = screen.getAllByRole("heading", { name: "Exam" }).at(-1);
+    assert.ok(examHeading);
+    const examSection = examHeading.closest("section");
+    assert.ok(examSection);
+    fireEvent.click(within(examSection).getByRole("button", { name: "Start simulated exam" }));
+
+    await waitFor(() => assert.match(examSection.textContent ?? "", /Morse playback could not start: simulated audio-start failure/));
+    const examInput = within(examSection).getByLabelText("Your copy") as HTMLTextAreaElement;
+    assert.equal(examInput.value, "");
+    assert.equal(examInput.disabled, true);
+    assert.doesNotMatch(examSection.textContent ?? "", /Generated exam/);
+  });
+
+  it("stops any active Morse playback before starting another player", async () => {
+    window.location.hash = "#/morse";
+    const store = createStore("morse-one-player-at-a-time");
+    await store.putPreferences(morsePreferences(true));
+    stubMorseAudioContext();
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-one-player-seed"} />);
+
+    await screen.findByRole("heading", { name: "Quick listen" });
+    const quickPlay = screen.getByRole("button", { name: "Play Morse practice audio" }) as HTMLButtonElement;
+    const quickStop = screen.getByRole("button", { name: "Stop Morse practice audio" }) as HTMLButtonElement;
+    fireEvent.click(quickPlay);
+    await waitFor(() => assert.equal(quickStop.disabled, false));
+
+    const copyHeading = screen.getAllByRole("heading", { name: "Copy practice" }).at(-1);
+    assert.ok(copyHeading);
+    const copySection = copyHeading.closest("section");
+    assert.ok(copySection);
+    const copyStop = within(copySection).getByRole("button", { name: "Stop" }) as HTMLButtonElement;
+    fireEvent.click(within(copySection).getByRole("button", { name: "Start copy practice" }));
+    await waitFor(() => assert.equal(copyStop.disabled, false));
+    assert.equal(quickStop.disabled, true);
+    assert.match(container.querySelector(".morse-playback-status")?.textContent ?? "", /Morse playback stopped\./);
+
+    const examHeading = screen.getAllByRole("heading", { name: "Exam" }).at(-1);
+    assert.ok(examHeading);
+    const examSection = examHeading.closest("section");
+    assert.ok(examSection);
+    fireEvent.click(within(examSection).getByRole("button", { name: "Start simulated exam" }));
+    await waitFor(() => assert.match(examSection.textContent ?? "", /Exam playback started/));
+    assert.equal(copyStop.disabled, true);
+    assert.match(copySection.textContent ?? "", /Morse playback stopped\./);
   });
 
   it("localizes Morse diff token screen-reader labels in French", async () => {

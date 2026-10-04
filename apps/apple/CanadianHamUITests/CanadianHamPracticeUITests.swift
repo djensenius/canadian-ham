@@ -92,6 +92,26 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "FAIL")).firstMatch.waitForExistence(timeout: 10))
     }
 
+    func testMorseCopyStartResetsAfterAudioStartupFailure() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseFailCopyAudioStartup"
+        ])
+        defer { app.terminate() }
+
+        let copyStart = app.buttons["morse-copy-start-button"].firstMatch
+        XCTAssertTrue(copyStart.waitForExistence(timeout: 10))
+        copyStart.tap()
+
+        XCTAssertTrue(app.staticTexts["Morse error"].firstMatch.waitForExistence(timeout: 5))
+        let copyCheck = app.buttons["morse-copy-check-button"].firstMatch
+        XCTAssertTrue(copyCheck.waitForExistence(timeout: 5))
+        XCTAssertFalse(copyCheck.isEnabled, "Failed audio startup should leave Check copy disabled")
+        XCTAssertFalse(app.textViews["morse-copy-text-editor"].firstMatch.isEnabled, "Failed audio startup should leave no active passage for editing")
+        XCTAssertFalse(app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "Playback duration")).firstMatch.exists, "Failed audio startup should clear the attempted copy passage")
+    }
+
     func testMorseExamStartResetsAfterAudioStartupFailure() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [
@@ -107,7 +127,34 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
         XCTAssertTrue(app.staticTexts["Morse error"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(examStart.isEnabled, "Failed audio startup should return the exam to idle so Start is enabled")
+        XCTAssertFalse(app.textViews["morse-exam-text-editor"].firstMatch.isEnabled, "Failed audio startup should leave no active exam for editing")
         XCTAssertFalse(app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "Generated exam")).firstMatch.exists, "Failed audio startup should clear the generated exam summary")
+    }
+
+    func testMorseStartingQuickListenStopsCopyPlayback() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseCopyPlaybackSeconds", "10"
+        ])
+        defer { app.terminate() }
+
+        let copyStart = app.buttons["morse-copy-start-button"].firstMatch
+        XCTAssertTrue(copyStart.waitForExistence(timeout: 10))
+        copyStart.tap()
+        let copyCheck = app.buttons["morse-copy-check-button"].firstMatch
+        XCTAssertTrue(copyCheck.waitForExistence(timeout: 5))
+        XCTAssertFalse(copyCheck.isEnabled, "Copy check should stay disabled while copy practice is playing")
+
+        let quickPlay = app.buttons["morse-quick-play-button"].firstMatch
+        XCTAssertTrue(quickPlay.waitForExistence(timeout: 5))
+        scrollUntilHittable(quickPlay, in: app, maxSwipes: 8)
+        quickPlay.tap()
+
+        let quickStop = app.buttons["morse-quick-stop-button"].firstMatch
+        XCTAssertTrue(quickStop.waitForExistence(timeout: 5))
+        XCTAssertTrue(quickStop.isEnabled, "Quick listen should be the active Morse playback after it starts")
+        XCTAssertTrue(copyCheck.isEnabled, "Starting Quick listen should stop copy-practice playback and re-enable Check copy")
     }
 
     func testAccessibilityAuditMorseExamGradedDiffLight() throws {

@@ -7,11 +7,17 @@ import { morseTimingFromPreferences } from "../../lib/morseSettings";
 import type { WebPreferences } from "../../lib/progressStore";
 import { buildCopyDiff, containsDotDashNotation, copyPracticePassage, type MorseCopyPassageLength } from "./copyExam";
 
+export interface MorsePlaybackCoordinator {
+  register(ownerId: string, stop: () => void): () => void;
+  claim(ownerId: string): void;
+}
+
 interface MorseCopyExamSectionProps {
   readonly interfaceLanguage: InterfaceLanguage;
   readonly preferences: WebPreferences;
   readonly reviewDurationSeconds?: number;
   readonly examSeedFactory?: (profileName: MorseProfileName) => string;
+  readonly playbackCoordinator?: MorsePlaybackCoordinator;
 }
 
 type CopyStage = "idle" | "playing" | "ready" | "graded";
@@ -31,18 +37,28 @@ interface ExamPassageState {
 
 const defaultExamReviewSeconds = 120;
 const defaultExamSeedFactory = (profileName: MorseProfileName) => `web-${profileName}-${Date.now().toString(36)}`;
+const noopPlaybackCoordinator: MorsePlaybackCoordinator = {
+  register: () => () => {},
+  claim: () => {},
+};
 
-export function MorseCopyExamSection({ interfaceLanguage, preferences, reviewDurationSeconds = defaultExamReviewSeconds, examSeedFactory = defaultExamSeedFactory }: MorseCopyExamSectionProps) {
+export function MorseCopyExamSection({ interfaceLanguage, preferences, reviewDurationSeconds = defaultExamReviewSeconds, examSeedFactory = defaultExamSeedFactory, playbackCoordinator = noopPlaybackCoordinator }: MorseCopyExamSectionProps) {
   const locale = interfaceLanguageTag(interfaceLanguage);
   return (
     <div className="morse-copy-exam-grid">
-      <MorseCopyPracticePanel interfaceLanguage={interfaceLanguage} locale={locale} preferences={preferences} />
-      <MorseExamPanel interfaceLanguage={interfaceLanguage} locale={locale} preferences={preferences} reviewDurationSeconds={reviewDurationSeconds} examSeedFactory={examSeedFactory} />
+      <MorseCopyPracticePanel interfaceLanguage={interfaceLanguage} locale={locale} preferences={preferences} playbackCoordinator={playbackCoordinator} />
+      <MorseExamPanel interfaceLanguage={interfaceLanguage} locale={locale} preferences={preferences} reviewDurationSeconds={reviewDurationSeconds} examSeedFactory={examSeedFactory} playbackCoordinator={playbackCoordinator} />
     </div>
   );
 }
 
-function MorseCopyPracticePanel({ interfaceLanguage, locale, preferences }: { readonly interfaceLanguage: InterfaceLanguage; readonly locale: string; readonly preferences: WebPreferences }) {
+function useMorsePlaybackRegistration(coordinator: MorsePlaybackCoordinator, ownerId: string, stop: () => void): void {
+  const stopRef = useRef(stop);
+  stopRef.current = stop;
+  useEffect(() => coordinator.register(ownerId, () => stopRef.current()), [coordinator, ownerId]);
+}
+
+function MorseCopyPracticePanel({ interfaceLanguage, locale, preferences, playbackCoordinator }: { readonly interfaceLanguage: InterfaceLanguage; readonly locale: string; readonly preferences: WebPreferences; readonly playbackCoordinator: MorsePlaybackCoordinator }) {
   const playerRef = useRef<WebMorsePlayer | null>(null);
   const finishTimerRef = useRef<number | null>(null);
   const generationRef = useRef(0);
@@ -60,21 +76,23 @@ function MorseCopyPracticePanel({ interfaceLanguage, locale, preferences }: { re
     clearWindowTimer(finishTimerRef.current);
     void playerRef.current?.close();
   }, []);
+  useMorsePlaybackRegistration(playbackCoordinator, "copy-practice", stopPlaying);
 
   async function start(): Promise<void> {
     const selected = copyPracticePassage(length, passageIndexRef.current);
-    passageIndexRef.current += 1;
     const timing = morseTimingFromPreferences(preferences.morse);
     const durationSeconds = textToTimedMorse(selected.text, timing).totalDurationSeconds;
     const generation = generationRef.current + 1;
+    playbackCoordinator.claim("copy-practice");
     generationRef.current = generation;
     clearWindowTimer(finishTimerRef.current);
     playerRef.current ??= new WebMorsePlayer();
-    setPassage({ text: selected.text, title: selected.title, durationSeconds });
+    playerRef.current.stop();
+    setPassage(null);
     setCopy("");
     setDiff(null);
     setStage("playing");
-    setStatus(t(interfaceLanguage, "morseCopyPracticeStarted"));
+    setStatus("");
     setLiveStatus("");
     try {
       const handle = await playerRef.current.playText(selected.text, preferences.morse);
@@ -82,6 +100,10 @@ function MorseCopyPracticePanel({ interfaceLanguage, locale, preferences }: { re
         handle.stop();
         return;
       }
+      passageIndexRef.current += 1;
+      setPassage({ text: selected.text, title: selected.title, durationSeconds });
+      setStage("playing");
+      setStatus(t(interfaceLanguage, "morseCopyPracticeStarted"));
       finishTimerRef.current = window.setTimeout(() => {
         if (generation !== generationRef.current) {
           return;
@@ -95,6 +117,9 @@ function MorseCopyPracticePanel({ interfaceLanguage, locale, preferences }: { re
       if (generation !== generationRef.current) {
         return;
       }
+      setPassage(null);
+      setCopy("");
+      setDiff(null);
       setStage("idle");
       const message = t(interfaceLanguage, "morsePlaybackError", formatError(error));
       setStatus(message);
@@ -102,7 +127,10 @@ function MorseCopyPracticePanel({ interfaceLanguage, locale, preferences }: { re
     }
   }
 
-  function stop(): void {
+  function stopPlaying(): void {
+    if (stage !== "playing") {
+      return;
+    }
     generationRef.current += 1;
     clearWindowTimer(finishTimerRef.current);
     playerRef.current?.stop();
@@ -110,6 +138,10 @@ function MorseCopyPracticePanel({ interfaceLanguage, locale, preferences }: { re
     const message = t(interfaceLanguage, "morsePlaybackStopped");
     setStatus(message);
     setLiveStatus(message);
+  }
+
+  function stop(): void {
+    stopPlaying();
   }
 
   function grade(): void {
@@ -157,7 +189,7 @@ function MorseCopyPracticePanel({ interfaceLanguage, locale, preferences }: { re
   );
 }
 
-function MorseExamPanel({ interfaceLanguage, locale, preferences, reviewDurationSeconds, examSeedFactory }: { readonly interfaceLanguage: InterfaceLanguage; readonly locale: string; readonly preferences: WebPreferences; readonly reviewDurationSeconds: number; readonly examSeedFactory: (profileName: MorseProfileName) => string }) {
+function MorseExamPanel({ interfaceLanguage, locale, preferences, reviewDurationSeconds, examSeedFactory, playbackCoordinator }: { readonly interfaceLanguage: InterfaceLanguage; readonly locale: string; readonly preferences: WebPreferences; readonly reviewDurationSeconds: number; readonly examSeedFactory: (profileName: MorseProfileName) => string; readonly playbackCoordinator: MorsePlaybackCoordinator }) {
   const playerRef = useRef<WebMorsePlayer | null>(null);
   const playbackTimerRef = useRef<number | null>(null);
   const reviewIntervalRef = useRef<number | null>(null);
@@ -179,9 +211,11 @@ function MorseExamPanel({ interfaceLanguage, locale, preferences, reviewDuration
     clearWindowTimer(reviewFinishTimerRef.current);
     void playerRef.current?.close();
   }, []);
+  useMorsePlaybackRegistration(playbackCoordinator, "simulated-exam", stopPlaybackForCoordinator);
 
   async function start(): Promise<void> {
     const generation = generationRef.current + 1;
+    playbackCoordinator.claim("simulated-exam");
     generationRef.current = generation;
     clearWindowTimer(playbackTimerRef.current);
     clearWindowTimer(reviewIntervalRef.current);
@@ -190,12 +224,13 @@ function MorseExamPanel({ interfaceLanguage, locale, preferences, reviewDuration
     const generated = generateMorseExamText({ profile, seed: examSeedFactory(profileName) });
     const examPreferences = { ...preferences.morse, timingProfile: profileName, characterWpm: 12, effectiveWpm: 5 } as const;
     playerRef.current ??= new WebMorsePlayer();
-    setExam({ text: generated.text, durationSeconds: generated.durationSeconds, weightedCharacters: generated.weightedCharacters });
+    playerRef.current.stop();
+    setExam(null);
     setCopy("");
     setDiff(null);
     setReviewRemaining(reviewDurationSeconds);
     setStage("playing");
-    setStatus(t(interfaceLanguage, "morseExamPlaybackStarted"));
+    setStatus("");
     setLiveStatus("");
     try {
       const handle = await playerRef.current.playText(generated.text, examPreferences);
@@ -203,6 +238,9 @@ function MorseExamPanel({ interfaceLanguage, locale, preferences, reviewDuration
         handle.stop();
         return;
       }
+      setExam({ text: generated.text, durationSeconds: generated.durationSeconds, weightedCharacters: generated.weightedCharacters });
+      setStage("playing");
+      setStatus(t(interfaceLanguage, "morseExamPlaybackStarted"));
       playbackTimerRef.current = window.setTimeout(() => {
         if (generation !== generationRef.current) {
           return;
@@ -213,11 +251,33 @@ function MorseExamPanel({ interfaceLanguage, locale, preferences, reviewDuration
       if (generation !== generationRef.current) {
         return;
       }
+      setExam(null);
+      setCopy("");
+      setDiff(null);
       setStage("idle");
       const message = t(interfaceLanguage, "morsePlaybackError", formatError(error));
       setStatus(message);
       setLiveStatus(message);
     }
+  }
+
+  function stopPlaybackForCoordinator(): void {
+    if (stage !== "playing") {
+      return;
+    }
+    generationRef.current += 1;
+    clearWindowTimer(playbackTimerRef.current);
+    clearWindowTimer(reviewIntervalRef.current);
+    clearWindowTimer(reviewFinishTimerRef.current);
+    playerRef.current?.stop();
+    setExam(null);
+    setCopy("");
+    setDiff(null);
+    setReviewRemaining(reviewDurationSeconds);
+    setStage("idle");
+    const message = t(interfaceLanguage, "morsePlaybackStopped");
+    setStatus(message);
+    setLiveStatus(message);
   }
 
   function startReviewTimer(generation: number, expected: string): void {

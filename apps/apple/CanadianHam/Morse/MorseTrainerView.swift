@@ -4,6 +4,25 @@ import SwiftUI
 
 private let morsePracticeText = "KMRSU PARIS"
 
+@MainActor
+final class MorsePlaybackCoordinator {
+    private var stopHandlers: [String: () -> Void] = [:]
+
+    func register(_ ownerID: String, stop: @escaping () -> Void) {
+        stopHandlers[ownerID] = stop
+    }
+
+    func unregister(_ ownerID: String) {
+        stopHandlers[ownerID] = nil
+    }
+
+    func claim(_ ownerID: String) {
+        for (registeredOwnerID, stop) in stopHandlers where registeredOwnerID != ownerID {
+            stop()
+        }
+    }
+}
+
 struct MorseTrainerView: View {
     @Binding var settings: MorseTrainerSettings
     let onSettingsChanged: (MorseTrainerSettings) -> Void
@@ -14,6 +33,7 @@ struct MorseTrainerView: View {
     @State private var statusMessage = ""
     @State private var errorMessage: String?
     @State private var stopTask: Task<Void, Never>?
+    @State private var playbackCoordinator = MorsePlaybackCoordinator()
 
     private var normalizedSettings: MorseTrainerSettings { settings.normalized() }
 
@@ -44,7 +64,7 @@ struct MorseTrainerView: View {
                 }
                 .paperCard()
 
-                MorseCopyExamView(settings: normalizedSettings)
+                MorseCopyExamView(settings: normalizedSettings, playbackCoordinator: playbackCoordinator)
 
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     Text("Quick listen") // l10n: localized
@@ -58,9 +78,11 @@ struct MorseTrainerView: View {
                         morseTokenButton("Play") { play() }
                             .disabled(isPlaying)
                             .accessibilityLabel(Text("Play Morse practice audio")) // l10n: localized
+                            .accessibilityIdentifier("morse-quick-play-button")
                         morseTokenButton("Stop") { stopPlayback(reveal: false, message: String(localized: "Morse playback stopped.")) }
                             .disabled(!isPlaying)
                             .accessibilityLabel(Text("Stop Morse practice audio")) // l10n: localized
+                            .accessibilityIdentifier("morse-quick-stop-button")
                     }
                     if !statusMessage.isEmpty {
                         Text(statusMessage) // l10n: localized
@@ -117,11 +139,20 @@ struct MorseTrainerView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Morse")
-        .onDisappear { stopPlayback(reveal: false, message: "") }
+        .onAppear {
+            playbackCoordinator.register("quick-listen") {
+                stopPlayback(reveal: false, message: String(localized: "Morse playback stopped."))
+            }
+        }
+        .onDisappear {
+            playbackCoordinator.unregister("quick-listen")
+            stopPlayback(reveal: false, message: "")
+        }
     }
 
     private func play() {
         do {
+            playbackCoordinator.claim("quick-listen")
             isRevealed = false
             let duration = try driver.play(text: morsePracticeText, settings: normalizedSettings)
             isPlaying = true
