@@ -1,11 +1,11 @@
 ---
 id: TASK-12.15
 title: Remove accessibility audit handlers and fix the underlying issues
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-04 07:02'
-updated_date: '2026-10-04 15:55'
+updated_date: '2026-10-04 19:26'
 labels:
   - apple
   - accessibility
@@ -27,14 +27,14 @@ Why: the project rule is full default accessibility audits with no handlers or e
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 No performAccessibilityAudit call in any UI test target uses an issue handler or a restricted audit-type set; all audits run the full default audit
-- [ ] #2 The graded Morse diff tokens meet contrast in light and dark (colours from adaptive design tokens, not colour alone) and the course path passes Dynamic Type without filtering
-- [ ] #3 The iOS light and dark audits for the Morse course path, lesson, summary and graded diff pass; the iOS and macOS suites pass
+- [x] #2 The graded Morse diff tokens meet contrast in light and dark (colours from adaptive design tokens, not colour alone) and the course path passes Dynamic Type without filtering
+- [x] #3 The iOS light and dark audits for the Morse course path, lesson, summary and graded diff pass; the iOS and macOS suites pass
 <!-- AC:END -->
 
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Replace the graded-diff audit's blind swipe with deterministic scrolling to require morse-diff-title and a morse-diff-token-* fully visible below the navigation bar, and assert audited text does not intersect navigation chrome.\n2. Run the unfiltered graded-diff light/dark audits; if the audit exposes covered app content, fix the app layout rather than adding handlers or filters.\n3. Run apple localization/source checks, remove stale Localizable.xcstrings entries via the required JSON round-trip, then run the required package/web/platform validation once on the final code.\n4. Record per-test platform results in task-12.15, note shared validation in task-12.16, create the requested task-12 follow-up, re-check acceptance criteria with objective evidence, mark Done last.
+1. Replace inline graded Morse copy/exam diffs and scroll-to-results behavior with pushed Copy results / Exam results screens that summarize grading, expose the accessible character diff and user copy, and focus the results heading.\n2. Keep full default accessibility audits unfiltered; run the Morse results audit three times in light and dark plus the existing course/core/platform suites.\n3. Update EN/FR catalogue entries via the JSON round-trip, remove stale source text, and record validation before marking Done.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -55,10 +55,12 @@ Blocked after final iOS validation attempt: final full iOS run on code commit 3b
 Correction: the earlier note saying Localizable.xcstrings was not edited was stale/incorrect. This branch includes the approved catalogue cleanup from the required JSON round-trip; no additional catalogue edits are planned in this fix round.
 
 Blocked per coordinator stop rule after approved scroll/focus fix: implemented app-side ScrollViewReader scrollTo(anchor: .top) for copy practice and simulated exam results, with no animation under Reduce Motion, plus VoiceOver focus request on the diff heading and UI coverage. Reverted the out-of-scope global UISegmentedControl appearance override and compact language-picker bottom padding; removed the dead Morse audit language-picker branch. Targeted focus/scroll test passed: DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination "platform=iOS Simulator,name=iPhone 17 Pro" -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testMorseExamGradingScrollsToAndFocusesResults test CODE_SIGNING_ALLOWED=NO. Stability attempt then ran the unfiltered graded-diff light/dark audits three times each; all six executions failed Contrast at CanadianHamPracticeUITests.swift:951 (dark run durations ~106.6s, 104.7s, 109.6s; light ~93.2s, 93.8s, 96.8s). Full log: /var/folders/vn/hq32qlg16_5fnfnkl35k6x0r0000gn/T/pi-bash-bc63eddd1bef8249.log. Per the stop rule, no full platform/web validation was run and no further layout/feature removal was attempted. The existing inline Morse navigation title remains from the prior branch state, but this failed stability run does not prove it necessary; revisit before finalizing.
+
+Implemented final owner decision: copy practice and simulated exam grading now push dedicated Copy results / Exam results screens with summary, accessible character diff, user copy, primary action and navigation Back; the ScrollViewReader scroll-to-results path and resultFocusRequested accessibilityValue hook were removed. Catalogue updates used the OrderedDict JSON round-trip. No fallback audit handler or exception was used. Validation passed: node scripts/check-apple-text-sources.ts; pnpm typecheck; TZ=UTC pnpm test; pnpm build:web; pnpm check:apple-network; pnpm check:apple-l10n; targeted iOS Morse copy/exam flow; targeted iOS Morse results light audit 3/3 and dark audit 3/3; full iOS scheme 51 tests; macOS 45 tests with UI tests skipped per project command; tvOS 12 tests; visionOS 3 unit tests + 9 UI tests.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Removed the Morse accessibility audit filters and fixed the underlying Morse audit issues: adaptive token diff colours/non-colour markers, course-path Dynamic Type wrapping, and default full audits. This fix round restored the graded receiving-exam controls and user copy after grading while keeping the contrast/token improvements, and adjusted the graded-diff audit viewport to avoid clipped navigation-chrome false positives without handlers. Verified with targeted light/dark Morse diff and course audits plus full iOS and macOS suites.
+Finished task-12.15 by redesigning graded Morse copy/exam results onto pushed Copy results / Exam results screens, removing the scroll/focus test hook approach, and keeping all performAccessibilityAudit calls unfiltered. Verified with web/package checks, Apple localization/network/text-source checks, iOS light/dark results audits three times each, and full iOS/macOS/tvOS/visionOS platform runs.
 <!-- SECTION:FINAL_SUMMARY:END -->
