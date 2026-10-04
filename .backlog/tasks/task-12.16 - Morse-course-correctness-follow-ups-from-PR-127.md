@@ -1,9 +1,11 @@
 ---
 id: TASK-12.16
 title: 'Morse course correctness follow-ups from PR #127'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-04 09:12'
+updated_date: '2026-10-04 09:12'
 labels:
   - web
   - apple
