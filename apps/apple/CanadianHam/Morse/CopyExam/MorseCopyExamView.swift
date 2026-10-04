@@ -563,7 +563,6 @@ private struct MorseCopyResultsScreen: View {
     let result: MorseCopyResult
     let onStartAnother: () -> Void
 
-    @Environment(\.dismiss) private var dismiss
     @AccessibilityFocusState private var headingFocused: Bool
 
     var body: some View {
@@ -606,15 +605,12 @@ private struct MorseCopyResultsScreen: View {
                 }
                 .paperCard()
 
+                // onStartAnother resets the parent state, which clears presentedResult and pops this
+                // screen exactly once through the navigationDestination binding.
                 Button(result.kind.actionTitle) { // l10n: localized
-                    dismiss()
                     onStartAnother()
                 }
                 .buttonStyle(AccessiblePrimaryButtonStyle())
-                .simultaneousGesture(TapGesture().onEnded {
-                    dismiss()
-                    onStartAnother()
-                })
                 .accessibilityIdentifier(result.kind.actionIdentifier)
             }
             .pagePadding()

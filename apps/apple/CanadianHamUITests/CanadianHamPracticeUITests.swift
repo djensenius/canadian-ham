@@ -152,6 +152,43 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(examApp.buttons["morse-exam-start-button"].firstMatch.waitForExistence(timeout: 5), "Back should return to the simulated exam controls")
     }
 
+    func testMorseResultsStartAgainActionsReturnToMorseOnce() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseCopyPlaybackSeconds", "0.1",
+            "-CanadianHamMorseExamPlaybackSeconds", "0.1",
+            "-CanadianHamMorseExamReviewSeconds", "1"
+        ])
+        defer { app.terminate() }
+
+        // Exam: "Start another exam" closes the results once and leaves the user on the Morse screen.
+        let examStart = app.buttons["morse-exam-start-button"].firstMatch
+        XCTAssertTrue(examStart.waitForExistence(timeout: 10))
+        scrollUntilHittable(examStart, in: app, maxSwipes: 8)
+        examStart.tap()
+        let examResults = app.descendants(matching: .any)["morse-exam-results-heading"].firstMatch
+        XCTAssertTrue(examResults.waitForExistence(timeout: 10))
+        app.buttons["morse-exam-results-start-another-button"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["morse-exam-start-button"].firstMatch.waitForExistence(timeout: 5), "Start another exam should return to the exam controls")
+        XCTAssertFalse(examResults.exists, "The exam results screen should be closed")
+        XCTAssertFalse(app.descendants(matching: .any)["compact-root-list"].firstMatch.exists, "A single tap must not pop past the Morse screen")
+        XCTAssertTrue(app.buttons["morse-exam-start-button"].firstMatch.isEnabled, "A fresh exam can be started")
+
+        // Copy practice: "Try another passage" also returns to Morse exactly once.
+        let copyStart = app.buttons["morse-copy-start-button"].firstMatch
+        scrollUntilHittable(copyStart, in: app, maxSwipes: 8)
+        copyStart.tap()
+        XCTAssertTrue(app.staticTexts["Playback finished. Check your copy when ready."].firstMatch.waitForExistence(timeout: 5))
+        app.buttons["morse-copy-check-button"].firstMatch.tap()
+        let copyResults = app.descendants(matching: .any)["morse-copy-results-heading"].firstMatch
+        XCTAssertTrue(copyResults.waitForExistence(timeout: 5))
+        app.buttons["morse-copy-results-try-another-button"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["morse-copy-start-button"].firstMatch.waitForExistence(timeout: 5), "Try another passage should return to copy practice")
+        XCTAssertFalse(copyResults.exists, "The copy results screen should be closed")
+        XCTAssertFalse(app.descendants(matching: .any)["compact-root-list"].firstMatch.exists, "A single tap must not pop past the Morse screen")
+    }
+
     func testMorseExamGradingPushesResultsScreen() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [
