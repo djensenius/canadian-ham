@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-04 01:32'
+updated_date: '2026-10-04 02:16'
 labels:
   - web
   - apple
@@ -47,6 +47,8 @@ Why: the owner wants formal, Duolingo-like training where you really learn Morse
 Implemented shared Morse course fixture and TS/Swift course logic using the G4FON/ISED order from docs/proposals/morse-trainer.md section 3A. Added web and Apple course path/session/review persistence and progress export/import. Validation run: pnpm typecheck (passed after pnpm install; initial root run failed before workspace bins were linked), pnpm test (passed), pnpm build:web (passed), web dist URL/CSP audit (passed), pnpm check:schemas (passed), DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/morse-swift (passed), targeted iOS xbuild CanadianHamTests/MorseTrainerTests (6 tests passed), targeted iOS xbuild CanadianHamTests/ProgressStoreTests (13 tests passed, including Morse course export/import/reset evidence), targeted iOS UI test CanadianHamPracticeUITests/testMorseSectionIsTopLevelShowsCourseAndOpensFirstLesson (passed after two selector-fix failures), pnpm check:apple-l10n (passed after fixing catalogue/localization build issues), pnpm check:apple-network (passed). Web App.test now includes the first Morse lesson flow and axe coverage; tvOS/visionOS remain the existing simplified Morse preview/home per owner decision.
 
 Fix round started from review b68ecf00 vs base 1196c04. Reopened AC #2-#5 pending evidence for lesson depth, local progress import isolation, completed-session answer locking, and required accessibility/platform test runs.
+
+Fix round implementation committed in d6e9061: restored the Apple string catalogue to the 1196c04 base and appended only Morse-course keys (French plurals for existing count strings verified intact; %lld days now has one/other plural variations); added seeded shared TS/Swift Koch lesson generation with 20 scored exercises; hid/disabled completed sessions and made web/Apple answers no-op after done; isolated Apple Morse progress files for in-memory stores and added separate-location export/import tests; added web older-export and IndexedDB v3→v4 tests; added Apple invalid-Morse import tests and progress reload after import; added web and Apple feedback/accessibility refinements. Validation: pnpm typecheck passed; pnpm test passed; pnpm build:web plus apps/web audit:urls passed; pnpm check:schemas passed; node scripts/check-apple-text-sources.ts passed; bash scripts/check-apple-no-network.sh passed; swift test --package-path packages/morse-swift passed; targeted iOS xbuild CanadianHamTests/MorseTrainerTests and ProgressStoreTests passed (21 tests). Apple UI/full platform runs are still pending because xbuild is currently serialized behind other long-running builds; one targeted UI iteration before final fixes failed and the subsequent retry timed out waiting for the xbuild lock.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
