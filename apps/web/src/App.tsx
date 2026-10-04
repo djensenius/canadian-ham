@@ -2008,7 +2008,14 @@ function MorseSettingsControls({ interfaceLanguage, preferences, onSetPreference
   const characterWpmInputValue = morseSpeedControlsDisabled ? morseNumberInputValue(morseTimingProfile.characterWpm) : morseNumberDrafts.characterWpm;
   const effectiveWpmInputValue = morseSpeedControlsDisabled ? morseNumberInputValue(morseTimingProfile.effectiveWpm) : morseNumberDrafts.effectiveWpm;
 
+  // Resync drafts only when the stored Morse preferences actually change. Skipping the
+  // initial run avoids a redundant reset that could clobber a draft typed right after mount.
+  const syncedMorsePreferences = useRef(preferences.morse);
   useEffect(() => {
+    if (syncedMorsePreferences.current === preferences.morse) {
+      return;
+    }
+    syncedMorsePreferences.current = preferences.morse;
     setMorseNumberDrafts(morseDraftsFromPreferences(preferences.morse));
   }, [preferences.morse]);
 
