@@ -1,7 +1,7 @@
 ---
 id: TASK-12.16
 title: 'Morse course correctness follow-ups from PR #127'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-04 09:12'
