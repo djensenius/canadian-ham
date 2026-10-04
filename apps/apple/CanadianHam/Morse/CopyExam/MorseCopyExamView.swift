@@ -565,13 +565,23 @@ private struct MorseCopyResultsScreen: View {
 
     @AccessibilityFocusState private var headingFocused: Bool
 
+    /// Only the receiving exam has a pass/fail outcome; copy practice reports accuracy, so its heading stays neutral.
+    private var headingColor: Color {
+        switch result.kind {
+        case .copyPractice:
+            DesignTokens.Colors.ink
+        default:
+            result.diff.score.passed ? DesignTokens.Colors.correctText : DesignTokens.Colors.warningText
+        }
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                     Text(result.kind.title) // l10n: localized
                         .font(DesignTokens.FontScale.title.weight(.bold))
-                        .foregroundStyle(result.diff.score.passed ? DesignTokens.Colors.correctText : DesignTokens.Colors.warningText)
+                        .foregroundStyle(headingColor)
                         .accessibilityAddTraits(.isHeader)
                         .accessibilityIdentifier(result.kind.headingIdentifier)
                         .accessibilityFocused($headingFocused)
