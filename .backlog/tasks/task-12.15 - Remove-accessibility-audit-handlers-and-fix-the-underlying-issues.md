@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-04 07:02'
-updated_date: '2026-10-04 14:37'
+updated_date: '2026-10-04 15:55'
 labels:
   - apple
   - accessibility
@@ -53,6 +53,8 @@ Coordinator decision 2026-10-03: the question-bank language picker is removed fr
 Blocked after final iOS validation attempt: final full iOS run on code commit 3b94596 executed 94 tests and failed only CanadianHamPracticeUITests/testAccessibilityAuditMorseExamGradedDiffDark. Evidence exported under /tmp/t12-ios-full-failure; failure text said morse-diff-title and morse-diff-token were visible but the positioning helper did not accept the state. After simplifying the helper, targeted dark still failed Contrast, with the audit inspecting morse-exam-explanation. Dark token contrast measured from Tokens.swift passes (ink on paper 14.05:1, ink on paperElevated 12.63:1, inkMuted on paper 9.23:1, inkMuted on paperElevated 8.30:1), so the remaining failure is covered/clipped layout at the audited position. Per coordinator direction, no further feature/layout removal was done without approval.
 
 Correction: the earlier note saying Localizable.xcstrings was not edited was stale/incorrect. This branch includes the approved catalogue cleanup from the required JSON round-trip; no additional catalogue edits are planned in this fix round.
+
+Blocked per coordinator stop rule after approved scroll/focus fix: implemented app-side ScrollViewReader scrollTo(anchor: .top) for copy practice and simulated exam results, with no animation under Reduce Motion, plus VoiceOver focus request on the diff heading and UI coverage. Reverted the out-of-scope global UISegmentedControl appearance override and compact language-picker bottom padding; removed the dead Morse audit language-picker branch. Targeted focus/scroll test passed: DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination "platform=iOS Simulator,name=iPhone 17 Pro" -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testMorseExamGradingScrollsToAndFocusesResults test CODE_SIGNING_ALLOWED=NO. Stability attempt then ran the unfiltered graded-diff light/dark audits three times each; all six executions failed Contrast at CanadianHamPracticeUITests.swift:951 (dark run durations ~106.6s, 104.7s, 109.6s; light ~93.2s, 93.8s, 96.8s). Full log: /var/folders/vn/hq32qlg16_5fnfnkl35k6x0r0000gn/T/pi-bash-bc63eddd1bef8249.log. Per the stop rule, no full platform/web validation was run and no further layout/feature removal was attempted. The existing inline Morse navigation title remains from the prior branch state, but this failed stability run does not prove it necessary; revisit before finalizing.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
