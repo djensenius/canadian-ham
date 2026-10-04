@@ -4711,6 +4711,28 @@
         }
       }
     },
+    "Lesson %lld\n%@\n%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lesson %1$lld\n%2$@\n%3$@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçon %1$lld\n%2$@\n%3$@"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçon %1$lld\n%2$@\n%3$@"
+          }
+        }
+      }
+    },
     "Lesson content unavailable" : {
       "localizations" : {
         "fr" : {

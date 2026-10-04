@@ -236,43 +236,45 @@ private struct MorseReceivingExamView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Text("Simulated 5 wpm exam") // l10n: localized
-                .font(DesignTokens.FontScale.title.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .accessibilityAddTraits(.isHeader)
-            Text("The receiving exam plays once without pause or replay, then gives a 2-minute review before grading. Results stay only on this screen.") // l10n: localized
-                .font(DesignTokens.FontScale.body)
-                .foregroundStyle(DesignTokens.Colors.ink)
-            Picker("Exam timing profile", selection: $selectedProfile) { // l10n: localized
-                Text(MorseTrainerSettings.TimingProfile.isedParis.localizedLabel).tag(MorseTrainerSettings.TimingProfile.isedParis) // l10n: localized
-                Text(MorseTrainerSettings.TimingProfile.ric1Literal.localizedLabel).tag(MorseTrainerSettings.TimingProfile.ric1Literal) // l10n: localized
-            }
-            .disabled(stage == .playing || stage == .review)
-            morseTokenButton("Start simulated exam") { startExam() }
-                .disabled(stage == .playing || stage == .review)
-                .accessibilityIdentifier("morse-exam-start-button")
-            if let examText {
-                Text(String.localizedStringWithFormat(String(localized: "Generated exam: %lld weighted characters, %@ seconds of audio."), Int64(examText.weightedCharacters), formattedSeconds(examText.durationSeconds))) // l10n: localized
-                    .font(DesignTokens.FontScale.caption)
-                    .foregroundStyle(DesignTokens.Colors.inkMuted)
-            }
-            if stage == .review {
-                Text(String.localizedStringWithFormat(String(localized: "Review time remaining: %lld seconds."), Int64(reviewRemaining))) // l10n: localized
-                    .font(DesignTokens.FontScale.body.weight(.bold))
+            if stage != .graded {
+                Text("Simulated 5 wpm exam") // l10n: localized
+                    .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
-                    .accessibilityIdentifier("morse-exam-review-timer")
-            }
-            TextEditor(text: $userCopy)
-                .font(.body.monospaced())
-                .frame(minHeight: 140)
-                .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
-                .disabled(stage == .idle || stage == .graded)
-                .accessibilityLabel(Text("Your copy")) // l10n: localized
-                .accessibilityIdentifier("morse-exam-text-editor")
-            if containsDotDashNotation(userCopy) {
-                Text("Enter the characters you heard, not dot and dash notation.") // l10n: localized
-                    .font(DesignTokens.FontScale.caption.weight(.semibold))
-                    .foregroundStyle(DesignTokens.Colors.warningText)
+                    .accessibilityAddTraits(.isHeader)
+                Text("The receiving exam plays once without pause or replay, then gives a 2-minute review before grading. Results stay only on this screen.") // l10n: localized
+                    .font(DesignTokens.FontScale.body)
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                Picker("Exam timing profile", selection: $selectedProfile) { // l10n: localized
+                    Text(MorseTrainerSettings.TimingProfile.isedParis.localizedLabel).tag(MorseTrainerSettings.TimingProfile.isedParis) // l10n: localized
+                    Text(MorseTrainerSettings.TimingProfile.ric1Literal.localizedLabel).tag(MorseTrainerSettings.TimingProfile.ric1Literal) // l10n: localized
+                }
+                .disabled(stage == .playing || stage == .review)
+                morseTokenButton("Start simulated exam") { startExam() }
+                    .disabled(stage == .playing || stage == .review)
+                    .accessibilityIdentifier("morse-exam-start-button")
+                if let examText {
+                    Text(String.localizedStringWithFormat(String(localized: "Generated exam: %lld weighted characters, %@ seconds of audio."), Int64(examText.weightedCharacters), formattedSeconds(examText.durationSeconds))) // l10n: localized
+                        .font(DesignTokens.FontScale.caption)
+                        .foregroundStyle(DesignTokens.Colors.inkMuted)
+                }
+                if stage == .review {
+                    Text(String.localizedStringWithFormat(String(localized: "Review time remaining: %lld seconds."), Int64(reviewRemaining))) // l10n: localized
+                        .font(DesignTokens.FontScale.body.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityIdentifier("morse-exam-review-timer")
+                }
+                TextEditor(text: $userCopy)
+                    .font(.body.monospaced())
+                    .frame(minHeight: 140)
+                    .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+                    .disabled(stage == .idle)
+                    .accessibilityLabel(Text("Your copy")) // l10n: localized
+                    .accessibilityIdentifier("morse-exam-text-editor")
+                if containsDotDashNotation(userCopy) {
+                    Text("Enter the characters you heard, not dot and dash notation.") // l10n: localized
+                        .font(DesignTokens.FontScale.caption.weight(.semibold))
+                        .foregroundStyle(DesignTokens.Colors.warningText)
+                }
             }
             if !statusMessage.isEmpty {
                 Text(statusMessage) // l10n: localized
@@ -414,14 +416,16 @@ private struct MorseDiffView: View {
             Text("Character diff") // l10n: localized
                 .font(DesignTokens.FontScale.body.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
+                .background(DesignTokens.Colors.paper)
                 .accessibilityAddTraits(.isHeader)
-                .accessibilityIdentifier("morse-diff-title")
             Text(diffSummary) // l10n: localized
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
+                .background(DesignTokens.Colors.paper)
             Text(diff.score.passed ? String.localizedStringWithFormat(String(localized: "Exam rule: pass at %lld%% because 5 or fewer errors count as 100%%."), Int64(diff.score.markPercent)) : String.localizedStringWithFormat(String(localized: "Exam rule: fail at %lld%% because more than 5 errors is below the 100%% pass mark."), Int64(diff.score.markPercent))) // l10n: localized
                 .font(DesignTokens.FontScale.caption)
-                .foregroundStyle(DesignTokens.Colors.inkMuted)
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .background(DesignTokens.Colors.paper)
             DisclosureGroup("Expected transcript") { // l10n: localized
                 Text(verbatim: expectedText) // l10n: verbatim
                     .font(.body.monospaced())
@@ -435,13 +439,15 @@ private struct MorseDiffView: View {
                         .padding(.horizontal, DesignTokens.Spacing.xs)
                         .padding(.vertical, 3)
                         .background(diffBackground(operation), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.xs, style: .continuous))
-                        .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.xs, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+                        .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.xs, style: .continuous).strokeBorder(diffBorder(operation), lineWidth: 1))
                         .accessibilityLabel(Text(accessibilityDiffLabel(operation))) // l10n: localized
                         .accessibilityIdentifier("morse-diff-token-\(operation.kind.rawValue)")
                 }
             }
         }
-        .accessibilityIdentifier("morse-diff-view")
+        .padding(DesignTokens.Spacing.sm)
+        .background(DesignTokens.Colors.paper, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
     }
 
     private var diffSummary: String {
@@ -494,14 +500,20 @@ private func diffBackground(_ operation: MorseCopyDiffOperation) -> Color {
     }
 }
 
-private func diffForeground(_ operation: MorseCopyDiffOperation) -> Color {
+private func diffForeground(_: MorseCopyDiffOperation) -> Color {
+    DesignTokens.Colors.ink
+}
+
+private func diffBorder(_ operation: MorseCopyDiffOperation) -> Color {
     switch operation.kind {
-    case .match, .inserted:
-        DesignTokens.Colors.ink
+    case .match:
+        DesignTokens.Colors.border
     case .wrong:
-        DesignTokens.Colors.incorrectText
+        DesignTokens.Colors.incorrectBorder
     case .missing:
-        DesignTokens.Colors.warningText
+        DesignTokens.Colors.warningBorder
+    case .inserted:
+        DesignTokens.Colors.accent
     }
 }
 

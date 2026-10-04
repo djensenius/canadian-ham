@@ -233,16 +233,9 @@ private func formattedWpm(_ wpm: Double) -> String {
 @MainActor
 func morseTokenButton(_ title: LocalizedStringKey, action: @escaping () -> Void) -> some View {
     Button(action: action) {
-        Text(title) // l10n: localized
-            .font(DesignTokens.FontScale.body.weight(.semibold))
-            .foregroundStyle(DesignTokens.Colors.ink)
-            .padding(.horizontal, DesignTokens.Spacing.lg)
-            .padding(.vertical, DesignTokens.Spacing.md)
-            .frame(minHeight: 48)
-            .background(DesignTokens.Colors.paperElevated, in: Capsule())
-            .overlay(Capsule().strokeBorder(DesignTokens.Colors.ink, lineWidth: 1))
+        AccessibleSecondaryButtonLabel(title: title)
     }
-    .buttonStyle(.plain)
+    .buttonStyle(AccessibleSecondaryButtonStyle())
 }
 
 struct MorseSettingsSection: View {
