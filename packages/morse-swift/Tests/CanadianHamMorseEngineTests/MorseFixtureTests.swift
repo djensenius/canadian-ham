@@ -27,6 +27,8 @@ final class MorseFixtureTests: XCTestCase {
                 try validateCourseFixture(data)
             case "morse-course-exercises":
                 try validateCourseExercisesFixture(data)
+            case "morse-course-streak":
+                try validateCourseStreakFixture(data)
             default:
                 XCTFail("unsupported fixture kind: \(header.kind)")
             }
@@ -180,6 +182,13 @@ final class MorseFixtureTests: XCTestCase {
         }
     }
 
+    private func validateCourseStreakFixture(_ data: Data) throws {
+        let fixture = try JSONDecoder().decode(CourseStreakFixture.self, from: data)
+        for testCase in fixture.cases {
+            XCTAssertEqual(morseDailyStreak(activity: testCase.input.activity, todayIso: testCase.input.todayIso), testCase.expectedOutput.streak, testCase.id)
+        }
+    }
+
     private func validateCourseFixture(_ data: Data) throws {
         let course = try decodeMorseCourse(data: data)
         XCTAssertEqual(course.characterOrder, approvedMorseCourseCharacterOrder)
@@ -203,6 +212,8 @@ final class MorseFixtureTests: XCTestCase {
         XCTAssertEqual(try morseLessonState(course: course, progress: progress, lessonId: "koch-001"), .completed)
         XCTAssertEqual(try morseLessonState(course: course, progress: progress, lessonId: "koch-002"), .current)
         XCTAssertEqual(morseDailyStreak(activity: progress.dailyActivity, todayIso: "2026-10-03T12:05:00.000Z"), 1)
+        XCTAssertEqual(morseDailyStreak(activity: progress.dailyActivity, todayIso: "2026-10-04T00:05:00.000Z"), 1)
+        XCTAssertEqual(morseDailyStreak(activity: progress.dailyActivity, todayIso: "2026-10-05T00:05:00.000Z"), 0)
 
         let firstLesson = try XCTUnwrap(course.lessons.first)
         let exercises = buildMorseLessonExercises(lesson: firstLesson, seed: "lesson-one")
@@ -426,6 +437,25 @@ private struct CourseExercisesInput: Decodable {
 
 private struct CourseExercisesOutput: Decodable {
     let exercises: [ExpectedCourseExercise]
+}
+
+private struct CourseStreakFixture: Decodable {
+    let cases: [CourseStreakCase]
+}
+
+private struct CourseStreakCase: Decodable {
+    let id: String
+    let input: CourseStreakInput
+    let expectedOutput: CourseStreakOutput
+}
+
+private struct CourseStreakInput: Decodable {
+    let todayIso: String
+    let activity: [MorseDailyActivityRecord]
+}
+
+private struct CourseStreakOutput: Decodable {
+    let streak: Int
 }
 
 private struct ExpectedCourseExercise: Decodable {

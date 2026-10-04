@@ -6,6 +6,7 @@ import {
   MORSE_CODE_TABLE,
   MorseValidationError,
   buildMorseLessonExercises,
+  dailyStreak,
   diffMorseCopy,
   farnsworthTiming,
   generateMorseExamText,
@@ -83,6 +84,9 @@ function validateFixture(fixture: any): void {
       break;
     case "morse-course-exercises":
       validateCourseExercisesFixture(fixture);
+      break;
+    case "morse-course-streak":
+      validateCourseStreakFixture(fixture);
       break;
     default:
       throw new Error(`unsupported fixture kind: ${fixture.kind}`);
@@ -197,6 +201,12 @@ function validateCourseExercisesFixture(fixture: any): void {
     const lesson = course.lessons.find((entry) => entry.id === testCase.input.lessonId);
     expect(lesson, testCase.id).toBeDefined();
     expect(buildMorseLessonExercises({ lesson: lesson!, seed: testCase.input.seed }), testCase.id).toEqual(testCase.expectedOutput.exercises);
+  }
+}
+
+function validateCourseStreakFixture(fixture: any): void {
+  for (const testCase of fixture.cases) {
+    expect(dailyStreak(testCase.input.activity, testCase.input.todayIso), testCase.id).toBe(testCase.expectedOutput.streak);
   }
 }
 

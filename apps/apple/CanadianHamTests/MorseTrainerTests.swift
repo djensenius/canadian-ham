@@ -137,6 +137,45 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertTrue(session.done)
     }
 
+    func testMorseCourseSummaryCopyDependsOnSessionModeAndLessonPosition() throws {
+        let course = try minimalMorseCourse()
+        let finalLesson = try XCTUnwrap(course.lessons.first)
+
+        XCTAssertEqual(
+            morseCourseSummaryMessage(for: MorseCourseSession(mode: .review, exercises: [.typeCharacter("K")], done: true), percent: 100, course: course),
+            String(localized: "Review complete. Practice progress was saved.")
+        )
+        XCTAssertEqual(
+            morseCourseSummaryMessage(for: MorseCourseSession(mode: .lesson(finalLesson), exercises: [.typeCharacter("K")], done: true), percent: 100, course: course),
+            String(localized: "Great work. All Morse lessons are complete.")
+        )
+        XCTAssertEqual(
+            morseCourseSummaryMessage(for: MorseCourseSession(mode: .lesson(finalLesson), exercises: [.typeCharacter("K")], done: true), percent: 80, course: course),
+            String(localized: "Reach 90% accuracy to complete this lesson.")
+        )
+        for session in [
+            MorseCourseSession(mode: .review, exercises: [.typeCharacter("K")], done: true),
+            MorseCourseSession(mode: .lesson(course.lessons[0]), exercises: [.typeCharacter("K")], done: true),
+        ] {
+            XCTAssertEqual(
+                morseCourseSummaryMessage(for: session, percent: 100, course: course, progressSaved: false),
+                String(localized: "Progress was not saved. Try again before relying on this result."),
+                "A failed save must never claim progress was saved or a lesson unlocked"
+            )
+        }
+    }
+
+    func testMorseCourseLocalDateStringUsesGregorianCalendarInCurrentTimeZone() throws {
+        let formatter = ISO8601DateFormatter()
+        let date = try XCTUnwrap(formatter.date(from: "2026-10-04T12:00:00Z"))
+        let timeZone = try XCTUnwrap(TimeZone(secondsFromGMT: 0))
+        var buddhistCalendar = Calendar(identifier: .buddhist)
+        buddhistCalendar.timeZone = timeZone
+
+        XCTAssertEqual(buddhistCalendar.component(.year, from: date), 2569)
+        XCTAssertEqual(morseCourseLocalDateString(date, timeZone: timeZone), "2026-10-04")
+    }
+
     func testMorseCourseProgressIgnoresStoredProgressForAnotherCourse() throws {
         let storedProgress = MorseCourseProgressExport(
             courseId: "other-course",
@@ -156,6 +195,26 @@ final class MorseTrainerTests: XCTestCase {
 
         XCTAssertEqual(selectedProgress.courseId, "ised-koch-g4fon-v1")
         XCTAssertTrue(selectedProgress.lessonProgress.isEmpty)
+    }
+
+    private func minimalMorseCourse() throws -> MorseCourse {
+        let json = #"""
+        {
+          "schemaVersion": 1,
+          "kind": "morse-course",
+          "courseId": "test-course",
+          "unlockAccuracy": 0.9,
+          "unitSize": 5,
+          "characterOrder": ["K"],
+          "units": [
+            { "id": "unit-01", "unitNumber": 1, "title": "Unit 1", "lessonIds": ["koch-001"] }
+          ],
+          "lessons": [
+            { "id": "koch-001", "unitId": "unit-01", "lessonNumber": 1, "title": "Lesson 1", "newCharacters": ["K"], "learnedCharacters": ["K"] }
+          ]
+        }
+        """#
+        return try JSONDecoder().decode(MorseCourse.self, from: Data(json.utf8))
     }
 
     func testMorseSettingsRoundTripThroughUserDefaults() throws {

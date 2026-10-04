@@ -280,13 +280,24 @@ function localDateString(value: string): string {
 
 function LessonSummary({ interfaceLanguage, saveState, session }: { readonly interfaceLanguage: InterfaceLanguage; readonly saveState: "idle" | "saving" | "saved" | "failed"; readonly session: SessionState }) {
   const percent = session.total === 0 ? 100 : Math.round((session.correct / session.total) * 100);
-  const savedMessage = percent >= 90 ? t(interfaceLanguage, "morseCourseUnlocked") : t(interfaceLanguage, "morseCourseTryAgain");
+  const savedMessage = morseCourseSummaryMessage(interfaceLanguage, session, percent, course.lessons.length);
   const progressMessage = saveState === "saving"
     ? t(interfaceLanguage, "morseCourseSavingProgress")
     : saveState === "failed"
       ? t(interfaceLanguage, "morseCourseProgressNotSaved")
       : savedMessage;
   return <section className="morse-summary" aria-labelledby="morse-summary-title"><h5 id="morse-summary-title">{t(interfaceLanguage, "morseCourseSummary")}</h5><p>{t(interfaceLanguage, "morseCourseAccuracy", percent)}</p><p>{progressMessage}</p></section>;
+}
+
+export function morseCourseSummaryMessage(interfaceLanguage: InterfaceLanguage, session: SessionState, percent: number, lessonCount: number): string {
+  if (session.mode === "review") {
+    return t(interfaceLanguage, "morseCourseReviewComplete");
+  }
+  const isFinalLesson = session.lesson !== null && session.lesson.lessonNumber >= lessonCount;
+  if (percent >= 90) {
+    return isFinalLesson ? t(interfaceLanguage, "morseCourseComplete") : t(interfaceLanguage, "morseCourseUnlocked");
+  }
+  return isFinalLesson ? t(interfaceLanguage, "morseCourseTryFinalAgain") : t(interfaceLanguage, "morseCourseTryAgain");
 }
 
 function formatError(error: unknown): string {

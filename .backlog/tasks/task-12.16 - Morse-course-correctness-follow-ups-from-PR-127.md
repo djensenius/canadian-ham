@@ -1,0 +1,248 @@
+---
+id: TASK-12.16
+title: 'Morse course correctness follow-ups from PR #127'
+status: Done
+assignee:
+  - '@worker'
+created_date: '2026-10-04 09:12'
+updated_date: '2026-10-04 17:03'
+labels:
+  - web
+  - apple
+  - morse
+milestone: m-1
+dependencies:
+  - TASK-12.5
+parent_task_id: TASK-12
+priority: high
+ordinal: 63000
+---
+
+## Description
+
+<!-- SECTION:DESCRIPTION:BEGIN -->
+Why: Copilot's final review of PR #127 found six issues in the new course code: the summary claims the next lesson unlocked after review sessions and after lesson 40; the daily streak resets to 0 at midnight until today's first lesson (TS and Swift); Apple builds progress dates with Calendar.current, so non-Gregorian calendars produce dates that don't match web; and the TypeScript course parser doesn't validate unit IDs while Swift does.
+<!-- SECTION:DESCRIPTION:END -->
+
+## Acceptance Criteria
+<!-- AC:BEGIN -->
+- [x] #1 Summary copy depends on session mode and lesson position: reviews and lesson 40 never claim an unlock (web and Apple), with tests
+- [x] #2 The daily streak counts back from today if there's activity today, otherwise from yesterday, so it only breaks after a missed day; identical in TS and Swift with a shared fixture
+- [x] #3 Apple progress dates use a Gregorian calendar in the current time zone; the TS parser validates unit IDs unit-01..unit-08 like Swift; tests cover both
+<!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Fix the shared Morse course engine behavior: daily streak starts from today or yesterday and TypeScript validates unit IDs unit-01..unit-08, then cover both with package tests/shared fixture.
+2. Update web and Apple lesson summary copy so review sessions and final lesson completions do not claim a next unlock, and add tests.
+3. Use a Gregorian current-time-zone date formatter for Apple local progress dates and cover it in Swift tests.
+4. Run targeted package/web/Swift checks for the changed code before moving to task-12.15.
+<!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented shared Morse course correctness fixes. Targeted validation:
+- packages/morse-engine Vitest: packages/morse-engine/test/course.test.ts and fixtures.test.ts passed (17 tests), including rejects course fixtures with unexpected unit IDs and shared course-streak fixture cases.
+- packages/morse-swift: initial swift test without DEVELOPER_DIR failed because CommandLineTools could not resolve XCTest; reran with DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer and MorseFixtureTests/testEveryMorseFixtureMatchesSwiftEngine passed.
+- web: pnpm --filter @canadian-ham/web test -- App.test.tsx passed (Vitest reported 13 files, 122 tests), including uses Morse course summary copy for review sessions and the final lesson.
+- Apple targeted macOS xbuild unit tests passed: MorseTrainerTests/testMorseCourseSummaryCopyDependsOnSessionModeAndLessonPosition and MorseTrainerTests/testMorseCourseLocalDateStringUsesGregorianCalendarInCurrentTimeZone.
+
+Validation-only full Apple suite run for task-12.16 on branch task-12.16-course-fixes; code commit under validation was b41a44c0173aa9ca86e660263c30ce683a79bc43. No code changes were made. Web checks, swift test, check:apple-l10n, and text-source checks were already passing before this validation and were not rerun in this validation-only pass.
+
+Commands run:
+- iOS: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test CODE_SIGNING_ALLOWED=NO`
+- macOS: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=macOS,arch=arm64' -skip-testing:CanadianHamUITests test SDKROOT=macosx SUPPORTED_PLATFORMS=macosx CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES`
+- tvOS: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamTV -destination 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation)' test CODE_SIGNING_ALLOWED=NO`
+- visionOS: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamVision -destination 'platform=visionOS Simulator,name=Apple Vision Pro' test CODE_SIGNING_ALLOWED=NO`
+
+Platform summaries:
+- iOS: TEST SUCCEEDED; parsed 94 per-test results, 0 failures. Summaries: 94 parsed test cases. xcresult: /Users/david/Library/Developer/Xcode/DerivedData/CanadianHam-bvwegohnpxzdjlchwymywgmwugno/Logs/Test/Test-CanadianHam-2026.10.04_10-37-21--0400.xcresult
+- macOS: TEST SUCCEEDED; parsed 45 per-test results, 0 failures. Summaries: 45 parsed test cases. xcresult: /Users/david/Library/Developer/Xcode/DerivedData/CanadianHam-bvwegohnpxzdjlchwymywgmwugno/Logs/Test/Test-CanadianHam-2026.10.04_11-27-28--0400.xcresult
+- tvOS: TEST SUCCEEDED; parsed 15 per-test results, 0 failures. Summaries: 15 parsed test cases. xcresult: /Users/david/Library/Developer/Xcode/DerivedData/CanadianHam-bvwegohnpxzdjlchwymywgmwugno/Logs/Test/Test-CanadianHamTV-2026.10.04_11-29-42--0400.xcresult
+- visionOS: TEST SUCCEEDED; parsed 12 per-test results, 0 failures. Summaries: 12 parsed test cases. xcresult: /Users/david/Library/Developer/Xcode/DerivedData/CanadianHam-bvwegohnpxzdjlchwymywgmwugno/Logs/Test/Test-CanadianHamVision-2026.10.04_11-37-19--0400.xcresult
+
+Per-test results:
+iOS (94 tests):
+- passed: CanadianHamTests.LocalizationCatalogTests.testEveryCatalogKeyHasFrenchTranslations (0.020 seconds)
+- passed: CanadianHamTests.LocalizationCatalogTests.testFrenchRuntimeBundleLocalizesCompilerKeysAndPluralCatalogEntries (0.005 seconds)
+- passed: CanadianHamTests.LocalizationCatalogTests.testLocalizedNullableTextAndLanguageFallsBackToEnglish (0.000 seconds)
+- passed: CanadianHamTests.LocalizationCatalogTests.testQuestionBankLoadErrorDescriptionUsesFrenchLocale (0.004 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testCompletedMorseCourseSessionIgnoresResubmittedAnswer (0.001 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testFixedTimingProfilesUseEngineValues (0.000 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testMorseAudioScheduleUsesEngineTimingsAndFiveMillisecondRamp (0.001 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testMorseCopyDiffClassifiesWrongMissingAndInsertedCharacters (0.001 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testMorseCourseLocalDateStringUsesGregorianCalendarInCurrentTimeZone (0.002 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testMorseCourseProgressIgnoresStoredProgressForAnotherCourse (0.001 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testMorseCourseSummaryCopyDependsOnSessionModeAndLessonPosition (0.002 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testMorseExamGeneratorMeetsReceivingExamConstraints (0.002 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testMorseSettingsClampAndPreset (0.001 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testMorseSettingsDecodesLegacyPayloadWithIsEnabled (0.001 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testMorseSettingsRoundTripThroughUserDefaults (0.004 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testMorseStopDelayDrainsFadeBeforeStoppingEngine (0.000 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testAppSettingsModelPublishesMorseSettingsForRootViewSync (0.001 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testDecodesLegacyBasicExportWithoutBankIdFields (0.064 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testDecodesWebLegacyExportWithOptionalLessonStoresAndTheme (0.024 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testImportOfOlderExportRollsBackWhenMorseProgressRemovalFails (0.042 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testImportRollbackKeepsExistingDataWhenReplacementFails (0.059 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testImportRollbackPropagatesMorseProgressRemovalFailure (0.032 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testImportsOlderExportWithoutMorseCourseProgressAsNoMorseProgress (0.033 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testImportsRealisticWebExportWithKnownLessonProgressAndQuizAttempt (0.030 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testImportTimerDecodingRejectsHugeNumbersAndRoundsFractionalWebValues (0.001 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testImportValidationChecksLessonRecordShapeKnownIdsAndDuplicates (0.026 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testImportValidationRejectsInvalidMorseCourseProgress (0.039 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testImportValidationRejectsMismatchedScoreBankId (0.038 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testImportValidationRejectsUnknownIdsBadTimestampsBadBoxAndDuplicateSubmittedAt (0.027 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testLessonQuizAttemptSaveRollsBackAttemptAndProgressOnFailure (0.033 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testMockExamTimerRefreshPreservesFractionalRemainder (0.002 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testProgressStoreRoundTripExportImportReset (0.054 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testResetRollsBackWhenMorseProgressRemovalFails (0.024 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testSharedAppleSettingsModelAppliesLivePreferenceUpdates (0.008 seconds)
+- passed: CanadianHamTests.QuestionBankTests.testBundledJSONDecodesExpectedCounts (0.019 seconds)
+- passed: CanadianHamTests.QuestionBankTests.testBundledLessonsAndExplanationsLoadThroughContentLibrary (0.572 seconds)
+- passed: CanadianHamTests.QuestionBankTests.testEngineQuestionDrawKeepsQuestionInsideRequestedCategory (0.019 seconds)
+- passed: CanadianHamTests.QuestionBankTests.testEngineShufflePreservesAnswerInvariantsForEveryBundledQuestion (0.074 seconds)
+- passed: CanadianHamTests.QuestionBankTests.testKnownLessonIdsComeFromSubsectionLessonMappingsWithoutQuizzes (0.001 seconds)
+- passed: CanadianHamTests.QuestionBankTests.testRealBundleKnownLessonIdsCoverBundledContentLibraryLessons (0.327 seconds)
+- passed: CanadianHamTests.ReadinessAndScoringTests.testAdvancedScoringAndReadinessSuppressHonours (0.001 seconds)
+- passed: CanadianHamTests.ReadinessAndScoringTests.testExamScoringBoundaries (0.001 seconds)
+- passed: CanadianHamTests.ReadinessAndScoringTests.testReadinessStates (0.000 seconds)
+- passed: CanadianHamTests.ReadinessAndScoringTests.testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate (0.034 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testAboutShowsReleaseAttributionDisclaimerAndBankVersion (24.787 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditCoreScreensDark (101.140 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditCoreScreensLight (103.485 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditLearnFlowDark (39.460 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditLearnFlowLight (39.391 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditMockExamFlowDark (107.422 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditMockExamFlowLight (108.854 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditMorseCourseLessonAndSummaryDark (131.720 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditMorseCourseLessonAndSummaryLight (140.911 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditMorseExamGradedDiffDark (60.759 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditMorseExamGradedDiffLight (66.601 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditPracticeSessionDark (96.356 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditPracticeSessionLight (97.840 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testCanPracticeInFrenchAndSeeFeedback (26.172 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testCompactHomeStartPracticeAndMockExamBackReturnToHome (30.428 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testCompactMockExamEndExamDiscardsInProgressSession (29.897 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testCompactRootNavigationPreservesMockExamState (44.771 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testCompactRootNavigationPreservesPracticeSessionState (44.791 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testCompactTopLevelListPushesMorseThenLearn (19.650 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testCompletesFirstMorseLessonSessionOnIOS (168.591 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testDueReviewLaterSessionKeepsPositionTallyAndReviewAfterSubmit (55.768 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testExplanationAppearsAfterAnsweringInPractice (23.548 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testFrenchAboutKeepsLegalTextInEnglish (14.506 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testFrenchSystemLanguageNavigatesMainScreensAndAuditsHomeAndPractice (75.266 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testLanguagePickerExistsOnCategoryListAndPractice (21.640 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testLanguagePickerExistsOnCompactHomeLearnMorseAndMockExam (40.664 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testLearnOpensLessonAndShowsFirstHeading (7.083 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testLearnUserNavigationOpensLessonQuiz (149.676 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testLessonQuizResultPersistsAfterRelaunch (30.114 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testLongestAnswerWrapsAtLargestAccessibilityTextSize (25.952 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testMockExamDoesNotShowCorrectnessBeforeSubmit (21.281 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testMockExamHeaderControlsSupportLargestAccessibilityTextSize (47.871 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testMockExamNextUnansweredJumpsAfterAnsweringFirstQuestion (38.298 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testMockExamResultHeadingCarriesVoiceOverSubmissionSummary (28.454 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testMorseCopyPracticeAndExamFlow (45.160 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testMorseCopyStartResetsAfterAudioStartupFailure (11.746 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testMorseExamStartResetsAfterAudioStartupFailure (58.837 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testMorseLessonSummaryShowsCorrectAnswerForWrongFinalAnswerOnIOS (164.287 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testMorseSectionIsTopLevelShowsCourseAndOpensFirstLesson (30.291 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testMorseStartingQuickListenStopsCopyPlayback (35.230 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testPracticeFlowSupportsLargestAccessibilityTextSize (58.000 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testPracticeImmediateFeedbackKeepsStateAfterFirstAnswer (16.389 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testPracticeModeChangeReopensCachedSessionFresh (61.207 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testRegularWidthMockExamEndExamDiscardsInProgressSession (36.051 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testRegularWidthMockExamResultPersistsAfterSubmit (45.351 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testReviewLaterHidesCorrectnessUntilSubmitAndResultsSurviveSave (26.009 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testSettingsResetClearsCompactMockExamCacheWithoutRelaunch (45.158 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testSettingsResetClearsSavedMockExamProgress (54.386 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testSubsectionPracticeOpensFromHubAndShowsReviewScreen (32.541 seconds)
+- passed: CanadianHamUITests.CanadianHamPracticeUITests.testWeakAreasImmediateSessionKeepsFeedbackPositionAndTallyAfterAnswers (53.249 seconds)
+
+macOS (45 tests):
+- passed: CanadianHamTests.LocalizationCatalogTests.testEveryCatalogKeyHasFrenchTranslations (0.006 seconds)
+- passed: CanadianHamTests.LocalizationCatalogTests.testFrenchRuntimeBundleLocalizesCompilerKeysAndPluralCatalogEntries (0.003 seconds)
+- passed: CanadianHamTests.LocalizationCatalogTests.testLocalizedNullableTextAndLanguageFallsBackToEnglish (0.001 seconds)
+- passed: CanadianHamTests.LocalizationCatalogTests.testQuestionBankLoadErrorDescriptionUsesFrenchLocale (0.003 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testCompletedMorseCourseSessionIgnoresResubmittedAnswer (0.001 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testFixedTimingProfilesUseEngineValues (0.001 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testMorseAudioScheduleUsesEngineTimingsAndFiveMillisecondRamp (0.001 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testMorseCopyDiffClassifiesWrongMissingAndInsertedCharacters (0.001 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testMorseCourseLocalDateStringUsesGregorianCalendarInCurrentTimeZone (0.002 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testMorseCourseProgressIgnoresStoredProgressForAnotherCourse (0.001 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testMorseCourseSummaryCopyDependsOnSessionModeAndLessonPosition (0.001 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testMorseExamGeneratorMeetsReceivingExamConstraints (0.002 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testMorseSettingsClampAndPreset (0.001 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testMorseSettingsDecodesLegacyPayloadWithIsEnabled (0.001 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testMorseSettingsRoundTripThroughUserDefaults (0.002 seconds)
+- passed: CanadianHamTests.MorseTrainerTests.testMorseStopDelayDrainsFadeBeforeStoppingEngine (0.001 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testAppSettingsModelPublishesMorseSettingsForRootViewSync (0.001 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testDecodesLegacyBasicExportWithoutBankIdFields (0.028 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testDecodesWebLegacyExportWithOptionalLessonStoresAndTheme (0.022 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testImportOfOlderExportRollsBackWhenMorseProgressRemovalFails (0.026 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testImportRollbackKeepsExistingDataWhenReplacementFails (0.034 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testImportRollbackPropagatesMorseProgressRemovalFailure (0.028 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testImportsOlderExportWithoutMorseCourseProgressAsNoMorseProgress (0.025 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testImportsRealisticWebExportWithKnownLessonProgressAndQuizAttempt (0.025 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testImportTimerDecodingRejectsHugeNumbersAndRoundsFractionalWebValues (0.001 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testImportValidationChecksLessonRecordShapeKnownIdsAndDuplicates (0.023 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testImportValidationRejectsInvalidMorseCourseProgress (0.025 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testImportValidationRejectsMismatchedScoreBankId (0.025 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testImportValidationRejectsUnknownIdsBadTimestampsBadBoxAndDuplicateSubmittedAt (0.026 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testLessonQuizAttemptSaveRollsBackAttemptAndProgressOnFailure (0.023 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testMockExamTimerRefreshPreservesFractionalRemainder (0.001 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testNativeSettingsGeneralBindingsUpdatePracticePreferences (0.005 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testProgressStoreRoundTripExportImportReset (0.036 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testResetRollsBackWhenMorseProgressRemovalFails (0.008 seconds)
+- passed: CanadianHamTests.ProgressStoreTests.testSharedAppleSettingsModelAppliesLivePreferenceUpdates (0.006 seconds)
+- passed: CanadianHamTests.QuestionBankTests.testBundledJSONDecodesExpectedCounts (0.019 seconds)
+- passed: CanadianHamTests.QuestionBankTests.testBundledLessonsAndExplanationsLoadThroughContentLibrary (0.442 seconds)
+- passed: CanadianHamTests.QuestionBankTests.testEngineQuestionDrawKeepsQuestionInsideRequestedCategory (0.019 seconds)
+- passed: CanadianHamTests.QuestionBankTests.testEngineShufflePreservesAnswerInvariantsForEveryBundledQuestion (0.079 seconds)
+- passed: CanadianHamTests.QuestionBankTests.testKnownLessonIdsComeFromSubsectionLessonMappingsWithoutQuizzes (0.001 seconds)
+- passed: CanadianHamTests.QuestionBankTests.testRealBundleKnownLessonIdsCoverBundledContentLibraryLessons (0.325 seconds)
+- passed: CanadianHamTests.ReadinessAndScoringTests.testAdvancedScoringAndReadinessSuppressHonours (0.001 seconds)
+- passed: CanadianHamTests.ReadinessAndScoringTests.testExamScoringBoundaries (0.001 seconds)
+- passed: CanadianHamTests.ReadinessAndScoringTests.testReadinessStates (0.001 seconds)
+- passed: CanadianHamTests.ReadinessAndScoringTests.testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate (0.028 seconds)
+
+tvOS (15 tests):
+- passed: CanadianHamTVTests.CanadianHamTVTests.testBundledQuestionBankLoadsForTVApp (0.027 seconds)
+- passed: CanadianHamTVTests.CanadianHamTVTests.testTVPracticeQuestionDrawStaysInCategoryAndShufflesAnswers (0.024 seconds)
+- passed: CanadianHamTVTests.CanadianHamTVTests.testTVPracticeSeedsVaryAcrossSessionIDs (0.024 seconds)
+- passed: CanadianHamTVUITests.CanadianHamTVUITests.testAboutAccessibilityAuditLightAndDark (18.834 seconds)
+- passed: CanadianHamTVUITests.CanadianHamTVUITests.testAboutLowerSectionsReachableWithRemote (24.271 seconds)
+- passed: CanadianHamTVUITests.CanadianHamTVUITests.testAboutShowsReleaseAttributionDisclaimerAndBankVersion (7.662 seconds)
+- passed: CanadianHamTVUITests.CanadianHamTVUITests.testCategoryGridAccessibilityAuditLightAndDark (14.230 seconds)
+- passed: CanadianHamTVUITests.CanadianHamTVUITests.testCategoryGridNavigatesToMorse (8.577 seconds)
+- passed: CanadianHamTVUITests.CanadianHamTVUITests.testFocusRingEvidenceScreenshots (76.220 seconds)
+- passed: CanadianHamTVUITests.CanadianHamTVUITests.testLayoutEvidenceScreenshots (79.835 seconds)
+- passed: CanadianHamTVUITests.CanadianHamTVUITests.testMorseAccessibilityAuditLightAndDark (13.053 seconds)
+- passed: CanadianHamTVUITests.CanadianHamTVUITests.testMorseScreenShowsPlaybackControls (8.875 seconds)
+- passed: CanadianHamTVUITests.CanadianHamTVUITests.testPracticeAccessibilityAuditLightAndDark (29.847 seconds)
+- passed: CanadianHamTVUITests.CanadianHamTVUITests.testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances (17.056 seconds)
+- passed: CanadianHamTVUITests.CanadianHamTVUITests.testRemoteMenuReturnsPracticeAndAboutToCategoryGrid (11.478 seconds)
+
+visionOS (12 tests):
+- passed: CanadianHamVisionTests.CanadianHamVisionTests.testBundledQuestionBankLoadsForVisionApp (0.039 seconds)
+- passed: CanadianHamVisionTests.CanadianHamVisionTests.testVisionPracticeQuestionDrawStaysInCategoryAndShufflesAnswers (0.026 seconds)
+- passed: CanadianHamVisionTests.CanadianHamVisionTests.testVisionPracticeSeedsVaryAcrossSessionIDs (0.027 seconds)
+- passed: CanadianHamVisionUITests.CanadianHamVisionUITests.testAboutAccessibilityAuditLightAndDark (20.028 seconds)
+- passed: CanadianHamVisionUITests.CanadianHamVisionUITests.testAboutShowsReleaseAttributionDisclaimerAndBankVersion (14.588 seconds)
+- passed: CanadianHamVisionUITests.CanadianHamVisionUITests.testCategoryGridAccessibilityAuditLightAndDark (17.830 seconds)
+- passed: CanadianHamVisionUITests.CanadianHamVisionUITests.testCategoryGridNavigatesToMorse (12.391 seconds)
+- passed: CanadianHamVisionUITests.CanadianHamVisionUITests.testLongestQuestionSupportsLargestDynamicType (23.815 seconds)
+- passed: CanadianHamVisionUITests.CanadianHamVisionUITests.testMorseAccessibilityAuditLightAndDark (17.437 seconds)
+- passed: CanadianHamVisionUITests.CanadianHamVisionUITests.testMorseScreenShowsPlaybackControls (10.432 seconds)
+- passed: CanadianHamVisionUITests.CanadianHamVisionUITests.testPracticeAccessibilityAuditLightAndDark (38.520 seconds)
+- passed: CanadianHamVisionUITests.CanadianHamVisionUITests.testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances (17.850 seconds)
+
+PR #132 follow-up (Copilot 4178349018): Apple save() now reports success; a failed save shows 'Progress was not saved. Try again before relying on this result.' (EN/FR, matching web) instead of claiming progress was saved or a lesson unlocked; the flag resets per session. Final runs on the fix: macOS 45/45 passed: CanadianHamTests.LocalizationCatalogTests.testEveryCatalogKeyHasFrenchTranslations CanadianHamTests.LocalizationCatalogTests.testFrenchRuntimeBundleLocalizesCompilerKeysAndPluralCatalogEntries CanadianHamTests.LocalizationCatalogTests.testLocalizedNullableTextAndLanguageFallsBackToEnglish CanadianHamTests.LocalizationCatalogTests.testQuestionBankLoadErrorDescriptionUsesFrenchLocale CanadianHamTests.MorseTrainerTests.testCompletedMorseCourseSessionIgnoresResubmittedAnswer CanadianHamTests.MorseTrainerTests.testFixedTimingProfilesUseEngineValues CanadianHamTests.MorseTrainerTests.testMorseAudioScheduleUsesEngineTimingsAndFiveMillisecondRamp CanadianHamTests.MorseTrainerTests.testMorseCopyDiffClassifiesWrongMissingAndInsertedCharacters CanadianHamTests.MorseTrainerTests.testMorseCourseLocalDateStringUsesGregorianCalendarInCurrentTimeZone CanadianHamTests.MorseTrainerTests.testMorseCourseProgressIgnoresStoredProgressForAnotherCourse CanadianHamTests.MorseTrainerTests.testMorseCourseSummaryCopyDependsOnSessionModeAndLessonPosition CanadianHamTests.MorseTrainerTests.testMorseExamGeneratorMeetsReceivingExamConstraints CanadianHamTests.MorseTrainerTests.testMorseSettingsClampAndPreset CanadianHamTests.MorseTrainerTests.testMorseSettingsDecodesLegacyPayloadWithIsEnabled CanadianHamTests.MorseTrainerTests.testMorseSettingsRoundTripThroughUserDefaults CanadianHamTests.MorseTrainerTests.testMorseStopDelayDrainsFadeBeforeStoppingEngine CanadianHamTests.ProgressStoreTests.testAppSettingsModelPublishesMorseSettingsForRootViewSync CanadianHamTests.ProgressStoreTests.testDecodesLegacyBasicExportWithoutBankIdFields CanadianHamTests.ProgressStoreTests.testDecodesWebLegacyExportWithOptionalLessonStoresAndTheme CanadianHamTests.ProgressStoreTests.testImportOfOlderExportRollsBackWhenMorseProgressRemovalFails CanadianHamTests.ProgressStoreTests.testImportRollbackKeepsExistingDataWhenReplacementFails CanadianHamTests.ProgressStoreTests.testImportRollbackPropagatesMorseProgressRemovalFailure CanadianHamTests.ProgressStoreTests.testImportsOlderExportWithoutMorseCourseProgressAsNoMorseProgress CanadianHamTests.ProgressStoreTests.testImportsRealisticWebExportWithKnownLessonProgressAndQuizAttempt CanadianHamTests.ProgressStoreTests.testImportTimerDecodingRejectsHugeNumbersAndRoundsFractionalWebValues CanadianHamTests.ProgressStoreTests.testImportValidationChecksLessonRecordShapeKnownIdsAndDuplicates CanadianHamTests.ProgressStoreTests.testImportValidationRejectsInvalidMorseCourseProgress CanadianHamTests.ProgressStoreTests.testImportValidationRejectsMismatchedScoreBankId CanadianHamTests.ProgressStoreTests.testImportValidationRejectsUnknownIdsBadTimestampsBadBoxAndDuplicateSubmittedAt CanadianHamTests.ProgressStoreTests.testLessonQuizAttemptSaveRollsBackAttemptAndProgressOnFailure CanadianHamTests.ProgressStoreTests.testMockExamTimerRefreshPreservesFractionalRemainder CanadianHamTests.ProgressStoreTests.testNativeSettingsGeneralBindingsUpdatePracticePreferences CanadianHamTests.ProgressStoreTests.testProgressStoreRoundTripExportImportReset CanadianHamTests.ProgressStoreTests.testResetRollsBackWhenMorseProgressRemovalFails CanadianHamTests.ProgressStoreTests.testSharedAppleSettingsModelAppliesLivePreferenceUpdates CanadianHamTests.QuestionBankTests.testBundledJSONDecodesExpectedCounts CanadianHamTests.QuestionBankTests.testBundledLessonsAndExplanationsLoadThroughContentLibrary CanadianHamTests.QuestionBankTests.testEngineQuestionDrawKeepsQuestionInsideRequestedCategory CanadianHamTests.QuestionBankTests.testEngineShufflePreservesAnswerInvariantsForEveryBundledQuestion CanadianHamTests.QuestionBankTests.testKnownLessonIdsComeFromSubsectionLessonMappingsWithoutQuizzes CanadianHamTests.QuestionBankTests.testRealBundleKnownLessonIdsCoverBundledContentLibraryLessons CanadianHamTests.ReadinessAndScoringTests.testAdvancedScoringAndReadinessSuppressHonours CanadianHamTests.ReadinessAndScoringTests.testExamScoringBoundaries CanadianHamTests.ReadinessAndScoringTests.testReadinessStates CanadianHamTests.ReadinessAndScoringTests.testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate | iOS 94/94 passed: CanadianHamTests.LocalizationCatalogTests.testEveryCatalogKeyHasFrenchTranslations CanadianHamTests.LocalizationCatalogTests.testFrenchRuntimeBundleLocalizesCompilerKeysAndPluralCatalogEntries CanadianHamTests.LocalizationCatalogTests.testLocalizedNullableTextAndLanguageFallsBackToEnglish CanadianHamTests.LocalizationCatalogTests.testQuestionBankLoadErrorDescriptionUsesFrenchLocale CanadianHamTests.MorseTrainerTests.testCompletedMorseCourseSessionIgnoresResubmittedAnswer CanadianHamTests.MorseTrainerTests.testFixedTimingProfilesUseEngineValues CanadianHamTests.MorseTrainerTests.testMorseAudioScheduleUsesEngineTimingsAndFiveMillisecondRamp CanadianHamTests.MorseTrainerTests.testMorseCopyDiffClassifiesWrongMissingAndInsertedCharacters CanadianHamTests.MorseTrainerTests.testMorseCourseLocalDateStringUsesGregorianCalendarInCurrentTimeZone CanadianHamTests.MorseTrainerTests.testMorseCourseProgressIgnoresStoredProgressForAnotherCourse CanadianHamTests.MorseTrainerTests.testMorseCourseSummaryCopyDependsOnSessionModeAndLessonPosition CanadianHamTests.MorseTrainerTests.testMorseExamGeneratorMeetsReceivingExamConstraints CanadianHamTests.MorseTrainerTests.testMorseSettingsClampAndPreset CanadianHamTests.MorseTrainerTests.testMorseSettingsDecodesLegacyPayloadWithIsEnabled CanadianHamTests.MorseTrainerTests.testMorseSettingsRoundTripThroughUserDefaults CanadianHamTests.MorseTrainerTests.testMorseStopDelayDrainsFadeBeforeStoppingEngine CanadianHamTests.ProgressStoreTests.testAppSettingsModelPublishesMorseSettingsForRootViewSync CanadianHamTests.ProgressStoreTests.testDecodesLegacyBasicExportWithoutBankIdFields CanadianHamTests.ProgressStoreTests.testDecodesWebLegacyExportWithOptionalLessonStoresAndTheme CanadianHamTests.ProgressStoreTests.testImportOfOlderExportRollsBackWhenMorseProgressRemovalFails CanadianHamTests.ProgressStoreTests.testImportRollbackKeepsExistingDataWhenReplacementFails CanadianHamTests.ProgressStoreTests.testImportRollbackPropagatesMorseProgressRemovalFailure CanadianHamTests.ProgressStoreTests.testImportsOlderExportWithoutMorseCourseProgressAsNoMorseProgress CanadianHamTests.ProgressStoreTests.testImportsRealisticWebExportWithKnownLessonProgressAndQuizAttempt CanadianHamTests.ProgressStoreTests.testImportTimerDecodingRejectsHugeNumbersAndRoundsFractionalWebValues CanadianHamTests.ProgressStoreTests.testImportValidationChecksLessonRecordShapeKnownIdsAndDuplicates CanadianHamTests.ProgressStoreTests.testImportValidationRejectsInvalidMorseCourseProgress CanadianHamTests.ProgressStoreTests.testImportValidationRejectsMismatchedScoreBankId CanadianHamTests.ProgressStoreTests.testImportValidationRejectsUnknownIdsBadTimestampsBadBoxAndDuplicateSubmittedAt CanadianHamTests.ProgressStoreTests.testLessonQuizAttemptSaveRollsBackAttemptAndProgressOnFailure CanadianHamTests.ProgressStoreTests.testMockExamTimerRefreshPreservesFractionalRemainder CanadianHamTests.ProgressStoreTests.testProgressStoreRoundTripExportImportReset CanadianHamTests.ProgressStoreTests.testResetRollsBackWhenMorseProgressRemovalFails CanadianHamTests.ProgressStoreTests.testSharedAppleSettingsModelAppliesLivePreferenceUpdates CanadianHamTests.QuestionBankTests.testBundledJSONDecodesExpectedCounts CanadianHamTests.QuestionBankTests.testBundledLessonsAndExplanationsLoadThroughContentLibrary CanadianHamTests.QuestionBankTests.testEngineQuestionDrawKeepsQuestionInsideRequestedCategory CanadianHamTests.QuestionBankTests.testEngineShufflePreservesAnswerInvariantsForEveryBundledQuestion CanadianHamTests.QuestionBankTests.testKnownLessonIdsComeFromSubsectionLessonMappingsWithoutQuizzes CanadianHamTests.QuestionBankTests.testRealBundleKnownLessonIdsCoverBundledContentLibraryLessons CanadianHamTests.ReadinessAndScoringTests.testAdvancedScoringAndReadinessSuppressHonours CanadianHamTests.ReadinessAndScoringTests.testExamScoringBoundaries CanadianHamTests.ReadinessAndScoringTests.testReadinessStates CanadianHamTests.ReadinessAndScoringTests.testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate CanadianHamUITests.CanadianHamPracticeUITests.testAboutShowsReleaseAttributionDisclaimerAndBankVersion CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditCoreScreensDark CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditCoreScreensLight CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditLearnFlowDark CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditLearnFlowLight CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditMockExamFlowDark CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditMockExamFlowLight CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditMorseCourseLessonAndSummaryDark CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditMorseCourseLessonAndSummaryLight CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditMorseExamGradedDiffDark CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditMorseExamGradedDiffLight CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditPracticeSessionDark CanadianHamUITests.CanadianHamPracticeUITests.testAccessibilityAuditPracticeSessionLight CanadianHamUITests.CanadianHamPracticeUITests.testCanPracticeInFrenchAndSeeFeedback CanadianHamUITests.CanadianHamPracticeUITests.testCompactHomeStartPracticeAndMockExamBackReturnToHome CanadianHamUITests.CanadianHamPracticeUITests.testCompactMockExamEndExamDiscardsInProgressSession CanadianHamUITests.CanadianHamPracticeUITests.testCompactRootNavigationPreservesMockExamState CanadianHamUITests.CanadianHamPracticeUITests.testCompactRootNavigationPreservesPracticeSessionState CanadianHamUITests.CanadianHamPracticeUITests.testCompactTopLevelListPushesMorseThenLearn CanadianHamUITests.CanadianHamPracticeUITests.testCompletesFirstMorseLessonSessionOnIOS CanadianHamUITests.CanadianHamPracticeUITests.testDueReviewLaterSessionKeepsPositionTallyAndReviewAfterSubmit CanadianHamUITests.CanadianHamPracticeUITests.testExplanationAppearsAfterAnsweringInPractice CanadianHamUITests.CanadianHamPracticeUITests.testFrenchAboutKeepsLegalTextInEnglish CanadianHamUITests.CanadianHamPracticeUITests.testFrenchSystemLanguageNavigatesMainScreensAndAuditsHomeAndPractice CanadianHamUITests.CanadianHamPracticeUITests.testLanguagePickerExistsOnCategoryListAndPractice CanadianHamUITests.CanadianHamPracticeUITests.testLanguagePickerExistsOnCompactHomeLearnMorseAndMockExam CanadianHamUITests.CanadianHamPracticeUITests.testLearnOpensLessonAndShowsFirstHeading CanadianHamUITests.CanadianHamPracticeUITests.testLearnUserNavigationOpensLessonQuiz CanadianHamUITests.CanadianHamPracticeUITests.testLessonQuizResultPersistsAfterRelaunch CanadianHamUITests.CanadianHamPracticeUITests.testLongestAnswerWrapsAtLargestAccessibilityTextSize CanadianHamUITests.CanadianHamPracticeUITests.testMockExamDoesNotShowCorrectnessBeforeSubmit CanadianHamUITests.CanadianHamPracticeUITests.testMockExamHeaderControlsSupportLargestAccessibilityTextSize CanadianHamUITests.CanadianHamPracticeUITests.testMockExamNextUnansweredJumpsAfterAnsweringFirstQuestion CanadianHamUITests.CanadianHamPracticeUITests.testMockExamResultHeadingCarriesVoiceOverSubmissionSummary CanadianHamUITests.CanadianHamPracticeUITests.testMorseCopyPracticeAndExamFlow CanadianHamUITests.CanadianHamPracticeUITests.testMorseCopyStartResetsAfterAudioStartupFailure CanadianHamUITests.CanadianHamPracticeUITests.testMorseExamStartResetsAfterAudioStartupFailure CanadianHamUITests.CanadianHamPracticeUITests.testMorseLessonSummaryShowsCorrectAnswerForWrongFinalAnswerOnIOS CanadianHamUITests.CanadianHamPracticeUITests.testMorseSectionIsTopLevelShowsCourseAndOpensFirstLesson CanadianHamUITests.CanadianHamPracticeUITests.testMorseStartingQuickListenStopsCopyPlayback CanadianHamUITests.CanadianHamPracticeUITests.testPracticeFlowSupportsLargestAccessibilityTextSize CanadianHamUITests.CanadianHamPracticeUITests.testPracticeImmediateFeedbackKeepsStateAfterFirstAnswer CanadianHamUITests.CanadianHamPracticeUITests.testPracticeModeChangeReopensCachedSessionFresh CanadianHamUITests.CanadianHamPracticeUITests.testRegularWidthMockExamEndExamDiscardsInProgressSession CanadianHamUITests.CanadianHamPracticeUITests.testRegularWidthMockExamResultPersistsAfterSubmit CanadianHamUITests.CanadianHamPracticeUITests.testReviewLaterHidesCorrectnessUntilSubmitAndResultsSurviveSave CanadianHamUITests.CanadianHamPracticeUITests.testSettingsResetClearsCompactMockExamCacheWithoutRelaunch CanadianHamUITests.CanadianHamPracticeUITests.testSettingsResetClearsSavedMockExamProgress CanadianHamUITests.CanadianHamPracticeUITests.testSubsectionPracticeOpensFromHubAndShowsReviewScreen CanadianHamUITests.CanadianHamPracticeUITests.testWeakAreasImmediateSessionKeepsFeedbackPositionAndTallyAfterAnswers | tvOS/visionOS not rerun: their targets don't compile MorseCourseView.swift; the one new catalogue key is unused there (check:apple-l10n passed).
+<!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Fixed Morse course summary copy for review/final-lesson sessions on web and Apple; changed TS/Swift daily streaks to count from today or yesterday using a shared fixture; made Apple local progress dates Gregorian in the current time zone; and added TS validation for unit IDs. Verified with package Vitest, DEVELOPER_DIR swift test, targeted web App tests, and targeted xbuild macOS unit tests named in notes.
+<!-- SECTION:FINAL_SUMMARY:END -->

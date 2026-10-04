@@ -218,7 +218,8 @@ public func recordMorseCharacterResults(progress: MorseCourseProgressExport, res
 
 public func morseDailyStreak(activity: [MorseDailyActivityRecord], todayIso: String) -> Int {
     let dates = Set(activity.filter { $0.lessonsCompleted > 0 }.map(\.date))
-    var cursor = String(todayIso.prefix(10))
+    let today = String(todayIso.prefix(10))
+    var cursor = dates.contains(today) ? today : shiftIsoDate(today, days: -1)
     var streak = 0
     while dates.contains(cursor) {
         streak += 1
