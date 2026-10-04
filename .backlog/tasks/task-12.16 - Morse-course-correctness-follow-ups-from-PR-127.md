@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-04 09:12'
-updated_date: '2026-10-04 09:13'
+updated_date: '2026-10-04 09:17'
 labels:
   - web
   - apple
@@ -39,3 +39,13 @@ Why: Copilot's final review of PR #127 found six issues in the new course code: 
 3. Use a Gregorian current-time-zone date formatter for Apple local progress dates and cover it in Swift tests.
 4. Run targeted package/web/Swift checks for the changed code before moving to task-12.15.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented shared Morse course correctness fixes. Targeted validation:
+- packages/morse-engine Vitest: packages/morse-engine/test/course.test.ts and fixtures.test.ts passed (17 tests), including rejects course fixtures with unexpected unit IDs and shared course-streak fixture cases.
+- packages/morse-swift: initial swift test without DEVELOPER_DIR failed because CommandLineTools could not resolve XCTest; reran with DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer and MorseFixtureTests/testEveryMorseFixtureMatchesSwiftEngine passed.
+- web: pnpm --filter @canadian-ham/web test -- App.test.tsx passed (Vitest reported 13 files, 122 tests), including uses Morse course summary copy for review sessions and the final lesson.
+- Apple targeted macOS xbuild unit tests passed: MorseTrainerTests/testMorseCourseSummaryCopyDependsOnSessionModeAndLessonPosition and MorseTrainerTests/testMorseCourseLocalDateStringUsesGregorianCalendarInCurrentTimeZone.
+<!-- SECTION:NOTES:END -->
