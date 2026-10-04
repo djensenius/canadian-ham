@@ -1,11 +1,11 @@
 ---
 id: TASK-12.6
 title: Morse copy practice and simulated Canadian 5 wpm exam
-status: In Progress
+status: Done
 assignee:
   - '@pi-worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-04 01:32'
+updated_date: '2026-10-04 02:36'
 labels:
   - web
   - apple
@@ -28,8 +28,8 @@ Why: learners need to listen to whole passages and type what they hear, and cand
 <!-- AC:BEGIN -->
 - [x] #1 The text generator follows RIC-1 section 8.2 (at least 75 weighted characters and 180 s for the chosen profile); the default profile is isedParis 12/5 with ric1Literal as a harder option
 - [x] #2 Playback is uninterrupted, followed by a 2-minute review; grading is 5 or fewer errors = pass (100%), otherwise fail, with a diff view
-- [ ] #3 Web and Apple tests cover generation, timing and grading with the shared fixtures
-- [ ] #4 Copy practice: listen to a full passage (plain-language sentences or QSO-style text) at the user's settings, type it, and see a character-level diff with wrong, missing and inserted characters highlighted, accessible to screen readers
+- [x] #3 Web and Apple tests cover generation, timing and grading with the shared fixtures
+- [x] #4 Copy practice: listen to a full passage (plain-language sentences or QSO-style text) at the user's settings, type it, and see a character-level diff with wrong, missing and inserted characters highlighted, accessible to screen readers
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -46,10 +46,133 @@ Why: learners need to listen to whole passages and type what they hear, and cand
 Implemented shared Morse exam generation/diff in packages/morse-engine and packages/morse-swift, web copy practice/exam panels, and iOS/macOS Apple copy practice/exam views. tvOS/visionOS were left on their existing simplified Morse preview per owner decision; shared package coverage still ran through their linked app suites. Validation: pnpm typecheck; pnpm test (content-tools 100, morse-engine 7, web 112); pnpm build:web; web URL/CSP audit; DEVELOPER_DIR swift test in packages/morse-swift (MorseFixtureTests/testEveryMorseFixtureMatchesSwiftEngine); node scripts/check-apple-text-sources.ts; pnpm check:apple-l10n; pnpm check:apple-network. Apple targeted: iOS MorseTrainerTests 8 tests passed; iOS CanadianHamPracticeUITests/testMorseCopyPracticeAndExamFlow passed. Full affected-platform suites: iOS CanadianHam passed (36 unit tests + 41 UI tests); macOS CanadianHam passed (36 unit tests, UI skipped); tvOS CanadianHamTV passed (12 UI tests); visionOS CanadianHamVision passed (3 unit tests + 9 UI tests). XcodeGen regenerated twice with deterministic project diff.
 
 Review fix round started from tip 6619207542954c5ebd4b27a554cd1277f7ee5248 after merging origin/main (already up to date; git fetch reported credential storage warning fatal: failed to store: -25308). Unchecked AC3 and AC4 until fixture/accessibility coverage and localized screen-reader labels are verified.
+
+Review fix round completed. Web diff token aria-labels now come from i18n.ts in English and French (for example, "Wrong: expected ?, received X" / "Erroné : attendu ?, reçu X") and use words rather than an arrow. Web exam generation is deterministic under App.seedFactory in tests, the exam test advances by the generated duration and runs axe on the graded exam, and duplicate diff heading ids were removed with useId(). Shared fixtures now pin fixed-seed generated exam text and shared diff operations across TS and Swift. Apple startExam now clears examText, returns to idle and shows the error when audio startup throws; targeted UI coverage verifies the Start button re-enables and the generated summary is cleared. Apple graded-diff light/dark contrast audits pass on iOS; diff tokens now set operation-specific foreground colours. apps/apple/CanadianHam/Resources/Localizable.xcstrings was not changed.
+
+Validation passed: pnpm typecheck; pnpm test; pnpm build:web; pnpm --filter @canadian-ham/web audit:urls; pnpm --filter @canadian-ham/morse-engine test; cd packages/morse-swift && DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test; node scripts/check-apple-text-sources.ts; pnpm check:apple-l10n; pnpm check:apple-network. Targeted Apple fix checks passed: iOS CanadianHamPracticeUITests/testMorseExamStartResetsAfterAudioStartupFailure; iOS CanadianHamPracticeUITests/testAccessibilityAuditMorseExamGradedDiffLight; iOS CanadianHamPracticeUITests/testAccessibilityAuditMorseExamGradedDiffDark. Final Apple runs per policy: iOS full CanadianHam passed (35 unit + 44 UI per-test results below); macOS full CanadianHam passed (36 unit, UI skipped). tvOS and visionOS full suites were skipped because this fix changes web files, shared fixtures/tests, packages/morse-swift tests only, and iOS/macOS CanadianHam CopyExam/UI-test files; it does not change tvOS/visionOS target-compiled files or apps/apple/CanadianHam/Resources/Localizable.xcstrings.
+
+Full Apple per-test results:
+iOS 79
+PASSED CanadianHamTests.LocalizationCatalogTests testEveryCatalogKeyHasFrenchTranslations
+PASSED CanadianHamTests.LocalizationCatalogTests testFrenchRuntimeBundleLocalizesCompilerKeysAndPluralCatalogEntries
+PASSED CanadianHamTests.LocalizationCatalogTests testLocalizedNullableTextAndLanguageFallsBackToEnglish
+PASSED CanadianHamTests.LocalizationCatalogTests testQuestionBankLoadErrorDescriptionUsesFrenchLocale
+PASSED CanadianHamTests.MorseTrainerTests testFixedTimingProfilesUseEngineValues
+PASSED CanadianHamTests.MorseTrainerTests testMorseAudioScheduleUsesEngineTimingsAndFiveMillisecondRamp
+PASSED CanadianHamTests.MorseTrainerTests testMorseCopyDiffClassifiesWrongMissingAndInsertedCharacters
+PASSED CanadianHamTests.MorseTrainerTests testMorseExamGeneratorMeetsReceivingExamConstraints
+PASSED CanadianHamTests.MorseTrainerTests testMorseSettingsClampAndPreset
+PASSED CanadianHamTests.MorseTrainerTests testMorseSettingsDecodesLegacyPayloadWithIsEnabled
+PASSED CanadianHamTests.MorseTrainerTests testMorseSettingsRoundTripThroughUserDefaults
+PASSED CanadianHamTests.MorseTrainerTests testMorseStopDelayDrainsFadeBeforeStoppingEngine
+PASSED CanadianHamTests.ProgressStoreTests testAppSettingsModelPublishesMorseSettingsForRootViewSync
+PASSED CanadianHamTests.ProgressStoreTests testDecodesLegacyBasicExportWithoutBankIdFields
+PASSED CanadianHamTests.ProgressStoreTests testDecodesWebLegacyExportWithOptionalLessonStoresAndTheme
+PASSED CanadianHamTests.ProgressStoreTests testImportRollbackKeepsExistingDataWhenReplacementFails
+PASSED CanadianHamTests.ProgressStoreTests testImportsRealisticWebExportWithKnownLessonProgressAndQuizAttempt
+PASSED CanadianHamTests.ProgressStoreTests testImportTimerDecodingRejectsHugeNumbersAndRoundsFractionalWebValues
+PASSED CanadianHamTests.ProgressStoreTests testImportValidationChecksLessonRecordShapeKnownIdsAndDuplicates
+PASSED CanadianHamTests.ProgressStoreTests testImportValidationRejectsMismatchedScoreBankId
+PASSED CanadianHamTests.ProgressStoreTests testImportValidationRejectsUnknownIdsBadTimestampsBadBoxAndDuplicateSubmittedAt
+PASSED CanadianHamTests.ProgressStoreTests testLessonQuizAttemptSaveRollsBackAttemptAndProgressOnFailure
+PASSED CanadianHamTests.ProgressStoreTests testMockExamTimerRefreshPreservesFractionalRemainder
+PASSED CanadianHamTests.ProgressStoreTests testProgressStoreRoundTripExportImportReset
+PASSED CanadianHamTests.ProgressStoreTests testSharedAppleSettingsModelAppliesLivePreferenceUpdates
+PASSED CanadianHamTests.QuestionBankTests testBundledJSONDecodesExpectedCounts
+PASSED CanadianHamTests.QuestionBankTests testBundledLessonsAndExplanationsLoadThroughContentLibrary
+PASSED CanadianHamTests.QuestionBankTests testEngineQuestionDrawKeepsQuestionInsideRequestedCategory
+PASSED CanadianHamTests.QuestionBankTests testEngineShufflePreservesAnswerInvariantsForEveryBundledQuestion
+PASSED CanadianHamTests.QuestionBankTests testKnownLessonIdsComeFromSubsectionLessonMappingsWithoutQuizzes
+PASSED CanadianHamTests.QuestionBankTests testRealBundleKnownLessonIdsCoverBundledContentLibraryLessons
+PASSED CanadianHamTests.ReadinessAndScoringTests testAdvancedScoringAndReadinessSuppressHonours
+PASSED CanadianHamTests.ReadinessAndScoringTests testExamScoringBoundaries
+PASSED CanadianHamTests.ReadinessAndScoringTests testReadinessStates
+PASSED CanadianHamTests.ReadinessAndScoringTests testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testAboutShowsReleaseAttributionDisclaimerAndBankVersion
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testAccessibilityAuditCoreScreensDark
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testAccessibilityAuditCoreScreensLight
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testAccessibilityAuditLearnFlowDark
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testAccessibilityAuditLearnFlowLight
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testAccessibilityAuditMockExamFlowDark
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testAccessibilityAuditMockExamFlowLight
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testAccessibilityAuditMorseExamGradedDiffDark
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testAccessibilityAuditMorseExamGradedDiffLight
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testAccessibilityAuditPracticeSessionDark
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testAccessibilityAuditPracticeSessionLight
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testCanPracticeInFrenchAndSeeFeedback
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testCompactHomeStartPracticeAndMockExamBackReturnToHome
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testCompactMockExamEndExamDiscardsInProgressSession
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testCompactRootNavigationPreservesMockExamState
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testCompactRootNavigationPreservesPracticeSessionState
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testCompactTopLevelListPushesMorseThenLearn
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testDueReviewLaterSessionKeepsPositionTallyAndReviewAfterSubmit
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testExplanationAppearsAfterAnsweringInPractice
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testFrenchAboutKeepsLegalTextInEnglish
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testFrenchSystemLanguageNavigatesMainScreensAndAuditsHomeAndPractice
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testLanguagePickerExistsOnCategoryListAndPractice
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testLanguagePickerExistsOnCompactHomeLearnMorseAndMockExam
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testLearnOpensLessonAndShowsFirstHeading
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testLearnUserNavigationOpensLessonQuiz
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testLessonQuizResultPersistsAfterRelaunch
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testLongestAnswerWrapsAtLargestAccessibilityTextSize
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testMockExamDoesNotShowCorrectnessBeforeSubmit
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testMockExamHeaderControlsSupportLargestAccessibilityTextSize
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testMockExamNextUnansweredJumpsAfterAnsweringFirstQuestion
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testMockExamResultHeadingCarriesVoiceOverSubmissionSummary
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testMorseCopyPracticeAndExamFlow
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testMorseExamStartResetsAfterAudioStartupFailure
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testMorseSectionIsTopLevelAndShowsSettings
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testPracticeFlowSupportsLargestAccessibilityTextSize
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testPracticeImmediateFeedbackKeepsStateAfterFirstAnswer
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testPracticeModeChangeReopensCachedSessionFresh
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testRegularWidthMockExamEndExamDiscardsInProgressSession
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testRegularWidthMockExamResultPersistsAfterSubmit
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testReviewLaterHidesCorrectnessUntilSubmitAndResultsSurviveSave
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testSettingsResetClearsCompactMockExamCacheWithoutRelaunch
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testSettingsResetClearsSavedMockExamProgress
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testSubsectionPracticeOpensFromHubAndShowsReviewScreen
+PASSED CanadianHamUITests.CanadianHamPracticeUITests testWeakAreasImmediateSessionKeepsFeedbackPositionAndTallyAfterAnswers
+macOS 36
+PASSED CanadianHamTests.LocalizationCatalogTests testEveryCatalogKeyHasFrenchTranslations
+PASSED CanadianHamTests.LocalizationCatalogTests testFrenchRuntimeBundleLocalizesCompilerKeysAndPluralCatalogEntries
+PASSED CanadianHamTests.LocalizationCatalogTests testLocalizedNullableTextAndLanguageFallsBackToEnglish
+PASSED CanadianHamTests.LocalizationCatalogTests testQuestionBankLoadErrorDescriptionUsesFrenchLocale
+PASSED CanadianHamTests.MorseTrainerTests testFixedTimingProfilesUseEngineValues
+PASSED CanadianHamTests.MorseTrainerTests testMorseAudioScheduleUsesEngineTimingsAndFiveMillisecondRamp
+PASSED CanadianHamTests.MorseTrainerTests testMorseCopyDiffClassifiesWrongMissingAndInsertedCharacters
+PASSED CanadianHamTests.MorseTrainerTests testMorseExamGeneratorMeetsReceivingExamConstraints
+PASSED CanadianHamTests.MorseTrainerTests testMorseSettingsClampAndPreset
+PASSED CanadianHamTests.MorseTrainerTests testMorseSettingsDecodesLegacyPayloadWithIsEnabled
+PASSED CanadianHamTests.MorseTrainerTests testMorseSettingsRoundTripThroughUserDefaults
+PASSED CanadianHamTests.MorseTrainerTests testMorseStopDelayDrainsFadeBeforeStoppingEngine
+PASSED CanadianHamTests.ProgressStoreTests testAppSettingsModelPublishesMorseSettingsForRootViewSync
+PASSED CanadianHamTests.ProgressStoreTests testDecodesLegacyBasicExportWithoutBankIdFields
+PASSED CanadianHamTests.ProgressStoreTests testDecodesWebLegacyExportWithOptionalLessonStoresAndTheme
+PASSED CanadianHamTests.ProgressStoreTests testImportRollbackKeepsExistingDataWhenReplacementFails
+PASSED CanadianHamTests.ProgressStoreTests testImportsRealisticWebExportWithKnownLessonProgressAndQuizAttempt
+PASSED CanadianHamTests.ProgressStoreTests testImportTimerDecodingRejectsHugeNumbersAndRoundsFractionalWebValues
+PASSED CanadianHamTests.ProgressStoreTests testImportValidationChecksLessonRecordShapeKnownIdsAndDuplicates
+PASSED CanadianHamTests.ProgressStoreTests testImportValidationRejectsMismatchedScoreBankId
+PASSED CanadianHamTests.ProgressStoreTests testImportValidationRejectsUnknownIdsBadTimestampsBadBoxAndDuplicateSubmittedAt
+PASSED CanadianHamTests.ProgressStoreTests testLessonQuizAttemptSaveRollsBackAttemptAndProgressOnFailure
+PASSED CanadianHamTests.ProgressStoreTests testMockExamTimerRefreshPreservesFractionalRemainder
+PASSED CanadianHamTests.ProgressStoreTests testNativeSettingsGeneralBindingsUpdatePracticePreferences
+PASSED CanadianHamTests.ProgressStoreTests testProgressStoreRoundTripExportImportReset
+PASSED CanadianHamTests.ProgressStoreTests testSharedAppleSettingsModelAppliesLivePreferenceUpdates
+PASSED CanadianHamTests.QuestionBankTests testBundledJSONDecodesExpectedCounts
+PASSED CanadianHamTests.QuestionBankTests testBundledLessonsAndExplanationsLoadThroughContentLibrary
+PASSED CanadianHamTests.QuestionBankTests testEngineQuestionDrawKeepsQuestionInsideRequestedCategory
+PASSED CanadianHamTests.QuestionBankTests testEngineShufflePreservesAnswerInvariantsForEveryBundledQuestion
+PASSED CanadianHamTests.QuestionBankTests testKnownLessonIdsComeFromSubsectionLessonMappingsWithoutQuizzes
+PASSED CanadianHamTests.QuestionBankTests testRealBundleKnownLessonIdsCoverBundledContentLibraryLessons
+PASSED CanadianHamTests.ReadinessAndScoringTests testAdvancedScoringAndReadinessSuppressHonours
+PASSED CanadianHamTests.ReadinessAndScoringTests testExamScoringBoundaries
+PASSED CanadianHamTests.ReadinessAndScoringTests testReadinessStates
+PASSED CanadianHamTests.ReadinessAndScoringTests testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Added Morse copy practice and the simulated Canadian 5 wpm receiving exam across shared engines, web, and Apple iOS/macOS. Verified generator constraints, scoring/diff, web UI, Apple UI, localization, network policy, and full affected Apple suites with evidence in implementation notes.
+Completed the task-12.6 review fix round: localized web diff screen-reader labels, reset Apple exam state after audio startup failure, made the web exam test deterministic, added pinned shared exam/diff fixtures, added unique diff heading IDs, and verified graded diff accessibility/contrast. Validated with the web/package checks, Apple localization/network checks, targeted iOS UI tests, and final iOS/macOS full runs with per-test names in the implementation notes.
 <!-- SECTION:FINAL_SUMMARY:END -->
