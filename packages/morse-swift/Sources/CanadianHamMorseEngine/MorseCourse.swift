@@ -83,6 +83,13 @@ public struct MorseDailyActivityRecord: Codable, Equatable, Sendable, Identifiab
     }
 }
 
+public enum MorseCourseExercise: Equatable, Sendable {
+    case meet(String)
+    case choose(String, [String])
+    case typeCharacter(String)
+    case typeGroup(String)
+}
+
 public struct MorseCourseProgressExport: Codable, Equatable, Sendable {
     public let courseId: String
     public let lessonProgress: [MorseLessonProgressRecord]
@@ -138,6 +145,27 @@ public func isMorseLessonCompleted(course: MorseCourse, progress: MorseCoursePro
 public func learnedMorseCharacters(course: MorseCourse, progress: MorseCourseProgressExport) -> [String] {
     let unlocked = max(1, course.lessons.filter { (try? morseLessonState(course: course, progress: progress, lessonId: $0.id)) != .locked }.count)
     return course.lessons[min(unlocked - 1, course.lessons.count - 1)].learnedCharacters
+}
+
+public func buildMorseLessonExercises(lesson: MorseCourseLesson, progress: MorseCourseProgressExport? = nil, seed: String, scoredCount: Int = 20) -> [MorseCourseExercise] {
+    let scoredTotal = min(25, max(15, scoredCount))
+    var random = SeededMorseRandom(seed: "\(seed):\(lesson.id)")
+    let learned = lesson.learnedCharacters.filter { approvedMorseCourseCharacterOrder.contains($0) }
+    let newCharacters = lesson.newCharacters.filter { approvedMorseCourseCharacterOrder.contains($0) }
+    let weak = lesson.lessonNumber == 1 ? [] : (progress.map { selectWeakestMorseCharacters(stats: $0.characterStats, learnedCharacters: learned, limit: 6) } ?? [])
+    let weighted = weightedPracticeCharacters(learned: learned, newCharacters: newCharacters, weak: weak)
+    var exercises = newCharacters.map { MorseCourseExercise.meet($0) }
+    for index in 0..<scoredTotal {
+        let target = index < newCharacters.count ? newCharacters[index] : drawWeighted(weighted, random: &random)
+        if index % 5 == 4 {
+            exercises.append(.typeGroup(buildKochGroup(weighted, random: &random)))
+        } else if index % 2 == 0 {
+            exercises.append(.choose(target, chooseOptions(target: target, learned: learned, weak: weak, random: &random)))
+        } else {
+            exercises.append(.typeCharacter(target))
+        }
+    }
+    return exercises
 }
 
 public func selectWeakestMorseCharacters(stats: [MorseCharacterStatRecord], learnedCharacters: [String], limit: Int = 5) -> [String] {
@@ -203,12 +231,96 @@ private func validateMorseCourse(_ course: MorseCourse) throws {
     guard course.unlockAccuracy == 0.9, course.unitSize == 5 else { throw MorseCourseError.invalidFixture("Morse course unlock rule must be 90 percent and units of five lessons.") }
     guard course.characterOrder == approvedMorseCourseCharacterOrder else { throw MorseCourseError.invalidFixture("Morse course character order must match the approved G4FON/ISED order.") }
     guard course.units.count == 8, course.lessons.count == 40 else { throw MorseCourseError.invalidFixture("Morse course must contain 8 units and 40 lessons.") }
+    var lessonIds = Set<String>()
     for (index, lesson) in course.lessons.enumerated() {
+        guard lessonIds.insert(lesson.id).inserted else { throw MorseCourseError.invalidFixture("Duplicate Morse lesson id \(lesson.id).") }
         let expectedNew = index == 0 ? Array(approvedMorseCourseCharacterOrder.prefix(2)) : [approvedMorseCourseCharacterOrder[index + 1]]
         let expectedLearned = Array(approvedMorseCourseCharacterOrder.prefix(index + 2))
-        guard lesson.lessonNumber == index + 1, lesson.newCharacters == expectedNew, lesson.learnedCharacters == expectedLearned else {
+        let expectedUnitId = "unit-\(String(format: "%02d", (index / 5) + 1))"
+        guard lesson.lessonNumber == index + 1, lesson.unitId == expectedUnitId, lesson.newCharacters == expectedNew, lesson.learnedCharacters == expectedLearned else {
             throw MorseCourseError.invalidFixture("Morse lesson \(lesson.id) does not match the approved Koch progression.")
         }
+    }
+    for (index, unit) in course.units.enumerated() {
+        let expectedLessonIds = course.lessons.dropFirst(index * 5).prefix(5).map(\.id)
+        guard unit.unitNumber == index + 1, unit.id == "unit-\(String(format: "%02d", index + 1))", unit.lessonIds == expectedLessonIds else {
+            throw MorseCourseError.invalidFixture("Morse unit \(unit.id) lesson IDs are out of order.")
+        }
+    }
+}
+
+private let confusableMorseCharacters: [String: [String]] = [
+    "K": ["R", "M", "A"],
+    "M": ["O", "T", "K"],
+    "R": ["K", "A", "S"],
+    "S": ["U", "R", "I"],
+    "U": ["S", "A", "V"],
+    "A": ["R", "U", "W"],
+    "P": ["T", "L", "J"],
+    "T": ["M", "O", "P"],
+    "L": ["P", "F", "R"],
+    "O": ["M", "T", "0"],
+]
+
+private func chooseOptions(target: String, learned: [String], weak: [String], random: inout SeededMorseRandom) -> [String] {
+    let candidates = unique((confusableMorseCharacters[target] ?? []) + weak + Array(learned.suffix(8).reversed()) + learned + approvedMorseCourseCharacterOrder)
+        .filter { $0 != target && approvedMorseCourseCharacterOrder.contains($0) }
+    return shuffle([target] + candidates.prefix(3), random: &random)
+}
+
+private func weightedPracticeCharacters(learned: [String], newCharacters: [String], weak: [String]) -> [String] {
+    var weighted: [String] = []
+    func append(_ characters: [String], weight: Int) {
+        for character in characters where approvedMorseCourseCharacterOrder.contains(character) {
+            weighted.append(contentsOf: Array(repeating: character, count: weight))
+        }
+    }
+    append(learned, weight: 1)
+    append(Array(learned.suffix(6)), weight: 1)
+    append(weak, weight: 2)
+    append(newCharacters, weight: 4)
+    return weighted.isEmpty ? ["K"] : weighted
+}
+
+private func buildKochGroup(_ weighted: [String], random: inout SeededMorseRandom) -> String {
+    (0..<5).map { _ in drawWeighted(weighted, random: &random) }.joined()
+}
+
+private func drawWeighted(_ characters: [String], random: inout SeededMorseRandom) -> String {
+    characters[min(characters.count - 1, Int(random.next() * Double(characters.count)))]
+}
+
+private func unique(_ values: [String]) -> [String] {
+    var seen = Set<String>()
+    return values.filter { seen.insert($0).inserted }
+}
+
+private func shuffle(_ values: [String], random: inout SeededMorseRandom) -> [String] {
+    var shuffled = values
+    guard shuffled.count > 1 else { return shuffled }
+    for index in stride(from: shuffled.count - 1, through: 1, by: -1) {
+        let swapIndex = min(index, Int(random.next() * Double(index + 1)))
+        shuffled.swapAt(index, swapIndex)
+    }
+    return shuffled
+}
+
+private struct SeededMorseRandom {
+    private var state: UInt32 = 2_166_136_261
+
+    init(seed: String) {
+        for scalar in seed.unicodeScalars {
+            state ^= UInt32(scalar.value)
+            state = state &* 16_777_619
+        }
+    }
+
+    mutating func next() -> Double {
+        state = state &+ 0x6D2B79F5
+        var value = state
+        value = (value ^ (value >> 15)) &* (value | 1)
+        value ^= value &+ ((value ^ (value >> 7)) &* (value | 61))
+        return Double(value ^ (value >> 14)) / Double(UInt32.max)
     }
 }
 

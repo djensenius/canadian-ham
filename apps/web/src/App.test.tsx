@@ -18,6 +18,8 @@ import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExpor
 import { INTERFACE_LANGUAGE_STORAGE_KEY } from "./lib/i18n";
 import { applyThemePreference, readStoredThemePreference, THEME_COLORS, THEME_STORAGE_KEY } from "./lib/theme";
 import { buildExamAttempt, createMockExam } from "./lib/studyEngine";
+import { buildMorseLessonExercises, parseMorseCourseFixture } from "@canadian-ham/morse-engine";
+import courseFixture from "../../../fixtures/morse/course.json";
 
 const fixedNow = "2026-01-02T03:04:05.000Z";
 const referenceSheetNote = "In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.";
@@ -1028,8 +1030,8 @@ describe("App accessibility and flows", () => {
     assert.equal(window.location.hash, "#/morse");
     assert.ok(screen.getByText("Preview"));
     assert.ok(screen.getByRole("heading", { name: "Learn (course)" }));
-    assert.ok(screen.getByRole("button", { name: /Lesson 1K MCurrent/ }));
-    assert.ok(screen.getByRole("button", { name: /Lesson 2RLocked/ }));
+    assert.ok(screen.getByRole("button", { name: /Lesson 1, K M, Current/ }));
+    assert.ok(screen.getByRole("button", { name: /Lesson 2, R, Locked/ }));
     assert.ok(screen.getByRole("heading", { name: "Copy practice" }));
     assert.ok(screen.getByRole("heading", { name: "Exam" }));
     assert.ok(screen.getByRole("heading", { name: "Morse settings" }));
@@ -1045,21 +1047,66 @@ describe("App accessibility and flows", () => {
     render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-course-flow-seed"} />);
 
     await screen.findByRole("heading", { name: "Morse course path" });
-    await user.click(screen.getByRole("button", { name: /Lesson 1K MCurrent/ }));
+    const course = parseMorseCourseFixture(courseFixture);
+    const firstLesson = course.lessons[0]!;
+    const exercises = buildMorseLessonExercises({ lesson: firstLesson, seed: "morse-course-flow-seed" });
+    await user.click(screen.getByRole("button", { name: /Lesson 1, K M, Current/ }));
     const session = await screen.findByRole("region", { name: "Lesson 1 session" });
-    await user.click(within(session).getByRole("button", { name: "Next" }));
-    await user.click(within(session).getByRole("button", { name: "M" }));
-    await user.type(within(session).getByLabelText("Your copy"), "M");
-    await user.click(within(session).getByRole("button", { name: "Check" }));
-    await user.type(within(session).getByLabelText("Your copy"), "KMMMM");
-    await user.click(within(session).getByRole("button", { name: "Check" }));
+    let finalForm: HTMLFormElement | null = null;
+    for (const exercise of exercises) {
+      if (exercise.kind === "meet") {
+        await user.click(within(session).getByRole("button", { name: "Next" }));
+      } else if (exercise.kind === "choose") {
+        await user.click(within(session).getByRole("button", { name: exercise.character }));
+      } else {
+        const expected = exercise.kind === "type-character" ? exercise.character : exercise.text;
+        const field = within(session).getByLabelText("Your copy");
+        const form = field.closest("form");
+        assert.ok(form);
+        finalForm = form;
+        fireEvent.change(field, { target: { value: expected } });
+        await user.click(within(session).getByRole("button", { name: "Check" }));
+      }
+    }
 
     await screen.findByText("Great work. The next lesson is unlocked.");
     const saved = await store.getMorseCourseProgress();
     assert.equal(saved?.lessonProgress[0]?.lessonId, "koch-001");
     assert.equal(saved?.lessonProgress[0]?.bestAccuracy, 1);
+    assert.equal(saved?.lessonProgress[0]?.attempts, 1);
     assert.equal(saved?.dailyActivity[0]?.date, "2026-01-02");
-    assert.equal(screen.getByRole("button", { name: /Lesson 2RCurrent/ }).getAttribute("disabled"), null);
+    assert.equal(screen.getByRole("button", { name: /Lesson 2, R, Current/ }).getAttribute("disabled"), null);
+    assert.equal(within(session).queryByRole("button", { name: "Check" }), null);
+    if (finalForm !== null) {
+      fireEvent.submit(finalForm);
+      await waitFor(async () => assert.deepEqual(await store.getMorseCourseProgress(), saved));
+    }
+  });
+
+  it("shows the correct answer on a missed Morse lesson item and keeps summary accessible", async () => {
+    window.location.hash = "#/morse";
+    const store = createStore("morse-course-miss");
+    stubMorseAudioContext();
+    const user = userEvent.setup();
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-course-miss-seed"} />);
+
+    await screen.findByRole("heading", { name: "Morse course path" });
+    const course = parseMorseCourseFixture(courseFixture);
+    const firstLesson = course.lessons[0]!;
+    const exercises = buildMorseLessonExercises({ lesson: firstLesson, seed: "morse-course-miss-seed" });
+    await user.click(screen.getByRole("button", { name: /Lesson 1, K M, Current/ }));
+    const session = await screen.findByRole("region", { name: "Lesson 1 session" });
+    for (const exercise of exercises) {
+      if (exercise.kind === "meet") {
+        await user.click(within(session).getByRole("button", { name: "Next" }));
+      } else if (exercise.kind === "choose") {
+        const wrong = exercise.options.find((option) => option !== exercise.character)!;
+        await user.click(within(session).getByRole("button", { name: wrong }));
+        assert.match(session.textContent ?? "", new RegExp(`Correct answer: ${exercise.character.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
+        break;
+      }
+    }
+    await expectNoAxeViolations(container);
   });
 
   it("shows Morse start status visually without placing it in the live region", async () => {

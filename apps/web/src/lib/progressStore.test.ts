@@ -135,6 +135,28 @@ function assertProgressExportMatchesSchema(exported: ProgressExportV1): void {
   assert.match(result.stdout, /Schema validation passed for stdin against progress-export-v1\.schema\.json/);
 }
 
+async function createVersion3Database(name: string): Promise<void> {
+  const request = indexedDB.open(name, 3);
+  await new Promise<void>((resolve, reject) => {
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      db.createObjectStore("questionProgress", { keyPath: "questionId" });
+      const attemptStore = db.createObjectStore("examAttempts", { keyPath: "id" });
+      attemptStore.createIndex("submittedAt", "submittedAt", { unique: false });
+      db.createObjectStore("preferences", { keyPath: "key" });
+      db.createObjectStore("lessonProgress", { keyPath: "lessonId" });
+      const quizAttemptStore = db.createObjectStore("lessonQuizAttempts", { keyPath: "id" });
+      quizAttemptStore.createIndex("submittedAt", "submittedAt", { unique: false });
+      quizAttemptStore.createIndex("lessonId", "lessonId", { unique: false });
+    };
+    request.onerror = () => reject(request.error ?? new Error("Unable to create v3 test database"));
+    request.onsuccess = () => {
+      request.result.close();
+      resolve();
+    };
+  });
+}
+
 async function createVersion2Database(name: string): Promise<void> {
   const request = indexedDB.open(name, 2);
   await new Promise<void>((resolve, reject) => {
@@ -243,14 +265,15 @@ describe("ProgressStore", () => {
     assert.deepEqual(await store.getQuestionProgress(), []);
   });
 
-  it("accepts legacy exports without lesson stores as empty v3 data", () => {
-    const legacy = { ...validExport(), lessonProgress: undefined, lessonQuizAttempts: undefined };
+  it("accepts legacy exports without lesson or Morse stores as empty older data", () => {
+    const legacy = { ...validExport(), lessonProgress: undefined, lessonQuizAttempts: undefined, morseCourseProgress: undefined };
 
     const validation = validateProgressImport(legacy);
 
     assert.equal(validation.ok, true);
     assert.deepEqual(validation.data?.lessonProgress, []);
     assert.deepEqual(validation.data?.lessonQuizAttempts, []);
+    assert.equal(validation.data?.morseCourseProgress, undefined);
   });
 
   it("rejects imports whose score bankId does not match the active bank", () => {
@@ -281,6 +304,15 @@ describe("ProgressStore", () => {
     assert.equal(validation.data?.questionProgress[0]?.bankId, bankId);
     assert.equal(validation.data?.examAttempts[0]?.bankId, bankId);
     assert.equal(validation.data?.examAttempts[0]?.score.bankId, bankId);
+  });
+
+  it("migrates an existing v3 IndexedDB database to v4 Morse course progress", async () => {
+    await createVersion3Database("migrate-v3-v4");
+    const store = createStore("migrate-v3-v4");
+
+    assert.equal(await store.getMorseCourseProgress(), undefined);
+    await store.putMorseCourseProgress(morseCourseProgress);
+    assert.deepEqual(await store.getMorseCourseProgress(), morseCourseProgress);
   });
 
   it("migrates an existing v2 IndexedDB database to v3 lesson stores", async () => {

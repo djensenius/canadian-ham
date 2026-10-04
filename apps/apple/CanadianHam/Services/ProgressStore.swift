@@ -399,15 +399,18 @@ final class ProgressStoreService: ObservableObject {
     private let context: ModelContext
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
-    private let morseCourseProgressURL = ProgressStoreService.morseCourseProgressURL
+    private let morseCourseProgressURL: URL
 #if DEBUG
+    var morseCourseProgressURLForTesting: URL { morseCourseProgressURL }
     var failNextImportAfterDeleteForTesting = false
     var failNextLessonQuizSaveForTesting = false
 #endif
 
-    init(container: ModelContainer) throws {
+    init(container: ModelContainer, morseCourseProgressURL: URL = ProgressStoreService.morseCourseProgressURL) throws {
         self.container = container
         self.context = ModelContext(container)
+        self.morseCourseProgressURL = morseCourseProgressURL
+        try FileManager.default.createDirectory(at: morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
         self.preferences = try loadPreferences()
     }
 
@@ -434,7 +437,11 @@ final class ProgressStoreService: ObservableObject {
         ])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
         let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
-        return try ProgressStoreService(container: container)
+        let directory = FileManager.default.temporaryDirectory
+            .appending(path: "CanadianHamProgressStoreTests", directoryHint: .isDirectory)
+            .appending(path: UUID().uuidString, directoryHint: .isDirectory)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        return try ProgressStoreService(container: container, morseCourseProgressURL: directory.appending(path: "MorseCourseProgress.json"))
     }
 
     static var persistentStoreURL: URL {
@@ -503,6 +510,7 @@ final class ProgressStoreService: ObservableObject {
 
     func saveMorseCourseProgress(_ progress: MorseCourseProgressExport) throws {
         let data = try encoder.encode(progress)
+        try FileManager.default.createDirectory(at: morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
         try data.write(to: morseCourseProgressURL, options: [.atomic])
         objectWillChange.send()
     }
@@ -651,6 +659,7 @@ final class ProgressStoreService: ObservableObject {
             entity.archivedLessonQuizAttemptsData = try encoder.encode(data.lessonQuizAttempts)
             context.insert(entity)
             if let morseCourseProgress = data.morseCourseProgress {
+                try FileManager.default.createDirectory(at: morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
                 try encoder.encode(morseCourseProgress).write(to: morseCourseProgressURL, options: [.atomic])
             } else {
                 try? FileManager.default.removeItem(at: morseCourseProgressURL)
@@ -848,6 +857,7 @@ final class ProgressStoreService: ObservableObject {
         entity.archivedLessonQuizAttemptsData = snapshot.archivedLessonQuizAttemptsData
         context.insert(entity)
         if let morseCourseProgressData = snapshot.morseCourseProgressData {
+            try FileManager.default.createDirectory(at: morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
             try morseCourseProgressData.write(to: morseCourseProgressURL, options: [.atomic])
         } else {
             try? FileManager.default.removeItem(at: morseCourseProgressURL)
@@ -928,7 +938,7 @@ private func validateMorseCourseProgress(_ progress: MorseCourseProgressExport, 
     var characters = Set<String>()
     for (index, record) in progress.characterStats.enumerated() {
         let prefix = "Import morseCourseProgress.characterStats[\(index)]"
-        if record.character.isEmpty { errors.append(String(localized: "\(prefix).character must be non-empty.")) }
+        if record.character.count != 1 { errors.append(String(localized: "\(prefix).character must be a single Morse character.")) }
         if !characters.insert(record.character).inserted { errors.append(String(localized: "\(prefix).character duplicates another character stat.")) }
         if record.attempts < 0 { errors.append(String(localized: "\(prefix).attempts must be non-negative.")) }
         if record.correctAttempts < 0 || record.correctAttempts > record.attempts { errors.append(String(localized: "\(prefix).correctAttempts must be between 0 and attempts.")) }
@@ -937,7 +947,7 @@ private func validateMorseCourseProgress(_ progress: MorseCourseProgressExport, 
     }
     for (index, record) in progress.dailyActivity.enumerated() {
         let prefix = "Import morseCourseProgress.dailyActivity[\(index)]"
-        if record.date.count != 10 { errors.append(String(localized: "\(prefix).date must be YYYY-MM-DD.")) }
+        if record.date.range(of: #"^\d{4}-\d{2}-\d{2}$"#, options: .regularExpression) == nil { errors.append(String(localized: "\(prefix).date must be YYYY-MM-DD.")) }
         if record.lessonsCompleted < 0 { errors.append(String(localized: "\(prefix).lessonsCompleted must be non-negative.")) }
     }
 }

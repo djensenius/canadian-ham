@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
+  buildMorseLessonExercises,
   dailyStreak,
   emptyMorseCourseProgress,
   learnedCharactersForProgress,
@@ -37,6 +38,47 @@ describe("Morse Koch course fixture", () => {
     expect(lessonState(course, progress, "koch-001")).toBe("completed");
     expect(lessonState(course, progress, "koch-002")).toBe("current");
     expect(dailyStreak(progress.dailyActivity, "2026-10-03T12:10:00.000Z")).toBe(1);
+  });
+
+  it("builds seeded real lesson exercises with both lesson-one characters and meaningful scoring", () => {
+    const course = parseMorseCourseFixture(courseFixture);
+    const lesson = course.lessons[0]!;
+
+    const exercises = buildMorseLessonExercises({ lesson, seed: "lesson-one" });
+    const scored = exercises.filter((exercise) => exercise.kind !== "meet");
+    const options = exercises.filter((exercise) => exercise.kind === "choose").map((exercise) => exercise.options.join(""));
+    const groups = exercises.filter((exercise) => exercise.kind === "type-group").map((exercise) => exercise.text);
+
+    expect(exercises.slice(0, 2)).toEqual([{ kind: "meet", character: "K" }, { kind: "meet", character: "M" }]);
+    expect(scored.length).toBeGreaterThanOrEqual(15);
+    expect(scored.length).toBeLessThanOrEqual(25);
+    expect(options.every((entry) => entry.length >= 2)).toBe(true);
+    expect(options.some((entry) => !entry.endsWith("K"))).toBe(true);
+    expect(groups.every((group) => group.length === 5 && [...group].every((character) => lesson.learnedCharacters.includes(character)))).toBe(true);
+    expect(buildMorseLessonExercises({ lesson, seed: "lesson-one" })).toEqual(exercises);
+    expect(buildMorseLessonExercises({ lesson, seed: "lesson-one-other" })).not.toEqual(exercises);
+  });
+
+  it("weights later lesson practice toward new and weak characters", () => {
+    const course = parseMorseCourseFixture(courseFixture);
+    const lesson = course.lessons[4]!;
+    const progress = {
+      ...emptyMorseCourseProgress(course.courseId),
+      characterStats: [
+        { character: "K", attempts: 5, correctAttempts: 5, recentResults: [true, true, true, true, true], lastPracticedAt: "2026-10-03T12:00:00.000Z" },
+        { character: "U", attempts: 5, correctAttempts: 1, recentResults: [false, false, false, false, true], lastPracticedAt: "2026-10-03T12:00:00.000Z" },
+      ],
+    };
+
+    const exercises = buildMorseLessonExercises({ lesson, progress, seed: "weak-weight" });
+    const targets = exercises.flatMap((exercise) => {
+      if (exercise.kind === "choose" || exercise.kind === "type-character") return [exercise.character];
+      if (exercise.kind === "type-group") return [...exercise.text];
+      return [];
+    });
+
+    expect(targets.filter((character) => character === "A").length).toBeGreaterThan(0);
+    expect(targets.filter((character) => character === "U").length).toBeGreaterThan(0);
   });
 
   it("selects weakest learned characters by recent accuracy", () => {

@@ -130,6 +130,24 @@ final class MorseFixtureTests: XCTestCase {
         XCTAssertEqual(try morseLessonState(course: course, progress: progress, lessonId: "koch-001"), .completed)
         XCTAssertEqual(try morseLessonState(course: course, progress: progress, lessonId: "koch-002"), .current)
         XCTAssertEqual(morseDailyStreak(activity: progress.dailyActivity, todayIso: "2026-10-03T12:05:00.000Z"), 1)
+
+        let firstLesson = try XCTUnwrap(course.lessons.first)
+        let exercises = buildMorseLessonExercises(lesson: firstLesson, seed: "lesson-one")
+        let scored = exercises.filter { exercise in
+            if case .meet = exercise { return false }
+            return true
+        }
+        XCTAssertEqual(Array(exercises.prefix(2)), [.meet("K"), .meet("M")])
+        XCTAssertGreaterThanOrEqual(scored.count, 15)
+        XCTAssertLessThanOrEqual(scored.count, 25)
+        XCTAssertTrue(exercises.contains { exercise in
+            if case .typeGroup(let text) = exercise {
+                return text.count == 5 && text.allSatisfy { firstLesson.learnedCharacters.contains(String($0)) }
+            }
+            return false
+        })
+        XCTAssertEqual(buildMorseLessonExercises(lesson: firstLesson, seed: "lesson-one"), exercises)
+        XCTAssertNotEqual(buildMorseLessonExercises(lesson: firstLesson, seed: "lesson-one-other"), exercises)
     }
 
     private func assertExpectedError(_ expectedError: ExpectedError, _ testCaseId: String, action: () throws -> Void) {

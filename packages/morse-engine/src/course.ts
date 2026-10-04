@@ -56,8 +56,33 @@ export interface MorseCourseProgressExport {
   readonly dailyActivity: readonly MorseDailyActivityRecord[];
 }
 
+export type MorseCourseExercise =
+  | { readonly kind: "meet"; readonly character: string }
+  | { readonly kind: "choose"; readonly character: string; readonly options: readonly string[] }
+  | { readonly kind: "type-character"; readonly character: string }
+  | { readonly kind: "type-group"; readonly text: string };
+
+export interface BuildMorseLessonExercisesInput {
+  readonly lesson: MorseCourseLesson;
+  readonly progress?: MorseCourseProgressExport;
+  readonly seed: string;
+  readonly scoredCount?: number;
+}
+
 const expectedOrder = Object.freeze("K M R S U A P T L O W I . N J E F 0 Y , V G 5 / Q 9 Z H 3 8 B ? 4 2 7 C 1 D 6 X -".split(" "));
 const expectedCharacters = new Set(expectedOrder);
+const confusableCharacters = new Map<string, readonly string[]>([
+  ["K", ["R", "M", "A"]],
+  ["M", ["O", "T", "K"]],
+  ["R", ["K", "A", "S"]],
+  ["S", ["U", "R", "I"]],
+  ["U", ["S", "A", "V"]],
+  ["A", ["R", "U", "W"]],
+  ["P", ["T", "L", "J"]],
+  ["T", ["M", "O", "P"]],
+  ["L", ["P", "F", "R"]],
+  ["O", ["M", "T", "0"]],
+]);
 
 export function parseMorseCourseFixture(value: unknown): MorseCourse {
   if (!isRecord(value)) throw new Error("Morse course fixture must be an object.");
@@ -124,6 +149,28 @@ export function learnedCharactersForProgress(course: MorseCourse, progress: Mors
   return course.lessons[Math.min(unlocked - 1, course.lessons.length - 1)]!.learnedCharacters;
 }
 
+export function buildMorseLessonExercises(input: BuildMorseLessonExercisesInput): readonly MorseCourseExercise[] {
+  const scoredCount = Math.max(15, Math.min(25, input.scoredCount ?? 20));
+  const random = seededRandom(`${input.seed}:${input.lesson.id}`);
+  const learned = input.lesson.learnedCharacters.filter((character) => expectedCharacters.has(character));
+  const newCharacters = input.lesson.newCharacters.filter((character) => expectedCharacters.has(character));
+  const weak = input.progress === undefined || input.lesson.lessonNumber === 1 ? [] : selectWeakestCharacters(input.progress.characterStats, learned, 6);
+  const weighted = weightedPracticeCharacters(learned, newCharacters, weak);
+  const exercises: MorseCourseExercise[] = newCharacters.map((character) => ({ kind: "meet", character }));
+
+  for (let index = 0; index < scoredCount; index += 1) {
+    const target = index < newCharacters.length ? newCharacters[index]! : drawWeighted(weighted, random);
+    if (index % 5 === 4) {
+      exercises.push({ kind: "type-group", text: buildKochGroup(weighted, random) });
+    } else if (index % 2 === 0) {
+      exercises.push({ kind: "choose", character: target, options: chooseOptions(target, learned, weak, random) });
+    } else {
+      exercises.push({ kind: "type-character", character: target });
+    }
+  }
+  return Object.freeze(exercises);
+}
+
 export function selectWeakestCharacters(
   stats: readonly MorseCharacterStatRecord[],
   learnedCharacters: readonly string[],
@@ -183,6 +230,68 @@ export function dailyStreak(activity: readonly MorseDailyActivityRecord[], today
     cursor = shiftIsoDate(cursor, -1);
   }
   return streak;
+}
+
+function chooseOptions(target: string, learned: readonly string[], weak: readonly string[], random: () => number): readonly string[] {
+  const distractors = unique([
+    ...(confusableCharacters.get(target) ?? []),
+    ...weak,
+    ...learned.slice(-8).toReversed(),
+    ...learned,
+    ...expectedOrder,
+  ]).filter((character) => character !== target && expectedCharacters.has(character));
+  return shuffle([target, ...distractors.slice(0, 3)], random);
+}
+
+function weightedPracticeCharacters(learned: readonly string[], newCharacters: readonly string[], weak: readonly string[]): readonly string[] {
+  const weighted: string[] = [];
+  const pushWeighted = (characters: readonly string[], weight: number) => {
+    for (const character of characters) {
+      if (!expectedCharacters.has(character)) continue;
+      for (let index = 0; index < weight; index += 1) weighted.push(character);
+    }
+  };
+  pushWeighted(learned, 1);
+  pushWeighted(learned.slice(-6), 1);
+  pushWeighted(weak, 2);
+  pushWeighted(newCharacters, 4);
+  return weighted.length === 0 ? ["K"] : Object.freeze(weighted);
+}
+
+function buildKochGroup(weightedCharacters: readonly string[], random: () => number): string {
+  return Array.from({ length: 5 }, () => drawWeighted(weightedCharacters, random)).join("");
+}
+
+function drawWeighted(characters: readonly string[], random: () => number): string {
+  return characters[Math.floor(random() * characters.length)] ?? characters[0] ?? "K";
+}
+
+function unique(values: readonly string[]): readonly string[] {
+  return [...new Set(values)];
+}
+
+function shuffle<T>(values: readonly T[], random: () => number): readonly T[] {
+  const shuffled = [...values];
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex]!, shuffled[index]!];
+  }
+  return Object.freeze(shuffled);
+}
+
+function seededRandom(seed: string): () => number {
+  let state = 2166136261;
+  for (let index = 0; index < seed.length; index += 1) {
+    state ^= seed.charCodeAt(index);
+    state = Math.imul(state, 16777619);
+  }
+  return () => {
+    state += 0x6D2B79F5;
+    let value = state;
+    value = Math.imul(value ^ (value >>> 15), value | 1);
+    value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+    return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+  };
 }
 
 function updatedCharacterStats(stats: readonly MorseCharacterStatRecord[], results: readonly { readonly character: string; readonly correct: boolean }[], attemptedAt: string): readonly MorseCharacterStatRecord[] {

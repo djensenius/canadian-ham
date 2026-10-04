@@ -22,6 +22,7 @@ export {
 } from "./morse.ts";
 
 export {
+  buildMorseLessonExercises,
   dailyStreak,
   emptyMorseCourseProgress,
   isLessonCompleted,
@@ -32,9 +33,11 @@ export {
   recordMorseLessonAttempt,
   selectWeakestCharacters,
   unlockedLessonCount,
+  type BuildMorseLessonExercisesInput,
   type MorseCharacterStatRecord,
   type MorseCourse,
   type MorseCourseLesson,
+  type MorseCourseExercise,
   type MorseCourseProgressExport,
   type MorseCourseUnit,
   type MorseDailyActivityRecord,
