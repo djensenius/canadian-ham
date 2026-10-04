@@ -2829,6 +2829,22 @@
         }
       }
     },
+    "Complete the previous lesson to unlock this lesson." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminez la leçon précédente pour débloquer celle-ci."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminez la leçon précédente pour débloquer celle-ci."
+          }
+        }
+      }
+    },
     "Completed" : {
       "localizations" : {
         "fr" : {
@@ -4577,18 +4593,18 @@
         }
       }
     },
-    "Learn and practise Morse code offline. Copy practice and the simulated receiving exam are available below." : {
+    "Learn and practise Morse code offline with the Koch course, copy practice and the simulated receiving exam below." : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apprenez le code Morse et exercez-vous hors ligne. La copie et l’examen simulé de réception sont offerts ci-dessous."
+            "value" : "Apprenez le code Morse et exercez-vous hors ligne avec le cours Koch, la copie et l’examen simulé de réception ci-dessous."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apprenez le code Morse et exercez-vous hors ligne. La copie et l’examen simulé de réception sont offerts ci-dessous."
+            "value" : "Apprenez le code Morse et exercez-vous hors ligne avec le cours Koch, la copie et l’examen simulé de réception ci-dessous."
           }
         }
       }

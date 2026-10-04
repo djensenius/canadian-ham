@@ -78,6 +78,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         completeVisibleMorseLesson(in: app)
 
         XCTAssertTrue(app.staticTexts["Lesson summary"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Great work. The next lesson is unlocked."].firstMatch.waitForExistence(timeout: 5))
     }
 
     func testAccessibilityAuditMorseCourseLessonAndSummaryLight() throws {
@@ -963,6 +964,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
     private func auditMorseCourseFlow(appearance: AuditAppearance) throws {
         let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1", "-CanadianHamMorseCourseAuditOnly"])
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
+        try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course path")
         tapFirstMorseLesson(in: app)
         XCTAssertTrue(app.staticTexts["Lesson 1 session"].firstMatch.waitForExistence(timeout: 10))
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse lesson session")
@@ -1138,8 +1140,26 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try app.performAccessibilityAudit()
     }
 
-    private func performCourseAudit(on app: XCUIApplication, context _: String) throws {
-        try app.performAccessibilityAudit(for: [.elementDetection, .hitRegion, .sufficientElementDescription])
+    private func performCourseAudit(on app: XCUIApplication, context: String) throws {
+        if context.contains("morse course path") {
+            try app.performAccessibilityAudit { issue in
+                let label = issue.element?.label ?? ""
+                let isCoursePathLessonTextDynamicTypeIssue = issue.auditType == .dynamicType && self.isMorseCoursePathLessonLabel(label)
+                // Xcode 27 reports dynamic-type false positives for the visible text fragments inside the responsive SwiftUI course path.
+                // Each lesson button exposes one combined label plus the locked-state hint, and non-course-path-label audit issues still fail.
+                return isCoursePathLessonTextDynamicTypeIssue
+            }
+        } else {
+            try app.performAccessibilityAudit()
+        }
+    }
+
+    private func isMorseCoursePathLessonLabel(_ label: String) -> Bool {
+        if label.hasPrefix("Lesson ") || label.hasPrefix("Unit ") || ["Locked", "Current", "Completed"].contains(label) {
+            return true
+        }
+        let morseCourseCharacters = Set("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/?. ")
+        return !label.isEmpty && label.allSatisfy { morseCourseCharacters.contains($0) }
     }
 
     private func openMockExamStart(in app: XCUIApplication) {

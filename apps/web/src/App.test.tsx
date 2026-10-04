@@ -70,6 +70,14 @@ function createMemoryStorage(): Storage {
   };
 }
 
+function localDateString(value: string): string {
+  const date = new Date(value);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 class DelayedInitialPreferencesStore extends ProgressStore {
   private readonly releaseInitialPreferencesPromise: Promise<void>;
   private releaseInitialPreferencesPromiseResolve: (() => void) | null = null;
@@ -1096,7 +1104,7 @@ describe("App accessibility and flows", () => {
     assert.equal(saved?.lessonProgress[0]?.lessonId, "koch-001");
     assert.equal(saved?.lessonProgress[0]?.bestAccuracy, 1);
     assert.equal(saved?.lessonProgress[0]?.attempts, 1);
-    assert.equal(saved?.dailyActivity[0]?.date, "2026-01-01");
+    assert.equal(saved?.dailyActivity[0]?.date, localDateString(fixedNow));
     assert.equal(screen.getByRole("button", { name: /Lesson 2, R, Current/ }).getAttribute("disabled"), null);
     assert.equal(within(session).queryByRole("button", { name: "Check" }), null);
   });

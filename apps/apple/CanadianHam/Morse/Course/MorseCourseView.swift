@@ -98,7 +98,7 @@ struct MorseCourseView: View {
                     Text(String.localizedStringWithFormat(String(localized: "Unit %lld"), Int64(unit.unitNumber))) // l10n: localized
                         .font(DesignTokens.FontScale.body.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: DesignTokens.Spacing.sm), count: 5), spacing: DesignTokens.Spacing.sm) {
+                    LazyVStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                         ForEach(unit.lessonIds, id: \.self) { lessonId in
                             if let lesson = course.lessons.first(where: { $0.id == lessonId }) {
                                 lessonButton(lesson: lesson, state: (try? morseLessonState(course: course, progress: progress, lessonId: lesson.id)) ?? .locked)
@@ -119,13 +119,17 @@ struct MorseCourseView: View {
         } label: {
             VStack(spacing: DesignTokens.Spacing.xs) {
                 Text(String.localizedStringWithFormat(String(localized: "Lesson %lld"), Int64(lesson.lessonNumber))) // l10n: localized
-                    .font(DesignTokens.FontScale.caption)
+                    .font(DesignTokens.FontScale.body)
+                    .accessibilityHidden(true)
                 Text(lesson.newCharacters.joined(separator: " ")) // l10n: verbatim
                     .font(DesignTokens.FontScale.body.weight(.bold))
+                    .accessibilityHidden(true)
                 Text(label(for: state)) // l10n: localized
-                    .font(DesignTokens.FontScale.caption)
+                    .font(DesignTokens.FontScale.body)
+                    .accessibilityHidden(true)
             }
-            .frame(maxWidth: .infinity, minHeight: 84)
+            .frame(maxWidth: .infinity)
+            .fixedSize(horizontal: false, vertical: true)
             .foregroundStyle(DesignTokens.Colors.ink)
             .padding(DesignTokens.Spacing.sm)
             .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
@@ -136,7 +140,9 @@ struct MorseCourseView: View {
         }
         .allowsHitTesting(state != .locked)
         .buttonStyle(.plain)
+        .accessibilityRespondsToUserInteraction(state != .locked)
         .accessibilityLabel(Text(String.localizedStringWithFormat(String(localized: "Lesson %lld, %@, %@"), Int64(lesson.lessonNumber), lesson.newCharacters.joined(separator: " "), labelText(for: state)))) // l10n: localized
+        .accessibilityHint(Text(accessibilityHintText(for: state))) // l10n: localized
         .accessibilityIdentifier("morse-course-lesson-\(lesson.lessonNumber)")
     }
 
@@ -174,14 +180,20 @@ struct MorseCourseView: View {
             Text(morseCodeTable[character] ?? "") // l10n: verbatim
                 .font(.largeTitle.weight(.bold).monospaced())
             HStack {
-                Button("Play character") { play(character) } // l10n: localized
+                Button { play(character) } label: {
+                    AccessibleSecondaryButtonLabel(title: "Play character")
+                } // l10n: localized
+                .buttonStyle(AccessibleSecondaryButtonStyle())
                 Button("Next") { answer(correct: true, results: []) } // l10n: localized
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(AccessiblePrimaryButtonStyle())
                     .accessibilityIdentifier("morse-course-next")
             }
         case .choose(let character, let options):
             Text("Listen and choose the character you heard.") // l10n: localized
-            Button("Play") { play(character) } // l10n: localized
+            Button { play(character) } label: {
+                AccessibleSecondaryButtonLabel(title: "Play")
+            } // l10n: localized
+            .buttonStyle(AccessibleSecondaryButtonStyle())
             HStack {
                 ForEach(options, id: \.self) { option in
                     Button(option) { answer(correct: option == character, results: [(character, option == character)]) } // l10n: verbatim
@@ -198,7 +210,10 @@ struct MorseCourseView: View {
     private func typedCopyForm(prompt: LocalizedStringKey, expected: String) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             Text(prompt) // l10n: localized
-            Button("Play") { play(expected) } // l10n: localized
+            Button { play(expected) } label: {
+                AccessibleSecondaryButtonLabel(title: "Play")
+            } // l10n: localized
+            .buttonStyle(AccessibleSecondaryButtonStyle())
             TextField("Your copy", text: $typedAnswer) // l10n: localized
 #if os(iOS)
                 .textInputAutocapitalization(.characters)
@@ -209,7 +224,7 @@ struct MorseCourseView: View {
                 let normalized = typedAnswer.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
                 answer(correct: normalized == expected, results: expected.enumerated().map { index, character in (String(character), normalized.dropFirst(index).first.map(String.init) == String(character)) })
             } // l10n: localized
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(AccessiblePrimaryButtonStyle())
             .accessibilityIdentifier("morse-course-check")
         }
     }
@@ -319,6 +334,10 @@ struct MorseCourseView: View {
         case .current: String(localized: "Current")
         case .completed: String(localized: "Completed")
         }
+    }
+
+    private func accessibilityHintText(for state: MorseLessonState) -> String {
+        state == .locked ? String(localized: "Complete the previous lesson to unlock this lesson.") : ""
     }
 }
 

@@ -66,7 +66,7 @@ struct MorseTrainerView: View {
                             .padding(.vertical, DesignTokens.Spacing.xs)
                             .background(DesignTokens.Colors.paperInset, in: Capsule())
                     }
-                    Text("Learn and practise Morse code offline. Copy practice and the simulated receiving exam are available below.") // l10n: localized
+                    Text("Learn and practise Morse code offline with the Koch course, copy practice and the simulated receiving exam below.") // l10n: localized
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
