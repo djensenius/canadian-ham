@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-04 09:12'
-updated_date: '2026-10-04 09:12'
+updated_date: '2026-10-04 09:13'
 labels:
   - web
   - apple
@@ -30,3 +30,12 @@ Why: Copilot's final review of PR #127 found six issues in the new course code: 
 - [ ] #2 The daily streak counts back from today if there's activity today, otherwise from yesterday, so it only breaks after a missed day; identical in TS and Swift with a shared fixture
 - [ ] #3 Apple progress dates use a Gregorian calendar in the current time zone; the TS parser validates unit IDs unit-01..unit-08 like Swift; tests cover both
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Fix the shared Morse course engine behavior: daily streak starts from today or yesterday and TypeScript validates unit IDs unit-01..unit-08, then cover both with package tests/shared fixture.
+2. Update web and Apple lesson summary copy so review sessions and final lesson completions do not claim a next unlock, and add tests.
+3. Use a Gregorian current-time-zone date formatter for Apple local progress dates and cover it in Swift tests.
+4. Run targeted package/web/Swift checks for the changed code before moving to task-12.15.
+<!-- SECTION:PLAN:END -->
