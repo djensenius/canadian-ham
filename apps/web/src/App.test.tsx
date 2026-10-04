@@ -10,6 +10,8 @@ import { StrictMode } from "react";
 import { IDBFactory } from "fake-indexeddb";
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
 
+import { generateMorseExamText, profileForName } from "@canadian-ham/morse-engine";
+
 import { App, AppErrorBoundary, CitationLink, ExplanationPanel } from "./App";
 import { bankId, categories, loadQuestions, loadQuestionsFromUrl, manifest, type Answer, type Category, type Question } from "./data/bank";
 import { explanationForQuestion, parseChoiceNotes } from "./data/explanations";
@@ -1101,17 +1103,49 @@ describe("App accessibility and flows", () => {
     }
 
     assert.ok(within(copySection).getByRole("heading", { name: "Character diff" }));
+    assert.ok(copySection.querySelector('[aria-label="Wrong: expected ?, received X"]'));
     assert.match(copySection.textContent ?? "", /wrong/i);
     assert.match(copySection.textContent ?? "", /total errors/i);
     await expectNoAxeViolations(container);
   });
 
-  it("runs the simulated Morse exam through playback, review, grading, and diff", async () => {
+  it("localizes Morse diff token screen-reader labels in French", async () => {
+    window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
+    window.location.hash = "#/morse";
+    const store = createStore("morse-copy-practice-fr");
+    await store.putPreferences(morsePreferences(true));
+    stubMorseAudioContext();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-copy-fr-seed"} />);
+
+    await screen.findByRole("heading", { name: "Écoute rapide" });
+    const copyHeading = screen.getAllByRole("heading", { name: "Copie" }).at(-1);
+    assert.ok(copyHeading);
+    const copySection = copyHeading.closest("section");
+    assert.ok(copySection);
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(within(copySection).getByRole("button", { name: "Démarrer la copie" }));
+      fireEvent.change(within(copySection).getByLabelText("Votre copie"), { target: { value: "THE NET OPENS AT NOON. QSX" } });
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(90_000);
+      });
+      fireEvent.click(within(copySection).getByRole("button", { name: "Vérifier la copie" }));
+    } finally {
+      vi.useRealTimers();
+    }
+
+    assert.ok(within(copySection).getByRole("heading", { name: "Différence par caractère" }));
+    assert.ok(copySection.querySelector('[aria-label="Erroné : attendu ?, reçu X"]'));
+  });
+
+  it("runs the simulated Morse exam through playback, review, grading, axe, and diff", async () => {
     window.location.hash = "#/morse";
     const store = createStore("morse-exam-flow");
     await store.putPreferences(morsePreferences(true));
     stubMorseAudioContext();
-    render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-exam-seed"} />);
+    const examSeed = "web-isedParis-morse-exam-seed";
+    const generatedExam = generateMorseExamText({ seed: examSeed, profile: profileForName("isedParis") });
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-exam-seed"} />);
 
     await screen.findByRole("heading", { name: "Quick listen" });
     const examHeading = screen.getAllByRole("heading", { name: "Exam" }).at(-1);
@@ -1123,7 +1157,7 @@ describe("App accessibility and flows", () => {
       fireEvent.click(within(examSection).getByRole("button", { name: "Start simulated exam" }));
       fireEvent.change(within(examSection).getByLabelText("Your copy"), { target: { value: "ABC" } });
       await act(async () => {
-        await vi.advanceTimersByTimeAsync(260_000);
+        await vi.advanceTimersByTimeAsync(Math.ceil(generatedExam.durationSeconds * 1000) + 80);
       });
       assert.match(examSection.textContent ?? "", /Review time remaining/);
       await act(async () => {
@@ -1135,6 +1169,7 @@ describe("App accessibility and flows", () => {
 
     assert.match(examSection.textContent ?? "", /FAIL/);
     assert.ok(within(examSection).getByRole("heading", { name: "Character diff" }));
+    await expectNoAxeViolations(container);
   });
 
   it("opens #/morse directly without waiting on retired preview gating", async () => {

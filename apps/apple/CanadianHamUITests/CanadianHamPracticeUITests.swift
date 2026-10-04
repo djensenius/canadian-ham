@@ -92,6 +92,35 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "FAIL")).firstMatch.waitForExistence(timeout: 10))
     }
 
+    func testMorseExamStartResetsAfterAudioStartupFailure() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseFailExamAudioStartup"
+        ])
+        defer { app.terminate() }
+
+        let examStart = app.buttons["morse-exam-start-button"].firstMatch
+        XCTAssertTrue(examStart.waitForExistence(timeout: 10))
+        scrollUntilHittable(examStart, in: app, maxSwipes: 8)
+        examStart.tap()
+
+        XCTAssertTrue(app.staticTexts["Morse error"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(examStart.isEnabled, "Failed audio startup should return the exam to idle so Start is enabled")
+        XCTAssertFalse(app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "Generated exam")).firstMatch.exists, "Failed audio startup should clear the generated exam summary")
+    }
+
+    func testAccessibilityAuditMorseExamGradedDiffLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditMorseExamGradedDiff(appearance: .light)
+    }
+
+    func testAccessibilityAuditMorseExamGradedDiffDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditMorseExamGradedDiff(appearance: .dark)
+        XCUIDevice.shared.appearance = .light
+    }
+
     func testCompactTopLevelListPushesMorseThenLearn() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp()
@@ -784,6 +813,30 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCUIDevice.shared.appearance = .dark
         try auditMockExamFlow(appearance: .dark)
         XCUIDevice.shared.appearance = .light
+    }
+
+    private func auditMorseExamGradedDiff(appearance: AuditAppearance) throws {
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseExamPlaybackSeconds", "0.1",
+            "-CanadianHamMorseExamReviewSeconds", "1"
+        ])
+        defer { app.terminate() }
+
+        let examStart = app.buttons["morse-exam-start-button"].firstMatch
+        XCTAssertTrue(examStart.waitForExistence(timeout: 10))
+        scrollUntilHittable(examStart, in: app, maxSwipes: 8)
+        examStart.tap()
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "FAIL")).firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Character diff"].firstMatch.waitForExistence(timeout: 5))
+        let diffView = app.descendants(matching: .any)["morse-diff-view"].firstMatch
+        XCTAssertTrue(diffView.waitForExistence(timeout: 5), "Expected the graded Morse diff view before auditing")
+        try app.performAccessibilityAudit(for: .contrast) { issue in
+            let identifier = issue.element?.identifier ?? ""
+            let label = issue.element?.label ?? ""
+            let isMorseDiffIssue = identifier.hasPrefix("morse-diff") || label == "Character diff" || label.contains("expected") || label.contains("received")
+            return !isMorseDiffIssue
+        }
     }
 
     private func auditCoreScreens(appearance: AuditAppearance) throws {

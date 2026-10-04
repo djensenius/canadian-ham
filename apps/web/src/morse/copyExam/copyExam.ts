@@ -1,4 +1,4 @@
-import { diffMorseCopy, validateMorseText, type MorseCopyDiff, type MorseCopyDiffOperation } from "@canadian-ham/morse-engine";
+import { diffMorseCopy, validateMorseText, type MorseCopyDiff } from "@canadian-ham/morse-engine";
 
 export type MorseCopyPassageLength = "short" | "medium" | "long";
 
@@ -73,17 +73,4 @@ export function buildCopyDiff(expected: string, received: string): MorseCopyDiff
 export function containsDotDashNotation(text: string): boolean {
   const stripped = text.replace(/\s/gu, "");
   return stripped.length > 0 && /^[.-]+$/u.test(stripped);
-}
-
-export function diffOperationLabel(operation: MorseCopyDiffOperation): string {
-  switch (operation.kind) {
-    case "match":
-      return operation.expected ?? "";
-    case "wrong":
-      return `Wrong: ${operation.expected ?? ""}→${operation.received ?? ""}`;
-    case "missing":
-      return `Missing: ${operation.expected ?? ""}`;
-    case "inserted":
-      return `Inserted: ${operation.received ?? ""}`;
-  }
 }

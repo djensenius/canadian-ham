@@ -1,16 +1,17 @@
-import { generateMorseExamText, profileForName, textToTimedMorse, type MorseCopyDiff, type MorseProfileName } from "@canadian-ham/morse-engine";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { generateMorseExamText, profileForName, textToTimedMorse, type MorseCopyDiff, type MorseCopyDiffOperation, type MorseProfileName } from "@canadian-ham/morse-engine";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 
 import { WebMorsePlayer } from "../../lib/morseAudio";
 import { interfaceLanguageTag, t, type InterfaceLanguage } from "../../lib/i18n";
 import { morseTimingFromPreferences } from "../../lib/morseSettings";
 import type { WebPreferences } from "../../lib/progressStore";
-import { buildCopyDiff, containsDotDashNotation, copyPracticePassage, diffOperationLabel, type MorseCopyPassageLength } from "./copyExam";
+import { buildCopyDiff, containsDotDashNotation, copyPracticePassage, type MorseCopyPassageLength } from "./copyExam";
 
 interface MorseCopyExamSectionProps {
   readonly interfaceLanguage: InterfaceLanguage;
   readonly preferences: WebPreferences;
   readonly reviewDurationSeconds?: number;
+  readonly examSeedFactory?: (profileName: MorseProfileName) => string;
 }
 
 type CopyStage = "idle" | "playing" | "ready" | "graded";
@@ -29,13 +30,14 @@ interface ExamPassageState {
 }
 
 const defaultExamReviewSeconds = 120;
+const defaultExamSeedFactory = (profileName: MorseProfileName) => `web-${profileName}-${Date.now().toString(36)}`;
 
-export function MorseCopyExamSection({ interfaceLanguage, preferences, reviewDurationSeconds = defaultExamReviewSeconds }: MorseCopyExamSectionProps) {
+export function MorseCopyExamSection({ interfaceLanguage, preferences, reviewDurationSeconds = defaultExamReviewSeconds, examSeedFactory = defaultExamSeedFactory }: MorseCopyExamSectionProps) {
   const locale = interfaceLanguageTag(interfaceLanguage);
   return (
     <div className="morse-copy-exam-grid">
       <MorseCopyPracticePanel interfaceLanguage={interfaceLanguage} locale={locale} preferences={preferences} />
-      <MorseExamPanel interfaceLanguage={interfaceLanguage} locale={locale} preferences={preferences} reviewDurationSeconds={reviewDurationSeconds} />
+      <MorseExamPanel interfaceLanguage={interfaceLanguage} locale={locale} preferences={preferences} reviewDurationSeconds={reviewDurationSeconds} examSeedFactory={examSeedFactory} />
     </div>
   );
 }
@@ -155,7 +157,7 @@ function MorseCopyPracticePanel({ interfaceLanguage, locale, preferences }: { re
   );
 }
 
-function MorseExamPanel({ interfaceLanguage, locale, preferences, reviewDurationSeconds }: { readonly interfaceLanguage: InterfaceLanguage; readonly locale: string; readonly preferences: WebPreferences; readonly reviewDurationSeconds: number }) {
+function MorseExamPanel({ interfaceLanguage, locale, preferences, reviewDurationSeconds, examSeedFactory }: { readonly interfaceLanguage: InterfaceLanguage; readonly locale: string; readonly preferences: WebPreferences; readonly reviewDurationSeconds: number; readonly examSeedFactory: (profileName: MorseProfileName) => string }) {
   const playerRef = useRef<WebMorsePlayer | null>(null);
   const playbackTimerRef = useRef<number | null>(null);
   const reviewIntervalRef = useRef<number | null>(null);
@@ -185,7 +187,7 @@ function MorseExamPanel({ interfaceLanguage, locale, preferences, reviewDuration
     clearWindowTimer(reviewIntervalRef.current);
     clearWindowTimer(reviewFinishTimerRef.current);
     const profile = profileForName(profileName);
-    const generated = generateMorseExamText({ profile, seed: `web-${profileName}-${Date.now().toString(36)}` });
+    const generated = generateMorseExamText({ profile, seed: examSeedFactory(profileName) });
     const examPreferences = { ...preferences.morse, timingProfile: profileName, characterWpm: 12, effectiveWpm: 5 } as const;
     playerRef.current ??= new WebMorsePlayer();
     setExam({ text: generated.text, durationSeconds: generated.durationSeconds, weightedCharacters: generated.weightedCharacters });
@@ -282,6 +284,7 @@ function MorseExamPanel({ interfaceLanguage, locale, preferences, reviewDuration
 }
 
 function MorseDiffView({ diff, expectedText, interfaceLanguage }: { readonly diff: MorseCopyDiff; readonly expectedText: string; readonly interfaceLanguage: InterfaceLanguage }) {
+  const headingId = useId();
   const summary = t(
     interfaceLanguage,
     "morseDiffSummary",
@@ -291,8 +294,8 @@ function MorseDiffView({ diff, expectedText, interfaceLanguage }: { readonly dif
     String(diff.score.inserted),
   );
   return (
-    <section className="morse-diff" aria-labelledby="morse-diff-heading">
-      <h4 id="morse-diff-heading">{t(interfaceLanguage, "morseDiffTitle")}</h4>
+    <section className="morse-diff" aria-labelledby={headingId}>
+      <h4 id={headingId}>{t(interfaceLanguage, "morseDiffTitle")}</h4>
       <p role="status">{summary}</p>
       <p>{diff.score.passed ? t(interfaceLanguage, "morseDiffPassMark", String(diff.score.markPercent)) : t(interfaceLanguage, "morseDiffFailMark", String(diff.score.markPercent))}</p>
       <details>
@@ -301,7 +304,7 @@ function MorseDiffView({ diff, expectedText, interfaceLanguage }: { readonly dif
       </details>
       <ol className="morse-diff-list" aria-label={summary}>
         {diff.operations.map((operation, index) => (
-          <li key={`${operation.kind}-${index}`} className={`morse-diff-token morse-diff-${operation.kind}`} aria-label={diffOperationLabel(operation)}>
+          <li key={`${operation.kind}-${index}`} className={`morse-diff-token morse-diff-${operation.kind}`} aria-label={diffOperationLabel(operation, interfaceLanguage)}>
             <span className="morse-diff-token-label">{visibleDiffLabel(operation)}</span>
           </li>
         ))}
@@ -322,6 +325,19 @@ function visibleDiffLabel(operation: { readonly kind: string; readonly expected?
       return `+ ${operation.received ?? ""}`;
     default:
       return "";
+  }
+}
+
+function diffOperationLabel(operation: MorseCopyDiffOperation, interfaceLanguage: InterfaceLanguage): string {
+  switch (operation.kind) {
+    case "match":
+      return operation.expected ?? "";
+    case "wrong":
+      return t(interfaceLanguage, "morseDiffWrongLabel", operation.expected ?? "", operation.received ?? "");
+    case "missing":
+      return t(interfaceLanguage, "morseDiffMissingLabel", operation.expected ?? "");
+    case "inserted":
+      return t(interfaceLanguage, "morseDiffInsertedLabel", operation.received ?? "");
   }
 }
 

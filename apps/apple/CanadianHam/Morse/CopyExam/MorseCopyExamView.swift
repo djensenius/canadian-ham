@@ -270,6 +270,11 @@ private struct MorseReceivingExamView: View {
             playbackSettings.timingProfile = selectedProfile
             playbackSettings.characterWpm = 12
             playbackSettings.effectiveWpm = 5
+#if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseFailExamAudioStartup") {
+                throw NSError(domain: "CanadianHamUITests", code: 1)
+            }
+#endif
             let duration = try driver.play(text: generated.text, settings: playbackSettings)
             let waitSeconds = debugExamPlaybackOverride ?? duration
             playbackTask = Task { @MainActor in
@@ -279,6 +284,15 @@ private struct MorseReceivingExamView: View {
                 startReview()
             }
         } catch {
+            playbackTask?.cancel()
+            playbackTask = nil
+            reviewTask?.cancel()
+            reviewTask = nil
+            driver.stop()
+            examText = nil
+            diff = nil
+            stage = .idle
+            statusMessage = ""
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: "), detail: error)
         }
     }
@@ -351,14 +365,17 @@ private struct MorseDiffView: View {
                 ForEach(Array(diff.operations.enumerated()), id: \.offset) { _, operation in
                     Text(visibleDiffLabel(operation)) // l10n: localized markers with verbatim characters
                         .font(.caption.monospaced().weight(.bold))
+                        .foregroundStyle(diffForeground(operation))
                         .padding(.horizontal, DesignTokens.Spacing.xs)
                         .padding(.vertical, 3)
                         .background(diffBackground(operation), in: RoundedRectangle(cornerRadius: DesignTokens.Radius.xs, style: .continuous))
                         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.xs, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
                         .accessibilityLabel(Text(accessibilityDiffLabel(operation))) // l10n: localized
+                        .accessibilityIdentifier("morse-diff-token-\(operation.kind.rawValue)")
                 }
             }
         }
+        .accessibilityIdentifier("morse-diff-view")
     }
 
     private var diffSummary: String {
@@ -408,6 +425,17 @@ private func diffBackground(_ operation: MorseCopyDiffOperation) -> Color {
         DesignTokens.Colors.warningBg
     case .inserted:
         DesignTokens.Colors.paperElevated
+    }
+}
+
+private func diffForeground(_ operation: MorseCopyDiffOperation) -> Color {
+    switch operation.kind {
+    case .match, .inserted:
+        DesignTokens.Colors.ink
+    case .wrong:
+        DesignTokens.Colors.incorrectText
+    case .missing:
+        DesignTokens.Colors.warningText
     }
 }
 

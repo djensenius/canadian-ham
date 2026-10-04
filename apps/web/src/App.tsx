@@ -641,7 +641,7 @@ function AppContent({
           <Results attempt={latestResult ?? latestAttempt} interfaceLanguage={interfaceLanguage} language={language} onStartPractice={startPractice} questionsById={bankQuestionsById} />
         ) : null}
         {initialStoreLoaded && route === "morse" ? (
-          <MorseSection interfaceLanguage={interfaceLanguage} onSetPreferences={setPreferences} preferences={preferences} />
+          <MorseSection interfaceLanguage={interfaceLanguage} onSetPreferences={setPreferences} preferences={preferences} seedFactory={seedFactory} />
         ) : null}
         {initialStoreLoaded && route === "settings" ? (
           <Settings
@@ -1769,7 +1769,7 @@ function About({ interfaceLanguage }: { readonly interfaceLanguage: InterfaceLan
 
 const MORSE_PRACTICE_TEXT = "KMRSU PARIS";
 
-function MorseSection({ interfaceLanguage, preferences, onSetPreferences }: { readonly interfaceLanguage: InterfaceLanguage; readonly preferences: WebPreferences; readonly onSetPreferences: (preferences: PreferencesPatch) => Promise<boolean> }) {
+function MorseSection({ interfaceLanguage, preferences, onSetPreferences, seedFactory }: { readonly interfaceLanguage: InterfaceLanguage; readonly preferences: WebPreferences; readonly onSetPreferences: (preferences: PreferencesPatch) => Promise<boolean>; readonly seedFactory: () => string }) {
   return (
     <section className="card morse-section" aria-labelledby="morse-section-title">
       <p className="eyebrow">{t(interfaceLanguage, "morseEyebrow")}</p>
@@ -1789,7 +1789,7 @@ function MorseSection({ interfaceLanguage, preferences, onSetPreferences }: { re
           <p>{t(interfaceLanguage, "morseExamPlaceholder")}</p>
         </div>
       </div>
-      <MorseCopyExamSection interfaceLanguage={interfaceLanguage} preferences={preferences} />
+      <MorseCopyExamSection interfaceLanguage={interfaceLanguage} preferences={preferences} examSeedFactory={(profileName) => `web-${profileName}-${seedFactory()}`} />
       <MorseTrainerPreview interfaceLanguage={interfaceLanguage} preferences={preferences} />
       <MorseSettingsControls interfaceLanguage={interfaceLanguage} onSetPreferences={onSetPreferences} preferences={preferences} />
     </section>

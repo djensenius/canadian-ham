@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import {
   MORSE_CODE_TABLE,
   MorseValidationError,
+  diffMorseCopy,
   farnsworthTiming,
   generateMorseExamText,
   profileForName,
@@ -67,6 +68,9 @@ function validateFixture(fixture: any): void {
       break;
     case "morse-copy-exam":
       validateCopyExamFixture(fixture);
+      break;
+    case "morse-copy-diff":
+      validateCopyDiffFixture(fixture);
       break;
     case "morse-validation":
       validateValidationFixture(fixture);
@@ -144,6 +148,32 @@ function validateCopyExamFixture(fixture: any): void {
     expect(generated.durationSeconds, testCase.id).toBeGreaterThanOrEqual(testCase.expectedOutput.minDurationSeconds);
     expect(generated.normalizedText, testCase.id).toBe(textToTimedMorse(generated.text, profile).normalizedText);
     expect(round(generated.durationSeconds, 9), testCase.id).toBeCloseTo(textToTimedMorse(generated.text, profile).totalDurationSeconds, 9);
+    if (testCase.expectedOutput.text !== undefined) {
+      expect(generated.text, testCase.id).toBe(testCase.expectedOutput.text);
+    }
+    if (testCase.expectedOutput.normalizedText !== undefined) {
+      expect(generated.normalizedText, testCase.id).toBe(testCase.expectedOutput.normalizedText);
+    }
+    if (testCase.expectedOutput.weightedCharacters !== undefined) {
+      expect(generated.weightedCharacters, testCase.id).toBe(testCase.expectedOutput.weightedCharacters);
+    }
+    if (testCase.expectedOutput.unweightedCharacters !== undefined) {
+      expect(generated.unweightedCharacters, testCase.id).toBe(testCase.expectedOutput.unweightedCharacters);
+    }
+    if (testCase.expectedOutput.durationSeconds !== undefined) {
+      expect(round(generated.durationSeconds, 9), testCase.id).toBeCloseTo(testCase.expectedOutput.durationSeconds, 9);
+    }
+  }
+}
+
+function validateCopyDiffFixture(fixture: any): void {
+  for (const testCase of fixture.cases) {
+    if (testCase.expectedError !== undefined) {
+      expectFixtureError(() => diffMorseCopy(testCase.input.expected, testCase.input.received), testCase.expectedError, testCase.id);
+      continue;
+    }
+
+    expect(diffMorseCopy(testCase.input.expected, testCase.input.received), testCase.id).toEqual(testCase.expectedOutput);
   }
 }
 
