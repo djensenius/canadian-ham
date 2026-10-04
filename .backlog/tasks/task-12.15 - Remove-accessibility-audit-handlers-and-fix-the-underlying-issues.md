@@ -1,9 +1,11 @@
 ---
 id: TASK-12.15
 title: Remove accessibility audit handlers and fix the underlying issues
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-04 07:02'
+updated_date: '2026-10-04 09:17'
 labels:
   - apple
   - accessibility
