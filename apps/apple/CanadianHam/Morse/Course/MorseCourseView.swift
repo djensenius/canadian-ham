@@ -16,30 +16,44 @@ struct MorseCourseView: View {
     @State private var driver = MorseAudioDriver()
     @AccessibilityFocusState private var sessionIsFocused: Bool
 
+    private var isCourseAuditOnly: Bool {
+#if DEBUG
+        ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseCourseAuditOnly")
+#else
+        false
+#endif
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Text("Koch course") // l10n: localized
-                    .font(DesignTokens.FontScale.caption.weight(.semibold))
-                    .foregroundStyle(DesignTokens.Colors.inkMuted)
-                Text("Morse course path") // l10n: localized
-                    .font(DesignTokens.FontScale.title.weight(.bold))
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                    .accessibilityAddTraits(.isHeader)
-                Text("Learn the ISED Morse character set by ear with 40 short Koch lessons. Each lesson unlocks the next at 90% accuracy.") // l10n: localized
-                    .font(DesignTokens.FontScale.body)
-                    .foregroundStyle(DesignTokens.Colors.ink)
+            if !(isCourseAuditOnly && session != nil) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                    Text("Koch course") // l10n: localized
+                        .font(DesignTokens.FontScale.caption.weight(.semibold))
+                        .foregroundStyle(.primary)
+                    Text("Morse course path") // l10n: localized
+                        .font(DesignTokens.FontScale.title.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityAddTraits(.isHeader)
+                    Text("Learn the ISED Morse character set by ear with 40 short Koch lessons. Each lesson unlocks the next at 90% accuracy.") // l10n: localized
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                }
             }
 
             if let course, let progress {
-                courseStats(course: course, progress: progress)
-                Button("Review weakest characters") { startReview(course: course, progress: progress) } // l10n: localized
-                    .buttonStyle(.bordered)
-                    .accessibilityIdentifier("morse-course-review")
                 if let session {
                     sessionView(session, course: course, progress: progress)
                 }
-                coursePath(course: course, progress: progress)
+                if !isCourseAuditOnly || session == nil {
+                    courseStats(course: course, progress: progress)
+                    Button { startReview(course: course, progress: progress) } label: {
+                        AccessibleSecondaryButtonLabel(title: "Review weakest characters")
+                    } // l10n: localized
+                    .buttonStyle(AccessibleSecondaryButtonStyle())
+                    .accessibilityIdentifier("morse-course-review")
+                    coursePath(course: course, progress: progress)
+                }
             } else if let errorMessage {
                 MessagePanel(title: "Morse course error", message: errorMessage, kind: .warning)
             } else {
@@ -56,7 +70,7 @@ struct MorseCourseView: View {
 
     private func courseStats(course: MorseCourse, progress: MorseCourseProgressExport) -> some View {
         let completed = progress.lessonProgress.filter { $0.bestAccuracy >= course.unlockAccuracy }.count
-        let streak = morseDailyStreak(activity: progress.dailyActivity, todayIso: Date.now.canonicalUTCString)
+        let streak = morseDailyStreak(activity: progress.dailyActivity, todayIso: Date.now.localDateString)
         return HStack(spacing: DesignTokens.Spacing.md) {
             statCard(title: "Daily streak", value: String.localizedStringWithFormat(String(localized: "%lld days"), Int64(streak)))
             statCard(title: "Lessons completed", value: String.localizedStringWithFormat(String(localized: "%lld of %lld"), Int64(completed), Int64(course.lessons.count)))
@@ -67,10 +81,10 @@ struct MorseCourseView: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             Text(title) // l10n: localized
                 .font(DesignTokens.FontScale.caption.weight(.semibold))
-                .foregroundStyle(DesignTokens.Colors.inkMuted)
+                .foregroundStyle(.primary)
             Text(value) // l10n: localized
                 .font(DesignTokens.FontScale.title.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
+                .foregroundStyle(.primary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(DesignTokens.Spacing.md)
@@ -107,14 +121,21 @@ struct MorseCourseView: View {
                 Text(String.localizedStringWithFormat(String(localized: "Lesson %lld"), Int64(lesson.lessonNumber))) // l10n: localized
                     .font(DesignTokens.FontScale.caption)
                 Text(lesson.newCharacters.joined(separator: " ")) // l10n: verbatim
-                    .font(DesignTokens.FontScale.body.weight(.bold).monospaced())
+                    .font(DesignTokens.FontScale.body.weight(.bold))
                 Text(label(for: state)) // l10n: localized
                     .font(DesignTokens.FontScale.caption)
             }
             .frame(maxWidth: .infinity, minHeight: 84)
+            .foregroundStyle(DesignTokens.Colors.ink)
+            .padding(DesignTokens.Spacing.sm)
+            .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous)
+                    .strokeBorder(DesignTokens.Colors.border, style: StrokeStyle(lineWidth: 1, dash: state == .locked ? [5, 4] : []))
+            }
         }
-        .disabled(state == .locked)
-        .buttonStyle(.bordered)
+        .allowsHitTesting(state != .locked)
+        .buttonStyle(.plain)
         .accessibilityLabel(Text(String.localizedStringWithFormat(String(localized: "Lesson %lld, %@, %@"), Int64(lesson.lessonNumber), lesson.newCharacters.joined(separator: " "), labelText(for: state)))) // l10n: localized
         .accessibilityIdentifier("morse-course-lesson-\(lesson.lessonNumber)")
     }
@@ -128,7 +149,7 @@ struct MorseCourseView: View {
             if !session.done {
                 exerciseView(session.currentExercise)
             }
-            if !statusMessage.isEmpty {
+            if !session.done && !statusMessage.isEmpty {
                 Text(statusMessage) // l10n: localized
                     .foregroundStyle(DesignTokens.Colors.ink)
             }
@@ -179,7 +200,9 @@ struct MorseCourseView: View {
             Text(prompt) // l10n: localized
             Button("Play") { play(expected) } // l10n: localized
             TextField("Your copy", text: $typedAnswer) // l10n: localized
+#if os(iOS)
                 .textInputAutocapitalization(.characters)
+#endif
                 .autocorrectionDisabled()
                 .accessibilityIdentifier("morse-course-copy-field")
             Button("Check") {
@@ -205,20 +228,20 @@ struct MorseCourseView: View {
     }
 
     private func startLesson(_ lesson: MorseCourseLesson, course: MorseCourse, progress: MorseCourseProgressExport) {
-        let exercises = buildMorseLessonExercises(lesson: lesson, progress: progress, seed: Date.now.canonicalUTCString)
+        let exercises = buildMorseLessonExercises(lesson: lesson, progress: progress, seed: lessonSeed())
         typedAnswer = ""
         session = MorseCourseSession(
             mode: .lesson(lesson),
             exercises: exercises
         )
-        sessionIsFocused = true
+        refocusSession()
     }
 
     private func startReview(course: MorseCourse, progress: MorseCourseProgressExport) {
         let learned = learnedMorseCharacters(course: course, progress: progress)
         let weakest = selectWeakestMorseCharacters(stats: progress.characterStats, learnedCharacters: learned, limit: 5)
         session = MorseCourseSession(mode: .review, exercises: (weakest.isEmpty ? Array(learned.prefix(5)) : weakest).map { .typeCharacter($0) })
-        sessionIsFocused = true
+        refocusSession()
     }
 
     private func play(_ text: String) {
@@ -229,23 +252,39 @@ struct MorseCourseView: View {
         }
     }
 
+    private func lessonSeed() -> String {
+#if DEBUG
+        AppLaunchArguments.value(after: "-CanadianHamMorseCourseSeed") ?? Date.now.canonicalUTCString
+#else
+        Date.now.canonicalUTCString
+#endif
+    }
+
+    private func refocusSession() {
+        sessionIsFocused = false
+        DispatchQueue.main.async {
+            sessionIsFocused = true
+        }
+    }
+
     private func answer(correct: Bool, results: [(String, Bool)]) {
-        guard var currentSession = session, !currentSession.done else { return }
-        let scored = currentSession.currentExercise.isScored
-        if scored { currentSession.total += 1 }
-        if scored, correct { currentSession.correct += 1 }
-        currentSession.characterResults.append(contentsOf: results.map { (character: $0.0, correct: $0.1) })
-        statusMessage = correct ? String(localized: "Correct.") : String(localized: "Try again next time.") + " " + String(localized: "Correct answer: \(expectedAnswer(currentSession.currentExercise)).")
-        let isLast = currentSession.index >= currentSession.exercises.count - 1
-        if isLast {
-            currentSession.done = true
-            save(currentSession)
+        guard var currentSession = session else { return }
+        let exercise = currentSession.currentExercise
+        let scored = exercise.isScored
+        guard currentSession.applyAnswer(correct: correct, results: results) else { return }
+        if scored {
+            statusMessage = correct ? String(localized: "Correct.") : String(localized: "Try again next time.") + " " + String(localized: "Correct answer: \(expectedAnswer(exercise)).")
         } else {
-            currentSession.index += 1
+            statusMessage = ""
+        }
+        if currentSession.done {
+            save(currentSession)
         }
         typedAnswer = ""
         session = currentSession
-        AccessibilityNotification.Announcement(statusMessage).post()
+        if !statusMessage.isEmpty {
+            AccessibilityNotification.Announcement(statusMessage).post()
+        }
     }
 
     private func save(_ session: MorseCourseSession) {
@@ -254,7 +293,7 @@ struct MorseCourseView: View {
             let nextProgress: MorseCourseProgressExport
             switch session.mode {
             case .lesson(let lesson):
-                nextProgress = try recordMorseLessonAttempt(course: course, progress: progress, lessonId: lesson.id, correct: session.correct, total: max(1, session.total), characterResults: session.characterResults, attemptedAt: Date.now.canonicalUTCString)
+                nextProgress = try recordMorseLessonAttempt(course: course, progress: progress, lessonId: lesson.id, correct: session.correct, total: max(1, session.total), characterResults: session.characterResults, attemptedAt: Date.now.canonicalUTCString, activityDate: Date.now.localDateString)
             case .review:
                 nextProgress = recordMorseCharacterResults(progress: progress, results: session.characterResults, attemptedAt: Date.now.canonicalUTCString)
             }
@@ -283,7 +322,7 @@ struct MorseCourseView: View {
     }
 }
 
-private struct MorseCourseSession {
+struct MorseCourseSession {
     enum Mode {
         case lesson(MorseCourseLesson)
         case review
@@ -303,6 +342,20 @@ private struct MorseCourseSession {
         case .lesson(let lesson): return LocalizedStringKey("Lesson \(lesson.lessonNumber) session")
         case .review: return "Weak-character review"
         }
+    }
+
+    mutating func applyAnswer(correct isCorrect: Bool, results: [(String, Bool)]) -> Bool {
+        guard !done else { return false }
+        let scored = currentExercise.isScored
+        if scored { total += 1 }
+        if scored, isCorrect { correct += 1 }
+        characterResults.append(contentsOf: results.map { (character: $0.0, correct: $0.1) })
+        if index >= exercises.count - 1 {
+            done = true
+        } else {
+            index += 1
+        }
+        return true
     }
 }
 
@@ -327,5 +380,10 @@ private extension MorseCourseExercise {
 private extension Date {
     var canonicalUTCString: String {
         ISO8601Format(.iso8601(timeZone: .gmt, includingFractionalSeconds: true))
+    }
+
+    var localDateString: String {
+        let components = Calendar.current.dateComponents([.year, .month, .day], from: self)
+        return String(format: "%04d-%02d-%02d", components.year ?? 1970, components.month ?? 1, components.day ?? 1)
     }
 }

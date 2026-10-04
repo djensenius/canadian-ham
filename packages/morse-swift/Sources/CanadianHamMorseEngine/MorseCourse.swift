@@ -189,7 +189,8 @@ public func recordMorseLessonAttempt(
     correct: Int,
     total: Int,
     characterResults: [(character: String, correct: Bool)],
-    attemptedAt: String
+    attemptedAt: String,
+    activityDate: String? = nil
 ) throws -> MorseCourseProgressExport {
     guard total > 0, correct >= 0, correct <= total else {
         throw MorseCourseError.invalidFixture("Invalid Morse lesson score.")
@@ -207,7 +208,7 @@ public func recordMorseLessonAttempt(
     )
     let lessonProgress = (progress.lessonProgress.filter { $0.lessonId != lessonId } + [record]).sorted { $0.lessonId < $1.lessonId }
     let characterStats = updatedCharacterStats(stats: progress.characterStats, results: characterResults, attemptedAt: attemptedAt)
-    let dailyActivity = accuracy >= course.unlockAccuracy ? updatedDailyActivity(progress.dailyActivity, attemptedAt: attemptedAt) : progress.dailyActivity
+    let dailyActivity = accuracy >= course.unlockAccuracy ? updatedDailyActivity(progress.dailyActivity, date: activityDate ?? String(attemptedAt.prefix(10))) : progress.dailyActivity
     return MorseCourseProgressExport(courseId: course.courseId, lessonProgress: lessonProgress, characterStats: characterStats, dailyActivity: dailyActivity)
 }
 
@@ -263,8 +264,9 @@ private let confusableMorseCharacters: [String: [String]] = [
 ]
 
 private func chooseOptions(target: String, learned: [String], weak: [String], random: inout SeededMorseRandom) -> [String] {
-    let candidates = unique((confusableMorseCharacters[target] ?? []) + weak + Array(learned.suffix(8).reversed()) + learned + approvedMorseCourseCharacterOrder)
-        .filter { $0 != target && approvedMorseCourseCharacterOrder.contains($0) }
+    let learnedSet = Set(learned)
+    let candidates = unique(weak + (confusableMorseCharacters[target] ?? []) + Array(learned.suffix(8).reversed()) + learned)
+        .filter { $0 != target && learnedSet.contains($0) && approvedMorseCourseCharacterOrder.contains($0) }
     return shuffle([target] + candidates.prefix(3), random: &random)
 }
 
@@ -320,7 +322,7 @@ private struct SeededMorseRandom {
         var value = state
         value = (value ^ (value >> 15)) &* (value | 1)
         value ^= value &+ ((value ^ (value >> 7)) &* (value | 61))
-        return Double(value ^ (value >> 14)) / Double(UInt32.max)
+        return Double(value ^ (value >> 14)) / 4_294_967_296
     }
 }
 
@@ -339,8 +341,7 @@ private func updatedCharacterStats(stats: [MorseCharacterStatRecord], results: [
     return byCharacter.values.sorted { (approvedMorseCourseCharacterOrder.firstIndex(of: $0.character) ?? 0) < (approvedMorseCourseCharacterOrder.firstIndex(of: $1.character) ?? 0) }
 }
 
-private func updatedDailyActivity(_ activity: [MorseDailyActivityRecord], attemptedAt: String) -> [MorseDailyActivityRecord] {
-    let date = String(attemptedAt.prefix(10))
+private func updatedDailyActivity(_ activity: [MorseDailyActivityRecord], date: String) -> [MorseDailyActivityRecord] {
     let current = activity.first { $0.date == date }
     return (activity.filter { $0.date != date } + [MorseDailyActivityRecord(date: date, lessonsCompleted: (current?.lessonsCompleted ?? 0) + 1)]).sorted { $0.date < $1.date }
 }
@@ -351,12 +352,16 @@ private func recentAccuracy(_ stat: MorseCharacterStatRecord?) -> Double {
 }
 
 private func shiftIsoDate(_ value: String, days: Int) -> String {
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = TimeZone(secondsFromGMT: 0) ?? .gmt
     var components = DateComponents()
+    components.calendar = calendar
+    components.timeZone = calendar.timeZone
     components.year = Int(value.prefix(4))
     components.month = Int(value.dropFirst(5).prefix(2))
     components.day = Int(value.dropFirst(8).prefix(2))
     components.day = (components.day ?? 1) + days
-    let date = Calendar(identifier: .gregorian).date(from: components) ?? Date(timeIntervalSince1970: 0)
+    let date = calendar.date(from: components) ?? Date(timeIntervalSince1970: 0)
     let formatter = ISO8601DateFormatter()
     formatter.formatOptions = [.withFullDate]
     formatter.timeZone = TimeZone(secondsFromGMT: 0)

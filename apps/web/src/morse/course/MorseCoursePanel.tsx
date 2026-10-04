@@ -23,7 +23,7 @@ import type { ProgressStore, WebPreferences } from "../../lib/progressStore";
 
 const course = parseMorseCourseFixture(courseFixture);
 
-interface SessionState {
+export interface SessionState {
   readonly mode: "lesson" | "review";
   readonly lesson: MorseCourseLesson | null;
   readonly exercises: readonly Exercise[];
@@ -45,6 +45,7 @@ export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, s
   const [progress, setProgress] = useState<MorseCourseProgressExport>(() => emptyMorseCourseProgress(course.courseId));
   const [loadError, setLoadError] = useState<string | null>(null);
   const [session, setSession] = useState<SessionState | null>(null);
+  const [sessionFocusRequest, setSessionFocusRequest] = useState(0);
   const [typedAnswer, setTypedAnswer] = useState("");
   const [liveMessage, setLiveMessage] = useState("");
   const playerRef = useRef<WebMorsePlayer | null>(null);
@@ -70,12 +71,13 @@ export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, s
       sessionRef.current?.scrollIntoView?.({ block: "start", behavior: reduceMotion ? "auto" : "smooth" });
       sessionRef.current?.focus({ preventScroll: true });
     }
-  }, [session?.lesson?.id, session?.mode]);
+  }, [sessionFocusRequest]);
 
   const learned = useMemo(() => learnedCharactersForProgress(course, progress), [progress]);
   const weakest = useMemo(() => selectWeakestCharacters(progress.characterStats, learned, 5), [learned, progress.characterStats]);
   const lessonsCompleted = progress.lessonProgress.filter((record) => record.bestAccuracy >= course.unlockAccuracy).length;
-  const streak = dailyStreak(progress.dailyActivity, now());
+  const todayLocalDate = localDateString(now());
+  const streak = dailyStreak(progress.dailyActivity, todayLocalDate);
 
   async function play(text: string): Promise<void> {
     playerRef.current ??= new WebMorsePlayer();
@@ -97,6 +99,7 @@ export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, s
       feedback: "",
       done: false,
     });
+    setSessionFocusRequest((value) => value + 1);
   }
 
   function startReview(): void {
@@ -113,38 +116,26 @@ export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, s
       feedback: "",
       done: false,
     });
+    setSessionFocusRequest((value) => value + 1);
   }
 
   async function saveSession(next: SessionState): Promise<void> {
     const attemptedAt = now();
     const nextProgress = next.mode === "lesson" && next.lesson !== null
-      ? recordMorseLessonAttempt({ course, progress, lessonId: next.lesson.id, correct: next.correct, total: Math.max(1, next.total), characterResults: next.characterResults, attemptedAt })
+      ? recordMorseLessonAttempt({ course, progress, lessonId: next.lesson.id, correct: next.correct, total: Math.max(1, next.total), characterResults: next.characterResults, attemptedAt, activityDate: localDateString(attemptedAt) })
       : recordMorseCharacterResults(progress, next.characterResults, attemptedAt);
     await store.putMorseCourseProgress(nextProgress);
     setProgress(nextProgress);
   }
 
   function answer(correct: boolean, results: readonly { readonly character: string; readonly correct: boolean }[]): void {
-    if (session === null || session.done) return;
-    const scored = session.exercises[session.index]?.kind !== "meet";
-    const nextTotal = session.total + (scored ? 1 : 0);
-    const nextCorrect = session.correct + (scored && correct ? 1 : 0);
-    const isLast = session.index >= session.exercises.length - 1;
-    const expected = expectedAnswer(session.exercises[session.index]);
-    const feedback = scored ? (correct ? t(interfaceLanguage, "morseCourseFeedbackCorrect") : t(interfaceLanguage, "morseCourseFeedbackIncorrect", expected)) : t(interfaceLanguage, "morseCourseMeetComplete");
-    const nextSession = {
-      ...session,
-      index: isLast ? session.index : session.index + 1,
-      correct: nextCorrect,
-      total: nextTotal,
-      characterResults: [...session.characterResults, ...results],
-      feedback,
-      done: isLast,
-    };
+    if (session === null) return;
+    const nextSession = answerMorseCourseSession(session, correct, results, interfaceLanguage);
+    if (nextSession === session) return;
     setSession(nextSession);
     setTypedAnswer("");
-    setLiveMessage(feedback);
-    if (isLast) void saveSession(nextSession);
+    setLiveMessage(nextSession.feedback);
+    if (nextSession.done) void saveSession(nextSession);
   }
 
   const currentExercise = session?.exercises[session.index];
@@ -218,6 +209,30 @@ function renderExercise(
   return <form className="morse-exercise" onSubmit={(event) => { event.preventDefault(); const normalized = typedAnswer.trim().toUpperCase(); const correct = normalized === expected; answer(correct, Array.from(expected).map((character, index) => ({ character, correct: normalized[index] === character }))); }}><p>{exercise.kind === "type-character" ? t(interfaceLanguage, "morseCourseTypeCharacter") : t(interfaceLanguage, "morseCourseTypeGroup")}</p><button type="button" onClick={() => void play(expected)}>{t(interfaceLanguage, "morsePlay")}</button><label className="stacked-control"><span>{t(interfaceLanguage, "morseCourseYourCopy")}</span><input value={typedAnswer} autoCapitalize="characters" onChange={(event) => setTypedAnswer(event.currentTarget.value)} /></label><button type="submit" className="primary-button">{t(interfaceLanguage, "morseCourseCheck")}</button></form>;
 }
 
+export function answerMorseCourseSession(
+  session: SessionState,
+  correct: boolean,
+  results: readonly { readonly character: string; readonly correct: boolean }[],
+  interfaceLanguage: InterfaceLanguage,
+): SessionState {
+  if (session.done) return session;
+  const scored = session.exercises[session.index]?.kind !== "meet";
+  const nextTotal = session.total + (scored ? 1 : 0);
+  const nextCorrect = session.correct + (scored && correct ? 1 : 0);
+  const isLast = session.index >= session.exercises.length - 1;
+  const expected = expectedAnswer(session.exercises[session.index]);
+  const feedback = scored ? (correct ? t(interfaceLanguage, "morseCourseFeedbackCorrect") : t(interfaceLanguage, "morseCourseFeedbackIncorrect", expected)) : t(interfaceLanguage, "morseCourseMeetComplete");
+  return {
+    ...session,
+    index: isLast ? session.index : session.index + 1,
+    correct: nextCorrect,
+    total: nextTotal,
+    characterResults: [...session.characterResults, ...results],
+    feedback,
+    done: isLast,
+  };
+}
+
 function expectedAnswer(exercise: Exercise | undefined): string {
   if (exercise === undefined) return "";
   switch (exercise.kind) {
@@ -226,6 +241,14 @@ function expectedAnswer(exercise: Exercise | undefined): string {
     case "type-character": return exercise.character;
     case "type-group": return exercise.text;
   }
+}
+
+function localDateString(value: string): string {
+  const date = new Date(value);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 function LessonSummary({ interfaceLanguage, session }: { readonly interfaceLanguage: InterfaceLanguage; readonly session: SessionState }) {

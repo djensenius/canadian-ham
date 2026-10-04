@@ -193,6 +193,7 @@ export function recordMorseLessonAttempt(input: {
   readonly total: number;
   readonly characterResults: readonly { readonly character: string; readonly correct: boolean }[];
   readonly attemptedAt: string;
+  readonly activityDate?: string;
 }): MorseCourseProgressExport {
   if (input.total <= 0 || input.correct < 0 || input.correct > input.total) throw new Error("Invalid Morse lesson score.");
   const accuracy = input.correct / input.total;
@@ -212,7 +213,7 @@ export function recordMorseLessonAttempt(input: {
   ].toSorted((a, b) => a.lessonId.localeCompare(b.lessonId));
   const characterStats = updatedCharacterStats(input.progress.characterStats, input.characterResults, input.attemptedAt);
   const dailyActivity = accuracy >= input.course.unlockAccuracy
-    ? updatedDailyActivity(input.progress.dailyActivity, input.attemptedAt)
+    ? updatedDailyActivity(input.progress.dailyActivity, input.activityDate ?? isoDate(input.attemptedAt))
     : input.progress.dailyActivity;
   return { courseId: input.course.courseId, lessonProgress, characterStats, dailyActivity };
 }
@@ -233,13 +234,13 @@ export function dailyStreak(activity: readonly MorseDailyActivityRecord[], today
 }
 
 function chooseOptions(target: string, learned: readonly string[], weak: readonly string[], random: () => number): readonly string[] {
+  const learnedSet = new Set(learned);
   const distractors = unique([
-    ...(confusableCharacters.get(target) ?? []),
     ...weak,
-    ...learned.slice(-8).toReversed(),
+    ...(confusableCharacters.get(target) ?? []),
+    ...[...learned.slice(-8)].reverse(),
     ...learned,
-    ...expectedOrder,
-  ]).filter((character) => character !== target && expectedCharacters.has(character));
+  ]).filter((character) => character !== target && expectedCharacters.has(character) && learnedSet.has(character));
   return shuffle([target, ...distractors.slice(0, 3)], random);
 }
 
@@ -310,8 +311,7 @@ function updatedCharacterStats(stats: readonly MorseCharacterStatRecord[], resul
   return [...byCharacter.values()].toSorted((a, b) => expectedOrder.indexOf(a.character) - expectedOrder.indexOf(b.character));
 }
 
-function updatedDailyActivity(activity: readonly MorseDailyActivityRecord[], attemptedAt: string): readonly MorseDailyActivityRecord[] {
-  const date = isoDate(attemptedAt);
+function updatedDailyActivity(activity: readonly MorseDailyActivityRecord[], date: string): readonly MorseDailyActivityRecord[] {
   const current = activity.find((entry) => entry.date === date);
   return [
     ...activity.filter((entry) => entry.date !== date),

@@ -101,6 +101,42 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(decoded.volume, 0.45)
     }
 
+    func testMorseExamGeneratorMeetsReceivingExamConstraints() throws {
+        for profileName in [MorseProfileName.isedParis, .ric1Literal] {
+            let profile = profileForName(profileName)
+            let exam = try generateMorseExamText(seed: "apple-unit-\(profileName.rawValue)", profile: profile)
+            let weight = try weightedCharacterCount(exam.text)
+            let sequence = try textToTimedMorse(exam.text, profile: profile)
+
+            XCTAssertGreaterThanOrEqual(weight.weightedCharacters, 75, profileName.rawValue)
+            XCTAssertGreaterThanOrEqual(sequence.totalDurationSeconds, 180, profileName.rawValue)
+            XCTAssertEqual(exam.weightedCharacters, weight.weightedCharacters, profileName.rawValue)
+            XCTAssertEqual(exam.durationSeconds, sequence.totalDurationSeconds, accuracy: 0.000_001, profileName.rawValue)
+            XCTAssertTrue(validateMorseText(exam.text).valid, profileName.rawValue)
+        }
+    }
+
+    func testMorseCopyDiffClassifiesWrongMissingAndInsertedCharacters() throws {
+        let diff = try diffMorseCopy(expected: "ABC", received: "AXCD")
+
+        XCTAssertEqual(diff.score.errors, 2)
+        XCTAssertEqual(diff.score.wrong, 1)
+        XCTAssertEqual(diff.score.missing, 0)
+        XCTAssertEqual(diff.score.inserted, 1)
+        XCTAssertEqual(diff.operations.map(\.kind), [.match, .wrong, .match, .inserted])
+    }
+
+    func testCompletedMorseCourseSessionIgnoresResubmittedAnswer() throws {
+        var session = MorseCourseSession(mode: .review, exercises: [.typeCharacter("K")], index: 0, correct: 1, total: 1, characterResults: [(character: "K", correct: true)], done: true)
+
+        XCTAssertFalse(session.applyAnswer(correct: false, results: [("K", false)]))
+        XCTAssertEqual(session.index, 0)
+        XCTAssertEqual(session.correct, 1)
+        XCTAssertEqual(session.total, 1)
+        XCTAssertEqual(session.characterResults.count, 1)
+        XCTAssertTrue(session.done)
+    }
+
     func testMorseSettingsRoundTripThroughUserDefaults() throws {
         let suiteName = "MorseTrainerTests.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))

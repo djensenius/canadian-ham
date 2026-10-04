@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "kind": "morse-course-exercises",
+  "cases": [
+    {
+      "id": "lesson-1-ui-seed",
+      "input": {
+        "lessonId": "koch-001",
+        "seed": "ui-morse-course-lesson-1"
+      },
+      "expectedOutput": {
+        "exercises": [
+          { "kind": "meet", "character": "K" },
+          { "kind": "meet", "character": "M" },
+          { "kind": "choose", "character": "K", "options": ["M", "K"] },
+          { "kind": "type-character", "character": "M" },
+          { "kind": "choose", "character": "M", "options": ["K", "M"] },
+          { "kind": "type-character", "character": "K" },
+          { "kind": "type-group", "text": "MMMKM" },
+          { "kind": "type-character", "character": "K" },
+          { "kind": "choose", "character": "M", "options": ["K", "M"] },
+          { "kind": "type-character", "character": "K" },
+          { "kind": "choose", "character": "K", "options": ["K", "M"] },
+          { "kind": "type-group", "text": "MKMMM" },
+          { "kind": "choose", "character": "M", "options": ["K", "M"] },
+          { "kind": "type-character", "character": "K" },
+          { "kind": "choose", "character": "K", "options": ["K", "M"] },
+          { "kind": "type-character", "character": "M" },
+          { "kind": "type-group", "text": "MKKKK" },
+          { "kind": "type-character", "character": "M" },
+          { "kind": "choose", "character": "K", "options": ["K", "M"] },
+          { "kind": "type-character", "character": "K" },
+          { "kind": "choose", "character": "K", "options": ["M", "K"] },
+          { "kind": "type-group", "text": "KMMKK" }
+        ]
+      }
+    }
+  ]
+}

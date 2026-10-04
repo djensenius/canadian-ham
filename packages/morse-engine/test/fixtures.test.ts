@@ -5,7 +5,11 @@ import { describe, expect, it } from "vitest";
 import {
   MORSE_CODE_TABLE,
   MorseValidationError,
+  buildMorseLessonExercises,
+  diffMorseCopy,
   farnsworthTiming,
+  generateMorseExamText,
+  parseMorseCourseFixture,
   profileForName,
   scoreMorseCopy,
   textToTimedMorse,
@@ -19,6 +23,7 @@ import {
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "../../..");
 const fixturesRoot = join(repoRoot, "fixtures/morse");
 const fixturePaths = await jsonFiles(fixturesRoot);
+const course = parseMorseCourseFixture(JSON.parse(await readFile(join(fixturesRoot, "course.json"), "utf8")));
 
 describe("public tables", () => {
   it("freezes the Morse code table so consumers can't change mappings at runtime", () => {
@@ -64,11 +69,20 @@ function validateFixture(fixture: any): void {
     case "morse-scoring":
       validateScoringFixture(fixture);
       break;
+    case "morse-copy-exam":
+      validateCopyExamFixture(fixture);
+      break;
+    case "morse-copy-diff":
+      validateCopyDiffFixture(fixture);
+      break;
     case "morse-validation":
       validateValidationFixture(fixture);
       break;
     case "morse-course":
       // The dedicated course test validates the full 40-lesson shape.
+      break;
+    case "morse-course-exercises":
+      validateCourseExercisesFixture(fixture);
       break;
     default:
       throw new Error(`unsupported fixture kind: ${fixture.kind}`);
@@ -128,9 +142,61 @@ function validateScoringFixture(fixture: any): void {
   }
 }
 
+function validateCopyExamFixture(fixture: any): void {
+  for (const testCase of fixture.cases) {
+    const profile = profileFromFixture(testCase.input.profile);
+    const generated = generateMorseExamText({
+      seed: testCase.input.seed,
+      profile,
+      minWeightedCharacters: testCase.input.minWeightedCharacters,
+      minDurationSeconds: testCase.input.minDurationSeconds,
+    });
+    const validation = validateMorseText(generated.text);
+    expect(validation.valid, testCase.id).toBe(true);
+    expect(generated.weightedCharacters, testCase.id).toBeGreaterThanOrEqual(testCase.expectedOutput.minWeightedCharacters);
+    expect(generated.durationSeconds, testCase.id).toBeGreaterThanOrEqual(testCase.expectedOutput.minDurationSeconds);
+    expect(generated.normalizedText, testCase.id).toBe(textToTimedMorse(generated.text, profile).normalizedText);
+    expect(round(generated.durationSeconds, 9), testCase.id).toBeCloseTo(textToTimedMorse(generated.text, profile).totalDurationSeconds, 9);
+    if (testCase.expectedOutput.text !== undefined) {
+      expect(generated.text, testCase.id).toBe(testCase.expectedOutput.text);
+    }
+    if (testCase.expectedOutput.normalizedText !== undefined) {
+      expect(generated.normalizedText, testCase.id).toBe(testCase.expectedOutput.normalizedText);
+    }
+    if (testCase.expectedOutput.weightedCharacters !== undefined) {
+      expect(generated.weightedCharacters, testCase.id).toBe(testCase.expectedOutput.weightedCharacters);
+    }
+    if (testCase.expectedOutput.unweightedCharacters !== undefined) {
+      expect(generated.unweightedCharacters, testCase.id).toBe(testCase.expectedOutput.unweightedCharacters);
+    }
+    if (testCase.expectedOutput.durationSeconds !== undefined) {
+      expect(round(generated.durationSeconds, 9), testCase.id).toBeCloseTo(testCase.expectedOutput.durationSeconds, 9);
+    }
+  }
+}
+
+function validateCopyDiffFixture(fixture: any): void {
+  for (const testCase of fixture.cases) {
+    if (testCase.expectedError !== undefined) {
+      expectFixtureError(() => diffMorseCopy(testCase.input.expected, testCase.input.received), testCase.expectedError, testCase.id);
+      continue;
+    }
+
+    expect(diffMorseCopy(testCase.input.expected, testCase.input.received), testCase.id).toEqual(testCase.expectedOutput);
+  }
+}
+
 function validateValidationFixture(fixture: any): void {
   for (const testCase of fixture.cases) {
     expect(validateMorseText(testCase.input.text), testCase.id).toEqual(testCase.expectedOutput);
+  }
+}
+
+function validateCourseExercisesFixture(fixture: any): void {
+  for (const testCase of fixture.cases) {
+    const lesson = course.lessons.find((entry) => entry.id === testCase.input.lessonId);
+    expect(lesson, testCase.id).toBeDefined();
+    expect(buildMorseLessonExercises({ lesson: lesson!, seed: testCase.input.seed }), testCase.id).toEqual(testCase.expectedOutput.exercises);
   }
 }
 

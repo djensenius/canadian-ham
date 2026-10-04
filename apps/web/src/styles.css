@@ -51,6 +51,7 @@ a {
 button:focus-visible,
 select:focus-visible,
 input:focus-visible,
+textarea:focus-visible,
 a:focus-visible,
 main:focus-visible,
 [tabindex="-1"]:focus-visible {
@@ -961,7 +962,10 @@ input[type="checkbox"]:checked::after {
 .morse-section,
 .morse-home-card,
 .morse-trainer,
-.morse-copy-card {
+.morse-copy-card,
+.morse-copy-panel,
+.morse-exam-panel,
+.morse-diff {
   display: grid;
   gap: var(--ch-space-md);
 }
@@ -993,6 +997,21 @@ input[type="checkbox"]:checked::after {
   background: var(--ch-color-paper-inset);
 }
 
+.morse-copy-exam-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: var(--ch-space-lg);
+}
+
+.morse-copy-panel,
+.morse-exam-panel {
+  align-content: start;
+  padding: var(--ch-space-lg);
+  border: 1px solid var(--ch-color-border);
+  border-radius: var(--ch-radius-lg);
+  background: var(--ch-color-paper-elevated);
+}
+
 .settings-panel {
   margin-block: var(--ch-space-lg);
   padding: var(--ch-space-lg);
@@ -1015,8 +1034,14 @@ input[type="checkbox"]:checked::after {
 }
 
 .stacked-control input,
-.stacked-control select {
+.stacked-control select,
+.stacked-control textarea {
   width: 100%;
+}
+
+.stacked-control textarea {
+  min-height: 8rem;
+  resize: vertical;
 }
 
 .morse-settings-summary {
@@ -1049,6 +1074,67 @@ input[type="checkbox"]:checked::after {
   font-family: var(--ch-font-mono);
   font-size: var(--ch-type-title-size);
   letter-spacing: 0.08em;
+}
+
+.morse-copy-input textarea {
+  font-family: var(--ch-font-mono);
+  letter-spacing: 0.04em;
+}
+
+.timer-pill,
+.warning-text {
+  display: inline-flex;
+  width: fit-content;
+  padding: var(--ch-space-xs) var(--ch-space-sm);
+  border-radius: var(--ch-radius-pill);
+  font-weight: 800;
+}
+
+.timer-pill {
+  border: 1px solid var(--ch-color-border);
+  background: var(--ch-color-paper-inset);
+}
+
+.warning-text {
+  border: 1px solid var(--ch-color-warning-border);
+  background: var(--ch-color-warning-bg);
+}
+
+.morse-diff-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ch-space-xs);
+  padding: 0;
+  list-style: none;
+}
+
+.morse-diff-token {
+  padding: 0.2rem 0.4rem;
+  border: 1px solid var(--ch-color-border);
+  border-radius: var(--ch-radius-sm);
+  background: var(--ch-color-paper-inset);
+  font-family: var(--ch-font-mono);
+  font-weight: 800;
+}
+
+.morse-diff-wrong,
+.morse-diff-missing,
+.morse-diff-inserted {
+  border-style: dashed;
+  text-decoration: underline;
+  text-decoration-thickness: 0.14em;
+}
+
+.morse-diff-wrong {
+  background: var(--ch-color-incorrect-bg);
+}
+
+.morse-diff-missing {
+  background: var(--ch-color-warning-bg);
+}
+
+.morse-diff-inserted {
+  background: var(--ch-color-paper-elevated);
 }
 
 .module-grid,

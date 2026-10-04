@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "kind": "morse-copy-exam",
+  "cases": [
+    {
+      "id": "ised-paris-default-receiving-exam",
+      "input": {
+        "seed": "shared-ised-paris-copy-exam",
+        "profile": { "name": "isedParis" },
+        "minWeightedCharacters": 75,
+        "minDurationSeconds": 180
+      },
+      "expectedOutput": {
+        "minWeightedCharacters": 75,
+        "minDurationSeconds": 180,
+        "text": "THE MESSAGE NUMBER IS 42 FOR FIELD DAY. PLEASE SEND NAME, QTH, AND RST AGAIN. FORECAST PERIODS WILL BE SHORTENED TODAY.",
+        "normalizedText": "THE MESSAGE NUMBER IS 42 FOR FIELD DAY. PLEASE SEND NAME, QTH, AND RST AGAIN. FORECAST PERIODS WILL BE SHORTENED TODAY.",
+        "weightedCharacters": 106,
+        "unweightedCharacters": 99,
+        "durationSeconds": 244.16842105263086
+      }
+    },
+    {
+      "id": "ric1-literal-harder-receiving-exam",
+      "input": {
+        "seed": "shared-ric1-literal-copy-exam",
+        "profile": { "name": "ric1Literal" },
+        "minWeightedCharacters": 75,
+        "minDurationSeconds": 180
+      },
+      "expectedOutput": {
+        "minWeightedCharacters": 75,
+        "minDurationSeconds": 180,
+        "text": "CALL VE2HAM/PORTABLE AFTER THE NET. QSL THE TEST MESSAGE BEFORE NOON. THE RADIO OPERATOR CHECKS THE NORTH ANTENNA. STATION VE3ABC COPIES YOUR SIGNAL 599.",
+        "normalizedText": "CALL VE2HAM/PORTABLE AFTER THE NET. QSL THE TEST MESSAGE BEFORE NOON. THE RADIO OPERATOR CHECKS THE NORTH ANTENNA. STATION VE3ABC COPIES YOUR SIGNAL 599.",
+        "weightedCharacters": 140,
+        "unweightedCharacters": 130,
+        "durationSeconds": 202.19999999999865
+      }
+    }
+  ]
+}

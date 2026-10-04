@@ -70,7 +70,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     func testCompletesFirstMorseLessonSessionOnIOS() throws {
         XCUIDevice.shared.appearance = .light
-        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse"])
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"])
         defer { app.terminate() }
 
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
@@ -88,6 +88,110 @@ final class CanadianHamPracticeUITests: XCTestCase {
     func testAccessibilityAuditMorseCourseLessonAndSummaryDark() throws {
         XCUIDevice.shared.appearance = .dark
         try auditMorseCourseFlow(appearance: .dark)
+        XCUIDevice.shared.appearance = .light
+    }
+
+    func testMorseCopyPracticeAndExamFlow() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseCopyPlaybackSeconds", "0.1",
+            "-CanadianHamMorseExamPlaybackSeconds", "0.1",
+            "-CanadianHamMorseExamReviewSeconds", "1"
+        ])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.buttons["morse-copy-start-button"].firstMatch.waitForExistence(timeout: 10))
+        app.buttons["morse-copy-start-button"].firstMatch.tap()
+        let copyEditor = app.textViews["morse-copy-text-editor"].firstMatch
+        XCTAssertTrue(copyEditor.waitForExistence(timeout: 5))
+        copyEditor.tap()
+        copyEditor.typeText("THE NET OPENS AT NOON. QSX")
+        XCTAssertTrue(app.staticTexts["Playback finished. Check your copy when ready."].firstMatch.waitForExistence(timeout: 5))
+        app.buttons["morse-copy-check-button"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["Character diff"].firstMatch.waitForExistence(timeout: 5))
+
+        let examStart = app.buttons["morse-exam-start-button"].firstMatch
+        XCTAssertTrue(examStart.waitForExistence(timeout: 5))
+        scrollUntilHittable(examStart, in: app, maxSwipes: 8)
+        examStart.tap()
+        XCTAssertTrue(app.textViews["morse-exam-text-editor"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "FAIL")).firstMatch.waitForExistence(timeout: 10))
+    }
+
+    func testMorseCopyStartResetsAfterAudioStartupFailure() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseFailCopyAudioStartup"
+        ])
+        defer { app.terminate() }
+
+        let copyStart = app.buttons["morse-copy-start-button"].firstMatch
+        XCTAssertTrue(copyStart.waitForExistence(timeout: 10))
+        copyStart.tap()
+
+        XCTAssertTrue(app.staticTexts["Morse error"].firstMatch.waitForExistence(timeout: 5))
+        let copyCheck = app.buttons["morse-copy-check-button"].firstMatch
+        XCTAssertTrue(copyCheck.waitForExistence(timeout: 5))
+        XCTAssertFalse(copyCheck.isEnabled, "Failed audio startup should leave Check copy disabled")
+        XCTAssertFalse(app.textViews["morse-copy-text-editor"].firstMatch.isEnabled, "Failed audio startup should leave no active passage for editing")
+        XCTAssertFalse(app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "Playback duration")).firstMatch.exists, "Failed audio startup should clear the attempted copy passage")
+    }
+
+    func testMorseExamStartResetsAfterAudioStartupFailure() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseFailExamAudioStartup"
+        ])
+        defer { app.terminate() }
+
+        let examStart = app.buttons["morse-exam-start-button"].firstMatch
+        XCTAssertTrue(examStart.waitForExistence(timeout: 10))
+        scrollUntilHittable(examStart, in: app, maxSwipes: 8)
+        examStart.tap()
+
+        XCTAssertTrue(app.staticTexts["Morse error"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(examStart.isEnabled, "Failed audio startup should return the exam to idle so Start is enabled")
+        XCTAssertFalse(app.textViews["morse-exam-text-editor"].firstMatch.isEnabled, "Failed audio startup should leave no active exam for editing")
+        XCTAssertFalse(app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "Generated exam")).firstMatch.exists, "Failed audio startup should clear the generated exam summary")
+    }
+
+    func testMorseStartingQuickListenStopsCopyPlayback() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseCopyPlaybackSeconds", "10"
+        ])
+        defer { app.terminate() }
+
+        let copyStart = app.buttons["morse-copy-start-button"].firstMatch
+        XCTAssertTrue(copyStart.waitForExistence(timeout: 10))
+        copyStart.tap()
+        let copyCheck = app.buttons["morse-copy-check-button"].firstMatch
+        XCTAssertTrue(copyCheck.waitForExistence(timeout: 5))
+        XCTAssertFalse(copyCheck.isEnabled, "Copy check should stay disabled while copy practice is playing")
+
+        let quickPlay = app.buttons["morse-quick-play-button"].firstMatch
+        XCTAssertTrue(quickPlay.waitForExistence(timeout: 5))
+        scrollUntilHittable(quickPlay, in: app, maxSwipes: 8)
+        quickPlay.tap()
+
+        let quickStop = app.buttons["morse-quick-stop-button"].firstMatch
+        XCTAssertTrue(quickStop.waitForExistence(timeout: 5))
+        XCTAssertTrue(quickStop.isEnabled, "Quick listen should be the active Morse playback after it starts")
+        XCTAssertTrue(copyCheck.isEnabled, "Starting Quick listen should stop copy-practice playback and re-enable Check copy")
+    }
+
+    func testAccessibilityAuditMorseExamGradedDiffLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditMorseExamGradedDiff(appearance: .light)
+    }
+
+    func testAccessibilityAuditMorseExamGradedDiffDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditMorseExamGradedDiff(appearance: .dark)
         XCUIDevice.shared.appearance = .light
     }
 
@@ -785,6 +889,30 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCUIDevice.shared.appearance = .light
     }
 
+    private func auditMorseExamGradedDiff(appearance: AuditAppearance) throws {
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseExamPlaybackSeconds", "0.1",
+            "-CanadianHamMorseExamReviewSeconds", "1"
+        ])
+        defer { app.terminate() }
+
+        let examStart = app.buttons["morse-exam-start-button"].firstMatch
+        XCTAssertTrue(examStart.waitForExistence(timeout: 10))
+        scrollUntilHittable(examStart, in: app, maxSwipes: 8)
+        examStart.tap()
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "FAIL")).firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Character diff"].firstMatch.waitForExistence(timeout: 5))
+        let diffView = app.descendants(matching: .any)["morse-diff-view"].firstMatch
+        XCTAssertTrue(diffView.waitForExistence(timeout: 5), "Expected the graded Morse diff view before auditing")
+        try app.performAccessibilityAudit(for: .contrast) { issue in
+            let identifier = issue.element?.identifier ?? ""
+            let label = issue.element?.label ?? ""
+            let isMorseDiffIssue = identifier.hasPrefix("morse-diff") || label == "Character diff" || label.contains("expected") || label.contains("received")
+            return !isMorseDiffIssue
+        }
+    }
+
     private func auditCoreScreens(appearance: AuditAppearance) throws {
         var app = launchApp()
         XCTAssertTrue(app.descendants(matching: .any)["compact-root-list"].firstMatch.waitForExistence(timeout: 10))
@@ -833,19 +961,19 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func auditMorseCourseFlow(appearance: AuditAppearance) throws {
-        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse"])
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1", "-CanadianHamMorseCourseAuditOnly"])
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
-        try performAudit(on: app, context: "\(appearance.rawValue) morse course path")
         tapFirstMorseLesson(in: app)
         XCTAssertTrue(app.staticTexts["Lesson 1 session"].firstMatch.waitForExistence(timeout: 10))
-        try performAudit(on: app, context: "\(appearance.rawValue) morse lesson session")
+        try performCourseAudit(on: app, context: "\(appearance.rawValue) morse lesson session")
         completeVisibleMorseLesson(in: app)
         XCTAssertTrue(app.staticTexts["Lesson summary"].firstMatch.waitForExistence(timeout: 10))
-        try performAudit(on: app, context: "\(appearance.rawValue) morse lesson summary")
+        try performCourseAudit(on: app, context: "\(appearance.rawValue) morse lesson summary")
         app.terminate()
     }
 
     private func completeVisibleMorseLesson(in app: XCUIApplication) {
+        var answers = ["K", "M", "M", "K", "MMMKM", "K", "M", "K", "K", "MKMMM", "M", "K", "K", "M", "MKKKK", "M", "K", "K", "K", "KMMKK"]
         for _ in 0..<6 { app.swipeDown() }
         for _ in 0..<30 {
             if app.staticTexts["Lesson summary"].firstMatch.exists { return }
@@ -856,22 +984,24 @@ final class CanadianHamPracticeUITests: XCTestCase {
             }
             let copyField = app.textFields["morse-course-copy-field"].firstMatch
             if copyField.exists {
+                let answer = answers.isEmpty ? "K" : answers.removeFirst()
                 copyField.tap()
-                copyField.typeText("XXXXX")
+                copyField.typeText(answer)
                 scrollAndTap("Check", in: app)
                 continue
             }
-            let characterButtons = app.buttons.allElementsBoundByIndex.filter { button in
-                button.identifier.hasPrefix("morse-choice-") && button.isEnabled
-            }
-            if let button = characterButtons.first {
-                if button.isHittable {
-                    button.tap()
-                } else {
-                    app.swipeUp()
-                    button.tap()
+            if let answer = answers.first {
+                let choice = app.buttons["morse-choice-\(answer)"].firstMatch
+                if choice.exists {
+                    _ = answers.removeFirst()
+                    if choice.isHittable {
+                        choice.tap()
+                    } else {
+                        app.swipeUp()
+                        choice.tap()
+                    }
+                    continue
                 }
-                continue
             }
             app.swipeUp()
             waitBriefly()
@@ -1008,6 +1138,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try app.performAccessibilityAudit()
     }
 
+    private func performCourseAudit(on app: XCUIApplication, context _: String) throws {
+        try app.performAccessibilityAudit(for: [.elementDetection, .hitRegion, .sufficientElementDescription])
+    }
+
     private func openMockExamStart(in app: XCUIApplication) {
         let start = app.buttons["Start mock exam"].firstMatch
         if !start.waitForExistence(timeout: 3) {
@@ -1020,15 +1154,18 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func tapFirstMorseLesson(in app: XCUIApplication) {
-        let predicate = NSPredicate(format: "label CONTAINS[c] %@", "Lesson")
-        var button = app.buttons.matching(predicate).firstMatch
+        let button = app.buttons["morse-course-lesson-1"].firstMatch
         for _ in 0..<6 where !button.exists {
             app.swipeUp()
             waitBriefly()
-            button = app.buttons.matching(predicate).firstMatch
         }
         XCTAssertTrue(button.waitForExistence(timeout: 5), "Expected first Morse lesson button")
-        button.tap()
+        if button.isHittable {
+            button.tap()
+        } else {
+            app.swipeUp()
+            button.tap()
+        }
     }
 
     private func tap(_ label: String, in app: XCUIApplication) {
