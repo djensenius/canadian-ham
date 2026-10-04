@@ -49,3 +49,9 @@ Implemented shared Morse course correctness fixes. Targeted validation:
 - web: pnpm --filter @canadian-ham/web test -- App.test.tsx passed (Vitest reported 13 files, 122 tests), including uses Morse course summary copy for review sessions and the final lesson.
 - Apple targeted macOS xbuild unit tests passed: MorseTrainerTests/testMorseCourseSummaryCopyDependsOnSessionModeAndLessonPosition and MorseTrainerTests/testMorseCourseLocalDateStringUsesGregorianCalendarInCurrentTimeZone.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Fixed Morse course summary copy for review/final-lesson sessions on web and Apple; changed TS/Swift daily streaks to count from today or yesterday using a shared fixture; made Apple local progress dates Gregorian in the current time zone; and added TS validation for unit IDs. Verified with package Vitest, DEVELOPER_DIR swift test, targeted web App tests, and targeted xbuild macOS unit tests named in notes.
+<!-- SECTION:FINAL_SUMMARY:END -->
