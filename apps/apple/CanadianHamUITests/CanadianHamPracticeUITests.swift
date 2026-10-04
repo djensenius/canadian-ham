@@ -81,6 +81,20 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Great work. The next lesson is unlocked."].firstMatch.waitForExistence(timeout: 5))
     }
 
+    func testMorseLessonSummaryShowsCorrectAnswerForWrongFinalAnswerOnIOS() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
+        tapFirstMorseLesson(in: app)
+        completeVisibleMorseLesson(in: app, finalAnswerOverride: "K")
+
+        XCTAssertTrue(app.staticTexts["Lesson summary"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Try again next time. Correct answer: KMMKK."].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Great work. The next lesson is unlocked."].firstMatch.waitForExistence(timeout: 5))
+    }
+
     func testAccessibilityAuditMorseCourseLessonAndSummaryLight() throws {
         XCUIDevice.shared.appearance = .light
         try auditMorseCourseFlow(appearance: .light)
@@ -974,7 +988,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app.terminate()
     }
 
-    private func completeVisibleMorseLesson(in app: XCUIApplication) {
+    private func completeVisibleMorseLesson(in app: XCUIApplication, finalAnswerOverride: String? = nil) {
         var answers = ["K", "M", "M", "K", "MMMKM", "K", "M", "K", "K", "MKMMM", "M", "K", "K", "M", "MKKKK", "M", "K", "K", "K", "KMMKK"]
         for _ in 0..<6 { app.swipeDown() }
         for _ in 0..<30 {
@@ -986,7 +1000,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
             }
             let copyField = app.textFields["morse-course-copy-field"].firstMatch
             if copyField.exists {
-                let answer = answers.isEmpty ? "K" : answers.removeFirst()
+                let expectedAnswer = answers.isEmpty ? "K" : answers.removeFirst()
+                let answer = answers.isEmpty ? (finalAnswerOverride ?? expectedAnswer) : expectedAnswer
                 copyField.tap()
                 copyField.typeText(answer)
                 scrollAndTap("Check", in: app)

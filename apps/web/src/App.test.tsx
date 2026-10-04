@@ -147,6 +147,18 @@ class CountingPreferencesStore extends ProgressStore {
   }
 }
 
+class FailingMorseCourseStore extends ProgressStore {
+  failNextMorseCourseSave = true;
+
+  override async putMorseCourseProgress(progress: import("@canadian-ham/morse-engine").MorseCourseProgressExport): Promise<void> {
+    if (this.failNextMorseCourseSave) {
+      this.failNextMorseCourseSave = false;
+      throw new Error("simulated Morse course save failure");
+    }
+    await super.putMorseCourseProgress(progress);
+  }
+}
+
 class DelayedPreferencesStore extends ProgressStore {
   readonly pendingPreferenceSaves: Array<{
     readonly preferences: WebPreferences;
@@ -1107,6 +1119,57 @@ describe("App accessibility and flows", () => {
     assert.equal(saved?.dailyActivity[0]?.date, localDateString(fixedNow));
     assert.equal(screen.getByRole("button", { name: /Lesson 2, R, Current/ }).getAttribute("disabled"), null);
     assert.equal(within(session).queryByRole("button", { name: "Check" }), null);
+  });
+
+  it("surfaces Morse course playback failures accessibly", async () => {
+    window.location.hash = "#/morse";
+    vi.stubGlobal("AudioContext", undefined);
+    vi.stubGlobal("webkitAudioContext", undefined);
+    const store = createStore("morse-course-playback-failure");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-course-playback-failure-seed"} />);
+
+    await screen.findByRole("heading", { name: "Morse course path" });
+    await user.click(screen.getByRole("button", { name: /Lesson 1, K M, Current/ }));
+    const session = await screen.findByRole("region", { name: "Lesson 1 session" });
+    await user.click(within(session).getByRole("button", { name: "Play character" }));
+
+    const alert = await screen.findByRole("alert");
+    assert.match(alert.textContent ?? "", /Morse playback could not start: Web Audio is not available in this browser\./);
+  });
+
+  it("surfaces Morse course save failures before presenting unlock progress", async () => {
+    window.location.hash = "#/morse";
+    const store = new FailingMorseCourseStore("morse-course-save-failure");
+    stores.push(store);
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-course-save-failure-seed"} />);
+
+    await screen.findByRole("heading", { name: "Morse course path" });
+    const course = parseMorseCourseFixture(courseFixture);
+    const firstLesson = course.lessons[0]!;
+    const exercises = buildMorseLessonExercises({ lesson: firstLesson, seed: "morse-course-save-failure-seed" });
+    await user.click(screen.getByRole("button", { name: /Lesson 1, K M, Current/ }));
+    const session = await screen.findByRole("region", { name: "Lesson 1 session" });
+    for (const exercise of exercises) {
+      if (exercise.kind === "meet") {
+        await user.click(within(session).getByRole("button", { name: "Next" }));
+      } else if (exercise.kind === "choose") {
+        await user.click(within(session).getByRole("button", { name: exercise.character }));
+      } else {
+        const expected = exercise.kind === "type-character" ? exercise.character : exercise.text;
+        const field = within(session).getByLabelText("Your copy");
+        fireEvent.change(field, { target: { value: expected } });
+        await user.click(within(session).getByRole("button", { name: "Check" }));
+      }
+    }
+
+    const alert = await screen.findByRole("alert");
+    assert.match(alert.textContent ?? "", /Unable to save Morse course progress: simulated Morse course save failure/);
+    assert.ok(screen.getByText("Progress was not saved. Try again before relying on the unlock."));
+    assert.equal(screen.queryByText("Great work. The next lesson is unlocked."), null);
+    assert.equal((screen.getByRole("button", { name: /Lesson 2, R, Locked/ }) as HTMLButtonElement).disabled, true);
+    assert.equal(await store.getMorseCourseProgress(), undefined);
   });
 
   it("leaves a completed Morse lesson session unchanged when an answer is resubmitted", () => {

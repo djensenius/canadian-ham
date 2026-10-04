@@ -48,6 +48,8 @@ export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, s
   const [sessionFocusRequest, setSessionFocusRequest] = useState(0);
   const [typedAnswer, setTypedAnswer] = useState("");
   const [liveMessage, setLiveMessage] = useState("");
+  const [actionError, setActionError] = useState<string | null>(null);
+  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "failed">("idle");
   const playerRef = useRef<WebMorsePlayer | null>(null);
   const sessionRef = useRef<HTMLElement | null>(null);
 
@@ -81,13 +83,20 @@ export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, s
 
   async function play(text: string): Promise<void> {
     playerRef.current ??= new WebMorsePlayer();
-    await playerRef.current.playText(text, preferences.morse);
+    try {
+      await playerRef.current.playText(text, preferences.morse);
+      setActionError(null);
+    } catch (error) {
+      const message = t(interfaceLanguage, "morsePlaybackError", formatError(error));
+      setActionError(message);
+      setLiveMessage(message);
+    }
   }
 
   function startLesson(lesson: MorseCourseLesson): void {
     if (lessonState(course, progress, lesson.id) === "locked") return;
     const exercises = buildMorseLessonExercises({ lesson, progress, seed: seedFactory() });
-    setTypedAnswer("");
+    resetSessionFeedback();
     setSession({
       mode: "lesson",
       lesson,
@@ -104,7 +113,7 @@ export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, s
 
   function startReview(): void {
     const reviewCharacters = weakest.length > 0 ? weakest : learned.slice(0, 5);
-    setTypedAnswer("");
+    resetSessionFeedback();
     setSession({
       mode: "review",
       lesson: null,
@@ -119,13 +128,30 @@ export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, s
     setSessionFocusRequest((value) => value + 1);
   }
 
+  function resetSessionFeedback(): void {
+    setTypedAnswer("");
+    setLiveMessage("");
+    setActionError(null);
+    setSaveState("idle");
+  }
+
   async function saveSession(next: SessionState): Promise<void> {
     const attemptedAt = now();
     const nextProgress = next.mode === "lesson" && next.lesson !== null
       ? recordMorseLessonAttempt({ course, progress, lessonId: next.lesson.id, correct: next.correct, total: Math.max(1, next.total), characterResults: next.characterResults, attemptedAt, activityDate: localDateString(attemptedAt) })
       : recordMorseCharacterResults(progress, next.characterResults, attemptedAt);
-    await store.putMorseCourseProgress(nextProgress);
-    setProgress(nextProgress);
+    setSaveState("saving");
+    setActionError(null);
+    try {
+      await store.putMorseCourseProgress(nextProgress);
+      setProgress(nextProgress);
+      setSaveState("saved");
+    } catch (error) {
+      const message = t(interfaceLanguage, "morseCourseSaveError", formatError(error));
+      setSaveState("failed");
+      setActionError(message);
+      setLiveMessage(message);
+    }
   }
 
   function answer(correct: boolean, results: readonly { readonly character: string; readonly correct: boolean }[]): void {
@@ -154,6 +180,7 @@ export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, s
         </dl>
       </div>
       {loadError !== null ? <p role="alert">{t(interfaceLanguage, "morseCourseLoadError", loadError)}</p> : null}
+      {actionError !== null ? <p role="alert">{actionError}</p> : null}
       <div className="action-row">
         <button type="button" onClick={startReview}>{t(interfaceLanguage, "morseCourseReviewWeak")}</button>
         <p>{t(interfaceLanguage, "morseCourseWeakest", weakest.join(" ") || learned.join(" "))}</p>
@@ -182,7 +209,7 @@ export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, s
           <p>{t(interfaceLanguage, "morseCourseSessionProgress", session.index + 1, session.exercises.length)}</p>
           {!session.done ? renderExercise(currentExercise, play, typedAnswer, setTypedAnswer, answer, interfaceLanguage) : null}
           {session.feedback ? <p>{session.feedback}</p> : null}
-          {session.done ? <LessonSummary interfaceLanguage={interfaceLanguage} session={session} /> : null}
+          {session.done ? <LessonSummary interfaceLanguage={interfaceLanguage} saveState={saveState} session={session} /> : null}
           <div className="sr-only" aria-live="polite" aria-atomic="true">{liveMessage}</div>
         </section>
       ) : null}
@@ -251,9 +278,19 @@ function localDateString(value: string): string {
   return `${year}-${month}-${day}`;
 }
 
-function LessonSummary({ interfaceLanguage, session }: { readonly interfaceLanguage: InterfaceLanguage; readonly session: SessionState }) {
+function LessonSummary({ interfaceLanguage, saveState, session }: { readonly interfaceLanguage: InterfaceLanguage; readonly saveState: "idle" | "saving" | "saved" | "failed"; readonly session: SessionState }) {
   const percent = session.total === 0 ? 100 : Math.round((session.correct / session.total) * 100);
-  return <section className="morse-summary" aria-labelledby="morse-summary-title"><h5 id="morse-summary-title">{t(interfaceLanguage, "morseCourseSummary")}</h5><p>{t(interfaceLanguage, "morseCourseAccuracy", percent)}</p><p>{percent >= 90 ? t(interfaceLanguage, "morseCourseUnlocked") : t(interfaceLanguage, "morseCourseTryAgain")}</p></section>;
+  const savedMessage = percent >= 90 ? t(interfaceLanguage, "morseCourseUnlocked") : t(interfaceLanguage, "morseCourseTryAgain");
+  const progressMessage = saveState === "saving"
+    ? t(interfaceLanguage, "morseCourseSavingProgress")
+    : saveState === "failed"
+      ? t(interfaceLanguage, "morseCourseProgressNotSaved")
+      : savedMessage;
+  return <section className="morse-summary" aria-labelledby="morse-summary-title"><h5 id="morse-summary-title">{t(interfaceLanguage, "morseCourseSummary")}</h5><p>{t(interfaceLanguage, "morseCourseAccuracy", percent)}</p><p>{progressMessage}</p></section>;
+}
+
+function formatError(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
 
 function stateLabel(interfaceLanguage: InterfaceLanguage, state: "locked" | "current" | "completed"): string {

@@ -378,7 +378,9 @@ enum ProgressStoreError: LocalizedError, Equatable {
 #if DEBUG
 enum ProgressStoreInjectedFailure: Error, Equatable {
     case importAfterDelete
+    case importAfterMorseWrite
     case lessonQuizSave
+    case morseCourseProgressRemoval
 }
 #endif
 
@@ -403,7 +405,9 @@ final class ProgressStoreService: ObservableObject {
 #if DEBUG
     var morseCourseProgressURLForTesting: URL { morseCourseProgressURL }
     var failNextImportAfterDeleteForTesting = false
+    var failNextImportAfterMorseWriteForTesting = false
     var failNextLessonQuizSaveForTesting = false
+    var failNextMorseCourseProgressRemovalForTesting = false
 #endif
 
     init(container: ModelContainer, morseCourseProgressURL: URL = ProgressStoreService.morseCourseProgressURL) throws {
@@ -580,13 +584,20 @@ final class ProgressStoreService: ObservableObject {
     }
 
     func resetAllData() throws {
-        try context.delete(model: QuestionProgressEntity.self)
-        try context.delete(model: ExamAttemptEntity.self)
-        try context.delete(model: PreferencesEntity.self)
-        try? FileManager.default.removeItem(at: morseCourseProgressURL)
-        preferences = .default
-        try context.save()
-        objectWillChange.send()
+        let previousSnapshot = try snapshotForRollback()
+        do {
+            try context.delete(model: QuestionProgressEntity.self)
+            try context.delete(model: ExamAttemptEntity.self)
+            try context.delete(model: PreferencesEntity.self)
+            try removeMorseCourseProgressIfPresent()
+            preferences = .default
+            try context.save()
+            objectWillChange.send()
+        } catch {
+            context.rollback()
+            try restore(previousSnapshot)
+            throw error
+        }
     }
 
     func exportData(bank: QuestionBank, exportedAt: String) throws -> ProgressExportV1 {
@@ -662,8 +673,14 @@ final class ProgressStoreService: ObservableObject {
                 try FileManager.default.createDirectory(at: morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
                 try encoder.encode(morseCourseProgress).write(to: morseCourseProgressURL, options: [.atomic])
             } else {
-                try? FileManager.default.removeItem(at: morseCourseProgressURL)
+                try removeMorseCourseProgressIfPresent()
             }
+#if DEBUG
+            if failNextImportAfterMorseWriteForTesting {
+                failNextImportAfterMorseWriteForTesting = false
+                throw ProgressStoreInjectedFailure.importAfterMorseWrite
+            }
+#endif
             try context.save()
             preferences = nextPreferences
             objectWillChange.send()
@@ -843,6 +860,18 @@ final class ProgressStoreService: ObservableObject {
         )
     }
 
+    private func removeMorseCourseProgressIfPresent() throws {
+        if FileManager.default.fileExists(atPath: morseCourseProgressURL.path(percentEncoded: false)) {
+#if DEBUG
+            if failNextMorseCourseProgressRemovalForTesting {
+                failNextMorseCourseProgressRemovalForTesting = false
+                throw ProgressStoreInjectedFailure.morseCourseProgressRemoval
+            }
+#endif
+            try FileManager.default.removeItem(at: morseCourseProgressURL)
+        }
+    }
+
     private func restore(_ snapshot: ProgressStoreSnapshot) throws {
         try context.delete(model: QuestionProgressEntity.self)
         try context.delete(model: ExamAttemptEntity.self)
@@ -860,7 +889,7 @@ final class ProgressStoreService: ObservableObject {
             try FileManager.default.createDirectory(at: morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
             try morseCourseProgressData.write(to: morseCourseProgressURL, options: [.atomic])
         } else {
-            try? FileManager.default.removeItem(at: morseCourseProgressURL)
+            try removeMorseCourseProgressIfPresent()
         }
         for record in snapshot.questionProgress {
             try upsertQuestionProgress(record)
@@ -927,7 +956,7 @@ private func validateMorseCourseProgress(_ progress: MorseCourseProgressExport, 
     var lessonIds = Set<String>()
     for (index, record) in progress.lessonProgress.enumerated() {
         let prefix = "Import morseCourseProgress.lessonProgress[\(index)]"
-        if !record.lessonId.hasPrefix("koch-") { errors.append(String(localized: "\(prefix).lessonId must be a Morse lesson ID.")) }
+        if record.lessonId.range(of: #"^koch-\d{3}$"#, options: .regularExpression) == nil { errors.append(String(localized: "\(prefix).lessonId must be a Morse lesson ID.")) }
         if !lessonIds.insert(record.lessonId).inserted { errors.append(String(localized: "\(prefix).lessonId duplicates another Morse lesson record.")) }
         if record.attempts < 1 { errors.append(String(localized: "\(prefix).attempts must be positive.")) }
         if !(0...1).contains(record.bestAccuracy) { errors.append(String(localized: "\(prefix).bestAccuracy must be between 0 and 1.")) }

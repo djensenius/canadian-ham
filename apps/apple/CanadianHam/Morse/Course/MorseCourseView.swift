@@ -12,6 +12,7 @@ struct MorseCourseView: View {
     @State private var session: MorseCourseSession?
     @State private var typedAnswer = ""
     @State private var statusMessage = ""
+    @State private var statusMessageIsCorrective = false
     @State private var errorMessage: String?
     @State private var driver = MorseAudioDriver()
     @AccessibilityFocusState private var sessionIsFocused: Bool
@@ -41,6 +42,9 @@ struct MorseCourseView: View {
                 }
             }
 
+            if let errorMessage {
+                MessagePanel(title: "Morse course error", message: errorMessage, kind: .warning)
+            }
             if let course, let progress {
                 if let session {
                     sessionView(session, course: course, progress: progress)
@@ -54,9 +58,7 @@ struct MorseCourseView: View {
                     .accessibilityIdentifier("morse-course-review")
                     coursePath(course: course, progress: progress)
                 }
-            } else if let errorMessage {
-                MessagePanel(title: "Morse course error", message: errorMessage, kind: .warning)
-            } else {
+            } else if errorMessage == nil {
                 ProgressView("Loading Morse course…") // l10n: localized
             }
         }
@@ -155,7 +157,7 @@ struct MorseCourseView: View {
             if !session.done {
                 exerciseView(session.currentExercise)
             }
-            if !session.done && !statusMessage.isEmpty {
+            if !statusMessage.isEmpty && (!session.done || statusMessageIsCorrective) {
                 Text(statusMessage) // l10n: localized
                     .foregroundStyle(DesignTokens.Colors.ink)
             }
@@ -235,8 +237,9 @@ struct MorseCourseView: View {
                 throw MorseCourseError.invalidFixture("Missing bundled Morse course fixture.")
             }
             let loadedCourse = try decodeMorseCourse(data: Data(contentsOf: url))
+            let storedProgress = try progressStore.morseCourseProgress()
             course = loadedCourse
-            progress = try progressStore.morseCourseProgress() ?? emptyMorseCourseProgress(courseId: loadedCourse.courseId)
+            progress = morseCourseProgressForBundledCourse(storedProgress, courseId: loadedCourse.courseId)
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
@@ -244,7 +247,7 @@ struct MorseCourseView: View {
 
     private func startLesson(_ lesson: MorseCourseLesson, course: MorseCourse, progress: MorseCourseProgressExport) {
         let exercises = buildMorseLessonExercises(lesson: lesson, progress: progress, seed: lessonSeed())
-        typedAnswer = ""
+        resetSessionFeedback()
         session = MorseCourseSession(
             mode: .lesson(lesson),
             exercises: exercises
@@ -255,6 +258,7 @@ struct MorseCourseView: View {
     private func startReview(course: MorseCourse, progress: MorseCourseProgressExport) {
         let learned = learnedMorseCharacters(course: course, progress: progress)
         let weakest = selectWeakestMorseCharacters(stats: progress.characterStats, learnedCharacters: learned, limit: 5)
+        resetSessionFeedback()
         session = MorseCourseSession(mode: .review, exercises: (weakest.isEmpty ? Array(learned.prefix(5)) : weakest).map { .typeCharacter($0) })
         refocusSession()
     }
@@ -275,6 +279,12 @@ struct MorseCourseView: View {
 #endif
     }
 
+    private func resetSessionFeedback() {
+        typedAnswer = ""
+        statusMessage = ""
+        statusMessageIsCorrective = false
+    }
+
     private func refocusSession() {
         sessionIsFocused = false
         DispatchQueue.main.async {
@@ -289,8 +299,10 @@ struct MorseCourseView: View {
         guard currentSession.applyAnswer(correct: correct, results: results) else { return }
         if scored {
             statusMessage = correct ? String(localized: "Correct.") : String(localized: "Try again next time.") + " " + String(localized: "Correct answer: \(expectedAnswer(exercise)).")
+            statusMessageIsCorrective = !correct
         } else {
             statusMessage = ""
+            statusMessageIsCorrective = false
         }
         if currentSession.done {
             save(currentSession)
@@ -385,6 +397,13 @@ private func expectedAnswer(_ exercise: MorseCourseExercise) -> String {
     case .typeCharacter(let character): character
     case .typeGroup(let text): text
     }
+}
+
+func morseCourseProgressForBundledCourse(_ storedProgress: MorseCourseProgressExport?, courseId: String) -> MorseCourseProgressExport {
+    guard let storedProgress, storedProgress.courseId == courseId else {
+        return emptyMorseCourseProgress(courseId: courseId)
+    }
+    return storedProgress
 }
 
 private extension MorseCourseExercise {
