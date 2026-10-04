@@ -53,6 +53,7 @@ import {
 } from "./lib/i18n";
 import { WebMorsePlayer } from "./lib/morseAudio";
 import { morseISEDExamPreset, morseTimingFromPreferences, normalizeMorsePreferences, type WebMorseTimingProfileName } from "./lib/morseSettings";
+import { MorseCopyExamSection, type MorsePlaybackCoordinator } from "./morse/copyExam/MorseCopyExamSection";
 import { applyThemePreference, mirrorThemePreference, readStoredThemePreference } from "./lib/theme";
 import {
   applyPracticeAnswer,
@@ -640,7 +641,7 @@ function AppContent({
           <Results attempt={latestResult ?? latestAttempt} interfaceLanguage={interfaceLanguage} language={language} onStartPractice={startPractice} questionsById={bankQuestionsById} />
         ) : null}
         {initialStoreLoaded && route === "morse" ? (
-          <MorseSection interfaceLanguage={interfaceLanguage} onSetPreferences={setPreferences} preferences={preferences} />
+          <MorseSection interfaceLanguage={interfaceLanguage} onSetPreferences={setPreferences} preferences={preferences} seedFactory={seedFactory} />
         ) : null}
         {initialStoreLoaded && route === "settings" ? (
           <Settings
@@ -1768,33 +1769,62 @@ function About({ interfaceLanguage }: { readonly interfaceLanguage: InterfaceLan
 
 const MORSE_PRACTICE_TEXT = "KMRSU PARIS";
 
-function MorseSection({ interfaceLanguage, preferences, onSetPreferences }: { readonly interfaceLanguage: InterfaceLanguage; readonly preferences: WebPreferences; readonly onSetPreferences: (preferences: PreferencesPatch) => Promise<boolean> }) {
+function useMorsePlaybackCoordinator(): MorsePlaybackCoordinator {
+  const stopHandlersRef = useRef(new Map<string, () => void>());
+  return useMemo(() => ({
+    register(ownerId, stop) {
+      stopHandlersRef.current.set(ownerId, stop);
+      return () => {
+        if (stopHandlersRef.current.get(ownerId) === stop) {
+          stopHandlersRef.current.delete(ownerId);
+        }
+      };
+    },
+    claim(ownerId) {
+      for (const [registeredOwnerId, stop] of stopHandlersRef.current) {
+        if (registeredOwnerId !== ownerId) {
+          stop();
+        }
+      }
+    },
+  }), []);
+}
+
+function useMorsePlaybackRegistration(coordinator: MorsePlaybackCoordinator, ownerId: string, stop: () => void): void {
+  const stopRef = useRef(stop);
+  stopRef.current = stop;
+  useEffect(() => coordinator.register(ownerId, () => stopRef.current()), [coordinator, ownerId]);
+}
+
+function MorseSection({ interfaceLanguage, preferences, onSetPreferences, seedFactory }: { readonly interfaceLanguage: InterfaceLanguage; readonly preferences: WebPreferences; readonly onSetPreferences: (preferences: PreferencesPatch) => Promise<boolean>; readonly seedFactory: () => string }) {
+  const playbackCoordinator = useMorsePlaybackCoordinator();
   return (
     <section className="card morse-section" aria-labelledby="morse-section-title">
       <p className="eyebrow">{t(interfaceLanguage, "morseEyebrow")}</p>
       <h2 id="morse-section-title">{t(interfaceLanguage, "morseSectionTitle")} <span className="preview-label">{t(interfaceLanguage, "previewLabel")}</span></h2>
       <p>{t(interfaceLanguage, "morseSectionIntro")}</p>
       <div className="morse-home-grid" role="group" aria-label={t(interfaceLanguage, "morseHomeEntriesAria")}>
-        <section className="morse-home-card" aria-labelledby="morse-learn-title">
+        <div className="morse-home-card">
           <h3 id="morse-learn-title">{t(interfaceLanguage, "morseLearnTitle")}</h3>
           <p>{t(interfaceLanguage, "morseLearnPlaceholder")}</p>
-        </section>
-        <section className="morse-home-card" aria-labelledby="morse-copy-practice-title">
+        </div>
+        <div className="morse-home-card">
           <h3 id="morse-copy-practice-title">{t(interfaceLanguage, "morseCopyPracticeTitle")}</h3>
           <p>{t(interfaceLanguage, "morsePracticePlaceholder")}</p>
-        </section>
-        <section className="morse-home-card" aria-labelledby="morse-exam-title">
+        </div>
+        <div className="morse-home-card">
           <h3 id="morse-exam-title">{t(interfaceLanguage, "morseExamTitle")}</h3>
           <p>{t(interfaceLanguage, "morseExamPlaceholder")}</p>
-        </section>
+        </div>
       </div>
-      <MorseTrainerPreview interfaceLanguage={interfaceLanguage} preferences={preferences} />
+      <MorseCopyExamSection interfaceLanguage={interfaceLanguage} preferences={preferences} examSeedFactory={(profileName) => `web-${profileName}-${seedFactory()}`} playbackCoordinator={playbackCoordinator} />
+      <MorseTrainerPreview interfaceLanguage={interfaceLanguage} preferences={preferences} playbackCoordinator={playbackCoordinator} />
       <MorseSettingsControls interfaceLanguage={interfaceLanguage} onSetPreferences={onSetPreferences} preferences={preferences} />
     </section>
   );
 }
 
-function MorseTrainerPreview({ interfaceLanguage, preferences }: { readonly interfaceLanguage: InterfaceLanguage; readonly preferences: WebPreferences }) {
+function MorseTrainerPreview({ interfaceLanguage, preferences, playbackCoordinator }: { readonly interfaceLanguage: InterfaceLanguage; readonly preferences: WebPreferences; readonly playbackCoordinator: MorsePlaybackCoordinator }) {
   const playerRef = useRef<WebMorsePlayer | null>(null);
   const revealTimerRef = useRef<number | null>(null);
   const playbackGenerationRef = useRef(0);
@@ -1821,6 +1851,7 @@ function MorseTrainerPreview({ interfaceLanguage, preferences }: { readonly inte
       window.clearTimeout(revealTimerRef.current);
     }
   }, []);
+  useMorsePlaybackRegistration(playbackCoordinator, "quick-listen", stopPlaying);
 
   useEffect(() => {
     if (playing && focusStopAfterStartRef.current) {
@@ -1835,6 +1866,7 @@ function MorseTrainerPreview({ interfaceLanguage, preferences }: { readonly inte
 
   async function play(): Promise<void> {
     const generation = playbackGenerationRef.current + 1;
+    playbackCoordinator.claim("quick-listen");
     playbackGenerationRef.current = generation;
     playerRef.current ??= new WebMorsePlayer();
     focusStopAfterStartRef.current = document.activeElement === playButtonRef.current;
@@ -1875,7 +1907,10 @@ function MorseTrainerPreview({ interfaceLanguage, preferences }: { readonly inte
     }
   }
 
-  function stop(): void {
+  function stopPlaying(): void {
+    if (!playing) {
+      return;
+    }
     playbackGenerationRef.current += 1;
     focusPlayAfterStopRef.current = document.activeElement === stopButtonRef.current;
     playerRef.current?.stop();
@@ -1887,6 +1922,10 @@ function MorseTrainerPreview({ interfaceLanguage, preferences }: { readonly inte
     const stoppedStatus = t(interfaceLanguage, "morsePlaybackStopped");
     setStatus(stoppedStatus);
     setLiveStatus(stoppedStatus);
+  }
+
+  function stop(): void {
+    stopPlaying();
   }
 
   return (

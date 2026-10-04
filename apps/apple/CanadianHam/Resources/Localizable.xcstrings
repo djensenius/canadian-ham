@@ -1781,6 +1781,28 @@
         }
       }
     },
+    "%lld total errors: %lld wrong, %lld missing, %lld inserted." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld total errors: %2$lld wrong, %3$lld missing, %4$lld inserted."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld erreurs au total : %2$lld erronées, %3$lld manquantes, %4$lld ajoutées."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld erreurs au total : %2$lld erronées, %3$lld manquantes, %4$lld ajoutées."
+          }
+        }
+      }
+    },
     "%lld unanswered questions count as incorrect." : {
       "localizations" : {
         "en" : {
@@ -2385,6 +2407,22 @@
         }
       }
     },
+    "Character diff" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Différence par caractère"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Différence par caractère"
+          }
+        }
+      }
+    },
     "Character speed" : {
       "localizations" : {
         "en" : {
@@ -2403,6 +2441,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vitesse des caractères"
+          }
+        }
+      }
+    },
+    "Check copy" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérifier la copie"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérifier la copie"
+          }
+        }
+      }
+    },
+    "Choose a passage length, start the audio, and type what you hear during or after playback. Passages use only RIC-1 section 8.2 characters." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisissez une longueur de passage, démarrez l’audio et tapez ce que vous entendez pendant ou après la lecture. Les passages utilisent seulement les caractères de la section 8.2 de RIC-1."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisissez une longueur de passage, démarrez l’audio et tapez ce que vous entendez pendant ou après la lecture. Les passages utilisent seulement les caractères de la section 8.2 de RIC-1."
           }
         }
       }
@@ -2451,50 +2521,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "À venir"
-          }
-        }
-      }
-    },
-    "Coming soon with copy-practice drills." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Coming soon with copy-practice drills."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "À venir avec les exercices de copie."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "À venir avec les exercices de copie."
-          }
-        }
-      }
-    },
-    "Coming soon with the simulated 5 wpm exam." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Coming soon with the simulated 5 wpm exam."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "À venir avec l’examen simulé à 5 mots/min."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "À venir avec l’examen simulé à 5 mots/min."
           }
         }
       }
@@ -2585,6 +2611,22 @@
         }
       }
     },
+    "Copy checked: %lld errors." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copie vérifiée : %lld erreurs."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copie vérifiée : %lld erreurs."
+          }
+        }
+      }
+    },
     "Copy practice" : {
       "localizations" : {
         "en" : {
@@ -2603,6 +2645,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Copie"
+          }
+        }
+      }
+    },
+    "Copy practice playback started." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecture de copie commencée."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecture de copie commencée."
           }
         }
       }
@@ -3083,6 +3141,22 @@
         }
       }
     },
+    "Enter the characters you heard, not dot and dash notation." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrez les caractères entendus, et non la notation en points et tirets."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrez les caractères entendus, et non la notation en points et tirets."
+          }
+        }
+      }
+    },
     "Exam" : {
       "localizations" : {
         "en" : {
@@ -3117,6 +3191,86 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Code d’examen : %@"
+          }
+        }
+      }
+    },
+    "Exam playback started. Audio cannot be paused or replayed." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecture d’examen commencée. L’audio ne peut pas être mis en pause ni rejoué."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecture d’examen commencée. L’audio ne peut pas être mis en pause ni rejoué."
+          }
+        }
+      }
+    },
+    "Exam rule: fail at %lld%% because more than 5 errors is below the 100%% pass mark." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Règle d’examen : échec à %lld %%, car plus de 5 erreurs est inférieur au seuil de réussite de 100 %%."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Règle d’examen : échec à %lld %%, car plus de 5 erreurs est inférieur au seuil de réussite de 100 %%."
+          }
+        }
+      }
+    },
+    "Exam rule: pass at %lld%% because 5 or fewer errors count as 100%%." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Règle d’examen : réussite à %lld %%, car 5 erreurs ou moins donnent 100 %%."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Règle d’examen : réussite à %lld %%, car 5 erreurs ou moins donnent 100 %%."
+          }
+        }
+      }
+    },
+    "Exam timing profile" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil de minutage d’examen"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil de minutage d’examen"
+          }
+        }
+      }
+    },
+    "Expected transcript" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transcription attendue"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transcription attendue"
           }
         }
       }
@@ -3187,6 +3341,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Exporter…"
+          }
+        }
+      }
+    },
+    "FAIL, %lld%%, with %lld errors." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "FAIL, %1$lld%%, with %2$lld errors."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ÉCHEC, %1$lld %%, avec %2$lld erreurs."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ÉCHEC, %1$lld %%, avec %2$lld erreurs."
           }
         }
       }
@@ -3295,6 +3471,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Générez 100 questions : une par sous-section, dans un ordre reproductible. La minuterie facultative est désactivée par défaut."
+          }
+        }
+      }
+    },
+    "Generated exam: %lld weighted characters, %@ seconds of audio." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Generated exam: %1$lld weighted characters, %2$@ seconds of audio."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Examen généré : %1$lld caractères pondérés, %2$@ secondes d’audio."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Examen généré : %1$lld caractères pondérés, %2$@ secondes d’audio."
           }
         }
       }
@@ -3777,6 +3975,22 @@
         }
       }
     },
+    "Inserted: %@" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouté : %@"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouté : %@"
+          }
+        }
+      }
+    },
     "ISED 5 wpm (PARIS-calibrated)" : {
       "localizations" : {
         "en" : {
@@ -3925,18 +4139,18 @@
         }
       }
     },
-    "Learn and practise Morse code offline. Course, copy practice, and exam drills are coming soon." : {
+    "Learn and practise Morse code offline. Copy practice and the simulated receiving exam are available below." : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apprenez le code Morse et exercez-vous hors ligne. Le cours, la copie et les exercices d’examen arriveront bientôt."
+            "value" : "Apprenez le code Morse et exercez-vous hors ligne. La copie et l’examen simulé de réception sont offerts ci-dessous."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apprenez le code Morse et exercez-vous hors ligne. Le cours, la copie et les exercices d’examen arriveront bientôt."
+            "value" : "Apprenez le code Morse et exercez-vous hors ligne. La copie et l’examen simulé de réception sont offerts ci-dessous."
           }
         }
       }
@@ -4117,6 +4331,22 @@
         }
       }
     },
+    "Listen to full passages and compare your copy below." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Écoutez des passages complets et comparez votre copie ci-dessous."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Écoutez des passages complets et comparez votre copie ci-dessous."
+          }
+        }
+      }
+    },
     "Loading Canadian Ham…" : {
       "localizations" : {
         "fr" : {
@@ -4209,6 +4439,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stockage local de la progression indisponible"
+          }
+        }
+      }
+    },
+    "Long" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Long"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Long"
           }
         }
       }
@@ -4321,6 +4567,22 @@
         }
       }
     },
+    "Medium" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moyen"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moyen"
+          }
+        }
+      }
+    },
     "Missing bundled resource: %@.json" : {
       "localizations" : {
         "en" : {
@@ -4339,6 +4601,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ressource intégrée manquante : %@.json"
+          }
+        }
+      }
+    },
+    "Missing: %@" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manquant : %@"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manquant : %@"
           }
         }
       }
@@ -5131,6 +5409,38 @@
         }
       }
     },
+    "PASS, 100%%, with %lld errors." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RÉUSSITE, 100 %%, avec %lld erreurs."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RÉUSSITE, 100 %%, avec %lld erreurs."
+          }
+        }
+      }
+    },
+    "Passage length" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Longueur du passage"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Longueur du passage"
+          }
+        }
+      }
+    },
     "Pause timer" : {
       "localizations" : {
         "fr" : {
@@ -5187,6 +5497,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lire l’audio d’exercice Morse"
+          }
+        }
+      }
+    },
+    "Playback duration: %@ seconds." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durée de lecture : %@ secondes."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durée de lecture : %@ secondes."
+          }
+        }
+      }
+    },
+    "Playback finished. Check your copy when ready." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecture terminée. Vérifiez votre copie quand vous êtes prêt."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecture terminée. Vérifiez votre copie quand vous êtes prêt."
+          }
+        }
+      }
+    },
+    "Playback finished. The %lld-second review period has started." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecture terminée. La période de révision de %lld secondes a commencé."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecture terminée. La période de révision de %lld secondes a commencé."
           }
         }
       }
@@ -6001,6 +6359,22 @@
         }
       }
     },
+    "Review time remaining: %lld seconds." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temps de révision restant : %lld secondes."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temps de révision restant : %lld secondes."
+          }
+        }
+      }
+    },
     "RIC-1 literal spacing" : {
       "localizations" : {
         "en" : {
@@ -6143,6 +6517,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Erreur de réglages"
+          }
+        }
+      }
+    },
+    "Short" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Court"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Court"
+          }
+        }
+      }
+    },
+    "Simulated 5 wpm exam" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Examen simulé à 5 mots/min"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Examen simulé à 5 mots/min"
           }
         }
       }
@@ -6325,6 +6731,22 @@
         }
       }
     },
+    "Start copy practice" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Démarrer la copie"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Démarrer la copie"
+          }
+        }
+      }
+    },
     "Start due review. %lld due questions; unseen excluded" : {
       "localizations" : {
         "en" : {
@@ -6455,6 +6877,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Commencer le questionnaire"
+          }
+        }
+      }
+    },
+    "Start simulated exam" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Démarrer l’examen simulé"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Démarrer l’examen simulé"
           }
         }
       }
@@ -6815,6 +7253,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "La banque de questions intégrée ne contient aucune catégorie d’exercices."
+          }
+        }
+      }
+    },
+    "The receiving exam plays once without pause or replay, then gives a 2-minute review before grading. Results stay only on this screen." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’examen de réception joue une seule fois, sans pause ni reprise, puis donne 2 minutes de révision avant la correction. Les résultats restent seulement sur cet écran."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’examen de réception joue une seule fois, sans pause ni reprise, puis donne 2 minutes de révision avant la correction. Les résultats restent seulement sur cet écran."
           }
         }
       }
@@ -7253,6 +7707,38 @@
         }
       }
     },
+    "Try a simulated Canadian 5 wpm receiving exam below." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essayez un examen canadien simulé de réception à 5 mots/min ci-dessous."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essayez un examen canadien simulé de réception à 5 mots/min ci-dessous."
+          }
+        }
+      }
+    },
+    "Unable to complete this operation: " : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de terminer cette opération : "
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de terminer cette opération : "
+          }
+        }
+      }
+    },
     "Unable to complete this operation: %@" : {
       "localizations" : {
         "en" : {
@@ -7493,6 +7979,28 @@
         }
       }
     },
+    "Wrong: expected %@, received %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Wrong: expected %1$@, received %2$@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erroné : %@ attendu, %@ reçu"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erroné : %@ attendu, %@ reçu"
+          }
+        }
+      }
+    },
     "Your answer, correct answer" : {
       "localizations" : {
         "fr" : {
@@ -7521,6 +8029,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Votre réponse, mauvaise réponse"
+          }
+        }
+      }
+    },
+    "Your copy" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Votre copie"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Votre copie"
           }
         }
       }

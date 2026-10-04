@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "kind": "morse-copy-diff",
+  "cases": [
+    {
+      "id": "wrong-match-inserted-diff-operations",
+      "input": {
+        "expected": "ABC",
+        "received": "AXCD"
+      },
+      "expectedOutput": {
+        "score": {
+          "errors": 2,
+          "wrong": 1,
+          "missing": 0,
+          "inserted": 1,
+          "passed": true,
+          "markPercent": 100,
+          "expectedLength": 3,
+          "receivedLength": 4
+        },
+        "operations": [
+          {
+            "kind": "match",
+            "expected": "A",
+            "received": "A"
+          },
+          {
+            "kind": "wrong",
+            "expected": "B",
+            "received": "X"
+          },
+          {
+            "kind": "match",
+            "expected": "C",
+            "received": "C"
+          },
+          {
+            "kind": "inserted",
+            "received": "D"
+          }
+        ]
+      }
+    }
+  ]
+}
