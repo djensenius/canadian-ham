@@ -34,10 +34,7 @@ Why: the project rule is full default accessibility audits with no handlers or e
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Keep every UI-test performAccessibilityAudit call on the default full audit, with no handlers or restricted audit types.
-2. Use adaptive DesignTokens colors and non-colour markers for Morse diff tokens, and keep the graded exam controls/copy visible after grading.
-3. Keep the Morse course path Dynamic Type fix that lets lesson content wrap instead of clipping.
-4. Verify targeted light/dark Morse graded-diff and course audits, then full iOS and macOS test suites.
+1. Replace the graded-diff audit's blind swipe with deterministic scrolling to require morse-diff-title and a morse-diff-token-* fully visible below the navigation bar, and assert audited text does not intersect navigation chrome.\n2. Run the unfiltered graded-diff light/dark audits; if the audit exposes covered app content, fix the app layout rather than adding handlers or filters.\n3. Run apple localization/source checks, remove stale Localizable.xcstrings entries via the required JSON round-trip, then run the required package/web/platform validation once on the final code.\n4. Record per-test platform results in task-12.15, note shared validation in task-12.16, create the requested task-12 follow-up, re-check acceptance criteria with objective evidence, mark Done last.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
