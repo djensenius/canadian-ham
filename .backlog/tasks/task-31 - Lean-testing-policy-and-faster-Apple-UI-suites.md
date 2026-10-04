@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@coordinator'
 created_date: '2026-10-03 13:42'
-updated_date: '2026-10-03 13:44'
+updated_date: '2026-10-04 21:06'
 labels:
   - apple
   - testing
@@ -41,4 +41,6 @@ Why: the owner noted we are overtesting (2026-10-03). Every task ran the full UI
 
 <!-- SECTION:NOTES:BEGIN -->
 AC #1: AGENTS.md now has a 'Testing policy (all agents)' section and the post-merge rule runs quick checks instead of full Apple suites. AC #2/#3 (suite consolidation) are for a later worker.
+
+Flaky web test fixed at the cause (2026-10-03): 'lets Morse number inputs accept multi-digit drafts before committing' failed about 1 in 4 runs (650700 vs 700) because a mount effect in the Settings Morse controls reset the number drafts to the same values and could clobber a draft typed right after mount. The effect now skips the initial run and resyncs only when the stored Morse preferences actually change. The test is unchanged; 15/15 runs passed (TZ=UTC).
 <!-- SECTION:NOTES:END -->
