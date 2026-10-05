@@ -1818,7 +1818,7 @@ function MorseSection({ interfaceLanguage, preferences, onSetPreferences, store,
           <p>{t(interfaceLanguage, "morseExamPlaceholder")}</p>
         </div>
       </div>
-      <MorseCoursePanel interfaceLanguage={interfaceLanguage} preferences={preferences} store={store} now={now} seedFactory={seedFactory} />
+      <MorseCoursePanel interfaceLanguage={interfaceLanguage} preferences={preferences} store={store} now={now} seedFactory={seedFactory} playbackCoordinator={playbackCoordinator} />
       <MorseCopyExamSection interfaceLanguage={interfaceLanguage} preferences={preferences} examSeedFactory={(profileName) => `web-${profileName}-${seedFactory()}`} playbackCoordinator={playbackCoordinator} />
       <MorseTrainerPreview interfaceLanguage={interfaceLanguage} preferences={preferences} playbackCoordinator={playbackCoordinator} />
       <MorseSettingsControls interfaceLanguage={interfaceLanguage} onSetPreferences={onSetPreferences} preferences={preferences} />

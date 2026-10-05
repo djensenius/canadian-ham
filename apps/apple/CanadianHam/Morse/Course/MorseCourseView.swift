@@ -6,6 +6,7 @@ struct MorseCourseView: View {
     let progressStore: ProgressStoreService
     @Binding var settings: MorseTrainerSettings
     let onProgressChanged: () -> Void
+    let playbackCoordinator: MorsePlaybackCoordinator
 
     @State private var course: MorseCourse?
     @State private var progress: MorseCourseProgressExport?
@@ -68,7 +69,15 @@ struct MorseCourseView: View {
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         .task { loadCourse() }
         .onReceive(progressStore.objectWillChange) { _ in loadCourse() }
-        .onDisappear { driver.stop() }
+        .onAppear {
+            playbackCoordinator.register("course") {
+                stopCoursePlayback()
+            }
+        }
+        .onDisappear {
+            playbackCoordinator.unregister("course")
+            stopCoursePlayback()
+        }
     }
 
     private func courseStats(course: MorseCourse, progress: MorseCourseProgressExport) -> some View {
@@ -262,10 +271,15 @@ struct MorseCourseView: View {
 
     private func play(_ text: String) {
         do {
+            playbackCoordinator.claim("course")
             _ = try driver.play(text: text, settings: settings.normalized())
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
+    }
+
+    private func stopCoursePlayback() {
+        driver.stop()
     }
 
     private func lessonSeed() -> String {

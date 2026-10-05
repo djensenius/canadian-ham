@@ -276,6 +276,32 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(copyCheck.isEnabled, "Starting Quick listen should stop copy-practice playback and re-enable Check copy")
     }
 
+    func testMorseStartingCourseAudioStopsCopyPlayback() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseCopyPlaybackSeconds", "10",
+            "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"
+        ])
+        defer { app.terminate() }
+
+        let copyStart = app.buttons["morse-copy-start-button"].firstMatch
+        XCTAssertTrue(copyStart.waitForExistence(timeout: 10))
+        copyStart.tap()
+        let copyCheck = app.buttons["morse-copy-check-button"].firstMatch
+        XCTAssertTrue(copyCheck.waitForExistence(timeout: 5))
+        XCTAssertFalse(copyCheck.isEnabled, "Copy check should stay disabled while copy practice is playing")
+
+        scrollToTop(in: app)
+        tapFirstMorseLesson(in: app)
+        let coursePlay = app.buttons["Play character"].firstMatch
+        XCTAssertTrue(coursePlay.waitForExistence(timeout: 5))
+        scrollUntilHittable(coursePlay, in: app, maxSwipes: 8)
+        coursePlay.tap()
+
+        XCTAssertTrue(copyCheck.isEnabled, "Starting Morse course audio should stop copy-practice playback and re-enable Check copy")
+    }
+
     func testAccessibilityAuditMorseExamGradedDiffLight() throws {
         XCUIDevice.shared.appearance = .light
         try auditMorseExamGradedDiff(appearance: .light)

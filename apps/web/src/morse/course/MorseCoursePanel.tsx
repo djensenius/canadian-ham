@@ -20,8 +20,14 @@ import { WebMorsePlayer } from "../../lib/morseAudio";
 import type { InterfaceLanguage } from "../../lib/i18n";
 import { t } from "../../lib/i18n";
 import type { ProgressStore, WebPreferences } from "../../lib/progressStore";
+import type { MorsePlaybackCoordinator } from "../copyExam/MorseCopyExamSection";
 
 const course = parseMorseCourseFixture(courseFixture);
+
+const noopPlaybackCoordinator: MorsePlaybackCoordinator = {
+  register: () => () => {},
+  claim: () => {},
+};
 
 export interface SessionState {
   readonly mode: "lesson" | "review";
@@ -35,12 +41,13 @@ export interface SessionState {
   readonly done: boolean;
 }
 
-export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, seedFactory }: {
+export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, seedFactory, playbackCoordinator = noopPlaybackCoordinator }: {
   readonly interfaceLanguage: InterfaceLanguage;
   readonly preferences: WebPreferences;
   readonly store: ProgressStore;
   readonly now: () => string;
   readonly seedFactory: () => string;
+  readonly playbackCoordinator?: MorsePlaybackCoordinator;
 }) {
   const [progress, setProgress] = useState<MorseCourseProgressExport>(() => emptyMorseCourseProgress(course.courseId));
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -64,8 +71,15 @@ export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, s
       .catch((error: unknown) => {
         if (!cancelled) setLoadError(error instanceof Error ? error.message : String(error));
       });
-    return () => { cancelled = true; playerRef.current?.stop(); };
-  }, [store]);
+    const unregister = playbackCoordinator.register("course", () => {
+      playerRef.current?.stop();
+    });
+    return () => {
+      cancelled = true;
+      unregister();
+      playerRef.current?.stop();
+    };
+  }, [playbackCoordinator, store]);
 
   useEffect(() => {
     if (session !== null && !session.done) {
@@ -83,6 +97,7 @@ export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, s
 
   async function play(text: string): Promise<void> {
     playerRef.current ??= new WebMorsePlayer();
+    playbackCoordinator.claim("course");
     try {
       await playerRef.current.playText(text, preferences.morse);
       setActionError(null);

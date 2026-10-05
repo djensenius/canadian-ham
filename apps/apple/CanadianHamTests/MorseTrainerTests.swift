@@ -45,6 +45,28 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(MorseAudioStopTiming.stopDelay(rampDuration: 0.12), 0.12, accuracy: 0.000_001)
     }
 
+    @MainActor
+    func testMorsePlaybackCoordinatorStopsCourseAndOtherOwnersOneAtATime() throws {
+        let coordinator = MorsePlaybackCoordinator()
+        var courseStops = 0
+        var quickListenStops = 0
+
+        coordinator.register("course") {
+            courseStops += 1
+        }
+        coordinator.register("quick-listen") {
+            quickListenStops += 1
+        }
+
+        coordinator.claim("course")
+        XCTAssertEqual(courseStops, 0)
+        XCTAssertEqual(quickListenStops, 1, "Course audio should stop other Morse playback owners before it starts")
+
+        coordinator.claim("quick-listen")
+        XCTAssertEqual(courseStops, 1, "Other Morse playback owners should stop course audio before they start")
+        XCTAssertEqual(quickListenStops, 1)
+    }
+
     func testFixedTimingProfilesUseEngineValues() throws {
         let ised = try MorseTrainerSettings(
             toneHz: 650,
