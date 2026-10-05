@@ -75,12 +75,12 @@ struct MorseCourseView: View {
         let completed = progress.lessonProgress.filter { $0.bestAccuracy >= course.unlockAccuracy }.count
         let streak = morseDailyStreak(activity: progress.dailyActivity, todayIso: Date.now.localDateString)
         return HStack(spacing: DesignTokens.Spacing.md) {
-            statCard(title: "Daily streak", accessibilityTitle: String(localized: "Daily streak"), value: String.localizedStringWithFormat(String(localized: "%lld days"), Int64(streak)))
-            statCard(title: "Lessons completed", accessibilityTitle: String(localized: "Lessons completed"), value: String.localizedStringWithFormat(String(localized: "%lld of %lld"), Int64(completed), Int64(course.lessons.count)))
+            statCard(title: "Daily streak", value: String.localizedStringWithFormat(String(localized: "%lld days"), Int64(streak)))
+            statCard(title: "Lessons completed", value: String.localizedStringWithFormat(String(localized: "%lld of %lld"), Int64(completed), Int64(course.lessons.count)))
         }
     }
 
-    private func statCard(title: LocalizedStringKey, accessibilityTitle: String, value: String) -> some View {
+    private func statCard(title: LocalizedStringKey, value: String) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             Text(title) // l10n: localized
                 .font(DesignTokens.FontScale.caption.weight(.semibold))
@@ -93,8 +93,6 @@ struct MorseCourseView: View {
         .padding(DesignTokens.Spacing.md)
         .background(Color.white, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(Color.black.opacity(0.25), lineWidth: 1))
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("\(accessibilityTitle), \(value)")) // l10n: localized
     }
 
     private func coursePath(course: MorseCourse, progress: MorseCourseProgressExport) -> some View {
