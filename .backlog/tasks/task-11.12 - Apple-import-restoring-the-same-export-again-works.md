@@ -1,11 +1,11 @@
 ---
 id: TASK-11.12
 title: 'Apple import: restoring the same export again works'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-05 13:33'
-updated_date: '2026-10-05 21:52'
+updated_date: '2026-10-05 21:57'
 labels: []
 dependencies:
   - TASK-11.5
@@ -33,6 +33,8 @@ Why: ProgressModels marks questionId and attempt id as @Attribute(.unique). Sinc
 2. Fix any SwiftData uniqueness conflicts found by the regression and add import validation for Advanced attempts with honours=true on Apple and web.
 3. Add focused Apple and web tests for rejecting honours=true when the target bank has no Honours result.
 4. Run targeted import tests, then required web and Apple validation before checking acceptance criteria.
+
+5. Address review round 1: add per-test full-run names/counts to task notes and re-run required checks after code changes.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -49,6 +51,8 @@ Validation passed:
 - node scripts/check-apple-text-sources.ts.
 - Targeted iOS xbuild ProgressStoreTests: 21 tests passed, including testImportingTheSameExportTwiceRestoresIdenticalProgressAttemptsAndLessons and testAdvancedImportRejectsHonoursAttempts.
 - Apple final suite via /tmp/t1112-apple-final-2.log: pnpm check:apple-l10n passed (Apple French localization export complete); iOS full suite 60 tests passed; macOS full suite 53 tests passed; tvOS full suite 12 tests passed; visionOS full suite 9 tests passed.
+
+Review round 1 requested changes: per-test final full-run evidence names/counts were missing; reopening task for fix evidence updates.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
