@@ -40,6 +40,16 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(schedule.amplitude(at: 55, stopRampStartFrame: 50), 0, accuracy: 0.000_001)
     }
 
+    func testMorseAudioSessionStaysActiveUntilLastPlayerReleases() {
+        var usage = MorseAudioSessionUsage()
+        usage.acquire() // course starts
+        usage.acquire() // Quick listen starts before the course's delayed cleanup runs
+        XCTAssertFalse(usage.release(), "The outgoing player must not deactivate the session while another plays")
+        XCTAssertTrue(usage.release(), "The last player releases the session")
+        XCTAssertTrue(usage.release(), "An extra release stays at zero users")
+        XCTAssertEqual(usage.activeUsers, 0)
+    }
+
     func testMorseStopDelayDrainsFadeBeforeStoppingEngine() throws {
         XCTAssertEqual(MorseAudioStopTiming.stopDelay(rampDuration: 0.005), 0.1, accuracy: 0.000_001)
         XCTAssertEqual(MorseAudioStopTiming.stopDelay(rampDuration: 0.12), 0.12, accuracy: 0.000_001)
