@@ -113,7 +113,27 @@ private final class MorseAudioRenderState {
     }
 }
 
+/// Counts Morse players using the shared audio session, so one player's delayed
+/// cleanup can't deactivate the session while another player is already playing.
+struct MorseAudioSessionUsage: Equatable, Sendable {
+    private(set) var activeUsers = 0
+
+    /// Records a player starting to use the session.
+    mutating func acquire() {
+        activeUsers += 1
+    }
+
+    /// Records a player releasing the session; returns true when it was the last user.
+    mutating func release() -> Bool {
+        activeUsers = max(0, activeUsers - 1)
+        return activeUsers == 0
+    }
+}
+
 final class MorseAudioDriver {
+    nonisolated(unsafe) private static var sessionUsage = MorseAudioSessionUsage()
+    private var holdsSession = false
+
     private let engine = AVAudioEngine()
     private let renderState = MorseAudioRenderState()
     private var sourceNode: AVAudioSourceNode?
@@ -134,6 +154,10 @@ final class MorseAudioDriver {
         try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
         try session.setActive(true)
 #endif
+        if !holdsSession {
+            holdsSession = true
+            Self.sessionUsage.acquire()
+        }
 
         let node = AVAudioSourceNode { [weak self] _, _, frameCount, audioBufferList -> OSStatus in
             self?.renderState.render(frameCount: frameCount, audioBufferList: audioBufferList) ?? noErr
@@ -181,8 +205,15 @@ final class MorseAudioDriver {
         }
         sourceNode = nil
         renderState.reset()
+        guard holdsSession else { return }
+        holdsSession = false
+        let wasLastUser = Self.sessionUsage.release()
 #if !os(macOS)
-        try? AVAudioSession.sharedInstance().setActive(false, options: [.notifyOthersOnDeactivation])
+        if wasLastUser {
+            try? AVAudioSession.sharedInstance().setActive(false, options: [.notifyOthersOnDeactivation])
+        }
+#else
+        _ = wasLastUser
 #endif
     }
 }

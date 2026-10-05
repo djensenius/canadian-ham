@@ -287,6 +287,82 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(copyCheck.isEnabled, "Starting Quick listen should stop copy-practice playback and re-enable Check copy")
     }
 
+    func testMorseStartingCourseAudioStopsCopyPlayback() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseCopyPlaybackSeconds", "10",
+            "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"
+        ])
+        defer { app.terminate() }
+
+        let copyStart = app.buttons["morse-copy-start-button"].firstMatch
+        XCTAssertTrue(copyStart.waitForExistence(timeout: 10))
+        copyStart.tap()
+        let copyCheck = app.buttons["morse-copy-check-button"].firstMatch
+        XCTAssertTrue(copyCheck.waitForExistence(timeout: 5))
+        XCTAssertFalse(copyCheck.isEnabled, "Copy check should stay disabled while copy practice is playing")
+
+        scrollToTop(in: app)
+        tapFirstMorseLesson(in: app)
+        let coursePlay = app.buttons["Play character"].firstMatch
+        XCTAssertTrue(coursePlay.waitForExistence(timeout: 5))
+        scrollUntilHittable(coursePlay, in: app, maxSwipes: 8)
+        coursePlay.tap()
+
+        XCTAssertTrue(copyCheck.isEnabled, "Starting Morse course audio should stop copy-practice playback and re-enable Check copy")
+    }
+
+    func testMorseStartingQuickListenStopsCoursePlayback() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1",
+            "-CanadianHamMorseCourseLongPlayback"
+        ])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
+        tapFirstMorseLesson(in: app)
+        let coursePlay = app.buttons["Play character"].firstMatch
+        XCTAssertTrue(coursePlay.waitForExistence(timeout: 5))
+        scrollUntilHittable(coursePlay, in: app, maxSwipes: 8)
+        coursePlay.tap()
+
+        let quickPlay = app.buttons["morse-quick-play-button"].firstMatch
+        XCTAssertTrue(quickPlay.waitForExistence(timeout: 5))
+        scrollUntilHittable(quickPlay, in: app, maxSwipes: 8)
+        quickPlay.tap()
+
+        let quickStop = app.buttons["morse-quick-stop-button"].firstMatch
+        XCTAssertTrue(quickStop.waitForExistence(timeout: 5))
+        XCTAssertTrue(quickStop.isEnabled, "Quick listen should be the active Morse playback after it starts")
+        XCTAssertTrue(app.staticTexts["Morse playback stopped."].firstMatch.waitForExistence(timeout: 5), "Starting Quick listen should show that course playback stopped")
+    }
+
+    func testMorseQuickListenAfterFinishedCourseAudioDoesNotReportStop() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
+        tapFirstMorseLesson(in: app)
+        let coursePlay = app.buttons["Play character"].firstMatch
+        XCTAssertTrue(coursePlay.waitForExistence(timeout: 5))
+        scrollUntilHittable(coursePlay, in: app, maxSwipes: 8)
+        coursePlay.tap()
+        // One character lasts well under a second; let it finish on its own.
+        Thread.sleep(forTimeInterval: 4)
+
+        let quickPlay = app.buttons["morse-quick-play-button"].firstMatch
+        XCTAssertTrue(quickPlay.waitForExistence(timeout: 5))
+        scrollUntilHittable(quickPlay, in: app, maxSwipes: 8)
+        quickPlay.tap()
+
+        XCTAssertTrue(app.buttons["morse-quick-stop-button"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["Morse playback stopped."].firstMatch.waitForExistence(timeout: 2), "Course audio that already finished must not be reported as stopped")
+    }
+
     func testAccessibilityAuditMorseExamGradedDiffLight() throws {
         XCUIDevice.shared.appearance = .light
         try auditMorseExamGradedDiff(appearance: .light)

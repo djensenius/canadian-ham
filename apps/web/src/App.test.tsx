@@ -217,14 +217,36 @@ class MockMorseGainNode extends MockMorseAudioNode {
   readonly gain = new MockMorseAudioParam();
 }
 
-function stubMorseAudioContext(): void {
+interface StubMorseOscillatorStopCounter {
+  stopCalls(): number;
+}
+
+function stubMorseAudioContext(): { readonly stopCalls: () => number; readonly oscillators: () => readonly StubMorseOscillatorStopCounter[] } {
+  let stopCalls = 0;
+  const oscillators: StubMorseOscillatorStopCounter[] = [];
+
+  class CountingMorseOscillatorNode extends MockMorseOscillatorNode {
+    #stopCalls = 0;
+
+    override stop(): void {
+      stopCalls += 1;
+      this.#stopCalls += 1;
+    }
+
+    stopCalls(): number {
+      return this.#stopCalls;
+    }
+  }
+
   class MockMorseAudioContext {
     readonly currentTime = 0;
     readonly destination = new MockMorseAudioNode() as unknown as AudioDestinationNode;
     readonly state: AudioContextState = "running";
 
     createOscillator(): OscillatorNode {
-      return new MockMorseOscillatorNode() as unknown as OscillatorNode;
+      const oscillator = new CountingMorseOscillatorNode();
+      oscillators.push(oscillator);
+      return oscillator as unknown as OscillatorNode;
     }
 
     createGain(): GainNode {
@@ -238,6 +260,7 @@ function stubMorseAudioContext(): void {
 
   vi.stubGlobal("AudioContext", MockMorseAudioContext);
   vi.stubGlobal("webkitAudioContext", undefined);
+  return { stopCalls: () => stopCalls, oscillators: () => oscillators };
 }
 
 function stubFailingMorseAudioContext(message = "simulated audio-start failure"): void {
@@ -1341,6 +1364,42 @@ describe("App accessibility and flows", () => {
     assert.equal(examInput.value, "");
     assert.equal(examInput.disabled, true);
     assert.doesNotMatch(examSection.textContent ?? "", /Generated exam/);
+  });
+
+  it("coordinates course audio with the shared one-player-at-a-time Morse controller", async () => {
+    window.location.hash = "#/morse";
+    const store = createStore("morse-course-one-player-at-a-time");
+    await store.putPreferences(morsePreferences(true));
+    const audio = stubMorseAudioContext();
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-course-one-player-seed"} />);
+
+    await screen.findByRole("heading", { name: "Quick listen" });
+    const quickPlay = screen.getByRole("button", { name: "Play Morse practice audio" }) as HTMLButtonElement;
+    const quickStop = screen.getByRole("button", { name: "Stop Morse practice audio" }) as HTMLButtonElement;
+    fireEvent.click(quickPlay);
+    await waitFor(() => assert.equal(quickStop.disabled, false));
+    const quickOscillator = audio.oscillators().at(-1);
+    assert.ok(quickOscillator);
+    const quickStopCallsAfterStart = quickOscillator.stopCalls();
+
+    fireEvent.click(screen.getByRole("button", { name: /Lesson 1, K M, Current/ }));
+    const session = await screen.findByRole("region", { name: "Lesson 1 session" });
+    fireEvent.click(within(session).getByRole("button", { name: "Play character" }));
+    await waitFor(() => assert.equal(quickStop.disabled, true));
+    assert.ok(quickOscillator.stopCalls() > quickStopCallsAfterStart, "Starting course audio should stop the Quick listen oscillator");
+    assert.match(container.querySelector(".morse-playback-status")?.textContent ?? "", /Morse playback stopped\./);
+    const courseOscillator = audio.oscillators().at(-1);
+    assert.ok(courseOscillator);
+    const courseStopCallsAfterStart = courseOscillator.stopCalls();
+
+    const copyHeading = screen.getAllByRole("heading", { name: "Copy practice" }).at(-1);
+    assert.ok(copyHeading);
+    const copySection = copyHeading.closest("section");
+    assert.ok(copySection);
+    const copyStop = within(copySection).getByRole("button", { name: "Stop" }) as HTMLButtonElement;
+    fireEvent.click(within(copySection).getByRole("button", { name: "Start copy practice" }));
+    await waitFor(() => assert.equal(copyStop.disabled, false));
+    assert.ok(courseOscillator.stopCalls() > courseStopCallsAfterStart, "Starting copy practice should stop the course oscillator");
   });
 
   it("stops any active Morse playback before starting another player", async () => {

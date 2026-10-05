@@ -20,8 +20,14 @@ import { WebMorsePlayer } from "../../lib/morseAudio";
 import type { InterfaceLanguage } from "../../lib/i18n";
 import { t } from "../../lib/i18n";
 import type { ProgressStore, WebPreferences } from "../../lib/progressStore";
+import type { MorsePlaybackCoordinator } from "../copyExam/MorseCopyExamSection";
 
 const course = parseMorseCourseFixture(courseFixture);
+
+const noopPlaybackCoordinator: MorsePlaybackCoordinator = {
+  register: () => () => {},
+  claim: () => {},
+};
 
 export interface SessionState {
   readonly mode: "lesson" | "review";
@@ -35,12 +41,13 @@ export interface SessionState {
   readonly done: boolean;
 }
 
-export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, seedFactory }: {
+export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, seedFactory, playbackCoordinator = noopPlaybackCoordinator }: {
   readonly interfaceLanguage: InterfaceLanguage;
   readonly preferences: WebPreferences;
   readonly store: ProgressStore;
   readonly now: () => string;
   readonly seedFactory: () => string;
+  readonly playbackCoordinator?: MorsePlaybackCoordinator;
 }) {
   const [progress, setProgress] = useState<MorseCourseProgressExport>(() => emptyMorseCourseProgress(course.courseId));
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -51,6 +58,8 @@ export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, s
   const [actionError, setActionError] = useState<string | null>(null);
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "failed">("idle");
   const playerRef = useRef<WebMorsePlayer | null>(null);
+  // Bumped on every play and every stop so a cancelled start is ignored, not reported as an error.
+  const playbackGenerationRef = useRef(0);
   const sessionRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -64,8 +73,17 @@ export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, s
       .catch((error: unknown) => {
         if (!cancelled) setLoadError(error instanceof Error ? error.message : String(error));
       });
-    return () => { cancelled = true; playerRef.current?.stop(); };
-  }, [store]);
+    const unregister = playbackCoordinator.register("course", () => {
+      playbackGenerationRef.current += 1;
+      playerRef.current?.stop();
+    });
+    return () => {
+      cancelled = true;
+      unregister();
+      playbackGenerationRef.current += 1;
+      playerRef.current?.stop();
+    };
+  }, [playbackCoordinator, store]);
 
   useEffect(() => {
     if (session !== null && !session.done) {
@@ -83,10 +101,18 @@ export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, s
 
   async function play(text: string): Promise<void> {
     playerRef.current ??= new WebMorsePlayer();
+    playbackCoordinator.claim("course");
+    const generation = playbackGenerationRef.current + 1;
+    playbackGenerationRef.current = generation;
     try {
-      await playerRef.current.playText(text, preferences.morse);
+      const handle = await playerRef.current.playText(text, preferences.morse);
+      if (generation !== playbackGenerationRef.current) {
+        handle.stop();
+        return;
+      }
       setActionError(null);
     } catch (error) {
+      if (generation !== playbackGenerationRef.current) return;
       const message = t(interfaceLanguage, "morsePlaybackError", formatError(error));
       setActionError(message);
       setLiveMessage(message);
