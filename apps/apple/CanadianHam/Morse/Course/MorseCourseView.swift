@@ -17,6 +17,7 @@ struct MorseCourseView: View {
     @State private var errorMessage: String?
     @State private var progressSaveFailed = false
     @State private var driver = MorseAudioDriver()
+    @State private var isPlaying = false
     @AccessibilityFocusState private var sessionIsFocused: Bool
 
     private var isCourseAuditOnly: Bool {
@@ -273,14 +274,17 @@ struct MorseCourseView: View {
         do {
             playbackCoordinator.claim("course")
             _ = try driver.play(text: text, settings: settings.normalized())
+            isPlaying = true
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
 
     private func stopCoursePlayback(message: String = "") {
+        let wasPlaying = isPlaying
         driver.stop()
-        guard !message.isEmpty else { return }
+        isPlaying = false
+        guard !message.isEmpty && wasPlaying else { return }
         statusMessage = message
         statusMessageIsCorrective = false
         AccessibilityNotification.Announcement(message).post()
