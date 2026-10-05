@@ -3,9 +3,9 @@ id: TASK-32
 title: macOS Settings window follows the chosen appearance
 status: Done
 assignee:
-  - '@worker'
+  - '@djensenius'
 created_date: '2026-10-03 23:33'
-updated_date: '2026-10-05 00:03'
+updated_date: '2026-10-05 04:29'
 labels:
   - apple
   - macos
