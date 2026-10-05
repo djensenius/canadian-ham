@@ -276,6 +276,10 @@ struct MorseCourseView: View {
             playbackCoordinator.claim("course")
             let duration = try driver.play(text: playbackText(for: text), settings: settings.normalized())
             isPlaying = true
+            // A new course playback replaces an earlier "stopped" notice, but never corrective feedback.
+            if !statusMessageIsCorrective && statusMessage == String(localized: "Morse playback stopped.") {
+                statusMessage = ""
+            }
             // Clear the flag when this playback ends on its own, unless a newer one started.
             playbackGeneration += 1
             let generation = playbackGeneration

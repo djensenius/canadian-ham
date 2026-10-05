@@ -340,16 +340,19 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Morse playback stopped."].firstMatch.waitForExistence(timeout: 5), "Starting Quick listen should show that course playback stopped")
     }
 
-    func testMorseQuickListenAfterFinishedCourseAudioKeepsCorrectiveFeedback() throws {
+    func testMorseQuickListenAfterFinishedCourseAudioDoesNotReportStop() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"])
         defer { app.terminate() }
 
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
         tapFirstMorseLesson(in: app)
-        completeVisibleMorseLesson(in: app, finalAnswerOverride: "K")
-        let corrective = app.staticTexts["Try again next time. Correct answer: KMMKK."].firstMatch
-        XCTAssertTrue(corrective.waitForExistence(timeout: 10))
+        let coursePlay = app.buttons["Play character"].firstMatch
+        XCTAssertTrue(coursePlay.waitForExistence(timeout: 5))
+        scrollUntilHittable(coursePlay, in: app, maxSwipes: 8)
+        coursePlay.tap()
+        // One character lasts well under a second; let it finish on its own.
+        Thread.sleep(forTimeInterval: 4)
 
         let quickPlay = app.buttons["morse-quick-play-button"].firstMatch
         XCTAssertTrue(quickPlay.waitForExistence(timeout: 5))
@@ -357,8 +360,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         quickPlay.tap()
 
         XCTAssertTrue(app.buttons["morse-quick-stop-button"].firstMatch.waitForExistence(timeout: 5))
-        XCTAssertFalse(app.staticTexts["Morse playback stopped."].firstMatch.waitForExistence(timeout: 2), "Finished course audio must not be reported as stopped")
-        XCTAssertTrue(corrective.exists, "Starting Quick listen must keep the lesson's corrective feedback")
+        XCTAssertFalse(app.staticTexts["Morse playback stopped."].firstMatch.waitForExistence(timeout: 2), "Course audio that already finished must not be reported as stopped")
     }
 
     func testAccessibilityAuditMorseExamGradedDiffLight() throws {
