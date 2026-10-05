@@ -84,10 +84,10 @@ struct MorseCourseView: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             Text(title) // l10n: localized
                 .font(DesignTokens.FontScale.caption.weight(.semibold))
-                .foregroundStyle(DesignTokens.Colors.ink)
+                .foregroundStyle(.primary)
             Text(value) // l10n: localized
                 .font(DesignTokens.FontScale.title.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
+                .foregroundStyle(.primary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(DesignTokens.Spacing.md)
