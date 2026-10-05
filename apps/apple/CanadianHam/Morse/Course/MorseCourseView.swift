@@ -6,6 +6,7 @@ struct MorseCourseView: View {
     let progressStore: ProgressStoreService
     @Binding var settings: MorseTrainerSettings
     let onProgressChanged: () -> Void
+    let playbackCoordinator: MorsePlaybackCoordinator
 
     @State private var course: MorseCourse?
     @State private var progress: MorseCourseProgressExport?
@@ -16,6 +17,8 @@ struct MorseCourseView: View {
     @State private var errorMessage: String?
     @State private var progressSaveFailed = false
     @State private var driver = MorseAudioDriver()
+    @State private var isPlaying = false
+    @State private var playbackGeneration = 0
     @AccessibilityFocusState private var sessionIsFocused: Bool
 
     private var isCourseAuditOnly: Bool {
@@ -68,7 +71,15 @@ struct MorseCourseView: View {
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         .task { loadCourse() }
         .onReceive(progressStore.objectWillChange) { _ in loadCourse() }
-        .onDisappear { driver.stop() }
+        .onAppear {
+            playbackCoordinator.register("course") {
+                stopCoursePlayback(message: String(localized: "Morse playback stopped."))
+            }
+        }
+        .onDisappear {
+            playbackCoordinator.unregister("course")
+            stopCoursePlayback()
+        }
     }
 
     private func courseStats(course: MorseCourse, progress: MorseCourseProgressExport) -> some View {
@@ -262,10 +273,48 @@ struct MorseCourseView: View {
 
     private func play(_ text: String) {
         do {
-            _ = try driver.play(text: text, settings: settings.normalized())
+            playbackCoordinator.claim("course")
+            let duration = try driver.play(text: playbackText(for: text), settings: settings.normalized())
+            isPlaying = true
+            // A new course playback replaces an earlier "stopped" notice, but never corrective feedback.
+            if !statusMessageIsCorrective && statusMessage == String(localized: "Morse playback stopped.") {
+                statusMessage = ""
+            }
+            // Clear the flag when this playback ends on its own, unless a newer one started.
+            playbackGeneration += 1
+            let generation = playbackGeneration
+            Task { @MainActor in
+                try? await Task.sleep(for: .seconds(max(0, duration)))
+                if playbackGeneration == generation {
+                    isPlaying = false
+                }
+            }
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
+    }
+
+    private func playbackText(for text: String) -> String {
+#if DEBUG
+        // UI tests need course audio that is still playing when another mode starts.
+        if ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseCourseLongPlayback") {
+            return Array(repeating: text, count: 30).joined(separator: " ")
+        }
+#endif
+        return text
+    }
+
+    private func stopCoursePlayback(message: String = "") {
+        let wasPlaying = isPlaying
+        driver.stop()
+        isPlaying = false
+        playbackGeneration += 1
+        // Only report a stop for audio that was actually playing, and never replace
+        // corrective feedback such as "Correct answer: X".
+        guard !message.isEmpty && wasPlaying && !statusMessageIsCorrective else { return }
+        statusMessage = message
+        statusMessageIsCorrective = false
+        AccessibilityNotification.Announcement(message).post()
     }
 
     private func lessonSeed() -> String {

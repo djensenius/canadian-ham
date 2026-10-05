@@ -65,29 +65,40 @@ targets:
         buildPhase: resources
         createIntermediateGroups: false
     postBuildScripts:
-      - name: Copy Basic generated content
+      - name: Copy Basic and Advanced generated content
         basedOnDependencyAnalysis: false
         inputFiles:
           - $(SRCROOT)/../../content/generated/basic-2025-07-15/questions.json
           - $(SRCROOT)/../../content/generated/basic-2025-07-15/subsections.json
           - $(SRCROOT)/../../content/generated/basic-2025-07-15/categories.json
           - $(SRCROOT)/../../content/generated/basic-2025-07-15/manifest.json
+          - $(SRCROOT)/../../content/generated/advanced-2025-02-04/questions.json
+          - $(SRCROOT)/../../content/generated/advanced-2025-02-04/subsections.json
+          - $(SRCROOT)/../../content/generated/advanced-2025-02-04/categories.json
+          - $(SRCROOT)/../../content/generated/advanced-2025-02-04/manifest.json
         outputFiles:
           - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/questions.json
           - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/subsections.json
           - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/categories.json
           - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/manifest.json
-          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/advanced-2025-02-04
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/advanced-2025-02-04/questions.json
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/advanced-2025-02-04/subsections.json
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/advanced-2025-02-04/categories.json
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/advanced-2025-02-04/manifest.json
         script: |
           set -euo pipefail
           generated_destination="${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/generated"
           basic_destination="${generated_destination}/basic-2025-07-15"
-          rm -rf "${generated_destination}/advanced-2025-02-04"
-          mkdir -p "${basic_destination}"
+          advanced_destination="${generated_destination}/advanced-2025-02-04"
+          mkdir -p "${basic_destination}" "${advanced_destination}"
           cp "${SRCROOT}/../../content/generated/basic-2025-07-15/questions.json" "${basic_destination}/questions.json"
           cp "${SRCROOT}/../../content/generated/basic-2025-07-15/subsections.json" "${basic_destination}/subsections.json"
           cp "${SRCROOT}/../../content/generated/basic-2025-07-15/categories.json" "${basic_destination}/categories.json"
           cp "${SRCROOT}/../../content/generated/basic-2025-07-15/manifest.json" "${basic_destination}/manifest.json"
+          cp "${SRCROOT}/../../content/generated/advanced-2025-02-04/questions.json" "${advanced_destination}/questions.json"
+          cp "${SRCROOT}/../../content/generated/advanced-2025-02-04/subsections.json" "${advanced_destination}/subsections.json"
+          cp "${SRCROOT}/../../content/generated/advanced-2025-02-04/categories.json" "${advanced_destination}/categories.json"
+          cp "${SRCROOT}/../../content/generated/advanced-2025-02-04/manifest.json" "${advanced_destination}/manifest.json"
     dependencies:
       - package: CanadianHamEngine
         product: CanadianHamEngine
@@ -143,29 +154,40 @@ targets:
         buildPhase: resources
         createIntermediateGroups: false
     postBuildScripts:
-      - name: Copy Basic generated content
+      - name: Copy Basic and Advanced generated content
         basedOnDependencyAnalysis: false
         inputFiles:
           - $(SRCROOT)/../../content/generated/basic-2025-07-15/questions.json
           - $(SRCROOT)/../../content/generated/basic-2025-07-15/subsections.json
           - $(SRCROOT)/../../content/generated/basic-2025-07-15/categories.json
           - $(SRCROOT)/../../content/generated/basic-2025-07-15/manifest.json
+          - $(SRCROOT)/../../content/generated/advanced-2025-02-04/questions.json
+          - $(SRCROOT)/../../content/generated/advanced-2025-02-04/subsections.json
+          - $(SRCROOT)/../../content/generated/advanced-2025-02-04/categories.json
+          - $(SRCROOT)/../../content/generated/advanced-2025-02-04/manifest.json
         outputFiles:
           - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/questions.json
           - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/subsections.json
           - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/categories.json
           - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/basic-2025-07-15/manifest.json
-          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/advanced-2025-02-04
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/advanced-2025-02-04/questions.json
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/advanced-2025-02-04/subsections.json
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/advanced-2025-02-04/categories.json
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/generated/advanced-2025-02-04/manifest.json
         script: |
           set -euo pipefail
           generated_destination="${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/generated"
           basic_destination="${generated_destination}/basic-2025-07-15"
-          rm -rf "${generated_destination}/advanced-2025-02-04"
-          mkdir -p "${basic_destination}"
+          advanced_destination="${generated_destination}/advanced-2025-02-04"
+          mkdir -p "${basic_destination}" "${advanced_destination}"
           cp "${SRCROOT}/../../content/generated/basic-2025-07-15/questions.json" "${basic_destination}/questions.json"
           cp "${SRCROOT}/../../content/generated/basic-2025-07-15/subsections.json" "${basic_destination}/subsections.json"
           cp "${SRCROOT}/../../content/generated/basic-2025-07-15/categories.json" "${basic_destination}/categories.json"
           cp "${SRCROOT}/../../content/generated/basic-2025-07-15/manifest.json" "${basic_destination}/manifest.json"
+          cp "${SRCROOT}/../../content/generated/advanced-2025-02-04/questions.json" "${advanced_destination}/questions.json"
+          cp "${SRCROOT}/../../content/generated/advanced-2025-02-04/subsections.json" "${advanced_destination}/subsections.json"
+          cp "${SRCROOT}/../../content/generated/advanced-2025-02-04/categories.json" "${advanced_destination}/categories.json"
+          cp "${SRCROOT}/../../content/generated/advanced-2025-02-04/manifest.json" "${advanced_destination}/manifest.json"
     dependencies:
       - target: CanadianHam
       - package: CanadianHamEngine

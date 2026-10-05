@@ -1,7 +1,7 @@
 import { dueCount, type CategoryBreakdownEntry, type QuestionProgressRecord } from "@canadian-ham/engine-ts";
 import { type MorseCourseProgressExport } from "@canadian-ham/morse-engine";
 
-import { bankId, categories, knownQuestionIds, subsections } from "../data/bank";
+import { basicBank, bankDataForId, DEFAULT_BANK_ID, isCourseBankId, type BankData, type CourseBankId } from "../data/bank";
 import { defaultMorsePreferences, normalizeMorsePreferences, type WebMorsePreferences } from "./morseSettings";
 import { lessonsById } from "../data/lessons";
 import { lessonQuizzesById } from "../data/quizzes";
@@ -14,6 +14,7 @@ export interface WebPreferences {
   readonly practiceMode: PracticeMode;
   readonly examTimerEnabled: boolean;
   readonly theme: ThemePreference;
+  readonly activeBankId: CourseBankId;
   readonly morse: WebMorsePreferences;
 }
 
@@ -95,6 +96,7 @@ export const defaultPreferences: WebPreferences = {
   practiceMode: "immediate",
   examTimerEnabled: false,
   theme: "system",
+  activeBankId: DEFAULT_BANK_ID,
   morse: defaultMorsePreferences,
 };
 
@@ -193,51 +195,56 @@ export class ProgressStore {
     await this.put("preferences", { key: PREFERENCES_KEY, value: preferences });
   }
 
-  async exportData(exportedAt: string): Promise<ProgressExportV1> {
+  async exportData(exportedAt: string, bank: BankData = basicBank): Promise<ProgressExportV1> {
+    const allQuestionProgress = await this.getQuestionProgress();
+    const allExamAttempts = await this.getExamAttempts();
     return {
       schema: "canadian-ham.progress-export",
       version: 1,
       exportedAt,
-      bankId,
-      questionProgress: await this.getQuestionProgress(),
-      examAttempts: await this.getExamAttempts(),
-      lessonProgress: await this.getLessonProgress(),
-      lessonQuizAttempts: await this.getLessonQuizAttempts(),
+      bankId: bank.bankId,
+      questionProgress: allQuestionProgress.filter((record) => record.bankId === bank.bankId),
+      examAttempts: allExamAttempts.filter((attempt) => attempt.bankId === bank.bankId),
+      lessonProgress: bank.hasLessons ? await this.getLessonProgress() : [],
+      lessonQuizAttempts: bank.hasLessons ? await this.getLessonQuizAttempts() : [],
       morseCourseProgress: await this.getMorseCourseProgress(),
-      preferences: await this.getPreferences(),
+      preferences: { ...(await this.getPreferences()), activeBankId: bank.bankId },
     };
   }
 
   async importData(data: ProgressExportV1): Promise<void> {
     const db = await this.open();
+    const importBank = bankDataForId(data.bankId);
+    const existingQuestionProgress = (await this.getQuestionProgress()).filter((record) => record.bankId !== importBank.bankId);
+    const existingExamAttempts = (await this.getExamAttempts()).filter((attempt) => attempt.bankId !== importBank.bankId);
     await runTransaction(db, ["questionProgress", "examAttempts", "lessonProgress", "lessonQuizAttempts", "morseCourseProgress", "preferences"], "readwrite", (transaction) => {
       transaction.objectStore("questionProgress").clear();
       transaction.objectStore("examAttempts").clear();
-      transaction.objectStore("lessonProgress").clear();
-      transaction.objectStore("lessonQuizAttempts").clear();
-      transaction.objectStore("morseCourseProgress").clear();
-      transaction.objectStore("preferences").clear();
       const questionStore = transaction.objectStore("questionProgress");
       const attemptStore = transaction.objectStore("examAttempts");
       const lessonStore = transaction.objectStore("lessonProgress");
       const quizAttemptStore = transaction.objectStore("lessonQuizAttempts");
       const morseCourseStore = transaction.objectStore("morseCourseProgress");
-      for (const record of data.questionProgress) {
+      for (const record of [...existingQuestionProgress, ...data.questionProgress]) {
         questionStore.put(record);
       }
-      for (const attempt of data.examAttempts) {
+      for (const attempt of [...existingExamAttempts, ...data.examAttempts]) {
         attemptStore.put(attempt);
       }
-      for (const record of data.lessonProgress ?? []) {
-        lessonStore.put(record);
-      }
-      for (const attempt of data.lessonQuizAttempts ?? []) {
-        quizAttemptStore.put(attempt);
+      if (importBank.hasLessons) {
+        lessonStore.clear();
+        quizAttemptStore.clear();
+        for (const record of data.lessonProgress ?? []) {
+          lessonStore.put(record);
+        }
+        for (const attempt of data.lessonQuizAttempts ?? []) {
+          quizAttemptStore.put(attempt);
+        }
       }
       if (data.morseCourseProgress !== undefined) {
         morseCourseStore.put({ ...data.morseCourseProgress, key: "default" });
       }
-      transaction.objectStore("preferences").put({ key: PREFERENCES_KEY, value: normalizePreferences(data.preferences) });
+      transaction.objectStore("preferences").put({ key: PREFERENCES_KEY, value: normalizePreferences({ ...data.preferences, activeBankId: importBank.bankId }) });
     });
   }
 
@@ -348,7 +355,7 @@ function migrateDatabase(db: IDBDatabase, oldVersion: number, transaction: IDBTr
   }
 }
 
-export function validateProgressImport(raw: unknown): ImportValidationResult {
+export function validateProgressImport(raw: unknown, bank: BankData = basicBank): ImportValidationResult {
   const errors: string[] = [];
   if (!isRecord(raw)) {
     return { ok: false, errors: ["Import file must be a JSON object."] };
@@ -359,8 +366,8 @@ export function validateProgressImport(raw: unknown): ImportValidationResult {
   if (raw.version !== 1) {
     errors.push("Import file version must be 1.");
   }
-  if (raw.bankId !== undefined && raw.bankId !== bankId) {
-    errors.push(`Import bankId must be ${bankId}.`);
+  if (raw.bankId !== undefined && raw.bankId !== bank.bankId) {
+    errors.push(`Import bankId must be ${bank.bankId}.`);
   }
   if (typeof raw.exportedAt !== "string") {
     errors.push("Import exportedAt must be a canonical UTC timestamp string.");
@@ -388,13 +395,13 @@ export function validateProgressImport(raw: unknown): ImportValidationResult {
 
   const questionProgress = Array.isArray(raw.questionProgress) ? raw.questionProgress : [];
   for (const [index, record] of questionProgress.entries()) {
-    errors.push(...validateQuestionProgressRecord(record, index));
+    errors.push(...validateQuestionProgressRecord(record, index, bank));
   }
 
   const examAttempts = Array.isArray(raw.examAttempts) ? raw.examAttempts : [];
   const submittedAtValues = new Set<string>();
   for (const [index, attempt] of examAttempts.entries()) {
-    errors.push(...validateExamAttempt(attempt, index));
+    errors.push(...validateExamAttempt(attempt, index, bank));
     if (isRecord(attempt) && typeof attempt.submittedAt === "string") {
       if (submittedAtValues.has(attempt.submittedAt)) {
         errors.push(`Import examAttempts[${index}].submittedAt duplicates another exam attempt.`);
@@ -418,7 +425,7 @@ export function validateProgressImport(raw: unknown): ImportValidationResult {
   const lessonQuizAttempts = Array.isArray(raw.lessonQuizAttempts) ? raw.lessonQuizAttempts : [];
   const lessonQuizAttemptIds = new Set<string>();
   for (const [index, attempt] of lessonQuizAttempts.entries()) {
-    errors.push(...validateLessonQuizAttempt(attempt, index));
+    errors.push(...validateLessonQuizAttempt(attempt, index, bank));
     if (isRecord(attempt) && typeof attempt.id === "string") {
       if (lessonQuizAttemptIds.has(attempt.id)) {
         errors.push(`Import lessonQuizAttempts[${index}].id duplicates another lesson quiz attempt.`);
@@ -438,9 +445,9 @@ export function validateProgressImport(raw: unknown): ImportValidationResult {
       schema: "canadian-ham.progress-export",
       version: 1,
       exportedAt: raw.exportedAt as string,
-      bankId,
-      questionProgress: questionProgress.map(normalizeQuestionProgressRecord) as QuestionProgressRecord[],
-      examAttempts: examAttempts.map(normalizeExamAttempt) as ExamAttempt[],
+      bankId: bank.bankId,
+      questionProgress: questionProgress.map((record) => normalizeQuestionProgressRecord(record, bank)) as QuestionProgressRecord[],
+      examAttempts: examAttempts.map((attempt) => normalizeExamAttempt(attempt, bank)) as ExamAttempt[],
       lessonProgress: lessonProgress as LessonProgressRecord[],
       lessonQuizAttempts: lessonQuizAttempts as LessonQuizAttempt[],
       morseCourseProgress: raw.morseCourseProgress as MorseCourseProgressExport | undefined,
@@ -522,16 +529,16 @@ function validateMorseCourseProgress(value: unknown): string[] {
   return errors;
 }
 
-function normalizeQuestionProgressRecord(record: unknown): unknown {
-  return isRecord(record) ? { ...record, bankId: record.bankId ?? bankId } : record;
+function normalizeQuestionProgressRecord(record: unknown, bank: BankData): unknown {
+  return isRecord(record) ? { ...record, bankId: record.bankId ?? bank.bankId } : record;
 }
 
-function normalizeExamAttempt(attempt: unknown): unknown {
+function normalizeExamAttempt(attempt: unknown, bank: BankData): unknown {
   if (!isRecord(attempt)) {
     return attempt;
   }
-  const score = isRecord(attempt.score) ? { ...attempt.score, bankId: attempt.score.bankId ?? bankId } : attempt.score;
-  return { ...attempt, bankId: attempt.bankId ?? bankId, score };
+  const score = isRecord(attempt.score) ? { ...attempt.score, bankId: attempt.score.bankId ?? bank.bankId } : attempt.score;
+  return { ...attempt, bankId: attempt.bankId ?? bank.bankId, score };
 }
 
 function requestToPromise<T>(request: IDBRequest<T>): Promise<T> {
@@ -568,6 +575,7 @@ function normalizePreferences(value: unknown): WebPreferences {
     practiceMode: value.practiceMode === "review-later" ? "review-later" : "immediate",
     examTimerEnabled: typeof value.examTimerEnabled === "boolean" ? value.examTimerEnabled : defaultPreferences.examTimerEnabled,
     theme: value.theme === "light" || value.theme === "dark" || value.theme === "system" ? value.theme : defaultPreferences.theme,
+    activeBankId: isCourseBankId(value.activeBankId) ? value.activeBankId : defaultPreferences.activeBankId,
     morse: normalizeMorsePreferences(isRecord(value.morse) ? value.morse : undefined),
   };
 }
@@ -577,6 +585,7 @@ function isPreferences(value: unknown): value is WebPreferences {
     && (value.practiceMode === "immediate" || value.practiceMode === "review-later")
     && typeof value.examTimerEnabled === "boolean"
     && (value.theme === undefined || value.theme === "system" || value.theme === "light" || value.theme === "dark")
+    && (value.activeBankId === undefined || isCourseBankId(value.activeBankId))
     && (value.morse === undefined || isMorsePreferences(value.morse));
 }
 
@@ -590,17 +599,17 @@ function isMorsePreferences(value: unknown): value is WebMorsePreferences {
     && (value.volume === undefined || typeof value.volume === "number");
 }
 
-function validateQuestionProgressRecord(value: unknown, index: number): string[] {
+function validateQuestionProgressRecord(value: unknown, index: number, bank: BankData): string[] {
   const prefix = `Import questionProgress[${index}]`;
   const errors: string[] = [];
   if (!isRecord(value)) {
     return [`${prefix} must be an object.`];
   }
-  if (typeof value.questionId !== "string" || !knownQuestionIds.has(value.questionId)) {
+  if (typeof value.questionId !== "string" || !bank.knownQuestionIds.has(value.questionId)) {
     errors.push(`${prefix}.questionId must be a known question ID.`);
   }
-  if (value.bankId !== undefined && value.bankId !== bankId) {
-    errors.push(`${prefix}.bankId must be ${bankId}.`);
+  if (value.bankId !== undefined && value.bankId !== bank.bankId) {
+    errors.push(`${prefix}.bankId must be ${bank.bankId}.`);
   }
   if (!isNonNegativeInteger(value.attempts)) {
     errors.push(`${prefix}.attempts must be a non-negative integer.`);
@@ -655,7 +664,7 @@ function validateLessonProgressRecord(value: unknown, index: number): string[] {
   return errors;
 }
 
-function validateLessonQuizAttempt(value: unknown, index: number): string[] {
+function validateLessonQuizAttempt(value: unknown, index: number, bank: BankData): string[] {
   const prefix = `Import lessonQuizAttempts[${index}]`;
   const errors: string[] = [];
   if (!isRecord(value)) {
@@ -694,12 +703,12 @@ function validateLessonQuizAttempt(value: unknown, index: number): string[] {
       errors.push(`${prefix}.percent must match correct divided by total.`);
     }
   }
-  if (!isKnownQuestionIdArray(value.officialQuestionIds)) {
+  if (!isKnownQuestionIdArray(value.officialQuestionIds, bank)) {
     errors.push(`${prefix}.officialQuestionIds must contain known question IDs.`);
   } else if (quiz !== undefined && !value.officialQuestionIds.every((id) => quiz.officialQuestionIds.includes(id))) {
     errors.push(`${prefix}.officialQuestionIds must belong to the lesson quiz.`);
   }
-  if (!isKnownQuestionIdArray(value.incorrectOfficialQuestionIds)) {
+  if (!isKnownQuestionIdArray(value.incorrectOfficialQuestionIds, bank)) {
     errors.push(`${prefix}.incorrectOfficialQuestionIds must contain known question IDs.`);
   } else if (Array.isArray(value.officialQuestionIds) && value.officialQuestionIds.every((id) => typeof id === "string")) {
     const officialQuestionIds = new Set(value.officialQuestionIds);
@@ -713,11 +722,11 @@ function validateLessonQuizAttempt(value: unknown, index: number): string[] {
   return errors;
 }
 
-function isKnownQuestionIdArray(value: unknown): value is readonly string[] {
-  return Array.isArray(value) && value.every((id) => typeof id === "string" && knownQuestionIds.has(id));
+function isKnownQuestionIdArray(value: unknown, bank: BankData): value is readonly string[] {
+  return Array.isArray(value) && value.every((id) => typeof id === "string" && bank.knownQuestionIds.has(id));
 }
 
-function validateExamAttempt(value: unknown, index: number): string[] {
+function validateExamAttempt(value: unknown, index: number, bank: BankData): string[] {
   const prefix = `Import examAttempts[${index}]`;
   const errors: string[] = [];
   if (!isRecord(value)) {
@@ -726,8 +735,8 @@ function validateExamAttempt(value: unknown, index: number): string[] {
   if (typeof value.id !== "string" || value.id.length === 0) {
     errors.push(`${prefix}.id must be a non-empty string.`);
   }
-  if (value.bankId !== undefined && value.bankId !== bankId) {
-    errors.push(`${prefix}.bankId must be ${bankId}.`);
+  if (value.bankId !== undefined && value.bankId !== bank.bankId) {
+    errors.push(`${prefix}.bankId must be ${bank.bankId}.`);
   }
   if (value.mode !== "mock-exam") {
     errors.push(`${prefix}.mode must be mock-exam.`);
@@ -746,12 +755,12 @@ function validateExamAttempt(value: unknown, index: number): string[] {
     pushCanonicalTimestampError(errors, value.submittedAt, `${prefix}.submittedAt`);
   }
   errors.push(...validateTimer(value.timer, `${prefix}.timer`));
-  errors.push(...validateScore(value.score, `${prefix}.score`));
+  errors.push(...validateScore(value.score, `${prefix}.score`, bank));
   if (!Array.isArray(value.items)) {
     errors.push(`${prefix}.items must be an array.`);
   } else {
     for (const [itemIndex, item] of value.items.entries()) {
-      errors.push(...validateExamAttemptItem(item, `${prefix}.items[${itemIndex}]`));
+      errors.push(...validateExamAttemptItem(item, `${prefix}.items[${itemIndex}]`, bank));
     }
   }
   return errors;
@@ -774,13 +783,13 @@ function validateTimer(value: unknown, prefix: string): string[] {
   return errors;
 }
 
-function validateScore(value: unknown, prefix: string): string[] {
+function validateScore(value: unknown, prefix: string, bank: BankData): string[] {
   if (!isRecord(value)) {
     return [`${prefix} must be an object.`];
   }
   const errors: string[] = [];
-  if (value.bankId !== undefined && value.bankId !== bankId) {
-    errors.push(`${prefix}.bankId must be ${bankId}.`);
+  if (value.bankId !== undefined && value.bankId !== bank.bankId) {
+    errors.push(`${prefix}.bankId must be ${bank.bankId}.`);
   }
   if (!isNonNegativeInteger(value.correct)) {
     errors.push(`${prefix}.correct must be a non-negative integer.`);
@@ -801,21 +810,21 @@ function validateScore(value: unknown, prefix: string): string[] {
     errors.push(`${prefix}.categoryBreakdown must be an array.`);
   } else {
     for (const [index, entry] of value.categoryBreakdown.entries()) {
-      errors.push(...validateCategoryBreakdownEntry(entry, `${prefix}.categoryBreakdown[${index}]`));
+      errors.push(...validateCategoryBreakdownEntry(entry, `${prefix}.categoryBreakdown[${index}]`, bank));
     }
   }
-  if (!Array.isArray(value.weakSubsectionIds) || !value.weakSubsectionIds.every((id) => typeof id === "string" && knownSubsectionIds.has(id))) {
+  if (!Array.isArray(value.weakSubsectionIds) || !value.weakSubsectionIds.every((id) => typeof id === "string" && bank.knownSubsectionIds.has(id))) {
     errors.push(`${prefix}.weakSubsectionIds must contain known subsection IDs.`);
   }
   return errors;
 }
 
-function validateCategoryBreakdownEntry(value: unknown, prefix: string): string[] {
+function validateCategoryBreakdownEntry(value: unknown, prefix: string, bank: BankData): string[] {
   if (!isRecord(value)) {
     return [`${prefix} must be an object.`];
   }
   const errors: string[] = [];
-  if (typeof value.categoryId !== "string" || !knownCategoryIds.has(value.categoryId)) {
+  if (typeof value.categoryId !== "string" || !bank.knownCategoryIds.has(value.categoryId)) {
     errors.push(`${prefix}.categoryId must be a known category ID.`);
   }
   if (!isNonNegativeInteger(value.correct)) {
@@ -830,13 +839,13 @@ function validateCategoryBreakdownEntry(value: unknown, prefix: string): string[
   return errors;
 }
 
-function validateExamAttemptItem(value: unknown, prefix: string): string[] {
+function validateExamAttemptItem(value: unknown, prefix: string, bank: BankData): string[] {
   if (!isRecord(value)) {
     return [`${prefix} must be an object.`];
   }
   const errors: string[] = [];
   const questionId = typeof value.questionId === "string" ? value.questionId : null;
-  const questionIsKnown = questionId !== null && knownQuestionIds.has(questionId);
+  const questionIsKnown = questionId !== null && bank.knownQuestionIds.has(questionId);
   if (!questionIsKnown) {
     errors.push(`${prefix}.questionId must be a known question ID.`);
   }
@@ -846,10 +855,10 @@ function validateExamAttemptItem(value: unknown, prefix: string): string[] {
   }
   const expectedSubsectionId = questionIsKnown ? questionId!.slice(0, 9) : null;
   const expectedCategoryId = questionIsKnown ? questionId!.slice(0, 5) : null;
-  if (typeof value.subsectionId !== "string" || !knownSubsectionIds.has(value.subsectionId) || (expectedSubsectionId !== null && value.subsectionId !== expectedSubsectionId)) {
+  if (typeof value.subsectionId !== "string" || !bank.knownSubsectionIds.has(value.subsectionId) || (expectedSubsectionId !== null && value.subsectionId !== expectedSubsectionId)) {
     errors.push(`${prefix}.subsectionId must match the known question subsection.`);
   }
-  if (typeof value.categoryId !== "string" || !knownCategoryIds.has(value.categoryId) || (expectedCategoryId !== null && value.categoryId !== expectedCategoryId)) {
+  if (typeof value.categoryId !== "string" || !bank.knownCategoryIds.has(value.categoryId) || (expectedCategoryId !== null && value.categoryId !== expectedCategoryId)) {
     errors.push(`${prefix}.categoryId must match the known question category.`);
   }
   if (!Array.isArray(value.choicePermutation) || value.choicePermutation.length !== 4 || !value.choicePermutation.every((entry) => Number.isInteger(entry) && entry >= 0 && entry <= 3) || new Set(value.choicePermutation).size !== 4) {
@@ -871,7 +880,7 @@ function validateExamAttemptItem(value: unknown, prefix: string): string[] {
 function pushCanonicalTimestampError(errors: string[], value: string, fieldName: string): void {
   try {
     // Route import validation through the engine's canonical timestamp parser.
-    dueCount([{ questionId: "B-001-001-001", bankId, attempts: 0, correctAttempts: 0, lastAttemptedAt: value, lastResult: "incorrect", recentResults: [], leitner: { box: 0, dueAt: value } }], value);
+    dueCount([{ questionId: "B-001-001-001", bankId: DEFAULT_BANK_ID, attempts: 0, correctAttempts: 0, lastAttemptedAt: value, lastResult: "incorrect", recentResults: [], leitner: { box: 0, dueAt: value } }], value);
   } catch (error) {
     errors.push(`${fieldName} must use canonical UTC timestamp format YYYY-MM-DDTHH:MM:SS.sssZ (${error instanceof Error ? error.message : String(error)}).`);
   }
@@ -892,6 +901,3 @@ function isNonNegativeFiniteNumber(value: unknown): value is number {
 function isRatio(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 1;
 }
-
-const knownCategoryIds = new Set(categories.map((category) => category.id));
-const knownSubsectionIds = new Set(subsections.map((subsection) => subsection.id));

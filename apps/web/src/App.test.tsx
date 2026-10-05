@@ -14,7 +14,7 @@ import { generateMorseExamText, profileForName } from "@canadian-ham/morse-engin
 
 import { App, AppErrorBoundary, CitationLink, ExplanationPanel } from "./App";
 import { answerMorseCourseSession, morseCourseSummaryMessage, type SessionState } from "./morse/course/MorseCoursePanel";
-import { bankId, categories, loadQuestions, loadQuestionsFromUrl, manifest, type Answer, type Category, type Question } from "./data/bank";
+import { ADVANCED_BANK_ID, advancedBank, bankId, categories, loadQuestions, loadQuestionsFromUrl, manifest, type Answer, type Category, type Question } from "./data/bank";
 import { explanationForQuestion, parseChoiceNotes } from "./data/explanations";
 import { lessonQuizzesById, buildLessonQuizItems } from "./data/quizzes";
 import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExportV1, type WebPreferences } from "./lib/progressStore";
@@ -217,14 +217,36 @@ class MockMorseGainNode extends MockMorseAudioNode {
   readonly gain = new MockMorseAudioParam();
 }
 
-function stubMorseAudioContext(): void {
+interface StubMorseOscillatorStopCounter {
+  stopCalls(): number;
+}
+
+function stubMorseAudioContext(): { readonly stopCalls: () => number; readonly oscillators: () => readonly StubMorseOscillatorStopCounter[] } {
+  let stopCalls = 0;
+  const oscillators: StubMorseOscillatorStopCounter[] = [];
+
+  class CountingMorseOscillatorNode extends MockMorseOscillatorNode {
+    #stopCalls = 0;
+
+    override stop(): void {
+      stopCalls += 1;
+      this.#stopCalls += 1;
+    }
+
+    stopCalls(): number {
+      return this.#stopCalls;
+    }
+  }
+
   class MockMorseAudioContext {
     readonly currentTime = 0;
     readonly destination = new MockMorseAudioNode() as unknown as AudioDestinationNode;
     readonly state: AudioContextState = "running";
 
     createOscillator(): OscillatorNode {
-      return new MockMorseOscillatorNode() as unknown as OscillatorNode;
+      const oscillator = new CountingMorseOscillatorNode();
+      oscillators.push(oscillator);
+      return oscillator as unknown as OscillatorNode;
     }
 
     createGain(): GainNode {
@@ -238,6 +260,7 @@ function stubMorseAudioContext(): void {
 
   vi.stubGlobal("AudioContext", MockMorseAudioContext);
   vi.stubGlobal("webkitAudioContext", undefined);
+  return { stopCalls: () => stopCalls, oscillators: () => oscillators };
 }
 
 function stubFailingMorseAudioContext(message = "simulated audio-start failure"): void {
@@ -915,6 +938,83 @@ describe("App accessibility and flows", () => {
     await waitFor(async () => assert.equal((await store.getQuestionProgress()).length, 1));
   });
 
+  it("switches to Advanced, persists the course, hides lessons, and generates a 50-question no-Honours mock", async () => {
+    window.location.hash = "#/home";
+    const store = createStore("advanced-course-switcher");
+    const user = userEvent.setup();
+    const { container, unmount } = render(<App store={store} now={() => fixedNow} seedFactory={() => "advanced-web-seed"} />);
+
+    await screen.findByRole("heading", { name: "Ready for Basic with Honours?" });
+    await user.click(screen.getByRole("radio", { name: "Advanced" }));
+    await screen.findByRole("heading", { name: "Ready for the Advanced qualification?" });
+    assert.equal((await store.getPreferences()).activeBankId, ADVANCED_BANK_ID);
+
+    await user.click(screen.getAllByRole("button", { name: "Learn" })[0]!);
+    await screen.findByRole("heading", { name: "Advanced lessons are coming" });
+    assert.equal(screen.queryByText(referenceSheetNote), null);
+
+    await user.click(screen.getByRole("button", { name: "Mock exam" }));
+    assert.match(screen.getByText(/Generate 50 Advanced questions/).textContent ?? "", /Generate 50 Advanced questions/);
+    assert.match(screen.getByText(/No ISED reference sheet/).textContent ?? "", /No ISED reference sheet/);
+    await user.click(await screen.findByRole("button", { name: "Start mock exam" }));
+    await screen.findByText(/Question 1 of 50/);
+    assert.equal(screen.queryByText(referenceSheetNote), null);
+
+    await expectNoAxeViolations(container);
+    unmount();
+
+    window.location.hash = "#/home";
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "advanced-web-seed-2"} />);
+    await screen.findByRole("heading", { name: "Ready for the Advanced qualification?" });
+  });
+
+  it("renders the French interface with Advanced selected and tags Advanced category names as English", async () => {
+    window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
+    window.location.hash = "#/home";
+    const store = createStore("advanced-french-ui");
+    await store.putPreferences({ ...defaultPreferences, activeBankId: ADVANCED_BANK_ID });
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "advanced-fr-seed"} />);
+
+    await screen.findByRole("heading", { name: "Prêt pour la compétence supérieure?" });
+    const courseGroup = screen.getByRole("group", { name: "Sélection du cours" });
+    assert.equal((within(courseGroup).getByRole("radio", { name: "Compétence supérieure" }) as HTMLInputElement).value, ADVANCED_BANK_ID);
+
+    const advancedCategoryName = advancedBank.categories[0]?.name.en;
+    assert.ok(advancedCategoryName);
+    const categoryFallback = await screen.findByText(advancedCategoryName);
+    assert.equal(categoryFallback.getAttribute("lang"), "en");
+
+    const primaryNav = screen.getByRole("navigation", { name: "Principale" });
+    await user.click(within(primaryNav).getByRole("button", { name: "Examen simulé" }));
+    await screen.findByRole("heading", { name: "Examen simulé" });
+    assert.ok(screen.getByText("ISDE ne fournit pas de feuille de référence pour l’examen de compétence supérieure. N’utilisez pas la feuille de référence de la compétence de base comme matériel autorisé à l’examen de compétence supérieure."));
+  });
+
+  it("scores Advanced mocks at 70 percent without Honours", async () => {
+    assert.equal(advancedBank.subsections.length, 50);
+    const advancedQuestions = await loadQuestions(ADVANCED_BANK_ID);
+    const generatedItems = createMockExam("advanced-scoring", advancedQuestions, advancedBank);
+    const attempt = buildExamAttempt({
+      bank: advancedBank,
+      seed: "advanced-scoring",
+      startedAt: "2026-01-02T00:00:00.000Z",
+      submittedAt: "2026-01-02T01:00:00.000Z",
+      timerEnabled: false,
+      secondsElapsed: 0,
+      generatedItems,
+      selectedByQuestionId: new Map(generatedItems.map((item, index) => [item.questionId, index < 35 ? 0 : 1])),
+      flaggedQuestionIds: new Set(),
+    });
+
+    assert.equal(generatedItems.length, 50);
+    assert.equal(new Set(generatedItems.map((item) => item.subsectionId)).size, 50);
+    assert.equal(attempt.bankId, ADVANCED_BANK_ID);
+    assert.equal(attempt.score.percent, 70);
+    assert.equal(attempt.score.passed, true);
+    assert.equal(attempt.score.honours, false);
+  });
+
   it("renders Mock exam with narrow DOM order, supports keyboard operation, and has no axe violations", async () => {
     window.location.hash = "#/mock";
     const store = createStore("mock");
@@ -1341,6 +1441,42 @@ describe("App accessibility and flows", () => {
     assert.equal(examInput.value, "");
     assert.equal(examInput.disabled, true);
     assert.doesNotMatch(examSection.textContent ?? "", /Generated exam/);
+  });
+
+  it("coordinates course audio with the shared one-player-at-a-time Morse controller", async () => {
+    window.location.hash = "#/morse";
+    const store = createStore("morse-course-one-player-at-a-time");
+    await store.putPreferences(morsePreferences(true));
+    const audio = stubMorseAudioContext();
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-course-one-player-seed"} />);
+
+    await screen.findByRole("heading", { name: "Quick listen" });
+    const quickPlay = screen.getByRole("button", { name: "Play Morse practice audio" }) as HTMLButtonElement;
+    const quickStop = screen.getByRole("button", { name: "Stop Morse practice audio" }) as HTMLButtonElement;
+    fireEvent.click(quickPlay);
+    await waitFor(() => assert.equal(quickStop.disabled, false));
+    const quickOscillator = audio.oscillators().at(-1);
+    assert.ok(quickOscillator);
+    const quickStopCallsAfterStart = quickOscillator.stopCalls();
+
+    fireEvent.click(screen.getByRole("button", { name: /Lesson 1, K M, Current/ }));
+    const session = await screen.findByRole("region", { name: "Lesson 1 session" });
+    fireEvent.click(within(session).getByRole("button", { name: "Play character" }));
+    await waitFor(() => assert.equal(quickStop.disabled, true));
+    assert.ok(quickOscillator.stopCalls() > quickStopCallsAfterStart, "Starting course audio should stop the Quick listen oscillator");
+    assert.match(container.querySelector(".morse-playback-status")?.textContent ?? "", /Morse playback stopped\./);
+    const courseOscillator = audio.oscillators().at(-1);
+    assert.ok(courseOscillator);
+    const courseStopCallsAfterStart = courseOscillator.stopCalls();
+
+    const copyHeading = screen.getAllByRole("heading", { name: "Copy practice" }).at(-1);
+    assert.ok(copyHeading);
+    const copySection = copyHeading.closest("section");
+    assert.ok(copySection);
+    const copyStop = within(copySection).getByRole("button", { name: "Stop" }) as HTMLButtonElement;
+    fireEvent.click(within(copySection).getByRole("button", { name: "Start copy practice" }));
+    await waitFor(() => assert.equal(copyStop.disabled, false));
+    assert.ok(courseOscillator.stopCalls() > courseStopCallsAfterStart, "Starting copy practice should stop the course oscillator");
   });
 
   it("stops any active Morse playback before starting another player", async () => {

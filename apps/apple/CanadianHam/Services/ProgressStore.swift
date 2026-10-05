@@ -31,12 +31,14 @@ struct ApplePreferences: Codable, Equatable, Sendable {
     var examTimerEnabled: Bool
     var language: BankLanguage
     var theme: Theme
+    var activeBankId: CourseBankID
 
     static let `default` = ApplePreferences(
         practiceMode: .immediate,
         examTimerEnabled: false,
         language: .english,
-        theme: .system
+        theme: .system,
+        activeBankId: .basic
     )
 }
 
@@ -464,7 +466,10 @@ final class ProgressStoreService: ObservableObject {
         progressDirectory.appending(path: "MorseCourseProgress.json")
     }
 
+    private static let activeBankPreferenceKey = "CanadianHam.activeBankId"
+
     static func resetPersistentStoreFiles() {
+        UserDefaults.standard.removeObject(forKey: activeBankPreferenceKey)
         let url = persistentStoreURL
         for suffix in ["", "-shm", "-wal"] {
             try? FileManager.default.removeItem(at: URL(fileURLWithPath: url.path + suffix))
@@ -579,8 +584,15 @@ final class ProgressStoreService: ObservableObject {
         entity.examTimerEnabled = preferences.examTimerEnabled
         entity.language = preferences.language.rawValue
         entity.theme = preferences.theme.rawValue
+        do {
+            try context.save()
+        } catch {
+            // Keep the stored and published preferences unchanged when the save fails.
+            context.rollback()
+            throw error
+        }
+        UserDefaults.standard.set(preferences.activeBankId.rawValue, forKey: Self.activeBankPreferenceKey)
         self.preferences = preferences
-        try context.save()
     }
 
     func resetAllData() throws {
@@ -590,6 +602,7 @@ final class ProgressStoreService: ObservableObject {
             try context.delete(model: ExamAttemptEntity.self)
             try context.delete(model: PreferencesEntity.self)
             try removeMorseCourseProgressIfPresent()
+            UserDefaults.standard.removeObject(forKey: Self.activeBankPreferenceKey)
             preferences = .default
             try context.save()
             objectWillChange.send()
@@ -610,10 +623,10 @@ final class ProgressStoreService: ObservableObject {
             version: 1,
             exportedAt: exportedAt,
             bankId: bank.manifest.bankId,
-            questionProgress: try questionProgressRecords(),
-            examAttempts: try examAttempts(),
-            lessonProgress: lessonProgress,
-            lessonQuizAttempts: lessonQuizAttempts,
+            questionProgress: try questionProgressRecords().filter { $0.bankId == bank.manifest.bankId },
+            examAttempts: try examAttempts().filter { $0.bankId == bank.manifest.bankId },
+            lessonProgress: bank.courseBankID.hasLessons ? lessonProgress : [],
+            lessonQuizAttempts: bank.courseBankID.hasLessons ? lessonQuizAttempts : [],
             morseCourseProgress: try morseCourseProgress(),
             preferences: ExportedPreferences(
                 practiceMode: preferences.practiceMode.rawValue,
@@ -637,9 +650,8 @@ final class ProgressStoreService: ObservableObject {
 
         let previousSnapshot = try snapshotForRollback()
         do {
-            try context.delete(model: QuestionProgressEntity.self)
-            try context.delete(model: ExamAttemptEntity.self)
-            try context.delete(model: PreferencesEntity.self)
+            try deleteQuestionProgress(bankId: bank.manifest.bankId)
+            try deleteExamAttempts(bankId: bank.manifest.bankId)
 #if DEBUG
             if failNextImportAfterDeleteForTesting {
                 failNextImportAfterDeleteForTesting = false
@@ -652,7 +664,7 @@ final class ProgressStoreService: ObservableObject {
             for attempt in data.examAttempts {
                 try saveExamAttemptWithoutSave(attempt)
             }
-            var nextPreferences = ApplePreferences.default
+            var nextPreferences = preferences
             if let mode = ApplePreferences.PracticeMode(rawValue: data.preferences.practiceMode) {
                 nextPreferences.practiceMode = mode
             }
@@ -660,20 +672,19 @@ final class ProgressStoreService: ObservableObject {
             if let theme = ApplePreferences.Theme(rawValue: data.preferences.theme) {
                 nextPreferences.theme = theme
             }
-            let entity = PreferencesEntity(
-                practiceMode: nextPreferences.practiceMode.rawValue,
-                examTimerEnabled: nextPreferences.examTimerEnabled,
-                language: nextPreferences.language.rawValue,
-                theme: nextPreferences.theme.rawValue
-            )
-            entity.archivedLessonProgressData = try encoder.encode(data.lessonProgress)
-            entity.archivedLessonQuizAttemptsData = try encoder.encode(data.lessonQuizAttempts)
-            context.insert(entity)
+            nextPreferences.activeBankId = bank.courseBankID
+            let entity = try preferencesEntity(createIfMissing: true, saveIfCreated: false)
+            entity.practiceMode = nextPreferences.practiceMode.rawValue
+            entity.examTimerEnabled = nextPreferences.examTimerEnabled
+            entity.language = nextPreferences.language.rawValue
+            entity.theme = nextPreferences.theme.rawValue
+            if bank.courseBankID.hasLessons {
+                entity.archivedLessonProgressData = try encoder.encode(data.lessonProgress)
+                entity.archivedLessonQuizAttemptsData = try encoder.encode(data.lessonQuizAttempts)
+            }
             if let morseCourseProgress = data.morseCourseProgress {
                 try FileManager.default.createDirectory(at: morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
                 try encoder.encode(morseCourseProgress).write(to: morseCourseProgressURL, options: [.atomic])
-            } else {
-                try removeMorseCourseProgressIfPresent()
             }
 #if DEBUG
             if failNextImportAfterMorseWriteForTesting {
@@ -682,6 +693,7 @@ final class ProgressStoreService: ObservableObject {
             }
 #endif
             try context.save()
+            UserDefaults.standard.set(nextPreferences.activeBankId.rawValue, forKey: Self.activeBankPreferenceKey)
             preferences = nextPreferences
             objectWillChange.send()
         } catch {
@@ -788,6 +800,22 @@ final class ProgressStoreService: ObservableObject {
         return try context.fetch(descriptor).first
     }
 
+    private func deleteQuestionProgress(bankId: String) throws {
+        let targetBankId = bankId
+        let descriptor = FetchDescriptor<QuestionProgressEntity>(predicate: #Predicate { $0.bankId == targetBankId })
+        for entity in try context.fetch(descriptor) {
+            context.delete(entity)
+        }
+    }
+
+    private func deleteExamAttempts(bankId: String) throws {
+        let targetBankId = bankId
+        let descriptor = FetchDescriptor<ExamAttemptEntity>(predicate: #Predicate { $0.bankId == targetBankId })
+        for entity in try context.fetch(descriptor) {
+            context.delete(entity)
+        }
+    }
+
     private func examAttemptEntity(id: String) throws -> ExamAttemptEntity? {
         var descriptor = FetchDescriptor<ExamAttemptEntity>(predicate: #Predicate { $0.id == id })
         descriptor.fetchLimit = 1
@@ -832,7 +860,8 @@ final class ProgressStoreService: ObservableObject {
             practiceMode: ApplePreferences.PracticeMode(rawValue: entity.practiceMode) ?? .immediate,
             examTimerEnabled: entity.examTimerEnabled,
             language: BankLanguage(rawValue: entity.language) ?? .english,
-            theme: ApplePreferences.Theme(rawValue: entity.theme) ?? .system
+            theme: ApplePreferences.Theme(rawValue: entity.theme) ?? .system,
+            activeBankId: CourseBankID(rawValue: UserDefaults.standard.string(forKey: Self.activeBankPreferenceKey) ?? "") ?? .basic
         )
     }
 
@@ -907,6 +936,7 @@ final class ProgressStoreService: ObservableObject {
             try saveExamAttemptWithoutSave(attempt)
         }
         try context.save()
+        UserDefaults.standard.set(snapshot.preferences.activeBankId.rawValue, forKey: Self.activeBankPreferenceKey)
         preferences = snapshot.preferences
     }
 

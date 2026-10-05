@@ -33,14 +33,14 @@ struct HomeView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    Text("Offline, private, 2025 bank")
+                    Text(bank.courseBankID == .advanced ? "Offline, private, Advanced bank" : "Offline, private, 2025 bank") // l10n: localized
                         .font(DesignTokens.FontScale.caption.weight(.semibold))
                         .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    Text("Ready for Basic with Honours?")
+                    Text(bank.courseBankID == .advanced ? "Ready for the Advanced qualification?" : "Ready for Basic with Honours?") // l10n: localized
                         .font(DesignTokens.FontScale.display.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
-                    Text("Study with the bundled ISED Basic 2025-07-15 question bank on iPhone, iPad, and Mac. Progress stays on this device unless you export it.")
+                    Text(bank.courseBankID == .advanced ? "Study with the bundled ISED Advanced 2025-02-04 question bank on iPhone, iPad, and Mac. Progress stays on this device unless you export it and is separate from Basic." : "Study with the bundled ISED Basic 2025-07-15 question bank on iPhone, iPad, and Mac. Progress stays on this device unless you export it.") // l10n: localized
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
                     homeActionLayout
@@ -140,19 +140,19 @@ struct HomeView: View {
     private func categoryPracticeAccessibilityLabel(_ category: BankCategory) -> AttributedString {
         var label = AttributedString(String(localized: "Practice"))
         label += AttributedString(" ")
-        label += localized(category.name.text(for: language), language: language)
+        label += localized(category.name.text(for: language), language: category.name.resolvedLanguage(for: language))
         label += AttributedString(", \(localizedQuestionCount(category.questionCount))")
         return label
     }
 
     private func loadSummary() {
         do {
-            let progress = try progressStore.questionProgressRecords()
-            let attempts = try progressStore.examAttempts()
+            let progress = try progressStore.questionProgressRecords().filter { $0.bankId == bank.manifest.bankId }
+            let attempts = try progressStore.examAttempts().filter { $0.bankId == bank.manifest.bankId }
             let now = try AppleStudyEngine.canonicalNow()
             let readiness = try AppleStudyEngine.readiness(bank: bank, progress: progress, attempts: attempts, now: now)
             let weak = AppleStudyEngine.weakSubsections(progress: progress, latestExam: attempts.sorted { $0.submittedAt > $1.submittedAt }.first)
-            summary = HomeSummary(readiness: readiness, dueReviewCount: try dueCount(records: progress, now: now), weakSubsectionCount: weak.count, completedExamCount: attempts.count)
+            summary = HomeSummary(readiness: readiness, hasHonours: bank.courseBankID.hasHonours, dueReviewCount: try dueCount(records: progress, now: now), weakSubsectionCount: weak.count, completedExamCount: attempts.count)
             errorMessage = nil
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
@@ -169,14 +169,14 @@ private struct HomeSummary {
     let weakSubsectionCount: Int
     let completedExamCount: Int
 
-    init(readiness: ReadinessResult, dueReviewCount: Int, weakSubsectionCount: Int, completedExamCount: Int) {
+    init(readiness: ReadinessResult, hasHonours: Bool, dueReviewCount: Int, weakSubsectionCount: Int, completedExamCount: Int) {
         self.dueReviewCount = dueReviewCount
         self.weakSubsectionCount = weakSubsectionCount
         self.completedExamCount = completedExamCount
         switch readiness.state {
         case .notEnoughData:
             title = "Not enough data"
-            message = "Complete at least two mock exams before Canadian Ham claims pass or honours readiness. Keep practicing by category while you build evidence."
+            message = hasHonours ? "Complete at least two mock exams before Canadian Ham claims pass or honours readiness. Keep practicing by category while you build evidence." : "Complete at least two mock exams before Canadian Ham claims pass readiness. Keep practicing by topic while you build evidence."
             symbol = "chart.bar.doc.horizontal"
             tint = DesignTokens.Colors.ink
         case .needsReview:
@@ -186,7 +186,7 @@ private struct HomeSummary {
             tint = DesignTokens.Colors.warningText
         case .passReady:
             title = "Pass-ready"
-            message = "At least two recent mock exams meet the 70% pass threshold. Keep working toward 80% for Basic with Honours."
+            message = hasHonours ? "At least two recent mock exams meet the 70% pass threshold. Keep working toward 80% for Basic with Honours." : "At least two recent mock exams meet the 70% Advanced pass threshold. There is no Advanced Honours result."
             symbol = "checkmark.seal.fill"
             tint = DesignTokens.Colors.correctText
         case .honoursReady:
@@ -293,7 +293,7 @@ struct PracticeHubView: View {
     private func categoryPracticeAccessibilityLabel(_ category: BankCategory) -> AttributedString {
         var label = AttributedString(String(localized: "Practice category"))
         label += AttributedString(" ")
-        label += localized(category.name.text(for: language), language: language)
+        label += localized(category.name.text(for: language), language: category.name.resolvedLanguage(for: language))
         label += AttributedString(", \(localizedQuestionCount(category.questionCount))")
         return label
     }
@@ -308,8 +308,8 @@ struct PracticeHubView: View {
 
     private func refreshCounts() {
         do {
-            let progress = try progressStore.questionProgressRecords()
-            let attempts = try progressStore.examAttempts()
+            let progress = try progressStore.questionProgressRecords().filter { $0.bankId == bank.manifest.bankId }
+            let attempts = try progressStore.examAttempts().filter { $0.bankId == bank.manifest.bankId }
             let now = try AppleStudyEngine.canonicalNow()
             due = try dueCount(records: progress, now: now)
             weak = AppleStudyEngine.weakSubsections(progress: progress, latestExam: attempts.sorted { $0.submittedAt > $1.submittedAt }.first).count
@@ -582,8 +582,8 @@ struct PracticeSessionView: View {
 
     private func loadSession() {
         do {
-            var progress = try progressStore.questionProgressRecords()
-            let attempts = try progressStore.examAttempts()
+            var progress = try progressStore.questionProgressRecords().filter { $0.bankId == bank.manifest.bankId }
+            let attempts = try progressStore.examAttempts().filter { $0.bankId == bank.manifest.bankId }
             let latest = attempts.sorted { $0.submittedAt > $1.submittedAt }.first
             let seed = AppLaunchArguments.value(after: "-CanadianHamPracticeSeed") ?? "practice/\(scopeTitle)/\(UUID().uuidString)"
             let now = try AppleStudyEngine.canonicalNow()
@@ -670,7 +670,7 @@ struct PracticeSessionView: View {
         guard !state.committedQuestionIds.contains(question.id) else { return }
         do {
             let now = try AppleStudyEngine.canonicalNow()
-            let progress = try progressStore.questionProgressRecords()
+            let progress = try progressStore.questionProgressRecords().filter { $0.bankId == bank.manifest.bankId }
             let next = try AppleStudyEngine.applyPracticeAnswer(progress: progress, question: question, selectedSourceIndex: sourceIndex, now: now)
             try progressStore.saveQuestionProgress(next)
             state.committedQuestionIds.insert(question.id)
@@ -694,7 +694,7 @@ struct PracticeSessionView: View {
             return
         }
         do {
-            var progress = try progressStore.questionProgressRecords()
+            var progress = try progressStore.questionProgressRecords().filter { $0.bankId == bank.manifest.bankId }
             let now = try AppleStudyEngine.canonicalNow()
             for item in state.items {
                 guard let selected = state.selectedByQuestionId[item.question.id] else { continue }
@@ -862,10 +862,10 @@ struct MockExamView: View {
                 .font(DesignTokens.FontScale.headline.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
-            Text("Generate 100 questions: one from each subsection, mixed into a repeatable order. The optional timer is off by default.")
+            Text(bank.courseBankID == .advanced ? "Generate 50 Advanced questions: one from each topic area, mixed into a repeatable order. The optional timer is off by default." : "Generate 100 questions: one from each subsection, mixed into a repeatable order. The optional timer is off by default.") // l10n: localized
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
-            Text("In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.")
+            Text(bank.courseBankID == .advanced ? "No ISED reference sheet is provided for the Advanced exam. Do not use the Basic reference sheet as Advanced exam-allowed material." : "In the real exam you are given ISED's reference sheet of formulas and block diagrams. The lessons teach everything on it.") // l10n: localized
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
             tokenButton("Start mock exam") { startExam() }
@@ -1192,7 +1192,7 @@ struct MockExamView: View {
                     .accessibilityLabel(Text(mockExamSubmissionAnnouncement(for: attempt))) // l10n: localized
                     .accessibilityFocused($resultFocus, equals: .resultsHeading)
                     .onAppear { focusResultsHeadingAfterLayout() }
-                Text("Score: \(attempt.score.correct) / \(attempt.score.total) (\(attempt.score.percent, format: .number.precision(.fractionLength(0...1)))%). Pass is 70%; honours is 80%.")
+                Text(bank.courseBankID == .advanced ? "Score: \(attempt.score.correct) / \(attempt.score.total) (\(attempt.score.percent, format: .number.precision(.fractionLength(0...1)))%). Pass is 70%; there is no Advanced Honours." : "Score: \(attempt.score.correct) / \(attempt.score.total) (\(attempt.score.percent, format: .number.precision(.fractionLength(0...1)))%). Pass is 70%; honours is 80%.") // l10n: localized
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
                 Text("Exam code: \(attempt.seed)")
@@ -1320,7 +1320,7 @@ struct MockExamView: View {
                 selectedByQuestionId: state.selectedByQuestionId,
                 flaggedQuestionIds: state.flagged
             )
-            var progress = try progressStore.questionProgressRecords()
+            var progress = try progressStore.questionProgressRecords().filter { $0.bankId == bank.manifest.bankId }
             for item in attempt.items {
                 if let question = bank.question(id: item.questionId) {
                     progress = try AppleStudyEngine.applyPracticeAnswer(progress: progress, question: question, selectedSourceIndex: item.selectedSourceIndex ?? -1, now: submittedAt)
@@ -1397,6 +1397,18 @@ struct SettingsView: View {
                         .font(DesignTokens.FontScale.headline.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
+                    Picker("Course", selection: Binding(
+                        get: { progressStore.preferences.activeBankId },
+                        set: { bankId in savePreferences { $0.activeBankId = bankId } }
+                    )) {
+                        ForEach(CourseBankID.allCases) { bankId in
+                            Text(bankId.localizedName).tag(bankId) // l10n: localized
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .accessibilityIdentifier("course-picker")
+                    .accessibilityLabel(Text("Course")) // l10n: localized
+
                     Picker("Practice mode", selection: Binding(
                         get: { progressStore.preferences.practiceMode },
                         set: { mode in savePreferences { $0.practiceMode = mode } }
@@ -1824,7 +1836,7 @@ private struct CategoryCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            Text(localized(category.name.text(for: language), language: language)) // l10n: content(question)
+            Text(localized(category.name.text(for: language), language: category.name.resolvedLanguage(for: language))) // l10n: content(question)
                 .font(DesignTokens.FontScale.body.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
             Text(verbatim: "\(localizedQuestionCount(category.questionCount)) • \(localizedSubsectionCount(category.subsectionCount))") // l10n: verbatim

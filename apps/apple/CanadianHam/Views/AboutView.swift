@@ -19,14 +19,14 @@ struct AboutView: View {
                 }
 
                 paperSection("Sources") {
-                    Text("ISED Amateur Radio Operator Certificate Basic Qualification question bank, effective \(bank.manifest.effectiveDate).")
+                    Text(bank.courseBankID == .advanced ? "ISED Amateur Radio Operator Certificate Advanced Qualification question bank, effective \(bank.manifest.effectiveDate)." : "ISED Amateur Radio Operator Certificate Basic Qualification question bank, effective \(bank.manifest.effectiveDate).") // l10n: localized
                     Text("Question bank source URL: \(verbatimText(bank.manifest.source.url))")
                         .font(DesignTokens.FontScale.caption)
                         .textSelection(.enabled)
                     Text("RBR-4, Standards for the Operation of Radio Stations in the Amateur Radio Service: \(verbatimText(aboutRBR4CitationURL))")
                         .font(DesignTokens.FontScale.caption)
                         .textSelection(.enabled)
-                    Text("ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps.")
+                    Text(bank.courseBankID == .advanced ? "There is no ISED-approved Advanced exam reference sheet; the Basic reference sheet must not be presented as exam-allowed for Advanced." : "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps.") // l10n: localized
                 }
 
                 paperSection("Attribution") {

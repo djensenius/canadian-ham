@@ -22,6 +22,7 @@ const XML_NAMESPACE_URLS = new Set([
 // exception.
 export const OFFICIAL_SOURCE_CITATION_URLS = new Set([
   "https://apc-cap.ic.gc.ca/datafiles/amat_basic_quest.zip#amat_basic_quest_delim.txt",
+  "https://apc-cap.ic.gc.ca/datafiles/amat_adv_quest.zip#amat_adv_quest_delim.txt",
   "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service",
 ]);
 

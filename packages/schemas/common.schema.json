@@ -564,6 +564,7 @@
         "practiceMode": { "enum": ["immediate", "review-later"] },
         "examTimerEnabled": { "type": "boolean" },
         "theme": { "enum": ["system", "light", "dark"] },
+        "activeBankId": { "$ref": "#/$defs/bankId" },
         "morse": {
           "type": "object",
           "properties": {
