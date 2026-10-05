@@ -789,7 +789,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Advanced lessons are coming"].firstMatch.waitForExistence(timeout: 10), "Advanced should show the lessons-coming screen")
 
         tapCompactBack(in: app)
-        tap("Practice", in: app)
+        tap("Home", in: app)
         tap("Mock exam", in: app)
         XCTAssertTrue(anyVisibleLabel(in: app, contains: "Generate 50 Advanced questions"), "Advanced mock start should explain the 50-question exam")
         openMockExamStart(in: app)
