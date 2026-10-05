@@ -29,7 +29,10 @@ Why: task-12.5 introduced web and Apple Morse course playback after task-12.6 ad
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Fix the web course-vs-copy regression test so it observes the course player's own stop signal/state instead of global oscillator stop counts.\n2. Inspect Apple view wiring and add an iOS UI test for starting another Morse mode while course playback is active if the existing accessibility identifiers make that feasible without product changes.\n3. Run targeted changed tests while iterating, then final web checks and one full iOS plus one full macOS CanadianHam xbuild suite.\n4. Record full-suite per-test names in task-12.14 notes and return task-12.14 to Done.
+1. Fix the web course-vs-copy regression test so it observes the course player's own stop signal/state instead of global oscillator stop counts.
+2. Inspect Apple view wiring and add an iOS UI test for starting another Morse mode while course playback is active if the existing accessibility identifiers make that feasible without product changes.
+3. Run targeted changed tests while iterating, then final web checks and one full iOS plus one full macOS CanadianHam xbuild suite.
+4. Record full-suite per-test names in task-12.14 notes and return task-12.14 to Done.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
