@@ -71,16 +71,13 @@ struct MorseCourseView: View {
         .onDisappear { driver.stop() }
     }
 
-    @ViewBuilder
     private func courseStats(course: MorseCourse, progress: MorseCourseProgressExport) -> some View {
         let completed = progress.lessonProgress.filter { $0.bestAccuracy >= course.unlockAccuracy }.count
         let streak = morseDailyStreak(activity: progress.dailyActivity, todayIso: Date.now.localDateString)
-        if completed > 0 || streak > 0 {
-            let streakText = String.localizedStringWithFormat(String(localized: "%lld days"), Int64(streak))
-            HStack(spacing: DesignTokens.Spacing.md) {
-                statCard(title: "Daily streak", accessibilityTitle: String(localized: "Daily streak"), value: streakText)
-                statCard(title: "Lessons completed", accessibilityTitle: String(localized: "Lessons completed"), value: String.localizedStringWithFormat(String(localized: "%lld of %lld"), Int64(completed), Int64(course.lessons.count)))
-            }
+        let streakText = streak == 0 ? String(localized: "No streak yet") : String.localizedStringWithFormat(String(localized: "%lld days"), Int64(streak))
+        return HStack(spacing: DesignTokens.Spacing.md) {
+            statCard(title: "Daily streak", accessibilityTitle: String(localized: "Daily streak"), value: streakText)
+            statCard(title: "Lessons completed", accessibilityTitle: String(localized: "Lessons completed"), value: String.localizedStringWithFormat(String(localized: "%lld of %lld"), Int64(completed), Int64(course.lessons.count)))
         }
     }
 
