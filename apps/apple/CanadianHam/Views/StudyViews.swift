@@ -1551,20 +1551,7 @@ struct SettingsView: View {
                 .foregroundStyle(DesignTokens.Colors.ink)
             HStack {
                 tokenButton("Cancel") { pendingCourseSwitch = nil }
-                Button(role: .destructive) {
-                    confirmCourseSwitch()
-                } label: {
-                    Text("Switch course") // l10n: localized
-                        .font(DesignTokens.FontScale.body.weight(.semibold))
-                        .foregroundStyle(DesignTokens.Colors.warningText)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .padding(.horizontal, DesignTokens.Spacing.lg)
-                        .padding(.vertical, DesignTokens.Spacing.md)
-                        .frame(minHeight: 56)
-                        .background(DesignTokens.Colors.warningBg, in: Capsule())
-                        .overlay(Capsule().strokeBorder(DesignTokens.Colors.warningBorder, lineWidth: 1))
-                }
-                .buttonStyle(.plain)
+                tokenButton("Switch course") { confirmCourseSwitch() }
             }
         }
         .paperCard()
