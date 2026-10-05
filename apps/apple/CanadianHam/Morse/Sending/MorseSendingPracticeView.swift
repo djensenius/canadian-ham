@@ -33,8 +33,9 @@ struct MorseSendingPracticeView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                 Text("Sending practice") // l10n: localized
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
@@ -112,9 +113,13 @@ struct MorseSendingPracticeView: View {
                 if let errorMessage {
                     MessagePanel(title: "Morse error", message: errorMessage, kind: .warning)
                 }
+                }
+                .paperCard()
             }
-            .paperCard()
+            .pagePadding()
         }
+        .background(DesignTokens.Colors.paper)
+        .navigationTitle("Sending practice") // l10n: localized
         .navigationDestination(isPresented: resultIsPresented) {
             if let presentedResult {
                 MorseSendingResultsScreen(result: presentedResult) {

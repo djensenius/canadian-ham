@@ -220,9 +220,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
         ])
         defer { app.terminate() }
 
+        openSendingPractice(in: app)
         let start = app.buttons["morse-sending-start-exam-button"].firstMatch
         XCTAssertTrue(start.waitForExistence(timeout: 10))
-        scrollUntilHittable(start, in: app, maxSwipes: 8)
         start.tap()
         let debugFill = app.buttons["morse-sending-debug-fill-button"].firstMatch
         XCTAssertTrue(debugFill.waitForExistence(timeout: 5), "DEBUG-only deterministic sending hook should be present in UI tests")
@@ -1044,14 +1044,21 @@ final class CanadianHamPracticeUITests: XCTestCase {
             "-CanadianHamMorseSendingExamSeconds", "120"
         ])
         defer { app.terminate() }
+        openSendingPractice(in: app)
         let start = app.buttons["morse-sending-start-exam-button"].firstMatch
         XCTAssertTrue(start.waitForExistence(timeout: 10))
-        scrollUntilHittable(start, in: app, maxSwipes: 8)
         start.tap()
         app.buttons["morse-sending-debug-fill-button"].firstMatch.tap()
         app.buttons["morse-sending-grade-exam-button"].firstMatch.tap()
         XCTAssertTrue(app.descendants(matching: .any)["morse-sending-results-heading"].firstMatch.waitForExistence(timeout: 5))
         try performAudit(on: app, context: "Morse sending results \(appearance)")
+    }
+
+    private func openSendingPractice(in app: XCUIApplication) {
+        let open = app.buttons["morse-sending-open-button"].firstMatch
+        XCTAssertTrue(open.waitForExistence(timeout: 10), "Expected the Sending practice entry on the Morse screen")
+        scrollUntilHittable(open, in: app, maxSwipes: 8)
+        open.tap()
     }
 
     private func auditMorseExamGradedDiff(appearance: AuditAppearance) throws {
