@@ -1430,10 +1430,6 @@ struct SettingsView: View {
                     .accessibilityIdentifier("course-picker")
                     .accessibilityLabel(Text("Course")) // l10n: localized
 
-                    if pendingCourseSwitch != nil {
-                        courseSwitchConfirmationPanel
-                    }
-
                     Picker("Practice mode", selection: Binding(
                         get: { progressStore.preferences.practiceMode },
                         set: { mode in savePreferences { $0.practiceMode = mode } }
@@ -1531,6 +1527,14 @@ struct SettingsView: View {
             Button("Reset", role: .destructive) { resetAllData() }
         } message: {
             Text("Deletes local progress, mock exams, and preferences. Bundled content remains installed.")
+        }
+        .sheet(isPresented: Binding(
+            get: { pendingCourseSwitch != nil },
+            set: { isPresented in if !isPresented { pendingCourseSwitch = nil } }
+        )) {
+            courseSwitchConfirmationPanel
+                .padding(DesignTokens.Spacing.xl)
+                .background(DesignTokens.Colors.paper)
         }
         .onChange(of: pendingCourseSwitch) { _, next in
             if next != nil {
