@@ -584,9 +584,15 @@ final class ProgressStoreService: ObservableObject {
         entity.examTimerEnabled = preferences.examTimerEnabled
         entity.language = preferences.language.rawValue
         entity.theme = preferences.theme.rawValue
+        do {
+            try context.save()
+        } catch {
+            // Keep the stored and published preferences unchanged when the save fails.
+            context.rollback()
+            throw error
+        }
         UserDefaults.standard.set(preferences.activeBankId.rawValue, forKey: Self.activeBankPreferenceKey)
         self.preferences = preferences
-        try context.save()
     }
 
     func resetAllData() throws {

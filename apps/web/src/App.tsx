@@ -480,11 +480,23 @@ function AppContent({
       return;
     }
     const nextBank = bankDataForId(nextBankId);
-    await setPreferences({ activeBankId: nextBank.bankId });
+    // Clear course-specific sessions in the same render as the optimistic bank change,
+    // so a session is never shown or scored against the other course's questions.
+    const previous = { practiceScope, practiceSession, mockExam, latestResult };
     setPracticeScope({ type: "all" });
     setPracticeSession(null);
     setMockExam(null);
     setLatestResult(null);
+    try {
+      await setPreferences({ activeBankId: nextBank.bankId });
+    } catch (error) {
+      // The bank change was rolled back; restore the previous course's sessions.
+      setPracticeScope(previous.practiceScope);
+      setPracticeSession(previous.practiceSession);
+      setMockExam(previous.mockExam);
+      setLatestResult(previous.latestResult);
+      throw error;
+    }
     setAlertMessage(t(interfaceLanguage, "courseChanged", nextBank.title));
   }
 
@@ -563,7 +575,7 @@ function AppContent({
           </div>
         </div>
         <div className="header-actions">
-          <CourseSwitcher activeBank={activeBank} interfaceLanguage={interfaceLanguage} onCourseChange={(bankId) => void setCourse(bankId)} />
+          <CourseSwitcher activeBank={activeBank} interfaceLanguage={interfaceLanguage} onCourseChange={(bankId) => void setCourse(bankId).catch(() => undefined)} />
           <PwaStatus interfaceLanguage={interfaceLanguage} updateDisabled={mockExam !== null} />
           <LanguageToggle interfaceLanguage={interfaceLanguage} language={language} onLanguageChange={setLanguage} />
         </div>
