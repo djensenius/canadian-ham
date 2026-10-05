@@ -26,8 +26,8 @@ Why: Copilot's final review of PR #123 noted that copy practice displays exam-st
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Copy practice results show accuracy and the error breakdown (wrong, missing, inserted) without pass/fail or the exam mark; exam mode is unchanged; web and Apple tests cover both
-- [ ] #2 Swift exam-text generation reports constraint failures with a distinct error (not invalid speed), matching TS, with a test
+- [x] #1 Copy practice results show accuracy and the error breakdown (wrong, missing, inserted) without pass/fail or the exam mark; exam mode is unchanged; web and Apple tests cover both
+- [x] #2 Swift exam-text generation reports constraint failures with a distinct error (not invalid speed), matching TS, with a test
 <!-- AC:END -->
 
 ## Implementation Plan
