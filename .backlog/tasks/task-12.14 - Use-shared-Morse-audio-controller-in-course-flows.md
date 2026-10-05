@@ -1,11 +1,11 @@
 ---
 id: TASK-12.14
 title: Use shared Morse audio controller in course flows
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-04 05:20'
-updated_date: '2026-10-05 00:01'
+updated_date: '2026-10-05 00:06'
 labels: []
 milestone: m-1
 dependencies: []
@@ -21,9 +21,9 @@ Why: task-12.5 introduced web and Apple Morse course playback after task-12.6 ad
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Web course playback uses the same shared one-player-at-a-time controller as copy practice and the simulated receiving exam.
-- [ ] #2 Apple course playback uses the same shared Morse playback coordinator as the other Morse modes.
-- [ ] #3 Tests or targeted manual checks cover starting course audio while another Morse mode is active and confirm only one playback remains active.
+- [x] #1 Web course playback uses the same shared one-player-at-a-time controller as copy practice and the simulated receiving exam.
+- [x] #2 Apple course playback uses the same shared Morse playback coordinator as the other Morse modes.
+- [x] #3 Tests or targeted manual checks cover starting course audio while another Morse mode is active and confirm only one playback remains active.
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -34,3 +34,15 @@ Why: task-12.5 introduced web and Apple Morse course playback after task-12.6 ad
 3. Add web and iOS UI coverage that starts course audio while another Morse mode is active and starts another Morse mode while course audio is active.
 4. Run targeted web and Apple tests, then finalize task-12.14 with evidence before starting task-12.17.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented shared course playback coordination. Web: MorseCoursePanel now registers as owner "course" with the existing MorsePlaybackCoordinator, claims before every course play, and App passes the same coordinator used by Quick listen/copy/exam. Apple: MorseCourseView now accepts the MorsePlaybackCoordinator, registers owner "course", claims before course play, and unregisters/stops on disappear. Tests added/updated: apps/web/src/App.test.tsx "coordinates course audio with the shared one-player-at-a-time Morse controller"; apps/apple/CanadianHamTests/MorseTrainerTests/testMorsePlaybackCoordinatorStopsCourseAndOtherOwnersOneAtATime; apps/apple/CanadianHamUITests/CanadianHamPracticeUITests/testMorseStartingCourseAudioStopsCopyPlayback. Validation passed: pnpm test -- --run apps/web/src/App.test.tsx -t "coordinates course audio|stops any active Morse playback" (also ran package prechecks; web Vitest reported 13 files/123 tests passed). Validation passed: DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination "platform=iOS Simulator,name=iPhone 17 Pro" -only-testing:CanadianHamTests/MorseTrainerTests/testMorsePlaybackCoordinatorStopsCourseAndOtherOwnersOneAtATime -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testMorseStartingCourseAudioStopsCopyPlayback -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testMorseStartingQuickListenStopsCopyPlayback test CODE_SIGNING_ALLOWED=NO; per-test passed: MorseTrainerTests/testMorsePlaybackCoordinatorStopsCourseAndOtherOwnersOneAtATime, CanadianHamPracticeUITests/testMorseStartingCourseAudioStopsCopyPlayback, CanadianHamPracticeUITests/testMorseStartingQuickListenStopsCopyPlayback.
+<!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Course playback on web and Apple now uses the shared one-player-at-a-time Morse controller. Verified with web integration coverage for course vs Quick listen/copy, Apple coordinator unit coverage, and targeted iOS UI tests for course/Quick listen/copy ownership.
+<!-- SECTION:FINAL_SUMMARY:END -->
