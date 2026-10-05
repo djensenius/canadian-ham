@@ -1,11 +1,11 @@
 ---
 id: TASK-11.13
 title: Warn before a course switch discards unfinished work
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-05 13:33'
-updated_date: '2026-10-05 21:52'
+updated_date: '2026-10-05 21:57'
 labels: []
 dependencies:
   - TASK-11.5
@@ -33,6 +33,8 @@ Why: switching course (Basic/Advanced) silently discards an unfinished mock exam
 2. Add localized, accessible confirmation before discarding unfinished sessions; Cancel leaves the current course and session intact.
 3. Add web component coverage and iOS UI coverage including light/dark unfiltered accessibility audits.
 4. Run targeted tests, localization checks, web checks, and one full Apple run for each affected platform.
+
+5. Address review round 1: make unfinished-work checks multi-window safe on Mac, fix cheap web/Apple focus/session details, and record per-test names/counts from full runs.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -48,6 +50,8 @@ Validation passed:
 - pnpm test/typecheck/build:web and dist URL/CSP audit passed.
 - node scripts/check-apple-text-sources.ts and pnpm check:apple-l10n passed.
 - Apple final suite via /tmp/t1112-apple-final-2.log: iOS full suite 60 tests passed; macOS full suite 53 tests passed; tvOS full suite 12 tests passed; visionOS full suite 9 tests passed. tvOS/visionOS were run because Localizable.xcstrings is bundled there too.
+
+Review round 1 requested changes: multi-window Mac unfinished-work registry, per-test full-run evidence, and cheap notes for web/Apple course-switch behavior; reopening task for fixes.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
