@@ -216,7 +216,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "morse",
             "-CanadianHamMorseSendingDebugHook",
-            "-CanadianHamMorseSendingExamSeconds", "5"
+            "-CanadianHamMorseSendingExamSeconds", "120"
         ])
         defer { app.terminate() }
 
@@ -1041,7 +1041,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "morse",
             "-CanadianHamMorseSendingDebugHook",
-            "-CanadianHamMorseSendingExamSeconds", "5"
+            "-CanadianHamMorseSendingExamSeconds", "120"
         ])
         defer { app.terminate() }
         let start = app.buttons["morse-sending-start-exam-button"].firstMatch

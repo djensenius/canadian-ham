@@ -445,6 +445,13 @@ private struct MorseSendingResultsScreen: View {
                     .font(.body.monospaced())
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityHidden(!result.decodedText.isEmpty)
+                if !result.decodedText.isEmpty {
+                    Text("Decoded text is shown visually above.") // l10n: localized
+                        .font(DesignTokens.FontScale.caption)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityHidden(false)
+                }
                 morseTokenButton("Start another sending check") { startAgain() }
                     .accessibilityIdentifier("morse-sending-results-start-another-button")
             }

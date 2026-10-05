@@ -9550,6 +9550,22 @@
           }
         }
       }
+    },
+    "Decoded text is shown visually above." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le texte décodé est affiché visuellement ci-dessus."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le texte décodé est affiché visuellement ci-dessus."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
