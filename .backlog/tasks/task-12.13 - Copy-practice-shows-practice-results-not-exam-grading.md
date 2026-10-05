@@ -1,7 +1,7 @@
 ---
 id: TASK-12.13
 title: 'Copy practice shows practice results, not exam grading'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-04 03:37'
