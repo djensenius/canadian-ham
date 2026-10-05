@@ -3301,23 +3301,6 @@
         }
       }
     },
-    "Decoded exam text filled for UI testing." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Texte d’examen décodé rempli pour les tests d’interface."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Texte d’examen décodé rempli pour les tests d’interface."
-          }
-        }
-      }
-    },
     "Decoded text" : {
       "localizations" : {
         "fr" : {
@@ -3842,22 +3825,6 @@
         }
       }
     },
-    "Exam rule: 5 or fewer errors count as 100%, and the whole text must be sent within 3:00." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Règle d’examen : 5 erreurs ou moins donnent 100 %, et tout le texte doit être envoyé en 3:00."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Règle d’examen : 5 erreurs ou moins donnent 100 %, et tout le texte doit être envoyé en 3:00."
-          }
-        }
-      }
-    },
     "Exam rule: fail at %lld%% because more than 5 errors is below the 100%% pass mark." : {
       "localizations" : {
         "fr" : {
@@ -4026,23 +3993,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ÉCHEC, %1$lld %%, avec %2$lld erreurs."
-          }
-        }
-      }
-    },
-    "Fill sending check" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remplir la vérification d’envoi"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remplir la vérification d’envoi"
           }
         }
       }
@@ -9581,6 +9531,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Votre progression locale indique des catégories faibles, des questions à réviser ou moins d’examens simulés réussis que nécessaire. Révisez les questions faibles et les questions à réviser avant de vous fier à votre préparation à l’examen."
+          }
+        }
+      }
+    },
+    "Rule: 5 or fewer errors and all text within 3:00 to pass." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Règle : 5 erreurs ou moins et tout le texte en 3:00 pour réussir."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Règle : 5 erreurs ou moins et tout le texte en 3:00 pour réussir."
           }
         }
       }

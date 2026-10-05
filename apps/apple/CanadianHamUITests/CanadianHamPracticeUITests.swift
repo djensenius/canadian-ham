@@ -228,7 +228,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(debugFill.waitForExistence(timeout: 5), "DEBUG-only deterministic sending hook should be present in UI tests")
         debugFill.tap()
         let grade = app.buttons["morse-sending-grade-exam-button"].firstMatch
-        scrollUntilHittable(grade, in: app, maxSwipes: 4)
+        XCTAssertTrue(grade.waitForExistence(timeout: 5))
+        if !grade.isHittable {
+            app.swipeUp()
+        }
         grade.tap()
 
         let heading = app.descendants(matching: .any)["morse-sending-results-heading"].firstMatch

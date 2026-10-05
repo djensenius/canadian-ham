@@ -96,8 +96,11 @@ struct MorseSendingPracticeView: View {
                     morseTokenButton("Clear sending practice") { resetSending(clearExam: false) }
 #if DEBUG
                     if ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseSendingDebugHook") {
-                        morseTokenButton("Fill sending check") { fillExamTextForUITest() }
-                            .accessibilityIdentifier("morse-sending-debug-fill-button")
+                        Button(action: fillExamTextForUITest) {
+                            Text(verbatim: "Fill sending check") // l10n: verbatim DEBUG-only UI test hook
+                                .font(DesignTokens.FontScale.body.weight(.bold))
+                        }
+                        .accessibilityIdentifier("morse-sending-debug-fill-button")
                     }
 #endif
                 }
@@ -275,7 +278,7 @@ struct MorseSendingPracticeView: View {
 #if DEBUG
     private func fillExamTextForUITest() {
         decodedText = (try? canonicalMorseCharacters(examText).joined()) ?? examText.replacingOccurrences(of: " ", with: "")
-        statusMessage = String(localized: "Decoded exam text filled for UI testing.")
+        statusMessage = "Decoded exam text filled for UI testing."
     }
 #else
     private func fillExamTextForUITest() {}
@@ -414,34 +417,41 @@ private struct MorseSendingResultsScreen: View {
     let startAgain: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            Text("Sending results") // l10n: localized
-                .font(DesignTokens.FontScale.title.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .accessibilityAddTraits(.isHeader)
-                .accessibilityIdentifier("morse-sending-results-heading")
-            Text(summary) // l10n: localized
-                .font(DesignTokens.FontScale.body.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .accessibilityIdentifier("morse-sending-results-summary")
-            Text("Exam rule: 5 or fewer errors count as 100%, and the whole text must be sent within 3:00.") // l10n: localized
-                .font(DesignTokens.FontScale.body)
-                .foregroundStyle(DesignTokens.Colors.ink)
-            Text(String.localizedStringWithFormat(String(localized: "%lld total errors: %lld wrong, %lld missing, %lld inserted."), Int64(result.score.diff.score.errors), Int64(result.score.diff.score.wrong), Int64(result.score.diff.score.missing), Int64(result.score.diff.score.inserted))) // l10n: localized
-                .font(DesignTokens.FontScale.body)
-                .foregroundStyle(DesignTokens.Colors.ink)
-            Text("Decoded text") // l10n: localized
-                .font(DesignTokens.FontScale.body.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
-            Text(result.decodedText.isEmpty ? String(localized: "No text sent.") : result.decodedText) // l10n: localized
-                .font(.body.monospaced())
-                .foregroundStyle(DesignTokens.Colors.ink)
-            morseTokenButton("Start another sending check") { startAgain() }
-                .accessibilityIdentifier("morse-sending-results-start-another-button")
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                Text("Sending results") // l10n: localized
+                    .font(DesignTokens.FontScale.title.weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("morse-sending-results-heading")
+                    .fixedSize(horizontal: false, vertical: true)
+                Text(summary) // l10n: localized
+                    .font(DesignTokens.FontScale.body.weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .accessibilityIdentifier("morse-sending-results-summary")
+                    .fixedSize(horizontal: false, vertical: true)
+                Text("Rule: 5 or fewer errors and all text within 3:00 to pass.") // l10n: localized
+                    .font(DesignTokens.FontScale.body)
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                Text(String.localizedStringWithFormat(String(localized: "%lld total errors: %lld wrong, %lld missing, %lld inserted."), Int64(result.score.diff.score.errors), Int64(result.score.diff.score.wrong), Int64(result.score.diff.score.missing), Int64(result.score.diff.score.inserted))) // l10n: localized
+                    .font(DesignTokens.FontScale.body)
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                Text("Decoded text") // l10n: localized
+                    .font(DesignTokens.FontScale.body.weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                Text(result.decodedText.isEmpty ? String(localized: "No text sent.") : result.decodedText) // l10n: localized
+                    .font(.body.monospaced())
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                morseTokenButton("Start another sending check") { startAgain() }
+                    .accessibilityIdentifier("morse-sending-results-start-another-button")
+            }
+            .pagePadding()
         }
-        .pagePadding()
         .background(DesignTokens.Colors.paper)
-        .navigationTitle("Sending results")
+        .navigationTitle("Sending results") // l10n: localized
     }
 
     private var summary: String {
