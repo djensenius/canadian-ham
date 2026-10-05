@@ -200,6 +200,44 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertFalse(app.descendants(matching: .any)["compact-root-list"].firstMatch.exists, "A single tap must not pop past the Morse screen")
     }
 
+    func testAccessibilityAuditMorseSendingResultsLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditMorseSendingResults(appearance: .light)
+    }
+
+    func testAccessibilityAuditMorseSendingResultsDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditMorseSendingResults(appearance: .dark)
+        XCUIDevice.shared.appearance = .light
+    }
+
+    func testMorseSendingPracticeUsesDebugHookAndPushesResultsScreen() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseSendingDebugHook",
+            "-CanadianHamMorseSendingExamSeconds", "5"
+        ])
+        defer { app.terminate() }
+
+        let start = app.buttons["morse-sending-start-exam-button"].firstMatch
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        scrollUntilHittable(start, in: app, maxSwipes: 8)
+        start.tap()
+        let debugFill = app.buttons["morse-sending-debug-fill-button"].firstMatch
+        XCTAssertTrue(debugFill.waitForExistence(timeout: 5), "DEBUG-only deterministic sending hook should be present in UI tests")
+        debugFill.tap()
+        let grade = app.buttons["morse-sending-grade-exam-button"].firstMatch
+        scrollUntilHittable(grade, in: app, maxSwipes: 4)
+        grade.tap()
+
+        let heading = app.descendants(matching: .any)["morse-sending-results-heading"].firstMatch
+        XCTAssertTrue(heading.waitForExistence(timeout: 5), "Sending grading should push a results screen")
+        let summary = app.staticTexts["morse-sending-results-summary"].firstMatch
+        XCTAssertTrue(summary.waitForExistence(timeout: 5))
+        XCTAssertTrue(summary.label.contains("PASS"), "Debug hook sends the expected text and should pass, got: \(summary.label)")
+    }
+
     func testMorseExamGradingPushesResultsScreen() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [
@@ -994,6 +1032,25 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCUIDevice.shared.appearance = .dark
         try auditMockExamFlow(appearance: .dark)
         XCUIDevice.shared.appearance = .light
+    }
+
+    private func auditMorseSendingResults(appearance: AuditAppearance) throws {
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseSendingDebugHook",
+            "-CanadianHamMorseSendingExamSeconds", "5",
+            auditIterationArgument,
+            auditIterationID
+        ])
+        defer { app.terminate() }
+        let start = app.buttons["morse-sending-start-exam-button"].firstMatch
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        scrollUntilHittable(start, in: app, maxSwipes: 8)
+        start.tap()
+        app.buttons["morse-sending-debug-fill-button"].firstMatch.tap()
+        app.buttons["morse-sending-grade-exam-button"].firstMatch.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["morse-sending-results-heading"].firstMatch.waitForExistence(timeout: 5))
+        try performAudit(on: app, context: "Morse sending results \(appearance)")
     }
 
     private func auditMorseExamGradedDiff(appearance: AuditAppearance) throws {

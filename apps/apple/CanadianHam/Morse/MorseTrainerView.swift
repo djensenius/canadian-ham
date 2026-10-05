@@ -73,6 +73,7 @@ struct MorseTrainerView: View {
                             MorseHomePlaceholder(title: "Learn (course)", message: "Koch lessons available now.")
                             MorseHomePlaceholder(title: "Copy practice", message: "Listen to full passages and compare your copy below.")
                             MorseHomePlaceholder(title: "Exam", message: "Try a simulated Canadian 5 wpm receiving exam below.")
+                            MorseHomePlaceholder(title: "Sending practice", message: "Practise tap timing with a straight key or iambic paddles.")
                         }
                     }
                     .paperCard()
@@ -80,6 +81,8 @@ struct MorseTrainerView: View {
                     MorseCourseView(progressStore: progressStore, settings: $settings, onProgressChanged: onProgressChanged)
 
                     MorseCopyExamView(settings: normalizedSettings, playbackCoordinator: playbackCoordinator)
+
+                    MorseSendingPracticeView(settings: normalizedSettings, playbackCoordinator: playbackCoordinator)
 
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                         Text("Quick listen") // l10n: localized

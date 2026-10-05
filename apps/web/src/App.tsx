@@ -55,6 +55,7 @@ import {
 import { WebMorsePlayer } from "./lib/morseAudio";
 import { morseISEDExamPreset, morseTimingFromPreferences, normalizeMorsePreferences, type WebMorseTimingProfileName } from "./lib/morseSettings";
 import { MorseCopyExamSection, type MorsePlaybackCoordinator } from "./morse/copyExam/MorseCopyExamSection";
+import { MorseSendingPracticeSection } from "./morse/sending/MorseSendingPracticeSection";
 import { applyThemePreference, mirrorThemePreference, readStoredThemePreference } from "./lib/theme";
 import {
   applyPracticeAnswer,
@@ -1817,9 +1818,14 @@ function MorseSection({ interfaceLanguage, preferences, onSetPreferences, store,
           <h3 id="morse-exam-title">{t(interfaceLanguage, "morseExamTitle")}</h3>
           <p>{t(interfaceLanguage, "morseExamPlaceholder")}</p>
         </div>
+        <div className="morse-home-card">
+          <h3 id="morse-sending-home-title">{t(interfaceLanguage, "morseSendingTitle")}</h3>
+          <p>{t(interfaceLanguage, "morseSendingPlaceholder")}</p>
+        </div>
       </div>
       <MorseCoursePanel interfaceLanguage={interfaceLanguage} preferences={preferences} store={store} now={now} seedFactory={seedFactory} />
       <MorseCopyExamSection interfaceLanguage={interfaceLanguage} preferences={preferences} examSeedFactory={(profileName) => `web-${profileName}-${seedFactory()}`} playbackCoordinator={playbackCoordinator} />
+      <MorseSendingPracticeSection interfaceLanguage={interfaceLanguage} preferences={preferences} examSeedFactory={(profileName) => `web-sending-${profileName}-${seedFactory()}`} playbackCoordinator={playbackCoordinator} />
       <MorseTrainerPreview interfaceLanguage={interfaceLanguage} preferences={preferences} playbackCoordinator={playbackCoordinator} />
       <MorseSettingsControls interfaceLanguage={interfaceLanguage} onSetPreferences={onSetPreferences} preferences={preferences} />
     </section>

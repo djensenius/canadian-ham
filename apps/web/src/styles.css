@@ -965,6 +965,8 @@ input[type="checkbox"]:checked::after {
 .morse-copy-card,
 .morse-copy-panel,
 .morse-exam-panel,
+.morse-sending-panel,
+.morse-sending-results,
 .morse-diff {
   display: grid;
   gap: var(--ch-space-md);
@@ -1004,12 +1006,85 @@ input[type="checkbox"]:checked::after {
 }
 
 .morse-copy-panel,
-.morse-exam-panel {
+.morse-exam-panel,
+.morse-sending-panel {
   align-content: start;
   padding: var(--ch-space-lg);
   border: 1px solid var(--ch-color-border);
   border-radius: var(--ch-radius-lg);
   background: var(--ch-color-paper-elevated);
+}
+
+.morse-sending-panel:focus-visible {
+  outline: 3px solid var(--ch-color-focus);
+  outline-offset: 0.2rem;
+}
+
+.morse-sending-header,
+.morse-keyer-grid,
+.morse-paddle-row,
+.morse-sending-feedback {
+  display: grid;
+  gap: var(--ch-space-md);
+}
+
+.morse-keyer-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+}
+
+.morse-paddle-row {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.morse-key-button {
+  min-block-size: 4.75rem;
+  inline-size: 100%;
+  border: 2px solid var(--ch-color-border);
+  border-radius: var(--ch-radius-lg);
+  background: var(--ch-color-paper-inset);
+  color: var(--ch-color-ink);
+  font-size: var(--ch-type-title-size);
+  font-weight: 900;
+  touch-action: none;
+}
+
+.morse-key-button.active,
+.morse-key-button:active {
+  transform: translateY(1px);
+  background: var(--ch-color-paper);
+  border-color: var(--ch-color-accent);
+}
+
+.morse-sending-feedback {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  margin: 0;
+}
+
+.morse-sending-feedback div,
+.morse-sending-exam,
+.morse-sending-results {
+  padding: var(--ch-space-md);
+  border: 1px solid var(--ch-color-border);
+  border-radius: var(--ch-radius-md);
+  background: var(--ch-color-paper-inset);
+}
+
+.morse-sending-feedback dt {
+  color: var(--ch-color-ink-muted);
+  font-size: var(--ch-type-caption-size);
+  font-weight: 800;
+}
+
+.morse-sending-feedback dd {
+  margin: 0;
+}
+
+.morse-timer {
+  width: fit-content;
+  padding: var(--ch-space-xs) var(--ch-space-sm);
+  border-radius: var(--ch-radius-pill);
+  background: var(--ch-color-paper-elevated);
+  font-weight: 900;
 }
 
 .settings-panel {

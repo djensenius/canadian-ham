@@ -126,6 +126,31 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(diff.operations.map(\.kind), [.match, .wrong, .match, .inserted])
     }
 
+    func testMorseSendingClassifiesTimingAndErrorSignal() throws {
+        let profile = profileForName(.isedParis)
+        let dot = try classifyMorseKeyDown(durationSeconds: 0.1, profile: profile)
+        let dash = try classifyMorseKeyDown(durationSeconds: 0.31, profile: profile)
+        let feedback = morseCharacterTimingFeedback(samples: [dot, dash])
+        let errorSignal = decodeMorseElements(String(repeating: ".", count: morseErrorSignalDots))
+
+        XCTAssertEqual(dot.element, .dot)
+        XCTAssertEqual(dash.element, .dash)
+        XCTAssertEqual(feedback.decoded.character, "A")
+        XCTAssertEqual(feedback.dotDashRatio ?? 0, 3.1, accuracy: 0.000_001)
+        XCTAssertEqual(errorSignal.kind, .errorSignal)
+        XCTAssertEqual(applyMorseDecodedCharacter(text: "AB", decoded: errorSignal), "A")
+    }
+
+    func testMorseSendingScoreRequiresTimeAndUsesExamErrorRule() throws {
+        let pass = try scoreMorseSending(expected: "ABCDEF", sent: "ABCDEX", completedWithinTime: true)
+        let timedOut = try scoreMorseSending(expected: "ABCDEF", sent: "ABCDEF", completedWithinTime: false)
+
+        XCTAssertTrue(pass.passed)
+        XCTAssertEqual(pass.markPercent, 100)
+        XCTAssertFalse(timedOut.passed)
+        XCTAssertEqual(timedOut.markPercent, 99)
+    }
+
     func testCompletedMorseCourseSessionIgnoresResubmittedAnswer() throws {
         var session = MorseCourseSession(mode: .review, exercises: [.typeCharacter("K")], index: 0, correct: 1, total: 1, characterResults: [(character: "K", correct: true)], done: true)
 

@@ -126,6 +126,60 @@ public struct MorseExamText: Codable, Equatable, Sendable {
     public let profile: MorseTimingProfile
 }
 
+public enum MorseKeyElement: String, Codable, Equatable, Sendable {
+    case dot = "."
+    case dash = "-"
+}
+
+public enum MorseDecodedKind: String, Codable, Equatable, Sendable {
+    case character
+    case errorSignal
+    case unknown
+}
+
+public struct MorseKeyTimingSample: Codable, Equatable, Sendable {
+    public let element: MorseKeyElement
+    public let durationSeconds: Double
+    public let expectedSeconds: Double
+    public let ratioToExpected: Double
+
+    public init(element: MorseKeyElement, durationSeconds: Double, expectedSeconds: Double, ratioToExpected: Double) {
+        self.element = element
+        self.durationSeconds = durationSeconds
+        self.expectedSeconds = expectedSeconds
+        self.ratioToExpected = ratioToExpected
+    }
+}
+
+public struct MorseDecodedCharacter: Codable, Equatable, Sendable {
+    public let kind: MorseDecodedKind
+    public let elements: String
+    public let character: String?
+
+    public init(kind: MorseDecodedKind, elements: String, character: String? = nil) {
+        self.kind = kind
+        self.elements = elements
+        self.character = character
+    }
+}
+
+public struct MorseCharacterTimingFeedback: Codable, Equatable, Sendable {
+    public let elements: String
+    public let decoded: MorseDecodedCharacter
+    public let dotDashRatio: Double?
+    public let timingConsistencyPercent: Int
+    public let averageRatioToExpected: Double
+}
+
+public struct MorseSendingScore: Codable, Equatable, Sendable {
+    public let diff: MorseCopyDiff
+    public let completedWithinTime: Bool
+    public let passed: Bool
+    public let markPercent: Int
+}
+
+public let morseErrorSignalDots = 8
+
 public enum MorseEngineError: Error, Equatable, Sendable, CustomStringConvertible {
     case invalidCharacters([InvalidMorseCharacter])
     case invalidSpeed(String)
@@ -193,6 +247,7 @@ public let morseCodeTable: [String: String] = [
 
 public let allowedRIC1Characters: [String] = Array(morseCodeTable.keys).sorted()
 
+private let reverseMorseCodeTable = Dictionary(uniqueKeysWithValues: morseCodeTable.map { ($0.value, $0.key) })
 private let allowedCharacters = Set(morseCodeTable.keys)
 private let punctuationAndFigures = Set(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", ",", "?", "-", "/"])
 private let examSentenceCorpus = [
@@ -329,6 +384,78 @@ public func textToTimedMorse(_ text: String, profile: MorseTimingProfile = profi
         profile: profile,
         symbols: symbols,
         totalDurationSeconds: cursor
+    )
+}
+
+public func classifyMorseKeyDown(durationSeconds: Double, profile: MorseTimingProfile) throws -> MorseKeyTimingSample {
+    guard durationSeconds.isFinite, durationSeconds > 0 else {
+        throw MorseEngineError.invalidSpeed("durationSeconds must be a positive finite number")
+    }
+    let element: MorseKeyElement = durationSeconds <= 2 * profile.dotSeconds ? .dot : .dash
+    let expectedSeconds = element == .dot ? profile.dotSeconds : profile.dashSeconds
+    return MorseKeyTimingSample(
+        element: element,
+        durationSeconds: durationSeconds,
+        expectedSeconds: expectedSeconds,
+        ratioToExpected: durationSeconds / expectedSeconds
+    )
+}
+
+public func decodeMorseElements(_ elements: [MorseKeyElement]) -> MorseDecodedCharacter {
+    decodeMorseElements(elements.map(\.rawValue).joined())
+}
+
+public func decodeMorseElements(_ elements: String) -> MorseDecodedCharacter {
+    guard elements.range(of: #"^[.-]+$"#, options: .regularExpression) != nil else {
+        return MorseDecodedCharacter(kind: .unknown, elements: elements)
+    }
+    if elements == String(repeating: ".", count: morseErrorSignalDots) {
+        return MorseDecodedCharacter(kind: .errorSignal, elements: elements)
+    }
+    guard let character = reverseMorseCodeTable[elements] else {
+        return MorseDecodedCharacter(kind: .unknown, elements: elements)
+    }
+    return MorseDecodedCharacter(kind: .character, elements: elements, character: character)
+}
+
+public func applyMorseDecodedCharacter(text: String, decoded: MorseDecodedCharacter) -> String {
+    switch decoded.kind {
+    case .errorSignal:
+        return String(text.dropLast())
+    case .character:
+        if let character = decoded.character {
+            return text + character
+        }
+        return text
+    case .unknown:
+        return text
+    }
+}
+
+public func morseCharacterTimingFeedback(samples: [MorseKeyTimingSample]) -> MorseCharacterTimingFeedback {
+    let elements = samples.map(\.element.rawValue).joined()
+    let ratios = samples.map(\.ratioToExpected)
+    let averageRatio = ratios.isEmpty ? 1 : ratios.reduce(0, +) / Double(ratios.count)
+    let meanAbsoluteError = ratios.isEmpty ? 0 : ratios.reduce(0) { $0 + abs($1 - 1) } / Double(ratios.count)
+    let dotDurations = samples.filter { $0.element == .dot }.map(\.durationSeconds)
+    let dashDurations = samples.filter { $0.element == .dash }.map(\.durationSeconds)
+    let dotDashRatio: Double? = dotDurations.isEmpty || dashDurations.isEmpty ? nil : average(dashDurations) / average(dotDurations)
+    return MorseCharacterTimingFeedback(
+        elements: elements,
+        decoded: decodeMorseElements(elements),
+        dotDashRatio: dotDashRatio,
+        timingConsistencyPercent: Int(max(0, min(100, ((1 - meanAbsoluteError) * 100).rounded()))),
+        averageRatioToExpected: averageRatio
+    )
+}
+
+public func scoreMorseSending(expected: String, sent: String, completedWithinTime: Bool = true) throws -> MorseSendingScore {
+    let diff = try diffMorseCopy(expected: expected, received: sent)
+    return MorseSendingScore(
+        diff: diff,
+        completedWithinTime: completedWithinTime,
+        passed: completedWithinTime && diff.score.passed,
+        markPercent: completedWithinTime ? diff.score.markPercent : min(diff.score.markPercent, 99)
     )
 }
 
@@ -506,6 +633,10 @@ private func normalizeMorseScalar(_ scalar: Unicode.Scalar) -> String? {
         return nil
     }
     return String(scalar).uppercased()
+}
+
+private func average(_ values: [Double]) -> Double {
+    values.reduce(0, +) / Double(values.count)
 }
 
 private struct SeededMorseRandom {

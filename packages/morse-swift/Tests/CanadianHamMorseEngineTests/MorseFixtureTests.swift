@@ -29,6 +29,8 @@ final class MorseFixtureTests: XCTestCase {
                 try validateCourseExercisesFixture(data)
             case "morse-course-streak":
                 try validateCourseStreakFixture(data)
+            case "morse-sending":
+                try validateSendingFixture(data)
             default:
                 XCTFail("unsupported fixture kind: \(header.kind)")
             }
@@ -199,6 +201,35 @@ final class MorseFixtureTests: XCTestCase {
         let fixture = try JSONDecoder().decode(CourseStreakFixture.self, from: data)
         for testCase in fixture.cases {
             XCTAssertEqual(morseDailyStreak(activity: testCase.input.activity, todayIso: testCase.input.todayIso), testCase.expectedOutput.streak, testCase.id)
+        }
+    }
+
+    private func validateSendingFixture(_ data: Data) throws {
+        let fixture = try JSONDecoder().decode(SendingFixture.self, from: data)
+        for testCase in fixture.cases {
+            if let expected = testCase.input.expected, let sent = testCase.input.sent, let completedWithinTime = testCase.input.completedWithinTime {
+                let score = try scoreMorseSending(expected: expected, sent: sent, completedWithinTime: completedWithinTime)
+                XCTAssertEqual(score.diff.score.errors, try XCTUnwrap(testCase.expectedOutput.errors), testCase.id)
+                XCTAssertEqual(score.passed, try XCTUnwrap(testCase.expectedOutput.passed), testCase.id)
+                XCTAssertEqual(score.markPercent, try XCTUnwrap(testCase.expectedOutput.markPercent), testCase.id)
+                continue
+            }
+
+            guard let profileInput = testCase.input.profile, let durationsSeconds = testCase.input.durationsSeconds else {
+                XCTFail("missing sending timing input for \(testCase.id)")
+                continue
+            }
+            let selectedProfile = try profile(from: profileInput)
+            let samples = try durationsSeconds.map { try classifyMorseKeyDown(durationSeconds: $0, profile: selectedProfile) }
+            let feedback = morseCharacterTimingFeedback(samples: samples)
+            XCTAssertEqual(feedback.elements, try XCTUnwrap(testCase.expectedOutput.elements), testCase.id)
+            XCTAssertEqual(feedback.decoded, try XCTUnwrap(testCase.expectedOutput.decoded), testCase.id)
+            XCTAssertEqual(feedback.timingConsistencyPercent, try XCTUnwrap(testCase.expectedOutput.timingConsistencyPercent), testCase.id)
+            XCTAssertEqual(feedback.averageRatioToExpected, try XCTUnwrap(testCase.expectedOutput.averageRatioToExpected), accuracy: 1e-12, testCase.id)
+            XCTAssertEqual(feedback.dotDashRatio, testCase.expectedOutput.dotDashRatio, testCase.id)
+            if let appliedText = testCase.expectedOutput.appliedText, let applyToText = testCase.input.applyToText {
+                XCTAssertEqual(applyMorseDecodedCharacter(text: applyToText, decoded: feedback.decoded), appliedText, testCase.id)
+            }
         }
     }
 
@@ -469,6 +500,37 @@ private struct CourseStreakInput: Decodable {
 
 private struct CourseStreakOutput: Decodable {
     let streak: Int
+}
+
+private struct SendingFixture: Decodable {
+    let cases: [SendingCase]
+}
+
+private struct SendingCase: Decodable {
+    let id: String
+    let input: SendingInput
+    let expectedOutput: SendingOutput
+}
+
+private struct SendingInput: Decodable {
+    let profile: TimingProfileInput?
+    let durationsSeconds: [Double]?
+    let applyToText: String?
+    let expected: String?
+    let sent: String?
+    let completedWithinTime: Bool?
+}
+
+private struct SendingOutput: Decodable {
+    let elements: String?
+    let decoded: MorseDecodedCharacter?
+    let appliedText: String?
+    let timingConsistencyPercent: Int?
+    let averageRatioToExpected: Double?
+    let dotDashRatio: Double?
+    let errors: Int?
+    let passed: Bool?
+    let markPercent: Int?
 }
 
 private struct ExpectedCourseExercise: Decodable {

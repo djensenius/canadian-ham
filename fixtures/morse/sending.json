@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "kind": "morse-sending",
+  "cases": [
+    {
+      "id": "dot-classification-and-feedback",
+      "input": {
+        "profile": { "name": "isedParis" },
+        "durationsSeconds": [0.09]
+      },
+      "expectedOutput": {
+        "elements": ".",
+        "decoded": { "kind": "character", "elements": ".", "character": "E" },
+        "timingConsistencyPercent": 90,
+        "averageRatioToExpected": 0.9,
+        "dotDashRatio": null
+      }
+    },
+    {
+      "id": "dash-classification-and-feedback",
+      "input": {
+        "profile": { "name": "isedParis" },
+        "durationsSeconds": [0.32]
+      },
+      "expectedOutput": {
+        "elements": "-",
+        "decoded": { "kind": "character", "elements": "-", "character": "T" },
+        "timingConsistencyPercent": 93,
+        "averageRatioToExpected": 1.0666666666666667,
+        "dotDashRatio": null
+      }
+    },
+    {
+      "id": "eight-dot-error-signal-deletes-previous-character",
+      "input": {
+        "profile": { "name": "isedParis" },
+        "durationsSeconds": [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
+        "applyToText": "AB"
+      },
+      "expectedOutput": {
+        "elements": "........",
+        "decoded": { "kind": "errorSignal", "elements": "........" },
+        "appliedText": "A",
+        "timingConsistencyPercent": 100,
+        "averageRatioToExpected": 1,
+        "dotDashRatio": null
+      }
+    },
+    {
+      "id": "sending-score-reuses-exam-marking",
+      "input": {
+        "expected": "ABC",
+        "sent": "ADC",
+        "completedWithinTime": true
+      },
+      "expectedOutput": {
+        "errors": 1,
+        "passed": true,
+        "markPercent": 100
+      }
+    }
+  ]
+}

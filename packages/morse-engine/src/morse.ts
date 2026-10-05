@@ -84,6 +84,39 @@ export interface MorseExamText {
   readonly profile: MorseTimingProfile;
 }
 
+export type MorseKeyElement = "." | "-";
+export type MorseDecodedKind = "character" | "errorSignal" | "unknown";
+
+export interface MorseKeyTimingSample {
+  readonly element: MorseKeyElement;
+  readonly durationSeconds: number;
+  readonly expectedSeconds: number;
+  readonly ratioToExpected: number;
+}
+
+export interface MorseDecodedCharacter {
+  readonly kind: MorseDecodedKind;
+  readonly elements: string;
+  readonly character?: string;
+}
+
+export interface MorseCharacterTimingFeedback {
+  readonly elements: string;
+  readonly decoded: MorseDecodedCharacter;
+  readonly dotDashRatio: number | null;
+  readonly timingConsistencyPercent: number;
+  readonly averageRatioToExpected: number;
+}
+
+export interface MorseSendingScore {
+  readonly diff: MorseCopyDiff;
+  readonly completedWithinTime: boolean;
+  readonly passed: boolean;
+  readonly markPercent: number;
+}
+
+export const MORSE_ERROR_SIGNAL_DOTS = 8;
+
 export const MORSE_CODE_TABLE = Object.freeze({
   A: ".-",
   B: "-...",
@@ -130,6 +163,7 @@ export const MORSE_CODE_TABLE = Object.freeze({
 
 export const ALLOWED_RIC1_CHARACTERS = Object.freeze(Object.keys(MORSE_CODE_TABLE));
 
+const reverseMorseCodeTable = new Map<string, string>(Object.entries(MORSE_CODE_TABLE).map(([character, elements]) => [elements, character]));
 const allowedCharacters = new Set<string>(ALLOWED_RIC1_CHARACTERS);
 const punctuationAndFigures = new Set<string>(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", ",", "?", "-", "/"]);
 
@@ -277,6 +311,69 @@ export function textToTimedMorse(text: string, profile: MorseTimingProfile = MOR
     profile,
     symbols,
     totalDurationSeconds: cursor,
+  };
+}
+
+export function classifyMorseKeyDown(durationSeconds: number, profile: MorseTimingProfile): MorseKeyTimingSample {
+  if (!Number.isFinite(durationSeconds) || durationSeconds <= 0) {
+    throw new RangeError("durationSeconds must be a positive finite number");
+  }
+  const dotDashBoundarySeconds = 2 * profile.dotSeconds;
+  const element: MorseKeyElement = durationSeconds <= dotDashBoundarySeconds ? "." : "-";
+  const expectedSeconds = element === "." ? profile.dotSeconds : profile.dashSeconds;
+  return { element, durationSeconds, expectedSeconds, ratioToExpected: durationSeconds / expectedSeconds };
+}
+
+export function decodeMorseElements(elements: readonly MorseKeyElement[] | string): MorseDecodedCharacter {
+  const normalizedElements = typeof elements === "string" ? elements : elements.join("");
+  if (!/^[.-]+$/u.test(normalizedElements)) {
+    return { kind: "unknown", elements: normalizedElements };
+  }
+  if (normalizedElements === ".".repeat(MORSE_ERROR_SIGNAL_DOTS)) {
+    return { kind: "errorSignal", elements: normalizedElements };
+  }
+  const character = reverseMorseCodeTable.get(normalizedElements);
+  return character === undefined
+    ? { kind: "unknown", elements: normalizedElements }
+    : { kind: "character", elements: normalizedElements, character };
+}
+
+export function applyMorseDecodedCharacter(text: string, decoded: MorseDecodedCharacter): string {
+  if (decoded.kind === "errorSignal") {
+    return Array.from(text).slice(0, -1).join("");
+  }
+  if (decoded.kind === "character" && decoded.character !== undefined) {
+    return `${text}${decoded.character}`;
+  }
+  return text;
+}
+
+export function morseCharacterTimingFeedback(samples: readonly MorseKeyTimingSample[]): MorseCharacterTimingFeedback {
+  const elements = samples.map((sample) => sample.element).join("");
+  const ratios = samples.map((sample) => sample.ratioToExpected);
+  const averageRatioToExpected = ratios.length === 0 ? 1 : ratios.reduce((total, ratio) => total + ratio, 0) / ratios.length;
+  const meanAbsoluteError = ratios.length === 0 ? 0 : ratios.reduce((total, ratio) => total + Math.abs(ratio - 1), 0) / ratios.length;
+  const dotDurations = samples.filter((sample) => sample.element === ".").map((sample) => sample.durationSeconds);
+  const dashDurations = samples.filter((sample) => sample.element === "-").map((sample) => sample.durationSeconds);
+  const dotDashRatio = dotDurations.length > 0 && dashDurations.length > 0
+    ? average(dashDurations) / average(dotDurations)
+    : null;
+  return {
+    elements,
+    decoded: decodeMorseElements(elements),
+    dotDashRatio,
+    timingConsistencyPercent: Math.max(0, Math.min(100, Math.round((1 - meanAbsoluteError) * 100))),
+    averageRatioToExpected,
+  };
+}
+
+export function scoreMorseSending(expected: string, sent: string, completedWithinTime = true): MorseSendingScore {
+  const diff = diffMorseCopy(expected, sent);
+  return {
+    diff,
+    completedWithinTime,
+    passed: completedWithinTime && diff.score.passed,
+    markPercent: completedWithinTime ? diff.score.markPercent : Math.min(diff.score.markPercent, 99),
   };
 }
 
@@ -442,6 +539,10 @@ function normalizeCharacter(character: string): string | undefined {
     return undefined;
   }
   return character.toUpperCase();
+}
+
+function average(values: readonly number[]): number {
+  return values.reduce((total, value) => total + value, 0) / values.length;
 }
 
 function seededRandom(seed: string): () => number {

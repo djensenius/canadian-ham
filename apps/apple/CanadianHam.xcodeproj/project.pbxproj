@@ -89,6 +89,7 @@
 		AC54AE6D8B9AF2AE8CE61FDE /* CanadianHamTV-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7D22DC6BEB5258264EA424D3 /* CanadianHamTV-InfoPlist.strings */; };
 		AFFA52B1C5ECDFD23A77E6A3 /* MorseCourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AA88F601A0455484A38F9D /* MorseCourseView.swift */; };
 		B00FB34D312F4173BFFCF151 /* CanadianHamEngine in Frameworks */ = {isa = PBXBuildFile; productRef = 2E108B72C914D6F8D1BF0C66 /* CanadianHamEngine */; };
+		B017F9C75D6463B92B530ACE /* MorseSendingPracticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2654658DFD1D2481E7193B /* MorseSendingPracticeView.swift */; };
 		B0482ACB36AF22C5E174F05E /* quizzes in Resources */ = {isa = PBXBuildFile; fileRef = 68B2019B8C107CCE6C8C9198 /* quizzes */; };
 		B0C7B7CAC1D226318F0900AC /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 10FA8D954031CD5F553D46A3 /* Localizable.xcstrings */; };
 		B1D73B5C5972B72A5B59CBED /* CanadianHamContent in Frameworks */ = {isa = PBXBuildFile; productRef = A9EEDAA05AD705E57A6948B6 /* CanadianHamContent */; };
@@ -206,6 +207,7 @@
 		AE3801936961090D211F5292 /* CanadianHamVisionUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CanadianHamVisionUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1D63C824E4C00165C3F4961 /* CanadianHam-InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "CanadianHam-InfoPlist.strings"; path = "fr-CA.lproj/CanadianHam-InfoPlist.strings"; sourceTree = "<group>"; };
 		B72C0FA8ECBD6EAFA6A5D34F /* AppSettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsModel.swift; sourceTree = "<group>"; };
+		BA2654658DFD1D2481E7193B /* MorseSendingPracticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseSendingPracticeView.swift; sourceTree = "<group>"; };
 		BB023709CD1B8683292D109F /* ProgressModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressModels.swift; sourceTree = "<group>"; };
 		C28A9D49438EBAC030569D6E /* CanadianHamVisionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamVisionTests.swift; sourceTree = "<group>"; };
 		C5F42909CFD2242DE9CFD019 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -525,8 +527,17 @@
 				FC95E41AA3E6715FCCBF7956 /* MorseTrainerView.swift */,
 				F553E007F4162F581641F49C /* CopyExam */,
 				A9442C49EF4D6970D5523F03 /* Course */,
+				D9807D170C8B9A7DD7F53F61 /* Sending */,
 			);
 			path = Morse;
+			sourceTree = "<group>";
+		};
+		D9807D170C8B9A7DD7F53F61 /* Sending */ = {
+			isa = PBXGroup;
+			children = (
+				BA2654658DFD1D2481E7193B /* MorseSendingPracticeView.swift */,
+			);
+			path = Sending;
 			sourceTree = "<group>";
 		};
 		EBF0E9962FF2249E5EB6BC6B /* content */ = {
@@ -1083,6 +1094,7 @@
 				59EC5C3A19D8FF6609993C84 /* MorseAudioDriver.swift in Sources */,
 				2B54DF0F27C4978DBAF06D92 /* MorseCopyExamView.swift in Sources */,
 				AFFA52B1C5ECDFD23A77E6A3 /* MorseCourseView.swift in Sources */,
+				B017F9C75D6463B92B530ACE /* MorseSendingPracticeView.swift in Sources */,
 				F29D97E65744F19D2C1D0D8E /* MorseTrainerSettings.swift in Sources */,
 				5DF5007F39C2EFC48596AD6F /* MorseTrainerView.swift in Sources */,
 				28F2DC98A7E9840A41F7C1E4 /* NativeSettingsView.swift in Sources */,
