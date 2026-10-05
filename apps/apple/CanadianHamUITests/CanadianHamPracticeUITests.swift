@@ -1140,14 +1140,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["course-picker"].firstMatch.waitForExistence(timeout: 10), "Settings should expose the course picker")
 
         tap("Advanced", in: app)
-        let confirmation = app.descendants(matching: .any)["course-switch-confirmation"].firstMatch
-        XCTAssertTrue(confirmation.waitForExistence(timeout: 5), "Unfinished mock exam should trigger course-switch confirmation")
-        XCTAssertTrue(app.staticTexts["Switch course?"].firstMatch.exists)
+        let confirmationTitle = app.staticTexts["Switch course?"].firstMatch
+        XCTAssertTrue(confirmationTitle.waitForExistence(timeout: 5), "Unfinished mock exam should trigger course-switch confirmation")
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "unfinished practice or mock exam")).firstMatch.exists)
         try performAudit(on: app, context: "\(appearance.rawValue) course switch confirmation")
 
         app.buttons["Cancel"].firstMatch.tap()
-        waitForElementToDisappear(confirmation, timeout: 5, message: "Cancel should dismiss the course-switch confirmation")
+        waitForElementToDisappear(confirmationTitle, timeout: 5, message: "Cancel should dismiss the course-switch confirmation")
         XCTAssertTrue(app.descendants(matching: .any)["course-picker"].firstMatch.waitForExistence(timeout: 5), "Cancel should return to Settings")
         XCTAssertTrue(app.buttons["Basic"].firstMatch.isSelected || app.buttons["Basic"].firstMatch.exists, "Cancel should leave Basic selected")
 

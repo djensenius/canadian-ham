@@ -1553,13 +1553,13 @@ struct SettingsView: View {
             Text("Switching courses will discard the unfinished practice or mock exam session. Saved progress remains on this device.") // l10n: localized
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
+                .fixedSize(horizontal: false, vertical: true)
             HStack {
                 tokenButton("Cancel") { pendingCourseSwitch = nil }
                 tokenButton("Switch course") { confirmCourseSwitch() }
             }
         }
         .paperCard()
-        .accessibilityIdentifier("course-switch-confirmation")
     }
 
     private func focusCourseSwitchConfirmationAfterLayout() {
