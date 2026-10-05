@@ -51,7 +51,7 @@ struct MorseTrainerView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
                 if isCourseAuditOnly {
-                    MorseCourseView(progressStore: progressStore, settings: $settings, onProgressChanged: onProgressChanged)
+                    MorseCourseView(progressStore: progressStore, settings: $settings, onProgressChanged: onProgressChanged, playbackCoordinator: playbackCoordinator)
                 } else {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                         HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
@@ -77,7 +77,7 @@ struct MorseTrainerView: View {
                     }
                     .paperCard()
 
-                    MorseCourseView(progressStore: progressStore, settings: $settings, onProgressChanged: onProgressChanged)
+                    MorseCourseView(progressStore: progressStore, settings: $settings, onProgressChanged: onProgressChanged, playbackCoordinator: playbackCoordinator)
 
                     MorseCopyExamView(settings: normalizedSettings, playbackCoordinator: playbackCoordinator)
 
