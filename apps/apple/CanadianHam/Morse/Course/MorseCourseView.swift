@@ -85,9 +85,11 @@ struct MorseCourseView: View {
             Text(title) // l10n: localized
                 .font(DesignTokens.FontScale.caption.weight(.semibold))
                 .foregroundStyle(Color.black)
+                .accessibilityHidden(true)
             Text(value) // l10n: localized
                 .font(DesignTokens.FontScale.title.weight(.bold))
                 .foregroundStyle(Color.black)
+                .accessibilityHidden(true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(DesignTokens.Spacing.md)
