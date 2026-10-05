@@ -31,7 +31,10 @@ Why: Copilot's final PR #121 review noted the native macOS Settings window doesn
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Inspect the macOS Settings scene, appearance preference storage, and existing tests.\n2. Apply the stored appearance preference to NativeSettingsView/Settings scene using the same mapping as main windows without changing shared platform behavior.\n3. Add a focused macOS unit check for live appearance preference propagation.\n4. Run targeted macOS testing while iterating, then one full macOS suite per apps/apple/project.yml; record per-test names/results in notes before finalizing.
+1. Inspect the macOS Settings scene, appearance preference storage, and existing tests.
+2. Apply the stored appearance preference to NativeSettingsView/Settings scene using the same mapping as main windows without changing shared platform behavior.
+3. Add a focused macOS unit check for live appearance preference propagation.
+4. Run targeted macOS testing while iterating, then one full macOS suite per apps/apple/project.yml; record per-test names/results in notes before finalizing.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
