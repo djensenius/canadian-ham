@@ -1413,8 +1413,11 @@ struct SettingsView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    Text("Settings")
+                if pendingCourseSwitch != nil {
+                    courseSwitchConfirmationPanel
+                } else {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                        Text("Settings")
                         .font(DesignTokens.FontScale.headline.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
@@ -1500,8 +1503,9 @@ struct SettingsView: View {
                 }
                 .paperCard()
 
-                if let statusMessage { MessagePanel(title: "Settings", message: statusMessage, kind: .success) }
-                if let errorMessage { MessagePanel(title: "Settings error", message: errorMessage, kind: .warning) }
+                    if let statusMessage { MessagePanel(title: "Settings", message: statusMessage, kind: .success) }
+                    if let errorMessage { MessagePanel(title: "Settings error", message: errorMessage, kind: .warning) }
+                }
             }
             .pagePadding()
         }
@@ -1527,14 +1531,6 @@ struct SettingsView: View {
             Button("Reset", role: .destructive) { resetAllData() }
         } message: {
             Text("Deletes local progress, mock exams, and preferences. Bundled content remains installed.")
-        }
-        .sheet(isPresented: Binding(
-            get: { pendingCourseSwitch != nil },
-            set: { isPresented in if !isPresented { pendingCourseSwitch = nil } }
-        )) {
-            courseSwitchConfirmationPanel
-                .padding(DesignTokens.Spacing.xl)
-                .background(DesignTokens.Colors.paper)
         }
         .onChange(of: pendingCourseSwitch) { _, next in
             if next != nil {
