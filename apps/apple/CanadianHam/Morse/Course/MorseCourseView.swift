@@ -84,15 +84,14 @@ struct MorseCourseView: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             Text(title) // l10n: localized
                 .font(DesignTokens.FontScale.caption.weight(.semibold))
-                .foregroundStyle(Color.black)
+                .foregroundStyle(DesignTokens.Colors.ink)
             Text(value) // l10n: localized
                 .font(DesignTokens.FontScale.title.weight(.bold))
-                .foregroundStyle(Color.black)
+                .foregroundStyle(DesignTokens.Colors.ink)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(DesignTokens.Spacing.md)
-        .background(Color.white, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(Color.black.opacity(0.25), lineWidth: 1))
+        .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
     }
 
     private func coursePath(course: MorseCourse, progress: MorseCourseProgressExport) -> some View {
