@@ -500,7 +500,7 @@ function AppContent({
       setLatestResult(previous.latestResult);
       throw error;
     }
-    setAlertMessage(t(interfaceLanguage, "courseChanged", nextBank.title));
+    setAlertMessage(t(interfaceLanguage, "courseChanged", nextBank.course === "advanced" ? t(interfaceLanguage, "courseAdvanced") : t(interfaceLanguage, "courseBasic")));
   }
 
   function setInterfaceLanguage(nextLanguage: InterfaceLanguage): void {
@@ -554,9 +554,14 @@ function AppContent({
     try {
       await store.putExamAttempt(attempt);
       await store.putQuestionProgressMany(nextProgress);
-      setLatestResult(attempt);
       setExamAttempts((current) => [...current.filter((existing) => existing.id !== attempt.id), attempt]);
       setProgress((current) => mergeBankProgress(current, nextProgress, attempt.bankId));
+      // If the course changed while saving, keep the saved records but don't show this
+      // attempt's results or clear the other course's exam.
+      if (latestRequestedPreferencesRef.current.activeBankId !== attempt.bankId) {
+        return;
+      }
+      setLatestResult(attempt);
       setMockExam(null);
       setAlertMessage("");
       navigate("results");

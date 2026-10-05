@@ -4,7 +4,7 @@ import { spawnSync } from "node:child_process";
 import { afterEach, beforeEach, describe, it } from "vitest";
 import { IDBFactory } from "fake-indexeddb";
 
-import { bankId } from "../data/bank";
+import { advancedBank, bankId } from "../data/bank";
 import { ProgressStore, defaultPreferences, validateProgressImport, type ExamAttempt, type LessonProgressRecord, type LessonQuizAttempt, type ProgressExportV1 } from "./progressStore";
 import type { QuestionProgressRecord } from "@canadian-ham/engine-ts";
 import type { MorseCourseProgressExport } from "@canadian-ham/morse-engine";
@@ -204,6 +204,51 @@ describe("ProgressStore", () => {
     assert.deepEqual(await second.getLessonQuizAttempts(), [lessonQuizAttempt]);
     assert.deepEqual(await second.getMorseCourseProgress(), morseCourseProgress);
     assert.deepEqual(await second.getPreferences(), { ...defaultPreferences, practiceMode: "review-later", examTimerEnabled: true, theme: "dark" });
+  });
+
+  it("imports one course while keeping the other course's progress, in both directions", async () => {
+    const advancedRecord: QuestionProgressRecord = { ...record, questionId: "A-001-001-001", bankId: advancedBank.bankId };
+    const advancedAttempt: ExamAttempt = {
+      ...attempt,
+      id: "attempt-advanced-1",
+      bankId: advancedBank.bankId,
+      submittedAt: "2026-01-02T03:10:00.000Z",
+      score: { ...attempt.score, bankId: advancedBank.bankId, honours: false },
+    };
+
+    // Exports from another device: one Advanced-only, one Basic-only with different lesson data.
+    const source = createStore("cross-course-source");
+    const replacementAdvanced: QuestionProgressRecord = { ...advancedRecord, attempts: 3, correctAttempts: 2 };
+    await source.putQuestionProgress(replacementAdvanced);
+    const advancedExport = await source.exportData("2026-01-02T04:00:00.000Z", advancedBank);
+    assert.deepEqual(advancedExport.lessonProgress, []);
+    const replacementLesson: LessonProgressRecord = { ...lessonProgressRecord, readCount: 7 };
+    const basicSource = createStore("cross-course-basic-source");
+    await basicSource.putLessonProgress(replacementLesson);
+    const basicExport = await basicSource.exportData("2026-01-02T04:05:00.000Z");
+
+    const target = createStore("cross-course-target");
+    await target.putQuestionProgress(record);
+    await target.putQuestionProgress(advancedRecord);
+    await target.putExamAttempt(attempt);
+    await target.putExamAttempt(advancedAttempt);
+    await target.putLessonProgress(lessonProgressRecord);
+    await target.putLessonQuizAttempt(lessonQuizAttempt);
+
+    // Advanced import replaces Advanced records and keeps Basic progress, attempts and lessons.
+    await target.importData(advancedExport);
+    const sortById = <T extends { questionId: string }>(items: readonly T[]) => [...items].sort((left, right) => left.questionId.localeCompare(right.questionId));
+    assert.deepEqual(sortById(await target.getQuestionProgress()), sortById([replacementAdvanced, record]));
+    assert.deepEqual(await target.getExamAttempts(), [attempt]);
+    assert.deepEqual(await target.getLessonProgress(), [lessonProgressRecord]);
+    assert.deepEqual(await target.getLessonQuizAttempts(), [lessonQuizAttempt]);
+
+    // Basic import replaces Basic records and lesson data and keeps Advanced progress.
+    await target.importData(basicExport);
+    assert.deepEqual(await target.getQuestionProgress(), [replacementAdvanced]);
+    assert.deepEqual(await target.getExamAttempts(), []);
+    assert.deepEqual(await target.getLessonProgress(), [replacementLesson]);
+    assert.deepEqual(await target.getLessonQuizAttempts(), []);
   });
 
   it("rejects invalid import data with clear errors", () => {
