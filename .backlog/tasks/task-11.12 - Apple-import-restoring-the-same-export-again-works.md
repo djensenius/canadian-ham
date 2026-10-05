@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-05 13:33'
-updated_date: '2026-10-05 17:56'
+updated_date: '2026-10-05 18:49'
 labels: []
 dependencies:
   - TASK-11.5
@@ -39,4 +39,6 @@ Why: ProgressModels marks questionId and attempt id as @Attribute(.unique). Sinc
 
 <!-- SECTION:NOTES:BEGIN -->
 Started implementation. Added scope from PR #141 Copilot final summary: Advanced imports must reject attempts marked honours=true on Apple and web because Advanced has no Honours result.
+
+Implemented Apple same-export-twice regression and Advanced honours import rejection on Apple/web. Web pnpm test, typecheck, build, dist URL/CSP audit, and Apple text-source check passed; iOS targeted ProgressStoreTests are queued behind the xbuild lock in /tmp/t1112-ios-progressstore.log.
 <!-- SECTION:NOTES:END -->
