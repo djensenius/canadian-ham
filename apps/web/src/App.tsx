@@ -671,13 +671,17 @@ function AppContent({
             interfaceLanguage={interfaceLanguage}
             now={now}
             onProgressImported={(data) => {
+              const importBank = bankDataForId(data.bankId);
+              const importedPreferences = { ...data.preferences, activeBankId: importBank.bankId };
               setProgress((current) => mergeBankProgress(current, data.questionProgress, data.bankId));
               setExamAttempts((current) => mergeBankExamAttempts(current, data.examAttempts, data.bankId));
-              setLessonProgress(data.lessonProgress ?? []);
-              setLessonQuizAttempts(data.lessonQuizAttempts ?? []);
-              savedPreferencesRef.current = data.preferences;
-              latestRequestedPreferencesRef.current = data.preferences;
-              setPreferencesState(data.preferences);
+              if (importBank.hasLessons) {
+                setLessonProgress(data.lessonProgress ?? []);
+                setLessonQuizAttempts(data.lessonQuizAttempts ?? []);
+              }
+              savedPreferencesRef.current = importedPreferences;
+              latestRequestedPreferencesRef.current = importedPreferences;
+              setPreferencesState(importedPreferences);
               setPracticeSession(null);
               setMockExam(null);
               setLatestResult(null);

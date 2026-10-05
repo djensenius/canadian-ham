@@ -1,110 +1,24 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    ", %@" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ", %@"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ", %@"
-          }
-        }
-      }
-    },
-    ", current" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ", en cours"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ", en cours"
-          }
-        }
-      }
-    },
-    ", flagged" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ", marquée"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ", marquée"
-          }
-        }
-      }
-    },
-    ". Source: " : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ". Source : "
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ". Source : "
-          }
-        }
-      }
-    },
-    "%@ · %@" : {
+    "%@ Unanswered positions: %@%@." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ · %2$@"
+            "state" : "translated",
+            "value" : "%1$@ Unanswered positions: %2$@%3$@."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ · %@"
+            "value" : "%1$@ Positions sans réponse : %2$@%3$@."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ · %@"
-          }
-        }
-      }
-    },
-    "%@ · %lld min · %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ · %2$lld min · %3$@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ · %lld min · %@"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ · %lld min · %@"
+            "value" : "%1$@ Positions sans réponse : %2$@%3$@."
           }
         }
       }
@@ -175,28 +89,6 @@
         }
       }
     },
-    "%@ Unanswered positions: %@%@." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ Unanswered positions: %2$@%3$@."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ Positions sans réponse : %2$@%3$@."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ Positions sans réponse : %2$@%3$@."
-          }
-        }
-      }
-    },
     "%@ wpm" : {
       "localizations" : {
         "en" : {
@@ -219,46 +111,46 @@
         }
       }
     },
-    "%@: " : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@: "
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ : "
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ : "
-          }
-        }
-      }
-    },
-    "%@: %lld / %lld (%@%%)" : {
+    "%@ · %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "%1$@: %2$lld / %3$lld (%4$@%%)"
+            "value" : "%1$@ · %2$@"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ : %lld / %lld (%@ %%)"
+            "value" : "%@ · %@"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ : %lld / %lld (%@ %%)"
+            "value" : "%@ · %@"
+          }
+        }
+      }
+    },
+    "%@ · %lld min · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$lld min · %3$@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · %lld min · %@"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · %lld min · %@"
           }
         }
       }
@@ -777,6 +669,22 @@
         }
       }
     },
+    "%@.lessonId duplicates another Morse lesson record." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.lessonId duplique un autre enregistrement de leçon Morse."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.lessonId duplique un autre enregistrement de leçon Morse."
+          }
+        }
+      }
+    },
     "%@.lessonId duplicates another lesson progress record." : {
       "localizations" : {
         "en" : {
@@ -799,18 +707,18 @@
         }
       }
     },
-    "%@.lessonId duplicates another Morse lesson record." : {
+    "%@.lessonId must be a Morse lesson ID." : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@.lessonId duplique un autre enregistrement de leçon Morse."
+            "value" : "%@.lessonId doit être un identifiant de leçon Morse."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@.lessonId duplique un autre enregistrement de leçon Morse."
+            "value" : "%@.lessonId doit être un identifiant de leçon Morse."
           }
         }
       }
@@ -833,22 +741,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@.lessonId doit être un identifiant de leçon connu."
-          }
-        }
-      }
-    },
-    "%@.lessonId must be a Morse lesson ID." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@.lessonId doit être un identifiant de leçon Morse."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@.lessonId doit être un identifiant de leçon Morse."
           }
         }
       }
@@ -1453,6 +1345,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@.weakSubsectionIds contient l’identifiant de sous-section inconnu %2$@."
+          }
+        }
+      }
+    },
+    "%@: " : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: "
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ : "
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ : "
+          }
+        }
+      }
+    },
+    "%@: %lld / %lld (%@%%)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$lld / %3$lld (%4$@%%)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ : %lld / %lld (%@ %%)"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ : %lld / %lld (%@ %%)"
           }
         }
       }
@@ -2225,18 +2161,66 @@
         }
       }
     },
-    "•" : {
+    ", %@" : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "•"
+            "value" : ", %@"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "•"
+            "value" : ", %@"
+          }
+        }
+      }
+    },
+    ", current" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ", en cours"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ", en cours"
+          }
+        }
+      }
+    },
+    ", flagged" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ", marquée"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ", marquée"
+          }
+        }
+      }
+    },
+    ". Source: " : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ". Source : "
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ". Source : "
           }
         }
       }
@@ -2289,6 +2273,22 @@
         }
       }
     },
+    "Accuracy: %lld%%. Errors: %lld total, %lld wrong, %lld missing, %lld inserted." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exactitude : %lld %%. Erreurs : %lld au total, %lld incorrectes, %lld manquantes, %lld insérées."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exactitude : %lld %%. Erreurs : %lld au total, %lld incorrectes, %lld manquantes, %lld insérées."
+          }
+        }
+      }
+    },
     "Active bank: %@, effective %@." : {
       "localizations" : {
         "en" : {
@@ -2307,6 +2307,70 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Banque active : %@, en vigueur le %@."
+          }
+        }
+      }
+    },
+    "Advanced" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compétence supérieure"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compétence supérieure"
+          }
+        }
+      }
+    },
+    "Advanced lessons" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçons de compétence supérieure"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçons de compétence supérieure"
+          }
+        }
+      }
+    },
+    "Advanced lessons are coming" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les leçons de compétence supérieure sont à venir"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les leçons de compétence supérieure sont à venir"
+          }
+        }
+      }
+    },
+    "Advanced lessons are not bundled yet. Use practice by topic and 50-question mock exams while the curriculum is authored." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les leçons de compétence supérieure ne sont pas encore incluses. Utilisez les exercices par sujet et les examens simulés de 50 questions pendant la rédaction du programme."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les leçons de compétence supérieure ne sont pas encore incluses. Utilisez les exercices par sujet et les examens simulés de 50 questions pendant la rédaction du programme."
           }
         }
       }
@@ -2415,22 +2479,6 @@
         }
       }
     },
-    "answered" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "avec réponse"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "avec réponse"
-          }
-        }
-      }
-    },
     "Answered %lld of %lld" : {
       "localizations" : {
         "en" : {
@@ -2487,6 +2535,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Apparence"
+          }
+        }
+      }
+    },
+    "At least two recent mock exams meet the 70% Advanced pass threshold. There is no Advanced Honours result." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Au moins deux examens simulés récents atteignent le seuil de réussite de 70 % de la compétence supérieure. Il n’y a pas de résultat avec distinction pour la compétence supérieure."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Au moins deux examens simulés récents atteignent le seuil de réussite de 70 % de la compétence supérieure. Il n’y a pas de résultat avec distinction pour la compétence supérieure."
           }
         }
       }
@@ -2555,6 +2619,22 @@
         }
       }
     },
+    "Basic" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compétence de base"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compétence de base"
+          }
+        }
+      }
+    },
     "Basic with Honours" : {
       "localizations" : {
         "fr" : {
@@ -2583,28 +2663,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Canadian Ham"
-          }
-        }
-      }
-    },
-    "canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner."
           }
         }
       }
@@ -2969,6 +3027,22 @@
         }
       }
     },
+    "Copy results" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultats de copie"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultats de copie"
+          }
+        }
+      }
+    },
     "Correct" : {
       "localizations" : {
         "fr" : {
@@ -3067,6 +3141,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bonne réponse. Votre réponse : "
+          }
+        }
+      }
+    },
+    "Course" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cours"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cours"
           }
         }
       }
@@ -3585,6 +3675,22 @@
         }
       }
     },
+    "Exam results" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultats de l’examen"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultats de l’examen"
+          }
+        }
+      }
+    },
     "Exam rule: fail at %lld%% because more than 5 errors is below the 100%% pass mark." : {
       "localizations" : {
         "fr" : {
@@ -3865,6 +3971,22 @@
         }
       }
     },
+    "Generate 50 Advanced questions: one from each topic area, mixed into a repeatable order. The optional timer is off by default." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Générer 50 questions de compétence supérieure : une par sujet, mélangées dans un ordre reproductible. Le chronomètre facultatif est désactivé par défaut."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Générer 50 questions de compétence supérieure : une par sujet, mélangées dans un ordre reproductible. Le chronomètre facultatif est désactivé par défaut."
+          }
+        }
+      }
+    },
     "Generated exam: %lld weighted characters, %@ seconds of audio." : {
       "localizations" : {
         "en" : {
@@ -3903,22 +4025,6 @@
         }
       }
     },
-    "Great work. The next lesson is unlocked." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bravo. La leçon suivante est débloquée."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bravo. La leçon suivante est débloquée."
-          }
-        }
-      }
-    },
     "Great work. All Morse lessons are complete." : {
       "localizations" : {
         "en" : {
@@ -3937,6 +4043,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bravo. Toutes les leçons Morse sont terminées."
+          }
+        }
+      }
+    },
+    "Great work. The next lesson is unlocked." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bravo. La leçon suivante est débloquée."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bravo. La leçon suivante est débloquée."
           }
         }
       }
@@ -3991,6 +4113,110 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Prêt pour la distinction"
+          }
+        }
+      }
+    },
+    "ISED 5 wpm (PARIS-calibrated)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISED 5 wpm (PARIS-calibrated)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISDE 5 mots/min (étalonné sur PARIS)"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISDE 5 mots/min (étalonné sur PARIS)"
+          }
+        }
+      }
+    },
+    "ISED Amateur Radio Operator Certificate Advanced Qualification question bank, effective %@." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Banque de questions d’ISDE pour le certificat d’opérateur radioamateur — compétence supérieure, en vigueur le %1$@."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Banque de questions d’ISDE pour le certificat d’opérateur radioamateur — compétence supérieure, en vigueur le %1$@."
+          }
+        }
+      }
+    },
+    "ISED Amateur Radio Operator Certificate Basic Qualification question bank, effective %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISED Amateur Radio Operator Certificate Basic Qualification question bank, effective %1$@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Banque de questions d’ISDE pour le certificat d’opérateur radioamateur avec compétence de base, en vigueur le %1$@."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Banque de questions d’ISDE pour le certificat d’opérateur radioamateur avec compétence de base, en vigueur le %1$@."
+          }
+        }
+      }
+    },
+    "ISED exam preset" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISED exam preset"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Préréglage d’examen ISDE"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Préréglage d’examen ISDE"
+          }
+        }
+      }
+    },
+    "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base, avec les formules et les schémas fonctionnels, pendant l’examen; les PDF de référence sont des sources et ne sont pas inclus dans les applications."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base, avec les formules et les schémas fonctionnels, pendant l’examen; les PDF de référence sont des sources et ne sont pas inclus dans les applications."
           }
         }
       }
@@ -4435,94 +4661,6 @@
         }
       }
     },
-    "ISED 5 wpm (PARIS-calibrated)" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISED 5 wpm (PARIS-calibrated)"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISDE 5 mots/min (étalonné sur PARIS)"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISDE 5 mots/min (étalonné sur PARIS)"
-          }
-        }
-      }
-    },
-    "ISED Amateur Radio Operator Certificate Basic Qualification question bank, effective %@." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISED Amateur Radio Operator Certificate Basic Qualification question bank, effective %1$@."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Banque de questions d’ISDE pour le certificat d’opérateur radioamateur avec compétence de base, en vigueur le %1$@."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Banque de questions d’ISDE pour le certificat d’opérateur radioamateur avec compétence de base, en vigueur le %1$@."
-          }
-        }
-      }
-    },
-    "ISED exam preset" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISED exam preset"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Préréglage d’examen ISDE"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Préréglage d’examen ISDE"
-          }
-        }
-      }
-    },
-    "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISED provides the Basic exam reference sheet with formulas and block diagrams at the exam; the reference PDFs are source artifacts and are not shipped in the apps."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base, avec les formules et les schémas fonctionnels, pendant l’examen; les PDF de référence sont des sources et ne sont pas inclus dans les applications."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISDE fournit la feuille de référence de l’examen de compétence de base, avec les formules et les schémas fonctionnels, pendant l’examen; les PDF de référence sont des sources et ne sont pas inclus dans les applications."
-          }
-        }
-      }
-    },
     "Koch course" : {
       "localizations" : {
         "fr" : {
@@ -4663,6 +4801,28 @@
         }
       }
     },
+    "Lesson %lld\n%@\n%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lesson %1$lld\n%2$@\n%3$@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçon %1$lld\n%2$@\n%3$@"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçon %1$lld\n%2$@\n%3$@"
+          }
+        }
+      }
+    },
     "Lesson %lld session" : {
       "localizations" : {
         "fr" : {
@@ -4691,28 +4851,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Leçon %lld, %@, %@"
-          }
-        }
-      }
-    },
-    "Lesson %lld\n%@\n%@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lesson %1$lld\n%2$@\n%3$@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leçon %1$lld\n%2$@\n%3$@"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leçon %1$lld\n%2$@\n%3$@"
           }
         }
       }
@@ -5735,6 +5873,38 @@
         }
       }
     },
+    "No Canadian Ham explanation is bundled for this question yet." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune explication Canadian Ham n’est encore fournie pour cette question."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune explication Canadian Ham n’est encore fournie pour cette question."
+          }
+        }
+      }
+    },
+    "No ISED reference sheet is provided for the Advanced exam. Do not use the Basic reference sheet as Advanced exam-allowed material." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISDE ne fournit pas de feuille de référence pour l’examen de compétence supérieure. N’utilisez pas la feuille de référence de la compétence de base comme matériel autorisé à l’examen de compétence supérieure."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISDE ne fournit pas de feuille de référence pour l’examen de compétence supérieure. N’utilisez pas la feuille de référence de la compétence de base comme matériel autorisé à l’examen de compétence supérieure."
+          }
+        }
+      }
+    },
     "No accounts, networking, analytics, telemetry, third-party SDKs, or iCloud sync. Import and export use local files you choose." : {
       "localizations" : {
         "fr" : {
@@ -5767,22 +5937,6 @@
         }
       }
     },
-    "No Canadian Ham explanation is bundled for this question yet." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune explication Canadian Ham n’est encore fournie pour cette question."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune explication Canadian Ham n’est encore fournie pour cette question."
-          }
-        }
-      }
-    },
     "No categories" : {
       "localizations" : {
         "fr" : {
@@ -5795,6 +5949,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aucune catégorie"
+          }
+        }
+      }
+    },
+    "No copy entered." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune copie saisie."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune copie saisie."
           }
         }
       }
@@ -6013,6 +6183,38 @@
         }
       }
     },
+    "Offline, private, Advanced bank" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hors ligne, privé, banque supérieure"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hors ligne, privé, banque supérieure"
+          }
+        }
+      }
+    },
+    "Open Morse settings" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir les réglages Morse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir les réglages Morse"
+          }
+        }
+      }
+    },
     "Open a Canadian Ham window to load settings." : {
       "localizations" : {
         "en" : {
@@ -6067,22 +6269,6 @@
         }
       }
     },
-    "Open Morse settings" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ouvrir les réglages Morse"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ouvrir les réglages Morse"
-          }
-        }
-      }
-    },
     "Outline available" : {
       "localizations" : {
         "fr" : {
@@ -6095,6 +6281,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Plan disponible"
+          }
+        }
+      }
+    },
+    "PASS, 100%%, with %lld errors." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RÉUSSITE, 100 %%, avec %lld erreurs."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RÉUSSITE, 100 %%, avec %lld erreurs."
           }
         }
       }
@@ -6127,22 +6329,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Prêt pour la réussite"
-          }
-        }
-      }
-    },
-    "PASS, 100%%, with %lld errors." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "RÉUSSITE, 100 %%, avec %lld erreurs."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "RÉUSSITE, 100 %%, avec %lld erreurs."
           }
         }
       }
@@ -6201,22 +6387,6 @@
         }
       }
     },
-    "Play character" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jouer le caractère"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jouer le caractère"
-          }
-        }
-      }
-    },
     "Play Morse practice audio" : {
       "localizations" : {
         "en" : {
@@ -6235,6 +6405,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lire l’audio d’exercice Morse"
+          }
+        }
+      }
+    },
+    "Play character" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jouer le caractère"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jouer le caractère"
           }
         }
       }
@@ -6617,6 +6803,22 @@
         }
       }
     },
+    "Progress was not saved. Try again before relying on this result." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La progression n’a pas été enregistrée. Réessayez avant de vous fier à ce résultat."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La progression n’a pas été enregistrée. Réessayez avant de vous fier à ce résultat."
+          }
+        }
+      }
+    },
     "Question %lld of %lld" : {
       "localizations" : {
         "en" : {
@@ -6851,18 +7053,24 @@
         }
       }
     },
-    "Reach 90% accuracy to unlock the next lesson." : {
+    "RIC-1 literal spacing" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RIC-1 literal spacing"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Atteignez 90 % d’exactitude pour débloquer la leçon suivante."
+            "value" : "Espacement littéral RIC-1"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Atteignez 90 % d’exactitude pour débloquer la leçon suivante."
+            "value" : "Espacement littéral RIC-1"
           }
         }
       }
@@ -6885,6 +7093,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Atteignez 90 % d’exactitude pour terminer cette leçon."
+          }
+        }
+      }
+    },
+    "Reach 90% accuracy to unlock the next lesson." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atteignez 90 % d’exactitude pour débloquer la leçon suivante."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atteignez 90 % d’exactitude pour débloquer la leçon suivante."
           }
         }
       }
@@ -6933,6 +7157,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Prêt pour la compétence de base avec distinction?"
+          }
+        }
+      }
+    },
+    "Ready for the Advanced qualification?" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prêt pour la compétence supérieure?"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prêt pour la compétence supérieure?"
           }
         }
       }
@@ -7103,6 +7343,28 @@
         }
       }
     },
+    "Review complete. Practice progress was saved." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review complete. Practice progress was saved."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Révision terminée. La progression de pratique a été enregistrée."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Révision terminée. La progression de pratique a été enregistrée."
+          }
+        }
+      }
+    },
     "Review due questions" : {
       "localizations" : {
         "fr" : {
@@ -7167,28 +7429,6 @@
         }
       }
     },
-    "RIC-1 literal spacing" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "RIC-1 literal spacing"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Espacement littéral RIC-1"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Espacement littéral RIC-1"
-          }
-        }
-      }
-    },
     "Saved result: %lld / %lld (%@%%)." : {
       "localizations" : {
         "en" : {
@@ -7229,6 +7469,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Résultat : %lld / %lld (%@ %%). Le seuil de réussite est de 70 %%; la distinction est à 80 %%."
+          }
+        }
+      }
+    },
+    "Score: %lld / %lld (%@%%). Pass is 70%%; there is no Advanced Honours." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultat : %1$lld / %2$lld (%3$@ %%). La réussite est à 70 %%; il n’y a pas de résultat avec distinction pour la compétence supérieure."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultat : %1$lld / %2$lld (%3$@ %%). La réussite est à 70 %%; il n’y a pas de résultat avec distinction pour la compétence supérieure."
           }
         }
       }
@@ -7487,6 +7743,22 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "Start another exam" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commencer un autre examen"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commencer un autre examen"
           }
         }
       }
@@ -7883,6 +8155,22 @@
         }
       }
     },
+    "Study with the bundled ISED Advanced 2025-02-04 question bank on iPhone, iPad, and Mac. Progress stays on this device unless you export it and is separate from Basic." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Étudiez la banque de questions ISDE EN/FR de compétence supérieure 2025-02-04 incluse sur iPhone, iPad et Mac. La progression reste sur cet appareil sauf si vous l’exportez et est séparée de celle de la compétence de base."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Étudiez la banque de questions ISDE EN/FR de compétence supérieure 2025-02-04 incluse sur iPhone, iPad et Mac. La progression reste sur cet appareil sauf si vous l’exportez et est séparée de celle de la compétence de base."
+          }
+        }
+      }
+    },
     "Study with the bundled ISED Basic 2025-07-15 question bank on iPhone, iPad, and Mac. Progress stays on this device unless you export it." : {
       "localizations" : {
         "fr" : {
@@ -8049,6 +8337,22 @@
         }
       }
     },
+    "The receiving exam plays once without pause or replay, then gives a 2-minute review before grading. Results open on a separate screen after grading." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’examen de réception joue une seule fois, sans pause ni reprise, puis accorde une révision de 2 minutes avant la correction. Les résultats s’ouvrent sur un écran distinct après la correction."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’examen de réception joue une seule fois, sans pause ni reprise, puis accorde une révision de 2 minutes avant la correction. Les résultats s’ouvrent sur un écran distinct après la correction."
+          }
+        }
+      }
+    },
     "Theme" : {
       "localizations" : {
         "fr" : {
@@ -8061,6 +8365,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Thème"
+          }
+        }
+      }
+    },
+    "There is no ISED-approved Advanced exam reference sheet; the Basic reference sheet must not be presented as exam-allowed for Advanced." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il n’existe pas de feuille de référence approuvée par ISDE pour l’examen de compétence supérieure; la feuille de référence de la compétence de base ne doit pas être présentée comme matériel autorisé pour la compétence supérieure."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il n’existe pas de feuille de référence approuvée par ISDE pour l’examen de compétence supérieure; la feuille de référence de la compétence de base ne doit pas être présentée comme matériel autorisé pour la compétence supérieure."
           }
         }
       }
@@ -8083,28 +8403,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ces réglages locaux contrôlent la tonalité, le minutage et le volume de lecture Morse sans accès réseau."
-          }
-        }
-      }
-    },
-    "This Apple app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This Apple app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette application Apple fonctionne entièrement hors ligne avec du contenu intégré; elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers, et conserve la progression seulement sur cet appareil, sauf si vous l’exportez."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette application Apple fonctionne entièrement hors ligne avec du contenu intégré; elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers, et conserve la progression seulement sur cet appareil, sauf si vous l’exportez."
           }
         }
       }
@@ -8149,6 +8447,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cette application Apple Vision Pro fonctionne entièrement hors ligne avec du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers. Les séances d’exercice sont conservées seulement pendant que l’application est ouverte; rien n’est enregistré ni envoyé."
+          }
+        }
+      }
+    },
+    "This Apple app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Apple app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette application Apple fonctionne entièrement hors ligne avec du contenu intégré; elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers, et conserve la progression seulement sur cet appareil, sauf si vous l’exportez."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette application Apple fonctionne entièrement hors ligne avec du contenu intégré; elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucun code réseau, aucune synchronisation iCloud, aucune notification poussée, aucune configuration distante ni aucun SDK tiers, et conserve la progression seulement sur cet appareil, sauf si vous l’exportez."
           }
         }
       }
@@ -8515,6 +8835,22 @@
         }
       }
     },
+    "Try another passage" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essayer un autre passage"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essayer un autre passage"
+          }
+        }
+      }
+    },
     "Unable to complete this operation: " : {
       "localizations" : {
         "fr" : {
@@ -8707,22 +9043,6 @@
         }
       }
     },
-    "unanswered" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "sans réponse"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "sans réponse"
-          }
-        }
-      }
-    },
     "Unit %lld" : {
       "localizations" : {
         "fr" : {
@@ -8889,152 +9209,72 @@
         }
       }
     },
-    "Review complete. Practice progress was saved." : {
+    "answered" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "avec réponse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "avec réponse"
+          }
+        }
+      }
+    },
+    "canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Review complete. Practice progress was saved."
+            "value" : "canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Révision terminée. La progression de pratique a été enregistrée."
+            "value" : "canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Révision terminée. La progression de pratique a été enregistrée."
+            "value" : "canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner."
           }
         }
       }
     },
-    "Progress was not saved. Try again before relying on this result." : {
+    "unanswered" : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La progression n’a pas été enregistrée. Réessayez avant de vous fier à ce résultat."
+            "value" : "sans réponse"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La progression n’a pas été enregistrée. Réessayez avant de vous fier à ce résultat."
+            "value" : "sans réponse"
           }
         }
       }
     },
-    "Accuracy: %lld%%. Errors: %lld total, %lld wrong, %lld missing, %lld inserted." : {
+    "•" : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exactitude : %lld %%. Erreurs : %lld au total, %lld incorrectes, %lld manquantes, %lld insérées."
+            "value" : "•"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exactitude : %lld %%. Erreurs : %lld au total, %lld incorrectes, %lld manquantes, %lld insérées."
-          }
-        }
-      }
-    },
-    "Copy results" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Résultats de copie"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Résultats de copie"
-          }
-        }
-      }
-    },
-    "Exam results" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Résultats de l’examen"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Résultats de l’examen"
-          }
-        }
-      }
-    },
-    "No copy entered." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune copie saisie."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune copie saisie."
-          }
-        }
-      }
-    },
-    "Start another exam" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Commencer un autre examen"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Commencer un autre examen"
-          }
-        }
-      }
-    },
-    "The receiving exam plays once without pause or replay, then gives a 2-minute review before grading. Results open on a separate screen after grading." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’examen de réception joue une seule fois, sans pause ni reprise, puis accorde une révision de 2 minutes avant la correction. Les résultats s’ouvrent sur un écran distinct après la correction."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’examen de réception joue une seule fois, sans pause ni reprise, puis accorde une révision de 2 minutes avant la correction. Les résultats s’ouvrent sur un écran distinct après la correction."
-          }
-        }
-      }
-    },
-    "Try another passage" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Essayer un autre passage"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Essayer un autre passage"
+            "value" : "•"
           }
         }
       }

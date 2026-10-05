@@ -644,9 +644,8 @@ final class ProgressStoreService: ObservableObject {
 
         let previousSnapshot = try snapshotForRollback()
         do {
-            try context.delete(model: QuestionProgressEntity.self)
-            try context.delete(model: ExamAttemptEntity.self)
-            try context.delete(model: PreferencesEntity.self)
+            try deleteQuestionProgress(bankId: bank.manifest.bankId)
+            try deleteExamAttempts(bankId: bank.manifest.bankId)
 #if DEBUG
             if failNextImportAfterDeleteForTesting {
                 failNextImportAfterDeleteForTesting = false
@@ -659,7 +658,7 @@ final class ProgressStoreService: ObservableObject {
             for attempt in data.examAttempts {
                 try saveExamAttemptWithoutSave(attempt)
             }
-            var nextPreferences = ApplePreferences.default
+            var nextPreferences = preferences
             if let mode = ApplePreferences.PracticeMode(rawValue: data.preferences.practiceMode) {
                 nextPreferences.practiceMode = mode
             }
@@ -668,20 +667,18 @@ final class ProgressStoreService: ObservableObject {
                 nextPreferences.theme = theme
             }
             nextPreferences.activeBankId = bank.courseBankID
-            let entity = PreferencesEntity(
-                practiceMode: nextPreferences.practiceMode.rawValue,
-                examTimerEnabled: nextPreferences.examTimerEnabled,
-                language: nextPreferences.language.rawValue,
-                theme: nextPreferences.theme.rawValue
-            )
-            entity.archivedLessonProgressData = try encoder.encode(data.lessonProgress)
-            entity.archivedLessonQuizAttemptsData = try encoder.encode(data.lessonQuizAttempts)
-            context.insert(entity)
+            let entity = try preferencesEntity(createIfMissing: true, saveIfCreated: false)
+            entity.practiceMode = nextPreferences.practiceMode.rawValue
+            entity.examTimerEnabled = nextPreferences.examTimerEnabled
+            entity.language = nextPreferences.language.rawValue
+            entity.theme = nextPreferences.theme.rawValue
+            if bank.courseBankID.hasLessons {
+                entity.archivedLessonProgressData = try encoder.encode(data.lessonProgress)
+                entity.archivedLessonQuizAttemptsData = try encoder.encode(data.lessonQuizAttempts)
+            }
             if let morseCourseProgress = data.morseCourseProgress {
                 try FileManager.default.createDirectory(at: morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
                 try encoder.encode(morseCourseProgress).write(to: morseCourseProgressURL, options: [.atomic])
-            } else {
-                try removeMorseCourseProgressIfPresent()
             }
 #if DEBUG
             if failNextImportAfterMorseWriteForTesting {
@@ -795,6 +792,22 @@ final class ProgressStoreService: ObservableObject {
         var descriptor = FetchDescriptor<QuestionProgressEntity>(predicate: #Predicate { $0.questionId == questionId })
         descriptor.fetchLimit = 1
         return try context.fetch(descriptor).first
+    }
+
+    private func deleteQuestionProgress(bankId: String) throws {
+        let targetBankId = bankId
+        let descriptor = FetchDescriptor<QuestionProgressEntity>(predicate: #Predicate { $0.bankId == targetBankId })
+        for entity in try context.fetch(descriptor) {
+            context.delete(entity)
+        }
+    }
+
+    private func deleteExamAttempts(bankId: String) throws {
+        let targetBankId = bankId
+        let descriptor = FetchDescriptor<ExamAttemptEntity>(predicate: #Predicate { $0.bankId == targetBankId })
+        for entity in try context.fetch(descriptor) {
+            context.delete(entity)
+        }
     }
 
     private func examAttemptEntity(id: String) throws -> ExamAttemptEntity? {

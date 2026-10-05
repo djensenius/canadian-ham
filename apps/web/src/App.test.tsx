@@ -945,6 +945,29 @@ describe("App accessibility and flows", () => {
     await screen.findByRole("heading", { name: "Ready for the Advanced qualification?" });
   });
 
+  it("renders the French interface with Advanced selected and tags Advanced category names as English", async () => {
+    window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
+    window.location.hash = "#/home";
+    const store = createStore("advanced-french-ui");
+    await store.putPreferences({ ...defaultPreferences, activeBankId: ADVANCED_BANK_ID });
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "advanced-fr-seed"} />);
+
+    await screen.findByRole("heading", { name: "Prêt pour la compétence supérieure?" });
+    const courseGroup = screen.getByRole("group", { name: "Sélection du cours" });
+    assert.equal((within(courseGroup).getByRole("radio", { name: "Compétence supérieure" }) as HTMLInputElement).value, ADVANCED_BANK_ID);
+
+    const advancedCategoryName = advancedBank.categories[0]?.name.en;
+    assert.ok(advancedCategoryName);
+    const categoryFallback = await screen.findByText(advancedCategoryName);
+    assert.equal(categoryFallback.getAttribute("lang"), "en");
+
+    const primaryNav = screen.getByRole("navigation", { name: "Principale" });
+    await user.click(within(primaryNav).getByRole("button", { name: "Examen simulé" }));
+    await screen.findByRole("heading", { name: "Examen simulé" });
+    assert.ok(screen.getByText("ISDE ne fournit pas de feuille de référence pour l’examen de compétence supérieure. N’utilisez pas la feuille de référence de la compétence de base comme matériel autorisé à l’examen de compétence supérieure."));
+  });
+
   it("scores Advanced mocks at 70 percent without Honours", async () => {
     assert.equal(advancedBank.subsections.length, 50);
     const advancedQuestions = await loadQuestions(ADVANCED_BANK_ID);

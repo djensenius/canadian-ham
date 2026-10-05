@@ -183,15 +183,16 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(importedStore.preferences, .default)
     }
 
-    func testImportsOlderExportWithoutMorseCourseProgressAsNoMorseProgress() throws {
+    func testImportsOlderExportWithoutMorseCourseProgressKeepsExistingMorseProgress() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let store = try ProgressStoreService.inMemoryForTests()
-        try store.saveMorseCourseProgress(MorseCourseProgressExport(
+        let originalMorseProgress = MorseCourseProgressExport(
             courseId: "ised-koch-g4fon-v1",
             lessonProgress: [],
             characterStats: [],
             dailyActivity: []
-        ))
+        )
+        try store.saveMorseCourseProgress(originalMorseProgress)
         let json = """
         {
           "schema": "canadian-ham.progress-export",
@@ -209,7 +210,113 @@ final class ProgressStoreTests: XCTestCase {
 
         try store.importData(decoded, bank: bank)
 
-        XCTAssertNil(try store.morseCourseProgress())
+        XCTAssertEqual(try store.morseCourseProgress(), originalMorseProgress)
+    }
+
+    func testAdvancedImportKeepsBasicProgressExamsAndLessonsThenBasicImportKeepsAdvancedProgress() throws {
+        let basicBank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let advancedBank = try QuestionBankStore.load(bankId: .advanced, from: Bundle(for: Self.self))
+        let store = try ProgressStoreService.inMemoryForTests()
+
+        let originalBasicRecord = try applyAnswer(existing: nil, update: AnswerUpdate(
+            questionId: "B-001-001-001",
+            bankId: basicBank.manifest.bankId,
+            isCorrect: true,
+            now: "2026-01-02T03:04:05.000Z"
+        ))
+        try store.saveQuestionProgress([originalBasicRecord])
+        let originalBasicExam = try mockAttempt(bank: basicBank, seed: "basic-original", submittedAt: "2026-01-02T04:04:05.000Z")
+        try store.saveExamAttempt(originalBasicExam)
+        let originalLessonProgress = LessonProgressRecord(lessonId: "L-005-01", readAt: "2026-01-02T03:10:00.000Z", readCount: 2)
+        try store.saveLessonProgress(originalLessonProgress)
+        let originalLessonQuizAttempt = LessonQuizAttempt(
+            id: "lesson-quiz-original",
+            quizId: "QZ-L-005-01-A",
+            lessonId: "L-005-01",
+            submittedAt: "2026-01-02T03:20:00.000Z",
+            correct: 1,
+            total: 1,
+            percent: 100,
+            officialQuestionIds: ["B-005-001-001"],
+            incorrectOfficialQuestionIds: [],
+            incorrectConceptCheckIds: []
+        )
+        try store.saveLessonQuizAttempt(originalLessonQuizAttempt, questionProgress: [originalBasicRecord])
+
+        let advancedRecord = try applyAnswer(existing: nil, update: AnswerUpdate(
+            questionId: try XCTUnwrap(advancedBank.questions.first?.id),
+            bankId: advancedBank.manifest.bankId,
+            isCorrect: false,
+            now: "2026-01-03T03:04:05.000Z"
+        ))
+        let advancedExam = try mockAttempt(bank: advancedBank, seed: "advanced-import", submittedAt: "2026-01-03T04:04:05.000Z")
+        let advancedExport = ProgressExportV1(
+            schema: "canadian-ham.progress-export",
+            version: 1,
+            exportedAt: "2026-01-03T05:04:05.000Z",
+            bankId: advancedBank.manifest.bankId,
+            questionProgress: [advancedRecord],
+            examAttempts: [advancedExam],
+            lessonProgress: [],
+            lessonQuizAttempts: [],
+            preferences: ExportedPreferences(practiceMode: "review-later", examTimerEnabled: true, theme: "dark")
+        )
+
+        try store.importData(advancedExport, bank: advancedBank)
+
+        var questionProgress = try store.questionProgressRecords()
+        XCTAssertTrue(questionProgress.contains(originalBasicRecord), "Advanced import must keep Basic question progress")
+        XCTAssertTrue(questionProgress.contains(advancedRecord), "Advanced import must add Advanced question progress")
+        var examAttempts = try store.examAttempts()
+        XCTAssertTrue(examAttempts.contains(originalBasicExam), "Advanced import must keep Basic mock exam attempts")
+        XCTAssertTrue(examAttempts.contains(advancedExam), "Advanced import must add Advanced mock exam attempts")
+        XCTAssertEqual(try store.lessonProgressRecords(), [originalLessonProgress], "Advanced import must not clear Basic lesson progress")
+        XCTAssertEqual(try store.lessonQuizAttempts(), [originalLessonQuizAttempt], "Advanced import must not clear Basic lesson quiz attempts")
+
+        let replacementBasicRecord = try applyAnswer(existing: nil, update: AnswerUpdate(
+            questionId: "B-001-001-002",
+            bankId: basicBank.manifest.bankId,
+            isCorrect: true,
+            now: "2026-01-04T03:04:05.000Z"
+        ))
+        let replacementBasicExam = try mockAttempt(bank: basicBank, seed: "basic-replacement", submittedAt: "2026-01-04T04:04:05.000Z")
+        let replacementLessonProgress = LessonProgressRecord(lessonId: "L-005-01", readAt: "2026-01-04T03:10:00.000Z", readCount: 3)
+        let replacementLessonQuizAttempt = LessonQuizAttempt(
+            id: "lesson-quiz-replacement",
+            quizId: "QZ-L-005-01-A",
+            lessonId: "L-005-01",
+            submittedAt: "2026-01-04T03:20:00.000Z",
+            correct: 0,
+            total: 1,
+            percent: 0,
+            officialQuestionIds: ["B-005-001-001"],
+            incorrectOfficialQuestionIds: ["B-005-001-001"],
+            incorrectConceptCheckIds: []
+        )
+        let basicExport = ProgressExportV1(
+            schema: "canadian-ham.progress-export",
+            version: 1,
+            exportedAt: "2026-01-04T05:04:05.000Z",
+            bankId: basicBank.manifest.bankId,
+            questionProgress: [replacementBasicRecord],
+            examAttempts: [replacementBasicExam],
+            lessonProgress: try archivedArray([replacementLessonProgress]),
+            lessonQuizAttempts: try archivedArray([replacementLessonQuizAttempt]),
+            preferences: ExportedPreferences(practiceMode: "immediate", examTimerEnabled: false, theme: "light")
+        )
+
+        try store.importData(basicExport, bank: basicBank)
+
+        questionProgress = try store.questionProgressRecords()
+        XCTAssertFalse(questionProgress.contains(originalBasicRecord), "Basic import must replace Basic question progress")
+        XCTAssertTrue(questionProgress.contains(replacementBasicRecord), "Basic import must add replacement Basic question progress")
+        XCTAssertTrue(questionProgress.contains(advancedRecord), "Basic import must keep Advanced question progress")
+        examAttempts = try store.examAttempts()
+        XCTAssertFalse(examAttempts.contains(originalBasicExam), "Basic import must replace Basic mock exam attempts")
+        XCTAssertTrue(examAttempts.contains(replacementBasicExam), "Basic import must add replacement Basic mock exam attempts")
+        XCTAssertTrue(examAttempts.contains(advancedExam), "Basic import must keep Advanced mock exam attempts")
+        XCTAssertEqual(try store.lessonProgressRecords(), [replacementLessonProgress], "Basic import must replace Basic lesson progress")
+        XCTAssertEqual(try store.lessonQuizAttempts(), [replacementLessonQuizAttempt], "Basic import must replace Basic lesson quiz attempts")
     }
 
     func testImportValidationRejectsInvalidMorseCourseProgress() throws {
@@ -432,7 +539,7 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(store.preferences.theme, .dark)
     }
 
-    func testImportOfOlderExportRollsBackWhenMorseProgressRemovalFails() throws {
+    func testImportOfOlderExportDoesNotRemoveExistingMorseProgress() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let store = try ProgressStoreService.inMemoryForTests()
         let originalMorseProgress = sampleMorseCourseProgress()
@@ -450,9 +557,7 @@ final class ProgressStoreTests: XCTestCase {
         )
 
         store.failNextMorseCourseProgressRemovalForTesting = true
-        XCTAssertThrowsError(try store.importData(replacement, bank: bank)) { error in
-            XCTAssertEqual(error as? ProgressStoreInjectedFailure, .morseCourseProgressRemoval)
-        }
+        XCTAssertNoThrow(try store.importData(replacement, bank: bank))
 
         XCTAssertEqual(try store.morseCourseProgress(), originalMorseProgress)
     }
@@ -629,6 +734,25 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertTrue(errors.contains { $0.contains("duplicates another exam attempt") })
         XCTAssertTrue(errors.contains { $0.contains("preferences.practiceMode") })
         XCTAssertThrowsError(try store.importData(data, bank: bank))
+    }
+
+    private func mockAttempt(bank: QuestionBank, seed: String, submittedAt: String) throws -> StoredExamAttempt {
+        let generated = try AppleStudyEngine.generatedMockExam(bank: bank, seed: seed)
+        return try AppleStudyEngine.buildExamAttempt(
+            bank: bank,
+            seed: seed,
+            startedAt: "2026-01-02T03:04:05.000Z",
+            submittedAt: submittedAt,
+            timerEnabled: false,
+            secondsElapsed: 0,
+            generatedItems: generated.items,
+            selectedByQuestionId: [:],
+            flaggedQuestionIds: []
+        )
+    }
+
+    private func archivedArray<T: Encodable>(_ value: [T]) throws -> [ArchivedJSON] {
+        try JSONDecoder().decode([ArchivedJSON].self, from: JSONEncoder().encode(value))
     }
 
     private func sampleMorseCourseProgress(lessonId: String = "koch-001") -> MorseCourseProgressExport {
