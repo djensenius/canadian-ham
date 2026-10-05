@@ -84,6 +84,25 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(saveCount, 2)
         XCTAssertNil(failedError)
     }
+
+    func testNativeSettingsAppearanceColorSchemeFollowsLiveThemePreference() throws {
+        let store = try CanadianHam.ProgressStoreService.inMemoryForTests()
+        let appSettings = CanadianHam.AppSettingsModel()
+        appSettings.progressStore = store
+        let settingsView = NativeSettingsView(appSettings: appSettings)
+        let bindings = NativeSettingsPreferenceBindings(progressStore: store)
+
+        XCTAssertNil(settingsView.preferredColorScheme)
+
+        bindings.theme.wrappedValue = .dark
+        XCTAssertEqual(settingsView.preferredColorScheme, .dark)
+
+        bindings.theme.wrappedValue = .light
+        XCTAssertEqual(settingsView.preferredColorScheme, .light)
+
+        bindings.theme.wrappedValue = .system
+        XCTAssertNil(settingsView.preferredColorScheme)
+    }
 #endif
 
     func testAppSettingsModelPublishesMorseSettingsForRootViewSync() throws {

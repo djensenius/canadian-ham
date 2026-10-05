@@ -5,6 +5,10 @@ import UniformTypeIdentifiers
 struct NativeSettingsView: View {
     @ObservedObject var appSettings: AppSettingsModel
 
+    var preferredColorScheme: ColorScheme? {
+        appSettings.progressStore?.preferences.theme.nativeColorScheme
+    }
+
     var body: some View {
         TabView {
             NativeGeneralSettingsTab(appSettings: appSettings)
@@ -16,6 +20,7 @@ struct NativeSettingsView: View {
         }
         .frame(width: 560, height: 480)
         .padding(DesignTokens.Spacing.lg)
+        .preferredColorScheme(preferredColorScheme)
     }
 }
 
@@ -291,6 +296,14 @@ private extension ApplePreferences.Theme {
         case .system: "System"
         case .light: "Light"
         case .dark: "Dark"
+        }
+    }
+
+    var nativeColorScheme: ColorScheme? {
+        switch self {
+        case .system: nil
+        case .light: .light
+        case .dark: .dark
         }
     }
 }
