@@ -330,6 +330,33 @@ describe("ProgressStore", () => {
     assert.match(validation.errors.join("\n"), /examAttempts\[0\]\.score\.bankId must be basic-2025-07-15/);
   });
 
+  it("rejects Advanced import attempts marked with Honours", () => {
+    const advancedAttempt: ExamAttempt = {
+      ...attempt,
+      id: "attempt-advanced-honours",
+      bankId: advancedBank.bankId,
+      submittedAt: "2026-01-02T03:10:00.000Z",
+      items: [{ ...attempt.items[0]!, questionId: "A-001-001-001", subsectionId: "A-001-001", categoryId: "A-001" }],
+      score: {
+        ...attempt.score,
+        bankId: advancedBank.bankId,
+        honours: true,
+        categoryBreakdown: [{ categoryId: "A-001", correct: 1, total: 1, percent: 100 }],
+      },
+    };
+
+    const validation = validateProgressImport(validExport({
+      bankId: advancedBank.bankId,
+      questionProgress: [{ ...record, questionId: "A-001-001-001", bankId: advancedBank.bankId }],
+      examAttempts: [advancedAttempt],
+      lessonProgress: [],
+      lessonQuizAttempts: [],
+    }), advancedBank);
+
+    assert.equal(validation.ok, false);
+    assert.match(validation.errors.join("\n"), /examAttempts\[0\]\.score\.honours must be false for this course/);
+  });
+
   it("accepts legacy Basic exports without bankId fields and normalizes them", () => {
     const { bankId: _exportBankId, questionProgress, examAttempts, ...legacy } = validExport();
     const legacyQuestionProgress = questionProgress.map(({ bankId: _recordBankId, ...recordWithoutBankId }) => recordWithoutBankId);

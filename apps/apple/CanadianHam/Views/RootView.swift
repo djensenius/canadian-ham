@@ -107,6 +107,11 @@ struct RootView: View {
             guard appSettings.morseSettings != next else { return }
             appSettings.morseSettings = next
         }
+        .onAppear {
+            appSettings.hasUnfinishedCourseWork = {
+                practiceSessionStates.hasUnfinishedCourseWork || mockExamState.hasUnfinishedCourseWork
+            }
+        }
     }
 
     @ViewBuilder
@@ -336,7 +341,8 @@ struct RootView: View {
             openAbout: {
                 compactNavigationPath.append(CompactSettingsRoute.about)
                 selection = .about
-            }
+            },
+            hasUnfinishedCourseWork: { appSettings.hasUnfinishedCourseWork() }
         ) { replacesLocalData in
             recordDataChanged(replacesLocalData: replacesLocalData)
         }
@@ -563,7 +569,14 @@ struct RootView: View {
                 recordDataChanged()
             }
         case .settings:
-            SettingsView(bank: bank, progressStore: progressStore, morseSettings: $morseSettings, openMorse: { selection = .morse }, openAbout: { selection = .about }) { replacesLocalData in
+            SettingsView(
+                bank: bank,
+                progressStore: progressStore,
+                morseSettings: $morseSettings,
+                openMorse: { selection = .morse },
+                openAbout: { selection = .about },
+                hasUnfinishedCourseWork: { appSettings.hasUnfinishedCourseWork() }
+            ) { replacesLocalData in
                 recordDataChanged(replacesLocalData: replacesLocalData)
             }
         case .about:

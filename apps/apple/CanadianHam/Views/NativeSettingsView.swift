@@ -28,6 +28,7 @@ private struct NativeGeneralSettingsTab: View {
     @ObservedObject var appSettings: AppSettingsModel
     @State private var statusMessage = ""
     @State private var errorMessage = ""
+    @State private var pendingCourseSwitch: CourseBankID?
 
     var body: some View {
         Form {
@@ -44,7 +45,10 @@ private struct NativeGeneralSettingsTab: View {
                     }
                 )
 
-                Picker("Course", selection: bindings.activeBankId) {
+                Picker("Course", selection: Binding(
+                    get: { progressStore.preferences.activeBankId },
+                    set: { bankId in requestCourseSwitch(to: bankId, progressStore: progressStore) }
+                )) {
                     ForEach(CourseBankID.allCases) { bankId in
                         Text(bankId.localizedName).tag(bankId) // l10n: localized
                     }
@@ -99,6 +103,43 @@ private struct NativeGeneralSettingsTab: View {
         }
         .formStyle(.grouped)
         .padding()
+        .alert("Switch course?", isPresented: Binding(
+            get: { pendingCourseSwitch != nil },
+            set: { isPresented in if !isPresented { pendingCourseSwitch = nil } }
+        )) {
+            Button("Cancel", role: .cancel) { pendingCourseSwitch = nil }
+            Button("Switch course", role: .destructive) { confirmCourseSwitch() }
+        } message: {
+            Text("Switching courses will discard the unfinished practice or mock exam session. Saved progress remains on this device.")
+        }
+    }
+
+    private func requestCourseSwitch(to bankId: CourseBankID, progressStore: ProgressStoreService) {
+        guard bankId != progressStore.preferences.activeBankId else { return }
+        if appSettings.hasUnfinishedCourseWork() {
+            pendingCourseSwitch = bankId
+        } else {
+            saveCourseSwitch(to: bankId, progressStore: progressStore)
+        }
+    }
+
+    private func confirmCourseSwitch() {
+        guard let progressStore = appSettings.progressStore, let pendingCourseSwitch else { return }
+        self.pendingCourseSwitch = nil
+        saveCourseSwitch(to: pendingCourseSwitch, progressStore: progressStore)
+    }
+
+    private func saveCourseSwitch(to bankId: CourseBankID, progressStore: ProgressStoreService) {
+        var next = progressStore.preferences
+        next.activeBankId = bankId
+        do {
+            try progressStore.updatePreferences(next)
+            appSettings.recordDataChanged()
+            statusMessage = String(localized: "Preferences saved locally.")
+            errorMessage = ""
+        } catch {
+            errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
+        }
     }
 }
 

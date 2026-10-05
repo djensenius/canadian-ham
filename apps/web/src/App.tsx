@@ -253,9 +253,12 @@ function AppContent({
   const [practiceSession, setPracticeSession] = useState<PracticeSession | null>(null);
   const [mockExam, setMockExam] = useState<MockExamSession | null>(null);
   const [latestResult, setLatestResult] = useState<ExamAttempt | null>(null);
+  const [pendingCourseSwitch, setPendingCourseSwitch] = useState<CourseBankId | null>(null);
   const [statusMessage, setStatusMessage] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
   const mainRef = useRef<HTMLElement>(null);
+  const courseSwitcherRef = useRef<HTMLFieldSetElement>(null);
+  const courseSwitchDialogRef = useRef<HTMLElement>(null);
   const previousRouteFocusRef = useRef({ locationHash, route });
   const interfaceLanguageRef = useRef(interfaceLanguage);
   const savedPreferencesRef = useRef(preferences);
@@ -347,6 +350,12 @@ function AppContent({
   useEffect(() => {
     document.documentElement.lang = interfaceLanguageTag(interfaceLanguage);
   }, [interfaceLanguage]);
+
+  useEffect(() => {
+    if (pendingCourseSwitch !== null) {
+      courseSwitchDialogRef.current?.focus();
+    }
+  }, [pendingCourseSwitch]);
 
   useEffect(() => {
     applyThemePreference(preferences.theme);
@@ -478,6 +487,31 @@ function AppContent({
     }
   }
 
+  function requestCourseChange(nextBankId: CourseBankId): void {
+    if (nextBankId === activeBank.bankId) {
+      return;
+    }
+    if (mockExam !== null || hasUnfinishedPracticeSession(practiceSession)) {
+      setPendingCourseSwitch(nextBankId);
+      return;
+    }
+    void setCourse(nextBankId).catch(() => undefined);
+  }
+
+  async function confirmCourseSwitch(): Promise<void> {
+    if (pendingCourseSwitch === null) {
+      return;
+    }
+    const nextBankId = pendingCourseSwitch;
+    setPendingCourseSwitch(null);
+    await setCourse(nextBankId);
+  }
+
+  function cancelCourseSwitch(): void {
+    setPendingCourseSwitch(null);
+    window.setTimeout(() => courseSwitcherRef.current?.focus(), 0);
+  }
+
   async function setCourse(nextBankId: CourseBankId): Promise<void> {
     if (nextBankId === activeBank.bankId) {
       return;
@@ -583,11 +617,22 @@ function AppContent({
           </div>
         </div>
         <div className="header-actions">
-          <CourseSwitcher activeBank={activeBank} interfaceLanguage={interfaceLanguage} onCourseChange={(bankId) => void setCourse(bankId).catch(() => undefined)} />
+          <CourseSwitcher activeBank={activeBank} fieldsetRef={courseSwitcherRef} interfaceLanguage={interfaceLanguage} onCourseChange={requestCourseChange} />
           <PwaStatus interfaceLanguage={interfaceLanguage} updateDisabled={mockExam !== null} />
           <LanguageToggle interfaceLanguage={interfaceLanguage} language={language} onLanguageChange={setLanguage} />
         </div>
       </header>
+
+      {pendingCourseSwitch !== null ? (
+        <section className="confirm-panel course-switch-confirm" role="alertdialog" aria-labelledby="course-switch-confirm-title" aria-describedby="course-switch-confirm-copy" aria-modal="false" ref={courseSwitchDialogRef} tabIndex={-1}>
+          <h2 id="course-switch-confirm-title">{t(interfaceLanguage, "courseSwitchConfirmTitle")}</h2>
+          <p id="course-switch-confirm-copy">{t(interfaceLanguage, "courseSwitchConfirmCopy")}</p>
+          <div className="action-row">
+            <button type="button" onClick={cancelCourseSwitch}>{t(interfaceLanguage, "courseSwitchCancel")}</button>
+            <button type="button" className="danger" onClick={() => void confirmCourseSwitch().catch(() => undefined)}>{t(interfaceLanguage, "courseSwitchConfirm")}</button>
+          </div>
+        </section>
+      ) : null}
 
       <nav className="top-nav" aria-label={t(interfaceLanguage, "navPrimary")}>
         <button type="button" disabled={!initialStoreLoaded} aria-current={route === "home" ? "page" : undefined} onClick={() => navigate("home")}>{t(interfaceLanguage, "navHome")}</button>
@@ -751,9 +796,9 @@ function InitialStoreLoading({ interfaceLanguage }: { readonly interfaceLanguage
   );
 }
 
-function CourseSwitcher({ activeBank, interfaceLanguage, onCourseChange }: { readonly activeBank: BankData; readonly interfaceLanguage: InterfaceLanguage; readonly onCourseChange: (bankId: CourseBankId) => void }) {
+function CourseSwitcher({ activeBank, fieldsetRef, interfaceLanguage, onCourseChange }: { readonly activeBank: BankData; readonly fieldsetRef?: RefObject<HTMLFieldSetElement | null>; readonly interfaceLanguage: InterfaceLanguage; readonly onCourseChange: (bankId: CourseBankId) => void }) {
   return (
-    <fieldset className="course-switcher" aria-label={t(interfaceLanguage, "courseSwitcherAria")}>
+    <fieldset className="course-switcher" aria-label={t(interfaceLanguage, "courseSwitcherAria")} ref={fieldsetRef} tabIndex={-1}>
       <legend>{t(interfaceLanguage, "courseSwitcherLegend")}</legend>
       {bankCatalog.map((bank) => (
         <label key={bank.bankId}>
@@ -2437,6 +2482,16 @@ function ScopeValue({ activeBank, interfaceLanguage, scope }: { readonly activeB
 
 function hasUnsubmittedReviewAnswers(session: PracticeSession | null): boolean {
   return session !== null && session.mode === "review-later" && !session.submitted && session.selectedByQuestionId.size > 0;
+}
+
+function hasUnfinishedPracticeSession(session: PracticeSession | null): boolean {
+  if (session === null) {
+    return false;
+  }
+  if (session.mode === "review-later") {
+    return !session.submitted;
+  }
+  return session.selectedByQuestionId.size < session.items.length;
 }
 
 function buildReadiness(bank: BankData, progress: readonly QuestionProgressRecord[], attempts: readonly ExamAttempt[], now: string): ReadinessResult {

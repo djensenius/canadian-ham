@@ -11,6 +11,8 @@ final class AppSettingsModel: ObservableObject {
     @Published private(set) var dataRevision = 0
     @Published private(set) var localDataReplacementRevision = 0
 
+    var hasUnfinishedCourseWork: @MainActor () -> Bool = { false }
+
     private var progressStoreCancellable: AnyCancellable?
 
     init(morseSettings: MorseTrainerSettings = .load()) {

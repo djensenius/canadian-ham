@@ -334,6 +334,16 @@ final class PracticeSessionState: ObservableObject {
     @Published var answeredCount = 0
     @Published var correctCount = 0
     @Published var errorMessage: String?
+
+    var hasUnfinishedCourseWork: Bool {
+        guard !items.isEmpty, let loadedPracticeMode else { return false }
+        switch loadedPracticeMode {
+        case .immediate:
+            return answeredCount < items.count
+        case .reviewLater:
+            return !reviewSubmitted
+        }
+    }
 }
 
 @MainActor
@@ -349,6 +359,10 @@ final class PracticeSessionStateCache: ObservableObject {
 
     func clear() {
         states.removeAll()
+    }
+
+    var hasUnfinishedCourseWork: Bool {
+        states.values.contains { $0.hasUnfinishedCourseWork }
     }
 }
 
@@ -724,6 +738,10 @@ final class MockExamState: ObservableObject {
     @Published var errorMessage: String?
     @Published var timerStatus = String(localized: "Timer off")
     @Published var loadedLocalDataReplacementRevision = 0
+
+    var hasUnfinishedCourseWork: Bool {
+        !generatedItems.isEmpty && result == nil
+    }
 
     func resetSession(localDataReplacementRevision: Int) {
         seed = ""
@@ -1378,6 +1396,7 @@ struct SettingsView: View {
     @Binding var morseSettings: MorseTrainerSettings
     let openMorse: () -> Void
     let openAbout: () -> Void
+    let hasUnfinishedCourseWork: () -> Bool
     let onDataChanged: (_ replacesLocalData: Bool) -> Void
 
     @State private var statusMessage: String?
@@ -1386,6 +1405,7 @@ struct SettingsView: View {
     @State private var showingExporter = false
     @State private var showingImporter = false
     @State private var pendingImport: ProgressExportV1?
+    @State private var pendingCourseSwitch: CourseBankID?
     @State private var confirmingImport = false
     @State private var confirmingReset = false
 
@@ -1399,7 +1419,7 @@ struct SettingsView: View {
                         .accessibilityAddTraits(.isHeader)
                     Picker("Course", selection: Binding(
                         get: { progressStore.preferences.activeBankId },
-                        set: { bankId in savePreferences { $0.activeBankId = bankId } }
+                        set: { bankId in requestCourseSwitch(to: bankId) }
                     )) {
                         ForEach(CourseBankID.allCases) { bankId in
                             Text(bankId.localizedName).tag(bankId) // l10n: localized
@@ -1501,12 +1521,40 @@ struct SettingsView: View {
         } message: {
             Text("Import replaces local progress, mock exams, and preferences with the selected valid JSON file.")
         }
+        .alert("Switch course?", isPresented: Binding(
+            get: { pendingCourseSwitch != nil },
+            set: { isPresented in if !isPresented { pendingCourseSwitch = nil } }
+        )) {
+            Button("Cancel", role: .cancel) { pendingCourseSwitch = nil }
+            Button("Switch course", role: .destructive) { confirmCourseSwitch() }
+        } message: {
+            Text("Switching courses will discard the unfinished practice or mock exam session. Saved progress remains on this device.")
+        }
         .alert("Reset all local data?", isPresented: $confirmingReset) {
             Button("Cancel", role: .cancel) {}
             Button("Reset", role: .destructive) { resetAllData() }
         } message: {
             Text("Deletes local progress, mock exams, and preferences. Bundled content remains installed.")
         }
+    }
+
+    private func requestCourseSwitch(to bankId: CourseBankID) {
+        guard bankId != progressStore.preferences.activeBankId else { return }
+        if hasUnfinishedCourseWork() {
+            pendingCourseSwitch = bankId
+        } else {
+            saveCourseSwitch(to: bankId)
+        }
+    }
+
+    private func confirmCourseSwitch() {
+        guard let pendingCourseSwitch else { return }
+        self.pendingCourseSwitch = nil
+        saveCourseSwitch(to: pendingCourseSwitch)
+    }
+
+    private func saveCourseSwitch(to bankId: CourseBankID) {
+        savePreferences { $0.activeBankId = bankId }
     }
 
     private func savePreferences(_ mutate: (inout ApplePreferences) -> Void) {

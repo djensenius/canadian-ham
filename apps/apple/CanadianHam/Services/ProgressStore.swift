@@ -658,6 +658,9 @@ final class ProgressStoreService: ObservableObject {
                 throw ProgressStoreInjectedFailure.importAfterDelete
             }
 #endif
+            // Commit deletions before reinserting the same unique IDs; SwiftData can otherwise
+            // enforce @Attribute(.unique) against the deleted in-memory objects during one save.
+            try context.save()
             for record in data.questionProgress {
                 try upsertQuestionProgress(record)
             }
@@ -739,7 +742,7 @@ final class ProgressStoreService: ObservableObject {
             if !submittedAt.insert(attempt.submittedAt).inserted { errors.append(String(localized: "\(prefix).submittedAt duplicates another exam attempt.")) }
             if attempt.timer.secondsAllowed != nil && attempt.timer.secondsAllowed! < 0 { errors.append(String(localized: "\(prefix).timer.secondsAllowed must be null or non-negative.")) }
             if attempt.timer.secondsElapsed < 0 { errors.append(String(localized: "\(prefix).timer.secondsElapsed must be non-negative.")) }
-            validateScore(attempt.score, prefix: "\(prefix).score", bankId: bank.manifest.bankId, knownCategoryIds: knownCategoryIds, knownSubsectionIds: knownSubsectionIds, errors: &errors)
+            validateScore(attempt.score, prefix: "\(prefix).score", bankId: bank.manifest.bankId, hasHonours: bank.courseBankID.hasHonours, knownCategoryIds: knownCategoryIds, knownSubsectionIds: knownSubsectionIds, errors: &errors)
             for (itemIndex, item) in attempt.items.enumerated() {
                 validateAttemptItem(item, prefix: "\(prefix).items[\(itemIndex)]", knownQuestionIds: knownQuestionIds, knownCategoryIds: knownCategoryIds, knownSubsectionIds: knownSubsectionIds, errors: &errors)
             }
@@ -968,6 +971,7 @@ private func validateScore(
     _ score: StoredExamScore,
     prefix: String,
     bankId: String,
+    hasHonours: Bool,
     knownCategoryIds: Set<String>,
     knownSubsectionIds: Set<String>,
     errors: inout [String]
@@ -977,6 +981,7 @@ private func validateScore(
     if score.total < 0 { errors.append(String(localized: "\(prefix).total must be non-negative.")) }
     if score.correct > score.total { errors.append(String(localized: "\(prefix).correct must not exceed total.")) }
     if score.percent < 0 { errors.append(String(localized: "\(prefix).percent must be non-negative.")) }
+    if !hasHonours && score.honours { errors.append(String(localized: "\(prefix).honours must be false for this course.")) }
     for (index, entry) in score.categoryBreakdown.enumerated() {
         let entryPrefix = "\(prefix).categoryBreakdown[\(index)]"
         if !knownCategoryIds.contains(entry.categoryId) { errors.append(String(localized: "\(entryPrefix).categoryId must be a known category ID.")) }
