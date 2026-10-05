@@ -184,7 +184,7 @@ function MorseCopyPracticePanel({ interfaceLanguage, locale, preferences, playba
       {containsDotDashNotation(copy) ? <p className="warning-text" role="alert">{t(interfaceLanguage, "morseDotDashWarning")}</p> : null}
       <div className="morse-copy-status">{status ? <p>{status}</p> : null}</div>
       <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">{liveStatus}</div>
-      {diff ? <MorseDiffView diff={diff} interfaceLanguage={interfaceLanguage} expectedText={passage?.text ?? ""} /> : null}
+      {diff ? <MorseDiffView mode="practice" diff={diff} interfaceLanguage={interfaceLanguage} expectedText={passage?.text ?? ""} locale={locale} /> : null}
     </section>
   );
 }
@@ -338,14 +338,14 @@ function MorseExamPanel({ interfaceLanguage, locale, preferences, reviewDuration
       {containsDotDashNotation(copy) ? <p className="warning-text" role="alert">{t(interfaceLanguage, "morseDotDashWarning")}</p> : null}
       <div className="morse-copy-status">{status ? <p>{status}</p> : null}</div>
       <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">{liveStatus}</div>
-      {diff ? <MorseDiffView diff={diff} interfaceLanguage={interfaceLanguage} expectedText={exam?.text ?? ""} /> : null}
+      {diff ? <MorseDiffView mode="exam" diff={diff} interfaceLanguage={interfaceLanguage} expectedText={exam?.text ?? ""} locale={locale} /> : null}
     </section>
   );
 }
 
-function MorseDiffView({ diff, expectedText, interfaceLanguage }: { readonly diff: MorseCopyDiff; readonly expectedText: string; readonly interfaceLanguage: InterfaceLanguage }) {
+function MorseDiffView({ mode, diff, expectedText, interfaceLanguage, locale }: { readonly mode: "practice" | "exam"; readonly diff: MorseCopyDiff; readonly expectedText: string; readonly interfaceLanguage: InterfaceLanguage; readonly locale: string }) {
   const headingId = useId();
-  const summary = t(
+  const errorSummary = t(
     interfaceLanguage,
     "morseDiffSummary",
     String(diff.score.errors),
@@ -353,11 +353,14 @@ function MorseDiffView({ diff, expectedText, interfaceLanguage }: { readonly dif
     String(diff.score.missing),
     String(diff.score.inserted),
   );
+  const accuracy = formatLocaleNumber(copyAccuracyPercent(diff), locale, 0);
+  const practiceSummary = t(interfaceLanguage, "morsePracticeResultSummary", accuracy, errorSummary);
+  const summary = mode === "practice" ? practiceSummary : errorSummary;
   return (
     <section className="morse-diff" aria-labelledby={headingId}>
       <h4 id={headingId}>{t(interfaceLanguage, "morseDiffTitle")}</h4>
       <p role="status">{summary}</p>
-      <p>{diff.score.passed ? t(interfaceLanguage, "morseDiffPassMark", String(diff.score.markPercent)) : t(interfaceLanguage, "morseDiffFailMark", String(diff.score.markPercent))}</p>
+      {mode === "exam" ? <p>{diff.score.passed ? t(interfaceLanguage, "morseDiffPassMark", String(diff.score.markPercent)) : t(interfaceLanguage, "morseDiffFailMark", String(diff.score.markPercent))}</p> : null}
       <details>
         <summary>{t(interfaceLanguage, "morseExpectedTranscript")}</summary>
         <p className="morse-copy" lang="en">{expectedText}</p>
@@ -406,6 +409,14 @@ function clearWindowTimer(timer: number | null): void {
     window.clearTimeout(timer);
     window.clearInterval(timer);
   }
+}
+
+function copyAccuracyPercent(diff: MorseCopyDiff): number {
+  if (diff.score.expectedLength === 0) {
+    return diff.score.errors === 0 ? 100 : 0;
+  }
+  const correct = Math.max(0, diff.score.expectedLength - diff.score.errors);
+  return Math.round((correct / diff.score.expectedLength) * 100);
 }
 
 function formatSeconds(value: number, locale: string): string {

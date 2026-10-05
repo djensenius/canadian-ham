@@ -1378,8 +1378,10 @@ describe("App accessibility and flows", () => {
 
     assert.ok(within(copySection).getByRole("heading", { name: "Character diff" }));
     assert.ok(copySection.querySelector('[aria-label="Wrong: expected ?, received X"]'));
+    assert.match(copySection.textContent ?? "", /Practice accuracy: \d+%\./);
     assert.match(copySection.textContent ?? "", /wrong/i);
     assert.match(copySection.textContent ?? "", /total errors/i);
+    assert.doesNotMatch(copySection.textContent ?? "", /Exam rule|PASS|FAIL/);
     await expectNoAxeViolations(container);
   });
 
@@ -1510,6 +1512,8 @@ describe("App accessibility and flows", () => {
     }
 
     assert.match(examSection.textContent ?? "", /FAIL/);
+    assert.match(examSection.textContent ?? "", /Exam rule:/);
+    assert.doesNotMatch(examSection.textContent ?? "", /Practice accuracy/);
     assert.ok(within(examSection).getByRole("heading", { name: "Character diff" }));
     await expectNoAxeViolations(container);
   });

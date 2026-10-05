@@ -141,6 +141,19 @@ final class MorseFixtureTests: XCTestCase {
         }
     }
 
+    func testGenerateMorseExamTextReportsUnsatisfiedConstraintsDistinctly() throws {
+        do {
+            _ = try generateMorseExamText(minWeightedCharacters: Int.max)
+            XCTFail("Unsatisfiable Morse exam-text constraints should throw")
+        } catch MorseEngineError.examTextConstraintsUnsatisfied(let message) {
+            XCTAssertTrue(message.contains("Unable to generate Morse exam text that satisfies RIC-1 section 8.2 constraints."), "message was: \(message)")
+        } catch MorseEngineError.invalidSpeed(let message) {
+            XCTFail("Unsatisfiable constraints must not be reported as invalid speed: \(message)")
+        } catch {
+            XCTFail("Unexpected error for unsatisfiable constraints: \(error)")
+        }
+    }
+
     private func validateCopyDiffFixture(_ data: Data) throws {
         let fixture = try JSONDecoder().decode(CopyDiffFixture.self, from: data)
         for testCase in fixture.cases {

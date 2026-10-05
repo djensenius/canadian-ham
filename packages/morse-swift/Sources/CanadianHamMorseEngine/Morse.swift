@@ -129,6 +129,7 @@ public struct MorseExamText: Codable, Equatable, Sendable {
 public enum MorseEngineError: Error, Equatable, Sendable, CustomStringConvertible {
     case invalidCharacters([InvalidMorseCharacter])
     case invalidSpeed(String)
+    case examTextConstraintsUnsatisfied(String)
     case unknownProfile(String)
 
     public var description: String {
@@ -137,6 +138,8 @@ public enum MorseEngineError: Error, Equatable, Sendable, CustomStringConvertibl
             let names = characters.map(\.character).joined(separator: " ")
             return "Text contains characters outside RIC-1 section 8.2: \(names)"
         case let .invalidSpeed(message):
+            return message
+        case let .examTextConstraintsUnsatisfied(message):
             return message
         case let .unknownProfile(name):
             return "Unknown Morse timing profile: \(name)"
@@ -358,7 +361,7 @@ public func generateMorseExamText(
         }
     }
 
-    throw MorseEngineError.invalidSpeed("Unable to generate Morse exam text that satisfies RIC-1 section 8.2 constraints.")
+    throw MorseEngineError.examTextConstraintsUnsatisfied("Unable to generate Morse exam text that satisfies RIC-1 section 8.2 constraints.")
 }
 
 public func scoreMorseCopy(expected: String, received: String) throws -> MorseExamScore {
