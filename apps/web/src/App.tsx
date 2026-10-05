@@ -240,7 +240,9 @@ function AppContent({
   const [route, setRoute] = useState<Route>(() => routeFromHash(initialView));
   const [language, setLanguage] = useState<Language>("en");
   const [interfaceLanguage, setInterfaceLanguageState] = useState<InterfaceLanguage>(() => readStoredInterfaceLanguage());
-  const [bankQuestions, setBankQuestions] = useState<readonly Question[] | null>(null);
+  // Loaded questions are tagged with their course and only exposed while that course is active,
+  // so a render never sees the previous course's questions after a switch.
+  const [loadedBankQuestions, setLoadedBankQuestions] = useState<{ readonly bankId: CourseBankId; readonly questions: readonly Question[] } | null>(null);
   const [initialStoreLoaded, setInitialStoreLoaded] = useState(false);
   const [progress, setProgress] = useState<readonly QuestionProgressRecord[]>([]);
   const [examAttempts, setExamAttempts] = useState<readonly ExamAttempt[]>([]);
@@ -306,11 +308,11 @@ function AppContent({
 
   useEffect(() => {
     let cancelled = false;
-    setBankQuestions(null);
-    loadQuestions(preferences.activeBankId)
+    const bankId = preferences.activeBankId;
+    loadQuestions(bankId)
       .then((questions) => {
         if (!cancelled) {
-          setBankQuestions(questions);
+          setLoadedBankQuestions({ bankId, questions });
         }
       })
       .catch((error: unknown) => {
@@ -366,6 +368,7 @@ function AppContent({
   }, [preferences.theme]);
 
   const activeBank = useMemo(() => bankDataForId(preferences.activeBankId), [preferences.activeBankId]);
+  const bankQuestions = loadedBankQuestions?.bankId === preferences.activeBankId ? loadedBankQuestions.questions : null;
   const activeProgress = useMemo(() => progress.filter((record) => record.bankId === activeBank.bankId), [activeBank.bankId, progress]);
   const activeExamAttempts = useMemo(() => examAttempts.filter((attempt) => attempt.bankId === activeBank.bankId), [activeBank.bankId, examAttempts]);
   const bankQuestionsById = useMemo(() => bankQuestions === null ? new Map<string, Question>() : questionsById(bankQuestions), [bankQuestions]);
