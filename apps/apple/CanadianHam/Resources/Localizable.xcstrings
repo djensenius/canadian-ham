@@ -9566,22 +9566,6 @@
           }
         }
       }
-    },
-    "No streak yet" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune série pour l’instant"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune série pour l’instant"
-          }
-        }
-      }
     }
   },
   "version" : "1.0"
