@@ -57,7 +57,27 @@ struct LearnView: View {
     @State private var errorMessage: String?
 
     var body: some View {
+        if !bank.courseBankID.hasLessons {
+            ScrollView {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    Text("Advanced lessons")
+                        .font(DesignTokens.FontScale.caption.weight(.semibold))
+                        .foregroundStyle(DesignTokens.Colors.inkMuted)
+                    Text("Advanced lessons are coming")
+                        .font(DesignTokens.FontScale.headline.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityAddTraits(.isHeader)
+                    Text("Advanced lessons are not bundled yet. Use practice by topic and 50-question mock exams while the curriculum is authored.")
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                }
+                .pagePadding()
+            }
+            .background(DesignTokens.Colors.paper)
+            .navigationTitle("Learn")
+        } else {
         ScrollView {
+
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     Text("Structured lessons")
@@ -92,6 +112,7 @@ struct LearnView: View {
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Learn")
         .task(id: revision) { refreshProgress() }
+        }
     }
 
     private func moduleCard(_ module: LessonModule) -> some View {

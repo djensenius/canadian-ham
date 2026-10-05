@@ -39,6 +39,15 @@ private struct NativeGeneralSettingsTab: View {
                     }
                 )
 
+                Picker("Course", selection: bindings.activeBankId) {
+                    ForEach(CourseBankID.allCases) { bankId in
+                        Text(bankId.localizedName).tag(bankId) // l10n: localized
+                    }
+                }
+                .pickerStyle(.segmented)
+                .accessibilityIdentifier("native-course-picker")
+                .accessibilityLabel(Text("Course")) // l10n: localized
+
                 Picker("Practice mode", selection: bindings.practiceMode) {
                     ForEach(ApplePreferences.PracticeMode.allCases) { mode in
                         Text(mode.nativeLocalizedLabel).tag(mode) // l10n: localized
@@ -93,6 +102,10 @@ struct NativeSettingsPreferenceBindings {
     let progressStore: ProgressStoreService
     var didSave: () -> Void = {}
     var didFail: (Error) -> Void = { _ in }
+
+    var activeBankId: Binding<CourseBankID> {
+        binding(get: { $0.activeBankId }, set: { $0.activeBankId = $1 })
+    }
 
     var practiceMode: Binding<ApplePreferences.PracticeMode> {
         binding(get: { $0.practiceMode }, set: { $0.practiceMode = $1 })

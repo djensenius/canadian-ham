@@ -16,12 +16,12 @@ enum QuestionBankLoadError: Error, LocalizedError, Sendable {
 }
 
 enum QuestionBankStore {
-    static func load(from bundle: Bundle = .main) throws -> QuestionBank {
+    static func load(bankId: CourseBankID = .basic, from bundle: Bundle = .main) throws -> QuestionBank {
         let decoder = JSONDecoder()
-        let questions: [BankQuestion] = try decode("questions", from: bundle, with: decoder)
-        let categories: [BankCategory] = try decode("categories", from: bundle, with: decoder)
-        let subsections: [BankSubsection] = try decode("subsections", from: bundle, with: decoder)
-        let manifest: BankManifest = try decode("manifest", from: bundle, with: decoder)
+        let questions: [BankQuestion] = try decode("questions", bankId: bankId, from: bundle, with: decoder)
+        let categories: [BankCategory] = try decode("categories", bankId: bankId, from: bundle, with: decoder)
+        let subsections: [BankSubsection] = try decode("subsections", bankId: bankId, from: bundle, with: decoder)
+        let manifest: BankManifest = try decode("manifest", bankId: bankId, from: bundle, with: decoder)
         let lessonQuizzes = try decodeLessonQuizzes(from: bundle, with: decoder)
 
         return QuestionBank(
@@ -35,13 +35,14 @@ enum QuestionBankStore {
 
     private static func decode<Value: Decodable>(
         _ resourceName: String,
+        bankId: CourseBankID,
         from bundle: Bundle,
         with decoder: JSONDecoder
     ) throws -> Value {
         guard let url = bundle.url(forResource: resourceName, withExtension: "json")
             ?? bundle.resourceURL?
                 .appendingPathComponent("generated", isDirectory: true)
-                .appendingPathComponent("basic-2025-07-15", isDirectory: true)
+                .appendingPathComponent(bankId.rawValue, isDirectory: true)
                 .appendingPathComponent("\(resourceName).json")
         else {
             throw QuestionBankLoadError.missingResource(resourceName)

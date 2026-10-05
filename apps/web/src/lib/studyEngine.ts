@@ -11,7 +11,7 @@ import {
   type QuestionProgressRecord,
 } from "@canadian-ham/engine-ts";
 
-import { bankId, subsections, type Question } from "../data/bank";
+import { basicBank, type BankData, type Question } from "../data/bank";
 import type { ExamAttempt, ExamAttemptItem } from "./progressStore";
 
 export type PracticeScope =
@@ -62,6 +62,7 @@ export function applyPracticeAnswer(
   questionId: string,
   selectedSourceIndex: number,
   now: string,
+  bankId: string = basicBank.bankId,
 ): QuestionProgressRecord[] {
   const byQuestionId = new Map(records.map((record) => [record.questionId, record]));
   const updated = applyAnswer(byQuestionId.get(questionId), {
@@ -74,9 +75,9 @@ export function applyPracticeAnswer(
   return [...byQuestionId.values()].sort((a, b) => a.questionId.localeCompare(b.questionId));
 }
 
-export function createMockExam(seed: string, questions: readonly Question[]): readonly GeneratedExamItem[] {
+export function createMockExam(seed: string, questions: readonly Question[], bank: BankData = basicBank): readonly GeneratedExamItem[] {
   return generateExam({
-    bankId,
+    bankId: bank.bankId,
     seed,
     subsections: buildSubsectionsFromQuestions(questions),
     requireFullMockExam: true,
@@ -92,6 +93,7 @@ export function generatedExamQuestion(item: Pick<GeneratedExamItem, "questionId"
 }
 
 export function buildExamAttempt(input: {
+  readonly bank?: BankData;
   readonly seed: string;
   readonly startedAt: string;
   readonly submittedAt: string;
@@ -110,10 +112,11 @@ export function buildExamAttempt(input: {
       flagged: input.flaggedQuestionIds.has(item.questionId),
     };
   });
-  const score = scoreExam(items, { bankId });
+  const bank = input.bank ?? basicBank;
+  const score = scoreExam(items, { bankId: bank.bankId });
   return {
-    id: `attempt-${input.submittedAt}-local-${input.seed}`,
-    bankId,
+    id: `attempt-${bank.bankId}-${input.submittedAt}-local-${input.seed}`,
+    bankId: bank.bankId,
     mode: "mock-exam",
     seed: input.seed,
     startedAt: input.startedAt,
@@ -161,13 +164,10 @@ function eligibleQuestionsForScope(
   return questions;
 }
 
-export function examCategoryCounts(items: readonly Pick<GeneratedExamItem, "categoryId">[]): readonly number[] {
-  return Array.from({ length: 8 }, (_, index) => {
-    const id = `B-${String(index + 1).padStart(3, "0")}`;
-    return items.filter((item) => item.categoryId === id).length;
-  });
+export function examCategoryCounts(items: readonly Pick<GeneratedExamItem, "categoryId">[], bank: BankData = basicBank): readonly number[] {
+  return bank.categories.map((category) => items.filter((item) => item.categoryId === category.id).length);
 }
 
-export function allSubsectionIds(): readonly string[] {
-  return subsections.map((subsection) => subsection.id);
+export function allSubsectionIds(bank: BankData = basicBank): readonly string[] {
+  return bank.subsections.map((subsection) => subsection.id);
 }

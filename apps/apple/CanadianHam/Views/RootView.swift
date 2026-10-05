@@ -150,6 +150,11 @@ struct RootView: View {
         .onChange(of: progressStore.preferences.practiceMode) { _, _ in
             practiceSessionStates.clear()
         }
+        .onChange(of: progressStore.preferences.activeBankId) { _, next in
+            loadBank(for: next)
+            practiceSessionStates.clear()
+            mockExamState.resetSession(localDataReplacementRevision: appSettings.localDataReplacementRevision)
+        }
     }
 
     private func compactRootList(progressStore: ProgressStoreService) -> some View {
@@ -466,6 +471,11 @@ struct RootView: View {
         .onChange(of: progressStore.preferences.practiceMode) { _, _ in
             practiceSessionStates.clear()
         }
+        .onChange(of: progressStore.preferences.activeBankId) { _, next in
+            loadBank(for: next)
+            practiceSessionStates.clear()
+            mockExamState.resetSession(localDataReplacementRevision: appSettings.localDataReplacementRevision)
+        }
         .onChange(of: selection) { _, next in
             if next != .learn {
                 navigationPath.removeAll()
@@ -574,15 +584,25 @@ struct RootView: View {
 
     private func loadBankIfNeeded() {
         guard bank == nil, bankLoadError == nil else { return }
+        loadBank(for: progressStore?.preferences.activeBankId ?? .basic)
+    }
+
+    private func loadBank(for bankId: CourseBankID) {
         do {
-            let loaded = try QuestionBankStore.load()
+            let loaded = try QuestionBankStore.load(bankId: bankId)
             if let contentLibrary {
                 bank = loaded.withKnownLessonIds(Set(contentLibrary.lessons.map(\.id)))
             } else {
                 bank = loaded
             }
             appSettings.bank = bank
+            bankLoadError = nil
+            if !bankId.hasLessons, selection == .learn {
+                selection = .home
+            }
         } catch {
+            bank = nil
+            appSettings.bank = nil
             bankLoadError = localizedErrorMessage(String(localized: "Unable to load question bank: \("")"), detail: error)
         }
     }
@@ -630,6 +650,9 @@ struct RootView: View {
 #endif
             progressStoreError = nil
             language = progressStore?.preferences.language ?? .english
+            if let progressStore, bank?.manifest.bankId != progressStore.preferences.activeBankId.rawValue {
+                loadBank(for: progressStore.preferences.activeBankId)
+            }
         } catch {
             progressStore = nil
             appSettings.progressStore = nil
@@ -652,6 +675,10 @@ struct RootView: View {
         }
         if let rawTheme = AppLaunchArguments.value(after: "-CanadianHamTheme"), let theme = ApplePreferences.Theme(rawValue: rawTheme) {
             preferences.theme = theme
+            changed = true
+        }
+        if let rawBankId = AppLaunchArguments.value(after: "-CanadianHamCourseBankId"), let bankId = CourseBankID(rawValue: rawBankId) {
+            preferences.activeBankId = bankId
             changed = true
         }
         if changed {
@@ -795,7 +822,7 @@ struct RootView: View {
     }
 
     private func categoryAccessibilityLabel(_ category: BankCategory) -> AttributedString {
-        var label = localized(category.name.text(for: language), language: language)
+        var label = localized(category.name.text(for: language), language: category.name.resolvedLanguage(for: language))
         label += AttributedString(", \(localizedQuestionCount(category.questionCount)), \(localizedSubsectionCount(category.subsectionCount))")
         return label
     }
@@ -896,7 +923,7 @@ private struct CategoryRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-            Text(localized(category.name.text(for: language), language: language)) // l10n: content(question)
+            Text(localized(category.name.text(for: language), language: category.name.resolvedLanguage(for: language))) // l10n: content(question)
                 .font(DesignTokens.FontScale.body.weight(.semibold))
                 .foregroundStyle(DesignTokens.Colors.ink)
             Text(verbatim: "\(localizedQuestionCount(category.questionCount)) • \(localizedSubsectionCount(category.subsectionCount))") // l10n: verbatim
