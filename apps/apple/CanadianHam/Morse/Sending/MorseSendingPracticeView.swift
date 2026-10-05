@@ -450,13 +450,7 @@ private struct MorseSendingResultsScreen: View {
                     .font(.body.monospaced())
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .fixedSize(horizontal: false, vertical: true)
-                    .accessibilityHidden(!result.decodedText.isEmpty)
-                if !result.decodedText.isEmpty {
-                    Text("Decoded text is shown visually above.") // l10n: localized
-                        .font(DesignTokens.FontScale.caption)
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                        .accessibilityHidden(false)
-                }
+                    .accessibilityLabel(Text(decodedTextAccessibilityLabel)) // l10n: localized
                 morseTokenButton("Start another sending check") { startAgain() }
                     .accessibilityIdentifier("morse-sending-results-start-another-button")
             }
@@ -470,6 +464,11 @@ private struct MorseSendingResultsScreen: View {
         result.score.passed
             ? String.localizedStringWithFormat(String(localized: "PASS, 100%%, with %lld errors."), Int64(result.score.diff.score.errors))
             : String.localizedStringWithFormat(String(localized: "FAIL, %lld%%, with %lld errors."), Int64(result.score.markPercent), Int64(result.score.diff.score.errors))
+    }
+
+    private var decodedTextAccessibilityLabel: String {
+        guard !result.decodedText.isEmpty else { return String(localized: "No text sent.") }
+        return Array(result.decodedText).map(String.init).joined(separator: " ")
     }
 }
 
