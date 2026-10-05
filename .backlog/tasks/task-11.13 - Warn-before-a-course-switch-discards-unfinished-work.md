@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-05 13:33'
-updated_date: '2026-10-05 17:56'
+updated_date: '2026-10-05 18:49'
 labels: []
 dependencies:
   - TASK-11.5
@@ -39,4 +39,6 @@ Why: switching course (Basic/Advanced) silently discards an unfinished mock exam
 
 <!-- SECTION:NOTES:BEGIN -->
 Started implementation after reading task-execution/task-finalization guidance, AGENTS testing policy, task-11.5 review notes, and PR #141 discussion.
+
+Implemented web and Apple course-switch confirmation before discarding unfinished practice/mock sessions, with EN/FR strings and web/iOS UI coverage. Web pnpm test, typecheck, build, dist URL/CSP audit, and Apple text-source check passed; iOS targeted UI/unit runs are queued behind the xbuild lock.
 <!-- SECTION:NOTES:END -->
