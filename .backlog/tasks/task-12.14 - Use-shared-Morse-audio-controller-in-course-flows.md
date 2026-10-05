@@ -1,7 +1,7 @@
 ---
 id: TASK-12.14
 title: Use shared Morse audio controller in course flows
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-04 05:20'
