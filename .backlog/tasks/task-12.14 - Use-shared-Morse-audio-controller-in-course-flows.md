@@ -43,5 +43,5 @@ Review follow-up for finding 3: strengthened the web test to assert the Quick li
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Course playback on web and Apple now uses the shared one-player-at-a-time Morse controller. Verified with web integration coverage for course vs Quick listen/copy, Apple coordinator unit coverage, and targeted iOS UI tests for course/Quick listen/copy ownership.
+Review follow-up fixed the weak web assertion by checking the course player's own oscillator stop count and added iOS UI coverage that Quick listen stops active course playback. Verified with targeted web/iOS checks, pnpm typecheck, TZ=UTC pnpm test, pnpm build:web, and one full CanadianHam run each on iOS and macOS with per-test names recorded in notes.
 <!-- SECTION:FINAL_SUMMARY:END -->
