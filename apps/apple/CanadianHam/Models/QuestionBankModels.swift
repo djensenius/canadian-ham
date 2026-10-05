@@ -1,5 +1,24 @@
 import Foundation
 
+enum CourseBankID: String, CaseIterable, Identifiable, Codable, Sendable {
+    case basic = "basic-2025-07-15"
+    case advanced = "advanced-2025-02-04"
+
+    var id: String { rawValue }
+
+    var localizedName: LocalizedStringResource {
+        switch self {
+        case .basic: "Basic"
+        case .advanced: "Advanced"
+        }
+    }
+
+    var hasLessons: Bool { self == .basic }
+    var hasHonours: Bool { self == .basic }
+    var mockExamQuestionCount: Int { self == .advanced ? 50 : 100 }
+    var passPercent: Int { 70 }
+}
+
 enum BankLanguage: String, CaseIterable, Identifiable, Sendable {
     case english = "en"
     case french = "fr"
@@ -35,6 +54,15 @@ struct LocalizedText: Decodable, Hashable, Sendable {
             en ?? fr ?? ""
         case .french:
             fr ?? en ?? ""
+        }
+    }
+
+    func resolvedLanguage(for language: BankLanguage) -> BankLanguage {
+        switch language {
+        case .english:
+            en != nil ? .english : .french
+        case .french:
+            fr != nil ? .french : .english
         }
     }
 }
@@ -184,6 +212,10 @@ struct QuestionBank: Sendable {
 
     func question(id: String) -> BankQuestion? {
         questionsById[id]
+    }
+
+    var courseBankID: CourseBankID {
+        CourseBankID(rawValue: manifest.bankId) ?? .basic
     }
 
     func subsectionTitle(_ subsection: BankSubsection, language: BankLanguage) -> String {

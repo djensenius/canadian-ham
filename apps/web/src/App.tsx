@@ -14,17 +14,15 @@ import { MorseCoursePanel } from "./morse/course/MorseCoursePanel";
 import { MarkdownContent } from "./components/MarkdownContent";
 import { PwaStatus } from "./components/PwaStatus";
 import {
-  allQuestionCount,
-  bankId,
-  categories,
+  bankCatalog,
+  bankDataForId,
   categoryNameWithLanguage,
   loadQuestions,
   localizedCategoryNameWithLanguage,
-  manifest,
   questionsById,
   subsectionTitle,
-  subsectionTitles,
-  subsections,
+  type BankData,
+  type CourseBankId,
   type Language,
   type Question,
 } from "./data/bank";
@@ -158,6 +156,7 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
             <p role="alert">{t(interfaceLanguage, "errorBoundaryRenderFailed", this.state.errorMessage)}</p>
             <p>{t(interfaceLanguage, "errorBoundaryResetAvailable")}</p>
             <Settings
+              activeBank={bankDataForId(recoveryPreferences.activeBankId)}
               now={this.props.now}
               onProgressImported={() => this.setState({ errorMessage: null })}
               onReset={() => this.setState({ errorMessage: null })}
@@ -241,7 +240,9 @@ function AppContent({
   const [route, setRoute] = useState<Route>(() => routeFromHash(initialView));
   const [language, setLanguage] = useState<Language>("en");
   const [interfaceLanguage, setInterfaceLanguageState] = useState<InterfaceLanguage>(() => readStoredInterfaceLanguage());
-  const [bankQuestions, setBankQuestions] = useState<readonly Question[] | null>(null);
+  // Loaded questions are tagged with their course and only exposed while that course is active,
+  // so a render never sees the previous course's questions after a switch.
+  const [loadedBankQuestions, setLoadedBankQuestions] = useState<{ readonly bankId: CourseBankId; readonly questions: readonly Question[] } | null>(null);
   const [initialStoreLoaded, setInitialStoreLoaded] = useState(false);
   const [progress, setProgress] = useState<readonly QuestionProgressRecord[]>([]);
   const [examAttempts, setExamAttempts] = useState<readonly ExamAttempt[]>([]);
@@ -307,10 +308,11 @@ function AppContent({
 
   useEffect(() => {
     let cancelled = false;
-    loadQuestions()
+    const bankId = preferences.activeBankId;
+    loadQuestions(bankId)
       .then((questions) => {
         if (!cancelled) {
-          setBankQuestions(questions);
+          setLoadedBankQuestions({ bankId, questions });
         }
       })
       .catch((error: unknown) => {
@@ -321,7 +323,7 @@ function AppContent({
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [preferences.activeBankId]);
 
   useEffect(() => {
     const onHashChange = () => {
@@ -365,14 +367,18 @@ function AppContent({
     return () => media.removeListener?.(onSystemThemeChange);
   }, [preferences.theme]);
 
+  const activeBank = useMemo(() => bankDataForId(preferences.activeBankId), [preferences.activeBankId]);
+  const bankQuestions = loadedBankQuestions?.bankId === preferences.activeBankId ? loadedBankQuestions.questions : null;
+  const activeProgress = useMemo(() => progress.filter((record) => record.bankId === activeBank.bankId), [activeBank.bankId, progress]);
+  const activeExamAttempts = useMemo(() => examAttempts.filter((attempt) => attempt.bankId === activeBank.bankId), [activeBank.bankId, examAttempts]);
   const bankQuestionsById = useMemo(() => bankQuestions === null ? new Map<string, Question>() : questionsById(bankQuestions), [bankQuestions]);
-  const latestAttempt = useMemo(() => latestSubmittedAttempt(examAttempts), [examAttempts]);
-  const readiness = useMemo(() => buildReadiness(progress, examAttempts, now()), [examAttempts, now, progress]);
+  const latestAttempt = useMemo(() => latestSubmittedAttempt(activeExamAttempts), [activeExamAttempts]);
+  const readiness = useMemo(() => buildReadiness(activeBank, activeProgress, activeExamAttempts, now()), [activeBank, activeExamAttempts, now, activeProgress]);
   const weakSubsections = useMemo(
-    () => weakSubsectionIds(progress, latestAttempt?.items ?? []),
-    [latestAttempt, progress],
+    () => weakSubsectionIds(activeProgress, latestAttempt?.items ?? []),
+    [latestAttempt, activeProgress],
   );
-  const dueReviewCount = useMemo(() => dueCount(progress, now()), [now, progress]);
+  const dueReviewCount = useMemo(() => dueCount(activeProgress, now()), [now, activeProgress]);
   const routeSegments = hashSegments(locationHash);
   const currentModuleId = route === "module" || route === "lesson" ? routeSegments[1] : undefined;
   const currentLessonId = route === "lesson" ? routeSegments[2] : undefined;
@@ -420,7 +426,7 @@ function AppContent({
     const items = buildPracticeItems({
       questions: bankQuestions,
       scope,
-      progress,
+      progress: activeProgress,
       latestExamItems: latestAttempt?.items,
       seed,
       now: now(),
@@ -472,6 +478,31 @@ function AppContent({
     }
   }
 
+  async function setCourse(nextBankId: CourseBankId): Promise<void> {
+    if (nextBankId === activeBank.bankId) {
+      return;
+    }
+    const nextBank = bankDataForId(nextBankId);
+    // Clear course-specific sessions in the same render as the optimistic bank change,
+    // so a session is never shown or scored against the other course's questions.
+    const previous = { practiceScope, practiceSession, mockExam, latestResult };
+    setPracticeScope({ type: "all" });
+    setPracticeSession(null);
+    setMockExam(null);
+    setLatestResult(null);
+    try {
+      await setPreferences({ activeBankId: nextBank.bankId });
+    } catch (error) {
+      // The bank change was rolled back; restore the previous course's sessions.
+      setPracticeScope(previous.practiceScope);
+      setPracticeSession(previous.practiceSession);
+      setMockExam(previous.mockExam);
+      setLatestResult(previous.latestResult);
+      throw error;
+    }
+    setAlertMessage(t(interfaceLanguage, "courseChanged", nextBank.course === "advanced" ? t(interfaceLanguage, "courseAdvanced") : t(interfaceLanguage, "courseBasic")));
+  }
+
   function setInterfaceLanguage(nextLanguage: InterfaceLanguage): void {
     setInterfaceLanguageState(nextLanguage);
     storeInterfaceLanguage(nextLanguage);
@@ -480,7 +511,7 @@ function AppContent({
   async function commitProgress(nextProgress: readonly QuestionProgressRecord[]): Promise<void> {
     try {
       await store.putQuestionProgressMany(nextProgress);
-      setProgress(nextProgress);
+      setProgress((current) => mergeBankProgress(current, nextProgress, activeBank.bankId));
       setAlertMessage("");
     } catch (error) {
       setAlertMessage(t(interfaceLanguage, "errorSaveQuestionProgress", formatError(error)));
@@ -508,7 +539,7 @@ function AppContent({
     try {
       await store.putLessonQuizAttemptWithQuestionProgress(attempt, nextProgress);
       setLessonQuizAttempts((current) => [...current, attempt].sort((a, b) => a.submittedAt.localeCompare(b.submittedAt)));
-      setProgress(nextProgress);
+      setProgress((current) => mergeBankProgress(current, nextProgress, activeBank.bankId));
       setAlertMessage("");
     } catch (error) {
       setAlertMessage(t(interfaceLanguage, "errorSaveLessonQuiz", formatError(error)));
@@ -516,16 +547,21 @@ function AppContent({
   }
 
   async function handleExamSubmitted(attempt: ExamAttempt): Promise<void> {
-    let nextProgress = progress;
+    let nextProgress = activeProgress;
     for (const item of attempt.items) {
-      nextProgress = applyPracticeAnswer(nextProgress, item.questionId, item.selectedSourceIndex ?? -1, attempt.submittedAt);
+      nextProgress = applyPracticeAnswer(nextProgress, item.questionId, item.selectedSourceIndex ?? -1, attempt.submittedAt, attempt.bankId);
     }
     try {
       await store.putExamAttempt(attempt);
       await store.putQuestionProgressMany(nextProgress);
-      setLatestResult(attempt);
       setExamAttempts((current) => [...current.filter((existing) => existing.id !== attempt.id), attempt]);
-      setProgress(nextProgress);
+      setProgress((current) => mergeBankProgress(current, nextProgress, attempt.bankId));
+      // If the course changed while saving, keep the saved records but don't show this
+      // attempt's results or clear the other course's exam.
+      if (latestRequestedPreferencesRef.current.activeBankId !== attempt.bankId) {
+        return;
+      }
+      setLatestResult(attempt);
       setMockExam(null);
       setAlertMessage("");
       navigate("results");
@@ -547,6 +583,7 @@ function AppContent({
           </div>
         </div>
         <div className="header-actions">
+          <CourseSwitcher activeBank={activeBank} interfaceLanguage={interfaceLanguage} onCourseChange={(bankId) => void setCourse(bankId).catch(() => undefined)} />
           <PwaStatus interfaceLanguage={interfaceLanguage} updateDisabled={mockExam !== null} />
           <LanguageToggle interfaceLanguage={interfaceLanguage} language={language} onLanguageChange={setLanguage} />
         </div>
@@ -568,8 +605,9 @@ function AppContent({
         {initialStoreLoaded && route === "home" ? (
           <Home
             interfaceLanguage={interfaceLanguage}
+            activeBank={activeBank}
             dueReviewCount={dueReviewCount}
-            examAttempts={examAttempts}
+            examAttempts={activeExamAttempts}
             onNavigate={navigate}
             onStartPractice={startPractice}
             readiness={readiness}
@@ -577,23 +615,25 @@ function AppContent({
           />
         ) : null}
         {initialStoreLoaded && route === "learn" ? (
-          <Learn
-            interfaceLanguage={interfaceLanguage}
-            lessonProgress={lessonProgress}
-            onOpenLesson={navigateToLesson}
-            onOpenModule={navigateToModule}
-          />
+          activeBank.hasLessons ? (
+            <Learn
+              interfaceLanguage={interfaceLanguage}
+              lessonProgress={lessonProgress}
+              onOpenLesson={navigateToLesson}
+              onOpenModule={navigateToModule}
+            />
+          ) : <AdvancedLessonsComingSoon interfaceLanguage={interfaceLanguage} />
         ) : null}
         {initialStoreLoaded && route === "module" ? (
-          <ModulePage
+          activeBank.hasLessons ? <ModulePage
             interfaceLanguage={interfaceLanguage}
             lessonProgress={lessonProgress}
             moduleId={currentModuleId ?? ""}
             onOpenLesson={navigateToLesson}
-          />
+          /> : <AdvancedLessonsComingSoon interfaceLanguage={interfaceLanguage} />
         ) : null}
         {initialStoreLoaded && route === "lesson" ? (
-          <LessonPage
+          activeBank.hasLessons ? <LessonPage
             interfaceLanguage={interfaceLanguage}
             attempts={lessonQuizAttempts}
             bankQuestionsById={bankQuestionsById}
@@ -606,21 +646,22 @@ function AppContent({
             onOpenLesson={navigateToLesson}
             onOpenModule={navigateToModule}
             onQuizAttempt={(attempt, nextProgress) => void commitLessonQuizAttempt(attempt, nextProgress)}
-            progress={progress}
-          />
+            progress={activeProgress}
+          /> : <AdvancedLessonsComingSoon interfaceLanguage={interfaceLanguage} />
         ) : null}
         {initialStoreLoaded && route === "practice" ? (
           <Practice
             interfaceLanguage={interfaceLanguage}
             language={language}
             bankReady={bankQuestions !== null}
+            activeBank={activeBank}
             activeScope={practiceScope}
             now={now}
             onProgressChange={commitProgress}
             onSessionChange={setPracticeSession}
             onSetPreferences={setPreferences}
             preferences={preferences}
-            progress={progress}
+            progress={activeProgress}
             session={practiceSession}
             startPractice={startPractice}
           />
@@ -628,6 +669,7 @@ function AppContent({
         {initialStoreLoaded && route === "mock" ? (
           <MockExam
             interfaceLanguage={interfaceLanguage}
+            activeBank={activeBank}
             exam={mockExam}
             language={language}
             questions={bankQuestions}
@@ -639,7 +681,7 @@ function AppContent({
           />
         ) : null}
         {initialStoreLoaded && route === "results" ? (
-          <Results attempt={latestResult ?? latestAttempt} interfaceLanguage={interfaceLanguage} language={language} onStartPractice={startPractice} questionsById={bankQuestionsById} />
+          <Results activeBank={activeBank} attempt={latestResult ?? latestAttempt} interfaceLanguage={interfaceLanguage} language={language} onStartPractice={startPractice} questionsById={bankQuestionsById} />
         ) : null}
         {initialStoreLoaded && route === "morse" ? (
           <MorseSection interfaceLanguage={interfaceLanguage} now={now} onSetPreferences={setPreferences} preferences={preferences} seedFactory={seedFactory} store={store} />
@@ -649,13 +691,17 @@ function AppContent({
             interfaceLanguage={interfaceLanguage}
             now={now}
             onProgressImported={(data) => {
-              setProgress(data.questionProgress);
-              setExamAttempts(data.examAttempts);
-              setLessonProgress(data.lessonProgress ?? []);
-              setLessonQuizAttempts(data.lessonQuizAttempts ?? []);
-              savedPreferencesRef.current = data.preferences;
-              latestRequestedPreferencesRef.current = data.preferences;
-              setPreferencesState(data.preferences);
+              const importBank = bankDataForId(data.bankId);
+              const importedPreferences = { ...data.preferences, activeBankId: importBank.bankId };
+              setProgress((current) => mergeBankProgress(current, data.questionProgress, data.bankId));
+              setExamAttempts((current) => mergeBankExamAttempts(current, data.examAttempts, data.bankId));
+              if (importBank.hasLessons) {
+                setLessonProgress(data.lessonProgress ?? []);
+                setLessonQuizAttempts(data.lessonQuizAttempts ?? []);
+              }
+              savedPreferencesRef.current = importedPreferences;
+              latestRequestedPreferencesRef.current = importedPreferences;
+              setPreferencesState(importedPreferences);
               setPracticeSession(null);
               setMockExam(null);
               setLatestResult(null);
@@ -682,12 +728,13 @@ function AppContent({
             }}
             onInterfaceLanguageChange={setInterfaceLanguage}
             onSetPreferences={setPreferences}
+            activeBank={activeBank}
             preferences={preferences}
             statusMessage={statusMessage}
             store={store}
           />
         ) : null}
-        {initialStoreLoaded && route === "about" ? <About interfaceLanguage={interfaceLanguage} /> : null}
+        {initialStoreLoaded && route === "about" ? <About activeBank={activeBank} interfaceLanguage={interfaceLanguage} /> : null}
       </main>
 
       <Footer interfaceLanguage={interfaceLanguage} />
@@ -704,7 +751,32 @@ function InitialStoreLoading({ interfaceLanguage }: { readonly interfaceLanguage
   );
 }
 
+function CourseSwitcher({ activeBank, interfaceLanguage, onCourseChange }: { readonly activeBank: BankData; readonly interfaceLanguage: InterfaceLanguage; readonly onCourseChange: (bankId: CourseBankId) => void }) {
+  return (
+    <fieldset className="course-switcher" aria-label={t(interfaceLanguage, "courseSwitcherAria")}>
+      <legend>{t(interfaceLanguage, "courseSwitcherLegend")}</legend>
+      {bankCatalog.map((bank) => (
+        <label key={bank.bankId}>
+          <input type="radio" name="course" value={bank.bankId} checked={activeBank.bankId === bank.bankId} onChange={() => onCourseChange(bank.bankId)} />
+          {bank.course === "advanced" ? t(interfaceLanguage, "courseAdvanced") : t(interfaceLanguage, "courseBasic")}
+        </label>
+      ))}
+    </fieldset>
+  );
+}
+
+function AdvancedLessonsComingSoon({ interfaceLanguage }: { readonly interfaceLanguage: InterfaceLanguage }) {
+  return (
+    <section className="card learn" aria-labelledby="advanced-lessons-title">
+      <p className="eyebrow">{t(interfaceLanguage, "advancedLessonsEyebrow")}</p>
+      <h2 id="advanced-lessons-title">{t(interfaceLanguage, "advancedLessonsTitle")}</h2>
+      <p>{t(interfaceLanguage, "advancedLessonsComingSoon")}</p>
+    </section>
+  );
+}
+
 interface HomeProps {
+  readonly activeBank: BankData;
   readonly interfaceLanguage: InterfaceLanguage;
   readonly readiness: ReadinessResult;
   readonly weakSubsections: readonly string[];
@@ -714,15 +786,15 @@ interface HomeProps {
   readonly onNavigate: (route: Route) => void;
 }
 
-function Home({ interfaceLanguage, readiness, weakSubsections, dueReviewCount, examAttempts, onStartPractice, onNavigate }: HomeProps) {
+function Home({ activeBank, interfaceLanguage, readiness, weakSubsections, dueReviewCount, examAttempts, onStartPractice, onNavigate }: HomeProps) {
   const weakCategories = new Set(weakSubsections.map((id) => id.slice(0, 5)));
   return (
     <section className="card home" aria-labelledby="home-title">
       <div className="home-hero">
         <div>
-          <p className="eyebrow">{t(interfaceLanguage, "homeEyebrow")}</p>
-          <h2 id="home-title">{t(interfaceLanguage, "homeTitle")}</h2>
-          <p>{t(interfaceLanguage, "homeIntro")}</p>
+          <p className="eyebrow">{activeBank.course === "advanced" ? t(interfaceLanguage, "advancedHomeEyebrow") : t(interfaceLanguage, "homeEyebrow")}</p>
+          <h2 id="home-title">{activeBank.course === "advanced" ? t(interfaceLanguage, "advancedHomeTitle") : t(interfaceLanguage, "homeTitle")}</h2>
+          <p>{activeBank.course === "advanced" ? t(interfaceLanguage, "advancedHomeIntro") : t(interfaceLanguage, "homeIntro")}</p>
           <div className="action-row">
             <button type="button" className="primary-button" onClick={() => onStartPractice({ type: "all" })}>{t(interfaceLanguage, "homeStartPractice")}</button>
             <button type="button" className="secondary-button" onClick={() => onNavigate("learn")}>{t(interfaceLanguage, "homeLearn")}</button>
@@ -738,7 +810,7 @@ function Home({ interfaceLanguage, readiness, weakSubsections, dueReviewCount, e
         <p>{t(interfaceLanguage, "readinessCompletedExams")} <strong>{examAttempts.length}</strong></p>
         {weakCategories.size > 0 ? (
           <p>{t(interfaceLanguage, "readinessWeakCategories")} {[...weakCategories].map((categoryId, index) => {
-            const name = categoryNameWithLanguage(categoryId, interfaceLanguage);
+            const name = categoryNameWithLanguage(categoryId, interfaceLanguage, activeBank);
             return <span key={categoryId}>{index > 0 ? ", " : null}<span lang={languageTag(name.language)}>{name.text}</span></span>;
           })}</p>
         ) : <p>{t(interfaceLanguage, "readinessNoWeakCategory")}</p>}
@@ -747,7 +819,7 @@ function Home({ interfaceLanguage, readiness, weakSubsections, dueReviewCount, e
             <summary>{t(interfaceLanguage, "readinessWeakSubsections")}</summary>
             <ul>
               {weakSubsections.slice(0, 12).map((subsectionId) => (
-                <li key={subsectionId}>{subsectionId}{colonSeparator(interfaceLanguage)}<span lang={englishTextLang(interfaceLanguage)}>{subsectionTitle(subsectionId)}</span></li>
+                <li key={subsectionId}>{subsectionId}{colonSeparator(interfaceLanguage)}<span lang={englishTextLang(interfaceLanguage)}>{subsectionTitle(subsectionId, activeBank)}</span></li>
               ))}
             </ul>
           </details>
@@ -762,10 +834,10 @@ function Home({ interfaceLanguage, readiness, weakSubsections, dueReviewCount, e
       <div className="category-grid" aria-label={t(interfaceLanguage, "practiceCategoriesAria")}>
         <button className="category-card all-questions" type="button" onClick={() => onStartPractice({ type: "all" })}>
           <span>{t(interfaceLanguage, "allQuestions")}</span>
-          <strong>{allQuestionCount}</strong>
+          <strong>{activeBank.allQuestionCount}</strong>
           <small>{t(interfaceLanguage, "mixedAllCategories")}</small>
         </button>
-        {categories.map((category) => {
+        {activeBank.categories.map((category) => {
           const name = localizedCategoryNameWithLanguage(category, interfaceLanguage);
           return (
             <button className="category-card" type="button" key={category.id} onClick={() => onStartPractice({ type: "category", categoryId: category.id })}>
@@ -1119,6 +1191,7 @@ function ConceptCheckCard({ conceptCheck, choicePermutation, selectedChoiceIndex
 
 interface PracticeProps {
   readonly interfaceLanguage: InterfaceLanguage;
+  readonly activeBank: BankData;
   readonly activeScope: PracticeScope;
   readonly language: Language;
   readonly bankReady: boolean;
@@ -1134,6 +1207,7 @@ interface PracticeProps {
 
 function Practice({
   interfaceLanguage,
+  activeBank,
   activeScope,
   language,
   bankReady,
@@ -1146,9 +1220,9 @@ function Practice({
   onProgressChange,
   onSetPreferences,
 }: PracticeProps) {
-  const [scopeKind, setScopeKind] = useState(() => controlsFromScope(activeScope).scopeKind);
-  const [categoryId, setCategoryId] = useState(() => controlsFromScope(activeScope).categoryId);
-  const [subsectionId, setSubsectionId] = useState(() => controlsFromScope(activeScope).subsectionId);
+  const [scopeKind, setScopeKind] = useState(() => controlsFromScope(activeScope, activeBank).scopeKind);
+  const [categoryId, setCategoryId] = useState(() => controlsFromScope(activeScope, activeBank).categoryId);
+  const [subsectionId, setSubsectionId] = useState(() => controlsFromScope(activeScope, activeBank).subsectionId);
   const [submittingPractice, setSubmittingPractice] = useState(false);
   const feedbackRef = useRef<HTMLDivElement>(null);
   const reviewRef = useRef<HTMLDivElement>(null);
@@ -1164,7 +1238,7 @@ function Practice({
   }, [bankReady]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    const controls = controlsFromScope(session?.scope ?? activeScope);
+    const controls = controlsFromScope(session?.scope ?? activeScope, activeBank);
     setScopeKind(controls.scopeKind);
     setCategoryId(controls.categoryId);
     setSubsectionId(controls.subsectionId);
@@ -1203,7 +1277,7 @@ function Practice({
     const nextSession = { ...session, selectedByQuestionId: selected };
     onSessionChange(nextSession);
     if (session.mode === "immediate") {
-      const nextProgress = applyPracticeAnswer(progress, item.question.id, sourceIndex, now());
+      const nextProgress = applyPracticeAnswer(progress, item.question.id, sourceIndex, now(), activeBank.bankId);
       try {
         await onProgressChange(nextProgress);
       } catch {
@@ -1223,7 +1297,7 @@ function Practice({
       for (const item of session.items) {
         const sourceIndex = session.selectedByQuestionId.get(item.question.id);
         if (sourceIndex !== undefined) {
-          nextProgress = applyPracticeAnswer(nextProgress, item.question.id, sourceIndex, submittedAt);
+          nextProgress = applyPracticeAnswer(nextProgress, item.question.id, sourceIndex, submittedAt, activeBank.bankId);
         }
       }
       await onProgressChange(nextProgress);
@@ -1253,7 +1327,7 @@ function Practice({
           <label>
             {t(interfaceLanguage, "category")}
             <select value={categoryId} onChange={(event) => setCategoryId(event.currentTarget.value)}>
-              {categories.map((category) => {
+              {activeBank.categories.map((category) => {
                 const name = localizedCategoryNameWithLanguage(category, interfaceLanguage);
                 return <option key={category.id} lang={languageTag(name.language)} value={category.id}>{name.text}</option>;
               })}
@@ -1264,7 +1338,7 @@ function Practice({
           <label>
             {t(interfaceLanguage, "subsection")}
             <select value={subsectionId} onChange={(event) => setSubsectionId(event.currentTarget.value)}>
-              {subsectionTitles.map((subsection) => <option key={subsection.id} lang={englishTextLang(interfaceLanguage)} value={subsection.id}>{subsection.id}{colonSeparator(interfaceLanguage)}{subsection.title.en}</option>)}
+              {activeBank.subsections.map((subsection) => <option key={subsection.id} lang={englishTextLang(interfaceLanguage)} value={subsection.id}>{subsection.id}{colonSeparator(interfaceLanguage)}{subsectionTitle(subsection.id, activeBank)}</option>)}
             </select>
           </label>
         ) : null}
@@ -1285,7 +1359,7 @@ function Practice({
           <aside className="session-outline" aria-label={t(interfaceLanguage, "practiceSessionOutline")}>
             <div className="session-summary" aria-label={t(interfaceLanguage, "practiceSessionProgress")}>
               <span>{t(interfaceLanguage, "questionProgress", session.currentIndex + 1, session.items.length)}</span>
-              <span>{t(interfaceLanguage, "scopePrefix")} <ScopeValue interfaceLanguage={interfaceLanguage} scope={session.scope} /></span>
+              <span>{t(interfaceLanguage, "scopePrefix")} <ScopeValue activeBank={activeBank} interfaceLanguage={interfaceLanguage} scope={session.scope} /></span>
               <span>{t(interfaceLanguage, "modePrefix")} {session.mode === "immediate" ? t(interfaceLanguage, "feedbackImmediate") : t(interfaceLanguage, "feedbackReviewLater")}</span>
               <span>{t(interfaceLanguage, "seedPrefix")} {session.seed}</span>
             </div>
@@ -1454,6 +1528,7 @@ export function CitationLink({ citation, interfaceLanguage = "en" }: { readonly 
 }
 
 interface MockExamProps {
+  readonly activeBank: BankData;
   readonly interfaceLanguage: InterfaceLanguage;
   readonly exam: MockExamSession | null;
   readonly language: Language;
@@ -1465,7 +1540,7 @@ interface MockExamProps {
   readonly onSubmitExam: (attempt: ExamAttempt) => Promise<void>;
 }
 
-function MockExam({ interfaceLanguage, exam, language, questions, preferences, now, seedFactory, onExamChange, onSubmitExam }: MockExamProps) {
+function MockExam({ activeBank, interfaceLanguage, exam, language, questions, preferences, now, seedFactory, onExamChange, onSubmitExam }: MockExamProps) {
   const [seed, setSeed] = useState("");
   const [timerEnabled, setTimerEnabled] = useState(preferences.examTimerEnabled);
   const [timerAnnouncement, setTimerAnnouncement] = useState("");
@@ -1506,7 +1581,7 @@ function MockExam({ interfaceLanguage, exam, language, questions, preferences, n
       seed: selectedSeed,
       startedAt: now(),
       timerEnabled,
-      generatedItems: createMockExam(selectedSeed, questions),
+      generatedItems: createMockExam(selectedSeed, questions, activeBank),
       currentIndex: 0,
       selectedByQuestionId: new Map(),
       flaggedQuestionIds: new Set(),
@@ -1520,14 +1595,14 @@ function MockExam({ interfaceLanguage, exam, language, questions, preferences, n
     return (
       <section className="card mock-exam" aria-labelledby="mock-title">
         <h2 id="mock-title">{t(interfaceLanguage, "mockTitle")}</h2>
-        <p>{t(interfaceLanguage, "mockIntro")}</p>
+        <p>{activeBank.course === "advanced" ? t(interfaceLanguage, "advancedMockIntro", activeBank.mockExamQuestionCount) : t(interfaceLanguage, "mockIntro")}</p>
         <label>
           {t(interfaceLanguage, "seedOptional")}
           <input value={seed} onChange={(event) => setSeed(event.currentTarget.value)} placeholder={t(interfaceLanguage, "seedPlaceholder")} />
         </label>
         <label><input type="checkbox" checked={timerEnabled} onChange={(event) => setTimerEnabled(event.currentTarget.checked)} /> {t(interfaceLanguage, "timerEnable")}</label>
         <p id="timer-note">{t(interfaceLanguage, "timerNote")}</p>
-        <p className="reference-note">{t(interfaceLanguage, "referenceSheetNote")}</p>
+        <p className="reference-note">{activeBank.course === "advanced" ? t(interfaceLanguage, "advancedNoReferenceSheetNote") : t(interfaceLanguage, "referenceSheetNote")}</p>
         <button type="button" className="primary-button" disabled={questions === null} onClick={startExam}>{questions === null ? t(interfaceLanguage, "loadingQuestionBank") : t(interfaceLanguage, "startMockExam")}</button>
       </section>
     );
@@ -1566,6 +1641,7 @@ function MockExam({ interfaceLanguage, exam, language, questions, preferences, n
     }
     try {
       await onSubmitExam(buildExamAttempt({
+        bank: activeBank,
         seed: exam.seed,
         startedAt: exam.startedAt,
         submittedAt: now(),
@@ -1667,7 +1743,7 @@ function MockExam({ interfaceLanguage, exam, language, questions, preferences, n
   );
 }
 
-function Results({ attempt, interfaceLanguage, language, onStartPractice, questionsById }: { readonly attempt: ExamAttempt | null; readonly interfaceLanguage: InterfaceLanguage; readonly language: Language; readonly onStartPractice: (scope: PracticeScope) => void; readonly questionsById: ReadonlyMap<string, Question> }) {
+function Results({ activeBank, attempt, interfaceLanguage, language, onStartPractice, questionsById }: { readonly activeBank: BankData; readonly attempt: ExamAttempt | null; readonly interfaceLanguage: InterfaceLanguage; readonly language: Language; readonly onStartPractice: (scope: PracticeScope) => void; readonly questionsById: ReadonlyMap<string, Question> }) {
   if (attempt === null) {
     return (
       <section className="card results" aria-labelledby="results-title">
@@ -1681,12 +1757,12 @@ function Results({ attempt, interfaceLanguage, language, onStartPractice, questi
     <section className="card results" aria-labelledby="results-title">
       <h2 id="results-title">{t(interfaceLanguage, "mockResultsTitle")}</h2>
       <p><strong>{attempt.score.correct} / {attempt.score.total}</strong> ({attempt.score.percent.toFixed(0)}{interfaceLanguage === "fr" ? " %" : "%"})</p>
-      <p>{attempt.score.honours ? t(interfaceLanguage, "resultHonours") : attempt.score.passed ? t(interfaceLanguage, "resultPass") : t(interfaceLanguage, "resultBelowPass")}</p>
-      <p>{t(interfaceLanguage, "passThresholdCopy")}</p>
+      <p>{attempt.score.honours ? t(interfaceLanguage, "resultHonours") : attempt.score.passed ? t(interfaceLanguage, activeBank.course === "advanced" ? "advancedResultPass" : "resultPass") : t(interfaceLanguage, "resultBelowPass")}</p>
+      <p>{activeBank.course === "advanced" ? t(interfaceLanguage, "advancedPassThresholdCopy") : t(interfaceLanguage, "passThresholdCopy")}</p>
       <h3>{t(interfaceLanguage, "categoryBreakdown")}</h3>
       <ul>
         {attempt.score.categoryBreakdown.map((entry) => (
-          <li key={entry.categoryId}><CategoryNameText categoryId={entry.categoryId} interfaceLanguage={interfaceLanguage} />{colonSeparator(interfaceLanguage)}{entry.correct}/{entry.total} ({entry.percent.toFixed(0)}{interfaceLanguage === "fr" ? " %" : "%"})</li>
+          <li key={entry.categoryId}><CategoryNameText activeBank={activeBank} categoryId={entry.categoryId} interfaceLanguage={interfaceLanguage} />{colonSeparator(interfaceLanguage)}{entry.correct}/{entry.total} ({entry.percent.toFixed(0)}{interfaceLanguage === "fr" ? " %" : "%"})</li>
         ))}
       </ul>
       <button type="button" onClick={() => onStartPractice({ type: "weak" })}>{t(interfaceLanguage, "readinessPracticeWeak")}</button>
@@ -1723,7 +1799,7 @@ function Results({ attempt, interfaceLanguage, language, onStartPractice, questi
 
 const rbr4CitationUrl = "https://ised-isde.canada.ca/site/spectrum-management-telecommunications/en/licences-and-certificates/regulations-reference-rbr/rbr-4-standards-operation-radio-stations-amateur-radio-service";
 
-function About({ interfaceLanguage }: { readonly interfaceLanguage: InterfaceLanguage }) {
+function About({ activeBank, interfaceLanguage }: { readonly activeBank: BankData; readonly interfaceLanguage: InterfaceLanguage }) {
   const legalLang = englishTextLang(interfaceLanguage);
 
   return (
@@ -1734,16 +1810,16 @@ function About({ interfaceLanguage }: { readonly interfaceLanguage: InterfaceLan
 
       <section aria-labelledby="about-bank-heading">
         <h3 id="about-bank-heading">{t(interfaceLanguage, "aboutBankHeading")}</h3>
-        <p>{t(interfaceLanguage, "aboutBankVersion", bankId, manifest.effectiveDate)}</p>
-        <p>{t(interfaceLanguage, "aboutQuestionBankCounts", manifest.counts.questions, manifest.counts.categories, manifest.counts.subsections)}</p>
+        <p>{t(interfaceLanguage, "aboutBankVersion", activeBank.bankId, activeBank.manifest.effectiveDate)}</p>
+        <p>{t(interfaceLanguage, "aboutQuestionBankCounts", activeBank.manifest.counts.questions, activeBank.manifest.counts.categories, activeBank.manifest.counts.subsections)}</p>
       </section>
 
       <section aria-labelledby="about-sources-heading">
         <h3 id="about-sources-heading">{t(interfaceLanguage, "aboutSourcesHeading")}</h3>
         <ul>
-          <li>{t(interfaceLanguage, "aboutQuestionBankSource", manifest.effectiveDate, manifest.source.url)}</li>
+          <li>{t(interfaceLanguage, activeBank.course === "advanced" ? "aboutAdvancedQuestionBankSource" : "aboutQuestionBankSource", activeBank.manifest.effectiveDate, activeBank.manifest.source.url)}</li>
           <li>{t(interfaceLanguage, "aboutRbr4Source", rbr4CitationUrl)}</li>
-          <li>{t(interfaceLanguage, "aboutReferenceSheetSource")}</li>
+          <li>{activeBank.course === "advanced" ? t(interfaceLanguage, "aboutAdvancedNoReferenceSheetSource") : t(interfaceLanguage, "aboutReferenceSheetSource")}</li>
         </ul>
       </section>
 
@@ -2103,6 +2179,7 @@ function MorseSettingsControls({ interfaceLanguage, preferences, onSetPreference
 }
 
 interface SettingsProps {
+  readonly activeBank: BankData;
   readonly interfaceLanguage: InterfaceLanguage;
   readonly store: ProgressStore;
   readonly now: () => string;
@@ -2114,7 +2191,7 @@ interface SettingsProps {
   readonly onSetPreferences: (preferences: PreferencesPatch) => Promise<boolean>;
 }
 
-function Settings({ interfaceLanguage, store, now, preferences, statusMessage, onProgressImported, onReset, onInterfaceLanguageChange, onSetPreferences }: SettingsProps) {
+function Settings({ activeBank, interfaceLanguage, store, now, preferences, statusMessage, onProgressImported, onReset, onInterfaceLanguageChange, onSetPreferences }: SettingsProps) {
   const [errors, setErrors] = useState<readonly string[]>([]);
   const [pendingImport, setPendingImport] = useState<ProgressExportV1 | null>(null);
   const [message, setMessage] = useState(statusMessage);
@@ -2136,7 +2213,7 @@ function Settings({ interfaceLanguage, store, now, preferences, statusMessage, o
   async function exportProgress(): Promise<void> {
     setErrors([]);
     try {
-      const data = await store.exportData(now());
+      const data = await store.exportData(now(), activeBank);
       const blob = new Blob([serializeProgressExport(data)], { type: "application/json" });
       const href = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
@@ -2162,7 +2239,7 @@ function Settings({ interfaceLanguage, store, now, preferences, statusMessage, o
     }
     try {
       const parsed = JSON.parse(await readFileText(file)) as unknown;
-      const result = validateProgressImport(parsed);
+      const result = validateProgressImport(parsed, activeBank);
       if (!result.ok || result.data === undefined) {
         setErrors(result.errors);
         return;
@@ -2231,7 +2308,7 @@ function Settings({ interfaceLanguage, store, now, preferences, statusMessage, o
     <section className="card settings" aria-labelledby="settings-title">
       <h2 id="settings-title">{t(interfaceLanguage, "settingsTitle")}</h2>
       <p>{t(interfaceLanguage, "settingsPrivacyCopy")}</p>
-      <p>{t(interfaceLanguage, "activeBank", bankId, manifest.effectiveDate)}</p>
+      <p>{t(interfaceLanguage, "activeBank", activeBank.bankId, activeBank.manifest.effectiveDate)}</p>
       <fieldset className="segmented-control theme-toggle">
         <legend>{t(interfaceLanguage, "themeLegend")}</legend>
         <label><input type="radio" name="theme" checked={preferences.theme === "system"} onChange={() => void chooseTheme("system")} /> {t(interfaceLanguage, "themeSystem")}</label>
@@ -2329,25 +2406,25 @@ function scopeFromControls(scopeKind: string, categoryId: string, subsectionId: 
   return { type: "all" };
 }
 
-function controlsFromScope(scope: PracticeScope): { scopeKind: string; categoryId: string; subsectionId: string } {
+function controlsFromScope(scope: PracticeScope, bank: BankData): { scopeKind: string; categoryId: string; subsectionId: string } {
   return {
     scopeKind: scope.type,
-    categoryId: scope.type === "category" ? scope.categoryId : categories[0]?.id ?? "B-001",
-    subsectionId: scope.type === "subsection" ? scope.subsectionId : subsections[0]?.id ?? "B-001-001",
+    categoryId: scope.type === "category" ? scope.categoryId : bank.categories[0]?.id ?? "B-001",
+    subsectionId: scope.type === "subsection" ? scope.subsectionId : bank.subsections[0]?.id ?? "B-001-001",
   };
 }
 
-function CategoryNameText({ categoryId, interfaceLanguage }: { readonly categoryId: string; readonly interfaceLanguage: InterfaceLanguage }) {
-  const name = categoryNameWithLanguage(categoryId, interfaceLanguage);
+function CategoryNameText({ activeBank, categoryId, interfaceLanguage }: { readonly activeBank: BankData; readonly categoryId: string; readonly interfaceLanguage: InterfaceLanguage }) {
+  const name = categoryNameWithLanguage(categoryId, interfaceLanguage, activeBank);
   return <span lang={languageTag(name.language)}>{name.text}</span>;
 }
 
-function ScopeValue({ interfaceLanguage, scope }: { readonly interfaceLanguage: InterfaceLanguage; readonly scope: PracticeScope }) {
+function ScopeValue({ activeBank, interfaceLanguage, scope }: { readonly activeBank: BankData; readonly interfaceLanguage: InterfaceLanguage; readonly scope: PracticeScope }) {
   if (scope.type === "category") {
-    return <CategoryNameText categoryId={scope.categoryId} interfaceLanguage={interfaceLanguage} />;
+    return <CategoryNameText activeBank={activeBank} categoryId={scope.categoryId} interfaceLanguage={interfaceLanguage} />;
   }
   if (scope.type === "subsection") {
-    return <>{scope.subsectionId}{colonSeparator(interfaceLanguage)}<span lang={englishTextLang(interfaceLanguage)}>{subsectionTitle(scope.subsectionId)}</span></>;
+    return <>{scope.subsectionId}{colonSeparator(interfaceLanguage)}<span lang={englishTextLang(interfaceLanguage)}>{subsectionTitle(scope.subsectionId, activeBank)}</span></>;
   }
   if (scope.type === "weak") {
     return <>{t(interfaceLanguage, "practiceScopeWeak")}</>;
@@ -2362,9 +2439,9 @@ function hasUnsubmittedReviewAnswers(session: PracticeSession | null): boolean {
   return session !== null && session.mode === "review-later" && !session.submitted && session.selectedByQuestionId.size > 0;
 }
 
-function buildReadiness(progress: readonly QuestionProgressRecord[], attempts: readonly ExamAttempt[], now: string): ReadinessResult {
+function buildReadiness(bank: BankData, progress: readonly QuestionProgressRecord[], attempts: readonly ExamAttempt[], now: string): ReadinessResult {
   return computeReadiness({
-    bankId,
+    bankId: bank.bankId,
     completedExams: attempts.map((attempt) => ({
       submittedAt: attempt.submittedAt,
       score: attempt.score,
@@ -2376,6 +2453,16 @@ function buildReadiness(progress: readonly QuestionProgressRecord[], attempts: r
 
 function latestSubmittedAttempt(attempts: readonly ExamAttempt[]): ExamAttempt | null {
   return [...attempts].sort((a, b) => Date.parse(b.submittedAt) - Date.parse(a.submittedAt))[0] ?? null;
+}
+
+function mergeBankProgress(current: readonly QuestionProgressRecord[], nextBankProgress: readonly QuestionProgressRecord[], bankId: string): readonly QuestionProgressRecord[] {
+  return [...current.filter((record) => record.bankId !== bankId), ...nextBankProgress]
+    .toSorted((a, b) => a.questionId.localeCompare(b.questionId));
+}
+
+function mergeBankExamAttempts(current: readonly ExamAttempt[], nextBankAttempts: readonly ExamAttempt[], bankId: string): readonly ExamAttempt[] {
+  return [...current.filter((attempt) => attempt.bankId !== bankId), ...nextBankAttempts]
+    .toSorted((a, b) => a.submittedAt.localeCompare(b.submittedAt));
 }
 
 function languageTag(language: Language): "en" | "fr-CA" {

@@ -14,6 +14,44 @@ final class QuestionBankTests: XCTestCase {
         XCTAssertEqual(bank.manifest.counts.categories, 8)
     }
 
+    func testAdvancedBundledJSONDecodesExpectedCountsAndEnglishCategoryFallbacks() throws {
+        let bank = try QuestionBankStore.load(bankId: .advanced, from: Bundle(for: Self.self))
+
+        XCTAssertEqual(bank.manifest.bankId, CourseBankID.advanced.rawValue)
+        XCTAssertEqual(bank.questions.count, 549)
+        XCTAssertEqual(bank.subsections.count, 50)
+        XCTAssertEqual(bank.categories.count, 7)
+        XCTAssertTrue(bank.categories.allSatisfy { $0.name.fr == nil })
+        XCTAssertEqual(bank.categories.first?.name.resolvedLanguage(for: .french), .english)
+    }
+
+    func testAdvancedMockExamUsesFiftyQuestionsAndNoHonours() throws {
+        let bank = try QuestionBankStore.load(bankId: .advanced, from: Bundle(for: Self.self))
+        let exam = try AppleStudyEngine.generatedMockExam(bank: bank, seed: "advanced-unit-mock")
+        let selected = Dictionary(uniqueKeysWithValues: exam.items.enumerated().map { index, item in
+            (item.questionId, index < 40 ? Optional(0) : Optional(1))
+        })
+        let attempt = try AppleStudyEngine.buildExamAttempt(
+            bank: bank,
+            seed: "advanced-unit-mock",
+            startedAt: "2026-01-02T00:00:00.000Z",
+            submittedAt: "2026-01-02T01:00:00.000Z",
+            timerEnabled: false,
+            secondsElapsed: 0,
+            generatedItems: exam.items,
+            selectedByQuestionId: selected,
+            flaggedQuestionIds: []
+        )
+
+        XCTAssertEqual(exam.items.count, 50)
+        XCTAssertEqual(Set(exam.items.map(\.subsectionId)).count, 50)
+        XCTAssertEqual(attempt.bankId, CourseBankID.advanced.rawValue)
+        XCTAssertEqual(attempt.score.total, 50)
+        XCTAssertEqual(attempt.score.correct, 40)
+        XCTAssertTrue(attempt.score.passed)
+        XCTAssertFalse(attempt.score.honours)
+    }
+
     func testEngineShufflePreservesAnswerInvariantsForEveryBundledQuestion() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let seeds = [

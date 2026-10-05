@@ -2289,6 +2289,22 @@
         }
       }
     },
+    "Accuracy: %lld%%. Errors: %lld total, %lld wrong, %lld missing, %lld inserted." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exactitude : %lld %%. Erreurs : %lld au total, %lld incorrectes, %lld manquantes, %lld insérées."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exactitude : %lld %%. Erreurs : %lld au total, %lld incorrectes, %lld manquantes, %lld insérées."
+          }
+        }
+      }
+    },
     "Active bank: %@, effective %@." : {
       "localizations" : {
         "en" : {
@@ -2307,6 +2323,70 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Banque active : %@, en vigueur le %@."
+          }
+        }
+      }
+    },
+    "Advanced" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compétence supérieure"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compétence supérieure"
+          }
+        }
+      }
+    },
+    "Advanced lessons" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçons de compétence supérieure"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçons de compétence supérieure"
+          }
+        }
+      }
+    },
+    "Advanced lessons are coming" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les leçons de compétence supérieure sont à venir"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les leçons de compétence supérieure sont à venir"
+          }
+        }
+      }
+    },
+    "Advanced lessons are not bundled yet. Use practice by topic and 50-question mock exams while the curriculum is authored." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les leçons de compétence supérieure ne sont pas encore incluses. Utilisez les exercices par sujet et les examens simulés de 50 questions pendant la rédaction du programme."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les leçons de compétence supérieure ne sont pas encore incluses. Utilisez les exercices par sujet et les examens simulés de 50 questions pendant la rédaction du programme."
           }
         }
       }
@@ -2491,6 +2571,22 @@
         }
       }
     },
+    "At least two recent mock exams meet the 70% Advanced pass threshold. There is no Advanced Honours result." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Au moins deux examens simulés récents atteignent le seuil de réussite de 70 % de la compétence supérieure. Il n’y a pas de résultat avec distinction pour la compétence supérieure."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Au moins deux examens simulés récents atteignent le seuil de réussite de 70 % de la compétence supérieure. Il n’y a pas de résultat avec distinction pour la compétence supérieure."
+          }
+        }
+      }
+    },
     "At least two recent mock exams meet the 70% pass threshold. Keep working toward 80% for Basic with Honours." : {
       "localizations" : {
         "fr" : {
@@ -2551,6 +2647,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Banque"
+          }
+        }
+      }
+    },
+    "Basic" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compétence de base"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compétence de base"
           }
         }
       }
@@ -2829,6 +2941,22 @@
         }
       }
     },
+    "Complete at least two mock exams before Canadian Ham claims pass readiness. Keep practicing by topic while you build evidence." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminez au moins deux examens simulés avant que Canadian Ham indique une préparation suffisante pour réussir. Continuez les exercices par sujet pendant que vous accumulez des données."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminez au moins deux examens simulés avant que Canadian Ham indique une préparation suffisante pour réussir. Continuez les exercices par sujet pendant que vous accumulez des données."
+          }
+        }
+      }
+    },
     "Complete the previous lesson to unlock this lesson." : {
       "localizations" : {
         "fr" : {
@@ -2969,6 +3097,22 @@
         }
       }
     },
+    "Copy results" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultats de copie"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultats de copie"
+          }
+        }
+      }
+    },
     "Correct" : {
       "localizations" : {
         "fr" : {
@@ -3067,6 +3211,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bonne réponse. Votre réponse : "
+          }
+        }
+      }
+    },
+    "Course" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cours"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cours"
           }
         }
       }
@@ -3585,6 +3745,22 @@
         }
       }
     },
+    "Exam results" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultats de l’examen"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultats de l’examen"
+          }
+        }
+      }
+    },
     "Exam rule: fail at %lld%% because more than 5 errors is below the 100%% pass mark." : {
       "localizations" : {
         "fr" : {
@@ -3849,6 +4025,22 @@
         }
       }
     },
+    "Generate 50 Advanced questions: one from each topic area, mixed into a repeatable order. The optional timer is off by default." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Générer 50 questions de compétence supérieure : une par sujet, mélangées dans un ordre reproductible. Le chronomètre facultatif est désactivé par défaut."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Générer 50 questions de compétence supérieure : une par sujet, mélangées dans un ordre reproductible. Le chronomètre facultatif est désactivé par défaut."
+          }
+        }
+      }
+    },
     "Generate 100 questions: one from each subsection, mixed into a repeatable order. The optional timer is off by default." : {
       "localizations" : {
         "fr" : {
@@ -3903,22 +4095,6 @@
         }
       }
     },
-    "Great work. The next lesson is unlocked." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bravo. La leçon suivante est débloquée."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bravo. La leçon suivante est débloquée."
-          }
-        }
-      }
-    },
     "Great work. All Morse lessons are complete." : {
       "localizations" : {
         "en" : {
@@ -3937,6 +4113,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bravo. Toutes les leçons Morse sont terminées."
+          }
+        }
+      }
+    },
+    "Great work. The next lesson is unlocked." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bravo. La leçon suivante est débloquée."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bravo. La leçon suivante est débloquée."
           }
         }
       }
@@ -4457,6 +4649,22 @@
         }
       }
     },
+    "ISED Amateur Radio Operator Certificate Advanced Qualification question bank, effective %@." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Banque de questions d’ISDE pour le certificat d’opérateur radioamateur — compétence supérieure, en vigueur le %1$@."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Banque de questions d’ISDE pour le certificat d’opérateur radioamateur — compétence supérieure, en vigueur le %1$@."
+          }
+        }
+      }
+    },
     "ISED Amateur Radio Operator Certificate Basic Qualification question bank, effective %@." : {
       "localizations" : {
         "en" : {
@@ -4663,6 +4871,28 @@
         }
       }
     },
+    "Lesson %lld\n%@\n%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lesson %1$lld\n%2$@\n%3$@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçon %1$lld\n%2$@\n%3$@"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçon %1$lld\n%2$@\n%3$@"
+          }
+        }
+      }
+    },
     "Lesson %lld session" : {
       "localizations" : {
         "fr" : {
@@ -4691,28 +4921,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Leçon %lld, %@, %@"
-          }
-        }
-      }
-    },
-    "Lesson %lld\n%@\n%@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lesson %1$lld\n%2$@\n%3$@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leçon %1$lld\n%2$@\n%3$@"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leçon %1$lld\n%2$@\n%3$@"
           }
         }
       }
@@ -5799,6 +6007,38 @@
         }
       }
     },
+    "No copy entered." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune copie saisie."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune copie saisie."
+          }
+        }
+      }
+    },
+    "No ISED reference sheet is provided for the Advanced exam. Do not use the Basic reference sheet as Advanced exam-allowed material." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISDE ne fournit pas de feuille de référence pour l’examen de compétence supérieure. N’utilisez pas la feuille de référence de la compétence de base comme matériel autorisé à l’examen de compétence supérieure."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISDE ne fournit pas de feuille de référence pour l’examen de compétence supérieure. N’utilisez pas la feuille de référence de la compétence de base comme matériel autorisé à l’examen de compétence supérieure."
+          }
+        }
+      }
+    },
     "No questions" : {
       "localizations" : {
         "fr" : {
@@ -6009,6 +6249,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hors ligne, privé, banque 2025"
+          }
+        }
+      }
+    },
+    "Offline, private, Advanced bank" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hors ligne, privé, banque supérieure"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hors ligne, privé, banque supérieure"
           }
         }
       }
@@ -6617,6 +6873,22 @@
         }
       }
     },
+    "Progress was not saved. Try again before relying on this result." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La progression n’a pas été enregistrée. Réessayez avant de vous fier à ce résultat."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La progression n’a pas été enregistrée. Réessayez avant de vous fier à ce résultat."
+          }
+        }
+      }
+    },
     "Question %lld of %lld" : {
       "localizations" : {
         "en" : {
@@ -6851,22 +7123,6 @@
         }
       }
     },
-    "Reach 90% accuracy to unlock the next lesson." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Atteignez 90 % d’exactitude pour débloquer la leçon suivante."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Atteignez 90 % d’exactitude pour débloquer la leçon suivante."
-          }
-        }
-      }
-    },
     "Reach 90% accuracy to complete this lesson." : {
       "localizations" : {
         "en" : {
@@ -6885,6 +7141,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Atteignez 90 % d’exactitude pour terminer cette leçon."
+          }
+        }
+      }
+    },
+    "Reach 90% accuracy to unlock the next lesson." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atteignez 90 % d’exactitude pour débloquer la leçon suivante."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atteignez 90 % d’exactitude pour débloquer la leçon suivante."
           }
         }
       }
@@ -6933,6 +7205,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Prêt pour la compétence de base avec distinction?"
+          }
+        }
+      }
+    },
+    "Ready for the Advanced qualification?" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prêt pour la compétence supérieure?"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prêt pour la compétence supérieure?"
           }
         }
       }
@@ -7103,6 +7391,28 @@
         }
       }
     },
+    "Review complete. Practice progress was saved." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review complete. Practice progress was saved."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Révision terminée. La progression de pratique a été enregistrée."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Révision terminée. La progression de pratique a été enregistrée."
+          }
+        }
+      }
+    },
     "Review due questions" : {
       "localizations" : {
         "fr" : {
@@ -7229,6 +7539,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Résultat : %lld / %lld (%@ %%). Le seuil de réussite est de 70 %%; la distinction est à 80 %%."
+          }
+        }
+      }
+    },
+    "Score: %lld / %lld (%@%%). Pass is 70%%; there is no Advanced Honours." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultat : %1$lld / %2$lld (%3$@ %%). La réussite est à 70 %%; il n’y a pas de résultat avec distinction pour la compétence supérieure."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultat : %1$lld / %2$lld (%3$@ %%). La réussite est à 70 %%; il n’y a pas de résultat avec distinction pour la compétence supérieure."
           }
         }
       }
@@ -7487,6 +7813,22 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "Start another exam" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commencer un autre examen"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commencer un autre examen"
           }
         }
       }
@@ -7883,6 +8225,22 @@
         }
       }
     },
+    "Study with the bundled ISED Advanced 2025-02-04 question bank on iPhone, iPad, and Mac. Progress stays on this device unless you export it and is separate from Basic." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Étudiez la banque de questions ISDE EN/FR de compétence supérieure 2025-02-04 incluse sur iPhone, iPad et Mac. La progression reste sur cet appareil sauf si vous l’exportez et est séparée de celle de la compétence de base."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Étudiez la banque de questions ISDE EN/FR de compétence supérieure 2025-02-04 incluse sur iPhone, iPad et Mac. La progression reste sur cet appareil sauf si vous l’exportez et est séparée de celle de la compétence de base."
+          }
+        }
+      }
+    },
     "Study with the bundled ISED Basic 2025-07-15 question bank on iPhone, iPad, and Mac. Progress stays on this device unless you export it." : {
       "localizations" : {
         "fr" : {
@@ -8049,6 +8407,22 @@
         }
       }
     },
+    "The receiving exam plays once without pause or replay, then gives a 2-minute review before grading. Results open on a separate screen after grading." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’examen de réception joue une seule fois, sans pause ni reprise, puis accorde une révision de 2 minutes avant la correction. Les résultats s’ouvrent sur un écran distinct après la correction."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’examen de réception joue une seule fois, sans pause ni reprise, puis accorde une révision de 2 minutes avant la correction. Les résultats s’ouvrent sur un écran distinct après la correction."
+          }
+        }
+      }
+    },
     "Theme" : {
       "localizations" : {
         "fr" : {
@@ -8061,6 +8435,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Thème"
+          }
+        }
+      }
+    },
+    "There is no ISED-approved Advanced exam reference sheet; the Basic reference sheet must not be presented as exam-allowed for Advanced." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il n’existe pas de feuille de référence approuvée par ISDE pour l’examen de compétence supérieure; la feuille de référence de la compétence de base ne doit pas être présentée comme matériel autorisé pour la compétence supérieure."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il n’existe pas de feuille de référence approuvée par ISDE pour l’examen de compétence supérieure; la feuille de référence de la compétence de base ne doit pas être présentée comme matériel autorisé pour la compétence supérieure."
           }
         }
       }
@@ -8515,6 +8905,22 @@
         }
       }
     },
+    "Try another passage" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essayer un autre passage"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essayer un autre passage"
+          }
+        }
+      }
+    },
     "Unable to complete this operation: " : {
       "localizations" : {
         "fr" : {
@@ -8885,156 +9291,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Votre progression locale indique des catégories faibles, des questions à réviser ou moins d’examens simulés réussis que nécessaire. Révisez les questions faibles et les questions à réviser avant de vous fier à votre préparation à l’examen."
-          }
-        }
-      }
-    },
-    "Review complete. Practice progress was saved." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Review complete. Practice progress was saved."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Révision terminée. La progression de pratique a été enregistrée."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Révision terminée. La progression de pratique a été enregistrée."
-          }
-        }
-      }
-    },
-    "Progress was not saved. Try again before relying on this result." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La progression n’a pas été enregistrée. Réessayez avant de vous fier à ce résultat."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La progression n’a pas été enregistrée. Réessayez avant de vous fier à ce résultat."
-          }
-        }
-      }
-    },
-    "Accuracy: %lld%%. Errors: %lld total, %lld wrong, %lld missing, %lld inserted." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exactitude : %lld %%. Erreurs : %lld au total, %lld incorrectes, %lld manquantes, %lld insérées."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exactitude : %lld %%. Erreurs : %lld au total, %lld incorrectes, %lld manquantes, %lld insérées."
-          }
-        }
-      }
-    },
-    "Copy results" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Résultats de copie"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Résultats de copie"
-          }
-        }
-      }
-    },
-    "Exam results" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Résultats de l’examen"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Résultats de l’examen"
-          }
-        }
-      }
-    },
-    "No copy entered." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune copie saisie."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune copie saisie."
-          }
-        }
-      }
-    },
-    "Start another exam" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Commencer un autre examen"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Commencer un autre examen"
-          }
-        }
-      }
-    },
-    "The receiving exam plays once without pause or replay, then gives a 2-minute review before grading. Results open on a separate screen after grading." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’examen de réception joue une seule fois, sans pause ni reprise, puis accorde une révision de 2 minutes avant la correction. Les résultats s’ouvrent sur un écran distinct après la correction."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’examen de réception joue une seule fois, sans pause ni reprise, puis accorde une révision de 2 minutes avant la correction. Les résultats s’ouvrent sur un écran distinct après la correction."
-          }
-        }
-      }
-    },
-    "Try another passage" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Essayer un autre passage"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Essayer un autre passage"
           }
         }
       }
