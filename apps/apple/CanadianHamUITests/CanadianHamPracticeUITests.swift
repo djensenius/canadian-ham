@@ -317,7 +317,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "morse",
-            "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"
+            "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1",
+            "-CanadianHamMorseCourseLongPlayback"
         ])
         defer { app.terminate() }
 
@@ -337,6 +338,27 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(quickStop.waitForExistence(timeout: 5))
         XCTAssertTrue(quickStop.isEnabled, "Quick listen should be the active Morse playback after it starts")
         XCTAssertTrue(app.staticTexts["Morse playback stopped."].firstMatch.waitForExistence(timeout: 5), "Starting Quick listen should show that course playback stopped")
+    }
+
+    func testMorseQuickListenAfterFinishedCourseAudioKeepsCorrectiveFeedback() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
+        tapFirstMorseLesson(in: app)
+        completeVisibleMorseLesson(in: app, finalAnswerOverride: "K")
+        let corrective = app.staticTexts["Try again next time. Correct answer: KMMKK."].firstMatch
+        XCTAssertTrue(corrective.waitForExistence(timeout: 10))
+
+        let quickPlay = app.buttons["morse-quick-play-button"].firstMatch
+        XCTAssertTrue(quickPlay.waitForExistence(timeout: 5))
+        scrollUntilHittable(quickPlay, in: app, maxSwipes: 8)
+        quickPlay.tap()
+
+        XCTAssertTrue(app.buttons["morse-quick-stop-button"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["Morse playback stopped."].firstMatch.waitForExistence(timeout: 2), "Finished course audio must not be reported as stopped")
+        XCTAssertTrue(corrective.exists, "Starting Quick listen must keep the lesson's corrective feedback")
     }
 
     func testAccessibilityAuditMorseExamGradedDiffLight() throws {

@@ -18,6 +18,7 @@ struct MorseCourseView: View {
     @State private var progressSaveFailed = false
     @State private var driver = MorseAudioDriver()
     @State private var isPlaying = false
+    @State private var playbackGeneration = 0
     @AccessibilityFocusState private var sessionIsFocused: Bool
 
     private var isCourseAuditOnly: Bool {
@@ -273,18 +274,40 @@ struct MorseCourseView: View {
     private func play(_ text: String) {
         do {
             playbackCoordinator.claim("course")
-            _ = try driver.play(text: text, settings: settings.normalized())
+            let duration = try driver.play(text: playbackText(for: text), settings: settings.normalized())
             isPlaying = true
+            // Clear the flag when this playback ends on its own, unless a newer one started.
+            playbackGeneration += 1
+            let generation = playbackGeneration
+            Task { @MainActor in
+                try? await Task.sleep(for: .seconds(max(0, duration)))
+                if playbackGeneration == generation {
+                    isPlaying = false
+                }
+            }
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
+    }
+
+    private func playbackText(for text: String) -> String {
+#if DEBUG
+        // UI tests need course audio that is still playing when another mode starts.
+        if ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseCourseLongPlayback") {
+            return Array(repeating: text, count: 30).joined(separator: " ")
+        }
+#endif
+        return text
     }
 
     private func stopCoursePlayback(message: String = "") {
         let wasPlaying = isPlaying
         driver.stop()
         isPlaying = false
-        guard !message.isEmpty && wasPlaying else { return }
+        playbackGeneration += 1
+        // Only report a stop for audio that was actually playing, and never replace
+        // corrective feedback such as "Correct answer: X".
+        guard !message.isEmpty && wasPlaying && !statusMessageIsCorrective else { return }
         statusMessage = message
         statusMessageIsCorrective = false
         AccessibilityNotification.Announcement(message).post()
