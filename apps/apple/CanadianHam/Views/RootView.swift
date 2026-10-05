@@ -48,6 +48,7 @@ struct RootView: View {
     @State private var morseSettings = MorseTrainerSettings.load()
     @State private var dataRevision = 0
     @State private var navigationPath: [LearnRoute] = []
+    @State private var unfinishedCourseWorkCheckID = UUID()
     @StateObject private var practiceSessionStates = PracticeSessionStateCache()
     @StateObject private var mockExamState = MockExamState()
 #if os(iOS)
@@ -108,9 +109,12 @@ struct RootView: View {
             appSettings.morseSettings = next
         }
         .onAppear {
-            appSettings.hasUnfinishedCourseWork = {
+            appSettings.registerUnfinishedCourseWorkCheck(id: unfinishedCourseWorkCheckID) {
                 practiceSessionStates.hasUnfinishedCourseWork || mockExamState.hasUnfinishedCourseWork
             }
+        }
+        .onDisappear {
+            appSettings.unregisterUnfinishedCourseWorkCheck(id: unfinishedCourseWorkCheckID)
         }
     }
 
@@ -342,7 +346,7 @@ struct RootView: View {
                 compactNavigationPath.append(CompactSettingsRoute.about)
                 selection = .about
             },
-            hasUnfinishedCourseWork: { appSettings.hasUnfinishedCourseWork() }
+            hasUnfinishedCourseWork: { appSettings.hasAnyUnfinishedCourseWork }
         ) { replacesLocalData in
             recordDataChanged(replacesLocalData: replacesLocalData)
         }
@@ -575,7 +579,7 @@ struct RootView: View {
                 morseSettings: $morseSettings,
                 openMorse: { selection = .morse },
                 openAbout: { selection = .about },
-                hasUnfinishedCourseWork: { appSettings.hasUnfinishedCourseWork() }
+                hasUnfinishedCourseWork: { appSettings.hasAnyUnfinishedCourseWork }
             ) { replacesLocalData in
                 recordDataChanged(replacesLocalData: replacesLocalData)
             }

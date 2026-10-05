@@ -116,7 +116,7 @@ private struct NativeGeneralSettingsTab: View {
 
     private func requestCourseSwitch(to bankId: CourseBankID, progressStore: ProgressStoreService) {
         guard bankId != progressStore.preferences.activeBankId else { return }
-        if appSettings.hasUnfinishedCourseWork() {
+        if appSettings.hasAnyUnfinishedCourseWork {
             pendingCourseSwitch = bankId
         } else {
             saveCourseSwitch(to: bankId, progressStore: progressStore)

@@ -971,30 +971,55 @@ describe("App accessibility and flows", () => {
   it("confirms before a course switch discards an unfinished mock exam", async () => {
     window.location.hash = "#/mock";
     const store = createStore("course-switch-confirmation");
-    const user = userEvent.setup();
-    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "course-switch-confirmation-seed"} />);
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "course-switch-confirmation-seed"} />);
 
     await screen.findByRole("heading", { name: "Mock exam" });
-    await user.click(screen.getByRole("button", { name: "Start mock exam" }));
+    fireEvent.click(screen.getByRole("button", { name: "Start mock exam" }));
     await screen.findByText(/Question 1 of 100/);
 
-    await user.click(screen.getByRole("radio", { name: "Advanced" }));
+    fireEvent.click(screen.getByRole("radio", { name: "Advanced" }));
     const dialog = await screen.findByRole("alertdialog", { name: "Switch course?" });
     assert.equal(document.activeElement, dialog);
     assert.match(dialog.textContent ?? "", /discard the unfinished practice or mock exam session/);
-    await expectNoAxeViolations(container);
+    await expectNoAxeViolations(dialog);
 
-    await user.click(within(dialog).getByRole("button", { name: "Cancel course switch" }));
+    fireEvent.keyDown(dialog, { key: "Escape" });
     assert.equal(screen.queryByRole("alertdialog", { name: "Switch course?" }), null);
     assert.equal((screen.getByRole("radio", { name: "Basic" }) as HTMLInputElement).checked, true);
     assert.ok(screen.getByText(/Question 1 of 100/));
     assert.equal((await store.getPreferences()).activeBankId, bankId);
 
-    await user.click(screen.getByRole("radio", { name: "Advanced" }));
-    await user.click(within(await screen.findByRole("alertdialog", { name: "Switch course?" })).getByRole("button", { name: "Switch course" }));
+    fireEvent.click(screen.getByRole("radio", { name: "Advanced" }));
+    const cancelDialog = await screen.findByRole("alertdialog", { name: "Switch course?" });
+    fireEvent.click(within(cancelDialog).getByRole("button", { name: "Cancel course switch" }));
+    assert.equal(screen.queryByRole("alertdialog", { name: "Switch course?" }), null);
+    const courseSwitcher = screen.getByRole("group", { name: "Course selection" });
+    assert.equal(document.activeElement, courseSwitcher);
+    assert.equal((screen.getByRole("radio", { name: "Basic" }) as HTMLInputElement).checked, true);
+    assert.ok(screen.getByText(/Question 1 of 100/));
+    assert.equal((await store.getPreferences()).activeBankId, bankId);
+
+    fireEvent.click(screen.getByRole("radio", { name: "Advanced" }));
+    fireEvent.click(within(await screen.findByRole("alertdialog", { name: "Switch course?" })).getByRole("button", { name: "Switch course" }));
     await screen.findByRole("heading", { name: "Mock exam" });
     assert.match(screen.getByText(/Generate 50 Advanced questions/).textContent ?? "", /Generate 50 Advanced questions/);
     assert.equal((await store.getPreferences()).activeBankId, ADVANCED_BANK_ID);
+    assert.equal(document.activeElement, screen.getByRole("group", { name: "Course selection" }));
+  });
+
+  it("does not confirm a course switch for an unanswered practice session", async () => {
+    window.location.hash = "#/practice";
+    const store = createStore("course-switch-unanswered-practice");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "course-switch-unanswered-practice-seed"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+
+    await user.click(screen.getByRole("radio", { name: "Advanced" }));
+
+    assert.equal(screen.queryByRole("alertdialog", { name: "Switch course?" }), null);
+    await waitFor(async () => assert.equal((await store.getPreferences()).activeBankId, ADVANCED_BANK_ID));
   });
 
   it("renders the French interface with Advanced selected and tags Advanced category names as English", async () => {

@@ -339,9 +339,9 @@ final class PracticeSessionState: ObservableObject {
         guard !items.isEmpty, let loadedPracticeMode else { return false }
         switch loadedPracticeMode {
         case .immediate:
-            return answeredCount < items.count
+            return answeredCount > 0 && answeredCount < items.count
         case .reviewLater:
-            return !reviewSubmitted
+            return answeredCount > 0 && !reviewSubmitted
         }
     }
 }
@@ -1408,6 +1408,7 @@ struct SettingsView: View {
     @State private var pendingCourseSwitch: CourseBankID?
     @State private var confirmingImport = false
     @State private var confirmingReset = false
+    @AccessibilityFocusState private var coursePickerFocused: Bool
     @AccessibilityFocusState private var courseSwitchConfirmationFocused: Bool
 
     var body: some View {
@@ -1432,6 +1433,7 @@ struct SettingsView: View {
                     .pickerStyle(.segmented)
                     .accessibilityIdentifier("course-picker")
                     .accessibilityLabel(Text("Course")) // l10n: localized
+                    .accessibilityFocused($coursePickerFocused)
 
                     Picker("Practice mode", selection: Binding(
                         get: { progressStore.preferences.practiceMode },
@@ -1551,7 +1553,7 @@ struct SettingsView: View {
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .fixedSize(horizontal: false, vertical: true)
             HStack {
-                tokenButton("Cancel") { pendingCourseSwitch = nil }
+                tokenButton("Cancel") { cancelCourseSwitch() }
                 tokenButton("Switch course") { confirmCourseSwitch() }
             }
         }
@@ -1570,6 +1572,13 @@ struct SettingsView: View {
             pendingCourseSwitch = bankId
         } else {
             saveCourseSwitch(to: bankId)
+        }
+    }
+
+    private func cancelCourseSwitch() {
+        pendingCourseSwitch = nil
+        DispatchQueue.main.async {
+            coursePickerFocused = true
         }
     }
 

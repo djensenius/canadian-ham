@@ -35,6 +35,28 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(timerRunStartedAt.timeIntervalSince1970, startedAt.addingTimeInterval(2).timeIntervalSince1970, accuracy: 0.000_001)
     }
 
+    func testAppSettingsModelTracksUnfinishedCourseWorkAcrossRegisteredWindows() throws {
+        let appSettings = CanadianHam.AppSettingsModel()
+        let firstWindow = UUID()
+        let secondWindow = UUID()
+        var firstUnfinished = true
+        var secondUnfinished = false
+
+        appSettings.registerUnfinishedCourseWorkCheck(id: firstWindow) { firstUnfinished }
+        appSettings.registerUnfinishedCourseWorkCheck(id: secondWindow) { secondUnfinished }
+
+        XCTAssertTrue(appSettings.hasAnyUnfinishedCourseWork)
+
+        firstUnfinished = false
+        XCTAssertFalse(appSettings.hasAnyUnfinishedCourseWork)
+
+        secondUnfinished = true
+        XCTAssertTrue(appSettings.hasAnyUnfinishedCourseWork)
+
+        appSettings.unregisterUnfinishedCourseWorkCheck(id: secondWindow)
+        XCTAssertFalse(appSettings.hasAnyUnfinishedCourseWork)
+    }
+
     func testSharedAppleSettingsModelAppliesLivePreferenceUpdates() throws {
         let store = try CanadianHam.ProgressStoreService.inMemoryForTests()
         let appSettings = CanadianHam.AppSettingsModel()

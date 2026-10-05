@@ -505,11 +505,19 @@ function AppContent({
     const nextBankId = pendingCourseSwitch;
     setPendingCourseSwitch(null);
     await setCourse(nextBankId);
+    window.setTimeout(() => courseSwitcherRef.current?.focus() ?? mainRef.current?.focus(), 0);
   }
 
   function cancelCourseSwitch(): void {
     setPendingCourseSwitch(null);
     window.setTimeout(() => courseSwitcherRef.current?.focus(), 0);
+  }
+
+  function handleCourseSwitchDialogKeyDown(event: KeyboardEvent<HTMLElement>): void {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      cancelCourseSwitch();
+    }
   }
 
   async function setCourse(nextBankId: CourseBankId): Promise<void> {
@@ -624,7 +632,7 @@ function AppContent({
       </header>
 
       {pendingCourseSwitch !== null ? (
-        <section className="confirm-panel course-switch-confirm" role="alertdialog" aria-labelledby="course-switch-confirm-title" aria-describedby="course-switch-confirm-copy" aria-modal="false" ref={courseSwitchDialogRef} tabIndex={-1}>
+        <section className="confirm-panel course-switch-confirm" role="alertdialog" aria-labelledby="course-switch-confirm-title" aria-describedby="course-switch-confirm-copy" aria-modal="false" ref={courseSwitchDialogRef} tabIndex={-1} onKeyDown={handleCourseSwitchDialogKeyDown}>
           <h2 id="course-switch-confirm-title">{t(interfaceLanguage, "courseSwitchConfirmTitle")}</h2>
           <p id="course-switch-confirm-copy">{t(interfaceLanguage, "courseSwitchConfirmCopy")}</p>
           <div className="action-row">
@@ -751,6 +759,7 @@ function AppContent({
               setMockExam(null);
               setLatestResult(null);
               setPracticeScope({ type: "all" });
+              setPendingCourseSwitch(null);
               setAlertMessage("");
             }}
             onReset={() => {
@@ -765,6 +774,7 @@ function AppContent({
               setPracticeSession(null);
               setMockExam(null);
               setLatestResult(null);
+              setPendingCourseSwitch(null);
               clearStoredInterfaceLanguage();
               const resetInterfaceLanguage = readStoredInterfaceLanguage();
               setInterfaceLanguageState(resetInterfaceLanguage);
@@ -2485,7 +2495,7 @@ function hasUnsubmittedReviewAnswers(session: PracticeSession | null): boolean {
 }
 
 function hasUnfinishedPracticeSession(session: PracticeSession | null): boolean {
-  if (session === null) {
+  if (session === null || session.selectedByQuestionId.size === 0) {
     return false;
   }
   if (session.mode === "review-later") {

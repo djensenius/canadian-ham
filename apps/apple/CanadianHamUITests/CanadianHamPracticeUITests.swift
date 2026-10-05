@@ -1148,7 +1148,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app.buttons["Cancel"].firstMatch.tap()
         waitForElementToDisappear(confirmationTitle, timeout: 5, message: "Cancel should dismiss the course-switch confirmation")
         XCTAssertTrue(app.descendants(matching: .any)["course-picker"].firstMatch.waitForExistence(timeout: 5), "Cancel should return to Settings")
-        XCTAssertTrue(app.buttons["Basic"].firstMatch.isSelected || app.buttons["Basic"].firstMatch.exists, "Cancel should leave Basic selected")
+        XCTAssertTrue(app.buttons["Basic"].firstMatch.isSelected, "Cancel should leave Basic selected")
 
         tapCompactBack(in: app)
         tap("Home", in: app)
