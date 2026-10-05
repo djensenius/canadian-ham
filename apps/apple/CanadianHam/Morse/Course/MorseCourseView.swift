@@ -71,7 +71,7 @@ struct MorseCourseView: View {
         .onReceive(progressStore.objectWillChange) { _ in loadCourse() }
         .onAppear {
             playbackCoordinator.register("course") {
-                stopCoursePlayback()
+                stopCoursePlayback(message: String(localized: "Morse playback stopped."))
             }
         }
         .onDisappear {
@@ -278,8 +278,12 @@ struct MorseCourseView: View {
         }
     }
 
-    private func stopCoursePlayback() {
+    private func stopCoursePlayback(message: String = "") {
         driver.stop()
+        guard !message.isEmpty else { return }
+        statusMessage = message
+        statusMessageIsCorrective = false
+        AccessibilityNotification.Announcement(message).post()
     }
 
     private func lessonSeed() -> String {

@@ -302,6 +302,32 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(copyCheck.isEnabled, "Starting Morse course audio should stop copy-practice playback and re-enable Check copy")
     }
 
+    func testMorseStartingQuickListenStopsCoursePlayback() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"
+        ])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
+        tapFirstMorseLesson(in: app)
+        let coursePlay = app.buttons["Play character"].firstMatch
+        XCTAssertTrue(coursePlay.waitForExistence(timeout: 5))
+        scrollUntilHittable(coursePlay, in: app, maxSwipes: 8)
+        coursePlay.tap()
+
+        let quickPlay = app.buttons["morse-quick-play-button"].firstMatch
+        XCTAssertTrue(quickPlay.waitForExistence(timeout: 5))
+        scrollUntilHittable(quickPlay, in: app, maxSwipes: 8)
+        quickPlay.tap()
+
+        let quickStop = app.buttons["morse-quick-stop-button"].firstMatch
+        XCTAssertTrue(quickStop.waitForExistence(timeout: 5))
+        XCTAssertTrue(quickStop.isEnabled, "Quick listen should be the active Morse playback after it starts")
+        XCTAssertTrue(app.staticTexts["Morse playback stopped."].firstMatch.waitForExistence(timeout: 5), "Starting Quick listen should show that course playback stopped")
+    }
+
     func testAccessibilityAuditMorseExamGradedDiffLight() throws {
         XCUIDevice.shared.appearance = .light
         try auditMorseExamGradedDiff(appearance: .light)
