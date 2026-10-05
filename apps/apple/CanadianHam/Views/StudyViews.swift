@@ -1408,6 +1408,7 @@ struct SettingsView: View {
     @State private var pendingCourseSwitch: CourseBankID?
     @State private var confirmingImport = false
     @State private var confirmingReset = false
+    @AccessibilityFocusState private var courseSwitchConfirmationFocused: Bool
 
     var body: some View {
         ScrollView {
@@ -1428,6 +1429,10 @@ struct SettingsView: View {
                     .pickerStyle(.segmented)
                     .accessibilityIdentifier("course-picker")
                     .accessibilityLabel(Text("Course")) // l10n: localized
+
+                    if pendingCourseSwitch != nil {
+                        courseSwitchConfirmationPanel
+                    }
 
                     Picker("Practice mode", selection: Binding(
                         get: { progressStore.preferences.practiceMode },
@@ -1521,20 +1526,54 @@ struct SettingsView: View {
         } message: {
             Text("Import replaces local progress, mock exams, and preferences with the selected valid JSON file.")
         }
-        .alert("Switch course?", isPresented: Binding(
-            get: { pendingCourseSwitch != nil },
-            set: { isPresented in if !isPresented { pendingCourseSwitch = nil } }
-        )) {
-            Button("Cancel", role: .cancel) { pendingCourseSwitch = nil }
-            Button("Switch course", role: .destructive) { confirmCourseSwitch() }
-        } message: {
-            Text("Switching courses will discard the unfinished practice or mock exam session. Saved progress remains on this device.")
-        }
         .alert("Reset all local data?", isPresented: $confirmingReset) {
             Button("Cancel", role: .cancel) {}
             Button("Reset", role: .destructive) { resetAllData() }
         } message: {
             Text("Deletes local progress, mock exams, and preferences. Bundled content remains installed.")
+        }
+        .onChange(of: pendingCourseSwitch) { _, next in
+            if next != nil {
+                focusCourseSwitchConfirmationAfterLayout()
+            }
+        }
+    }
+
+    private var courseSwitchConfirmationPanel: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            Text("Switch course?") // l10n: localized
+                .font(DesignTokens.FontScale.title.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .accessibilityAddTraits(.isHeader)
+                .accessibilityFocused($courseSwitchConfirmationFocused)
+            Text("Switching courses will discard the unfinished practice or mock exam session. Saved progress remains on this device.") // l10n: localized
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
+            HStack {
+                tokenButton("Cancel") { pendingCourseSwitch = nil }
+                Button(role: .destructive) {
+                    confirmCourseSwitch()
+                } label: {
+                    Text("Switch course") // l10n: localized
+                        .font(DesignTokens.FontScale.body.weight(.semibold))
+                        .foregroundStyle(DesignTokens.Colors.warningText)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.horizontal, DesignTokens.Spacing.lg)
+                        .padding(.vertical, DesignTokens.Spacing.md)
+                        .frame(minHeight: 56)
+                        .background(DesignTokens.Colors.warningBg, in: Capsule())
+                        .overlay(Capsule().strokeBorder(DesignTokens.Colors.warningBorder, lineWidth: 1))
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .paperCard()
+        .accessibilityIdentifier("course-switch-confirmation")
+    }
+
+    private func focusCourseSwitchConfirmationAfterLayout() {
+        DispatchQueue.main.async {
+            courseSwitchConfirmationFocused = true
         }
     }
 

@@ -1140,12 +1140,15 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["course-picker"].firstMatch.waitForExistence(timeout: 10), "Settings should expose the course picker")
 
         tap("Advanced", in: app)
-        XCTAssertTrue(app.alerts["Switch course?"].waitForExistence(timeout: 5), "Unfinished mock exam should trigger course-switch confirmation")
-        XCTAssertTrue(app.alerts["Switch course?"].staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "unfinished practice or mock exam")).firstMatch.exists)
+        let confirmation = app.descendants(matching: .any)["course-switch-confirmation"].firstMatch
+        XCTAssertTrue(confirmation.waitForExistence(timeout: 5), "Unfinished mock exam should trigger course-switch confirmation")
+        XCTAssertTrue(app.staticTexts["Switch course?"].firstMatch.exists)
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "unfinished practice or mock exam")).firstMatch.exists)
         try performAudit(on: app, context: "\(appearance.rawValue) course switch confirmation")
 
-        app.alerts["Switch course?"].buttons["Cancel"].tap()
-        XCTAssertTrue(app.descendants(matching: .any)["course-picker"].firstMatch.waitForExistence(timeout: 5), "Cancel should return focus to Settings")
+        app.buttons["Cancel"].firstMatch.tap()
+        waitForElementToDisappear(confirmation, timeout: 5, message: "Cancel should dismiss the course-switch confirmation")
+        XCTAssertTrue(app.descendants(matching: .any)["course-picker"].firstMatch.waitForExistence(timeout: 5), "Cancel should return to Settings")
         XCTAssertTrue(app.buttons["Basic"].firstMatch.isSelected || app.buttons["Basic"].firstMatch.exists, "Cancel should leave Basic selected")
 
         tapCompactBack(in: app)
