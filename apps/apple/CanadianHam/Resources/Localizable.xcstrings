@@ -585,6 +585,22 @@
         }
       }
     },
+    "%@.honours must be false for this course." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.honours doit être false pour ce cours."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.honours doit être false pour ce cours."
+          }
+        }
+      }
+    },
     "%@.id duplicates another lesson quiz attempt." : {
       "localizations" : {
         "en" : {
@@ -8365,6 +8381,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sous-sections"
+          }
+        }
+      }
+    },
+    "Switch course" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changer de cours"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changer de cours"
+          }
+        }
+      }
+    },
+    "Switch course?" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changer de cours?"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changer de cours?"
+          }
+        }
+      }
+    },
+    "Switching courses will discard the unfinished practice or mock exam session. Saved progress remains on this device." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le changement de cours abandonnera la séance d’exercices ou l’examen simulé non terminé. La progression enregistrée reste sur cet appareil."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le changement de cours abandonnera la séance d’exercices ou l’examen simulé non terminé. La progression enregistrée reste sur cet appareil."
           }
         }
       }

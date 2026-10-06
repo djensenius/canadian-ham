@@ -805,6 +805,8 @@ function validateScore(value: unknown, prefix: string, bank: BankData): string[]
   }
   if (typeof value.honours !== "boolean") {
     errors.push(`${prefix}.honours must be boolean.`);
+  } else if (!bank.hasHonours && value.honours) {
+    errors.push(`${prefix}.honours must be false for this course.`);
   }
   if (!Array.isArray(value.categoryBreakdown)) {
     errors.push(`${prefix}.categoryBreakdown must be an array.`);
