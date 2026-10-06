@@ -1,7 +1,7 @@
 ---
 id: TASK-12.7
 title: Morse sending practice with tap timing
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
@@ -26,8 +26,8 @@ Why: the Morse qualification includes sending; the owner chose tap timing on key
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Straight-key and paddle emulation on keyboard and touch, with dot/dash ratio feedback
-- [ ] #2 An exam-style check: whole text within 3:00, the 8-dot error signal and resend accepted, 5 or fewer errors to pass
+- [x] #1 Straight-key and paddle emulation on keyboard and touch, with dot/dash ratio feedback
+- [x] #2 An exam-style check: whole text within 3:00, the 8-dot error signal and resend accepted, 5 or fewer errors to pass
 - [x] #3 No microphone permission or new entitlements; tests pass on web and Apple
 <!-- AC:END -->
 
