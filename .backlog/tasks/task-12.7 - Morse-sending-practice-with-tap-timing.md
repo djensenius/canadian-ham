@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-06 11:39'
+updated_date: '2026-10-06 11:49'
 labels:
   - web
   - apple
@@ -76,6 +76,8 @@ Evidence:
 - macOS full 60/60.
 - tvOS full 15/15: CanadianHamTVTests.CanadianHamTVTests.testBundledQuestionBankLoadsForTVApp CanadianHamTVTests.CanadianHamTVTests.testTVPracticeQuestionDrawStaysInCategoryAndShufflesAnswers CanadianHamTVTests.CanadianHamTVTests.testTVPracticeSeedsVaryAcrossSessionIDs CanadianHamTVUITests.CanadianHamTVUITests.testAboutAccessibilityAuditLightAndDark CanadianHamTVUITests.CanadianHamTVUITests.testAboutLowerSectionsReachableWithRemote CanadianHamTVUITests.CanadianHamTVUITests.testAboutShowsReleaseAttributionDisclaimerAndBankVersion CanadianHamTVUITests.CanadianHamTVUITests.testCategoryGridAccessibilityAuditLightAndDark CanadianHamTVUITests.CanadianHamTVUITests.testCategoryGridNavigatesToMorse CanadianHamTVUITests.CanadianHamTVUITests.testFocusRingEvidenceScreenshots CanadianHamTVUITests.CanadianHamTVUITests.testLayoutEvidenceScreenshots CanadianHamTVUITests.CanadianHamTVUITests.testMorseAccessibilityAuditLightAndDark CanadianHamTVUITests.CanadianHamTVUITests.testMorseScreenShowsPlaybackControls CanadianHamTVUITests.CanadianHamTVUITests.testPracticeAccessibilityAuditLightAndDark CanadianHamTVUITests.CanadianHamTVUITests.testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances CanadianHamTVUITests.CanadianHamTVUITests.testRemoteMenuReturnsPracticeAndAboutToCategoryGrid 
 - visionOS full 12/12: CanadianHamVisionTests.CanadianHamVisionTests.testBundledQuestionBankLoadsForVisionApp CanadianHamVisionTests.CanadianHamVisionTests.testVisionPracticeQuestionDrawStaysInCategoryAndShufflesAnswers CanadianHamVisionTests.CanadianHamVisionTests.testVisionPracticeSeedsVaryAcrossSessionIDs CanadianHamVisionUITests.CanadianHamVisionUITests.testAboutAccessibilityAuditLightAndDark CanadianHamVisionUITests.CanadianHamVisionUITests.testAboutShowsReleaseAttributionDisclaimerAndBankVersion CanadianHamVisionUITests.CanadianHamVisionUITests.testCategoryGridAccessibilityAuditLightAndDark CanadianHamVisionUITests.CanadianHamVisionUITests.testCategoryGridNavigatesToMorse CanadianHamVisionUITests.CanadianHamVisionUITests.testLongestQuestionSupportsLargestDynamicType CanadianHamVisionUITests.CanadianHamVisionUITests.testMorseAccessibilityAuditLightAndDark CanadianHamVisionUITests.CanadianHamVisionUITests.testMorseScreenShowsPlaybackControls CanadianHamVisionUITests.CanadianHamVisionUITests.testPracticeAccessibilityAuditLightAndDark CanadianHamVisionUITests.CanadianHamVisionUITests.testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances
+
+PR #144 Copilot round 4 (e226890, coordinator): the French PASS plural variants use U+00A0 before %, and the tests expect it. The web morseDiffSummary is plural-aware per count (EN '1 total error'; FR singular for 0 and 1), and the timeout test expects '1 total error'. Releasing the last paddle stops repeating but lets the current element finish sounding. Evidence: web typecheck and 143 web tests; check:apple-l10n exit 0; iOS LocalizationCatalogTests 4/4; macOS full 60/60. The catalogue change is values only, so the tvOS/visionOS full runs on 3c45881 still apply.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
