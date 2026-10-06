@@ -1,7 +1,7 @@
 ---
 id: TASK-12.7
 title: Morse sending practice with tap timing
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
@@ -26,8 +26,8 @@ Why: the Morse qualification includes sending; the owner chose tap timing on key
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Straight-key and paddle emulation on keyboard and touch, with dot/dash ratio feedback
-- [ ] #2 An exam-style check: whole text within 3:00, the 8-dot error signal and resend accepted, 5 or fewer errors to pass
+- [x] #1 Straight-key and paddle emulation on keyboard and touch, with dot/dash ratio feedback
+- [x] #2 An exam-style check: whole text within 3:00, the 8-dot error signal and resend accepted, 5 or fewer errors to pass
 - [x] #3 No microphone permission or new entitlements; tests pass on web and Apple
 <!-- AC:END -->
 
@@ -58,5 +58,5 @@ Final Apple run visionOS per-test names (12 passed): CanadianHamVisionTests.Cana
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented and review-fixed tap-based Morse sending practice. AC1 verified with shared 25/25 multi-element fixture, web straight-key/paddle/stuck-key tests, Apple continuous side-tone and hardware-key handling, and targeted iOS sending UI flow/audits. AC2 verified with timeout/error-signal fixtures, corrected TS/Swift timeout scoring, web passing/timeout tests, and iOS exam-style sending results flow. AC3 verified with no microphone/entitlement changes, check:apple-network, check:apple-l10n/text-source checks, web checks, swift test, and final full iOS/macOS/tvOS/visionOS suites.
+Implemented and review-fixed tap-based Morse sending practice. AC1 verified by web straight-key/paddle/stuck-key tests, shared 25/25 multi-element fixtures, Apple held-tone/hardware-key/accessibility-action code, and targeted/full iOS sending UI tests. AC2 verified by timeout/error-signal fixtures, corrected TS/Swift timeout scoring, web passing/restart/clear/timeout tests, and iOS exam-style sending flow/audits. AC3 verified with no microphone/entitlement changes, no-network/l10n/text-source checks, web checks, swift test, and final full iOS/macOS/tvOS/visionOS suites.
 <!-- SECTION:FINAL_SUMMARY:END -->
