@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-04 13:22'
-updated_date: '2026-10-06 18:25'
+updated_date: '2026-10-06 18:39'
 labels: []
 milestone: m-1
 dependencies: []
@@ -284,6 +284,8 @@ Validation on final code commit:
   - CanadianHamVisionUITests.CanadianHamVisionUITests testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances
 
 Coordinator: the round 0 validation block that cites '0fd1fd2c…' is superseded (that SHA doesn't exist; the round 0 code commit was 0fd1fd2dca5d…). The final evidence is the round 1 block on 5a3889e. Internal re-review: APPROVE WITH NOTES (~/.cache/canadian-ham-reviews/t1217-r2.md). The non-blocking notes are tracked in a follow-up task.
+
+PR #149 Copilot fix (e60142b, coordinator): unitTitle returns the interpolated literal "Unit \(unit.unitNumber)" so LocalizedStringKey uses the 'Unit %lld' catalogue key (French 'Unité 1'); LocalizedStringKey(String) had built a runtime key 'Unit 1'. Evidence: iOS targeted 3/3 (testMorseSectionIsTopLevelShowsCourseAndOpensFirstLesson, testAccessibilityAuditMorseCourseLessonAndSummaryLight, testAccessibilityAuditMorseCourseLessonAndSummaryDark); macOS full 60/60.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
