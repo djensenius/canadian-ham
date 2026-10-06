@@ -504,8 +504,19 @@ function AppContent({
     }
     const nextBankId = pendingCourseSwitch;
     setPendingCourseSwitch(null);
-    await setCourse(nextBankId);
-    window.setTimeout(() => courseSwitcherRef.current?.focus() ?? mainRef.current?.focus(), 0);
+    try {
+      await setCourse(nextBankId);
+    } finally {
+      // Return focus to the switcher (or main as a fallback), also when the save fails.
+      window.setTimeout(() => {
+        const switcher = courseSwitcherRef.current;
+        if (switcher !== null) {
+          switcher.focus();
+        } else {
+          mainRef.current?.focus();
+        }
+      }, 0);
+    }
   }
 
   function cancelCourseSwitch(): void {

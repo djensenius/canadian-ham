@@ -994,7 +994,9 @@ describe("App accessibility and flows", () => {
     fireEvent.click(within(cancelDialog).getByRole("button", { name: "Cancel course switch" }));
     assert.equal(screen.queryByRole("alertdialog", { name: "Switch course?" }), null);
     const courseSwitcher = screen.getByRole("group", { name: "Course selection" });
-    assert.equal(document.activeElement, courseSwitcher);
+    await waitFor(() => assert.ok(document.activeElement === courseSwitcher, "course switcher focused after Cancel"));
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    assert.ok(document.activeElement === courseSwitcher, "focus stays on the course switcher after Cancel");
     assert.equal((screen.getByRole("radio", { name: "Basic" }) as HTMLInputElement).checked, true);
     assert.ok(screen.getByText(/Question 1 of 100/));
     assert.equal((await store.getPreferences()).activeBankId, bankId);
@@ -1004,7 +1006,9 @@ describe("App accessibility and flows", () => {
     await screen.findByRole("heading", { name: "Mock exam" });
     assert.match(screen.getByText(/Generate 50 Advanced questions/).textContent ?? "", /Generate 50 Advanced questions/);
     assert.equal((await store.getPreferences()).activeBankId, ADVANCED_BANK_ID);
-    assert.equal(document.activeElement, screen.getByRole("group", { name: "Course selection" }));
+    await waitFor(() => assert.ok(document.activeElement === screen.getByRole("group", { name: "Course selection" }), "course switcher focused after Confirm"));
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    assert.ok(document.activeElement === screen.getByRole("group", { name: "Course selection" }), "focus stays on the course switcher after Confirm");
   });
 
   it("does not confirm a course switch for an unanswered practice session", async () => {
