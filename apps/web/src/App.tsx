@@ -489,12 +489,16 @@ function AppContent({
 
   function requestCourseChange(nextBankId: CourseBankId): void {
     if (nextBankId === activeBank.bankId) {
+      // Choosing the current course again dismisses any pending switch warning.
+      setPendingCourseSwitch(null);
       return;
     }
     if (mockExam !== null || hasUnfinishedPracticeSession(practiceSession)) {
       setPendingCourseSwitch(nextBankId);
       return;
     }
+    // Nothing left to discard (for example, the exam was submitted while the warning was open).
+    setPendingCourseSwitch(null);
     void setCourse(nextBankId).catch(() => undefined);
   }
 

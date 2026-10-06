@@ -1011,6 +1011,25 @@ describe("App accessibility and flows", () => {
     assert.ok(document.activeElement === screen.getByRole("group", { name: "Course selection" }), "focus stays on the course switcher after Confirm");
   });
 
+  it("clears a stale course switch warning once the exam is submitted", async () => {
+    window.location.hash = "#/mock";
+    const store = createStore("course-switch-stale-warning");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "course-switch-stale-seed"} />);
+
+    await user.click(await screen.findByRole("button", { name: "Start mock exam" }));
+    // Leave the warning open, submit the exam, then pick Advanced again.
+    await user.click(screen.getByRole("radio", { name: "Advanced" }));
+    await screen.findByRole("alertdialog", { name: "Switch course?" });
+    await user.click(screen.getAllByTestId("answer-choice")[0]!);
+    await user.click(screen.getByRole("button", { name: "Submit exam" }));
+    await user.click(screen.getByRole("button", { name: "Confirm submit" }));
+    await screen.findByRole("heading", { name: "Mock exam results" });
+    await user.click(screen.getByRole("radio", { name: "Advanced" }));
+    await waitFor(async () => assert.equal((await store.getPreferences()).activeBankId, ADVANCED_BANK_ID));
+    assert.ok(screen.queryByRole("alertdialog", { name: "Switch course?" }) === null, "no stale warning after switching");
+  });
+
   it("does not confirm a course switch for an unanswered practice session", async () => {
     window.location.hash = "#/practice";
     const store = createStore("course-switch-unanswered-practice");
