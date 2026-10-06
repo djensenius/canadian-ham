@@ -66,6 +66,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
         openMorseCourse(in: app)
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["morse-course-unit-1"].firstMatch.waitForExistence(timeout: 5))
+        openFirstMorseUnit(in: app)
+        let lockedLesson = app.buttons["morse-course-lesson-2"].firstMatch
+        XCTAssertTrue(lockedLesson.waitForExistence(timeout: 5), "Expected locked Morse lesson button")
+        XCTAssertFalse(lockedLesson.isEnabled, "Locked Morse lesson must be disabled so it cannot push a session")
+        XCTAssertFalse(app.staticTexts["Lesson 2 session"].firstMatch.exists, "Locked Morse lesson must not open a session")
         tapFirstMorseLesson(in: app)
         XCTAssertTrue(app.staticTexts["Lesson 1 session"].firstMatch.waitForExistence(timeout: 5))
     }
@@ -363,7 +368,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(copyCheck.isEnabled, "Starting Quick listen should stop copy-practice playback and re-enable Check copy")
     }
 
-    func testMorseStartingCourseAudioStopsCopyPlayback() throws {
+    func testLeavingMorseHomeStopsCopyPlaybackBeforeCourseLesson() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "morse",
@@ -388,10 +393,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
         returnFromMorseCourseToMorseHome(in: app)
 
         XCTAssertTrue(copyCheck.waitForExistence(timeout: 5))
-        XCTAssertTrue(copyCheck.isEnabled, "Starting Morse course audio should stop copy-practice playback and re-enable Check copy")
+        XCTAssertTrue(copyCheck.isEnabled, "Leaving the Morse home for the pushed course flow should stop copy-practice playback and re-enable Check copy")
     }
 
-    func testMorseStartingQuickListenStopsCoursePlayback() throws {
+    func testLeavingCourseLessonStopsCoursePlaybackBeforeQuickListen() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "morse",
@@ -416,7 +421,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
         let quickStop = app.buttons["morse-quick-stop-button"].firstMatch
         XCTAssertTrue(quickStop.waitForExistence(timeout: 5))
-        XCTAssertTrue(quickStop.isEnabled, "Quick listen should be the active Morse playback after it starts")
+        XCTAssertTrue(quickStop.isEnabled, "Quick listen should be the active Morse playback after leaving the course lesson stopped course audio")
         XCTAssertFalse(app.staticTexts["Morse playback stopped."].firstMatch.waitForExistence(timeout: 2), "Leaving the pushed course screen stops course audio without reporting a coordinator stop on the Morse home")
     }
 

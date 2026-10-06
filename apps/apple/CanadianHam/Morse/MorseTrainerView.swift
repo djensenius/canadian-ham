@@ -74,69 +74,69 @@ struct MorseTrainerView: View {
                     MorseSendingPracticeView(settings: normalizedSettings, playbackCoordinator: playbackCoordinator)
                 }
 
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                        Text("Quick listen") // l10n: localized
-                            .font(DesignTokens.FontScale.title.weight(.bold))
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                            .accessibilityAddTraits(.isHeader)
-                        Text("Preview the current player with a short practice group. The text is revealed only after playback so you can copy by ear first.") // l10n: localized
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    Text("Quick listen") // l10n: localized
+                        .font(DesignTokens.FontScale.title.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityAddTraits(.isHeader)
+                    Text("Preview the current player with a short practice group. The text is revealed only after playback so you can copy by ear first.") // l10n: localized
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                    HStack {
+                        morseTokenButton("Play") { play() }
+                            .disabled(isPlaying)
+                            .accessibilityLabel(Text("Play Morse practice audio")) // l10n: localized
+                            .accessibilityIdentifier("morse-quick-play-button")
+                        morseTokenButton("Stop") { stopPlayback(reveal: false, message: String(localized: "Morse playback stopped.")) }
+                            .disabled(!isPlaying)
+                            .accessibilityLabel(Text("Stop Morse practice audio")) // l10n: localized
+                            .accessibilityIdentifier("morse-quick-stop-button")
+                    }
+                    if !statusMessage.isEmpty {
+                        Text(statusMessage) // l10n: localized
                             .font(DesignTokens.FontScale.body)
                             .foregroundStyle(DesignTokens.Colors.ink)
-                        HStack {
-                            morseTokenButton("Play") { play() }
-                                .disabled(isPlaying)
-                                .accessibilityLabel(Text("Play Morse practice audio")) // l10n: localized
-                                .accessibilityIdentifier("morse-quick-play-button")
-                            morseTokenButton("Stop") { stopPlayback(reveal: false, message: String(localized: "Morse playback stopped.")) }
-                                .disabled(!isPlaying)
-                                .accessibilityLabel(Text("Stop Morse practice audio")) // l10n: localized
-                                .accessibilityIdentifier("morse-quick-stop-button")
-                        }
-                        if !statusMessage.isEmpty {
-                            Text(statusMessage) // l10n: localized
-                                .font(DesignTokens.FontScale.body)
-                                .foregroundStyle(DesignTokens.Colors.ink)
-                        }
                     }
-                    .paperCard()
+                }
+                .paperCard()
 
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                        Text("Practice text") // l10n: localized
-                            .font(DesignTokens.FontScale.title.weight(.bold))
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    Text("Practice text") // l10n: localized
+                        .font(DesignTokens.FontScale.title.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityAddTraits(.isHeader)
+                    if isRevealed {
+                        Text(verbatim: morsePracticeText) // l10n: verbatim
+                            .font(.title.weight(.bold).monospaced())
                             .foregroundStyle(DesignTokens.Colors.ink)
-                            .accessibilityAddTraits(.isHeader)
-                        if isRevealed {
-                            Text(verbatim: morsePracticeText) // l10n: verbatim
-                                .font(.title.weight(.bold).monospaced())
-                                .foregroundStyle(DesignTokens.Colors.ink)
-                                .textSelection(.enabled)
-                        } else {
-                            Text("Hidden until playback finishes.") // l10n: localized
-                                .font(DesignTokens.FontScale.body)
-                                .foregroundStyle(DesignTokens.Colors.ink)
-                        }
+                            .textSelection(.enabled)
+                    } else {
+                        Text("Hidden until playback finishes.") // l10n: localized
+                            .font(DesignTokens.FontScale.body)
+                            .foregroundStyle(DesignTokens.Colors.ink)
                     }
-                    .paperCard()
+                }
+                .paperCard()
 
 #if os(macOS)
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                        Text("Morse settings") // l10n: localized
-                            .font(DesignTokens.FontScale.title.weight(.bold))
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                            .accessibilityAddTraits(.isHeader)
-                        Text("Use Settings to change Morse tone, timing, and playback volume.") // l10n: localized
-                            .font(DesignTokens.FontScale.body)
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                        SettingsLink {
-                            Text("Open Morse settings") // l10n: localized
-                        }
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    Text("Morse settings") // l10n: localized
+                        .font(DesignTokens.FontScale.title.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityAddTraits(.isHeader)
+                    Text("Use Settings to change Morse tone, timing, and playback volume.") // l10n: localized
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                    SettingsLink {
+                        Text("Open Morse settings") // l10n: localized
                     }
-                    .paperCard()
+                }
+                .paperCard()
 #else
-                    MorseSettingsSection(settings: $settings, openMorse: {}) { nextSettings in
-                        onSettingsChanged(nextSettings)
-                    }
-                    .paperCard()
+                MorseSettingsSection(settings: $settings, openMorse: {}) { nextSettings in
+                    onSettingsChanged(nextSettings)
+                }
+                .paperCard()
 #endif
 
                 if let errorMessage {

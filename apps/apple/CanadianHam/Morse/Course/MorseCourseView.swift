@@ -11,6 +11,7 @@ struct MorseCourseView: View {
     @State private var course: MorseCourse?
     @State private var progress: MorseCourseProgressExport?
     @State private var session: MorseCourseSession?
+    @State private var showingSession = false
     @State private var typedAnswer = ""
     @State private var statusMessage = ""
     @State private var statusMessageIsCorrective = false
@@ -29,6 +30,9 @@ struct MorseCourseView: View {
 #endif
             .background(DesignTokens.Colors.paper)
             .morseCourseOpaqueNavigationBar()
+            .navigationDestination(isPresented: $showingSession) {
+                sessionScreen()
+            }
             .task { loadCourse() }
             .onReceive(progressStore.objectWillChange) { _ in loadCourse() }
     }
@@ -56,13 +60,13 @@ struct MorseCourseView: View {
                 }
                 if let course, let progress {
                     courseStats(course: course, progress: progress)
-                    NavigationLink {
-                        sessionScreen()
+                    Button {
+                        prepareReview(course: course, progress: progress)
+                        showingSession = true
                     } label: {
                         AccessibleSecondaryButtonLabel(title: "Review weakest characters")
                     } // l10n: localized
                     .buttonStyle(AccessibleSecondaryButtonStyle())
-                    .simultaneousGesture(TapGesture().onEnded { prepareReview(course: course, progress: progress) })
                     .accessibilityIdentifier("morse-course-review")
                     courseUnits(course: course)
                 } else if errorMessage == nil {
@@ -189,18 +193,15 @@ struct MorseCourseView: View {
     }
 
     private func lessonButton(lesson: MorseCourseLesson, state: MorseLessonState) -> some View {
-        NavigationLink {
-            sessionScreen()
+        Button {
+            guard let course, let progress, state != .locked else { return }
+            prepareLesson(lesson, course: course, progress: progress)
+            showingSession = true
         } label: {
             lessonButtonLabel(lesson: lesson, state: state)
         }
-        .allowsHitTesting(state != .locked)
+        .disabled(state == .locked)
         .buttonStyle(.plain)
-        .simultaneousGesture(TapGesture().onEnded {
-            guard let course, let progress, state != .locked else { return }
-            prepareLesson(lesson, course: course, progress: progress)
-        })
-        .accessibilityRespondsToUserInteraction(state != .locked)
         .accessibilityLabel(Text(String.localizedStringWithFormat(String(localized: "Lesson %lld, %@, %@"), Int64(lesson.lessonNumber), lesson.newCharacters.joined(separator: " "), labelText(for: state)))) // l10n: localized
         .accessibilityHint(Text(accessibilityHintText(for: state))) // l10n: localized
         .accessibilityIdentifier("morse-course-lesson-\(lesson.lessonNumber)")
