@@ -1,7 +1,7 @@
 ---
 id: TASK-12.7
 title: Morse sending practice with tap timing
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
@@ -26,8 +26,8 @@ Why: the Morse qualification includes sending; the owner chose tap timing on key
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Straight-key and paddle emulation on keyboard and touch, with dot/dash ratio feedback
-- [ ] #2 An exam-style check: whole text within 3:00, the 8-dot error signal and resend accepted, 5 or fewer errors to pass
+- [x] #1 Straight-key and paddle emulation on keyboard and touch, with dot/dash ratio feedback
+- [x] #2 An exam-style check: whole text within 3:00, the 8-dot error signal and resend accepted, 5 or fewer errors to pass
 - [x] #3 No microphone permission or new entitlements; tests pass on web and Apple
 <!-- AC:END -->
 
@@ -74,5 +74,5 @@ Review-fix final Apple run visionOS per-test names (12 passed): CanadianHamVisio
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented tap-based Morse sending practice with straight-key and iambic paddle controls, shared timing/error-signal decoding/scoring helpers, web tests, Apple pushed sending/results screens, DEBUG-only iOS UI hook, and full validation across web plus iOS/macOS/tvOS/visionOS. Verified AC1 with shared fixtures, web keyboard/touch component tests, Apple MorseTrainerTests sending timing tests, and iOS UI sending flow. Verified AC2 with shared 8-dot error signal fixture, scoreMorseSending tests, sending check timer/results UI, and iOS UI pass flow. Verified AC3 with no microphone/entitlement changes, check:apple-network, check:apple-l10n/text-source checks, and full platform suites.
+Implemented and review-fixed tap-based Morse sending practice. AC1 verified with shared 25/25 multi-element fixture, web straight-key/paddle/stuck-key tests, Apple continuous side-tone and hardware-key handling, and targeted iOS sending UI flow/audits. AC2 verified with timeout/error-signal fixtures, corrected TS/Swift timeout scoring, web passing/timeout tests, and iOS exam-style sending results flow. AC3 verified with no microphone/entitlement changes, check:apple-network, check:apple-l10n/text-source checks, web checks, swift test, and final full iOS/macOS/tvOS/visionOS suites.
 <!-- SECTION:FINAL_SUMMARY:END -->
