@@ -1673,11 +1673,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     private func scrollToMorseCourseLastUnit(in app: XCUIApplication) {
         let lastUnit = app.buttons["morse-course-unit-8"].firstMatch
-        for _ in 0..<12 where !lastUnit.exists || !lastUnit.isHittable {
+        for _ in 0..<12 where !isFullyVisible(lastUnit, in: app, requiresHittable: true) {
             app.swipeUp()
             waitBriefly()
         }
         XCTAssertTrue(lastUnit.waitForExistence(timeout: 5), "Expected final Morse course unit")
+        XCTAssertTrue(isFullyVisible(lastUnit, in: app, requiresHittable: true), "Expected final Morse course unit to be fully visible below the navigation bar")
     }
 
     private func returnFromMorseCourseToMorseHome(in app: XCUIApplication) {

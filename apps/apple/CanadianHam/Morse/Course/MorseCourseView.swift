@@ -28,6 +28,7 @@ struct MorseCourseView: View {
             .navigationBarTitleDisplayMode(.inline)
 #endif
             .background(DesignTokens.Colors.paper)
+            .morseCourseOpaqueNavigationBar()
             .task { loadCourse() }
             .onReceive(progressStore.objectWillChange) { _ in loadCourse() }
     }
@@ -168,6 +169,7 @@ struct MorseCourseView: View {
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
+        .morseCourseOpaqueNavigationBar()
         .navigationTitle(unitTitle(unitID: unitID)) // l10n: localized
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
@@ -227,6 +229,7 @@ struct MorseCourseView: View {
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
+        .morseCourseOpaqueNavigationBar()
         .navigationTitle(sessionTitle) // l10n: localized
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
@@ -287,6 +290,7 @@ struct MorseCourseView: View {
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
+        .morseCourseOpaqueNavigationBar()
         .navigationTitle("Lesson summary")
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
@@ -556,6 +560,18 @@ struct MorseCourseView: View {
 
     private func accessibilityHintText(for state: MorseLessonState) -> String {
         state == .locked ? String(localized: "Complete the previous lesson to unlock this lesson.") : ""
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func morseCourseOpaqueNavigationBar() -> some View {
+#if os(iOS)
+        toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+#else
+        self
+#endif
     }
 }
 
