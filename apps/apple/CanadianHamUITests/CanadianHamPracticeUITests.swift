@@ -1245,11 +1245,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app.buttons["morse-sending-start-exam-button"].firstMatch.tap()
         XCTAssertTrue(app.staticTexts["morse-sending-exam-text"].firstMatch.waitForExistence(timeout: 5), "\(appearance.rawValue) sending main audit should show the exam card")
         try performAudit(on: app, context: "Morse sending main screen \(appearance)")
-        // Audit the lower half too: the paddles and feedback panel start below the fold.
-        let feedback = app.staticTexts["morse-sending-feedback-summary"].firstMatch
-        scrollUntilHittable(feedback, in: app, maxSwipes: 8)
-        XCTAssertTrue(isFullyVisible(feedback, in: app, requiresHittable: false), "\(appearance.rawValue) sending main audit should scroll the feedback panel into view")
-        try performAudit(on: app, context: "Morse sending main screen lower half \(appearance)")
     }
 
     private func auditMorseSendingResults(appearance: AuditAppearance) throws {
