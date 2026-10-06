@@ -304,6 +304,11 @@ struct MorseCourseView: View {
             Text(String.localizedStringWithFormat(String(localized: "Accuracy: %lld%%"), Int64(percent))) // l10n: localized
                 .font(DesignTokens.FontScale.body.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
+            if statusMessageIsCorrective && !statusMessage.isEmpty {
+                Text(statusMessage) // l10n: localized
+                    .font(DesignTokens.FontScale.body)
+                    .foregroundStyle(DesignTokens.Colors.ink)
+            }
             Text(morseCourseSummaryMessage(for: session, percent: percent, course: course, progressSaved: !progressSaveFailed)) // l10n: localized
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)

@@ -1623,6 +1623,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         if app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 1) {
             return
         }
+        scrollToTop(in: app)
         let button = app.buttons["morse-course-open-button"].firstMatch
         XCTAssertTrue(button.waitForExistence(timeout: 5), "Expected Morse course entry on the Morse home")
         scrollUntilHittable(button, in: app, maxSwipes: 10)
