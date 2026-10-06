@@ -1,9 +1,11 @@
 ---
 id: TASK-12.4
 title: 'Morse visual, haptic and screen-reader alternatives'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-02 01:12'
+updated_date: '2026-10-06 18:44'
 labels:
   - web
   - apple
