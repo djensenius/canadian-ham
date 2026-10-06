@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-05 13:33'
-updated_date: '2026-10-06 03:03'
+updated_date: '2026-10-06 03:16'
 labels: []
 dependencies:
   - TASK-11.5
@@ -117,6 +117,8 @@ Final macOS full run per-test names: CanadianHamTests unit bundle 56 tests passe
 - CanadianHamTests.ReadinessAndScoringTests (4): testAdvancedScoringAndReadinessSuppressHonours; testExamScoringBoundaries; testReadinessStates; testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate.
 
 tvOS/visionOS were not rerun for this PR #142 fix because no catalogue or tvOS/visionOS-bundled resource changed after the previous full four-platform validation.
+
+PR #142 Copilot round 2 (84ba407, coordinator): web requestCourseChange clears the pending warning when a switch needs no confirmation (for example, the exam was submitted while the warning was open) and when the current course is chosen. New test 'clears a stale course switch warning once the exam is submitted' fails without the fix and passes with it. Web typecheck, all web tests and build:web pass; web-only change, no Apple runs needed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
