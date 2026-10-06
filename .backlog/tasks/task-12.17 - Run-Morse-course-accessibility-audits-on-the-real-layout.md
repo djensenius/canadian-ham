@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-04 13:22'
-updated_date: '2026-10-06 11:58'
+updated_date: '2026-10-06 16:27'
 labels: []
 milestone: m-1
 dependencies: []
@@ -35,3 +35,23 @@ The current Morse course accessibility audit path uses the -CanadianHamMorseCour
 4. Remove -CanadianHamMorseCourseAuditOnly and update iOS UI-test helpers/audits to exercise Morse home, Course home, a Unit screen, first lesson, and summary in light and dark, including scroll-and-reaudit coverage for long screens.
 5. Run l10n/text checks, targeted iOS UI tests while iterating, then final platform checks per AGENTS.md task-execution and task-finalization policy; record per-test evidence before checking ACs and moving Done.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implementation notes after final code:
+- `apps/apple/CanadianHam/Morse/MorseTrainerView.swift:61-74` changed the Morse home so it links to the course (`morse-course-open-button`) instead of embedding the course, while leaving copy, sending, quick listen, and settings on the real Morse layout.
+- `apps/apple/CanadianHam/Morse/Course/MorseCourseView.swift:24-33` keeps the course in the app navigation stack without `-CanadianHamMorseCourseAuditOnly`; `:36-75` is the course home, `:157-187` is the unit screen, `:221-258` is the lesson/review session screen with playback coordinator register/unregister, and `:288-310` is the pushed summary screen.
+- `apps/apple/CanadianHam/Morse/Course/MorseCourseView.swift:88-155` keeps the course home short enough for real-layout audits by using compact stats and two-column unit links; `:580-587` uses token-based opaque navigation-bar background on iOS. The prior audit failure was confirmed in `/tmp/t1217-ios-targeted-4.log:1678-1681`, where the lower-course audit sampled `Daily streak` and failed `Contrast failed` at `CanadianHamPracticeUITests.swift:1608`; after compacting the home, light/dark course audits passed.
+- `apps/apple/CanadianHamUITests/CanadianHamPracticeUITests.swift:1407-1429` now audits the Morse home, course home, lower course home content, unit screen, lesson, and summary in light/dark with plain `performAccessibilityAudit()` and no handlers; `:1622-1681` contains the updated navigation/scroll helpers.
+- `apps/apple/CanadianHam/Resources/Localizable.xcstrings:10008` adds `Lessons %lld–%lld` with en/fr/fr-CA through the required JSON round-trip.
+Validation on final code commit `0fd1fd2c750267222668555e62006ff919410a3c`:
+- `node scripts/check-apple-text-sources.ts` passed.
+- `pnpm check:apple-l10n` passed, including French export plus tvOS and visionOS localization builds.
+- Targeted iOS audits: `/tmp/t1217-ios-audits-6.log` passed `testAccessibilityAuditMorseCourseLessonAndSummaryDark` and `testAccessibilityAuditMorseCourseLessonAndSummaryLight`.
+- Full iOS: `/tmp/t1217-ios-full.log` passed 124 tests (60 unit + 66 UI according to xbuild suite summaries/log test cases), including `testAccessibilityAuditMorseCourseLessonAndSummaryDark`, `testAccessibilityAuditMorseCourseLessonAndSummaryLight`, `testMorseStartingCourseAudioStopsCopyPlayback`, `testMorseStartingQuickListenStopsCopyPlayback`, `testMorseStartingQuickListenStopsCoursePlayback`, `testMorseQuickListenAfterFinishedCourseAudioDoesNotReportStop`, `testCompletesFirstMorseLessonSessionOnIOS`, and `testMorseLessonSummaryShowsCorrectAnswerForWrongFinalAnswerOnIOS`.
+- Full macOS: `/tmp/t1217-macos-full.log` passed 60 unit tests.
+- Full tvOS: `/tmp/t1217-tvos-full.log` passed 15 tests (3 unit + 12 UI).
+- Full visionOS: `/tmp/t1217-visionos-full.log` passed 12 tests (3 unit + 9 UI).
+- tvOS/visionOS were run because the string catalogue changed.
+<!-- SECTION:NOTES:END -->
