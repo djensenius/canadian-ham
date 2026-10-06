@@ -11,6 +11,7 @@ final class AppSettingsModel: ObservableObject {
     @Published private(set) var dataRevision = 0
     @Published private(set) var localDataReplacementRevision = 0
 
+    private var unfinishedCourseWorkChecks: [UUID: @MainActor () -> Bool] = [:]
     private var progressStoreCancellable: AnyCancellable?
 
     init(morseSettings: MorseTrainerSettings = .load()) {
@@ -22,6 +23,18 @@ final class AppSettingsModel: ObservableObject {
         if replacesLocalData {
             localDataReplacementRevision += 1
         }
+    }
+
+    func registerUnfinishedCourseWorkCheck(id: UUID, _ check: @escaping @MainActor () -> Bool) {
+        unfinishedCourseWorkChecks[id] = check
+    }
+
+    func unregisterUnfinishedCourseWorkCheck(id: UUID) {
+        unfinishedCourseWorkChecks.removeValue(forKey: id)
+    }
+
+    var hasAnyUnfinishedCourseWork: Bool {
+        unfinishedCourseWorkChecks.values.contains { $0() }
     }
 
     private func bindProgressStore() {

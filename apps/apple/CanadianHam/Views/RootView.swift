@@ -48,6 +48,7 @@ struct RootView: View {
     @State private var morseSettings = MorseTrainerSettings.load()
     @State private var dataRevision = 0
     @State private var navigationPath: [LearnRoute] = []
+    @State private var unfinishedCourseWorkCheckID = UUID()
     @StateObject private var practiceSessionStates = PracticeSessionStateCache()
     @StateObject private var mockExamState = MockExamState()
 #if os(iOS)
@@ -107,6 +108,14 @@ struct RootView: View {
             guard appSettings.morseSettings != next else { return }
             appSettings.morseSettings = next
         }
+        .onAppear {
+            appSettings.registerUnfinishedCourseWorkCheck(id: unfinishedCourseWorkCheckID) {
+                practiceSessionStates.hasUnfinishedCourseWork || mockExamState.hasUnfinishedCourseWork
+            }
+        }
+        .onDisappear {
+            appSettings.unregisterUnfinishedCourseWorkCheck(id: unfinishedCourseWorkCheckID)
+        }
     }
 
     @ViewBuilder
@@ -154,6 +163,9 @@ struct RootView: View {
             loadBank(for: next)
             practiceSessionStates.clear()
             mockExamState.resetSession(localDataReplacementRevision: appSettings.localDataReplacementRevision)
+        }
+        .onChange(of: appSettings.localDataReplacementRevision) { _, next in
+            clearCachedSessions(localDataReplacementRevision: next)
         }
     }
 
@@ -336,7 +348,9 @@ struct RootView: View {
             openAbout: {
                 compactNavigationPath.append(CompactSettingsRoute.about)
                 selection = .about
-            }
+            },
+            hasUnfinishedCourseWork: { appSettings.hasAnyUnfinishedCourseWork },
+            localDataReplacementRevision: appSettings.localDataReplacementRevision
         ) { replacesLocalData in
             recordDataChanged(replacesLocalData: replacesLocalData)
         }
@@ -476,6 +490,9 @@ struct RootView: View {
             practiceSessionStates.clear()
             mockExamState.resetSession(localDataReplacementRevision: appSettings.localDataReplacementRevision)
         }
+        .onChange(of: appSettings.localDataReplacementRevision) { _, next in
+            clearCachedSessions(localDataReplacementRevision: next)
+        }
         .onChange(of: selection) { _, next in
             if next != .learn {
                 navigationPath.removeAll()
@@ -485,6 +502,11 @@ struct RootView: View {
 
     private var combinedDataRevision: Int {
         dataRevision + appSettings.dataRevision
+    }
+
+    private func clearCachedSessions(localDataReplacementRevision: Int) {
+        practiceSessionStates.clear()
+        mockExamState.resetSession(localDataReplacementRevision: localDataReplacementRevision)
     }
 
     private func recordDataChanged(replacesLocalData: Bool = false) {
@@ -563,7 +585,15 @@ struct RootView: View {
                 recordDataChanged()
             }
         case .settings:
-            SettingsView(bank: bank, progressStore: progressStore, morseSettings: $morseSettings, openMorse: { selection = .morse }, openAbout: { selection = .about }) { replacesLocalData in
+            SettingsView(
+                bank: bank,
+                progressStore: progressStore,
+                morseSettings: $morseSettings,
+                openMorse: { selection = .morse },
+                openAbout: { selection = .about },
+                hasUnfinishedCourseWork: { appSettings.hasAnyUnfinishedCourseWork },
+                localDataReplacementRevision: appSettings.localDataReplacementRevision
+            ) { replacesLocalData in
                 recordDataChanged(replacesLocalData: replacesLocalData)
             }
         case .about:

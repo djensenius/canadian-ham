@@ -911,6 +911,17 @@ final class CanadianHamPracticeUITests: XCTestCase {
         )
     }
 
+    func testCourseSwitchConfirmationKeepsMockExamWhenCancelledLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try exerciseCourseSwitchConfirmation(appearance: .light)
+    }
+
+    func testCourseSwitchConfirmationAuditsDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try exerciseCourseSwitchConfirmation(appearance: .dark)
+        XCUIDevice.shared.appearance = .light
+    }
+
     func testCoursePickerSwitchesToAdvancedLessonsAndFiftyQuestionMockWithoutHonours() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [
@@ -1202,6 +1213,38 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(open.waitForExistence(timeout: 10), "Expected the Sending practice entry on the Morse screen")
         scrollUntilHittable(open, in: app, maxSwipes: 8)
         open.tap()
+    }
+
+    private func exerciseCourseSwitchConfirmation(appearance: AuditAppearance) throws {
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "mock",
+            "-CanadianHamMockExamQuestionID", "B-001-002-002",
+            "-CanadianHamMockExamLimit", "1"
+        ])
+        defer { app.terminate() }
+
+        tap("Start mock exam", in: app)
+        XCTAssertTrue(app.staticTexts["Question 1 of 1"].firstMatch.waitForExistence(timeout: 10), "Expected unfinished mock exam before switching courses")
+        tapCompactBack(in: app)
+        tapCompactBack(in: app)
+        tap("Settings", in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["course-picker"].firstMatch.waitForExistence(timeout: 10), "Settings should expose the course picker")
+
+        tap("Advanced", in: app)
+        let confirmationTitle = app.staticTexts["Switch course?"].firstMatch
+        XCTAssertTrue(confirmationTitle.waitForExistence(timeout: 5), "Unfinished mock exam should trigger course-switch confirmation")
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "unfinished practice or mock exam")).firstMatch.exists)
+        try performAudit(on: app, context: "\(appearance.rawValue) course switch confirmation")
+
+        app.buttons["Cancel"].firstMatch.tap()
+        waitForElementToDisappear(confirmationTitle, timeout: 5, message: "Cancel should dismiss the course-switch confirmation")
+        XCTAssertTrue(app.descendants(matching: .any)["course-picker"].firstMatch.waitForExistence(timeout: 5), "Cancel should return to Settings")
+        XCTAssertTrue(app.buttons["Basic"].firstMatch.isSelected, "Cancel should leave Basic selected")
+
+        tapCompactBack(in: app)
+        tap("Home", in: app)
+        tap("Mock exam", in: app)
+        XCTAssertTrue(app.staticTexts["Question 1 of 1"].firstMatch.waitForExistence(timeout: 10), "Cancel should keep the unfinished mock exam session")
     }
 
     private func auditAdvancedCourseScreens(appearance: AuditAppearance) throws {

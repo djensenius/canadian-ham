@@ -334,6 +334,16 @@ final class PracticeSessionState: ObservableObject {
     @Published var answeredCount = 0
     @Published var correctCount = 0
     @Published var errorMessage: String?
+
+    var hasUnfinishedCourseWork: Bool {
+        guard !items.isEmpty, let loadedPracticeMode else { return false }
+        switch loadedPracticeMode {
+        case .immediate:
+            return answeredCount > 0 && answeredCount < items.count
+        case .reviewLater:
+            return answeredCount > 0 && !reviewSubmitted
+        }
+    }
 }
 
 @MainActor
@@ -349,6 +359,10 @@ final class PracticeSessionStateCache: ObservableObject {
 
     func clear() {
         states.removeAll()
+    }
+
+    var hasUnfinishedCourseWork: Bool {
+        states.values.contains { $0.hasUnfinishedCourseWork }
     }
 }
 
@@ -724,6 +738,10 @@ final class MockExamState: ObservableObject {
     @Published var errorMessage: String?
     @Published var timerStatus = String(localized: "Timer off")
     @Published var loadedLocalDataReplacementRevision = 0
+
+    var hasUnfinishedCourseWork: Bool {
+        !generatedItems.isEmpty && result == nil
+    }
 
     func resetSession(localDataReplacementRevision: Int) {
         seed = ""
@@ -1378,6 +1396,8 @@ struct SettingsView: View {
     @Binding var morseSettings: MorseTrainerSettings
     let openMorse: () -> Void
     let openAbout: () -> Void
+    let hasUnfinishedCourseWork: () -> Bool
+    let localDataReplacementRevision: Int
     let onDataChanged: (_ replacesLocalData: Bool) -> Void
 
     @State private var statusMessage: String?
@@ -1386,20 +1406,26 @@ struct SettingsView: View {
     @State private var showingExporter = false
     @State private var showingImporter = false
     @State private var pendingImport: ProgressExportV1?
+    @State private var pendingCourseSwitch: CourseBankID?
     @State private var confirmingImport = false
     @State private var confirmingReset = false
+    @AccessibilityFocusState private var coursePickerFocused: Bool
+    @AccessibilityFocusState private var courseSwitchConfirmationFocused: Bool
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    Text("Settings")
+                if pendingCourseSwitch != nil {
+                    courseSwitchConfirmationPanel
+                } else {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                        Text("Settings")
                         .font(DesignTokens.FontScale.headline.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
                     Picker("Course", selection: Binding(
                         get: { progressStore.preferences.activeBankId },
-                        set: { bankId in savePreferences { $0.activeBankId = bankId } }
+                        set: { bankId in requestCourseSwitch(to: bankId) }
                     )) {
                         ForEach(CourseBankID.allCases) { bankId in
                             Text(bankId.localizedName).tag(bankId) // l10n: localized
@@ -1408,6 +1434,7 @@ struct SettingsView: View {
                     .pickerStyle(.segmented)
                     .accessibilityIdentifier("course-picker")
                     .accessibilityLabel(Text("Course")) // l10n: localized
+                    .accessibilityFocused($coursePickerFocused)
 
                     Picker("Practice mode", selection: Binding(
                         get: { progressStore.preferences.practiceMode },
@@ -1479,8 +1506,9 @@ struct SettingsView: View {
                 }
                 .paperCard()
 
-                if let statusMessage { MessagePanel(title: "Settings", message: statusMessage, kind: .success) }
-                if let errorMessage { MessagePanel(title: "Settings error", message: errorMessage, kind: .warning) }
+                    if let statusMessage { MessagePanel(title: "Settings", message: statusMessage, kind: .success) }
+                    if let errorMessage { MessagePanel(title: "Settings error", message: errorMessage, kind: .warning) }
+                }
             }
             .pagePadding()
         }
@@ -1507,6 +1535,75 @@ struct SettingsView: View {
         } message: {
             Text("Deletes local progress, mock exams, and preferences. Bundled content remains installed.")
         }
+        .onChange(of: pendingCourseSwitch) { _, next in
+            if next != nil {
+                focusCourseSwitchConfirmationAfterLayout()
+            }
+        }
+        .onChange(of: localDataReplacementRevision) { _, _ in
+            pendingCourseSwitch = nil
+        }
+        .onChange(of: progressStore.preferences.activeBankId) { _, _ in
+            pendingCourseSwitch = nil
+        }
+    }
+
+    private var courseSwitchConfirmationPanel: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            Text("Switch course?") // l10n: localized
+                .font(DesignTokens.FontScale.title.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .accessibilityAddTraits(.isHeader)
+                .accessibilityFocused($courseSwitchConfirmationFocused)
+            Text("Switching courses will discard the unfinished practice or mock exam session. Saved progress remains on this device.") // l10n: localized
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .fixedSize(horizontal: false, vertical: true)
+            HStack {
+                tokenButton("Cancel") { cancelCourseSwitch() }
+                tokenButton("Switch course") { confirmCourseSwitch() }
+            }
+        }
+        .paperCard()
+    }
+
+    private func focusCourseSwitchConfirmationAfterLayout() {
+        DispatchQueue.main.async {
+            courseSwitchConfirmationFocused = true
+        }
+    }
+
+    private func requestCourseSwitch(to bankId: CourseBankID) {
+        guard bankId != progressStore.preferences.activeBankId else { return }
+        if hasUnfinishedCourseWork() {
+            pendingCourseSwitch = bankId
+        } else {
+            saveCourseSwitch(to: bankId)
+        }
+    }
+
+    private func cancelCourseSwitch() {
+        pendingCourseSwitch = nil
+        DispatchQueue.main.async {
+            coursePickerFocused = true
+        }
+    }
+
+    private func confirmCourseSwitch() {
+        guard let pendingCourseSwitch else { return }
+        self.pendingCourseSwitch = nil
+        saveCourseSwitch(to: pendingCourseSwitch)
+        focusCoursePickerAfterLayout()
+    }
+
+    private func focusCoursePickerAfterLayout() {
+        DispatchQueue.main.async {
+            coursePickerFocused = true
+        }
+    }
+
+    private func saveCourseSwitch(to bankId: CourseBankID) {
+        savePreferences { $0.activeBankId = bankId }
     }
 
     private func savePreferences(_ mutate: (inout ApplePreferences) -> Void) {

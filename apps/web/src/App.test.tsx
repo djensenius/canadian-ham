@@ -968,6 +968,83 @@ describe("App accessibility and flows", () => {
     await screen.findByRole("heading", { name: "Ready for the Advanced qualification?" });
   });
 
+  it("confirms before a course switch discards an unfinished mock exam", async () => {
+    window.location.hash = "#/mock";
+    const store = createStore("course-switch-confirmation");
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "course-switch-confirmation-seed"} />);
+
+    await screen.findByRole("heading", { name: "Mock exam" });
+    fireEvent.click(screen.getByRole("button", { name: "Start mock exam" }));
+    await screen.findByText(/Question 1 of 100/);
+
+    fireEvent.click(screen.getByRole("radio", { name: "Advanced" }));
+    const dialog = await screen.findByRole("alertdialog", { name: "Switch course?" });
+    assert.equal(document.activeElement, dialog);
+    assert.match(dialog.textContent ?? "", /discard the unfinished practice or mock exam session/);
+    await expectNoAxeViolations(dialog);
+
+    fireEvent.keyDown(dialog, { key: "Escape" });
+    assert.equal(screen.queryByRole("alertdialog", { name: "Switch course?" }), null);
+    assert.equal((screen.getByRole("radio", { name: "Basic" }) as HTMLInputElement).checked, true);
+    assert.ok(screen.getByText(/Question 1 of 100/));
+    assert.equal((await store.getPreferences()).activeBankId, bankId);
+
+    fireEvent.click(screen.getByRole("radio", { name: "Advanced" }));
+    const cancelDialog = await screen.findByRole("alertdialog", { name: "Switch course?" });
+    fireEvent.click(within(cancelDialog).getByRole("button", { name: "Cancel course switch" }));
+    assert.equal(screen.queryByRole("alertdialog", { name: "Switch course?" }), null);
+    const courseSwitcher = screen.getByRole("group", { name: "Course selection" });
+    await waitFor(() => assert.ok(document.activeElement === courseSwitcher, "course switcher focused after Cancel"));
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    assert.ok(document.activeElement === courseSwitcher, "focus stays on the course switcher after Cancel");
+    assert.equal((screen.getByRole("radio", { name: "Basic" }) as HTMLInputElement).checked, true);
+    assert.ok(screen.getByText(/Question 1 of 100/));
+    assert.equal((await store.getPreferences()).activeBankId, bankId);
+
+    fireEvent.click(screen.getByRole("radio", { name: "Advanced" }));
+    fireEvent.click(within(await screen.findByRole("alertdialog", { name: "Switch course?" })).getByRole("button", { name: "Switch course" }));
+    await screen.findByRole("heading", { name: "Mock exam" });
+    assert.match(screen.getByText(/Generate 50 Advanced questions/).textContent ?? "", /Generate 50 Advanced questions/);
+    assert.equal((await store.getPreferences()).activeBankId, ADVANCED_BANK_ID);
+    await waitFor(() => assert.ok(document.activeElement === screen.getByRole("group", { name: "Course selection" }), "course switcher focused after Confirm"));
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    assert.ok(document.activeElement === screen.getByRole("group", { name: "Course selection" }), "focus stays on the course switcher after Confirm");
+  });
+
+  it("clears a stale course switch warning once the exam is submitted", async () => {
+    window.location.hash = "#/mock";
+    const store = createStore("course-switch-stale-warning");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "course-switch-stale-seed"} />);
+
+    await user.click(await screen.findByRole("button", { name: "Start mock exam" }));
+    // Leave the warning open, submit the exam, then pick Advanced again.
+    await user.click(screen.getByRole("radio", { name: "Advanced" }));
+    await screen.findByRole("alertdialog", { name: "Switch course?" });
+    await user.click(screen.getAllByTestId("answer-choice")[0]!);
+    await user.click(screen.getByRole("button", { name: "Submit exam" }));
+    await user.click(screen.getByRole("button", { name: "Confirm submit" }));
+    await screen.findByRole("heading", { name: "Mock exam results" });
+    await user.click(screen.getByRole("radio", { name: "Advanced" }));
+    await waitFor(async () => assert.equal((await store.getPreferences()).activeBankId, ADVANCED_BANK_ID));
+    assert.ok(screen.queryByRole("alertdialog", { name: "Switch course?" }) === null, "no stale warning after switching");
+  });
+
+  it("does not confirm a course switch for an unanswered practice session", async () => {
+    window.location.hash = "#/practice";
+    const store = createStore("course-switch-unanswered-practice");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "course-switch-unanswered-practice-seed"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+
+    await user.click(screen.getByRole("radio", { name: "Advanced" }));
+
+    assert.equal(screen.queryByRole("alertdialog", { name: "Switch course?" }), null);
+    await waitFor(async () => assert.equal((await store.getPreferences()).activeBankId, ADVANCED_BANK_ID));
+  });
+
   it("renders the French interface with Advanced selected and tags Advanced category names as English", async () => {
     window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
     window.location.hash = "#/home";
