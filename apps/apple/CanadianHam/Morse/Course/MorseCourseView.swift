@@ -35,7 +35,7 @@ struct MorseCourseView: View {
 
     private var courseHome: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                 courseCard {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                         Text("Koch course") // l10n: localized
@@ -88,7 +88,7 @@ struct MorseCourseView: View {
     private func courseStats(course: MorseCourse, progress: MorseCourseProgressExport) -> some View {
         let completed = progress.lessonProgress.filter { $0.bestAccuracy >= course.unlockAccuracy }.count
         let streak = morseDailyStreak(activity: progress.dailyActivity, todayIso: Date.now.localDateString)
-        return VStack(spacing: DesignTokens.Spacing.md) {
+        return HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
             statCard(title: "Daily streak", value: String.localizedStringWithFormat(String(localized: "%lld days"), Int64(streak)))
             statCard(title: "Lessons completed", value: String.localizedStringWithFormat(String(localized: "%lld of %lld"), Int64(completed), Int64(course.lessons.count)))
         }
@@ -111,35 +111,47 @@ struct MorseCourseView: View {
 
     private func courseUnits(course: MorseCourse) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            ForEach(course.units) { unit in
-                NavigationLink {
-                    unitScreen(unitID: unit.id)
-                } label: {
-                    HStack(spacing: DesignTokens.Spacing.md) {
-                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                            Text("Unit \(unit.unitNumber)") // l10n: localized
-                                .font(DesignTokens.FontScale.body.weight(.bold))
-                                .foregroundStyle(DesignTokens.Colors.ink)
-                            Text(unitLessonRange(unit: unit, course: course)) // l10n: localized with numbers
-                                .font(DesignTokens.FontScale.body)
-                                .foregroundStyle(DesignTokens.Colors.inkMuted)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        Image(systemName: "chevron.right")
-                            .font(DesignTokens.FontScale.caption.weight(.semibold))
-                            .foregroundStyle(DesignTokens.Colors.inkMuted)
+            ForEach(Array(stride(from: 0, to: course.units.count, by: 2)), id: \.self) { index in
+                HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
+                    unitNavigationLink(unit: course.units[index], course: course)
+                    if index + 1 < course.units.count {
+                        unitNavigationLink(unit: course.units[index + 1], course: course)
+                    } else {
+                        Spacer(minLength: 0)
+                            .frame(maxWidth: .infinity)
                     }
-                    .padding(DesignTokens.Spacing.md)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-                    .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
                 }
-                .buttonStyle(.plain)
-                .accessibilityIdentifier("morse-course-unit-\(unit.unitNumber)")
             }
         }
         .accessibilityElement(children: .contain)
         .accessibilityLabel(Text("Morse course units and lessons")) // l10n: localized
+    }
+
+    private func unitNavigationLink(unit: MorseCourseUnit, course: MorseCourse) -> some View {
+        NavigationLink {
+            unitScreen(unitID: unit.id)
+        } label: {
+            HStack(spacing: DesignTokens.Spacing.sm) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                    Text("Unit \(unit.unitNumber)") // l10n: localized
+                        .font(DesignTokens.FontScale.body.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                    Text(unitLessonRange(unit: unit, course: course)) // l10n: localized with numbers
+                        .font(DesignTokens.FontScale.caption)
+                        .foregroundStyle(DesignTokens.Colors.inkMuted)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                Image(systemName: "chevron.right")
+                    .font(DesignTokens.FontScale.caption.weight(.semibold))
+                    .foregroundStyle(DesignTokens.Colors.inkMuted)
+            }
+            .padding(DesignTokens.Spacing.sm)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("morse-course-unit-\(unit.unitNumber)")
     }
 
     private func unitScreen(unitID: String) -> some View {
