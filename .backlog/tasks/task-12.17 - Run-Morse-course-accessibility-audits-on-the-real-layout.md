@@ -1,7 +1,7 @@
 ---
 id: TASK-12.17
 title: Run Morse course accessibility audits on the real layout
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-04 13:22'
