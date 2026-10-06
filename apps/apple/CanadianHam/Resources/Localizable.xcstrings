@@ -6477,19 +6477,19 @@
               "zero" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "RÉUSSITE, 100 %%, avec %lld erreur."
+                  "value" : "RÉUSSITE, 100 %%, avec %lld erreur."
                 }
               },
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "RÉUSSITE, 100 %%, avec %lld erreur."
+                  "value" : "RÉUSSITE, 100 %%, avec %lld erreur."
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "RÉUSSITE, 100 %%, avec %lld erreurs."
+                  "value" : "RÉUSSITE, 100 %%, avec %lld erreurs."
                 }
               }
             }
@@ -6501,19 +6501,19 @@
               "zero" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "RÉUSSITE, 100 %%, avec %lld erreur."
+                  "value" : "RÉUSSITE, 100 %%, avec %lld erreur."
                 }
               },
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "RÉUSSITE, 100 %%, avec %lld erreur."
+                  "value" : "RÉUSSITE, 100 %%, avec %lld erreur."
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "RÉUSSITE, 100 %%, avec %lld erreurs."
+                  "value" : "RÉUSSITE, 100 %%, avec %lld erreurs."
                 }
               }
             }

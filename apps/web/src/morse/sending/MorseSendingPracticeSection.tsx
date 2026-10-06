@@ -314,8 +314,8 @@ export function MorseSendingPracticeSection({ interfaceLanguage, preferences, pl
   function endPaddle(element: MorseKeyElement): void {
     pressedPaddlesRef.current.delete(element);
     if (pressedPaddlesRef.current.size === 0) {
+      // Stop repeating but let the current dot or dash finish sounding; it was recorded at full length.
       clearPaddleTimer();
-      playerRef.current?.stop();
     }
   }
 

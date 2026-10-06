@@ -223,7 +223,7 @@ describe("MorseSendingPracticeSection", () => {
     assert.ok(screen.getByRole("heading", { name: "Sending results" }));
     const results = screen.getByRole("heading", { name: "Sending results" }).parentElement?.textContent ?? "";
     assert.match(results, /PASS, 100%, with 1 error\./);
-    assert.match(results, /1 total errors: 0 wrong, 1 missing, 0 inserted/);
+    assert.match(results, /1 total error: 0 wrong, 1 missing, 0 inserted/);
     assert.match(results, /E/);
   });
 

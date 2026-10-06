@@ -49,8 +49,8 @@ final class LocalizationCatalogTests: XCTestCase {
         XCTAssertEqual(localizedUnansweredQuestionCount(2, bundle: frenchBundle, locale: locale), "2 questions sans réponse compteront comme incorrectes.")
 
         let sendingPassFormat = frenchBundle.localizedString(forKey: "PASS, 100%%, with %lld errors.", value: nil, table: nil)
-        XCTAssertEqual(String(format: sendingPassFormat, locale: locale, Int64(1)), "RÉUSSITE, 100 %, avec 1 erreur.")
-        XCTAssertEqual(String(format: sendingPassFormat, locale: locale, Int64(2)), "RÉUSSITE, 100 %, avec 2 erreurs.")
+        XCTAssertEqual(String(format: sendingPassFormat, locale: locale, Int64(1)), "RÉUSSITE, 100\u{00A0}%, avec 1 erreur.")
+        XCTAssertEqual(String(format: sendingPassFormat, locale: locale, Int64(2)), "RÉUSSITE, 100\u{00A0}%, avec 2 erreurs.")
 
         let mockExamSubmittedFormat = frenchBundle.localizedString(forKey: "Mock exam submitted. %@, %lld of %lld.", value: nil, table: nil)
         let passStatus = frenchBundle.localizedString(forKey: "Pass", value: nil, table: nil)
