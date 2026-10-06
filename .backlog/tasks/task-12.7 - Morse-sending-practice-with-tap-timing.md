@@ -1,11 +1,11 @@
 ---
 id: TASK-12.7
 title: Morse sending practice with tap timing
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-06 00:14'
+updated_date: '2026-10-06 00:22'
 labels:
   - web
   - apple
@@ -26,8 +26,8 @@ Why: the Morse qualification includes sending; the owner chose tap timing on key
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [x] #1 Straight-key and paddle emulation on keyboard and touch, with dot/dash ratio feedback
-- [x] #2 An exam-style check: whole text within 3:00, the 8-dot error signal and resend accepted, 5 or fewer errors to pass
+- [ ] #1 Straight-key and paddle emulation on keyboard and touch, with dot/dash ratio feedback
+- [ ] #2 An exam-style check: whole text within 3:00, the 8-dot error signal and resend accepted, 5 or fewer errors to pass
 - [x] #3 No microphone permission or new entitlements; tests pass on web and Apple
 <!-- AC:END -->
 
@@ -35,6 +35,8 @@ Why: the Morse qualification includes sending; the owner chose tap timing on key
 
 <!-- SECTION:PLAN:BEGIN -->
 1. Inspect existing Morse engine/audio/copy exam flows and platform routing to identify narrow seams for sending practice.\n2. Add shared TS/Swift timing decode/scoring helpers plus JSON fixtures for tap classification and 8-dot error signal behavior.\n3. Add web sending practice and exam-style sending screens using the existing Morse audio controller and copy/exam corpus generator, with keyboard/touch controls and tests.\n4. Add iPhone/iPad/Mac sending practice/results screens using the Swift Morse engine/audio controller, DEBUG-only deterministic UI-test hook, localization strings, unit/UI tests, and leave tvOS/visionOS unchanged.\n5. Run targeted checks while iterating, then required web/package/Apple validations and record evidence before finalizing.
+
+6. Address review findings: repair web/Apple keyboard and key lifecycle handling, correct timeout scoring to count remaining text as missing errors, add timeout/multi-element fixtures and tests, remove side effects from web state updates, add main sending screen audits, rerun validations, then re-check ACs only after evidence.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
