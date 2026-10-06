@@ -1,7 +1,7 @@
 ---
 id: TASK-12.4
 title: 'Morse visual, haptic and screen-reader alternatives'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
@@ -52,3 +52,9 @@ Implemented Morse output modes and accessibility alternatives. Evidence map:
 - Added/updated test names: packages/morse-engine test "maps timed Morse symbols to beacon transitions, tape tokens and haptic durations" and "keeps the configured visual beacon below WCAG 2.2 SC 2.3.1 thresholds at Morse cadence"; packages/morse-swift MorseFixtureTests/testVisualTapeAndHapticOutputMapping and testMorseBeaconFlashSafetyMath; web App.test "uses the non-flashing Morse tape when reduced motion is requested"; Apple MorseTrainerTests/testMorseSettingsClampAndPreset; iOS UI CanadianHamPracticeUITests/testMorseVisualOutputModeQuickListenOnIOS.
 - Validation passed on final commit e5a99d24c50986721907b2231e86aeb3bf5fe152: pnpm typecheck; TZ=UTC pnpm test; pnpm build:web; pnpm --filter @canadian-ham/web audit:urls; pnpm check:schemas; pnpm import:check; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/morse-swift; pnpm check:apple-l10n; node scripts/check-apple-text-sources.ts; pnpm check:apple-network. Apple full runs: iOS CanadianHam (60 unit tests + 67 UI tests) /tmp/t124-ios.log; macOS CanadianHam with -skip-testing:CanadianHamUITests (60 unit tests) /tmp/t124-macos.log; tvOS CanadianHamTV (12 UI tests plus unit target) /tmp/t124-tvos.log; visionOS CanadianHamVision (9 UI tests plus unit target) /tmp/t124-vision.log. All passed.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Implemented Morse output modes for audio, WCAG-bounded low-contrast visual beacon, non-flashing tape, and Core Haptics where supported. Settings persist/export/import outputMode on web and Apple; web and iOS/iPadOS/macOS Quick listen, course, copy practice, and receiving exam now share one coordinator across output modes; tvOS/visionOS received no new output UI. Verified with TS/Swift unit tests, web component/reduced-motion coverage, Apple unit and iOS UI tests, l10n/text/network gates, and final full iOS/macOS/tvOS/visionOS xbuild runs.
+<!-- SECTION:FINAL_SUMMARY:END -->
