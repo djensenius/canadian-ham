@@ -39,120 +39,108 @@ struct MorseTrainerView: View {
 
     private var normalizedSettings: MorseTrainerSettings { settings.normalized() }
 
-    private var isCourseAuditOnly: Bool {
-#if DEBUG
-        ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseCourseAuditOnly")
-#else
-        false
-#endif
-    }
-
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
-                if isCourseAuditOnly {
-                    MorseCourseView(progressStore: progressStore, settings: $settings, onProgressChanged: onProgressChanged, playbackCoordinator: playbackCoordinator)
-                } else {
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                        HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
-                            Text("Morse") // l10n: localized
-                                .font(DesignTokens.FontScale.headline.weight(.bold))
-                                .foregroundStyle(DesignTokens.Colors.ink)
-                                .accessibilityAddTraits(.isHeader)
-                            Text("Preview") // l10n: localized
-                                .font(DesignTokens.FontScale.caption.weight(.bold))
-                                .foregroundStyle(DesignTokens.Colors.inkMuted)
-                                .padding(.horizontal, DesignTokens.Spacing.sm)
-                                .padding(.vertical, DesignTokens.Spacing.xs)
-                                .background(DesignTokens.Colors.paperInset, in: Capsule())
-                        }
-                        Text("Learn and practise Morse code offline with the Koch course, copy practice and the simulated receiving exam below.") // l10n: localized
-                            .font(DesignTokens.FontScale.body)
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                            MorseHomePlaceholder(title: "Learn (course)", message: "Koch lessons available now.")
-                            MorseHomePlaceholder(title: "Copy practice", message: "Listen to full passages and compare your copy below.")
-                            MorseHomePlaceholder(title: "Exam", message: "Try a simulated Canadian 5 wpm receiving exam below.")
-                        }
-                    }
-                    .paperCard()
-
-                    MorseCourseView(progressStore: progressStore, settings: $settings, onProgressChanged: onProgressChanged, playbackCoordinator: playbackCoordinator)
-
-                    MorseCopyExamView(settings: normalizedSettings, playbackCoordinator: playbackCoordinator)
-
-                    MorseHomeNavigationLink(title: "Sending practice", message: "Practise tap timing with a straight key or iambic paddles.") {
-                        MorseSendingPracticeView(settings: normalizedSettings, playbackCoordinator: playbackCoordinator)
-                    }
-
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                        Text("Quick listen") // l10n: localized
-                            .font(DesignTokens.FontScale.title.weight(.bold))
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    HStack(alignment: .firstTextBaseline, spacing: DesignTokens.Spacing.sm) {
+                        Text("Morse") // l10n: localized
+                            .font(DesignTokens.FontScale.headline.weight(.bold))
                             .foregroundStyle(DesignTokens.Colors.ink)
                             .accessibilityAddTraits(.isHeader)
-                        Text("Preview the current player with a short practice group. The text is revealed only after playback so you can copy by ear first.") // l10n: localized
+                        Text("Preview") // l10n: localized
+                            .font(DesignTokens.FontScale.caption.weight(.bold))
+                            .foregroundStyle(DesignTokens.Colors.inkMuted)
+                            .padding(.horizontal, DesignTokens.Spacing.sm)
+                            .padding(.vertical, DesignTokens.Spacing.xs)
+                            .background(DesignTokens.Colors.paperInset, in: Capsule())
+                    }
+                    Text("Learn and practise Morse code offline with the Koch course, copy practice and the simulated receiving exam below.") // l10n: localized
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                        MorseHomeNavigationLink(title: "Learn (course)", message: "Koch lessons available now.", accessibilityIdentifier: "morse-course-open-button") {
+                            MorseCourseView(progressStore: progressStore, settings: $settings, onProgressChanged: onProgressChanged, playbackCoordinator: playbackCoordinator)
+                        }
+                        MorseHomePlaceholder(title: "Copy practice", message: "Listen to full passages and compare your copy below.")
+                        MorseHomePlaceholder(title: "Exam", message: "Try a simulated Canadian 5 wpm receiving exam below.")
+                    }
+                }
+                .paperCard()
+
+                MorseCopyExamView(settings: normalizedSettings, playbackCoordinator: playbackCoordinator)
+
+                MorseHomeNavigationLink(title: "Sending practice", message: "Practise tap timing with a straight key or iambic paddles.", accessibilityIdentifier: "morse-sending-open-button") {
+                    MorseSendingPracticeView(settings: normalizedSettings, playbackCoordinator: playbackCoordinator)
+                }
+
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    Text("Quick listen") // l10n: localized
+                        .font(DesignTokens.FontScale.title.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityAddTraits(.isHeader)
+                    Text("Preview the current player with a short practice group. The text is revealed only after playback so you can copy by ear first.") // l10n: localized
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                    HStack {
+                        morseTokenButton("Play") { play() }
+                            .disabled(isPlaying)
+                            .accessibilityLabel(Text("Play Morse practice audio")) // l10n: localized
+                            .accessibilityIdentifier("morse-quick-play-button")
+                        morseTokenButton("Stop") { stopPlayback(reveal: false, message: String(localized: "Morse playback stopped.")) }
+                            .disabled(!isPlaying)
+                            .accessibilityLabel(Text("Stop Morse practice audio")) // l10n: localized
+                            .accessibilityIdentifier("morse-quick-stop-button")
+                    }
+                    if !statusMessage.isEmpty {
+                        Text(statusMessage) // l10n: localized
                             .font(DesignTokens.FontScale.body)
                             .foregroundStyle(DesignTokens.Colors.ink)
-                        HStack {
-                            morseTokenButton("Play") { play() }
-                                .disabled(isPlaying)
-                                .accessibilityLabel(Text("Play Morse practice audio")) // l10n: localized
-                                .accessibilityIdentifier("morse-quick-play-button")
-                            morseTokenButton("Stop") { stopPlayback(reveal: false, message: String(localized: "Morse playback stopped.")) }
-                                .disabled(!isPlaying)
-                                .accessibilityLabel(Text("Stop Morse practice audio")) // l10n: localized
-                                .accessibilityIdentifier("morse-quick-stop-button")
-                        }
-                        if !statusMessage.isEmpty {
-                            Text(statusMessage) // l10n: localized
-                                .font(DesignTokens.FontScale.body)
-                                .foregroundStyle(DesignTokens.Colors.ink)
-                        }
                     }
-                    .paperCard()
+                }
+                .paperCard()
 
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                        Text("Practice text") // l10n: localized
-                            .font(DesignTokens.FontScale.title.weight(.bold))
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    Text("Practice text") // l10n: localized
+                        .font(DesignTokens.FontScale.title.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityAddTraits(.isHeader)
+                    if isRevealed {
+                        Text(verbatim: morsePracticeText) // l10n: verbatim
+                            .font(.title.weight(.bold).monospaced())
                             .foregroundStyle(DesignTokens.Colors.ink)
-                            .accessibilityAddTraits(.isHeader)
-                        if isRevealed {
-                            Text(verbatim: morsePracticeText) // l10n: verbatim
-                                .font(.title.weight(.bold).monospaced())
-                                .foregroundStyle(DesignTokens.Colors.ink)
-                                .textSelection(.enabled)
-                        } else {
-                            Text("Hidden until playback finishes.") // l10n: localized
-                                .font(DesignTokens.FontScale.body)
-                                .foregroundStyle(DesignTokens.Colors.ink)
-                        }
+                            .textSelection(.enabled)
+                    } else {
+                        Text("Hidden until playback finishes.") // l10n: localized
+                            .font(DesignTokens.FontScale.body)
+                            .foregroundStyle(DesignTokens.Colors.ink)
                     }
-                    .paperCard()
+                }
+                .paperCard()
 
 #if os(macOS)
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                        Text("Morse settings") // l10n: localized
-                            .font(DesignTokens.FontScale.title.weight(.bold))
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                            .accessibilityAddTraits(.isHeader)
-                        Text("Use Settings to change Morse tone, timing, and playback volume.") // l10n: localized
-                            .font(DesignTokens.FontScale.body)
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                        SettingsLink {
-                            Text("Open Morse settings") // l10n: localized
-                        }
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    Text("Morse settings") // l10n: localized
+                        .font(DesignTokens.FontScale.title.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityAddTraits(.isHeader)
+                    Text("Use Settings to change Morse tone, timing, and playback volume.") // l10n: localized
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                    SettingsLink {
+                        Text("Open Morse settings") // l10n: localized
                     }
-                    .paperCard()
+                }
+                .paperCard()
 #else
-                    MorseSettingsSection(settings: $settings, openMorse: {}) { nextSettings in
-                        onSettingsChanged(nextSettings)
-                    }
-                    .paperCard()
+                MorseSettingsSection(settings: $settings, openMorse: {}) { nextSettings in
+                    onSettingsChanged(nextSettings)
+                }
+                .paperCard()
 #endif
 
-                    if let errorMessage {
-                        MessagePanel(title: "Morse error", message: errorMessage, kind: .warning)
-                    }
+                if let errorMessage {
+                    MessagePanel(title: "Morse error", message: errorMessage, kind: .warning)
                 }
             }
             .pagePadding()
@@ -217,6 +205,7 @@ private struct MorseHomePlaceholder: View {
 private struct MorseHomeNavigationLink<Destination: View>: View {
     let title: LocalizedStringKey
     let message: LocalizedStringKey
+    let accessibilityIdentifier: String
     @ViewBuilder let destination: () -> Destination
 
     var body: some View {
@@ -224,7 +213,7 @@ private struct MorseHomeNavigationLink<Destination: View>: View {
             MorseHomeCardContent(title: title, message: message)
         }
         .buttonStyle(.plain)
-        .accessibilityIdentifier("morse-sending-open-button")
+        .accessibilityIdentifier(accessibilityIdentifier)
     }
 }
 

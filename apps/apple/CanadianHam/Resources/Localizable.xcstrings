@@ -10004,6 +10004,28 @@
           }
         }
       }
+    },
+    "Lessons %lld–%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lessons %1$lld–%2$lld"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçons %1$lld à %2$lld"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçons %1$lld à %2$lld"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
