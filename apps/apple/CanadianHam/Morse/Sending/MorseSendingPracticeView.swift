@@ -418,7 +418,7 @@ private struct MorseSendingExamCard: View {
     }
 }
 
-private struct MorsePressKeyButton: View {
+struct MorsePressKeyButton: View {
     let title: String
     let accessibilityLabel: String
     let accessibilityIdentifier: String
