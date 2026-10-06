@@ -1,11 +1,11 @@
 ---
 id: TASK-11.13
 title: Warn before a course switch discards unfinished work
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-05 13:33'
-updated_date: '2026-10-06 00:55'
+updated_date: '2026-10-06 01:03'
 labels: []
 dependencies:
   - TASK-11.5
@@ -35,6 +35,8 @@ Why: switching course (Basic/Advanced) silently discards an unfinished mock exam
 4. Run targeted tests, localization checks, web checks, and one full Apple run for each affected platform.
 
 5. Address review round 1: make unfinished-work checks multi-window safe on Mac, fix cheap web/Apple focus/session details, and record per-test names/counts from full runs.
+
+6. Address PR #142 Copilot findings: clear stale Apple course-switch prompts/caches on replacement or external course changes, restore Confirm focus, and update final evidence.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -86,6 +88,8 @@ Final full-run evidence on final code commit c41cee8b75773b317a2fef87d0dfed01034
 - tvOS and visionOS full suites were not rerun in this review-fix round because the review fixes did not change Localizable.xcstrings or platform-shared catalogue resources; previous branch validation already covered them.
 
 Re-review fix (4e5750d, coordinator): after Confirm, web focus now returns to the course switcher. The old 'a?.focus() ?? b?.focus()' always fell through to <main>. Focus is also restored in a finally block when the save fails. The test now checks focus with waitFor plus a short settle for both Cancel and Confirm: it fails without the fix and passes with it. Web typecheck, all web tests and build:web pass; web-only change, no Apple runs needed.
+
+PR #142 Copilot review requested stale pending-switch/replacement handling and Confirm focus fixes; reopening for fix.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
