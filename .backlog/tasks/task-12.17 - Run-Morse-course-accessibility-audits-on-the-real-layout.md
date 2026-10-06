@@ -1,11 +1,11 @@
 ---
 id: TASK-12.17
 title: Run Morse course accessibility audits on the real layout
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-04 13:22'
-updated_date: '2026-10-06 16:28'
+updated_date: '2026-10-06 16:32'
 labels: []
 milestone: m-1
 dependencies: []
@@ -54,6 +54,8 @@ Validation on final code commit `0fd1fd2c750267222668555e62006ff919410a3c`:
 - Full tvOS: `/tmp/t1217-tvos-full.log` passed 15 tests (3 unit + 12 UI).
 - Full visionOS: `/tmp/t1217-visionos-full.log` passed 12 tests (3 unit + 9 UI).
 - tvOS/visionOS were run because the string catalogue changed.
+
+Review round 1: reopening to replace tap-gesture-driven course session navigation with button-driven state pushes, rename/fix playback tests to match post-redesign behavior, correct validation evidence, and rerun final checks.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
