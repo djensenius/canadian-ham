@@ -1397,6 +1397,7 @@ struct SettingsView: View {
     let openMorse: () -> Void
     let openAbout: () -> Void
     let hasUnfinishedCourseWork: () -> Bool
+    let localDataReplacementRevision: Int
     let onDataChanged: (_ replacesLocalData: Bool) -> Void
 
     @State private var statusMessage: String?
@@ -1539,6 +1540,12 @@ struct SettingsView: View {
                 focusCourseSwitchConfirmationAfterLayout()
             }
         }
+        .onChange(of: localDataReplacementRevision) { _, _ in
+            pendingCourseSwitch = nil
+        }
+        .onChange(of: progressStore.preferences.activeBankId) { _, _ in
+            pendingCourseSwitch = nil
+        }
     }
 
     private var courseSwitchConfirmationPanel: some View {
@@ -1586,6 +1593,13 @@ struct SettingsView: View {
         guard let pendingCourseSwitch else { return }
         self.pendingCourseSwitch = nil
         saveCourseSwitch(to: pendingCourseSwitch)
+        focusCoursePickerAfterLayout()
+    }
+
+    private func focusCoursePickerAfterLayout() {
+        DispatchQueue.main.async {
+            coursePickerFocused = true
+        }
     }
 
     private func saveCourseSwitch(to bankId: CourseBankID) {

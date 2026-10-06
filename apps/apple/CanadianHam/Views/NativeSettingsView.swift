@@ -112,6 +112,12 @@ private struct NativeGeneralSettingsTab: View {
         } message: {
             Text("Switching courses will discard the unfinished practice or mock exam session. Saved progress remains on this device.")
         }
+        .onChange(of: appSettings.localDataReplacementRevision) { _, _ in
+            pendingCourseSwitch = nil
+        }
+        .onChange(of: appSettings.progressStore?.preferences.activeBankId) { _, _ in
+            pendingCourseSwitch = nil
+        }
     }
 
     private func requestCourseSwitch(to bankId: CourseBankID, progressStore: ProgressStoreService) {

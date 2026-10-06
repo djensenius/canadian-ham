@@ -35,6 +35,22 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(timerRunStartedAt.timeIntervalSince1970, startedAt.addingTimeInterval(2).timeIntervalSince1970, accuracy: 0.000_001)
     }
 
+    func testAppSettingsModelReplacementRevisionAdvancesForLocalDataReplacement() throws {
+        let appSettings = CanadianHam.AppSettingsModel()
+        let initialDataRevision = appSettings.dataRevision
+        let initialReplacementRevision = appSettings.localDataReplacementRevision
+
+        appSettings.recordDataChanged()
+
+        XCTAssertEqual(appSettings.dataRevision, initialDataRevision + 1)
+        XCTAssertEqual(appSettings.localDataReplacementRevision, initialReplacementRevision)
+
+        appSettings.recordDataChanged(replacesLocalData: true)
+
+        XCTAssertEqual(appSettings.dataRevision, initialDataRevision + 2)
+        XCTAssertEqual(appSettings.localDataReplacementRevision, initialReplacementRevision + 1)
+    }
+
     func testAppSettingsModelTracksUnfinishedCourseWorkAcrossRegisteredWindows() throws {
         let appSettings = CanadianHam.AppSettingsModel()
         let firstWindow = UUID()
@@ -721,6 +737,91 @@ final class ProgressStoreTests: XCTestCase {
             XCTAssertEqual(error as? ProgressStoreInjectedFailure, .morseCourseProgressRemoval)
         }
         XCTAssertEqual(try store.morseCourseProgress(), importedMorseProgress)
+    }
+
+    func testImportRollbackAfterMorseWriteRestoresPopulatedStoreAcrossCourses() throws {
+        let basicBank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let advancedBank = try QuestionBankStore.load(bankId: .advanced, from: Bundle(for: Self.self))
+        let store = try ProgressStoreService.inMemoryForTests()
+
+        let originalBasicRecord = try applyAnswer(existing: nil, update: AnswerUpdate(
+            questionId: "B-001-001-001",
+            bankId: basicBank.manifest.bankId,
+            isCorrect: true,
+            now: "2026-01-02T03:04:05.000Z"
+        ))
+        let originalAdvancedRecord = try applyAnswer(existing: nil, update: AnswerUpdate(
+            questionId: try XCTUnwrap(advancedBank.questions.first?.id),
+            bankId: advancedBank.manifest.bankId,
+            isCorrect: false,
+            now: "2026-01-03T03:04:05.000Z"
+        ))
+        try store.saveQuestionProgress([originalBasicRecord, originalAdvancedRecord])
+        let originalBasicExam = try mockAttempt(bank: basicBank, seed: "rollback-basic-original", submittedAt: "2026-01-02T04:04:05.000Z")
+        let originalAdvancedExam = try mockAttempt(bank: advancedBank, seed: "rollback-advanced-original", submittedAt: "2026-01-03T04:04:05.000Z")
+        try store.saveExamAttempt(originalBasicExam)
+        try store.saveExamAttempt(originalAdvancedExam)
+        let originalLessonProgress = LessonProgressRecord(lessonId: "L-005-01", readAt: "2026-01-02T03:10:00.000Z", readCount: 2)
+        try store.saveLessonProgress(originalLessonProgress)
+        let originalLessonQuizAttempt = LessonQuizAttempt(
+            id: "lesson-quiz-populated-rollback",
+            quizId: "QZ-L-005-01-A",
+            lessonId: "L-005-01",
+            submittedAt: "2026-01-02T03:20:00.000Z",
+            correct: 1,
+            total: 1,
+            percent: 100,
+            officialQuestionIds: ["B-005-001-001"],
+            incorrectOfficialQuestionIds: [],
+            incorrectConceptCheckIds: []
+        )
+        try store.saveLessonQuizAttempt(originalLessonQuizAttempt, questionProgress: [originalBasicRecord])
+        let originalMorseProgress = sampleMorseCourseProgress(lessonId: "koch-001")
+        try store.saveMorseCourseProgress(originalMorseProgress)
+        var preferences = store.preferences
+        preferences.practiceMode = .reviewLater
+        preferences.examTimerEnabled = true
+        preferences.theme = .dark
+        preferences.activeBankId = .advanced
+        try store.updatePreferences(preferences)
+        let originalSnapshot = try progressSnapshot(from: store)
+
+        let replacementBasicRecord = try applyAnswer(existing: nil, update: AnswerUpdate(
+            questionId: "B-001-001-002",
+            bankId: basicBank.manifest.bankId,
+            isCorrect: false,
+            now: "2026-01-04T03:04:05.000Z"
+        ))
+        let replacementBasicExam = try mockAttempt(bank: basicBank, seed: "rollback-basic-replacement", submittedAt: "2026-01-04T04:04:05.000Z")
+        let replacement = ProgressExportV1(
+            schema: "canadian-ham.progress-export",
+            version: 1,
+            exportedAt: "2026-01-04T05:04:05.000Z",
+            bankId: basicBank.manifest.bankId,
+            questionProgress: [replacementBasicRecord],
+            examAttempts: [replacementBasicExam],
+            lessonProgress: try archivedArray([LessonProgressRecord(lessonId: "L-005-01", readAt: "2026-01-04T03:10:00.000Z", readCount: 5)]),
+            lessonQuizAttempts: try archivedArray([LessonQuizAttempt(
+                id: "lesson-quiz-populated-rollback-replacement",
+                quizId: "QZ-L-005-01-A",
+                lessonId: "L-005-01",
+                submittedAt: "2026-01-04T03:20:00.000Z",
+                correct: 0,
+                total: 1,
+                percent: 0,
+                officialQuestionIds: ["B-005-001-001"],
+                incorrectOfficialQuestionIds: ["B-005-001-001"],
+                incorrectConceptCheckIds: []
+            )]),
+            morseCourseProgress: sampleMorseCourseProgress(lessonId: "koch-002"),
+            preferences: ExportedPreferences(practiceMode: "immediate", examTimerEnabled: false, theme: "light")
+        )
+
+        store.failNextImportAfterMorseWriteForTesting = true
+        XCTAssertThrowsError(try store.importData(replacement, bank: basicBank)) { error in
+            XCTAssertEqual(error as? ProgressStoreInjectedFailure, .importAfterMorseWrite)
+        }
+        XCTAssertEqual(try progressSnapshot(from: store), originalSnapshot)
     }
 
     func testImportRollbackKeepsExistingDataWhenReplacementFails() throws {

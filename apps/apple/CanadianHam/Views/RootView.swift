@@ -164,6 +164,9 @@ struct RootView: View {
             practiceSessionStates.clear()
             mockExamState.resetSession(localDataReplacementRevision: appSettings.localDataReplacementRevision)
         }
+        .onChange(of: appSettings.localDataReplacementRevision) { _, next in
+            clearCachedSessions(localDataReplacementRevision: next)
+        }
     }
 
     private func compactRootList(progressStore: ProgressStoreService) -> some View {
@@ -346,7 +349,8 @@ struct RootView: View {
                 compactNavigationPath.append(CompactSettingsRoute.about)
                 selection = .about
             },
-            hasUnfinishedCourseWork: { appSettings.hasAnyUnfinishedCourseWork }
+            hasUnfinishedCourseWork: { appSettings.hasAnyUnfinishedCourseWork },
+            localDataReplacementRevision: appSettings.localDataReplacementRevision
         ) { replacesLocalData in
             recordDataChanged(replacesLocalData: replacesLocalData)
         }
@@ -486,6 +490,9 @@ struct RootView: View {
             practiceSessionStates.clear()
             mockExamState.resetSession(localDataReplacementRevision: appSettings.localDataReplacementRevision)
         }
+        .onChange(of: appSettings.localDataReplacementRevision) { _, next in
+            clearCachedSessions(localDataReplacementRevision: next)
+        }
         .onChange(of: selection) { _, next in
             if next != .learn {
                 navigationPath.removeAll()
@@ -495,6 +502,11 @@ struct RootView: View {
 
     private var combinedDataRevision: Int {
         dataRevision + appSettings.dataRevision
+    }
+
+    private func clearCachedSessions(localDataReplacementRevision: Int) {
+        practiceSessionStates.clear()
+        mockExamState.resetSession(localDataReplacementRevision: localDataReplacementRevision)
     }
 
     private func recordDataChanged(replacesLocalData: Bool = false) {
@@ -579,7 +591,8 @@ struct RootView: View {
                 morseSettings: $morseSettings,
                 openMorse: { selection = .morse },
                 openAbout: { selection = .about },
-                hasUnfinishedCourseWork: { appSettings.hasAnyUnfinishedCourseWork }
+                hasUnfinishedCourseWork: { appSettings.hasAnyUnfinishedCourseWork },
+                localDataReplacementRevision: appSettings.localDataReplacementRevision
             ) { replacesLocalData in
                 recordDataChanged(replacesLocalData: replacesLocalData)
             }
