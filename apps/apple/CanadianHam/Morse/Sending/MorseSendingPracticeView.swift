@@ -563,7 +563,7 @@ private struct MorseSendingFeedbackView: View {
         guard let lastFeedback else {
             return String(localized: "Send a character to see dot/dash ratio and timing consistency.")
         }
-        let ratio = lastFeedback.dotDashRatio.map { String(format: "%.2f", $0) } ?? String(localized: "not enough dots and dashes")
+        let ratio = lastFeedback.dotDashRatio.map { $0.formatted(.number.precision(.fractionLength(2))) } ?? String(localized: "not enough dots and dashes")
         return String.localizedStringWithFormat(
             String(localized: "%@, dot/dash ratio %@, timing consistency %lld%%."),
             lastFeedback.elements,

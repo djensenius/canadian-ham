@@ -104,6 +104,27 @@ describe("MorseSendingPracticeSection", () => {
     assert.equal(coordinator.claim.mock.calls.at(0)?.[0], "sending-practice");
   });
 
+  it("keys from a focused key button with Space or Enter, and from screen-reader activation", async () => {
+    renderSending();
+    const panel = screen.getByRole("heading", { name: "Sending practice" }).closest("section")!;
+    const dashPaddle = within(panel).getByRole("button", { name: /dash paddle/i });
+
+    // Keyboard on the focused paddle: Space down then up sends one dash, and its click is not doubled.
+    dashPaddle.focus();
+    fireEvent.keyDown(dashPaddle, { key: " " });
+    await act(async () => { vi.advanceTimersByTime(1); });
+    fireEvent.keyUp(dashPaddle, { key: " " });
+    fireEvent.click(dashPaddle, { detail: 0 });
+    await act(async () => { vi.advanceTimersByTime(4000); });
+    assert.equal(within(panel).getByText("Decoded text").nextElementSibling?.textContent, "T");
+
+    // Screen-reader activation (a click with no pointer and no key events) sends one dot on the straight key.
+    const straightKey = within(panel).getByRole("button", { name: /Straight key/ });
+    fireEvent.click(straightKey, { detail: 0 });
+    await act(async () => { vi.advanceTimersByTime(4000); });
+    assert.equal(within(panel).getByText("Decoded text").nextElementSibling?.textContent, "TE");
+  });
+
   it("keeps fast multi-element characters together by cancelling the pending character timer", async () => {
     renderSending({ preferences: fastPreferences() });
     const panel = screen.getByRole("heading", { name: "Sending practice" }).closest("section")!;

@@ -11,7 +11,7 @@ import {
   type MorseProfileName,
   type MorseSendingScore,
 } from "@canadian-ham/morse-engine";
-import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
+import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type MouseEvent, type PointerEvent } from "react";
 
 import { WebMorsePlayer } from "../../lib/morseAudio";
 import { interfaceLanguageTag, t, type InterfaceLanguage } from "../../lib/i18n";
@@ -59,6 +59,7 @@ export function MorseSendingPracticeSection({ interfaceLanguage, preferences, pl
   const activeKeyRef = useRef<KeyDownState | null>(null);
   const finalizeTimerRef = useRef<number | null>(null);
   const paddleTimerRef = useRef<number | null>(null);
+  const suppressNextKeyClickRef = useRef(false);
   const pressedPaddlesRef = useRef<Set<MorseKeyElement>>(new Set());
   const nextIambicElementRef = useRef<MorseKeyElement>(".");
   const examIntervalRef = useRef<number | null>(null);
@@ -341,6 +342,42 @@ export function MorseSendingPracticeSection({ interfaceLanguage, preferences, pl
     paddleTimerRef.current = window.setTimeout(() => emitAndScheduleNextPaddleElement(), repeatMilliseconds);
   }
 
+  // Keyboard on a focused key button: Space or Enter holds the key like a press.
+  function handleKeyButtonKeyDown(event: KeyboardEvent<HTMLButtonElement>, key: "straight" | MorseKeyElement): void {
+    if (event.key !== " " && event.key !== "Enter") return;
+    event.preventDefault();
+    event.stopPropagation();
+    suppressNextKeyClickRef.current = true;
+    if (event.repeat) return;
+    if (key === "straight") {
+      void beginStraightKey("keyboard");
+    } else {
+      beginPaddle(key);
+    }
+  }
+
+  function handleKeyButtonKeyUp(event: KeyboardEvent<HTMLButtonElement>, key: "straight" | MorseKeyElement): void {
+    if (event.key !== " " && event.key !== "Enter") return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (key === "straight") {
+      endStraightKey();
+    } else {
+      endPaddle(key);
+    }
+  }
+
+  // Screen-reader activation arrives as a click with no pointer (detail 0) and no key events:
+  // send one timed element (a dot for the straight key).
+  function handleKeyButtonClick(event: MouseEvent<HTMLButtonElement>, key: "straight" | MorseKeyElement): void {
+    if (suppressNextKeyClickRef.current) {
+      suppressNextKeyClickRef.current = false;
+      return;
+    }
+    if (event.detail !== 0) return;
+    emitPaddleElement(key === "straight" ? "." : key);
+  }
+
   function handleKeyDown(event: KeyboardEvent<HTMLElement>): void {
     if (isInteractiveKeyboardTarget(event.target, event.currentTarget)) return;
     const key = event.key.toLowerCase();
@@ -463,6 +500,9 @@ export function MorseSendingPracticeSection({ interfaceLanguage, preferences, pl
             onPointerUp={endPointerStraight}
             onPointerCancel={endPointerStraight}
             onLostPointerCapture={endStraightKey}
+            onKeyDown={(event) => handleKeyButtonKeyDown(event, "straight")}
+            onKeyUp={(event) => handleKeyButtonKeyUp(event, "straight")}
+            onClick={(event) => handleKeyButtonClick(event, "straight")}
           >
             {t(interfaceLanguage, "morseStraightKeyButton")}
           </button>
@@ -470,8 +510,8 @@ export function MorseSendingPracticeSection({ interfaceLanguage, preferences, pl
         <section aria-labelledby="morse-paddle-heading">
           <h4 id="morse-paddle-heading">{t(interfaceLanguage, "morsePaddleTitle")}</h4>
           <div className="morse-paddle-row">
-            <button type="button" className="morse-key-button" aria-label={t(interfaceLanguage, "morseDotPaddleAria")} onPointerDown={(event) => beginPointerPaddle(event, ".")} onPointerUp={(event) => endPointerPaddle(event, ".")} onPointerCancel={(event) => endPointerPaddle(event, ".")} onLostPointerCapture={() => endPaddle(".")}>{t(interfaceLanguage, "morseDotPaddle")}</button>
-            <button type="button" className="morse-key-button" aria-label={t(interfaceLanguage, "morseDashPaddleAria")} onPointerDown={(event) => beginPointerPaddle(event, "-")} onPointerUp={(event) => endPointerPaddle(event, "-")} onPointerCancel={(event) => endPointerPaddle(event, "-")} onLostPointerCapture={() => endPaddle("-")}>{t(interfaceLanguage, "morseDashPaddle")}</button>
+            <button type="button" className="morse-key-button" aria-label={t(interfaceLanguage, "morseDotPaddleAria")} onPointerDown={(event) => beginPointerPaddle(event, ".")} onPointerUp={(event) => endPointerPaddle(event, ".")} onPointerCancel={(event) => endPointerPaddle(event, ".")} onLostPointerCapture={() => endPaddle(".")} onKeyDown={(event) => handleKeyButtonKeyDown(event, ".")} onKeyUp={(event) => handleKeyButtonKeyUp(event, ".")} onClick={(event) => handleKeyButtonClick(event, ".")}>{t(interfaceLanguage, "morseDotPaddle")}</button>
+            <button type="button" className="morse-key-button" aria-label={t(interfaceLanguage, "morseDashPaddleAria")} onPointerDown={(event) => beginPointerPaddle(event, "-")} onPointerUp={(event) => endPointerPaddle(event, "-")} onPointerCancel={(event) => endPointerPaddle(event, "-")} onLostPointerCapture={() => endPaddle("-")} onKeyDown={(event) => handleKeyButtonKeyDown(event, "-")} onKeyUp={(event) => handleKeyButtonKeyUp(event, "-")} onClick={(event) => handleKeyButtonClick(event, "-")}>{t(interfaceLanguage, "morseDashPaddle")}</button>
           </div>
         </section>
       </div>

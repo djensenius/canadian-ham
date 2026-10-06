@@ -6453,16 +6453,70 @@
     },
     "PASS, 100%%, with %lld errors." : {
       "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "PASS, 100%%, with %lld error."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "PASS, 100%%, with %lld errors."
+                }
+              }
+            }
+          }
+        },
         "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "RÉUSSITE, 100 %%, avec %lld erreurs."
+          "variations" : {
+            "plural" : {
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "RÉUSSITE, 100 %%, avec %lld erreur."
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "RÉUSSITE, 100 %%, avec %lld erreur."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "RÉUSSITE, 100 %%, avec %lld erreurs."
+                }
+              }
+            }
           }
         },
         "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "RÉUSSITE, 100 %%, avec %lld erreurs."
+          "variations" : {
+            "plural" : {
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "RÉUSSITE, 100 %%, avec %lld erreur."
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "RÉUSSITE, 100 %%, avec %lld erreur."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "RÉUSSITE, 100 %%, avec %lld erreurs."
+                }
+              }
+            }
           }
         }
       }
