@@ -200,6 +200,17 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertFalse(app.descendants(matching: .any)["compact-root-list"].firstMatch.exists, "A single tap must not pop past the Morse screen")
     }
 
+    func testAccessibilityAuditMorseSendingMainScreenLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditMorseSendingMainScreen(appearance: .light)
+    }
+
+    func testAccessibilityAuditMorseSendingMainScreenDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditMorseSendingMainScreen(appearance: .dark)
+        XCUIDevice.shared.appearance = .light
+    }
+
     func testAccessibilityAuditMorseSendingResultsLight() throws {
         XCUIDevice.shared.appearance = .light
         try auditMorseSendingResults(appearance: .light)
@@ -1152,6 +1163,21 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCUIDevice.shared.appearance = .dark
         try auditAdvancedCourseScreens(appearance: .dark)
         XCUIDevice.shared.appearance = .light
+    }
+
+    private func auditMorseSendingMainScreen(appearance: AuditAppearance) throws {
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseSendingDebugHook",
+            "-CanadianHamMorseSendingExamSeconds", "120"
+        ])
+        defer { app.terminate() }
+        openSendingPractice(in: app)
+        XCTAssertTrue(app.buttons["morse-sending-straight-key-button"].firstMatch.waitForExistence(timeout: 10), "\(appearance.rawValue) sending main audit should show the straight key")
+        XCTAssertTrue(app.staticTexts["morse-sending-feedback-summary"].firstMatch.waitForExistence(timeout: 5), "\(appearance.rawValue) sending main audit should show the feedback panel")
+        app.buttons["morse-sending-start-exam-button"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["morse-sending-exam-text"].firstMatch.waitForExistence(timeout: 5), "\(appearance.rawValue) sending main audit should show the exam card")
+        try performAudit(on: app, context: "Morse sending main screen \(appearance)")
     }
 
     private func auditMorseSendingResults(appearance: AuditAppearance) throws {

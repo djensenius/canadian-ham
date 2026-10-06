@@ -205,4 +205,34 @@ describe("MorseSendingPracticeSection", () => {
     assert.match(results, /1 total errors: 0 wrong, 1 missing, 0 inserted/);
     assert.match(results, /E/);
   });
+
+  it("restarting an exam while running starts a fresh timer and passage", async () => {
+    let index = 0;
+    renderSending({ examDurationSeconds: 3, examTextFactory: () => (index++ === 0 ? "E" : "T") });
+
+    fireEvent.click(screen.getByRole("button", { name: "Exam-style check" }));
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    assert.match(screen.getByText(/Time remaining/).textContent ?? "", /0:02/);
+
+    fireEvent.click(screen.getByRole("button", { name: "Start sending check" }));
+    assert.match(screen.getByText(/Time remaining/).textContent ?? "", /0:03/);
+    assert.match(screen.getByText("T").textContent ?? "", /T/);
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    assert.match(screen.getByText(/Time remaining/).textContent ?? "", /0:02/);
+  });
+
+  it("clear during an exam resets sent state and restarts a running timer", async () => {
+    renderSending({ examDurationSeconds: 3, examTextFactory: () => "EE" });
+    const panel = screen.getByRole("heading", { name: "Sending practice" }).closest("section")!;
+
+    fireEvent.click(screen.getByRole("button", { name: "Exam-style check" }));
+    await sendStraightKey(panel, 100);
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    assert.match(screen.getByText(/Time remaining/).textContent ?? "", /0:02/);
+    fireEvent.click(screen.getByRole("button", { name: "Clear sending practice" }));
+    assert.equal(within(panel).getByText("Decoded text").nextElementSibling?.textContent, "—");
+    assert.match(screen.getByText(/Time remaining/).textContent ?? "", /0:03/);
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    assert.match(screen.getByText(/Time remaining/).textContent ?? "", /0:02/);
+  });
 });

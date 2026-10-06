@@ -18,7 +18,9 @@ struct MorseSendingPracticeView: View {
     @State private var finalizeTask: Task<Void, Never>?
     @State private var pressedPaddles: Set<MorseKeyElement> = []
     @State private var paddleRepeatTask: Task<Void, Never>?
+    @State private var paddleRepeatToken = UUID()
     @State private var nextIambicElement: MorseKeyElement = .dot
+    @State private var lastPaddleElement: MorseKeyElement?
     @State private var examText = ""
     @State private var examRemaining = 180
     @State private var examRunning = false
@@ -44,7 +46,7 @@ struct MorseSendingPracticeView: View {
                     .font(DesignTokens.FontScale.title.weight(.bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
-                Text("Practise tap timing with a straight key or iambic-style paddles. On Mac, hold Space for the straight key; use J for dots and K for dashes. On iPhone and iPad, use the large touch targets.") // l10n: localized
+                Text("Practise tap timing with a straight key or iambic-style paddles. On Mac and iPad hardware keyboards, focus this screen first, then hold Space for the straight key; use J for dots and K for dashes. On iPhone and iPad, use the large touch targets.") // l10n: localized
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
                 MorseSendingExamCard(
@@ -63,7 +65,9 @@ struct MorseSendingPracticeView: View {
                         accessibilityLabel: String(localized: "Straight key. Hold to send tone, release to classify dot or dash."),
                         accessibilityIdentifier: "morse-sending-straight-key-button",
                         begin: beginStraightKey,
-                        end: endStraightKey
+                        end: endStraightKey,
+                        sendDotAction: { sendTimedElement(.dot) },
+                        sendDashAction: { sendTimedElement(.dash) }
                     )
                 }
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -76,14 +80,16 @@ struct MorseSendingPracticeView: View {
                             accessibilityLabel: String(localized: "Dot paddle. Hold for repeated dots."),
                             accessibilityIdentifier: "morse-sending-dot-paddle-button",
                             begin: { beginPaddle(.dot) },
-                            end: { endPaddle(.dot) }
+                            end: { endPaddle(.dot) },
+                            defaultAction: { sendTimedElement(.dot) }
                         )
                         MorsePressKeyButton(
                             title: String(localized: "Dash"),
                             accessibilityLabel: String(localized: "Dash paddle. Hold for repeated dashes."),
                             accessibilityIdentifier: "morse-sending-dash-paddle-button",
                             begin: { beginPaddle(.dash) },
-                            end: { endPaddle(.dash) }
+                            end: { endPaddle(.dash) },
+                            defaultAction: { sendTimedElement(.dash) }
                         )
                     }
                 }
@@ -214,6 +220,8 @@ struct MorseSendingPracticeView: View {
 
     private func startPaddleRepeat(preferredElement: MorseKeyElement? = nil) {
         paddleRepeatTask?.cancel()
+        let token = UUID()
+        paddleRepeatToken = token
         paddleRepeatTask = Task { @MainActor in
             var preferred = preferredElement
             while !Task.isCancelled, !pressedPaddles.isEmpty {
@@ -224,20 +232,29 @@ struct MorseSendingPracticeView: View {
                 let delay = max(40_000_000, UInt64(((duration + profile.intraCharacterGapSeconds) * 1_000_000_000).rounded()))
                 try? await Task.sleep(nanoseconds: delay)
             }
-            paddleRepeatTask = nil
+            if paddleRepeatToken == token {
+                paddleRepeatTask = nil
+            }
         }
     }
 
     private func nextPaddleElement(preferred: MorseKeyElement?) -> MorseKeyElement {
         if pressedPaddles.contains(.dot), pressedPaddles.contains(.dash) {
-            let element = nextIambicElement
-            nextIambicElement = element == .dot ? .dash : .dot
+            let element = lastPaddleElement.map(oppositeElement) ?? nextIambicElement
+            nextIambicElement = oppositeElement(element)
             return element
         }
-        return preferred ?? (pressedPaddles.contains(.dot) ? .dot : .dash)
+        let element = preferred ?? (pressedPaddles.contains(.dot) ? .dot : .dash)
+        nextIambicElement = oppositeElement(element)
+        return element
     }
 
     private func emitPaddleElement(_ element: MorseKeyElement) {
+        sendTimedElement(element)
+        lastPaddleElement = element
+    }
+
+    private func sendTimedElement(_ element: MorseKeyElement) {
         finalizeTask?.cancel()
         finalizeTask = nil
         let text = element == .dot ? "E" : "T"
@@ -345,6 +362,7 @@ struct MorseSendingPracticeView: View {
         straightKeyDownAt = nil
         pressedPaddles = []
         paddleRepeatTask?.cancel()
+        paddleRepeatToken = UUID()
         paddleRepeatTask = nil
     }
 
@@ -406,11 +424,15 @@ private struct MorsePressKeyButton: View {
     let accessibilityIdentifier: String
     let begin: () -> Void
     let end: () -> Void
+    var defaultAction: (() -> Void)? = nil
+    var sendDotAction: (() -> Void)? = nil
+    var sendDashAction: (() -> Void)? = nil
 
+    @GestureState private var gestureIsPressing = false
     @State private var isPressed = false
 
     var body: some View {
-        Text(title) // l10n: localized
+        let label = Text(title) // l10n: localized
             .font(DesignTokens.FontScale.title.weight(.bold))
             .frame(minHeight: 76)
             .frame(maxWidth: .infinity)
@@ -422,18 +444,38 @@ private struct MorsePressKeyButton: View {
             .accessibilityLabel(Text(accessibilityLabel)) // l10n: localized
             .accessibilityIdentifier(accessibilityIdentifier)
             .gesture(DragGesture(minimumDistance: 0)
-                .onChanged { _ in
-                    if !isPressed {
-                        isPressed = true
-                        begin()
-                    }
-                }
-                .onEnded { _ in
-                    if isPressed {
-                        isPressed = false
-                        end()
-                    }
-                })
+                .updating($gestureIsPressing) { _, state, _ in state = true }
+                .onChanged { _ in startPressIfNeeded() }
+                .onEnded { _ in endPressIfNeeded() })
+            .onChange(of: gestureIsPressing) { _, pressing in
+                if !pressing { endPressIfNeeded() }
+            }
+        configuredAccessibilityActions(for: label)
+    }
+
+    @ViewBuilder
+    private func configuredAccessibilityActions<Content: View>(for content: Content) -> some View {
+        if let sendDotAction, let sendDashAction {
+            content
+                .accessibilityAction(named: Text("Send dot")) { sendDotAction() } // l10n: localized
+                .accessibilityAction(named: Text("Send dash")) { sendDashAction() } // l10n: localized
+        } else if let defaultAction {
+            content.accessibilityAction { defaultAction() }
+        } else {
+            content
+        }
+    }
+
+    private func startPressIfNeeded() {
+        guard !isPressed else { return }
+        isPressed = true
+        begin()
+    }
+
+    private func endPressIfNeeded() {
+        guard isPressed else { return }
+        isPressed = false
+        end()
     }
 }
 
@@ -503,7 +545,7 @@ private struct MorseSendingResultsScreen: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityIdentifier("morse-sending-results-summary")
                     .fixedSize(horizontal: false, vertical: true)
-                Text("Rule: 5 or fewer errors and all text within 3:00 to pass.") // l10n: localized
+                Text("Rule: unsent characters at 0:00 count as errors; 5 or fewer errors count as 100% and pass.") // l10n: localized
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .fixedSize(horizontal: false, vertical: true)
@@ -538,6 +580,10 @@ private struct MorseSendingResultsScreen: View {
         guard !result.decodedText.isEmpty else { return String(localized: "No text sent.") }
         return Array(result.decodedText).map(String.init).joined(separator: " ")
     }
+}
+
+private func oppositeElement(_ element: MorseKeyElement) -> MorseKeyElement {
+    element == .dot ? .dash : .dot
 }
 
 private func sendingTimerLabel(_ seconds: Int) -> String {
