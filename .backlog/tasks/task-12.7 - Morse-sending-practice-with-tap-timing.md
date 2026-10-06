@@ -1,11 +1,11 @@
 ---
 id: TASK-12.7
 title: Morse sending practice with tap timing
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-06 03:22'
+updated_date: '2026-10-06 03:28'
 labels:
   - web
   - apple
@@ -26,8 +26,8 @@ Why: the Morse qualification includes sending; the owner chose tap timing on key
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [x] #1 Straight-key and paddle emulation on keyboard and touch, with dot/dash ratio feedback
-- [x] #2 An exam-style check: whole text within 3:00, the 8-dot error signal and resend accepted, 5 or fewer errors to pass
+- [ ] #1 Straight-key and paddle emulation on keyboard and touch, with dot/dash ratio feedback
+- [ ] #2 An exam-style check: whole text within 3:00, the 8-dot error signal and resend accepted, 5 or fewer errors to pass
 - [x] #3 No microphone permission or new entitlements; tests pass on web and Apple
 <!-- AC:END -->
 
@@ -69,6 +69,8 @@ Review-fix final Apple run macOS per-test names (53 passed): CanadianHamTests.Lo
 Review-fix final Apple run tvOS per-test names (15 passed): CanadianHamTVTests.CanadianHamTVTests.testBundledQuestionBankLoadsForTVApp; CanadianHamTVTests.CanadianHamTVTests.testTVPracticeQuestionDrawStaysInCategoryAndShufflesAnswers; CanadianHamTVTests.CanadianHamTVTests.testTVPracticeSeedsVaryAcrossSessionIDs; CanadianHamTVUITests.CanadianHamTVUITests.testAboutAccessibilityAuditLightAndDark; CanadianHamTVUITests.CanadianHamTVUITests.testAboutLowerSectionsReachableWithRemote; CanadianHamTVUITests.CanadianHamTVUITests.testAboutShowsReleaseAttributionDisclaimerAndBankVersion; CanadianHamTVUITests.CanadianHamTVUITests.testCategoryGridAccessibilityAuditLightAndDark; CanadianHamTVUITests.CanadianHamTVUITests.testCategoryGridNavigatesToMorse; CanadianHamTVUITests.CanadianHamTVUITests.testFocusRingEvidenceScreenshots; CanadianHamTVUITests.CanadianHamTVUITests.testLayoutEvidenceScreenshots; CanadianHamTVUITests.CanadianHamTVUITests.testMorseAccessibilityAuditLightAndDark; CanadianHamTVUITests.CanadianHamTVUITests.testMorseScreenShowsPlaybackControls; CanadianHamTVUITests.CanadianHamTVUITests.testPracticeAccessibilityAuditLightAndDark; CanadianHamTVUITests.CanadianHamTVUITests.testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances; CanadianHamTVUITests.CanadianHamTVUITests.testRemoteMenuReturnsPracticeAndAboutToCategoryGrid
 
 Review-fix final Apple run visionOS per-test names (12 passed): CanadianHamVisionTests.CanadianHamVisionTests.testBundledQuestionBankLoadsForVisionApp; CanadianHamVisionTests.CanadianHamVisionTests.testVisionPracticeQuestionDrawStaysInCategoryAndShufflesAnswers; CanadianHamVisionTests.CanadianHamVisionTests.testVisionPracticeSeedsVaryAcrossSessionIDs; CanadianHamVisionUITests.CanadianHamVisionUITests.testAboutAccessibilityAuditLightAndDark; CanadianHamVisionUITests.CanadianHamVisionUITests.testAboutShowsReleaseAttributionDisclaimerAndBankVersion; CanadianHamVisionUITests.CanadianHamVisionUITests.testCategoryGridAccessibilityAuditLightAndDark; CanadianHamVisionUITests.CanadianHamVisionUITests.testCategoryGridNavigatesToMorse; CanadianHamVisionUITests.CanadianHamVisionUITests.testLongestQuestionSupportsLargestDynamicType; CanadianHamVisionUITests.CanadianHamVisionUITests.testMorseAccessibilityAuditLightAndDark; CanadianHamVisionUITests.CanadianHamVisionUITests.testMorseScreenShowsPlaybackControls; CanadianHamVisionUITests.CanadianHamVisionUITests.testPracticeAccessibilityAuditLightAndDark; CanadianHamVisionUITests.CanadianHamVisionUITests.testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances
+
+Re-review follow-up: previous notes overstated main-screen sending audits, VoiceOver keying actions, and @GestureState cancellation. Reopening AC1/AC2 to implement and validate those items, correct rule text/timer behavior, merge origin/main, rerun required checks, then re-check ACs only after evidence.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
