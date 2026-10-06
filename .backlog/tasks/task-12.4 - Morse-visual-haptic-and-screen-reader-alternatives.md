@@ -1,11 +1,11 @@
 ---
 id: TASK-12.4
 title: 'Morse visual, haptic and screen-reader alternatives'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-06 20:26'
+updated_date: '2026-10-06 20:32'
 labels:
   - web
   - apple
@@ -27,9 +27,9 @@ Why: Deaf and hard-of-hearing learners need non-audio ways to learn, and a flash
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [x] #1 A visual beacon meets WCAG 2.2 SC 2.3.1 (flash area under 25% of a 341x256 CSS px region, red-flash handling, cadence limits), plus a non-flashing tape display
+- [ ] #1 A visual beacon meets WCAG 2.2 SC 2.3.1 (flash area under 25% of a 341x256 CSS px region, red-flash handling, cadence limits), plus a non-flashing tape display
 - [x] #2 Core Haptics is used only where supportsHaptics is true (in practice iPhone), with no haptic UI on tvOS or visionOS
-- [x] #3 VoiceOver/ARIA announcements don't talk over playback; accessibility audits pass
+- [ ] #3 VoiceOver/ARIA announcements don't talk over playback; accessibility audits pass
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -55,6 +55,8 @@ Implemented Morse output modes and accessibility alternatives. Evidence map:
 Final branch tip after Backlog finalization is 52321b6e4e97f129dcbbc79f98718bb7b5d3eedf; code validation was run after the final code commit e5a99d24c50986721907b2231e86aeb3bf5fe152, and subsequent commits only update Backlog task metadata.
 
 Correction to Apple full-run counts from final xbuild logs: iOS CanadianHam ran 58 unit tests and 67 UI tests; macOS CanadianHam ran 60 unit tests with UI skipped; tvOS CanadianHamTV ran 3 unit tests and 12 UI tests; visionOS CanadianHamVision ran 3 unit tests and 9 UI tests. All had 0 failures.
+
+Review round 1 requested changes: reopening AC #1 and #3 for Dim Flashing Lights, real token luminance safety maths, beacon/tape audits, localized/valid ARIA names, corrected notes and final per-test names.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
