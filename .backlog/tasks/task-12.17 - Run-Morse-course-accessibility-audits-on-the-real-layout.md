@@ -1,11 +1,11 @@
 ---
 id: TASK-12.17
 title: Run Morse course accessibility audits on the real layout
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-04 13:22'
-updated_date: '2026-10-06 16:27'
+updated_date: '2026-10-06 16:28'
 labels: []
 milestone: m-1
 dependencies: []
@@ -21,9 +21,9 @@ The current Morse course accessibility audit path uses the -CanadianHamMorseCour
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Morse course path, lesson, and summary accessibility audits launch the normal Morse section layout without -CanadianHamMorseCourseAuditOnly
-- [ ] #2 The audits still reach the course path, first lesson, and summary deterministically in light and dark without handlers or audit filters
-- [ ] #3 Regression tests or UI-test helpers are updated so the real-layout course audit remains stable
+- [x] #1 Morse course path, lesson, and summary accessibility audits launch the normal Morse section layout without -CanadianHamMorseCourseAuditOnly
+- [x] #2 The audits still reach the course path, first lesson, and summary deterministically in light and dark without handlers or audit filters
+- [x] #3 Regression tests or UI-test helpers are updated so the real-layout course audit remains stable
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -55,3 +55,9 @@ Validation on final code commit `0fd1fd2c750267222668555e62006ff919410a3c`:
 - Full visionOS: `/tmp/t1217-visionos-full.log` passed 12 tests (3 unit + 9 UI).
 - tvOS/visionOS were run because the string catalogue changed.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Implemented real-layout Morse course audits by turning the Morse home course entry into pushed Course home, Unit, Lesson, and Summary screens, removing -CanadianHamMorseCourseAuditOnly from app/test paths, and updating helpers to run plain performAccessibilityAudit() on Morse home, course home (top/lower), unit, lesson, and summary in light/dark. Verified with node scripts/check-apple-text-sources.ts, pnpm check:apple-l10n, targeted light/dark Morse course audits, full iOS, macOS, tvOS, and visionOS xbuild suites on final code commit 0fd1fd2c750267222668555e62006ff919410a3c.
+<!-- SECTION:FINAL_SUMMARY:END -->
