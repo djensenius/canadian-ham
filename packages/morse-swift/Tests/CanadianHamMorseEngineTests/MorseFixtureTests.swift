@@ -165,16 +165,13 @@ final class MorseFixtureTests: XCTestCase {
         let flashesPerSecond = maxMorseFlashesPerSecond(events: morseSignalEvents(sequence: sequence))
         XCTAssertEqual(flashesPerSecond, 5)
         XCTAssertLessThan(morseBeaconAreaCssPixels, morseFlashMaxAreaCssPixels)
-        let safe = evaluateMorseFlashSafety(MorseFlashSafetyInput(
-            flashAreaCssPixels: morseBeaconAreaCssPixels,
-            flashesPerSecond: flashesPerSecond,
-            darkerRelativeLuminance: morseBeaconDarkerRelativeLuminance,
-            lighterRelativeLuminance: morseBeaconLighterRelativeLuminance,
-            usesSaturatedRed: false
-        ))
+        let safe = evaluateMorseBeaconFlashSafety(
+            palette: morseBeaconPalette(accent: morseLightAccentRGB, background: morseLightPaperInsetRGB),
+            flashesPerSecond: flashesPerSecond
+        )
         XCTAssertTrue(safe.safe)
         XCTAssertEqual(safe.reason, .belowGeneralThreshold)
-        XCTAssertEqual(safe.luminanceDelta, 0.07, accuracy: 1e-12)
+        XCTAssertLessThanOrEqual(safe.luminanceDelta, 0.07)
         XCTAssertFalse(evaluateMorseFlashSafety(MorseFlashSafetyInput(
             flashAreaCssPixels: morseFlashMaxAreaCssPixels + 1,
             flashesPerSecond: 2,

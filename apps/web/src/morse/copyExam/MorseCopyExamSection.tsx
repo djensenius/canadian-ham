@@ -181,7 +181,7 @@ function MorseCopyPracticePanel({ interfaceLanguage, locale, preferences, playba
         <textarea value={copy} disabled={passage === null} rows={5} onChange={(event) => setCopy(event.currentTarget.value)} />
       </label>
       {containsDotDashNotation(copy) ? <p className="warning-text" role="alert">{t(interfaceLanguage, "morseDotDashWarning")}</p> : null}
-      <MorseOutputView state={output.state} />
+      <MorseOutputView state={output.state} interfaceLanguage={interfaceLanguage} />
       <div className="morse-copy-status">{status ? <p>{status}</p> : null}</div>
       <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">{liveStatus}</div>
       {diff ? <MorseDiffView mode="practice" diff={diff} interfaceLanguage={interfaceLanguage} expectedText={passage?.text ?? ""} locale={locale} /> : null}
@@ -335,7 +335,7 @@ function MorseExamPanel({ interfaceLanguage, locale, preferences, reviewDuration
         <textarea value={copy} disabled={exam === null || stage === "graded"} rows={6} onChange={(event) => setCopy(event.currentTarget.value)} />
       </label>
       {containsDotDashNotation(copy) ? <p className="warning-text" role="alert">{t(interfaceLanguage, "morseDotDashWarning")}</p> : null}
-      <MorseOutputView state={output.state} />
+      <MorseOutputView state={output.state} interfaceLanguage={interfaceLanguage} />
       <div className="morse-copy-status">{status ? <p>{status}</p> : null}</div>
       <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">{liveStatus}</div>
       {diff ? <MorseDiffView mode="exam" diff={diff} interfaceLanguage={interfaceLanguage} expectedText={exam?.text ?? ""} locale={locale} /> : null}

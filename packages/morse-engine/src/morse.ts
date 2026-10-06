@@ -49,6 +49,18 @@ export interface MorseHapticEvent {
   readonly symbolKind: "dot" | "dash";
 }
 
+export interface MorseRGB {
+  readonly red: number;
+  readonly green: number;
+  readonly blue: number;
+}
+
+export interface MorseFlashBeaconPalette {
+  readonly resting: MorseRGB;
+  readonly active: MorseRGB;
+  readonly usesSaturatedRed: boolean;
+}
+
 export interface MorseFlashSafetyInput {
   readonly flashAreaCssPixels: number;
   readonly flashesPerSecond: number;
@@ -156,8 +168,12 @@ export const MORSE_FLASH_REFERENCE_WIDTH_CSS_PIXELS = 341;
 export const MORSE_FLASH_REFERENCE_HEIGHT_CSS_PIXELS = 256;
 export const MORSE_FLASH_MAX_AREA_CSS_PIXELS = (MORSE_FLASH_REFERENCE_WIDTH_CSS_PIXELS * MORSE_FLASH_REFERENCE_HEIGHT_CSS_PIXELS) / 4;
 export const MORSE_BEACON_AREA_CSS_PIXELS = 112 * 112;
-export const MORSE_BEACON_DARKER_RELATIVE_LUMINANCE = 0.45;
-export const MORSE_BEACON_LIGHTER_RELATIVE_LUMINANCE = 0.52;
+export const MORSE_BEACON_RESTING_MIX = 0.70;
+export const MORSE_BEACON_ACTIVE_MIX = 0.75;
+export const MORSE_LIGHT_PAPER_INSET_RGB = Object.freeze({ red: 0xef / 255, green: 0xe3 / 255, blue: 0xcb / 255 });
+export const MORSE_DARK_PAPER_INSET_RGB = Object.freeze({ red: 0x18 / 255, green: 0x14 / 255, blue: 0x10 / 255 });
+export const MORSE_LIGHT_ACCENT_RGB = Object.freeze({ red: 0xa5 / 255, green: 0x3a / 255, blue: 0x2a / 255 });
+export const MORSE_DARK_ACCENT_RGB = Object.freeze({ red: 0xff / 255, green: 0x8a / 255, blue: 0x70 / 255 });
 
 export const MORSE_CODE_TABLE = Object.freeze({
   A: ".-",
@@ -399,6 +415,40 @@ export function maxMorseFlashesPerSecond(events: readonly MorseSignalEvent[]): n
   return maxFlashes;
 }
 
+export function morseRelativeLuminance(color: MorseRGB): number {
+  const linearRed = linearizeSrgb(color.red);
+  const linearGreen = linearizeSrgb(color.green);
+  const linearBlue = linearizeSrgb(color.blue);
+  return (0.2126 * linearRed) + (0.7152 * linearGreen) + (0.0722 * linearBlue);
+}
+
+export function mixMorseRgb(foreground: MorseRGB, background: MorseRGB, foregroundRatio: number): MorseRGB {
+  const ratio = Math.max(0, Math.min(1, foregroundRatio));
+  return {
+    red: foreground.red * ratio + background.red * (1 - ratio),
+    green: foreground.green * ratio + background.green * (1 - ratio),
+    blue: foreground.blue * ratio + background.blue * (1 - ratio),
+  };
+}
+
+export function morseBeaconPalette(input: { readonly accent: MorseRGB; readonly background: MorseRGB }): MorseFlashBeaconPalette {
+  return {
+    resting: mixMorseRgb(input.accent, input.background, MORSE_BEACON_RESTING_MIX),
+    active: mixMorseRgb(input.accent, input.background, MORSE_BEACON_ACTIVE_MIX),
+    usesSaturatedRed: isSaturatedRed(input.accent),
+  };
+}
+
+export function evaluateMorseBeaconFlashSafety(input: { readonly palette: MorseFlashBeaconPalette; readonly flashesPerSecond: number; readonly flashAreaCssPixels?: number }): MorseFlashSafetyResult {
+  return evaluateMorseFlashSafety({
+    flashAreaCssPixels: input.flashAreaCssPixels ?? MORSE_BEACON_AREA_CSS_PIXELS,
+    flashesPerSecond: input.flashesPerSecond,
+    darkerRelativeLuminance: morseRelativeLuminance(input.palette.resting),
+    lighterRelativeLuminance: morseRelativeLuminance(input.palette.active),
+    usesSaturatedRed: input.palette.usesSaturatedRed,
+  });
+}
+
 export function evaluateMorseFlashSafety(input: MorseFlashSafetyInput): MorseFlashSafetyResult {
   const darker = Math.min(input.darkerRelativeLuminance, input.lighterRelativeLuminance);
   const lighter = Math.max(input.darkerRelativeLuminance, input.lighterRelativeLuminance);
@@ -416,6 +466,15 @@ export function evaluateMorseFlashSafety(input: MorseFlashSafetyInput): MorseFla
     return { safe: true, reason: "below-general-threshold", luminanceDelta, maxAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS };
   }
   return { safe: false, reason: "luminance-too-high", luminanceDelta, maxAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS };
+}
+
+function linearizeSrgb(component: number): number {
+  return component <= 0.03928 ? component / 12.92 : ((component + 0.055) / 1.055) ** 2.4;
+}
+
+function isSaturatedRed(color: MorseRGB): boolean {
+  const total = color.red + color.green + color.blue;
+  return total > 0 && color.red / total >= 0.8;
 }
 
 export function classifyMorseKeyDown(durationSeconds: number, profile: MorseTimingProfile): MorseKeyTimingSample {

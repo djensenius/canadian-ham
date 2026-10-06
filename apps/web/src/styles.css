@@ -1022,13 +1022,13 @@ input[type="checkbox"]:checked::after {
   max-block-size: 112px;
   border: 2px solid var(--ch-color-border);
   border-radius: var(--ch-radius-pill);
-  background: color-mix(in srgb, var(--ch-color-accent) 12%, var(--ch-color-paper-elevated));
-  box-shadow: inset 0 0 0 1rem color-mix(in srgb, var(--ch-color-accent) 4%, var(--ch-color-paper-elevated));
+  background: color-mix(in srgb, var(--ch-color-accent) 70%, var(--ch-color-paper-inset));
+  box-shadow: inset 0 0 0 1rem color-mix(in srgb, var(--ch-color-accent) 62%, var(--ch-color-paper-inset));
 }
 
 .morse-beacon-lamp.active {
-  background: color-mix(in srgb, var(--ch-color-accent) 20%, var(--ch-color-paper-elevated));
-  box-shadow: inset 0 0 0 1rem color-mix(in srgb, var(--ch-color-accent) 10%, var(--ch-color-paper-elevated));
+  background: color-mix(in srgb, var(--ch-color-accent) 75%, var(--ch-color-paper-inset));
+  box-shadow: inset 0 0 0 1rem color-mix(in srgb, var(--ch-color-accent) 67%, var(--ch-color-paper-inset));
 }
 
 .morse-visual-tape {

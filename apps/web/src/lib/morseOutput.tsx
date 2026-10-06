@@ -1,16 +1,19 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useId, useMemo, useRef, useState } from "react";
 import {
   MORSE_BEACON_AREA_CSS_PIXELS,
-  MORSE_BEACON_DARKER_RELATIVE_LUMINANCE,
-  MORSE_BEACON_LIGHTER_RELATIVE_LUMINANCE,
-  evaluateMorseFlashSafety,
+  MORSE_DARK_ACCENT_RGB,
+  MORSE_DARK_PAPER_INSET_RGB,
+  MORSE_LIGHT_ACCENT_RGB,
+  MORSE_LIGHT_PAPER_INSET_RGB,
+  evaluateMorseBeaconFlashSafety,
   maxMorseFlashesPerSecond,
+  morseBeaconPalette,
   morseSignalEvents,
   morseTapeTokens,
   textToTimedMorse,
 } from "@canadian-ham/morse-engine";
 
-import { t, type InterfaceLanguage } from "./i18n";
+import { interfaceLanguageTag, t, type InterfaceLanguage } from "./i18n";
 import { WebMorsePlayer, type MorsePlaybackHandle } from "./morseAudio";
 import { morseTimingFromPreferences, normalizeMorsePreferences, type WebMorsePreferences } from "./morseSettings";
 
@@ -65,19 +68,13 @@ export function useWebMorseOutput(interfaceLanguage: InterfaceLanguage): WebMors
     const reduceMotion = prefersReducedMotion();
     const signalEvents = morseSignalEvents(sequence);
     const flashesPerSecond = maxMorseFlashesPerSecond(signalEvents);
-    const safety = evaluateMorseFlashSafety({
-      flashAreaCssPixels: MORSE_BEACON_AREA_CSS_PIXELS,
-      flashesPerSecond,
-      darkerRelativeLuminance: MORSE_BEACON_DARKER_RELATIVE_LUMINANCE,
-      lighterRelativeLuminance: MORSE_BEACON_LIGHTER_RELATIVE_LUMINANCE,
-      usesSaturatedRed: false,
-    });
+    const safety = evaluateMorseBeaconFlashSafety({ palette: currentWebBeaconPalette(), flashesPerSecond });
     const useTape = normalized.outputMode === "visualTape" || reduceMotion || !safety.safe;
     const safetyNote = reduceMotion
       ? t(interfaceLanguage, "morseOutputReducedMotionTape")
       : !safety.safe
         ? t(interfaceLanguage, "morseOutputSafetyFallback")
-        : t(interfaceLanguage, "morseOutputBeaconSafety", MORSE_BEACON_AREA_CSS_PIXELS.toLocaleString(), safety.luminanceDelta.toFixed(2), String(flashesPerSecond));
+        : t(interfaceLanguage, "morseOutputBeaconSafety", formatLocaleNumber(MORSE_BEACON_AREA_CSS_PIXELS, interfaceLanguage, 0), formatLocaleNumber(safety.luminanceDelta, interfaceLanguage, 2), formatLocaleNumber(flashesPerSecond, interfaceLanguage, 0));
 
     if (useTape) {
       setState({ mode: "visualTape", beaconActive: false, tape: "", safetyNote });
@@ -125,17 +122,34 @@ export function useWebMorseOutput(interfaceLanguage: InterfaceLanguage): WebMors
   return useMemo(() => ({ state, playText, stop, close }), [close, playText, state, stop]);
 }
 
-export function MorseOutputView({ state }: { readonly state: WebMorseOutputState }) {
+export function MorseOutputView({ state, interfaceLanguage }: { readonly state: WebMorseOutputState; readonly interfaceLanguage: InterfaceLanguage }) {
   if (state.mode === "idle") {
     return null;
   }
+  const generatedLabelId = useId();
+  const labelId = state.mode === "visualTape" ? generatedLabelId : undefined;
   return (
     <div className="morse-output-view" aria-live="off">
-      {state.mode === "visualBeacon" ? <div className={`morse-beacon-lamp${state.beaconActive ? " active" : ""}`} aria-label="Morse visual beacon" role="img" /> : null}
-      {state.mode === "visualTape" ? <p className="morse-visual-tape" aria-label="Morse tape output">{state.tape || "·"}</p> : null}
+      {state.mode === "visualBeacon" ? <div className={`morse-beacon-lamp${state.beaconActive ? " active" : ""}`} aria-label={t(interfaceLanguage, "morseOutputVisualBeaconName")} role="img" /> : null}
+      {state.mode === "visualTape" ? <div role="region" aria-labelledby={labelId}>
+        <p id={labelId} className="sr-only">{t(interfaceLanguage, "morseOutputVisualTapeName")}</p>
+        <output className="morse-visual-tape" aria-live="off">{state.tape || "·"}</output>
+      </div> : null}
       <p className="help-text">{state.safetyNote}</p>
     </div>
   );
+}
+
+function currentWebBeaconPalette() {
+  const dark = document.documentElement.dataset.theme === "dark"
+    || (document.documentElement.dataset.theme !== "light" && (globalThis.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false));
+  return dark
+    ? morseBeaconPalette({ accent: MORSE_DARK_ACCENT_RGB, background: MORSE_DARK_PAPER_INSET_RGB })
+    : morseBeaconPalette({ accent: MORSE_LIGHT_ACCENT_RGB, background: MORSE_LIGHT_PAPER_INSET_RGB });
+}
+
+function formatLocaleNumber(value: number, interfaceLanguage: InterfaceLanguage, maximumFractionDigits: number): string {
+  return new Intl.NumberFormat(interfaceLanguageTag(interfaceLanguage), { maximumFractionDigits, minimumFractionDigits: maximumFractionDigits }).format(value);
 }
 
 function prefersReducedMotion(): boolean {

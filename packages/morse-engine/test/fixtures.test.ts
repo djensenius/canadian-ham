@@ -3,22 +3,30 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
+  MORSE_BEACON_ACTIVE_MIX,
   MORSE_BEACON_AREA_CSS_PIXELS,
-  MORSE_BEACON_DARKER_RELATIVE_LUMINANCE,
-  MORSE_BEACON_LIGHTER_RELATIVE_LUMINANCE,
+  MORSE_BEACON_RESTING_MIX,
+  MORSE_DARK_ACCENT_RGB,
+  MORSE_DARK_PAPER_INSET_RGB,
   MORSE_CODE_TABLE,
   MORSE_FLASH_MAX_AREA_CSS_PIXELS,
+  MORSE_LIGHT_ACCENT_RGB,
+  MORSE_LIGHT_PAPER_INSET_RGB,
   MorseValidationError,
   applyMorseDecodedCharacter,
   buildMorseLessonExercises,
   classifyMorseKeyDown,
   dailyStreak,
   diffMorseCopy,
+  evaluateMorseBeaconFlashSafety,
   evaluateMorseFlashSafety,
   farnsworthTiming,
   generateMorseExamText,
   maxMorseFlashesPerSecond,
+  mixMorseRgb,
+  morseBeaconPalette,
   morseCharacterTimingFeedback,
+  morseRelativeLuminance,
   morseHapticEvents,
   morseSignalEvents,
   morseTapeTokens,
@@ -70,13 +78,12 @@ describe("visual, tape and haptic output mapping", () => {
     const flashesPerSecond = maxMorseFlashesPerSecond(morseSignalEvents(sequence));
     expect(flashesPerSecond).toBe(5);
     expect(MORSE_BEACON_AREA_CSS_PIXELS).toBeLessThan(MORSE_FLASH_MAX_AREA_CSS_PIXELS);
-    expect(evaluateMorseFlashSafety({
-      flashAreaCssPixels: MORSE_BEACON_AREA_CSS_PIXELS,
-      flashesPerSecond,
-      darkerRelativeLuminance: MORSE_BEACON_DARKER_RELATIVE_LUMINANCE,
-      lighterRelativeLuminance: MORSE_BEACON_LIGHTER_RELATIVE_LUMINANCE,
-      usesSaturatedRed: false,
-    })).toMatchObject({ safe: true, reason: "below-general-threshold", luminanceDelta: 0.07 });
+    const lightSafety = evaluateMorseBeaconFlashSafety({ palette: morseBeaconPalette({ accent: MORSE_LIGHT_ACCENT_RGB, background: MORSE_LIGHT_PAPER_INSET_RGB }), flashesPerSecond });
+    const darkSafety = evaluateMorseBeaconFlashSafety({ palette: morseBeaconPalette({ accent: MORSE_DARK_ACCENT_RGB, background: MORSE_DARK_PAPER_INSET_RGB }), flashesPerSecond });
+    expect(lightSafety).toMatchObject({ safe: true, reason: "below-general-threshold" });
+    expect(darkSafety).toMatchObject({ safe: true, reason: "below-general-threshold" });
+    expect(lightSafety.luminanceDelta).toBeLessThanOrEqual(0.07);
+    expect(darkSafety.luminanceDelta).toBeLessThanOrEqual(0.07);
     expect(evaluateMorseFlashSafety({
       flashAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS + 1,
       flashesPerSecond: 2,
@@ -91,6 +98,23 @@ describe("visual, tape and haptic output mapping", () => {
       lighterRelativeLuminance: 0.8,
       usesSaturatedRed: true,
     })).toMatchObject({ safe: false, reason: "saturated-red" });
+  });
+
+  it("matches web token colors with a luminance margin for light and dark beacon states", async () => {
+    const tokensCss = await readFile(join(repoRoot, "apps/web/src/styles/tokens.css"), "utf8");
+    const lightPaperInset = parseCssHexToken(tokensCss, "light", "paper-inset");
+    const lightAccent = parseCssHexToken(tokensCss, "light", "accent");
+    const darkPaperInset = parseCssHexToken(tokensCss, "dark", "paper-inset");
+    const darkAccent = parseCssHexToken(tokensCss, "dark", "accent");
+    expect(lightPaperInset).toEqual(MORSE_LIGHT_PAPER_INSET_RGB);
+    expect(lightAccent).toEqual(MORSE_LIGHT_ACCENT_RGB);
+    expect(darkPaperInset).toEqual(MORSE_DARK_PAPER_INSET_RGB);
+    expect(darkAccent).toEqual(MORSE_DARK_ACCENT_RGB);
+    for (const [accent, background] of [[lightAccent, lightPaperInset], [darkAccent, darkPaperInset]] as const) {
+      const resting = mixMorseRgb(accent, background, MORSE_BEACON_RESTING_MIX);
+      const active = mixMorseRgb(accent, background, MORSE_BEACON_ACTIVE_MIX);
+      expect(Math.abs(morseRelativeLuminance(active) - morseRelativeLuminance(resting))).toBeLessThanOrEqual(0.07);
+    }
   });
 });
 
@@ -315,6 +339,22 @@ function profileFromFixture(input: { readonly name?: MorseProfileName; readonly 
 
 function fixtureNumber(value: number | "NaN"): number {
   return value === "NaN" ? Number.NaN : value;
+}
+
+function parseCssHexToken(css: string, mode: "light" | "dark", token: string): { readonly red: number; readonly green: number; readonly blue: number } {
+  const source = mode === "light"
+    ? css.match(/\[data-theme="light"\]\s*\{(?<body>[\s\S]*?)\n\}/)?.groups?.body ?? ""
+    : css.match(/\[data-theme="dark"\]\s*\{(?<body>[\s\S]*?)\n\}/)?.groups?.body ?? "";
+  const match = source.match(new RegExp(`--ch-color-${token}:\\s*(#[0-9A-Fa-f]{6});`));
+  if (match === null) {
+    throw new Error(`Missing ${mode} CSS token: ${token}`);
+  }
+  const hex = match[1]!.slice(1);
+  return {
+    red: Number.parseInt(hex.slice(0, 2), 16) / 255,
+    green: Number.parseInt(hex.slice(2, 4), 16) / 255,
+    blue: Number.parseInt(hex.slice(4, 6), 16) / 255,
+  };
 }
 
 function symbolCounts(symbols: readonly { readonly kind: MorseSymbolKind }[]): Record<MorseSymbolKind, number> {

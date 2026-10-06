@@ -149,13 +149,15 @@ final class MorseHapticDriver {
     private var player: CHHapticPatternPlayer?
 #endif
 
-    static var supportsHaptics: Bool {
+    private static let cachedSupportsHaptics: Bool = {
 #if os(iOS) && canImport(CoreHaptics)
         CHHapticEngine.capabilitiesForHardware().supportsHaptics
 #else
         false
 #endif
-    }
+    }()
+
+    static var supportsHaptics: Bool { cachedSupportsHaptics }
 
     func play(sequence: TimedMorseSequence) throws -> TimeInterval {
 #if os(iOS) && canImport(CoreHaptics)

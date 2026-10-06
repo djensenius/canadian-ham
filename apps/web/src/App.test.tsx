@@ -19,6 +19,7 @@ import { explanationForQuestion, parseChoiceNotes } from "./data/explanations";
 import { lessonQuizzesById, buildLessonQuizItems } from "./data/quizzes";
 import { ProgressStore, defaultPreferences, type ExamAttempt, type ProgressExportV1, type WebPreferences } from "./lib/progressStore";
 import { INTERFACE_LANGUAGE_STORAGE_KEY } from "./lib/i18n";
+import { MorseOutputView } from "./lib/morseOutput";
 import { applyThemePreference, readStoredThemePreference, THEME_COLORS, THEME_STORAGE_KEY } from "./lib/theme";
 import { buildExamAttempt, createMockExam } from "./lib/studyEngine";
 import { buildMorseLessonExercises, parseMorseCourseFixture } from "@canadian-ham/morse-engine";
@@ -1436,12 +1437,36 @@ describe("App accessibility and flows", () => {
     const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-visual-start-seed"} />);
 
     await screen.findByRole("heading", { name: "Quick listen" });
-    await user.click(screen.getByRole("button", { name: "Play Morse practice audio" }));
+    await user.click(screen.getByRole("button", { name: "Play Morse practice output" }));
 
     assert.match(container.querySelector(".morse-playback-status")?.textContent ?? "", /Morse playback started\./);
     assert.equal(container.querySelector(".morse-live-status")?.textContent, "");
-    await user.click(screen.getByRole("button", { name: "Stop Morse practice audio" }));
+    await user.click(screen.getByRole("button", { name: "Stop Morse practice output" }));
     assert.match(container.querySelector(".morse-live-status")?.textContent ?? "", /Morse playback stopped\./);
+  });
+
+  it("runs visual beacon playback with fake timers", async () => {
+    window.location.hash = "#/morse";
+    const store = createStore("morse-beacon-fake-timer");
+    await store.putPreferences({ ...morsePreferences(true), morse: { ...defaultPreferences.morse, outputMode: "visualBeacon" } });
+    stubReducedMotion(false);
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-beacon-seed"} />);
+
+    await screen.findByRole("heading", { name: "Quick listen" });
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Play Morse practice output" }));
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1);
+      });
+      assert.ok(container.querySelector(".morse-beacon-lamp.active"), "Beacon should be active for the first Morse element");
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(120_000);
+      });
+      assert.equal(container.querySelector(".morse-beacon-lamp.active"), null, "Beacon should be inactive after playback finishes");
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("uses the non-flashing Morse tape when reduced motion is requested", async () => {
@@ -1454,7 +1479,7 @@ describe("App accessibility and flows", () => {
     await screen.findByRole("heading", { name: "Quick listen" });
     vi.useFakeTimers();
     try {
-      fireEvent.click(screen.getByRole("button", { name: "Play Morse practice audio" }));
+      fireEvent.click(screen.getByRole("button", { name: "Play Morse practice output" }));
       await act(async () => {
         await vi.advanceTimersByTimeAsync(1);
       });
@@ -1464,6 +1489,16 @@ describe("App accessibility and flows", () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+
+  it("passes axe on static Morse beacon and tape output states", async () => {
+    const beacon = render(<MorseOutputView interfaceLanguage="en" state={{ mode: "visualBeacon", beaconActive: true, tape: "", safetyNote: "Beacon area 12,544 CSS px; luminance delta 0.06; max 5 flashes/s." }} />);
+    await expectNoAxeViolations(beacon.container);
+    beacon.unmount();
+
+    const tape = render(<MorseOutputView interfaceLanguage="fr" state={{ mode: "visualTape", beaconActive: false, tape: ".-.", safetyNote: "La préférence de réduction des animations est activée; la lecture utilise donc le ruban non clignotant." }} />);
+    assert.match(tape.container.textContent ?? "", /\.\-\./);
+    await expectNoAxeViolations(tape.container);
   });
 
   it("announces Morse finish after playback completes", async () => {
@@ -1476,7 +1511,7 @@ describe("App accessibility and flows", () => {
     await screen.findByRole("heading", { name: "Quick listen" });
     vi.useFakeTimers();
     try {
-      fireEvent.click(screen.getByRole("button", { name: "Play Morse practice audio" }));
+      fireEvent.click(screen.getByRole("button", { name: "Play Morse practice output" }));
       assert.match(container.querySelector(".morse-playback-status")?.textContent ?? "", /Morse playback started\./);
 
       await act(async () => {
@@ -1566,8 +1601,8 @@ describe("App accessibility and flows", () => {
     const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-course-one-player-seed"} />);
 
     await screen.findByRole("heading", { name: "Quick listen" });
-    const quickPlay = screen.getByRole("button", { name: "Play Morse practice audio" }) as HTMLButtonElement;
-    const quickStop = screen.getByRole("button", { name: "Stop Morse practice audio" }) as HTMLButtonElement;
+    const quickPlay = screen.getByRole("button", { name: "Play Morse practice output" }) as HTMLButtonElement;
+    const quickStop = screen.getByRole("button", { name: "Stop Morse practice output" }) as HTMLButtonElement;
     fireEvent.click(quickPlay);
     await waitFor(() => assert.equal(quickStop.disabled, false));
     const quickOscillator = audio.oscillators().at(-1);
@@ -1602,8 +1637,8 @@ describe("App accessibility and flows", () => {
     const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-one-player-seed"} />);
 
     await screen.findByRole("heading", { name: "Quick listen" });
-    const quickPlay = screen.getByRole("button", { name: "Play Morse practice audio" }) as HTMLButtonElement;
-    const quickStop = screen.getByRole("button", { name: "Stop Morse practice audio" }) as HTMLButtonElement;
+    const quickPlay = screen.getByRole("button", { name: "Play Morse practice output" }) as HTMLButtonElement;
+    const quickStop = screen.getByRole("button", { name: "Stop Morse practice output" }) as HTMLButtonElement;
     fireEvent.click(quickPlay);
     await waitFor(() => assert.equal(quickStop.disabled, false));
 

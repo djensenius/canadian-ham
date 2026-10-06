@@ -2095,7 +2095,7 @@ function MorseTrainerPreview({ interfaceLanguage, preferences, playbackCoordinat
         <button type="button" ref={stopButtonRef} disabled={!playing} onClick={stop} aria-label={t(interfaceLanguage, "morseStopPracticeAria")}>{t(interfaceLanguage, "morseStop")}</button>
       </div>
       <p className="morse-duration">{t(interfaceLanguage, "morseDuration", formattedDuration)}</p>
-      <MorseOutputView state={output.state} />
+      <MorseOutputView state={output.state} interfaceLanguage={interfaceLanguage} />
       <div className="morse-playback-status">{status ? <p>{status}</p> : null}</div>
       <div className="sr-only morse-live-status" role="status" aria-live="polite" aria-atomic="true">{liveStatus}</div>
       <section className="morse-copy-card" aria-labelledby="morse-copy-title">

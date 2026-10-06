@@ -140,6 +140,8 @@ private struct MorseCopyPracticeView: View {
     let playbackCoordinator: MorsePlaybackCoordinator
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.colorScheme) private var colorScheme
+    @State private var dimFlashingLightsEnabled = morseDimFlashingLightsEnabled()
     @State private var driver = MorseAudioDriver()
     @State private var hapticDriver = MorseHapticDriver()
     @State private var visualPlaybackState = MorseVisualPlaybackState()
@@ -173,7 +175,7 @@ private struct MorseCopyPracticeView: View {
                 .font(DesignTokens.FontScale.title.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
-            Text("Choose a passage length, start the audio, and type what you hear during or after playback. Passages use only RIC-1 section 8.2 characters.") // l10n: localized
+            Text("Choose a passage length, start playback, and type what you receive during or after it. Passages use only RIC-1 section 8.2 characters.") // l10n: localized
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
             Picker("Passage length", selection: $selectedLength) { // l10n: localized
@@ -195,7 +197,7 @@ private struct MorseCopyPracticeView: View {
             if activePassage != nil {
                 Text(String.localizedStringWithFormat(String(localized: "Playback duration: %@ seconds."), formattedSeconds(activeDuration))) // l10n: localized
                     .font(DesignTokens.FontScale.caption)
-                    .foregroundStyle(DesignTokens.Colors.inkMuted)
+                    .foregroundStyle(DesignTokens.Colors.ink)
             }
             TextEditor(text: $userCopy)
                 .font(.body.monospaced())
@@ -231,6 +233,9 @@ private struct MorseCopyPracticeView: View {
             playbackCoordinator.register("copy-practice") {
                 stopPracticeIfPlaying()
             }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .morseDimFlashingLightsChanged)) { _ in
+            dimFlashingLightsEnabled = morseDimFlashingLightsEnabled()
         }
         .onDisappear {
             playbackCoordinator.unregister("copy-practice")
@@ -339,7 +344,7 @@ private struct MorseCopyPracticeView: View {
         case .haptics:
             return try hapticDriver.play(sequence: sequence)
         case .visualBeacon, .visualTape:
-            visualPlaybackTasks = scheduleMorseVisualPlayback(sequence: sequence, requestedMode: normalized.outputMode, reduceFlashing: shouldReduceMorseFlashing(environmentReduceMotion: reduceMotion)) { nextState in
+            visualPlaybackTasks = scheduleMorseVisualPlayback(sequence: sequence, requestedMode: normalized.outputMode, reduceFlashing: shouldReduceMorseFlashing(flags: currentMorseReduceFlashingFlags(environmentReduceMotion: reduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)), colorScheme: colorScheme) { nextState in
                 visualPlaybackState = nextState
             }
             return sequence.totalDurationSeconds
@@ -371,6 +376,8 @@ private struct MorseReceivingExamView: View {
     let playbackCoordinator: MorsePlaybackCoordinator
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.colorScheme) private var colorScheme
+    @State private var dimFlashingLightsEnabled = morseDimFlashingLightsEnabled()
     @State private var driver = MorseAudioDriver()
     @State private var hapticDriver = MorseHapticDriver()
     @State private var visualPlaybackState = MorseVisualPlaybackState()
@@ -425,9 +432,9 @@ private struct MorseReceivingExamView: View {
                 .disabled(stage == .playing || stage == .review)
                 .accessibilityIdentifier("morse-exam-start-button")
             if let examText {
-                Text(String.localizedStringWithFormat(String(localized: "Generated exam: %lld weighted characters, %@ seconds of audio."), Int64(examText.weightedCharacters), formattedSeconds(examText.durationSeconds))) // l10n: localized
+                Text(String.localizedStringWithFormat(String(localized: "Generated exam: %lld weighted characters, %@ seconds of playback."), Int64(examText.weightedCharacters), formattedSeconds(examText.durationSeconds))) // l10n: localized
                     .font(DesignTokens.FontScale.caption)
-                    .foregroundStyle(DesignTokens.Colors.inkMuted)
+                    .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityIdentifier("morse-exam-generated-summary")
             }
             if stage == .review {
@@ -473,6 +480,9 @@ private struct MorseReceivingExamView: View {
                 stopExamPlaybackIfPlaying()
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: .morseDimFlashingLightsChanged)) { _ in
+            dimFlashingLightsEnabled = morseDimFlashingLightsEnabled()
+        }
         .onDisappear {
             playbackCoordinator.unregister("simulated-exam")
             stopAll()
@@ -517,7 +527,7 @@ private struct MorseReceivingExamView: View {
 #endif
             let duration = try startConfiguredOutput(text: generated.text, settings: playbackSettings)
             examText = generated
-            statusMessage = String(localized: "Exam playback started. Audio cannot be paused or replayed.")
+            statusMessage = String(localized: "Exam playback started. It cannot be paused or replayed.")
             let waitSeconds = debugExamPlaybackOverride ?? duration
             playbackTask = Task { @MainActor in
                 try? await Task.sleep(for: .milliseconds(Int((waitSeconds * 1000).rounded(.up)) + 60))
@@ -558,7 +568,7 @@ private struct MorseReceivingExamView: View {
         case .haptics:
             return try hapticDriver.play(sequence: sequence)
         case .visualBeacon, .visualTape:
-            visualPlaybackTasks = scheduleMorseVisualPlayback(sequence: sequence, requestedMode: playbackSettings.normalized().outputMode, reduceFlashing: shouldReduceMorseFlashing(environmentReduceMotion: reduceMotion)) { nextState in
+            visualPlaybackTasks = scheduleMorseVisualPlayback(sequence: sequence, requestedMode: playbackSettings.normalized().outputMode, reduceFlashing: shouldReduceMorseFlashing(flags: currentMorseReduceFlashingFlags(environmentReduceMotion: reduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)), colorScheme: colorScheme) { nextState in
                 visualPlaybackState = nextState
             }
             return sequence.totalDurationSeconds

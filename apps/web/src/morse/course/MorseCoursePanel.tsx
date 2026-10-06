@@ -233,7 +233,7 @@ export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, s
           <h4 id="morse-session-title">{session.mode === "lesson" && session.lesson !== null ? t(interfaceLanguage, "morseCourseSessionLesson", session.lesson.lessonNumber) : t(interfaceLanguage, "morseCourseReviewTitle")}</h4>
           <p>{t(interfaceLanguage, "morseCourseSessionProgress", session.index + 1, session.exercises.length)}</p>
           {!session.done ? renderExercise(currentExercise, play, typedAnswer, setTypedAnswer, answer, interfaceLanguage) : null}
-          <MorseOutputView state={output.state} />
+          <MorseOutputView state={output.state} interfaceLanguage={interfaceLanguage} />
           {session.feedback ? <p>{session.feedback}</p> : null}
           {session.done ? <LessonSummary interfaceLanguage={interfaceLanguage} saveState={saveState} session={session} /> : null}
           <div className="sr-only" aria-live="polite" aria-atomic="true">{liveMessage}</div>

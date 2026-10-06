@@ -17,6 +17,8 @@ struct MorseCourseView: View {
     @State private var statusMessageIsCorrective = false
     @State private var errorMessage: String?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.colorScheme) private var colorScheme
+    @State private var dimFlashingLightsEnabled = morseDimFlashingLightsEnabled()
     @State private var progressSaveFailed = false
     @State private var driver = MorseAudioDriver()
     @State private var hapticDriver = MorseHapticDriver()
@@ -39,6 +41,9 @@ struct MorseCourseView: View {
             }
             .task { loadCourse() }
             .onReceive(progressStore.objectWillChange) { _ in loadCourse() }
+            .onReceive(NotificationCenter.default.publisher(for: .morseDimFlashingLightsChanged)) { _ in
+                dimFlashingLightsEnabled = morseDimFlashingLightsEnabled()
+            }
     }
 
     private var courseHome: some View {
@@ -450,6 +455,8 @@ struct MorseCourseView: View {
             Task { @MainActor in
                 try? await Task.sleep(for: .seconds(max(0, duration)))
                 if playbackGeneration == generation {
+                    hapticDriver.stop()
+                    visualPlaybackState.beaconActive = false
                     isPlaying = false
                 }
             }
@@ -470,7 +477,7 @@ struct MorseCourseView: View {
         case .haptics:
             return try hapticDriver.play(sequence: sequence)
         case .visualBeacon, .visualTape:
-            visualPlaybackTasks = scheduleMorseVisualPlayback(sequence: sequence, requestedMode: normalized.outputMode, reduceFlashing: shouldReduceMorseFlashing(environmentReduceMotion: reduceMotion)) { nextState in
+            visualPlaybackTasks = scheduleMorseVisualPlayback(sequence: sequence, requestedMode: normalized.outputMode, reduceFlashing: shouldReduceMorseFlashing(flags: currentMorseReduceFlashingFlags(environmentReduceMotion: reduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)), colorScheme: colorScheme) { nextState in
                 visualPlaybackState = nextState
             }
             return sequence.totalDurationSeconds
