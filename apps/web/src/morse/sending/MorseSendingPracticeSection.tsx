@@ -114,10 +114,21 @@ export function MorseSendingPracticeSection({ interfaceLanguage, preferences, pl
   useEffect(() => {
     if (!examRunning) return;
     clearExamInterval();
-    examIntervalRef.current = window.setInterval(() => {
-      setExamRemaining((remaining) => Math.max(0, remaining - 1));
-    }, 1000);
-    return clearExamInterval;
+    // Derive the countdown from a deadline, not from tick counts: browsers throttle
+    // intervals in background tabs, which would otherwise let an exam run past 3:00.
+    const deadline = Date.now() + examRemaining * 1000;
+    function syncRemaining(): void {
+      setExamRemaining(Math.max(0, Math.ceil((deadline - Date.now()) / 1000)));
+    }
+    function syncOnVisible(): void {
+      if (document.visibilityState === "visible") syncRemaining();
+    }
+    examIntervalRef.current = window.setInterval(syncRemaining, 1000);
+    document.addEventListener("visibilitychange", syncOnVisible);
+    return () => {
+      clearExamInterval();
+      document.removeEventListener("visibilitychange", syncOnVisible);
+    };
   }, [examRunning, examRun]);
 
   useEffect(() => {

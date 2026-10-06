@@ -201,9 +201,20 @@ describe("MorseSendingPracticeSection", () => {
 
     assert.ok(screen.getByRole("heading", { name: "Sending results" }));
     const results = screen.getByRole("heading", { name: "Sending results" }).parentElement?.textContent ?? "";
-    assert.match(results, /PASS, 100%, with 1 errors/);
+    assert.match(results, /PASS, 100%, with 1 error\./);
     assert.match(results, /1 total errors: 0 wrong, 1 missing, 0 inserted/);
     assert.match(results, /E/);
+  });
+
+  it("ends the exam on time even when background-tab throttling skipped interval ticks", async () => {
+    renderSending({ examDurationSeconds: 180, examTextFactory: () => "EE" });
+
+    fireEvent.click(screen.getByRole("button", { name: "Exam-style check" }));
+    // Simulate a throttled background tab: the clock moves 3:05 but no interval tick runs.
+    vi.setSystemTime(Date.now() + 185_000);
+    await act(async () => { document.dispatchEvent(new Event("visibilitychange")); });
+
+    assert.ok(screen.getByRole("heading", { name: "Sending results" }), "the exam is graded as soon as the tab is visible again");
   });
 
   it("restarting an exam while running starts a fresh timer and passage", async () => {

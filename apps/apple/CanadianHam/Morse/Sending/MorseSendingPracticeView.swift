@@ -123,7 +123,13 @@ struct MorseSendingPracticeView: View {
         .navigationTitle("Sending practice") // l10n: localized
         .focusable(true)
         .focused($keyFocusActive)
-        .onAppear { keyFocusActive = true }
+        .onAppear {
+            keyFocusActive = true
+            // Another Morse mode starting playback stops any held key or paddle here.
+            playbackCoordinator.register("sending-practice") {
+                stopAllKeying(finalizeStraight: true)
+            }
+        }
         .onKeyPress(phases: [.down, .up]) { press in
             handleKeyPress(press)
         }
@@ -139,6 +145,7 @@ struct MorseSendingPracticeView: View {
             }
         }
         .onDisappear {
+            playbackCoordinator.unregister("sending-practice")
             stopAllKeying(finalizeStraight: false)
             examTimerTask?.cancel()
         }
