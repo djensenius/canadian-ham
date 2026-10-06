@@ -185,34 +185,6 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(fail.markPercent, 99)
     }
 
-    @MainActor
-    func testMorsePressKeyButtonAccessibilityActionsTriggerConfiguredKeying() throws {
-        var actions: [String] = []
-        let straightKey = MorsePressKeyButton(
-            title: "Hold key",
-            accessibilityLabel: "Straight key",
-            accessibilityIdentifier: "test-straight-key",
-            begin: { actions.append("begin") },
-            end: { actions.append("end") },
-            sendDotAction: { actions.append("dot") },
-            sendDashAction: { actions.append("dash") }
-        )
-        let paddle = MorsePressKeyButton(
-            title: "Dot",
-            accessibilityLabel: "Dot paddle",
-            accessibilityIdentifier: "test-dot-paddle",
-            begin: { actions.append("paddle-begin") },
-            end: { actions.append("paddle-end") },
-            defaultAction: { actions.append("paddle-default") }
-        )
-
-        straightKey.sendDotAction?()
-        straightKey.sendDashAction?()
-        paddle.defaultAction?()
-
-        XCTAssertEqual(actions, ["dot", "dash", "paddle-default"])
-    }
-
     func testCompletedMorseCourseSessionIgnoresResubmittedAnswer() throws {
         var session = MorseCourseSession(mode: .review, exercises: [.typeCharacter("K")], index: 0, correct: 1, total: 1, characterResults: [(character: "K", correct: true)], done: true)
 

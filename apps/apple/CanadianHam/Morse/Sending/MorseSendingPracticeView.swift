@@ -255,6 +255,8 @@ struct MorseSendingPracticeView: View {
     }
 
     private func sendTimedElement(_ element: MorseKeyElement) {
+        // VoiceOver actions reach here without a press, so claim the shared player here too.
+        playbackCoordinator.claim("sending-practice")
         finalizeTask?.cancel()
         finalizeTask = nil
         let text = element == .dot ? "E" : "T"
