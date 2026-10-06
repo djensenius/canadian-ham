@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-06 18:44'
+updated_date: '2026-10-06 18:46'
 labels:
   - web
   - apple
@@ -31,3 +31,12 @@ Why: Deaf and hard-of-hearing learners need non-audio ways to learn, and a flash
 - [ ] #2 Core Haptics is used only where supportsHaptics is true (in practice iPhone), with no haptic UI on tvOS or visionOS
 - [ ] #3 VoiceOver/ARIA announcements don't talk over playback; accessibility audits pass
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Add shared Morse output-mode primitives in TypeScript and Swift: output-mode persistence, schedule-to-beacon/tape/haptic events, and WCAG flash-safety calculations with tests.
+2. Wire web Morse playback consumers (Quick listen, course, copy practice, exam) through the existing one-player coordinator for audio, visual beacon, and non-flashing tape; add settings, reduced-motion fallback, ARIA behavior, styles, and component tests.
+3. Wire Apple iOS/iPadOS/macOS Morse playback consumers through the same settings for audio, visual beacon, non-flashing tape, and capability-gated Core Haptics on iPhone only; keep tvOS/visionOS basic with no new UI and localize EN/FR strings through the catalogue JSON round trip.
+4. Run targeted TS/Swift tests and required web/Apple checks, record file:line evidence and per-test names in task notes, then finalize only with verified acceptance criteria.
+<!-- SECTION:PLAN:END -->
