@@ -1,7 +1,7 @@
 ---
 id: TASK-12.7
 title: Morse sending practice with tap timing
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
