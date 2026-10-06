@@ -80,7 +80,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         tapFirstMorseLesson(in: app)
         completeVisibleMorseLesson(in: app)
 
-        XCTAssertTrue(app.staticTexts["Lesson summary"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.descendants(matching: .any)["morse-course-summary-heading"].firstMatch.waitForExistence(timeout: 10))
         XCTAssertTrue(app.staticTexts["Great work. The next lesson is unlocked."].firstMatch.waitForExistence(timeout: 5))
     }
 
@@ -94,7 +94,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         tapFirstMorseLesson(in: app)
         completeVisibleMorseLesson(in: app, finalAnswerOverride: "K")
 
-        XCTAssertTrue(app.staticTexts["Lesson summary"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.descendants(matching: .any)["morse-course-summary-heading"].firstMatch.waitForExistence(timeout: 10))
         XCTAssertTrue(app.staticTexts["Try again next time. Correct answer: KMMKK."].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Great work. The next lesson is unlocked."].firstMatch.waitForExistence(timeout: 5))
     }
@@ -1425,7 +1425,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Lesson 1 session"].firstMatch.waitForExistence(timeout: 10))
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse lesson session")
         completeVisibleMorseLesson(in: app)
-        XCTAssertTrue(app.staticTexts["Lesson summary"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.descendants(matching: .any)["morse-course-summary-heading"].firstMatch.waitForExistence(timeout: 10))
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse lesson summary")
         app.terminate()
     }
@@ -1434,7 +1434,14 @@ final class CanadianHamPracticeUITests: XCTestCase {
         var answers = ["K", "M", "M", "K", "MMMKM", "K", "M", "K", "K", "MKMMM", "M", "K", "K", "M", "MKKKK", "M", "K", "K", "K", "KMMKK"]
         for _ in 0..<6 { app.swipeDown() }
         for _ in 0..<30 {
-            if app.staticTexts["Lesson summary"].firstMatch.exists { return }
+            if app.descendants(matching: .any)["morse-course-summary-heading"].firstMatch.exists { return }
+            let summary = app.buttons["Lesson summary"].firstMatch
+            if summary.exists {
+                scrollUntilHittable(summary, in: app, maxSwipes: 8)
+                XCTAssertTrue(summary.isHittable, "Expected lesson summary button to be hittable")
+                summary.tap()
+                return
+            }
             let next = app.buttons["morse-course-next"].firstMatch
             if next.exists {
                 if next.isHittable { next.tap() } else { app.swipeUp(); next.tap() }

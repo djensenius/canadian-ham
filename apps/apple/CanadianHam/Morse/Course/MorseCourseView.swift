@@ -11,8 +11,6 @@ struct MorseCourseView: View {
     @State private var course: MorseCourse?
     @State private var progress: MorseCourseProgressExport?
     @State private var session: MorseCourseSession?
-    @State private var showingSession = false
-    @State private var showingSummary = false
     @State private var typedAnswer = ""
     @State private var statusMessage = ""
     @State private var statusMessageIsCorrective = false
@@ -30,9 +28,6 @@ struct MorseCourseView: View {
             .navigationBarTitleDisplayMode(.inline)
 #endif
             .background(DesignTokens.Colors.paper)
-            .navigationDestination(isPresented: $showingSession) {
-                sessionScreen()
-            }
             .task { loadCourse() }
             .onReceive(progressStore.objectWillChange) { _ in loadCourse() }
     }
@@ -60,10 +55,13 @@ struct MorseCourseView: View {
                 }
                 if let course, let progress {
                     courseStats(course: course, progress: progress)
-                    Button { startReview(course: course, progress: progress) } label: {
+                    NavigationLink {
+                        sessionScreen()
+                    } label: {
                         AccessibleSecondaryButtonLabel(title: "Review weakest characters")
                     } // l10n: localized
                     .buttonStyle(AccessibleSecondaryButtonStyle())
+                    .simultaneousGesture(TapGesture().onEnded { prepareReview(course: course, progress: progress) })
                     .accessibilityIdentifier("morse-course-review")
                     courseUnits(course: course)
                 } else if errorMessage == nil {
@@ -170,9 +168,6 @@ struct MorseCourseView: View {
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
-        .navigationDestination(isPresented: $showingSession) {
-            sessionScreen()
-        }
         .navigationTitle(unitTitle(unitID: unitID)) // l10n: localized
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
@@ -180,31 +175,38 @@ struct MorseCourseView: View {
     }
 
     private func lessonButton(lesson: MorseCourseLesson, state: MorseLessonState) -> some View {
-        Button {
-            guard let course, let progress, state != .locked else { return }
-            startLesson(lesson, course: course, progress: progress)
+        NavigationLink {
+            sessionScreen()
         } label: {
-            Text(lessonButtonTitle(lesson: lesson, state: state)) // l10n: localized with verbatim characters
-                .font(DesignTokens.FontScale.body.weight(.semibold))
-                .multilineTextAlignment(.center)
-                .lineSpacing(DesignTokens.Spacing.xs)
-                .lineLimit(nil)
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity)
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .padding(DesignTokens.Spacing.sm)
-                .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-                .overlay {
-                    RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous)
-                        .strokeBorder(DesignTokens.Colors.border, style: StrokeStyle(lineWidth: 1, dash: state == .locked ? [5, 4] : []))
-                }
+            lessonButtonLabel(lesson: lesson, state: state)
         }
         .allowsHitTesting(state != .locked)
         .buttonStyle(.plain)
+        .simultaneousGesture(TapGesture().onEnded {
+            guard let course, let progress, state != .locked else { return }
+            prepareLesson(lesson, course: course, progress: progress)
+        })
         .accessibilityRespondsToUserInteraction(state != .locked)
         .accessibilityLabel(Text(String.localizedStringWithFormat(String(localized: "Lesson %lld, %@, %@"), Int64(lesson.lessonNumber), lesson.newCharacters.joined(separator: " "), labelText(for: state)))) // l10n: localized
         .accessibilityHint(Text(accessibilityHintText(for: state))) // l10n: localized
         .accessibilityIdentifier("morse-course-lesson-\(lesson.lessonNumber)")
+    }
+
+    private func lessonButtonLabel(lesson: MorseCourseLesson, state: MorseLessonState) -> some View {
+        Text(lessonButtonTitle(lesson: lesson, state: state)) // l10n: localized with verbatim characters
+            .font(DesignTokens.FontScale.body.weight(.semibold))
+            .multilineTextAlignment(.center)
+            .lineSpacing(DesignTokens.Spacing.xs)
+            .lineLimit(nil)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity)
+            .foregroundStyle(DesignTokens.Colors.ink)
+            .padding(DesignTokens.Spacing.sm)
+            .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous)
+                    .strokeBorder(DesignTokens.Colors.border, style: StrokeStyle(lineWidth: 1, dash: state == .locked ? [5, 4] : []))
+            }
     }
 
     private func sessionScreen() -> some View {
@@ -225,9 +227,6 @@ struct MorseCourseView: View {
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
-        .navigationDestination(isPresented: $showingSummary) {
-            summaryScreen()
-        }
         .navigationTitle(sessionTitle) // l10n: localized
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
@@ -261,7 +260,9 @@ struct MorseCourseView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
             }
             if session.done {
-                Button { showingSummary = true } label: {
+                NavigationLink {
+                    summaryScreen()
+                } label: {
                     AccessibleSecondaryButtonLabel(title: "Lesson summary")
                 } // l10n: localized
                 .buttonStyle(AccessibleSecondaryButtonStyle())
@@ -299,6 +300,7 @@ struct MorseCourseView: View {
                 .font(DesignTokens.FontScale.title.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
+                .accessibilityIdentifier("morse-course-summary-heading")
             Text(String.localizedStringWithFormat(String(localized: "Accuracy: %lld%%"), Int64(percent))) // l10n: localized
                 .font(DesignTokens.FontScale.body.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
@@ -388,25 +390,21 @@ struct MorseCourseView: View {
         }
     }
 
-    private func startLesson(_ lesson: MorseCourseLesson, course: MorseCourse, progress: MorseCourseProgressExport) {
+    private func prepareLesson(_ lesson: MorseCourseLesson, course: MorseCourse, progress: MorseCourseProgressExport) {
         let exercises = buildMorseLessonExercises(lesson: lesson, progress: progress, seed: lessonSeed())
         resetSessionFeedback()
         session = MorseCourseSession(
             mode: .lesson(lesson),
             exercises: exercises
         )
-        showingSummary = false
-        showingSession = true
         refocusSession()
     }
 
-    private func startReview(course: MorseCourse, progress: MorseCourseProgressExport) {
+    private func prepareReview(course: MorseCourse, progress: MorseCourseProgressExport) {
         let learned = learnedMorseCharacters(course: course, progress: progress)
         let weakest = selectWeakestMorseCharacters(stats: progress.characterStats, learnedCharacters: learned, limit: 5)
         resetSessionFeedback()
         session = MorseCourseSession(mode: .review, exercises: (weakest.isEmpty ? Array(learned.prefix(5)) : weakest).map { .typeCharacter($0) })
-        showingSummary = false
-        showingSession = true
         refocusSession()
     }
 
@@ -497,9 +495,6 @@ struct MorseCourseView: View {
         session = currentSession
         if !statusMessage.isEmpty {
             AccessibilityNotification.Announcement(statusMessage).post()
-        }
-        if currentSession.done {
-            showingSummary = true
         }
     }
 
