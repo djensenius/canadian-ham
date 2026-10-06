@@ -372,8 +372,8 @@ export function scoreMorseSending(expected: string, sent: string, completedWithi
   return {
     diff,
     completedWithinTime,
-    passed: completedWithinTime && diff.score.passed,
-    markPercent: completedWithinTime ? diff.score.markPercent : Math.min(diff.score.markPercent, 99),
+    passed: diff.score.passed,
+    markPercent: diff.score.markPercent,
   };
 }
 

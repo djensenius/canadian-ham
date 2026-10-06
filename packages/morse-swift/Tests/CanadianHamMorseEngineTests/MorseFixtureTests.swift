@@ -226,7 +226,11 @@ final class MorseFixtureTests: XCTestCase {
             XCTAssertEqual(feedback.decoded, try XCTUnwrap(testCase.expectedOutput.decoded), testCase.id)
             XCTAssertEqual(feedback.timingConsistencyPercent, try XCTUnwrap(testCase.expectedOutput.timingConsistencyPercent), testCase.id)
             XCTAssertEqual(feedback.averageRatioToExpected, try XCTUnwrap(testCase.expectedOutput.averageRatioToExpected), accuracy: 1e-12, testCase.id)
-            XCTAssertEqual(feedback.dotDashRatio, testCase.expectedOutput.dotDashRatio, testCase.id)
+            if let expectedDotDashRatio = testCase.expectedOutput.dotDashRatio {
+                XCTAssertEqual(try XCTUnwrap(feedback.dotDashRatio), expectedDotDashRatio, accuracy: 1e-12, testCase.id)
+            } else {
+                XCTAssertNil(feedback.dotDashRatio, testCase.id)
+            }
             if let appliedText = testCase.expectedOutput.appliedText, let applyToText = testCase.input.applyToText {
                 XCTAssertEqual(applyMorseDecodedCharacter(text: applyToText, decoded: feedback.decoded), appliedText, testCase.id)
             }

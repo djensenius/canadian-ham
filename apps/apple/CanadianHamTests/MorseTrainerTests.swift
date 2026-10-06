@@ -173,14 +173,16 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(applyMorseDecodedCharacter(text: "AB", decoded: errorSignal), "A")
     }
 
-    func testMorseSendingScoreRequiresTimeAndUsesExamErrorRule() throws {
-        let pass = try scoreMorseSending(expected: "ABCDEF", sent: "ABCDEX", completedWithinTime: true)
-        let timedOut = try scoreMorseSending(expected: "ABCDEF", sent: "ABCDEF", completedWithinTime: false)
+    func testMorseSendingScoreCountsTimeoutOnlyThroughMissingCharacters() throws {
+        let pass = try scoreMorseSending(expected: "ABCDEF", sent: "ABCDE", completedWithinTime: false)
+        let fail = try scoreMorseSending(expected: "ABCDEFGHIJK", sent: "ABCDE", completedWithinTime: false)
 
         XCTAssertTrue(pass.passed)
+        XCTAssertEqual(pass.diff.score.missing, 1)
         XCTAssertEqual(pass.markPercent, 100)
-        XCTAssertFalse(timedOut.passed)
-        XCTAssertEqual(timedOut.markPercent, 99)
+        XCTAssertFalse(fail.passed)
+        XCTAssertEqual(fail.diff.score.missing, 6)
+        XCTAssertEqual(fail.markPercent, 99)
     }
 
     func testCompletedMorseCourseSessionIgnoresResubmittedAnswer() throws {

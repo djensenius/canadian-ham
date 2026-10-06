@@ -24,13 +24,14 @@ interface MorseSendingPracticeSectionProps {
   readonly preferences: WebPreferences;
   readonly playbackCoordinator: MorsePlaybackCoordinator;
   readonly examSeedFactory?: (profileName: MorseProfileName) => string;
+  readonly examTextFactory?: (profileName: MorseProfileName) => string;
   readonly examDurationSeconds?: number;
   readonly nowMilliseconds?: () => number;
 }
 
 type SendingMode = "practice" | "exam";
 
-type ActiveKey = "straight" | "dot" | "dash";
+type ActiveKey = "straight";
 
 interface KeyDownState {
   readonly key: ActiveKey;
@@ -46,54 +47,100 @@ const paddleKeyboardMap: Readonly<Record<string, MorseKeyElement>> = Object.free
   "-": "-",
 });
 
-export function MorseSendingPracticeSection({ interfaceLanguage, preferences, playbackCoordinator, examSeedFactory = defaultExamSeedFactory, examDurationSeconds = defaultExamDurationSeconds, nowMilliseconds = () => performance.now() }: MorseSendingPracticeSectionProps) {
+const noopPlaybackCoordinator: MorsePlaybackCoordinator = {
+  register: () => () => {},
+  claim: () => {},
+};
+
+export function MorseSendingPracticeSection({ interfaceLanguage, preferences, playbackCoordinator = noopPlaybackCoordinator, examSeedFactory = defaultExamSeedFactory, examTextFactory, examDurationSeconds = defaultExamDurationSeconds, nowMilliseconds = () => performance.now() }: MorseSendingPracticeSectionProps) {
   const keyboardHelpId = useId();
   const playerRef = useRef<WebMorsePlayer | null>(null);
   const toneGenerationRef = useRef(0);
   const activeKeyRef = useRef<KeyDownState | null>(null);
   const finalizeTimerRef = useRef<number | null>(null);
-  const paddleIntervalRef = useRef<number | null>(null);
+  const paddleTimerRef = useRef<number | null>(null);
   const pressedPaddlesRef = useRef<Set<MorseKeyElement>>(new Set());
   const nextIambicElementRef = useRef<MorseKeyElement>(".");
   const examIntervalRef = useRef<number | null>(null);
+  const pendingSamplesRef = useRef<readonly MorseKeyTimingSample[]>([]);
+  const decodedTextRef = useRef("");
+  const examTextRef = useRef("");
+  const examRunningRef = useRef(false);
   const [mode, setMode] = useState<SendingMode>("practice");
-  const [pendingSamples, setPendingSamples] = useState<readonly MorseKeyTimingSample[]>([]);
-  const [decodedText, setDecodedText] = useState("");
+  const [pendingSamples, setPendingSamplesState] = useState<readonly MorseKeyTimingSample[]>([]);
+  const [decodedText, setDecodedTextState] = useState("");
   const [lastFeedback, setLastFeedback] = useState<MorseCharacterTimingFeedback | null>(null);
   const [status, setStatus] = useState("");
   const [liveStatus, setLiveStatus] = useState("");
-  const [examText, setExamText] = useState("");
+  const [examText, setExamTextState] = useState("");
   const [examRemaining, setExamRemaining] = useState(examDurationSeconds);
-  const [examRunning, setExamRunning] = useState(false);
+  const [examRunning, setExamRunningState] = useState(false);
   const [examScore, setExamScore] = useState<MorseSendingScore | null>(null);
+  const [gradedText, setGradedText] = useState("");
+  const [straightPressed, setStraightPressed] = useState(false);
   const profile = useMemo(() => morseTimingFromPreferences(preferences.morse), [preferences.morse]);
   const locale = interfaceLanguageTag(interfaceLanguage);
-  const keyButtonPressed = activeKeyRef.current?.key === "straight";
 
   useEffect(() => () => {
-    stopTone();
+    releaseAllKeys({ finalizeStraight: false });
     clearFinalizeTimer();
-    clearPaddleInterval();
     clearExamInterval();
     void playerRef.current?.close();
+  }, []);
+
+  useEffect(() => playbackCoordinator.register("sending-practice", () => {
+    releaseAllKeys({ finalizeStraight: true });
+  }), [playbackCoordinator]);
+
+  useEffect(() => {
+    function releaseForPageExit(): void {
+      releaseAllKeys({ finalizeStraight: true });
+    }
+    function releaseForVisibility(): void {
+      if (document.visibilityState !== "visible") releaseForPageExit();
+    }
+    window.addEventListener("blur", releaseForPageExit);
+    document.addEventListener("visibilitychange", releaseForVisibility);
+    return () => {
+      window.removeEventListener("blur", releaseForPageExit);
+      document.removeEventListener("visibilitychange", releaseForVisibility);
+    };
   }, []);
 
   useEffect(() => {
     if (!examRunning) return;
     clearExamInterval();
     examIntervalRef.current = window.setInterval(() => {
-      setExamRemaining((remaining) => {
-        if (remaining <= 1) {
-          clearExamInterval();
-          setExamRunning(false);
-          gradeExam(false);
-          return 0;
-        }
-        return remaining - 1;
-      });
+      setExamRemaining((remaining) => Math.max(0, remaining - 1));
     }, 1000);
     return clearExamInterval;
   }, [examRunning]);
+
+  useEffect(() => {
+    if (examRunning && examRemaining === 0) {
+      gradeExam(false);
+    }
+  }, [examRemaining, examRunning]);
+
+  function setPendingSamples(samples: readonly MorseKeyTimingSample[]): void {
+    pendingSamplesRef.current = samples;
+    setPendingSamplesState(samples);
+  }
+
+  function setDecodedText(text: string): void {
+    decodedTextRef.current = text;
+    setDecodedTextState(text);
+  }
+
+  function setExamText(text: string): void {
+    examTextRef.current = text;
+    setExamTextState(text);
+  }
+
+  function setExamRunning(running: boolean): void {
+    examRunningRef.current = running;
+    setExamRunningState(running);
+  }
 
   function clearFinalizeTimer(): void {
     if (finalizeTimerRef.current !== null) {
@@ -102,10 +149,10 @@ export function MorseSendingPracticeSection({ interfaceLanguage, preferences, pl
     }
   }
 
-  function clearPaddleInterval(): void {
-    if (paddleIntervalRef.current !== null) {
-      window.clearInterval(paddleIntervalRef.current);
-      paddleIntervalRef.current = null;
+  function clearPaddleTimer(): void {
+    if (paddleTimerRef.current !== null) {
+      window.clearTimeout(paddleTimerRef.current);
+      paddleTimerRef.current = null;
     }
   }
 
@@ -120,27 +167,45 @@ export function MorseSendingPracticeSection({ interfaceLanguage, preferences, pl
     toneGenerationRef.current += 1;
     playerRef.current?.stop();
     activeKeyRef.current = null;
+    setStraightPressed(false);
+  }
+
+  function releaseAllKeys({ finalizeStraight }: { readonly finalizeStraight: boolean }): void {
+    const active = activeKeyRef.current;
+    if (active?.key === "straight" && finalizeStraight) {
+      const durationSeconds = Math.max(0.001, (nowMilliseconds() - active.startedAtMilliseconds) / 1000);
+      appendSample(classifyMorseKeyDown(durationSeconds, profile));
+    }
+    stopTone();
+    clearPaddleTimer();
+    pressedPaddlesRef.current.clear();
   }
 
   function resetSending(nextMode: SendingMode = mode): void {
-    stopTone();
+    releaseAllKeys({ finalizeStraight: false });
     clearFinalizeTimer();
-    clearPaddleInterval();
-    pressedPaddlesRef.current.clear();
+    clearExamInterval();
     setPendingSamples([]);
     setDecodedText("");
     setLastFeedback(null);
     setStatus("");
     setLiveStatus("");
+    setExamScore(null);
+    setGradedText("");
+    if (nextMode === "practice") {
+      setExamRunning(false);
+    }
     setMode(nextMode);
   }
 
   async function beginStraightKey(source: "keyboard" | "touch"): Promise<void> {
     if (activeKeyRef.current !== null) return;
+    clearFinalizeTimer();
     playbackCoordinator.claim("sending-practice");
     const generation = toneGenerationRef.current + 1;
     toneGenerationRef.current = generation;
     activeKeyRef.current = { key: "straight", startedAtMilliseconds: nowMilliseconds() };
+    setStraightPressed(true);
     playerRef.current ??= new WebMorsePlayer();
     try {
       await playerRef.current.startTone(preferences.morse);
@@ -150,6 +215,7 @@ export function MorseSendingPracticeSection({ interfaceLanguage, preferences, pl
         setStatus(message);
         setLiveStatus(message);
         activeKeyRef.current = null;
+        setStraightPressed(false);
       }
       return;
     }
@@ -166,24 +232,28 @@ export function MorseSendingPracticeSection({ interfaceLanguage, preferences, pl
     appendSample(classifyMorseKeyDown(durationSeconds, profile));
   }
 
-  function appendSample(sample: MorseKeyTimingSample): void {
-    setPendingSamples((samples) => {
-      const next = [...samples, sample];
-      scheduleFinalizeCharacter(next);
-      return next;
-    });
+  function appendSample(sample: MorseKeyTimingSample, finalizeAfterElementSeconds = 0): void {
+    const next = [...pendingSamplesRef.current, sample];
+    setPendingSamples(next);
+    scheduleFinalizeCharacter(next, finalizeAfterElementSeconds);
   }
 
-  function scheduleFinalizeCharacter(samples: readonly MorseKeyTimingSample[]): void {
+  function scheduleFinalizeCharacter(samples: readonly MorseKeyTimingSample[], finalizeAfterElementSeconds = 0): void {
     clearFinalizeTimer();
-    finalizeTimerRef.current = window.setTimeout(() => finalizeCharacter(samples), Math.ceil(profile.interCharacterGapSeconds * 1000) + 20);
+    finalizeTimerRef.current = window.setTimeout(() => {
+      finalizeCharacter(samples);
+    }, Math.ceil((finalizeAfterElementSeconds + profile.interCharacterGapSeconds) * 1000) + 20);
   }
 
-  function finalizeCharacter(samples: readonly MorseKeyTimingSample[]): void {
+  function finalizePendingCharacter(): string {
+    return finalizeCharacter(pendingSamplesRef.current);
+  }
+
+  function finalizeCharacter(samples: readonly MorseKeyTimingSample[]): string {
     clearFinalizeTimer();
-    if (samples.length === 0) return;
+    if (samples.length === 0) return decodedTextRef.current;
     const feedback = morseCharacterTimingFeedback(samples);
-    const nextText = applyMorseDecodedCharacter(decodedText, feedback.decoded);
+    const nextText = applyMorseDecodedCharacter(decodedTextRef.current, feedback.decoded);
     setPendingSamples([]);
     setLastFeedback(feedback);
     setDecodedText(nextText);
@@ -194,9 +264,11 @@ export function MorseSendingPracticeSection({ interfaceLanguage, preferences, pl
         : t(interfaceLanguage, "morseSendingUnknownCharacter", feedback.elements);
     setStatus(message);
     setLiveStatus(message);
+    return nextText;
   }
 
   function emitPaddleElement(element: MorseKeyElement): void {
+    clearFinalizeTimer();
     playbackCoordinator.claim("sending-practice");
     const text = element === "." ? "E" : "T";
     void (async () => {
@@ -207,44 +279,47 @@ export function MorseSendingPracticeSection({ interfaceLanguage, preferences, pl
         // The timing sample still records even if the optional side-tone cannot start.
       }
     })();
-    appendSample({
-      element,
-      durationSeconds: element === "." ? profile.dotSeconds : profile.dashSeconds,
-      expectedSeconds: element === "." ? profile.dotSeconds : profile.dashSeconds,
-      ratioToExpected: 1,
-    });
+    const durationSeconds = element === "." ? profile.dotSeconds : profile.dashSeconds;
+    appendSample({ element, durationSeconds, expectedSeconds: durationSeconds, ratioToExpected: 1 }, durationSeconds);
   }
 
   function beginPaddle(element: MorseKeyElement): void {
     pressedPaddlesRef.current.add(element);
-    emitPaddleElement(element);
-    restartPaddleInterval();
+    if (paddleTimerRef.current === null) {
+      emitAndScheduleNextPaddleElement(element);
+    }
   }
 
   function endPaddle(element: MorseKeyElement): void {
     pressedPaddlesRef.current.delete(element);
-    restartPaddleInterval();
+    if (pressedPaddlesRef.current.size === 0) {
+      clearPaddleTimer();
+      playerRef.current?.stop();
+    }
   }
 
-  function restartPaddleInterval(): void {
-    clearPaddleInterval();
-    if (pressedPaddlesRef.current.size === 0) return;
-    const repeatMilliseconds = Math.max(40, Math.round((profile.dotSeconds + profile.intraCharacterGapSeconds) * 1000));
-    paddleIntervalRef.current = window.setInterval(() => {
-      const pressed = pressedPaddlesRef.current;
-      if (pressed.size === 0) return;
-      let element: MorseKeyElement;
-      if (pressed.has(".") && pressed.has("-")) {
-        element = nextIambicElementRef.current;
-        nextIambicElementRef.current = element === "." ? "-" : ".";
-      } else {
-        element = pressed.has(".") ? "." : "-";
-      }
-      emitPaddleElement(element);
-    }, repeatMilliseconds);
+  function emitAndScheduleNextPaddleElement(preferredElement?: MorseKeyElement): void {
+    const pressed = pressedPaddlesRef.current;
+    if (pressed.size === 0) {
+      clearPaddleTimer();
+      return;
+    }
+    let element: MorseKeyElement;
+    if (pressed.has(".") && pressed.has("-")) {
+      element = nextIambicElementRef.current;
+      nextIambicElementRef.current = element === "." ? "-" : ".";
+    } else {
+      element = preferredElement ?? (pressed.has(".") ? "." : "-");
+    }
+    emitPaddleElement(element);
+    const durationSeconds = element === "." ? profile.dotSeconds : profile.dashSeconds;
+    const repeatMilliseconds = Math.max(40, Math.round((durationSeconds + profile.intraCharacterGapSeconds) * 1000));
+    clearPaddleTimer();
+    paddleTimerRef.current = window.setTimeout(() => emitAndScheduleNextPaddleElement(), repeatMilliseconds);
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLElement>): void {
+    if (isInteractiveKeyboardTarget(event.target, event.currentTarget)) return;
     const key = event.key.toLowerCase();
     if (event.repeat) return;
     if (key === " ") {
@@ -260,6 +335,7 @@ export function MorseSendingPracticeSection({ interfaceLanguage, preferences, pl
   }
 
   function handleKeyUp(event: KeyboardEvent<HTMLElement>): void {
+    if (isInteractiveKeyboardTarget(event.target, event.currentTarget)) return;
     const key = event.key.toLowerCase();
     if (key === " ") {
       event.preventDefault();
@@ -274,41 +350,47 @@ export function MorseSendingPracticeSection({ interfaceLanguage, preferences, pl
   }
 
   function beginPointerStraight(event: PointerEvent<HTMLButtonElement>): void {
-    event.currentTarget.setPointerCapture(event.pointerId);
+    event.currentTarget.setPointerCapture?.(event.pointerId);
     void beginStraightKey("touch");
   }
 
   function endPointerStraight(event: PointerEvent<HTMLButtonElement>): void {
-    event.currentTarget.releasePointerCapture(event.pointerId);
+    if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
+      event.currentTarget.releasePointerCapture?.(event.pointerId);
+    }
     endStraightKey();
   }
 
   function beginPointerPaddle(event: PointerEvent<HTMLButtonElement>, element: MorseKeyElement): void {
-    event.currentTarget.setPointerCapture(event.pointerId);
+    event.currentTarget.setPointerCapture?.(event.pointerId);
     beginPaddle(element);
   }
 
   function endPointerPaddle(event: PointerEvent<HTMLButtonElement>, element: MorseKeyElement): void {
-    event.currentTarget.releasePointerCapture(event.pointerId);
+    if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
+      event.currentTarget.releasePointerCapture?.(event.pointerId);
+    }
     endPaddle(element);
   }
 
   function startExam(): void {
     resetSending("exam");
-    const generated = generateMorseExamText({ profile: profileForName("isedParis"), seed: examSeedFactory("isedParis"), minDurationSeconds: 0 });
-    setExamText(generated.text);
+    const generatedText = examTextFactory?.("isedParis") ?? generateMorseExamText({ profile: profileForName("isedParis"), seed: examSeedFactory("isedParis"), minDurationSeconds: 0 }).text;
+    setExamText(generatedText);
     setExamRemaining(examDurationSeconds);
     setExamScore(null);
+    setGradedText("");
     setExamRunning(true);
     setStatus(t(interfaceLanguage, "morseSendingExamStarted"));
   }
 
   function gradeExam(completedWithinTime = examRemaining > 0): void {
-    if (examText === "") return;
-    finalizeCharacter(pendingSamples);
-    const score = scoreMorseSending(examText, decodedText, completedWithinTime);
+    if (examTextRef.current === "" || !examRunningRef.current && examScore !== null) return;
+    const sentText = finalizePendingCharacter();
+    const score = scoreMorseSending(examTextRef.current, sentText, completedWithinTime);
     setExamRunning(false);
     clearExamInterval();
+    setGradedText(sentText);
     setExamScore(score);
     const message = score.passed
       ? t(interfaceLanguage, "morseSendingExamPassed", String(score.diff.score.errors))
@@ -322,7 +404,7 @@ export function MorseSendingPracticeSection({ interfaceLanguage, preferences, pl
   const timerLabel = formatTimer(examRemaining);
 
   return (
-    <section className="morse-sending-panel" aria-labelledby="morse-sending-title" tabIndex={0} onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} aria-describedby={keyboardHelpId}>
+    <section className="morse-sending-panel" aria-labelledby="morse-sending-title" tabIndex={0} onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) releaseAllKeys({ finalizeStraight: true }); }} aria-describedby={keyboardHelpId}>
       <div className="morse-sending-header">
         <div>
           <h3 id="morse-sending-title">{t(interfaceLanguage, "morseSendingTitle")}</h3>
@@ -350,12 +432,13 @@ export function MorseSendingPracticeSection({ interfaceLanguage, preferences, pl
           <h4 id="morse-straight-key-heading">{t(interfaceLanguage, "morseStraightKeyTitle")}</h4>
           <button
             type="button"
-            className={`morse-key-button${keyButtonPressed ? " active" : ""}`}
+            className={`morse-key-button${straightPressed ? " active" : ""}`}
             aria-label={t(interfaceLanguage, "morseStraightKeyButtonAria")}
-            aria-pressed={keyButtonPressed}
+            aria-pressed={straightPressed}
             onPointerDown={beginPointerStraight}
             onPointerUp={endPointerStraight}
             onPointerCancel={endPointerStraight}
+            onLostPointerCapture={endStraightKey}
           >
             {t(interfaceLanguage, "morseStraightKeyButton")}
           </button>
@@ -363,8 +446,8 @@ export function MorseSendingPracticeSection({ interfaceLanguage, preferences, pl
         <section aria-labelledby="morse-paddle-heading">
           <h4 id="morse-paddle-heading">{t(interfaceLanguage, "morsePaddleTitle")}</h4>
           <div className="morse-paddle-row">
-            <button type="button" className="morse-key-button" aria-label={t(interfaceLanguage, "morseDotPaddleAria")} onPointerDown={(event) => beginPointerPaddle(event, ".")} onPointerUp={(event) => endPointerPaddle(event, ".")} onPointerCancel={(event) => endPointerPaddle(event, ".")}>{t(interfaceLanguage, "morseDotPaddle")}</button>
-            <button type="button" className="morse-key-button" aria-label={t(interfaceLanguage, "morseDashPaddleAria")} onPointerDown={(event) => beginPointerPaddle(event, "-")} onPointerUp={(event) => endPointerPaddle(event, "-")} onPointerCancel={(event) => endPointerPaddle(event, "-")}>{t(interfaceLanguage, "morseDashPaddle")}</button>
+            <button type="button" className="morse-key-button" aria-label={t(interfaceLanguage, "morseDotPaddleAria")} onPointerDown={(event) => beginPointerPaddle(event, ".")} onPointerUp={(event) => endPointerPaddle(event, ".")} onPointerCancel={(event) => endPointerPaddle(event, ".")} onLostPointerCapture={() => endPaddle(".")}>{t(interfaceLanguage, "morseDotPaddle")}</button>
+            <button type="button" className="morse-key-button" aria-label={t(interfaceLanguage, "morseDashPaddleAria")} onPointerDown={(event) => beginPointerPaddle(event, "-")} onPointerUp={(event) => endPointerPaddle(event, "-")} onPointerCancel={(event) => endPointerPaddle(event, "-")} onLostPointerCapture={() => endPaddle("-")}>{t(interfaceLanguage, "morseDashPaddle")}</button>
           </div>
         </section>
       </div>
@@ -378,7 +461,7 @@ export function MorseSendingPracticeSection({ interfaceLanguage, preferences, pl
       </div>
       {status ? <p className="morse-copy-status">{status}</p> : null}
       <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">{liveStatus}</div>
-      {examScore !== null ? <SendingExamResults interfaceLanguage={interfaceLanguage} score={examScore} decodedText={decodedText} /> : null}
+      {examScore !== null ? <SendingExamResults interfaceLanguage={interfaceLanguage} score={examScore} decodedText={gradedText} /> : null}
     </section>
   );
 }
@@ -397,6 +480,11 @@ function SendingExamResults({ interfaceLanguage, score, decodedText }: { readonl
       <p className="morse-copy" lang="en">{decodedText || t(interfaceLanguage, "morseSendingNoSentText")}</p>
     </section>
   );
+}
+
+function isInteractiveKeyboardTarget(target: EventTarget | null, container: HTMLElement): boolean {
+  if (!(target instanceof HTMLElement) || target === container) return false;
+  return target.closest("button,input,select,textarea,a,[role='button']") !== null;
 }
 
 function timingFeedbackSummary(feedback: MorseCharacterTimingFeedback, interfaceLanguage: InterfaceLanguage, locale: string): string {

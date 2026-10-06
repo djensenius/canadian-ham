@@ -454,8 +454,8 @@ public func scoreMorseSending(expected: String, sent: String, completedWithinTim
     return MorseSendingScore(
         diff: diff,
         completedWithinTime: completedWithinTime,
-        passed: completedWithinTime && diff.score.passed,
-        markPercent: completedWithinTime ? diff.score.markPercent : min(diff.score.markPercent, 99)
+        passed: diff.score.passed,
+        markPercent: diff.score.markPercent
     )
 }
 

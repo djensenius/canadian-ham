@@ -234,7 +234,11 @@ function validateSendingFixture(fixture: any): void {
     expect(feedback.decoded, testCase.id).toEqual(testCase.expectedOutput.decoded);
     expect(feedback.timingConsistencyPercent, testCase.id).toBe(testCase.expectedOutput.timingConsistencyPercent);
     expect(feedback.averageRatioToExpected, testCase.id).toBeCloseTo(testCase.expectedOutput.averageRatioToExpected, 12);
-    expect(feedback.dotDashRatio, testCase.id).toBe(testCase.expectedOutput.dotDashRatio);
+    if (testCase.expectedOutput.dotDashRatio === null) {
+      expect(feedback.dotDashRatio, testCase.id).toBeNull();
+    } else {
+      expect(feedback.dotDashRatio ?? Number.NaN, testCase.id).toBeCloseTo(testCase.expectedOutput.dotDashRatio, 12);
+    }
     if (testCase.expectedOutput.appliedText !== undefined) {
       expect(applyMorseDecodedCharacter(testCase.input.applyToText, feedback.decoded), testCase.id).toBe(testCase.expectedOutput.appliedText);
     }

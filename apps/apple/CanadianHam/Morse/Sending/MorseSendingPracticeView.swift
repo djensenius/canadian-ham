@@ -6,6 +6,8 @@ struct MorseSendingPracticeView: View {
     let settings: MorseTrainerSettings
     let playbackCoordinator: MorsePlaybackCoordinator
 
+    @Environment(\.scenePhase) private var scenePhase
+    @FocusState private var keyFocusActive: Bool
     @State private var driver = MorseAudioDriver()
     @State private var pendingSamples: [MorseKeyTimingSample] = []
     @State private var decodedText = ""
@@ -14,7 +16,9 @@ struct MorseSendingPracticeView: View {
     @State private var errorMessage: String?
     @State private var straightKeyDownAt: Date?
     @State private var finalizeTask: Task<Void, Never>?
-    @State private var paddleTasks: [MorseKeyElement: Task<Void, Never>] = [:]
+    @State private var pressedPaddles: Set<MorseKeyElement> = []
+    @State private var paddleRepeatTask: Task<Void, Never>?
+    @State private var nextIambicElement: MorseKeyElement = .dot
     @State private var examText = ""
     @State private var examRemaining = 180
     @State private var examRunning = false
@@ -61,9 +65,6 @@ struct MorseSendingPracticeView: View {
                         begin: beginStraightKey,
                         end: endStraightKey
                     )
-#if os(macOS)
-                    .keyboardShortcut(.space, modifiers: [])
-#endif
                 }
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     Text("Iambic paddle emulation") // l10n: localized
@@ -77,9 +78,6 @@ struct MorseSendingPracticeView: View {
                             begin: { beginPaddle(.dot) },
                             end: { endPaddle(.dot) }
                         )
-#if os(macOS)
-                        .keyboardShortcut("j", modifiers: [])
-#endif
                         MorsePressKeyButton(
                             title: String(localized: "Dash"),
                             accessibilityLabel: String(localized: "Dash paddle. Hold for repeated dashes."),
@@ -87,9 +85,6 @@ struct MorseSendingPracticeView: View {
                             begin: { beginPaddle(.dash) },
                             end: { endPaddle(.dash) }
                         )
-#if os(macOS)
-                        .keyboardShortcut("k", modifiers: [])
-#endif
                     }
                 }
                 MorseSendingFeedbackView(decodedText: decodedText, pendingSamples: pendingSamples, lastFeedback: lastFeedback)
@@ -120,6 +115,15 @@ struct MorseSendingPracticeView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Sending practice") // l10n: localized
+        .focusable(true)
+        .focused($keyFocusActive)
+        .onAppear { keyFocusActive = true }
+        .onKeyPress(phases: [.down, .up]) { press in
+            handleKeyPress(press)
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase != .active { stopAllKeying(finalizeStraight: true) }
+        }
         .navigationDestination(isPresented: resultIsPresented) {
             if let presentedResult {
                 MorseSendingResultsScreen(result: presentedResult) {
@@ -129,17 +133,47 @@ struct MorseSendingPracticeView: View {
             }
         }
         .onDisappear {
-            stopAllKeying()
+            stopAllKeying(finalizeStraight: false)
             examTimerTask?.cancel()
         }
     }
 
+    private func handleKeyPress(_ press: KeyPress) -> KeyPress.Result {
+        let character = press.characters.lowercased()
+        let element = character == "j" ? MorseKeyElement.dot : character == "k" ? MorseKeyElement.dash : nil
+        switch press.phase {
+        case .down:
+            if press.key == .space {
+                beginStraightKey()
+                return .handled
+            }
+            if let element {
+                beginPaddle(element)
+                return .handled
+            }
+        case .up:
+            if press.key == .space {
+                endStraightKey()
+                return .handled
+            }
+            if let element {
+                endPaddle(element)
+                return .handled
+            }
+        default:
+            break
+        }
+        return .ignored
+    }
+
     private func beginStraightKey() {
         guard straightKeyDownAt == nil else { return }
+        finalizeTask?.cancel()
+        finalizeTask = nil
         playbackCoordinator.claim("sending-practice")
         straightKeyDownAt = Date()
         do {
-            _ = try driver.play(text: "E", settings: settings.normalized())
+            try driver.startTone(settings: settings.normalized())
             errorMessage = nil
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
@@ -160,39 +194,66 @@ struct MorseSendingPracticeView: View {
     }
 
     private func beginPaddle(_ element: MorseKeyElement) {
-        guard paddleTasks[element] == nil else { return }
+        finalizeTask?.cancel()
+        finalizeTask = nil
+        pressedPaddles.insert(element)
         playbackCoordinator.claim("sending-practice")
-        emitPaddleElement(element)
-        let delay = max(40_000_000, UInt64((profile.dotSeconds + profile.intraCharacterGapSeconds) * 1_000_000_000))
-        paddleTasks[element] = Task { @MainActor in
-            while !Task.isCancelled {
-                try? await Task.sleep(nanoseconds: delay)
-                guard !Task.isCancelled else { break }
-                emitPaddleElement(element)
-            }
+        if paddleRepeatTask == nil {
+            startPaddleRepeat(preferredElement: element)
         }
     }
 
     private func endPaddle(_ element: MorseKeyElement) {
-        paddleTasks[element]?.cancel()
-        paddleTasks[element] = nil
+        pressedPaddles.remove(element)
+        if pressedPaddles.isEmpty {
+            paddleRepeatTask?.cancel()
+            paddleRepeatTask = nil
+            driver.stop()
+        }
+    }
+
+    private func startPaddleRepeat(preferredElement: MorseKeyElement? = nil) {
+        paddleRepeatTask?.cancel()
+        paddleRepeatTask = Task { @MainActor in
+            var preferred = preferredElement
+            while !Task.isCancelled, !pressedPaddles.isEmpty {
+                let element = nextPaddleElement(preferred: preferred)
+                preferred = nil
+                emitPaddleElement(element)
+                let duration = element == .dot ? profile.dotSeconds : profile.dashSeconds
+                let delay = max(40_000_000, UInt64(((duration + profile.intraCharacterGapSeconds) * 1_000_000_000).rounded()))
+                try? await Task.sleep(nanoseconds: delay)
+            }
+            paddleRepeatTask = nil
+        }
+    }
+
+    private func nextPaddleElement(preferred: MorseKeyElement?) -> MorseKeyElement {
+        if pressedPaddles.contains(.dot), pressedPaddles.contains(.dash) {
+            let element = nextIambicElement
+            nextIambicElement = element == .dot ? .dash : .dot
+            return element
+        }
+        return preferred ?? (pressedPaddles.contains(.dot) ? .dot : .dash)
     }
 
     private func emitPaddleElement(_ element: MorseKeyElement) {
+        finalizeTask?.cancel()
+        finalizeTask = nil
         let text = element == .dot ? "E" : "T"
         _ = try? driver.play(text: text, settings: settings.normalized())
         let duration = element == .dot ? profile.dotSeconds : profile.dashSeconds
-        appendSample(MorseKeyTimingSample(element: element, durationSeconds: duration, expectedSeconds: duration, ratioToExpected: 1))
+        appendSample(MorseKeyTimingSample(element: element, durationSeconds: duration, expectedSeconds: duration, ratioToExpected: 1), finalizeAfterElementSeconds: duration)
     }
 
-    private func appendSample(_ sample: MorseKeyTimingSample) {
+    private func appendSample(_ sample: MorseKeyTimingSample, finalizeAfterElementSeconds: Double = 0) {
         pendingSamples.append(sample)
-        scheduleFinalizeCharacter()
+        scheduleFinalizeCharacter(finalizeAfterElementSeconds: finalizeAfterElementSeconds)
     }
 
-    private func scheduleFinalizeCharacter() {
+    private func scheduleFinalizeCharacter(finalizeAfterElementSeconds: Double = 0) {
         finalizeTask?.cancel()
-        let delay = UInt64((profile.interCharacterGapSeconds * 1_000_000_000).rounded(.up)) + 20_000_000
+        let delay = UInt64(((finalizeAfterElementSeconds + profile.interCharacterGapSeconds) * 1_000_000_000).rounded(.up)) + 20_000_000
         finalizeTask = Task { @MainActor in
             try? await Task.sleep(nanoseconds: delay)
             guard !Task.isCancelled else { return }
@@ -257,7 +318,7 @@ struct MorseSendingPracticeView: View {
     }
 
     private func resetSending(clearExam: Bool) {
-        stopAllKeying()
+        stopAllKeying(finalizeStraight: false)
         finalizeTask?.cancel()
         finalizeTask = nil
         pendingSamples = []
@@ -273,11 +334,18 @@ struct MorseSendingPracticeView: View {
         }
     }
 
-    private func stopAllKeying() {
+    private func stopAllKeying(finalizeStraight: Bool) {
+        if finalizeStraight, let started = straightKeyDownAt {
+            let duration = max(0.001, Date().timeIntervalSince(started))
+            if let sample = try? classifyMorseKeyDown(durationSeconds: duration, profile: profile) {
+                appendSample(sample)
+            }
+        }
         driver.stop()
         straightKeyDownAt = nil
-        for task in paddleTasks.values { task.cancel() }
-        paddleTasks = [:]
+        pressedPaddles = []
+        paddleRepeatTask?.cancel()
+        paddleRepeatTask = nil
     }
 
 #if DEBUG
