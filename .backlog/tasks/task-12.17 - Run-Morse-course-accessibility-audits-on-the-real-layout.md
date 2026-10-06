@@ -287,5 +287,5 @@ Validation on final code commit:
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented real-layout Morse course audits by turning the Morse home course entry into pushed Course home, Unit, Lesson, and Summary screens, removing -CanadianHamMorseCourseAuditOnly from app/test paths, and updating helpers to run plain performAccessibilityAudit() on Morse home, course home (top/lower), unit, lesson, and summary in light/dark. Verified with node scripts/check-apple-text-sources.ts, pnpm check:apple-l10n, targeted light/dark Morse course audits, full iOS, macOS, tvOS, and visionOS xbuild suites on final code commit 0fd1fd2c750267222668555e62006ff919410a3c.
+Implemented review-round fixes for task-12.17: course lesson/review session navigation is now button-driven and state-pushed without tap gestures or disabled hit-testing/accessibility hacks; locked lessons are disabled and covered by UI assertions; playback tests were renamed to match the pushed-screen behavior; validation evidence now cites final code commit 5a3889e06b70d16eeb26b5609a7e5f41f5ae8631 from git rev-parse and records per-test names for full iOS, macOS, tvOS, and visionOS runs. Verified with text/l10n checks, targeted iOS course/playback tests, and final full xbuild suites on all four Apple platforms.
 <!-- SECTION:FINAL_SUMMARY:END -->
