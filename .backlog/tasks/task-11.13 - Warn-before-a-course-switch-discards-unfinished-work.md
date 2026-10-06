@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-05 13:33'
-updated_date: '2026-10-06 00:12'
+updated_date: '2026-10-06 00:55'
 labels: []
 dependencies:
   - TASK-11.5
@@ -84,6 +84,8 @@ Final full-run evidence on final code commit c41cee8b75773b317a2fef87d0dfed01034
   - macOS unit QuestionBankTests: testAdvancedBundledJSONDecodesExpectedCountsAndEnglishCategoryFallbacks; testAdvancedMockExamUsesFiftyQuestionsAndNoHonours; testBundledJSONDecodesExpectedCounts; testBundledLessonsAndExplanationsLoadThroughContentLibrary; testEngineQuestionDrawKeepsQuestionInsideRequestedCategory; testEngineShufflePreservesAnswerInvariantsForEveryBundledQuestion; testKnownLessonIdsComeFromSubsectionLessonMappingsWithoutQuizzes; testRealBundleKnownLessonIdsCoverBundledContentLibraryLessons.
   - macOS unit ReadinessAndScoringTests: testAdvancedScoringAndReadinessSuppressHonours; testExamScoringBoundaries; testReadinessStates; testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate.
 - tvOS and visionOS full suites were not rerun in this review-fix round because the review fixes did not change Localizable.xcstrings or platform-shared catalogue resources; previous branch validation already covered them.
+
+Re-review fix (4e5750d, coordinator): after Confirm, web focus now returns to the course switcher. The old 'a?.focus() ?? b?.focus()' always fell through to <main>. Focus is also restored in a finally block when the save fails. The test now checks focus with waitFor plus a short settle for both Cancel and Confirm: it fails without the fix and passes with it. Web typecheck, all web tests and build:web pass; web-only change, no Apple runs needed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
