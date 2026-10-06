@@ -23,8 +23,11 @@ struct MorseSendingPracticeView: View {
     @State private var lastPaddleElement: MorseKeyElement?
     @State private var examText = ""
     @State private var examRemaining = 180
+    @State private var examDeadline: Date?
     @State private var examRunning = false
     @State private var examTimerTask: Task<Void, Never>?
+    @State private var finiteToneStopTask: Task<Void, Never>?
+    @State private var finiteToneGeneration = 0
     @State private var presentedResult: MorseSendingResult?
 
     private var profile: MorseTimingProfile { (try? settings.normalized().timingProfileValue()) ?? profileForName(.isedParis) }
@@ -52,9 +55,8 @@ struct MorseSendingPracticeView: View {
                 MorseSendingExamCard(
                     examText: examText,
                     examRemaining: examRemaining,
-                    examRunning: examRunning,
                     start: startExam,
-                    grade: { gradeExam(completedWithinTime: examRemaining > 0) }
+                    grade: { gradeExam(completedWithinTime: examCompletedWithinDeadline()) }
                 )
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     Text("Straight key") // l10n: localized
@@ -134,7 +136,14 @@ struct MorseSendingPracticeView: View {
             handleKeyPress(press)
         }
         .onChange(of: scenePhase) { _, phase in
-            if phase != .active { stopAllKeying(finalizeStraight: true) }
+            if phase == .active {
+                refreshExamCountdown()
+            } else {
+                stopAllKeying(finalizeStraight: true)
+            }
+        }
+        .onChange(of: keyFocusActive) { _, isFocused in
+            if !isFocused { stopAllKeying(finalizeStraight: true) }
         }
         .navigationDestination(isPresented: resultIsPresented) {
             if let presentedResult {
@@ -181,6 +190,7 @@ struct MorseSendingPracticeView: View {
 
     private func beginStraightKey() {
         guard straightKeyDownAt == nil else { return }
+        cancelFiniteToneStop()
         finalizeTask?.cancel()
         finalizeTask = nil
         playbackCoordinator.claim("sending-practice")
@@ -221,7 +231,6 @@ struct MorseSendingPracticeView: View {
         if pressedPaddles.isEmpty {
             paddleRepeatTask?.cancel()
             paddleRepeatTask = nil
-            driver.stop()
         }
     }
 
@@ -267,8 +276,10 @@ struct MorseSendingPracticeView: View {
         finalizeTask?.cancel()
         finalizeTask = nil
         let text = element == .dot ? "E" : "T"
-        _ = try? driver.play(text: text, settings: settings.normalized())
         let duration = element == .dot ? profile.dotSeconds : profile.dashSeconds
+        if let playbackDuration = try? driver.play(text: text, settings: settings.normalized()) {
+            scheduleFiniteToneStop(after: playbackDuration)
+        }
         appendSample(MorseKeyTimingSample(element: element, durationSeconds: duration, expectedSeconds: duration, ratioToExpected: 1), finalizeAfterElementSeconds: duration)
     }
 
@@ -306,23 +317,53 @@ struct MorseSendingPracticeView: View {
         AccessibilityNotification.Announcement(statusMessage).post()
     }
 
+    private func scheduleFiniteToneStop(after duration: TimeInterval) {
+        finiteToneGeneration += 1
+        let generation = finiteToneGeneration
+        finiteToneStopTask?.cancel()
+        finiteToneStopTask = Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(Int((duration * 1000).rounded(.up)) + 60))
+            guard !Task.isCancelled, generation == finiteToneGeneration else { return }
+            driver.stop()
+            finiteToneStopTask = nil
+        }
+    }
+
+    private func cancelFiniteToneStop() {
+        finiteToneGeneration += 1
+        finiteToneStopTask?.cancel()
+        finiteToneStopTask = nil
+    }
+
+    private func refreshExamCountdown(now: Date = Date()) {
+        guard examRunning, let examDeadline else { return }
+        let remaining = morseSendingRemainingExamSeconds(deadline: examDeadline, now: now)
+        examRemaining = remaining
+        if remaining == 0 {
+            gradeExam(completedWithinTime: false)
+        }
+    }
+
+    private func examCompletedWithinDeadline(now: Date = Date()) -> Bool {
+        guard let examDeadline else { return examRemaining > 0 }
+        return now < examDeadline
+    }
+
     private func startExam() {
         resetSending(clearExam: false)
         do {
             let generated = try generateMorseExamText(seed: "apple-sending-\(Date().timeIntervalSince1970)", profile: profileForName(.isedParis), minDurationSeconds: 0)
             examText = generated.text
             examRemaining = debugExamDurationSeconds
+            examDeadline = Date().addingTimeInterval(TimeInterval(debugExamDurationSeconds))
             examRunning = true
             statusMessage = String(localized: "Sending check started. Send the displayed passage within 3:00.")
             examTimerTask?.cancel()
             examTimerTask = Task { @MainActor in
-                while examRemaining > 0, !Task.isCancelled {
+                while !Task.isCancelled, examRunning {
                     try? await Task.sleep(for: .seconds(1))
                     guard !Task.isCancelled else { return }
-                    examRemaining -= 1
-                }
-                if !Task.isCancelled, examRunning {
-                    gradeExam(completedWithinTime: false)
+                    refreshExamCountdown()
                 }
             }
         } catch {
@@ -334,6 +375,7 @@ struct MorseSendingPracticeView: View {
         finalizeCharacter()
         guard !examText.isEmpty else { return }
         examRunning = false
+        examDeadline = nil
         examTimerTask?.cancel()
         do {
             let score = try scoreMorseSending(expected: examText, sent: decodedText, completedWithinTime: completedWithinTime)
@@ -356,6 +398,7 @@ struct MorseSendingPracticeView: View {
             examTimerTask?.cancel()
             examText = ""
             examRemaining = debugExamDurationSeconds
+            examDeadline = nil
             examRunning = false
         }
     }
@@ -367,6 +410,7 @@ struct MorseSendingPracticeView: View {
                 appendSample(sample)
             }
         }
+        cancelFiniteToneStop()
         driver.stop()
         straightKeyDownAt = nil
         pressedPaddles = []
@@ -388,7 +432,6 @@ struct MorseSendingPracticeView: View {
 private struct MorseSendingExamCard: View {
     let examText: String
     let examRemaining: Int
-    let examRunning: Bool
     let start: () -> Void
     let grade: () -> Void
 
@@ -414,7 +457,6 @@ private struct MorseSendingExamCard: View {
                 .accessibilityIdentifier("morse-sending-timer")
             HStack {
                 morseTokenButton("Start sending check") { start() }
-                    .disabled(examRunning)
                     .accessibilityIdentifier("morse-sending-start-exam-button")
                 morseTokenButton("End and grade") { grade() }
                     .disabled(examText.isEmpty)
@@ -540,6 +582,8 @@ private struct MorseSendingResultsScreen: View {
     let result: MorseSendingResult
     let startAgain: () -> Void
 
+    @AccessibilityFocusState private var headingFocused: Bool
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -548,6 +592,8 @@ private struct MorseSendingResultsScreen: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityIdentifier("morse-sending-results-heading")
+                    .accessibilityFocused($headingFocused)
+                    .onAppear { focusHeadingAfterLayout() }
                     .fixedSize(horizontal: false, vertical: true)
                 Text(summary) // l10n: localized
                     .font(DesignTokens.FontScale.body.weight(.bold))
@@ -589,10 +635,21 @@ private struct MorseSendingResultsScreen: View {
         guard !result.decodedText.isEmpty else { return String(localized: "No text sent.") }
         return Array(result.decodedText).map(String.init).joined(separator: " ")
     }
+
+    private func focusHeadingAfterLayout() {
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 150_000_000)
+            headingFocused = true
+        }
+    }
 }
 
 private func oppositeElement(_ element: MorseKeyElement) -> MorseKeyElement {
     element == .dot ? .dash : .dot
+}
+
+func morseSendingRemainingExamSeconds(deadline: Date, now: Date) -> Int {
+    max(0, Int(ceil(deadline.timeIntervalSince(now))))
 }
 
 private func sendingTimerLabel(_ seconds: Int) -> String {

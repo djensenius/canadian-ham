@@ -252,6 +252,26 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(summary.label.contains("PASS"), "Debug hook sends the expected text and should pass, got: \(summary.label)")
     }
 
+    func testMorseSendingPracticeGradesImmediatelyAtDeadline() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseSendingExamSeconds", "1"
+        ])
+        defer { app.terminate() }
+
+        openSendingPractice(in: app)
+        let start = app.buttons["morse-sending-start-exam-button"].firstMatch
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        start.tap()
+
+        let heading = app.descendants(matching: .any)["morse-sending-results-heading"].firstMatch
+        XCTAssertTrue(heading.waitForExistence(timeout: 8), "The fixed exam deadline should automatically grade and push results")
+        let summary = app.staticTexts["morse-sending-results-summary"].firstMatch
+        XCTAssertTrue(summary.waitForExistence(timeout: 5))
+        XCTAssertTrue(summary.label.contains("FAIL"), "An unanswered one-second sending check should fail, got: \(summary.label)")
+    }
+
     func testMorseExamGradingPushesResultsScreen() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [
