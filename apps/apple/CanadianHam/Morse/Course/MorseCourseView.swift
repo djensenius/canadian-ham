@@ -3,6 +3,12 @@ import CanadianHamMorseEngine
 import SwiftUI
 
 struct MorseCourseView: View {
+    private enum MorseCourseRoute: Hashable {
+        case unit(String)
+        case session
+        case summary
+    }
+
     let progressStore: ProgressStoreService
     @Binding var settings: MorseTrainerSettings
     let onProgressChanged: () -> Void
@@ -11,6 +17,7 @@ struct MorseCourseView: View {
     @State private var course: MorseCourse?
     @State private var progress: MorseCourseProgressExport?
     @State private var session: MorseCourseSession?
+    @State private var path: [MorseCourseRoute] = []
     @State private var typedAnswer = ""
     @State private var statusMessage = ""
     @State private var statusMessageIsCorrective = false
@@ -21,54 +28,18 @@ struct MorseCourseView: View {
     @State private var playbackGeneration = 0
     @AccessibilityFocusState private var sessionIsFocused: Bool
 
-    private var isCourseAuditOnly: Bool {
-#if DEBUG
-        ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseCourseAuditOnly")
-#else
-        false
-#endif
-    }
-
     var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            if !(isCourseAuditOnly && session != nil) {
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Text("Koch course") // l10n: localized
-                        .font(DesignTokens.FontScale.caption.weight(.semibold))
-                        .foregroundStyle(.primary)
-                    Text("Morse course path") // l10n: localized
-                        .font(DesignTokens.FontScale.title.weight(.bold))
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                        .accessibilityAddTraits(.isHeader)
-                    Text("Learn the ISED Morse character set by ear with 40 short Koch lessons. Each lesson unlocks the next at 90% accuracy.") // l10n: localized
-                        .font(DesignTokens.FontScale.body)
-                        .foregroundStyle(DesignTokens.Colors.ink)
+        NavigationStack(path: $path) {
+            courseHome
+                .navigationDestination(for: MorseCourseRoute.self) { route in
+                    routeDestination(route)
                 }
-            }
-
-            if let errorMessage {
-                MessagePanel(title: "Morse course error", message: errorMessage, kind: .warning)
-            }
-            if let course, let progress {
-                if let session {
-                    sessionView(session, course: course, progress: progress)
-                }
-                if !isCourseAuditOnly || session == nil {
-                    courseStats(course: course, progress: progress)
-                    Button { startReview(course: course, progress: progress) } label: {
-                        AccessibleSecondaryButtonLabel(title: "Review weakest characters")
-                    } // l10n: localized
-                    .buttonStyle(AccessibleSecondaryButtonStyle())
-                    .accessibilityIdentifier("morse-course-review")
-                    coursePath(course: course, progress: progress)
-                }
-            } else if errorMessage == nil {
-                ProgressView("Loading Morse course…") // l10n: localized
-            }
         }
-        .padding(DesignTokens.Spacing.lg)
-        .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+        .navigationTitle("Morse course path")
+#if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+#endif
+        .background(DesignTokens.Colors.paper)
         .task { loadCourse() }
         .onReceive(progressStore.objectWillChange) { _ in loadCourse() }
         .onAppear {
@@ -82,10 +53,71 @@ struct MorseCourseView: View {
         }
     }
 
+    private var courseHome: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                courseCard {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                        Text("Koch course") // l10n: localized
+                            .font(DesignTokens.FontScale.caption.weight(.semibold))
+                            .foregroundStyle(DesignTokens.Colors.inkMuted)
+                        Text("Morse course path") // l10n: localized
+                            .font(DesignTokens.FontScale.title.weight(.bold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .accessibilityAddTraits(.isHeader)
+                        Text("Learn the ISED Morse character set by ear with 40 short Koch lessons. Each lesson unlocks the next at 90% accuracy.") // l10n: localized
+                            .font(DesignTokens.FontScale.body)
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                    }
+                }
+
+                if let errorMessage {
+                    MessagePanel(title: "Morse course error", message: errorMessage, kind: .warning)
+                }
+                if let course, let progress {
+                    courseStats(course: course, progress: progress)
+                    Button { startReview(course: course, progress: progress) } label: {
+                        AccessibleSecondaryButtonLabel(title: "Review weakest characters")
+                    } // l10n: localized
+                    .buttonStyle(AccessibleSecondaryButtonStyle())
+                    .accessibilityIdentifier("morse-course-review")
+                    courseUnits(course: course)
+                } else if errorMessage == nil {
+                    ProgressView("Loading Morse course…") // l10n: localized
+                        .font(DesignTokens.FontScale.body)
+                }
+            }
+            .pagePadding()
+        }
+        .background(DesignTokens.Colors.paper)
+    }
+
+    @ViewBuilder
+    private func routeDestination(_ route: MorseCourseRoute) -> some View {
+        switch route {
+        case .unit(let unitId):
+            unitScreen(unitID: unitId)
+        case .session:
+            sessionScreen()
+        case .summary:
+            summaryScreen()
+        }
+    }
+
+    private func courseCard<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            content()
+        }
+        .padding(DesignTokens.Spacing.lg)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.lg, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+    }
+
     private func courseStats(course: MorseCourse, progress: MorseCourseProgressExport) -> some View {
         let completed = progress.lessonProgress.filter { $0.bestAccuracy >= course.unlockAccuracy }.count
         let streak = morseDailyStreak(activity: progress.dailyActivity, todayIso: Date.now.localDateString)
-        return HStack(spacing: DesignTokens.Spacing.md) {
+        return VStack(spacing: DesignTokens.Spacing.md) {
             statCard(title: "Daily streak", value: String.localizedStringWithFormat(String(localized: "%lld days"), Int64(streak)))
             statCard(title: "Lessons completed", value: String.localizedStringWithFormat(String(localized: "%lld of %lld"), Int64(completed), Int64(course.lessons.count)))
         }
@@ -95,37 +127,79 @@ struct MorseCourseView: View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
             Text(title) // l10n: localized
                 .font(DesignTokens.FontScale.caption.weight(.semibold))
-                .foregroundStyle(.primary)
+                .foregroundStyle(DesignTokens.Colors.inkMuted)
             Text(value) // l10n: localized
                 .font(DesignTokens.FontScale.title.weight(.bold))
-                .foregroundStyle(.primary)
+                .foregroundStyle(DesignTokens.Colors.ink)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(DesignTokens.Spacing.md)
         .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
     }
 
-    private func coursePath(course: MorseCourse, progress: MorseCourseProgressExport) -> some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+    private func courseUnits(course: MorseCourse) -> some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             ForEach(course.units) { unit in
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                    Text("Unit \(unit.unitNumber)") // l10n: localized
-                        .font(.body.weight(.bold))
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                        .lineLimit(nil)
-                        .fixedSize(horizontal: false, vertical: true)
-                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                        ForEach(unit.lessonIds, id: \.self) { lessonId in
-                            if let lesson = course.lessons.first(where: { $0.id == lessonId }) {
-                                lessonButton(lesson: lesson, state: (try? morseLessonState(course: course, progress: progress, lessonId: lesson.id)) ?? .locked)
-                            }
+                NavigationLink(value: MorseCourseRoute.unit(unit.id)) {
+                    HStack(spacing: DesignTokens.Spacing.md) {
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                            Text("Unit \(unit.unitNumber)") // l10n: localized
+                                .font(DesignTokens.FontScale.body.weight(.bold))
+                                .foregroundStyle(DesignTokens.Colors.ink)
+                            Text(unitLessonRange(unit: unit, course: course)) // l10n: localized with numbers
+                                .font(DesignTokens.FontScale.body)
+                                .foregroundStyle(DesignTokens.Colors.inkMuted)
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        Image(systemName: "chevron.right")
+                            .font(DesignTokens.FontScale.caption.weight(.semibold))
+                            .foregroundStyle(DesignTokens.Colors.inkMuted)
                     }
+                    .padding(DesignTokens.Spacing.md)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
                 }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("morse-course-unit-\(unit.unitNumber)")
             }
         }
         .accessibilityElement(children: .contain)
         .accessibilityLabel(Text("Morse course units and lessons")) // l10n: localized
+    }
+
+    private func unitScreen(unitID: String) -> some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                if let course, let progress, let unit = course.units.first(where: { $0.id == unitID }) {
+                    courseCard {
+                        Text("Unit \(unit.unitNumber)") // l10n: localized
+                            .font(DesignTokens.FontScale.title.weight(.bold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .accessibilityAddTraits(.isHeader)
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                            ForEach(unit.lessonIds, id: \.self) { lessonId in
+                                if let lesson = course.lessons.first(where: { $0.id == lessonId }) {
+                                    lessonButton(lesson: lesson, state: (try? morseLessonState(course: course, progress: progress, lessonId: lesson.id)) ?? .locked)
+                                }
+                            }
+                        }
+                    }
+                } else if let errorMessage {
+                    MessagePanel(title: "Morse course error", message: errorMessage, kind: .warning)
+                } else {
+                    ProgressView("Loading Morse course…") // l10n: localized
+                        .font(DesignTokens.FontScale.body)
+                }
+            }
+            .pagePadding()
+        }
+        .background(DesignTokens.Colors.paper)
+        .navigationTitle(unitTitle(unitID: unitID)) // l10n: localized
+#if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+#endif
     }
 
     private func lessonButton(lesson: MorseCourseLesson, state: MorseLessonState) -> some View {
@@ -134,7 +208,7 @@ struct MorseCourseView: View {
             startLesson(lesson, course: course, progress: progress)
         } label: {
             Text(lessonButtonTitle(lesson: lesson, state: state)) // l10n: localized with verbatim characters
-                .font(.body.weight(.semibold))
+                .font(DesignTokens.FontScale.body.weight(.semibold))
                 .multilineTextAlignment(.center)
                 .lineSpacing(DesignTokens.Spacing.xs)
                 .lineLimit(nil)
@@ -156,30 +230,93 @@ struct MorseCourseView: View {
         .accessibilityIdentifier("morse-course-lesson-\(lesson.lessonNumber)")
     }
 
-    private func sessionView(_ session: MorseCourseSession, course: MorseCourse, progress: MorseCourseProgressExport) -> some View {
+    private func sessionScreen() -> some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                if let course, let progress, let session {
+                    courseCard {
+                        sessionContent(session, course: course, progress: progress)
+                    }
+                    .accessibilityFocused($sessionIsFocused)
+                } else if let errorMessage {
+                    MessagePanel(title: "Morse course error", message: errorMessage, kind: .warning)
+                } else {
+                    ProgressView("Loading Morse course…") // l10n: localized
+                        .font(DesignTokens.FontScale.body)
+                }
+            }
+            .pagePadding()
+        }
+        .background(DesignTokens.Colors.paper)
+        .navigationTitle(sessionTitle) // l10n: localized
+#if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+#endif
+    }
+
+    private func sessionContent(_ session: MorseCourseSession, course: MorseCourse, progress: MorseCourseProgressExport) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Text(session.title) // l10n: localized
                 .font(DesignTokens.FontScale.title.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
             Text(String.localizedStringWithFormat(String(localized: "Exercise %lld of %lld"), Int64(session.index + 1), Int64(session.exercises.count))) // l10n: localized
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
             if !session.done {
                 exerciseView(session.currentExercise)
             }
             if !statusMessage.isEmpty && (!session.done || statusMessageIsCorrective) {
                 Text(statusMessage) // l10n: localized
+                    .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
             }
             if session.done {
-                let percent = session.total == 0 ? 100 : Int((Double(session.correct) / Double(session.total) * 100).rounded())
-                Text("Lesson summary") // l10n: localized
-                    .font(DesignTokens.FontScale.body.weight(.bold))
-                Text(String.localizedStringWithFormat(String(localized: "Accuracy: %lld%%"), Int64(percent))) // l10n: localized
-                Text(morseCourseSummaryMessage(for: session, percent: percent, course: course, progressSaved: !progressSaveFailed)) // l10n: localized
+                Button { path.append(.summary) } label: {
+                    AccessibleSecondaryButtonLabel(title: "Lesson summary")
+                } // l10n: localized
+                .buttonStyle(AccessibleSecondaryButtonStyle())
             }
         }
-        .padding(DesignTokens.Spacing.md)
-        .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-        .accessibilityFocused($sessionIsFocused)
+    }
+
+    private func summaryScreen() -> some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                if let course, let session {
+                    courseCard {
+                        summaryContent(session: session, course: course)
+                    }
+                } else if let errorMessage {
+                    MessagePanel(title: "Morse course error", message: errorMessage, kind: .warning)
+                } else {
+                    ProgressView("Loading Morse course…") // l10n: localized
+                        .font(DesignTokens.FontScale.body)
+                }
+            }
+            .pagePadding()
+        }
+        .background(DesignTokens.Colors.paper)
+        .navigationTitle("Lesson summary")
+#if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+#endif
+    }
+
+    private func summaryContent(session: MorseCourseSession, course: MorseCourse) -> some View {
+        let percent = session.total == 0 ? 100 : Int((Double(session.correct) / Double(session.total) * 100).rounded())
+        return VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            Text("Lesson summary") // l10n: localized
+                .font(DesignTokens.FontScale.title.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .accessibilityAddTraits(.isHeader)
+            Text(String.localizedStringWithFormat(String(localized: "Accuracy: %lld%%"), Int64(percent))) // l10n: localized
+                .font(DesignTokens.FontScale.body.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+            Text(morseCourseSummaryMessage(for: session, percent: percent, course: course, progressSaved: !progressSaveFailed)) // l10n: localized
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
+        }
     }
 
     @ViewBuilder
@@ -187,9 +324,12 @@ struct MorseCourseView: View {
         switch exercise {
         case .meet(let character):
             Text(String.localizedStringWithFormat(String(localized: "Meet %@. Listen, then notice its dits and dahs."), character)) // l10n: localized
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
             Text(morseCodeTable[character] ?? "") // l10n: verbatim
                 .font(.largeTitle.weight(.bold).monospaced())
-            HStack {
+                .foregroundStyle(DesignTokens.Colors.ink)
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 Button { play(character) } label: {
                     AccessibleSecondaryButtonLabel(title: "Play character")
                 } // l10n: localized
@@ -200,13 +340,16 @@ struct MorseCourseView: View {
             }
         case .choose(let character, let options):
             Text("Listen and choose the character you heard.") // l10n: localized
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
             Button { play(character) } label: {
                 AccessibleSecondaryButtonLabel(title: "Play")
             } // l10n: localized
             .buttonStyle(AccessibleSecondaryButtonStyle())
-            HStack {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 ForEach(options, id: \.self) { option in
                     Button(option) { answer(correct: option == character, results: [(character, option == character)]) } // l10n: verbatim
+                        .buttonStyle(AccessibleSecondaryButtonStyle())
                         .accessibilityIdentifier("morse-choice-\(option)")
                 }
             }
@@ -220,6 +363,8 @@ struct MorseCourseView: View {
     private func typedCopyForm(prompt: LocalizedStringKey, expected: String) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             Text(prompt) // l10n: localized
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
             Button { play(expected) } label: {
                 AccessibleSecondaryButtonLabel(title: "Play")
             } // l10n: localized
@@ -229,6 +374,7 @@ struct MorseCourseView: View {
                 .textInputAutocapitalization(.characters)
 #endif
                 .autocorrectionDisabled()
+                .font(DesignTokens.FontScale.body)
                 .accessibilityIdentifier("morse-course-copy-field")
             Button("Check") {
                 let normalized = typedAnswer.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
@@ -260,6 +406,7 @@ struct MorseCourseView: View {
             mode: .lesson(lesson),
             exercises: exercises
         )
+        path.append(.session)
         refocusSession()
     }
 
@@ -268,6 +415,7 @@ struct MorseCourseView: View {
         let weakest = selectWeakestMorseCharacters(stats: progress.characterStats, learnedCharacters: learned, limit: 5)
         resetSessionFeedback()
         session = MorseCourseSession(mode: .review, exercises: (weakest.isEmpty ? Array(learned.prefix(5)) : weakest).map { .typeCharacter($0) })
+        path.append(.session)
         refocusSession()
     }
 
@@ -359,6 +507,9 @@ struct MorseCourseView: View {
         if !statusMessage.isEmpty {
             AccessibilityNotification.Announcement(statusMessage).post()
         }
+        if currentSession.done {
+            path.append(.summary)
+        }
     }
 
     /// Returns true only when the progress was written; the summary must not claim success otherwise.
@@ -381,6 +532,23 @@ struct MorseCourseView: View {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
             return false
         }
+    }
+
+    private var sessionTitle: LocalizedStringKey {
+        session?.title ?? "Morse course path"
+    }
+
+    private func unitTitle(unitID: String) -> LocalizedStringKey {
+        guard let unit = course?.units.first(where: { $0.id == unitID }) else { return "Morse course path" }
+        return LocalizedStringKey("Unit \(unit.unitNumber)")
+    }
+
+    private func unitLessonRange(unit: MorseCourseUnit, course: MorseCourse) -> String {
+        let lessonNumbers = unit.lessonIds.compactMap { lessonId in
+            course.lessons.first(where: { $0.id == lessonId })?.lessonNumber
+        }
+        guard let first = lessonNumbers.first, let last = lessonNumbers.last else { return "" }
+        return String.localizedStringWithFormat(String(localized: "Lessons %lld–%lld"), Int64(first), Int64(last))
     }
 
     private func lessonButtonTitle(lesson: MorseCourseLesson, state: MorseLessonState) -> String {

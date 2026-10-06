@@ -59,13 +59,15 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Learn (course)"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Copy practice"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Exam"].firstMatch.waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["Unit 1"].firstMatch.waitForExistence(timeout: 5))
-        tapFirstMorseLesson(in: app)
-        XCTAssertTrue(app.staticTexts["Lesson 1 session"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["morse-course-open-button"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Morse settings"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Hidden until playback finishes."].firstMatch.waitForExistence(timeout: 5))
+        openMorseCourse(in: app)
+        XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["morse-course-unit-1"].firstMatch.waitForExistence(timeout: 5))
+        tapFirstMorseLesson(in: app)
+        XCTAssertTrue(app.staticTexts["Lesson 1 session"].firstMatch.waitForExistence(timeout: 5))
     }
 
     func testCompletesFirstMorseLessonSessionOnIOS() throws {
@@ -73,6 +75,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"])
         defer { app.terminate() }
 
+        openMorseCourse(in: app)
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
         tapFirstMorseLesson(in: app)
         completeVisibleMorseLesson(in: app)
@@ -86,6 +89,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"])
         defer { app.terminate() }
 
+        openMorseCourse(in: app)
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
         tapFirstMorseLesson(in: app)
         completeVisibleMorseLesson(in: app, finalAnswerOverride: "K")
@@ -375,13 +379,15 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(copyCheck.waitForExistence(timeout: 5))
         XCTAssertFalse(copyCheck.isEnabled, "Copy check should stay disabled while copy practice is playing")
 
-        scrollToTop(in: app)
+        openMorseCourse(in: app)
         tapFirstMorseLesson(in: app)
         let coursePlay = app.buttons["Play character"].firstMatch
         XCTAssertTrue(coursePlay.waitForExistence(timeout: 5))
         scrollUntilHittable(coursePlay, in: app, maxSwipes: 8)
         coursePlay.tap()
+        returnFromMorseCourseToMorseHome(in: app)
 
+        XCTAssertTrue(copyCheck.waitForExistence(timeout: 5))
         XCTAssertTrue(copyCheck.isEnabled, "Starting Morse course audio should stop copy-practice playback and re-enable Check copy")
     }
 
@@ -394,12 +400,14 @@ final class CanadianHamPracticeUITests: XCTestCase {
         ])
         defer { app.terminate() }
 
+        openMorseCourse(in: app)
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
         tapFirstMorseLesson(in: app)
         let coursePlay = app.buttons["Play character"].firstMatch
         XCTAssertTrue(coursePlay.waitForExistence(timeout: 5))
         scrollUntilHittable(coursePlay, in: app, maxSwipes: 8)
         coursePlay.tap()
+        returnFromMorseCourseToMorseHome(in: app)
 
         let quickPlay = app.buttons["morse-quick-play-button"].firstMatch
         XCTAssertTrue(quickPlay.waitForExistence(timeout: 5))
@@ -409,7 +417,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let quickStop = app.buttons["morse-quick-stop-button"].firstMatch
         XCTAssertTrue(quickStop.waitForExistence(timeout: 5))
         XCTAssertTrue(quickStop.isEnabled, "Quick listen should be the active Morse playback after it starts")
-        XCTAssertTrue(app.staticTexts["Morse playback stopped."].firstMatch.waitForExistence(timeout: 5), "Starting Quick listen should show that course playback stopped")
+        XCTAssertFalse(app.staticTexts["Morse playback stopped."].firstMatch.waitForExistence(timeout: 2), "Leaving the pushed course screen stops course audio without reporting a coordinator stop on the Morse home")
     }
 
     func testMorseQuickListenAfterFinishedCourseAudioDoesNotReportStop() throws {
@@ -417,6 +425,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"])
         defer { app.terminate() }
 
+        openMorseCourse(in: app)
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
         tapFirstMorseLesson(in: app)
         let coursePlay = app.buttons["Play character"].firstMatch
@@ -425,6 +434,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         coursePlay.tap()
         // One character lasts well under a second; let it finish on its own.
         Thread.sleep(forTimeInterval: 4)
+        returnFromMorseCourseToMorseHome(in: app)
 
         let quickPlay = app.buttons["morse-quick-play-button"].firstMatch
         XCTAssertTrue(quickPlay.waitForExistence(timeout: 5))
@@ -1395,9 +1405,22 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func auditMorseCourseFlow(appearance: AuditAppearance) throws {
-        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1", "-CanadianHamMorseCourseAuditOnly"])
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"])
+        XCTAssertTrue(app.staticTexts["Morse"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["morse-course-open-button"].firstMatch.waitForExistence(timeout: 10))
+        try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home top")
+        scrollMorseHomeLowerContentIntoView(in: app)
+        try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home lower content")
+
+        openMorseCourse(in: app)
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
-        try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course path")
+        try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home top")
+        scrollToMorseCourseLastUnit(in: app)
+        try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home lower units")
+
+        openFirstMorseUnit(in: app)
+        XCTAssertTrue(app.staticTexts["Unit 1"].firstMatch.waitForExistence(timeout: 10))
+        try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course unit")
         tapFirstMorseLesson(in: app)
         XCTAssertTrue(app.staticTexts["Lesson 1 session"].firstMatch.waitForExistence(timeout: 10))
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse lesson session")
@@ -1589,19 +1612,75 @@ final class CanadianHamPracticeUITests: XCTestCase {
         tap("Start mock exam", in: app)
     }
 
+    private func openMorseCourse(in app: XCUIApplication) {
+        if app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 1) {
+            return
+        }
+        let button = app.buttons["morse-course-open-button"].firstMatch
+        XCTAssertTrue(button.waitForExistence(timeout: 5), "Expected Morse course entry on the Morse home")
+        scrollUntilHittable(button, in: app, maxSwipes: 10)
+        XCTAssertTrue(button.isHittable, "Expected Morse course entry to be hittable")
+        button.tap()
+        XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10), "Expected Morse course home")
+    }
+
+    private func openFirstMorseUnit(in app: XCUIApplication) {
+        if app.buttons["morse-course-lesson-1"].firstMatch.waitForExistence(timeout: 1) {
+            return
+        }
+        openMorseCourse(in: app)
+        scrollToTop(in: app)
+        let unit = app.buttons["morse-course-unit-1"].firstMatch
+        for _ in 0..<8 where !unit.exists {
+            app.swipeDown()
+            waitBriefly()
+        }
+        XCTAssertTrue(unit.waitForExistence(timeout: 5), "Expected first Morse course unit")
+        scrollUntilHittable(unit, in: app, maxSwipes: 10)
+        XCTAssertTrue(unit.isHittable, "Expected first Morse course unit to be hittable")
+        unit.tap()
+    }
+
     private func tapFirstMorseLesson(in app: XCUIApplication) {
+        openFirstMorseUnit(in: app)
         let button = app.buttons["morse-course-lesson-1"].firstMatch
         for _ in 0..<6 where !button.exists {
             app.swipeUp()
             waitBriefly()
         }
         XCTAssertTrue(button.waitForExistence(timeout: 5), "Expected first Morse lesson button")
-        if button.isHittable {
-            button.tap()
-        } else {
+        scrollUntilHittable(button, in: app, maxSwipes: 8)
+        XCTAssertTrue(button.isHittable, "Expected first Morse lesson button to be hittable")
+        button.tap()
+    }
+
+    private func scrollMorseHomeLowerContentIntoView(in app: XCUIApplication) {
+        let settings = app.staticTexts["Morse settings"].firstMatch
+        for _ in 0..<12 where !settings.exists || !settings.isHittable {
             app.swipeUp()
-            button.tap()
+            waitBriefly()
         }
+        XCTAssertTrue(settings.waitForExistence(timeout: 5), "Expected lower Morse home content")
+    }
+
+    private func scrollToMorseCourseLastUnit(in app: XCUIApplication) {
+        let lastUnit = app.buttons["morse-course-unit-8"].firstMatch
+        for _ in 0..<12 where !lastUnit.exists || !lastUnit.isHittable {
+            app.swipeUp()
+            waitBriefly()
+        }
+        XCTAssertTrue(lastUnit.waitForExistence(timeout: 5), "Expected final Morse course unit")
+    }
+
+    private func returnFromMorseCourseToMorseHome(in app: XCUIApplication) {
+        for _ in 0..<5 {
+            if app.buttons["morse-course-open-button"].firstMatch.exists && app.staticTexts["Quick listen"].firstMatch.exists {
+                return
+            }
+            tapCompactBack(in: app)
+            waitBriefly()
+        }
+        XCTAssertTrue(app.buttons["morse-course-open-button"].firstMatch.waitForExistence(timeout: 5), "Expected to return to the Morse home")
     }
 
     private func tap(_ label: String, in app: XCUIApplication) {
