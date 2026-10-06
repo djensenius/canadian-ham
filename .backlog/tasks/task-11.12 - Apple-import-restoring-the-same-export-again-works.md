@@ -1,11 +1,11 @@
 ---
 id: TASK-11.12
 title: 'Apple import: restoring the same export again works'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-05 13:33'
-updated_date: '2026-10-06 00:12'
+updated_date: '2026-10-06 01:03'
 labels: []
 dependencies:
   - TASK-11.5
@@ -35,6 +35,8 @@ Why: ProgressModels marks questionId and attempt id as @Attribute(.unique). Sinc
 4. Run targeted import tests, then required web and Apple validation before checking acceptance criteria.
 
 5. Address review round 1: add per-test full-run names/counts to task notes and re-run required checks after code changes.
+
+6. Address PR #142 Copilot findings: add populated post-Morse-write rollback regression and update evidence after final iOS/macOS runs.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -85,6 +87,8 @@ Final full-run evidence on final code commit c41cee8b75773b317a2fef87d0dfed01034
   - macOS unit QuestionBankTests: testAdvancedBundledJSONDecodesExpectedCountsAndEnglishCategoryFallbacks; testAdvancedMockExamUsesFiftyQuestionsAndNoHonours; testBundledJSONDecodesExpectedCounts; testBundledLessonsAndExplanationsLoadThroughContentLibrary; testEngineQuestionDrawKeepsQuestionInsideRequestedCategory; testEngineShufflePreservesAnswerInvariantsForEveryBundledQuestion; testKnownLessonIdsComeFromSubsectionLessonMappingsWithoutQuizzes; testRealBundleKnownLessonIdsCoverBundledContentLibraryLessons.
   - macOS unit ReadinessAndScoringTests: testAdvancedScoringAndReadinessSuppressHonours; testExamScoringBoundaries; testReadinessStates; testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate.
 - tvOS and visionOS full suites were not rerun in this review-fix round because the review fixes did not change Localizable.xcstrings or platform-shared catalogue resources; previous branch validation already covered them.
+
+PR #142 Copilot review requested populated rollback coverage after the committed-delete import path; reopening for fix.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
