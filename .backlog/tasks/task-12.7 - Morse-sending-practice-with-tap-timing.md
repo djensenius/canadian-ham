@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-06 00:22'
+updated_date: '2026-10-06 03:22'
 labels:
   - web
   - apple
@@ -57,6 +57,8 @@ Full Apple run visionOS per-test names (12 passed): CanadianHamVisionTests.Canad
 Follow-up fix: removed MorseSendingPracticeView results-screen accessibilityHidden workaround and the 'Decoded text is shown visually above.' replacement text/catalog key. The decoded text remains visible and accessible with an accessibilityLabel that spells the sent characters. Branch Swift diff grep found no added accessibilityHidden, Color.black, Color.white, audit handler, or performAccessibilityAudit workaround outside existing test audit calls. Targeted iOS rerun after fix passed: MorseTrainerTests, testMorseSendingPracticeUsesDebugHookAndPushesResultsScreen, testAccessibilityAuditMorseSendingResultsLight, testAccessibilityAuditMorseSendingResultsDark. Full iOS rerun after fix passed: 112 tests (51 unit + 61 UI), including the full default sending-results audits and core-screen audits. pnpm check:apple-l10n rerun after fix passed.
 
 Final follow-up validation after commit 18279cb405cf339e396ed175bdcb2ac981a163ed: removed results-screen accessibilityHidden and visual-only replacement text; removed the obsolete catalogue key via JSON round-trip. Confirmed branch Swift diff adds no accessibilityHidden, Color.black, Color.white, or audit-handler workaround. Targeted xbuild passed MorseTrainerTests plus testMorseSendingPracticeUsesDebugHookAndPushesResultsScreen, testAccessibilityAuditMorseSendingResultsLight, and testAccessibilityAuditMorseSendingResultsDark. Full iOS suite passed after the fix (51 unit + 61 UI tests). pnpm check:apple-l10n passed after the fix. macOS suite rerun passed after the fix (53 unit tests).
+
+Review fixes implemented: corrected sending timeout scoring in TS and Swift so running out of time only contributes normal missing-character errors; added timeout and 25/25 '.-' fixtures; repaired web grading to finalize pending characters and grade from refs without state-updater side effects; added web stuck-key release on blur/focus/visibility/lost pointer capture, coordinator registration, interactive-control Space guard, paddle duration+gap repeat timing, score reset/result snapshot behavior, and tests for passing/timeout/paddles/blur. Updated Apple sending with held continuous straight-key side-tone, focusable hardware-key handling via onKeyPress for Space/J/K, scenePhase cancellation, gesture cancellation via @GestureState, paddle release stopping audio, duration-aware paddle finalization, and accessible dot/dash button actions. Added main sending screen/result audits with no handlers; grep confirmed no added accessibilityHidden, Color.black/Color.white, or audit-handler workarounds.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
