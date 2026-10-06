@@ -5,14 +5,18 @@ import { describe, expect, it } from "vitest";
 import {
   MORSE_CODE_TABLE,
   MorseValidationError,
+  applyMorseDecodedCharacter,
   buildMorseLessonExercises,
+  classifyMorseKeyDown,
   dailyStreak,
   diffMorseCopy,
   farnsworthTiming,
   generateMorseExamText,
+  morseCharacterTimingFeedback,
   parseMorseCourseFixture,
   profileForName,
   scoreMorseCopy,
+  scoreMorseSending,
   textToTimedMorse,
   validateMorseText,
   weightedCharacterCount,
@@ -87,6 +91,9 @@ function validateFixture(fixture: any): void {
       break;
     case "morse-course-streak":
       validateCourseStreakFixture(fixture);
+      break;
+    case "morse-sending":
+      validateSendingFixture(fixture);
       break;
     default:
       throw new Error(`unsupported fixture kind: ${fixture.kind}`);
@@ -207,6 +214,34 @@ function validateCourseExercisesFixture(fixture: any): void {
 function validateCourseStreakFixture(fixture: any): void {
   for (const testCase of fixture.cases) {
     expect(dailyStreak(testCase.input.activity, testCase.input.todayIso), testCase.id).toBe(testCase.expectedOutput.streak);
+  }
+}
+
+function validateSendingFixture(fixture: any): void {
+  for (const testCase of fixture.cases) {
+    if (testCase.input.expected !== undefined) {
+      const score = scoreMorseSending(testCase.input.expected, testCase.input.sent, testCase.input.completedWithinTime);
+      expect(score.diff.score.errors, testCase.id).toBe(testCase.expectedOutput.errors);
+      expect(score.passed, testCase.id).toBe(testCase.expectedOutput.passed);
+      expect(score.markPercent, testCase.id).toBe(testCase.expectedOutput.markPercent);
+      continue;
+    }
+
+    const profile = profileFromFixture(testCase.input.profile);
+    const samples = testCase.input.durationsSeconds.map((duration: number) => classifyMorseKeyDown(duration, profile));
+    const feedback = morseCharacterTimingFeedback(samples);
+    expect(feedback.elements, testCase.id).toBe(testCase.expectedOutput.elements);
+    expect(feedback.decoded, testCase.id).toEqual(testCase.expectedOutput.decoded);
+    expect(feedback.timingConsistencyPercent, testCase.id).toBe(testCase.expectedOutput.timingConsistencyPercent);
+    expect(feedback.averageRatioToExpected, testCase.id).toBeCloseTo(testCase.expectedOutput.averageRatioToExpected, 12);
+    if (testCase.expectedOutput.dotDashRatio === null) {
+      expect(feedback.dotDashRatio, testCase.id).toBeNull();
+    } else {
+      expect(feedback.dotDashRatio ?? Number.NaN, testCase.id).toBeCloseTo(testCase.expectedOutput.dotDashRatio, 12);
+    }
+    if (testCase.expectedOutput.appliedText !== undefined) {
+      expect(applyMorseDecodedCharacter(testCase.input.applyToText, feedback.decoded), testCase.id).toBe(testCase.expectedOutput.appliedText);
+    }
   }
 }
 

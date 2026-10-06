@@ -38,6 +38,16 @@ struct MorseAudioSchedule: Equatable, Sendable {
         }
     }
 
+    init(continuousSettings settings: MorseTrainerSettings, sampleRate: Double = 48_000, rampSeconds: Double = 0.005) {
+        let normalized = settings.normalized()
+        self.sampleRate = sampleRate
+        frequency = Double(normalized.toneHz)
+        volume = normalized.volume
+        rampFrames = max(1, AVAudioFramePosition((rampSeconds * sampleRate).rounded()))
+        totalFrames = AVAudioFramePosition.max
+        segments = [MorseAudioSegment(startFrame: 0, endFrame: AVAudioFramePosition.max)]
+    }
+
     func amplitude(at frame: AVAudioFramePosition, stopRampStartFrame: AVAudioFramePosition? = nil) -> Double {
         guard let segment = segments.first(where: { frame >= $0.startFrame && frame < $0.endFrame }) else { return 0 }
         let framesIntoSegment = frame - segment.startFrame
@@ -144,10 +154,23 @@ final class MorseAudioDriver {
     func play(text: String, settings: MorseTrainerSettings) throws -> TimeInterval {
         stopImmediately()
         let sequence = try textToTimedMorse(text, profile: settings.timingProfileValue())
+        try start(scheduleFactory: { sampleRate in
+            MorseAudioSchedule(sequence: sequence, settings: settings, sampleRate: sampleRate)
+        }, settings: settings)
+        return sequence.totalDurationSeconds
+    }
+
+    func startTone(settings: MorseTrainerSettings) throws {
+        stopImmediately()
+        try start(scheduleFactory: { sampleRate in
+            MorseAudioSchedule(continuousSettings: settings, sampleRate: sampleRate)
+        }, settings: settings)
+    }
+
+    private func start(scheduleFactory: (Double) -> MorseAudioSchedule, settings: MorseTrainerSettings) throws {
         let outputFormat = engine.outputNode.outputFormat(forBus: 0)
         let sampleRate = outputFormat.sampleRate > 0 ? outputFormat.sampleRate : 48_000
-        let nextSchedule = MorseAudioSchedule(sequence: sequence, settings: settings, sampleRate: sampleRate)
-        renderState.configure(schedule: nextSchedule)
+        renderState.configure(schedule: scheduleFactory(sampleRate))
 
 #if !os(macOS)
         let session = AVAudioSession.sharedInstance()
@@ -172,7 +195,6 @@ final class MorseAudioDriver {
             cleanupStoppedEngine()
             throw error
         }
-        return sequence.totalDurationSeconds
     }
 
     func stop() {

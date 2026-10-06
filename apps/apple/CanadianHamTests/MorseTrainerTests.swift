@@ -158,6 +158,72 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(diff.operations.map(\.kind), [.match, .wrong, .match, .inserted])
     }
 
+    func testMorseSendingClassifiesTimingAndErrorSignal() throws {
+        let profile = profileForName(.isedParis)
+        let dot = try classifyMorseKeyDown(durationSeconds: 0.1, profile: profile)
+        let dash = try classifyMorseKeyDown(durationSeconds: 0.31, profile: profile)
+        let feedback = morseCharacterTimingFeedback(samples: [dot, dash])
+        let errorSignal = decodeMorseElements(String(repeating: ".", count: morseErrorSignalDots))
+
+        XCTAssertEqual(dot.element, .dot)
+        XCTAssertEqual(dash.element, .dash)
+        XCTAssertEqual(feedback.decoded.character, "A")
+        XCTAssertEqual(feedback.dotDashRatio ?? 0, 3.1, accuracy: 0.000_001)
+        XCTAssertEqual(errorSignal.kind, .errorSignal)
+        XCTAssertEqual(applyMorseDecodedCharacter(text: "AB", decoded: errorSignal), "A")
+    }
+
+    func testMorseSendingScoreCountsTimeoutOnlyThroughMissingCharacters() throws {
+        let pass = try scoreMorseSending(expected: "ABCDEF", sent: "ABCDE", completedWithinTime: false)
+        let fail = try scoreMorseSending(expected: "ABCDEFGHIJK", sent: "ABCDE", completedWithinTime: false)
+
+        XCTAssertTrue(pass.passed)
+        XCTAssertEqual(pass.diff.score.missing, 1)
+        XCTAssertEqual(pass.markPercent, 100)
+        XCTAssertFalse(fail.passed)
+        XCTAssertEqual(fail.diff.score.missing, 6)
+        XCTAssertEqual(fail.markPercent, 99)
+    }
+
+    func testMorseSendingRemainingExamSecondsUsesFixedDeadline() throws {
+        let now = Date(timeIntervalSinceReferenceDate: 10_000)
+        let deadline = now.addingTimeInterval(90)
+
+        XCTAssertEqual(morseSendingRemainingExamSeconds(deadline: deadline, now: now), 90)
+        XCTAssertEqual(morseSendingRemainingExamSeconds(deadline: deadline, now: now.addingTimeInterval(89.1)), 1)
+        XCTAssertEqual(morseSendingRemainingExamSeconds(deadline: deadline, now: deadline), 0)
+        XCTAssertEqual(morseSendingRemainingExamSeconds(deadline: deadline, now: deadline.addingTimeInterval(12)), 0)
+    }
+
+    func testMorsePressKeyButtonAccessibilityActionsTriggerConfiguredKeying() async throws {
+        let actions = await MainActor.run {
+            var actions: [String] = []
+            let straightKey = MorsePressKeyButton(
+                title: "Hold key",
+                accessibilityLabel: "Straight key",
+                accessibilityIdentifier: "test-straight-key",
+                begin: { actions.append("begin") },
+                end: { actions.append("end") },
+                sendDotAction: { actions.append("dot") },
+                sendDashAction: { actions.append("dash") }
+            )
+            let paddle = MorsePressKeyButton(
+                title: "Dot",
+                accessibilityLabel: "Dot paddle",
+                accessibilityIdentifier: "test-dot-paddle",
+                begin: { actions.append("paddle-begin") },
+                end: { actions.append("paddle-end") },
+                defaultAction: { actions.append("paddle-default") }
+            )
+            straightKey.sendDotAction?()
+            straightKey.sendDashAction?()
+            paddle.defaultAction?()
+            return actions
+        }
+
+        XCTAssertEqual(actions, ["dot", "dash", "paddle-default"])
+    }
+
     func testCompletedMorseCourseSessionIgnoresResubmittedAnswer() throws {
         var session = MorseCourseSession(mode: .review, exercises: [.typeCharacter("K")], index: 0, correct: 1, total: 1, characterResults: [(character: "K", correct: true)], done: true)
 

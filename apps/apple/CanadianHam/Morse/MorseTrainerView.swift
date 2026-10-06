@@ -81,6 +81,10 @@ struct MorseTrainerView: View {
 
                     MorseCopyExamView(settings: normalizedSettings, playbackCoordinator: playbackCoordinator)
 
+                    MorseHomeNavigationLink(title: "Sending practice", message: "Practise tap timing with a straight key or iambic paddles.") {
+                        MorseSendingPracticeView(settings: normalizedSettings, playbackCoordinator: playbackCoordinator)
+                    }
+
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                         Text("Quick listen") // l10n: localized
                             .font(DesignTokens.FontScale.title.weight(.bold))
@@ -202,6 +206,29 @@ struct MorseTrainerView: View {
 }
 
 private struct MorseHomePlaceholder: View {
+    let title: LocalizedStringKey
+    let message: LocalizedStringKey
+
+    var body: some View {
+        MorseHomeCardContent(title: title, message: message)
+    }
+}
+
+private struct MorseHomeNavigationLink<Destination: View>: View {
+    let title: LocalizedStringKey
+    let message: LocalizedStringKey
+    @ViewBuilder let destination: () -> Destination
+
+    var body: some View {
+        NavigationLink(destination: destination) {
+            MorseHomeCardContent(title: title, message: message)
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("morse-sending-open-button")
+    }
+}
+
+private struct MorseHomeCardContent: View {
     let title: LocalizedStringKey
     let message: LocalizedStringKey
 

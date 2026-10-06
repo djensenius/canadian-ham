@@ -11,6 +11,11 @@ export interface MorsePlaybackHandle {
   stop: () => void;
 }
 
+export interface MorseToneHandle {
+  readonly startedAtSeconds: number;
+  stop: () => void;
+}
+
 export interface WebMorseAudioContextLike {
   readonly currentTime: number;
   readonly destination: AudioNode;
@@ -55,6 +60,23 @@ export class WebMorsePlayer {
     return handle;
   }
 
+  async startTone(preferences: WebMorsePreferences): Promise<MorseToneHandle> {
+    const generation = ++this.#generation;
+    const normalizedPreferences = normalizeMorsePreferences(preferences);
+    const context = this.#context ?? this.createContext();
+    this.#context = context;
+    if (context.state === "suspended") {
+      await context.resume?.();
+    }
+    if (generation !== this.#generation) {
+      throw new Error("Morse playback was cancelled.");
+    }
+    this.#active?.stop();
+    const handle = scheduleContinuousMorseTone(context, normalizedPreferences);
+    this.#active = { durationSeconds: Number.POSITIVE_INFINITY, startedAtSeconds: handle.startedAtSeconds, stop: handle.stop };
+    return handle;
+  }
+
   stop(): void {
     this.#generation += 1;
     this.#active?.stop();
@@ -71,6 +93,41 @@ export class WebMorsePlayer {
     }
     await context?.close?.();
   }
+}
+
+export function scheduleContinuousMorseTone(context: WebMorseAudioContextLike, preferences: WebMorsePreferences): MorseToneHandle {
+  const normalizedPreferences = normalizeMorsePreferences(preferences);
+  const oscillator = context.createOscillator();
+  const outputGain = context.createGain();
+  const startedAtSeconds = context.currentTime;
+  oscillator.type = "sine";
+  oscillator.frequency.setValueAtTime(normalizedPreferences.toneHz, context.currentTime);
+  outputGain.gain.setValueAtTime(0, context.currentTime);
+  outputGain.gain.linearRampToValueAtTime(normalizedPreferences.volume, context.currentTime + MORSE_AUDIO_RAMP_SECONDS);
+  oscillator.connect(outputGain);
+  outputGain.connect(context.destination);
+  oscillator.start(startedAtSeconds);
+  let stopped = false;
+  return {
+    startedAtSeconds,
+    stop: () => {
+      if (stopped) return;
+      stopped = true;
+      const stopStartedAt = context.currentTime;
+      const stopAt = stopStartedAt + MORSE_AUDIO_RAMP_SECONDS;
+      outputGain.gain.setValueAtTime(normalizedPreferences.volume, stopStartedAt);
+      outputGain.gain.linearRampToValueAtTime(0, stopAt);
+      try {
+        oscillator.stop(stopAt);
+      } catch {
+        // Some Web Audio implementations throw if stop() has already been scheduled or called.
+      }
+      globalThis.setTimeout(() => {
+        oscillator.disconnect();
+        outputGain.disconnect();
+      }, Math.ceil(MORSE_AUDIO_RAMP_SECONDS * 1000) + 20);
+    },
+  };
 }
 
 export function scheduleMorseSequence(context: WebMorseAudioContextLike, sequence: TimedMorseSequence, preferences: WebMorsePreferences): MorsePlaybackHandle {
