@@ -3,12 +3,6 @@ import CanadianHamMorseEngine
 import SwiftUI
 
 struct MorseCourseView: View {
-    private enum MorseCourseRoute: Hashable {
-        case unit(String)
-        case session
-        case summary
-    }
-
     let progressStore: ProgressStoreService
     @Binding var settings: MorseTrainerSettings
     let onProgressChanged: () -> Void
@@ -17,7 +11,8 @@ struct MorseCourseView: View {
     @State private var course: MorseCourse?
     @State private var progress: MorseCourseProgressExport?
     @State private var session: MorseCourseSession?
-    @State private var path: [MorseCourseRoute] = []
+    @State private var showingSession = false
+    @State private var showingSummary = false
     @State private var typedAnswer = ""
     @State private var statusMessage = ""
     @State private var statusMessageIsCorrective = false
@@ -29,28 +24,17 @@ struct MorseCourseView: View {
     @AccessibilityFocusState private var sessionIsFocused: Bool
 
     var body: some View {
-        NavigationStack(path: $path) {
-            courseHome
-                .navigationDestination(for: MorseCourseRoute.self) { route in
-                    routeDestination(route)
-                }
-        }
-        .navigationTitle("Morse course path")
+        courseHome
+            .navigationTitle("Morse course path")
 #if os(iOS)
-        .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.inline)
 #endif
-        .background(DesignTokens.Colors.paper)
-        .task { loadCourse() }
-        .onReceive(progressStore.objectWillChange) { _ in loadCourse() }
-        .onAppear {
-            playbackCoordinator.register("course") {
-                stopCoursePlayback(message: String(localized: "Morse playback stopped."))
+            .background(DesignTokens.Colors.paper)
+            .navigationDestination(isPresented: $showingSession) {
+                sessionScreen()
             }
-        }
-        .onDisappear {
-            playbackCoordinator.unregister("course")
-            stopCoursePlayback()
-        }
+            .task { loadCourse() }
+            .onReceive(progressStore.objectWillChange) { _ in loadCourse() }
     }
 
     private var courseHome: some View {
@@ -92,18 +76,6 @@ struct MorseCourseView: View {
         .background(DesignTokens.Colors.paper)
     }
 
-    @ViewBuilder
-    private func routeDestination(_ route: MorseCourseRoute) -> some View {
-        switch route {
-        case .unit(let unitId):
-            unitScreen(unitID: unitId)
-        case .session:
-            sessionScreen()
-        case .summary:
-            summaryScreen()
-        }
-    }
-
     private func courseCard<Content: View>(@ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             content()
@@ -141,7 +113,9 @@ struct MorseCourseView: View {
     private func courseUnits(course: MorseCourse) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
             ForEach(course.units) { unit in
-                NavigationLink(value: MorseCourseRoute.unit(unit.id)) {
+                NavigationLink {
+                    unitScreen(unitID: unit.id)
+                } label: {
                     HStack(spacing: DesignTokens.Spacing.md) {
                         VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
                             Text("Unit \(unit.unitNumber)") // l10n: localized
@@ -196,6 +170,9 @@ struct MorseCourseView: View {
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
+        .navigationDestination(isPresented: $showingSession) {
+            sessionScreen()
+        }
         .navigationTitle(unitTitle(unitID: unitID)) // l10n: localized
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
@@ -248,10 +225,22 @@ struct MorseCourseView: View {
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
+        .navigationDestination(isPresented: $showingSummary) {
+            summaryScreen()
+        }
         .navigationTitle(sessionTitle) // l10n: localized
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
 #endif
+        .onAppear {
+            playbackCoordinator.register("course") {
+                stopCoursePlayback(message: String(localized: "Morse playback stopped."))
+            }
+        }
+        .onDisappear {
+            playbackCoordinator.unregister("course")
+            stopCoursePlayback()
+        }
     }
 
     private func sessionContent(_ session: MorseCourseSession, course: MorseCourse, progress: MorseCourseProgressExport) -> some View {
@@ -272,7 +261,7 @@ struct MorseCourseView: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
             }
             if session.done {
-                Button { path.append(.summary) } label: {
+                Button { showingSummary = true } label: {
                     AccessibleSecondaryButtonLabel(title: "Lesson summary")
                 } // l10n: localized
                 .buttonStyle(AccessibleSecondaryButtonStyle())
@@ -406,7 +395,8 @@ struct MorseCourseView: View {
             mode: .lesson(lesson),
             exercises: exercises
         )
-        path.append(.session)
+        showingSummary = false
+        showingSession = true
         refocusSession()
     }
 
@@ -415,7 +405,8 @@ struct MorseCourseView: View {
         let weakest = selectWeakestMorseCharacters(stats: progress.characterStats, learnedCharacters: learned, limit: 5)
         resetSessionFeedback()
         session = MorseCourseSession(mode: .review, exercises: (weakest.isEmpty ? Array(learned.prefix(5)) : weakest).map { .typeCharacter($0) })
-        path.append(.session)
+        showingSummary = false
+        showingSession = true
         refocusSession()
     }
 
@@ -508,7 +499,7 @@ struct MorseCourseView: View {
             AccessibilityNotification.Announcement(statusMessage).post()
         }
         if currentSession.done {
-            path.append(.summary)
+            showingSummary = true
         }
     }
 
