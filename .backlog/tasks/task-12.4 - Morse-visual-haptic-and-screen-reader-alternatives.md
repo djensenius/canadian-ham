@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-06 20:25'
+updated_date: '2026-10-06 20:26'
 labels:
   - web
   - apple
@@ -53,6 +53,8 @@ Implemented Morse output modes and accessibility alternatives. Evidence map:
 - Validation passed on final commit e5a99d24c50986721907b2231e86aeb3bf5fe152: pnpm typecheck; TZ=UTC pnpm test; pnpm build:web; pnpm --filter @canadian-ham/web audit:urls; pnpm check:schemas; pnpm import:check; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/morse-swift; pnpm check:apple-l10n; node scripts/check-apple-text-sources.ts; pnpm check:apple-network. Apple full runs: iOS CanadianHam (60 unit tests + 67 UI tests) /tmp/t124-ios.log; macOS CanadianHam with -skip-testing:CanadianHamUITests (60 unit tests) /tmp/t124-macos.log; tvOS CanadianHamTV (12 UI tests plus unit target) /tmp/t124-tvos.log; visionOS CanadianHamVision (9 UI tests plus unit target) /tmp/t124-vision.log. All passed.
 
 Final branch tip after Backlog finalization is 52321b6e4e97f129dcbbc79f98718bb7b5d3eedf; code validation was run after the final code commit e5a99d24c50986721907b2231e86aeb3bf5fe152, and subsequent commits only update Backlog task metadata.
+
+Correction to Apple full-run counts from final xbuild logs: iOS CanadianHam ran 58 unit tests and 67 UI tests; macOS CanadianHam ran 60 unit tests with UI skipped; tvOS CanadianHamTV ran 3 unit tests and 12 UI tests; visionOS CanadianHamVision ran 3 unit tests and 9 UI tests. All had 0 failures.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
