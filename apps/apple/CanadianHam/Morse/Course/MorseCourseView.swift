@@ -548,7 +548,8 @@ struct MorseCourseView: View {
 
     private func unitTitle(unitID: String) -> LocalizedStringKey {
         guard let unit = course?.units.first(where: { $0.id == unitID }) else { return "Morse course path" }
-        return LocalizedStringKey("Unit \(unit.unitNumber)")
+        // An interpolated literal keeps the "Unit %lld" catalogue key, so French shows "Unité 1".
+        return "Unit \(unit.unitNumber)"
     }
 
     private func unitLessonRange(unit: MorseCourseUnit, course: MorseCourse) -> String {
