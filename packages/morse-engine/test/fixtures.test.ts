@@ -3,16 +3,25 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
+  MORSE_BEACON_AREA_CSS_PIXELS,
+  MORSE_BEACON_DARKER_RELATIVE_LUMINANCE,
+  MORSE_BEACON_LIGHTER_RELATIVE_LUMINANCE,
   MORSE_CODE_TABLE,
+  MORSE_FLASH_MAX_AREA_CSS_PIXELS,
   MorseValidationError,
   applyMorseDecodedCharacter,
   buildMorseLessonExercises,
   classifyMorseKeyDown,
   dailyStreak,
   diffMorseCopy,
+  evaluateMorseFlashSafety,
   farnsworthTiming,
   generateMorseExamText,
+  maxMorseFlashesPerSecond,
   morseCharacterTimingFeedback,
+  morseHapticEvents,
+  morseSignalEvents,
+  morseTapeTokens,
   parseMorseCourseFixture,
   profileForName,
   scoreMorseCopy,
@@ -33,6 +42,55 @@ const course = parseMorseCourseFixture(JSON.parse(await readFile(join(fixturesRo
 describe("public tables", () => {
   it("freezes the Morse code table so consumers can't change mappings at runtime", () => {
     expect(Object.isFrozen(MORSE_CODE_TABLE)).toBe(true);
+  });
+});
+
+describe("visual, tape and haptic output mapping", () => {
+  it("maps timed Morse symbols to beacon transitions, tape tokens and haptic durations", () => {
+    const sequence = textToTimedMorse("ET", profileForName("isedParis"));
+    const signalEvents = morseSignalEvents(sequence);
+    expect(signalEvents.map((event) => ({ kind: event.kind, character: event.character, symbolKind: event.symbolKind }))).toEqual([
+      { kind: "on", character: "E", symbolKind: "dot" },
+      { kind: "off", character: "E", symbolKind: "dot" },
+      { kind: "on", character: "T", symbolKind: "dash" },
+      { kind: "off", character: "T", symbolKind: "dash" },
+    ]);
+    expect(signalEvents[1]!.atSeconds).toBeCloseTo(0.1, 12);
+    expect(signalEvents[2]!.atSeconds).toBeCloseTo(1.505263157894737, 12);
+    expect(morseTapeTokens(sequence).map((token) => token.token)).toEqual([".", "-"]);
+    expect(morseTapeTokens(sequence)[1]!.revealAtSeconds).toBeCloseTo(1.505263157894737, 12);
+    const hapticEvents = morseHapticEvents(sequence);
+    expect(hapticEvents.map((event) => event.symbolKind)).toEqual(["dot", "dash"]);
+    expect(hapticEvents[1]!.startSeconds).toBeCloseTo(1.505263157894737, 12);
+    expect(hapticEvents[1]!.durationSeconds).toBeCloseTo(0.3, 12);
+  });
+
+  it("keeps the configured visual beacon below WCAG 2.2 SC 2.3.1 thresholds at Morse cadence", () => {
+    const sequence = textToTimedMorse("5", profileForName("isedParis"));
+    const flashesPerSecond = maxMorseFlashesPerSecond(morseSignalEvents(sequence));
+    expect(flashesPerSecond).toBe(5);
+    expect(MORSE_BEACON_AREA_CSS_PIXELS).toBeLessThan(MORSE_FLASH_MAX_AREA_CSS_PIXELS);
+    expect(evaluateMorseFlashSafety({
+      flashAreaCssPixels: MORSE_BEACON_AREA_CSS_PIXELS,
+      flashesPerSecond,
+      darkerRelativeLuminance: MORSE_BEACON_DARKER_RELATIVE_LUMINANCE,
+      lighterRelativeLuminance: MORSE_BEACON_LIGHTER_RELATIVE_LUMINANCE,
+      usesSaturatedRed: false,
+    })).toMatchObject({ safe: true, reason: "below-general-threshold", luminanceDelta: 0.07 });
+    expect(evaluateMorseFlashSafety({
+      flashAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS + 1,
+      flashesPerSecond: 2,
+      darkerRelativeLuminance: 0.2,
+      lighterRelativeLuminance: 0.8,
+      usesSaturatedRed: false,
+    })).toMatchObject({ safe: false, reason: "area-too-large" });
+    expect(evaluateMorseFlashSafety({
+      flashAreaCssPixels: MORSE_BEACON_AREA_CSS_PIXELS,
+      flashesPerSecond: 5,
+      darkerRelativeLuminance: 0.2,
+      lighterRelativeLuminance: 0.8,
+      usesSaturatedRed: true,
+    })).toMatchObject({ safe: false, reason: "saturated-red" });
   });
 });
 

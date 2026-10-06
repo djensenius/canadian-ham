@@ -596,7 +596,8 @@ function isMorsePreferences(value: unknown): value is WebMorsePreferences {
     && (value.characterWpm === undefined || typeof value.characterWpm === "number")
     && (value.effectiveWpm === undefined || typeof value.effectiveWpm === "number")
     && (value.timingProfile === undefined || value.timingProfile === "isedParis" || value.timingProfile === "ric1Literal" || value.timingProfile === "general")
-    && (value.volume === undefined || typeof value.volume === "number");
+    && (value.volume === undefined || typeof value.volume === "number")
+    && (value.outputMode === undefined || value.outputMode === "audio" || value.outputMode === "visualBeacon" || value.outputMode === "visualTape");
 }
 
 function validateQuestionProgressRecord(value: unknown, index: number, bank: BankData): string[] {

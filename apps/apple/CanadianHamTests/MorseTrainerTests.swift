@@ -16,6 +16,10 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(settings.characterWpm, 25)
         XCTAssertEqual(settings.effectiveWpm, 25)
         XCTAssertEqual(settings.volume, 1)
+        XCTAssertEqual(settings.outputMode, .audio)
+
+        let visualSettings = MorseTrainerSettings(toneHz: 650, characterWpm: 15, effectiveWpm: 5, timingProfile: .general, volume: 0.6, outputMode: .visualBeacon).normalized()
+        XCTAssertEqual(visualSettings.outputMode, .visualBeacon)
 
         let preset = settings.applyingISEDExamPreset()
         XCTAssertEqual(preset.characterWpm, 12)
@@ -131,6 +135,7 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(decoded.effectiveWpm, 7)
         XCTAssertEqual(decoded.timingProfile, .general)
         XCTAssertEqual(decoded.volume, 0.45)
+        XCTAssertEqual(decoded.outputMode, .audio)
     }
 
     func testMorseExamGeneratorMeetsReceivingExamConstraints() throws {

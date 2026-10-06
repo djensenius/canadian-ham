@@ -139,7 +139,11 @@ private struct MorseCopyPracticeView: View {
     let settings: MorseTrainerSettings
     let playbackCoordinator: MorsePlaybackCoordinator
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var driver = MorseAudioDriver()
+    @State private var hapticDriver = MorseHapticDriver()
+    @State private var visualPlaybackState = MorseVisualPlaybackState()
+    @State private var visualPlaybackTasks: [Task<Void, Never>] = []
     @State private var selectedLength: MorseCopyPassageLength = .short
     @State private var passageIndex = 0
     @State private var activePassage: MorseCopyPracticePassage?
@@ -205,6 +209,7 @@ private struct MorseCopyPracticeView: View {
                     .font(DesignTokens.FontScale.caption.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.warningText)
             }
+            MorseVisualPlaybackView(state: visualPlaybackState)
             if !statusMessage.isEmpty {
                 Text(statusMessage) // l10n: localized
                     .font(DesignTokens.FontScale.body)
@@ -237,6 +242,8 @@ private struct MorseCopyPracticeView: View {
         finishTask?.cancel()
         finishTask = nil
         driver.stop()
+        hapticDriver.stop()
+        cancelMorseVisualPlayback(&visualPlaybackTasks, state: &visualPlaybackState)
         activePassage = nil
         activeDuration = 0
         userCopy = ""
@@ -256,6 +263,8 @@ private struct MorseCopyPracticeView: View {
             finishTask?.cancel()
             finishTask = nil
             driver.stop()
+            hapticDriver.stop()
+            cancelMorseVisualPlayback(&visualPlaybackTasks, state: &visualPlaybackState)
             activePassage = nil
             activeDuration = 0
             userCopy = ""
@@ -269,7 +278,7 @@ private struct MorseCopyPracticeView: View {
                 throw NSError(domain: "CanadianHamUITests", code: 1)
             }
 #endif
-            let duration = try driver.play(text: passage.text, settings: settings.normalized())
+            let duration = try startConfiguredOutput(text: passage.text)
             passageIndex += 1
             activePassage = passage
             activeDuration = duration
@@ -280,6 +289,10 @@ private struct MorseCopyPracticeView: View {
                 try? await Task.sleep(for: .milliseconds(Int((waitSeconds * 1000).rounded(.up)) + 60))
                 guard !Task.isCancelled else { return }
                 driver.stop()
+                hapticDriver.stop()
+                visualPlaybackTasks.forEach { $0.cancel() }
+                visualPlaybackTasks = []
+                visualPlaybackState.beaconActive = false
                 isPlaying = false
                 statusMessage = String(localized: "Playback finished. Check your copy when ready.")
                 AccessibilityNotification.Announcement(statusMessage).post()
@@ -288,6 +301,8 @@ private struct MorseCopyPracticeView: View {
             finishTask?.cancel()
             finishTask = nil
             driver.stop()
+            hapticDriver.stop()
+            cancelMorseVisualPlayback(&visualPlaybackTasks, state: &visualPlaybackState)
             activePassage = nil
             activeDuration = 0
             userCopy = ""
@@ -303,10 +318,31 @@ private struct MorseCopyPracticeView: View {
         finishTask?.cancel()
         finishTask = nil
         driver.stop()
+        hapticDriver.stop()
+        cancelMorseVisualPlayback(&visualPlaybackTasks, state: &visualPlaybackState)
         isPlaying = false
         statusMessage = message
         if !message.isEmpty {
             AccessibilityNotification.Announcement(message).post()
+        }
+    }
+
+    private func startConfiguredOutput(text: String) throws -> TimeInterval {
+        let normalized = settings.normalized()
+        driver.stop()
+        hapticDriver.stop()
+        cancelMorseVisualPlayback(&visualPlaybackTasks, state: &visualPlaybackState)
+        let sequence = try textToTimedMorse(text, profile: normalized.timingProfileValue())
+        switch normalized.outputMode {
+        case .audio:
+            return try driver.play(text: text, settings: normalized)
+        case .haptics:
+            return try hapticDriver.play(sequence: sequence)
+        case .visualBeacon, .visualTape:
+            visualPlaybackTasks = scheduleMorseVisualPlayback(sequence: sequence, requestedMode: normalized.outputMode, reduceFlashing: shouldReduceMorseFlashing(environmentReduceMotion: reduceMotion)) { nextState in
+                visualPlaybackState = nextState
+            }
+            return sequence.totalDurationSeconds
         }
     }
 
@@ -334,7 +370,11 @@ private struct MorseReceivingExamView: View {
     let settings: MorseTrainerSettings
     let playbackCoordinator: MorsePlaybackCoordinator
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var driver = MorseAudioDriver()
+    @State private var hapticDriver = MorseHapticDriver()
+    @State private var visualPlaybackState = MorseVisualPlaybackState()
+    @State private var visualPlaybackTasks: [Task<Void, Never>] = []
     @State private var selectedProfile: MorseTrainerSettings.TimingProfile = .isedParis
     @State private var examText: MorseExamText?
     @State private var userCopy = ""
@@ -408,6 +448,7 @@ private struct MorseReceivingExamView: View {
                     .font(DesignTokens.FontScale.caption.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.warningText)
             }
+            MorseVisualPlaybackView(state: visualPlaybackState)
             if !statusMessage.isEmpty {
                 Text(statusMessage) // l10n: localized
                     .font(DesignTokens.FontScale.body)
@@ -474,7 +515,7 @@ private struct MorseReceivingExamView: View {
                 throw NSError(domain: "CanadianHamUITests", code: 1)
             }
 #endif
-            let duration = try driver.play(text: generated.text, settings: playbackSettings)
+            let duration = try startConfiguredOutput(text: generated.text, settings: playbackSettings)
             examText = generated
             statusMessage = String(localized: "Exam playback started. Audio cannot be paused or replayed.")
             let waitSeconds = debugExamPlaybackOverride ?? duration
@@ -482,6 +523,10 @@ private struct MorseReceivingExamView: View {
                 try? await Task.sleep(for: .milliseconds(Int((waitSeconds * 1000).rounded(.up)) + 60))
                 guard !Task.isCancelled else { return }
                 driver.stop()
+                hapticDriver.stop()
+                visualPlaybackTasks.forEach { $0.cancel() }
+                visualPlaybackTasks = []
+                visualPlaybackState.beaconActive = false
                 startReview()
             }
         } catch {
@@ -490,6 +535,8 @@ private struct MorseReceivingExamView: View {
             reviewTask?.cancel()
             reviewTask = nil
             driver.stop()
+            hapticDriver.stop()
+            cancelMorseVisualPlayback(&visualPlaybackTasks, state: &visualPlaybackState)
             examText = nil
             userCopy = ""
             diff = nil
@@ -497,6 +544,24 @@ private struct MorseReceivingExamView: View {
             stage = .idle
             statusMessage = ""
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: "), detail: error)
+        }
+    }
+
+    private func startConfiguredOutput(text: String, settings playbackSettings: MorseTrainerSettings) throws -> TimeInterval {
+        driver.stop()
+        hapticDriver.stop()
+        cancelMorseVisualPlayback(&visualPlaybackTasks, state: &visualPlaybackState)
+        let sequence = try textToTimedMorse(text, profile: playbackSettings.timingProfileValue())
+        switch playbackSettings.normalized().outputMode {
+        case .audio:
+            return try driver.play(text: text, settings: playbackSettings)
+        case .haptics:
+            return try hapticDriver.play(sequence: sequence)
+        case .visualBeacon, .visualTape:
+            visualPlaybackTasks = scheduleMorseVisualPlayback(sequence: sequence, requestedMode: playbackSettings.normalized().outputMode, reduceFlashing: shouldReduceMorseFlashing(environmentReduceMotion: reduceMotion)) { nextState in
+                visualPlaybackState = nextState
+            }
+            return sequence.totalDurationSeconds
         }
     }
 
@@ -537,6 +602,8 @@ private struct MorseReceivingExamView: View {
         reviewTask?.cancel()
         reviewTask = nil
         driver.stop()
+        hapticDriver.stop()
+        cancelMorseVisualPlayback(&visualPlaybackTasks, state: &visualPlaybackState)
         examText = nil
         userCopy = ""
         diff = nil
@@ -553,6 +620,10 @@ private struct MorseReceivingExamView: View {
         reviewTask?.cancel()
         reviewTask = nil
         driver.stop()
+        hapticDriver.stop()
+        visualPlaybackTasks.forEach { $0.cancel() }
+        visualPlaybackTasks = []
+        visualPlaybackState.beaconActive = false
         if stage == .playing || stage == .review {
             stage = examText == nil ? .idle : .graded
         }

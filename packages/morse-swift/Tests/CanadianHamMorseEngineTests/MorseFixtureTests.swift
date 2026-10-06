@@ -143,6 +143,54 @@ final class MorseFixtureTests: XCTestCase {
         }
     }
 
+    func testVisualTapeAndHapticOutputMapping() throws {
+        let sequence = try textToTimedMorse("ET", profile: profileForName(.isedParis))
+        let signalEvents = morseSignalEvents(sequence: sequence)
+        XCTAssertEqual(signalEvents.map(\.kind), [.on, .off, .on, .off])
+        XCTAssertEqual(signalEvents.map(\.character), ["E", "E", "T", "T"])
+        XCTAssertEqual(signalEvents.map(\.symbolKind), [.dot, .dot, .dash, .dash])
+        XCTAssertEqual(signalEvents[1].atSeconds, 0.1, accuracy: 1e-12)
+        XCTAssertEqual(signalEvents[2].atSeconds, 1.505263157894737, accuracy: 1e-12)
+        let tapeTokens = morseTapeTokens(sequence: sequence)
+        XCTAssertEqual(tapeTokens.map(\.token), [".", "-"])
+        XCTAssertEqual(tapeTokens[1].revealAtSeconds, 1.505263157894737, accuracy: 1e-12)
+        let hapticEvents = morseHapticEvents(sequence: sequence)
+        XCTAssertEqual(hapticEvents.map(\.symbolKind), [.dot, .dash])
+        XCTAssertEqual(hapticEvents[1].startSeconds, 1.505263157894737, accuracy: 1e-12)
+        XCTAssertEqual(hapticEvents[1].durationSeconds, 0.3, accuracy: 1e-12)
+    }
+
+    func testMorseBeaconFlashSafetyMath() throws {
+        let sequence = try textToTimedMorse("5", profile: profileForName(.isedParis))
+        let flashesPerSecond = maxMorseFlashesPerSecond(events: morseSignalEvents(sequence: sequence))
+        XCTAssertEqual(flashesPerSecond, 5)
+        XCTAssertLessThan(morseBeaconAreaCssPixels, morseFlashMaxAreaCssPixels)
+        let safe = evaluateMorseFlashSafety(MorseFlashSafetyInput(
+            flashAreaCssPixels: morseBeaconAreaCssPixels,
+            flashesPerSecond: flashesPerSecond,
+            darkerRelativeLuminance: morseBeaconDarkerRelativeLuminance,
+            lighterRelativeLuminance: morseBeaconLighterRelativeLuminance,
+            usesSaturatedRed: false
+        ))
+        XCTAssertTrue(safe.safe)
+        XCTAssertEqual(safe.reason, .belowGeneralThreshold)
+        XCTAssertEqual(safe.luminanceDelta, 0.07, accuracy: 1e-12)
+        XCTAssertFalse(evaluateMorseFlashSafety(MorseFlashSafetyInput(
+            flashAreaCssPixels: morseFlashMaxAreaCssPixels + 1,
+            flashesPerSecond: 2,
+            darkerRelativeLuminance: 0.2,
+            lighterRelativeLuminance: 0.8,
+            usesSaturatedRed: false
+        )).safe)
+        XCTAssertEqual(evaluateMorseFlashSafety(MorseFlashSafetyInput(
+            flashAreaCssPixels: morseBeaconAreaCssPixels,
+            flashesPerSecond: 5,
+            darkerRelativeLuminance: 0.2,
+            lighterRelativeLuminance: 0.8,
+            usesSaturatedRed: true
+        )).reason, .saturatedRed)
+    }
+
     func testGenerateMorseExamTextReportsUnsatisfiedConstraintsDistinctly() throws {
         do {
             _ = try generateMorseExamText(minWeightedCharacters: Int.max)

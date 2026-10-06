@@ -16,7 +16,7 @@ import {
 } from "@canadian-ham/morse-engine";
 
 import courseFixture from "../../../../../fixtures/morse/course.json";
-import { WebMorsePlayer } from "../../lib/morseAudio";
+import { MorseOutputView, useWebMorseOutput } from "../../lib/morseOutput";
 import type { InterfaceLanguage } from "../../lib/i18n";
 import { t } from "../../lib/i18n";
 import type { ProgressStore, WebPreferences } from "../../lib/progressStore";
@@ -57,7 +57,7 @@ export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, s
   const [liveMessage, setLiveMessage] = useState("");
   const [actionError, setActionError] = useState<string | null>(null);
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "failed">("idle");
-  const playerRef = useRef<WebMorsePlayer | null>(null);
+  const output = useWebMorseOutput(interfaceLanguage);
   // Bumped on every play and every stop so a cancelled start is ignored, not reported as an error.
   const playbackGenerationRef = useRef(0);
   const sessionRef = useRef<HTMLElement | null>(null);
@@ -75,15 +75,15 @@ export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, s
       });
     const unregister = playbackCoordinator.register("course", () => {
       playbackGenerationRef.current += 1;
-      playerRef.current?.stop();
+      output.stop();
     });
     return () => {
       cancelled = true;
       unregister();
       playbackGenerationRef.current += 1;
-      playerRef.current?.stop();
+      void output.close();
     };
-  }, [playbackCoordinator, store]);
+  }, [output.close, output.stop, playbackCoordinator, store]);
 
   useEffect(() => {
     if (session !== null && !session.done) {
@@ -100,12 +100,11 @@ export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, s
   const streak = dailyStreak(progress.dailyActivity, todayLocalDate);
 
   async function play(text: string): Promise<void> {
-    playerRef.current ??= new WebMorsePlayer();
     playbackCoordinator.claim("course");
     const generation = playbackGenerationRef.current + 1;
     playbackGenerationRef.current = generation;
     try {
-      const handle = await playerRef.current.playText(text, preferences.morse);
+      const handle = await output.playText(text, preferences.morse);
       if (generation !== playbackGenerationRef.current) {
         handle.stop();
         return;
@@ -234,6 +233,7 @@ export function MorseCoursePanel({ interfaceLanguage, preferences, store, now, s
           <h4 id="morse-session-title">{session.mode === "lesson" && session.lesson !== null ? t(interfaceLanguage, "morseCourseSessionLesson", session.lesson.lessonNumber) : t(interfaceLanguage, "morseCourseReviewTitle")}</h4>
           <p>{t(interfaceLanguage, "morseCourseSessionProgress", session.index + 1, session.exercises.length)}</p>
           {!session.done ? renderExercise(currentExercise, play, typedAnswer, setTypedAnswer, answer, interfaceLanguage) : null}
+          <MorseOutputView state={output.state} />
           {session.feedback ? <p>{session.feedback}</p> : null}
           {session.done ? <LessonSummary interfaceLanguage={interfaceLanguage} saveState={saveState} session={session} /> : null}
           <div className="sr-only" aria-live="polite" aria-atomic="true">{liveMessage}</div>

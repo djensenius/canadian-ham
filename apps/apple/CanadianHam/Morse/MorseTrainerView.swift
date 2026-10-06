@@ -1,8 +1,122 @@
 import Accessibility
 import CanadianHamMorseEngine
 import SwiftUI
+#if os(iOS)
+import UIKit
+#endif
 
 private let morsePracticeText = "KMRSU PARIS"
+
+struct MorseVisualPlaybackState: Equatable {
+    enum Mode: Equatable { case idle, visualBeacon, visualTape }
+    var mode: Mode = .idle
+    var beaconActive = false
+    var tape = ""
+    var safetyNote = ""
+}
+
+struct MorseVisualPlaybackView: View {
+    let state: MorseVisualPlaybackState
+
+    var body: some View {
+        if state.mode != .idle {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                if state.mode == .visualBeacon {
+                    Circle()
+                        .fill(state.beaconActive ? DesignTokens.Colors.accent.opacity(0.20) : DesignTokens.Colors.accent.opacity(0.12))
+                        .overlay(Circle().strokeBorder(DesignTokens.Colors.border, lineWidth: 2))
+                        .frame(width: 112, height: 112)
+                        .accessibilityLabel(Text("Morse visual beacon")) // l10n: localized
+                        .accessibilityIdentifier("morse-visual-beacon")
+                }
+                if state.mode == .visualTape {
+                    Text(verbatim: state.tape.isEmpty ? "·" : state.tape) // l10n: verbatim
+                        .font(DesignTokens.FontScale.title.monospaced().weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityLabel(Text("Morse tape output")) // l10n: localized
+                        .accessibilityIdentifier("morse-visual-tape")
+                }
+                Text(state.safetyNote) // l10n: localized, contains measured numbers
+                    .font(DesignTokens.FontScale.caption)
+                    .foregroundStyle(DesignTokens.Colors.inkMuted)
+            }
+            .padding(DesignTokens.Spacing.sm)
+            .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+        }
+    }
+}
+
+@MainActor
+func scheduleMorseVisualPlayback(sequence: TimedMorseSequence, requestedMode: MorseTrainerSettings.OutputMode, reduceFlashing: Bool, setState: @escaping (MorseVisualPlaybackState) -> Void) -> [Task<Void, Never>] {
+    let signalEvents = morseSignalEvents(sequence: sequence)
+    let flashesPerSecond = maxMorseFlashesPerSecond(events: signalEvents)
+    let safety = evaluateMorseFlashSafety(MorseFlashSafetyInput(
+        flashAreaCssPixels: morseBeaconAreaCssPixels,
+        flashesPerSecond: flashesPerSecond,
+        darkerRelativeLuminance: morseBeaconDarkerRelativeLuminance,
+        lighterRelativeLuminance: morseBeaconLighterRelativeLuminance,
+        usesSaturatedRed: false
+    ))
+    let useTape = requestedMode == .visualTape || reduceFlashing || !safety.safe
+    let safetyNote: String
+    if reduceFlashing {
+        safetyNote = String(localized: "Reduced Motion or Dim Flashing Lights is on, so playback uses the non-flashing tape.")
+    } else if !safety.safe {
+        safetyNote = String(localized: "Beacon safety limits were exceeded, so playback uses the non-flashing tape.")
+    } else {
+        safetyNote = String.localizedStringWithFormat(
+            String(localized: "Beacon area %.0f points; luminance delta %.2f; max %lld flashes/s."),
+            morseBeaconAreaCssPixels,
+            safety.luminanceDelta,
+            Int64(flashesPerSecond)
+        )
+    }
+    var tasks: [Task<Void, Never>] = []
+    if useTape {
+        setState(MorseVisualPlaybackState(mode: .visualTape, beaconActive: false, tape: "", safetyNote: safetyNote))
+        var tape = ""
+        for token in morseTapeTokens(sequence: sequence) {
+            tasks.append(Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(max(0, Int((token.revealAtSeconds * 1000).rounded()))))
+                guard !Task.isCancelled else { return }
+                tape += token.token
+                setState(MorseVisualPlaybackState(mode: .visualTape, beaconActive: false, tape: tape, safetyNote: safetyNote))
+            })
+        }
+    } else {
+        setState(MorseVisualPlaybackState(mode: .visualBeacon, beaconActive: false, tape: "", safetyNote: safetyNote))
+        for event in signalEvents {
+            tasks.append(Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(max(0, Int((event.atSeconds * 1000).rounded()))))
+                guard !Task.isCancelled else { return }
+                setState(MorseVisualPlaybackState(mode: .visualBeacon, beaconActive: event.kind == .on, tape: "", safetyNote: safetyNote))
+            })
+        }
+    }
+    tasks.append(Task { @MainActor in
+        try? await Task.sleep(for: .milliseconds(Int((sequence.totalDurationSeconds * 1000).rounded(.up)) + 60))
+        guard !Task.isCancelled else { return }
+        setState(MorseVisualPlaybackState(mode: useTape ? .visualTape : .visualBeacon, beaconActive: false, tape: useTape ? morseTapeTokens(sequence: sequence).map(\.token).joined() : "", safetyNote: safetyNote))
+    })
+    return tasks
+}
+
+@MainActor
+func cancelMorseVisualPlayback(_ tasks: inout [Task<Void, Never>], state: inout MorseVisualPlaybackState) {
+    tasks.forEach { $0.cancel() }
+    tasks = []
+    state = MorseVisualPlaybackState()
+}
+
+@MainActor
+func shouldReduceMorseFlashing(environmentReduceMotion: Bool) -> Bool {
+#if os(iOS)
+    environmentReduceMotion || UIAccessibility.isReduceMotionEnabled || UIAccessibility.prefersCrossFadeTransitions
+#else
+    environmentReduceMotion
+#endif
+}
 
 @MainActor
 final class MorsePlaybackCoordinator {
@@ -29,7 +143,11 @@ struct MorseTrainerView: View {
     let onSettingsChanged: (MorseTrainerSettings) -> Void
     let onProgressChanged: () -> Void
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var driver = MorseAudioDriver()
+    @State private var hapticDriver = MorseHapticDriver()
+    @State private var visualPlaybackState = MorseVisualPlaybackState()
+    @State private var visualPlaybackTasks: [Task<Void, Never>] = []
     @State private var isPlaying = false
     @State private var isRevealed = false
     @State private var statusMessage = ""
@@ -92,6 +210,7 @@ struct MorseTrainerView: View {
                             .accessibilityLabel(Text("Stop Morse practice audio")) // l10n: localized
                             .accessibilityIdentifier("morse-quick-stop-button")
                     }
+                    MorseVisualPlaybackView(state: visualPlaybackState)
                     if !statusMessage.isEmpty {
                         Text(statusMessage) // l10n: localized
                             .font(DesignTokens.FontScale.body)
@@ -165,7 +284,7 @@ struct MorseTrainerView: View {
         do {
             playbackCoordinator.claim("quick-listen")
             isRevealed = false
-            let duration = try driver.play(text: morsePracticeText, settings: normalizedSettings)
+            let duration = try startConfiguredOutput(text: morsePracticeText)
             isPlaying = true
             statusMessage = String(localized: "Morse playback started.")
             errorMessage = nil
@@ -184,11 +303,41 @@ struct MorseTrainerView: View {
         stopTask?.cancel()
         stopTask = nil
         driver.stop()
+        hapticDriver.stop()
+        visualPlaybackTasks.forEach { $0.cancel() }
+        visualPlaybackTasks = []
+        if reveal {
+            visualPlaybackState.beaconActive = false
+        } else {
+            visualPlaybackState = MorseVisualPlaybackState()
+        }
         isPlaying = false
         if reveal { isRevealed = true }
         statusMessage = message
         if !message.isEmpty {
             AccessibilityNotification.Announcement(message).post()
+        }
+    }
+
+    private func startConfiguredOutput(text: String) throws -> TimeInterval {
+        driver.stop()
+        hapticDriver.stop()
+        cancelMorseVisualPlayback(&visualPlaybackTasks, state: &visualPlaybackState)
+        let sequence = try textToTimedMorse(text, profile: normalizedSettings.timingProfileValue())
+        switch normalizedSettings.outputMode {
+        case .audio:
+            return try driver.play(text: text, settings: normalizedSettings)
+        case .haptics:
+            return try hapticDriver.play(sequence: sequence)
+        case .visualBeacon, .visualTape:
+            visualPlaybackTasks = scheduleMorseVisualPlayback(
+                sequence: sequence,
+                requestedMode: normalizedSettings.outputMode,
+                reduceFlashing: shouldReduceMorseFlashing(environmentReduceMotion: reduceMotion)
+            ) { nextState in
+                visualPlaybackState = nextState
+            }
+            return sequence.totalDurationSeconds
         }
     }
 }
@@ -329,6 +478,12 @@ struct MorseSettingsSection: View {
             Slider(value: binding(\.volume), in: 0...1, step: 0.05) {
                 Text("Trainer volume") // l10n: localized
             }
+            Picker("Output mode", selection: binding(\.outputMode)) { // l10n: localized
+                ForEach(MorseTrainerSettings.OutputMode.availableCases) { mode in
+                    Text(mode.localizedLabel).tag(mode) // l10n: localized
+                }
+            }
+            .accessibilityIdentifier("morse-output-mode-picker")
             morseTokenButton("ISED exam preset") {
                 update(settings.applyingISEDExamPreset())
             }

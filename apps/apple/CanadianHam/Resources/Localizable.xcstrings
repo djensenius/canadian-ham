@@ -10026,6 +10026,182 @@
           }
         }
       }
+    },
+    "Audio tone" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tonalité audio"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tonalité audio"
+          }
+        }
+      }
+    },
+    "Visual beacon (low-contrast)" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Balise visuelle (faible contraste)"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Balise visuelle (faible contraste)"
+          }
+        }
+      }
+    },
+    "Non-flashing tape" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruban non clignotant"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruban non clignotant"
+          }
+        }
+      }
+    },
+    "Haptics" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vibrations"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vibrations"
+          }
+        }
+      }
+    },
+    "Haptics are not available on this device." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les vibrations ne sont pas disponibles sur cet appareil."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les vibrations ne sont pas disponibles sur cet appareil."
+          }
+        }
+      }
+    },
+    "Morse visual beacon" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Balise visuelle Morse"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Balise visuelle Morse"
+          }
+        }
+      }
+    },
+    "Morse tape output" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sortie Morse sur ruban"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sortie Morse sur ruban"
+          }
+        }
+      }
+    },
+    "Reduced Motion or Dim Flashing Lights is on, so playback uses the non-flashing tape." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réduire les animations ou Atténuer les lumières clignotantes est activé; la lecture utilise donc le ruban non clignotant."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réduire les animations ou Atténuer les lumières clignotantes est activé; la lecture utilise donc le ruban non clignotant."
+          }
+        }
+      }
+    },
+    "Beacon safety limits were exceeded, so playback uses the non-flashing tape." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les limites de sécurité de la balise sont dépassées; la lecture utilise donc le ruban non clignotant."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les limites de sécurité de la balise sont dépassées; la lecture utilise donc le ruban non clignotant."
+          }
+        }
+      }
+    },
+    "Beacon area %.0f points; luminance delta %.2f; max %lld flashes/s." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zone de balise %.0f points; écart de luminance %.2f; maximum %lld clignotements/s."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zone de balise %.0f points; écart de luminance %.2f; maximum %lld clignotements/s."
+          }
+        }
+      }
+    },
+    "Output mode" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode de sortie"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode de sortie"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

@@ -1,5 +1,8 @@
 import AVFoundation
 import CanadianHamMorseEngine
+#if canImport(CoreHaptics)
+import CoreHaptics
+#endif
 import Foundation
 
 private let morseMinimumStopDrainSeconds: TimeInterval = 0.1
@@ -137,6 +140,69 @@ struct MorseAudioSessionUsage: Equatable, Sendable {
     mutating func release() -> Bool {
         activeUsers = max(0, activeUsers - 1)
         return activeUsers == 0
+    }
+}
+
+final class MorseHapticDriver {
+#if canImport(CoreHaptics)
+    private var engine: CHHapticEngine?
+    private var player: CHHapticPatternPlayer?
+#endif
+
+    static var supportsHaptics: Bool {
+#if os(iOS) && canImport(CoreHaptics)
+        CHHapticEngine.capabilitiesForHardware().supportsHaptics
+#else
+        false
+#endif
+    }
+
+    func play(sequence: TimedMorseSequence) throws -> TimeInterval {
+#if os(iOS) && canImport(CoreHaptics)
+        guard Self.supportsHaptics else { throw MorseOutputError.hapticsUnavailable }
+        stop()
+        let engine = try CHHapticEngine()
+        try engine.start()
+        let events = morseHapticEvents(sequence: sequence).map { event in
+            CHHapticEvent(
+                eventType: .hapticContinuous,
+                parameters: [
+                    CHHapticEventParameter(parameterID: .hapticIntensity, value: event.symbolKind == .dot ? 0.55 : 0.75),
+                    CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.65),
+                ],
+                relativeTime: event.startSeconds,
+                duration: event.durationSeconds
+            )
+        }
+        let pattern = try CHHapticPattern(events: events, parameters: [])
+        let player = try engine.makePlayer(with: pattern)
+        try player.start(atTime: 0)
+        self.engine = engine
+        self.player = player
+        return sequence.totalDurationSeconds
+#else
+        throw MorseOutputError.hapticsUnavailable
+#endif
+    }
+
+    func stop() {
+#if canImport(CoreHaptics)
+        try? player?.stop(atTime: 0)
+        player = nil
+        engine?.stop(completionHandler: nil)
+        engine = nil
+#endif
+    }
+}
+
+enum MorseOutputError: LocalizedError {
+    case hapticsUnavailable
+
+    var errorDescription: String? {
+        switch self {
+        case .hapticsUnavailable:
+            String(localized: "Haptics are not available on this device.")
+        }
     }
 }
 

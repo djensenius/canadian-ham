@@ -75,6 +75,27 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Lesson 1 session"].firstMatch.waitForExistence(timeout: 5))
     }
 
+    func testMorseVisualOutputModeQuickListenOnIOS() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse"])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
+        let outputMode = app.descendants(matching: .any)["morse-output-mode-picker"].firstMatch
+        scrollUntilHittable(outputMode, in: app, maxSwipes: 8)
+        outputMode.tap()
+        let visualOption = app.buttons["Visual beacon (low-contrast)"].firstMatch
+        if visualOption.waitForExistence(timeout: 3) {
+            visualOption.tap()
+        } else {
+            app.staticTexts["Visual beacon (low-contrast)"].firstMatch.tap()
+        }
+        let quickPlay = app.buttons["morse-quick-play-button"].firstMatch
+        scrollUntilHittable(quickPlay, in: app, maxSwipes: 8)
+        quickPlay.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["morse-visual-beacon"].firstMatch.waitForExistence(timeout: 5), "Choosing visual beacon should show a visual Morse output when Quick listen plays")
+    }
+
     func testCompletesFirstMorseLessonSessionOnIOS() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"])

@@ -56,6 +56,22 @@ function createStore(name: string): ProgressStore {
   return store;
 }
 
+function stubReducedMotion(matches: boolean): void {
+  Object.defineProperty(window, "matchMedia", {
+    value: (query: string) => ({
+      matches: query === "(prefers-reduced-motion: reduce)" ? matches : false,
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    }),
+    configurable: true,
+  });
+}
+
 function createMemoryStorage(): Storage {
   const values = new Map<string, string>();
   return {
@@ -1426,6 +1442,28 @@ describe("App accessibility and flows", () => {
     assert.equal(container.querySelector(".morse-live-status")?.textContent, "");
     await user.click(screen.getByRole("button", { name: "Stop Morse practice audio" }));
     assert.match(container.querySelector(".morse-live-status")?.textContent ?? "", /Morse playback stopped\./);
+  });
+
+  it("uses the non-flashing Morse tape when reduced motion is requested", async () => {
+    window.location.hash = "#/morse";
+    const store = createStore("morse-reduced-motion-tape");
+    await store.putPreferences({ ...morsePreferences(true), morse: { ...defaultPreferences.morse, outputMode: "visualBeacon" } });
+    stubReducedMotion(true);
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-reduced-motion-seed"} />);
+
+    await screen.findByRole("heading", { name: "Quick listen" });
+    vi.useFakeTimers();
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "Play Morse practice audio" }));
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1);
+      });
+      assert.equal(container.querySelector(".morse-beacon-lamp"), null);
+      assert.match(container.querySelector(".morse-visual-tape")?.textContent ?? "", /[.\-·]/);
+      assert.match(container.querySelector(".morse-output-view")?.textContent ?? "", /Reduced-motion preference is on/);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("announces Morse finish after playback completes", async () => {
