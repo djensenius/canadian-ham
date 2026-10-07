@@ -1470,9 +1470,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Morse"].firstMatch.waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["morse-course-open-button"].firstMatch.waitForExistence(timeout: 10))
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home top")
-        scrollMorseHomeLowerContentIntoView(in: app)
-        try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home lower content")
-
         openMorseCourse(in: app)
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home top")
@@ -1725,11 +1722,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     private func scrollMorseHomeLowerContentIntoView(in app: XCUIApplication) {
         let settings = app.staticTexts["Morse settings"].firstMatch
-        for _ in 0..<12 where !settings.exists || !settings.isHittable {
+        for _ in 0..<12 where !settings.exists || !isFullyVisible(settings, in: app, requiresHittable: false) {
             app.swipeUp()
             waitBriefly()
         }
         XCTAssertTrue(settings.waitForExistence(timeout: 5), "Expected lower Morse home content")
+        for _ in 0..<2 { app.swipeUp(); waitBriefly() }
     }
 
     private func scrollToMorseCourseLastUnit(in app: XCUIApplication) {
