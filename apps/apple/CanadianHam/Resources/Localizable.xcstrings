@@ -2146,6 +2146,12 @@
         "fr" : {
           "variations" : {
             "plural" : {
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$lld erreur au total : %2$lld erronée, %3$lld manquante, %4$lld ajoutée."
+                }
+              },
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -2156,12 +2162,6 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "%1$lld erreurs au total : %2$lld erronées, %3$lld manquantes, %4$lld ajoutées."
-                }
-              },
-              "zero" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%1$lld erreur au total : %2$lld erronée, %3$lld manquante, %4$lld ajoutée."
                 }
               }
             }
@@ -2170,6 +2170,12 @@
         "fr-CA" : {
           "variations" : {
             "plural" : {
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$lld erreur au total : %2$lld erronée, %3$lld manquante, %4$lld ajoutée."
+                }
+              },
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -2180,12 +2186,6 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "%1$lld erreurs au total : %2$lld erronées, %3$lld manquantes, %4$lld ajoutées."
-                }
-              },
-              "zero" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%1$lld erreur au total : %2$lld erronée, %3$lld manquante, %4$lld ajoutée."
                 }
               }
             }
@@ -6718,6 +6718,12 @@
         "fr" : {
           "variations" : {
             "plural" : {
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "RÉUSSITE, 100 %%, avec %lld erreur."
+                }
+              },
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -6728,12 +6734,6 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "RÉUSSITE, 100 %%, avec %lld erreurs."
-                }
-              },
-              "zero" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "RÉUSSITE, 100 %%, avec %lld erreur."
                 }
               }
             }
@@ -6742,6 +6742,12 @@
         "fr-CA" : {
           "variations" : {
             "plural" : {
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "RÉUSSITE, 100 %%, avec %lld erreur."
+                }
+              },
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -6752,12 +6758,6 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "RÉUSSITE, 100 %%, avec %lld erreurs."
-                }
-              },
-              "zero" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "RÉUSSITE, 100 %%, avec %lld erreur."
                 }
               }
             }
