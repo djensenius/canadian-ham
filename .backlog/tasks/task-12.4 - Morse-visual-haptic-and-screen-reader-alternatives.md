@@ -1,7 +1,7 @@
 ---
 id: TASK-12.4
 title: 'Morse visual, haptic and screen-reader alternatives'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
@@ -27,9 +27,9 @@ Why: Deaf and hard-of-hearing learners need non-audio ways to learn, and a flash
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 A visual beacon meets WCAG 2.2 SC 2.3.1 (flash area under 25% of a 341x256 CSS px region, red-flash handling, cadence limits), plus a non-flashing tape display
+- [x] #1 A visual beacon meets WCAG 2.2 SC 2.3.1 (flash area under 25% of a 341x256 CSS px region, red-flash handling, cadence limits), plus a non-flashing tape display
 - [x] #2 Core Haptics is used only where supportsHaptics is true (in practice iPhone), with no haptic UI on tvOS or visionOS
-- [ ] #3 VoiceOver/ARIA announcements don't talk over playback; accessibility audits pass
+- [x] #3 VoiceOver/ARIA announcements don't talk over playback; accessibility audits pass
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -90,5 +90,5 @@ visionOS final /tmp/t124-r5b-vision-final.log: 12 passed test names, 0 failures:
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Completed review follow-up 2: removed the rejected visual audit fixture and launch argument, audited beacon/tape on the real Morse screen in Quick listen mode, kept the opaque token navigation bar, and revalidated. Final code tip 6a47c7b1a2e42846db13a7bddac514c3538d2628 passed targeted real-screen visual audits, full iOS, full macOS, and existing web/Swift/l10n/network checks; tvOS/visionOS prior review-round full runs remain valid because final changes only touched MorseTrainerView and iOS UI tests.
+Completed review round 2 on final code tip 9d9df5751f99b128d7d97f818da4b8febbdf32b1. Beacon safety now follows WCAG area-cap semantics and uses perceptible token states (paperInset unlit, solid accent lit); the rejected visual audit fixture and launch argument are removed; restored Morse home lower-content and sending lower-half audits pass with a scroll-positioning helper; tvOS/visionOS compile without the settings-level debug hook. Verified with web checks, SwiftPM, Apple l10n/text/network gates, targeted real-screen audits, and full iOS/macOS/tvOS/visionOS runs with per-test names recorded in notes.
 <!-- SECTION:FINAL_SUMMARY:END -->
