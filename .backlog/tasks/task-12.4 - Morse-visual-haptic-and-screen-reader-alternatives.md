@@ -1,11 +1,11 @@
 ---
 id: TASK-12.4
 title: 'Morse visual, haptic and screen-reader alternatives'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-07 05:35'
+updated_date: '2026-10-07 05:42'
 labels:
   - web
   - apple
@@ -27,9 +27,9 @@ Why: Deaf and hard-of-hearing learners need non-audio ways to learn, and a flash
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [x] #1 A visual beacon meets WCAG 2.2 SC 2.3.1 (flash area under 25% of a 341x256 CSS px region, red-flash handling, cadence limits), plus a non-flashing tape display
+- [ ] #1 A visual beacon meets WCAG 2.2 SC 2.3.1 (flash area under 25% of a 341x256 CSS px region, red-flash handling, cadence limits), plus a non-flashing tape display
 - [x] #2 Core Haptics is used only where supportsHaptics is true (in practice iPhone), with no haptic UI on tvOS or visionOS
-- [x] #3 VoiceOver/ARIA announcements don't talk over playback; accessibility audits pass
+- [ ] #3 VoiceOver/ARIA announcements don't talk over playback; accessibility audits pass
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -70,6 +70,8 @@ Review round 1 fixes completed on code tip 8b8f241c09f9e9169e76ef0dad1ac1edbab44
 Review follow-up: removing DEBUG-only visual audit fixture/launch argument and replacing with audits of the real Morse screen in beacon/tape modes, light/dark, during and after playback. AC #3 reopened until the real-screen audits and final runs pass.
 
 Review follow-up 2 completed on code tip 6a47c7b1a2e42846db13a7bddac514c3538d2628. Removed the rejected -CanadianHamMorseVisualAuditMode launch argument and MorseVisualAuditFixtureView; no audit-only layout remains. Real Morse screen visual audits now use Quick listen with the real MorseTrainerView layout, forcing only the real output mode via -CanadianHamMorseOutputMode for deterministic playback settings. Evidence: apps/apple/CanadianHamUITests/CanadianHamPracticeUITests.swift:128 includes beacon/tape light/dark tests; apps/apple/CanadianHamUITests/CanadianHamPracticeUITests.swift:1450 audits the real Quick listen output during playback and after Morse playback finished; apps/apple/CanadianHam/Morse/MorseTrainerView.swift:234 renders the real Morse home directly. Morse home uses the opaque token navigation bar at apps/apple/CanadianHam/Morse/MorseTrainerView.swift:389. The output view was moved near the top of the real Morse screen so the beacon/tape is fully below the navigation bar without substitute layout. Luminance notes remain: decorative beacon fill uses accent over paperInset at 70%/75%; light fill luminances 0.222/0.199 (delta 0.023), dark fill luminances 0.207/0.234 (delta 0.028). Text is ink on paper/card surfaces, not on the tinted lamp. Targeted real-screen visual audits passed in /tmp/visual-fixture-audits-final.log equivalent rerun /tmp/real-visual-audits2.log after launch-arg fix and final full iOS /tmp/t124-r3b-ios-final.log (71 UI tests including the four real visual-output audits, 0 failures). macOS final rerun /tmp/t124-r3b-macos-final.log passed (65 unit tests). tvOS/visionOS were not rerun after the final iOS/mac-only code commit; previous review-round full runs /tmp/t124-r2b-tvos-final.log and /tmp/t124-r2b-vision-final.log passed and their compiled targets were unaffected by the final MorseTrainerView/iOS UI-test changes.
+
+Review round 2 requested changes: reopen AC #1 and #3; remove audit-only Morse visual fixture, make WCAG area-cap the primary beacon rule with perceivable states, restore deleted audits, remove shared settings DEBUG launch hook, and record per-test names in notes.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
