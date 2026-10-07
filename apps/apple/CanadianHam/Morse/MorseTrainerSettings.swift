@@ -133,11 +133,22 @@ struct MorseTrainerSettings: Codable, Equatable, Sendable {
     }
 
     static func load(defaults: UserDefaults = .standard) -> MorseTrainerSettings {
-        guard let data = defaults.data(forKey: storageKey),
-              let decoded = try? JSONDecoder().decode(MorseTrainerSettings.self, from: data) else {
-            return .default
+        let loaded: MorseTrainerSettings
+        if let data = defaults.data(forKey: storageKey),
+           let decoded = try? JSONDecoder().decode(MorseTrainerSettings.self, from: data) {
+            loaded = decoded
+        } else {
+            loaded = .default
         }
-        return decoded.normalized()
+#if DEBUG
+        if let rawOutputMode = AppLaunchArguments.value(after: "-CanadianHamMorseOutputMode"),
+           let outputMode = OutputMode(rawValue: rawOutputMode) {
+            var overridden = loaded
+            overridden.outputMode = outputMode
+            return overridden.normalized()
+        }
+#endif
+        return loaded.normalized()
     }
 
     func save(defaults: UserDefaults = .standard) {

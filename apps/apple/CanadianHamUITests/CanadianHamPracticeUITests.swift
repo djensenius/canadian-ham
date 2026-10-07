@@ -127,23 +127,23 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     func testAccessibilityAuditMorseBeaconOutputLight() throws {
         XCUIDevice.shared.appearance = .light
-        try auditMorseVisualFixture(modes: ["beacon-active", "beacon-idle"], appearance: .light)
+        try auditMorseVisualQuickListen(outputMode: "visualBeacon", outputIdentifier: "morse-visual-beacon", appearance: .light)
     }
 
     func testAccessibilityAuditMorseBeaconOutputDark() throws {
         XCUIDevice.shared.appearance = .dark
-        try auditMorseVisualFixture(modes: ["beacon-active", "beacon-idle"], appearance: .dark)
+        try auditMorseVisualQuickListen(outputMode: "visualBeacon", outputIdentifier: "morse-visual-beacon", appearance: .dark)
         XCUIDevice.shared.appearance = .light
     }
 
     func testAccessibilityAuditMorseTapeOutputLight() throws {
         XCUIDevice.shared.appearance = .light
-        try auditMorseVisualFixture(modes: ["tape-active", "tape-done"], appearance: .light)
+        try auditMorseVisualQuickListen(outputMode: "visualTape", outputIdentifier: "morse-visual-tape", appearance: .light)
     }
 
     func testAccessibilityAuditMorseTapeOutputDark() throws {
         XCUIDevice.shared.appearance = .dark
-        try auditMorseVisualFixture(modes: ["tape-active", "tape-done"], appearance: .dark)
+        try auditMorseVisualQuickListen(outputMode: "visualTape", outputIdentifier: "morse-visual-tape", appearance: .dark)
         XCUIDevice.shared.appearance = .light
     }
 
@@ -1447,13 +1447,22 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app.terminate()
     }
 
-    private func auditMorseVisualFixture(modes: [String], appearance: AuditAppearance) throws {
-        for mode in modes {
-            let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseVisualAuditMode", mode])
-            defer { app.terminate() }
-            XCTAssertTrue(app.staticTexts["Morse visual output audit"].firstMatch.waitForExistence(timeout: 10))
-            try performAudit(on: app, context: "\(appearance.rawValue) morse visual fixture \(mode)")
-        }
+    private func auditMorseVisualQuickListen(outputMode: String, outputIdentifier: String, appearance: AuditAppearance) throws {
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseOutputMode", outputMode])
+        defer { app.terminate() }
+        XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
+        let play = app.buttons["morse-quick-play-button"].firstMatch
+        XCTAssertTrue(play.waitForExistence(timeout: 5), "Expected Quick listen play button")
+        play.tap()
+        let output = app.descendants(matching: .any)[outputIdentifier].firstMatch
+        XCTAssertTrue(output.waitForExistence(timeout: 5), "Expected visual output \(outputIdentifier) on the real Morse screen")
+        assertFullyVisibleBelowNavigationBar(output, in: app, context: "\(appearance.rawValue) \(outputMode) during playback")
+        Thread.sleep(forTimeInterval: 0.2)
+        try performAudit(on: app, context: "\(appearance.rawValue) \(outputMode) during playback")
+        XCTAssertTrue(app.staticTexts["Morse playback finished."].firstMatch.waitForExistence(timeout: 60))
+        XCTAssertTrue(output.exists, "Expected visual output \(outputIdentifier) to remain available after playback")
+        assertFullyVisibleBelowNavigationBar(output, in: app, context: "\(appearance.rawValue) \(outputMode) after playback")
+        try performAudit(on: app, context: "\(appearance.rawValue) \(outputMode) after playback")
     }
 
     private func auditMorseCourseFlow(appearance: AuditAppearance) throws {

@@ -226,27 +226,18 @@ struct MorseTrainerView: View {
     @State private var stopTask: Task<Void, Never>?
     @State private var playbackCoordinator = MorsePlaybackCoordinator()
 
-    private var normalizedSettings: MorseTrainerSettings { settings.normalized() }
-
-    var body: some View {
+    private var normalizedSettings: MorseTrainerSettings {
+        var normalized = settings.normalized()
 #if DEBUG
-        if let visualAuditMode = AppLaunchArguments.value(after: "-CanadianHamMorseVisualAuditMode") {
-            MorseVisualAuditFixtureView(mode: visualAuditMode)
-                .background(DesignTokens.Colors.paper)
-                .morseTrainerOpaqueNavigationBar()
-                .navigationTitle("Morse")
-#if os(iOS)
-                .navigationBarTitleDisplayMode(.inline)
-#endif
-        } else {
-            morseTrainerContent
+        if let rawOutputMode = AppLaunchArguments.value(after: "-CanadianHamMorseOutputMode"),
+           let outputMode = MorseTrainerSettings.OutputMode(rawValue: rawOutputMode) {
+            normalized.outputMode = outputMode
         }
-#else
-        morseTrainerContent
 #endif
+        return normalized.normalized()
     }
 
-    private var morseTrainerContent: some View {
+    var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -275,12 +266,6 @@ struct MorseTrainerView: View {
                 }
                 .paperCard()
 
-                MorseCopyExamView(settings: normalizedSettings, playbackCoordinator: playbackCoordinator)
-
-                MorseHomeNavigationLink(title: "Sending practice", message: "Practise tap timing with a straight key or iambic paddles.", accessibilityIdentifier: "morse-sending-open-button") {
-                    MorseSendingPracticeView(settings: normalizedSettings, playbackCoordinator: playbackCoordinator)
-                }
-
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     Text("Quick listen") // l10n: localized
                         .font(DesignTokens.FontScale.title.weight(.bold))
@@ -307,6 +292,13 @@ struct MorseTrainerView: View {
                     }
                 }
                 .paperCard()
+
+                MorseCopyExamView(settings: normalizedSettings, playbackCoordinator: playbackCoordinator)
+
+                MorseHomeNavigationLink(title: "Sending practice", message: "Practise tap timing with a straight key or iambic paddles.", accessibilityIdentifier: "morse-sending-open-button") {
+                    MorseSendingPracticeView(settings: normalizedSettings, playbackCoordinator: playbackCoordinator)
+                }
+
 
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     Text("Practice text") // l10n: localized
@@ -435,38 +427,6 @@ struct MorseTrainerView: View {
         }
     }
 }
-
-#if DEBUG
-private struct MorseVisualAuditFixtureView: View {
-    let mode: String
-
-    private var state: MorseVisualPlaybackState {
-        switch mode {
-        case "beacon-active":
-            MorseVisualPlaybackState(mode: .visualBeacon, beaconActive: true, tape: "", safetyNote: "")
-        case "beacon-idle":
-            MorseVisualPlaybackState(mode: .visualBeacon, beaconActive: false, tape: "", safetyNote: "")
-        case "tape-done":
-            MorseVisualPlaybackState(mode: .visualTape, beaconActive: false, tape: ".-.-", safetyNote: String(localized: "Reduced Motion or Dim Flashing Lights is on, so playback uses the non-flashing tape."))
-        default:
-            MorseVisualPlaybackState(mode: .visualTape, beaconActive: false, tape: ".-", safetyNote: String(localized: "Reduced Motion or Dim Flashing Lights is on, so playback uses the non-flashing tape."))
-        }
-    }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            Text("Morse visual output audit") // l10n: localized DEBUG-only UI test fixture
-                .font(DesignTokens.FontScale.title.weight(.bold))
-                .foregroundStyle(DesignTokens.Colors.ink)
-                .accessibilityAddTraits(.isHeader)
-            MorseVisualPlaybackView(state: state)
-        }
-        .pagePadding()
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .background(DesignTokens.Colors.paper)
-    }
-}
-#endif
 
 private extension View {
     @ViewBuilder
