@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-03 13:42'
-updated_date: '2026-10-07 12:25'
+updated_date: '2026-10-07 23:27'
 labels:
   - apple
   - testing
@@ -47,4 +47,6 @@ AC #1: AGENTS.md now has a 'Testing policy (all agents)' section and the post-me
 Flaky web test fixed at the cause (2026-10-03): 'lets Morse number inputs accept multi-digit drafts before committing' failed about 1 in 4 runs (650700 vs 700) because a mount effect in the Settings Morse controls reset the number drafts to the same values and could clobber a draft typed right after mount. The effect now skips the initial run and resyncs only when the stored Morse preferences actually change. The test is unchanged; 15/15 runs passed (TZ=UTC).
 
 Task-31 worker start: read AGENTS.md, task-execution/finalization guides, and task. Before UI test code changes, wrote docs/testing/ui-audit-inventory-before.md with 118 baseline accessibility audit rows (iOS/tvOS/visionOS; screen/state, appearance, lowerHalf).
+
+Task-31 consolidation status at 0435944102597008c776406bb3d70615267cff1c: committed before/after inventories and iOS UI audit consolidation. Inventory diff script compares (platform, screen/state, appearance, lowerHalf): before rows 118, after rows 118, missing [], added [] (no audit coverage loss). Test count changed iOS UI 71 -> 59; tvOS 12 unchanged; visionOS 9 unchanged. Baseline timings: iOS UI clean main 91c7e57 log /tmp/main-91c7e57-ios.log 71 tests 5265.401s; task branch before iOS reruns hit simulator/SpringBoard flakes (/tmp/t31-logs/before-ios-ui.log, /tmp/t31-logs/before-ios-ui-rerun.log); before tvOS /tmp/t31-logs/before-tvos-ui.log 12 tests 285.668s; before visionOS /tmp/t31-logs/before-visionos-ui.log 9 tests 173.578s. Final runs on 0435944: macOS /tmp/t31-logs/final-macos-full.log passed 65 tests 1.523s; tvOS /tmp/t31-logs/final-tvos-full.log passed 12 UI tests 304.743s (plus 3 unit tests); visionOS /tmp/t31-logs/final-visionos-full.log passed 9 UI tests 174.946s (plus 3 unit tests). iOS final reruns did not pass: /tmp/t31-logs/final-ios-full-2.log SpringBoard host-down crash during consolidated appearance tests; /tmp/t31-logs/final-ios-full-3.log SpringBoard crashed during testAccessibilityAuditMorseTapeOutputLightAndDark; after adding tearDown restore + 2s appearance settle, /tmp/t31-logs/final-ios-full-4.log still failed after AX/SpringBoard errors at consolidated tests testAccessibilityAuditLearnFlowLightAndDark, testAccessibilityAuditMockExamFlowLightAndDark, testAccessibilityAuditMorseBeaconOutputLightAndDark plus one contrast failure in testAccessibilityAuditMorseCourseLessonAndSummaryLightAndDark. DiagnosticReports SpringBoard crash logs at 2026-10-07 15:53 and 17:17 show SIGABRT in RBSAssertion dealloc / PosterUIFoundation snapshot.
 <!-- SECTION:NOTES:END -->
