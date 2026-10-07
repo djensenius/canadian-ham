@@ -1,11 +1,11 @@
 ---
 id: TASK-12.4
 title: 'Morse visual, haptic and screen-reader alternatives'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-07 02:42'
+updated_date: '2026-10-07 02:44'
 labels:
   - web
   - apple
@@ -29,7 +29,7 @@ Why: Deaf and hard-of-hearing learners need non-audio ways to learn, and a flash
 <!-- AC:BEGIN -->
 - [x] #1 A visual beacon meets WCAG 2.2 SC 2.3.1 (flash area under 25% of a 341x256 CSS px region, red-flash handling, cadence limits), plus a non-flashing tape display
 - [x] #2 Core Haptics is used only where supportsHaptics is true (in practice iPhone), with no haptic UI on tvOS or visionOS
-- [x] #3 VoiceOver/ARIA announcements don't talk over playback; accessibility audits pass
+- [ ] #3 VoiceOver/ARIA announcements don't talk over playback; accessibility audits pass
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -66,6 +66,8 @@ Review round 1 fixes completed on code tip 8b8f241c09f9e9169e76ef0dad1ac1edbab44
 - Apple visual audits: apps/apple/CanadianHam/Morse/MorseTrainerView.swift:440 provides a DEBUG-only visual-output audit fixture; apps/apple/CanadianHamUITests/CanadianHamPracticeUITests.swift:128 adds light/dark beacon and tape accessibility audits. Diagnostic handler was used during debugging only and removed before commit.
 - Targeted checks after fixes: pnpm typecheck; TZ=UTC pnpm test; pnpm build:web; pnpm --filter @canadian-ham/web audit:urls; pnpm check:schemas; pnpm import:check; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/morse-swift; pnpm check:apple-l10n; node scripts/check-apple-text-sources.ts; pnpm check:apple-network; targeted iOS visual output audits all passed.
 - Final full xbuild runs on code tip 8b8f241c09f9e9169e76ef0dad1ac1edbab44922: iOS /tmp/t124-r2b-ios-final.log passed (65 unit test names + 71 UI test names, 0 failures); macOS /tmp/t124-r2b-macos-final.log passed (65 unit test names, UI skipped, 0 failures); tvOS /tmp/t124-r2b-tvos-final.log passed (3 unit + 12 UI test names, 0 failures); visionOS /tmp/t124-r2b-vision-final.log passed (3 unit + 9 UI test names, 0 failures). Per-test name extraction is in the worker transcript and the logs list every Test Case name.
+
+Review follow-up: removing DEBUG-only visual audit fixture/launch argument and replacing with audits of the real Morse screen in beacon/tape modes, light/dark, during and after playback. AC #3 reopened until the real-screen audits and final runs pass.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
