@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-06 20:32'
+updated_date: '2026-10-07 02:42'
 labels:
   - web
   - apple
@@ -57,6 +57,15 @@ Final branch tip after Backlog finalization is 52321b6e4e97f129dcbbc79f98718bb7b
 Correction to Apple full-run counts from final xbuild logs: iOS CanadianHam ran 58 unit tests and 67 UI tests; macOS CanadianHam ran 60 unit tests with UI skipped; tvOS CanadianHamTV ran 3 unit tests and 12 UI tests; visionOS CanadianHamVision ran 3 unit tests and 9 UI tests. All had 0 failures.
 
 Review round 1 requested changes: reopening AC #1 and #3 for Dim Flashing Lights, real token luminance safety maths, beacon/tape audits, localized/valid ARIA names, corrected notes and final per-test names.
+
+Review round 1 fixes completed on code tip 8b8f241c09f9e9169e76ef0dad1ac1edbab44922.
+- Dim Flashing Lights: apps/apple/CanadianHam/Morse/MorseTrainerView.swift:172 calls MADimFlashingLightsEnabled() on iOS/macOS and apps/apple/CanadianHam/Morse/MorseTrainerView.swift:183 observes kMADimFlashingLightsChangedNotification; decision logic is injectable/tested in MorseTrainerTests/testReduceFlashingDecisionUsesInjectedFlags. Prefer Cross-Fade was removed from the fallback decision.
+- Real token flash maths: packages/morse-engine/src/morse.ts:171 and packages/morse-swift/Sources/CanadianHamMorseEngine/Morse.swift:268 use 70%/75% accent-over-paperInset states; packages/morse-engine/src/morse.ts:442 and packages/morse-swift/Sources/CanadianHamMorseEngine/Morse.swift:543 evaluate safety from computed palette luminances. Final computed luminance values from token RGBs: light resting 0.222, active 0.199, delta 0.023; dark resting 0.207, active 0.234, delta 0.028. Text is ink-on-paper outside the decorative lamp.
+- Web ARIA/localization: apps/web/src/lib/morseOutput.tsx:125 uses localized labels and an output/region for tape content; web tests cover beacon fake timers, reduced-motion tape, axe, import/export outputMode, and rejecting haptics.
+- Apple haptics: apps/apple/CanadianHam/Morse/MorseAudioDriver.swift:152 caches supportsHaptics; course natural-end path stops haptics.
+- Apple visual audits: apps/apple/CanadianHam/Morse/MorseTrainerView.swift:440 provides a DEBUG-only visual-output audit fixture; apps/apple/CanadianHamUITests/CanadianHamPracticeUITests.swift:128 adds light/dark beacon and tape accessibility audits. Diagnostic handler was used during debugging only and removed before commit.
+- Targeted checks after fixes: pnpm typecheck; TZ=UTC pnpm test; pnpm build:web; pnpm --filter @canadian-ham/web audit:urls; pnpm check:schemas; pnpm import:check; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/morse-swift; pnpm check:apple-l10n; node scripts/check-apple-text-sources.ts; pnpm check:apple-network; targeted iOS visual output audits all passed.
+- Final full xbuild runs on code tip 8b8f241c09f9e9169e76ef0dad1ac1edbab44922: iOS /tmp/t124-r2b-ios-final.log passed (65 unit test names + 71 UI test names, 0 failures); macOS /tmp/t124-r2b-macos-final.log passed (65 unit test names, UI skipped, 0 failures); tvOS /tmp/t124-r2b-tvos-final.log passed (3 unit + 12 UI test names, 0 failures); visionOS /tmp/t124-r2b-vision-final.log passed (3 unit + 9 UI test names, 0 failures). Per-test name extraction is in the worker transcript and the logs list every Test Case name.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
