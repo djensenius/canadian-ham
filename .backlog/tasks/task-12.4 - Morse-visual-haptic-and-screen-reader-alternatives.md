@@ -1,7 +1,7 @@
 ---
 id: TASK-12.4
 title: 'Morse visual, haptic and screen-reader alternatives'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
@@ -27,9 +27,9 @@ Why: Deaf and hard-of-hearing learners need non-audio ways to learn, and a flash
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 A visual beacon meets WCAG 2.2 SC 2.3.1 (flash area under 25% of a 341x256 CSS px region, red-flash handling, cadence limits), plus a non-flashing tape display
+- [x] #1 A visual beacon meets WCAG 2.2 SC 2.3.1 (flash area under 25% of a 341x256 CSS px region, red-flash handling, cadence limits), plus a non-flashing tape display
 - [x] #2 Core Haptics is used only where supportsHaptics is true (in practice iPhone), with no haptic UI on tvOS or visionOS
-- [ ] #3 VoiceOver/ARIA announcements don't talk over playback; accessibility audits pass
+- [x] #3 VoiceOver/ARIA announcements don't talk over playback; accessibility audits pass
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -71,5 +71,5 @@ Review round 1 fixes completed on code tip 8b8f241c09f9e9169e76ef0dad1ac1edbab44
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented Morse output modes for audio, WCAG-bounded low-contrast visual beacon, non-flashing tape, and Core Haptics where supported. Settings persist/export/import outputMode on web and Apple; web and iOS/iPadOS/macOS Quick listen, course, copy practice, and receiving exam now share one coordinator across output modes; tvOS/visionOS received no new output UI. Verified with TS/Swift unit tests, web component/reduced-motion coverage, Apple unit and iOS UI tests, l10n/text/network gates, and final full iOS/macOS/tvOS/visionOS xbuild runs.
+Addressed review findings: Dim Flashing Lights now uses MediaAccessibility and notification updates; flash-safety uses computed token luminances with wider margins; web/Apple accessible labels and tape values are localized/valid; haptics capability is cached and stopped on natural course end; visual beacon/tape audits and missing import/export/fallback/Codable tests were added. Verified with web/package checks, SwiftPM tests, l10n/text/network gates, targeted iOS visual audits, and final full iOS/macOS/tvOS/visionOS xbuild runs on code tip 8b8f241c09f9e9169e76ef0dad1ac1edbab44922.
 <!-- SECTION:FINAL_SUMMARY:END -->
