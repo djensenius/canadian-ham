@@ -2865,6 +2865,22 @@
         }
       }
     },
+    "Beacon" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Balise"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Balise"
+          }
+        }
+      }
+    },
     "Beacon area %.0f points; luminance delta %.2f; max %@." : {
       "localizations" : {
         "en" : {
@@ -6341,50 +6357,6 @@
         }
       }
     },
-    "Morse tape output" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Morse tape output"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sortie Morse sur ruban"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sortie Morse sur ruban"
-          }
-        }
-      }
-    },
-    "Morse visual beacon" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Morse visual beacon"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Balise visuelle Morse"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Balise visuelle Morse"
-          }
-        }
-      }
-    },
     "Needs review" : {
       "localizations" : {
         "fr" : {
@@ -6791,22 +6763,6 @@
         }
       }
     },
-    "Off" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Désactivé"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Désactivé"
-          }
-        }
-      }
-    },
     "Official question %@ is loading from the bundled bank." : {
       "localizations" : {
         "fr" : {
@@ -6889,22 +6845,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hors ligne, privé, banque supérieure"
-          }
-        }
-      }
-    },
-    "On" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activé"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activé"
           }
         }
       }
@@ -9401,6 +9341,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Système"
+          }
+        }
+      }
+    },
+    "Tape" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruban"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruban"
           }
         }
       }

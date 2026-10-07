@@ -125,6 +125,28 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Great work. The next lesson is unlocked."].firstMatch.waitForExistence(timeout: 5))
     }
 
+    func testAccessibilityAuditMorseBeaconOutputLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditMorseVisualFixture(modes: ["beacon-active", "beacon-idle"], appearance: .light)
+    }
+
+    func testAccessibilityAuditMorseBeaconOutputDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditMorseVisualFixture(modes: ["beacon-active", "beacon-idle"], appearance: .dark)
+        XCUIDevice.shared.appearance = .light
+    }
+
+    func testAccessibilityAuditMorseTapeOutputLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditMorseVisualFixture(modes: ["tape-active", "tape-done"], appearance: .light)
+    }
+
+    func testAccessibilityAuditMorseTapeOutputDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditMorseVisualFixture(modes: ["tape-active", "tape-done"], appearance: .dark)
+        XCUIDevice.shared.appearance = .light
+    }
+
     func testAccessibilityAuditMorseCourseLessonAndSummaryLight() throws {
         XCUIDevice.shared.appearance = .light
         try auditMorseCourseFlow(appearance: .light)
@@ -1423,6 +1445,15 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Local progress store unavailable"].waitForExistence(timeout: 10))
         try performAudit(on: app, context: "\(appearance.rawValue) store recovery")
         app.terminate()
+    }
+
+    private func auditMorseVisualFixture(modes: [String], appearance: AuditAppearance) throws {
+        for mode in modes {
+            let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseVisualAuditMode", mode])
+            defer { app.terminate() }
+            XCTAssertTrue(app.staticTexts["Morse visual output audit"].firstMatch.waitForExistence(timeout: 10))
+            try performAudit(on: app, context: "\(appearance.rawValue) morse visual fixture \(mode)")
+        }
     }
 
     private func auditMorseCourseFlow(appearance: AuditAppearance) throws {

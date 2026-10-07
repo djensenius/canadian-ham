@@ -26,23 +26,19 @@ struct MorseVisualPlaybackView: View {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
                 if state.mode == .visualBeacon {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                        Text("Morse visual beacon") // l10n: localized
+                        Text("Beacon") // l10n: localized
                             .font(DesignTokens.FontScale.caption.weight(.semibold))
                             .foregroundStyle(DesignTokens.Colors.ink)
+                            .accessibilityIdentifier("morse-visual-beacon")
                         Circle()
                             .fill(state.beaconActive ? DesignTokens.Colors.accent.opacity(morseBeaconActiveMix) : DesignTokens.Colors.accent.opacity(morseBeaconRestingMix))
                             .overlay(Circle().strokeBorder(DesignTokens.Colors.border, lineWidth: 2))
-                            .overlay(Text(state.beaconActive ? "On" : "Off") // l10n: localized
-                                .font(DesignTokens.FontScale.caption.weight(.bold))
-                                .foregroundStyle(DesignTokens.Colors.ink))
                             .frame(width: 112, height: 112)
                     }
-                    .accessibilityElement(children: .combine)
-                    .accessibilityIdentifier("morse-visual-beacon")
                 }
                 if state.mode == .visualTape {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
-                        Text("Morse tape output") // l10n: localized
+                        Text("Tape") // l10n: localized
                             .font(DesignTokens.FontScale.caption.weight(.semibold))
                             .foregroundStyle(DesignTokens.Colors.ink)
                         Text(verbatim: state.tape.isEmpty ? "·" : state.tape) // l10n: verbatim
@@ -54,9 +50,12 @@ struct MorseVisualPlaybackView: View {
                     .accessibilityValue(Text(state.tape.isEmpty ? "·" : state.tape)) // l10n: verbatim
                     .accessibilityIdentifier("morse-visual-tape")
                 }
-                Text(state.safetyNote) // l10n: localized, contains measured numbers
-                    .font(DesignTokens.FontScale.caption)
-                    .foregroundStyle(DesignTokens.Colors.ink)
+                if !state.safetyNote.isEmpty {
+                    Text(state.safetyNote) // l10n: localized, contains measured numbers
+                        .font(DesignTokens.FontScale.caption)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
             .padding(DesignTokens.Spacing.sm)
             .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
@@ -230,6 +229,24 @@ struct MorseTrainerView: View {
     private var normalizedSettings: MorseTrainerSettings { settings.normalized() }
 
     var body: some View {
+#if DEBUG
+        if let visualAuditMode = AppLaunchArguments.value(after: "-CanadianHamMorseVisualAuditMode") {
+            MorseVisualAuditFixtureView(mode: visualAuditMode)
+                .background(DesignTokens.Colors.paper)
+                .morseTrainerOpaqueNavigationBar()
+                .navigationTitle("Morse")
+#if os(iOS)
+                .navigationBarTitleDisplayMode(.inline)
+#endif
+        } else {
+            morseTrainerContent
+        }
+#else
+        morseTrainerContent
+#endif
+    }
+
+    private var morseTrainerContent: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.xl) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -337,6 +354,7 @@ struct MorseTrainerView: View {
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
+        .morseTrainerOpaqueNavigationBar()
         .navigationTitle("Morse")
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
@@ -415,6 +433,50 @@ struct MorseTrainerView: View {
             }
             return sequence.totalDurationSeconds
         }
+    }
+}
+
+#if DEBUG
+private struct MorseVisualAuditFixtureView: View {
+    let mode: String
+
+    private var state: MorseVisualPlaybackState {
+        switch mode {
+        case "beacon-active":
+            MorseVisualPlaybackState(mode: .visualBeacon, beaconActive: true, tape: "", safetyNote: "")
+        case "beacon-idle":
+            MorseVisualPlaybackState(mode: .visualBeacon, beaconActive: false, tape: "", safetyNote: "")
+        case "tape-done":
+            MorseVisualPlaybackState(mode: .visualTape, beaconActive: false, tape: ".-.-", safetyNote: String(localized: "Reduced Motion or Dim Flashing Lights is on, so playback uses the non-flashing tape."))
+        default:
+            MorseVisualPlaybackState(mode: .visualTape, beaconActive: false, tape: ".-", safetyNote: String(localized: "Reduced Motion or Dim Flashing Lights is on, so playback uses the non-flashing tape."))
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+            Text("Morse visual output audit") // l10n: localized DEBUG-only UI test fixture
+                .font(DesignTokens.FontScale.title.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .accessibilityAddTraits(.isHeader)
+            MorseVisualPlaybackView(state: state)
+        }
+        .pagePadding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .background(DesignTokens.Colors.paper)
+    }
+}
+#endif
+
+private extension View {
+    @ViewBuilder
+    func morseTrainerOpaqueNavigationBar() -> some View {
+#if os(iOS)
+        toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+#else
+        self
+#endif
     }
 }
 
