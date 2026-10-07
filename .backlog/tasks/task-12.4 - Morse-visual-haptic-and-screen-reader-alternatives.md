@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-07 12:08'
+updated_date: '2026-10-07 12:14'
 labels:
   - web
   - apple
@@ -87,6 +87,8 @@ tvOS final /tmp/t124-r5b-tvos-final.log: 15 passed test names, 0 failures: Canad
 visionOS final /tmp/t124-r5b-vision-final.log: 12 passed test names, 0 failures: CanadianHamVisionTests.CanadianHamVisionTests.testBundledQuestionBankLoadsForVisionApp; CanadianHamVisionTests.CanadianHamVisionTests.testVisionPracticeQuestionDrawStaysInCategoryAndShufflesAnswers; CanadianHamVisionTests.CanadianHamVisionTests.testVisionPracticeSeedsVaryAcrossSessionIDs; CanadianHamVisionUITests.CanadianHamVisionUITests.testAboutAccessibilityAuditLightAndDark; CanadianHamVisionUITests.CanadianHamVisionUITests.testAboutShowsReleaseAttributionDisclaimerAndBankVersion; CanadianHamVisionUITests.CanadianHamVisionUITests.testCategoryGridAccessibilityAuditLightAndDark; CanadianHamVisionUITests.CanadianHamVisionUITests.testCategoryGridNavigatesToMorse; CanadianHamVisionUITests.CanadianHamVisionUITests.testLongestQuestionSupportsLargestDynamicType; CanadianHamVisionUITests.CanadianHamVisionUITests.testMorseAccessibilityAuditLightAndDark; CanadianHamVisionUITests.CanadianHamVisionUITests.testMorseScreenShowsPlaybackControls; CanadianHamVisionUITests.CanadianHamVisionUITests.testPracticeAccessibilityAuditLightAndDark; CanadianHamVisionUITests.CanadianHamVisionUITests.testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances
 
 Coordinator (bb82df8): reverted the unrelated Localizable.xcstrings reordering. The catalogue now keeps main's key order, with only the task-12.4 keys added (18) or removed (5); the diff against main went from 1,698 to 390 lines. Key values are identical to the validated commit 9d9df57. pnpm check:apple-l10n exit 0 with no changes; iOS LocalizationCatalogTests passed.
+
+Coordinator (eb889bd): restored main's zero/one/other plural-form order for two unrelated entries (catalogue diff vs main now 350 lines, task keys only); check:apple-l10n exit 0. Final review round 3: APPROVE WITH NOTES (~/.cache/canadian-ham-reviews/t124-r3.md); the notes are tracked in the follow-up task. Correction: dark beacon contrast is 7.96:1 (not 7.98:1).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
