@@ -73,20 +73,41 @@ describe("visual, tape and haptic output mapping", () => {
     expect(hapticEvents[1]!.durationSeconds).toBeCloseTo(0.3, 12);
   });
 
-  it("keeps the configured visual beacon below WCAG 2.2 SC 2.3.1 thresholds at Morse cadence", () => {
+  it("keeps the configured visual beacon within WCAG 2.2 SC 2.3.1 area thresholds and perceptible in both themes", () => {
     const sequence = textToTimedMorse("5", profileForName("isedParis"));
     const flashesPerSecond = maxMorseFlashesPerSecond(morseSignalEvents(sequence));
     expect(flashesPerSecond).toBe(5);
-    expect(MORSE_BEACON_AREA_CSS_PIXELS).toBeLessThan(MORSE_FLASH_MAX_AREA_CSS_PIXELS);
-    const lightSafety = evaluateMorseBeaconFlashSafety({ palette: morseBeaconPalette({ accent: MORSE_LIGHT_ACCENT_RGB, background: MORSE_LIGHT_PAPER_INSET_RGB }), flashesPerSecond });
-    const darkSafety = evaluateMorseBeaconFlashSafety({ palette: morseBeaconPalette({ accent: MORSE_DARK_ACCENT_RGB, background: MORSE_DARK_PAPER_INSET_RGB }), flashesPerSecond });
-    expect(lightSafety).toMatchObject({ safe: true, reason: "below-general-threshold" });
-    expect(darkSafety).toMatchObject({ safe: true, reason: "below-general-threshold" });
-    expect(lightSafety.luminanceDelta).toBeLessThanOrEqual(0.07);
-    expect(darkSafety.luminanceDelta).toBeLessThanOrEqual(0.07);
+    expect(MORSE_BEACON_AREA_CSS_PIXELS).toBeLessThanOrEqual(MORSE_FLASH_MAX_AREA_CSS_PIXELS);
+    const lightPalette = morseBeaconPalette({ accent: MORSE_LIGHT_ACCENT_RGB, background: MORSE_LIGHT_PAPER_INSET_RGB });
+    const darkPalette = morseBeaconPalette({ accent: MORSE_DARK_ACCENT_RGB, background: MORSE_DARK_PAPER_INSET_RGB });
+    expect(evaluateMorseBeaconFlashSafety({ palette: lightPalette, flashesPerSecond })).toMatchObject({ safe: true, reason: "below-area-threshold" });
+    expect(evaluateMorseBeaconFlashSafety({ palette: darkPalette, flashesPerSecond })).toMatchObject({ safe: true, reason: "below-area-threshold" });
+    expect(contrastRatio(lightPalette.resting, lightPalette.active)).toBeGreaterThanOrEqual(3);
+    expect(contrastRatio(darkPalette.resting, darkPalette.active)).toBeGreaterThanOrEqual(3);
+    expect(evaluateMorseFlashSafety({
+      flashAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS,
+      flashesPerSecond: 5,
+      darkerRelativeLuminance: 0.2,
+      lighterRelativeLuminance: 0.8,
+      usesSaturatedRed: false,
+    })).toMatchObject({ safe: true, reason: "below-area-threshold" });
     expect(evaluateMorseFlashSafety({
       flashAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS + 1,
       flashesPerSecond: 2,
+      darkerRelativeLuminance: 0.2,
+      lighterRelativeLuminance: 0.8,
+      usesSaturatedRed: false,
+    })).toMatchObject({ safe: true, reason: "within-three-flashes" });
+    expect(evaluateMorseFlashSafety({
+      flashAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS + 1,
+      flashesPerSecond: 5,
+      darkerRelativeLuminance: 0.75,
+      lighterRelativeLuminance: 0.82,
+      usesSaturatedRed: false,
+    })).toMatchObject({ safe: true, reason: "below-general-threshold" });
+    expect(evaluateMorseFlashSafety({
+      flashAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS + 1,
+      flashesPerSecond: 5,
       darkerRelativeLuminance: 0.2,
       lighterRelativeLuminance: 0.8,
       usesSaturatedRed: false,
@@ -113,7 +134,7 @@ describe("visual, tape and haptic output mapping", () => {
     for (const [accent, background] of [[lightAccent, lightPaperInset], [darkAccent, darkPaperInset]] as const) {
       const resting = mixMorseRgb(accent, background, MORSE_BEACON_RESTING_MIX);
       const active = mixMorseRgb(accent, background, MORSE_BEACON_ACTIVE_MIX);
-      expect(Math.abs(morseRelativeLuminance(active) - morseRelativeLuminance(resting))).toBeLessThanOrEqual(0.07);
+      expect(contrastRatio(resting, active)).toBeGreaterThanOrEqual(3);
     }
   });
 });
@@ -339,6 +360,14 @@ function profileFromFixture(input: { readonly name?: MorseProfileName; readonly 
 
 function fixtureNumber(value: number | "NaN"): number {
   return value === "NaN" ? Number.NaN : value;
+}
+
+function contrastRatio(left: { readonly red: number; readonly green: number; readonly blue: number }, right: { readonly red: number; readonly green: number; readonly blue: number }): number {
+  const leftLuminance = morseRelativeLuminance(left);
+  const rightLuminance = morseRelativeLuminance(right);
+  const lighter = Math.max(leftLuminance, rightLuminance);
+  const darker = Math.min(leftLuminance, rightLuminance);
+  return (lighter + 0.05) / (darker + 0.05);
 }
 
 function parseCssHexToken(css: string, mode: "light" | "dark", token: string): { readonly red: number; readonly green: number; readonly blue: number } {

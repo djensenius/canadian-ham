@@ -136,6 +136,7 @@ public struct MorseFlashSafetyInput: Codable, Equatable, Sendable {
 
 public struct MorseFlashSafetyResult: Codable, Equatable, Sendable {
     public enum Reason: String, Codable, Sendable {
+        case belowAreaThreshold
         case withinThreeFlashes
         case belowGeneralThreshold
         case areaTooLarge
@@ -265,8 +266,8 @@ public let morseFlashReferenceWidthCssPixels = 341.0
 public let morseFlashReferenceHeightCssPixels = 256.0
 public let morseFlashMaxAreaCssPixels = (morseFlashReferenceWidthCssPixels * morseFlashReferenceHeightCssPixels) / 4
 public let morseBeaconAreaCssPixels = 112.0 * 112.0
-public let morseBeaconRestingMix = 0.70
-public let morseBeaconActiveMix = 0.75
+public let morseBeaconRestingMix = 0.0
+public let morseBeaconActiveMix = 1.0
 public let morseLightPaperInsetRGB = MorseRGB(red: 0xef / 255, green: 0xe3 / 255, blue: 0xcb / 255)
 public let morseDarkPaperInsetRGB = MorseRGB(red: 0x18 / 255, green: 0x14 / 255, blue: 0x10 / 255)
 public let morseLightAccentRGB = MorseRGB(red: 0xa5 / 255, green: 0x3a / 255, blue: 0x2a / 255)
@@ -554,11 +555,11 @@ public func evaluateMorseFlashSafety(_ input: MorseFlashSafetyInput) -> MorseFla
     let darker = min(input.darkerRelativeLuminance, input.lighterRelativeLuminance)
     let lighter = max(input.darkerRelativeLuminance, input.lighterRelativeLuminance)
     let luminanceDelta = lighter - darker
-    if input.flashAreaCssPixels > morseFlashMaxAreaCssPixels {
-        return MorseFlashSafetyResult(safe: false, reason: .areaTooLarge, luminanceDelta: luminanceDelta, maxAreaCssPixels: morseFlashMaxAreaCssPixels)
-    }
     if input.usesSaturatedRed {
         return MorseFlashSafetyResult(safe: false, reason: .saturatedRed, luminanceDelta: luminanceDelta, maxAreaCssPixels: morseFlashMaxAreaCssPixels)
+    }
+    if input.flashAreaCssPixels <= morseFlashMaxAreaCssPixels {
+        return MorseFlashSafetyResult(safe: true, reason: .belowAreaThreshold, luminanceDelta: luminanceDelta, maxAreaCssPixels: morseFlashMaxAreaCssPixels)
     }
     if input.flashesPerSecond <= 3 {
         return MorseFlashSafetyResult(safe: true, reason: .withinThreeFlashes, luminanceDelta: luminanceDelta, maxAreaCssPixels: morseFlashMaxAreaCssPixels)
@@ -566,7 +567,7 @@ public func evaluateMorseFlashSafety(_ input: MorseFlashSafetyInput) -> MorseFla
     if luminanceDelta < 0.1 || darker >= 0.8 {
         return MorseFlashSafetyResult(safe: true, reason: .belowGeneralThreshold, luminanceDelta: luminanceDelta, maxAreaCssPixels: morseFlashMaxAreaCssPixels)
     }
-    return MorseFlashSafetyResult(safe: false, reason: .luminanceTooHigh, luminanceDelta: luminanceDelta, maxAreaCssPixels: morseFlashMaxAreaCssPixels)
+    return MorseFlashSafetyResult(safe: false, reason: .areaTooLarge, luminanceDelta: luminanceDelta, maxAreaCssPixels: morseFlashMaxAreaCssPixels)
 }
 
 private func linearizeMorseSRGB(_ component: Double) -> Double {

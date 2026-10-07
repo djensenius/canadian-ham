@@ -71,7 +71,7 @@ export interface MorseFlashSafetyInput {
 
 export interface MorseFlashSafetyResult {
   readonly safe: boolean;
-  readonly reason: "within-three-flashes" | "below-general-threshold" | "area-too-large" | "saturated-red" | "luminance-too-high";
+  readonly reason: "below-area-threshold" | "within-three-flashes" | "below-general-threshold" | "area-too-large" | "saturated-red" | "luminance-too-high";
   readonly luminanceDelta: number;
   readonly maxAreaCssPixels: number;
 }
@@ -168,8 +168,8 @@ export const MORSE_FLASH_REFERENCE_WIDTH_CSS_PIXELS = 341;
 export const MORSE_FLASH_REFERENCE_HEIGHT_CSS_PIXELS = 256;
 export const MORSE_FLASH_MAX_AREA_CSS_PIXELS = (MORSE_FLASH_REFERENCE_WIDTH_CSS_PIXELS * MORSE_FLASH_REFERENCE_HEIGHT_CSS_PIXELS) / 4;
 export const MORSE_BEACON_AREA_CSS_PIXELS = 112 * 112;
-export const MORSE_BEACON_RESTING_MIX = 0.70;
-export const MORSE_BEACON_ACTIVE_MIX = 0.75;
+export const MORSE_BEACON_RESTING_MIX = 0;
+export const MORSE_BEACON_ACTIVE_MIX = 1;
 export const MORSE_LIGHT_PAPER_INSET_RGB = Object.freeze({ red: 0xef / 255, green: 0xe3 / 255, blue: 0xcb / 255 });
 export const MORSE_DARK_PAPER_INSET_RGB = Object.freeze({ red: 0x18 / 255, green: 0x14 / 255, blue: 0x10 / 255 });
 export const MORSE_LIGHT_ACCENT_RGB = Object.freeze({ red: 0xa5 / 255, green: 0x3a / 255, blue: 0x2a / 255 });
@@ -453,11 +453,11 @@ export function evaluateMorseFlashSafety(input: MorseFlashSafetyInput): MorseFla
   const darker = Math.min(input.darkerRelativeLuminance, input.lighterRelativeLuminance);
   const lighter = Math.max(input.darkerRelativeLuminance, input.lighterRelativeLuminance);
   const luminanceDelta = lighter - darker;
-  if (input.flashAreaCssPixels > MORSE_FLASH_MAX_AREA_CSS_PIXELS) {
-    return { safe: false, reason: "area-too-large", luminanceDelta, maxAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS };
-  }
   if (input.usesSaturatedRed) {
     return { safe: false, reason: "saturated-red", luminanceDelta, maxAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS };
+  }
+  if (input.flashAreaCssPixels <= MORSE_FLASH_MAX_AREA_CSS_PIXELS) {
+    return { safe: true, reason: "below-area-threshold", luminanceDelta, maxAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS };
   }
   if (input.flashesPerSecond <= 3) {
     return { safe: true, reason: "within-three-flashes", luminanceDelta, maxAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS };
@@ -465,7 +465,7 @@ export function evaluateMorseFlashSafety(input: MorseFlashSafetyInput): MorseFla
   if (luminanceDelta < 0.1 || darker >= 0.8) {
     return { safe: true, reason: "below-general-threshold", luminanceDelta, maxAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS };
   }
-  return { safe: false, reason: "luminance-too-high", luminanceDelta, maxAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS };
+  return { safe: false, reason: "area-too-large", luminanceDelta, maxAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS };
 }
 
 function linearizeSrgb(component: number): number {

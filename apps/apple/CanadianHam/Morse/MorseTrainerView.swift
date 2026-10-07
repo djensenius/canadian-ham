@@ -31,7 +31,7 @@ struct MorseVisualPlaybackView: View {
                             .foregroundStyle(DesignTokens.Colors.ink)
                             .accessibilityIdentifier("morse-visual-beacon")
                         Circle()
-                            .fill(state.beaconActive ? DesignTokens.Colors.accent.opacity(morseBeaconActiveMix) : DesignTokens.Colors.accent.opacity(morseBeaconRestingMix))
+                            .fill(state.beaconActive ? DesignTokens.Colors.accent : DesignTokens.Colors.paperInset)
                             .overlay(Circle().strokeBorder(DesignTokens.Colors.border, lineWidth: 2))
                             .frame(width: 112, height: 112)
                     }
@@ -46,7 +46,8 @@ struct MorseVisualPlaybackView: View {
                             .foregroundStyle(DesignTokens.Colors.ink)
                             .fixedSize(horizontal: false, vertical: true)
                     }
-                    .accessibilityElement(children: .combine)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(Text("Morse tape output")) // l10n: localized
                     .accessibilityValue(Text(state.tape.isEmpty ? "·" : state.tape)) // l10n: verbatim
                     .accessibilityIdentifier("morse-visual-tape")
                 }
@@ -58,7 +59,7 @@ struct MorseVisualPlaybackView: View {
                 }
             }
             .padding(DesignTokens.Spacing.sm)
-            .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+            .background(DesignTokens.Colors.paper, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         }
     }
@@ -84,9 +85,9 @@ func morseVisualPlaybackPlan(sequence: TimedMorseSequence, requestedMode: MorseT
     } else {
         let flashCount = String.localizedStringWithFormat(String(localized: "%lld flashes/s"), Int64(flashesPerSecond))
         safetyNote = String.localizedStringWithFormat(
-            String(localized: "Beacon area %.0f points; luminance delta %.2f; max %@."),
+            String(localized: "Beacon area %.0f points is below the %.0f-point WCAG flash cap; max %@."),
             morseBeaconAreaCssPixels,
-            safety.luminanceDelta,
+            safety.maxAreaCssPixels,
             flashCount
         )
     }
@@ -290,6 +291,23 @@ struct MorseTrainerView: View {
                             .font(DesignTokens.FontScale.body)
                             .foregroundStyle(DesignTokens.Colors.ink)
                     }
+
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                        Text("Practice text") // l10n: localized
+                            .font(DesignTokens.FontScale.body.weight(.bold))
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .accessibilityAddTraits(.isHeader)
+                        if isRevealed {
+                            Text(verbatim: morsePracticeText) // l10n: verbatim
+                                .font(.title.weight(.bold).monospaced())
+                                .foregroundStyle(DesignTokens.Colors.ink)
+                                .textSelection(.enabled)
+                        } else {
+                            Text("Hidden until playback finishes.") // l10n: localized
+                                .font(DesignTokens.FontScale.body)
+                                .foregroundStyle(DesignTokens.Colors.ink)
+                        }
+                    }
                 }
                 .paperCard()
 
@@ -299,24 +317,6 @@ struct MorseTrainerView: View {
                     MorseSendingPracticeView(settings: normalizedSettings, playbackCoordinator: playbackCoordinator)
                 }
 
-
-                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-                    Text("Practice text") // l10n: localized
-                        .font(DesignTokens.FontScale.title.weight(.bold))
-                        .foregroundStyle(DesignTokens.Colors.ink)
-                        .accessibilityAddTraits(.isHeader)
-                    if isRevealed {
-                        Text(verbatim: morsePracticeText) // l10n: verbatim
-                            .font(.title.weight(.bold).monospaced())
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                            .textSelection(.enabled)
-                    } else {
-                        Text("Hidden until playback finishes.") // l10n: localized
-                            .font(DesignTokens.FontScale.body)
-                            .foregroundStyle(DesignTokens.Colors.ink)
-                    }
-                }
-                .paperCard()
 
 #if os(macOS)
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -475,7 +475,7 @@ private struct MorseHomeCardContent: View {
                 .foregroundStyle(DesignTokens.Colors.ink)
             Text(message) // l10n: localized
                 .font(DesignTokens.FontScale.body)
-                .foregroundStyle(DesignTokens.Colors.inkMuted)
+                .foregroundStyle(DesignTokens.Colors.ink)
         }
         .padding(DesignTokens.Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)

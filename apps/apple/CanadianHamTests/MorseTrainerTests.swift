@@ -125,7 +125,7 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(decoded, settings)
     }
 
-    func testMorseBeaconPaletteMatchesDesignTokensAndKeepsLuminanceMargin() throws {
+    func testMorseBeaconPaletteMatchesDesignTokensAndKeepsAreaAndContrastMargins() throws {
         let tokensURL = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
             .deletingLastPathComponent()
@@ -133,10 +133,13 @@ final class MorseTrainerTests: XCTestCase {
         let tokens = try String(contentsOf: tokensURL, encoding: .utf8)
         XCTAssertTrue(tokens.contains("paperInset = Color.dynamicToken(light: DesignTokens.RGB(red: 0.937255, green: 0.890196, blue: 0.796078), dark: DesignTokens.RGB(red: 0.094118, green: 0.078431, blue: 0.062745))"))
         XCTAssertTrue(tokens.contains("accent = Color.dynamicToken(light: DesignTokens.RGB(red: 0.647059, green: 0.227451, blue: 0.164706), dark: DesignTokens.RGB(red: 1.000000, green: 0.541176, blue: 0.439216))"))
+        XCTAssertLessThanOrEqual(morseBeaconAreaCssPixels, morseFlashMaxAreaCssPixels)
         for scheme in [ColorScheme.light, .dark] {
-            let safety = evaluateMorseBeaconFlashSafety(palette: morseBeaconPalette(for: scheme), flashesPerSecond: 5)
+            let palette = morseBeaconPalette(for: scheme)
+            let safety = evaluateMorseBeaconFlashSafety(palette: palette, flashesPerSecond: 5)
             XCTAssertTrue(safety.safe)
-            XCTAssertLessThanOrEqual(safety.luminanceDelta, 0.07)
+            XCTAssertEqual(safety.reason, .belowAreaThreshold)
+            XCTAssertGreaterThanOrEqual(morseContrastRatio(palette.resting, palette.active), 3)
         }
     }
 
@@ -149,7 +152,7 @@ final class MorseTrainerTests: XCTestCase {
 
         XCTAssertFalse(beacon.useTape)
         XCTAssertTrue(beacon.safety.safe)
-        XCTAssertLessThanOrEqual(beacon.safety.luminanceDelta, 0.07)
+        XCTAssertEqual(beacon.safety.reason, .belowAreaThreshold)
         XCTAssertTrue(reduced.useTape)
         XCTAssertTrue(requestedTape.useTape)
     }
@@ -364,6 +367,14 @@ final class MorseTrainerTests: XCTestCase {
 
         XCTAssertEqual(selectedProgress.courseId, "ised-koch-g4fon-v1")
         XCTAssertTrue(selectedProgress.lessonProgress.isEmpty)
+    }
+
+    private func morseContrastRatio(_ left: MorseRGB, _ right: MorseRGB) -> Double {
+        let leftLuminance = morseRelativeLuminance(left)
+        let rightLuminance = morseRelativeLuminance(right)
+        let lighter = max(leftLuminance, rightLuminance)
+        let darker = min(leftLuminance, rightLuminance)
+        return (lighter + 0.05) / (darker + 0.05)
     }
 
     private func minimalMorseCourse() throws -> MorseCourse {

@@ -2867,6 +2867,12 @@
     },
     "Beacon" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beacon"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2881,24 +2887,24 @@
         }
       }
     },
-    "Beacon area %.0f points; luminance delta %.2f; max %@." : {
+    "Beacon area %.0f points is below the %.0f-point WCAG flash cap; max %@." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Beacon area %.0f points; luminance delta %.2f; max %@."
+            "value" : "Beacon area %.0f points is below the %.0f-point WCAG flash cap; max %@."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zone de balise %.0f points; écart de luminance %.2f; maximum %@."
+            "value" : "La zone de balise de %.0f points est sous la limite WCAG de %.0f points; maximum %@."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zone de balise %.0f points; écart de luminance %.2f; maximum %@."
+            "value" : "La zone de balise de %.0f points est sous la limite WCAG de %.0f points; maximum %@."
           }
         }
       }
@@ -6357,6 +6363,22 @@
         }
       }
     },
+    "Morse tape output" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sortie Morse sur ruban"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sortie Morse sur ruban"
+          }
+        }
+      }
+    },
     "Needs review" : {
       "localizations" : {
         "fr" : {
@@ -9347,6 +9369,12 @@
     },
     "Tape" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tape"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10153,18 +10181,24 @@
         }
       }
     },
-    "Visual beacon (low-contrast)" : {
+    "Visual beacon" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visual beacon"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Balise visuelle (faible contraste)"
+            "value" : "Balise visuelle"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Balise visuelle (faible contraste)"
+            "value" : "Balise visuelle"
           }
         }
       }

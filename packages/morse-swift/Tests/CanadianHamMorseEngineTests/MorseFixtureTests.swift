@@ -164,21 +164,38 @@ final class MorseFixtureTests: XCTestCase {
         let sequence = try textToTimedMorse("5", profile: profileForName(.isedParis))
         let flashesPerSecond = maxMorseFlashesPerSecond(events: morseSignalEvents(sequence: sequence))
         XCTAssertEqual(flashesPerSecond, 5)
-        XCTAssertLessThan(morseBeaconAreaCssPixels, morseFlashMaxAreaCssPixels)
-        let safe = evaluateMorseBeaconFlashSafety(
-            palette: morseBeaconPalette(accent: morseLightAccentRGB, background: morseLightPaperInsetRGB),
-            flashesPerSecond: flashesPerSecond
-        )
-        XCTAssertTrue(safe.safe)
-        XCTAssertEqual(safe.reason, .belowGeneralThreshold)
-        XCTAssertLessThanOrEqual(safe.luminanceDelta, 0.07)
-        XCTAssertFalse(evaluateMorseFlashSafety(MorseFlashSafetyInput(
+        XCTAssertLessThanOrEqual(morseBeaconAreaCssPixels, morseFlashMaxAreaCssPixels)
+        let lightPalette = morseBeaconPalette(accent: morseLightAccentRGB, background: morseLightPaperInsetRGB)
+        let darkPalette = morseBeaconPalette(accent: morseDarkAccentRGB, background: morseDarkPaperInsetRGB)
+        let lightSafe = evaluateMorseBeaconFlashSafety(palette: lightPalette, flashesPerSecond: flashesPerSecond)
+        let darkSafe = evaluateMorseBeaconFlashSafety(palette: darkPalette, flashesPerSecond: flashesPerSecond)
+        XCTAssertTrue(lightSafe.safe)
+        XCTAssertTrue(darkSafe.safe)
+        XCTAssertEqual(lightSafe.reason, .belowAreaThreshold)
+        XCTAssertEqual(darkSafe.reason, .belowAreaThreshold)
+        XCTAssertGreaterThanOrEqual(morseContrastRatio(lightPalette.resting, lightPalette.active), 3)
+        XCTAssertGreaterThanOrEqual(morseContrastRatio(darkPalette.resting, darkPalette.active), 3)
+        XCTAssertTrue(evaluateMorseFlashSafety(MorseFlashSafetyInput(
             flashAreaCssPixels: morseFlashMaxAreaCssPixels + 1,
             flashesPerSecond: 2,
             darkerRelativeLuminance: 0.2,
             lighterRelativeLuminance: 0.8,
             usesSaturatedRed: false
         )).safe)
+        XCTAssertEqual(evaluateMorseFlashSafety(MorseFlashSafetyInput(
+            flashAreaCssPixels: morseFlashMaxAreaCssPixels + 1,
+            flashesPerSecond: 5,
+            darkerRelativeLuminance: 0.75,
+            lighterRelativeLuminance: 0.82,
+            usesSaturatedRed: false
+        )).reason, .belowGeneralThreshold)
+        XCTAssertEqual(evaluateMorseFlashSafety(MorseFlashSafetyInput(
+            flashAreaCssPixels: morseFlashMaxAreaCssPixels + 1,
+            flashesPerSecond: 5,
+            darkerRelativeLuminance: 0.2,
+            lighterRelativeLuminance: 0.8,
+            usesSaturatedRed: false
+        )).reason, .areaTooLarge)
         XCTAssertEqual(evaluateMorseFlashSafety(MorseFlashSafetyInput(
             flashAreaCssPixels: morseBeaconAreaCssPixels,
             flashesPerSecond: 5,
@@ -353,6 +370,14 @@ final class MorseFixtureTests: XCTestCase {
             XCTAssertEqual(pair.0.character, pair.1.character, "\(testCaseId) symbol \(index) character")
             XCTAssertEqual(pair.0.startSeconds, pair.1.startSeconds, accuracy: 1e-12, "\(testCaseId) symbol \(index) startSeconds")
         }
+    }
+
+    private func morseContrastRatio(_ left: MorseRGB, _ right: MorseRGB) -> Double {
+        let leftLuminance = morseRelativeLuminance(left)
+        let rightLuminance = morseRelativeLuminance(right)
+        let lighter = max(leftLuminance, rightLuminance)
+        let darker = min(leftLuminance, rightLuminance)
+        return (lighter + 0.05) / (darker + 0.05)
     }
 
     private func profile(from input: TimingProfileInput) throws -> MorseTimingProfile {

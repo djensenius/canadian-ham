@@ -84,11 +84,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let outputMode = app.descendants(matching: .any)["morse-output-mode-picker"].firstMatch
         scrollUntilHittable(outputMode, in: app, maxSwipes: 8)
         outputMode.tap()
-        let visualOption = app.buttons["Visual beacon (low-contrast)"].firstMatch
+        let visualOption = app.buttons["Visual beacon"].firstMatch
         if visualOption.waitForExistence(timeout: 3) {
             visualOption.tap()
         } else {
-            app.staticTexts["Visual beacon (low-contrast)"].firstMatch.tap()
+            app.staticTexts["Visual beacon"].firstMatch.tap()
         }
         let quickPlay = app.buttons["morse-quick-play-button"].firstMatch
         scrollUntilHittable(quickPlay, in: app, maxSwipes: 8)
@@ -1267,6 +1267,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app.buttons["morse-sending-start-exam-button"].firstMatch.tap()
         XCTAssertTrue(app.staticTexts["morse-sending-exam-text"].firstMatch.waitForExistence(timeout: 5), "\(appearance.rawValue) sending main audit should show the exam card")
         try performAudit(on: app, context: "Morse sending main screen \(appearance)")
+        // Audit the lower half too: the paddles and feedback panel start below the fold.
+        let feedback = app.staticTexts["morse-sending-feedback-summary"].firstMatch
+        scrollUntilHittable(feedback, in: app, maxSwipes: 8)
+        XCTAssertTrue(isFullyVisible(feedback, in: app, requiresHittable: false), "\(appearance.rawValue) sending main audit should scroll the feedback panel into view")
+        try performAudit(on: app, context: "Morse sending main screen lower half \(appearance)")
     }
 
     private func auditMorseSendingResults(appearance: AuditAppearance) throws {
@@ -1470,6 +1475,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Morse"].firstMatch.waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["morse-course-open-button"].firstMatch.waitForExistence(timeout: 10))
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home top")
+        scrollMorseHomeLowerContentIntoView(in: app)
+        try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home lower content")
         openMorseCourse(in: app)
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home top")
@@ -1727,7 +1734,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
             waitBriefly()
         }
         XCTAssertTrue(settings.waitForExistence(timeout: 5), "Expected lower Morse home content")
-        for _ in 0..<2 { app.swipeUp(); waitBriefly() }
+        for _ in 0..<5 { app.swipeUp(); waitBriefly() }
     }
 
     private func scrollToMorseCourseLastUnit(in app: XCUIApplication) {

@@ -74,7 +74,7 @@ export function useWebMorseOutput(interfaceLanguage: InterfaceLanguage): WebMors
       ? t(interfaceLanguage, "morseOutputReducedMotionTape")
       : !safety.safe
         ? t(interfaceLanguage, "morseOutputSafetyFallback")
-        : t(interfaceLanguage, "morseOutputBeaconSafety", formatLocaleNumber(MORSE_BEACON_AREA_CSS_PIXELS, interfaceLanguage, 0), formatLocaleNumber(safety.luminanceDelta, interfaceLanguage, 2), formatLocaleNumber(flashesPerSecond, interfaceLanguage, 0));
+        : t(interfaceLanguage, "morseOutputBeaconSafety", formatLocaleNumber(MORSE_BEACON_AREA_CSS_PIXELS, interfaceLanguage, 0), formatLocaleNumber(safety.maxAreaCssPixels, interfaceLanguage, 0), formatLocaleNumber(flashesPerSecond, interfaceLanguage, 0));
 
     if (useTape) {
       setState({ mode: "visualTape", beaconActive: false, tape: "", safetyNote });
@@ -123,10 +123,10 @@ export function useWebMorseOutput(interfaceLanguage: InterfaceLanguage): WebMors
 }
 
 export function MorseOutputView({ state, interfaceLanguage }: { readonly state: WebMorseOutputState; readonly interfaceLanguage: InterfaceLanguage }) {
+  const generatedLabelId = useId();
   if (state.mode === "idle") {
     return null;
   }
-  const generatedLabelId = useId();
   const labelId = state.mode === "visualTape" ? generatedLabelId : undefined;
   return (
     <div className="morse-output-view" aria-live="off">

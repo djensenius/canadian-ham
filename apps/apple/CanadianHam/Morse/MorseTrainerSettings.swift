@@ -29,7 +29,7 @@ struct MorseTrainerSettings: Codable, Equatable, Sendable {
         var localizedLabel: String {
             switch self {
             case .audio: String(localized: "Audio tone")
-            case .visualBeacon: String(localized: "Visual beacon (low-contrast)")
+            case .visualBeacon: String(localized: "Visual beacon")
             case .visualTape: String(localized: "Non-flashing tape")
             case .haptics: String(localized: "Haptics")
             }
@@ -133,22 +133,11 @@ struct MorseTrainerSettings: Codable, Equatable, Sendable {
     }
 
     static func load(defaults: UserDefaults = .standard) -> MorseTrainerSettings {
-        let loaded: MorseTrainerSettings
-        if let data = defaults.data(forKey: storageKey),
-           let decoded = try? JSONDecoder().decode(MorseTrainerSettings.self, from: data) {
-            loaded = decoded
-        } else {
-            loaded = .default
+        guard let data = defaults.data(forKey: storageKey),
+              let decoded = try? JSONDecoder().decode(MorseTrainerSettings.self, from: data) else {
+            return .default
         }
-#if DEBUG
-        if let rawOutputMode = AppLaunchArguments.value(after: "-CanadianHamMorseOutputMode"),
-           let outputMode = OutputMode(rawValue: rawOutputMode) {
-            var overridden = loaded
-            overridden.outputMode = outputMode
-            return overridden.normalized()
-        }
-#endif
-        return loaded.normalized()
+        return decoded.normalized()
     }
 
     func save(defaults: UserDefaults = .standard) {
