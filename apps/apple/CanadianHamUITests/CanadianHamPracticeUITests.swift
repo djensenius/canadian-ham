@@ -1191,26 +1191,19 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func auditMorseSendingMainScreenLightAndDark() throws {
-        setAuditAppearance(.light)
-        let app = launchApp(arguments: [
-            "-CanadianHamInitialScreen", "morse",
-            "-CanadianHamMorseSendingDebugHook",
-            "-CanadianHamMorseSendingExamSeconds", "600"
-        ])
-        defer {
-            app.terminate()
-            setAuditAppearance(.light)
-        }
-        openSendingPractice(in: app)
-        XCTAssertTrue(app.staticTexts["morse-sending-feedback-summary"].firstMatch.waitForExistence(timeout: 5), "Sending main audit should show the feedback panel")
-        app.buttons["morse-sending-start-exam-button"].firstMatch.tap()
-        XCTAssertTrue(app.staticTexts["morse-sending-exam-text"].firstMatch.waitForExistence(timeout: 5), "Sending main audit should show the exam card")
-
+        defer { setAuditAppearance(.light) }
         for appearance in [AuditAppearance.light, .dark] {
             setAuditAppearance(appearance)
-            scrollToTop(in: app)
+            let app = launchApp(arguments: [
+                "-CanadianHamInitialScreen", "morse",
+                "-CanadianHamMorseSendingDebugHook",
+                "-CanadianHamMorseSendingExamSeconds", "600"
+            ])
+            openSendingPractice(in: app)
             XCTAssertTrue(app.buttons["morse-sending-straight-key-button"].firstMatch.waitForExistence(timeout: 10), "\(appearance.rawValue) sending main audit should show the straight key")
             XCTAssertTrue(app.staticTexts["morse-sending-feedback-summary"].firstMatch.waitForExistence(timeout: 5), "\(appearance.rawValue) sending main audit should show the feedback panel")
+            app.buttons["morse-sending-start-exam-button"].firstMatch.tap()
+            XCTAssertTrue(app.staticTexts["morse-sending-exam-text"].firstMatch.waitForExistence(timeout: 5), "\(appearance.rawValue) sending main audit should show the exam card")
             try performAudit(on: app, context: "Morse sending main screen \(appearance)")
             // Audit the lower half too: the paddles and feedback panel start below the fold.
             let feedback = app.staticTexts["morse-sending-feedback-summary"].firstMatch
@@ -1218,6 +1211,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
             XCTAssertTrue(isFullyVisible(feedback, in: app, requiresHittable: false), "\(appearance.rawValue) sending main audit should scroll the feedback panel into view")
             settleScrollableContentBelowNavigationBar(in: app, context: "Morse sending main screen lower half \(appearance)")
             try performAudit(on: app, context: "Morse sending main screen lower half \(appearance)")
+            app.terminate()
         }
     }
 
