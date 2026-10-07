@@ -1005,6 +1005,40 @@ input[type="checkbox"]:checked::after {
   gap: var(--ch-space-lg);
 }
 
+.morse-output-view {
+  display: grid;
+  justify-items: start;
+  gap: var(--ch-space-sm);
+  padding: var(--ch-space-sm);
+  border: 1px solid var(--ch-color-border);
+  border-radius: var(--ch-radius-md);
+  background: var(--ch-color-paper-inset);
+}
+
+.morse-beacon-lamp {
+  inline-size: min(112px, 14vmin);
+  block-size: min(112px, 14vmin);
+  max-inline-size: 112px;
+  max-block-size: 112px;
+  border: 2px solid var(--ch-color-border);
+  border-radius: var(--ch-radius-pill);
+  background: var(--ch-color-paper-inset);
+}
+
+.morse-beacon-lamp.active {
+  background: var(--ch-color-accent);
+}
+
+.morse-visual-tape {
+  max-inline-size: 100%;
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--ch-font-mono);
+  font-size: var(--ch-type-title-size);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
 .morse-copy-panel,
 .morse-exam-panel,
 .morse-sending-panel {

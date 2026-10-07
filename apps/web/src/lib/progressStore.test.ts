@@ -182,7 +182,8 @@ describe("ProgressStore", () => {
     await first.putLessonProgress(lessonProgressRecord);
     await first.putLessonQuizAttempt(lessonQuizAttempt);
     await first.putMorseCourseProgress(morseCourseProgress);
-    await first.putPreferences({ ...defaultPreferences, practiceMode: "review-later", examTimerEnabled: true, theme: "dark" });
+    const preferencesWithOutputMode = { ...defaultPreferences, practiceMode: "review-later" as const, examTimerEnabled: true, theme: "dark" as const, morse: { ...defaultPreferences.morse, outputMode: "visualTape" as const } };
+    await first.putPreferences(preferencesWithOutputMode);
 
     const exported = await first.exportData("2026-01-02T04:00:00.000Z");
     assert.equal(exported.bankId, bankId);
@@ -190,7 +191,7 @@ describe("ProgressStore", () => {
     assert.deepEqual(exported.lessonProgress, [lessonProgressRecord]);
     assert.deepEqual(exported.lessonQuizAttempts, [lessonQuizAttempt]);
     assert.deepEqual(exported.morseCourseProgress, morseCourseProgress);
-    assert.deepEqual(exported.preferences, { ...defaultPreferences, practiceMode: "review-later", examTimerEnabled: true, theme: "dark" });
+    assert.deepEqual(exported.preferences, preferencesWithOutputMode);
     assertProgressExportMatchesSchema(exported);
 
     const validation = validateProgressImport(JSON.parse(JSON.stringify(exported)) as unknown);
@@ -203,7 +204,7 @@ describe("ProgressStore", () => {
     assert.deepEqual(await second.getLessonProgress(), [lessonProgressRecord]);
     assert.deepEqual(await second.getLessonQuizAttempts(), [lessonQuizAttempt]);
     assert.deepEqual(await second.getMorseCourseProgress(), morseCourseProgress);
-    assert.deepEqual(await second.getPreferences(), { ...defaultPreferences, practiceMode: "review-later", examTimerEnabled: true, theme: "dark" });
+    assert.deepEqual(await second.getPreferences(), preferencesWithOutputMode);
   });
 
   it("imports one course while keeping the other course's progress, in both directions", async () => {
@@ -308,6 +309,15 @@ describe("ProgressStore", () => {
 
     Object.defineProperty(globalThis, "indexedDB", { value: originalIndexedDB, configurable: true });
     assert.deepEqual(await store.getQuestionProgress(), []);
+  });
+
+  it("rejects web exports that try to import unsupported haptic output mode", () => {
+    const invalid = validExport({ preferences: { ...defaultPreferences, morse: { ...defaultPreferences.morse, outputMode: "haptics" as never } } });
+
+    const validation = validateProgressImport(invalid);
+
+    assert.equal(validation.ok, false);
+    assert.match(validation.errors.join("\n"), /Import preferences are invalid/);
   });
 
   it("accepts legacy exports without lesson or Morse stores as empty older data", () => {

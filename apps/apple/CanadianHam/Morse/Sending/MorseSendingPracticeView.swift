@@ -464,7 +464,7 @@ private struct MorseSendingExamCard: View {
             }
         }
         .padding(DesignTokens.Spacing.md)
-        .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+        .background(DesignTokens.Colors.paper, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
     }
 }

@@ -18,21 +18,87 @@ struct MorseTrainerSettings: Codable, Equatable, Sendable {
         }
     }
 
+    enum OutputMode: String, Codable, CaseIterable, Identifiable, Sendable {
+        case audio
+        case visualBeacon
+        case visualTape
+        case haptics
+
+        var id: String { rawValue }
+
+        var localizedLabel: String {
+            switch self {
+            case .audio: String(localized: "Audio tone")
+            case .visualBeacon: String(localized: "Visual beacon")
+            case .visualTape: String(localized: "Non-flashing tape")
+            case .haptics: String(localized: "Haptics")
+            }
+        }
+
+        static var availableCases: [OutputMode] {
+#if os(iOS)
+            MorseHapticDriver.supportsHaptics ? allCases : allCases.filter { $0 != .haptics }
+#else
+            allCases.filter { $0 != .haptics }
+#endif
+        }
+    }
+
     var toneHz: Int
     var characterWpm: Int
     var effectiveWpm: Int
     var timingProfile: TimingProfile
     var volume: Double
+    var outputMode: OutputMode
 
     static let `default` = MorseTrainerSettings(
         toneHz: 650,
         characterWpm: 15,
         effectiveWpm: 5,
         timingProfile: .isedParis,
-        volume: 0.6
+        volume: 0.6,
+        outputMode: .audio
     )
 
     static let storageKey = "canadian-ham.morse-trainer-settings.v1"
+
+    init(toneHz: Int, characterWpm: Int, effectiveWpm: Int, timingProfile: TimingProfile, volume: Double, outputMode: OutputMode = .audio) {
+        self.toneHz = toneHz
+        self.characterWpm = characterWpm
+        self.effectiveWpm = effectiveWpm
+        self.timingProfile = timingProfile
+        self.volume = volume
+        self.outputMode = outputMode
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case toneHz
+        case characterWpm
+        case effectiveWpm
+        case timingProfile
+        case volume
+        case outputMode
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        toneHz = try container.decode(Int.self, forKey: .toneHz)
+        characterWpm = try container.decode(Int.self, forKey: .characterWpm)
+        effectiveWpm = try container.decode(Int.self, forKey: .effectiveWpm)
+        timingProfile = try container.decode(TimingProfile.self, forKey: .timingProfile)
+        volume = try container.decode(Double.self, forKey: .volume)
+        outputMode = try container.decodeIfPresent(OutputMode.self, forKey: .outputMode) ?? .audio
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(toneHz, forKey: .toneHz)
+        try container.encode(characterWpm, forKey: .characterWpm)
+        try container.encode(effectiveWpm, forKey: .effectiveWpm)
+        try container.encode(timingProfile, forKey: .timingProfile)
+        try container.encode(volume, forKey: .volume)
+        try container.encode(outputMode, forKey: .outputMode)
+    }
 
     func normalized() -> MorseTrainerSettings {
         let normalizedCharacterWpm = Self.clamp(characterWpm, min: 12, max: 25)
@@ -41,7 +107,8 @@ struct MorseTrainerSettings: Codable, Equatable, Sendable {
             characterWpm: normalizedCharacterWpm,
             effectiveWpm: Self.clamp(effectiveWpm, min: 5, max: normalizedCharacterWpm),
             timingProfile: timingProfile,
-            volume: min(1, max(0, volume))
+            volume: min(1, max(0, volume)),
+            outputMode: Self.normalizedOutputMode(outputMode)
         )
     }
 
@@ -85,5 +152,9 @@ struct MorseTrainerSettings: Codable, Equatable, Sendable {
 
     private static func clamp(_ value: Int, min lowerBound: Int, max upperBound: Int) -> Int {
         Swift.min(upperBound, Swift.max(lowerBound, value))
+    }
+
+    private static func normalizedOutputMode(_ mode: OutputMode) -> OutputMode {
+        OutputMode.availableCases.contains(mode) ? mode : .audio
     }
 }

@@ -1,5 +1,6 @@
 @testable import CanadianHam
 import CanadianHamMorseEngine
+import SwiftUI
 import XCTest
 
 final class MorseTrainerTests: XCTestCase {
@@ -16,6 +17,10 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(settings.characterWpm, 25)
         XCTAssertEqual(settings.effectiveWpm, 25)
         XCTAssertEqual(settings.volume, 1)
+        XCTAssertEqual(settings.outputMode, .audio)
+
+        let visualSettings = MorseTrainerSettings(toneHz: 650, characterWpm: 15, effectiveWpm: 5, timingProfile: .general, volume: 0.6, outputMode: .visualBeacon).normalized()
+        XCTAssertEqual(visualSettings.outputMode, .visualBeacon)
 
         let preset = settings.applyingISEDExamPreset()
         XCTAssertEqual(preset.characterWpm, 12)
@@ -112,6 +117,74 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(general.effectiveWpm, 10, accuracy: 0.000_001)
     }
 
+    func testMorseSettingsCodableRoundTripPreservesOutputMode() throws {
+        let settings = MorseTrainerSettings(toneHz: 700, characterWpm: 18, effectiveWpm: 6, timingProfile: .general, volume: 0.4, outputMode: .visualTape)
+
+        let decoded = try JSONDecoder().decode(MorseTrainerSettings.self, from: JSONEncoder().encode(settings))
+
+        XCTAssertEqual(decoded, settings)
+    }
+
+    func testMorseBeaconPaletteMatchesDesignTokensAndKeepsAreaAndContrastMargins() throws {
+        let tokensURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appending(path: "CanadianHam/Design/Tokens.swift")
+        let tokens = try String(contentsOf: tokensURL, encoding: .utf8)
+        XCTAssertTrue(tokens.contains("paperInset = Color.dynamicToken(light: DesignTokens.RGB(red: 0.937255, green: 0.890196, blue: 0.796078), dark: DesignTokens.RGB(red: 0.094118, green: 0.078431, blue: 0.062745))"))
+        XCTAssertTrue(tokens.contains("accent = Color.dynamicToken(light: DesignTokens.RGB(red: 0.647059, green: 0.227451, blue: 0.164706), dark: DesignTokens.RGB(red: 1.000000, green: 0.541176, blue: 0.439216))"))
+        XCTAssertLessThanOrEqual(morseBeaconAreaCssPixels, morseFlashMaxAreaCssPixels)
+        for scheme in [ColorScheme.light, .dark] {
+            let palette = morseBeaconPalette(for: scheme)
+            let safety = evaluateMorseBeaconFlashSafety(palette: palette, flashesPerSecond: 5)
+            XCTAssertTrue(safety.safe)
+            XCTAssertEqual(safety.reason, .belowAreaThreshold)
+            XCTAssertGreaterThanOrEqual(morseContrastRatio(palette.resting, palette.active), 3)
+        }
+    }
+
+    func testMorseVisualPlaybackPlanUsesBeaconWhenSafeAndTapeWhenRequestedOrReduced() throws {
+        let sequence = try textToTimedMorse("5", profile: profileForName(.isedParis))
+
+        let beacon = morseVisualPlaybackPlan(sequence: sequence, requestedMode: .visualBeacon, reduceFlashing: false, colorScheme: .light)
+        let reduced = morseVisualPlaybackPlan(sequence: sequence, requestedMode: .visualBeacon, reduceFlashing: true, colorScheme: .light)
+        let requestedTape = morseVisualPlaybackPlan(sequence: sequence, requestedMode: .visualTape, reduceFlashing: false, colorScheme: .light)
+
+        XCTAssertFalse(beacon.useTape)
+        XCTAssertTrue(beacon.safety.safe)
+        XCTAssertEqual(beacon.safety.reason, .belowAreaThreshold)
+        XCTAssertTrue(reduced.useTape)
+        XCTAssertTrue(requestedTape.useTape)
+    }
+
+    func testReduceFlashingDecisionUsesInjectedFlags() {
+        XCTAssertFalse(shouldReduceMorseFlashing(flags: MorseReduceFlashingFlags(environmentReduceMotion: false, systemReduceMotion: false, dimFlashingLights: false)))
+        XCTAssertTrue(shouldReduceMorseFlashing(flags: MorseReduceFlashingFlags(environmentReduceMotion: true, systemReduceMotion: false, dimFlashingLights: false)))
+        XCTAssertTrue(shouldReduceMorseFlashing(flags: MorseReduceFlashingFlags(environmentReduceMotion: false, systemReduceMotion: true, dimFlashingLights: false)))
+        XCTAssertTrue(shouldReduceMorseFlashing(flags: MorseReduceFlashingFlags(environmentReduceMotion: false, systemReduceMotion: false, dimFlashingLights: true)))
+    }
+
+    @MainActor
+    func testScheduleMorseVisualPlaybackInitialStateAndFallback() throws {
+        let sequence = try textToTimedMorse("E", profile: profileForName(.isedParis))
+        var beaconState = MorseVisualPlaybackState()
+        var tapeState = MorseVisualPlaybackState()
+        var beaconTasks: [Task<Void, Never>] = []
+        var tapeTasks: [Task<Void, Never>] = []
+        defer {
+            beaconTasks.forEach { $0.cancel() }
+            tapeTasks.forEach { $0.cancel() }
+        }
+
+        beaconTasks = scheduleMorseVisualPlayback(sequence: sequence, requestedMode: .visualBeacon, reduceFlashing: false, colorScheme: .light) { beaconState = $0 }
+        tapeTasks = scheduleMorseVisualPlayback(sequence: sequence, requestedMode: .visualBeacon, reduceFlashing: true, colorScheme: .light) { tapeState = $0 }
+
+        XCTAssertEqual(beaconState.mode, .visualBeacon)
+        XCTAssertFalse(beaconState.beaconActive)
+        XCTAssertEqual(tapeState.mode, .visualTape)
+        XCTAssertEqual(tapeState.tape, "")
+    }
+
     func testMorseSettingsDecodesLegacyPayloadWithIsEnabled() throws {
         let json = #"""
         {
@@ -131,6 +204,7 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(decoded.effectiveWpm, 7)
         XCTAssertEqual(decoded.timingProfile, .general)
         XCTAssertEqual(decoded.volume, 0.45)
+        XCTAssertEqual(decoded.outputMode, .audio)
     }
 
     func testMorseExamGeneratorMeetsReceivingExamConstraints() throws {
@@ -293,6 +367,14 @@ final class MorseTrainerTests: XCTestCase {
 
         XCTAssertEqual(selectedProgress.courseId, "ised-koch-g4fon-v1")
         XCTAssertTrue(selectedProgress.lessonProgress.isEmpty)
+    }
+
+    private func morseContrastRatio(_ left: MorseRGB, _ right: MorseRGB) -> Double {
+        let leftLuminance = morseRelativeLuminance(left)
+        let rightLuminance = morseRelativeLuminance(right)
+        let lighter = max(leftLuminance, rightLuminance)
+        let darker = min(leftLuminance, rightLuminance)
+        return (lighter + 0.05) / (darker + 0.05)
     }
 
     private func minimalMorseCourse() throws -> MorseCourse {

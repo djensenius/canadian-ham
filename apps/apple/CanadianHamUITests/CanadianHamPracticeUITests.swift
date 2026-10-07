@@ -75,6 +75,27 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Lesson 1 session"].firstMatch.waitForExistence(timeout: 5))
     }
 
+    func testMorseVisualOutputModeQuickListenOnIOS() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse"])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
+        let outputMode = app.descendants(matching: .any)["morse-output-mode-picker"].firstMatch
+        scrollUntilHittable(outputMode, in: app, maxSwipes: 8)
+        outputMode.tap()
+        let visualOption = app.buttons["Visual beacon"].firstMatch
+        if visualOption.waitForExistence(timeout: 3) {
+            visualOption.tap()
+        } else {
+            app.staticTexts["Visual beacon"].firstMatch.tap()
+        }
+        let quickPlay = app.buttons["morse-quick-play-button"].firstMatch
+        scrollUntilHittable(quickPlay, in: app, maxSwipes: 8)
+        quickPlay.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["morse-visual-beacon"].firstMatch.waitForExistence(timeout: 5), "Choosing visual beacon should show a visual Morse output when Quick listen plays")
+    }
+
     func testCompletesFirstMorseLessonSessionOnIOS() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"])
@@ -102,6 +123,28 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["morse-course-summary-heading"].firstMatch.waitForExistence(timeout: 10))
         XCTAssertTrue(app.staticTexts["Try again next time. Correct answer: KMMKK."].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Great work. The next lesson is unlocked."].firstMatch.waitForExistence(timeout: 5))
+    }
+
+    func testAccessibilityAuditMorseBeaconOutputLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditMorseVisualQuickListen(outputMode: "visualBeacon", outputIdentifier: "morse-visual-beacon", appearance: .light)
+    }
+
+    func testAccessibilityAuditMorseBeaconOutputDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditMorseVisualQuickListen(outputMode: "visualBeacon", outputIdentifier: "morse-visual-beacon", appearance: .dark)
+        XCUIDevice.shared.appearance = .light
+    }
+
+    func testAccessibilityAuditMorseTapeOutputLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditMorseVisualQuickListen(outputMode: "visualTape", outputIdentifier: "morse-visual-tape", appearance: .light)
+    }
+
+    func testAccessibilityAuditMorseTapeOutputDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditMorseVisualQuickListen(outputMode: "visualTape", outputIdentifier: "morse-visual-tape", appearance: .dark)
+        XCUIDevice.shared.appearance = .light
     }
 
     func testAccessibilityAuditMorseCourseLessonAndSummaryLight() throws {
@@ -1228,6 +1271,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let feedback = app.staticTexts["morse-sending-feedback-summary"].firstMatch
         scrollUntilHittable(feedback, in: app, maxSwipes: 8)
         XCTAssertTrue(isFullyVisible(feedback, in: app, requiresHittable: false), "\(appearance.rawValue) sending main audit should scroll the feedback panel into view")
+        settleScrollableContentBelowNavigationBar(in: app, context: "Morse sending main screen lower half \(appearance)")
         try performAudit(on: app, context: "Morse sending main screen lower half \(appearance)")
     }
 
@@ -1409,18 +1453,37 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app.terminate()
     }
 
+    private func auditMorseVisualQuickListen(outputMode: String, outputIdentifier: String, appearance: AuditAppearance) throws {
+        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseOutputMode", outputMode])
+        defer { app.terminate() }
+        XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
+        let play = app.buttons["morse-quick-play-button"].firstMatch
+        XCTAssertTrue(play.waitForExistence(timeout: 5), "Expected Quick listen play button")
+        play.tap()
+        let output = app.descendants(matching: .any)[outputIdentifier].firstMatch
+        XCTAssertTrue(output.waitForExistence(timeout: 5), "Expected visual output \(outputIdentifier) on the real Morse screen")
+        assertFullyVisibleBelowNavigationBar(output, in: app, context: "\(appearance.rawValue) \(outputMode) during playback")
+        Thread.sleep(forTimeInterval: 0.2)
+        try performAudit(on: app, context: "\(appearance.rawValue) \(outputMode) during playback")
+        XCTAssertTrue(app.staticTexts["Morse playback finished."].firstMatch.waitForExistence(timeout: 60))
+        XCTAssertTrue(output.exists, "Expected visual output \(outputIdentifier) to remain available after playback")
+        assertFullyVisibleBelowNavigationBar(output, in: app, context: "\(appearance.rawValue) \(outputMode) after playback")
+        try performAudit(on: app, context: "\(appearance.rawValue) \(outputMode) after playback")
+    }
+
     private func auditMorseCourseFlow(appearance: AuditAppearance) throws {
         let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"])
         XCTAssertTrue(app.staticTexts["Morse"].firstMatch.waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["morse-course-open-button"].firstMatch.waitForExistence(timeout: 10))
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home top")
         scrollMorseHomeLowerContentIntoView(in: app)
+        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse home lower content")
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home lower content")
-
         openMorseCourse(in: app)
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home top")
         scrollToMorseCourseLastUnit(in: app)
+        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse course home lower units")
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home lower units")
 
         openFirstMorseUnit(in: app)
@@ -1674,6 +1737,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
             waitBriefly()
         }
         XCTAssertTrue(settings.waitForExistence(timeout: 5), "Expected lower Morse home content")
+        for _ in 0..<3 { app.swipeUp(); waitBriefly() }
     }
 
     private func scrollToMorseCourseLastUnit(in app: XCUIApplication) {
@@ -1940,6 +2004,46 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 scrollView.swipeUp()
             }
             waitBriefly()
+        }
+    }
+
+    private func settleScrollableContentBelowNavigationBar(
+        in app: XCUIApplication,
+        context: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let scrollView = app.scrollViews.firstMatch
+        guard scrollView.waitForExistence(timeout: 1) else { return }
+        for _ in 0..<30 {
+            let offenders = scrollableElementsIntersectingProtectedArea(in: app)
+            if offenders.isEmpty { return }
+            let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
+            let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.40))
+            start.press(forDuration: 0.01, thenDragTo: end)
+            waitBriefly()
+        }
+        let offenders = scrollableElementsIntersectingProtectedArea(in: app)
+        XCTAssertTrue(
+            offenders.isEmpty,
+            "\(context): expected no scrollable text or buttons to intersect the protected navigation/status area; offenders: \(offenders.joined(separator: "; "))",
+            file: file,
+            line: line
+        )
+    }
+
+    private func scrollableElementsIntersectingProtectedArea(in app: XCUIApplication) -> [String] {
+        let scrollView = app.scrollViews.firstMatch
+        guard scrollView.exists else { return [] }
+        let windowMinY = app.windows.firstMatch.frame.minY
+        let protectedMaxY = protectedNavigationFrame(in: app).maxY + 1
+        let elements = scrollView.staticTexts.allElementsBoundByIndex + scrollView.buttons.allElementsBoundByIndex
+        return elements.compactMap { element in
+            guard element.exists else { return nil }
+            let frame = element.frame
+            guard frame.width > 0, frame.height > 0 else { return nil }
+            guard frame.maxY > windowMinY, frame.minY < protectedMaxY else { return nil }
+            return "\(element.elementType) id=\(element.identifier) label=\(element.label) frame=\(frameDescription(frame))"
         }
     }
 

@@ -1741,6 +1741,76 @@
         }
       }
     },
+    "%lld flashes/s" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld flash/s"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld flashes/s"
+                }
+              }
+            }
+          }
+        },
+        "fr" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld clignotement/s"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld clignotements/s"
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld clignotement/s"
+                }
+              }
+            }
+          }
+        },
+        "fr-CA" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld clignotement/s"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld clignotements/s"
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld clignotement/s"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld lesson" : {
       "localizations" : {
         "en" : {
@@ -2699,6 +2769,22 @@
         }
       }
     },
+    "Audio tone" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tonalité audio"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tonalité audio"
+          }
+        }
+      }
+    },
     "Bank" : {
       "localizations" : {
         "fr" : {
@@ -2743,6 +2829,72 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Compétence de base avec distinction"
+          }
+        }
+      }
+    },
+    "Beacon" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beacon"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Balise"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Balise"
+          }
+        }
+      }
+    },
+    "Beacon area %.0f points is below the %.0f-point WCAG flash cap; max %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beacon area %.0f points is below the %.0f-point WCAG flash cap; max %@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La zone de balise de %.0f points est sous la limite WCAG de %.0f points; maximum %@."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La zone de balise de %.0f points est sous la limite WCAG de %.0f points; maximum %@."
+          }
+        }
+      }
+    },
+    "Beacon safety limits were exceeded, so playback uses the non-flashing tape." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beacon safety limits were exceeded, so playback uses the non-flashing tape."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les limites de sécurité de la balise sont dépassées; la lecture utilise donc le ruban non clignotant."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les limites de sécurité de la balise sont dépassées; la lecture utilise donc le ruban non clignotant."
           }
         }
       }
@@ -2925,18 +3077,24 @@
         }
       }
     },
-    "Choose a passage length, start the audio, and type what you hear during or after playback. Passages use only RIC-1 section 8.2 characters." : {
+    "Choose a passage length, start playback, and type what you receive during or after it. Passages use only RIC-1 section 8.2 characters." : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a passage length, start playback, and type what you receive during or after it. Passages use only RIC-1 section 8.2 characters."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choisissez une longueur de passage, démarrez l’audio et tapez ce que vous entendez pendant ou après la lecture. Les passages utilisent seulement les caractères de la section 8.2 de RIC-1."
+            "value" : "Choisissez une longueur de passage, démarrez la lecture et tapez ce que vous recevez pendant ou après celle-ci. Le passage utilise seulement les caractères de la section 8.2 de RIC-1."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choisissez une longueur de passage, démarrez l’audio et tapez ce que vous entendez pendant ou après la lecture. Les passages utilisent seulement les caractères de la section 8.2 de RIC-1."
+            "value" : "Choisissez une longueur de passage, démarrez la lecture et tapez ce que vous recevez pendant ou après celle-ci. Le passage utilise seulement les caractères de la section 8.2 de RIC-1."
           }
         }
       }
@@ -3793,18 +3951,24 @@
         }
       }
     },
-    "Exam playback started. Audio cannot be paused or replayed." : {
+    "Exam playback started. It cannot be paused or replayed." : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exam playback started. It cannot be paused or replayed."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lecture d’examen commencée. L’audio ne peut pas être mis en pause ni rejoué."
+            "value" : "Lecture d’examen commencée. Elle ne peut pas être mise en pause ni rejouée."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lecture d’examen commencée. L’audio ne peut pas être mis en pause ni rejoué."
+            "value" : "Lecture d’examen commencée. Elle ne peut pas être mise en pause ni rejouée."
           }
         }
       }
@@ -4121,24 +4285,24 @@
         }
       }
     },
-    "Generated exam: %lld weighted characters, %@ seconds of audio." : {
+    "Generated exam: %lld weighted characters, %@ seconds of playback." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Generated exam: %1$lld weighted characters, %2$@ seconds of audio."
+            "state" : "translated",
+            "value" : "Generated exam: %lld weighted characters, %@ seconds of playback."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Examen généré : %1$lld caractères pondérés, %2$@ secondes d’audio."
+            "value" : "Examen généré : %lld caractères pondérés, %@ secondes de lecture."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Examen généré : %1$lld caractères pondérés, %2$@ secondes d’audio."
+            "value" : "Examen généré : %lld caractères pondérés, %@ secondes de lecture."
           }
         }
       }
@@ -4193,6 +4357,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bravo. La leçon suivante est débloquée."
+          }
+        }
+      }
+    },
+    "Haptics" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vibrations"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vibrations"
+          }
+        }
+      }
+    },
+    "Haptics are not available on this device." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les vibrations ne sont pas disponibles sur cet appareil."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les vibrations ne sont pas disponibles sur cet appareil."
           }
         }
       }
@@ -5905,6 +6101,22 @@
         }
       }
     },
+    "Morse tape output" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sortie Morse sur ruban"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sortie Morse sur ruban"
+          }
+        }
+      }
+    },
     "Needs review" : {
       "localizations" : {
         "fr" : {
@@ -6183,6 +6395,22 @@
         }
       }
     },
+    "Non-flashing tape" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruban non clignotant"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruban non clignotant"
+          }
+        }
+      }
+    },
     "Not enough data" : {
       "localizations" : {
         "fr" : {
@@ -6419,6 +6647,22 @@
         }
       }
     },
+    "Output mode" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode de sortie"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode de sortie"
+          }
+        }
+      }
+    },
     "Pass" : {
       "localizations" : {
         "fr" : {
@@ -6591,24 +6835,24 @@
         }
       }
     },
-    "Play Morse practice audio" : {
+    "Play Morse practice output" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Play Morse practice audio"
+            "value" : "Play Morse practice output"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lire l’audio d’exercice Morse"
+            "value" : "Lire la sortie d’exercice Morse"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lire l’audio d’exercice Morse"
+            "value" : "Lire la sortie d’exercice Morse"
           }
         }
       }
@@ -7355,6 +7599,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Prête à lire"
+          }
+        }
+      }
+    },
+    "Reduced Motion or Dim Flashing Lights is on, so playback uses the non-flashing tape." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reduced Motion or Dim Flashing Lights is on, so playback uses the non-flashing tape."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réduire les animations ou Atténuer les lumières clignotantes est activé; la lecture utilise donc le ruban non clignotant."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réduire les animations ou Atténuer les lumières clignotantes est activé; la lecture utilise donc le ruban non clignotant."
           }
         }
       }
@@ -8273,24 +8539,24 @@
         }
       }
     },
-    "Stop Morse practice audio" : {
+    "Stop Morse practice output" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stop Morse practice audio"
+            "value" : "Stop Morse practice output"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Arrêter l’audio d’exercice Morse"
+            "value" : "Arrêter la sortie d’exercice Morse"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Arrêter l’audio d’exercice Morse"
+            "value" : "Arrêter la sortie d’exercice Morse"
           }
         }
       }
@@ -8547,6 +8813,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Système"
+          }
+        }
+      }
+    },
+    "Tape" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tape"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruban"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruban"
           }
         }
       }
@@ -9323,6 +9611,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Utilisez Réglages pour modifier la tonalité, le minutage et le volume de lecture Morse."
+          }
+        }
+      }
+    },
+    "Visual beacon" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visual beacon"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Balise visuelle"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Balise visuelle"
           }
         }
       }

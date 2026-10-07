@@ -16,8 +16,14 @@ struct MorseCourseView: View {
     @State private var statusMessage = ""
     @State private var statusMessageIsCorrective = false
     @State private var errorMessage: String?
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.colorScheme) private var colorScheme
+    @State private var dimFlashingLightsEnabled = morseDimFlashingLightsEnabled()
     @State private var progressSaveFailed = false
     @State private var driver = MorseAudioDriver()
+    @State private var hapticDriver = MorseHapticDriver()
+    @State private var visualPlaybackState = MorseVisualPlaybackState()
+    @State private var visualPlaybackTasks: [Task<Void, Never>] = []
     @State private var isPlaying = false
     @State private var playbackGeneration = 0
     @AccessibilityFocusState private var sessionIsFocused: Bool
@@ -35,6 +41,9 @@ struct MorseCourseView: View {
             }
             .task { loadCourse() }
             .onReceive(progressStore.objectWillChange) { _ in loadCourse() }
+            .onReceive(NotificationCenter.default.publisher(for: .morseDimFlashingLightsChanged)) { _ in
+                dimFlashingLightsEnabled = morseDimFlashingLightsEnabled()
+            }
     }
 
     private var courseHome: some View {
@@ -270,6 +279,7 @@ struct MorseCourseView: View {
             if !session.done {
                 exerciseView(session.currentExercise)
             }
+            MorseVisualPlaybackView(state: visualPlaybackState)
             if !statusMessage.isEmpty && (!session.done || statusMessageIsCorrective) {
                 Text(statusMessage) // l10n: localized
                     .font(DesignTokens.FontScale.body)
@@ -433,7 +443,7 @@ struct MorseCourseView: View {
     private func play(_ text: String) {
         do {
             playbackCoordinator.claim("course")
-            let duration = try driver.play(text: playbackText(for: text), settings: settings.normalized())
+            let duration = try startConfiguredOutput(text: playbackText(for: text))
             isPlaying = true
             // A new course playback replaces an earlier "stopped" notice, but never corrective feedback.
             if !statusMessageIsCorrective && statusMessage == String(localized: "Morse playback stopped.") {
@@ -445,11 +455,32 @@ struct MorseCourseView: View {
             Task { @MainActor in
                 try? await Task.sleep(for: .seconds(max(0, duration)))
                 if playbackGeneration == generation {
+                    hapticDriver.stop()
+                    visualPlaybackState.beaconActive = false
                     isPlaying = false
                 }
             }
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
+        }
+    }
+
+    private func startConfiguredOutput(text: String) throws -> TimeInterval {
+        let normalized = settings.normalized()
+        driver.stop()
+        hapticDriver.stop()
+        cancelMorseVisualPlayback(&visualPlaybackTasks, state: &visualPlaybackState)
+        let sequence = try textToTimedMorse(text, profile: normalized.timingProfileValue())
+        switch normalized.outputMode {
+        case .audio:
+            return try driver.play(text: text, settings: normalized)
+        case .haptics:
+            return try hapticDriver.play(sequence: sequence)
+        case .visualBeacon, .visualTape:
+            visualPlaybackTasks = scheduleMorseVisualPlayback(sequence: sequence, requestedMode: normalized.outputMode, reduceFlashing: shouldReduceMorseFlashing(flags: currentMorseReduceFlashingFlags(environmentReduceMotion: reduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)), colorScheme: colorScheme) { nextState in
+                visualPlaybackState = nextState
+            }
+            return sequence.totalDurationSeconds
         }
     }
 
@@ -466,6 +497,8 @@ struct MorseCourseView: View {
     private func stopCoursePlayback(message: String = "") {
         let wasPlaying = isPlaying
         driver.stop()
+        hapticDriver.stop()
+        cancelMorseVisualPlayback(&visualPlaybackTasks, state: &visualPlaybackState)
         isPlaying = false
         playbackGeneration += 1
         // Only report a stop for audio that was actually playing, and never replace

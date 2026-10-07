@@ -3,16 +3,33 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
+  MORSE_BEACON_ACTIVE_MIX,
+  MORSE_BEACON_AREA_CSS_PIXELS,
+  MORSE_BEACON_RESTING_MIX,
+  MORSE_DARK_ACCENT_RGB,
+  MORSE_DARK_PAPER_INSET_RGB,
   MORSE_CODE_TABLE,
+  MORSE_FLASH_MAX_AREA_CSS_PIXELS,
+  MORSE_LIGHT_ACCENT_RGB,
+  MORSE_LIGHT_PAPER_INSET_RGB,
   MorseValidationError,
   applyMorseDecodedCharacter,
   buildMorseLessonExercises,
   classifyMorseKeyDown,
   dailyStreak,
   diffMorseCopy,
+  evaluateMorseBeaconFlashSafety,
+  evaluateMorseFlashSafety,
   farnsworthTiming,
   generateMorseExamText,
+  maxMorseFlashesPerSecond,
+  mixMorseRgb,
+  morseBeaconPalette,
   morseCharacterTimingFeedback,
+  morseRelativeLuminance,
+  morseHapticEvents,
+  morseSignalEvents,
+  morseTapeTokens,
   parseMorseCourseFixture,
   profileForName,
   scoreMorseCopy,
@@ -33,6 +50,92 @@ const course = parseMorseCourseFixture(JSON.parse(await readFile(join(fixturesRo
 describe("public tables", () => {
   it("freezes the Morse code table so consumers can't change mappings at runtime", () => {
     expect(Object.isFrozen(MORSE_CODE_TABLE)).toBe(true);
+  });
+});
+
+describe("visual, tape and haptic output mapping", () => {
+  it("maps timed Morse symbols to beacon transitions, tape tokens and haptic durations", () => {
+    const sequence = textToTimedMorse("ET", profileForName("isedParis"));
+    const signalEvents = morseSignalEvents(sequence);
+    expect(signalEvents.map((event) => ({ kind: event.kind, character: event.character, symbolKind: event.symbolKind }))).toEqual([
+      { kind: "on", character: "E", symbolKind: "dot" },
+      { kind: "off", character: "E", symbolKind: "dot" },
+      { kind: "on", character: "T", symbolKind: "dash" },
+      { kind: "off", character: "T", symbolKind: "dash" },
+    ]);
+    expect(signalEvents[1]!.atSeconds).toBeCloseTo(0.1, 12);
+    expect(signalEvents[2]!.atSeconds).toBeCloseTo(1.505263157894737, 12);
+    expect(morseTapeTokens(sequence).map((token) => token.token)).toEqual([".", "-"]);
+    expect(morseTapeTokens(sequence)[1]!.revealAtSeconds).toBeCloseTo(1.505263157894737, 12);
+    const hapticEvents = morseHapticEvents(sequence);
+    expect(hapticEvents.map((event) => event.symbolKind)).toEqual(["dot", "dash"]);
+    expect(hapticEvents[1]!.startSeconds).toBeCloseTo(1.505263157894737, 12);
+    expect(hapticEvents[1]!.durationSeconds).toBeCloseTo(0.3, 12);
+  });
+
+  it("keeps the configured visual beacon within WCAG 2.2 SC 2.3.1 area thresholds and perceptible in both themes", () => {
+    const sequence = textToTimedMorse("5", profileForName("isedParis"));
+    const flashesPerSecond = maxMorseFlashesPerSecond(morseSignalEvents(sequence));
+    expect(flashesPerSecond).toBe(5);
+    expect(MORSE_BEACON_AREA_CSS_PIXELS).toBeLessThanOrEqual(MORSE_FLASH_MAX_AREA_CSS_PIXELS);
+    const lightPalette = morseBeaconPalette({ accent: MORSE_LIGHT_ACCENT_RGB, background: MORSE_LIGHT_PAPER_INSET_RGB });
+    const darkPalette = morseBeaconPalette({ accent: MORSE_DARK_ACCENT_RGB, background: MORSE_DARK_PAPER_INSET_RGB });
+    expect(evaluateMorseBeaconFlashSafety({ palette: lightPalette, flashesPerSecond })).toMatchObject({ safe: true, reason: "below-area-threshold" });
+    expect(evaluateMorseBeaconFlashSafety({ palette: darkPalette, flashesPerSecond })).toMatchObject({ safe: true, reason: "below-area-threshold" });
+    expect(contrastRatio(lightPalette.resting, lightPalette.active)).toBeGreaterThanOrEqual(3);
+    expect(contrastRatio(darkPalette.resting, darkPalette.active)).toBeGreaterThanOrEqual(3);
+    expect(evaluateMorseFlashSafety({
+      flashAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS,
+      flashesPerSecond: 5,
+      darkerRelativeLuminance: 0.2,
+      lighterRelativeLuminance: 0.8,
+      usesSaturatedRed: false,
+    })).toMatchObject({ safe: true, reason: "below-area-threshold" });
+    expect(evaluateMorseFlashSafety({
+      flashAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS + 1,
+      flashesPerSecond: 2,
+      darkerRelativeLuminance: 0.2,
+      lighterRelativeLuminance: 0.8,
+      usesSaturatedRed: false,
+    })).toMatchObject({ safe: true, reason: "within-three-flashes" });
+    expect(evaluateMorseFlashSafety({
+      flashAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS + 1,
+      flashesPerSecond: 5,
+      darkerRelativeLuminance: 0.75,
+      lighterRelativeLuminance: 0.82,
+      usesSaturatedRed: false,
+    })).toMatchObject({ safe: true, reason: "below-general-threshold" });
+    expect(evaluateMorseFlashSafety({
+      flashAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS + 1,
+      flashesPerSecond: 5,
+      darkerRelativeLuminance: 0.2,
+      lighterRelativeLuminance: 0.8,
+      usesSaturatedRed: false,
+    })).toMatchObject({ safe: false, reason: "area-too-large" });
+    expect(evaluateMorseFlashSafety({
+      flashAreaCssPixels: MORSE_BEACON_AREA_CSS_PIXELS,
+      flashesPerSecond: 5,
+      darkerRelativeLuminance: 0.2,
+      lighterRelativeLuminance: 0.8,
+      usesSaturatedRed: true,
+    })).toMatchObject({ safe: false, reason: "saturated-red" });
+  });
+
+  it("matches web token colors with a luminance margin for light and dark beacon states", async () => {
+    const tokensCss = await readFile(join(repoRoot, "apps/web/src/styles/tokens.css"), "utf8");
+    const lightPaperInset = parseCssHexToken(tokensCss, "light", "paper-inset");
+    const lightAccent = parseCssHexToken(tokensCss, "light", "accent");
+    const darkPaperInset = parseCssHexToken(tokensCss, "dark", "paper-inset");
+    const darkAccent = parseCssHexToken(tokensCss, "dark", "accent");
+    expect(lightPaperInset).toEqual(MORSE_LIGHT_PAPER_INSET_RGB);
+    expect(lightAccent).toEqual(MORSE_LIGHT_ACCENT_RGB);
+    expect(darkPaperInset).toEqual(MORSE_DARK_PAPER_INSET_RGB);
+    expect(darkAccent).toEqual(MORSE_DARK_ACCENT_RGB);
+    for (const [accent, background] of [[lightAccent, lightPaperInset], [darkAccent, darkPaperInset]] as const) {
+      const resting = mixMorseRgb(accent, background, MORSE_BEACON_RESTING_MIX);
+      const active = mixMorseRgb(accent, background, MORSE_BEACON_ACTIVE_MIX);
+      expect(contrastRatio(resting, active)).toBeGreaterThanOrEqual(3);
+    }
   });
 });
 
@@ -257,6 +360,30 @@ function profileFromFixture(input: { readonly name?: MorseProfileName; readonly 
 
 function fixtureNumber(value: number | "NaN"): number {
   return value === "NaN" ? Number.NaN : value;
+}
+
+function contrastRatio(left: { readonly red: number; readonly green: number; readonly blue: number }, right: { readonly red: number; readonly green: number; readonly blue: number }): number {
+  const leftLuminance = morseRelativeLuminance(left);
+  const rightLuminance = morseRelativeLuminance(right);
+  const lighter = Math.max(leftLuminance, rightLuminance);
+  const darker = Math.min(leftLuminance, rightLuminance);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+function parseCssHexToken(css: string, mode: "light" | "dark", token: string): { readonly red: number; readonly green: number; readonly blue: number } {
+  const source = mode === "light"
+    ? css.match(/\[data-theme="light"\]\s*\{(?<body>[\s\S]*?)\n\}/)?.groups?.body ?? ""
+    : css.match(/\[data-theme="dark"\]\s*\{(?<body>[\s\S]*?)\n\}/)?.groups?.body ?? "";
+  const match = source.match(new RegExp(`--ch-color-${token}:\\s*(#[0-9A-Fa-f]{6});`));
+  if (match === null) {
+    throw new Error(`Missing ${mode} CSS token: ${token}`);
+  }
+  const hex = match[1]!.slice(1);
+  return {
+    red: Number.parseInt(hex.slice(0, 2), 16) / 255,
+    green: Number.parseInt(hex.slice(2, 4), 16) / 255,
+    blue: Number.parseInt(hex.slice(4, 6), 16) / 255,
+  };
 }
 
 function symbolCounts(symbols: readonly { readonly kind: MorseSymbolKind }[]): Record<MorseSymbolKind, number> {

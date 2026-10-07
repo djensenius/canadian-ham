@@ -1,6 +1,7 @@
 export type MorseProfileName = "isedParis" | "ric1Literal";
 
 export type MorseSymbolKind = "dot" | "dash" | "intraCharacterGap" | "interCharacterGap" | "wordGap";
+export type MorseOutputMode = "audio" | "visualBeacon" | "visualTape" | "haptics";
 
 export interface MorseTimingProfile {
   readonly name?: MorseProfileName;
@@ -26,6 +27,53 @@ export interface TimedMorseSequence {
   readonly profile: MorseTimingProfile;
   readonly symbols: readonly TimedMorseSymbol[];
   readonly totalDurationSeconds: number;
+}
+
+export interface MorseSignalEvent {
+  readonly kind: "on" | "off";
+  readonly atSeconds: number;
+  readonly character: string;
+  readonly symbolKind: "dot" | "dash";
+}
+
+export interface MorseTapeToken {
+  readonly token: "." | "-";
+  readonly revealAtSeconds: number;
+  readonly character: string;
+}
+
+export interface MorseHapticEvent {
+  readonly startSeconds: number;
+  readonly durationSeconds: number;
+  readonly character: string;
+  readonly symbolKind: "dot" | "dash";
+}
+
+export interface MorseRGB {
+  readonly red: number;
+  readonly green: number;
+  readonly blue: number;
+}
+
+export interface MorseFlashBeaconPalette {
+  readonly resting: MorseRGB;
+  readonly active: MorseRGB;
+  readonly usesSaturatedRed: boolean;
+}
+
+export interface MorseFlashSafetyInput {
+  readonly flashAreaCssPixels: number;
+  readonly flashesPerSecond: number;
+  readonly darkerRelativeLuminance: number;
+  readonly lighterRelativeLuminance: number;
+  readonly usesSaturatedRed: boolean;
+}
+
+export interface MorseFlashSafetyResult {
+  readonly safe: boolean;
+  readonly reason: "below-area-threshold" | "within-three-flashes" | "below-general-threshold" | "area-too-large" | "saturated-red" | "luminance-too-high";
+  readonly luminanceDelta: number;
+  readonly maxAreaCssPixels: number;
 }
 
 export interface InvalidMorseCharacter {
@@ -116,6 +164,16 @@ export interface MorseSendingScore {
 }
 
 export const MORSE_ERROR_SIGNAL_DOTS = 8;
+export const MORSE_FLASH_REFERENCE_WIDTH_CSS_PIXELS = 341;
+export const MORSE_FLASH_REFERENCE_HEIGHT_CSS_PIXELS = 256;
+export const MORSE_FLASH_MAX_AREA_CSS_PIXELS = (MORSE_FLASH_REFERENCE_WIDTH_CSS_PIXELS * MORSE_FLASH_REFERENCE_HEIGHT_CSS_PIXELS) / 4;
+export const MORSE_BEACON_AREA_CSS_PIXELS = 112 * 112;
+export const MORSE_BEACON_RESTING_MIX = 0;
+export const MORSE_BEACON_ACTIVE_MIX = 1;
+export const MORSE_LIGHT_PAPER_INSET_RGB = Object.freeze({ red: 0xef / 255, green: 0xe3 / 255, blue: 0xcb / 255 });
+export const MORSE_DARK_PAPER_INSET_RGB = Object.freeze({ red: 0x18 / 255, green: 0x14 / 255, blue: 0x10 / 255 });
+export const MORSE_LIGHT_ACCENT_RGB = Object.freeze({ red: 0xa5 / 255, green: 0x3a / 255, blue: 0x2a / 255 });
+export const MORSE_DARK_ACCENT_RGB = Object.freeze({ red: 0xff / 255, green: 0x8a / 255, blue: 0x70 / 255 });
 
 export const MORSE_CODE_TABLE = Object.freeze({
   A: ".-",
@@ -312,6 +370,111 @@ export function textToTimedMorse(text: string, profile: MorseTimingProfile = MOR
     symbols,
     totalDurationSeconds: cursor,
   };
+}
+
+export function morseSignalEvents(sequence: TimedMorseSequence): MorseSignalEvent[] {
+  return sequence.symbols.flatMap((symbol) => {
+    if ((symbol.kind !== "dot" && symbol.kind !== "dash") || symbol.character === undefined) {
+      return [];
+    }
+    return [
+      { kind: "on" as const, atSeconds: symbol.startSeconds, character: symbol.character, symbolKind: symbol.kind },
+      { kind: "off" as const, atSeconds: symbol.startSeconds + symbol.durationSeconds, character: symbol.character, symbolKind: symbol.kind },
+    ];
+  });
+}
+
+export function morseTapeTokens(sequence: TimedMorseSequence): MorseTapeToken[] {
+  return sequence.symbols.flatMap((symbol) => {
+    if ((symbol.kind !== "dot" && symbol.kind !== "dash") || symbol.character === undefined) {
+      return [];
+    }
+    return [{ token: symbol.kind === "dot" ? "." as const : "-" as const, revealAtSeconds: symbol.startSeconds, character: symbol.character }];
+  });
+}
+
+export function morseHapticEvents(sequence: TimedMorseSequence): MorseHapticEvent[] {
+  return sequence.symbols.flatMap((symbol) => {
+    if ((symbol.kind !== "dot" && symbol.kind !== "dash") || symbol.character === undefined) {
+      return [];
+    }
+    return [{ startSeconds: symbol.startSeconds, durationSeconds: symbol.durationSeconds, character: symbol.character, symbolKind: symbol.kind }];
+  });
+}
+
+export function maxMorseFlashesPerSecond(events: readonly MorseSignalEvent[]): number {
+  const onTimes = events.filter((event) => event.kind === "on").map((event) => event.atSeconds).toSorted((left, right) => left - right);
+  let maxFlashes = 0;
+  let windowStart = 0;
+  for (let windowEnd = 0; windowEnd < onTimes.length; windowEnd += 1) {
+    while (onTimes[windowEnd]! - onTimes[windowStart]! >= 1) {
+      windowStart += 1;
+    }
+    maxFlashes = Math.max(maxFlashes, windowEnd - windowStart + 1);
+  }
+  return maxFlashes;
+}
+
+export function morseRelativeLuminance(color: MorseRGB): number {
+  const linearRed = linearizeSrgb(color.red);
+  const linearGreen = linearizeSrgb(color.green);
+  const linearBlue = linearizeSrgb(color.blue);
+  return (0.2126 * linearRed) + (0.7152 * linearGreen) + (0.0722 * linearBlue);
+}
+
+export function mixMorseRgb(foreground: MorseRGB, background: MorseRGB, foregroundRatio: number): MorseRGB {
+  const ratio = Math.max(0, Math.min(1, foregroundRatio));
+  return {
+    red: foreground.red * ratio + background.red * (1 - ratio),
+    green: foreground.green * ratio + background.green * (1 - ratio),
+    blue: foreground.blue * ratio + background.blue * (1 - ratio),
+  };
+}
+
+export function morseBeaconPalette(input: { readonly accent: MorseRGB; readonly background: MorseRGB }): MorseFlashBeaconPalette {
+  return {
+    resting: mixMorseRgb(input.accent, input.background, MORSE_BEACON_RESTING_MIX),
+    active: mixMorseRgb(input.accent, input.background, MORSE_BEACON_ACTIVE_MIX),
+    usesSaturatedRed: isSaturatedRed(input.accent),
+  };
+}
+
+export function evaluateMorseBeaconFlashSafety(input: { readonly palette: MorseFlashBeaconPalette; readonly flashesPerSecond: number; readonly flashAreaCssPixels?: number }): MorseFlashSafetyResult {
+  return evaluateMorseFlashSafety({
+    flashAreaCssPixels: input.flashAreaCssPixels ?? MORSE_BEACON_AREA_CSS_PIXELS,
+    flashesPerSecond: input.flashesPerSecond,
+    darkerRelativeLuminance: morseRelativeLuminance(input.palette.resting),
+    lighterRelativeLuminance: morseRelativeLuminance(input.palette.active),
+    usesSaturatedRed: input.palette.usesSaturatedRed,
+  });
+}
+
+export function evaluateMorseFlashSafety(input: MorseFlashSafetyInput): MorseFlashSafetyResult {
+  const darker = Math.min(input.darkerRelativeLuminance, input.lighterRelativeLuminance);
+  const lighter = Math.max(input.darkerRelativeLuminance, input.lighterRelativeLuminance);
+  const luminanceDelta = lighter - darker;
+  if (input.usesSaturatedRed) {
+    return { safe: false, reason: "saturated-red", luminanceDelta, maxAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS };
+  }
+  if (input.flashAreaCssPixels <= MORSE_FLASH_MAX_AREA_CSS_PIXELS) {
+    return { safe: true, reason: "below-area-threshold", luminanceDelta, maxAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS };
+  }
+  if (input.flashesPerSecond <= 3) {
+    return { safe: true, reason: "within-three-flashes", luminanceDelta, maxAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS };
+  }
+  if (luminanceDelta < 0.1 || darker >= 0.8) {
+    return { safe: true, reason: "below-general-threshold", luminanceDelta, maxAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS };
+  }
+  return { safe: false, reason: "area-too-large", luminanceDelta, maxAreaCssPixels: MORSE_FLASH_MAX_AREA_CSS_PIXELS };
+}
+
+function linearizeSrgb(component: number): number {
+  return component <= 0.03928 ? component / 12.92 : ((component + 0.055) / 1.055) ** 2.4;
+}
+
+function isSaturatedRed(color: MorseRGB): boolean {
+  const total = color.red + color.green + color.blue;
+  return total > 0 && color.red / total >= 0.8;
 }
 
 export function classifyMorseKeyDown(durationSeconds: number, profile: MorseTimingProfile): MorseKeyTimingSample {

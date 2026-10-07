@@ -50,7 +50,7 @@ import {
   t,
   type InterfaceLanguage,
 } from "./lib/i18n";
-import { WebMorsePlayer } from "./lib/morseAudio";
+import { MorseOutputView, useWebMorseOutput } from "./lib/morseOutput";
 import { morseISEDExamPreset, morseTimingFromPreferences, normalizeMorsePreferences, type WebMorseTimingProfileName } from "./lib/morseSettings";
 import { MorseCopyExamSection, type MorsePlaybackCoordinator } from "./morse/copyExam/MorseCopyExamSection";
 import { MorseSendingPracticeSection } from "./morse/sending/MorseSendingPracticeSection";
@@ -1979,7 +1979,7 @@ function MorseSection({ interfaceLanguage, preferences, onSetPreferences, store,
 }
 
 function MorseTrainerPreview({ interfaceLanguage, preferences, playbackCoordinator }: { readonly interfaceLanguage: InterfaceLanguage; readonly preferences: WebPreferences; readonly playbackCoordinator: MorsePlaybackCoordinator }) {
-  const playerRef = useRef<WebMorsePlayer | null>(null);
+  const output = useWebMorseOutput(interfaceLanguage);
   const revealTimerRef = useRef<number | null>(null);
   const playbackGenerationRef = useRef(0);
   const playButtonRef = useRef<HTMLButtonElement>(null);
@@ -2000,11 +2000,11 @@ function MorseTrainerPreview({ interfaceLanguage, preferences, playbackCoordinat
 
   useEffect(() => () => {
     playbackGenerationRef.current += 1;
-    void playerRef.current?.close();
+    void output.close();
     if (revealTimerRef.current !== null) {
       window.clearTimeout(revealTimerRef.current);
     }
-  }, []);
+  }, [output.close]);
   useMorsePlaybackRegistration(playbackCoordinator, "quick-listen", stopPlaying);
 
   useEffect(() => {
@@ -2022,7 +2022,6 @@ function MorseTrainerPreview({ interfaceLanguage, preferences, playbackCoordinat
     const generation = playbackGenerationRef.current + 1;
     playbackCoordinator.claim("quick-listen");
     playbackGenerationRef.current = generation;
-    playerRef.current ??= new WebMorsePlayer();
     focusStopAfterStartRef.current = document.activeElement === playButtonRef.current;
     setRevealed(false);
     setPlaying(true);
@@ -2033,7 +2032,7 @@ function MorseTrainerPreview({ interfaceLanguage, preferences, playbackCoordinat
       revealTimerRef.current = null;
     }
     try {
-      const handle = await playerRef.current.playText(MORSE_PRACTICE_TEXT, morsePreferences);
+      const handle = await output.playText(MORSE_PRACTICE_TEXT, morsePreferences);
       if (generation !== playbackGenerationRef.current) {
         handle.stop();
         return;
@@ -2067,7 +2066,7 @@ function MorseTrainerPreview({ interfaceLanguage, preferences, playbackCoordinat
     }
     playbackGenerationRef.current += 1;
     focusPlayAfterStopRef.current = document.activeElement === stopButtonRef.current;
-    playerRef.current?.stop();
+    output.stop();
     if (revealTimerRef.current !== null) {
       window.clearTimeout(revealTimerRef.current);
       revealTimerRef.current = null;
@@ -2096,6 +2095,7 @@ function MorseTrainerPreview({ interfaceLanguage, preferences, playbackCoordinat
         <button type="button" ref={stopButtonRef} disabled={!playing} onClick={stop} aria-label={t(interfaceLanguage, "morseStopPracticeAria")}>{t(interfaceLanguage, "morseStop")}</button>
       </div>
       <p className="morse-duration">{t(interfaceLanguage, "morseDuration", formattedDuration)}</p>
+      <MorseOutputView state={output.state} interfaceLanguage={interfaceLanguage} />
       <div className="morse-playback-status">{status ? <p>{status}</p> : null}</div>
       <div className="sr-only morse-live-status" role="status" aria-live="polite" aria-atomic="true">{liveStatus}</div>
       <section className="morse-copy-card" aria-labelledby="morse-copy-title">
@@ -2130,7 +2130,8 @@ function morsePreferencesEqual(left: WebPreferences["morse"], right: WebPreferen
     left.characterWpm === right.characterWpm &&
     left.effectiveWpm === right.effectiveWpm &&
     left.timingProfile === right.timingProfile &&
-    left.volume === right.volume;
+    left.volume === right.volume &&
+    left.outputMode === right.outputMode;
 }
 
 function isValidMorseNumberDraft(field: keyof MorseNumberDrafts, value: number, preferences: WebPreferences["morse"]): boolean {
@@ -2240,6 +2241,11 @@ function MorseSettingsControls({ interfaceLanguage, preferences, onSetPreference
         <label className="stacked-control"><span>{t(interfaceLanguage, "morseCharacterSpeed")}</span><input type="number" min="12" max="25" step="1" value={characterWpmInputValue} disabled={morseSpeedControlsDisabled} onChange={(event) => updateMorseNumberDraft("characterWpm", event.currentTarget.value)} onBlur={() => void commitMorseNumberDraft("characterWpm")} onKeyDown={(event) => handleMorseNumberKeyDown(event, "characterWpm")} /></label>
         <label className="stacked-control"><span>{t(interfaceLanguage, "morseEffectiveSpeed")}</span><input type="number" min="5" max={morseSpeedControlsDisabled ? characterWpmInputValue : preferences.morse.characterWpm} step="1" value={effectiveWpmInputValue} disabled={morseSpeedControlsDisabled} onChange={(event) => updateMorseNumberDraft("effectiveWpm", event.currentTarget.value)} onBlur={() => void commitMorseNumberDraft("effectiveWpm")} onKeyDown={(event) => handleMorseNumberKeyDown(event, "effectiveWpm")} /></label>
         <label className="stacked-control"><span>{t(interfaceLanguage, "morseVolume")}</span><input type="range" min="0" max="1" step="0.05" value={preferences.morse.volume} onChange={(event) => void saveMorsePreference({ volume: event.currentTarget.valueAsNumber })} /></label>
+        <label className="stacked-control"><span>{t(interfaceLanguage, "morseOutputMode")}</span><select value={preferences.morse.outputMode} onChange={(event) => void saveMorsePreference({ outputMode: event.currentTarget.value as WebPreferences["morse"]["outputMode"] })}>
+          <option value="audio">{t(interfaceLanguage, "morseOutputAudio")}</option>
+          <option value="visualBeacon">{t(interfaceLanguage, "morseOutputVisualBeacon")}</option>
+          <option value="visualTape">{t(interfaceLanguage, "morseOutputVisualTape")}</option>
+        </select></label>
         <label className="stacked-control"><span>{t(interfaceLanguage, "morseTimingProfile")}</span><select value={preferences.morse.timingProfile} onChange={(event) => void saveMorsePreference({ timingProfile: event.currentTarget.value as WebMorseTimingProfileName })}>
           <option value="isedParis">{t(interfaceLanguage, "morseTimingISEDParis")}</option>
           <option value="ric1Literal">{t(interfaceLanguage, "morseTimingRIC1Literal")}</option>

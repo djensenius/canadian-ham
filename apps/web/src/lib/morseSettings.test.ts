@@ -5,7 +5,7 @@ import { morseISEDExamPreset, morseTimingFromPreferences, normalizeMorsePreferen
 
 describe("Morse trainer settings", () => {
   it("drops the retired preview toggle flag and clamps local settings", () => {
-    const settings = normalizeMorsePreferences({ enabled: true, toneHz: 1200, characterWpm: 26, effectiveWpm: 30, volume: 2, timingProfile: "general" });
+    const settings = normalizeMorsePreferences({ enabled: true, toneHz: 1200, characterWpm: 26, effectiveWpm: 30, volume: 2, timingProfile: "general", outputMode: "visualBeacon" });
 
     assert.deepEqual(normalizeMorsePreferences(), {
       toneHz: 650,
@@ -13,6 +13,7 @@ describe("Morse trainer settings", () => {
       effectiveWpm: 5,
       timingProfile: "isedParis",
       volume: 0.6,
+      outputMode: "audio",
     });
     assert.deepEqual(settings, {
       toneHz: 900,
@@ -20,6 +21,7 @@ describe("Morse trainer settings", () => {
       effectiveWpm: 25,
       timingProfile: "general",
       volume: 1,
+      outputMode: "visualBeacon",
     });
   });
 

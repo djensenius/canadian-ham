@@ -5,6 +5,13 @@ public enum MorseProfileName: String, Codable, Sendable {
     case ric1Literal
 }
 
+public enum MorseOutputMode: String, Codable, CaseIterable, Sendable {
+    case audio
+    case visualBeacon
+    case visualTape
+    case haptics
+}
+
 public enum MorseSymbolKind: String, Codable, Sendable {
     case dot
     case dash
@@ -64,6 +71,82 @@ public struct TimedMorseSequence: Codable, Equatable, Sendable {
     public let profile: MorseTimingProfile
     public let symbols: [TimedMorseSymbol]
     public let totalDurationSeconds: Double
+}
+
+public struct MorseSignalEvent: Codable, Equatable, Sendable {
+    public enum Kind: String, Codable, Sendable { case on, off }
+    public let kind: Kind
+    public let atSeconds: Double
+    public let character: String
+    public let symbolKind: MorseSymbolKind
+}
+
+public struct MorseTapeToken: Codable, Equatable, Sendable {
+    public let token: String
+    public let revealAtSeconds: Double
+    public let character: String
+}
+
+public struct MorseHapticEvent: Codable, Equatable, Sendable {
+    public let startSeconds: Double
+    public let durationSeconds: Double
+    public let character: String
+    public let symbolKind: MorseSymbolKind
+}
+
+public struct MorseRGB: Codable, Equatable, Sendable {
+    public let red: Double
+    public let green: Double
+    public let blue: Double
+
+    public init(red: Double, green: Double, blue: Double) {
+        self.red = red
+        self.green = green
+        self.blue = blue
+    }
+}
+
+public struct MorseFlashBeaconPalette: Codable, Equatable, Sendable {
+    public let resting: MorseRGB
+    public let active: MorseRGB
+    public let usesSaturatedRed: Bool
+
+    public init(resting: MorseRGB, active: MorseRGB, usesSaturatedRed: Bool) {
+        self.resting = resting
+        self.active = active
+        self.usesSaturatedRed = usesSaturatedRed
+    }
+}
+
+public struct MorseFlashSafetyInput: Codable, Equatable, Sendable {
+    public let flashAreaCssPixels: Double
+    public let flashesPerSecond: Int
+    public let darkerRelativeLuminance: Double
+    public let lighterRelativeLuminance: Double
+    public let usesSaturatedRed: Bool
+
+    public init(flashAreaCssPixels: Double, flashesPerSecond: Int, darkerRelativeLuminance: Double, lighterRelativeLuminance: Double, usesSaturatedRed: Bool) {
+        self.flashAreaCssPixels = flashAreaCssPixels
+        self.flashesPerSecond = flashesPerSecond
+        self.darkerRelativeLuminance = darkerRelativeLuminance
+        self.lighterRelativeLuminance = lighterRelativeLuminance
+        self.usesSaturatedRed = usesSaturatedRed
+    }
+}
+
+public struct MorseFlashSafetyResult: Codable, Equatable, Sendable {
+    public enum Reason: String, Codable, Sendable {
+        case belowAreaThreshold
+        case withinThreeFlashes
+        case belowGeneralThreshold
+        case areaTooLarge
+        case saturatedRed
+        case luminanceTooHigh
+    }
+    public let safe: Bool
+    public let reason: Reason
+    public let luminanceDelta: Double
+    public let maxAreaCssPixels: Double
 }
 
 public struct InvalidMorseCharacter: Codable, Equatable, Sendable {
@@ -179,6 +262,16 @@ public struct MorseSendingScore: Codable, Equatable, Sendable {
 }
 
 public let morseErrorSignalDots = 8
+public let morseFlashReferenceWidthCssPixels = 341.0
+public let morseFlashReferenceHeightCssPixels = 256.0
+public let morseFlashMaxAreaCssPixels = (morseFlashReferenceWidthCssPixels * morseFlashReferenceHeightCssPixels) / 4
+public let morseBeaconAreaCssPixels = 112.0 * 112.0
+public let morseBeaconRestingMix = 0.0
+public let morseBeaconActiveMix = 1.0
+public let morseLightPaperInsetRGB = MorseRGB(red: 0xef / 255, green: 0xe3 / 255, blue: 0xcb / 255)
+public let morseDarkPaperInsetRGB = MorseRGB(red: 0x18 / 255, green: 0x14 / 255, blue: 0x10 / 255)
+public let morseLightAccentRGB = MorseRGB(red: 0xa5 / 255, green: 0x3a / 255, blue: 0x2a / 255)
+public let morseDarkAccentRGB = MorseRGB(red: 0xff / 255, green: 0x8a / 255, blue: 0x70 / 255)
 
 public enum MorseEngineError: Error, Equatable, Sendable, CustomStringConvertible {
     case invalidCharacters([InvalidMorseCharacter])
@@ -385,6 +478,105 @@ public func textToTimedMorse(_ text: String, profile: MorseTimingProfile = profi
         symbols: symbols,
         totalDurationSeconds: cursor
     )
+}
+
+public func morseSignalEvents(sequence: TimedMorseSequence) -> [MorseSignalEvent] {
+    sequence.symbols.flatMap { symbol -> [MorseSignalEvent] in
+        guard (symbol.kind == .dot || symbol.kind == .dash), let character = symbol.character else { return [] }
+        return [
+            MorseSignalEvent(kind: .on, atSeconds: symbol.startSeconds, character: character, symbolKind: symbol.kind),
+            MorseSignalEvent(kind: .off, atSeconds: symbol.startSeconds + symbol.durationSeconds, character: character, symbolKind: symbol.kind),
+        ]
+    }
+}
+
+public func morseTapeTokens(sequence: TimedMorseSequence) -> [MorseTapeToken] {
+    sequence.symbols.compactMap { symbol in
+        guard (symbol.kind == .dot || symbol.kind == .dash), let character = symbol.character else { return nil }
+        return MorseTapeToken(token: symbol.kind == .dot ? "." : "-", revealAtSeconds: symbol.startSeconds, character: character)
+    }
+}
+
+public func morseHapticEvents(sequence: TimedMorseSequence) -> [MorseHapticEvent] {
+    sequence.symbols.compactMap { symbol in
+        guard (symbol.kind == .dot || symbol.kind == .dash), let character = symbol.character else { return nil }
+        return MorseHapticEvent(startSeconds: symbol.startSeconds, durationSeconds: symbol.durationSeconds, character: character, symbolKind: symbol.kind)
+    }
+}
+
+public func maxMorseFlashesPerSecond(events: [MorseSignalEvent]) -> Int {
+    let onTimes = events.filter { $0.kind == .on }.map(\.atSeconds).sorted()
+    var maxFlashes = 0
+    var windowStart = 0
+    for windowEnd in onTimes.indices {
+        while onTimes[windowEnd] - onTimes[windowStart] >= 1 {
+            windowStart += 1
+        }
+        maxFlashes = max(maxFlashes, windowEnd - windowStart + 1)
+    }
+    return maxFlashes
+}
+
+public func morseRelativeLuminance(_ color: MorseRGB) -> Double {
+    let linearRed = linearizeMorseSRGB(color.red)
+    let linearGreen = linearizeMorseSRGB(color.green)
+    let linearBlue = linearizeMorseSRGB(color.blue)
+    return (0.2126 * linearRed) + (0.7152 * linearGreen) + (0.0722 * linearBlue)
+}
+
+public func mixMorseRGB(foreground: MorseRGB, background: MorseRGB, foregroundRatio: Double) -> MorseRGB {
+    let ratio = min(1, max(0, foregroundRatio))
+    return MorseRGB(
+        red: foreground.red * ratio + background.red * (1 - ratio),
+        green: foreground.green * ratio + background.green * (1 - ratio),
+        blue: foreground.blue * ratio + background.blue * (1 - ratio)
+    )
+}
+
+public func morseBeaconPalette(accent: MorseRGB, background: MorseRGB) -> MorseFlashBeaconPalette {
+    MorseFlashBeaconPalette(
+        resting: mixMorseRGB(foreground: accent, background: background, foregroundRatio: morseBeaconRestingMix),
+        active: mixMorseRGB(foreground: accent, background: background, foregroundRatio: morseBeaconActiveMix),
+        usesSaturatedRed: isSaturatedMorseRed(accent)
+    )
+}
+
+public func evaluateMorseBeaconFlashSafety(palette: MorseFlashBeaconPalette, flashesPerSecond: Int, flashAreaCssPixels: Double = morseBeaconAreaCssPixels) -> MorseFlashSafetyResult {
+    evaluateMorseFlashSafety(MorseFlashSafetyInput(
+        flashAreaCssPixels: flashAreaCssPixels,
+        flashesPerSecond: flashesPerSecond,
+        darkerRelativeLuminance: morseRelativeLuminance(palette.resting),
+        lighterRelativeLuminance: morseRelativeLuminance(palette.active),
+        usesSaturatedRed: palette.usesSaturatedRed
+    ))
+}
+
+public func evaluateMorseFlashSafety(_ input: MorseFlashSafetyInput) -> MorseFlashSafetyResult {
+    let darker = min(input.darkerRelativeLuminance, input.lighterRelativeLuminance)
+    let lighter = max(input.darkerRelativeLuminance, input.lighterRelativeLuminance)
+    let luminanceDelta = lighter - darker
+    if input.usesSaturatedRed {
+        return MorseFlashSafetyResult(safe: false, reason: .saturatedRed, luminanceDelta: luminanceDelta, maxAreaCssPixels: morseFlashMaxAreaCssPixels)
+    }
+    if input.flashAreaCssPixels <= morseFlashMaxAreaCssPixels {
+        return MorseFlashSafetyResult(safe: true, reason: .belowAreaThreshold, luminanceDelta: luminanceDelta, maxAreaCssPixels: morseFlashMaxAreaCssPixels)
+    }
+    if input.flashesPerSecond <= 3 {
+        return MorseFlashSafetyResult(safe: true, reason: .withinThreeFlashes, luminanceDelta: luminanceDelta, maxAreaCssPixels: morseFlashMaxAreaCssPixels)
+    }
+    if luminanceDelta < 0.1 || darker >= 0.8 {
+        return MorseFlashSafetyResult(safe: true, reason: .belowGeneralThreshold, luminanceDelta: luminanceDelta, maxAreaCssPixels: morseFlashMaxAreaCssPixels)
+    }
+    return MorseFlashSafetyResult(safe: false, reason: .areaTooLarge, luminanceDelta: luminanceDelta, maxAreaCssPixels: morseFlashMaxAreaCssPixels)
+}
+
+private func linearizeMorseSRGB(_ component: Double) -> Double {
+    component <= 0.03928 ? component / 12.92 : pow((component + 0.055) / 1.055, 2.4)
+}
+
+private func isSaturatedMorseRed(_ color: MorseRGB) -> Bool {
+    let total = color.red + color.green + color.blue
+    return total > 0 && color.red / total >= 0.8
 }
 
 public func classifyMorseKeyDown(durationSeconds: Double, profile: MorseTimingProfile) throws -> MorseKeyTimingSample {
