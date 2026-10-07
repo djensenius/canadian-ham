@@ -1271,6 +1271,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let feedback = app.staticTexts["morse-sending-feedback-summary"].firstMatch
         scrollUntilHittable(feedback, in: app, maxSwipes: 8)
         XCTAssertTrue(isFullyVisible(feedback, in: app, requiresHittable: false), "\(appearance.rawValue) sending main audit should scroll the feedback panel into view")
+        settleScrollableContentBelowNavigationBar(in: app, context: "Morse sending main screen lower half \(appearance)")
         try performAudit(on: app, context: "Morse sending main screen lower half \(appearance)")
     }
 
@@ -1476,11 +1477,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.buttons["morse-course-open-button"].firstMatch.waitForExistence(timeout: 10))
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home top")
         scrollMorseHomeLowerContentIntoView(in: app)
+        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse home lower content")
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home lower content")
         openMorseCourse(in: app)
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home top")
         scrollToMorseCourseLastUnit(in: app)
+        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse course home lower units")
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home lower units")
 
         openFirstMorseUnit(in: app)
@@ -1729,12 +1732,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     private func scrollMorseHomeLowerContentIntoView(in app: XCUIApplication) {
         let settings = app.staticTexts["Morse settings"].firstMatch
-        for _ in 0..<12 where !settings.exists || !isFullyVisible(settings, in: app, requiresHittable: false) {
+        for _ in 0..<12 where !settings.exists || !settings.isHittable {
             app.swipeUp()
             waitBriefly()
         }
         XCTAssertTrue(settings.waitForExistence(timeout: 5), "Expected lower Morse home content")
-        for _ in 0..<5 { app.swipeUp(); waitBriefly() }
+        for _ in 0..<3 { app.swipeUp(); waitBriefly() }
     }
 
     private func scrollToMorseCourseLastUnit(in app: XCUIApplication) {
@@ -2001,6 +2004,46 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 scrollView.swipeUp()
             }
             waitBriefly()
+        }
+    }
+
+    private func settleScrollableContentBelowNavigationBar(
+        in app: XCUIApplication,
+        context: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let scrollView = app.scrollViews.firstMatch
+        guard scrollView.waitForExistence(timeout: 1) else { return }
+        for _ in 0..<30 {
+            let offenders = scrollableElementsIntersectingProtectedArea(in: app)
+            if offenders.isEmpty { return }
+            let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
+            let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.40))
+            start.press(forDuration: 0.01, thenDragTo: end)
+            waitBriefly()
+        }
+        let offenders = scrollableElementsIntersectingProtectedArea(in: app)
+        XCTAssertTrue(
+            offenders.isEmpty,
+            "\(context): expected no scrollable text or buttons to intersect the protected navigation/status area; offenders: \(offenders.joined(separator: "; "))",
+            file: file,
+            line: line
+        )
+    }
+
+    private func scrollableElementsIntersectingProtectedArea(in app: XCUIApplication) -> [String] {
+        let scrollView = app.scrollViews.firstMatch
+        guard scrollView.exists else { return [] }
+        let windowMinY = app.windows.firstMatch.frame.minY
+        let protectedMaxY = protectedNavigationFrame(in: app).maxY + 1
+        let elements = scrollView.staticTexts.allElementsBoundByIndex + scrollView.buttons.allElementsBoundByIndex
+        return elements.compactMap { element in
+            guard element.exists else { return nil }
+            let frame = element.frame
+            guard frame.width > 0, frame.height > 0 else { return nil }
+            guard frame.maxY > windowMinY, frame.minY < protectedMaxY else { return nil }
+            return "\(element.elementType) id=\(element.identifier) label=\(element.label) frame=\(frameDescription(frame))"
         }
     }
 
