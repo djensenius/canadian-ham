@@ -130,16 +130,37 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Great work. The next lesson is unlocked."].firstMatch.waitForExistence(timeout: 5))
     }
 
-    func testAccessibilityAuditMorseBeaconOutputLightAndDark() throws {
-        try auditMorseVisualQuickListenLightAndDark(outputMode: "visualBeacon", outputIdentifier: "morse-visual-beacon")
+    func testAccessibilityAuditMorseBeaconOutputLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditMorseVisualQuickListen(outputMode: "visualBeacon", outputIdentifier: "morse-visual-beacon", appearance: .light)
     }
 
-    func testAccessibilityAuditMorseTapeOutputLightAndDark() throws {
-        try auditMorseVisualQuickListenLightAndDark(outputMode: "visualTape", outputIdentifier: "morse-visual-tape")
+    func testAccessibilityAuditMorseBeaconOutputDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditMorseVisualQuickListen(outputMode: "visualBeacon", outputIdentifier: "morse-visual-beacon", appearance: .dark)
+        XCUIDevice.shared.appearance = .light
     }
 
-    func testAccessibilityAuditMorseCourseLessonAndSummaryLightAndDark() throws {
-        try auditMorseCourseFlowLightAndDark()
+    func testAccessibilityAuditMorseTapeOutputLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditMorseVisualQuickListen(outputMode: "visualTape", outputIdentifier: "morse-visual-tape", appearance: .light)
+    }
+
+    func testAccessibilityAuditMorseTapeOutputDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditMorseVisualQuickListen(outputMode: "visualTape", outputIdentifier: "morse-visual-tape", appearance: .dark)
+        XCUIDevice.shared.appearance = .light
+    }
+
+    func testAccessibilityAuditMorseCourseLessonAndSummaryLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditMorseCourseFlow(appearance: .light)
+    }
+
+    func testAccessibilityAuditMorseCourseLessonAndSummaryDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditMorseCourseFlow(appearance: .dark)
+        XCUIDevice.shared.appearance = .light
     }
 
     func testMorseCopyPracticeAndExamFlow() throws {
@@ -236,12 +257,26 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertFalse(app.descendants(matching: .any)["compact-root-list"].firstMatch.exists, "A single tap must not pop past the Morse screen")
     }
 
-    func testAccessibilityAuditMorseSendingMainScreenLightAndDark() throws {
-        try auditMorseSendingMainScreenLightAndDark()
+    func testAccessibilityAuditMorseSendingMainScreenLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditMorseSendingMainScreen(appearance: .light)
     }
 
-    func testAccessibilityAuditMorseSendingResultsLightAndDark() throws {
-        try auditMorseSendingResultsLightAndDark()
+    func testAccessibilityAuditMorseSendingMainScreenDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditMorseSendingMainScreen(appearance: .dark)
+        XCUIDevice.shared.appearance = .light
+    }
+
+    func testAccessibilityAuditMorseSendingResultsLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditMorseSendingResults(appearance: .light)
+    }
+
+    func testAccessibilityAuditMorseSendingResultsDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditMorseSendingResults(appearance: .dark)
+        XCUIDevice.shared.appearance = .light
     }
 
     func testMorseSendingPracticeUsesDebugHookAndPushesResultsScreen() throws {
@@ -463,8 +498,15 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertFalse(app.staticTexts["Morse playback stopped."].firstMatch.waitForExistence(timeout: 2), "Course audio that already finished must not be reported as stopped")
     }
 
-    func testAccessibilityAuditMorseExamGradedDiffLightAndDark() throws {
-        try auditMorseExamGradedDiffLightAndDark()
+    func testAccessibilityAuditMorseExamGradedDiffLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditMorseExamGradedDiff(appearance: .light)
+    }
+
+    func testAccessibilityAuditMorseExamGradedDiffDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditMorseExamGradedDiff(appearance: .dark)
+        XCUIDevice.shared.appearance = .light
     }
 
     func testCompactTopLevelListPushesMorseThenLearn() throws {
@@ -952,8 +994,15 @@ final class CanadianHamPracticeUITests: XCTestCase {
         )
     }
 
-    func testCourseSwitchConfirmationKeepsMockExamWhenCancelledLightAndDark() throws {
-        try exerciseCourseSwitchConfirmationLightAndDark()
+    func testCourseSwitchConfirmationKeepsMockExamWhenCancelledLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try exerciseCourseSwitchConfirmation(appearance: .light)
+    }
+
+    func testCourseSwitchConfirmationAuditsDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try exerciseCourseSwitchConfirmation(appearance: .dark)
+        XCUIDevice.shared.appearance = .light
     }
 
     func testCoursePickerSwitchesToAdvancedLessonsAndFiftyQuestionMockWithoutHonours() throws {
@@ -1155,82 +1204,89 @@ final class CanadianHamPracticeUITests: XCTestCase {
         )
     }
 
-    func testAccessibilityAuditCoreScreensLightAndDark() throws {
-        try auditCoreScreensLightAndDark()
+    func testAccessibilityAuditCoreScreensLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditCoreScreens(appearance: .light)
     }
 
-    func testAccessibilityAuditPracticeSessionLightAndDark() throws {
-        try auditPracticeSessionLightAndDark()
+    func testAccessibilityAuditCoreScreensDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditCoreScreens(appearance: .dark)
+        XCUIDevice.shared.appearance = .light
     }
 
-    func testAccessibilityAuditLearnFlowLightAndDark() throws {
-        try auditLearnFlowLightAndDark()
+    func testAccessibilityAuditPracticeSessionLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditPracticeSession(appearance: .light)
     }
 
-    func testAccessibilityAuditMockExamFlowLightAndDark() throws {
-        try auditMockExamFlowLightAndDark()
+    func testAccessibilityAuditPracticeSessionDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditPracticeSession(appearance: .dark)
+        XCUIDevice.shared.appearance = .light
     }
 
-    func testAccessibilityAuditAdvancedCourseScreensLightAndDark() throws {
-        try auditAdvancedCourseScreensLightAndDark()
+    func testAccessibilityAuditLearnFlowLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditLearnFlow(appearance: .light)
     }
 
-    private func setAuditAppearance(_ appearance: AuditAppearance) {
-        switch appearance {
-        case .light:
-            XCUIDevice.shared.appearance = .light
-        case .dark:
-            XCUIDevice.shared.appearance = .dark
-        }
-        waitBriefly(2.0)
+    func testAccessibilityAuditLearnFlowDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditLearnFlow(appearance: .dark)
+        XCUIDevice.shared.appearance = .light
     }
 
-    private func auditBothAppearances(
-        _ body: (AuditAppearance) throws -> Void
-    ) throws {
-        defer { setAuditAppearance(.light) }
-        for appearance in [AuditAppearance.light, .dark] {
-            setAuditAppearance(appearance)
-            try body(appearance)
-        }
+    func testAccessibilityAuditMockExamFlowLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditMockExamFlow(appearance: .light)
     }
 
-    private func auditMorseSendingMainScreenLightAndDark() throws {
-        defer { setAuditAppearance(.light) }
-        for appearance in [AuditAppearance.light, .dark] {
-            setAuditAppearance(appearance)
-            let app = launchApp(arguments: [
-                "-CanadianHamInitialScreen", "morse",
-                "-CanadianHamMorseSendingDebugHook",
-                "-CanadianHamMorseSendingExamSeconds", "600"
-            ])
-            openSendingPractice(in: app)
-            XCTAssertTrue(app.buttons["morse-sending-straight-key-button"].firstMatch.waitForExistence(timeout: 10), "\(appearance.rawValue) sending main audit should show the straight key")
-            XCTAssertTrue(app.staticTexts["morse-sending-feedback-summary"].firstMatch.waitForExistence(timeout: 5), "\(appearance.rawValue) sending main audit should show the feedback panel")
-            app.buttons["morse-sending-start-exam-button"].firstMatch.tap()
-            XCTAssertTrue(app.staticTexts["morse-sending-exam-text"].firstMatch.waitForExistence(timeout: 5), "\(appearance.rawValue) sending main audit should show the exam card")
-            try performAudit(on: app, context: "Morse sending main screen \(appearance)")
-            // Audit the lower half too: the paddles and feedback panel start below the fold.
-            let feedback = app.staticTexts["morse-sending-feedback-summary"].firstMatch
-            scrollUntilHittable(feedback, in: app, maxSwipes: 8)
-            XCTAssertTrue(isFullyVisible(feedback, in: app, requiresHittable: false), "\(appearance.rawValue) sending main audit should scroll the feedback panel into view")
-            settleScrollableContentBelowNavigationBar(in: app, context: "Morse sending main screen lower half \(appearance)")
-            try performAudit(on: app, context: "Morse sending main screen lower half \(appearance)")
-            app.terminate()
-        }
+    func testAccessibilityAuditMockExamFlowDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditMockExamFlow(appearance: .dark)
+        XCUIDevice.shared.appearance = .light
     }
 
-    private func auditMorseSendingResultsLightAndDark() throws {
-        setAuditAppearance(.light)
+    func testAccessibilityAuditAdvancedCourseScreensLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditAdvancedCourseScreens(appearance: .light)
+    }
+
+    func testAccessibilityAuditAdvancedCourseScreensDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditAdvancedCourseScreens(appearance: .dark)
+        XCUIDevice.shared.appearance = .light
+    }
+
+    private func auditMorseSendingMainScreen(appearance: AuditAppearance) throws {
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "morse",
             "-CanadianHamMorseSendingDebugHook",
             "-CanadianHamMorseSendingExamSeconds", "120"
         ])
-        defer {
-            app.terminate()
-            setAuditAppearance(.light)
-        }
+        defer { app.terminate() }
+        openSendingPractice(in: app)
+        XCTAssertTrue(app.buttons["morse-sending-straight-key-button"].firstMatch.waitForExistence(timeout: 10), "\(appearance.rawValue) sending main audit should show the straight key")
+        XCTAssertTrue(app.staticTexts["morse-sending-feedback-summary"].firstMatch.waitForExistence(timeout: 5), "\(appearance.rawValue) sending main audit should show the feedback panel")
+        app.buttons["morse-sending-start-exam-button"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["morse-sending-exam-text"].firstMatch.waitForExistence(timeout: 5), "\(appearance.rawValue) sending main audit should show the exam card")
+        try performAudit(on: app, context: "Morse sending main screen \(appearance)")
+        // Audit the lower half too: the paddles and feedback panel start below the fold.
+        let feedback = app.staticTexts["morse-sending-feedback-summary"].firstMatch
+        scrollUntilHittable(feedback, in: app, maxSwipes: 8)
+        XCTAssertTrue(isFullyVisible(feedback, in: app, requiresHittable: false), "\(appearance.rawValue) sending main audit should scroll the feedback panel into view")
+        settleScrollableContentBelowNavigationBar(in: app, context: "Morse sending main screen lower half \(appearance)")
+        try performAudit(on: app, context: "Morse sending main screen lower half \(appearance)")
+    }
+
+    private func auditMorseSendingResults(appearance: AuditAppearance) throws {
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseSendingDebugHook",
+            "-CanadianHamMorseSendingExamSeconds", "120"
+        ])
+        defer { app.terminate() }
         openSendingPractice(in: app)
         let start = app.buttons["morse-sending-start-exam-button"].firstMatch
         XCTAssertTrue(start.waitForExistence(timeout: 10))
@@ -1238,9 +1294,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app.buttons["morse-sending-debug-fill-button"].firstMatch.tap()
         app.buttons["morse-sending-grade-exam-button"].firstMatch.tap()
         XCTAssertTrue(app.descendants(matching: .any)["morse-sending-results-heading"].firstMatch.waitForExistence(timeout: 5))
-        try auditBothAppearances { appearance in
-            try performAudit(on: app, context: "Morse sending results \(appearance)")
-        }
+        try performAudit(on: app, context: "Morse sending results \(appearance)")
     }
 
     private func openSendingPractice(in app: XCUIApplication) {
@@ -1250,17 +1304,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
         open.tap()
     }
 
-    private func exerciseCourseSwitchConfirmationLightAndDark() throws {
-        setAuditAppearance(.light)
+    private func exerciseCourseSwitchConfirmation(appearance: AuditAppearance) throws {
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "mock",
             "-CanadianHamMockExamQuestionID", "B-001-002-002",
             "-CanadianHamMockExamLimit", "1"
         ])
-        defer {
-            app.terminate()
-            setAuditAppearance(.light)
-        }
+        defer { app.terminate() }
 
         tap("Start mock exam", in: app)
         XCTAssertTrue(app.staticTexts["Question 1 of 1"].firstMatch.waitForExistence(timeout: 10), "Expected unfinished mock exam before switching courses")
@@ -1273,9 +1323,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let confirmationTitle = app.staticTexts["Switch course?"].firstMatch
         XCTAssertTrue(confirmationTitle.waitForExistence(timeout: 5), "Unfinished mock exam should trigger course-switch confirmation")
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "unfinished practice or mock exam")).firstMatch.exists)
-        try auditBothAppearances { appearance in
-            try performAudit(on: app, context: "\(appearance.rawValue) course switch confirmation")
-        }
+        try performAudit(on: app, context: "\(appearance.rawValue) course switch confirmation")
 
         app.buttons["Cancel"].firstMatch.tap()
         waitForElementToDisappear(confirmationTitle, timeout: 5, message: "Cancel should dismiss the course-switch confirmation")
@@ -1288,237 +1336,171 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Question 1 of 1"].firstMatch.waitForExistence(timeout: 10), "Cancel should keep the unfinished mock exam session")
     }
 
-    private func auditAdvancedCourseScreensLightAndDark() throws {
-        try auditAdvancedScreen(arguments: [
+    private func auditAdvancedCourseScreens(appearance: AuditAppearance) throws {
+        var app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "settings",
             "-CanadianHamCourseBankId", "advanced-2025-02-04"
-        ], waitMessage: "Advanced course audit should expose the course picker") { app, appearance in
-            XCTAssertTrue(app.descendants(matching: .any)["course-picker"].firstMatch.waitForExistence(timeout: 10), "\(appearance.rawValue) Advanced course audit should expose the course picker")
-            try performAudit(on: app, context: "\(appearance.rawValue) Advanced course picker")
-        }
+        ])
+        XCTAssertTrue(app.descendants(matching: .any)["course-picker"].firstMatch.waitForExistence(timeout: 10), "\(appearance.rawValue) Advanced course audit should expose the course picker")
+        try performAudit(on: app, context: "\(appearance.rawValue) Advanced course picker")
+        app.terminate()
 
-        try auditAdvancedScreen(arguments: [
+        app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "learn",
             "-CanadianHamCourseBankId", "advanced-2025-02-04"
-        ], waitMessage: "Advanced course audit should reach the coming-lessons screen") { app, appearance in
-            XCTAssertTrue(app.staticTexts["Advanced lessons are coming"].firstMatch.waitForExistence(timeout: 10), "\(appearance.rawValue) Advanced course audit should reach the coming-lessons screen")
-            try performAudit(on: app, context: "\(appearance.rawValue) Advanced lessons coming")
-        }
+        ])
+        XCTAssertTrue(app.staticTexts["Advanced lessons are coming"].firstMatch.waitForExistence(timeout: 10), "\(appearance.rawValue) Advanced course audit should reach the coming-lessons screen")
+        try performAudit(on: app, context: "\(appearance.rawValue) Advanced lessons coming")
+        app.terminate()
 
-        try auditAdvancedScreen(arguments: [
+        app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "practice",
             "-CanadianHamCourseBankId", "advanced-2025-02-04"
-        ], waitMessage: "Advanced course audit should reach the practice hub") { app, appearance in
-            XCTAssertTrue(app.staticTexts["Practice categories"].firstMatch.waitForExistence(timeout: 10), "\(appearance.rawValue) Advanced course audit should reach the practice hub")
-            XCTAssertTrue(anyVisibleLabel(in: app, contains: "Advanced Theory"), "\(appearance.rawValue) Advanced practice hub should show Advanced categories")
-            try performAudit(on: app, context: "\(appearance.rawValue) Advanced practice hub")
-        }
+        ])
+        XCTAssertTrue(app.staticTexts["Practice categories"].firstMatch.waitForExistence(timeout: 10), "\(appearance.rawValue) Advanced course audit should reach the practice hub")
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "Advanced Theory"), "\(appearance.rawValue) Advanced practice hub should show Advanced categories")
+        try performAudit(on: app, context: "\(appearance.rawValue) Advanced practice hub")
+        app.terminate()
 
-        try auditAdvancedScreen(arguments: [
+        app = launchApp(arguments: [
             "-CanadianHamInitialCategoryID", "A-001",
             "-CanadianHamCourseBankId", "advanced-2025-02-04",
             "-CanadianHamPracticeQuestionID", "A-001-001-001"
-        ], waitMessage: "Advanced course audit should reach an Advanced practice question") { app, appearance in
-            XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10), "\(appearance.rawValue) Advanced course audit should reach an Advanced practice question")
-            try performAudit(on: app, context: "\(appearance.rawValue) Advanced practice question")
-        }
+        ])
+        XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10), "\(appearance.rawValue) Advanced course audit should reach an Advanced practice question")
+        try performAudit(on: app, context: "\(appearance.rawValue) Advanced practice question")
+        app.terminate()
 
-        setAuditAppearance(.light)
-        let app = launchApp(arguments: [
+        app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "mock",
             "-CanadianHamCourseBankId", "advanced-2025-02-04",
             "-CanadianHamMockExamSeed", "ui-a11y-advanced-mock"
         ])
-        defer {
-            app.terminate()
-            setAuditAppearance(.light)
-        }
-        XCTAssertTrue(anyVisibleLabel(in: app, contains: "Generate 50 Advanced questions"), "Advanced course audit should reach the Advanced mock start screen")
-        try auditBothAppearances { appearance in
-            try performAudit(on: app, context: "\(appearance.rawValue) Advanced mock start")
-        }
-        setAuditAppearance(.light)
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "Generate 50 Advanced questions"), "\(appearance.rawValue) Advanced course audit should reach the Advanced mock start screen")
+        try performAudit(on: app, context: "\(appearance.rawValue) Advanced mock start")
         openMockExamStart(in: app)
-        XCTAssertTrue(app.staticTexts["Question 1 of 50"].firstMatch.waitForExistence(timeout: 10), "Advanced course audit should start a 50-question mock")
-        try auditBothAppearances { appearance in
-            try performAudit(on: app, context: "\(appearance.rawValue) Advanced mock question")
-        }
-        setAuditAppearance(.light)
+        XCTAssertTrue(app.staticTexts["Question 1 of 50"].firstMatch.waitForExistence(timeout: 10), "\(appearance.rawValue) Advanced course audit should start a 50-question mock")
+        try performAudit(on: app, context: "\(appearance.rawValue) Advanced mock question")
         scrollAndTap("Submit exam", in: app)
         submitMockExamAlert(in: app)
-        XCTAssertTrue(app.staticTexts["mock-results-heading"].firstMatch.waitForExistence(timeout: 10), "Advanced course audit should reach mock results")
+        XCTAssertTrue(app.staticTexts["mock-results-heading"].firstMatch.waitForExistence(timeout: 10), "\(appearance.rawValue) Advanced course audit should reach mock results")
         scrollToTop(in: app)
-        try auditBothAppearances { appearance in
-            try performAudit(on: app, context: "\(appearance.rawValue) Advanced mock results")
-        }
+        try performAudit(on: app, context: "\(appearance.rawValue) Advanced mock results")
+        app.terminate()
     }
 
-    private func auditAdvancedScreen(
-        arguments: [String],
-        waitMessage: String,
-        _ body: (XCUIApplication, AuditAppearance) throws -> Void
-    ) throws {
-        _ = waitMessage
-        setAuditAppearance(.light)
-        let app = launchApp(arguments: arguments)
-        defer {
-            app.terminate()
-            setAuditAppearance(.light)
-        }
-        try auditBothAppearances { appearance in
-            try body(app, appearance)
-        }
-    }
-
-    private func auditMorseExamGradedDiffLightAndDark() throws {
-        defer { setAuditAppearance(.light) }
+    private func auditMorseExamGradedDiff(appearance: AuditAppearance) throws {
         for iteration in 1...3 {
-            setAuditAppearance(.light)
             let app = launchApp(arguments: [
                 "-CanadianHamInitialScreen", "morse",
                 "-CanadianHamMorseExamPlaybackSeconds", "0.1",
                 "-CanadianHamMorseExamReviewSeconds", "1"
             ])
+            defer { app.terminate() }
 
             let examStart = app.buttons["morse-exam-start-button"].firstMatch
-            XCTAssertTrue(examStart.waitForExistence(timeout: 10), "Morse results audit \(iteration) should find the exam start button")
+            XCTAssertTrue(examStart.waitForExistence(timeout: 10), "\(appearance.rawValue) Morse results audit \(iteration) should find the exam start button")
             scrollUntilHittable(examStart, in: app, maxSwipes: 8)
             examStart.tap()
             let resultsHeading = app.descendants(matching: .any)["morse-exam-results-heading"].firstMatch
-            XCTAssertTrue(resultsHeading.waitForExistence(timeout: 10), "Morse results audit \(iteration) should reach the results screen")
+            XCTAssertTrue(resultsHeading.waitForExistence(timeout: 10), "\(appearance.rawValue) Morse results audit \(iteration) should reach the results screen")
+            assertFullyVisibleBelowNavigationBar(resultsHeading, in: app, context: "\(appearance.rawValue) morse exam results audit \(iteration)")
             XCTAssertTrue(app.staticTexts["Character diff"].firstMatch.waitForExistence(timeout: 5))
             XCTAssertTrue(app.buttons["morse-exam-results-start-another-button"].firstMatch.waitForExistence(timeout: 5))
-            try auditBothAppearances { appearance in
-                assertFullyVisibleBelowNavigationBar(resultsHeading, in: app, context: "\(appearance.rawValue) morse exam results audit \(iteration)")
-                try app.performAccessibilityAudit()
-            }
-            app.terminate()
+            try app.performAccessibilityAudit()
         }
     }
 
-    private func auditCoreScreensLightAndDark() throws {
-        try auditCoreScreen(arguments: [], resetData: true, waitFor: { app in
-            app.descendants(matching: .any)["compact-root-list"].firstMatch.waitForExistence(timeout: 10)
-        }, context: "compact root list")
-        try auditCoreScreen(arguments: ["-CanadianHamInitialScreen", "home"], resetData: true, waitFor: { app in
-            app.staticTexts["Ready for Basic with Honours?"].waitForExistence(timeout: 10)
-        }, context: "home")
-        try auditCoreScreen(arguments: ["-CanadianHamInitialScreen", "practice"], resetData: true, waitFor: { app in
-            app.staticTexts["Practice"].waitForExistence(timeout: 10)
-        }, context: "practice hub")
-        try auditCoreScreen(arguments: ["-CanadianHamInitialScreen", "mock"], resetData: true, waitFor: { app in
-            app.staticTexts["Mock exam"].waitForExistence(timeout: 10)
-        }, context: "mock exam start")
-        try auditCoreScreen(arguments: ["-CanadianHamInitialScreen", "learn"], resetData: true, waitFor: { app in
-            app.staticTexts["Learn"].waitForExistence(timeout: 10)
-        }, context: "learn module list")
-        try auditCoreScreen(arguments: ["-CanadianHamInitialScreen", "settings"], resetData: true, waitFor: { app in
-            app.staticTexts["Settings"].waitForExistence(timeout: 10)
-        }, context: "settings")
-        try auditCoreScreen(arguments: ["-CanadianHamInitialScreen", "morse"], resetData: true, waitFor: { app in
-            app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10)
-        }, context: "morse")
-        try auditCoreScreen(arguments: ["-CanadianHamInitialScreen", "about"], resetData: true, waitFor: { app in
-            app.staticTexts["About Canadian Ham"].waitForExistence(timeout: 10)
-        }, context: "about")
-        try auditCoreScreen(arguments: ["-CanadianHamForceStoreOpenError"], resetData: false, waitFor: { app in
-            app.staticTexts["Local progress store unavailable"].waitForExistence(timeout: 10)
-        }, context: "store recovery")
+    private func auditCoreScreens(appearance: AuditAppearance) throws {
+        var app = launchApp()
+        XCTAssertTrue(app.descendants(matching: .any)["compact-root-list"].firstMatch.waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "\(appearance.rawValue) compact root list")
+        app.terminate()
+
+        app = launchApp(arguments: ["-CanadianHamInitialScreen", "home"])
+        XCTAssertTrue(app.staticTexts["Ready for Basic with Honours?"].waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "\(appearance.rawValue) home")
+        app.terminate()
+
+        app = launchApp(arguments: ["-CanadianHamInitialScreen", "practice"])
+        XCTAssertTrue(app.staticTexts["Practice"].waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "\(appearance.rawValue) practice hub")
+        app.terminate()
+
+        app = launchApp(arguments: ["-CanadianHamInitialScreen", "mock"])
+        XCTAssertTrue(app.staticTexts["Mock exam"].waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "\(appearance.rawValue) mock exam start")
+        app.terminate()
+
+        app = launchApp(arguments: ["-CanadianHamInitialScreen", "learn"])
+        XCTAssertTrue(app.staticTexts["Learn"].waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "\(appearance.rawValue) learn module list")
+        app.terminate()
+
+        app = launchApp(arguments: ["-CanadianHamInitialScreen", "settings"])
+        XCTAssertTrue(app.staticTexts["Settings"].waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "\(appearance.rawValue) settings")
+        app.terminate()
+
+        app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse"])
+        XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "\(appearance.rawValue) morse")
+        app.terminate()
+
+        app = launchApp(arguments: ["-CanadianHamInitialScreen", "about"])
+        XCTAssertTrue(app.staticTexts["About Canadian Ham"].waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "\(appearance.rawValue) about")
+        app.terminate()
+
+        app = launchApp(arguments: ["-CanadianHamForceStoreOpenError"], resetData: false)
+        XCTAssertTrue(app.staticTexts["Local progress store unavailable"].waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "\(appearance.rawValue) store recovery")
+        app.terminate()
     }
 
-    private func auditCoreScreen(
-        arguments: [String],
-        resetData: Bool,
-        waitFor: (XCUIApplication) -> Bool,
-        context: String
-    ) throws {
-        setAuditAppearance(.light)
-        let app = launchApp(arguments: arguments, resetData: resetData)
-        defer {
-            app.terminate()
-            setAuditAppearance(.light)
-        }
-        XCTAssertTrue(waitFor(app), "Expected \(context)")
-        try auditBothAppearances { appearance in
-            try performAudit(on: app, context: "\(appearance.rawValue) \(context)")
-        }
-    }
-
-    private func auditMorseVisualQuickListenLightAndDark(outputMode: String, outputIdentifier: String) throws {
-        setAuditAppearance(.light)
+    private func auditMorseVisualQuickListen(outputMode: String, outputIdentifier: String, appearance: AuditAppearance) throws {
         let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseOutputMode", outputMode])
-        defer {
-            app.terminate()
-            setAuditAppearance(.light)
-        }
+        defer { app.terminate() }
         XCTAssertTrue(app.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10))
         let play = app.buttons["morse-quick-play-button"].firstMatch
         XCTAssertTrue(play.waitForExistence(timeout: 5), "Expected Quick listen play button")
+        play.tap()
         let output = app.descendants(matching: .any)[outputIdentifier].firstMatch
-
-        for appearance in [AuditAppearance.light, .dark] {
-            setAuditAppearance(appearance)
-            XCTAssertTrue(play.waitForExistence(timeout: 5), "Expected Quick listen play button")
-            scrollUntilHittable(play, in: app, maxSwipes: 8)
-            play.tap()
-            XCTAssertTrue(output.waitForExistence(timeout: 5), "Expected visual output \(outputIdentifier) on the real Morse screen")
-            assertFullyVisibleBelowNavigationBar(output, in: app, context: "\(appearance.rawValue) \(outputMode) during playback")
-            waitBriefly(0.2)
-            try performAudit(on: app, context: "\(appearance.rawValue) \(outputMode) during playback")
-            XCTAssertTrue(app.staticTexts["Morse playback finished."].firstMatch.waitForExistence(timeout: 60))
-            XCTAssertTrue(output.exists, "Expected visual output \(outputIdentifier) to remain available after playback")
-            assertFullyVisibleBelowNavigationBar(output, in: app, context: "\(appearance.rawValue) \(outputMode) after playback")
-            try performAudit(on: app, context: "\(appearance.rawValue) \(outputMode) after playback")
-        }
+        XCTAssertTrue(output.waitForExistence(timeout: 5), "Expected visual output \(outputIdentifier) on the real Morse screen")
+        assertFullyVisibleBelowNavigationBar(output, in: app, context: "\(appearance.rawValue) \(outputMode) during playback")
+        Thread.sleep(forTimeInterval: 0.2)
+        try performAudit(on: app, context: "\(appearance.rawValue) \(outputMode) during playback")
+        XCTAssertTrue(app.staticTexts["Morse playback finished."].firstMatch.waitForExistence(timeout: 60))
+        XCTAssertTrue(output.exists, "Expected visual output \(outputIdentifier) to remain available after playback")
+        assertFullyVisibleBelowNavigationBar(output, in: app, context: "\(appearance.rawValue) \(outputMode) after playback")
+        try performAudit(on: app, context: "\(appearance.rawValue) \(outputMode) after playback")
     }
 
-    private func auditMorseCourseFlowLightAndDark() throws {
-        setAuditAppearance(.light)
+    private func auditMorseCourseFlow(appearance: AuditAppearance) throws {
         let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"])
-        defer {
-            app.terminate()
-            setAuditAppearance(.light)
-        }
         XCTAssertTrue(app.staticTexts["Morse"].firstMatch.waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["morse-course-open-button"].firstMatch.waitForExistence(timeout: 10))
-        try auditBothAppearances { appearance in
-            try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home top")
-        }
+        try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home top")
         scrollMorseHomeLowerContentIntoView(in: app)
-        settleScrollableContentBelowNavigationBar(in: app, context: "morse home lower content")
-        try auditBothAppearances { appearance in
-            try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home lower content")
-        }
-        setAuditAppearance(.light)
+        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse home lower content")
+        try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home lower content")
         openMorseCourse(in: app)
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
-        try auditBothAppearances { appearance in
-            try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home top")
-        }
+        try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home top")
         scrollToMorseCourseLastUnit(in: app)
-        settleScrollableContentBelowNavigationBar(in: app, context: "morse course home lower units")
-        try auditBothAppearances { appearance in
-            try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home lower units")
-        }
+        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse course home lower units")
+        try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home lower units")
 
-        setAuditAppearance(.light)
         openFirstMorseUnit(in: app)
         XCTAssertTrue(app.staticTexts["Unit 1"].firstMatch.waitForExistence(timeout: 10))
-        try auditBothAppearances { appearance in
-            try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course unit")
-        }
-        setAuditAppearance(.light)
+        try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course unit")
         tapFirstMorseLesson(in: app)
         XCTAssertTrue(app.staticTexts["Lesson 1 session"].firstMatch.waitForExistence(timeout: 10))
-        try auditBothAppearances { appearance in
-            try performCourseAudit(on: app, context: "\(appearance.rawValue) morse lesson session")
-        }
-        setAuditAppearance(.light)
+        try performCourseAudit(on: app, context: "\(appearance.rawValue) morse lesson session")
         completeVisibleMorseLesson(in: app)
         XCTAssertTrue(app.descendants(matching: .any)["morse-course-summary-heading"].firstMatch.waitForExistence(timeout: 10))
-        try auditBothAppearances { appearance in
-            try performCourseAudit(on: app, context: "\(appearance.rawValue) morse lesson summary")
-        }
+        try performCourseAudit(on: app, context: "\(appearance.rawValue) morse lesson summary")
+        app.terminate()
     }
 
     private func completeVisibleMorseLesson(in app: XCUIApplication, finalAnswerOverride: String? = nil) {
@@ -1565,23 +1547,17 @@ final class CanadianHamPracticeUITests: XCTestCase {
         }
     }
 
-    private func auditPracticeSessionLightAndDark() throws {
-        setAuditAppearance(.light)
+    private func auditPracticeSession(appearance: AuditAppearance) throws {
         let app = launchApp(arguments: ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
         XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
-        try auditBothAppearances { appearance in
-            try performAudit(on: app, context: "\(appearance.rawValue) unanswered practice")
-        }
-        setAuditAppearance(.light)
+        try performAudit(on: app, context: "\(appearance.rawValue) unanswered practice")
+
         answerKnownIncorrectLifeAnswerIfPresent(in: app)
         _ = waitForAnswerFeedback(in: app)
         XCTAssertTrue(anyVisibleLabel(in: app, contains: "Incorrect"), "Audit fixture should expose the incorrect-answer state")
-        try auditBothAppearances { appearance in
-            try performAudit(on: app, context: "\(appearance.rawValue) incorrect answered practice")
-        }
+        try performAudit(on: app, context: "\(appearance.rawValue) incorrect answered practice")
         app.terminate()
 
-        setAuditAppearance(.light)
         let correctApp = launchApp(arguments: ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
         XCTAssertTrue(correctApp.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
         answerKnownCorrectLifeAnswerIfPresent(in: correctApp, identifier: "answer-C-button")
@@ -1589,72 +1565,46 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let correctFeedbackTitle = correctApp.staticTexts["answer-feedback-title"].firstMatch
         XCTAssertTrue(correctFeedbackTitle.waitForExistence(timeout: 5), "Correct-answer feedback title should exist")
         XCTAssertEqual(correctFeedbackTitle.label, "Correct", "Audit fixture should expose the exact correct-answer state")
-        try auditBothAppearances { appearance in
-            try performAudit(on: correctApp, context: "\(appearance.rawValue) correct answered practice")
-        }
+        try performAudit(on: correctApp, context: "\(appearance.rawValue) correct answered practice")
         correctApp.terminate()
 
-        setAuditAppearance(.light)
         let reviewApp = launchApp(arguments: [
             "-CanadianHamInitialCategoryID", "B-001",
             "-CanadianHamPracticeQuestionID", "B-001-002-002",
             "-CanadianHamPracticeMode", "review-later",
             "-CanadianHamPracticeLimit", "1"
         ])
-        defer {
-            reviewApp.terminate()
-            setAuditAppearance(.light)
-        }
         XCTAssertTrue(reviewApp.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
         answerFirstVisibleAnswer(in: reviewApp)
         scrollAndTap("Submit for review", in: reviewApp)
         XCTAssertTrue(reviewApp.staticTexts["Practice review"].waitForExistence(timeout: 10))
         scrollToTop(in: reviewApp)
-        try auditBothAppearances { appearance in
-            try performAudit(on: reviewApp, context: "\(appearance.rawValue) practice review")
-        }
-        setAuditAppearance(.light)
+        try performAudit(on: reviewApp, context: "\(appearance.rawValue) practice review")
         scrollPracticeReviewFeedbackIntoView(in: reviewApp)
-        try auditBothAppearances { appearance in
-            try performAudit(on: reviewApp, context: "\(appearance.rawValue) practice review feedback")
-        }
+        try performAudit(on: reviewApp, context: "\(appearance.rawValue) practice review feedback")
+        reviewApp.terminate()
     }
 
-    private func auditLearnFlowLightAndDark() throws {
-        try auditLearnScreen(arguments: ["-CanadianHamInitialScreen", "learn"], waitAndPrepare: { app in
-            XCTAssertTrue(app.staticTexts["Learn"].waitForExistence(timeout: 10))
-        }, context: "learn module list")
+    private func auditLearnFlow(appearance: AuditAppearance) throws {
+        var app = launchApp(arguments: ["-CanadianHamInitialScreen", "learn"])
+        XCTAssertTrue(app.staticTexts["Learn"].waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "\(appearance.rawValue) learn module list")
+        app.terminate()
 
-        try auditLearnScreen(arguments: ["-CanadianHamInitialLessonID", "L-006-03"], waitAndPrepare: { app in
-            XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
-        }, context: "lesson reader top")
+        app = launchApp(arguments: ["-CanadianHamInitialLessonID", "L-006-03"])
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
+        try performAudit(on: app, context: "\(appearance.rawValue) lesson reader top")
+        app.terminate()
 
-        try auditLearnScreen(arguments: ["-CanadianHamInitialLessonQuizID", "QZ-L-006-03-A", "-CanadianHamLessonQuizLimit", "1", "-CanadianHamLessonQuizSeed", "ui-a11y-lesson-quiz"], waitAndPrepare: { app in
-            waitForLessonQuizScreen(in: app)
-            answerFirstVisibleQuizAnswer(in: app)
-            XCTAssertTrue(app.descendants(matching: .any)["lesson-quiz-feedback"].firstMatch.waitForExistence(timeout: 5) || app.descendants(matching: .any)["answer-feedback"].firstMatch.waitForExistence(timeout: 1))
-        }, context: "lesson quiz answered")
+        app = launchApp(arguments: ["-CanadianHamInitialLessonQuizID", "QZ-L-006-03-A", "-CanadianHamLessonQuizLimit", "1", "-CanadianHamLessonQuizSeed", "ui-a11y-lesson-quiz"])
+        waitForLessonQuizScreen(in: app)
+        answerFirstVisibleQuizAnswer(in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-quiz-feedback"].firstMatch.waitForExistence(timeout: 5) || app.descendants(matching: .any)["answer-feedback"].firstMatch.waitForExistence(timeout: 1))
+        try performAudit(on: app, context: "\(appearance.rawValue) lesson quiz answered")
+        app.terminate()
     }
 
-    private func auditLearnScreen(
-        arguments: [String],
-        waitAndPrepare: (XCUIApplication) -> Void,
-        context: String
-    ) throws {
-        setAuditAppearance(.light)
-        let app = launchApp(arguments: arguments)
-        defer {
-            app.terminate()
-            setAuditAppearance(.light)
-        }
-        waitAndPrepare(app)
-        try auditBothAppearances { appearance in
-            try performAudit(on: app, context: "\(appearance.rawValue) \(context)")
-        }
-    }
-
-    private func auditMockExamFlowLightAndDark() throws {
-        setAuditAppearance(.light)
+    private func auditMockExamFlow(appearance: AuditAppearance) throws {
         let timerApp = launchApp(arguments: [
             "-CanadianHamInitialScreen", "mock",
             "-CanadianHamMockExamSeed", "ui-a11y-mock-exam-timer",
@@ -1673,28 +1623,18 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(timerNext.waitForExistence(timeout: 5), "One-question mock exam should expose Next")
         XCTAssertFalse(timerPrevious.isEnabled, "Previous should be disabled on a one-question mock exam")
         XCTAssertFalse(timerNext.isEnabled, "Next should be disabled on a one-question mock exam")
-        try auditBothAppearances { appearance in
-            try performAudit(on: timerApp, context: "\(appearance.rawValue) mock exam question timer")
-        }
-        setAuditAppearance(.light)
+        try performAudit(on: timerApp, context: "\(appearance.rawValue) mock exam question timer")
         tap("Questions", in: timerApp)
         XCTAssertTrue(timerApp.staticTexts["Question navigator"].waitForExistence(timeout: 5))
-        try auditBothAppearances { appearance in
-            try performAudit(on: timerApp, context: "\(appearance.rawValue) mock exam question navigator timer")
-        }
+        try performAudit(on: timerApp, context: "\(appearance.rawValue) mock exam question navigator timer")
         timerApp.terminate()
 
-        setAuditAppearance(.light)
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "mock",
             "-CanadianHamMockExamSeed", "ui-a11y-mock-exam-answered-flagged",
             "-CanadianHamMockExamQuestionID", "B-001-002-002",
             "-CanadianHamMockExamLimit", "3"
         ])
-        defer {
-            app.terminate()
-            setAuditAppearance(.light)
-        }
         openMockExamStart(in: app)
         XCTAssertTrue(app.staticTexts["mock-exam-seed"].waitForExistence(timeout: 10))
         let topAnswer = app.descendants(matching: .any)["answer-A-button"].firstMatch
@@ -1707,15 +1647,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(topAnswer.isHittable, "Selected top answer should remain visible before auditing")
         XCTAssertTrue(topAnswer.label.localizedCaseInsensitiveContains("Selected"), "Selected top answer should expose the Selected state before auditing")
         XCTAssertTrue(app.buttons["Flagged for review"].firstMatch.waitForExistence(timeout: 5), "Mock exam should expose the flagged state before auditing")
-        try auditBothAppearances { appearance in
-            try performAudit(on: app, context: "\(appearance.rawValue) mock exam answered flagged question")
-        }
-        setAuditAppearance(.light)
+        try performAudit(on: app, context: "\(appearance.rawValue) mock exam answered flagged question")
         tap("Questions", in: app)
         XCTAssertTrue(app.staticTexts["Question navigator"].firstMatch.waitForExistence(timeout: 5), "Mock exam should expose the navigator sheet before auditing")
-        try auditBothAppearances { appearance in
-            try performAudit(on: app, context: "\(appearance.rawValue) mock exam question navigator answered flagged")
-        }
+        try performAudit(on: app, context: "\(appearance.rawValue) mock exam question navigator answered flagged")
         tap("Done", in: app)
         let next = app.buttons["mock-next-button"].firstMatch
         XCTAssertTrue(next.isEnabled, "Answered-flagged audit fixture should keep mock Next enabled")
@@ -1725,14 +1660,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
         submitMockExamAlert(in: app)
         assertMockExamResultVisible(in: app)
         scrollToTop(in: app)
-        try auditBothAppearances { appearance in
-            try performAudit(on: app, context: "\(appearance.rawValue) mock exam results")
-        }
-        setAuditAppearance(.light)
+        try performAudit(on: app, context: "\(appearance.rawValue) mock exam results")
         scrollMockResultsDetailsIntoView(in: app)
-        try auditBothAppearances { appearance in
-            try performAudit(on: app, context: "\(appearance.rawValue) mock exam results details")
-        }
+        try performAudit(on: app, context: "\(appearance.rawValue) mock exam results details")
+        app.terminate()
     }
 
     private func launchApp(arguments: [String] = [], resetData: Bool = true) -> XCUIApplication {
