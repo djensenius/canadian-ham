@@ -8,6 +8,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    override func tearDownWithError() throws {
+        XCUIDevice.shared.appearance = .light
+        try super.tearDownWithError()
+    }
+
     func testFrenchSystemLanguageNavigatesMainScreensAndAuditsHomeAndPractice() throws {
         XCUIDevice.shared.appearance = .light
         let frenchLocaleArguments = ["-AppleLanguages", "(fr)", "-AppleLocale", "fr_CA"]
@@ -1177,7 +1182,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         case .dark:
             XCUIDevice.shared.appearance = .dark
         }
-        waitBriefly(0.8)
+        waitBriefly(2.0)
     }
 
     private func auditBothAppearances(
