@@ -1062,6 +1062,91 @@ describe("App accessibility and flows", () => {
     await waitFor(async () => assert.equal((await store.getPreferences()).activeBankId, ADVANCED_BANK_ID));
   });
 
+  it("confirms before a course switch discards a partially answered immediate-practice session", async () => {
+    window.location.hash = "#/practice";
+    const store = createStore("course-switch-answered-immediate-practice");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "course-switch-answered-immediate-practice-seed"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await user.click(screen.getByRole("button", { name: "Start set" }));
+    await user.click((await screen.findAllByTestId("answer-choice"))[0]!);
+    await screen.findByRole("status");
+
+    await user.click(screen.getByRole("radio", { name: "Advanced" }));
+    let dialog = await screen.findByRole("alertdialog", { name: "Switch course?" });
+    assert.match(dialog.textContent ?? "", /discard the unfinished practice or mock exam session/);
+
+    await user.click(within(dialog).getByRole("button", { name: "Cancel course switch" }));
+    assert.equal(screen.queryByRole("alertdialog", { name: "Switch course?" }), null);
+    assert.equal((screen.getByRole("radio", { name: "Basic" }) as HTMLInputElement).checked, true);
+    assert.ok(screen.getByRole("status").textContent?.trim(), "Cancel should keep the answered immediate-practice feedback");
+
+    await user.click(screen.getByRole("radio", { name: "Advanced" }));
+    dialog = await screen.findByRole("alertdialog", { name: "Switch course?" });
+    await user.click(within(dialog).getByRole("button", { name: "Switch course" }));
+    await waitFor(async () => assert.equal((await store.getPreferences()).activeBankId, ADVANCED_BANK_ID));
+    await waitFor(() => assert.match(document.querySelector(".question-meta")?.textContent ?? "", /A-00[1-7]-/));
+  });
+
+  it("confirms before a course switch discards a fully answered unsubmitted review-later practice session", async () => {
+    window.location.hash = "#/practice";
+    const store = createStore("course-switch-review-later-unsubmitted");
+    await store.putPreferences({ ...defaultPreferences, practiceMode: "review-later" });
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "course-switch-review-later-unsubmitted-seed"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await user.click(screen.getByRole("button", { name: "Start set" }));
+    await answerEveryReviewLaterQuestion(user);
+    assert.equal((screen.getByRole("button", { name: "Submit practice set" }) as HTMLButtonElement).disabled, false);
+
+    await user.click(screen.getByRole("radio", { name: "Advanced" }));
+    let dialog = await screen.findByRole("alertdialog", { name: "Switch course?" });
+    assert.match(dialog.textContent ?? "", /discard the unfinished practice or mock exam session/);
+
+    await user.click(within(dialog).getByRole("button", { name: "Cancel course switch" }));
+    assert.equal(screen.queryByRole("alertdialog", { name: "Switch course?" }), null);
+    assert.equal((screen.getByRole("radio", { name: "Basic" }) as HTMLInputElement).checked, true);
+    assert.equal((screen.getByRole("button", { name: "Submit practice set" }) as HTMLButtonElement).disabled, false);
+
+    await user.click(screen.getByRole("radio", { name: "Advanced" }));
+    dialog = await screen.findByRole("alertdialog", { name: "Switch course?" });
+    await user.click(within(dialog).getByRole("button", { name: "Switch course" }));
+    await waitFor(async () => assert.equal((await store.getPreferences()).activeBankId, ADVANCED_BANK_ID));
+    await waitFor(() => assert.match(document.querySelector(".question-meta")?.textContent ?? "", /A-00[1-7]-/));
+  });
+
+  it("does not confirm a course switch after a review-later practice session is submitted", async () => {
+    window.location.hash = "#/practice";
+    const store = createStore("course-switch-review-later-submitted");
+    await store.putPreferences({ ...defaultPreferences, practiceMode: "review-later" });
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "course-switch-review-later-submitted-seed"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await user.click(screen.getByRole("button", { name: "Start set" }));
+    await answerEveryReviewLaterQuestion(user);
+    await user.click(screen.getByRole("button", { name: "Submit practice set" }));
+    await screen.findByRole("heading", { name: "Practice set review" });
+
+    await user.click(screen.getByRole("radio", { name: "Advanced" }));
+
+    assert.equal(screen.queryByRole("alertdialog", { name: "Switch course?" }), null);
+    await waitFor(async () => assert.equal((await store.getPreferences()).activeBankId, ADVANCED_BANK_ID));
+  });
+
+  async function answerEveryReviewLaterQuestion(user: ReturnType<typeof userEvent.setup>): Promise<void> {
+    for (;;) {
+      await user.click((await screen.findAllByTestId("answer-choice"))[0]!);
+      const next = screen.getByRole("button", { name: "Next" }) as HTMLButtonElement;
+      if (next.disabled) {
+        return;
+      }
+      await user.click(next);
+    }
+  }
+
   it("renders the French interface with Advanced selected and tags Advanced category names as English", async () => {
     window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
     window.location.hash = "#/home";
@@ -1211,7 +1296,7 @@ describe("App accessibility and flows", () => {
     await screen.findByRole("heading", { name: "Practice" });
     await user.click(screen.getByLabelText("Review later"));
     for (let index = 0; index < 10; index += 1) {
-      await user.click(screen.getAllByTestId("answer-choice")[0]!);
+      await user.click((await screen.findAllByTestId("answer-choice"))[0]!);
       const next = screen.getByRole("button", { name: "Next" });
       if (!next.hasAttribute("disabled")) {
         await user.click(next);
