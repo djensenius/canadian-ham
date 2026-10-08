@@ -2027,9 +2027,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
             let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
             if offenders.isEmpty { return }
             let hasOffenderClippedAboveWindow = offenders.contains(where: \.isClippedAboveWindow)
-            let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: hasOffenderClippedAboveWindow ? 0.45 : 0.35))
-            let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: hasOffenderClippedAboveWindow ? 0.30 : 0.40))
-            start.press(forDuration: 0.01, thenDragTo: end)
+            if hasOffenderClippedAboveWindow {
+                scrollView.swipeUp()
+            } else {
+                let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
+                let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.40))
+                start.press(forDuration: 0.01, thenDragTo: end)
+            }
             waitBriefly()
         }
         let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
