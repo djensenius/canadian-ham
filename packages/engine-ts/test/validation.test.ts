@@ -46,9 +46,17 @@ test("practice exam generation does not require known bank rules unless a full m
   );
 });
 
-test("bank rules accept only schema-valid Advanced ids", () => {
+test("bank rules accept future schema-valid Basic ids", () => {
+  const rules = rulesForBankId("basic-2026-09-30");
+  assert.equal(rules.bankId, "basic-2026-09-30");
+  assert.equal(rules.mockExamQuestionCount, 100);
+  assert.equal(rules.subsectionCount, 100);
+  assert.equal(rules.hasHonours, true);
+});
+
+test("bank rules accept only schema-valid Basic and Advanced ids", () => {
   assert.equal(rulesForBankId("advanced-2026-01-15").bankId, "advanced-2026-01-15");
-  for (const bankId of ["advanced-", "advanced-X", "advanced-2026_01", "advanced-2026 01"]) {
+  for (const bankId of ["basic-", "basic-2026-1-15", "basic-2026_01_15", "basic-2026-01-15-extra", "advanced-", "advanced-X", "advanced-2026_01", "advanced-2026 01"]) {
     assert.throws(() => rulesForBankId(bankId), new RegExp(`unsupported bankId ${bankId}`));
   }
 });
@@ -66,16 +74,16 @@ test("advanced readiness treats the 70 percent pass threshold as inclusive", () 
     bankId: SYNTHETIC_ADVANCED_BANK_ID,
     completedExams: [
       { submittedAt: "2026-01-03T00:00:00.000Z", score: { correct: 35, total: 50, percent: 70 }, categoryBreakdown },
-      { submittedAt: "2026-01-02T00:00:00.000Z", score: { correct: 34, total: 50, percent: 68 }, categoryBreakdown },
+      { submittedAt: "2026-01-02T00:00:00.000Z", score: { correct: 35, total: 50, percent: 70 }, categoryBreakdown },
     ],
     dueReviewCount: 0,
   });
 
   assert.deepEqual(result, {
-    state: "needs-review",
+    state: "pass-ready",
     consideredExamCount: 2,
     consideredSubmittedAt: ["2026-01-03T00:00:00.000Z", "2026-01-02T00:00:00.000Z"],
-    reasons: [],
+    reasons: [{ type: "exam-threshold", threshold: 70, countAtOrAbove: 2 }],
   });
 });
 
