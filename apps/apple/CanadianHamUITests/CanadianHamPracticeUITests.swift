@@ -8,6 +8,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
         continueAfterFailure = false
     }
 
+    override func tearDownWithError() throws {
+        // Terminate first: switching appearance while the app is running can crash SpringBoard.
+        XCUIApplication().terminate()
+        XCUIDevice.shared.appearance = .light
+        try super.tearDownWithError()
+    }
+
     func testFrenchSystemLanguageNavigatesMainScreensAndAuditsHomeAndPractice() throws {
         XCUIDevice.shared.appearance = .light
         let frenchLocaleArguments = ["-AppleLanguages", "(fr)", "-AppleLocale", "fr_CA"]
@@ -1258,7 +1265,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "morse",
             "-CanadianHamMorseSendingDebugHook",
-            "-CanadianHamMorseSendingExamSeconds", "120"
+            "-CanadianHamMorseSendingExamSeconds", "600"
         ])
         defer { app.terminate() }
         openSendingPractice(in: app)
@@ -2014,37 +2021,60 @@ final class CanadianHamPracticeUITests: XCTestCase {
         line: UInt = #line
     ) {
         let scrollView = app.scrollViews.firstMatch
-        guard scrollView.waitForExistence(timeout: 1) else { return }
+        guard scrollView.waitForExistence(timeout: 1) else {
+            XCTFail("\(context): expected a scroll view before settling content below the navigation bar", file: file, line: line)
+            return
+        }
         for _ in 0..<30 {
-            let offenders = scrollableElementsIntersectingProtectedArea(in: app)
+            let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
             if offenders.isEmpty { return }
-            let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
-            let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.40))
-            start.press(forDuration: 0.01, thenDragTo: end)
+            let hasOffenderClippedAboveWindow = offenders.contains(where: \.isClippedAboveWindow)
+            if hasOffenderClippedAboveWindow {
+                let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
+                let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
+                start.press(forDuration: 0.01, thenDragTo: end)
+            } else {
+                let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
+                let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.40))
+                start.press(forDuration: 0.01, thenDragTo: end)
+            }
             waitBriefly()
         }
-        let offenders = scrollableElementsIntersectingProtectedArea(in: app)
+        let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
         XCTAssertTrue(
             offenders.isEmpty,
-            "\(context): expected no scrollable text or buttons to intersect the protected navigation/status area; offenders: \(offenders.joined(separator: "; "))",
+            "\(context): expected no scrollable text or buttons to intersect the protected navigation/status area; offenders: \(offenders.map(\.description).joined(separator: "; "))",
             file: file,
             line: line
         )
     }
 
-    private func scrollableElementsIntersectingProtectedArea(in app: XCUIApplication) -> [String] {
-        let scrollView = app.scrollViews.firstMatch
-        guard scrollView.exists else { return [] }
+    private func scrollableElementsIntersectingProtectedArea(in app: XCUIApplication, scrollView: XCUIElement) -> [ProtectedAreaOffender] {
         let windowMinY = app.windows.firstMatch.frame.minY
         let protectedMaxY = protectedNavigationFrame(in: app).maxY + 1
-        let elements = scrollView.staticTexts.allElementsBoundByIndex + scrollView.buttons.allElementsBoundByIndex
-        return elements.compactMap { element in
-            guard element.exists else { return nil }
-            let frame = element.frame
-            guard frame.width > 0, frame.height > 0 else { return nil }
-            guard frame.maxY > windowMinY, frame.minY < protectedMaxY else { return nil }
-            return "\(element.elementType) id=\(element.identifier) label=\(element.label) frame=\(frameDescription(frame))"
+        let textOffenders = scrollView.staticTexts.allElementsBoundByIndex.compactMap { element in
+            protectedAreaOffender(for: element, elementDescription: "staticText", windowMinY: windowMinY, protectedMaxY: protectedMaxY)
         }
+        let buttonOffenders = scrollView.buttons.allElementsBoundByIndex.compactMap { element in
+            protectedAreaOffender(for: element, elementDescription: "button", windowMinY: windowMinY, protectedMaxY: protectedMaxY)
+        }
+        return textOffenders + buttonOffenders
+    }
+
+    private func protectedAreaOffender(for element: XCUIElement, elementDescription: String, windowMinY: CGFloat, protectedMaxY: CGFloat) -> ProtectedAreaOffender? {
+        guard element.exists else { return nil }
+        let frame = element.frame
+        guard frame.width > 0, frame.height > 0 else { return nil }
+        guard frame.maxY > windowMinY, frame.minY < protectedMaxY else { return nil }
+        return ProtectedAreaOffender(
+            description: "\(elementDescription) id=\(element.identifier) label=\(element.label) frame=\(frameDescription(frame))",
+            isClippedAboveWindow: frame.minY < windowMinY
+        )
+    }
+
+    private struct ProtectedAreaOffender {
+        let description: String
+        let isClippedAboveWindow: Bool
     }
 
     private func isPartiallyVisibleBelowNavigationBar(_ element: XCUIElement, in app: XCUIApplication) -> Bool {
