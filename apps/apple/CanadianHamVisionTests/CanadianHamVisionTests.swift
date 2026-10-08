@@ -1,6 +1,10 @@
 import XCTest
 
 final class CanadianHamVisionTests: XCTestCase {
+    func testBundleContainsOnlyBasicGeneratedBankDirectory() throws {
+        XCTAssertEqual(try bundledGeneratedBankIDs(in: Bundle(for: Self.self)), Set(["basic-2025-07-15"]))
+    }
+
     func testBundledQuestionBankLoadsForVisionApp() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
 
@@ -23,6 +27,17 @@ final class CanadianHamVisionTests: XCTestCase {
         XCTAssertEqual(answers.count, 4)
         XCTAssertEqual(Set(answers.map(\.sourceIndex)), Set(question.answers.map(\.sourceIndex)))
         XCTAssertEqual(answers.filter(\.isCorrect).count, 1)
+    }
+
+    private func bundledGeneratedBankIDs(in bundle: Bundle) throws -> Set<String> {
+        let generatedURL = try XCTUnwrap(bundle.resourceURL?.appendingPathComponent("generated", isDirectory: true))
+        let resourceValues = try generatedURL.resourceValues(forKeys: [.isDirectoryKey])
+        XCTAssertEqual(resourceValues.isDirectory, true, "Expected generated resources directory in \(bundle.bundleURL.path)")
+        let urls = try FileManager.default.contentsOfDirectory(at: generatedURL, includingPropertiesForKeys: [.isDirectoryKey])
+        return Set(try urls.compactMap { url in
+            let values = try url.resourceValues(forKeys: [.isDirectoryKey])
+            return values.isDirectory == true ? url.lastPathComponent : nil
+        })
     }
 
     func testVisionPracticeSeedsVaryAcrossSessionIDs() throws {

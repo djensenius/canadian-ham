@@ -3,6 +3,13 @@ import Foundation
 import XCTest
 
 final class QuestionBankTests: XCTestCase {
+    func testAppBundleContainsOnlyExpectedGeneratedBankDirectories() throws {
+        XCTAssertEqual(
+            try bundledGeneratedBankIDs(in: Bundle.main),
+            Set(["basic-2025-07-15", "advanced-2025-02-04"])
+        )
+    }
+
     func testBundledJSONDecodesExpectedCounts() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
 
@@ -129,6 +136,17 @@ final class QuestionBankTests: XCTestCase {
         for explanation in library.explanations {
             XCTAssertNoThrow(try ExplanationBodyParser.parse(explanation), "Explanation \(explanation.id) should parse")
         }
+    }
+
+    private func bundledGeneratedBankIDs(in bundle: Bundle) throws -> Set<String> {
+        let generatedURL = try XCTUnwrap(bundle.resourceURL?.appendingPathComponent("generated", isDirectory: true))
+        let resourceValues = try generatedURL.resourceValues(forKeys: [.isDirectoryKey])
+        XCTAssertEqual(resourceValues.isDirectory, true, "Expected generated resources directory in \(bundle.bundleURL.path)")
+        let urls = try FileManager.default.contentsOfDirectory(at: generatedURL, includingPropertiesForKeys: [.isDirectoryKey])
+        return Set(try urls.compactMap { url in
+            let values = try url.resourceValues(forKeys: [.isDirectoryKey])
+            return values.isDirectory == true ? url.lastPathComponent : nil
+        })
     }
 
     func testKnownLessonIdsComeFromSubsectionLessonMappingsWithoutQuizzes() {
