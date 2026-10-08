@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-03 13:42'
-updated_date: '2026-10-08 08:26'
+updated_date: '2026-10-08 08:35'
 labels:
   - apple
   - testing
@@ -71,6 +71,8 @@ tvOS per-test names (15): CanadianHamTVTests.CanadianHamTVTests.testBundledQuest
 visionOS per-test names (12): CanadianHamVisionTests.CanadianHamVisionTests.testBundledQuestionBankLoadsForVisionApp: passed; CanadianHamVisionTests.CanadianHamVisionTests.testVisionPracticeQuestionDrawStaysInCategoryAndShufflesAnswers: passed; CanadianHamVisionTests.CanadianHamVisionTests.testVisionPracticeSeedsVaryAcrossSessionIDs: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testAboutAccessibilityAuditLightAndDark: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testAboutShowsReleaseAttributionDisclaimerAndBankVersion: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testCategoryGridAccessibilityAuditLightAndDark: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testCategoryGridNavigatesToMorse: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testLongestQuestionSupportsLargestDynamicType: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testMorseAccessibilityAuditLightAndDark: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testMorseScreenShowsPlaybackControls: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testPracticeAccessibilityAuditLightAndDark: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances: passed
 
 Coordinator: re-review APPROVE WITH NOTES (~/.cache/canadian-ham-reviews/t31-r2.md). Also recorded: /tmp/t31-logs/review-targeted-course-sending-3.log failed 4/4 on intermediate uncommitted helper code (offenders at :1487/:1276) before the final helper in bb2640d. AC #2 (tvOS/visionOS) means: no worthwhile safe change was found, and both suites pass unchanged. The post-settle visibility assertion for lower-half audits is tracked in task-12.20 (AC 1).
+
+PR #154 Copilot fixes (39a16a0, coordinator): tearDown terminates the app before resetting appearance, so a failed test never switches appearance on a running app (the SpringBoard crash trigger). The after-inventory wording no longer claims a consolidation landed. Evidence: iOS targeted 3/3 (testAccessibilityAuditCoreScreensLight, testAccessibilityAuditCoreScreensDark, testMorseSectionIsTopLevelShowsCourseAndOpensFirstLesson).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
