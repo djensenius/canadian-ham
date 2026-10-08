@@ -1,6 +1,6 @@
-# UI accessibility audit inventory after task-31 consolidation
+# UI accessibility audit inventory after the task-31 UI-suite changes
 
-Generated after task-31 UI-suite consolidation. Each row is one `performAccessibilityAudit` call path present in the final UI suites. `lowerHalf` is `true` only for audits that intentionally scroll lower content/details into view before auditing.
+Generated after the task-31 UI-suite changes (scroll-settling and teardown; launch consolidation was backed out and is task-33). Each row is one `performAccessibilityAudit` call path present in the final UI suites. `lowerHalf` is `true` only for audits that intentionally scroll lower content/details into view before auditing.
 
 | platform | testName | screenState | appearance | lowerHalf |
 | --- | --- | --- | --- | --- |

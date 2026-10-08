@@ -9,6 +9,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     override func tearDownWithError() throws {
+        // Terminate first: switching appearance while the app is running can crash SpringBoard.
+        XCUIApplication().terminate()
         XCUIDevice.shared.appearance = .light
         try super.tearDownWithError()
     }
