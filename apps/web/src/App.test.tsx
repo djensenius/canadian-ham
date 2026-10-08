@@ -1062,7 +1062,7 @@ describe("App accessibility and flows", () => {
     await waitFor(async () => assert.equal((await store.getPreferences()).activeBankId, ADVANCED_BANK_ID));
   });
 
-  it("renders the French interface with Advanced selected and tags Advanced category names as English", async () => {
+  it("renders the French interface with Advanced selected and tags verified Advanced category names as French", async () => {
     window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
     window.location.hash = "#/home";
     const store = createStore("advanced-french-ui");
@@ -1074,10 +1074,10 @@ describe("App accessibility and flows", () => {
     const courseGroup = screen.getByRole("group", { name: "Sélection du cours" });
     assert.equal((within(courseGroup).getByRole("radio", { name: "Compétence supérieure" }) as HTMLInputElement).value, ADVANCED_BANK_ID);
 
-    const advancedCategoryName = advancedBank.categories[0]?.name.en;
+    const advancedCategoryName = advancedBank.categories[0]?.name.fr;
     assert.ok(advancedCategoryName);
-    const categoryFallback = await screen.findByText(advancedCategoryName);
-    assert.equal(categoryFallback.getAttribute("lang"), "en");
+    const categoryName = await screen.findByText(advancedCategoryName);
+    assert.equal(categoryName.getAttribute("lang"), "fr-CA");
 
     const primaryNav = screen.getByRole("navigation", { name: "Principale" });
     await user.click(within(primaryNav).getByRole("button", { name: "Examen simulé" }));
