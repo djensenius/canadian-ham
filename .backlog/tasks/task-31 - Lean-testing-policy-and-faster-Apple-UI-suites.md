@@ -1,7 +1,7 @@
 ---
 id: TASK-31
 title: Lean testing policy and faster Apple UI suites
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-03 13:42'
@@ -25,7 +25,7 @@ Why: the owner noted we are overtesting (2026-10-03). Every task ran the full UI
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 AGENTS.md documents the tiered policy: targeted -only-testing runs while iterating; each changed platform's full suite once per PR; no Apple suites for web/docs/Backlog-only changes; full four-platform run with every audit at the release-candidate pass (task-1.6)
-- [ ] #2 tvOS and visionOS UI suites get the same treatment where it helps; all four suites pass after consolidation
+- [x] #2 tvOS and visionOS UI suites get the same treatment where it helps; all four suites pass after consolidation
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -70,3 +70,9 @@ tvOS per-test names (15): CanadianHamTVTests.CanadianHamTVTests.testBundledQuest
 
 visionOS per-test names (12): CanadianHamVisionTests.CanadianHamVisionTests.testBundledQuestionBankLoadsForVisionApp: passed; CanadianHamVisionTests.CanadianHamVisionTests.testVisionPracticeQuestionDrawStaysInCategoryAndShufflesAnswers: passed; CanadianHamVisionTests.CanadianHamVisionTests.testVisionPracticeSeedsVaryAcrossSessionIDs: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testAboutAccessibilityAuditLightAndDark: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testAboutShowsReleaseAttributionDisclaimerAndBankVersion: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testCategoryGridAccessibilityAuditLightAndDark: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testCategoryGridNavigatesToMorse: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testLongestQuestionSupportsLargestDynamicType: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testMorseAccessibilityAuditLightAndDark: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testMorseScreenShowsPlaybackControls: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testPracticeAccessibilityAuditLightAndDark: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances: passed
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Addressed review findings: moved unsafe iOS launch-consolidation claim to follow-up TASK-33, restored strict protected-area intersection detection in the iOS scroll-settling helper, removed the unused offender frame field, corrected inventory test names, and documented failed run history and final timing. Verified inventories still match at 118 rows with no missing coverage. Final validation: targeted iOS course/sending Light/Dark audits passed twice; final iOS full suite passed 134 tests; reused macOS/tvOS/visionOS passing final runs because only iOS UI tests changed afterward.
+<!-- SECTION:FINAL_SUMMARY:END -->
