@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-06 18:25'
-updated_date: '2026-10-08 13:34'
+updated_date: '2026-10-08 13:36'
 labels: []
 dependencies:
   - TASK-12.17
@@ -32,3 +32,9 @@ Why: the task-12.17 re-review approved the course redesign but listed untested p
 <!-- SECTION:PLAN:BEGIN -->
 1. Inspect existing Morse course UI tests and course playback/status hooks.\n2. Add UI coverage for opening lesson 1, Back to Unit 1/list, reopening with a fresh exercise 1 session.\n3. Make course playback stop observable in the UI test path and tap the disabled locked lesson before asserting no session.\n4. Add UI tests for Review weakest characters and re-entering a finished lesson.\n5. Run focused UI tests when the xbuild lock is available, then finalize with evidence.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented Morse course navigation/playback test gaps: task-12.19 AC1 now covered by apps/apple/CanadianHamUITests/CanadianHamPracticeUITests.swift:82-90, which opens lesson 1, verifies exercise 1, goes Back to Unit 1/lesson list, and reopens a fresh exercise-1 session. AC2 locked lesson path now coordinate-taps the disabled lesson before asserting no session at :77-81; course playback stop is observable with the DEBUG status added in apps/apple/CanadianHam/Morse/Course/MorseCourseView.swift:286-293 and asserted active/stopped in CanadianHamPracticeUITests.swift:540-573. AC3 review weakest and finished-lesson re-entry are covered at CanadianHamPracticeUITests.swift:143-167. Focused UI tests still need to run through xbuild when the build lock is available.
+<!-- SECTION:NOTES:END -->
