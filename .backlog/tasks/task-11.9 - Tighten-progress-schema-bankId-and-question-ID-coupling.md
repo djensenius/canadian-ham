@@ -1,9 +1,11 @@
 ---
 id: TASK-11.9
 title: Tighten progress schema bankId and question-ID coupling
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-02 14:00'
+updated_date: '2026-10-08 12:06'
 labels:
   - schemas
   - content
@@ -28,3 +30,9 @@ Review note 7 from task-11.3 found that common/progress schemas now accept Basic
 - [ ] #2 Valid Basic legacy exports without bankId still validate and import after the schema tightening.
 - [ ] #3 Schema fixtures include both valid per-bank exports and invalid mixed-prefix examples.
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Tighten progress/common JSON schemas with per-bank question-id coupling while preserving legacy Basic exports without bankId.\n2. Add valid Basic/Advanced and invalid mixed-prefix fixtures plus import/normalization coverage.\n3. Run schema/import checks and record evidence before finalizing.
+<!-- SECTION:PLAN:END -->
