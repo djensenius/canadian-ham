@@ -1,11 +1,11 @@
 ---
 id: TASK-31
 title: Lean testing policy and faster Apple UI suites
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-03 13:42'
-updated_date: '2026-10-08 04:28'
+updated_date: '2026-10-08 04:35'
 labels:
   - apple
   - testing
@@ -25,8 +25,7 @@ Why: the owner noted we are overtesting (2026-10-03). Every task ran the full UI
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 AGENTS.md documents the tiered policy: targeted -only-testing runs while iterating; each changed platform's full suite once per PR; no Apple suites for web/docs/Backlog-only changes; full four-platform run with every audit at the release-candidate pass (task-1.6)
-- [x] #2 The iOS UI suite is consolidated (e.g. light and dark audits per flow combined into one launch where possible, fewer repeated app launches) with the same screens, flows and accessibility audits still covered; a before/after table of test count and wall-clock time is recorded in the task notes
-- [x] #3 tvOS and visionOS UI suites get the same treatment where it helps; all four suites pass after consolidation
+- [ ] #2 tvOS and visionOS UI suites get the same treatment where it helps; all four suites pass after consolidation
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -64,9 +63,3 @@ tvOS per-test names (15): CanadianHamTVTests.CanadianHamTVTests.testBundledQuest
 
 visionOS per-test names (12): CanadianHamVisionTests.CanadianHamVisionTests.testBundledQuestionBankLoadsForVisionApp: passed; CanadianHamVisionTests.CanadianHamVisionTests.testVisionPracticeQuestionDrawStaysInCategoryAndShufflesAnswers: passed; CanadianHamVisionTests.CanadianHamVisionTests.testVisionPracticeSeedsVaryAcrossSessionIDs: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testAboutAccessibilityAuditLightAndDark: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testAboutShowsReleaseAttributionDisclaimerAndBankVersion: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testCategoryGridAccessibilityAuditLightAndDark: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testCategoryGridNavigatesToMorse: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testLongestQuestionSupportsLargestDynamicType: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testMorseAccessibilityAuditLightAndDark: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testMorseScreenShowsPlaybackControls: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testPracticeAccessibilityAuditLightAndDark: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances: passed
 <!-- SECTION:NOTES:END -->
-
-## Final Summary
-
-<!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented task-31 Apple UI-suite cleanup with audit inventories before/after (118 rows each; no missing screen/state/appearance/region coverage), robust iOS scroll settling, and restored separate Light/Dark iOS audit tests to avoid SpringBoard crashes from in-test appearance toggles. Final validation: iOS full suite passed 134 tests in /tmp/t31-logs/final-ios-full-7.log; macOS passed 65 tests; tvOS passed 15 tests; visionOS passed 12 tests. Timing table recorded in notes; tvOS/visionOS had no worthwhile safe consolidation and remained unchanged.
-<!-- SECTION:FINAL_SUMMARY:END -->
