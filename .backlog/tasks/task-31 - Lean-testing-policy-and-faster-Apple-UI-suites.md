@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-03 13:42'
-updated_date: '2026-10-08 08:23'
+updated_date: '2026-10-08 08:26'
 labels:
   - apple
   - testing
@@ -69,6 +69,8 @@ macOS per-test names (65): CanadianHamTests.LocalizationCatalogTests.testEveryCa
 tvOS per-test names (15): CanadianHamTVTests.CanadianHamTVTests.testBundledQuestionBankLoadsForTVApp: passed; CanadianHamTVTests.CanadianHamTVTests.testTVPracticeQuestionDrawStaysInCategoryAndShufflesAnswers: passed; CanadianHamTVTests.CanadianHamTVTests.testTVPracticeSeedsVaryAcrossSessionIDs: passed; CanadianHamTVUITests.CanadianHamTVUITests.testAboutAccessibilityAuditLightAndDark: passed; CanadianHamTVUITests.CanadianHamTVUITests.testAboutLowerSectionsReachableWithRemote: passed; CanadianHamTVUITests.CanadianHamTVUITests.testAboutShowsReleaseAttributionDisclaimerAndBankVersion: passed; CanadianHamTVUITests.CanadianHamTVUITests.testCategoryGridAccessibilityAuditLightAndDark: passed; CanadianHamTVUITests.CanadianHamTVUITests.testCategoryGridNavigatesToMorse: passed; CanadianHamTVUITests.CanadianHamTVUITests.testFocusRingEvidenceScreenshots: passed; CanadianHamTVUITests.CanadianHamTVUITests.testLayoutEvidenceScreenshots: passed; CanadianHamTVUITests.CanadianHamTVUITests.testMorseAccessibilityAuditLightAndDark: passed; CanadianHamTVUITests.CanadianHamTVUITests.testMorseScreenShowsPlaybackControls: passed; CanadianHamTVUITests.CanadianHamTVUITests.testPracticeAccessibilityAuditLightAndDark: passed; CanadianHamTVUITests.CanadianHamTVUITests.testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances: passed; CanadianHamTVUITests.CanadianHamTVUITests.testRemoteMenuReturnsPracticeAndAboutToCategoryGrid: passed
 
 visionOS per-test names (12): CanadianHamVisionTests.CanadianHamVisionTests.testBundledQuestionBankLoadsForVisionApp: passed; CanadianHamVisionTests.CanadianHamVisionTests.testVisionPracticeQuestionDrawStaysInCategoryAndShufflesAnswers: passed; CanadianHamVisionTests.CanadianHamVisionTests.testVisionPracticeSeedsVaryAcrossSessionIDs: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testAboutAccessibilityAuditLightAndDark: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testAboutShowsReleaseAttributionDisclaimerAndBankVersion: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testCategoryGridAccessibilityAuditLightAndDark: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testCategoryGridNavigatesToMorse: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testLongestQuestionSupportsLargestDynamicType: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testMorseAccessibilityAuditLightAndDark: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testMorseScreenShowsPlaybackControls: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testPracticeAccessibilityAuditLightAndDark: passed; CanadianHamVisionUITests.CanadianHamVisionUITests.testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances: passed
+
+Coordinator: re-review APPROVE WITH NOTES (~/.cache/canadian-ham-reviews/t31-r2.md). Also recorded: /tmp/t31-logs/review-targeted-course-sending-3.log failed 4/4 on intermediate uncommitted helper code (offenders at :1487/:1276) before the final helper in bb2640d. AC #2 (tvOS/visionOS) means: no worthwhile safe change was found, and both suites pass unchanged. The post-settle visibility assertion for lower-half audits is tracked in task-12.20 (AC 1).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
