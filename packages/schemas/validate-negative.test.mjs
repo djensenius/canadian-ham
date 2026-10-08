@@ -50,6 +50,22 @@ function assertSchemaRejects(data, schemaFile, expectedMessage) {
   assert(errors.some((error) => error.includes(expectedMessage)), `${schemaFile} errors did not include ${JSON.stringify(expectedMessage)}: ${errors.join("\n")}`);
 }
 
+test("progress export schema rejects Basic bankId with Advanced question progress", () => {
+  assertSchemaRejects(
+    readInvalidFixture("progress-export-v1-mixed-basic-bank-advanced-question.json"),
+    "progress-export-v1.schema.json",
+    "expected exactly one oneOf branch to match",
+  );
+});
+
+test("progress export schema rejects Advanced bankId with Basic exam items and breakdowns", () => {
+  assertSchemaRejects(
+    readInvalidFixture("progress-export-v1-mixed-advanced-bank-basic-exam.json"),
+    "progress-export-v1.schema.json",
+    "expected exactly one oneOf branch to match",
+  );
+});
+
 test("semantic canonical timestamps reject impossible calendar/time values", () => {
   assertSchemaRejects(
     { ...validProgressExport, exportedAt: "2026-02-31T25:61:61.000Z" },

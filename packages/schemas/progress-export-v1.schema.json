@@ -28,5 +28,36 @@
     "morseCourseProgress": { "$ref": "common.schema.json#/$defs/morseCourseProgress" },
     "preferences": { "$ref": "common.schema.json#/$defs/webPreferences" }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "bankId": { "$ref": "common.schema.json#/$defs/basicBankId" },
+        "questionProgress": {
+          "type": "array",
+          "items": { "$ref": "common.schema.json#/$defs/basicQuestionProgressRecord" }
+        },
+        "examAttempts": {
+          "type": "array",
+          "items": { "$ref": "common.schema.json#/$defs/basicProgressExamAttempt" }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["bankId"],
+      "properties": {
+        "bankId": { "$ref": "common.schema.json#/$defs/advancedBankId" },
+        "questionProgress": {
+          "type": "array",
+          "items": { "$ref": "common.schema.json#/$defs/advancedQuestionProgressRecord" }
+        },
+        "examAttempts": {
+          "type": "array",
+          "items": { "$ref": "common.schema.json#/$defs/advancedProgressExamAttempt" }
+        }
+      }
+    }
+  ]
 }
