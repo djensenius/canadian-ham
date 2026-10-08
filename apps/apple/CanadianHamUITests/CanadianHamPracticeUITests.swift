@@ -2058,7 +2058,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         guard elementType == .staticText || elementType == .button else { return nil }
         let frame = element.frame
         guard frame.width > 0, frame.height > 0 else { return nil }
-        guard frame.minY >= windowMinY, frame.minY < protectedMaxY else { return nil }
+        guard frame.maxY > windowMinY, frame.minY < protectedMaxY else { return nil }
         return ProtectedAreaOffender(description: "\(elementType) id=\(element.identifier) label=\(element.label) frame=\(frameDescription(frame))", frame: frame)
     }
 
