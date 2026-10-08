@@ -1,10 +1,11 @@
 ---
 id: TASK-11.10
 title: Verify official French Advanced category names
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-02 17:03'
-updated_date: '2026-10-03 03:15'
+updated_date: '2026-10-08 12:09'
 labels:
   - content
   - l10n
@@ -27,3 +28,9 @@ The Advanced bank importer currently stores null French category names with pend
 - [ ] #2 The source and verification method for each French category name are recorded in code comments, task notes, or project documentation
 - [ ] #3 Schema/import checks and category negative tests pass after any category metadata updates
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Update Advanced category metadata with the seven audited official French names and source citations from CIR-3 §5.3 plus the ISED Exam Generator.\n2. Add or update negative/category tests only as needed to prove metadata and pending-status behavior.\n3. Run schema/import/category checks, then finalize with file:line evidence and audited source notes.
+<!-- SECTION:PLAN:END -->
