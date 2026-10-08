@@ -1,9 +1,11 @@
 ---
 id: TASK-12.9
 title: Morse text Unicode consistency across TS and Swift
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-02 14:52'
+updated_date: '2026-10-08 12:06'
 labels:
   - web
   - apple
@@ -28,3 +30,9 @@ Why: the task-12.2 re-review found two small TS/Swift differences in text handli
 - [ ] #2 The received copy is NFC-normalised before scoring in both languages, with a fixture showing decomposed and precomposed É score identically
 - [ ] #3 pnpm test and swift test in packages/morse-swift pass
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Align TS and Swift Morse text handling on one explicit whitespace list, including U+FEFF and U+0085.\n2. NFC-normalize received copy before scoring in both engines and lock the behavior with shared fixtures.\n3. Verify parity with package tests, swift test, pnpm test, and required Apple platform runs if morse-swift changes.
+<!-- SECTION:PLAN:END -->
