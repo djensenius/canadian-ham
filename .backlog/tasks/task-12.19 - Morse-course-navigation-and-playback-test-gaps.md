@@ -1,9 +1,11 @@
 ---
 id: TASK-12.19
 title: Morse course navigation and playback test gaps
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-06 18:25'
+updated_date: '2026-10-08 13:34'
 labels: []
 dependencies:
   - TASK-12.17
@@ -24,3 +26,9 @@ Why: the task-12.17 re-review approved the course redesign but listed untested p
 - [ ] #2 The course-playback test observes course audio stopping (for example, via a DEBUG status) instead of a check that can never fail; the locked-lesson test taps the disabled button before asserting no session
 - [ ] #3 UI tests for 'Review weakest characters' and re-entering a finished lesson
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inspect existing Morse course UI tests and course playback/status hooks.\n2. Add UI coverage for opening lesson 1, Back to Unit 1/list, reopening with a fresh exercise 1 session.\n3. Make course playback stop observable in the UI test path and tap the disabled locked lesson before asserting no session.\n4. Add UI tests for Review weakest characters and re-entering a finished lesson.\n5. Run focused UI tests when the xbuild lock is available, then finalize with evidence.
+<!-- SECTION:PLAN:END -->
