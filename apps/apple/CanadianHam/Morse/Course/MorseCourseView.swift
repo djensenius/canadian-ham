@@ -284,6 +284,14 @@ struct MorseCourseView: View {
                 exerciseView(session.currentExercise)
             }
             MorseVisualPlaybackView(state: visualPlaybackState)
+#if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseCoursePlaybackDebugStatus") {
+                Text(verbatim: isPlaying ? "Course playback active" : "Course playback stopped") // l10n: verbatim DEBUG-only UI test hook
+                    .font(DesignTokens.FontScale.caption)
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .accessibilityIdentifier("morse-course-playback-debug-status")
+            }
+#endif
             if !statusMessage.isEmpty && (!session.done || statusMessageIsCorrective) {
                 Text(statusMessage) // l10n: localized
                     .font(DesignTokens.FontScale.body)
