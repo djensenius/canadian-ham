@@ -1263,7 +1263,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "morse",
             "-CanadianHamMorseSendingDebugHook",
-            "-CanadianHamMorseSendingExamSeconds", "120"
+            "-CanadianHamMorseSendingExamSeconds", "600"
         ])
         defer { app.terminate() }
         openSendingPractice(in: app)
@@ -2043,23 +2043,21 @@ final class CanadianHamPracticeUITests: XCTestCase {
     private func scrollableElementsIntersectingProtectedArea(in app: XCUIApplication, scrollView: XCUIElement) -> [ProtectedAreaOffender] {
         let windowMinY = app.windows.firstMatch.frame.minY
         let protectedMaxY = protectedNavigationFrame(in: app).maxY + 1
-        let elements = scrollView.staticTexts.allElementsBoundByIndex + scrollView.buttons.allElementsBoundByIndex
-        return elements.compactMap { element in
-            do {
-                return try protectedAreaOffender(for: element, windowMinY: windowMinY, protectedMaxY: protectedMaxY)
-            } catch {
-                return nil
-            }
+        let textOffenders = scrollView.staticTexts.allElementsBoundByIndex.compactMap { element in
+            protectedAreaOffender(for: element, elementDescription: "staticText", windowMinY: windowMinY, protectedMaxY: protectedMaxY)
         }
+        let buttonOffenders = scrollView.buttons.allElementsBoundByIndex.compactMap { element in
+            protectedAreaOffender(for: element, elementDescription: "button", windowMinY: windowMinY, protectedMaxY: protectedMaxY)
+        }
+        return textOffenders + buttonOffenders
     }
 
-    private func protectedAreaOffender(for element: XCUIElement, windowMinY: CGFloat, protectedMaxY: CGFloat) throws -> ProtectedAreaOffender? {
-        let elementType = element.elementType
-        guard elementType == .staticText || elementType == .button else { return nil }
+    private func protectedAreaOffender(for element: XCUIElement, elementDescription: String, windowMinY: CGFloat, protectedMaxY: CGFloat) -> ProtectedAreaOffender? {
+        guard element.exists else { return nil }
         let frame = element.frame
         guard frame.width > 0, frame.height > 0 else { return nil }
         guard frame.maxY > windowMinY, frame.minY < protectedMaxY else { return nil }
-        return ProtectedAreaOffender(description: "\(elementType) id=\(element.identifier) label=\(element.label) frame=\(frameDescription(frame))", frame: frame)
+        return ProtectedAreaOffender(description: "\(elementDescription) id=\(element.identifier) label=\(element.label) frame=\(frameDescription(frame))", frame: frame)
     }
 
     private struct ProtectedAreaOffender {
