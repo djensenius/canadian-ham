@@ -85,9 +85,9 @@ func morseVisualPlaybackPlan(sequence: TimedMorseSequence, requestedMode: MorseT
     } else {
         let flashCount = String.localizedStringWithFormat(String(localized: "%lld flashes/s"), Int64(flashesPerSecond))
         safetyNote = String.localizedStringWithFormat(
-            String(localized: "Beacon area %.0f points is below the %.0f-point WCAG flash cap; max %@."),
-            morseBeaconAreaCssPixels,
-            safety.maxAreaCssPixels,
+            String(localized: "Beacon area %@ square points is below the %@ square-point WCAG flash cap; max %@."),
+            formattedMorseArea(morseBeaconAreaCssPixels),
+            formattedMorseArea(safety.maxAreaCssPixels),
             flashCount
         )
     }
@@ -98,6 +98,10 @@ func morseBeaconPalette(for colorScheme: ColorScheme) -> MorseFlashBeaconPalette
     colorScheme == .dark
         ? morseBeaconPalette(accent: morseDarkAccentRGB, background: morseDarkPaperInsetRGB)
         : morseBeaconPalette(accent: morseLightAccentRGB, background: morseLightPaperInsetRGB)
+}
+
+func formattedMorseArea(_ value: Double) -> String {
+    value.formatted(.number.precision(.fractionLength(0)))
 }
 
 @MainActor
@@ -149,6 +153,10 @@ struct MorseReduceFlashingFlags: Equatable {
 
 func shouldReduceMorseFlashing(flags: MorseReduceFlashingFlags) -> Bool {
     flags.environmentReduceMotion || flags.systemReduceMotion || flags.dimFlashingLights
+}
+
+func shouldStopMorseVisualBeaconForReducedFlashing(state: MorseVisualPlaybackState, flags: MorseReduceFlashingFlags) -> Bool {
+    state.mode == .visualBeacon && shouldReduceMorseFlashing(flags: flags)
 }
 
 @MainActor
@@ -356,8 +364,12 @@ struct MorseTrainerView: View {
                 stopPlayback(reveal: false, message: String(localized: "Morse playback stopped."))
             }
         }
+        .onChange(of: reduceMotion) { _, _ in
+            stopBeaconPlaybackIfReducedFlashingIsEnabled()
+        }
         .onReceive(NotificationCenter.default.publisher(for: .morseDimFlashingLightsChanged)) { _ in
             dimFlashingLightsEnabled = morseDimFlashingLightsEnabled()
+            stopBeaconPlaybackIfReducedFlashingIsEnabled()
         }
         .onDisappear {
             playbackCoordinator.unregister("quick-listen")
@@ -381,6 +393,13 @@ struct MorseTrainerView: View {
             }
         } catch {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
+        }
+    }
+
+    private func stopBeaconPlaybackIfReducedFlashingIsEnabled() {
+        let flags = currentMorseReduceFlashingFlags(environmentReduceMotion: reduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)
+        if shouldStopMorseVisualBeaconForReducedFlashing(state: visualPlaybackState, flags: flags) {
+            stopPlayback(reveal: false, message: String(localized: "Morse playback stopped."))
         }
     }
 

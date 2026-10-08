@@ -1492,7 +1492,7 @@ describe("App accessibility and flows", () => {
   });
 
   it("passes axe on static Morse beacon and tape output states", async () => {
-    const beacon = render(<MorseOutputView interfaceLanguage="en" state={{ mode: "visualBeacon", beaconActive: true, tape: "", safetyNote: "Beacon area 12,544 CSS px is below the 21,824 CSS px WCAG flash cap; max 5 flashes/s." }} />);
+    const beacon = render(<MorseOutputView interfaceLanguage="en" state={{ mode: "visualBeacon", beaconActive: true, tape: "", safetyNote: "Beacon area 12,544 px² is below the 21,824 px² WCAG flash cap; max 5 flashes/s." }} />);
     await expectNoAxeViolations(beacon.container);
     beacon.unmount();
 

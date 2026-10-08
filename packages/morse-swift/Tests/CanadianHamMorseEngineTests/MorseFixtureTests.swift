@@ -175,6 +175,13 @@ final class MorseFixtureTests: XCTestCase {
         XCTAssertEqual(darkSafe.reason, .belowAreaThreshold)
         XCTAssertGreaterThanOrEqual(morseContrastRatio(lightPalette.resting, lightPalette.active), 3)
         XCTAssertGreaterThanOrEqual(morseContrastRatio(darkPalette.resting, darkPalette.active), 3)
+        XCTAssertEqual(evaluateMorseFlashSafety(MorseFlashSafetyInput(
+            flashAreaCssPixels: morseFlashMaxAreaCssPixels,
+            flashesPerSecond: 5,
+            darkerRelativeLuminance: 0.2,
+            lighterRelativeLuminance: 0.8,
+            usesSaturatedRed: false
+        )).reason, .belowAreaThreshold)
         XCTAssertTrue(evaluateMorseFlashSafety(MorseFlashSafetyInput(
             flashAreaCssPixels: morseFlashMaxAreaCssPixels + 1,
             flashesPerSecond: 2,

@@ -71,7 +71,7 @@ export interface MorseFlashSafetyInput {
 
 export interface MorseFlashSafetyResult {
   readonly safe: boolean;
-  readonly reason: "below-area-threshold" | "within-three-flashes" | "below-general-threshold" | "area-too-large" | "saturated-red" | "luminance-too-high";
+  readonly reason: "below-area-threshold" | "within-three-flashes" | "below-general-threshold" | "area-too-large" | "saturated-red";
   readonly luminanceDelta: number;
   readonly maxAreaCssPixels: number;
 }

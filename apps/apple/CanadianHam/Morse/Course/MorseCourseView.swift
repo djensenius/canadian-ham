@@ -41,8 +41,12 @@ struct MorseCourseView: View {
             }
             .task { loadCourse() }
             .onReceive(progressStore.objectWillChange) { _ in loadCourse() }
+            .onChange(of: reduceMotion) { _, _ in
+                stopBeaconPlaybackIfReducedFlashingIsEnabled()
+            }
             .onReceive(NotificationCenter.default.publisher(for: .morseDimFlashingLightsChanged)) { _ in
                 dimFlashingLightsEnabled = morseDimFlashingLightsEnabled()
+                stopBeaconPlaybackIfReducedFlashingIsEnabled()
             }
     }
 
@@ -492,6 +496,13 @@ struct MorseCourseView: View {
         }
 #endif
         return text
+    }
+
+    private func stopBeaconPlaybackIfReducedFlashingIsEnabled() {
+        let flags = currentMorseReduceFlashingFlags(environmentReduceMotion: reduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)
+        if shouldStopMorseVisualBeaconForReducedFlashing(state: visualPlaybackState, flags: flags) {
+            stopCoursePlayback(message: String(localized: "Morse playback stopped."))
+        }
     }
 
     private func stopCoursePlayback(message: String = "") {

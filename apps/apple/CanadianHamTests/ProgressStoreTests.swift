@@ -240,6 +240,27 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(importedStore.preferences, .default)
     }
 
+    func testProgressExportRoundTripsMorseSettingsInWebCompatiblePreferences() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let store = try ProgressStoreService.inMemoryForTests()
+        let morseSettings = MorseTrainerSettings(
+            toneHz: 700,
+            characterWpm: 18,
+            effectiveWpm: 6,
+            timingProfile: .general,
+            volume: 0.4,
+            outputMode: .visualTape
+        ).normalized()
+
+        let serialized = try store.serializedExport(bank: bank, exportedAt: "2026-01-02T05:04:05.000Z", morseSettings: morseSettings)
+        let decoded = try JSONDecoder().decode(ProgressExportV1.self, from: Data(serialized.utf8))
+
+        XCTAssertEqual(decoded.preferences.morse, morseSettings)
+        XCTAssertEqual(decoded.preferences.morse.outputMode, .visualTape)
+        XCTAssertTrue(serialized.contains("\"morse\""), "Apple exports should use the web preferences.morse shape.")
+        XCTAssertNoThrow(try ProgressStoreService.inMemoryForTests().importData(decoded, bank: bank))
+    }
+
     func testImportsOlderExportWithoutMorseCourseProgressKeepsExistingMorseProgress() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let store = try ProgressStoreService.inMemoryForTests()

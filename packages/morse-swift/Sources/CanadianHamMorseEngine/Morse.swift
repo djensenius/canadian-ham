@@ -141,7 +141,6 @@ public struct MorseFlashSafetyResult: Codable, Equatable, Sendable {
         case belowGeneralThreshold
         case areaTooLarge
         case saturatedRed
-        case luminanceTooHigh
     }
     public let safe: Bool
     public let reason: Reason

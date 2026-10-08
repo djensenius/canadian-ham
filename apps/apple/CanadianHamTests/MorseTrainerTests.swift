@@ -164,6 +164,16 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertTrue(shouldReduceMorseFlashing(flags: MorseReduceFlashingFlags(environmentReduceMotion: false, systemReduceMotion: false, dimFlashingLights: true)))
     }
 
+    func testReduceFlashingStopsOnlyRunningVisualBeacon() {
+        let enabledFlags = MorseReduceFlashingFlags(environmentReduceMotion: true, systemReduceMotion: false, dimFlashingLights: false)
+        let disabledFlags = MorseReduceFlashingFlags(environmentReduceMotion: false, systemReduceMotion: false, dimFlashingLights: false)
+
+        XCTAssertTrue(shouldStopMorseVisualBeaconForReducedFlashing(state: MorseVisualPlaybackState(mode: .visualBeacon), flags: enabledFlags))
+        XCTAssertFalse(shouldStopMorseVisualBeaconForReducedFlashing(state: MorseVisualPlaybackState(mode: .visualTape), flags: enabledFlags))
+        XCTAssertFalse(shouldStopMorseVisualBeaconForReducedFlashing(state: MorseVisualPlaybackState(mode: .idle), flags: enabledFlags))
+        XCTAssertFalse(shouldStopMorseVisualBeaconForReducedFlashing(state: MorseVisualPlaybackState(mode: .visualBeacon), flags: disabledFlags))
+    }
+
     @MainActor
     func testScheduleMorseVisualPlaybackInitialStateAndFallback() throws {
         let sequence = try textToTimedMorse("E", profile: profileForName(.isedParis))

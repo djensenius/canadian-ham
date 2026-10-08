@@ -234,8 +234,12 @@ private struct MorseCopyPracticeView: View {
                 stopPracticeIfPlaying()
             }
         }
+        .onChange(of: reduceMotion) { _, _ in
+            stopBeaconPlaybackIfReducedFlashingIsEnabled()
+        }
         .onReceive(NotificationCenter.default.publisher(for: .morseDimFlashingLightsChanged)) { _ in
             dimFlashingLightsEnabled = morseDimFlashingLightsEnabled()
+            stopBeaconPlaybackIfReducedFlashingIsEnabled()
         }
         .onDisappear {
             playbackCoordinator.unregister("copy-practice")
@@ -316,6 +320,13 @@ private struct MorseCopyPracticeView: View {
             isPlaying = false
             statusMessage = ""
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: "), detail: error)
+        }
+    }
+
+    private func stopBeaconPlaybackIfReducedFlashingIsEnabled() {
+        let flags = currentMorseReduceFlashingFlags(environmentReduceMotion: reduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)
+        if shouldStopMorseVisualBeaconForReducedFlashing(state: visualPlaybackState, flags: flags) {
+            stopPracticeIfPlaying()
         }
     }
 
@@ -480,8 +491,12 @@ private struct MorseReceivingExamView: View {
                 stopExamPlaybackIfPlaying()
             }
         }
+        .onChange(of: reduceMotion) { _, _ in
+            stopBeaconPlaybackIfReducedFlashingIsEnabled()
+        }
         .onReceive(NotificationCenter.default.publisher(for: .morseDimFlashingLightsChanged)) { _ in
             dimFlashingLightsEnabled = morseDimFlashingLightsEnabled()
+            stopBeaconPlaybackIfReducedFlashingIsEnabled()
         }
         .onDisappear {
             playbackCoordinator.unregister("simulated-exam")
@@ -572,6 +587,13 @@ private struct MorseReceivingExamView: View {
                 visualPlaybackState = nextState
             }
             return sequence.totalDurationSeconds
+        }
+    }
+
+    private func stopBeaconPlaybackIfReducedFlashingIsEnabled() {
+        let flags = currentMorseReduceFlashingFlags(environmentReduceMotion: reduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)
+        if shouldStopMorseVisualBeaconForReducedFlashing(state: visualPlaybackState, flags: flags) {
+            stopExamPlaybackIfPlaying()
         }
     }
 

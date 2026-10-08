@@ -120,11 +120,13 @@ struct ExportedPreferences: Codable, Equatable, Sendable {
     let practiceMode: String
     let examTimerEnabled: Bool
     let theme: String
+    let morse: MorseTrainerSettings
 
-    init(practiceMode: String, examTimerEnabled: Bool, theme: String = ApplePreferences.Theme.system.rawValue) {
+    init(practiceMode: String, examTimerEnabled: Bool, theme: String = ApplePreferences.Theme.system.rawValue, morse: MorseTrainerSettings = .default) {
         self.practiceMode = practiceMode
         self.examTimerEnabled = examTimerEnabled
         self.theme = theme
+        self.morse = morse.normalized()
     }
 
     init(from decoder: Decoder) throws {
@@ -132,6 +134,7 @@ struct ExportedPreferences: Codable, Equatable, Sendable {
         practiceMode = try container.decode(String.self, forKey: .practiceMode)
         examTimerEnabled = try container.decode(Bool.self, forKey: .examTimerEnabled)
         theme = try container.decodeIfPresent(String.self, forKey: .theme) ?? ApplePreferences.Theme.system.rawValue
+        morse = try container.decodeIfPresent(MorseTrainerSettings.self, forKey: .morse)?.normalized() ?? .default
     }
 }
 
@@ -613,7 +616,7 @@ final class ProgressStoreService: ObservableObject {
         }
     }
 
-    func exportData(bank: QuestionBank, exportedAt: String) throws -> ProgressExportV1 {
+    func exportData(bank: QuestionBank, exportedAt: String, morseSettings: MorseTrainerSettings = .load()) throws -> ProgressExportV1 {
         try CanonicalTimestamp.require(exportedAt, fieldName: "exportedAt")
         let entity = try preferencesEntity(createIfMissing: true)
         let lessonProgress = try decoder.decode([ArchivedJSON].self, from: entity.archivedLessonProgressData)
@@ -631,13 +634,14 @@ final class ProgressStoreService: ObservableObject {
             preferences: ExportedPreferences(
                 practiceMode: preferences.practiceMode.rawValue,
                 examTimerEnabled: preferences.examTimerEnabled,
-                theme: preferences.theme.rawValue
+                theme: preferences.theme.rawValue,
+                morse: morseSettings
             )
         )
     }
 
-    func serializedExport(bank: QuestionBank, exportedAt: String) throws -> String {
-        let data = try exportData(bank: bank, exportedAt: exportedAt)
+    func serializedExport(bank: QuestionBank, exportedAt: String, morseSettings: MorseTrainerSettings = .load()) throws -> String {
+        let data = try exportData(bank: bank, exportedAt: exportedAt, morseSettings: morseSettings)
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         return String(decoding: try encoder.encode(data), as: UTF8.self) + "\n"
     }

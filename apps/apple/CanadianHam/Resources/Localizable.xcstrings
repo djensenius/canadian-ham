@@ -2877,6 +2877,28 @@
         }
       }
     },
+    "Beacon area %@ square points is below the %@ square-point WCAG flash cap; max %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beacon area %@ square points is below the %@ square-point WCAG flash cap; max %@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La zone de balise de %@ points carrés est sous la limite WCAG de %@ points carrés; maximum %@."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La zone de balise de %@ points carrés est sous la limite WCAG de %@ points carrés; maximum %@."
+          }
+        }
+      }
+    },
     "Beacon safety limits were exceeded, so playback uses the non-flashing tape." : {
       "localizations" : {
         "en" : {
