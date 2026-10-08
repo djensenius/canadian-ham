@@ -2149,19 +2149,19 @@
               "zero" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%1$lld erreur au total : %2$lld erronée, %3$lld manquante, %4$lld ajoutée."
+                  "value" : "Total des erreurs : %1$lld; caractères erronés : %2$lld; caractères manquants : %3$lld; caractères ajoutés : %4$lld."
                 }
               },
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%1$lld erreur au total : %2$lld erronée, %3$lld manquante, %4$lld ajoutée."
+                  "value" : "Total des erreurs : %1$lld; caractères erronés : %2$lld; caractères manquants : %3$lld; caractères ajoutés : %4$lld."
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%1$lld erreurs au total : %2$lld erronées, %3$lld manquantes, %4$lld ajoutées."
+                  "value" : "Total des erreurs : %1$lld; caractères erronés : %2$lld; caractères manquants : %3$lld; caractères ajoutés : %4$lld."
                 }
               }
             }
@@ -2173,19 +2173,19 @@
               "zero" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%1$lld erreur au total : %2$lld erronée, %3$lld manquante, %4$lld ajoutée."
+                  "value" : "Total des erreurs : %1$lld; caractères erronés : %2$lld; caractères manquants : %3$lld; caractères ajoutés : %4$lld."
                 }
               },
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%1$lld erreur au total : %2$lld erronée, %3$lld manquante, %4$lld ajoutée."
+                  "value" : "Total des erreurs : %1$lld; caractères erronés : %2$lld; caractères manquants : %3$lld; caractères ajoutés : %4$lld."
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%1$lld erreurs au total : %2$lld erronées, %3$lld manquantes, %4$lld ajoutées."
+                  "value" : "Total des erreurs : %1$lld; caractères erronés : %2$lld; caractères manquants : %3$lld; caractères ajoutés : %4$lld."
                 }
               }
             }

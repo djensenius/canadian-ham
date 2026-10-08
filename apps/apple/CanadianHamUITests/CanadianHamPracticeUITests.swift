@@ -331,6 +331,62 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(summary.label.contains("FAIL"), "An unanswered one-second sending check should fail, got: \(summary.label)")
     }
 
+    func testMorseSendingPracticeGradesHeldStraightKeyBeforeScoring() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseSendingDebugHook",
+            "-CanadianHamMorseSendingExamSeconds", "120",
+            "-CanadianHamMorseSendingExamText", "E"
+        ])
+        defer { app.terminate() }
+
+        openSendingPractice(in: app)
+        let start = app.buttons["morse-sending-start-exam-button"].firstMatch
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        start.tap()
+
+        let holdStraight = app.buttons["morse-sending-debug-hold-straight-button"].firstMatch
+        XCTAssertTrue(holdStraight.waitForExistence(timeout: 5), "DEBUG-only held-key hook should be present in UI tests")
+        scrollUntilHittable(holdStraight, in: app, maxSwipes: 8)
+        holdStraight.tap()
+
+        let grade = app.buttons["morse-sending-grade-exam-button"].firstMatch
+        scrollUntilPartiallyVisible(grade, in: app, maxSwipes: 8)
+        XCTAssertTrue(grade.waitForExistence(timeout: 5))
+        if !grade.isHittable {
+            app.swipeDown()
+            waitBriefly()
+        }
+        grade.tap()
+
+        let heading = app.descendants(matching: .any)["morse-sending-results-heading"].firstMatch
+        XCTAssertTrue(heading.waitForExistence(timeout: 5), "Grading should finalize the held straight key and push results")
+        let summary = app.staticTexts["morse-sending-results-summary"].firstMatch
+        XCTAssertTrue(summary.waitForExistence(timeout: 5))
+        XCTAssertTrue(summary.label.contains("PASS"), "The held straight-key dot should be included before scoring, got: \(summary.label)")
+    }
+
+    func testMorseSendingPracticeClearsPendingCharacterWhenLeaving() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse"
+        ])
+        defer { app.terminate() }
+
+        openSendingPractice(in: app)
+        let straightKey = app.buttons["morse-sending-straight-key-button"].firstMatch
+        XCTAssertTrue(straightKey.waitForExistence(timeout: 10))
+        straightKey.press(forDuration: 0.1)
+        tapCompactBack(in: app)
+        Thread.sleep(forTimeInterval: 2.0)
+
+        openSendingPractice(in: app)
+        let decoded = app.staticTexts["morse-sending-decoded-text"].firstMatch
+        XCTAssertTrue(decoded.waitForExistence(timeout: 5))
+        XCTAssertEqual(decoded.label, "—", "Leaving sending practice should cancel the delayed character finalization and clear pending samples")
+    }
+
     func testMorseExamGradingPushesResultsScreen() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [

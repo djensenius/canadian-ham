@@ -105,6 +105,11 @@ struct MorseSendingPracticeView: View {
                                 .font(DesignTokens.FontScale.body.weight(.bold))
                         }
                         .accessibilityIdentifier("morse-sending-debug-fill-button")
+                        Button(action: beginHeldStraightKeyForUITest) {
+                            Text(verbatim: "Hold straight key for sending test") // l10n: verbatim DEBUG-only UI test hook
+                                .font(DesignTokens.FontScale.body.weight(.bold))
+                        }
+                        .accessibilityIdentifier("morse-sending-debug-hold-straight-button")
                     }
 #endif
                 }
@@ -156,6 +161,7 @@ struct MorseSendingPracticeView: View {
         .onDisappear {
             playbackCoordinator.unregister("sending-practice")
             stopAllKeying(finalizeStraight: false)
+            clearPendingCharacterFinalization(clearPendingSamples: true)
             examTimerTask?.cancel()
         }
     }
@@ -353,7 +359,7 @@ struct MorseSendingPracticeView: View {
         resetSending(clearExam: false)
         do {
             let generated = try generateMorseExamText(seed: "apple-sending-\(Date().timeIntervalSince1970)", profile: profileForName(.isedParis), minDurationSeconds: 0)
-            examText = generated.text
+            examText = debugExamTextOverride ?? generated.text
             examRemaining = debugExamDurationSeconds
             examDeadline = Date().addingTimeInterval(TimeInterval(debugExamDurationSeconds))
             examRunning = true
@@ -372,8 +378,9 @@ struct MorseSendingPracticeView: View {
     }
 
     private func gradeExam(completedWithinTime: Bool) {
-        finalizeCharacter()
         guard !examText.isEmpty else { return }
+        stopAllKeying(finalizeStraight: true)
+        finalizeCharacter()
         examRunning = false
         examDeadline = nil
         examTimerTask?.cancel()
@@ -387,9 +394,7 @@ struct MorseSendingPracticeView: View {
 
     private func resetSending(clearExam: Bool) {
         stopAllKeying(finalizeStraight: false)
-        finalizeTask?.cancel()
-        finalizeTask = nil
-        pendingSamples = []
+        clearPendingCharacterFinalization(clearPendingSamples: true)
         decodedText = ""
         lastFeedback = nil
         statusMessage = ""
@@ -419,13 +424,27 @@ struct MorseSendingPracticeView: View {
         paddleRepeatTask = nil
     }
 
+    private func clearPendingCharacterFinalization(clearPendingSamples: Bool) {
+        finalizeTask?.cancel()
+        finalizeTask = nil
+        if clearPendingSamples {
+            pendingSamples = []
+        }
+    }
+
 #if DEBUG
     private func fillExamTextForUITest() {
         decodedText = (try? canonicalMorseCharacters(examText).joined()) ?? examText.replacingOccurrences(of: " ", with: "")
         statusMessage = "Decoded exam text filled for UI testing."
     }
+
+    private func beginHeldStraightKeyForUITest() {
+        beginStraightKey()
+        statusMessage = "Straight key held for UI testing."
+    }
 #else
     private func fillExamTextForUITest() {}
+    private func beginHeldStraightKeyForUITest() {}
 #endif
 }
 
@@ -665,4 +684,12 @@ private var debugExamDurationSeconds: Int {
     }
 #endif
     return 180
+}
+
+private var debugExamTextOverride: String? {
+#if DEBUG
+    AppLaunchArguments.value(after: "-CanadianHamMorseSendingExamText")
+#else
+    nil
+#endif
 }

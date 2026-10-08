@@ -212,6 +212,21 @@ describe("MorseSendingPracticeSection", () => {
     assert.match(screen.getByRole("heading", { name: "Sending results" }).parentElement?.textContent ?? "", /PASS, 100%, with 0 errors/);
   });
 
+  it("releases a held straight key and stops playback before manual grading", async () => {
+    renderSending({ examDurationSeconds: 180, examTextFactory: () => "E" });
+    const panel = screen.getByRole("heading", { name: "Sending practice" }).closest("section")!;
+
+    fireEvent.click(screen.getByRole("button", { name: "Exam-style check" }));
+    fireEvent.keyDown(panel, { key: " " });
+    now += 100;
+    fireEvent.click(screen.getByRole("button", { name: "End and grade" }));
+
+    assert.ok(oscillatorStopCalls > 0, "grading should stop the continuous side-tone before scoring");
+    const results = screen.getByRole("heading", { name: "Sending results" }).parentElement?.textContent ?? "";
+    assert.match(results, /PASS, 100%, with 0 errors/);
+    assert.match(results, /E/);
+  });
+
   it("grades timeout from current text and counts only unsent characters as missing errors", async () => {
     renderSending({ examDurationSeconds: 1, examTextFactory: () => "EE" });
     const panel = screen.getByRole("heading", { name: "Sending practice" }).closest("section")!;
