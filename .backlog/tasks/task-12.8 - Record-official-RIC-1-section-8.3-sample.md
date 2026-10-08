@@ -1,10 +1,11 @@
 ---
 id: TASK-12.8
 title: Record official RIC-1 section 8.3 sample
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-02 13:58'
-updated_date: '2026-10-02 14:52'
+updated_date: '2026-10-08 12:09'
 labels:
   - web
   - apple
@@ -27,3 +28,9 @@ Task-12.2 uses a synthetic stand-in to exercise RIC-1 section 8.3 weighted-chara
 - [ ] #2 The synthetic stand-in weighting fixture is replaced or supplemented by an official-sample fixture with the expected weighted count
 - [ ] #3 TypeScript and Swift Morse tests pass against the official-sample fixture
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Add an official RIC-1/CIR-1 §8.3 Morse sample fixture with source citations exactly as audited, keeping official text separate from original content.\n2. Wire the fixture into TypeScript and Swift Morse fixture tests and assert the audited weighted count.\n3. Run targeted Morse package tests, then finalize the task with file:line evidence and audited source notes.
+<!-- SECTION:PLAN:END -->
