@@ -28,18 +28,18 @@ Generated before changing UI test code for task-31. Each row is one `performAcce
 | iOS | testAccessibilityAuditMorseCourseLessonAndSummaryDark | Morse course unit | dark | false |
 | iOS | testAccessibilityAuditMorseCourseLessonAndSummaryDark | Morse lesson session | dark | false |
 | iOS | testAccessibilityAuditMorseCourseLessonAndSummaryDark | Morse lesson summary | dark | false |
-| iOS | testMorseSendingMainScreenLight | Morse sending main screen | light | false |
-| iOS | testMorseSendingMainScreenLight | Morse sending main screen lower half | light | true |
-| iOS | testMorseSendingMainScreenDark | Morse sending main screen | dark | false |
-| iOS | testMorseSendingMainScreenDark | Morse sending main screen lower half | dark | true |
-| iOS | testMorseSendingResultsLight | Morse sending results | light | false |
-| iOS | testMorseSendingResultsDark | Morse sending results | dark | false |
-| iOS | testMorseExamGradedDiffLight | Morse exam graded diff result iteration 1 | light | false |
-| iOS | testMorseExamGradedDiffLight | Morse exam graded diff result iteration 2 | light | false |
-| iOS | testMorseExamGradedDiffLight | Morse exam graded diff result iteration 3 | light | false |
-| iOS | testMorseExamGradedDiffDark | Morse exam graded diff result iteration 1 | dark | false |
-| iOS | testMorseExamGradedDiffDark | Morse exam graded diff result iteration 2 | dark | false |
-| iOS | testMorseExamGradedDiffDark | Morse exam graded diff result iteration 3 | dark | false |
+| iOS | testAccessibilityAuditMorseSendingMainScreenLight | Morse sending main screen | light | false |
+| iOS | testAccessibilityAuditMorseSendingMainScreenLight | Morse sending main screen lower half | light | true |
+| iOS | testAccessibilityAuditMorseSendingMainScreenDark | Morse sending main screen | dark | false |
+| iOS | testAccessibilityAuditMorseSendingMainScreenDark | Morse sending main screen lower half | dark | true |
+| iOS | testAccessibilityAuditMorseSendingResultsLight | Morse sending results | light | false |
+| iOS | testAccessibilityAuditMorseSendingResultsDark | Morse sending results | dark | false |
+| iOS | testAccessibilityAuditMorseExamGradedDiffLight | Morse exam graded diff result iteration 1 | light | false |
+| iOS | testAccessibilityAuditMorseExamGradedDiffLight | Morse exam graded diff result iteration 2 | light | false |
+| iOS | testAccessibilityAuditMorseExamGradedDiffLight | Morse exam graded diff result iteration 3 | light | false |
+| iOS | testAccessibilityAuditMorseExamGradedDiffDark | Morse exam graded diff result iteration 1 | dark | false |
+| iOS | testAccessibilityAuditMorseExamGradedDiffDark | Morse exam graded diff result iteration 2 | dark | false |
+| iOS | testAccessibilityAuditMorseExamGradedDiffDark | Morse exam graded diff result iteration 3 | dark | false |
 | iOS | testAccessibilityAuditCoreScreensLight | Compact root list | light | false |
 | iOS | testAccessibilityAuditCoreScreensLight | Home | light | false |
 | iOS | testAccessibilityAuditCoreScreensLight | Practice hub | light | false |

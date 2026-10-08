@@ -2026,8 +2026,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
         for _ in 0..<30 {
             let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
             if offenders.isEmpty { return }
-            let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
-            let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.40))
+            let hasOffenderClippedAboveWindow = offenders.contains(where: \.isClippedAboveWindow)
+            let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: hasOffenderClippedAboveWindow ? 0.45 : 0.35))
+            let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: hasOffenderClippedAboveWindow ? 0.30 : 0.40))
             start.press(forDuration: 0.01, thenDragTo: end)
             waitBriefly()
         }
@@ -2056,13 +2057,16 @@ final class CanadianHamPracticeUITests: XCTestCase {
         guard element.exists else { return nil }
         let frame = element.frame
         guard frame.width > 0, frame.height > 0 else { return nil }
-        guard frame.minY >= windowMinY, frame.minY < protectedMaxY else { return nil }
-        return ProtectedAreaOffender(description: "\(elementDescription) id=\(element.identifier) label=\(element.label) frame=\(frameDescription(frame))", frame: frame)
+        guard frame.maxY > windowMinY, frame.minY < protectedMaxY else { return nil }
+        return ProtectedAreaOffender(
+            description: "\(elementDescription) id=\(element.identifier) label=\(element.label) frame=\(frameDescription(frame))",
+            isClippedAboveWindow: frame.minY < windowMinY
+        )
     }
 
     private struct ProtectedAreaOffender {
         let description: String
-        let frame: CGRect
+        let isClippedAboveWindow: Bool
     }
 
     private func isPartiallyVisibleBelowNavigationBar(_ element: XCUIElement, in app: XCUIApplication) -> Bool {
