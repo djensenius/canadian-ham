@@ -1,9 +1,11 @@
 ---
 id: TASK-11.11
 title: Negative tests for Advanced SHA256SUMS checks and Apple bundle exclusion
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-03 03:15'
+updated_date: '2026-10-08 12:06'
 labels:
   - content
   - apple
@@ -26,3 +28,9 @@ Why: the task-11.4 re-review found two checks without regression tests: the impo
 - [ ] #1 advanced-importer tests cover a malformed line, a duplicate path, a path not in the manifest, a hash mismatch and a missing manifest file, each failing with a clear error
 - [ ] #2 An Apple unit test asserts generated/basic-2025-07-15 is in the bundle and generated/advanced-* is not, passing in the iOS and macOS xbuild suites
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Add negative Advanced SHA256SUMS importer tests for malformed lines, duplicates, non-manifest paths, hash mismatches, and missing manifest entries.\n2. Add Apple bundle tests proving Basic generated content is bundled and Advanced generated content is excluded.\n3. Run targeted content-tools and Apple tests, then final affected checks.
+<!-- SECTION:PLAN:END -->
