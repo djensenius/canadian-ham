@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { textToTimedMorse } from "@canadian-ham/morse-engine";
 import { describe, it, vi } from "vitest";
 
-import { MORSE_AUDIO_RAMP_SECONDS, WebMorsePlayer, scheduleMorseSequence, type WebMorseAudioContextLike } from "./morseAudio";
+import { MORSE_AUDIO_CLOSE_MARGIN_SECONDS, MORSE_AUDIO_RAMP_SECONDS, MORSE_AUDIO_STOP_SCHEDULE_LEAD_SECONDS, WebMorsePlayer, scheduleMorseSequence, type WebMorseAudioContextLike } from "./morseAudio";
 import { normalizeMorsePreferences } from "./morseSettings";
 
 class MockAudioParam {
@@ -42,6 +42,8 @@ class MockAudioContext implements WebMorseAudioContextLike {
   currentTime = 10;
   destination = {} as AudioNode;
   state: AudioContextState = "suspended";
+  baseLatency = 0;
+  outputLatency = 0;
   readonly oscillator = new MockOscillatorNode();
   readonly gains: MockGainNode[] = [];
   resumeCount = 0;
@@ -124,19 +126,20 @@ describe("WebMorsePlayer", () => {
     assert.deepEqual(context.outputGain.gain.events, [{ type: "set", value: 1, time: 10 }]);
   });
 
-  it("ramps the unscheduled output gain down before manual stop", () => {
+  it("ramps the unscheduled output gain down from a lead time so stale currentTime still gets the full fade", () => {
     const context = new MockAudioContext();
     context.state = "running";
     const handle = scheduleMorseSequence(context, textToTimedMorse("E"), normalizeMorsePreferences({ volume: 0.5 }));
 
     handle.stop();
 
+    const stopStart = 10 + MORSE_AUDIO_STOP_SCHEDULE_LEAD_SECONDS;
     assert.deepEqual(context.outputGain.gain.events.slice(-2), [
-      { type: "set", value: 1, time: 10 },
-      { type: "linear", value: 0, time: 10 + MORSE_AUDIO_RAMP_SECONDS },
+      { type: "set", value: 1, time: stopStart },
+      { type: "linear", value: 0, time: stopStart + MORSE_AUDIO_RAMP_SECONDS },
     ]);
     assert.deepEqual(context.toneGain.gain.events.filter((event) => event.type === "hold" || event.type === "cancel"), []);
-    assert.equal(context.oscillator.stops.at(-1), 10 + MORSE_AUDIO_RAMP_SECONDS);
+    assert.equal(context.oscillator.stops.at(-1), stopStart + MORSE_AUDIO_RAMP_SECONDS);
   });
 
   it("does not require cancelAndHoldAtTime when stopping", () => {
@@ -147,11 +150,12 @@ describe("WebMorsePlayer", () => {
 
     handle.stop();
 
+    const stopStart = 10 + MORSE_AUDIO_STOP_SCHEDULE_LEAD_SECONDS;
     assert.deepEqual(context.outputGain.gain.events.slice(-2), [
-      { type: "set", value: 1, time: 10 },
-      { type: "linear", value: 0, time: 10 + MORSE_AUDIO_RAMP_SECONDS },
+      { type: "set", value: 1, time: stopStart },
+      { type: "linear", value: 0, time: stopStart + MORSE_AUDIO_RAMP_SECONDS },
     ]);
-    assert.equal(context.oscillator.stops.at(-1), 10 + MORSE_AUDIO_RAMP_SECONDS);
+    assert.equal(context.oscillator.stops.at(-1), stopStart + MORSE_AUDIO_RAMP_SECONDS);
   });
 
   it("cancels scheduling when stopped during AudioContext resume", async () => {
@@ -169,15 +173,18 @@ describe("WebMorsePlayer", () => {
     assert.deepEqual(context.oscillator.stops, []);
   });
 
-  it("closes the AudioContext after the stop fade when the route leaves", async () => {
+  it("closes the AudioContext after the stop fade plus device latency and margin when the route leaves", async () => {
     vi.useFakeTimers();
     try {
       const context = new MockAudioContext();
+      context.baseLatency = 0.03;
+      context.outputLatency = 0.02;
       const player = new WebMorsePlayer(() => context);
       await player.playText("E", normalizeMorsePreferences());
       const closePromise = player.close();
+      const expectedDelayMilliseconds = Math.ceil((MORSE_AUDIO_RAMP_SECONDS + context.baseLatency + context.outputLatency + MORSE_AUDIO_CLOSE_MARGIN_SECONDS) * 1000);
 
-      await vi.advanceTimersByTimeAsync(Math.ceil(MORSE_AUDIO_RAMP_SECONDS * 1000) - 1);
+      await vi.advanceTimersByTimeAsync(expectedDelayMilliseconds - 1);
       assert.equal(context.closeCount, 0);
       await vi.advanceTimersByTimeAsync(1);
       await closePromise;
