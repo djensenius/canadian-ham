@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-09 20:10'
+updated_date: '2026-10-09 20:17'
 labels:
   - apple
   - privacy
@@ -59,6 +59,8 @@ Final validation on ce437be7f510398343725a0651efc3d4eb4010ac:
 - DebugCloudKit iOS build passed with CODE_SIGNING_ALLOWED=NO; DebugCloudKit Info.plist inspection showed UIBackgroundModes[0] = remote-notification.
 - DebugCloudKit macOS build passed with CODE_SIGNING_ALLOWED=NO.
 - tvOS/visionOS suites skipped for this task because changed app code and entitlements are scoped to the CanadianHam iOS/macOS target and guard scripts; no tvOS/visionOS-compiled app source was changed beyond regenerated project metadata.
+
+Coordinator (67b87be): restored scripts/check-apple-localizations.sh to main's version (no DebugCloudKit export, no hard-coded gated-key allowlist). The 8 iCloud strings live in ICloudSyncCopy.swift, which is compiled in every configuration, so the default export extracts them. pnpm check:apple-l10n passes with exit 0 and leaves the catalogue unchanged. The earlier 'main catalogue drift' isn't reproduced with the default export. Re-review round 3: the r2 findings are fixed (~/.cache/canadian-ham-reviews/t13.4-r3.md).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
