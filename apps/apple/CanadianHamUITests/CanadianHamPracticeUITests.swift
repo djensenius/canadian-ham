@@ -154,21 +154,18 @@ final class CanadianHamPracticeUITests: XCTestCase {
         tapCompactBack(in: app)
         tapCompactBack(in: app)
         XCTAssertTrue(app.buttons["morse-course-unit-1"].firstMatch.waitForExistence(timeout: 5))
-        openFirstMorseUnit(in: app)
-        tapFirstMorseLesson(in: app)
-        XCTAssertTrue(app.staticTexts["Lesson 1 session"].firstMatch.waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Exercise 1 of")).firstMatch.waitForExistence(timeout: 5), "Re-entering a finished lesson should start a fresh session")
-
-        tapCompactBack(in: app)
         let review = app.buttons["morse-course-review"].firstMatch
-        if !review.waitForExistence(timeout: 2) {
-            tapCompactBack(in: app)
-        }
         XCTAssertTrue(review.waitForExistence(timeout: 5))
         scrollUntilHittable(review, in: app, maxSwipes: 8)
         review.tap()
         XCTAssertTrue(app.staticTexts["Review session"].firstMatch.waitForExistence(timeout: 5), "Review weakest characters should open a review session")
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Exercise 1 of")).firstMatch.waitForExistence(timeout: 5))
+
+        tapCompactBack(in: app)
+        openFirstMorseUnit(in: app)
+        tapFirstMorseLesson(in: app)
+        XCTAssertTrue(app.staticTexts["Lesson 1 session"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Exercise 1 of")).firstMatch.waitForExistence(timeout: 5), "Re-entering a finished lesson should start a fresh session")
     }
 
     func testAccessibilityAuditMorseBeaconOutputLight() throws {
