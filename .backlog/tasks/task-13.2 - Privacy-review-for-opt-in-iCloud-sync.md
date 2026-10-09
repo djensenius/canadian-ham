@@ -1,7 +1,7 @@
 ---
 id: TASK-13.2
 title: Privacy review for opt-in iCloud sync
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
