@@ -2290,7 +2290,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
             XCTFail("\(context): expected a scroll view before settling content below the navigation bar", file: file, line: line)
             return
         }
-        for _ in 0..<30 {
+        for _ in 0..<60 {
             let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
             if let target, target.exists {
                 let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
@@ -2307,7 +2307,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 if target.frame.maxY <= visibleFrame.minY {
                     scrollView.swipeDown()
                 } else {
-                    scrollView.swipeUp()
+                    let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
+                    let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
+                    start.press(forDuration: 0.01, thenDragTo: end)
                 }
                 waitBriefly()
                 continue
