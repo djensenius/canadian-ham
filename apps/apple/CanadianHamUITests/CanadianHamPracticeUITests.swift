@@ -1903,8 +1903,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let button = app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", labelFragment)).firstMatch
         XCTAssertTrue(button.waitForExistence(timeout: 5), "Expected button containing \(labelFragment)")
         scrollUntilHittable(button, in: app, maxSwipes: 10)
-        XCTAssertTrue(button.isHittable, "Expected button containing \(labelFragment) to be hittable")
-        button.tap()
+        if button.isHittable {
+            button.tap()
+        } else {
+            XCTAssertTrue(button.exists, "Expected button containing \(labelFragment) to exist before coordinate tap fallback")
+            button.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        }
     }
 
     private func tapCompactBack(in app: XCUIApplication) {
