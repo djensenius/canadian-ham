@@ -455,8 +455,11 @@ struct MorseCourseView: View {
     private func prepareReview(course: MorseCourse, progress: MorseCourseProgressExport) {
         let learned = learnedMorseCharacters(course: course, progress: progress)
         let weakest = selectWeakestMorseCharacters(stats: progress.characterStats, learnedCharacters: learned, limit: 5)
+        let fallbackCharacters = Array(course.lessons.flatMap(\.newCharacters).prefix(5))
+        let reviewCharacters = weakest.isEmpty ? Array((learned.isEmpty ? fallbackCharacters : learned).prefix(5)) : weakest
+        guard !reviewCharacters.isEmpty else { return }
         resetSessionFeedback()
-        session = MorseCourseSession(mode: .review, exercises: (weakest.isEmpty ? Array(learned.prefix(5)) : weakest).map { .typeCharacter($0) })
+        session = MorseCourseSession(mode: .review, exercises: reviewCharacters.map { .typeCharacter($0) })
         refocusSession()
     }
 
