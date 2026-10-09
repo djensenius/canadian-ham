@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-03 03:15'
-updated_date: '2026-10-09 10:30'
+updated_date: '2026-10-09 10:37'
 labels:
   - content
   - apple
@@ -49,6 +49,8 @@ Review fixes: tvOS/visionOS bundle guards now inspect the built app bundles via 
 Final validation on code commit 8044afbf33ae76222dec781f32b8b0867bd242df: targeted iOS bundle/course-switch run passed; full iOS passed CanadianHamTests 66 tests and CanadianHamUITests 74 tests; full macOS passed 68 CanadianHamTests; full tvOS clean rerun passed CanadianHamTVTests 4 tests and CanadianHamTVUITests 12 tests; full visionOS clean rerun passed CanadianHamVisionTests 4 tests and CanadianHamVisionUITests 9 tests. The first tvOS full after deliberate guard-bites failed because stale DerivedData still contained the deliberately injected generated/basic directory; clean xbuild rerun on the same code commit passed.
 
 Coordinator: AC #2 reworded after the review fix that removed the tvOS/visionOS copy scripts (those apps ship Basic at the bundle root; the guard asserts no generated/ directory and no Advanced resources, inspecting the built .app; a missing app fails). The first paragraph of these notes describes the superseded test-bundle guard; the 'Review fixes' paragraph is current. Re-review: APPROVE WITH NOTES (~/.cache/canadian-ham-reviews/t11-hardening-r2.md).
+
+PR #159 Copilot fix (600551f, coordinator): new test 'Advanced SHA256SUMS rejects a changed source file whose metadata is unchanged' appends a byte to questions/readme_adv.txt with SHA256SUMS and manifest.json untouched; it fails when the importer's file-byte hash check is disabled (verified: 106 pass / 1 fail) and passes with it (107 pass).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
