@@ -247,18 +247,18 @@ Core Data "Creating a Core Data Model for CloudKit" adds: "Unique constraints ar
 
 ---
 
-## Recommendation: LATER (after v1) — unchanged
+## Recommendation: gated sync later; local schema migration before v1 ships
 
-### Verdict: **DO NOT IMPLEMENT IN V1; SCHEDULE FOR AFTER V1 (P7), BEHIND A PRIVACY REVIEW**
+### Verdict: **KEEP ICLOUD OFF IN V1 RELEASE BUILDS; LAND LOCAL-ONLY SCHEMA V2 BEFORE V1; SCHEDULE GATED ICLOUD SYNC FOR AFTER V1**
 
 **Rationale (adjusted):**
-1. **Keep v1 simple and network-free.** v1 policy forbids iCloud sync: `AGENTS.md` says "Apple app must work fully offline and collect no data; no networking code, third-party SDKs, analytics, or iCloud sync in v1". The same rule is in DEC-APPLE-003, REQ-APPLE-003 and `docs/privacy.md`. Sync would also bring in the Push Notifications capability and remote-notification background mode, which `privacy.md` currently disallows. *Corrected:* the original's "guarantees an effortless App Store approval" was an unsupported claim and has been removed.
-2. **Schema change.** CloudKit needs `@Attribute(.unique)` removed from all three entities **and** declaration-level defaults (or optionals) for every non-optional property. Uniqueness then has to be enforced in `ProgressStore`. *Adjusted:* the repo stays private until T-009, so there is no public install base yet. "Migrating existing stores" before v1 would affect only development and TestFlight data. The main cost of doing it now is rewriting upsert/dedup logic in v1, not migrating users (see Decision 1).
+1. **Keep v1 release builds simple and network-free.** v1 policy forbids iCloud sync in release builds: `AGENTS.md` says Apple v1 release builds must work fully offline and collect no data, with no networking code, third-party SDKs, analytics, or iCloud sync. The same rule is in DEC-APPLE-003, REQ-APPLE-003 and `docs/privacy.md`. Sync also brings in the Push Notifications capability and remote-notification background mode, so those capabilities are allowed only when an off-by-default post-v1 iCloud build gate is explicitly enabled. *Corrected:* the original's "guarantees an effortless App Store approval" was an unsupported claim and has been removed.
+2. **Schema change.** CloudKit needs `@Attribute(.unique)` removed from all three entities **and** declaration-level defaults (or optionals) for every non-optional property. Uniqueness then has to be enforced in `ProgressStore`. *Updated owner decision:* because v1 has not shipped and is waiting on ISED permission, migrate the local schema before v1 ships instead of after v1. That keeps only one progress schema in the field. This schema V2 work stays local-only, continues to use `cloudKitDatabase: .none`, and adds no iCloud or push entitlements.
 3. **Users can already move their data.** Export and import of progress JSON is **REQ-QUIZ-005** (with REQ-APPLE-003 and REQ-OFFLINE-001), not "REQ-PROGRESS-001" as the brief said. T-506 not verified.
 
 ---
 
-## Phased Implementation Plan (after v1 / P7) — adjusted
+## Phased Implementation Plan — adjusted for pre-v1 schema migration
 
 ### Phase 0: Privacy review (new; required by DEC-APPLE-003)
 - Change `docs/privacy.md` and REQ-APPLE-003/004 to allow, **only when the user opts in**: iCloud (CloudKit) entitlements, the Push Notifications capability, and the remote-notification background mode.
@@ -266,11 +266,12 @@ Core Data "Creating a Core Data Model for CloudKit" adds: "Unique constraints ar
 - Adopt a **no-export/no-retention policy for CloudKit Console logs and telemetry**.
 - Re-run the App Store Connect questionnaire.
 
-### Phase 1: Schema refactor and removing uniqueness (estimate ~1–2 days, unverified)
+### Phase 1: Schema refactor and removing uniqueness before v1 ships (estimate ~1–2 days, unverified)
 - Add `CanadianHamProgressSchemaV2` with a `SchemaMigrationPlan` stage. Remove `@Attribute(.unique)` from all three entities. Give every non-optional property a **declaration-level** default.
 - Add query-before-insert and duplicate resolution in `ProgressStore`, keyed by `questionId`, exam `id`, and preferences `key`.
 - Keep timestamps in a normalized, sortable format.
 - Tests: V1→V2 migration, deduplication, in-memory `cloudKitDatabase: .none`.
+- This phase is local-only and may ship in v1 because v1 has not shipped yet; no iCloud, Push Notifications, or remote-notification entitlements are added.
 
 ### Phase 2: Opt-in CloudKit configuration (estimate ~2–3 days, unverified)
 - Add the iCloud (CloudKit) capability, Push Notifications (Xcode adds it automatically) and Background Modes → Remote notifications in `apps/apple/project.yml`. Regenerate with XcodeGen.
@@ -298,9 +299,7 @@ Core Data "Creating a Core Data Model for CloudKit" adds: "Unique constraints ar
 
 ## Decisions for the Owner (kept; adjusted where facts changed)
 
-1. **Schema strategy (now vs later).** Remove `@Attribute(.unique)` *and* add declaration-level defaults now in v1 (keeping `cloudKitDatabase: .none` and no entitlements), or keep the v1 schema and migrate after v1?
-   *Recommendation (kept):* keep v1 as is and migrate later through `SchemaMigrationPlan`.
-   *Adjusted note:* there is no public install base before T-009, so changing it now costs less in migration than the original brief said. The trade-off is mostly about adding dedup logic to v1 now.
+1. **Schema strategy (now vs later).** Earlier research recommended keeping the v1 schema and migrating after v1. The owner decision is now to remove `@Attribute(.unique)` and add declaration-level defaults before v1 ships, while keeping `cloudKitDatabase: .none` and adding no entitlements. Because v1 has not shipped, there will be only one schema in the field; development/TestFlight stores migrate through `SchemaMigrationPlan`.
 2. **Sync scope.** Should preferences sync, or only learning progress?
    *Recommendation (kept, reinforced):* sync learning progress only. Keep `PreferencesEntity` local in a separate `.none` configuration. As a synced singleton it would duplicate across devices without uniqueness.
 3. **Default state.** Confirm sync stays strictly **opt-in** (OFF until the user turns it on).

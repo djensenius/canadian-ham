@@ -4,7 +4,7 @@ title: Optional iCloud sync
 status: To Do
 assignee: []
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-02 01:12'
+updated_date: '2026-10-09 00:22'
 labels:
   - apple
   - privacy
@@ -38,4 +38,6 @@ Owner decisions (2026-10-02, owner accepted all recommendations in docs/proposal
 5. Privacy docs: approved in principle, after v1, a scoped exception in docs/privacy.md for CloudKit, Push Notifications and the remote-notification background mode (opt-in only), plus a CloudKit Console log no-retention policy. The AGENTS.md rule 'no iCloud sync in v1' stays unchanged; the privacy-review subtask revisits AGENTS.md, privacy.md and REQ-APPLE-003/004 when post-v1 work starts.
 
 2026-10-02: implementation subtasks task-13.2 to task-13.5 created. AGENTS.md v1 iCloud rule revisited: it stays as is for v1 (owner decision); task-13.2 updates it together with docs/privacy.md when post-v1 work starts.
+
+2026-10-08 owner and coordinator update: the owner asked for iCloud sync now. v1 hasn't shipped (waiting on ISED permission), so decision 1 changes: the local-only SwiftData schema V2 (no .unique, declaration defaults, V1→V2 lightweight migration, query-before-insert dedup) lands BEFORE v1 ships (task-13.3), so only one schema is in the field. Decision 5 is refined: AGENTS.md now says v1 RELEASE builds stay offline with no iCloud or push capability, and CloudKit, Push and the remote-notification background mode are allowed only behind an off-by-default build gate after v1 (task-13.2). The gate and toggle are task-13.4.
 <!-- SECTION:NOTES:END -->
