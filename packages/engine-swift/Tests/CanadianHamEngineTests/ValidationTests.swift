@@ -66,9 +66,17 @@ final class ValidationTests: XCTestCase {
         }
     }
 
-    func testBankRulesAcceptOnlySchemaValidAdvancedIds() throws {
+    func testBankRulesAcceptFutureSchemaValidBasicIds() throws {
+        let rules = try rulesForBankId("basic-2026-09-30")
+        XCTAssertEqual(rules.bankId, "basic-2026-09-30")
+        XCTAssertEqual(rules.mockExamQuestionCount, 100)
+        XCTAssertEqual(rules.subsectionCount, 100)
+        XCTAssertEqual(rules.hasHonours, true)
+    }
+
+    func testBankRulesAcceptOnlySchemaValidBasicAndAdvancedIds() throws {
         XCTAssertEqual(try rulesForBankId("advanced-2026-01-15").bankId, "advanced-2026-01-15")
-        for bankId in ["advanced-", "advanced-X", "advanced-2026_01", "advanced-2026 01"] {
+        for bankId in ["basic-", "basic-2026-1-15", "basic-2026_01_15", "basic-2026-01-15-extra", "advanced-", "advanced-X", "advanced-2026_01", "advanced-2026 01"] {
             XCTAssertThrowsError(try rulesForBankId(bankId)) { error in
                 XCTAssertEqual((error as? EngineError)?.message, "unsupported bankId \(bankId)")
             }
@@ -82,6 +90,23 @@ final class ValidationTests: XCTestCase {
     }
 
     func testAdvancedReadinessTreatsSeventyPercentPassThresholdAsInclusive() throws {
+        let categoryBreakdown = [CategoryBreakdownEntry(categoryId: "A-001", correct: 50, total: 50, percent: 100)]
+        let result = try computeReadiness(ReadinessInput(
+            bankId: syntheticAdvancedBankId,
+            completedExams: [
+                ReadinessExamAttempt(submittedAt: "2026-01-03T00:00:00.000Z", score: ReadinessScore(correct: 35, total: 50, percent: 70), categoryBreakdown: categoryBreakdown),
+                ReadinessExamAttempt(submittedAt: "2026-01-02T00:00:00.000Z", score: ReadinessScore(correct: 35, total: 50, percent: 70), categoryBreakdown: categoryBreakdown),
+            ],
+            dueReviewCount: 0
+        ))
+
+        XCTAssertEqual(result.state, .passReady)
+        XCTAssertEqual(result.consideredExamCount, 2)
+        XCTAssertEqual(result.consideredSubmittedAt, ["2026-01-03T00:00:00.000Z", "2026-01-02T00:00:00.000Z"])
+        XCTAssertEqual(result.reasons, [.examThreshold(threshold: 70, countAtOrAbove: 2)])
+    }
+
+    func testAdvancedReadinessDoesNotCountExamsBelowSeventyPercent() throws {
         let categoryBreakdown = [CategoryBreakdownEntry(categoryId: "A-001", correct: 50, total: 50, percent: 100)]
         let result = try computeReadiness(ReadinessInput(
             bankId: syntheticAdvancedBankId,

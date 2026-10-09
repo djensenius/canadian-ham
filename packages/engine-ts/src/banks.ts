@@ -33,11 +33,12 @@ export const ADVANCED_BANK_RULES: BankRules = {
 };
 
 // Matches packages/schemas/common.schema.json: the whole id, not just the prefix.
+const BASIC_BANK_ID_PATTERN = /^basic-\d{4}-\d{2}-\d{2}$/u;
 const ADVANCED_BANK_ID_PATTERN = /^advanced-[a-z0-9-]+$/u;
 
 export function rulesForBankId(bankId: string = BASIC_BANK_ID): BankRules {
-  if (bankId === BASIC_BANK_ID) {
-    return BASIC_BANK_RULES;
+  if (BASIC_BANK_ID_PATTERN.test(bankId)) {
+    return { ...BASIC_BANK_RULES, bankId };
   }
   if (bankId === SYNTHETIC_ADVANCED_BANK_ID || ADVANCED_BANK_ID_PATTERN.test(bankId)) {
     return { ...ADVANCED_BANK_RULES, bankId };

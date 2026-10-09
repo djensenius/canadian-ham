@@ -66,6 +66,7 @@ struct HomeView: View {
                         }
                         .buttonStyle(.plain)
                         .accessibilityLabel(Text(categoryPracticeAccessibilityLabel(category))) // l10n: content(question)
+                        .accessibilityIdentifier("category-\(category.id)-button")
                     }
                 }
                 .paperCard()
@@ -250,6 +251,7 @@ struct PracticeHubView: View {
                             }
                             .buttonStyle(.plain)
                             .accessibilityLabel(Text(categoryPracticeAccessibilityLabel(category))) // l10n: content(question)
+                            .accessibilityIdentifier("category-\(category.id)-button")
 
                             DisclosureGroup("Subsections") {
                                 ForEach(bank.subsectionsByCategory[category.id] ?? []) { subsection in

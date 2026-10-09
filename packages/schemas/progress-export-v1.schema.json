@@ -28,5 +28,53 @@
     "morseCourseProgress": { "$ref": "common.schema.json#/$defs/morseCourseProgress" },
     "preferences": { "$ref": "common.schema.json#/$defs/webPreferences" }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "bankId": { "$ref": "common.schema.json#/$defs/basicBankId" },
+        "questionProgress": {
+          "type": "array",
+          "items": { "$ref": "common.schema.json#/$defs/basicQuestionProgressRecord" }
+        },
+        "examAttempts": {
+          "type": "array",
+          "items": { "$ref": "common.schema.json#/$defs/basicProgressExamAttempt" }
+        },
+        "lessonQuizAttempts": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "common.schema.json#/$defs/lessonQuizAttempt" },
+              {
+                "type": "object",
+                "properties": {
+                  "officialQuestionIds": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/basicQuestionId" } },
+                  "incorrectOfficialQuestionIds": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/basicQuestionId" } }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["bankId"],
+      "properties": {
+        "bankId": { "$ref": "common.schema.json#/$defs/advancedBankId" },
+        "questionProgress": {
+          "type": "array",
+          "items": { "$ref": "common.schema.json#/$defs/advancedQuestionProgressRecord" }
+        },
+        "examAttempts": {
+          "type": "array",
+          "items": { "$ref": "common.schema.json#/$defs/advancedProgressExamAttempt" }
+        },
+        "lessonProgress": { "type": "array", "maxItems": 0 },
+        "lessonQuizAttempts": { "type": "array", "maxItems": 0 }
+      }
+    }
+  ]
 }

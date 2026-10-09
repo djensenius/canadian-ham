@@ -12,18 +12,48 @@
       "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$",
       "canonicalUtcTimestamp": true
     },
+    "basicBankId": {
+      "type": "string",
+      "pattern": "^basic-\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "advancedBankId": {
+      "type": "string",
+      "pattern": "^advanced-[a-z0-9-]+$"
+    },
     "bankId": {
       "oneOf": [
-        { "const": "basic-2025-07-15" },
-        { "type": "string", "pattern": "^advanced-[a-z0-9-]+$" }
+        { "$ref": "#/$defs/basicBankId" },
+        { "$ref": "#/$defs/advancedBankId" }
       ]
+    },
+    "basicCategoryId": {
+      "enum": ["B-001", "B-002", "B-003", "B-004", "B-005", "B-006", "B-007", "B-008"]
+    },
+    "advancedCategoryId": {
+      "enum": ["A-001", "A-002", "A-003", "A-004", "A-005", "A-006", "A-007"]
     },
     "categoryId": {
       "enum": ["B-001", "B-002", "B-003", "B-004", "B-005", "B-006", "B-007", "B-008", "A-001", "A-002", "A-003", "A-004", "A-005", "A-006", "A-007"]
     },
+    "basicSubsectionId": {
+      "type": "string",
+      "pattern": "^B-00[1-8]-\\d{3}$"
+    },
+    "advancedSubsectionId": {
+      "type": "string",
+      "pattern": "^A-00[1-7]-\\d{3}$"
+    },
     "subsectionId": {
       "type": "string",
       "pattern": "^(?:B-00[1-8]|A-00[1-7])-\\d{3}$"
+    },
+    "basicQuestionId": {
+      "type": "string",
+      "pattern": "^B-00[1-8]-\\d{3}-\\d{3}$"
+    },
+    "advancedQuestionId": {
+      "type": "string",
+      "pattern": "^A-00[1-7]-\\d{3}-\\d{3}$"
     },
     "questionId": {
       "type": "string",
@@ -295,6 +325,28 @@
       },
       "additionalProperties": false
     },
+    "basicCategoryBreakdownEntry": {
+      "allOf": [
+        { "$ref": "#/$defs/categoryBreakdownEntry" },
+        {
+          "type": "object",
+          "properties": {
+            "categoryId": { "$ref": "#/$defs/basicCategoryId" }
+          }
+        }
+      ]
+    },
+    "advancedCategoryBreakdownEntry": {
+      "allOf": [
+        { "$ref": "#/$defs/categoryBreakdownEntry" },
+        {
+          "type": "object",
+          "properties": {
+            "categoryId": { "$ref": "#/$defs/advancedCategoryId" }
+          }
+        }
+      ]
+    },
     "leitnerState": {
       "type": "object",
       "required": ["box", "dueAt"],
@@ -334,7 +386,49 @@
           "type": ["string", "null"]
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "questionId": { "$ref": "#/$defs/basicQuestionId" },
+            "bankId": { "$ref": "#/$defs/basicBankId" }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["bankId"],
+          "properties": {
+            "questionId": { "$ref": "#/$defs/advancedQuestionId" },
+            "bankId": { "$ref": "#/$defs/advancedBankId" }
+          }
+        }
+      ]
+    },
+    "basicQuestionProgressRecord": {
+      "allOf": [
+        { "$ref": "#/$defs/questionProgressRecord" },
+        {
+          "type": "object",
+          "properties": {
+            "questionId": { "$ref": "#/$defs/basicQuestionId" },
+            "bankId": { "$ref": "#/$defs/basicBankId" }
+          }
+        }
+      ]
+    },
+    "advancedQuestionProgressRecord": {
+      "allOf": [
+        { "$ref": "#/$defs/questionProgressRecord" },
+        {
+          "type": "object",
+          "required": ["bankId"],
+          "properties": {
+            "questionId": { "$ref": "#/$defs/advancedQuestionId" },
+            "bankId": { "$ref": "#/$defs/advancedBankId" }
+          }
+        }
+      ]
     },
     "answerUpdate": {
       "type": "object",
@@ -345,7 +439,23 @@
         "isCorrect": { "type": "boolean" },
         "now": { "$ref": "#/$defs/canonicalUtcTimestamp" }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "questionId": { "$ref": "#/$defs/basicQuestionId" },
+            "bankId": { "$ref": "#/$defs/basicBankId" }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "questionId": { "$ref": "#/$defs/advancedQuestionId" },
+            "bankId": { "$ref": "#/$defs/advancedBankId" }
+          }
+        }
+      ]
     },
     "generatedExamItem": {
       "type": "object",
@@ -382,7 +492,51 @@
         "isCorrect": { "type": "boolean" },
         "flagged": { "type": "boolean" }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "questionId": { "$ref": "#/$defs/basicQuestionId" },
+            "subsectionId": { "$ref": "#/$defs/basicSubsectionId" },
+            "categoryId": { "$ref": "#/$defs/basicCategoryId" }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "questionId": { "$ref": "#/$defs/advancedQuestionId" },
+            "subsectionId": { "$ref": "#/$defs/advancedSubsectionId" },
+            "categoryId": { "$ref": "#/$defs/advancedCategoryId" }
+          }
+        }
+      ]
+    },
+    "basicProgressExamAttemptItem": {
+      "allOf": [
+        { "$ref": "#/$defs/progressExamAttemptItem" },
+        {
+          "type": "object",
+          "properties": {
+            "questionId": { "$ref": "#/$defs/basicQuestionId" },
+            "subsectionId": { "$ref": "#/$defs/basicSubsectionId" },
+            "categoryId": { "$ref": "#/$defs/basicCategoryId" }
+          }
+        }
+      ]
+    },
+    "advancedProgressExamAttemptItem": {
+      "allOf": [
+        { "$ref": "#/$defs/progressExamAttemptItem" },
+        {
+          "type": "object",
+          "properties": {
+            "questionId": { "$ref": "#/$defs/advancedQuestionId" },
+            "subsectionId": { "$ref": "#/$defs/advancedSubsectionId" },
+            "categoryId": { "$ref": "#/$defs/advancedCategoryId" }
+          }
+        }
+      ]
     },
     "examTimer": {
       "type": "object",
@@ -429,7 +583,77 @@
           "items": { "$ref": "#/$defs/subsectionId" }
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "bankId": { "$ref": "#/$defs/basicBankId" },
+            "categoryBreakdown": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/basicCategoryBreakdownEntry" }
+            },
+            "weakSubsectionIds": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/basicSubsectionId" }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["bankId"],
+          "properties": {
+            "bankId": { "$ref": "#/$defs/advancedBankId" },
+            "categoryBreakdown": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/advancedCategoryBreakdownEntry" }
+            },
+            "weakSubsectionIds": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/advancedSubsectionId" }
+            }
+          }
+        }
+      ]
+    },
+    "basicExamScore": {
+      "allOf": [
+        { "$ref": "#/$defs/examScore" },
+        {
+          "type": "object",
+          "properties": {
+            "bankId": { "$ref": "#/$defs/basicBankId" },
+            "categoryBreakdown": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/basicCategoryBreakdownEntry" }
+            },
+            "weakSubsectionIds": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/basicSubsectionId" }
+            }
+          }
+        }
+      ]
+    },
+    "advancedExamScore": {
+      "allOf": [
+        { "$ref": "#/$defs/examScore" },
+        {
+          "type": "object",
+          "required": ["bankId"],
+          "properties": {
+            "bankId": { "$ref": "#/$defs/advancedBankId" },
+            "categoryBreakdown": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/advancedCategoryBreakdownEntry" }
+            },
+            "weakSubsectionIds": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/advancedSubsectionId" }
+            }
+          }
+        }
+      ]
     },
     "progressExamAttempt": {
       "type": "object",
@@ -448,7 +672,65 @@
         },
         "score": { "$ref": "#/$defs/examScore" }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "bankId": { "$ref": "#/$defs/basicBankId" },
+            "items": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/basicProgressExamAttemptItem" }
+            },
+            "score": { "$ref": "#/$defs/basicExamScore" }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["bankId"],
+          "properties": {
+            "bankId": { "$ref": "#/$defs/advancedBankId" },
+            "items": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/advancedProgressExamAttemptItem" }
+            },
+            "score": { "$ref": "#/$defs/advancedExamScore" }
+          }
+        }
+      ]
+    },
+    "basicProgressExamAttempt": {
+      "allOf": [
+        { "$ref": "#/$defs/progressExamAttempt" },
+        {
+          "type": "object",
+          "properties": {
+            "bankId": { "$ref": "#/$defs/basicBankId" },
+            "items": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/basicProgressExamAttemptItem" }
+            },
+            "score": { "$ref": "#/$defs/basicExamScore" }
+          }
+        }
+      ]
+    },
+    "advancedProgressExamAttempt": {
+      "allOf": [
+        { "$ref": "#/$defs/progressExamAttempt" },
+        {
+          "type": "object",
+          "required": ["bankId"],
+          "properties": {
+            "bankId": { "$ref": "#/$defs/advancedBankId" },
+            "items": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/advancedProgressExamAttemptItem" }
+            },
+            "score": { "$ref": "#/$defs/advancedExamScore" }
+          }
+        }
+      ]
     },
     "lessonProgressRecord": {
       "type": "object",
