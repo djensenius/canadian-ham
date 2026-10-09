@@ -25,9 +25,9 @@ Why: CloudKit cannot mirror models with unique constraints or non-defaulted prop
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 CanadianHamProgressSchemaV2 removes @Attribute(.unique) from all three entities and gives every non-optional property a declaration-level default, with a SchemaMigrationPlan stage
-- [ ] #2 ProgressStore dedups by questionId, exam id and preferences key, with query-before-insert
-- [ ] #3 V1-to-V2 migration and dedup tests pass via xbuild on iOS and macOS
+- [x] #1 CanadianHamProgressSchemaV2 removes @Attribute(.unique) from all three entities and gives every non-optional property a declaration-level default, with a SchemaMigrationPlan stage
+- [x] #2 ProgressStore dedups by questionId, exam id and preferences key, with query-before-insert
+- [x] #3 V1-to-V2 migration and dedup tests pass via xbuild on iOS and macOS
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -276,3 +276,9 @@ full macOS: 67 extracted passed test names; Executed 67 tests, with 0 failures (
 - CanadianHamTests.ReadinessAndScoringTests testReadinessStates
 - CanadianHamTests.ReadinessAndScoringTests testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Added CanadianHamProgressSchemaV2 with V1->V2 migration, removed SwiftData unique constraints in V2, added declaration-level defaults, and kept ModelContainers explicit local-only cloudKitDatabase .none. ProgressStore now deduplicates question progress, exam attempts, and preferences with query-before-insert while preserving import replace-all, rollback, reset, and existing tests. Added V1 migration and V2 duplicate tests. Verified with /tmp/icloud validation chain: targeted iOS/macOS migration+dedup tests passed, full iOS and macOS xbuild suites passed; tvOS/visionOS skipped because changed progress-store files are not target members there.
+<!-- SECTION:FINAL_SUMMARY:END -->
