@@ -1147,7 +1147,7 @@ describe("App accessibility and flows", () => {
     }
   }
 
-  it("renders the French interface with Advanced selected and tags Advanced category names as English", async () => {
+  it("renders the French interface with Advanced selected and tags verified Advanced category names as French", async () => {
     window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
     window.location.hash = "#/home";
     const store = createStore("advanced-french-ui");
@@ -1159,10 +1159,10 @@ describe("App accessibility and flows", () => {
     const courseGroup = screen.getByRole("group", { name: "Sélection du cours" });
     assert.equal((within(courseGroup).getByRole("radio", { name: "Compétence supérieure" }) as HTMLInputElement).value, ADVANCED_BANK_ID);
 
-    const advancedCategoryName = advancedBank.categories[0]?.name.en;
+    const advancedCategoryName = advancedBank.categories[0]?.name.fr;
     assert.ok(advancedCategoryName);
-    const categoryFallback = await screen.findByText(advancedCategoryName);
-    assert.equal(categoryFallback.getAttribute("lang"), "en");
+    const categoryName = await screen.findByText(advancedCategoryName);
+    assert.equal(categoryName.getAttribute("lang"), "fr-CA");
 
     const primaryNav = screen.getByRole("navigation", { name: "Principale" });
     await user.click(within(primaryNav).getByRole("button", { name: "Examen simulé" }));
@@ -1864,14 +1864,16 @@ describe("App accessibility and flows", () => {
     await waitFor(async () => assert.equal((await store.getPreferences()).morse.characterWpm, 20));
   });
 
-  it("reverts empty or invalid Morse number drafts and does not save unchanged values", async () => {
+  it("reverts empty or invalid Morse number drafts with a polite explanation and does not save unchanged values", async () => {
     window.location.hash = "#/morse";
     const store = new CountingPreferencesStore("morse-invalid-drafts");
     stores.push(store);
     const user = userEvent.setup();
-    render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-invalid-seed"} />);
+    const { container } = render(<App store={store} now={() => fixedNow} seedFactory={() => "morse-invalid-seed"} />);
 
-    await screen.findByRole("heading", { name: "Morse settings" });
+    const settingsHeading = await screen.findByRole("heading", { name: "Morse settings" });
+    const settingsSection = settingsHeading.closest("section");
+    assert.ok(settingsSection);
     const tone = screen.getByLabelText("Tone") as HTMLInputElement;
     await user.clear(tone);
     fireEvent.blur(tone);
@@ -1885,12 +1887,14 @@ describe("App accessibility and flows", () => {
     assert.equal(tone.value, "650");
     assert.equal((await store.getPreferences()).morse.toneHz, 650);
     assert.equal(store.putPreferencesCount, 0);
+    assert.equal(within(settingsSection).getByRole("status").textContent, "Tone reverted to the saved value. Enter a whole number from 400 to 900.");
 
     await user.clear(tone);
     await user.type(tone, "650");
     await user.keyboard("{Enter}");
     assert.equal(store.putPreferencesCount, 0);
-    assert.equal(screen.queryByText("Morse settings saved."), null);
+    assert.equal(screen.queryByText("Morse trainer settings saved locally."), null, "an unchanged commit must not report a save");
+    await expectNoAxeViolations(container);
   });
 
   it("renders Settings theme controls and no axe violations", async () => {

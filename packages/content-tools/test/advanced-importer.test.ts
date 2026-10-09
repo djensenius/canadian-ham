@@ -141,15 +141,18 @@ test("imports and validates the committed Advanced 2025-02-04 source bank", asyn
   assert.deepEqual(
     bank.categories.map((category) => [category.id, category.name.fr, category.frenchNameStatus]),
     [
-      ["A-001", null, "pending verification"],
-      ["A-002", null, "pending verification"],
-      ["A-003", null, "pending verification"],
-      ["A-004", null, "pending verification"],
-      ["A-005", null, "pending verification"],
-      ["A-006", null, "pending verification"],
-      ["A-007", null, "pending verification"],
+      ["A-001", "Théorie avancée", "verified"],
+      ["A-002", "Notions avancées sur les composants et les circuits", "verified"],
+      ["A-003", "Mesures", "verified"],
+      ["A-004", "Alimentation", "verified"],
+      ["A-005", "Émetteurs, modulation et traitement", "verified"],
+      ["A-006", "Récepteurs", "verified"],
+      ["A-007", "Descentes d'antenne - adaptation et systèmes d'antenne", "verified"],
     ],
   );
+  for (const category of bank.categories) {
+    assert.match(category.nameSource, /official French name verified from ISED CIR-3 §5\.3\.\d and the French Exam Generator/);
+  }
   for (const subsection of bank.subsections) {
     assert.ok(subsection.questionCount >= 10, `${subsection.id} has too few questions`);
     assert.ok(subsection.questionCount <= 11, `${subsection.id} has too many questions`);

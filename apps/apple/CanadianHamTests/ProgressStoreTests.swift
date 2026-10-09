@@ -973,6 +973,149 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertThrowsError(try store.importData(data, bank: bank))
     }
 
+    func testMigratesProgressStoreV1ToV2WithoutUniqueConstraints() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let storeURL = try temporaryProgressStoreURL()
+        let record = try applyAnswer(existing: nil, update: AnswerUpdate(
+            questionId: "B-001-001-001",
+            bankId: bank.manifest.bankId,
+            isCorrect: true,
+            now: "2026-01-02T03:04:05.000Z"
+        ))
+        let attempt = try mockAttempt(bank: bank, seed: "v1-migration", submittedAt: "2026-01-02T04:04:05.000Z")
+        let encoder = JSONEncoder()
+
+        do {
+            let schema = Schema(versionedSchema: CanadianHamProgressSchemaV1.self)
+            let configuration = ModelConfiguration(schema: schema, url: storeURL, cloudKitDatabase: .none)
+            let container = try ModelContainer(for: schema, configurations: [configuration])
+            let context = ModelContext(container)
+            context.insert(CanadianHamProgressSchemaV1.QuestionProgressEntity(
+                questionId: record.questionId,
+                bankId: record.bankId,
+                attempts: record.attempts,
+                correctAttempts: record.correctAttempts,
+                lastAttemptedAt: record.lastAttemptedAt,
+                lastResult: record.lastResult.rawValue,
+                recentResultsData: try encoder.encode(record.recentResults),
+                leitnerBox: record.leitner.box,
+                dueAt: record.leitner.dueAt,
+                notes: record.notes
+            ))
+            context.insert(CanadianHamProgressSchemaV1.ExamAttemptEntity(
+                id: attempt.id,
+                bankId: attempt.bankId,
+                seed: attempt.seed,
+                startedAt: attempt.startedAt,
+                submittedAt: attempt.submittedAt,
+                payloadData: try encoder.encode(attempt)
+            ))
+            context.insert(CanadianHamProgressSchemaV1.PreferencesEntity(
+                practiceMode: ApplePreferences.PracticeMode.reviewLater.rawValue,
+                examTimerEnabled: true,
+                language: BankLanguage.french.rawValue,
+                theme: ApplePreferences.Theme.dark.rawValue,
+                archivedLessonProgressData: try encoder.encode([ArchivedJSON]()),
+                archivedLessonQuizAttemptsData: try encoder.encode([ArchivedJSON]())
+            ))
+            try context.save()
+        }
+
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV2.self)
+        let configuration = ModelConfiguration(schema: schema, url: storeURL, cloudKitDatabase: .none)
+        let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
+        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL())
+
+        XCTAssertEqual(try store.questionProgressRecords(), [record])
+        XCTAssertEqual(try store.examAttempts(), [attempt])
+        XCTAssertEqual(store.preferences.practiceMode, .reviewLater)
+        XCTAssertTrue(store.preferences.examTimerEnabled)
+        XCTAssertEqual(store.preferences.language, .french)
+        XCTAssertEqual(store.preferences.theme, .dark)
+    }
+
+    func testProgressStoreDeduplicatesV2EntitiesWithoutUniqueConstraints() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV2.self)
+        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+        let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
+        let context = ModelContext(container)
+        let encoder = JSONEncoder()
+        let originalRecord = try applyAnswer(existing: nil, update: AnswerUpdate(
+            questionId: "B-001-001-001",
+            bankId: bank.manifest.bankId,
+            isCorrect: true,
+            now: "2026-01-02T03:04:05.000Z"
+        ))
+        let replacementRecord = try applyAnswer(existing: originalRecord, update: AnswerUpdate(
+            questionId: "B-001-001-001",
+            bankId: bank.manifest.bankId,
+            isCorrect: false,
+            now: "2026-01-02T03:05:05.000Z"
+        ))
+        let originalAttempt = try mockAttempt(bank: bank, seed: "dedup-original", submittedAt: "2026-01-02T04:04:05.000Z")
+        let replacementAttempt = StoredExamAttempt(
+            id: originalAttempt.id,
+            bankId: originalAttempt.bankId,
+            mode: originalAttempt.mode,
+            seed: "dedup-replacement",
+            startedAt: originalAttempt.startedAt,
+            submittedAt: originalAttempt.submittedAt,
+            timer: StoredExamTimer(enabled: true, secondsAllowed: nil, secondsElapsed: 9),
+            items: originalAttempt.items,
+            score: originalAttempt.score
+        )
+
+        for _ in 0..<2 {
+            context.insert(QuestionProgressEntity(
+                questionId: originalRecord.questionId,
+                bankId: originalRecord.bankId,
+                attempts: originalRecord.attempts,
+                correctAttempts: originalRecord.correctAttempts,
+                lastAttemptedAt: originalRecord.lastAttemptedAt,
+                lastResult: originalRecord.lastResult.rawValue,
+                recentResultsData: try encoder.encode(originalRecord.recentResults),
+                leitnerBox: originalRecord.leitner.box,
+                dueAt: originalRecord.leitner.dueAt,
+                notes: originalRecord.notes
+            ))
+            context.insert(ExamAttemptEntity(
+                id: originalAttempt.id,
+                bankId: originalAttempt.bankId,
+                seed: originalAttempt.seed,
+                startedAt: originalAttempt.startedAt,
+                submittedAt: originalAttempt.submittedAt,
+                payloadData: try encoder.encode(originalAttempt)
+            ))
+            context.insert(PreferencesEntity(
+                practiceMode: ApplePreferences.PracticeMode.immediate.rawValue,
+                examTimerEnabled: false,
+                language: BankLanguage.english.rawValue,
+                theme: ApplePreferences.Theme.system.rawValue
+            ))
+        }
+        try context.save()
+        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL())
+
+        try store.saveQuestionProgress([replacementRecord])
+        try store.saveExamAttempt(replacementAttempt)
+        var preferences = store.preferences
+        preferences.practiceMode = .reviewLater
+        preferences.examTimerEnabled = true
+        preferences.theme = .dark
+        try store.updatePreferences(preferences)
+
+        XCTAssertEqual(try store.questionProgressRecords(), [replacementRecord])
+        let attempts = try store.examAttempts()
+        XCTAssertEqual(attempts, [replacementAttempt])
+        XCTAssertEqual(attempts.first?.timer.secondsElapsed, 9)
+        XCTAssertEqual(store.preferences.practiceMode, .reviewLater)
+        let verificationContext = ModelContext(container)
+        XCTAssertEqual(try verificationContext.fetch(FetchDescriptor<QuestionProgressEntity>()).count, 1)
+        XCTAssertEqual(try verificationContext.fetch(FetchDescriptor<ExamAttemptEntity>()).count, 1)
+        XCTAssertEqual(try verificationContext.fetch(FetchDescriptor<PreferencesEntity>()).count, 1)
+    }
+
     private struct StoreSnapshot: Equatable {
         let questionProgress: [QuestionProgressRecord]
         let examAttempts: [StoredExamAttempt]
@@ -991,6 +1134,22 @@ final class ProgressStoreTests: XCTestCase {
             morseCourseProgress: try store.morseCourseProgress(),
             preferences: store.preferences
         )
+    }
+
+    private func temporaryProgressStoreURL() throws -> URL {
+        let directory = FileManager.default.temporaryDirectory
+            .appending(path: "CanadianHamProgressStoreMigrationTests", directoryHint: .isDirectory)
+            .appending(path: UUID().uuidString, directoryHint: .isDirectory)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        return directory.appending(path: "Progress.store")
+    }
+
+    private func temporaryMorseCourseProgressURL() throws -> URL {
+        let directory = FileManager.default.temporaryDirectory
+            .appending(path: "CanadianHamProgressStoreMigrationTests", directoryHint: .isDirectory)
+            .appending(path: UUID().uuidString, directoryHint: .isDirectory)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        return directory.appending(path: "MorseCourseProgress.json")
     }
 
     private func mockAttempt(bank: QuestionBank, seed: String, submittedAt: String) throws -> StoredExamAttempt {

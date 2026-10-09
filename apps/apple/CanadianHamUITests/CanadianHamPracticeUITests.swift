@@ -1007,7 +1007,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCUIDevice.shared.appearance = .light
     }
 
-    func testCourseSwitchConfirmationCoversAnsweredImmediatePractice() throws {
+    func testCourseSwitchCancelKeepsImmediatePracticeFeedbackAndConfirmOpensAdvancedPractice() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "home",
@@ -1026,18 +1026,19 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app.buttons["Cancel"].firstMatch.tap()
         waitForElementToDisappear(app.staticTexts["Switch course?"].firstMatch, timeout: 5, message: "Cancel should dismiss the course-switch confirmation")
         XCTAssertTrue(app.buttons["Basic"].firstMatch.isSelected, "Cancel should leave Basic selected")
+        returnFromSettingsToExistingAllPractice(in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["answer-feedback"].firstMatch.waitForExistence(timeout: 5), "Cancel should keep answered immediate-practice feedback")
 
+        openSettingsFromCompactPractice(in: app)
         requestAdvancedCourseSwitchExpectingConfirmation(in: app)
         app.buttons["Switch course"].firstMatch.tap()
         XCTAssertTrue(anyVisibleLabel(in: app, contains: "Preferences saved locally."), "Confirm should save the Advanced course preference")
         XCTAssertTrue(app.buttons["Advanced"].firstMatch.isSelected, "Confirm should select Advanced")
-
-        tap("Basic", in: app)
-        XCTAssertFalse(app.staticTexts["Switch course?"].firstMatch.waitForExistence(timeout: 2), "Confirm should discard the practice session so switching back does not warn")
-        XCTAssertTrue(app.buttons["Basic"].firstMatch.isSelected, "Switching back after Confirm should select Basic directly")
+        returnFromSettingsToExistingAllPractice(in: app)
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "A-001"), "Confirm should discard the Basic practice session and open Advanced practice")
     }
 
-    func testCourseSwitchConfirmationCoversReviewLaterPracticeBeforeAndAfterSubmit() throws {
+    func testCourseSwitchCancelKeepsUnsubmittedReviewLaterAnswersAndConfirmOpensAdvancedPractice() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "home",
@@ -1056,10 +1057,18 @@ final class CanadianHamPracticeUITests: XCTestCase {
         requestAdvancedCourseSwitchExpectingConfirmation(in: app)
         app.buttons["Cancel"].firstMatch.tap()
         waitForElementToDisappear(app.staticTexts["Switch course?"].firstMatch, timeout: 5, message: "Cancel should dismiss the course-switch confirmation")
+        XCTAssertTrue(app.buttons["Basic"].firstMatch.isSelected, "Cancel should leave Basic selected")
+        returnFromSettingsToExistingAllPractice(in: app)
+        waitForPracticeTally(containing: "Answered 1 of 1", in: app)
+        XCTAssertTrue(app.buttons["Submit for review"].firstMatch.waitForExistence(timeout: 5), "Cancel should keep the fully answered unsubmitted review-later session")
+
+        openSettingsFromCompactPractice(in: app)
         requestAdvancedCourseSwitchExpectingConfirmation(in: app)
         app.buttons["Switch course"].firstMatch.tap()
         XCTAssertTrue(anyVisibleLabel(in: app, contains: "Preferences saved locally."), "Confirm should save the Advanced course preference")
         XCTAssertTrue(app.buttons["Advanced"].firstMatch.isSelected, "Confirm should select Advanced")
+        returnFromSettingsToExistingAllPractice(in: app)
+        XCTAssertTrue(anyVisibleLabel(in: app, contains: "A-001"), "Confirm should discard the Basic review-later session and open Advanced practice")
     }
 
     func testSubmittedReviewLaterPracticeDoesNotWarnBeforeCourseSwitch() throws {
@@ -1389,6 +1398,23 @@ final class CanadianHamPracticeUITests: XCTestCase {
         tapCompactBack(in: app)
         tap("Settings", in: app)
         XCTAssertTrue(app.descendants(matching: .any)["course-picker"].firstMatch.waitForExistence(timeout: 10), "Settings should expose the course picker")
+    }
+
+    private func returnFromSettingsToExistingAllPractice(in app: XCUIApplication) {
+        tapCompactBack(in: app)
+        let answer = app.descendants(matching: .any)["answer-A-button"].firstMatch
+        if answer.waitForExistence(timeout: 2) {
+            return
+        }
+        if app.buttons["Start practice"].firstMatch.waitForExistence(timeout: 2) {
+            tap("Start practice", in: app)
+        } else if app.buttons.matching(NSPredicate(format: "label CONTAINS[c] %@", "Start all questions")).firstMatch.waitForExistence(timeout: 2) {
+            tapButton(containing: "Start all questions", in: app)
+        } else {
+            tap("Practice", in: app)
+            tapButton(containing: "Start all questions", in: app)
+        }
+        XCTAssertTrue(answer.waitForExistence(timeout: 10), "Practice session should be visible after returning from Settings")
     }
 
     private func requestAdvancedCourseSwitchExpectingConfirmation(in app: XCUIApplication) {

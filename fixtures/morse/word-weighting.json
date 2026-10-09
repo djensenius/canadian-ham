@@ -3,15 +3,29 @@
   "kind": "morse-word-weighting",
   "cases": [
     {
-      "id": "ric1-section-8-3-sample-stand-in-is-78-weighted-characters",
-      "notes": "docs/proposals/morse-trainer.md contains only the partial RIC-1 section 8.3 sample text with an ellipsis, so this fixture uses a clearly synthetic stand-in until the complete official sample is recorded.",
+      "id": "ric1-section-8-3-english-sample-is-78-weighted-characters",
+      "notes": "Official RIC-1 Issue 8 (May 2025) section 8.3 sample text. RIC-1 says this example shall not be used in an examination.",
+      "sourceCitation": "RIC-1 — Guide for Examiners Accredited to Conduct Examinations for Amateur Radio Operator Certificates, Issue 8 (May 2025), section 8.3 Example of Morse code test",
       "input": {
-        "text": "SYNTHETIC SAMPLE TEXT FOR MORSE FIXTURE CANADIAN RADIO ABCD QSJ 1962 / 7531 - OK?"
+        "text": "FORECAST PERIODS WILL BE SHORTENED DURING HEAVY STORMS. FRONTAL ZONES KEEP QSJ 1962."
       },
       "expectedOutput": {
         "weightedCharacters": 78,
-        "unweightedCharacters": 67,
-        "needsOfficialRic1Section83Sample": true
+        "unweightedCharacters": 72,
+        "needsOfficialRic1Section83Sample": false
+      }
+    },
+    {
+      "id": "cir1-section-8-3-french-sample-is-106-weighted-characters",
+      "notes": "Official CIR-1 8e édition (Mai 2025) section 8.3 sample text, reproduced without added accents or trailing period. CIR-1 says this example shall not be used in an examination.",
+      "sourceCitation": "CIR-1 — Guide à l'intention des examinateurs accrédités chargés d'administrer les examens menant à l'obtention du certificat d'opérateur radioamateur, 8e édition (Mai 2025), section 8.3 Exemple d'épreuve de code Morse",
+      "input": {
+        "text": "LES PERIODES DE VALIDITE DES PREVISIONS SONT RACCOURCIES PENDANT LES GROS ORAGES. LES ZONES FRONTALES GARDENT QSJ 1962"
+      },
+      "expectedOutput": {
+        "weightedCharacters": 106,
+        "unweightedCharacters": 101,
+        "needsOfficialRic1Section83Sample": false
       }
     },
     {

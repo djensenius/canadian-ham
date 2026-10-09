@@ -106,6 +106,23 @@ final class ValidationTests: XCTestCase {
         XCTAssertEqual(result.reasons, [.examThreshold(threshold: 70, countAtOrAbove: 2)])
     }
 
+    func testAdvancedReadinessDoesNotCountExamsBelowSeventyPercent() throws {
+        let categoryBreakdown = [CategoryBreakdownEntry(categoryId: "A-001", correct: 50, total: 50, percent: 100)]
+        let result = try computeReadiness(ReadinessInput(
+            bankId: syntheticAdvancedBankId,
+            completedExams: [
+                ReadinessExamAttempt(submittedAt: "2026-01-03T00:00:00.000Z", score: ReadinessScore(correct: 35, total: 50, percent: 70), categoryBreakdown: categoryBreakdown),
+                ReadinessExamAttempt(submittedAt: "2026-01-02T00:00:00.000Z", score: ReadinessScore(correct: 34, total: 50, percent: 68), categoryBreakdown: categoryBreakdown),
+            ],
+            dueReviewCount: 0
+        ))
+
+        XCTAssertEqual(result.state, .needsReview)
+        XCTAssertEqual(result.consideredExamCount, 2)
+        XCTAssertEqual(result.consideredSubmittedAt, ["2026-01-03T00:00:00.000Z", "2026-01-02T00:00:00.000Z"])
+        XCTAssertEqual(result.reasons, [])
+    }
+
     func testSharedBankRulesFixtureAgreesWithSwiftEngine() throws {
         let fixture = try JSONDecoder().decode(SharedBankRulesFixture.self, from: Data(contentsOf: sharedBankRulesFixtureURL()))
         XCTAssertEqual(fixture.schemaVersion, 1)

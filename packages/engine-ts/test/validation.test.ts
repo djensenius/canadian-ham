@@ -87,6 +87,25 @@ test("advanced readiness treats the 70 percent pass threshold as inclusive", () 
   });
 });
 
+test("advanced readiness does not count exams below the 70 percent pass threshold", () => {
+  const categoryBreakdown = [{ categoryId: "A-001", correct: 50, total: 50, percent: 100 }];
+  const result = computeReadiness({
+    bankId: SYNTHETIC_ADVANCED_BANK_ID,
+    completedExams: [
+      { submittedAt: "2026-01-03T00:00:00.000Z", score: { correct: 35, total: 50, percent: 70 }, categoryBreakdown },
+      { submittedAt: "2026-01-02T00:00:00.000Z", score: { correct: 34, total: 50, percent: 68 }, categoryBreakdown },
+    ],
+    dueReviewCount: 0,
+  });
+
+  assert.deepEqual(result, {
+    state: "needs-review",
+    consideredExamCount: 2,
+    consideredSubmittedAt: ["2026-01-03T00:00:00.000Z", "2026-01-02T00:00:00.000Z"],
+    reasons: [],
+  });
+});
+
 test("readiness rejects duplicate submittedAt timestamps", () => {
   const attempt = {
     submittedAt: "2026-01-05T00:00:00.000Z",
