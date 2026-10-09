@@ -262,7 +262,15 @@ final class ProgressStoreTests: XCTestCase {
 
         let serialized = try store.serializedExport(bank: bank, exportedAt: "2026-01-02T05:04:05.000Z", morseSettings: exportedMorseSettings)
         let decoded = try JSONDecoder().decode(ProgressExportV1.self, from: Data(serialized.utf8))
-        let importedMorseSettings = MorseTrainerSettings(exported: decoded.preferences.morse).normalized()
+        let decodedMorseForApp = CanadianHam.ExportedMorseSettings(
+            toneHz: decoded.preferences.morse.toneHz,
+            characterWpm: decoded.preferences.morse.characterWpm,
+            effectiveWpm: decoded.preferences.morse.effectiveWpm,
+            timingProfile: decoded.preferences.morse.timingProfile,
+            volume: decoded.preferences.morse.volume,
+            outputMode: decoded.preferences.morse.outputMode
+        )
+        let importedMorseSettings = CanadianHam.MorseTrainerSettings(exported: decodedMorseForApp).normalized()
 
         XCTAssertEqual(decoded.preferences.morse, exportedMorseSettings)
         XCTAssertEqual(importedMorseSettings, morseSettings)
@@ -334,7 +342,15 @@ final class ProgressStoreTests: XCTestCase {
 
         XCTAssertEqual(missingMorse.preferences.morse, .default)
         XCTAssertEqual(task123Web.preferences.morse.outputMode, "audio")
-        XCTAssertEqual(MorseTrainerSettings(exported: task123Web.preferences.morse).normalized().outputMode, .audio)
+        let task123MorseForApp = CanadianHam.ExportedMorseSettings(
+            toneHz: task123Web.preferences.morse.toneHz,
+            characterWpm: task123Web.preferences.morse.characterWpm,
+            effectiveWpm: task123Web.preferences.morse.effectiveWpm,
+            timingProfile: task123Web.preferences.morse.timingProfile,
+            volume: task123Web.preferences.morse.volume,
+            outputMode: task123Web.preferences.morse.outputMode
+        )
+        XCTAssertEqual(CanadianHam.MorseTrainerSettings(exported: task123MorseForApp).normalized().outputMode, .audio)
         XCTAssertEqual(partialMorse.preferences.morse.toneHz, ExportedMorseSettings.default.toneHz)
         XCTAssertEqual(partialMorse.preferences.morse.outputMode, "visualBeacon")
         XCTAssertNoThrow(try ProgressStoreService.inMemoryForTests().importData(missingMorse, bank: bank))
