@@ -1808,7 +1808,7 @@ describe("App accessibility and flows", () => {
     await user.type(tone, "650");
     await user.keyboard("{Enter}");
     assert.equal(store.putPreferencesCount, 0);
-    assert.equal(screen.queryByText("Morse settings saved."), null);
+    assert.equal(screen.queryByText("Morse trainer settings saved locally."), null, "an unchanged commit must not report a save");
     await expectNoAxeViolations(container);
   });
 
