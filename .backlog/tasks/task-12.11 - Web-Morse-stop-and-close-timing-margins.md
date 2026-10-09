@@ -1,7 +1,7 @@
 ---
 id: TASK-12.11
 title: Web Morse stop and close timing margins
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-03 03:18'
