@@ -1420,7 +1420,14 @@ final class CanadianHamPracticeUITests: XCTestCase {
     private func returnFromSettingsToFirstCategoryPractice(in app: XCUIApplication) {
         tapCompactBack(in: app)
         tap("Practice", in: app)
-        tapButton(containing: "Practice category", in: app)
+        let firstAdvancedCategory = app.buttons["category-A-001-button"].firstMatch
+        XCTAssertTrue(firstAdvancedCategory.waitForExistence(timeout: 10), "Expected Advanced category A-001 button")
+        scrollUntilHittable(firstAdvancedCategory, in: app, maxSwipes: 12)
+        if firstAdvancedCategory.isHittable {
+            firstAdvancedCategory.tap()
+        } else {
+            firstAdvancedCategory.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        }
         XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10), "Practice session should be visible after returning from Settings")
     }
 
