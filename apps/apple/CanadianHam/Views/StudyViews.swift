@@ -1654,7 +1654,7 @@ struct SettingsView: View {
         guard let pendingImport else { return }
         do {
             try progressStore.importData(pendingImport, bank: bank)
-            morseSettings = MorseTrainerSettings(exported: pendingImport.preferences.morse)
+            morseSettings = MorseTrainerSettings(exported: pendingImport.preferences.morse).normalized()
             morseSettings.save()
             self.pendingImport = nil
             statusMessage = String(localized: "Progress imported.")

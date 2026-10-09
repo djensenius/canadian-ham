@@ -11,7 +11,8 @@ struct MorseCourseView: View {
     @State private var course: MorseCourse?
     @State private var progress: MorseCourseProgressExport?
     @State private var session: MorseCourseSession?
-    @State private var showingSession = false
+    @State private var showingReviewSession = false
+    @State private var showingLessonSession = false
     @State private var typedAnswer = ""
     @State private var statusMessage = ""
     @State private var statusMessageIsCorrective = false
@@ -36,7 +37,7 @@ struct MorseCourseView: View {
 #endif
             .background(DesignTokens.Colors.paper)
             .morseCourseOpaqueNavigationBar()
-            .navigationDestination(isPresented: $showingSession) {
+            .navigationDestination(isPresented: $showingReviewSession) {
                 sessionScreen()
             }
             .task { loadCourse() }
@@ -83,7 +84,7 @@ struct MorseCourseView: View {
                     courseStats(course: course, progress: progress)
                     Button {
                         prepareReview(course: course, progress: progress)
-                        showingSession = true
+                        showingReviewSession = true
                     } label: {
                         AccessibleSecondaryButtonLabel(title: "Review weakest characters")
                     } // l10n: localized
@@ -211,13 +212,16 @@ struct MorseCourseView: View {
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
 #endif
+        .navigationDestination(isPresented: $showingLessonSession) {
+            sessionScreen()
+        }
     }
 
     private func lessonButton(lesson: MorseCourseLesson, state: MorseLessonState) -> some View {
         Button {
             guard let course, let progress, state != .locked else { return }
             prepareLesson(lesson, course: course, progress: progress)
-            showingSession = true
+            showingLessonSession = true
         } label: {
             lessonButtonLabel(lesson: lesson, state: state)
         }
@@ -455,8 +459,7 @@ struct MorseCourseView: View {
     private func prepareReview(course: MorseCourse, progress: MorseCourseProgressExport) {
         let learned = learnedMorseCharacters(course: course, progress: progress)
         let weakest = selectWeakestMorseCharacters(stats: progress.characterStats, learnedCharacters: learned, limit: 5)
-        let fallbackCharacters = Array(course.lessons.flatMap(\.newCharacters).prefix(5))
-        let reviewCharacters = weakest.isEmpty ? Array((learned.isEmpty ? fallbackCharacters : learned).prefix(5)) : weakest
+        let reviewCharacters = weakest.isEmpty ? Array(learned.prefix(5)) : weakest
         guard !reviewCharacters.isEmpty else { return }
         resetSessionFeedback()
         session = MorseCourseSession(mode: .review, exercises: reviewCharacters.map { .typeCharacter($0) })

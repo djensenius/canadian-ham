@@ -18,6 +18,17 @@ struct ExportedMorseSettings: Codable, Equatable, Sendable {
         self.volume = volume
         self.outputMode = outputMode
     }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let defaults = Self.default
+        toneHz = try container.decodeIfPresent(Int.self, forKey: .toneHz) ?? defaults.toneHz
+        characterWpm = try container.decodeIfPresent(Int.self, forKey: .characterWpm) ?? defaults.characterWpm
+        effectiveWpm = try container.decodeIfPresent(Int.self, forKey: .effectiveWpm) ?? defaults.effectiveWpm
+        timingProfile = try container.decodeIfPresent(String.self, forKey: .timingProfile) ?? defaults.timingProfile
+        volume = try container.decodeIfPresent(Double.self, forKey: .volume) ?? defaults.volume
+        outputMode = try container.decodeIfPresent(String.self, forKey: .outputMode) ?? defaults.outputMode
+    }
 }
 
 enum CourseBankID: String, CaseIterable, Identifiable, Codable, Sendable {

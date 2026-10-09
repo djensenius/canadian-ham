@@ -301,7 +301,7 @@ private struct NativeDataSettingsTab: View {
         }
         do {
             try progressStore.importData(pendingImport, bank: bank)
-            appSettings.morseSettings = MorseTrainerSettings(exported: pendingImport.preferences.morse)
+            appSettings.morseSettings = MorseTrainerSettings(exported: pendingImport.preferences.morse).normalized()
             appSettings.morseSettings.save()
             appSettings.recordDataChanged(replacesLocalData: true)
             self.pendingImport = nil

@@ -113,13 +113,14 @@ struct MorseTrainerSettings: Codable, Equatable, Sendable {
 
     var exportedPreferences: ExportedMorseSettings {
         let settings = normalized()
+        let webCompatibleOutputMode: OutputMode = settings.outputMode == .haptics ? .audio : settings.outputMode
         return ExportedMorseSettings(
             toneHz: settings.toneHz,
             characterWpm: settings.characterWpm,
             effectiveWpm: settings.effectiveWpm,
             timingProfile: settings.timingProfile.rawValue,
             volume: settings.volume,
-            outputMode: settings.outputMode.rawValue
+            outputMode: webCompatibleOutputMode.rawValue
         )
     }
 

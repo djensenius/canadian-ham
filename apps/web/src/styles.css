@@ -1012,7 +1012,7 @@ input[type="checkbox"]:checked::after {
   padding: var(--ch-space-sm);
   border: 1px solid var(--ch-color-border);
   border-radius: var(--ch-radius-md);
-  background: var(--ch-color-paper-inset);
+  background: var(--ch-color-paper);
 }
 
 .morse-beacon-lamp {
@@ -1022,7 +1022,7 @@ input[type="checkbox"]:checked::after {
   max-block-size: 112px;
   border: 2px solid var(--ch-color-border);
   border-radius: var(--ch-radius-pill);
-  background: var(--ch-color-paper);
+  background: var(--ch-color-paper-inset);
 }
 
 .morse-beacon-lamp.active {

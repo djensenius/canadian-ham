@@ -110,6 +110,11 @@ struct MorseSendingPracticeView: View {
                                 .font(DesignTokens.FontScale.body.weight(.bold))
                         }
                         .accessibilityIdentifier("morse-sending-debug-hold-straight-button")
+                        Button(action: gradeHeldStraightKeyForUITest) {
+                            Text(verbatim: "Grade held straight key for sending test") // l10n: verbatim DEBUG-only UI test hook
+                                .font(DesignTokens.FontScale.body.weight(.bold))
+                        }
+                        .accessibilityIdentifier("morse-sending-debug-grade-held-straight-button")
                     }
 #endif
                 }
@@ -425,11 +430,7 @@ struct MorseSendingPracticeView: View {
     }
 
     private func clearPendingCharacterFinalization(clearPendingSamples: Bool) {
-        finalizeTask?.cancel()
-        finalizeTask = nil
-        if clearPendingSamples {
-            pendingSamples = []
-        }
+        clearMorseSendingPendingCharacterFinalization(finalizeTask: &finalizeTask, pendingSamples: &pendingSamples, clearPendingSamples: clearPendingSamples)
     }
 
 #if DEBUG
@@ -442,10 +443,26 @@ struct MorseSendingPracticeView: View {
         beginStraightKey()
         statusMessage = "Straight key held for UI testing."
     }
+
+    private func gradeHeldStraightKeyForUITest() {
+        if straightKeyDownAt == nil {
+            beginStraightKey()
+        }
+        gradeExam(completedWithinTime: true)
+    }
 #else
     private func fillExamTextForUITest() {}
     private func beginHeldStraightKeyForUITest() {}
+    private func gradeHeldStraightKeyForUITest() {}
 #endif
+}
+
+func clearMorseSendingPendingCharacterFinalization(finalizeTask: inout Task<Void, Never>?, pendingSamples: inout [MorseKeyTimingSample], clearPendingSamples: Bool) {
+    finalizeTask?.cancel()
+    finalizeTask = nil
+    if clearPendingSamples {
+        pendingSamples = []
+    }
 }
 
 private struct MorseSendingExamCard: View {

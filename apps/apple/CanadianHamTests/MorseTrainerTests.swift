@@ -269,6 +269,16 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertEqual(fail.markPercent, 99)
     }
 
+    func testMorseSendingPendingFinalizationHelperCancelsAndClears() throws {
+        var task: Task<Void, Never>? = Task { try? await Task.sleep(for: .seconds(60)) }
+        var pendingSamples = [MorseKeyTimingSample(element: .dot, durationSeconds: 0.1, expectedSeconds: 0.1, ratioToExpected: 1)]
+
+        clearMorseSendingPendingCharacterFinalization(finalizeTask: &task, pendingSamples: &pendingSamples, clearPendingSamples: true)
+
+        XCTAssertNil(task)
+        XCTAssertTrue(pendingSamples.isEmpty)
+    }
+
     func testMorseSendingRemainingExamSecondsUsesFixedDeadline() throws {
         let now = Date(timeIntervalSinceReferenceDate: 10_000)
         let deadline = now.addingTimeInterval(90)
