@@ -2359,6 +2359,118 @@
         }
       }
     },
+    "iCloud Sync" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronisation iCloud"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronisation iCloud"
+          }
+        }
+      }
+    },
+    "Sync learning progress with iCloud" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchroniser la progression d’apprentissage avec iCloud"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchroniser la progression d’apprentissage avec iCloud"
+          }
+        }
+      }
+    },
+    "Off by default. When enabled, learning progress can sync through your private iCloud database after restart; preferences stay local on this device." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactivée par défaut. Une fois activée, la progression d’apprentissage peut se synchroniser avec votre base de données iCloud privée après le redémarrage ; les préférences restent locales sur cet appareil."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactivée par défaut. Une fois activée, la progression d’apprentissage peut se synchroniser avec votre base de données iCloud privée après le redémarrage ; les préférences restent locales sur cet appareil."
+          }
+        }
+      }
+    },
+    "Off by default. When enabled, learning progress can sync through your private iCloud database after restart; preferences stay local on this Mac." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactivée par défaut. Une fois activée, la progression d’apprentissage peut se synchroniser avec votre base de données iCloud privée après le redémarrage ; les préférences restent locales sur ce Mac."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactivée par défaut. Une fois activée, la progression d’apprentissage peut se synchroniser avec votre base de données iCloud privée après le redémarrage ; les préférences restent locales sur ce Mac."
+          }
+        }
+      }
+    },
+    "iCloud Sync will turn on after you restart the app." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La synchronisation iCloud s’activera après le redémarrage de l’app."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La synchronisation iCloud s’activera après le redémarrage de l’app."
+          }
+        }
+      }
+    },
+    "iCloud Sync will turn off after you restart the app." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La synchronisation iCloud se désactivera après le redémarrage de l’app."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La synchronisation iCloud se désactivera après le redémarrage de l’app."
+          }
+        }
+      }
+    },
+    "No accounts, analytics, telemetry, third-party SDKs, or developer-operated servers. iCloud Sync is optional and off until you turn it on; import and export use local files you choose." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun compte, analytique, télémétrie, SDK tiers ni serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez ; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun compte, analytique, télémétrie, SDK tiers ni serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez ; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
+          }
+        }
+      }
+    },
     "•" : {
       "localizations" : {
         "fr" : {

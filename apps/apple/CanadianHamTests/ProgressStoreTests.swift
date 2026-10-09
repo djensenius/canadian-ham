@@ -152,6 +152,78 @@ final class ProgressStoreTests: XCTestCase {
         store.handleICloudAccountSignal(.iCloudDisabled, defaults: defaults)
         XCTAssertFalse(ICloudSyncSettings.storedOptIn(defaults: defaults))
         XCTAssertEqual(try store.questionProgressRecords(), [record])
+
+        store.updateICloudSyncOptIn(true, defaults: defaults)
+        store.handleICloudAccountAvailability(.noAccount, defaults: defaults)
+        XCTAssertFalse(ICloudSyncSettings.storedOptIn(defaults: defaults))
+        XCTAssertEqual(try store.questionProgressRecords(), [record])
+
+        store.updateICloudSyncOptIn(true, defaults: defaults)
+        store.handleICloudAccountAvailability(.restricted, defaults: defaults)
+        XCTAssertFalse(ICloudSyncSettings.storedOptIn(defaults: defaults))
+        XCTAssertEqual(try store.questionProgressRecords(), [record])
+    }
+
+    func testSplitStoreFirstOpenCopiesLegacyPreferencesWithoutLosingProgress() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let directory = try temporaryProgressStoreDirectory()
+        let urls = ProgressStoreURLs(progressDirectory: directory)
+        let record = QuestionProgressRecord(
+            questionId: "B-001-001-001",
+            bankId: bank.manifest.bankId,
+            attempts: 3,
+            correctAttempts: 2,
+            lastAttemptedAt: "2026-01-02T03:04:05.000Z",
+            lastResult: .incorrect,
+            recentResults: [true, true, false],
+            leitner: LeitnerState(box: 2, dueAt: "2026-01-04T03:04:05.000Z"),
+            notes: "legacy note"
+        )
+        let attempt = try mockAttempt(bank: bank, seed: "legacy-split", submittedAt: "2026-01-02T04:04:05.000Z")
+        let lessonProgress = LessonProgressRecord(lessonId: "L-005-01", readAt: "2026-01-02T03:10:00.000Z", readCount: 2)
+        let lessonQuizAttempt = LessonQuizAttempt(
+            id: "legacy-quiz-attempt",
+            quizId: "QZ-L-005-01-A",
+            lessonId: "L-005-01",
+            submittedAt: "2026-01-02T03:20:00.000Z",
+            correct: 1,
+            total: 1,
+            percent: 100,
+            officialQuestionIds: ["B-005-001-001"],
+            incorrectOfficialQuestionIds: [],
+            incorrectConceptCheckIds: []
+        )
+
+        do {
+            let legacyStore = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
+            try legacyStore.saveQuestionProgress([record])
+            try legacyStore.saveExamAttempt(attempt)
+            var preferences = legacyStore.preferences
+            preferences.practiceMode = .reviewLater
+            preferences.examTimerEnabled = true
+            preferences.language = .french
+            preferences.theme = .dark
+            try legacyStore.updatePreferences(preferences)
+            try legacyStore.saveLessonProgress(lessonProgress)
+            try legacyStore.saveLessonQuizAttempt(lessonQuizAttempt, questionProgress: [record])
+        }
+
+        do {
+            let splitStore = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .split)
+            XCTAssertEqual(try splitStore.questionProgressRecords(), [record])
+            XCTAssertEqual(try splitStore.examAttempts(), [attempt])
+            XCTAssertEqual(splitStore.preferences.practiceMode, .reviewLater)
+            XCTAssertTrue(splitStore.preferences.examTimerEnabled)
+            XCTAssertEqual(splitStore.preferences.language, .french)
+            XCTAssertEqual(splitStore.preferences.theme, .dark)
+            XCTAssertEqual(try splitStore.lessonProgressRecords(), [lessonProgress])
+            XCTAssertEqual(try splitStore.lessonQuizAttempts(), [lessonQuizAttempt])
+        }
+
+        let reopenedSplitStore = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .split)
+        XCTAssertEqual(try reopenedSplitStore.questionProgressRecords(), [record])
+        XCTAssertEqual(try reopenedSplitStore.lessonProgressRecords(), [lessonProgress])
+        XCTAssertEqual(try reopenedSplitStore.lessonQuizAttempts(), [lessonQuizAttempt])
     }
 
 #if os(macOS)
@@ -1188,11 +1260,15 @@ final class ProgressStoreTests: XCTestCase {
     }
 
     private func temporaryProgressStoreURL() throws -> URL {
+        try temporaryProgressStoreDirectory().appending(path: "Progress.store")
+    }
+
+    private func temporaryProgressStoreDirectory() throws -> URL {
         let directory = FileManager.default.temporaryDirectory
             .appending(path: "CanadianHamProgressStoreMigrationTests", directoryHint: .isDirectory)
             .appending(path: UUID().uuidString, directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        return directory.appending(path: "Progress.store")
+        return directory
     }
 
     private func temporaryMorseCourseProgressURL() throws -> URL {

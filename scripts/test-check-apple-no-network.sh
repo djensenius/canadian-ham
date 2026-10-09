@@ -140,6 +140,10 @@ MD
 clean_root=$(make_fixture clean)
 cat > "$clean_root/apps/apple/AllowedCitation.swift" <<SWIFT
 let rbr4CitationURL = "$rbr4_url"
+#if ICLOUD_SYNC
+import CloudKit
+let gatedNetworkSymbol: CKRecord? = nil
+#endif
 SWIFT
 mkdir -p "$clean_root/content/lessons/m-001" "$clean_root/content/explanations/b-001"
 cat > "$clean_root/content/lessons/m-001/allowed.md" <<MD
@@ -194,6 +198,8 @@ assert_swift_sample_fails_with_label "import-analytics" "import StudyAnalytics" 
 assert_swift_sample_fails_with_label "import-attributed" "@preconcurrency import WebKit" "$source_symbol_label"
 assert_swift_sample_fails_with_label "import-implementation-only" "@_implementationOnly import Network" "$source_symbol_label"
 assert_swift_sample_fails_with_label "import-kind" "import enum WebKit.WKNavigationType" "$source_symbol_label"
+assert_swift_sample_fails_with_label "icloud-filter-keeps-else" $'#if ICLOUD_SYNC\nimport CloudKit\n#else\nlet urlSessionTask: URLSessionDataTask? = nil\n#endif' "$source_symbol_label"
+assert_swift_sample_fails_with_label "icloud-filter-exact-match" $'#if ICLOUD_SYNC || DEBUG\nimport Network\n#endif' "$source_symbol_label"
 
 url_label="unexpected URL literal in Swift source"
 assert_swift_sample_fails_with_label "url-mailto" "let supportEmail = \"mailto:help@example.test\"" "$url_label"
@@ -283,9 +289,32 @@ cat > "$config_root/apps/apple/CanadianHam.xcodeproj/project.pbxproj" <<'PBX'
 /* End XCRemoteSwiftPackageReference section */
 PBX
 assert_fails_with_labels "forbidden project config" "$config_root" \
-  "forbidden network/iCloud entitlement or Info.plist key in Apple project configuration" \
+  "forbidden network/iCloud entitlement or Info.plist key in default Apple project configuration" \
   "remote Swift package reference in Apple Xcode project" \
   "non-local Swift package dependency in apps/apple/project.yml"
+
+cloudkit_config_root=$(make_fixture project-cloudkit-config)
+cat > "$cloudkit_config_root/apps/apple/project.yml" <<'YAML'
+targets:
+  CanadianHamTV:
+    settings:
+      base:
+        CODE_SIGN_ENTITLEMENTS: CanadianHam/Resources/CanadianHam.TV.CloudKit.entitlements
+YAML
+assert_fails_with_labels "forbidden CloudKit entitlement project config" "$cloudkit_config_root" \
+  "forbidden network/iCloud entitlement or Info.plist key in default Apple project configuration"
+
+gated_cloudkit_config_root=$(make_fixture gated-project-cloudkit-config)
+cat > "$gated_cloudkit_config_root/apps/apple/project.yml" <<'YAML'
+targets:
+  CanadianHam:
+    settings:
+      configs:
+        DebugCloudKit:
+          CODE_SIGN_ENTITLEMENTS[sdk=iphone*]: CanadianHam/Resources/CanadianHam.iOS.CloudKit.entitlements
+          INFOPLIST_KEY_UIBackgroundModes[sdk=iphone*]: remote-notification
+YAML
+assert_passes "gated CloudKit project config" "$gated_cloudkit_config_root"
 
 manifest_root=$(make_fixture package-manifest)
 mkdir -p "$manifest_root/packages/sample-swift"

@@ -165,10 +165,15 @@ if [[ ${#swift_files[@]} -gt 0 ]]; then
     sanitized_file="$sanitized_swift_dir/$file"
     mkdir -p "$(dirname "$sanitized_file")"
     awk '
-      /^[[:space:]]*#if[[:space:]]+ICLOUD_SYNC([[:space:]]|$)/ { depth++; next }
-      depth > 0 && /^[[:space:]]*#if([[:space:]]|$)/ { depth++; next }
-      depth > 0 && /^[[:space:]]*#endif([[:space:]]|$)/ { depth--; next }
-      depth == 0 { print }
+      function is_exact_icloud_if(line) { return line ~ /^[[:space:]]*#if[[:space:]]+ICLOUD_SYNC[[:space:]]*(\/\/.*)?$/ }
+      skipping == 0 && is_exact_icloud_if($0) { skipping = 1; depth = 1; next }
+      skipping == 1 {
+        if ($0 ~ /^[[:space:]]*#if([[:space:]]|$)/) { depth++; next }
+        if (depth == 1 && $0 ~ /^[[:space:]]*#(else|elseif)([[:space:]]|$)/) { skipping = 0; depth = 0; next }
+        if ($0 ~ /^[[:space:]]*#endif([[:space:]]|$)/) { depth--; if (depth == 0) { skipping = 0 }; next }
+        next
+      }
+      { print }
     ' "$file" > "$sanitized_file"
     network_swift_files+=("$sanitized_file")
   done
@@ -233,8 +238,35 @@ if [[ ${#plist_files[@]} -gt 0 ]]; then
 fi
 
 if [[ ${#config_files[@]} -gt 0 ]]; then
-  config_entitlement_pattern='com\.apple\.security\.network\.(client|server)|com\.apple\.developer\.(icloud|ubiquity|aps-environment)|INFOPLIST_KEY_(NSLocalNetworkUsageDescription|NSBonjourServices|NSAppTransportSecurity|NSAllowsArbitraryLoads|NSAllowsLocalNetworking|WKAppBoundDomains)'
-  print_grep_matches "forbidden network/iCloud entitlement or Info.plist key in Apple project configuration" "$config_entitlement_pattern" "${config_files[@]}"
+  config_entitlement_pattern='com\.apple\.security\.network\.(client|server)|com\.apple\.developer\.(icloud|ubiquity|aps-environment)|CODE_SIGN_ENTITLEMENTS.*(iCloud|CloudKit)|INFOPLIST_KEY_(UIBackgroundModes|NSLocalNetworkUsageDescription|NSBonjourServices|NSAppTransportSecurity|NSAllowsArbitraryLoads|NSAllowsLocalNetworking|WKAppBoundDomains)'
+  for file in "${config_files[@]}"; do
+    if [[ "$file" == *.pbxproj ]]; then
+      while IFS= read -r match_line; do
+        [[ -n "$match_line" ]] || continue
+        report_issue "forbidden network/iCloud entitlement or Info.plist key in default Apple project configuration: $match_line"
+      done < <(awk -v pattern="$config_entitlement_pattern" '
+        /^[[:space:]]*[A-F0-9]+ \/\* (Debug|Release|DebugCloudKit) \*\/ = \{/ {
+          config = $0
+          sub(/^.*\/\* /, "", config)
+          sub(/ \*\/.*$/, "", config)
+        }
+        config != "" && $0 ~ /^[[:space:]]*name = / {
+          config = ""
+        }
+        config != "DebugCloudKit" && $0 ~ pattern { printf "%s:%d:%s\n", FILENAME, FNR, $0 }
+      ' "$file")
+    else
+      while IFS= read -r match_line; do
+        [[ -n "$match_line" ]] || continue
+        report_issue "forbidden network/iCloud entitlement or Info.plist key in default Apple project configuration: $match_line"
+      done < <(awk -v pattern="$config_entitlement_pattern" '
+        function indent_of(line) { match(line, /[^ ]/); return RSTART == 0 ? 0 : RSTART - 1 }
+        /^[[:space:]]*DebugCloudKit:[[:space:]]*$/ { in_gate = 1; gate_indent = indent_of($0); next }
+        in_gate && NF > 0 && indent_of($0) <= gate_indent { in_gate = 0 }
+        !in_gate && $0 ~ pattern { printf "%s:%d:%s\n", FILENAME, FNR, $0 }
+      ' "$file")
+    fi
+  done
 
   project_remote_package_pattern='XCRemoteSwiftPackageReference|repositoryURL'
   print_grep_matches "remote Swift package reference in Apple Xcode project" "$project_remote_package_pattern" "${config_files[@]}"

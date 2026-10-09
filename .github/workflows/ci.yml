@@ -191,6 +191,10 @@ jobs:
         if: needs.changes.outputs.full_checks == 'true'
         run: pnpm check:apple-network
 
+      - name: Test Apple iCloud gate checker
+        if: needs.changes.outputs.full_checks == 'true'
+        run: pnpm test:apple-icloud-gate
+
       - name: Apple iCloud gate check
         if: needs.changes.outputs.full_checks == 'true'
         run: pnpm check:apple-icloud-gate

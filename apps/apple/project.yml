@@ -132,7 +132,9 @@ targets:
         DebugCloudKit:
           CODE_SIGN_ENTITLEMENTS[sdk=macosx*]: CanadianHam/Resources/CanadianHam.macOS.CloudKit.entitlements
           CODE_SIGN_ENTITLEMENTS[sdk=iphone*]: CanadianHam/Resources/CanadianHam.iOS.CloudKit.entitlements
-          INFOPLIST_KEY_UIBackgroundModes[sdk=iphone*]: remote-notification
+          GENERATE_INFOPLIST_FILE[sdk=iphone*]: NO
+          INFOPLIST_FILE[sdk=iphone*]: CanadianHam/Resources/CanadianHam.iOS.CloudKit.Info.plist
+          INFOPLIST_KEY_UIBackgroundModes: remote-notification
   CanadianHamTests:
     type: bundle.unit-test
     platform: auto

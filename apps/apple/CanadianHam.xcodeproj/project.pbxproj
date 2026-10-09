@@ -93,6 +93,7 @@
 		B0482ACB36AF22C5E174F05E /* quizzes in Resources */ = {isa = PBXBuildFile; fileRef = 68B2019B8C107CCE6C8C9198 /* quizzes */; };
 		B0C7B7CAC1D226318F0900AC /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 10FA8D954031CD5F553D46A3 /* Localizable.xcstrings */; };
 		B1D73B5C5972B72A5B59CBED /* CanadianHamContent in Frameworks */ = {isa = PBXBuildFile; productRef = A9EEDAA05AD705E57A6948B6 /* CanadianHamContent */; };
+		B3EA152C884A2F1ADDA7EE35 /* CanadianHam.iOS.CloudKit.Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 853BE79B9411FF7A03476A73 /* CanadianHam.iOS.CloudKit.Info.plist */; };
 		B7DB41FE2F0E756C08A1885F /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543DA6642D20EAF6FA88693D /* Tokens.swift */; };
 		B9D65B4D05709AA74DE896F0 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
 		BF95B48C3152C964718844AD /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 641771DDA6C72AE924365999 /* manifest.json */; };
@@ -198,6 +199,7 @@
 		79F451DA18B5F91DD4DCA5BC /* course.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = course.json; sourceTree = "<group>"; };
 		7CD219C3080FCB9838E25140 /* CanadianHamTVTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamTVTests.swift; sourceTree = "<group>"; };
 		7D22DC6BEB5258264EA424D3 /* CanadianHamTV-InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "CanadianHamTV-InfoPlist.strings"; path = "fr.lproj/CanadianHamTV-InfoPlist.strings"; sourceTree = "<group>"; };
+		853BE79B9411FF7A03476A73 /* CanadianHam.iOS.CloudKit.Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = CanadianHam.iOS.CloudKit.Info.plist; sourceTree = "<group>"; };
 		86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineShuffle.swift; sourceTree = "<group>"; };
 		86CBBDFF03A04BC20799F5E4 /* CanadianHamTV.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CanadianHamTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D63616999E30A9A60763F71 /* CanadianHam.macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CanadianHam.macOS.entitlements; sourceTree = "<group>"; };
@@ -488,6 +490,7 @@
 				B1D63C824E4C00165C3F4961 /* CanadianHam-InfoPlist.strings */,
 				02FD09ACC6D3F5472A098191 /* CanadianHam-InfoPlist.strings */,
 				5FB02018DEAAC19F488B3B0F /* CanadianHam.iOS.CloudKit.entitlements */,
+				853BE79B9411FF7A03476A73 /* CanadianHam.iOS.CloudKit.Info.plist */,
 				1384BDF3C806AC3EEC29FB6C /* CanadianHam.macOS.CloudKit.entitlements */,
 				8D63616999E30A9A60763F71 /* CanadianHam.macOS.entitlements */,
 				10FA8D954031CD5F553D46A3 /* Localizable.xcstrings */,
@@ -899,6 +902,7 @@
 				018B9FABEC72D0DC5202DBC0 /* Assets.xcassets in Resources */,
 				9B089F46411317817CD15DA1 /* CanadianHam-InfoPlist.strings in Resources */,
 				A4A6DF61C3775C2EEF581B72 /* CanadianHam-InfoPlist.strings in Resources */,
+				B3EA152C884A2F1ADDA7EE35 /* CanadianHam.iOS.CloudKit.Info.plist in Resources */,
 				7AC3F901ABC1A7ED3D21F3E4 /* Localizable.xcstrings in Resources */,
 				DA8494DE030F9968C7D5505E /* PrivacyInfo.xcprivacy in Resources */,
 				CD41A0E943ED3D0B9276D02A /* course.json in Resources */,
@@ -1539,9 +1543,11 @@
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = CanadianHam/Resources/CanadianHam.macOS.CloudKit.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = YES;
+				"GENERATE_INFOPLIST_FILE[sdk=iphone*]" = NO;
+				"INFOPLIST_FILE[sdk=iphone*]" = CanadianHam/Resources/CanadianHam.iOS.CloudKit.Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Canadian Ham";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
-				"INFOPLIST_KEY_UIBackgroundModes[sdk=iphone*]" = "remote-notification";
+				INFOPLIST_KEY_UIBackgroundModes = "remote-notification";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

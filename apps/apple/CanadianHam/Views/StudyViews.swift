@@ -1503,9 +1503,15 @@ struct SettingsView: View {
                         .font(DesignTokens.FontScale.title.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
+#if ICLOUD_SYNC
+                    Text("No accounts, analytics, telemetry, third-party SDKs, or developer-operated servers. iCloud Sync is optional and off until you turn it on; import and export use local files you choose.")
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+#else
                     Text("No accounts, networking, analytics, telemetry, third-party SDKs, or iCloud sync. Import and export use local files you choose.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
+#endif
                     tokenButton("About Canadian Ham") { openAbout() }
                 }
                 .paperCard()

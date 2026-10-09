@@ -1,8 +1,10 @@
 #!/usr/bin/env node
+import { mkdtempSync, rmSync, mkdirSync, writeFileSync } from 'node:fs';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { tmpdir } from 'node:os';
 
-const root = process.cwd();
+const root = process.env.ICLOUD_GATE_ROOT ?? process.cwd();
 const projectYmlPath = join(root, 'apps/apple/project.yml');
 const pbxprojPath = join(root, 'apps/apple/CanadianHam.xcodeproj/project.pbxproj');
 const defaultMacEntitlementsPath = join(root, 'apps/apple/CanadianHam/Resources/CanadianHam.macOS.entitlements');
@@ -18,23 +20,30 @@ const cloudMacEntitlements = readFileSync(cloudMacEntitlementsPath, 'utf8');
 const errors = [];
 const fail = (message) => errors.push(message);
 
-const forbiddenDefaultTokens = [
-  'com.apple.developer.icloud',
-  'aps-environment',
-  'UIBackgroundModes',
-  'remote-notification',
-  'ICLOUD_SYNC',
-  'CanadianHam.iOS.CloudKit.entitlements',
-  'CanadianHam.macOS.CloudKit.entitlements',
+const forbiddenDefaultPatterns = [
+  /com\.apple\.developer\.icloud/,
+  /aps-environment/,
+  /UIBackgroundModes/,
+  /remote-notification/,
+  /\bICLOUD_SYNC\b/,
+  /-DICLOUD_SYNC\b/,
+  /SWIFT_ACTIVE_COMPILATION_CONDITIONS[\s\S]*ICLOUD_SYNC/,
+  /CloudKit\.entitlements/,
 ];
 
-for (const token of forbiddenDefaultTokens.slice(0, 4)) {
-  if (defaultMacEntitlements.includes(token)) {
-    fail(`Default macOS entitlements unexpectedly contain ${token}.`);
+for (const pattern of forbiddenDefaultPatterns.slice(0, 4)) {
+  if (pattern.test(defaultMacEntitlements)) {
+    fail(`Default macOS entitlements unexpectedly match ${pattern}.`);
   }
 }
 
-for (const token of ['DebugCloudKit: debug', '-DICLOUD_SYNC', 'CanadianHam.iOS.CloudKit.entitlements', 'CanadianHam.macOS.CloudKit.entitlements', 'INFOPLIST_KEY_UIBackgroundModes[sdk=iphone*]: remote-notification']) {
+for (const token of [
+  'DebugCloudKit: debug',
+  '-DICLOUD_SYNC',
+  'CanadianHam.iOS.CloudKit.entitlements',
+  'CanadianHam.macOS.CloudKit.entitlements',
+  'INFOPLIST_KEY_UIBackgroundModes: remote-notification',
+]) {
   if (!projectYml.includes(token)) {
     fail(`project.yml is missing gated iCloud marker: ${token}`);
   }
@@ -44,50 +53,66 @@ for (const [label, text] of [
   ['iOS CloudKit entitlements', cloudIOSEntitlements],
   ['macOS CloudKit entitlements', cloudMacEntitlements],
 ]) {
-  for (const token of ['com.apple.developer.icloud-container-identifiers', 'com.apple.developer.icloud-services', 'CloudKit', 'aps-environment', 'iCloud.com.djensenius.CanadianHam']) {
+  for (const token of ['com.apple.developer.icloud-container-identifiers', 'com.apple.developer.icloud-services', 'CloudKit', 'iCloud.com.djensenius.CanadianHam']) {
     if (!text.includes(token)) {
       fail(`${label} missing ${token}.`);
     }
   }
 }
+if (!cloudIOSEntitlements.includes('<key>aps-environment</key>')) {
+  fail('iOS CloudKit entitlements must use aps-environment.');
+}
+if (cloudIOSEntitlements.includes('<key>com.apple.developer.aps-environment</key>')) {
+  fail('iOS CloudKit entitlements must not use the macOS com.apple.developer.aps-environment key.');
+}
+if (!cloudMacEntitlements.includes('<key>com.apple.developer.aps-environment</key>')) {
+  fail('macOS CloudKit entitlements must use com.apple.developer.aps-environment.');
+}
+if (cloudMacEntitlements.includes('<key>aps-environment</key>')) {
+  fail('macOS CloudKit entitlements must not use the iOS aps-environment key.');
+}
 
-const buildConfigPattern = /[A-F0-9]+ \/\* (Debug|Release|DebugCloudKit) \*\/ = \{[\s\S]*?isa = XCBuildConfiguration;[\s\S]*?name = \1;[\s\S]*?\n\t\t\};/g;
-const defaultAppBlocks = [];
-const cloudKitAppBlocks = [];
+const buildConfigPattern = /[A-F0-9]+ \/\* (Debug|Release|DebugCloudKit) \*\/ = \{[\s\S]*?isa = XCBuildConfiguration;[\s\S]*?name = \1;[\s\S]*?\n\t+\};/g;
+const defaultBlocks = [];
+const cloudKitBlocks = [];
 let match;
 while ((match = buildConfigPattern.exec(pbxproj)) !== null) {
   const [block, configName] = match;
-  const buildSettings = block.match(/buildSettings = \{([\s\S]*?)\n\t\t\t\};/)?.[1] ?? '';
-  if (!buildSettings.includes('PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHam;')) {
-    continue;
-  }
+  const buildSettings = block.match(/buildSettings = \{([\s\S]*?)\n\t+\};/)?.[1] ?? '';
+  const entry = { configName, buildSettings };
   if (configName === 'DebugCloudKit') {
-    cloudKitAppBlocks.push(buildSettings);
+    cloudKitBlocks.push(entry);
   } else {
-    defaultAppBlocks.push({ configName, buildSettings });
+    defaultBlocks.push(entry);
   }
 }
 
-if (defaultAppBlocks.length < 2) {
-  fail('Could not find both default Debug and Release app build settings in the generated project.');
+if (defaultBlocks.length === 0) {
+  fail('Could not find generated Debug/Release build settings.');
 }
-
-for (const { configName, buildSettings } of defaultAppBlocks) {
-  for (const token of forbiddenDefaultTokens) {
-    if (buildSettings.includes(token)) {
-      fail(`${configName} app build settings unexpectedly contain gated iCloud token: ${token}`);
+for (const { configName, buildSettings } of defaultBlocks) {
+  for (const pattern of forbiddenDefaultPatterns) {
+    if (pattern.test(buildSettings)) {
+      fail(`${configName} build settings unexpectedly match gated iCloud token: ${pattern}`);
     }
   }
 }
 
-if (cloudKitAppBlocks.length === 0) {
+const appCloudKitBlocks = cloudKitBlocks.filter(({ buildSettings }) => buildSettings.includes('PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHam;'));
+if (appCloudKitBlocks.length === 0) {
   fail('Could not find the DebugCloudKit app build settings in the generated project.');
 } else {
-  const cloudKitBuildSettings = cloudKitAppBlocks.join('\n');
+  const cloudKitBuildSettings = appCloudKitBlocks.map(({ buildSettings }) => buildSettings).join('\n');
   for (const token of ['CanadianHam.iOS.CloudKit.entitlements', 'CanadianHam.macOS.CloudKit.entitlements', 'INFOPLIST_KEY_UIBackgroundModes']) {
     if (!cloudKitBuildSettings.includes(token)) {
       fail(`DebugCloudKit app build settings missing ${token}.`);
     }
+  }
+}
+for (const { buildSettings } of cloudKitBlocks) {
+  const hasCloudKitEntitlement = /CloudKit\.entitlements/.test(buildSettings);
+  if (hasCloudKitEntitlement && !buildSettings.includes('PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHam;')) {
+    fail('Only the CanadianHam app target may carry CloudKit entitlements in DebugCloudKit.');
   }
 }
 
@@ -106,4 +131,4 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log('iCloud gate check passed: default Debug/Release app settings stay free of iCloud, Push, and remote-notification capabilities; DebugCloudKit carries the gated capability settings.');
+console.log('iCloud gate check passed: default Debug/Release settings across project and targets stay free of iCloud, Push, remote-notification, and ICLOUD_SYNC; DebugCloudKit carries the gated app capability settings.');
