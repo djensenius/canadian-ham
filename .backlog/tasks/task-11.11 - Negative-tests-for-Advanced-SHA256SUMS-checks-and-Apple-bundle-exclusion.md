@@ -1,11 +1,11 @@
 ---
 id: TASK-11.11
 title: Negative tests for Advanced SHA256SUMS checks and Apple bundle exclusion
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-03 03:15'
-updated_date: '2026-10-09 06:00'
+updated_date: '2026-10-09 06:07'
 labels:
   - content
   - apple
@@ -25,8 +25,8 @@ Why: the task-11.4 re-review found two checks without regression tests: the impo
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [x] #1 advanced-importer tests cover a malformed line, a duplicate path, a path not in the manifest, a hash mismatch and a missing manifest file, each failing with a clear error
-- [x] #2 Apple bundle guard tests assert the post-task-11.5 per-platform contract: iOS/macOS app bundles contain exactly generated/basic-2025-07-15 and generated/advanced-2025-02-04, while tvOS/visionOS app bundles contain generated/basic-2025-07-15 and no generated/advanced-* directories
+- [ ] #1 advanced-importer tests cover a malformed line, a duplicate path, a path not in the manifest, a hash mismatch and a missing manifest file, each failing with a clear error
+- [ ] #2 Apple bundle guard tests assert the post-task-11.5 per-platform contract: iOS/macOS app bundles contain exactly generated/basic-2025-07-15 and generated/advanced-2025-02-04, while tvOS/visionOS app bundles contain generated/basic-2025-07-15 and no generated/advanced-* directories
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -41,6 +41,8 @@ Why: the task-11.4 re-review found two checks without regression tests: the impo
 Decision: task-11.11 AC #2 predates task-11.5. Supervisor clarified that iOS/macOS deliberately bundle Advanced for the course switcher; tvOS/visionOS remain Basic-only. Interpret and update the AC to the per-platform bundle contract rather than removing Advanced from iOS/macOS.
 
 Implemented SHA256SUMS negatives in packages/content-tools/test/advanced-importer.test.ts:73 covering malformed line, duplicate path, non-manifest path, manifest hash mismatch, and missing manifest line. Added exact Apple generated-bank bundle guards: iOS/macOS app allow-list test in apps/apple/CanadianHamTests/QuestionBankTests.swift:6; tvOS test-bundle Basic-only guard in apps/apple/CanadianHamTVTests/CanadianHamTVTests.swift:4; visionOS test-bundle Basic-only guard in apps/apple/CanadianHamVisionTests/CanadianHamVisionTests.swift:4. Added Basic generated-copy scripts for tvOS/visionOS targets in apps/apple/project.yml:262 and apps/apple/project.yml:388. Validation passed: pnpm --filter @canadian-ham/content-tools test; XcodeGen deterministic; targeted iOS tests CanadianHamTests.QuestionBankTests/testAppBundleContainsOnlyExpectedGeneratedBankDirectories passed; full iOS passed 74 UI tests plus unit tests; full macOS unit suite passed; tvOS tests passed including CanadianHamTVTests/testBundleContainsOnlyBasicGeneratedBankDirectory; visionOS tests passed including CanadianHamVisionTests/testBundleContainsOnlyBasicGeneratedBankDirectory. Note: the exact allow-list assertions are the bundle guard; introducing an unexpected generated bank directory would make the set comparison fail.
+
+Review round 1 reopened task-11.11: Apple tvOS/visionOS bundle guard must inspect app bundle, copy-script duplication must be removed, and guard-bites evidence must be recorded for bundle guards and SHA256SUMS negatives.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
