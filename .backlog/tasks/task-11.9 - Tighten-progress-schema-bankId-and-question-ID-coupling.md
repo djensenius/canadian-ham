@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 14:00'
-updated_date: '2026-10-09 06:00'
+updated_date: '2026-10-09 10:37'
 labels:
   - schemas
   - content
@@ -41,6 +41,8 @@ Review note 7 from task-11.3 found that common/progress schemas now accept Basic
 
 <!-- SECTION:NOTES:BEGIN -->
 Tightened schema bank/question coupling with per-bank defs in packages/schemas/common.schema.json:15 and progress export oneOf branches in packages/schemas/progress-export-v1.schema.json:32. Added valid Advanced fixture packages/schemas/test/fixtures/valid/progress-export-v1-advanced.json and invalid mixed-prefix fixtures packages/schemas/test/fixtures/invalid/progress-export-v1-mixed-basic-bank-advanced-question.json plus progress-export-v1-mixed-advanced-bank-basic-exam.json. Regression tests live in packages/schemas/validate-fixtures.test.mjs:67 and packages/schemas/validate-negative.test.mjs:38. Legacy Basic import normalization remains covered in apps/web/src/lib/progressStore.test.ts:364. Validation: pnpm --filter @canadian-ham/schemas test; pnpm --filter @canadian-ham/web test -- src/lib/progressStore.test.ts --runInBand; pnpm typecheck; pnpm test; pnpm import:check; pnpm build:web; URL/CSP audit.
+
+PR #159 Copilot fix (600551f, coordinator): progress-export-v1 Basic branch restricts lessonQuizAttempts official/incorrect question IDs to Basic IDs; the Advanced branch requires empty lessonProgress and lessonQuizAttempts. Two new negative schema tests fail without the change (verified: 42 pass / 2 fail) and pass with it (44 pass). Web exports still validate (web tests pass).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
