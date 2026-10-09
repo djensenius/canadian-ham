@@ -25,9 +25,9 @@ Why: the owner chose strictly opt-in sync of learning progress only (OFF by defa
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [x] #1 project.yml adds iCloud (CloudKit), Push and Background Modes (remote notifications); the project is regenerated with XcodeGen
-- [ ] #2 Settings has an iCloud Sync toggle that defaults OFF, using explicit cloudKitDatabase .none when off and .private("iCloud.com.djensenius.CanadianHam") (or the confirmed ID) when on; preferences stay in a separate local configuration
-- [ ] #3 Account change, sign-out and iCloud-disable are tested for local data loss; test configurations build without restricted entitlements (macOS ad hoc, simulators unsigned)
+- [ ] #1 project.yml adds iCloud (CloudKit), Push and Background Modes (remote notifications) only behind the non-default ICLOUD_SYNC gate; the project is regenerated with XcodeGen
+- [ ] #2 Settings has an iCloud Sync toggle that defaults OFF, existing local data survives first gated split-layout launch, OFF uses explicit cloudKitDatabase .none, ON uses .private("iCloud.com.djensenius.CanadianHam") (or the confirmed ID), and preferences stay in a separate local configuration
+- [ ] #3 Account-change/sign-out/iCloud-disable handler wiring is tested for no local data deletion by app code; default test configurations build without restricted entitlements, and signed-device CloudKit/account behaviours are tracked separately
 <!-- AC:END -->
 
 ## Implementation Plan
