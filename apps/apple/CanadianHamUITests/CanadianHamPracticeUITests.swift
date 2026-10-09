@@ -1378,6 +1378,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         scrollUntilHittable(feedback, in: app, maxSwipes: 8)
         XCTAssertTrue(isFullyVisible(feedback, in: app, requiresHittable: false), "\(appearance.rawValue) sending main audit should scroll the feedback panel into view")
         settleScrollableContentBelowNavigationBar(in: app, context: "Morse sending main screen lower half \(appearance)")
+        scrollUntilPartiallyVisible(feedback, in: app, maxSwipes: 8)
         assertPartiallyVisibleBelowNavigationBar(feedback, in: app, context: "\(appearance.rawValue) sending feedback after settling")
         try performAudit(on: app, context: "Morse sending main screen lower half \(appearance)")
     }
@@ -1586,6 +1587,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let settings = app.staticTexts["Morse settings"].firstMatch
         scrollMorseHomeLowerContentIntoView(in: app)
         settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse home lower content")
+        scrollUntilPartiallyVisible(settings, in: app, maxSwipes: 12)
         assertPartiallyVisibleBelowNavigationBar(settings, in: app, context: "\(appearance.rawValue) Morse settings after settling")
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home lower content")
         openMorseCourse(in: app)
@@ -1594,6 +1596,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let lastUnit = app.buttons["morse-course-unit-8"].firstMatch
         scrollToMorseCourseLastUnit(in: app)
         settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse course home lower units")
+        scrollUntilPartiallyVisible(lastUnit, in: app, maxSwipes: 12)
         assertPartiallyVisibleBelowNavigationBar(lastUnit, in: app, context: "\(appearance.rawValue) final Morse course unit after settling")
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home lower units")
 
