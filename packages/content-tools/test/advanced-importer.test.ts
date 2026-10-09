@@ -1,4 +1,7 @@
 import assert from "node:assert/strict";
+import { mkdtemp, cp, readFile, rm, writeFile } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
@@ -9,9 +12,37 @@ import {
 } from "../src/advanced-importer.ts";
 
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
+const ADVANCED_SOURCE_RELATIVE_DIR = "content/sources/ised/advanced-2025-02-04";
+const ADVANCED_SHA256SUMS_RELATIVE_PATH = `${ADVANCED_SOURCE_RELATIVE_DIR}/SHA256SUMS`;
+const HAND_CATEGORIES_RELATIVE_PATH = "content/categories-advanced.json";
 
 function windows1252Bytes(text: string): Uint8Array {
   return Buffer.from(text, "latin1");
+}
+
+async function withAdvancedImportFixture(mutator: (root: string) => Promise<void>): Promise<string> {
+  const root = await mkdtemp(path.join(os.tmpdir(), "advanced-importer-"));
+  await cp(path.join(REPO_ROOT, ADVANCED_SOURCE_RELATIVE_DIR), path.join(root, ADVANCED_SOURCE_RELATIVE_DIR), { recursive: true });
+  await cp(path.join(REPO_ROOT, HAND_CATEGORIES_RELATIVE_PATH), path.join(root, HAND_CATEGORIES_RELATIVE_PATH));
+  await mutator(root);
+  return root;
+}
+
+async function assertImportRejects(mutator: (root: string) => Promise<void>, expectedMessage: RegExp): Promise<void> {
+  const root = await withAdvancedImportFixture(mutator);
+  try {
+    await assert.rejects(() => importAdvancedQuestionBank(root), expectedMessage);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+}
+
+async function readFixtureSha256Sums(root: string): Promise<string> {
+  return readFile(path.join(root, ADVANCED_SHA256SUMS_RELATIVE_PATH), "utf8");
+}
+
+async function writeFixtureSha256Sums(root: string, text: string): Promise<void> {
+  await writeFile(path.join(root, ADVANCED_SHA256SUMS_RELATIVE_PATH), text, "utf8");
 }
 
 test("Advanced parser explicitly detects Windows-1252 legacy input when UTF-8 decoding fails", () => {
@@ -37,6 +68,51 @@ test("Advanced parser explicitly detects Windows-1252 legacy input when UTF-8 de
   assert.deepEqual(parsed.header, [...EXPECTED_HEADERS]);
   assert.equal(parsed.rows[0]?.fields[6], "Question française");
   assert.equal(parsed.rows[0]?.fields[7], "Bonne réponse");
+});
+
+test("Advanced SHA256SUMS rejects a malformed checksum line", async () => {
+  await assertImportRejects(
+    (root) => writeFixtureSha256Sums(root, "not-a-valid-sha-line\n"),
+    /SHA256SUMS: line 1 must be '<sha256>  <path>'/,
+  );
+});
+
+test("Advanced SHA256SUMS rejects duplicate paths", async () => {
+  await assertImportRejects(async (root) => {
+    const firstLine = (await readFixtureSha256Sums(root)).trimEnd().split("\n")[0]!;
+    await writeFixtureSha256Sums(root, `${firstLine}\n${firstLine}\n`);
+  }, /SHA256SUMS: duplicate checksum line for questions\/amat_adv_quest_delim\.txt/);
+});
+
+test("Advanced SHA256SUMS rejects paths not listed in the source manifest", async () => {
+  await assertImportRejects(async (root) => {
+    const original = await readFixtureSha256Sums(root);
+    await writeFixtureSha256Sums(root, `${original}0000000000000000000000000000000000000000000000000000000000000000  questions/not-in-manifest.txt\n`);
+  }, /SHA256SUMS: questions\/not-in-manifest\.txt is not listed in content\/sources\/ised\/advanced-2025-02-04\/manifest\.json/);
+});
+
+test("Advanced SHA256SUMS rejects checksum drift against the source manifest", async () => {
+  await assertImportRejects(async (root) => {
+    const lines = (await readFixtureSha256Sums(root)).trimEnd().split("\n");
+    lines[0] = `0000000000000000000000000000000000000000000000000000000000000000  questions/amat_adv_quest_delim.txt`;
+    await writeFixtureSha256Sums(root, `${lines.join("\n")}\n`);
+  }, /SHA256SUMS: questions\/amat_adv_quest_delim\.txt expected manifest SHA-256/);
+});
+
+test("Advanced SHA256SUMS rejects a missing line for a manifest-listed file", async () => {
+  await assertImportRejects(async (root) => {
+    const [, ...remainingLines] = (await readFixtureSha256Sums(root)).trimEnd().split("\n");
+    await writeFixtureSha256Sums(root, `${remainingLines.join("\n")}\n`);
+  }, /SHA256SUMS: missing line for questions\/amat_adv_quest_delim\.txt/);
+});
+
+test("Advanced SHA256SUMS rejects a changed source file whose metadata is unchanged", async () => {
+  // Only the file bytes change: SHA256SUMS and manifest.json still agree with each other,
+  // so this fails only if the importer really hashes each manifest-listed file.
+  await assertImportRejects(async (root) => {
+    const readmePath = path.join(root, ADVANCED_SOURCE_RELATIVE_DIR, "questions", "readme_adv.txt");
+    await writeFile(readmePath, Buffer.concat([await readFile(readmePath), Buffer.from("\n")]));
+  }, /questions\/readme_adv\.txt: SHA-256 mismatch against/);
 });
 
 test("imports and validates the committed Advanced 2025-02-04 source bank", async () => {
