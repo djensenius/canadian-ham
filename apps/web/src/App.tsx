@@ -2134,19 +2134,24 @@ function morsePreferencesEqual(left: WebPreferences["morse"], right: WebPreferen
     left.outputMode === right.outputMode;
 }
 
+function morseNumberDraftBounds(field: keyof MorseNumberDrafts, preferences: WebPreferences["morse"]): { readonly minimum: number; readonly maximum: number } {
+  const normalized = normalizeMorsePreferences(preferences);
+  switch (field) {
+    case "toneHz":
+      return { minimum: 400, maximum: 900 };
+    case "characterWpm":
+      return { minimum: 12, maximum: 25 };
+    case "effectiveWpm":
+      return { minimum: 5, maximum: normalized.characterWpm };
+  }
+}
+
 function isValidMorseNumberDraft(field: keyof MorseNumberDrafts, value: number, preferences: WebPreferences["morse"]): boolean {
   if (!Number.isFinite(value) || !Number.isInteger(value)) {
     return false;
   }
-  const normalized = normalizeMorsePreferences(preferences);
-  switch (field) {
-    case "toneHz":
-      return value >= 400 && value <= 900;
-    case "characterWpm":
-      return value >= 12 && value <= 25;
-    case "effectiveWpm":
-      return value >= 5 && value <= normalized.characterWpm;
-  }
+  const bounds = morseNumberDraftBounds(field, preferences);
+  return value >= bounds.minimum && value <= bounds.maximum;
 }
 
 function MorseSettingsControls({ interfaceLanguage, preferences, onSetPreferences }: { readonly interfaceLanguage: InterfaceLanguage; readonly preferences: WebPreferences; readonly onSetPreferences: (preferences: PreferencesPatch) => Promise<boolean> }) {
@@ -2205,7 +2210,20 @@ function MorseSettingsControls({ interfaceLanguage, preferences, onSetPreference
     const draft = morseNumberDrafts[field].trim();
     const numericValue = Number(draft);
     if (draft === "" || !isValidMorseNumberDraft(field, numericValue, preferences.morse)) {
+      const bounds = morseNumberDraftBounds(field, preferences.morse);
+      const fieldLabel = field === "toneHz"
+        ? t(interfaceLanguage, "morseTone")
+        : field === "characterWpm"
+          ? t(interfaceLanguage, "morseCharacterSpeed")
+          : t(interfaceLanguage, "morseEffectiveSpeed");
       setMorseNumberDrafts(morseDraftsFromPreferences(preferences.morse));
+      setMessage(t(
+        interfaceLanguage,
+        "morseNumberDraftReverted",
+        fieldLabel,
+        formatLocaleNumber(bounds.minimum, localeTag, 0),
+        formatLocaleNumber(bounds.maximum, localeTag, 0),
+      ));
       return;
     }
     const patch = { [field]: numericValue } as Partial<WebPreferences["morse"]>;

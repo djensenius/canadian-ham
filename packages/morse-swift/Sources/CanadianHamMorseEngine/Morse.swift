@@ -343,6 +343,34 @@ public let allowedRIC1Characters: [String] = Array(morseCodeTable.keys).sorted()
 private let reverseMorseCodeTable = Dictionary(uniqueKeysWithValues: morseCodeTable.map { ($0.value, $0.key) })
 private let allowedCharacters = Set(morseCodeTable.keys)
 private let punctuationAndFigures = Set(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", ",", "?", "-", "/"])
+private let morseWhitespaceScalarValues = Set<UInt32>([
+    0x0009,
+    0x000a,
+    0x000b,
+    0x000c,
+    0x000d,
+    0x0020,
+    0x0085,
+    0x00a0,
+    0x1680,
+    0x2000,
+    0x2001,
+    0x2002,
+    0x2003,
+    0x2004,
+    0x2005,
+    0x2006,
+    0x2007,
+    0x2008,
+    0x2009,
+    0x200a,
+    0x2028,
+    0x2029,
+    0x202f,
+    0x205f,
+    0x3000,
+    0xfeff,
+])
 private let examSentenceCorpus = [
     "THE RADIO OPERATOR CHECKS THE NORTH ANTENNA.",
     "WEATHER REPORTS WILL BE SHORT AND CLEAR.",
@@ -809,7 +837,7 @@ private func canonicalMorseWords(_ text: String) throws -> [[String]] {
 }
 
 private func receivedMorseCopyCharacters(_ text: String) -> [String] {
-    text.unicodeScalars.compactMap { scalar in
+    text.precomposedStringWithCanonicalMapping.unicodeScalars.compactMap { scalar in
         if scalar.isMorseWhitespace {
             return nil
         }
@@ -854,7 +882,7 @@ private struct SeededMorseRandom {
 
 private extension Unicode.Scalar {
     var isMorseWhitespace: Bool {
-        CharacterSet.whitespacesAndNewlines.contains(self)
+        morseWhitespaceScalarValues.contains(value)
     }
 }
 
