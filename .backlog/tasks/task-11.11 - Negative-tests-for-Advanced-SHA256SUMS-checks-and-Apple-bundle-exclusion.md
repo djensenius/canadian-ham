@@ -26,7 +26,7 @@ Why: the task-11.4 re-review found two checks without regression tests: the impo
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 advanced-importer tests cover a malformed line, a duplicate path, a path not in the manifest, a hash mismatch and a missing manifest file, each failing with a clear error
-- [ ] #2 Apple bundle guard tests assert the post-task-11.5 per-platform contract: iOS/macOS app bundles contain exactly generated/basic-2025-07-15 and generated/advanced-2025-02-04; tvOS/visionOS app bundles load the Basic bank (at the bundle root) and contain no generated/ directory and no Advanced resources
+- [x] #2 Apple bundle guard tests assert the post-task-11.5 per-platform contract: iOS/macOS app bundles contain exactly generated/basic-2025-07-15 and generated/advanced-2025-02-04; tvOS/visionOS app bundles load the Basic bank (at the bundle root) and contain no generated/ directory and no Advanced resources
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -47,6 +47,8 @@ Review round 1 reopened task-11.11: Apple tvOS/visionOS bundle guard must inspec
 Review fixes: tvOS/visionOS bundle guards now inspect the built app bundles via Bundle(url:) next to the .xctest bundle (apps/apple/CanadianHamTVTests/CanadianHamTVTests.swift:4, apps/apple/CanadianHamVisionTests/CanadianHamVisionTests.swift:4). Removed the duplicate generated-copy scripts from tvOS/visionOS app/test targets; XcodeGen was run twice and apps/apple/CanadianHam.xcodeproj stayed stable. Guard-bites evidence: disabling validateSha256Sums made all five Advanced SHA256SUMS negative tests fail with Missing expected rejection in /tmp/advanced-sha-guard-fail.log. Adding a stale generated/stale-bank directory made iOS and macOS QuestionBankTests/testAppBundleContainsOnlyExpectedGeneratedBankDirectories fail with the extra stale-bank in /tmp/advanced-guard-ios-fail.log and /tmp/advanced-guard-macos-fail.log. Adding Advanced generated resources to tvOS/visionOS app targets made CanadianHamTVTests/testAppBundleContainsOnlyBasicQuestionBankResources and CanadianHamVisionTests/testAppBundleContainsOnlyBasicQuestionBankResources fail in /tmp/advanced-guard-tvos-fail.log and /tmp/advanced-guard-visionos-fail.log. A first full iOS run in review work previously hit a transient SpringBoard crash in testAccessibilityAuditPracticeSessionDark; targeted rerun passed, and final full iOS on code commit 8044afbf33ae76222dec781f32b8b0867bd242df passed.
 
 Final validation on code commit 8044afbf33ae76222dec781f32b8b0867bd242df: targeted iOS bundle/course-switch run passed; full iOS passed CanadianHamTests 66 tests and CanadianHamUITests 74 tests; full macOS passed 68 CanadianHamTests; full tvOS clean rerun passed CanadianHamTVTests 4 tests and CanadianHamTVUITests 12 tests; full visionOS clean rerun passed CanadianHamVisionTests 4 tests and CanadianHamVisionUITests 9 tests. The first tvOS full after deliberate guard-bites failed because stale DerivedData still contained the deliberately injected generated/basic directory; clean xbuild rerun on the same code commit passed.
+
+Coordinator: AC #2 reworded after the review fix that removed the tvOS/visionOS copy scripts (those apps ship Basic at the bundle root; the guard asserts no generated/ directory and no Advanced resources, inspecting the built .app; a missing app fails). The first paragraph of these notes describes the superseded test-bundle guard; the 'Review fixes' paragraph is current. Re-review: APPROVE WITH NOTES (~/.cache/canadian-ham-reviews/t11-hardening-r2.md).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
