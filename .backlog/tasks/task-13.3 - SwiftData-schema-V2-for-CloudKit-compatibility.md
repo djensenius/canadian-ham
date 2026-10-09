@@ -1,7 +1,7 @@
 ---
 id: TASK-13.3
 title: SwiftData schema V2 for CloudKit compatibility
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
