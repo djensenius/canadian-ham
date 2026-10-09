@@ -1,7 +1,7 @@
 ---
 id: TASK-12.8
 title: Record official RIC-1 section 8.3 sample
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 13:58'
