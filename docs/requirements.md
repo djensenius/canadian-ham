@@ -74,7 +74,7 @@ Needs:
 | DEC-TOOLING-001 | Run importer and content tooling as TypeScript directly in Node using Node >= 23.6 type stripping; use `node:test`; keep the importer at zero runtime dependencies. | Owner confirmed this on 2026-09-28; the development machine has Node 26, and the importer should stay small and reproducible. |
 | DEC-APPLE-001 | Apple app is SwiftUI multiplatform for iOS/iPadOS 27.0+, macOS 27.0+, visionOS 27.0+, and tvOS 27.0+ in v1; watchOS remains later. | Native offline UX, shared SwiftUI code, owner-approved platform expansion, and platform-appropriate layouts/focus/windowing. |
 | DEC-APPLE-002 | Use SwiftData for local progress. | Native local persistence with no remote service. |
-| DEC-APPLE-003 | No third-party SDKs, no networking code, and no iCloud sync in v1. | Minimizes privacy risk and supports App Store Data Not Collected. iCloud sync may be reconsidered later only with a privacy review. |
+| DEC-APPLE-003 | No third-party SDKs, no networking code, and no iCloud sync in v1 release builds. | Minimizes privacy risk and supports App Store Data Not Collected. Optional CloudKit private-database sync may land on main only behind an off-by-default post-v1 build gate; when that gate is explicitly enabled after v1, the approved exception is limited to CloudKit, the Push Notifications capability CloudKit uses for silent sync, and the remote-notification background mode. v1 release builds must have no iCloud or push capability. |
 | DEC-APPLE-004 | Minimum Apple OS versions are iOS/iPadOS 27.0, macOS 27.0, tvOS 27.0, and visionOS 27.0. | Matches the first SwiftUI multiplatform Apple slice and keeps the initial offline app focused on currently supported Apple platforms. |
 | DEC-BILINGUAL-001 | Schema stores English and French from day one. UI ships English first; French UI comes in P6 using official ISED French question text. | Avoids schema migration later and prevents unofficial translations of ISED questions. |
 | DEC-BUILD-001 | Builds and tests use `xbuild`; never call `xcodebuild` directly. | Required by AGENTS.md to serialize builds and clean up simulators. |
@@ -377,7 +377,8 @@ Acceptance criteria:
 
 - Progress schema stores the fields in REQ-QUIZ-005.
 - On iOS and iPadOS, deleting the app deletes app-local progress. On macOS, deleting the app does not reliably delete the app container, so Reset all data must be available and documented.
-- No iCloud sync is enabled in v1.
+- No iCloud sync is enabled in v1 release builds, and v1 release builds have no iCloud or push capability.
+- The local SwiftData schema may migrate before v1 ships so there is only one schema in the field; this schema migration remains local-only and does not add entitlements.
 - Import/export JSON is user-initiated only.
 
 #### REQ-APPLE-004: No data collection
@@ -386,8 +387,8 @@ The Apple app shall collect no data.
 
 Acceptance criteria:
 
-- No networking code, analytics SDK, ad SDK, crash-reporting SDK, remote config SDK, or third-party tracking SDK exists.
-- App Store privacy label can truthfully state Data Not Collected.
+- No networking code, analytics SDK, ad SDK, crash-reporting SDK, remote config SDK, or third-party tracking SDK exists in v1 release builds.
+- App Store privacy label can truthfully state Data Not Collected. For any post-v1 build that explicitly enables the iCloud sync gate, this depends on using only the user's private CloudKit database, not exporting or retaining CloudKit Console logs, and re-checking the App Store privacy questionnaire before release.
 - Verification follows [privacy.md](privacy.md).
 
 #### REQ-APPLE-005: Basic visionOS app
