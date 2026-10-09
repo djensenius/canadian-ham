@@ -1,7 +1,7 @@
 ---
 id: TASK-12.9
 title: Morse text Unicode consistency across TS and Swift
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 14:52'
