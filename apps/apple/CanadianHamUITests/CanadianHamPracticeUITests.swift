@@ -1380,6 +1380,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         settleScrollableContentBelowNavigationBar(in: app, context: "Morse sending main screen lower half \(appearance)")
         scrollUntilPartiallyVisible(feedback, in: app, maxSwipes: 8)
         assertPartiallyVisibleBelowNavigationBar(feedback, in: app, context: "\(appearance.rawValue) sending feedback after settling")
+        settleScrollableContentBelowNavigationBar(in: app, context: "Morse sending main screen lower half audit \(appearance)")
         try performAudit(on: app, context: "Morse sending main screen lower half \(appearance)")
     }
 
@@ -1589,6 +1590,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse home lower content")
         scrollUntilPartiallyVisible(settings, in: app, maxSwipes: 12)
         assertPartiallyVisibleBelowNavigationBar(settings, in: app, context: "\(appearance.rawValue) Morse settings after settling")
+        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse home lower content audit")
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home lower content")
         openMorseCourse(in: app)
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
@@ -1598,6 +1600,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse course home lower units")
         scrollUntilPartiallyVisible(lastUnit, in: app, maxSwipes: 12)
         assertPartiallyVisibleBelowNavigationBar(lastUnit, in: app, context: "\(appearance.rawValue) final Morse course unit after settling")
+        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse course home lower units audit")
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home lower units")
 
         openFirstMorseUnit(in: app)
