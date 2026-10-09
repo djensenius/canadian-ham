@@ -116,26 +116,6 @@ struct LessonQuizAttempt: Codable, Equatable, Sendable, Identifiable {
     let incorrectConceptCheckIds: [String]
 }
 
-struct ExportedMorseSettings: Codable, Equatable, Sendable {
-    let toneHz: Int
-    let characterWpm: Int
-    let effectiveWpm: Int
-    let timingProfile: String
-    let volume: Double
-    let outputMode: String
-
-    static let `default` = ExportedMorseSettings(toneHz: 650, characterWpm: 15, effectiveWpm: 5, timingProfile: "isedParis", volume: 0.6, outputMode: "audio")
-
-    init(toneHz: Int, characterWpm: Int, effectiveWpm: Int, timingProfile: String, volume: Double, outputMode: String = "audio") {
-        self.toneHz = toneHz
-        self.characterWpm = characterWpm
-        self.effectiveWpm = effectiveWpm
-        self.timingProfile = timingProfile
-        self.volume = volume
-        self.outputMode = outputMode
-    }
-}
-
 struct ExportedPreferences: Codable, Equatable, Sendable {
     let practiceMode: String
     let examTimerEnabled: Bool
