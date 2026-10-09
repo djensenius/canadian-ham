@@ -220,10 +220,20 @@ final class ProgressStoreTests: XCTestCase {
             XCTAssertEqual(try splitStore.lessonQuizAttempts(), [lessonQuizAttempt])
         }
 
-        let reopenedSplitStore = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .split)
-        XCTAssertEqual(try reopenedSplitStore.questionProgressRecords(), [record])
-        XCTAssertEqual(try reopenedSplitStore.lessonProgressRecords(), [lessonProgress])
-        XCTAssertEqual(try reopenedSplitStore.lessonQuizAttempts(), [lessonQuizAttempt])
+        do {
+            let reopenedSplitStore = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .split)
+            XCTAssertEqual(try reopenedSplitStore.questionProgressRecords(), [record])
+            XCTAssertEqual(try reopenedSplitStore.lessonProgressRecords(), [lessonProgress])
+            XCTAssertEqual(try reopenedSplitStore.lessonQuizAttempts(), [lessonQuizAttempt])
+            try reopenedSplitStore.resetAllData()
+        }
+
+        let afterResetReopen = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .split)
+        XCTAssertEqual(try afterResetReopen.questionProgressRecords(), [])
+        XCTAssertEqual(try afterResetReopen.examAttempts(), [])
+        XCTAssertEqual(afterResetReopen.preferences, .default)
+        XCTAssertEqual(try afterResetReopen.lessonProgressRecords(), [])
+        XCTAssertEqual(try afterResetReopen.lessonQuizAttempts(), [])
     }
 
 #if os(macOS)

@@ -12,8 +12,10 @@ function fail(message) {
   failures += 1;
 }
 
-function basePbxproj({ projectDebug = '', appDebug = '', tvDebug = '', macEntitlement = 'CanadianHam/Resources/CanadianHam.macOS.CloudKit.entitlements' } = {}) {
+function basePbxproj({ projectDebug = '', appDebug = '', tvDebug = '', macEntitlement = 'CanadianHam/Resources/CanadianHam.macOS.CloudKit.entitlements', resourceLeak = '' } = {}) {
   return `// !$*UTF8*$!
+/* Begin PBXBuildFile section */
+${resourceLeak}/* End PBXBuildFile section */
 /* Begin XCBuildConfiguration section */
 	AAAA0001 /* Debug */ = {
 		isa = XCBuildConfiguration;
@@ -143,6 +145,8 @@ function assertFail(name, options, expected) {
 assertPass('clean fixture');
 assertFail('project Debug ICLOUD_SYNC leak', { projectDebug: '\t\t\tOTHER_SWIFT_FLAGS = "$(inherited) -DICLOUD_SYNC";\n' }, 'Debug build settings unexpectedly match gated iCloud token');
 assertFail('app Debug CloudKit entitlements leak', { appDebug: '\t\t\t"CODE_SIGN_ENTITLEMENTS[sdk=iphone*]" = CanadianHam/Resources/CanadianHam.iOS.CloudKit.entitlements;\n' }, 'Debug build settings unexpectedly match gated iCloud token');
+assertFail('app Debug CloudKit Info plist leak', { appDebug: '\t\t\tINFOPLIST_FILE = CanadianHam/Resources/CanadianHam.iOS.CloudKit.Info.plist;\n' }, 'Debug build settings unexpectedly match gated iCloud token');
+assertFail('CloudKit Info plist resource leak', { resourceLeak: '\tDDDD0001 /* CanadianHam.iOS.CloudKit.Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DDDD0002 /* CanadianHam.iOS.CloudKit.Info.plist */; };\n' }, 'CloudKit Info.plist must not be copied in any resources build phase');
 assertFail('other target Debug CloudKit entitlements leak', { tvDebug: '\t\t\tCODE_SIGN_ENTITLEMENTS = CanadianHam/Resources/CanadianHam.iOS.CloudKit.entitlements;\n' }, 'Debug build settings unexpectedly match gated iCloud token');
 assertFail('default mac entitlements iCloud leak', { defaultMacEntitlements: '<plist><dict><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>' }, 'Default macOS entitlements unexpectedly match');
 assertFail('macOS wrong push key', { macEntitlements: '<plist><dict><key>aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.com.djensenius.CanadianHam</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>' }, 'macOS CloudKit entitlements must use com.apple.developer.aps-environment');

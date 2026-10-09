@@ -2359,6 +2359,22 @@
         }
       }
     },
+    "This gated Apple app includes bundled content, no accounts, analytics, telemetry, ads, remote config, third-party SDKs, or developer-operated servers. iCloud Sync is optional and off until you turn it on; import and export use local files you choose." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette app Apple avec gate comprend du contenu intégré, aucun compte, analytique, télémétrie, publicité, configuration distante, SDK tiers ni serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez ; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette app Apple avec gate comprend du contenu intégré, aucun compte, analytique, télémétrie, publicité, configuration distante, SDK tiers ni serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez ; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
+          }
+        }
+      }
+    },
     "iCloud Sync" : {
       "localizations" : {
         "fr" : {

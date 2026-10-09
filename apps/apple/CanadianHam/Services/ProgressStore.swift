@@ -123,11 +123,13 @@ struct ProgressStoreURLs: Equatable, Sendable {
     let persistentStoreURL: URL
     let preferencesStoreURL: URL
     let morseCourseProgressURL: URL
+    let legacyPreferencesCopyMarkerURL: URL
 
     init(progressDirectory: URL) {
         self.persistentStoreURL = progressDirectory.appending(path: "Progress.store")
         self.preferencesStoreURL = progressDirectory.appending(path: "Preferences.store")
         self.morseCourseProgressURL = progressDirectory.appending(path: "MorseCourseProgress.json")
+        self.legacyPreferencesCopyMarkerURL = progressDirectory.appending(path: "Preferences.store.legacy-copy-complete")
     }
 
     @MainActor
@@ -514,6 +516,7 @@ final class ProgressStoreService: ObservableObject {
     private let context: ModelContext
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
+    private let storeURLs: ProgressStoreURLs
     private let morseCourseProgressURL: URL
 #if DEBUG
     var morseCourseProgressURLForTesting: URL { morseCourseProgressURL }
@@ -528,17 +531,21 @@ final class ProgressStoreService: ObservableObject {
 
     init(
         container: ModelContainer,
-        morseCourseProgressURL: URL = ProgressStoreService.morseCourseProgressURL,
+        storeURLs: ProgressStoreURLs = .standard,
+        morseCourseProgressURL: URL? = nil,
         iCloudSyncEnabled: Bool = ICloudSyncSettings.storedOptIn()
     ) throws {
         self.container = container
         self.context = ModelContext(container)
-        self.morseCourseProgressURL = morseCourseProgressURL
+        self.storeURLs = storeURLs
+        self.morseCourseProgressURL = morseCourseProgressURL ?? storeURLs.morseCourseProgressURL
         self.isICloudSyncEnabled = iCloudSyncEnabled
-        try FileManager.default.createDirectory(at: morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: self.morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
         self.preferences = try loadPreferences()
 #if ICLOUD_SYNC
-        startICloudAccountMonitoring()
+        if iCloudSyncEnabled {
+            startICloudAccountMonitoring()
+        }
 #endif
     }
 
@@ -553,7 +560,8 @@ final class ProgressStoreService: ObservableObject {
     ) throws -> ProgressStoreService {
         do {
             let resolvedLayout = resolvedLayout(layout)
-            let legacyPreferences = try legacyPreferencesSnapshotsIfNeeded(storeURLs: storeURLs, layout: resolvedLayout, isStoredInMemoryOnly: false)
+            let shouldAttemptLegacyCopy = shouldAttemptLegacyPreferencesCopy(storeURLs: storeURLs, layout: resolvedLayout)
+            let legacyPreferences = legacyPreferencesSnapshotsIfNeeded(storeURLs: storeURLs, shouldAttemptCopy: shouldAttemptLegacyCopy)
             let container = try makeModelContainer(
                 iCloudSyncEnabled: iCloudSyncEnabled,
                 isStoredInMemoryOnly: false,
@@ -561,9 +569,12 @@ final class ProgressStoreService: ObservableObject {
                 layout: resolvedLayout
             )
             try copyLegacyPreferencesIfNeeded(legacyPreferences, into: container, layout: resolvedLayout)
+            if shouldAttemptLegacyCopy {
+                markLegacyPreferencesCopyComplete(storeURLs: storeURLs)
+            }
             return try ProgressStoreService(
                 container: container,
-                morseCourseProgressURL: storeURLs.morseCourseProgressURL,
+                storeURLs: storeURLs,
                 iCloudSyncEnabled: iCloudSyncEnabled
             )
         } catch {
@@ -584,7 +595,7 @@ final class ProgressStoreService: ObservableObject {
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         return try ProgressStoreService(
             container: container,
-            morseCourseProgressURL: directory.appending(path: "MorseCourseProgress.json"),
+            storeURLs: ProgressStoreURLs(progressDirectory: directory),
             iCloudSyncEnabled: iCloudSyncEnabled
         )
     }
@@ -703,26 +714,39 @@ final class ProgressStoreService: ObservableObject {
         )
     }
 
+    private static func shouldAttemptLegacyPreferencesCopy(
+        storeURLs: ProgressStoreURLs,
+        layout: ProgressStoreConfigurationLayout
+    ) -> Bool {
+        guard layout == .split else { return false }
+        guard !FileManager.default.fileExists(atPath: storeURLs.legacyPreferencesCopyMarkerURL.path(percentEncoded: false)) else { return false }
+        guard !FileManager.default.fileExists(atPath: storeURLs.preferencesStoreURL.path(percentEncoded: false)) else { return false }
+        return FileManager.default.fileExists(atPath: storeURLs.persistentStoreURL.path(percentEncoded: false))
+    }
+
     private static func legacyPreferencesSnapshotsIfNeeded(
         storeURLs: ProgressStoreURLs,
-        layout: ProgressStoreConfigurationLayout,
-        isStoredInMemoryOnly: Bool
-    ) throws -> [PreferencesEntitySnapshot] {
-        guard layout == .split, !isStoredInMemoryOnly else { return [] }
-        guard FileManager.default.fileExists(atPath: storeURLs.persistentStoreURL.path(percentEncoded: false)) else { return [] }
-        let legacyContainer = try makeLegacySingleStoreModelContainer(isStoredInMemoryOnly: false, storeURLs: storeURLs)
-        let legacyContext = ModelContext(legacyContainer)
-        let descriptor = FetchDescriptor<PreferencesEntity>(sortBy: [SortDescriptor(\.key)])
-        return try legacyContext.fetch(descriptor).map { entity in
-            PreferencesEntitySnapshot(
-                key: entity.key,
-                practiceMode: entity.practiceMode,
-                examTimerEnabled: entity.examTimerEnabled,
-                language: entity.language,
-                theme: entity.theme,
-                archivedLessonProgressData: entity.archivedLessonProgressData,
-                archivedLessonQuizAttemptsData: entity.archivedLessonQuizAttemptsData
-            )
+        shouldAttemptCopy: Bool
+    ) -> [PreferencesEntitySnapshot] {
+        guard shouldAttemptCopy else { return [] }
+        do {
+            let legacyContainer = try makeLegacySingleStoreModelContainer(isStoredInMemoryOnly: false, storeURLs: storeURLs)
+            let legacyContext = ModelContext(legacyContainer)
+            let descriptor = FetchDescriptor<PreferencesEntity>(sortBy: [SortDescriptor(\.key)])
+            return try legacyContext.fetch(descriptor).map { entity in
+                PreferencesEntitySnapshot(
+                    key: entity.key,
+                    practiceMode: entity.practiceMode,
+                    examTimerEnabled: entity.examTimerEnabled,
+                    language: entity.language,
+                    theme: entity.theme,
+                    archivedLessonProgressData: entity.archivedLessonProgressData,
+                    archivedLessonQuizAttemptsData: entity.archivedLessonQuizAttemptsData
+                )
+            }
+        } catch {
+            NSLog("CanadianHam: unable to copy legacy preferences into split store: %@", String(describing: error))
+            return []
         }
     }
 
@@ -748,6 +772,13 @@ final class ProgressStoreService: ObservableObject {
             context.insert(entity)
         }
         try context.save()
+    }
+
+    private static func markLegacyPreferencesCopyComplete(storeURLs: ProgressStoreURLs) {
+        try? FileManager.default.createDirectory(at: storeURLs.legacyPreferencesCopyMarkerURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+        if !FileManager.default.fileExists(atPath: storeURLs.legacyPreferencesCopyMarkerURL.path(percentEncoded: false)) {
+            FileManager.default.createFile(atPath: storeURLs.legacyPreferencesCopyMarkerURL.path(percentEncoded: false), contents: Data(), attributes: nil)
+        }
     }
 
 #if ICLOUD_SYNC
@@ -786,12 +817,14 @@ final class ProgressStoreService: ObservableObject {
     static func resetPersistentStoreFiles() {
         UserDefaults.standard.removeObject(forKey: activeBankPreferenceKey)
         ICloudSyncSettings.clearStoredOptIn()
-        for url in [persistentStoreURL, preferencesStoreURL] {
+        let urls = ProgressStoreURLs.standard
+        for url in [urls.persistentStoreURL, urls.preferencesStoreURL] {
             for suffix in ["", "-shm", "-wal"] {
                 try? FileManager.default.removeItem(at: URL(fileURLWithPath: url.path + suffix))
             }
         }
-        try? FileManager.default.removeItem(at: morseCourseProgressURL)
+        try? FileManager.default.removeItem(at: urls.legacyPreferencesCopyMarkerURL)
+        try? FileManager.default.removeItem(at: urls.morseCourseProgressURL)
     }
 
     func updateICloudSyncOptIn(_ enabled: Bool, defaults: UserDefaults = .standard) {
@@ -977,6 +1010,7 @@ final class ProgressStoreService: ObservableObject {
             try removeMorseCourseProgressIfPresent()
             UserDefaults.standard.removeObject(forKey: Self.activeBankPreferenceKey)
             preferences = .default
+            Self.markLegacyPreferencesCopyComplete(storeURLs: storeURLs)
             try context.save()
             objectWillChange.send()
         } catch {

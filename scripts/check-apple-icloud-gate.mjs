@@ -29,6 +29,8 @@ const forbiddenDefaultPatterns = [
   /-DICLOUD_SYNC\b/,
   /SWIFT_ACTIVE_COMPILATION_CONDITIONS[\s\S]*ICLOUD_SYNC/,
   /CloudKit\.entitlements/,
+  /CloudKit\.Info\.plist/,
+  /INFOPLIST_FILE[\s\S]*CloudKit\.Info\.plist/,
 ];
 
 for (const pattern of forbiddenDefaultPatterns.slice(0, 4)) {
@@ -70,6 +72,10 @@ if (!cloudMacEntitlements.includes('<key>com.apple.developer.aps-environment</ke
 }
 if (cloudMacEntitlements.includes('<key>aps-environment</key>')) {
   fail('macOS CloudKit entitlements must not use the iOS aps-environment key.');
+}
+
+if (/CloudKit\.Info\.plist in Resources/.test(pbxproj)) {
+  fail('CloudKit Info.plist must not be copied in any resources build phase.');
 }
 
 const buildConfigPattern = /[A-F0-9]+ \/\* (Debug|Release|DebugCloudKit) \*\/ = \{[\s\S]*?isa = XCBuildConfiguration;[\s\S]*?name = \1;[\s\S]*?\n\t+\};/g;

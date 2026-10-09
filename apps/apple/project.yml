@@ -47,6 +47,7 @@ targets:
       - path: CanadianHam
         excludes:
           - Resources/Assets.xcassets
+          - Resources/CanadianHam.iOS.CloudKit.Info.plist
       - path: CanadianHam/Resources/Assets.xcassets
       - path: CanadianHam/Resources/Localizable.xcstrings
         type: file
