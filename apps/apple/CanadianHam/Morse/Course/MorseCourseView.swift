@@ -203,6 +203,9 @@ struct MorseCourseView: View {
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
 #endif
+        .navigationDestination(isPresented: $showingSession) {
+            sessionScreen()
+        }
     }
 
     private func lessonButton(lesson: MorseCourseLesson, state: MorseLessonState) -> some View {
