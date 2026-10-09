@@ -21,7 +21,7 @@ Relevant docs: [`../docs/architecture.md`](../docs/architecture.md), [`../docs/r
 All Morse fixtures are plain JSON and have `schemaVersion: 1` with one of these `kind` values:
 
 - `morse-timing`: text-to-timed-symbol profiles, including PARIS at `isedParis` (12.0 s), PARIS at `ric1Literal` (7.6 s), and effective-speed clamping.
-- `morse-word-weighting`: RIC-1 section 8.2 weighted character counts. The RIC-1 section 8.3 fixture is deliberately marked as a synthetic stand-in because [`../docs/proposals/morse-trainer.md`](../docs/proposals/morse-trainer.md) contains only a partial official sample with an ellipsis.
+- `morse-word-weighting`: RIC-1 section 8.2 weighted character counts. It includes the official RIC-1 section 8.3 English sample (Issue 8, May 2025) and the official CIR-1 section 8.3 French sample (8e édition, mai 2025), verbatim, with their weighted counts (task-12.8; sources in [`../docs/exam-facts.md`](../docs/exam-facts.md)).
 - `morse-scoring`: RIC-1 section 8.7 / RIC-3 section 5.2 grading boundaries, including 5 errors passing, 6 failing, and inserted characters counting as errors.
 - `morse-validation`: the RIC-1 section 8.2 character set (`A-Z`, `0-9`, `.`, `,`, `?`, `-`, `/`) and rejection cases.
 

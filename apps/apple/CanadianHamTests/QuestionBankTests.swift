@@ -14,15 +14,16 @@ final class QuestionBankTests: XCTestCase {
         XCTAssertEqual(bank.manifest.counts.categories, 8)
     }
 
-    func testAdvancedBundledJSONDecodesExpectedCountsAndEnglishCategoryFallbacks() throws {
+    func testAdvancedBundledJSONDecodesExpectedCountsAndVerifiedFrenchCategoryNames() throws {
         let bank = try QuestionBankStore.load(bankId: .advanced, from: Bundle(for: Self.self))
 
         XCTAssertEqual(bank.manifest.bankId, CourseBankID.advanced.rawValue)
         XCTAssertEqual(bank.questions.count, 549)
         XCTAssertEqual(bank.subsections.count, 50)
         XCTAssertEqual(bank.categories.count, 7)
-        XCTAssertTrue(bank.categories.allSatisfy { $0.name.fr == nil })
-        XCTAssertEqual(bank.categories.first?.name.resolvedLanguage(for: .french), .english)
+        XCTAssertTrue(bank.categories.allSatisfy { $0.frenchNameStatus == "verified" })
+        XCTAssertEqual(bank.categories.first?.name.fr, "Théorie avancée")
+        XCTAssertEqual(bank.categories.first?.name.resolvedLanguage(for: .french), .french)
     }
 
     func testAdvancedMockExamUsesFiftyQuestionsAndNoHonours() throws {
