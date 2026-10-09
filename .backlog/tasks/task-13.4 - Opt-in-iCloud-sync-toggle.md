@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-09 20:52'
+updated_date: '2026-10-09 20:58'
 labels:
   - apple
   - privacy
@@ -67,6 +67,8 @@ PR #160 Copilot fixes (00f477b, coordinator):
 - The iCloud copy now says question practice and mock exam progress sync, and lesson progress and preferences stay on the device. The About copy says 'development build' (no anglicised 'avec gate').
 - French has no space before ';' (docs/french-style.md), with fr and fr-CA, keys renamed in place.
 Evidence: test:apple-icloud-gate and check:apple-icloud-gate pass; check:apple-l10n exit 0 (catalogue unchanged by the export); check-apple-text-sources; macOS ProgressStoreTests and LocalizationCatalogTests 35/35. The legacy-read retry on transient failure is task-13.5 scope (the gate is off until then).
+
+PR #160 Copilot round 2 (81c55ae, coordinator): check-apple-no-network.sh now scans exact '#if ICLOUD_SYNC' branches too, exempting only 'import CloudKit' and CK*/CloudKit* identifiers, so other networking or analytics in gated code still fails. The plist scan flags UIBackgroundModes and remote-notification everywhere except the one approved gated Info.plist. New negative fixtures (gated import Network, gated URLSession, a background-modes plist) fail as expected; test:apple-network and check:apple-network pass. Account changes currently turn the opt-in off and show sync as off; the already-open container is released on the next launch. Tearing down the live CloudKit container immediately is task-13.5 scope (new AC).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
