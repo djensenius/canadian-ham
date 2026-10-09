@@ -1012,6 +1012,9 @@ final class ProgressStoreService: ObservableObject {
             preferences = .default
             Self.markLegacyPreferencesCopyComplete(storeURLs: storeURLs)
             try context.save()
+            // Reset all data also turns iCloud sync back off, but only once the reset has been saved.
+            ICloudSyncSettings.clearStoredOptIn()
+            isICloudSyncEnabled = false
             objectWillChange.send()
         } catch {
             context.rollback()

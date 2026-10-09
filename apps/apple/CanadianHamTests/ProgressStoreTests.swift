@@ -117,6 +117,19 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(defaultBuildPlan.preferencesDatabase, .none)
     }
 
+    @MainActor
+    func testResetAllDataTurnsICloudSyncOptInOff() throws {
+        let store = try ProgressStoreService.inMemoryForTests()
+        defer { ICloudSyncSettings.clearStoredOptIn() }
+        store.updateICloudSyncOptIn(true)
+        XCTAssertTrue(ICloudSyncSettings.storedOptIn())
+
+        try store.resetAllData()
+
+        XCTAssertFalse(ICloudSyncSettings.storedOptIn(), "Reset all data must turn the iCloud opt-in off")
+        XCTAssertFalse(store.isICloudSyncEnabled)
+    }
+
     func testICloudSyncToggleAndAccountSignalsPreserveLocalProgress() throws {
         let defaultsSuiteName = "ProgressStoreTests.iCloudSync.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: defaultsSuiteName))

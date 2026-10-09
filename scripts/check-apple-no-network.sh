@@ -159,7 +159,8 @@ fi
 network_swift_files=("${swift_files[@]}")
 if [[ ${#swift_files[@]} -gt 0 ]]; then
   sanitized_swift_dir=$(mktemp -d)
-  trap 'rm -rf "$sanitized_swift_dir"' EXIT
+  gated_plist_dir=""
+  trap 'rm -rf "$sanitized_swift_dir"; [[ -n "$gated_plist_dir" ]] && rm -rf "$gated_plist_dir"' EXIT
   network_swift_files=()
   for file in "${swift_files[@]}"; do
     sanitized_file="$sanitized_swift_dir/$file"
