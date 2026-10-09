@@ -1,11 +1,11 @@
 ---
 id: TASK-12.20
 title: 'Morse visual output: follow-ups from the task-12.4 review'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-07 12:14'
-updated_date: '2026-10-08 13:34'
+updated_date: '2026-10-09 18:00'
 labels: []
 dependencies:
   - TASK-12.4
@@ -22,12 +22,12 @@ Why: task-12.4's final review (~/.cache/canadian-ham-reviews/t124-r3.md) approve
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 After the UI-test scroll-settling helper runs, each lower-half audit asserts its target (sending feedback, Morse settings, last course unit) is still visible below the bar
-- [ ] #2 Remove the unreachable luminance-too-high reason (TS and Swift) or document it; add a Swift test at exactly the area cap
-- [ ] #3 Safety-note areas say square points / px² with grouped digits; the web unlit lamp sits on paper (not paper-inset) like Apple
-- [ ] #4 Apple: turning on Reduce Motion or Dim Flashing Lights during beacon playback stops the beacon (or switches to tape) in all four playback owners
-- [ ] #5 The UI-test scroll-settling helper fails (XCTFail) if the scroll view is missing instead of returning silently
-- [ ] #6 Apple export/import includes the Morse settings (including outputMode) with a round-trip test, matching web
+- [x] #1 After the UI-test scroll-settling helper runs, each lower-half audit asserts its target (sending feedback, Morse settings, last course unit) is still visible below the bar
+- [x] #2 Remove the unreachable luminance-too-high reason (TS and Swift) or document it; add a Swift test at exactly the area cap
+- [x] #3 Safety-note areas say square points / px² with grouped digits; the web unlit lamp sits on paper (not paper-inset) like Apple
+- [x] #4 Apple: turning on Reduce Motion or Dim Flashing Lights during beacon playback stops the beacon (or switches to tape) in all four playback owners
+- [x] #5 The UI-test scroll-settling helper fails (XCTFail) if the scroll view is missing instead of returning silently
+- [x] #6 Apple export/import includes the Morse settings (including outputMode) with a round-trip test, matching web
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -40,4 +40,12 @@ Why: task-12.4's final review (~/.cache/canadian-ham-reviews/t124-r3.md) approve
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented visual-output follow-ups: post-settle UI audit assertions now cover sending feedback, Morse settings, and final course unit at apps/apple/CanadianHamUITests/CanadianHamPracticeUITests.swift:1337-1338,:1543-1546,:1551-1554, and scrollUntilPartiallyVisible now XCTFails when no scroll view exists at :2063-2068. Safety-note formatting now uses grouped square points at apps/apple/CanadianHam/Morse/MorseTrainerView.swift:86-104 and web uses px² with the unlit lamp on paper at apps/web/src/lib/i18n.ts:421,:864 and apps/web/src/styles.css:1018-1025. Removed unreachable luminance-too-high from packages/morse-engine/src/morse.ts:72-75 and packages/morse-swift/Sources/CanadianHamMorseEngine/Morse.swift:137-144; exact area-cap Swift coverage is packages/morse-swift/Tests/CanadianHamMorseEngineTests/MorseFixtureTests.swift:178-184. Reduce Motion/Dim Flashing Lights beacon stops route through apps/apple/CanadianHam/Morse/MorseTrainerView.swift:367-402, CopyExam/MorseCopyExamView.swift:234-330 and :491-596, and Course/MorseCourseView.swift:41-45,:498-504. Apple export/import now carries preferences.morse in apps/apple/CanadianHam/Services/ProgressStore.swift:119-138,:619-640 and UI import/export applies it in StudyViews.swift:1621-1655 plus NativeSettingsView.swift:263-305, with round-trip coverage in apps/apple/CanadianHamTests/ProgressStoreTests.swift. Validation passed: pnpm --dir apps/web test src/App.test.tsx src/lib/morseSettings.test.ts (76 tests); pnpm --dir packages/morse-engine test (21 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/morse-swift (4 XCTest tests). A plain swift test without DEVELOPER_DIR failed because xcode-select points at CommandLineTools and XCTest was unavailable.
+
+Final validation passed on tip 6b892eaafeae1c5a29da15f01cdb7da6d860e962. Failed-run record: an earlier full iOS run failed new post-settle checks in testAccessibilityAuditMorseCourseLessonAndSummaryLight/Dark and testAccessibilityAuditMorseSendingMainScreenLight/Dark because assertions required full visibility; after parent guidance, the assertions now use partial below-bar visibility and the audit state is re-settled before performAccessibilityAudit. Required targeted reruns then passed twice: visibility-targeted-1 and visibility-targeted-2 each passed testAccessibilityAuditMorseCourseLessonAndSummaryLight, testAccessibilityAuditMorseCourseLessonAndSummaryDark, and testAccessibilityAuditMorseSendingMainScreenDark (3/3 each). Full suites passed on final code: iOS 139/139, macOS 67/67, tvOS 15/15, visionOS 12/12. Relevant passing iOS tests include MorseTrainerTests/testReduceFlashingStopsOnlyRunningVisualBeacon, /testMorseVisualPlaybackPlanUsesBeaconWhenSafeAndTapeWhenRequestedOrReduced, /testMorseBeaconPaletteMatchesDesignTokensAndKeepsAreaAndContrastMargins, ProgressStoreTests/testProgressExportRoundTripsMorseSettingsInWebCompatiblePreferences, and the Morse accessibility audits. Package/web checks passed: pnpm --dir packages/morse-engine test (21/21), DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/morse-swift (4/4 XCTest), pnpm --dir apps/web test src/App.test.tsx src/lib/morseSettings.test.ts (76/76), pnpm typecheck, pnpm test, pnpm build:web, node scripts/check-apple-text-sources.ts, and pnpm check:apple-l10n.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Implemented visual-output follow-ups: lower audit target visibility checks, flash-safety reason cleanup and exact cap test, square-area wording and web lamp styling, reduce-flashing beacon stops, scroll helper failure behavior, and Morse settings export/import round trip. Verified by targeted reruns, web/package checks, and full Apple suites.
+<!-- SECTION:FINAL_SUMMARY:END -->
