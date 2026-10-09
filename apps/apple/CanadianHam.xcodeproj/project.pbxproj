@@ -74,6 +74,7 @@
 		92BA95D6FCD407A66C0ED1E8 /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 5B61FF08B59BD2425E771B49 /* categories.json */; };
 		93A17F0A518F9EFA2B532E3A /* LaunchArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAE5A136902875D58354C00 /* LaunchArguments.swift */; };
 		9405A070EB557B342A128819 /* QuestionBankTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0517B98CAB6282BC63A22BB5 /* QuestionBankTests.swift */; };
+		942070A451CA10AC36A0A7D6 /* ICloudSyncCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD44BDE3AE8019C65CBB1C42 /* ICloudSyncCopy.swift */; };
 		99C0F97A90AE1A49F93825A5 /* CanadianHamTVApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D3A3A58596F0B71F478108 /* CanadianHamTVApp.swift */; };
 		9B089F46411317817CD15DA1 /* CanadianHam-InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B1D63C824E4C00165C3F4961 /* CanadianHam-InfoPlist.strings */; };
 		9D8BD598B9DE34941DFBC88D /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 641771DDA6C72AE924365999 /* manifest.json */; };
@@ -211,6 +212,7 @@
 		B72C0FA8ECBD6EAFA6A5D34F /* AppSettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsModel.swift; sourceTree = "<group>"; };
 		BA2654658DFD1D2481E7193B /* MorseSendingPracticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseSendingPracticeView.swift; sourceTree = "<group>"; };
 		BB023709CD1B8683292D109F /* ProgressModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressModels.swift; sourceTree = "<group>"; };
+		BD44BDE3AE8019C65CBB1C42 /* ICloudSyncCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICloudSyncCopy.swift; sourceTree = "<group>"; };
 		C28A9D49438EBAC030569D6E /* CanadianHamVisionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanadianHamVisionTests.swift; sourceTree = "<group>"; };
 		C5F42909CFD2242DE9CFD019 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C782F628EB577B33F58A9306 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 		00F571B4CA8A6975FB0E6572 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				BD44BDE3AE8019C65CBB1C42 /* ICloudSyncCopy.swift */,
 				DCAE5A136902875D58354C00 /* LaunchArguments.swift */,
 			);
 			path = Support;
@@ -1107,6 +1110,7 @@
 				02D2C3FC60500A28C043164F /* AppleStudyEngine.swift in Sources */,
 				1C042178F4987890B4904111 /* CanadianHamApp.swift in Sources */,
 				7E2869C0EF3CD0A21C072580 /* EngineShuffle.swift in Sources */,
+				942070A451CA10AC36A0A7D6 /* ICloudSyncCopy.swift in Sources */,
 				93A17F0A518F9EFA2B532E3A /* LaunchArguments.swift in Sources */,
 				EA651611EAE395366553C319 /* LearnViews.swift in Sources */,
 				59EC5C3A19D8FF6609993C84 /* MorseAudioDriver.swift in Sources */,

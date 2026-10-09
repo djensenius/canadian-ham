@@ -43,9 +43,11 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
   xbuild -exportLocalizations \
   -project "$PROJECT" \
   -scheme CanadianHam \
+  -configuration DebugCloudKit \
   -derivedDataPath "$DERIVED_DATA" \
   -localizationPath "$LOCALIZATION_DIR" \
-  -exportLanguage fr
+  -exportLanguage fr \
+  CODE_SIGNING_ALLOWED=NO
 
 assert_catalog_unchanged "xbuild -exportLocalizations"
 
@@ -105,6 +107,16 @@ for file_node in root.findall("x:file", ns):
             missing.append(f"{original}: {unit_id} -> {source}")
 
 catalog_keys = set(catalog.get("strings", {}).keys())
+gated_icloud_keys = {
+    "iCloud Sync",
+    "Sync learning progress with iCloud",
+    "Off by default. When enabled, learning progress can sync through your private iCloud database after restart; preferences stay local on this device.",
+    "Off by default. When enabled, learning progress can sync through your private iCloud database after restart; preferences stay local on this Mac.",
+    "iCloud Sync will turn on after you restart the app.",
+    "iCloud Sync will turn off after you restart the app.",
+    "No accounts, analytics, telemetry, third-party SDKs, or developer-operated servers. iCloud Sync is optional and off until you turn it on; import and export use local files you choose.",
+    "This gated Apple app includes bundled content, no accounts, analytics, telemetry, ads, remote config, third-party SDKs, or developer-operated servers. iCloud Sync is optional and off until you turn it on; import and export use local files you choose.",
+}
 compiled_keys = set()
 if derived_data.exists():
     for stringsdata_path in derived_data.glob("Build/Intermediates.noindex/*.build/**/*.stringsdata"):
@@ -124,14 +136,14 @@ if not compiled_keys:
     print("No compiler stringsdata keys found for Apple localization catalogue stale check.", file=sys.stderr)
     sys.exit(1)
 
-stale_by_compiler = sorted(catalog_keys - compiled_keys)
+stale_by_compiler = sorted(catalog_keys - compiled_keys - gated_icloud_keys)
 if stale_by_compiler:
     print("Apple localization catalogue keys missing from compiler stringsdata:", file=sys.stderr)
     for key in stale_by_compiler:
         print(f"- {key}", file=sys.stderr)
     sys.exit(1)
 
-stale_by_export = sorted(catalog_keys - exported_catalog_keys)
+stale_by_export = sorted(catalog_keys - exported_catalog_keys - gated_icloud_keys)
 if stale_by_export:
     print("Apple localization catalogue keys missing from exported XLIFF:", file=sys.stderr)
     for key in stale_by_export:

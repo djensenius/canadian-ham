@@ -89,13 +89,13 @@ private struct NativeGeneralSettingsTab: View {
                 }
                 .accessibilityLabel(Text("Appearance")) // l10n: localized
 #if ICLOUD_SYNC
-                Toggle("Sync learning progress with iCloud", isOn: Binding(
+                Toggle(ICloudSyncCopy.toggleLabel, isOn: Binding(
                     get: { progressStore.isICloudSyncEnabled },
                     set: { enabled in updateICloudSync(enabled, progressStore: progressStore) }
                 )) // l10n: localized
                 .accessibilityIdentifier("native-icloud-sync-toggle")
-                .accessibilityLabel(Text("Sync learning progress with iCloud")) // l10n: localized
-                Text("Off by default. When enabled, learning progress can sync through your private iCloud database after restart; preferences stay local on this Mac.") // l10n: localized
+                .accessibilityLabel(Text(ICloudSyncCopy.toggleLabel)) // l10n: localized
+                Text(ICloudSyncCopy.macExplanation) // l10n: localized
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
 #endif
                 if !statusMessage.isEmpty {
@@ -150,8 +150,8 @@ private struct NativeGeneralSettingsTab: View {
         progressStore.updateICloudSyncOptIn(enabled)
         appSettings.recordDataChanged()
         statusMessage = enabled
-            ? String(localized: "iCloud Sync will turn on after you restart the app.")
-            : String(localized: "iCloud Sync will turn off after you restart the app.")
+            ? ICloudSyncCopy.enabledAfterRestart
+            : ICloudSyncCopy.disabledAfterRestart
         errorMessage = ""
     }
 #endif
