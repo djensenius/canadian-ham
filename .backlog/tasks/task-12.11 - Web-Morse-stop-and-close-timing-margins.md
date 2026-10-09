@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-03 03:18'
-updated_date: '2026-10-09 03:14'
+updated_date: '2026-10-09 03:26'
 labels:
   - web
   - morse
@@ -295,6 +295,8 @@ visionOS: 12 passed tests
 - CanadianHamVisionUITests.CanadianHamVisionUITests/testMorseScreenShowsPlaybackControls
 - CanadianHamVisionUITests.CanadianHamVisionUITests/testPracticeAccessibilityAuditLightAndDark
 - CanadianHamVisionUITests.CanadianHamVisionUITests/testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances
+
+PR #157 Copilot fix (c46b652, coordinator): WebMorsePlayer remembers a pending drain when stop() fades live audio, so close() still waits ramp + latency + margin when useWebMorseOutput calls stop() first (the production path). New tests 'still drains the fade when the output controller calls stop() before close()' (fails without the fix) and 'closes immediately when nothing has played'. Web typecheck and tests pass; web-only change, no Apple runs needed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
