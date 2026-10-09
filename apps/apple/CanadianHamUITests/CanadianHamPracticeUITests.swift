@@ -83,8 +83,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Lesson 1 session"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Exercise 1 of")).firstMatch.waitForExistence(timeout: 5), "First lesson should start on exercise 1")
         tapCompactBack(in: app)
-        XCTAssertTrue(app.staticTexts["Unit 1"].firstMatch.waitForExistence(timeout: 5), "Back should return to Unit 1")
-        XCTAssertTrue(app.buttons["morse-course-lesson-1"].firstMatch.waitForExistence(timeout: 5), "Back should show the lesson list")
+        XCTAssertTrue(app.buttons["morse-course-unit-1"].firstMatch.waitForExistence(timeout: 5), "Back should return to the course list with Unit 1 visible")
+        openFirstMorseUnit(in: app)
+        XCTAssertTrue(app.buttons["morse-course-lesson-1"].firstMatch.waitForExistence(timeout: 5), "Reopening Unit 1 should show the lesson list")
         tapFirstMorseLesson(in: app)
         XCTAssertTrue(app.staticTexts["Lesson 1 session"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Exercise 1 of")).firstMatch.waitForExistence(timeout: 5), "Reopening lesson 1 should create a fresh exercise 1 session")
@@ -152,14 +153,17 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
         tapCompactBack(in: app)
         tapCompactBack(in: app)
-        XCTAssertTrue(app.staticTexts["Unit 1"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["morse-course-unit-1"].firstMatch.waitForExistence(timeout: 5))
+        openFirstMorseUnit(in: app)
         tapFirstMorseLesson(in: app)
         XCTAssertTrue(app.staticTexts["Lesson 1 session"].firstMatch.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Exercise 1 of")).firstMatch.waitForExistence(timeout: 5), "Re-entering a finished lesson should start a fresh session")
 
         tapCompactBack(in: app)
-        tapCompactBack(in: app)
         let review = app.buttons["morse-course-review"].firstMatch
+        if !review.waitForExistence(timeout: 2) {
+            tapCompactBack(in: app)
+        }
         XCTAssertTrue(review.waitForExistence(timeout: 5))
         scrollUntilHittable(review, in: app, maxSwipes: 8)
         review.tap()
@@ -558,7 +562,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(debugStatus.waitForExistence(timeout: 5))
         XCTAssertEqual(debugStatus.label, "Course playback active", "The course playback fixture should prove audio started before the stop path is exercised")
         tapCompactBack(in: app)
-        tapFirstMorseLesson(in: app)
         XCTAssertEqual(debugStatus.label, "Course playback stopped", "Back from the pushed course session should stop course playback before another owner starts")
         returnFromMorseCourseToMorseHome(in: app)
 

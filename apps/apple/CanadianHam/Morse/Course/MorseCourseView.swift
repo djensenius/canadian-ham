@@ -71,6 +71,14 @@ struct MorseCourseView: View {
                 if let errorMessage {
                     MessagePanel(title: "Morse course error", message: errorMessage, kind: .warning)
                 }
+#if DEBUG
+                if ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseCoursePlaybackDebugStatus") {
+                    Text(verbatim: isPlaying ? "Course playback active" : "Course playback stopped") // l10n: verbatim DEBUG-only UI test hook
+                        .font(DesignTokens.FontScale.caption)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityIdentifier("morse-course-playback-debug-status")
+                }
+#endif
                 if let course, let progress {
                     courseStats(course: course, progress: progress)
                     Button {
@@ -203,9 +211,6 @@ struct MorseCourseView: View {
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
 #endif
-        .navigationDestination(isPresented: $showingSession) {
-            sessionScreen()
-        }
     }
 
     private func lessonButton(lesson: MorseCourseLesson, state: MorseLessonState) -> some View {
