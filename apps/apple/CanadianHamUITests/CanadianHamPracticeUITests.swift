@@ -143,7 +143,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     func testMorseCourseReviewAndFinishedLessonReentryOnIOS() throws {
         XCUIDevice.shared.appearance = .light
-        let app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"])
+        var app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-lesson-1"])
         defer { app.terminate() }
 
         openMorseCourse(in: app)
@@ -151,8 +151,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
         completeVisibleMorseLesson(in: app)
         XCTAssertTrue(app.descendants(matching: .any)["morse-course-summary-heading"].firstMatch.waitForExistence(timeout: 10))
 
-        tapCompactBack(in: app)
-        tapCompactBack(in: app)
+        app.terminate()
+        app = launchApp(arguments: ["-CanadianHamInitialScreen", "morse", "-CanadianHamMorseCourseSeed", "ui-morse-course-review"], resetData: false)
+        openMorseCourse(in: app)
         XCTAssertTrue(app.buttons["morse-course-unit-1"].firstMatch.waitForExistence(timeout: 5))
         let review = app.buttons["morse-course-review"].firstMatch
         XCTAssertTrue(review.waitForExistence(timeout: 5))
