@@ -1437,6 +1437,134 @@
           }
         ]
       }
+    },
+    {
+      "id": "readiness-advanced-pass-ready-with-two-exams-at-exactly-seventy-percent",
+      "input": {
+        "bankId": "advanced-synthetic",
+        "completedExams": [
+          {
+            "submittedAt": "2026-01-05T00:00:00.000Z",
+            "score": {
+              "correct": 35,
+              "total": 50,
+              "percent": 70
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "A-001",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-002",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-003",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-004",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-005",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-006",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-007",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              }
+            ]
+          },
+          {
+            "submittedAt": "2026-01-04T00:00:00.000Z",
+            "score": {
+              "correct": 35,
+              "total": 50,
+              "percent": 70
+            },
+            "categoryBreakdown": [
+              {
+                "categoryId": "A-001",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-002",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-003",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-004",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-005",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-006",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              },
+              {
+                "categoryId": "A-007",
+                "correct": 8,
+                "total": 10,
+                "percent": 80
+              }
+            ]
+          }
+        ],
+        "dueReviewCount": 0
+      },
+      "expectedOutput": {
+        "state": "pass-ready",
+        "consideredExamCount": 2,
+        "consideredSubmittedAt": [
+          "2026-01-05T00:00:00.000Z",
+          "2026-01-04T00:00:00.000Z"
+        ],
+        "reasons": [
+          {
+            "type": "exam-threshold",
+            "threshold": 70,
+            "countAtOrAbove": 2
+          }
+        ]
+      }
     }
   ]
 }

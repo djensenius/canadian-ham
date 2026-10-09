@@ -495,6 +495,12 @@ function buildReadinessFixture(): unknown {
       0,
       SYNTHETIC_ADVANCED_BANK_ID,
     ),
+    makeReadinessCase(
+      "readiness-advanced-pass-ready-with-two-exams-at-exactly-seventy-percent",
+      [makeAdvancedAttempt("2026-01-05T00:00:00.000Z", 35), makeAdvancedAttempt("2026-01-04T00:00:00.000Z", 35)],
+      0,
+      SYNTHETIC_ADVANCED_BANK_ID,
+    ),
   ];
 
   return {

@@ -425,11 +425,7 @@ final class ProgressStoreService: ObservableObject {
 
     static func open() throws -> ProgressStoreService {
         do {
-            let schema = Schema([
-                QuestionProgressEntity.self,
-                ExamAttemptEntity.self,
-                PreferencesEntity.self,
-            ])
+            let schema = Schema(versionedSchema: CanadianHamProgressSchemaV2.self)
             let configuration = ModelConfiguration(schema: schema, url: persistentStoreURL, cloudKitDatabase: .none)
             let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
             return try ProgressStoreService(container: container)
@@ -439,11 +435,7 @@ final class ProgressStoreService: ObservableObject {
     }
 
     static func inMemoryForTests() throws -> ProgressStoreService {
-        let schema = Schema([
-            QuestionProgressEntity.self,
-            ExamAttemptEntity.self,
-            PreferencesEntity.self,
-        ])
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV2.self)
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
         let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
         let directory = FileManager.default.temporaryDirectory
@@ -560,7 +552,7 @@ final class ProgressStoreService: ObservableObject {
     func saveExamAttempt(_ attempt: StoredExamAttempt) throws {
         let data = try encoder.encode(attempt)
         // Web exports may regenerate local IDs; submittedAt is canonical and import validation forbids duplicates.
-        if let existing = try examAttemptEntity(id: attempt.id) ?? examAttemptEntity(submittedAt: attempt.submittedAt) {
+        if let existing = try examAttemptEntity(id: attempt.id, submittedAt: attempt.submittedAt) {
             existing.id = attempt.id
             existing.bankId = attempt.bankId
             existing.seed = attempt.seed
@@ -662,8 +654,8 @@ final class ProgressStoreService: ObservableObject {
                 throw ProgressStoreInjectedFailure.importAfterDelete
             }
 #endif
-            // Commit deletions before reinserting the same unique IDs; SwiftData can otherwise
-            // enforce @Attribute(.unique) against the deleted in-memory objects during one save.
+            // Commit deletions before reinserting replacement records so the bank-scoped
+            // replace-all import has a clean rollback boundary.
             try context.save()
             for record in data.questionProgress {
                 try upsertQuestionProgress(record)
@@ -802,9 +794,18 @@ final class ProgressStoreService: ObservableObject {
     }
 
     private func questionProgressEntity(questionId: String) throws -> QuestionProgressEntity? {
-        var descriptor = FetchDescriptor<QuestionProgressEntity>(predicate: #Predicate { $0.questionId == questionId })
-        descriptor.fetchLimit = 1
-        return try context.fetch(descriptor).first
+        let entities = try questionProgressEntities(questionId: questionId)
+        guard let survivor = entities.first else { return nil }
+        for duplicate in entities.dropFirst() {
+            context.delete(duplicate)
+        }
+        return survivor
+    }
+
+    private func questionProgressEntities(questionId: String) throws -> [QuestionProgressEntity] {
+        let targetQuestionId = questionId
+        let descriptor = FetchDescriptor<QuestionProgressEntity>(predicate: #Predicate { $0.questionId == targetQuestionId })
+        return try context.fetch(descriptor)
     }
 
     private func deleteQuestionProgress(bankId: String) throws {
@@ -823,23 +824,54 @@ final class ProgressStoreService: ObservableObject {
         }
     }
 
-    private func examAttemptEntity(id: String) throws -> ExamAttemptEntity? {
-        var descriptor = FetchDescriptor<ExamAttemptEntity>(predicate: #Predicate { $0.id == id })
-        descriptor.fetchLimit = 1
-        return try context.fetch(descriptor).first
+    private func examAttemptEntity(id: String, submittedAt: String? = nil) throws -> ExamAttemptEntity? {
+        let idMatches = try examAttemptEntities(id: id)
+        let submittedAtMatches = try submittedAt.map { try examAttemptEntities(submittedAt: $0) } ?? []
+        let matches = uniqueExamAttemptEntities(idMatches + submittedAtMatches)
+        guard let survivor = matches.first else { return nil }
+        for duplicate in matches.dropFirst() {
+            context.delete(duplicate)
+        }
+        return survivor
     }
 
     private func examAttemptEntity(submittedAt: String) throws -> ExamAttemptEntity? {
-        var descriptor = FetchDescriptor<ExamAttemptEntity>(predicate: #Predicate { $0.submittedAt == submittedAt })
-        descriptor.fetchLimit = 1
-        return try context.fetch(descriptor).first
+        let entities = try examAttemptEntities(submittedAt: submittedAt)
+        guard let survivor = entities.first else { return nil }
+        for duplicate in entities.dropFirst() {
+            context.delete(duplicate)
+        }
+        return survivor
+    }
+
+    private func examAttemptEntities(id: String) throws -> [ExamAttemptEntity] {
+        let targetId = id
+        let descriptor = FetchDescriptor<ExamAttemptEntity>(predicate: #Predicate { $0.id == targetId })
+        return try context.fetch(descriptor)
+    }
+
+    private func examAttemptEntities(submittedAt: String) throws -> [ExamAttemptEntity] {
+        let targetSubmittedAt = submittedAt
+        let descriptor = FetchDescriptor<ExamAttemptEntity>(predicate: #Predicate { $0.submittedAt == targetSubmittedAt })
+        return try context.fetch(descriptor)
+    }
+
+    private func uniqueExamAttemptEntities(_ entities: [ExamAttemptEntity]) -> [ExamAttemptEntity] {
+        var seen = Set<PersistentIdentifier>()
+        return entities.filter { entity in
+            seen.insert(entity.persistentModelID).inserted
+        }
     }
 
     private func existingPreferencesEntity() throws -> PreferencesEntity? {
         let defaultKey = PreferencesEntity.defaultKey
-        var descriptor = FetchDescriptor<PreferencesEntity>(predicate: #Predicate { $0.key == defaultKey })
-        descriptor.fetchLimit = 1
-        return try context.fetch(descriptor).first
+        let descriptor = FetchDescriptor<PreferencesEntity>(predicate: #Predicate { $0.key == defaultKey })
+        let entities = try context.fetch(descriptor)
+        guard let survivor = entities.first else { return nil }
+        for duplicate in entities.dropFirst() {
+            context.delete(duplicate)
+        }
+        return survivor
     }
 
     private func preferencesEntity(createIfMissing: Bool, saveIfCreated: Bool = true) throws -> PreferencesEntity {
@@ -874,14 +906,23 @@ final class ProgressStoreService: ObservableObject {
 
     private func saveExamAttemptWithoutSave(_ attempt: StoredExamAttempt) throws {
         let data = try encoder.encode(attempt)
-        context.insert(ExamAttemptEntity(
-            id: attempt.id,
-            bankId: attempt.bankId,
-            seed: attempt.seed,
-            startedAt: attempt.startedAt,
-            submittedAt: attempt.submittedAt,
-            payloadData: data
-        ))
+        if let existing = try examAttemptEntity(id: attempt.id, submittedAt: attempt.submittedAt) {
+            existing.id = attempt.id
+            existing.bankId = attempt.bankId
+            existing.seed = attempt.seed
+            existing.startedAt = attempt.startedAt
+            existing.submittedAt = attempt.submittedAt
+            existing.payloadData = data
+        } else {
+            context.insert(ExamAttemptEntity(
+                id: attempt.id,
+                bankId: attempt.bankId,
+                seed: attempt.seed,
+                startedAt: attempt.startedAt,
+                submittedAt: attempt.submittedAt,
+                payloadData: data
+            ))
+        }
     }
 
     private func snapshotForRollback() throws -> ProgressStoreSnapshot {

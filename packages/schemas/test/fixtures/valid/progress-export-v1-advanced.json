@@ -1,0 +1,57 @@
+{
+  "schema": "canadian-ham.progress-export",
+  "version": 1,
+  "exportedAt": "2026-01-02T03:04:05.000Z",
+  "bankId": "advanced-2025-02-04",
+  "questionProgress": [
+    {
+      "questionId": "A-001-001-001",
+      "bankId": "advanced-2025-02-04",
+      "attempts": 1,
+      "correctAttempts": 1,
+      "lastAttemptedAt": "2026-01-02T03:00:00.000Z",
+      "lastResult": "correct",
+      "recentResults": [true],
+      "leitner": { "box": 1, "dueAt": "2026-01-03T03:00:00.000Z" },
+      "notes": null
+    }
+  ],
+  "examAttempts": [
+    {
+      "id": "attempt-2026-01-02T03:10:00.000Z-local-advanced-fixture",
+      "bankId": "advanced-2025-02-04",
+      "mode": "mock-exam",
+      "seed": "advanced-fixture",
+      "startedAt": "2026-01-02T03:00:00.000Z",
+      "submittedAt": "2026-01-02T03:10:00.000Z",
+      "timer": { "enabled": false, "secondsAllowed": null, "secondsElapsed": 600 },
+      "items": [
+        {
+          "position": 1,
+          "questionId": "A-001-001-001",
+          "subsectionId": "A-001-001",
+          "categoryId": "A-001",
+          "choicePermutation": [0, 1, 2, 3],
+          "selectedSourceIndex": 0,
+          "isCorrect": true,
+          "flagged": false
+        }
+      ],
+      "score": {
+        "bankId": "advanced-2025-02-04",
+        "correct": 1,
+        "total": 1,
+        "percent": 100,
+        "passed": true,
+        "honours": false,
+        "categoryBreakdown": [
+          { "categoryId": "A-001", "correct": 1, "total": 1, "percent": 100 }
+        ],
+        "weakSubsectionIds": []
+      }
+    }
+  ],
+  "lessonProgress": [],
+  "lessonQuizAttempts": [],
+  "preferences": { "practiceMode": "review-later", "examTimerEnabled": false, "theme": "system", "activeBankId": "advanced-2025-02-04" }
+}
