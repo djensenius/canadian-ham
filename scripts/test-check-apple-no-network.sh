@@ -208,6 +208,20 @@ cat > "$background_root/apps/apple/Info.plist" <<'PLIST'
 <plist version="1.0"><dict><key>UIBackgroundModes</key><array><string>remote-notification</string></array></dict></plist>
 PLIST
 assert_fails_with_labels "background-modes-plist" "$background_root" "forbidden network client/server, iCloud, local-network, or transport-security entitlement/Info key"
+gated_plist_root=$(make_fixture gated-info-plist-extra-key)
+mkdir -p "$gated_plist_root/apps/apple/CanadianHam/Resources"
+cat > "$gated_plist_root/apps/apple/CanadianHam/Resources/CanadianHam.iOS.CloudKit.Info.plist" <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0"><dict><key>UIBackgroundModes</key><array><string>remote-notification</string></array><key>NSAppTransportSecurity</key><dict><key>NSAllowsArbitraryLoads</key><true/></dict></dict></plist>
+PLIST
+assert_fails_with_labels "gated-info-plist-extra-key" "$gated_plist_root" "forbidden network client/server, iCloud, local-network, or transport-security entitlement/Info key"
+gated_plist_ok_root=$(make_fixture gated-info-plist-approved)
+mkdir -p "$gated_plist_ok_root/apps/apple/CanadianHam/Resources"
+cat > "$gated_plist_ok_root/apps/apple/CanadianHam/Resources/CanadianHam.iOS.CloudKit.Info.plist" <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0"><dict><key>UIBackgroundModes</key><array><string>remote-notification</string></array></dict></plist>
+PLIST
+assert_passes "gated-info-plist-approved" "$gated_plist_ok_root"
 
 url_label="unexpected URL literal in Swift source"
 assert_swift_sample_fails_with_label "url-mailto" "let supportEmail = \"mailto:help@example.test\"" "$url_label"

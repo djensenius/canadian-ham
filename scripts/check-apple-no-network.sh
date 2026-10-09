@@ -236,8 +236,15 @@ if [[ ${#plist_files[@]} -gt 0 ]]; then
   network_plist_files=()
   for file in "${plist_files[@]}"; do
     [[ "$file" == *CloudKit.entitlements ]] && continue
-    # The one approved gated Info.plist (used only by DebugCloudKit) may declare remote notifications.
-    [[ "$file" == *apps/apple/CanadianHam/Resources/CanadianHam.iOS.CloudKit.Info.plist ]] && continue
+    # The one approved gated Info.plist (DebugCloudKit only) may declare the remote-notification
+    # background mode, and nothing else: scan a copy with just those two tokens removed.
+    if [[ "$file" == *apps/apple/CanadianHam/Resources/CanadianHam.iOS.CloudKit.Info.plist ]]; then
+      gated_plist_dir=${gated_plist_dir:-$(mktemp -d)}
+      gated_plist_copy="$gated_plist_dir/CanadianHam.iOS.CloudKit.Info.plist"
+      sed -e 's/UIBackgroundModes//g' -e 's/remote-notification//g' "$file" > "$gated_plist_copy"
+      network_plist_files+=("$gated_plist_copy")
+      continue
+    fi
     network_plist_files+=("$file")
   done
   if [[ ${#network_plist_files[@]} -gt 0 ]]; then
