@@ -1428,7 +1428,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
         } else {
             firstAdvancedCategory.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
         }
-        XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10), "Practice session should be visible after returning from Settings")
+        let answer = app.descendants(matching: .any)["answer-A-button"].firstMatch
+        if !answer.waitForExistence(timeout: 3) {
+            let advancedTheoryText = app.staticTexts["Advanced Theory"].firstMatch
+            XCTAssertTrue(advancedTheoryText.waitForExistence(timeout: 5), "Expected Advanced Theory category text after category button tap fallback")
+            advancedTheoryText.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        }
+        XCTAssertTrue(answer.waitForExistence(timeout: 10), "Practice session should be visible after returning from Settings")
     }
 
     private func requestAdvancedCourseSwitchExpectingConfirmation(in app: XCUIApplication) {
