@@ -61,6 +61,52 @@ for (const [label, text] of [
     }
   }
 }
+// Exact entitlement scope: only the approved keys, each with exactly the approved value.
+function parseTopLevelEntitlements(text) {
+  const entries = new Map();
+  const pattern = /<key>([^<]+)<\/key>\s*(<string>([^<]*)<\/string>|<true\/>|<false\/>|<array>([\s\S]*?)<\/array>)/g;
+  for (const match of text.matchAll(pattern)) {
+    let value;
+    if (match[3] !== undefined) value = match[3];
+    else if (match[2] === '<true/>') value = true;
+    else if (match[2] === '<false/>') value = false;
+    else value = [...(match[4] ?? '').matchAll(/<string>([^<]*)<\/string>/g)].map((item) => item[1]);
+    entries.set(match[1], value);
+  }
+  return entries;
+}
+const containerScope = ['iCloud.com.djensenius.CanadianHam'];
+const serviceScope = ['CloudKit'];
+for (const [label, text, required, optional] of [
+  ['iOS CloudKit entitlements', cloudIOSEntitlements, {
+    'aps-environment': 'development',
+    'com.apple.developer.icloud-container-identifiers': containerScope,
+    'com.apple.developer.icloud-services': serviceScope,
+  }, {}],
+  ['macOS CloudKit entitlements', cloudMacEntitlements, {
+    'com.apple.developer.aps-environment': 'development',
+    'com.apple.developer.icloud-container-identifiers': containerScope,
+    'com.apple.developer.icloud-services': serviceScope,
+  }, {
+    'com.apple.security.app-sandbox': true,
+    'com.apple.security.files.user-selected.read-write': true,
+  }],
+]) {
+  const entries = parseTopLevelEntitlements(text);
+  const allowed = { ...required, ...optional };
+  for (const [key, value] of entries) {
+    if (!(key in allowed)) {
+      fail(`${label} has an entitlement outside the approved scope: ${key}`);
+    } else if (JSON.stringify(value) !== JSON.stringify(allowed[key])) {
+      fail(`${label} ${key} must be exactly ${JSON.stringify(allowed[key])}, found ${JSON.stringify(value)}`);
+    }
+  }
+  for (const key of Object.keys(required)) {
+    if (!entries.has(key)) {
+      fail(`${label} missing ${key}.`);
+    }
+  }
+}
 if (!cloudIOSEntitlements.includes('<key>aps-environment</key>')) {
   fail('iOS CloudKit entitlements must use aps-environment.');
 }

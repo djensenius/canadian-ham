@@ -152,6 +152,11 @@ assertFail('default mac entitlements iCloud leak', { defaultMacEntitlements: '<p
 assertFail('macOS wrong push key', { macEntitlements: '<plist><dict><key>aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.com.djensenius.CanadianHam</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>' }, 'macOS CloudKit entitlements must use com.apple.developer.aps-environment');
 assertFail('iOS wrong push key', { iosEntitlements: '<plist><dict><key>com.apple.developer.aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.com.djensenius.CanadianHam</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>' }, 'iOS CloudKit entitlements must use aps-environment');
 
+const extraContainer = '<plist><dict><key>aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.com.djensenius.CanadianHam</string><string>iCloud.com.example.Other</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>';
+assertFail('iOS extra iCloud container', { iosEntitlements: extraContainer }, 'com.apple.developer.icloud-container-identifiers must be exactly');
+assertFail('macOS extra iCloud service', { macEntitlements: '<plist><dict><key>com.apple.developer.aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.com.djensenius.CanadianHam</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string><string>CloudDocuments</string></array></dict></plist>' }, 'com.apple.developer.icloud-services must be exactly');
+assertFail('iOS extra entitlement key', { iosEntitlements: extraContainer.replace('</dict>', '<key>com.apple.developer.ubiquity-kvstore-identifier</key><string>x</string></dict>') }, 'outside the approved scope');
+
 if (failures !== 0) {
   console.error(`icloud-gate-test: failed with ${failures} failure(s).`);
   process.exit(1);
