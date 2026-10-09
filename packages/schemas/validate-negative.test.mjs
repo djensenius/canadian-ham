@@ -160,21 +160,21 @@ test("generated bank categories require verified French names to be non-empty", 
   );
 });
 
-test("generated Advanced bank categories enforce pending French-name status", () => {
+test("generated Advanced bank categories reject a French name when marked pending", () => {
   const categories = readProjectJson("content/generated/advanced-2025-02-04/categories.json");
-  categories[0] = { ...categories[0], name: { ...categories[0].name, fr: "Nom provisoire" } };
-  assertSchemaRejects(categories, "generated-bank-categories.schema.json", "$[0].name.fr: expected const null, got \"Nom provisoire\"");
+  categories[0] = { ...categories[0], frenchNameStatus: "pending verification" };
+  assertSchemaRejects(categories, "generated-bank-categories.schema.json", "$[0].name.fr: expected const null, got \"Théorie avancée\"");
 });
 
 test("generated Advanced bank categories require verified French names to be non-empty", () => {
   const categories = readProjectJson("content/generated/advanced-2025-02-04/categories.json");
   assertSchemaRejects(
-    [{ ...categories[0], frenchNameStatus: "verified" }, ...categories.slice(1)],
+    [{ ...categories[0], name: { ...categories[0].name, fr: null } }, ...categories.slice(1)],
     "generated-bank-categories.schema.json",
     "$[0].name.fr: expected type \"string\", got null",
   );
   assertSchemaRejects(
-    [{ ...categories[0], frenchNameStatus: "verified", name: { ...categories[0].name, fr: "" } }, ...categories.slice(1)],
+    [{ ...categories[0], name: { ...categories[0].name, fr: "" } }, ...categories.slice(1)],
     "generated-bank-categories.schema.json",
     "$[0].name.fr: expected string length >= 1",
   );
