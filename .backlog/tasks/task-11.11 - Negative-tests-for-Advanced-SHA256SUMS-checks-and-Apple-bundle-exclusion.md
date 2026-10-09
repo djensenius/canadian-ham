@@ -26,6 +26,7 @@ Why: the task-11.4 re-review found two checks without regression tests: the impo
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 advanced-importer tests cover a malformed line, a duplicate path, a path not in the manifest, a hash mismatch and a missing manifest file, each failing with a clear error
+- [ ] #2 Apple bundle guard tests assert the post-task-11.5 per-platform contract: iOS/macOS app bundles contain exactly generated/basic-2025-07-15 and generated/advanced-2025-02-04; tvOS/visionOS app bundles load the Basic bank (at the bundle root) and contain no generated/ directory and no Advanced resources
 <!-- AC:END -->
 
 ## Implementation Plan
