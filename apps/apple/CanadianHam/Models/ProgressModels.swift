@@ -1,106 +1,211 @@
 import Foundation
 import SwiftData
 
-@Model
-final class QuestionProgressEntity {
-    @Attribute(.unique) var questionId: String
-    var bankId: String
-    var attempts: Int
-    var correctAttempts: Int
-    var lastAttemptedAt: String
-    var lastResult: String
-    var recentResultsData: Data
-    var leitnerBox: Int
-    var dueAt: String
-    var notes: String?
-
-    init(
-        questionId: String,
-        bankId: String,
-        attempts: Int,
-        correctAttempts: Int,
-        lastAttemptedAt: String,
-        lastResult: String,
-        recentResultsData: Data,
-        leitnerBox: Int,
-        dueAt: String,
-        notes: String? = nil
-    ) {
-        self.questionId = questionId
-        self.bankId = bankId
-        self.attempts = attempts
-        self.correctAttempts = correctAttempts
-        self.lastAttemptedAt = lastAttemptedAt
-        self.lastResult = lastResult
-        self.recentResultsData = recentResultsData
-        self.leitnerBox = leitnerBox
-        self.dueAt = dueAt
-        self.notes = notes
-    }
-}
-
-@Model
-final class ExamAttemptEntity {
-    @Attribute(.unique) var id: String
-    var bankId: String
-    var seed: String
-    var startedAt: String
-    var submittedAt: String
-    var payloadData: Data
-
-    init(id: String, bankId: String, seed: String, startedAt: String, submittedAt: String, payloadData: Data) {
-        self.id = id
-        self.bankId = bankId
-        self.seed = seed
-        self.startedAt = startedAt
-        self.submittedAt = submittedAt
-        self.payloadData = payloadData
-    }
-}
-
-@Model
-final class PreferencesEntity {
-    @Attribute(.unique) var key: String
-    var practiceMode: String
-    var examTimerEnabled: Bool
-    var language: String
-    var theme: String
-    var archivedLessonProgressData: Data
-    var archivedLessonQuizAttemptsData: Data
-
-    init(
-        key: String = PreferencesEntity.defaultKey,
-        practiceMode: String,
-        examTimerEnabled: Bool,
-        language: String,
-        theme: String,
-        archivedLessonProgressData: Data = Data("[]".utf8),
-        archivedLessonQuizAttemptsData: Data = Data("[]".utf8)
-    ) {
-        self.key = key
-        self.practiceMode = practiceMode
-        self.examTimerEnabled = examTimerEnabled
-        self.language = language
-        self.theme = theme
-        self.archivedLessonProgressData = archivedLessonProgressData
-        self.archivedLessonQuizAttemptsData = archivedLessonQuizAttemptsData
-    }
-
-    static let defaultKey = "preferences"
-}
-
 enum CanadianHamProgressSchemaV1: VersionedSchema {
     static let versionIdentifier = Schema.Version(1, 0, 0)
     static var models: [any PersistentModel.Type] {
         [QuestionProgressEntity.self, ExamAttemptEntity.self, PreferencesEntity.self]
     }
+
+    @Model
+    final class QuestionProgressEntity {
+        @Attribute(.unique) var questionId: String
+        var bankId: String
+        var attempts: Int
+        var correctAttempts: Int
+        var lastAttemptedAt: String
+        var lastResult: String
+        var recentResultsData: Data
+        var leitnerBox: Int
+        var dueAt: String
+        var notes: String?
+
+        init(
+            questionId: String,
+            bankId: String,
+            attempts: Int,
+            correctAttempts: Int,
+            lastAttemptedAt: String,
+            lastResult: String,
+            recentResultsData: Data,
+            leitnerBox: Int,
+            dueAt: String,
+            notes: String? = nil
+        ) {
+            self.questionId = questionId
+            self.bankId = bankId
+            self.attempts = attempts
+            self.correctAttempts = correctAttempts
+            self.lastAttemptedAt = lastAttemptedAt
+            self.lastResult = lastResult
+            self.recentResultsData = recentResultsData
+            self.leitnerBox = leitnerBox
+            self.dueAt = dueAt
+            self.notes = notes
+        }
+    }
+
+    @Model
+    final class ExamAttemptEntity {
+        @Attribute(.unique) var id: String
+        var bankId: String
+        var seed: String
+        var startedAt: String
+        var submittedAt: String
+        var payloadData: Data
+
+        init(id: String, bankId: String, seed: String, startedAt: String, submittedAt: String, payloadData: Data) {
+            self.id = id
+            self.bankId = bankId
+            self.seed = seed
+            self.startedAt = startedAt
+            self.submittedAt = submittedAt
+            self.payloadData = payloadData
+        }
+    }
+
+    @Model
+    final class PreferencesEntity {
+        @Attribute(.unique) var key: String
+        var practiceMode: String
+        var examTimerEnabled: Bool
+        var language: String
+        var theme: String
+        var archivedLessonProgressData: Data
+        var archivedLessonQuizAttemptsData: Data
+
+        init(
+            key: String = defaultKey,
+            practiceMode: String,
+            examTimerEnabled: Bool,
+            language: String,
+            theme: String,
+            archivedLessonProgressData: Data = Data("[]".utf8),
+            archivedLessonQuizAttemptsData: Data = Data("[]".utf8)
+        ) {
+            self.key = key
+            self.practiceMode = practiceMode
+            self.examTimerEnabled = examTimerEnabled
+            self.language = language
+            self.theme = theme
+            self.archivedLessonProgressData = archivedLessonProgressData
+            self.archivedLessonQuizAttemptsData = archivedLessonQuizAttemptsData
+        }
+
+        static let defaultKey = "preferences"
+    }
 }
+
+enum CanadianHamProgressSchemaV2: VersionedSchema {
+    static let versionIdentifier = Schema.Version(2, 0, 0)
+    static var models: [any PersistentModel.Type] {
+        [QuestionProgressEntity.self, ExamAttemptEntity.self, PreferencesEntity.self]
+    }
+
+    @Model
+    final class QuestionProgressEntity {
+        var questionId: String = ""
+        var bankId: String = ""
+        var attempts: Int = 0
+        var correctAttempts: Int = 0
+        var lastAttemptedAt: String = ""
+        var lastResult: String = "incorrect"
+        var recentResultsData: Data = Data("[]".utf8)
+        var leitnerBox: Int = 0
+        var dueAt: String = ""
+        var notes: String?
+
+        init(
+            questionId: String,
+            bankId: String,
+            attempts: Int,
+            correctAttempts: Int,
+            lastAttemptedAt: String,
+            lastResult: String,
+            recentResultsData: Data,
+            leitnerBox: Int,
+            dueAt: String,
+            notes: String? = nil
+        ) {
+            self.questionId = questionId
+            self.bankId = bankId
+            self.attempts = attempts
+            self.correctAttempts = correctAttempts
+            self.lastAttemptedAt = lastAttemptedAt
+            self.lastResult = lastResult
+            self.recentResultsData = recentResultsData
+            self.leitnerBox = leitnerBox
+            self.dueAt = dueAt
+            self.notes = notes
+        }
+    }
+
+    @Model
+    final class ExamAttemptEntity {
+        var id: String = ""
+        var bankId: String = ""
+        var seed: String = ""
+        var startedAt: String = ""
+        var submittedAt: String = ""
+        var payloadData: Data = Data()
+
+        init(id: String, bankId: String, seed: String, startedAt: String, submittedAt: String, payloadData: Data) {
+            self.id = id
+            self.bankId = bankId
+            self.seed = seed
+            self.startedAt = startedAt
+            self.submittedAt = submittedAt
+            self.payloadData = payloadData
+        }
+    }
+
+    @Model
+    final class PreferencesEntity {
+        var key: String = defaultKey
+        var practiceMode: String = "immediate"
+        var examTimerEnabled: Bool = false
+        var language: String = "en"
+        var theme: String = "system"
+        var archivedLessonProgressData: Data = Data("[]".utf8)
+        var archivedLessonQuizAttemptsData: Data = Data("[]".utf8)
+
+        init(
+            key: String = defaultKey,
+            practiceMode: String,
+            examTimerEnabled: Bool,
+            language: String,
+            theme: String,
+            archivedLessonProgressData: Data = Data("[]".utf8),
+            archivedLessonQuizAttemptsData: Data = Data("[]".utf8)
+        ) {
+            self.key = key
+            self.practiceMode = practiceMode
+            self.examTimerEnabled = examTimerEnabled
+            self.language = language
+            self.theme = theme
+            self.archivedLessonProgressData = archivedLessonProgressData
+            self.archivedLessonQuizAttemptsData = archivedLessonQuizAttemptsData
+        }
+
+        static let defaultKey = "preferences"
+    }
+}
+
+typealias QuestionProgressEntity = CanadianHamProgressSchemaV2.QuestionProgressEntity
+typealias ExamAttemptEntity = CanadianHamProgressSchemaV2.ExamAttemptEntity
+typealias PreferencesEntity = CanadianHamProgressSchemaV2.PreferencesEntity
 
 enum CanadianHamProgressMigrationPlan: SchemaMigrationPlan {
     static var schemas: [any VersionedSchema.Type] {
-        [CanadianHamProgressSchemaV1.self]
+        [CanadianHamProgressSchemaV1.self, CanadianHamProgressSchemaV2.self]
     }
 
-    // Stub for future schema changes. The first schema has no migration stages.
-    static var stages: [MigrationStage] { [] }
+    static var stages: [MigrationStage] {
+        [migrateV1toV2]
+    }
+
+    static let migrateV1toV2 = MigrationStage.lightweight(
+        fromVersion: CanadianHamProgressSchemaV1.self,
+        toVersion: CanadianHamProgressSchemaV2.self
+    )
 }

@@ -11,9 +11,9 @@ This document supports [requirements.md](requirements.md) and [architecture.md](
 - No advertising.
 - No third-party tracking.
 - No automatic crash or diagnostic upload.
-- No remote progress sync in v1.
-- No iCloud sync in v1.
-- No networking code in the Apple app.
+- No remote progress sync in v1 release builds.
+- No iCloud sync in v1 release builds.
+- No networking code in v1 Apple release builds.
 - Web progress remains in browser storage unless the user explicitly exports it.
 - On iOS, iPadOS and macOS, Apple progress remains in local app storage unless the user explicitly exports it.
 - On tvOS and visionOS, practice sessions are kept only while the app is open; nothing is saved or sent.
@@ -39,21 +39,28 @@ Allowed in-memory state on tvOS and visionOS:
 
 Disallowed data flows:
 
-- Sending progress to any server.
+- Sending progress to any server in v1 release builds.
 - Sending diagnostics to any server.
-- iCloud sync in v1.
-- Push notifications.
+- iCloud sync in v1 release builds.
+- Push notifications in v1 release builds.
 - Remote config.
 - Analytics events.
 - Advertising identifiers.
 - Third-party SDK collection.
 
+Post-v1 gated exception:
+
+- Optional iCloud progress sync may be built only behind an off-by-default build gate after v1. When that gate is disabled, including for v1 release builds, the app must carry no iCloud capability, no Push Notifications capability, and no remote-notification background mode.
+- When the gate is explicitly enabled after v1, the approved network-dependent scope is limited to CloudKit private-database progress sync, the Push Notifications capability that CloudKit uses for silent sync notifications, and the remote-notification background mode needed for SwiftData/Core Data CloudKit updates. The feature must remain user opt-in and off by default.
+- The approved exception does not permit analytics, diagnostics upload, remote config, advertising, third-party SDK collection, or developer-operated progress servers.
+
 Implementation rules:
 
 - When a platform persists progress, store it in SwiftData local stores.
 - Bundle all content needed for runtime use.
-- Do not add networking code for app features.
-- Do not add entitlements for network-dependent capabilities unless a future privacy review approves a new scope.
+- Do not add networking code for v1 app features.
+- Do not add entitlements for network-dependent capabilities unless this privacy review's off-by-default iCloud build gate or a later privacy review approves the exact scope.
+- Keep v1 release builds free of iCloud, Push Notifications, and remote-notification background-mode capabilities.
 - Do not add third-party SDKs in v1.
 - Build and test with `xbuild`, never direct `xcodebuild`.
 
@@ -129,15 +136,24 @@ The Apple app should qualify for App Store privacy label "Data Not Collected" be
 - It does not collect usage data.
 - It does not collect diagnostics.
 - It does not collect user content.
-- It does not transmit locally stored progress.
+- v1 release builds do not transmit locally stored progress.
 - It does not include analytics, ads, tracking, or third-party SDKs.
-- It works fully offline.
+- v1 release builds work fully offline.
+
+For a future build with the iCloud sync gate enabled, the "Data Not Collected" conclusion rests on Apple's definition of collection and the private CloudKit database access model. Apple's [App Privacy Details](https://developer.apple.com/app-store/app-privacy-details/) define "Collect" as transmitting data off device in a way that allows the developer or third-party partners to access it for longer than necessary to service the request in real time, and state that developers are not responsible for disclosing data collected by Apple. Apple's [`CKContainer.privateCloudDatabase`](https://developer.apple.com/documentation/cloudkit/ckcontainer/privateclouddatabase) documentation states that only the user can access their private database by default, that the user owns its content, and that private-database data is not visible in the developer portal. On that basis, progress stored only in the user's private CloudKit database is not developer collection, provided the project does not export, retain, correlate, or otherwise collect CloudKit operational logs or telemetry.
+
+CloudKit Console log policy for any gate-enabled build, based on Apple's [CloudKit Logs](https://developer.apple.com/icloud/logs/) documentation:
+
+- Do not export CloudKit Console logs or telemetry.
+- Do not retain CloudKit Console logs outside Apple's console.
+- Do not correlate CloudKit Console anonymous user IDs, platforms, OS versions, operation types, or timestamps with any other data.
+- Use CloudKit Console only for transient operational debugging required to service the app, and re-check App Store Connect privacy answers before any release that enables the gate.
 
 Evidence to keep for review:
 
 - Dependency list showing no third-party SDKs.
 - Source search showing no networking APIs used by app features.
-- Entitlement review showing no iCloud sync and no push notification capability.
+- Entitlement review showing no iCloud sync and no push notification capability for v1 release builds; for any post-v1 gate-enabled build, entitlement review showing the CloudKit/Push/remote-notification scope is limited to the approved iCloud sync gate.
 - Airplane-mode smoke test results.
 - iOS, iPadOS and macOS Settings screenshots showing export/import/reset are user-initiated, and tvOS/visionOS About screenshots showing sessions are in-memory only.
 
@@ -147,14 +163,14 @@ Release evidence for the current App Store privacy-label answers and web privacy
 
 ### Apple
 
-Policy: no network use by app features in v1.
+Policy: no network use by app features in v1 release builds.
 
 Verification targets:
 
 - No app networking module.
 - No remote URLs in runtime configuration except non-clickable attribution or source text (including the About screens' RBR-4 and active ISED question-bank source URLs), and the single RBR-4 citation link on the answer-explanation panel (`ExplanationPanelView`), which opens in the system browser only when tapped (the app makes no request itself). The panel appears after answering in lesson quizzes, practice sessions and review, and mock-exam review.
 - No code paths using URL loading for remote resources.
-- No app entitlements for iCloud sync or push notifications.
+- No app entitlements for iCloud sync or push notifications in v1 release builds. Any post-v1 gate-enabled build must limit network-dependent entitlements to CloudKit private-database sync, CloudKit's Push Notifications capability, and the remote-notification background mode.
 - Runtime smoke tests in airplane mode cover first launch, lesson reading, practice, mock exam, progress persistence, export, import, and reset on iOS, iPadOS and macOS; tvOS and visionOS smoke tests cover first launch and practice with in-memory sessions only.
 
 The project may still contain source URLs in documentation and source manifests for attribution and verification. Those URLs are not runtime network dependencies.
@@ -236,4 +252,4 @@ Reset semantics:
 
 - Confirm whether any development crash logs from TestFlight distribution affect privacy messaging before public release.
 - Confirm minimum App Store privacy questionnaire wording after the first Apple target exists.
-- Revisit privacy if iCloud sync is proposed later.
+- Before enabling the off-by-default iCloud sync build gate for a release, re-check the App Store privacy questionnaire and verify the CloudKit Console no-export/no-retention policy is still followed.
