@@ -554,10 +554,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(debugStatus.waitForExistence(timeout: 5))
         XCTAssertEqual(debugStatus.label, "Course playback active", "The course playback fixture should prove audio started before the stop path is exercised")
         tapCompactBack(in: app)
-        tapCompactBack(in: app)
-        let homeDebugStatus = app.staticTexts["morse-course-playback-debug-status"].firstMatch
-        expectation(for: NSPredicate(format: "label == %@", "Course playback stopped"), evaluatedWith: homeDebugStatus)
+        let unitDebugStatus = app.staticTexts["morse-course-playback-debug-status"].firstMatch
+        expectation(for: NSPredicate(format: "label == %@", "Course playback stopped"), evaluatedWith: unitDebugStatus)
         waitForExpectations(timeout: 5)
+        returnFromMorseCourseToMorseHome(in: app)
 
         let quickPlay = app.buttons["morse-quick-play-button"].firstMatch
         XCTAssertTrue(quickPlay.waitForExistence(timeout: 5))
@@ -1460,6 +1460,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let feedback = app.staticTexts["morse-sending-feedback-summary"].firstMatch
         scrollUntilHittable(feedback, in: app, maxSwipes: 8)
         XCTAssertTrue(isFullyVisible(feedback, in: app, requiresHittable: false), "\(appearance.rawValue) sending main audit should scroll the feedback panel into view")
+        scrollUntilPartiallyVisible(feedback, in: app, maxSwipes: 4)
         settleScrollableContentBelowNavigationBar(in: app, context: "Morse sending main screen lower half \(appearance)", preserving: feedback)
         assertPartiallyVisibleBelowNavigationBar(feedback, in: app, context: "\(appearance.rawValue) sending feedback after settling")
         try performAudit(on: app, context: "Morse sending main screen lower half \(appearance)")
@@ -1719,6 +1720,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home top")
         let settings = app.staticTexts["Morse settings"].firstMatch
         scrollMorseHomeLowerContentIntoView(in: app)
+        scrollUntilPartiallyVisible(settings, in: app, maxSwipes: 4)
         settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse home lower content", preserving: settings)
         assertPartiallyVisibleBelowNavigationBar(settings, in: app, context: "\(appearance.rawValue) Morse settings after settling")
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home lower content")
@@ -1727,6 +1729,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home top")
         let lastUnit = app.buttons["morse-course-unit-8"].firstMatch
         scrollToMorseCourseLastUnit(in: app)
+        scrollUntilPartiallyVisible(lastUnit, in: app, maxSwipes: 4)
         settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse course home lower units", preserving: lastUnit)
         assertPartiallyVisibleBelowNavigationBar(lastUnit, in: app, context: "\(appearance.rawValue) final Morse course unit after settling")
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home lower units")
@@ -2307,7 +2310,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 start.press(forDuration: 0.01, thenDragTo: end)
             } else {
                 let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
-                let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.40))
+                let endOffsetY = target == nil ? 0.40 : 0.55
+                let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: endOffsetY))
                 start.press(forDuration: 0.01, thenDragTo: end)
             }
             waitBriefly()
