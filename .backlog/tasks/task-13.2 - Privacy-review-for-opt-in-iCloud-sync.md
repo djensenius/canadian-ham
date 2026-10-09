@@ -26,9 +26,9 @@ Why: v1 forbids iCloud and push capabilities; the owner approved a scoped, opt-i
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 docs/privacy.md, REQ-APPLE-003/004, DEC-APPLE-003 and the AGENTS.md iCloud rule are updated for opt-in CloudKit, Push Notifications and the remote-notification background mode only
-- [ ] #2 The 'Data Not Collected' reasoning is recorded with Apple sources (App Privacy 'collect' definition, private database access)
-- [ ] #3 A CloudKit Console log no-export/no-retention policy is documented
+- [x] #1 docs/privacy.md, REQ-APPLE-003/004, DEC-APPLE-003 and the AGENTS.md iCloud rule are updated for opt-in CloudKit, Push Notifications and the remote-notification background mode only
+- [x] #2 The 'Data Not Collected' reasoning is recorded with Apple sources (App Privacy 'collect' definition, private database access)
+- [x] #3 A CloudKit Console log no-export/no-retention policy is documented
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -277,3 +277,9 @@ full macOS: 67 extracted passed test names; Executed 67 tests, with 0 failures (
 - CanadianHamTests.ReadinessAndScoringTests testReadinessStates
 - CanadianHamTests.ReadinessAndScoringTests testSavingSameAttemptTwiceDoesNotCreateDoubleSubmitDuplicate
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Updated AGENTS.md, docs/privacy.md, docs/requirements.md, and docs/proposals/icloud-sync.md to preserve v1 release no-iCloud/no-push/no-networking while documenting the off-by-default post-v1 CloudKit/Push Notifications/remote-notification build-gated exception; recorded App Privacy/private CloudKit Data Not Collected reasoning and CloudKit Console no-export/no-retention/no-correlation policy. Verified with /tmp/icloud validation chain: targeted iOS/macOS migration+dedup tests passed, full iOS and macOS xbuild suites passed; tvOS/visionOS skipped because changed progress-store files are not target members there.
+<!-- SECTION:FINAL_SUMMARY:END -->
