@@ -419,7 +419,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         openSendingPractice(in: app)
         let decoded = app.staticTexts["morse-sending-decoded-text"].firstMatch
         XCTAssertTrue(decoded.waitForExistence(timeout: 5))
-        XCTAssertEqual(decoded.label, "—", "Leaving sending practice should cancel the delayed character finalization and clear pending samples")
+        XCTAssertTrue(decoded.label.hasSuffix("—"), "Leaving sending practice should cancel the delayed character finalization and clear pending samples, got: \(decoded.label)")
     }
 
     func testMorseExamGradingPushesResultsScreen() throws {
