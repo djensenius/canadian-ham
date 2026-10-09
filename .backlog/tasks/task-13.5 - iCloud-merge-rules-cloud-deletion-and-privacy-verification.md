@@ -4,7 +4,7 @@ title: 'iCloud merge rules, cloud deletion and privacy verification'
 status: To Do
 assignee: []
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-09 20:58'
+updated_date: '2026-10-09 21:31'
 labels:
   - apple
   - privacy
@@ -36,4 +36,5 @@ Why: progress from several devices must converge without losing or double-counti
 - [ ] #10 Reword the gated privacy/About copy (EN: no 'includes bundled content, no accounts…' construction; FR: no anglicised 'avec gate') before the gate is ever enabled
 - [ ] #11 A failed legacy-preferences read is a distinct result: don't create the marker or finalise the copy, and retry on the next gated launch (the Preferences.store existence check must not block the retry); test the transient-failure path
 - [ ] #12 On an iCloud account change, sign-out or disable, tear down the live CloudKit-backed container immediately (reopen local-only) so the same container can't keep mirroring under a new account; test it with an injectable store factory
+- [ ] #13 Harden the gated-file guards: the iCloud gate check rejects every top-level entitlement key outside the allowlist regardless of value type (integer, dict…), and the gated Info.plist's UIBackgroundModes must be exactly [remote-notification]; negative fixtures for both
 <!-- AC:END -->
