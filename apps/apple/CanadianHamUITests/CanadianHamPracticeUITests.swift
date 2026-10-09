@@ -1034,7 +1034,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app.buttons["Switch course"].firstMatch.tap()
         XCTAssertTrue(anyVisibleLabel(in: app, contains: "Preferences saved locally."), "Confirm should save the Advanced course preference")
         XCTAssertTrue(app.buttons["Advanced"].firstMatch.isSelected, "Confirm should select Advanced")
-        returnFromSettingsToExistingAllPractice(in: app)
+        returnFromSettingsToFirstCategoryPractice(in: app)
         XCTAssertTrue(anyVisibleLabel(in: app, contains: "A-001"), "Confirm should discard the Basic practice session and open Advanced practice")
     }
 
@@ -1067,7 +1067,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app.buttons["Switch course"].firstMatch.tap()
         XCTAssertTrue(anyVisibleLabel(in: app, contains: "Preferences saved locally."), "Confirm should save the Advanced course preference")
         XCTAssertTrue(app.buttons["Advanced"].firstMatch.isSelected, "Confirm should select Advanced")
-        returnFromSettingsToExistingAllPractice(in: app)
+        returnFromSettingsToFirstCategoryPractice(in: app)
         XCTAssertTrue(anyVisibleLabel(in: app, contains: "A-001"), "Confirm should discard the Basic review-later session and open Advanced practice")
     }
 
@@ -1415,6 +1415,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
             tapButton(containing: "Start all questions", in: app)
         }
         XCTAssertTrue(answer.waitForExistence(timeout: 10), "Practice session should be visible after returning from Settings")
+    }
+
+    private func returnFromSettingsToFirstCategoryPractice(in app: XCUIApplication) {
+        tapCompactBack(in: app)
+        tap("Practice", in: app)
+        tapButton(containing: "Practice category", in: app)
+        XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10), "Practice session should be visible after returning from Settings")
     }
 
     private func requestAdvancedCourseSwitchExpectingConfirmation(in app: XCUIApplication) {
