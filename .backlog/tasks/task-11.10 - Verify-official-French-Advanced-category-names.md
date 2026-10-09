@@ -24,7 +24,7 @@ The Advanced bank importer currently stores null French category names with pend
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Each Advanced category in content/categories-advanced.json has an official French name verified against CIR-3 headings or an explicit documented reason for remaining pending
+- [x] #1 Each Advanced category in content/categories-advanced.json has an official French name verified against CIR-3 headings or an explicit documented reason for remaining pending
 - [ ] #2 The source and verification method for each French category name are recorded in code comments, task notes, or project documentation
 - [ ] #3 Schema/import checks and category negative tests pass after any category metadata updates
 <!-- AC:END -->
