@@ -1,7 +1,7 @@
 ---
 id: TASK-13.4
 title: Opt-in iCloud sync toggle
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
@@ -25,9 +25,9 @@ Why: the owner chose strictly opt-in sync of learning progress only (OFF by defa
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 project.yml adds iCloud (CloudKit), Push and Background Modes (remote notifications) only behind the non-default ICLOUD_SYNC gate; the project is regenerated with XcodeGen
-- [ ] #2 Settings has an iCloud Sync toggle that defaults OFF, existing local data survives first gated split-layout launch, OFF uses explicit cloudKitDatabase .none, ON uses .private("iCloud.com.djensenius.CanadianHam") (or the confirmed ID), and preferences stay in a separate local configuration
-- [ ] #3 Account-change/sign-out/iCloud-disable handler wiring is tested for no local data deletion by app code; default test configurations build without restricted entitlements, and signed-device CloudKit/account behaviours are tracked separately
+- [x] #1 project.yml adds iCloud (CloudKit), Push and Background Modes (remote notifications) only behind the non-default ICLOUD_SYNC gate; the project is regenerated with XcodeGen
+- [x] #2 Settings has an iCloud Sync toggle that defaults OFF, existing local data survives first gated split-layout launch, OFF uses explicit cloudKitDatabase .none, ON uses .private("iCloud.com.djensenius.CanadianHam") (or the confirmed ID), and preferences stay in a separate local configuration
+- [x] #3 Account-change/sign-out/iCloud-disable handler wiring is tested for no local data deletion by app code; default test configurations build without restricted entitlements, and signed-device CloudKit/account behaviours are tracked separately
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -60,3 +60,9 @@ Final validation on ce437be7f510398343725a0651efc3d4eb4010ac:
 - DebugCloudKit macOS build passed with CODE_SIGNING_ALLOWED=NO.
 - tvOS/visionOS suites skipped for this task because changed app code and entitlements are scoped to the CanadianHam iOS/macOS target and guard scripts; no tvOS/visionOS-compiled app source was changed beyond regenerated project metadata.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Resolved re-review r2 findings: CloudKit Info.plist is gated-only and excluded from default app resources with guard/self-test coverage; legacy preference copy is one-time and cannot resurrect data after reset; gated About text and account-monitor startup are corrected. Verified on final code commit ce437be7f510398343725a0651efc3d4eb4010ac with guard checks/self-tests, targeted store/account tests, check:apple-l10n, full default iOS/macOS suites with per-test names in task notes, default bundle absence check, and DebugCloudKit iOS/macOS builds plus Info.plist inspection.
+<!-- SECTION:FINAL_SUMMARY:END -->
