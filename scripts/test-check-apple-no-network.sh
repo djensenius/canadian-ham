@@ -45,7 +45,7 @@ make_path_without_plutil() {
   local tool
   local tool_path
   mkdir -p "$fake_bin"
-  for tool in dirname find grep sort; do
+  for tool in awk dirname find grep mkdir mktemp rm sort; do
     tool_path=$(command -v "$tool") || return 1
     ln -s "$tool_path" "$fake_bin/$tool"
   done
@@ -140,6 +140,10 @@ MD
 clean_root=$(make_fixture clean)
 cat > "$clean_root/apps/apple/AllowedCitation.swift" <<SWIFT
 let rbr4CitationURL = "$rbr4_url"
+#if ICLOUD_SYNC
+import CloudKit
+let gatedNetworkSymbol: CKRecord? = nil
+#endif
 SWIFT
 mkdir -p "$clean_root/content/lessons/m-001" "$clean_root/content/explanations/b-001"
 cat > "$clean_root/content/lessons/m-001/allowed.md" <<MD
@@ -194,6 +198,30 @@ assert_swift_sample_fails_with_label "import-analytics" "import StudyAnalytics" 
 assert_swift_sample_fails_with_label "import-attributed" "@preconcurrency import WebKit" "$source_symbol_label"
 assert_swift_sample_fails_with_label "import-implementation-only" "@_implementationOnly import Network" "$source_symbol_label"
 assert_swift_sample_fails_with_label "import-kind" "import enum WebKit.WKNavigationType" "$source_symbol_label"
+assert_swift_sample_fails_with_label "icloud-filter-keeps-else" $'#if ICLOUD_SYNC\nimport CloudKit\n#else\nlet urlSessionTask: URLSessionDataTask? = nil\n#endif' "$source_symbol_label"
+assert_swift_sample_fails_with_label "icloud-filter-exact-match" $'#if ICLOUD_SYNC || DEBUG\nimport Network\n#endif' "$source_symbol_label"
+assert_swift_sample_fails_with_label "icloud-gated-non-cloudkit-import" $'#if ICLOUD_SYNC\nimport CloudKit\nimport Network\n#endif' "$source_symbol_label"
+assert_swift_sample_fails_with_label "icloud-gated-urlsession" $'#if ICLOUD_SYNC\nlet container: CKContainer? = nil\nlet task: URLSessionDataTask? = nil\n#endif' "$source_symbol_label"
+background_root=$(make_fixture background-modes-plist)
+cat > "$background_root/apps/apple/Info.plist" <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0"><dict><key>UIBackgroundModes</key><array><string>remote-notification</string></array></dict></plist>
+PLIST
+assert_fails_with_labels "background-modes-plist" "$background_root" "forbidden network client/server, iCloud, local-network, or transport-security entitlement/Info key"
+gated_plist_root=$(make_fixture gated-info-plist-extra-key)
+mkdir -p "$gated_plist_root/apps/apple/CanadianHam/Resources"
+cat > "$gated_plist_root/apps/apple/CanadianHam/Resources/CanadianHam.iOS.CloudKit.Info.plist" <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0"><dict><key>UIBackgroundModes</key><array><string>remote-notification</string></array><key>NSAppTransportSecurity</key><dict><key>NSAllowsArbitraryLoads</key><true/></dict></dict></plist>
+PLIST
+assert_fails_with_labels "gated-info-plist-extra-key" "$gated_plist_root" "forbidden network client/server, iCloud, local-network, or transport-security entitlement/Info key"
+gated_plist_ok_root=$(make_fixture gated-info-plist-approved)
+mkdir -p "$gated_plist_ok_root/apps/apple/CanadianHam/Resources"
+cat > "$gated_plist_ok_root/apps/apple/CanadianHam/Resources/CanadianHam.iOS.CloudKit.Info.plist" <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0"><dict><key>UIBackgroundModes</key><array><string>remote-notification</string></array></dict></plist>
+PLIST
+assert_passes "gated-info-plist-approved" "$gated_plist_ok_root"
 
 url_label="unexpected URL literal in Swift source"
 assert_swift_sample_fails_with_label "url-mailto" "let supportEmail = \"mailto:help@example.test\"" "$url_label"
@@ -283,9 +311,32 @@ cat > "$config_root/apps/apple/CanadianHam.xcodeproj/project.pbxproj" <<'PBX'
 /* End XCRemoteSwiftPackageReference section */
 PBX
 assert_fails_with_labels "forbidden project config" "$config_root" \
-  "forbidden network/iCloud entitlement or Info.plist key in Apple project configuration" \
+  "forbidden network/iCloud entitlement or Info.plist key in default Apple project configuration" \
   "remote Swift package reference in Apple Xcode project" \
   "non-local Swift package dependency in apps/apple/project.yml"
+
+cloudkit_config_root=$(make_fixture project-cloudkit-config)
+cat > "$cloudkit_config_root/apps/apple/project.yml" <<'YAML'
+targets:
+  CanadianHamTV:
+    settings:
+      base:
+        CODE_SIGN_ENTITLEMENTS: CanadianHam/Resources/CanadianHam.TV.CloudKit.entitlements
+YAML
+assert_fails_with_labels "forbidden CloudKit entitlement project config" "$cloudkit_config_root" \
+  "forbidden network/iCloud entitlement or Info.plist key in default Apple project configuration"
+
+gated_cloudkit_config_root=$(make_fixture gated-project-cloudkit-config)
+cat > "$gated_cloudkit_config_root/apps/apple/project.yml" <<'YAML'
+targets:
+  CanadianHam:
+    settings:
+      configs:
+        DebugCloudKit:
+          CODE_SIGN_ENTITLEMENTS[sdk=iphone*]: CanadianHam/Resources/CanadianHam.iOS.CloudKit.entitlements
+          INFOPLIST_KEY_UIBackgroundModes[sdk=iphone*]: remote-notification
+YAML
+assert_passes "gated CloudKit project config" "$gated_cloudkit_config_root"
 
 manifest_root=$(make_fixture package-manifest)
 mkdir -p "$manifest_root/packages/sample-swift"

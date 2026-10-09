@@ -88,6 +88,16 @@ private struct NativeGeneralSettingsTab: View {
                     }
                 }
                 .accessibilityLabel(Text("Appearance")) // l10n: localized
+#if ICLOUD_SYNC
+                Toggle(ICloudSyncCopy.toggleLabel, isOn: Binding(
+                    get: { progressStore.isICloudSyncEnabled },
+                    set: { enabled in updateICloudSync(enabled, progressStore: progressStore) }
+                )) // l10n: localized
+                .accessibilityIdentifier("native-icloud-sync-toggle")
+                .accessibilityLabel(Text(ICloudSyncCopy.toggleLabel)) // l10n: localized
+                Text(ICloudSyncCopy.macExplanation) // l10n: localized
+                    .foregroundStyle(DesignTokens.Colors.inkMuted)
+#endif
                 if !statusMessage.isEmpty {
                     Text(statusMessage) // l10n: localized
                         .foregroundStyle(DesignTokens.Colors.correctText)
@@ -134,6 +144,17 @@ private struct NativeGeneralSettingsTab: View {
         self.pendingCourseSwitch = nil
         saveCourseSwitch(to: pendingCourseSwitch, progressStore: progressStore)
     }
+
+#if ICLOUD_SYNC
+    private func updateICloudSync(_ enabled: Bool, progressStore: ProgressStoreService) {
+        progressStore.updateICloudSyncOptIn(enabled)
+        appSettings.recordDataChanged()
+        statusMessage = enabled
+            ? ICloudSyncCopy.enabledAfterRestart
+            : ICloudSyncCopy.disabledAfterRestart
+        errorMessage = ""
+    }
+#endif
 
     private func saveCourseSwitch(to bankId: CourseBankID, progressStore: ProgressStoreService) {
         var next = progressStore.preferences
