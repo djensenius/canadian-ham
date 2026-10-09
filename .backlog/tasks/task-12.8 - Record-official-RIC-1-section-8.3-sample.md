@@ -25,7 +25,7 @@ Task-12.2 uses a synthetic stand-in to exercise RIC-1 section 8.3 weighted-chara
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 The official RIC-1 section 8.3 sample text and source citation are recorded in the repository
-- [ ] #2 The synthetic stand-in weighting fixture is replaced or supplemented by an official-sample fixture with the expected weighted count
+- [x] #2 The synthetic stand-in weighting fixture is replaced or supplemented by an official-sample fixture with the expected weighted count
 - [ ] #3 TypeScript and Swift Morse tests pass against the official-sample fixture
 <!-- AC:END -->
 
