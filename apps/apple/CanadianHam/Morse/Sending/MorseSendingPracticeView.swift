@@ -441,12 +441,15 @@ struct MorseSendingPracticeView: View {
 
     private func beginHeldStraightKeyForUITest() {
         beginStraightKey()
+        if straightKeyDownAt != nil {
+            straightKeyDownAt = Date().addingTimeInterval(-profile.dotSeconds)
+        }
         statusMessage = "Straight key held for UI testing."
     }
 
     private func gradeHeldStraightKeyForUITest() {
         if straightKeyDownAt == nil {
-            beginStraightKey()
+            beginHeldStraightKeyForUITest()
         }
         gradeExam(completedWithinTime: true)
     }

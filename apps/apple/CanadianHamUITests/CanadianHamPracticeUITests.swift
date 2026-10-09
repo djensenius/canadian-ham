@@ -554,9 +554,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(debugStatus.waitForExistence(timeout: 5))
         XCTAssertEqual(debugStatus.label, "Course playback active", "The course playback fixture should prove audio started before the stop path is exercised")
         tapCompactBack(in: app)
-        expectation(for: NSPredicate(format: "label == %@", "Course playback stopped"), evaluatedWith: debugStatus)
+        tapCompactBack(in: app)
+        let homeDebugStatus = app.staticTexts["morse-course-playback-debug-status"].firstMatch
+        expectation(for: NSPredicate(format: "label == %@", "Course playback stopped"), evaluatedWith: homeDebugStatus)
         waitForExpectations(timeout: 5)
-        returnFromMorseCourseToMorseHome(in: app)
 
         let quickPlay = app.buttons["morse-quick-play-button"].firstMatch
         XCTAssertTrue(quickPlay.waitForExistence(timeout: 5))
@@ -2288,19 +2289,16 @@ final class CanadianHamPracticeUITests: XCTestCase {
         }
         for _ in 0..<30 {
             let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
-            if offenders.isEmpty, target.map({ isPartiallyVisibleBelowNavigationBar($0, in: app) }) ?? true { return }
-            if let target, target.exists {
+            if offenders.isEmpty {
+                guard let target, target.exists, !isPartiallyVisibleBelowNavigationBar(target, in: app) else { return }
                 let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
                 if target.frame.maxY > visibleFrame.maxY {
                     scrollView.swipeUp()
-                    waitBriefly()
-                    continue
-                }
-                if target.frame.maxY <= visibleFrame.minY {
+                } else {
                     scrollView.swipeDown()
-                    waitBriefly()
-                    continue
                 }
+                waitBriefly()
+                continue
             }
             let hasOffenderClippedAboveWindow = offenders.contains(where: \.isClippedAboveWindow)
             if hasOffenderClippedAboveWindow {
