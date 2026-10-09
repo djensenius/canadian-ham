@@ -42,6 +42,61 @@ struct ApplePreferences: Codable, Equatable, Sendable {
     )
 }
 
+enum ICloudSyncDatabaseSelection: Equatable, Sendable {
+    case none
+    case privateDatabase(String)
+}
+
+enum ICloudAccountSignal: Equatable, Sendable {
+    case accountChanged
+    case signedOut
+    case iCloudDisabled
+}
+
+struct ICloudSyncSettings: Equatable, Sendable {
+    static let containerIdentifier = "iCloud.com.djensenius.CanadianHam"
+    static let containerRegistrationNote = "to be confirmed when the capability is registered"
+
+    private static let optInPreferenceKey = "CanadianHam.iCloudSyncOptIn"
+
+    static var isBuildEnabled: Bool {
+#if ICLOUD_SYNC
+        true
+#else
+        false
+#endif
+    }
+
+    static func storedOptIn(defaults: UserDefaults = .standard) -> Bool {
+        defaults.bool(forKey: optInPreferenceKey)
+    }
+
+    static func setStoredOptIn(_ enabled: Bool, defaults: UserDefaults = .standard) {
+        defaults.set(enabled, forKey: optInPreferenceKey)
+    }
+
+    static func clearStoredOptIn(defaults: UserDefaults = .standard) {
+        defaults.removeObject(forKey: optInPreferenceKey)
+    }
+
+    static func databaseSelection(storedOptIn: Bool, buildEnabled: Bool = isBuildEnabled) -> ICloudSyncDatabaseSelection {
+        guard buildEnabled, storedOptIn else { return .none }
+        return .privateDatabase(containerIdentifier)
+    }
+
+    static func handleAccountSignal(_ signal: ICloudAccountSignal, defaults: UserDefaults = .standard) {
+        switch signal {
+        case .accountChanged, .signedOut, .iCloudDisabled:
+            setStoredOptIn(false, defaults: defaults)
+        }
+    }
+}
+
+struct ProgressStoreConfigurationPlan: Equatable, Sendable {
+    let progressDatabase: ICloudSyncDatabaseSelection
+    let preferencesDatabase: ICloudSyncDatabaseSelection
+}
+
 extension BankLanguage: Codable {}
 
 struct ProgressExportV1: Codable, Equatable, Sendable {
@@ -398,6 +453,7 @@ private struct ProgressStoreSnapshot {
 @MainActor
 final class ProgressStoreService: ObservableObject {
     @Published private(set) var preferences: ApplePreferences = .default
+    @Published private(set) var isICloudSyncEnabled: Bool = ICloudSyncSettings.storedOptIn()
 
     let container: ModelContainer
     private let context: ModelContext
@@ -412,38 +468,120 @@ final class ProgressStoreService: ObservableObject {
     var failNextMorseCourseProgressRemovalForTesting = false
 #endif
 
-    init(container: ModelContainer, morseCourseProgressURL: URL = ProgressStoreService.morseCourseProgressURL) throws {
+    init(
+        container: ModelContainer,
+        morseCourseProgressURL: URL = ProgressStoreService.morseCourseProgressURL,
+        iCloudSyncEnabled: Bool = ICloudSyncSettings.storedOptIn()
+    ) throws {
         self.container = container
         self.context = ModelContext(container)
         self.morseCourseProgressURL = morseCourseProgressURL
+        self.isICloudSyncEnabled = iCloudSyncEnabled
         try FileManager.default.createDirectory(at: morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
         self.preferences = try loadPreferences()
     }
 
     static func open() throws -> ProgressStoreService {
         do {
-            let schema = Schema(versionedSchema: CanadianHamProgressSchemaV2.self)
-            let configuration = ModelConfiguration(schema: schema, url: persistentStoreURL, cloudKitDatabase: .none)
-            let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
-            return try ProgressStoreService(container: container)
+            let iCloudSyncEnabled = ICloudSyncSettings.storedOptIn()
+            let container = try makeModelContainer(iCloudSyncEnabled: iCloudSyncEnabled)
+            return try ProgressStoreService(container: container, iCloudSyncEnabled: iCloudSyncEnabled)
         } catch {
             throw ProgressStoreError.openFailed(error.localizedDescription)
         }
     }
 
-    static func inMemoryForTests() throws -> ProgressStoreService {
-        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV2.self)
-        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
-        let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
+    static func inMemoryForTests(iCloudSyncEnabled: Bool = false) throws -> ProgressStoreService {
+        let container = try makeModelContainer(iCloudSyncEnabled: iCloudSyncEnabled, isStoredInMemoryOnly: true)
         let directory = FileManager.default.temporaryDirectory
             .appending(path: "CanadianHamProgressStoreTests", directoryHint: .isDirectory)
             .appending(path: UUID().uuidString, directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        return try ProgressStoreService(container: container, morseCourseProgressURL: directory.appending(path: "MorseCourseProgress.json"))
+        return try ProgressStoreService(
+            container: container,
+            morseCourseProgressURL: directory.appending(path: "MorseCourseProgress.json"),
+            iCloudSyncEnabled: iCloudSyncEnabled
+        )
     }
+
+    static func configurationPlan(
+        iCloudSyncEnabled: Bool,
+        buildEnabled: Bool = ICloudSyncSettings.isBuildEnabled
+    ) -> ProgressStoreConfigurationPlan {
+        ProgressStoreConfigurationPlan(
+            progressDatabase: ICloudSyncSettings.databaseSelection(storedOptIn: iCloudSyncEnabled, buildEnabled: buildEnabled),
+            preferencesDatabase: .none
+        )
+    }
+
+    private static func makeModelContainer(iCloudSyncEnabled: Bool, isStoredInMemoryOnly: Bool = false) throws -> ModelContainer {
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV2.self)
+#if ICLOUD_SYNC
+        let plan = configurationPlan(iCloudSyncEnabled: iCloudSyncEnabled)
+        let progressSchema = Schema([QuestionProgressEntity.self, ExamAttemptEntity.self])
+        let preferencesSchema = Schema([PreferencesEntity.self])
+        let progressConfiguration: ModelConfiguration
+        let preferencesConfiguration: ModelConfiguration
+        if isStoredInMemoryOnly {
+            progressConfiguration = ModelConfiguration(
+                "LearningProgress",
+                schema: progressSchema,
+                isStoredInMemoryOnly: true,
+                cloudKitDatabase: cloudKitDatabase(for: plan.progressDatabase)
+            )
+            preferencesConfiguration = ModelConfiguration(
+                "LocalPreferences",
+                schema: preferencesSchema,
+                isStoredInMemoryOnly: true,
+                cloudKitDatabase: .none
+            )
+        } else {
+            progressConfiguration = ModelConfiguration(
+                "LearningProgress",
+                schema: progressSchema,
+                url: persistentStoreURL,
+                cloudKitDatabase: cloudKitDatabase(for: plan.progressDatabase)
+            )
+            preferencesConfiguration = ModelConfiguration(
+                "LocalPreferences",
+                schema: preferencesSchema,
+                url: preferencesStoreURL,
+                cloudKitDatabase: .none
+            )
+        }
+        return try ModelContainer(
+            for: schema,
+            migrationPlan: CanadianHamProgressMigrationPlan.self,
+            configurations: [progressConfiguration, preferencesConfiguration]
+        )
+#else
+        let configuration: ModelConfiguration
+        if isStoredInMemoryOnly {
+            configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+        } else {
+            configuration = ModelConfiguration(schema: schema, url: persistentStoreURL, cloudKitDatabase: .none)
+        }
+        return try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
+#endif
+    }
+
+#if ICLOUD_SYNC
+    private static func cloudKitDatabase(for selection: ICloudSyncDatabaseSelection) -> ModelConfiguration.CloudKitDatabase {
+        switch selection {
+        case .none:
+            .none
+        case .privateDatabase(let identifier):
+            .private(identifier)
+        }
+    }
+#endif
 
     static var persistentStoreURL: URL {
         progressDirectory.appending(path: "Progress.store")
+    }
+
+    static var preferencesStoreURL: URL {
+        progressDirectory.appending(path: "Preferences.store")
     }
 
     static var progressDirectory: URL {
@@ -462,11 +600,23 @@ final class ProgressStoreService: ObservableObject {
 
     static func resetPersistentStoreFiles() {
         UserDefaults.standard.removeObject(forKey: activeBankPreferenceKey)
-        let url = persistentStoreURL
-        for suffix in ["", "-shm", "-wal"] {
-            try? FileManager.default.removeItem(at: URL(fileURLWithPath: url.path + suffix))
+        ICloudSyncSettings.clearStoredOptIn()
+        for url in [persistentStoreURL, preferencesStoreURL] {
+            for suffix in ["", "-shm", "-wal"] {
+                try? FileManager.default.removeItem(at: URL(fileURLWithPath: url.path + suffix))
+            }
         }
         try? FileManager.default.removeItem(at: morseCourseProgressURL)
+    }
+
+    func updateICloudSyncOptIn(_ enabled: Bool, defaults: UserDefaults = .standard) {
+        ICloudSyncSettings.setStoredOptIn(enabled, defaults: defaults)
+        isICloudSyncEnabled = ICloudSyncSettings.storedOptIn(defaults: defaults)
+    }
+
+    func handleICloudAccountSignal(_ signal: ICloudAccountSignal, defaults: UserDefaults = .standard) {
+        ICloudSyncSettings.handleAccountSignal(signal, defaults: defaults)
+        isICloudSyncEnabled = ICloudSyncSettings.storedOptIn(defaults: defaults)
     }
 
     func questionProgressRecords() throws -> [QuestionProgressRecord] {

@@ -191,6 +191,10 @@ jobs:
         if: needs.changes.outputs.full_checks == 'true'
         run: pnpm check:apple-network
 
+      - name: Apple iCloud gate check
+        if: needs.changes.outputs.full_checks == 'true'
+        run: pnpm check:apple-icloud-gate
+
       # Local-only checks not run in GitHub CI: the Swift engine half of
       # scripts/check-engine-parity.sh and packages/morse-swift stay local-only
       # because they require xbuild/Xcode; Apple suites via xbuild stay

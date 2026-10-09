@@ -9,6 +9,10 @@ options:
   developmentLanguage: en
   knownRegions: [en, fr, fr-CA]
   createIntermediateGroups: true
+configs:
+  Debug: debug
+  DebugCloudKit: debug
+  Release: release
 packages:
   CanadianHamEngine:
     path: ../../packages/engine-swift
@@ -31,6 +35,9 @@ settings:
     SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
     CODE_SIGN_STYLE: Automatic
     ENABLE_USER_SCRIPT_SANDBOXING: YES
+  configs:
+    DebugCloudKit:
+      OTHER_SWIFT_FLAGS: $(inherited) -DICLOUD_SYNC
 targets:
   CanadianHam:
     type: application
@@ -121,6 +128,11 @@ targets:
         SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
         SWIFT_EMIT_LOC_STRINGS: YES
         LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+      configs:
+        DebugCloudKit:
+          CODE_SIGN_ENTITLEMENTS[sdk=macosx*]: CanadianHam/Resources/CanadianHam.macOS.CloudKit.entitlements
+          CODE_SIGN_ENTITLEMENTS[sdk=iphone*]: CanadianHam/Resources/CanadianHam.iOS.CloudKit.entitlements
+          INFOPLIST_KEY_UIBackgroundModes[sdk=iphone*]: remote-notification
   CanadianHamTests:
     type: bundle.unit-test
     platform: auto

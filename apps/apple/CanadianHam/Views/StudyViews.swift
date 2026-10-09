@@ -1475,6 +1475,10 @@ struct SettingsView: View {
                 }
                 .paperCard()
 
+#if ICLOUD_SYNC
+                iCloudSyncCard
+#endif
+
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     Text("Local data")
                         .font(DesignTokens.FontScale.title.weight(.bold))
@@ -1548,6 +1552,27 @@ struct SettingsView: View {
         }
     }
 
+#if ICLOUD_SYNC
+    private var iCloudSyncCard: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            Text("iCloud Sync") // l10n: localized
+                .font(DesignTokens.FontScale.title.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .accessibilityAddTraits(.isHeader)
+            Toggle("Sync learning progress with iCloud", isOn: Binding(
+                get: { progressStore.isICloudSyncEnabled },
+                set: { enabled in updateICloudSync(enabled) }
+            )) // l10n: localized
+            .accessibilityIdentifier("icloud-sync-toggle")
+            Text("Off by default. When enabled, learning progress can sync through your private iCloud database after restart; preferences stay local on this device.") // l10n: localized
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .paperCard()
+    }
+#endif
+
     private var courseSwitchConfirmationPanel: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             Text("Switch course?") // l10n: localized
@@ -1605,6 +1630,17 @@ struct SettingsView: View {
     private func saveCourseSwitch(to bankId: CourseBankID) {
         savePreferences { $0.activeBankId = bankId }
     }
+
+#if ICLOUD_SYNC
+    private func updateICloudSync(_ enabled: Bool) {
+        progressStore.updateICloudSyncOptIn(enabled)
+        statusMessage = enabled
+            ? String(localized: "iCloud Sync will turn on after you restart the app.")
+            : String(localized: "iCloud Sync will turn off after you restart the app.")
+        errorMessage = nil
+        onDataChanged(false)
+    }
+#endif
 
     private func savePreferences(_ mutate: (inout ApplePreferences) -> Void) {
         var next = progressStore.preferences

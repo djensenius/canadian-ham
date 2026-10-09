@@ -45,7 +45,7 @@ make_path_without_plutil() {
   local tool
   local tool_path
   mkdir -p "$fake_bin"
-  for tool in dirname find grep sort; do
+  for tool in awk dirname find grep mkdir mktemp rm sort; do
     tool_path=$(command -v "$tool") || return 1
     ln -s "$tool_path" "$fake_bin/$tool"
   done

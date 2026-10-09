@@ -103,6 +103,57 @@ final class ProgressStoreTests: XCTestCase {
         revisionCancellable.cancel()
     }
 
+    func testICloudSyncConfigurationPlanDefaultsOffAndKeepsPreferencesLocal() throws {
+        let offPlan = ProgressStoreService.configurationPlan(iCloudSyncEnabled: false, buildEnabled: true)
+        XCTAssertEqual(offPlan.progressDatabase, .none)
+        XCTAssertEqual(offPlan.preferencesDatabase, .none)
+
+        let onPlan = ProgressStoreService.configurationPlan(iCloudSyncEnabled: true, buildEnabled: true)
+        XCTAssertEqual(onPlan.progressDatabase, .privateDatabase(ICloudSyncSettings.containerIdentifier))
+        XCTAssertEqual(onPlan.preferencesDatabase, .none)
+
+        let defaultBuildPlan = ProgressStoreService.configurationPlan(iCloudSyncEnabled: true, buildEnabled: false)
+        XCTAssertEqual(defaultBuildPlan.progressDatabase, .none)
+        XCTAssertEqual(defaultBuildPlan.preferencesDatabase, .none)
+    }
+
+    func testICloudSyncToggleAndAccountSignalsPreserveLocalProgress() throws {
+        let defaultsSuiteName = "ProgressStoreTests.iCloudSync.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: defaultsSuiteName))
+        defer { defaults.removePersistentDomain(forName: defaultsSuiteName) }
+        let store = try ProgressStoreService.inMemoryForTests()
+        let record = QuestionProgressRecord(
+            questionId: "B-001-001-001",
+            bankId: basicBankId,
+            attempts: 2,
+            correctAttempts: 1,
+            lastAttemptedAt: "2026-01-02T03:04:05.000Z",
+            lastResult: .correct,
+            recentResults: [false, true],
+            leitner: LeitnerState(box: 1, dueAt: "2026-01-03T03:04:05.000Z")
+        )
+        try store.saveQuestionProgress([record])
+
+        store.updateICloudSyncOptIn(true, defaults: defaults)
+        store.updateICloudSyncOptIn(false, defaults: defaults)
+        XCTAssertEqual(try store.questionProgressRecords(), [record])
+
+        store.updateICloudSyncOptIn(true, defaults: defaults)
+        store.handleICloudAccountSignal(.accountChanged, defaults: defaults)
+        XCTAssertFalse(ICloudSyncSettings.storedOptIn(defaults: defaults))
+        XCTAssertEqual(try store.questionProgressRecords(), [record])
+
+        store.updateICloudSyncOptIn(true, defaults: defaults)
+        store.handleICloudAccountSignal(.signedOut, defaults: defaults)
+        XCTAssertFalse(ICloudSyncSettings.storedOptIn(defaults: defaults))
+        XCTAssertEqual(try store.questionProgressRecords(), [record])
+
+        store.updateICloudSyncOptIn(true, defaults: defaults)
+        store.handleICloudAccountSignal(.iCloudDisabled, defaults: defaults)
+        XCTAssertFalse(ICloudSyncSettings.storedOptIn(defaults: defaults))
+        XCTAssertEqual(try store.questionProgressRecords(), [record])
+    }
+
 #if os(macOS)
     func testNativeSettingsGeneralBindingsUpdatePracticePreferences() throws {
         let store = try CanadianHam.ProgressStoreService.inMemoryForTests()

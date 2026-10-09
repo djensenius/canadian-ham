@@ -156,15 +156,33 @@ if [[ ${#swift_files[@]} -eq 0 ]]; then
   report_issue "no Swift files found under apps/apple or packages/*-swift/Sources"
 fi
 
+network_swift_files=("${swift_files[@]}")
 if [[ ${#swift_files[@]} -gt 0 ]]; then
+  sanitized_swift_dir=$(mktemp -d)
+  trap 'rm -rf "$sanitized_swift_dir"' EXIT
+  network_swift_files=()
+  for file in "${swift_files[@]}"; do
+    sanitized_file="$sanitized_swift_dir/$file"
+    mkdir -p "$(dirname "$sanitized_file")"
+    awk '
+      /^[[:space:]]*#if[[:space:]]+ICLOUD_SYNC([[:space:]]|$)/ { depth++; next }
+      depth > 0 && /^[[:space:]]*#if([[:space:]]|$)/ { depth++; next }
+      depth > 0 && /^[[:space:]]*#endif([[:space:]]|$)/ { depth--; next }
+      depth == 0 { print }
+    ' "$file" > "$sanitized_file"
+    network_swift_files+=("$sanitized_file")
+  done
+fi
+
+if [[ ${#network_swift_files[@]} -gt 0 ]]; then
   source_identifier_pattern='(^|[^[:alnum:]_])(NSUbiquitous[[:alnum:]_]*|URLSession[[:alnum:]_]*|NSURLSession[[:alnum:]_]*|NSURLConnection[[:alnum:]_]*|URLRequest[[:alnum:]_]*|NSURLRequest[[:alnum:]_]*|NW[A-Z][[:alnum:]_]*|CK[A-Z][[:alnum:]_]*|CFSocket[[:alnum:]_]*|CFStream[[:alnum:]_]*|CFHTTP[[:alnum:]_]*|CFNetwork[[:alnum:]_]*|WKWebView[[:alnum:]_]*|SFSafariViewController[[:alnum:]_]*|ASWebAuthenticationSession[[:alnum:]_]*|CloudKit[[:alnum:]_]*|NSPersistentCloudKitContainer[[:alnum:]_]*|Firebase[[:alnum:]_]*|FirebaseAnalytics[[:alnum:]_]*|Crashlytics[[:alnum:]_]*|GoogleAnalytics[[:alnum:]_]*|GoogleTagManager[[:alnum:]_]*|Sentry[[:alnum:]_]*|Segment[[:alnum:]_]*|Mixpanel[[:alnum:]_]*|Amplitude[[:alnum:]_]*|PostHog[[:alnum:]_]*|Datadog[[:alnum:]_]*|AppCenter[[:alnum:]_]*|AdMob[[:alnum:]_]*|AppsFlyer[[:alnum:]_]*|Adjust[[:alnum:]_]*|Braze[[:alnum:]_]*|Snowplow[[:alnum:]_]*|TelemetryDeck[[:alnum:]_]*|Bugsnag[[:alnum:]_]*|NewRelic[[:alnum:]_]*|[[:alnum:]_]*(WebSocket|Socket)[[:alnum:]_]*)([^[:alnum:]_]|$)'
   source_import_pattern='^[[:space:]]*(@[A-Za-z_][A-Za-z0-9_]*(\([^)]*\))?[[:space:]]+)*import[[:space:]]+((struct|class|enum|protocol|typealias|func|var|let)[[:space:]]+)?(Network|CloudKit|WebKit|SafariServices|CFNetwork|AuthenticationServices|Firebase[[:alnum:]_]*|[[:alnum:]_]*Analytics[[:alnum:]_]*)(\.|[^[:alnum:]_]|$)'
   lowercase_socket_pattern='(^|[^[:alnum:]_])socket[[:space:]]*\('
   source_api_pattern="$source_import_pattern|$source_identifier_pattern|$lowercase_socket_pattern"
-  print_grep_matches "forbidden networking, browser, iCloud, socket, or analytics SDK symbol in Swift source" "$source_api_pattern" "${swift_files[@]}"
+  print_grep_matches "forbidden networking, browser, iCloud, socket, or analytics SDK symbol in Swift source" "$source_api_pattern" "${network_swift_files[@]}"
 
   url_pattern='https?://[^[:space:]"<>)]+|mailto:[^[:space:]"<>)]+|tel:[^[:space:]"<>)]+|sms:[^[:space:]"<>)]+|[A-Za-z][A-Za-z0-9+.-]*://[^[:space:]"<>)]+'
-  swift_url_matches=$(grep -nE "$url_pattern" "${swift_files[@]}" 2>&1)
+  swift_url_matches=$(grep -nE "$url_pattern" "${network_swift_files[@]}" 2>&1)
   swift_url_grep_status=$?
   if [[ $swift_url_grep_status -gt 1 ]]; then
     report_issue "grep failed while checking Swift URL literals"
@@ -203,12 +221,19 @@ if [[ ${#plist_files[@]} -gt 0 ]]; then
     printf 'apple-no-network: skipping plist format lint because plutil is not available on this platform; still scanning plist/privacy text for forbidden network keys.\n' >&2
   fi
 
-  entitlement_pattern='com\.apple\.security\.network\.(client|server)|com\.apple\.developer\.(icloud|ubiquity|aps-environment)|com\.apple\.developer\.icloud|NSUbiquitous|NSPersistentCloudKitContainer|CloudKit|NSLocalNetworkUsageDescription|NSBonjourServices|NSAppTransportSecurity|NSAllowsArbitraryLoads|NSAllowsLocalNetworking|WKAppBoundDomains'
-  print_grep_matches "forbidden network client/server, iCloud, local-network, or transport-security entitlement/Info key" "$entitlement_pattern" "${plist_files[@]}"
+  network_plist_files=()
+  for file in "${plist_files[@]}"; do
+    [[ "$file" == *CloudKit.entitlements ]] && continue
+    network_plist_files+=("$file")
+  done
+  if [[ ${#network_plist_files[@]} -gt 0 ]]; then
+    entitlement_pattern='com\.apple\.security\.network\.(client|server)|com\.apple\.developer\.(icloud|ubiquity|aps-environment)|com\.apple\.developer\.icloud|NSUbiquitous|NSPersistentCloudKitContainer|CloudKit|NSLocalNetworkUsageDescription|NSBonjourServices|NSAppTransportSecurity|NSAllowsArbitraryLoads|NSAllowsLocalNetworking|WKAppBoundDomains'
+    print_grep_matches "forbidden network client/server, iCloud, local-network, or transport-security entitlement/Info key" "$entitlement_pattern" "${network_plist_files[@]}"
+  fi
 fi
 
 if [[ ${#config_files[@]} -gt 0 ]]; then
-  config_entitlement_pattern='com\.apple\.security\.network\.(client|server)|com\.apple\.developer\.(icloud|ubiquity|aps-environment)|CODE_SIGN_ENTITLEMENTS.*(iCloud|CloudKit)|INFOPLIST_KEY_(NSLocalNetworkUsageDescription|NSBonjourServices|NSAppTransportSecurity|NSAllowsArbitraryLoads|NSAllowsLocalNetworking|WKAppBoundDomains)'
+  config_entitlement_pattern='com\.apple\.security\.network\.(client|server)|com\.apple\.developer\.(icloud|ubiquity|aps-environment)|INFOPLIST_KEY_(NSLocalNetworkUsageDescription|NSBonjourServices|NSAppTransportSecurity|NSAllowsArbitraryLoads|NSAllowsLocalNetworking|WKAppBoundDomains)'
   print_grep_matches "forbidden network/iCloud entitlement or Info.plist key in Apple project configuration" "$config_entitlement_pattern" "${config_files[@]}"
 
   project_remote_package_pattern='XCRemoteSwiftPackageReference|repositoryURL'

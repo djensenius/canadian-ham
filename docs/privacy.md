@@ -50,8 +50,8 @@ Disallowed data flows:
 
 Post-v1 gated exception:
 
-- Optional iCloud progress sync may be built only behind an off-by-default build gate after v1. When that gate is disabled, including for v1 release builds, the app must carry no iCloud capability, no Push Notifications capability, and no remote-notification background mode.
-- When the gate is explicitly enabled after v1, the approved network-dependent scope is limited to CloudKit private-database progress sync, the Push Notifications capability that CloudKit uses for silent sync notifications, and the remote-notification background mode needed for SwiftData/Core Data CloudKit updates. The feature must remain user opt-in and off by default.
+- Optional iCloud progress sync may be built only behind the non-default `DebugCloudKit` Apple build configuration after v1. That configuration defines `ICLOUD_SYNC`; default `Debug`/`Release`, CI and v1 release builds leave the gate disabled and must carry no iCloud capability, no Push Notifications capability, no remote-notification background mode and no Settings iCloud toggle.
+- When the gate is explicitly enabled after v1, the approved network-dependent scope is limited to CloudKit private-database progress sync for learning progress, the Push Notifications capability that CloudKit uses for silent sync notifications, and the remote-notification background mode needed for SwiftData/Core Data CloudKit updates. The feature must remain user opt-in and off by default, with preferences kept in a local-only `.none` configuration. The private container ID is currently `iCloud.com.djensenius.CanadianHam`, to be confirmed when the capability is registered.
 - The approved exception does not permit analytics, diagnostics upload, remote config, advertising, third-party SDK collection, or developer-operated progress servers.
 
 Implementation rules:

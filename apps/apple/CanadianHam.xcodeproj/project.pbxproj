@@ -168,6 +168,7 @@
 		0CE325C0851B44E13EA76E8A /* subsection-titles.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "subsection-titles.json"; sourceTree = "<group>"; };
 		10FA8D954031CD5F553D46A3 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		119AECAEDB885D3C3A535950 /* CanadianHamVision.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CanadianHamVision.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1384BDF3C806AC3EEC29FB6C /* CanadianHam.macOS.CloudKit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CanadianHam.macOS.CloudKit.entitlements; sourceTree = "<group>"; };
 		140A13D95FE054984DF26281 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		19D0EE29F4AF58261D7F6B2C /* LocalizationCatalogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationCatalogTests.swift; sourceTree = "<group>"; };
 		1DED9AA3F205BE249BD8DC23 /* ProgressStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStore.swift; sourceTree = "<group>"; };
@@ -184,6 +185,7 @@
 		4EF15EA3BC012EB6FC4367D8 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		543DA6642D20EAF6FA88693D /* Tokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tokens.swift; sourceTree = "<group>"; };
 		5B61FF08B59BD2425E771B49 /* categories.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = categories.json; sourceTree = "<group>"; };
+		5FB02018DEAAC19F488B3B0F /* CanadianHam.iOS.CloudKit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CanadianHam.iOS.CloudKit.entitlements; sourceTree = "<group>"; };
 		62D7A86407A650CCC12DE3EA /* morse-swift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "morse-swift"; path = "../../packages/morse-swift"; sourceTree = SOURCE_ROOT; };
 		641771DDA6C72AE924365999 /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = manifest.json; sourceTree = "<group>"; };
 		658B2A641A5BBF5D6B65B2DD /* AccessibleSecondaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibleSecondaryButtonStyle.swift; sourceTree = "<group>"; };
@@ -485,6 +487,8 @@
 				C5F42909CFD2242DE9CFD019 /* Assets.xcassets */,
 				B1D63C824E4C00165C3F4961 /* CanadianHam-InfoPlist.strings */,
 				02FD09ACC6D3F5472A098191 /* CanadianHam-InfoPlist.strings */,
+				5FB02018DEAAC19F488B3B0F /* CanadianHam.iOS.CloudKit.entitlements */,
+				1384BDF3C806AC3EEC29FB6C /* CanadianHam.macOS.CloudKit.entitlements */,
 				8D63616999E30A9A60763F71 /* CanadianHam.macOS.entitlements */,
 				10FA8D954031CD5F553D46A3 /* Localizable.xcstrings */,
 				053A76352EF3460FE69FEDFC /* PrivacyInfo.xcprivacy */,
@@ -1190,6 +1194,28 @@
 			};
 			name = Release;
 		};
+		037A3EF6F029E29F4F9BECE2 /* DebugCloudKit */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHamUITests;
+				PRODUCT_NAME = CanadianHamUITests;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CanadianHam;
+			};
+			name = DebugCloudKit;
+		};
 		072B20B8ED15BE5C3843C1DD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1267,6 +1293,24 @@
 			};
 			name = Release;
 		};
+		13A740A3D4837E9389D47E8E /* DebugCloudKit */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHamVisionTests;
+				PRODUCT_NAME = CanadianHamVisionTests;
+				SDKROOT = xros;
+				TARGETED_DEVICE_FAMILY = 7;
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = DebugCloudKit;
+		};
 		1635603C99D3ECE24CF0BCAF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1287,6 +1331,47 @@
 				XROS_DEPLOYMENT_TARGET = 27.0;
 			};
 			name = Release;
+		};
+		16FAFF40723D27B6C5760E93 /* DebugCloudKit */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Canadian Ham TV";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHam.TV;
+				PRODUCT_NAME = CanadianHamTV;
+				SDKROOT = appletvos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = DebugCloudKit;
+		};
+		1FAF1222BBA7AE4F27A97D8C /* DebugCloudKit */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHamVisionUITests;
+				PRODUCT_NAME = CanadianHamVisionUITests;
+				SDKROOT = xros;
+				TARGETED_DEVICE_FAMILY = 7;
+				TEST_TARGET_NAME = CanadianHamVision;
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = DebugCloudKit;
 		};
 		53200E12EAC37D475BCFFC73 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1445,6 +1530,35 @@
 			};
 			name = Release;
 		};
+		7BB3A1246816245543ED66C0 /* DebugCloudKit */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				"CODE_SIGN_ENTITLEMENTS[sdk=iphone*]" = CanadianHam/Resources/CanadianHam.iOS.CloudKit.entitlements;
+				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = CanadianHam/Resources/CanadianHam.macOS.CloudKit.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Canadian Ham";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				"INFOPLIST_KEY_UIBackgroundModes[sdk=iphone*]" = "remote-notification";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHam;
+				PRODUCT_NAME = CanadianHam;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DebugCloudKit;
+		};
 		7FBC145295AE486E55BA8ED4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1462,6 +1576,25 @@
 				XROS_DEPLOYMENT_TARGET = 27.0;
 			};
 			name = Debug;
+		};
+		880894643D96BA79A9D36F47 /* DebugCloudKit */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHamTVUITests;
+				PRODUCT_NAME = CanadianHamTVUITests;
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_TARGET_NAME = CanadianHamTV;
+				TVOS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = DebugCloudKit;
 		};
 		885332E7F37F27B3DBA28E96 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1595,6 +1728,119 @@
 			};
 			name = Debug;
 		};
+		A395ABD5753A0486DB1BFC1E /* DebugCloudKit */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Canadian Ham Vision";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHam.Vision;
+				PRODUCT_NAME = CanadianHamVision;
+				SDKROOT = xros;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 7;
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = DebugCloudKit;
+		};
+		AD731D0E82CB172339B6DD5D /* DebugCloudKit */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "$(inherited) -DICLOUD_SYNC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TVOS_DEPLOYMENT_TARGET = 27.0;
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = DebugCloudKit;
+		};
+		BD147EBCBE7161778253D005 /* DebugCloudKit */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHamTVTests;
+				PRODUCT_NAME = CanadianHamTVTests;
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = DebugCloudKit;
+		};
 		CA59ADDE79E92566930C8729 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1692,6 +1938,30 @@
 			};
 			name = Debug;
 		};
+		F608CD6DD01AD8B7B0E0A069 /* DebugCloudKit */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				"BUNDLE_LOADER[sdk=macosx*]" = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHamTests;
+				PRODUCT_NAME = CanadianHamTests;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CanadianHam.app/CanadianHam";
+				"TEST_HOST[sdk=macosx*]" = "$(BUILT_PRODUCTS_DIR)/CanadianHam.app/Contents/MacOS/CanadianHam";
+			};
+			name = DebugCloudKit;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1699,6 +1969,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D82C1CD0F49B1E6C6323E713 /* Debug */,
+				7BB3A1246816245543ED66C0 /* DebugCloudKit */,
 				D894D8116D94228E1D09E207 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1708,6 +1979,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				797569207F21ED190D5CE047 /* Debug */,
+				A395ABD5753A0486DB1BFC1E /* DebugCloudKit */,
 				1635603C99D3ECE24CF0BCAF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1717,6 +1989,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				07CF05955797175DD7AB8A2C /* Debug */,
+				BD147EBCBE7161778253D005 /* DebugCloudKit */,
 				926CDD791CC2C01145DFD00D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1726,6 +1999,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				072B20B8ED15BE5C3843C1DD /* Debug */,
+				1FAF1222BBA7AE4F27A97D8C /* DebugCloudKit */,
 				CA59ADDE79E92566930C8729 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1735,6 +2009,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7FBC145295AE486E55BA8ED4 /* Debug */,
+				13A740A3D4837E9389D47E8E /* DebugCloudKit */,
 				07F0A1532827487497CFF7AA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1744,6 +2019,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8C6A3EE1D07F08CA28E4A7DB /* Debug */,
+				AD731D0E82CB172339B6DD5D /* DebugCloudKit */,
 				6FE4D0D9CEE24D623D7260C3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1753,6 +2029,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				885332E7F37F27B3DBA28E96 /* Debug */,
+				880894643D96BA79A9D36F47 /* DebugCloudKit */,
 				018F6E5E8AA75F9B805B0904 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1762,6 +2039,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A320D7F6E9F61A0C6B41EF50 /* Debug */,
+				037A3EF6F029E29F4F9BECE2 /* DebugCloudKit */,
 				7B9A348211E13DCDC9A7BC0F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1771,6 +2049,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E9F9837BD111299FDFF6A31F /* Debug */,
+				16FAFF40723D27B6C5760E93 /* DebugCloudKit */,
 				09A2E6DE019FD321083F7513 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1780,6 +2059,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				53200E12EAC37D475BCFFC73 /* Debug */,
+				F608CD6DD01AD8B7B0E0A069 /* DebugCloudKit */,
 				57A3EFC60AC1FC71C197C590 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
