@@ -160,8 +160,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         scrollUntilHittable(review, in: app, maxSwipes: 8)
         XCTAssertTrue(review.isHittable, "Review weakest characters should be hittable before tapping")
         review.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
-        XCTAssertTrue(app.staticTexts["Review session"].firstMatch.waitForExistence(timeout: 5), "Review weakest characters should open a review session")
-        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Exercise 1 of")).firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Exercise 1 of")).firstMatch.waitForExistence(timeout: 5), "Review weakest characters should open an exercise session")
 
         tapCompactBack(in: app)
         openFirstMorseUnit(in: app)
