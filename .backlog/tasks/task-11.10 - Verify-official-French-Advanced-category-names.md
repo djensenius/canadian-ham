@@ -1,7 +1,7 @@
 ---
 id: TASK-11.10
 title: Verify official French Advanced category names
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-02 17:03'
