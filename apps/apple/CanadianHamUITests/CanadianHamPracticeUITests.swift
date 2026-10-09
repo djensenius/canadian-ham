@@ -158,7 +158,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let review = app.buttons["morse-course-review"].firstMatch
         XCTAssertTrue(review.waitForExistence(timeout: 5))
         scrollUntilHittable(review, in: app, maxSwipes: 8)
-        review.tap()
+        XCTAssertTrue(review.isHittable, "Review weakest characters should be hittable before tapping")
+        review.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
         XCTAssertTrue(app.staticTexts["Review session"].firstMatch.waitForExistence(timeout: 5), "Review weakest characters should open a review session")
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Exercise 1 of")).firstMatch.waitForExistence(timeout: 5))
 
