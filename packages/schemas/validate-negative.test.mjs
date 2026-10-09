@@ -66,6 +66,41 @@ test("progress export schema rejects Advanced bankId with Basic exam items and b
   );
 });
 
+const basicLessonQuizWithAdvancedQuestion = {
+  id: "lesson-quiz-1",
+  quizId: "QZ-L-005-01-A",
+  lessonId: "L-005-01",
+  submittedAt: "2026-01-02T03:45:00.000Z",
+  correct: 1,
+  total: 1,
+  percent: 100,
+  officialQuestionIds: ["A-001-001-001"],
+  incorrectOfficialQuestionIds: [],
+  incorrectConceptCheckIds: [],
+};
+
+test("progress export schema rejects Basic lesson quizzes that reference Advanced questions", () => {
+  assertSchemaRejects(
+    { ...validProgressExport, lessonQuizAttempts: [basicLessonQuizWithAdvancedQuestion] },
+    "progress-export-v1.schema.json",
+    "expected exactly one oneOf branch to match",
+  );
+});
+
+test("progress export schema rejects Advanced exports that carry lesson data", () => {
+  const advancedExport = { ...validProgressExport, bankId: "advanced-2025-02-04" };
+  assertSchemaRejects(
+    { ...advancedExport, lessonQuizAttempts: [{ ...basicLessonQuizWithAdvancedQuestion, officialQuestionIds: ["B-005-001-001"] }] },
+    "progress-export-v1.schema.json",
+    "expected exactly one oneOf branch to match",
+  );
+  assertSchemaRejects(
+    { ...advancedExport, lessonProgress: [{ lessonId: "L-005-01", readAt: "2026-01-02T03:30:00.000Z", readCount: 1 }] },
+    "progress-export-v1.schema.json",
+    "expected exactly one oneOf branch to match",
+  );
+});
+
 test("semantic canonical timestamps reject impossible calendar/time values", () => {
   assertSchemaRejects(
     { ...validProgressExport, exportedAt: "2026-02-31T25:61:61.000Z" },

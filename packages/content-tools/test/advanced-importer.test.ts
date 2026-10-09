@@ -106,6 +106,15 @@ test("Advanced SHA256SUMS rejects a missing line for a manifest-listed file", as
   }, /SHA256SUMS: missing line for questions\/amat_adv_quest_delim\.txt/);
 });
 
+test("Advanced SHA256SUMS rejects a changed source file whose metadata is unchanged", async () => {
+  // Only the file bytes change: SHA256SUMS and manifest.json still agree with each other,
+  // so this fails only if the importer really hashes each manifest-listed file.
+  await assertImportRejects(async (root) => {
+    const readmePath = path.join(root, ADVANCED_SOURCE_RELATIVE_DIR, "questions", "readme_adv.txt");
+    await writeFile(readmePath, Buffer.concat([await readFile(readmePath), Buffer.from("\n")]));
+  }, /questions\/readme_adv\.txt: SHA-256 mismatch against/);
+});
+
 test("imports and validates the committed Advanced 2025-02-04 source bank", async () => {
   const bank = await importAdvancedQuestionBank(REPO_ROOT);
 

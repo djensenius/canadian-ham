@@ -41,6 +41,21 @@
         "examAttempts": {
           "type": "array",
           "items": { "$ref": "common.schema.json#/$defs/basicProgressExamAttempt" }
+        },
+        "lessonQuizAttempts": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "common.schema.json#/$defs/lessonQuizAttempt" },
+              {
+                "type": "object",
+                "properties": {
+                  "officialQuestionIds": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/basicQuestionId" } },
+                  "incorrectOfficialQuestionIds": { "type": "array", "items": { "$ref": "common.schema.json#/$defs/basicQuestionId" } }
+                }
+              }
+            ]
+          }
         }
       }
     },
@@ -56,7 +71,9 @@
         "examAttempts": {
           "type": "array",
           "items": { "$ref": "common.schema.json#/$defs/advancedProgressExamAttempt" }
-        }
+        },
+        "lessonProgress": { "type": "array", "maxItems": 0 },
+        "lessonQuizAttempts": { "type": "array", "maxItems": 0 }
       }
     }
   ]
