@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-09 21:04'
+updated_date: '2026-10-09 21:27'
 labels:
   - apple
   - privacy
@@ -71,6 +71,8 @@ Evidence: test:apple-icloud-gate and check:apple-icloud-gate pass; check:apple-l
 PR #160 Copilot round 2 (81c55ae, coordinator): check-apple-no-network.sh now scans exact '#if ICLOUD_SYNC' branches too, exempting only 'import CloudKit' and CK*/CloudKit* identifiers, so other networking or analytics in gated code still fails. The plist scan flags UIBackgroundModes and remote-notification everywhere except the one approved gated Info.plist. New negative fixtures (gated import Network, gated URLSession, a background-modes plist) fail as expected; test:apple-network and check:apple-network pass. Account changes currently turn the opt-in off and show sync as off; the already-open container is released on the next launch. Tearing down the live CloudKit container immediately is task-13.5 scope (new AC).
 
 PR #160 Copilot round 3 (18ab235, coordinator): the gated CloudKit Info.plist is scanned with only the UIBackgroundModes and remote-notification tokens removed, so any other forbidden network key there (for example NSAppTransportSecurity/NSAllowsArbitraryLoads) fails. New fixtures: an extra forbidden key in the gated plist (fails) and the approved plist (passes). test:apple-network and check:apple-network pass.
+
+PR #160 Copilot round 4 (9a18252, coordinator): resetAllData clears the iCloud opt-in and sets isICloudSyncEnabled false only after the reset save succeeds (rollback is unchanged on failure); new test testResetAllDataTurnsICloudSyncOptInOff. check-apple-no-network.sh's EXIT trap also removes the gated-plist temp directory. Evidence: macOS ProgressStoreTests 32/32 (including the new test); test:apple-network and check:apple-network pass.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
