@@ -166,11 +166,18 @@ if [[ ${#swift_files[@]} -gt 0 ]]; then
     mkdir -p "$(dirname "$sanitized_file")"
     awk '
       function is_exact_icloud_if(line) { return line ~ /^[[:space:]]*#if[[:space:]]+ICLOUD_SYNC[[:space:]]*(\/\/.*)?$/ }
-      skipping == 0 && is_exact_icloud_if($0) { skipping = 1; depth = 1; next }
+      # Inside an exact "#if ICLOUD_SYNC" branch, only the approved CloudKit APIs are exempt:
+      # drop "import CloudKit" and CK*/CloudKit* identifiers, and keep scanning everything else.
+      skipping == 0 && is_exact_icloud_if($0) { skipping = 1; depth = 1; print ""; next }
       skipping == 1 {
-        if ($0 ~ /^[[:space:]]*#if([[:space:]]|$)/) { depth++; next }
-        if (depth == 1 && $0 ~ /^[[:space:]]*#(else|elseif)([[:space:]]|$)/) { skipping = 0; depth = 0; next }
-        if ($0 ~ /^[[:space:]]*#endif([[:space:]]|$)/) { depth--; if (depth == 0) { skipping = 0 }; next }
+        if ($0 ~ /^[[:space:]]*#if([[:space:]]|$)/) { depth++; print ""; next }
+        if (depth == 1 && $0 ~ /^[[:space:]]*#(else|elseif)([[:space:]]|$)/) { skipping = 0; depth = 0; print ""; next }
+        if ($0 ~ /^[[:space:]]*#endif([[:space:]]|$)/) { depth--; if (depth == 0) { skipping = 0 }; print ""; next }
+        if ($0 ~ /^[[:space:]]*import[[:space:]]+CloudKit[[:space:]]*(\/\/.*)?$/) { print ""; next }
+        line = $0
+        gsub(/CK[A-Z][A-Za-z0-9_]*/, "", line)
+        gsub(/[A-Za-z0-9_]*CloudKit[A-Za-z0-9_]*/, "", line)
+        print line
         next
       }
       { print }
@@ -229,10 +236,12 @@ if [[ ${#plist_files[@]} -gt 0 ]]; then
   network_plist_files=()
   for file in "${plist_files[@]}"; do
     [[ "$file" == *CloudKit.entitlements ]] && continue
+    # The one approved gated Info.plist (used only by DebugCloudKit) may declare remote notifications.
+    [[ "$file" == *apps/apple/CanadianHam/Resources/CanadianHam.iOS.CloudKit.Info.plist ]] && continue
     network_plist_files+=("$file")
   done
   if [[ ${#network_plist_files[@]} -gt 0 ]]; then
-    entitlement_pattern='com\.apple\.security\.network\.(client|server)|com\.apple\.developer\.(icloud|ubiquity|aps-environment)|com\.apple\.developer\.icloud|NSUbiquitous|NSPersistentCloudKitContainer|CloudKit|NSLocalNetworkUsageDescription|NSBonjourServices|NSAppTransportSecurity|NSAllowsArbitraryLoads|NSAllowsLocalNetworking|WKAppBoundDomains'
+    entitlement_pattern='com\.apple\.security\.network\.(client|server)|com\.apple\.developer\.(icloud|ubiquity|aps-environment)|com\.apple\.developer\.icloud|NSUbiquitous|NSPersistentCloudKitContainer|CloudKit|UIBackgroundModes|remote-notification|NSLocalNetworkUsageDescription|NSBonjourServices|NSAppTransportSecurity|NSAllowsArbitraryLoads|NSAllowsLocalNetworking|WKAppBoundDomains'
     print_grep_matches "forbidden network client/server, iCloud, local-network, or transport-security entitlement/Info key" "$entitlement_pattern" "${network_plist_files[@]}"
   fi
 fi

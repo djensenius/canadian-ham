@@ -200,6 +200,14 @@ assert_swift_sample_fails_with_label "import-implementation-only" "@_implementat
 assert_swift_sample_fails_with_label "import-kind" "import enum WebKit.WKNavigationType" "$source_symbol_label"
 assert_swift_sample_fails_with_label "icloud-filter-keeps-else" $'#if ICLOUD_SYNC\nimport CloudKit\n#else\nlet urlSessionTask: URLSessionDataTask? = nil\n#endif' "$source_symbol_label"
 assert_swift_sample_fails_with_label "icloud-filter-exact-match" $'#if ICLOUD_SYNC || DEBUG\nimport Network\n#endif' "$source_symbol_label"
+assert_swift_sample_fails_with_label "icloud-gated-non-cloudkit-import" $'#if ICLOUD_SYNC\nimport CloudKit\nimport Network\n#endif' "$source_symbol_label"
+assert_swift_sample_fails_with_label "icloud-gated-urlsession" $'#if ICLOUD_SYNC\nlet container: CKContainer? = nil\nlet task: URLSessionDataTask? = nil\n#endif' "$source_symbol_label"
+background_root=$(make_fixture background-modes-plist)
+cat > "$background_root/apps/apple/Info.plist" <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0"><dict><key>UIBackgroundModes</key><array><string>remote-notification</string></array></dict></plist>
+PLIST
+assert_fails_with_labels "background-modes-plist" "$background_root" "forbidden network client/server, iCloud, local-network, or transport-security entitlement/Info key"
 
 url_label="unexpected URL literal in Swift source"
 assert_swift_sample_fails_with_label "url-mailto" "let supportEmail = \"mailto:help@example.test\"" "$url_label"
