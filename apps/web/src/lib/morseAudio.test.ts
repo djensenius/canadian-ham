@@ -194,4 +194,34 @@ describe("WebMorsePlayer", () => {
       vi.useRealTimers();
     }
   });
+
+  it("still drains the fade when the output controller calls stop() before close()", async () => {
+    vi.useFakeTimers();
+    try {
+      const context = new MockAudioContext();
+      context.baseLatency = 0.03;
+      context.outputLatency = 0.02;
+      const player = new WebMorsePlayer(() => context);
+      await player.playText("E", normalizeMorsePreferences());
+      // useWebMorseOutput's close() stops first, then closes the player.
+      player.stop();
+      const closePromise = player.close();
+      const expectedDelayMilliseconds = Math.ceil((MORSE_AUDIO_RAMP_SECONDS + context.baseLatency + context.outputLatency + MORSE_AUDIO_CLOSE_MARGIN_SECONDS) * 1000);
+
+      await vi.advanceTimersByTimeAsync(expectedDelayMilliseconds - 1);
+      assert.equal(context.closeCount, 0, "close must wait for the fade even after stop()");
+      await vi.advanceTimersByTimeAsync(1);
+      await closePromise;
+      assert.equal(context.closeCount, 1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("closes immediately when nothing has played", async () => {
+    const context = new MockAudioContext();
+    const player = new WebMorsePlayer(() => context);
+    await player.close();
+    assert.equal(context.closeCount, 0, "no context was created, so there is nothing to close");
+  });
 });

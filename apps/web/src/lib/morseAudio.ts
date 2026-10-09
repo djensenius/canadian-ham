@@ -35,6 +35,8 @@ export type WebMorseAudioContextFactory = () => WebMorseAudioContextLike;
 export class WebMorsePlayer {
   #context: WebMorseAudioContextLike | null = null;
   #active: MorsePlaybackHandle | null = null;
+  // Set when stop() fades out live audio, so a following close() still waits for the fade and output latency.
+  #drainPending = false;
   #generation = 0;
 
   constructor(private readonly createContext: WebMorseAudioContextFactory = defaultAudioContextFactory) {}
@@ -83,16 +85,20 @@ export class WebMorsePlayer {
 
   stop(): void {
     this.#generation += 1;
+    if (this.#active !== null) {
+      this.#drainPending = true;
+    }
     this.#active?.stop();
     this.#active = null;
   }
 
   async close(): Promise<void> {
-    const hadActivePlayback = this.#active !== null;
     this.stop();
+    const needsDrain = this.#drainPending;
+    this.#drainPending = false;
     const context = this.#context;
     this.#context = null;
-    if (hadActivePlayback) {
+    if (needsDrain && context !== null) {
       await sleep(closeDelayMilliseconds(context));
     }
     await context?.close?.();
