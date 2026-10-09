@@ -1506,7 +1506,7 @@ struct SettingsView: View {
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
 #if ICLOUD_SYNC
-                    Text(ICloudSyncCopy.gatedPrivacySummary) // l10n: localized
+                    Text("No accounts, analytics, telemetry, third-party SDKs, or developer-operated servers. iCloud Sync is optional and off until you turn it on; import and export use local files you choose.") // l10n: localized
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
 #else
@@ -1563,16 +1563,16 @@ struct SettingsView: View {
 #if ICLOUD_SYNC
     private var iCloudSyncCard: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            Text(ICloudSyncCopy.title) // l10n: localized
+            Text("iCloud Sync") // l10n: localized
                 .font(DesignTokens.FontScale.title.weight(.bold))
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .accessibilityAddTraits(.isHeader)
-            Toggle(ICloudSyncCopy.toggleLabel, isOn: Binding(
+            Toggle("Sync learning progress with iCloud", isOn: Binding(
                 get: { progressStore.isICloudSyncEnabled },
                 set: { enabled in updateICloudSync(enabled) }
             )) // l10n: localized
             .accessibilityIdentifier("icloud-sync-toggle")
-            Text(ICloudSyncCopy.deviceExplanation) // l10n: localized
+            Text("Off by default. When enabled, learning progress can sync through your private iCloud database after restart; preferences stay local on this device.") // l10n: localized
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .fixedSize(horizontal: false, vertical: true)
@@ -1643,8 +1643,8 @@ struct SettingsView: View {
     private func updateICloudSync(_ enabled: Bool) {
         progressStore.updateICloudSyncOptIn(enabled)
         statusMessage = enabled
-            ? ICloudSyncCopy.enabledAfterRestart
-            : ICloudSyncCopy.disabledAfterRestart
+            ? String(localized: "iCloud Sync will turn on after you restart the app.")
+            : String(localized: "iCloud Sync will turn off after you restart the app.")
         errorMessage = nil
         onDataChanged(false)
     }
