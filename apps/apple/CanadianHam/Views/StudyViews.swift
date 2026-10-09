@@ -1621,7 +1621,7 @@ struct SettingsView: View {
 
     private func prepareExport() {
         do {
-            let text = try progressStore.serializedExport(bank: bank, exportedAt: AppleStudyEngine.canonicalNow(), morseSettings: morseSettings)
+            let text = try progressStore.serializedExport(bank: bank, exportedAt: AppleStudyEngine.canonicalNow(), morseSettings: morseSettings.exportedPreferences)
             exportDocument = ProgressExportDocument(text: text)
             showingExporter = true
         } catch {
@@ -1652,7 +1652,7 @@ struct SettingsView: View {
         guard let pendingImport else { return }
         do {
             try progressStore.importData(pendingImport, bank: bank)
-            morseSettings = pendingImport.preferences.morse
+            morseSettings = MorseTrainerSettings(exported: pendingImport.preferences.morse)
             morseSettings.save()
             self.pendingImport = nil
             statusMessage = String(localized: "Progress imported.")

@@ -100,6 +100,29 @@ struct MorseTrainerSettings: Codable, Equatable, Sendable {
         try container.encode(outputMode, forKey: .outputMode)
     }
 
+    init(exported: ExportedMorseSettings) {
+        self.init(
+            toneHz: exported.toneHz,
+            characterWpm: exported.characterWpm,
+            effectiveWpm: exported.effectiveWpm,
+            timingProfile: TimingProfile(rawValue: exported.timingProfile) ?? .isedParis,
+            volume: exported.volume,
+            outputMode: OutputMode(rawValue: exported.outputMode) ?? .audio
+        )
+    }
+
+    var exportedPreferences: ExportedMorseSettings {
+        let settings = normalized()
+        return ExportedMorseSettings(
+            toneHz: settings.toneHz,
+            characterWpm: settings.characterWpm,
+            effectiveWpm: settings.effectiveWpm,
+            timingProfile: settings.timingProfile.rawValue,
+            volume: settings.volume,
+            outputMode: settings.outputMode.rawValue
+        )
+    }
+
     func normalized() -> MorseTrainerSettings {
         let normalizedCharacterWpm = Self.clamp(characterWpm, min: 12, max: 25)
         return MorseTrainerSettings(

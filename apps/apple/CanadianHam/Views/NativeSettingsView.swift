@@ -263,7 +263,7 @@ private struct NativeDataSettingsTab: View {
             return
         }
         do {
-            let text = try progressStore.serializedExport(bank: bank, exportedAt: AppleStudyEngine.canonicalNow(), morseSettings: appSettings.morseSettings)
+            let text = try progressStore.serializedExport(bank: bank, exportedAt: AppleStudyEngine.canonicalNow(), morseSettings: appSettings.morseSettings.exportedPreferences)
             exportDocument = ProgressExportDocument(text: text)
             showingExporter = true
         } catch {
@@ -301,7 +301,7 @@ private struct NativeDataSettingsTab: View {
         }
         do {
             try progressStore.importData(pendingImport, bank: bank)
-            appSettings.morseSettings = pendingImport.preferences.morse
+            appSettings.morseSettings = MorseTrainerSettings(exported: pendingImport.preferences.morse)
             appSettings.morseSettings.save()
             appSettings.recordDataChanged(replacesLocalData: true)
             self.pendingImport = nil

@@ -252,11 +252,11 @@ final class ProgressStoreTests: XCTestCase {
             outputMode: .visualTape
         ).normalized()
 
-        let serialized = try store.serializedExport(bank: bank, exportedAt: "2026-01-02T05:04:05.000Z", morseSettings: morseSettings)
+        let serialized = try store.serializedExport(bank: bank, exportedAt: "2026-01-02T05:04:05.000Z", morseSettings: morseSettings.exportedPreferences)
         let decoded = try JSONDecoder().decode(ProgressExportV1.self, from: Data(serialized.utf8))
 
-        XCTAssertEqual(decoded.preferences.morse, morseSettings)
-        XCTAssertEqual(decoded.preferences.morse.outputMode, .visualTape)
+        XCTAssertEqual(decoded.preferences.morse, morseSettings.exportedPreferences)
+        XCTAssertEqual(decoded.preferences.morse.outputMode, "visualTape")
         XCTAssertTrue(serialized.contains("\"morse\""), "Apple exports should use the web preferences.morse shape.")
         XCTAssertNoThrow(try ProgressStoreService.inMemoryForTests().importData(decoded, bank: bank))
     }

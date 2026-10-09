@@ -116,17 +116,37 @@ struct LessonQuizAttempt: Codable, Equatable, Sendable, Identifiable {
     let incorrectConceptCheckIds: [String]
 }
 
+struct ExportedMorseSettings: Codable, Equatable, Sendable {
+    let toneHz: Int
+    let characterWpm: Int
+    let effectiveWpm: Int
+    let timingProfile: String
+    let volume: Double
+    let outputMode: String
+
+    static let `default` = ExportedMorseSettings(toneHz: 650, characterWpm: 15, effectiveWpm: 5, timingProfile: "isedParis", volume: 0.6, outputMode: "audio")
+
+    init(toneHz: Int, characterWpm: Int, effectiveWpm: Int, timingProfile: String, volume: Double, outputMode: String = "audio") {
+        self.toneHz = toneHz
+        self.characterWpm = characterWpm
+        self.effectiveWpm = effectiveWpm
+        self.timingProfile = timingProfile
+        self.volume = volume
+        self.outputMode = outputMode
+    }
+}
+
 struct ExportedPreferences: Codable, Equatable, Sendable {
     let practiceMode: String
     let examTimerEnabled: Bool
     let theme: String
-    let morse: MorseTrainerSettings
+    let morse: ExportedMorseSettings
 
-    init(practiceMode: String, examTimerEnabled: Bool, theme: String = ApplePreferences.Theme.system.rawValue, morse: MorseTrainerSettings = .default) {
+    init(practiceMode: String, examTimerEnabled: Bool, theme: String = ApplePreferences.Theme.system.rawValue, morse: ExportedMorseSettings = .default) {
         self.practiceMode = practiceMode
         self.examTimerEnabled = examTimerEnabled
         self.theme = theme
-        self.morse = morse.normalized()
+        self.morse = morse
     }
 
     init(from decoder: Decoder) throws {
@@ -134,7 +154,7 @@ struct ExportedPreferences: Codable, Equatable, Sendable {
         practiceMode = try container.decode(String.self, forKey: .practiceMode)
         examTimerEnabled = try container.decode(Bool.self, forKey: .examTimerEnabled)
         theme = try container.decodeIfPresent(String.self, forKey: .theme) ?? ApplePreferences.Theme.system.rawValue
-        morse = try container.decodeIfPresent(MorseTrainerSettings.self, forKey: .morse)?.normalized() ?? .default
+        morse = try container.decodeIfPresent(ExportedMorseSettings.self, forKey: .morse) ?? .default
     }
 }
 
@@ -616,7 +636,7 @@ final class ProgressStoreService: ObservableObject {
         }
     }
 
-    func exportData(bank: QuestionBank, exportedAt: String, morseSettings: MorseTrainerSettings = .load()) throws -> ProgressExportV1 {
+    func exportData(bank: QuestionBank, exportedAt: String, morseSettings: ExportedMorseSettings = .default) throws -> ProgressExportV1 {
         try CanonicalTimestamp.require(exportedAt, fieldName: "exportedAt")
         let entity = try preferencesEntity(createIfMissing: true)
         let lessonProgress = try decoder.decode([ArchivedJSON].self, from: entity.archivedLessonProgressData)
@@ -640,7 +660,7 @@ final class ProgressStoreService: ObservableObject {
         )
     }
 
-    func serializedExport(bank: QuestionBank, exportedAt: String, morseSettings: MorseTrainerSettings = .load()) throws -> String {
+    func serializedExport(bank: QuestionBank, exportedAt: String, morseSettings: ExportedMorseSettings = .default) throws -> String {
         let data = try exportData(bank: bank, exportedAt: exportedAt, morseSettings: morseSettings)
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         return String(decoding: try encoder.encode(data), as: UTF8.self) + "\n"
