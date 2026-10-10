@@ -310,6 +310,17 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCUIDevice.shared.appearance = .light
     }
 
+    func testAccessibilityAuditMorseSendingExamScreenLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditMorseSendingExamScreen(appearance: .light)
+    }
+
+    func testAccessibilityAuditMorseSendingExamScreenDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditMorseSendingExamScreen(appearance: .dark)
+        XCUIDevice.shared.appearance = .light
+    }
+
     func testAccessibilityAuditMorseSendingResultsLight() throws {
         XCUIDevice.shared.appearance = .light
         try auditMorseSendingResults(appearance: .light)
@@ -331,6 +342,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         defer { app.terminate() }
 
         openSendingPractice(in: app)
+        openSendingExamStyleCheck(in: app)
         let start = app.buttons["morse-sending-start-exam-button"].firstMatch
         XCTAssertTrue(start.waitForExistence(timeout: 10))
         start.tap()
@@ -360,6 +372,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         defer { app.terminate() }
 
         openSendingPractice(in: app)
+        openSendingExamStyleCheck(in: app)
         let start = app.buttons["morse-sending-start-exam-button"].firstMatch
         XCTAssertTrue(start.waitForExistence(timeout: 10))
         start.tap()
@@ -382,6 +395,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         defer { app.terminate() }
 
         openSendingPractice(in: app)
+        openSendingExamStyleCheck(in: app)
         let start = app.buttons["morse-sending-start-exam-button"].firstMatch
         XCTAssertTrue(start.waitForExistence(timeout: 10))
         start.tap()
@@ -1453,17 +1467,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
         openSendingPractice(in: app)
         XCTAssertTrue(app.buttons["morse-sending-straight-key-button"].firstMatch.waitForExistence(timeout: 10), "\(appearance.rawValue) sending main audit should show the straight key")
         XCTAssertTrue(app.staticTexts["morse-sending-feedback-summary"].firstMatch.waitForExistence(timeout: 5), "\(appearance.rawValue) sending main audit should show the feedback panel")
-        app.buttons["morse-sending-start-exam-button"].firstMatch.tap()
-        XCTAssertTrue(app.staticTexts["morse-sending-exam-text"].firstMatch.waitForExistence(timeout: 5), "\(appearance.rawValue) sending main audit should show the exam card")
+        XCTAssertTrue(app.buttons["morse-sending-exam-open-button"].firstMatch.waitForExistence(timeout: 5), "\(appearance.rawValue) sending main audit should expose the exam entry")
         try performAudit(on: app, context: "Morse sending main screen \(appearance)")
 
-        app.terminate()
-        app = launchApp(arguments: [
-            "-CanadianHamInitialScreen", "morse",
-            "-CanadianHamMorseSendingDebugHook",
-            "-CanadianHamMorseSendingExamSeconds", "600"
-        ])
-        openSendingPractice(in: app)
         // Audit the lower half too: the paddles and feedback panel start below the fold.
         let feedback = app.staticTexts["morse-sending-feedback-summary"].firstMatch
         scrollUntilHittable(feedback, in: app, maxSwipes: 8)
@@ -1478,6 +1484,21 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try performAudit(on: app, context: "Morse sending main screen lower half \(appearance)")
     }
 
+    private func auditMorseSendingExamScreen(appearance: AuditAppearance) throws {
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseSendingDebugHook",
+            "-CanadianHamMorseSendingExamSeconds", "600"
+        ])
+        defer { app.terminate() }
+        openSendingPractice(in: app)
+        openSendingExamStyleCheck(in: app)
+        XCTAssertTrue(app.buttons["morse-sending-start-exam-button"].firstMatch.waitForExistence(timeout: 10), "\(appearance.rawValue) sending exam audit should show the start button")
+        app.buttons["morse-sending-start-exam-button"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["morse-sending-exam-text"].firstMatch.waitForExistence(timeout: 5), "\(appearance.rawValue) sending exam audit should show the exam card")
+        try performAudit(on: app, context: "Morse sending exam screen \(appearance)")
+    }
+
     private func auditMorseSendingResults(appearance: AuditAppearance) throws {
         let app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "morse",
@@ -1486,6 +1507,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         ])
         defer { app.terminate() }
         openSendingPractice(in: app)
+        openSendingExamStyleCheck(in: app)
         let start = app.buttons["morse-sending-start-exam-button"].firstMatch
         XCTAssertTrue(start.waitForExistence(timeout: 10))
         start.tap()
@@ -1498,6 +1520,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
     private func openSendingPractice(in app: XCUIApplication) {
         let open = app.buttons["morse-sending-open-button"].firstMatch
         XCTAssertTrue(open.waitForExistence(timeout: 10), "Expected the Sending practice entry on the Morse screen")
+        scrollUntilHittable(open, in: app, maxSwipes: 8)
+        open.tap()
+    }
+
+    private func openSendingExamStyleCheck(in app: XCUIApplication) {
+        let open = app.buttons["morse-sending-exam-open-button"].firstMatch
+        XCTAssertTrue(open.waitForExistence(timeout: 10), "Expected the Exam-style check entry on the Sending practice screen")
         scrollUntilHittable(open, in: app, maxSwipes: 8)
         open.tap()
     }

@@ -28,6 +28,7 @@ struct MorseSendingPracticeView: View {
     @State private var examTimerTask: Task<Void, Never>?
     @State private var finiteToneStopTask: Task<Void, Never>?
     @State private var finiteToneGeneration = 0
+    @State private var showingExam = false
     @State private var presentedResult: MorseSendingResult?
 
     private var profile: MorseTimingProfile { (try? settings.normalized().timingProfileValue()) ?? profileForName(.isedParis) }
@@ -52,12 +53,59 @@ struct MorseSendingPracticeView: View {
                 Text("Practise tap timing with a straight key or iambic-style paddles. On Mac and iPad hardware keyboards, focus this screen first, then hold Space for the straight key; use J for dots and K for dashes. On iPhone and iPad, use the large touch targets.") // l10n: localized
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
-                MorseSendingExamCard(
-                    examText: examText,
-                    examRemaining: examRemaining,
-                    start: startExam,
-                    grade: { gradeExam(completedWithinTime: examCompletedWithinDeadline()) }
-                )
+                morseTokenButton("Exam-style check") { showingExam = true }
+                    .accessibilityIdentifier("morse-sending-exam-open-button")
+                sendingControls
+                }
+                .paperCard()
+            }
+            .pagePadding()
+        }
+        .background(DesignTokens.Colors.paper)
+        .navigationTitle("Sending practice") // l10n: localized
+        .focusable(true)
+        .focused($keyFocusActive)
+        .onAppear {
+            keyFocusActive = true
+            // Another Morse mode starting playback stops any held key or paddle here.
+            playbackCoordinator.register("sending-practice") {
+                stopAllKeying(finalizeStraight: true)
+            }
+        }
+        .onKeyPress(phases: [.down, .up]) { press in
+            handleKeyPress(press)
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                refreshExamCountdown()
+            } else {
+                stopAllKeying(finalizeStraight: true)
+            }
+        }
+        .onChange(of: keyFocusActive) { _, isFocused in
+            if !isFocused { stopAllKeying(finalizeStraight: true) }
+        }
+        .navigationDestination(isPresented: $showingExam) {
+            sendingExamScreen
+        }
+        .navigationDestination(isPresented: resultIsPresented) {
+            if let presentedResult {
+                MorseSendingResultsScreen(result: presentedResult) {
+                    resetSending(clearExam: true)
+                    self.presentedResult = nil
+                }
+            }
+        }
+        .onDisappear {
+            playbackCoordinator.unregister("sending-practice")
+            stopAllKeying(finalizeStraight: false)
+            clearPendingCharacterFinalization(clearPendingSamples: true)
+            examTimerTask?.cancel()
+        }
+    }
+
+    private var sendingControls: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     Text("Straight key") // l10n: localized
                         .font(DesignTokens.FontScale.body.weight(.bold))
@@ -126,48 +174,39 @@ struct MorseSendingPracticeView: View {
                 if let errorMessage {
                     MessagePanel(title: "Morse error", message: errorMessage, kind: .warning)
                 }
+        }
+    }
+
+    private var sendingExamScreen: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    Text("Exam-style check") // l10n: localized
+                        .font(DesignTokens.FontScale.title.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityAddTraits(.isHeader)
+                    Text("Send the displayed passage, then end and grade when ready. Unsent characters at 0:00 count as errors.") // l10n: localized
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                    MorseSendingExamCard(
+                        examText: examText,
+                        examRemaining: examRemaining,
+                        start: startExam,
+                        grade: { gradeExam(completedWithinTime: examCompletedWithinDeadline()) }
+                    )
+                    sendingControls
                 }
                 .paperCard()
             }
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
-        .navigationTitle("Sending practice") // l10n: localized
+        .navigationTitle("Exam-style check") // l10n: localized
         .focusable(true)
         .focused($keyFocusActive)
-        .onAppear {
-            keyFocusActive = true
-            // Another Morse mode starting playback stops any held key or paddle here.
-            playbackCoordinator.register("sending-practice") {
-                stopAllKeying(finalizeStraight: true)
-            }
-        }
+        .onAppear { keyFocusActive = true }
         .onKeyPress(phases: [.down, .up]) { press in
             handleKeyPress(press)
-        }
-        .onChange(of: scenePhase) { _, phase in
-            if phase == .active {
-                refreshExamCountdown()
-            } else {
-                stopAllKeying(finalizeStraight: true)
-            }
-        }
-        .onChange(of: keyFocusActive) { _, isFocused in
-            if !isFocused { stopAllKeying(finalizeStraight: true) }
-        }
-        .navigationDestination(isPresented: resultIsPresented) {
-            if let presentedResult {
-                MorseSendingResultsScreen(result: presentedResult) {
-                    resetSending(clearExam: true)
-                    self.presentedResult = nil
-                }
-            }
-        }
-        .onDisappear {
-            playbackCoordinator.unregister("sending-practice")
-            stopAllKeying(finalizeStraight: false)
-            clearPendingCharacterFinalization(clearPendingSamples: true)
-            examTimerTask?.cancel()
         }
     }
 
