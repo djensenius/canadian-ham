@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-10 23:18'
+updated_date: '2026-10-10 23:22'
 labels:
   - content
 dependencies:
@@ -50,6 +50,8 @@ Review r1 follow-up started: fixing every r1 note from ~/.cache/canadian-ham-rev
 Review r1 fixes recorded finding by finding. 1 fixed: L-007-02 now defines Faraday rotation as polarization twist through an ionized region and says reflection can change arriving polarization. 2 fixed: L-008-01 now defines common-mode current before lesson-body use and restores ferrite mechanism as high RF impedance / inductive reactance to common-mode current. 3 fixed: L-007-02 160/80 m summer daylight sentence now says long daylight and stronger D-region absorption reduce sky-wave usefulness. 4 fixed: L-007-03 now explains why 30-100 MHz suits meteor scatter in original words. 5 fixed: L-007-01 restored single-hop qualifier for E/F2 hop scales and summary. 6 fixed: L-007-01 now adds a new practical path-before-power example; prior notes overstated the valley/ridge/town example as added when it was a rewritten/renamed existing worked example. 7 fixed: L-008-02 LED-lamp example now says an AC line filter is low-pass in this job and names source/load placement. 8 fixed: L-008-02 hum misconception wording was revised to avoid close paraphrase while keeping the required 60 Hz distinction. 9 fixed: L-007-03 now explains auroral CW readability as narrow, simple on-off tone. 10 fixed: L-007-01 now uses ionized region / charged particles instead of loose charged-region wording. 11 fixed: L-007-03 radio-horizon worked example now separates Formula from Substitute. 12 fixed: restored quotation marks around "usually" and "skip" where review flagged awkward reading. 13 fixed: L-008-02 adds a switching-supply harmonic example: 70 x 100 kHz = 7 000 kHz = 7.0 MHz. 14 fixed in notes: dropped/reframed items are now recorded here: the 104.3/18.1 MHz intermod example and 3.2 MHz plus 9.2/18.4 MHz harmonic examples stayed dropped to keep lessons shorter; Faraday rotation, meteor-scatter reasoning, and shorter-lead pickup reasoning were restored in revised form.
 
 Review r1 validation passed after fixes: git diff --check; node packages/content-tools/src/check-lesson-coverage.ts; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:explanations; pnpm check:links; TZ=UTC pnpm test; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift. Protected front matter and Illustration brief sections reverified unchanged against main for all five lesson files. No L-005-01 or L-006-03 pinned expectations changed.
+
+Review r2 (APPROVE WITH NOTES): coordinator applied the notes: meteor-scatter 30-100 MHz reasoning, filtering reduces harmonic strength not frequency, Faraday rotation tied to the Earth's magnetic field. Coverage, originality :all, quizzes and links pass.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
