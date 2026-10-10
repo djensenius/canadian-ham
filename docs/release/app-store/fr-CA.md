@@ -2,39 +2,42 @@
 
 Statut : brouillon pour `task-1.9`. Ne rien soumettre avant la réussite des portes de publication dans [`../release-checklist.md`](../release-checklist.md) et la finalisation de l’autorisation de l’ISDE dans [`../../content-licensing.md`](../../content-licensing.md).
 
-Les décomptes sont des nombres de points de code Unicode pour le texte exact ci-dessous. La typographie suit [`../../french-style.md`](../../french-style.md), y compris l’espace insécable avant le deux-points.
+Les décomptes sont des nombres de points de code Unicode pour le texte exact ci-dessous. La typographie suit [`../../french-style.md`](../../french-style.md), y compris l’espace insécable avant le deux-points. App Store Connect n’affiche pas les nouveautés pour une première version; le brouillon Nouveautés est conservé ici pour une version ou mise à jour ultérieure. L’avis formel de non-approbation reste en anglais, comme dans [`../../content-licensing.md`](../../content-licensing.md), jusqu’à l’approbation d’une version juridique française.
 
 | Champ | Limite Apple | Décompte | Brouillon |
 |---|---:|---:|---|
 | Nom | 30 | 12 | Canadian Ham |
 | Sous-titre | 30 | 22 | Étude radio hors ligne |
-| Texte promotionnel | 170 | 143 | Étudiez la radioamateur canadienne hors ligne : leçons de base, exercices, examens simulés, Advanced sur iPhone/iPad/Mac et entraînement Morse. |
-| Mots-clés | 100 | 73 | radioamateur,Canada,ISDE,base,avancé,Morse,CW,examen,exercices,hors ligne |
-| Nouveautés v1 | 4 000 | 291 | Première version : leçons de base hors ligne, quiz, exercices par sujet, examens simulés de 100 questions, état de préparation, Advanced sur iPhone/iPad/Mac avec examens de 50 questions, et entraînement Morse avec leçons Koch, copie, examen, envoi et Quick listen sur Apple TV et Vision Pro. |
-| Description | 4 000 | 2 056 | Voir le bloc ci-dessous. |
+| Texte promotionnel | 170 | 136 | Étudiez le radioamateurisme hors ligne : leçons, examens simulés et Morse sur iPhone/iPad/Mac; exercices et Écoute rapide sur TV/Vision. |
+| Mots-clés | 100 | 76 | radioamateurisme,Canada,base,supérieure,Morse,CW,examen,exercices,hors ligne |
+| Nouveautés v1 | 4 000 | 277 | À conserver pour une version ultérieure : leçons, quiz, examens simulés de 100 questions, état de préparation et Morse complet sur iPhone/iPad/Mac; exercices de compétence supérieure avec examens de 50 questions; exercices par sujet et Écoute rapide sur Apple TV et Vision Pro. |
+| Description | 4 000 | 2 371 | Voir le bloc ci-dessous. |
 
 ## Description
 
 ```text
-Canadian Ham est un outil d’étude indépendant pour la radioamateur au Canada. Il fonctionne hors ligne, en anglais et en français, et ne collecte aucune donnée.
+Canadian Ham est un outil d’étude indépendant pour le radioamateurisme au Canada. Il fonctionne hors ligne, en anglais et en français, et ne collecte aucune donnée.
 
-Étude de la compétence de base
+Étude de la compétence de base sur iPhone, iPad et Mac
 - Lisez des leçons originales, puis consolidez-les avec de courts quiz.
 - Faites des exercices par sujet avec le matériel intégré de la banque de questions de base.
 - Lancez des examens simulés de 100 questions et consultez l’état de préparation pour la compétence de base et la compétence de base avec distinction.
 
-Exercices Advanced sur iPhone, iPad et Mac
-- Passez à la banque Advanced pour des exercices par sujet.
+Exercices de compétence supérieure sur iPhone, iPad et Mac
+- Passez à la banque de compétence supérieure pour des exercices par sujet.
 - Lancez des examens simulés de 50 questions.
-- Gardez la progression Advanced séparée de celle de la compétence de base.
-- Les leçons Advanced ne sont pas incluses dans la v1.
+- Gardez la progression de compétence supérieure séparée de celle de la compétence de base.
+- Les leçons de compétence supérieure ne sont pas incluses dans la v1.
 
-Entraînement Morse
+Entraînement Morse sur iPhone, iPad et Mac
 - Apprenez les caractères avec un cours selon la méthode Koch.
-- Utilisez les exercices de copie et un examen simulé.
-- Exercez-vous à l’envoi avec le rythme des taps.
-- Choisissez les sorties audio, visuelle, haptique et adaptées aux lecteurs d’écran là où elles sont prises en charge.
-- Apple TV et Apple Vision Pro comprennent seulement Quick listen pour le Morse.
+- Utilisez les exercices de copie et un examen simulé de réception.
+- Exercez-vous à l’envoi avec le minutage des touchers.
+- Utilisez les sorties audio, visuelle et haptique là où elles sont prises en charge; les écrans Morse sont conçus pour fonctionner avec VoiceOver.
+
+Apple TV et Apple Vision Pro
+- Faites des exercices par sujet avec les questions de compétence de base.
+- Utilisez seulement l’Écoute rapide Morse; le cours Morse complet, la copie, l’examen et l’envoi sont des fonctions iPhone/iPad/Mac.
 
 Confidentialité et utilisation hors ligne
 - Le contenu est intégré pour l’étude hors ligne.
@@ -42,7 +45,7 @@ Confidentialité et utilisation hors ligne
 - Sur iPhone, iPad et Mac, la progression reste sur l’appareil, sauf si vous l’exportez. Apple TV et Vision Pro gardent les séances d’exercices seulement pendant que l’app est ouverte.
 
 Accessibilité
-Canadian Ham suit les pratiques exemplaires d’accessibilité et prend en charge VoiceOver, Dynamic Type et Réduire les animations sur les plateformes Apple où ces fonctions s’appliquent.
+Canadian Ham est conçue pour prendre en charge VoiceOver, Police dynamique et Réduire les animations sur les plateformes Apple où ces fonctions s’appliquent.
 
-Canadian Ham n’est pas affilié au gouvernement du Canada, à Innovation, Sciences et Développement économique Canada, à Radio Amateurs du Canada, ni à un examinateur accrédité; il n’est ni commandité ni approuvé par ceux-ci.
+canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner.
 ```

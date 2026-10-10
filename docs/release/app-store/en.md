@@ -2,23 +2,23 @@
 
 Status: draft for `task-1.9`. Do not submit until the release gates in [`../release-checklist.md`](../release-checklist.md) are complete and the ISED permission record in [`../../content-licensing.md`](../../content-licensing.md) has been finalized.
 
-Character counts are Unicode code-point counts for the exact draft text below.
+Character counts are Unicode code-point counts for the exact draft text below. App Store Connect does not show What's New for a first release; the What's New draft is kept here for a later release/update.
 
 | Field | Apple limit | Count | Draft |
 |---|---:|---:|---|
 | Name | 30 | 12 | Canadian Ham |
 | Subtitle | 30 | 23 | Offline ham radio study |
-| Promotional text | 170 | 140 | Study Canadian amateur radio offline: Basic lessons, quizzes, practice and mocks, plus iPhone/iPad/Mac Advanced practice and Morse training. |
-| Keywords | 100 | 90 | ham radio,amateur radio,Canada,ISED,Basic,Advanced,Morse,CW,exam prep,offline,radioamateur |
-| What's new for v1 | 4,000 | 271 | Initial release: offline Basic lessons, quizzes, topic practice, 100-question mock exams, readiness, iPhone/iPad/Mac Advanced practice with 50-question mocks, and Morse training with Koch lessons, copy practice, exam, sending, and Quick listen on Apple TV and Vision Pro. |
-| Description | 4,000 | 1,613 | See block below. |
+| Promotional text | 170 | 136 | Study Canadian amateur radio offline: iPhone/iPad/Mac lessons, mocks and Morse training, plus TV/Vision Basic practice and Quick listen. |
+| Keywords | 100 | 91 | ham radio,amateur radio,Canada,Basic,Advanced,Morse,CW,exam prep,offline,radio,radioamateur |
+| What's new for v1 | 4,000 | 242 | Kept for later release: offline iPhone/iPad/Mac Basic lessons, quizzes, 100-question mocks, readiness, Advanced practice with 50-question mocks, and full Morse training; Apple TV and Vision Pro add Basic topic practice and Morse Quick listen. |
+| Description | 4,000 | 1,835 | See block below. |
 
 ## Description
 
 ```text
 Canadian Ham is an independent study tool for Canadian amateur radio learners. It is built for offline use, in English and French, and collects no data.
 
-Basic study
+Basic study on iPhone, iPad and Mac
 - Read original lessons, then reinforce them with short quizzes.
 - Practise by topic with bundled Basic question-bank material.
 - Run 100-question mock exams and review readiness for the Basic qualification and Basic with Honours.
@@ -29,12 +29,15 @@ Advanced practice on iPhone, iPad and Mac
 - Keep Advanced progress separate from Basic.
 - Advanced lessons are not included in v1.
 
-Morse training
+Morse training on iPhone, iPad and Mac
 - Learn characters with a Koch-method course.
-- Use copy practice and a simulated exam.
+- Use copy practice and a simulated receiving exam.
 - Practise sending with tap timing.
-- Choose audio, visual, haptic and screen-reader-friendly output options where supported.
-- Apple TV and Apple Vision Pro include Morse Quick listen only.
+- Use audio, visual and haptic output where supported; Morse screens are designed to work with VoiceOver.
+
+Apple TV and Apple Vision Pro
+- Practise Basic questions by topic.
+- Use Morse Quick listen only; the full Morse course, copy practice, exam and sending practice are iPhone/iPad/Mac features.
 
 Privacy and offline use
 - Content is bundled for offline study.
@@ -42,7 +45,7 @@ Privacy and offline use
 - On iPhone, iPad and Mac, progress stays on the device unless you export it. Apple TV and Vision Pro keep practice sessions only while the app is open.
 
 Accessibility
-Canadian Ham follows accessibility best practices and supports VoiceOver, Dynamic Type and Reduce Motion across the Apple platforms where those features apply.
+Canadian Ham is designed to support VoiceOver, Dynamic Type and Reduce Motion across the Apple platforms where those features apply.
 
-Canadian Ham is not affiliated with, sponsored by or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada, Radio Amateurs of Canada, or any accredited examiner.
+canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner.
 ```
