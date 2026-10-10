@@ -40,7 +40,7 @@ By the end of this lesson, you can:
 
 ## Repeaters are shared relays
 
-A repeater receives on one frequency and retransmits on another. Portable and mobile stations often have small antennas, low height, and moving locations. A repeater at a better site can hear those stations and retransmit from a stronger location.
+A repeater receives on one frequency and retransmits on another. Portable and mobile stations often have small antennas, low height, and moving locations. A repeater at a better site can hear those stations and retransmit from a stronger location. That increases the practical range of portable and mobile stations.
 
 Because many operators share the same relay, repeater procedure is short. Listen before transmitting. Leave a pause after another station unkeys so new traffic can enter. Keep overs brief so other users, including emergency traffic, can get access.
 
