@@ -11,12 +11,12 @@ Character counts are Unicode code-point counts for the exact draft text below. A
 | Promotional text | 170 | 136 | Study Canadian amateur radio offline: iPhone/iPad/Mac lessons, mocks and Morse training, plus TV/Vision Basic practice and Quick listen. |
 | Keywords | 100 | 91 | ham radio,amateur radio,Canada,Basic,Advanced,Morse,CW,exam prep,offline,radio,radioamateur |
 | What's new for v1 | 4,000 | 218 | Offline iPhone/iPad/Mac Basic lessons, quizzes, 100-question mocks, readiness, Advanced practice with 50-question mocks, and full Morse training; Apple TV and Vision Pro add Basic topic practice and Morse Quick listen. |
-| Description | 4,000 | 1,835 | See block below. |
+| Description | 4,000 | 1,941 | See block below. |
 
 ## Description
 
 ```text
-Canadian Ham is an independent study tool for Canadian amateur radio learners. It is built for offline use, in English and French, and collects no data.
+Canadian Ham is an independent study tool for Canadian amateur radio learners. It is built for offline use and collects no data. The interface and the official ISED question banks are in English and French; the original lessons are currently in English only.
 
 Basic study on iPhone, iPad and Mac
 - Read original lessons, then reinforce them with short quizzes.

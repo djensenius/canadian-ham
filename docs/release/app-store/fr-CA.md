@@ -11,12 +11,12 @@ Les décomptes sont des nombres de points de code Unicode pour le texte exact ci
 | Texte promotionnel | 170 | 136 | Étudiez le radioamateurisme hors ligne : leçons, examens simulés et Morse sur iPhone/iPad/Mac; exercices et Écoute rapide sur TV/Vision. |
 | Mots-clés | 100 | 89 | radioamateur,radioamateurisme,Canada,base,supérieure,Morse,CW,examen,exercices,hors ligne |
 | Nouveautés v1 | 4 000 | 235 | Leçons, quiz, examens simulés de 100 questions, état de préparation et Morse complet sur iPhone/iPad/Mac; exercices de compétence supérieure avec examens de 50 questions; exercices par sujet et Écoute rapide sur Apple TV et Vision Pro. |
-| Description | 4 000 | 2 371 | Voir le bloc ci-dessous. |
+| Description | 4 000 | 2 504 | Voir le bloc ci-dessous. |
 
 ## Description
 
 ```text
-Canadian Ham est un outil d’étude indépendant pour le radioamateurisme au Canada. Il fonctionne hors ligne, en anglais et en français, et ne collecte aucune donnée.
+Canadian Ham est un outil d’étude indépendant pour le radioamateurisme au Canada. Il fonctionne hors ligne et ne collecte aucune donnée. L’interface et les banques de questions officielles d’ISDE sont en anglais et en français; les leçons originales sont pour l’instant offertes en anglais seulement.
 
 Étude de la compétence de base sur iPhone, iPad et Mac
 - Lisez des leçons originales, puis consolidez-les avec de courts quiz.

@@ -63,7 +63,7 @@ Repeat each selected screenshot in light and dark appearance:
 - iPhone, iPad and Mac: `-CanadianHamTheme light` or `-CanadianHamTheme dark`.
 - Apple TV and Vision Pro: `-CanadianHamAppearance light` or `-CanadianHamAppearance dark`.
 
-Reset state before each capture with `-CanadianHamResetDataOnLaunch` where persistent progress would otherwise leak between shots. Use deterministic seeds/limits from the existing DEBUG launch arguments to make screenshots repeatable. Do not show a guaranteed exam outcome, official endorsement, private repository URL or unreleased public URL in any screenshot.
+Reset state before each capture with `-CanadianHamResetDataOnLaunch` where persistent progress would otherwise leak between shots. Use deterministic seeds from the existing DEBUG launch arguments to make screenshots repeatable. Never use the question/session limit arguments (`-CanadianHamLessonQuizLimit`, `-CanadianHamPracticeLimit`, `-CanadianHamMockExamLimit`) or `-CanadianHamForceRegularHorizontalSizeClass` on iPhone: they visibly change totals, controls or layout into states the release app never shows. Do not show a guaranteed exam outcome, official endorsement, private repository URL or unreleased public URL in any screenshot.
 
 ## Shared DEBUG launch arguments to stage iPhone, iPad and Mac screens
 
@@ -74,23 +74,23 @@ These arguments are present in `RootView.swift` and the UI tests:
 | Home readiness / Basic overview | `-CanadianHamInitialScreen home` |
 | Basic lessons list | `-CanadianHamInitialScreen learn` |
 | Specific Basic lesson | `-CanadianHamInitialLessonID L-006-03` |
-| Specific Basic lesson quiz | `-CanadianHamInitialLessonQuizID QZ-L-006-03-A -CanadianHamLessonQuizLimit 1 -CanadianHamLessonQuizSeed screenshot-basic-quiz` |
+| Specific Basic lesson quiz | `-CanadianHamInitialLessonQuizID QZ-L-006-03-A -CanadianHamLessonQuizSeed screenshot-basic-quiz` |
 | Practice category list | `-CanadianHamInitialScreen practice` |
-| Specific Basic practice question | `-CanadianHamInitialCategoryID B-001 -CanadianHamPracticeQuestionID B-001-002-002 -CanadianHamPracticeMode immediate -CanadianHamPracticeLimit 1 -CanadianHamPracticeSeed screenshot-basic-practice` |
+| Specific Basic practice question | `-CanadianHamInitialCategoryID B-001 -CanadianHamPracticeQuestionID B-001-002-002 -CanadianHamPracticeMode immediate -CanadianHamPracticeSeed screenshot-basic-practice` |
 | Mock exam start / mock state | `-CanadianHamInitialScreen mock -CanadianHamMockExamSeed screenshot-basic-mock` |
-| Short mock for staged result screen | `-CanadianHamInitialScreen mock -CanadianHamMockExamSeed screenshot-basic-result -CanadianHamMockExamLimit 1` then answer and submit manually. Use only for the results layout; don't present a 1-question result as a full 100-question mock in captions or copy |
+| Mock exam result screen | `-CanadianHamInitialScreen mock -CanadianHamMockExamSeed screenshot-basic-result`, then answer all 100 questions and submit (a real result; no limit argument) |
 | Advanced course picker on iPhone/iPad | `-CanadianHamInitialScreen settings -CanadianHamCourseBankId advanced-2025-02-04` |
 | Advanced course picker on Mac | Open the native Settings window with `-CanadianHamCourseBankId advanced-2025-02-04`; do not use `-CanadianHamInitialScreen settings` on macOS |
 | Advanced lessons-unavailable state | `-CanadianHamInitialScreen learn -CanadianHamCourseBankId advanced-2025-02-04` |
 | Advanced practice list | `-CanadianHamInitialScreen practice -CanadianHamCourseBankId advanced-2025-02-04` |
-| Specific Advanced practice question | `-CanadianHamInitialCategoryID A-001 -CanadianHamPracticeQuestionID A-001-001-001 -CanadianHamCourseBankId advanced-2025-02-04 -CanadianHamPracticeMode immediate -CanadianHamPracticeLimit 1 -CanadianHamPracticeSeed screenshot-advanced-practice` |
+| Specific Advanced practice question | `-CanadianHamInitialCategoryID A-001 -CanadianHamPracticeQuestionID A-001-001-001 -CanadianHamCourseBankId advanced-2025-02-04 -CanadianHamPracticeMode immediate -CanadianHamPracticeSeed screenshot-advanced-practice` |
 | Advanced 50-question mock start | `-CanadianHamInitialScreen mock -CanadianHamCourseBankId advanced-2025-02-04 -CanadianHamMockExamSeed screenshot-advanced-mock` |
 | Morse home / Quick listen | `-CanadianHamInitialScreen morse` |
 | Morse Koch course deterministic lesson | `-CanadianHamInitialScreen morse -CanadianHamMorseCourseSeed screenshot-morse-course` |
 | Morse copy/exam shortened playback | `-CanadianHamInitialScreen morse -CanadianHamMorseCopyPlaybackSeconds 0.1 -CanadianHamMorseExamPlaybackSeconds 0.1 -CanadianHamMorseExamReviewSeconds 1` |
 | Morse sending practice | `-CanadianHamInitialScreen morse -CanadianHamMorseSendingExamSeconds 120`; stage the sending screen manually and do not use the sending debug-hook flag, because it shows a debug-only button |
 | About / privacy / attribution | `-CanadianHamInitialScreen about` |
-| iPhone regular-width staged sidebar, if needed | add `-CanadianHamForceRegularHorizontalSizeClass` |
+| iPad sidebar layout | iPad only: the regular size class is native there; don't force it on iPhone |
 
 ## Device-class plan
 
@@ -101,7 +101,7 @@ Capture on `iPhone 17 Pro Max` with `xcrun simctl launch` and `xcrun simctl io �
 1. Home readiness / Basic overview — `-CanadianHamInitialScreen home`.
 2. Basic lesson or lesson quiz — `-CanadianHamInitialLessonID L-006-03` or the lesson-quiz arguments above.
 3. Basic practice with feedback — Basic practice arguments above; answer one question before capture.
-4. Basic mock exam / readiness result — staged short mock result for composition, then final release-candidate full-flow evidence separately.
+4. Basic mock exam / readiness result — a real 100-question mock submitted in the release-like build (no limit argument).
 5. Advanced practice or Advanced mock start — Advanced practice or mock arguments above; include caption text that Advanced lessons are not in v1.
 6. Morse training — Morse home, Koch course, copy practice or sending, using the Morse arguments above and without debug-only hooks.
 7. About/privacy — `-CanadianHamInitialScreen about` if legal/privacy screenshot is needed for review rather than marketing.
@@ -112,7 +112,7 @@ Capture EN light, EN dark, FR light and FR dark variants, then choose the strong
 
 Capture on `iPad Pro 13-inch (M4)` with `xcrun simctl launch` and `xcrun simctl io … screenshot`. A regular-width iPad set should show the split layout and larger study surfaces:
 
-1. Sidebar with Home / Learn / Practice / Morse / Settings using `-CanadianHamForceRegularHorizontalSizeClass -CanadianHamInitialScreen home` if a simulator needs forcing.
+1. Sidebar with Home / Learn / Practice / Morse / Settings using `-CanadianHamInitialScreen home` (iPad is regular width natively; never force the size class).
 2. Basic lesson reading surface — `-CanadianHamInitialLessonID L-006-03`.
 3. Topic practice question and feedback — Basic practice arguments above.
 4. Mock exam start or results — Basic mock arguments above.
