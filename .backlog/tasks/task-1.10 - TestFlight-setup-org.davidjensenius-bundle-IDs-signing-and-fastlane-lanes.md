@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 12:40'
-updated_date: '2026-10-10 16:41'
+updated_date: '2026-10-10 18:39'
 labels: []
 dependencies: []
 parent_task_id: TASK-1
@@ -57,6 +57,8 @@ Final validation: XcodeGen run twice plus cmp-stability check passed; stale com.
 Review r1 fixes: AGENTS.md and docs/content-licensing.md now allow internal-only TestFlight (team members) and keep external testers, public links and App Store submission blocked until task-1.7; Fastfile no longer overrides MARKETING_VERSION (project.yml is the single source); new icloud-gate self-test 'shared-bundle-ID tvOS DebugCloudKit entitlements leak'; stale containerRegistrationNote removed; create_app_record description corrected; task-13 note records the confirmed container. Checks: test:apple-icloud-gate, check:apple-icloud-gate, check:apple-network pass; ruby -c Fastfile OK. Signing root cause: Herdr/pi panes run in launchd's Background session (launchctl managername = Background), so the keychain can't prompt; run beta lanes from a GUI Terminal window or unlock the keychain first in that shell.
 
 Re-review r2 (61d2c4ac): APPROVE WITH NOTES. Notes addressed: content-licensing vendoring line references the internal-TestFlight exception; runbook says unlock only helps if the key ACL allows codesign, else use set-key-partition-list. Coordinator ran: test-check-apple-icloud-gate (pass), check-apple-icloud-gate (pass), ruby -c Fastfile (Syntax OK), rg containerRegistrationNote apps/scripts/docs (no refs), check:links.
+
+2026-10-10 launch-screen/orientation change (0f6aa32, App Store validation 90870/90474/90475): full iOS xbuild suite CanadianHamTests 70 + CanadianHamUITests 74 = 144/144, 0 failures (same test names as listed above); full macOS 72/72. tvOS/visionOS targets unchanged. Dedicated build keychain added; all four internal TestFlight builds uploaded and VALID: iOS 202610101303, macOS 202610101306, tvOS 202610101309, visionOS 202610101312 (1.0.0); the Internal group (internal, all builds) has them; no external groups or public link. Copilot round 1 fixed: testFlightInternalTestingOnly, produce app_version from project.yml, runbook keychain prerequisite. Follow-up task-36 (content README.md files bundled).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
