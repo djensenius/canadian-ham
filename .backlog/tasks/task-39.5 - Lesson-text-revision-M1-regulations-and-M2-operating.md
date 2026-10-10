@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-10 23:00'
+updated_date: '2026-10-10 23:04'
 labels:
   - content
 dependencies:
@@ -42,4 +42,6 @@ Revise all lessons in m1-regulations-policies and m2-operating-procedures to the
 
 <!-- SECTION:NOTES:BEGIN -->
 M1 pass: revised L-001-01 through L-001-06 in reference style without changing front matter, covers, quiz IDs, or Illustration brief blocks. L-001-01 added station-binder real-world context and certificate/address memory aid; facts checked against B-001-001 through B-001-004, B-001-022, and docs/exam-facts.md. L-001-02 added club work-day station-control context; facts checked against B-001-005 through B-001-009. L-001-03 added public-service net context and start/stop/half-hour identification memory aid; facts checked against B-001-010 through B-001-014. L-001-04 added power-display context and Basic-power memory aid; power and below-30-MHz facts checked against B-001-015 through B-001-019 and docs/exam-facts.md. L-001-05 added travel note-card context and place-first memory aid; facts checked against B-001-020 and B-001-021. L-001-06 added installation-file context; Safety Code 6 and EMCAB facts checked against B-001-023 through B-001-025. M1 check tranche passed after rerunning a transient web timeout: coverage, quizzes, originality, explanations, links, TZ=UTC pnpm test, and swift test.
+
+M2 pass: revised L-002-01 through L-002-04 in existing reference-style operating format without changing front matter, covers, quiz IDs, or Illustration brief blocks. L-002-01 added repeater-entry and simplex procedure examples, a 146.940 MHz minus 600 kHz offset calculation, and ITU phonetic memory aid; facts checked against B-002-001 through B-002-004. L-002-02 added RST and Q-signal memory aids plus real-world report and S-unit power examples; facts checked against B-002-005 through B-002-007. Adjusted the S-unit wording to avoid originality overlap while preserving the 6 dB/S-unit and quadrupling relationship. L-002-03 added distress-role memory aid and break-in/readiness examples; facts checked against B-002-008. L-002-04 added log-investigation and UTC conversion examples plus long-path memory aid; facts checked against B-002-009. M2 check tranche passed: coverage, quizzes, originality, explanations, links, TZ=UTC pnpm test, and swift test.
 <!-- SECTION:NOTES:END -->
