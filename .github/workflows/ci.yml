@@ -159,6 +159,10 @@ jobs:
         if: needs.changes.outputs.full_checks == 'true'
         run: pnpm check:links
 
+      - name: Figure check
+        if: needs.changes.outputs.full_checks == 'true'
+        run: pnpm check:figures
+
       - name: Content checkers
         if: needs.changes.outputs.full_checks == 'true'
         run: |

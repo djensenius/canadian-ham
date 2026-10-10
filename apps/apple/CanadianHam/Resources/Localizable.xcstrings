@@ -10464,6 +10464,28 @@
           }
         }
       }
+    },
+    "Figure text equivalent" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Figure text equivalent"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Équivalent textuel de la figure"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Équivalent textuel de la figure"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

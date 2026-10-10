@@ -451,6 +451,7 @@ export const enMessages = defineMessages({
   markdownTableAria: "Lesson table",
   markdownCodeBlockAria: "Lesson code block",
   markdownCodeBlockLanguageAria: (language: string) => `Lesson code block (${language})`,
+  markdownFigureTextEquivalent: "Figure text equivalent",
   markdownIllustrationPlaceholder: "Illustration placeholder",
   markdownIllustrationBrief: "Illustration brief:",
 });
@@ -895,6 +896,7 @@ export const frMessages = defineMessages({
   markdownTableAria: "Tableau de leçon",
   markdownCodeBlockAria: "Bloc de code de leçon",
   markdownCodeBlockLanguageAria: (language: string) => `Bloc de code de leçon (${language})`,
+  markdownFigureTextEquivalent: "Équivalent textuel de la figure",
   markdownIllustrationPlaceholder: "Espace réservé pour l’illustration",
   markdownIllustrationBrief: "Résumé de l’illustration :",
 } satisfies MessageCatalogue);

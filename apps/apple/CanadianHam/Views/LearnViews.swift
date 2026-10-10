@@ -541,22 +541,10 @@ private struct LessonMarkdownView: View {
             .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous))
         case .table(let table):
             LessonTableView(table: table)
-        case .illustrationBrief(let brief):
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                Label("Illustration brief", systemImage: "paintbrush")
-                    .font(DesignTokens.FontScale.body.weight(.bold))
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                Text(localized(brief.description, language: .english)) // l10n: content(en)
-                    .font(DesignTokens.FontScale.body)
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                Text(illustrationAltText(brief)) // l10n: localized
-                    .font(DesignTokens.FontScale.caption)
-                    .foregroundStyle(DesignTokens.Colors.inkMuted)
-            }
-            .padding(DesignTokens.Spacing.md)
-            .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-            .accessibilityElement(children: .combine)
-            .accessibilityLabel(Text(illustrationAccessibilityLabel(brief))) // l10n: localized
+        case .figure(let figure):
+            LessonFigureView(figure: figure)
+        case .illustrationBrief:
+            EmptyView()
         case .blockquote(let text):
             Text(english(strippingLinks(from: text))) // l10n: content(en)
                 .font(DesignTokens.FontScale.body.italic())
@@ -564,20 +552,6 @@ private struct LessonMarkdownView: View {
                 .padding(DesignTokens.Spacing.md)
                 .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         }
-    }
-
-    private func illustrationAltText(_ brief: MarkdownIllustrationBrief) -> AttributedString {
-        var text = AttributedString(String(localized: "Alt text: "))
-        text += english(brief.altText)
-        return text
-    }
-
-    private func illustrationAccessibilityLabel(_ brief: MarkdownIllustrationBrief) -> AttributedString {
-        var text = AttributedString(String(localized: "Illustration brief. "))
-        text += english(brief.altText)
-        text += AttributedString(". ")
-        text += english(brief.description)
-        return text
     }
 
     private func strippingLinks(from value: AttributedString) -> AttributedString {
@@ -591,6 +565,58 @@ private struct LessonMarkdownView: View {
 
     private func plainString(_ value: AttributedString) -> String {
         String(value.characters)
+    }
+}
+
+private struct LessonFigureView: View {
+    let figure: MarkdownFigure
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            ScrollView(.horizontal) {
+                Image("lesson-figure-\(figure.id)")
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .frame(maxWidth: .infinity)
+                    .frame(minWidth: minimumFigureWidth, minHeight: minimumFigureHeight)
+                    .padding(DesignTokens.Spacing.md)
+                    .accessibilityLabel(Text(english(figure.altText))) // l10n: content(en)
+            }
+            .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+
+            if !figure.textEquivalent.isEmpty {
+                DisclosureGroup {
+                    VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+                        ForEach(Array(figure.textEquivalent.enumerated()), id: \.offset) { _, item in
+                            Text(english(item)) // l10n: content(en)
+                                .font(DesignTokens.FontScale.body)
+                                .foregroundStyle(DesignTokens.Colors.ink)
+                                .textSelection(.enabled)
+                        }
+                    }
+                    .padding(.top, DesignTokens.Spacing.sm)
+                } label: {
+                    Text("Figure text equivalent")
+                        .font(DesignTokens.FontScale.body.weight(.semibold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                }
+            }
+        }
+        .padding(DesignTokens.Spacing.md)
+        .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+        .accessibilityIdentifier("lesson-figure-\(figure.id)")
+    }
+
+    private var minimumFigureWidth: CGFloat {
+        figure.id == "ohms-law-power-wheel" ? 520 : 300
+    }
+
+    private var minimumFigureHeight: CGFloat {
+        figure.id == "ohms-law-power-wheel" ? 520 : 220
     }
 }
 

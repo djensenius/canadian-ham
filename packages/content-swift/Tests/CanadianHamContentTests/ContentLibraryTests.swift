@@ -126,6 +126,22 @@ final class ContentLibraryTests: XCTestCase {
         }
     }
 
+    func testFigureDirectivesForOhmsLawLesson() throws {
+        let library = try ContentLibrary.load(fromDirectory: repoRootURL())
+        let lesson = try XCTUnwrap(library.lessonsById["L-005-02"])
+        let rendered = try LessonMarkdownRenderer.render(lesson.bodyMarkdown)
+
+        XCTAssertEqual(rendered.figures.map(\.id), ["power-triangle", "ohms-law-triangle", "ohms-law-power-wheel"])
+        let wheel = try XCTUnwrap(rendered.figures.last)
+        XCTAssertTrue(wheel.altText.contains("quadrants for P, E, I, and R"))
+        XCTAssertEqual(wheel.textEquivalent, [
+            "To find P: I x E; I² x R; E² / R.",
+            "To find E: I x R; P / I; √(P x R).",
+            "To find I: E / R; P / E; √(P / R).",
+            "To find R: E / I; E² / P; P / I²."
+        ])
+    }
+
     func testTableParserHandlesAlignmentEscapedPipesAndFencedCode() throws {
         let markdown = """
         ```text

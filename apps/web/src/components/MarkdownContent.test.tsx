@@ -54,11 +54,29 @@ describe("MarkdownContent parser", () => {
     assert.deepEqual(blocks, [{ type: "paragraph", text: "```text value = 300 / f" }]);
   });
 
-  it("stops an illustration brief after its description", () => {
-    const blocks = parseMarkdownBlocks("## Illustration brief\n\nAlt text: Meter\n\nDescription: Draw a meter.\n\nThis paragraph stays separate.");
+  it("stops an illustration brief after its description without showing the author brief to learners", () => {
+    const markdown = "## Illustration brief\n\nAlt text: Meter\n\nDescription: Draw a meter.\n\nThis paragraph stays separate.";
+    const blocks = parseMarkdownBlocks(markdown);
 
     assert.equal(blocks[0]?.type, "illustration");
     assert.deepEqual(blocks[1], { type: "paragraph", text: "This paragraph stays separate." });
+
+    render(<MarkdownContent markdown={markdown} />);
+    assert.equal(screen.queryByText("Illustration placeholder"), null);
+    assert.equal(screen.queryByText(/Draw a meter/u), null);
+    assert.ok(screen.getByText("This paragraph stays separate."));
+  });
+
+  it("parses and renders figure directives with alt text and text equivalents", () => {
+    const markdown = "::figure ohms-law-power-wheel\nAlt text: Ohm wheel alt.\nText equivalent:\n- To find P: I x E.\n::";
+    const blocks = parseMarkdownBlocks(markdown);
+
+    assert.deepEqual(blocks, [{ type: "figure", id: "ohms-law-power-wheel", alt: "Ohm wheel alt.", textEquivalent: ["To find P: I x E."] }]);
+
+    render(<MarkdownContent markdown={markdown} />);
+    assert.ok(screen.getByRole("img", { name: "Ohm wheel alt." }));
+    assert.ok(screen.getByText("Figure text equivalent"));
+    assert.ok(screen.getByText("To find P: I x E."));
   });
 
   it("renders parsed content without unsafe HTML injection", () => {

@@ -2,6 +2,16 @@ import type { ReactNode } from "react";
 
 import { t, type InterfaceLanguage } from "../lib/i18n";
 
+const figureSourceModules = import.meta.glob("../../../../content/figures/*.svg", {
+  eager: true,
+  query: "?raw",
+  import: "default",
+}) as Record<string, string>;
+
+const figureSourcesById = new Map(
+  Object.entries(figureSourceModules).map(([path, source]) => [path.split("/").pop()?.replace(/\.svg$/, "") ?? path, source]),
+);
+
 interface MarkdownContentProps {
   readonly markdown: string;
   readonly title?: string;
@@ -15,6 +25,7 @@ type MarkdownBlock =
   | { readonly type: "ordered-list"; readonly items: readonly string[] }
   | { readonly type: "table"; readonly headers: readonly string[]; readonly rows: readonly (readonly string[])[] }
   | { readonly type: "code"; readonly language: string | null; readonly code: string }
+  | { readonly type: "figure"; readonly id: string; readonly alt: string; readonly textEquivalent: readonly string[] }
   | { readonly type: "illustration"; readonly alt: string; readonly description: string };
 
 export function MarkdownContent({ markdown, title, interfaceLanguage = "en" }: MarkdownContentProps) {
@@ -62,16 +73,29 @@ function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: Int
       ><code>{block.code}</code></pre>
     );
   }
-  return (
-    <figure className="illustration-placeholder" key={index}>
-      <div className="illustration-placeholder__art" role="img" aria-label={block.alt}>
-        {t(interfaceLanguage, "markdownIllustrationPlaceholder")}
-      </div>
-      <figcaption>
-        <strong>{t(interfaceLanguage, "markdownIllustrationBrief")}</strong> {block.description}
-      </figcaption>
-    </figure>
-  );
+  if (block.type === "figure") {
+    const source = figureSourcesById.get(block.id);
+    return (
+      <figure className="lesson-figure" data-figure-id={block.id} key={index}>
+        <div
+          className="lesson-figure__art"
+          role="img"
+          aria-label={block.alt}
+          tabIndex={0}
+          dangerouslySetInnerHTML={source === undefined ? undefined : { __html: source }}
+        >{source === undefined ? block.alt : undefined}</div>
+        {block.textEquivalent.length > 0 ? (
+          <details className="lesson-figure__text-equivalent">
+            <summary>{t(interfaceLanguage, "markdownFigureTextEquivalent")}</summary>
+            <ul>
+              {block.textEquivalent.map((item) => <li key={item}>{item}</li>)}
+            </ul>
+          </details>
+        ) : null}
+      </figure>
+    );
+  }
+  return null;
 }
 
 export function parseMarkdownBlocks(markdown: string, title?: string): MarkdownBlock[] {
@@ -93,6 +117,14 @@ export function parseMarkdownBlocks(markdown: string, title?: string): MarkdownB
     if (fencedCode !== null) {
       blocks.push(fencedCode.block);
       index = fencedCode.nextIndex;
+      assertParserProgress(previousIndex, index);
+      continue;
+    }
+
+    const figure = parseFigure(lines, index);
+    if (figure !== null) {
+      blocks.push(figure.block);
+      index = figure.nextIndex;
       assertParserProgress(previousIndex, index);
       continue;
     }
@@ -154,7 +186,7 @@ export function parseMarkdownBlocks(markdown: string, title?: string): MarkdownB
     const paragraphLines: string[] = [];
     while (index < lines.length) {
       const paragraphLine = lines[index] ?? "";
-      if (paragraphLine.trim() === "" || /^(#{1,6})(?:\s|$)/.test(paragraphLine) || /^\s*[-*+]\s+/.test(paragraphLine) || /^\s*\d+\.\s+/.test(paragraphLine) || isTableStart(lines, index) || parseFencedCode(lines, index) !== null) {
+      if (paragraphLine.trim() === "" || /^(#{1,6})(?:\s|$)/.test(paragraphLine) || /^\s*[-*+]\s+/.test(paragraphLine) || /^\s*\d+\.\s+/.test(paragraphLine) || figureDirectiveId(paragraphLine) !== null || isTableStart(lines, index) || parseFencedCode(lines, index) !== null) {
         break;
       }
       paragraphLines.push(paragraphLine.trim());
@@ -206,6 +238,65 @@ function assertParserProgress(previousIndex: number, nextIndex: number): void {
   if (nextIndex <= previousIndex) {
     throw new Error(`Markdown parser failed to advance at line ${previousIndex + 1}.`);
   }
+}
+
+function figureDirectiveId(line: string): string | null {
+  return /^::figure\s+([a-z0-9][a-z0-9-]*)\s*$/.exec(line.trim())?.[1] ?? null;
+}
+
+function parseFigure(lines: readonly string[], startIndex: number): { readonly block: MarkdownBlock; readonly nextIndex: number } | null {
+  const id = figureDirectiveId(lines[startIndex] ?? "");
+  if (id === null) {
+    return null;
+  }
+
+  let index = startIndex + 1;
+  let alt = "";
+  const textEquivalent: string[] = [];
+  let readingTextEquivalent = false;
+
+  while (index < lines.length) {
+    const line = lines[index] ?? "";
+    const trimmed = line.trim();
+    if (trimmed === "::") {
+      return {
+        block: {
+          type: "figure",
+          id,
+          alt: stripInlineMarkdown(alt.length > 0 ? alt : id),
+          textEquivalent,
+        },
+        nextIndex: index + 1,
+      };
+    }
+
+    const altMatch = /^Alt text:\s*(.+)$/i.exec(trimmed);
+    if (altMatch !== null) {
+      alt = altMatch[1].trim();
+      readingTextEquivalent = false;
+      index += 1;
+      continue;
+    }
+    if (/^Text equivalent:\s*$/i.test(trimmed)) {
+      readingTextEquivalent = true;
+      index += 1;
+      continue;
+    }
+    if (readingTextEquivalent && /^[-*+]\s+/.test(trimmed)) {
+      textEquivalent.push(stripInlineMarkdown(trimmed.replace(/^[-*+]\s+/, "")));
+    }
+    index += 1;
+  }
+
+  return {
+    block: {
+      type: "figure",
+      id,
+      alt: stripInlineMarkdown(alt.length > 0 ? alt : id),
+      textEquivalent,
+    },
+    nextIndex: index,
+  };
 }
 
 function parseIllustration(lines: readonly string[], startIndex: number): { readonly block: MarkdownBlock; readonly nextIndex: number } {

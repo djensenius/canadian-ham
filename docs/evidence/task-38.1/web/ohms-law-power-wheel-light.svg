@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 960"><rect width="100%" height="100%" fill="#FFF8EA"/><g color="#1F1A14">
+  <title>Ohm's law and power formula wheel</title>
+  <desc>A four-quadrant formula wheel grouping ways to find P, E, I, and R.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="480" cy="480" r="405" stroke-width="18"/>
+    <path d="M480 78 C493 179 493 781 480 882" stroke-width="10"/>
+    <path d="M78 480 C179 493 781 493 882 480" stroke-width="10"/>
+    <circle cx="480" cy="480" r="118" stroke-width="9"/>
+    <path d="M204 201 C281 159 389 132 480 132 C574 132 680 160 758 204" stroke-width="5" opacity="0.65"/>
+    <path d="M203 758 C281 801 389 828 480 828 C574 828 681 800 758 756" stroke-width="5" opacity="0.65"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="480" y="506" font-size="44" font-weight="700">unknown</text>
+
+    <text x="480" y="160" font-size="78" font-weight="800">P</text>
+    <text x="480" y="226" font-size="34" font-weight="700">I x E</text>
+    <text x="480" y="276" font-size="34" font-weight="700">I² x R</text>
+    <text x="480" y="326" font-size="34" font-weight="700">E² / R</text>
+
+    <text x="760" y="470" font-size="78" font-weight="800">E</text>
+    <text x="760" y="536" font-size="34" font-weight="700">I x R</text>
+    <text x="760" y="586" font-size="34" font-weight="700">P / I</text>
+    <text x="760" y="636" font-size="34" font-weight="700">√(P x R)</text>
+
+    <text x="480" y="672" font-size="78" font-weight="800">I</text>
+    <text x="480" y="738" font-size="34" font-weight="700">E / R</text>
+    <text x="480" y="788" font-size="34" font-weight="700">P / E</text>
+    <text x="480" y="838" font-size="34" font-weight="700">√(P / R)</text>
+
+    <text x="200" y="470" font-size="78" font-weight="800">R</text>
+    <text x="200" y="536" font-size="34" font-weight="700">E / I</text>
+    <text x="200" y="586" font-size="34" font-weight="700">E² / P</text>
+    <text x="200" y="636" font-size="34" font-weight="700">P / I²</text>
+  </g>
+</g></svg>

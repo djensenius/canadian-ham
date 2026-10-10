@@ -1326,6 +1326,17 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCUIDevice.shared.appearance = .light
     }
 
+    func testOhmsLawLessonFiguresAndAccessibilityLight() throws {
+        XCUIDevice.shared.appearance = .light
+        try auditOhmsLawLessonFigures(appearance: .light)
+    }
+
+    func testOhmsLawLessonFiguresAndAccessibilityDark() throws {
+        XCUIDevice.shared.appearance = .dark
+        try auditOhmsLawLessonFigures(appearance: .dark)
+        XCUIDevice.shared.appearance = .light
+    }
+
     func testAccessibilityAuditMockExamFlowLight() throws {
         XCUIDevice.shared.appearance = .light
         try auditMockExamFlow(appearance: .light)
@@ -1744,6 +1755,20 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app.terminate()
     }
 
+    private func auditOhmsLawLessonFigures(appearance: AuditAppearance) throws {
+        let app = launchApp(arguments: ["-CanadianHamInitialLessonID", "L-005-02"])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
+        for figureID in ["power-triangle", "ohms-law-triangle", "ohms-law-power-wheel"] {
+            let figure = app.descendants(matching: .any)["lesson-figure-\(figureID)"].firstMatch
+            XCTAssertTrue(figure.waitForExistence(timeout: 10), "Expected \(figureID) figure")
+            scrollUntilPartiallyVisible(figure, in: app, maxSwipes: 12)
+            attachScreenshot(named: "task38-1-ios-\(appearance.rawValue)-\(figureID)", from: app)
+        }
+        try performAudit(on: app, context: "\(appearance.rawValue) Ohm's law lesson figures")
+    }
+
     private func auditMockExamFlow(appearance: AuditAppearance) throws {
         let timerApp = launchApp(arguments: [
             "-CanadianHamInitialScreen", "mock",
@@ -2140,6 +2165,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
             app.scrollViews.firstMatch.swipeUp()
             waitBriefly()
         }
+    }
+
+    private func attachScreenshot(named name: String, from app: XCUIApplication) {
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     private func scrollUntilPartiallyVisible(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
