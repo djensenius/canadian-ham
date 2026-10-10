@@ -25,8 +25,8 @@ Research and write docs/teaching-guide.md: a plain-language standard (target rea
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 docs/teaching-guide.md exists with the plain-language standard, an example bank covering all 8 modules (electronics deepest), a vetted memory-trick list with what each helps remember and its source, and a misconceptions list
-- [ ] #2 Every technical example and trick is checked for accuracy (Canadian context: RBR-4, RIC-3, Canadian band plan where relevant) and the research sources are listed
+- [x] #1 docs/teaching-guide.md exists with the plain-language standard, an example bank covering all 8 modules (electronics deepest), a vetted memory-trick list with what each helps remember and its source, and a misconceptions list
+- [x] #2 Every technical example and trick is checked for accuracy (Canadian context: RBR-4, RIC-3, Canadian band plan where relevant) and the research sources are listed
 <!-- AC:END -->
 
 ## Implementation Plan
