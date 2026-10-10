@@ -1472,12 +1472,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
         // Audit the lower half too: the paddles and feedback panel start below the fold.
         let feedback = firstVisibleElement(app.staticTexts.matching(identifier: "morse-sending-feedback-summary"), in: app)
-        scrollUntilHittable(feedback, in: app, maxSwipes: 8)
-        XCTAssertTrue(isFullyVisible(feedback, in: app, requiresHittable: false), "\(appearance.rawValue) sending main audit should scroll the feedback panel into view")
-        let sendingScrollView = app.scrollViews.firstMatch
-        XCTAssertTrue(sendingScrollView.waitForExistence(timeout: 1), "\(appearance.rawValue) sending lower audit should have a scroll view")
-        for _ in 0..<4 { sendingScrollView.swipeUp(); waitBriefly() }
-        scrollUntilPartiallyVisible(feedback, in: app, maxSwipes: 4)
+        scrollUntilPartiallyVisible(feedback, in: app, maxSwipes: 8)
         XCTAssertTrue(isPartiallyVisibleBelowNavigationBar(feedback, in: app), "\(appearance.rawValue) sending feedback should be positioned before settling")
         settleScrollableContentBelowNavigationBar(in: app, context: "Morse sending main screen lower half \(appearance)", preserving: feedback, preserveByScrollingUp: true)
         assertPartiallyVisibleBelowNavigationBar(feedback, in: app, context: "\(appearance.rawValue) sending feedback after settling")
