@@ -29,7 +29,7 @@ Record the written permission here when available in project records.
 | Storage location for permission evidence | Pending: private owner records; do not commit private correspondence unless approved |
 | Release review status | Blocked until reference number/date/scope are recorded and the scope explicitly covers the release artifacts |
 
-Do not infer permission scope beyond the written clearance. T-007/task-1.1 records the permission reference number, date, scope, and explicit confirmation that the scope covers bundling verbatim question text as app data, including the Advanced bank already named in the request. The reference PDFs are retained only as source artifacts and are not shipped in the apps. Until permission is recorded, vendoring is allowed only for private, non-distributed development under the [interim private-development policy](#interim-private-development-policy); publication and distribution remain blocked by the [public-release gate](#public-release-gate).
+Do not infer permission scope beyond the written clearance. T-007/task-1.1 records the permission reference number, date, scope, and explicit confirmation that the scope covers bundling verbatim question text as app data, including the Advanced bank already named in the request. The reference PDFs are retained only as source artifacts and are not shipped in the apps. Until permission is recorded, vendoring is allowed only for private, non-distributed development under the [interim private-development policy](#interim-private-development-policy) (including its internal-TestFlight exception); publication and distribution remain blocked by the [public-release gate](#public-release-gate).
 
 ## Interim private-development policy
 
