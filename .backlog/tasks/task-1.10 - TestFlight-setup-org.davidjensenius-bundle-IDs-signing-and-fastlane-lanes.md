@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 12:40'
-updated_date: '2026-10-10 12:40'
+updated_date: '2026-10-10 14:39'
 labels: []
 dependencies: []
 parent_task_id: TASK-1
@@ -35,3 +35,9 @@ Why: the owner wants internal TestFlight builds now, following the Telephone Boo
 3. Add fastlane Appfile/Fastfile plus ExportOptions plists and gitignore coverage for xbuild archive/export beta lanes and Developer Portal registration.
 4. Add the TestFlight runbook, run the required guard checks, project suites, register_bundle_ids, and an iOS Release archive/export proof, then record objective evidence in Backlog and commit.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+TestFlight upload attempts: fastlane ios beta used Release, xbuild, bundle org.davidjensenius.CanadianHam, build number 202610101034 and resolved signing identity Apple Development: david jensenius (MZU6SNXU5J) plus iOS Team Provisioning Profile: *, but archive failed at CodeSign with errSecInternalComponent (xbuild exit 65). fastlane mac beta used build number 202610101036 and likewise resolved signing identity before failing at CodeSign with errSecInternalComponent. Coordinator confirmed this is environmental keychain/private-key access; uploads stopped and owner will rerun interactively. docs/release/testflight.md now has Troubleshooting guidance for unlocking keychain / Always Allow / key partition list. iOS full test suite passed: CanadianHamTests 69 tests and CanadianHamUITests 74 tests, 0 failures, log /tmp/tf-ios.log.
+<!-- SECTION:NOTES:END -->
