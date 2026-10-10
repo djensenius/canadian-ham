@@ -592,7 +592,6 @@ struct MorseSettingsSection: View {
                     .font(DesignTokens.FontScale.body.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .padding(DesignTokens.Spacing.sm)
-                    .background(DesignTokens.Colors.paper, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous))
             }
             Slider(value: binding(\.volume), in: 0...1, step: 0.05) {
                 Text("Trainer volume") // l10n: localized
