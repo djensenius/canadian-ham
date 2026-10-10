@@ -110,7 +110,7 @@ The same habit applies to multi-service radios. An amateur certificate covers am
 
 Communication rules ask what the station is carrying. Open amateur communication, business traffic, public broadcasting, secret meaning, and non-amateur audio are different categories. Publishing a digital method handles only the secrecy question; it does not turn business or broadcast content into amateur content.
 
-Station-privilege rows form a small matrix. Basic is enough for some station work. Repeater installation, club-station installation, non-commercial or non-professional transmitting hardware, and remote control of key transmitter settings require Basic and Advanced.
+Station-privilege rows form a small matrix. Basic is enough for some station work. Repeater installation, club-station installation, transmitting hardware that is neither commercially manufactured nor professionally designed (home-built gear), and remote control of key transmitter settings require Basic and Advanced.
 
 Control rows close the loop. A transmitting station needs a control operator at the control point. The owner remains responsible for the station. A person without a certificate may participate only with the proper qualified person present and supervising.
 
