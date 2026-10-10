@@ -4,6 +4,7 @@ title: Core memory-aid figures
 status: To Do
 assignee: []
 created_date: '2026-10-10 20:55'
+updated_date: '2026-10-10 23:50'
 labels:
   - content
   - apple
@@ -25,4 +26,5 @@ Using the task-38.1 pipeline, draw: metric prefix ladder (giga to pico, x/÷ 1 0
 <!-- AC:BEGIN -->
 - [ ] #1 Each listed figure exists, is referenced from its lesson, and has alt text plus a text equivalent where dense
 - [ ] #2 Same accessibility and originality bar as task-38.1; audits pass in light and dark; numbers use space grouping (owner decision A)
+- [ ] #3 The L-005-01 metric-prefix ladder figure shows the micro-to-pico step as x/÷ 1 000 000 (the lesson table skips nano) or adds a nano rung; the brief's 'x 1 000 at every step' arrows are corrected when the figure is drawn
 <!-- AC:END -->
