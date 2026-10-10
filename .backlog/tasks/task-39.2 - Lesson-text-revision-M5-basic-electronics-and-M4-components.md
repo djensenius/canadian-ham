@@ -1,9 +1,11 @@
 ---
 id: TASK-39.2
 title: 'Lesson text revision: M5 basic electronics and M4 components'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-10 22:14'
+updated_date: '2026-10-10 22:51'
 labels:
   - content
 dependencies:
