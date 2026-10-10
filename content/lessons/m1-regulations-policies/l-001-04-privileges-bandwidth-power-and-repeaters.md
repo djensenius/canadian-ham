@@ -133,7 +133,7 @@ Repeater and signal-quality rows explain station behaviour after the frequency a
 
 A transceiver display might show RF output, while the radio manual may list maximum whole-radio DC current. If the manual says the radio can draw 20 A from a 13.8 V supply, the whole-radio supply draw is P = I x E = 20 A x 13.8 V = 276 W.
 
-That 276 W is not the same as the Basic 250 W DC-input limit. The regulatory DC-input limit is measured at the final RF stage, not at the power cord for the entire radio. RF power limits are measured right where the radio, or a linear amplifier if one is used, hands its power to the feedline. They are not measured after a tuner or at the antenna.
+That 276 W is not the same as the Basic 250 W DC-input limit. The regulatory DC-input limit is measured at the final RF stage, not at the power cord for the entire radio. Transmitter output limits, such as carrier power and PEP, are measured right where the radio, or a linear amplifier if one is used, hands its power to the feedline, not after a tuner. ERP and EIRP limits are different: they describe radiated power, so they include antenna-system gain.
 
 A practical station checklist is qualification, frequency range, occupied bandwidth, power quantity, identification, and whether the station is automatic or repeated. On modern radios, sidebands, digital bandwidth, amplifier output, and repeater output frequency can all be the value that matters.
 
