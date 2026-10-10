@@ -590,7 +590,7 @@ struct MorseSettingsSection: View {
             if let fixedTimingDescription {
                 Text(fixedTimingDescription) // l10n: localized
                     .font(DesignTokens.FontScale.body.weight(.semibold))
-                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .foregroundStyle(DesignTokens.Colors.accentStrong)
                     .accessibilityIdentifier("morse-settings-fixed-timing-description")
                     .padding(DesignTokens.Spacing.sm)
             }
