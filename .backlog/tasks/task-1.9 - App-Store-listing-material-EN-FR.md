@@ -30,7 +30,9 @@ Why: v1 needs App Store Connect metadata ready for the day ISED permission arriv
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Draft App Store listing metadata under docs/release/app-store/ in English and fr-CA, with character counts for each limited field and claims limited to the v1 Apple app.\n2. Add release/submission support material: age rating, App Privacy answers, category and URL plan, draft ISED attribution, and screenshot capture plan using existing DEBUG launch arguments.\n3. Verify French style, Apple field limits, link integrity, and commit the docs-only Backlog updates.
+1. Draft App Store listing metadata under docs/release/app-store/ in English and fr-CA, with character counts for each limited field and claims limited to the v1 Apple app.
+2. Add release/submission support material: age rating, App Privacy answers, category and URL plan, draft ISED attribution, and screenshot capture plan using existing DEBUG launch arguments.
+3. Verify French style, Apple field limits, link integrity, and commit the docs-only Backlog updates.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
