@@ -1,11 +1,11 @@
 ---
 id: TASK-39.5
 title: 'Lesson text revision: M1 regulations and M2 operating'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-10 23:05'
+updated_date: '2026-10-10 23:06'
 labels:
   - content
 dependencies:
@@ -47,3 +47,9 @@ M2 pass: revised L-002-01 through L-002-04 in existing reference-style operating
 
 Final validation passed after all lesson edits and Backlog notes: node packages/content-tools/src/check-lesson-coverage.ts; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:explanations; pnpm check:links; TZ=UTC pnpm test; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift. Pinned L-005-01 and L-006-03 expectations were not touched because this task did not change those lessons.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Revised all six M1 regulation lessons and all four M2 operating lessons to the teaching guide in reference style. Added practical real-world context, procedure examples, approved memory aids, and worked operating numbers where useful while preserving lesson IDs, front matter coverage, quiz references, and Illustration brief sections. Verified regulatory and operating facts against content/generated/basic-2025-07-15/questions.json and docs/exam-facts.md; final checks passed for coverage, quizzes, originality, explanations, links, TZ=UTC pnpm test, and content-swift swift test.
+<!-- SECTION:FINAL_SUMMARY:END -->
