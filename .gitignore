@@ -24,3 +24,5 @@ fastlane/test_output/
 *.swp
 *.swo
 *~
+
+fastlane/report.xml
