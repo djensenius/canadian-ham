@@ -8,11 +8,11 @@ Use one simulator/device class at a time:
 
 | App Store class | Simulator/device name | Bundle identifier |
 |---|---|---|
-| iPhone 6.9" | `iPhone 17 Pro Max` | `com.djensenius.CanadianHam` |
-| iPad 13" | `iPad Pro 13-inch (M4) (or the current 13-inch iPad Pro listed by `xcrun simctl list devices`)` | `com.djensenius.CanadianHam` |
-| Mac | local Mac app build | `com.djensenius.CanadianHam` |
-| Apple TV | `Apple TV 4K (3rd generation)` | `com.djensenius.CanadianHam.TV` |
-| Vision Pro | `Apple Vision Pro` | `com.djensenius.CanadianHam.Vision` |
+| iPhone 6.9" | `iPhone 17 Pro Max` | `org.davidjensenius.CanadianHam` |
+| iPad 13" | `iPad Pro 13-inch (M4) (or the current 13-inch iPad Pro listed by `xcrun simctl list devices`)` | `org.davidjensenius.CanadianHam` |
+| Mac | local Mac app build | `org.davidjensenius.CanadianHam` |
+| Apple TV | `Apple TV 4K (3rd generation)` | `org.davidjensenius.CanadianHam` |
+| Vision Pro | `Apple Vision Pro` | `org.davidjensenius.CanadianHam` |
 
 After building/installing the app through `xbuild`, capture simulator screenshots with this pattern, replacing the device, app bundle path, output path and launch arguments for each planned shot:
 
@@ -21,7 +21,7 @@ DEVICE="iPhone 17 Pro Max"
 xcrun simctl boot "$DEVICE" || true
 xcrun simctl bootstatus "$DEVICE" -b
 xcrun simctl install "$DEVICE" /path/to/CanadianHam.app
-xcrun simctl launch --terminate-running-process "$DEVICE" com.djensenius.CanadianHam \
+xcrun simctl launch --terminate-running-process "$DEVICE" org.davidjensenius.CanadianHam \
   -CanadianHamResetDataOnLaunch \
   -CanadianHamInitialScreen home \
   -CanadianHamTheme light

@@ -40,7 +40,7 @@
 | 27 | The v1 requirement quote comes from `docs/requirements.md` / `docs/privacy.md` | **Corrected**: the exact wording is in `AGENTS.md`; the same rule appears in DEC-APPLE-003, REQ-APPLE-003 and `privacy.md` | repo |
 | 28 | Export/import exists as `REQ-PROGRESS-001`, T-506 | **Corrected**: no REQ-PROGRESS-001 exists; it is REQ-QUIZ-005 (and REQ-APPLE-003). T-506 **Unverified** | `docs/requirements.md` |
 | 29 | Add rows to `tasks/PLAN.md` | **Corrected**: PLAN.md is now only a pointer; T-705 maps to Backlog **task-13** | `tasks/PLAN.md` |
-| 30 | Container `iCloud.ca.canadianham.app` | **Corrected**: bundle IDs use the `com.djensenius` prefix (`com.djensenius.CanadianHam`, `.TV`, `.Vision`) | `apps/apple/project.yml` |
+| 30 | Container `iCloud.ca.canadianham.app` | **Corrected again**: app targets share the universal-purchase bundle ID `org.davidjensenius.CanadianHam`; the gated container is `iCloud.org.davidjensenius.CanadianHam`. | `apps/apple/project.yml` |
 | 31 | RIC-3 URL (ISED) | **Verified**: resolves to Issue 5, March 2022 | ised-isde.canada.ca RIC-3 |
 | 32 | ISED Basic bank PDF URL (2025-07-15) | **Unverified**: PDF fetch failed. The project's authority is the delimited TXT (SHA-256 `34c7cd79…284f`) | — |
 | 33 | WWDC22 "Evolve your Core Data schema" (10120) | **Verified** | developer.apple.com/videos/play/wwdc2022/10120/ |
@@ -134,7 +134,7 @@ Core Data "Creating a Core Data Model for CloudKit" adds: "Unique constraints ar
 - `CKDatabase`: iOS/iPadOS **8.0**, macOS **10.10**, Mac Catalyst 13.1, tvOS (available, no version listed), visionOS 1.0. The original's 10.0 / 10.12 / 10.0 figures were wrong.
 - All are far below the project's 27.0 minimums (DEC-APPLE-004).
 
-**Project parity (Corrected):** `apps/apple/project.yml` adds `ProgressModels.swift` and `ProgressStore.swift` only to `CanadianHam` (iOS + macOS) and its tests. The `CanadianHamTV` and `CanadianHamVision` targets are separate apps (`com.djensenius.CanadianHam.TV`, `.Vision`) with no SwiftData progress store. Syncing on tvOS or visionOS first needs those targets to get progress storage (REQ-APPLE-005/006 "later parity"). All three apps would need the same iCloud container in their entitlements. Configuring iCloud services: "You can also use containers to share files and data between multiple apps belonging to the same developer."
+**Project parity (Corrected again):** `apps/apple/project.yml` adds `ProgressModels.swift` and `ProgressStore.swift` only to `CanadianHam` (iOS + macOS) and its tests. The `CanadianHamTV` and `CanadianHamVision` targets are separate universal-purchase apps that now share the `org.davidjensenius.CanadianHam` bundle ID and have no SwiftData progress store. Syncing on tvOS or visionOS first needs those targets to get progress storage (REQ-APPLE-005/006 "later parity"). Gated sync uses the shared `iCloud.org.davidjensenius.CanadianHam` container. Configuring iCloud services: "You can also use containers to share files and data between multiple apps belonging to the same developer."
 
 **Capabilities (Verified):**
 - SwiftData article: "SwiftData requires two separate capabilities … the iCloud capability … and the Background Modes capability, which lets your app receive remote notifications from CloudKit."
@@ -275,7 +275,7 @@ Core Data "Creating a Core Data Model for CloudKit" adds: "Unique constraints ar
 
 ### Phase 2: Opt-in CloudKit configuration (estimate ~2–3 days, unverified)
 - Add the iCloud (CloudKit) capability, Push Notifications (Xcode adds it automatically) and Background Modes → Remote notifications in `apps/apple/project.yml`. Regenerate with XcodeGen.
-- Use an explicit container. **Corrected:** not `iCloud.ca.canadianham.app`; for example `iCloud.com.djensenius.CanadianHam`, to be confirmed by the owner. Use the same container for any tvOS/visionOS app that later gets progress storage.
+- Use the owner-confirmed explicit container: `iCloud.org.davidjensenius.CanadianHam` (not `iCloud.ca.canadianham.app`). Use the same container for any tvOS/visionOS app that later gets progress storage.
 - Settings → **"iCloud Sync"**, **OFF by default**:
   - OFF: `ModelConfiguration(cloudKitDatabase: .none)`. This must be explicit, because entitlements trigger auto-discovery.
   - ON: `.private("<container-id>")` (explicit, rather than `.automatic`).
@@ -303,7 +303,7 @@ Core Data "Creating a Core Data Model for CloudKit" adds: "Unique constraints ar
 2. **Sync scope.** Should preferences sync, or only learning progress?
    *Recommendation (kept, reinforced):* sync learning progress only. Keep `PreferencesEntity` local in a separate `.none` configuration. As a synced singleton it would duplicate across devices without uniqueness.
 3. **Default state.** Confirm sync stays strictly **opt-in** (OFF until the user turns it on).
-4. **(New) Container ID and platform scope.** Confirm the container ID (for example `iCloud.com.djensenius.CanadianHam`) and whether tvOS/visionOS get progress storage, and therefore sync, in the same phase.
+4. **(Updated) Container ID and platform scope.** Container ID is confirmed as `iCloud.org.davidjensenius.CanadianHam`; confirm whether tvOS/visionOS get progress storage, and therefore sync, in the same phase.
 5. **(New) Privacy-doc changes.** Approve the scoped exception in `docs/privacy.md` for CloudKit, Push Notifications and the remote-notification background mode, and the CloudKit Console log no-retention policy.
 
 ---

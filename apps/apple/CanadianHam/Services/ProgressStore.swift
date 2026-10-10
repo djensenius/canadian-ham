@@ -65,8 +65,7 @@ enum ICloudAccountAvailability: Equatable, Sendable {
 }
 
 struct ICloudSyncSettings: Equatable, Sendable {
-    static let containerIdentifier = "iCloud.com.djensenius.CanadianHam"
-    static let containerRegistrationNote = "to be confirmed when the capability is registered"
+    static let containerIdentifier = "iCloud.org.davidjensenius.CanadianHam"
 
     private static let optInPreferenceKey = "CanadianHam.iCloudSyncOptIn"
 

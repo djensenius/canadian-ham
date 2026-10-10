@@ -30,6 +30,11 @@
   suites only if the merge combined Apple changes from more than one branch) before starting any
   dependent worker, then remove the task worktree with `git worktree remove`.
 
+## Internal TestFlight builds
+- After a feature merges to main, the coordinator uploads internal TestFlight builds from the main checkout for all four platforms (`fastlane ios beta`, `mac beta`, `appletvos beta`, `xros beta`). Run the post-merge iOS/macOS checks first. Build numbers are timestamps.
+- Signing uses the dedicated build keychain described in `docs/release/testflight.md`; never ask for or handle the login keychain password.
+- Internal testers only until task-1.7: no external groups, public links or App Store submission.
+
 ## Build and test rules (all agents)
 - Never call `xcodebuild` directly. Always use `xbuild` with the same arguments;
   it serializes builds across all agents and cleans up simulators.
@@ -69,10 +74,10 @@ platform) and share one build lock, so don't run them by reflex.
 - Active app question bank remains ISED Basic 2025-07-15; delimited TXT SHA-256 `34c7cd7967addfde648c566d0ecf25bf3d1e071c603b5101cfecc7bd0cbc284f`.
 - Advanced exception: verbatim Advanced question-bank source files may be vendored under `content/sources/ised/advanced-<title-page-date>/` only under the interim private-development policy in `docs/content-licensing.md`; no Advanced bank is active in the apps yet.
 - Preserve ISED EN/FR question text verbatim; original lessons/explanations stay separate from official data.
-- The repo stays private until T-009, which requires T-007 permission records and T-607 release checks; never make it public, deploy, or distribute builds before then; see `docs/content-licensing.md`.
+- The repo stays private until T-009, which requires T-007 permission records and T-607 release checks; never make it public, deploy, or distribute builds before then, except internal TestFlight builds to App Store Connect team members (task-1.10; no external testers, public links, or App Store submission until task-1.7); see `docs/content-licensing.md` and `docs/release/testflight.md`.
 - Apple app targets iOS/iPadOS 27.0, macOS 27.0, tvOS 27.0, and visionOS 27.0 minimums.
 - Apple app release builds for v1 must work fully offline and collect no data; no networking code, third-party SDKs, analytics, or iCloud sync in v1.
-- Optional CloudKit sync work may land on main only behind an off-by-default build gate for after v1: CloudKit, Push Notifications, and the remote-notification background mode are allowed only in the non-default `DebugCloudKit` Apple build configuration, which defines `ICLOUD_SYNC`. Default `Debug`/`Release`, CI, and the test commands below must have no iCloud or push capability, no remote-notification background mode, and no Settings iCloud toggle. v1 release builds must have no iCloud or push capability.
+- Optional CloudKit sync work may land on main only behind an off-by-default build gate for after v1: CloudKit, Push Notifications, and the remote-notification background mode are allowed only in the non-default `DebugCloudKit` Apple build configuration, which defines `ICLOUD_SYNC`. The gated container ID is `iCloud.org.davidjensenius.CanadianHam`. Default `Debug`/`Release`, CI, and the test commands below must have no iCloud or push capability, no remote-notification background mode, and no Settings iCloud toggle. v1 release builds must have no iCloud or push capability.
 - Use `xbuild` for Apple builds/tests; never call `xcodebuild` directly.
 
 ## Apple builds
