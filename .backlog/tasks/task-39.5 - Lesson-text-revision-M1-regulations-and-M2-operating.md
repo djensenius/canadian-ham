@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-10 22:51'
+updated_date: '2026-10-10 22:52'
 labels:
   - content
 dependencies:
@@ -28,3 +28,12 @@ Revise all lessons in m1-regulations-policies and m2-operating-procedures to the
 - [ ] #3 Memory tricks from the guide are added where they help, are accurate and inoffensive, and say what they help remember
 - [ ] #4 Coverage, quiz, explanation, originality and link checks pass; lesson IDs, front matter coverage and quiz references are unchanged; Illustration brief sections are left intact for task-38
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Preserve front matter, covers, quiz IDs, and Illustration brief blocks while revising only lesson prose/tables in M1 and M2 reference-style lessons.
+2. For M1, tighten rule prose, add approved memory aids for certificate/address, identification, and power qualification limits, and add practical context without Try-its or Common mistakes.
+3. For M2, add practical procedure descriptions and short on-air examples inside allowed reference-style sections, plus approved memory aids for phonetics, RST, Q signals, and UTC/logging where useful.
+4. Verify facts against questions.json and docs/exam-facts.md, run required content checks after M1, after M2, and final full checks, then record notes, AC evidence, and final summary through Backlog CLI.
+<!-- SECTION:PLAN:END -->
