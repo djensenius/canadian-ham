@@ -37,3 +37,19 @@ Research and write docs/teaching-guide.md: a plain-language standard (target rea
 3. Write docs/teaching-guide.md with concise writer guidance, supported templates, verified example bank, memory tricks, misconceptions, Canadian accuracy notes, originality rules, and revision checklist.
 4. Run docs/content checks, record evidence in task notes, check acceptance criteria, finalize task, and commit.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented docs/teaching-guide.md. Verification evidence:
+- Confirmed all 63 cited Basic question IDs in the guide exist in content/generated/basic-2025-07-15/questions.json with a script.
+- Checked identification interval against B-001-013-006 and B-001-013-009.
+- Checked certificate lifetime/address facts against B-001-002-002, B-001-002-001, and B-001-002-003.
+- Checked below-30-MHz access against B-001-015-003 and Basic/Advanced power against B-001-017-009, B-001-017-010, B-001-017-005, B-001-017-007, and B-001-017-002.
+- Checked Safety Code 6 notes against B-001-024-001, B-001-024-002, B-001-024-005, B-001-024-006, and B-001-024-009.
+- Checked band-plan voluntary status against B-002-004-010; marked specific calling frequencies and 70 cm offsets as needing current RAC/local verification before use.
+- Checked repeater/simplex/RST/Q-signal/phonetic operating claims against B-002-001-009, B-002-001-011, B-002-003-003, B-002-003-004, B-002-006-001, B-002-006-002, B-002-006-003, B-002-006-009, B-002-007-002, B-002-007-004, B-002-007-007, B-002-007-008, B-002-007-010, and B-002-008-005.
+- Checked diode, resistor colour-code, Ohm/power, series/parallel battery, reactance/ferrite, wavelength, SWR, tuner, low-pass-filter, and propagation claims against the question IDs cited inline in the guide.
+- Corrected research-brief errors: Honours does not raise power to Advanced limits; 2.45 GHz has 12.2 cm wavelength but is in the 13 cm amateur region; invented mnemonic/source attributions were replaced with common/traditional source status; Break Break is not taught as casual entry; 146.520 MHz and 70 cm offsets were not treated as exam-bank facts; universal fuse-margin claims were dropped.
+- Validation passed: pnpm check:links; pnpm typecheck; cited-QID existence script. No docs/Markdown lint script exists in package.json scripts.
+<!-- SECTION:NOTES:END -->
