@@ -121,7 +121,7 @@ After installation, an analyzer can show whether the resonant point is above or 
 
 A short antenna can be made electrically longer by adding inductance in series. That is why a compact HF mobile antenna often uses a loading coil. The coil helps cancel capacitive reactance from an element that is physically short for the band.
 
-A trap is a parallel coil-and-capacitor circuit placed in an antenna element. At some frequencies it isolates part of the antenna. At other frequencies more of the conductor participates. This can allow multiband operation, but traps add complexity and possible loss.
+A trap is a parallel coil-and-capacitor circuit placed in an antenna element. At some frequencies it isolates part of the antenna. At other frequencies more of the conductor participates. This can allow multiband operation, but traps add complexity and possible loss, and a trap antenna may radiate harmonics more readily than a simple single-band antenna.
 
 End insulators on a suspended wire mark where the antenna conductor ends electrically and where the support rope begins. They help keep a wet rope, tree, or support from changing the antenna's electrical length.
 

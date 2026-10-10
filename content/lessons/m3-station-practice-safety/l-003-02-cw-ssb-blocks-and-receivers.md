@@ -48,7 +48,7 @@ oscillator -> driver/buffer -> power amplifier -> antenna system
                  stable drive       keyed carrier power
 ```
 
-The oscillator supplies the RF signal in this basic diagram. It must be stable because drift becomes a transmitted error. A driver or buffer isolates the oscillator from load changes caused by later stages.
+The oscillator generates the RF signal at the frequency that will be transmitted. It must be stable because drift becomes a transmitted error. A driver or buffer isolates the oscillator from load changes caused by later stages.
 
 The station power supply provides direct current. The RF stages create and amplify the RF signal from that energy. The key controls the carrier so Morse characters become on-off RF energy.
 
@@ -85,7 +85,7 @@ antenna -> RF amplifier -> mixer -> IF filter -> IF amplifier -> product detecto
 
 The antenna converts the radio wave into a tiny current. The RF amplifier improves sensitivity if it adds useful gain without much noise. The mixer and local oscillator convert the selected RF signal to IF. The IF filter keeps the desired narrow slice and rejects nearby signals.
 
-The IF amplifier provides most receiver gain after the desired signal has been selected. The product detector needs a beat frequency oscillator, or BFO. The BFO supplies the reference needed to recover SSB or CW audio. The AF amplifier raises the recovered audio level for headphones or a speaker. An audio band-pass filter for CW tone shaping can sit in the AF amplifier chain.
+The IF amplifier provides most receiver gain after the desired signal has been selected. The product detector needs a beat frequency oscillator, or BFO. The detector mixes the IF signal with the BFO's reference signal to recover SSB or CW audio. The AF amplifier raises the recovered audio level for headphones or a speaker. An audio band-pass filter for CW tone shaping can sit in the AF amplifier chain.
 
 ### Worked example: product detection idea
 

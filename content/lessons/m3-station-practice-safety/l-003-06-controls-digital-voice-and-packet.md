@@ -96,7 +96,7 @@ Analog information varies smoothly. A microphone voltage rising and falling with
 
 Digital voice is not analog FM with a new label. A vocoder samples and encodes speech. The transmitter sends digital symbols. The receiver decodes those symbols and rebuilds audio. If the link becomes too weak, digital voice may sound broken or disappear instead of fading smoothly.
 
-Narrow digital modes can share spectrum efficiently. An FT8 transmission is roughly 50 Hz wide, so many FT8 contacts can fit in the space of one SSB voice signal. FT8 is also the listed weak-signal mode for the very low signal-to-noise-ratio case in this lesson's bank. RTTY is wider than very narrow weak-signal modes, so practical centre-to-centre spacing is a few hundred hertz rather than a single tone width.
+Narrow digital modes can share spectrum efficiently. An FT8 transmission is roughly 50 Hz wide, so many FT8 contacts can fit in the space of one SSB voice signal. FT8 can decode signals at a very low signal-to-noise ratio, well below what you could copy by ear. RTTY is wider than very narrow weak-signal modes, so practical centre-to-centre spacing is a few hundred hertz rather than a single tone width.
 
 ### In the real world: choosing a weak-path mode
 
@@ -106,7 +106,7 @@ If the task is a conversation, SSB or digital voice may fit better. Match the mo
 
 ## Packet, digipeaters, and reliability
 
-Packet radio sends data in framed chunks. A digipeater receives digital packets and retransmits packets marked for forwarding. That is different from a voice repeater that retransmits analog FM audio.
+Packet radio sends data in framed chunks. A digipeater receives digital packets and retransmits packets marked for forwarding. That is different from a voice repeater that retransmits analog FM audio. Linked together, packet stations and digipeaters form a network that can carry messages well beyond one direct radio path.
 
 Some digital protocols use automatic repeat request, or ARQ. The receiver can detect a missing or damaged frame and request a repeat. That retransmission process provides error correction. Instead of showing corrupted data silently, the link gets a clean copy within its retry limit or reports failure.
 
@@ -158,4 +158,5 @@ Description: Draw an original block diagram. On the left, show a paddle feeding 
 - A clipped first syllable is a VOX trigger problem, not a hang-time problem.
 - Noise blankers suit short impulse noise; DSP noise reduction suits some background noise; filters suit nearby signals.
 - Digital information uses discrete agreed values, so voice, text, and images can all become data.
+- Narrow weak-signal modes such as FT8 can decode at a very low signal-to-noise ratio.
 - Digipeaters forward selected digital packets, and ARQ improves reliability by requesting repeats when needed.

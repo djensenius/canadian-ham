@@ -99,7 +99,7 @@ A bond needs clean conductive contact, not just mechanical pressure. Clean the c
 
 Fuses have current and voltage ratings. The current rating controls when the fuse opens. The voltage rating says what voltage the fuse can interrupt safely without sustaining an arc. A higher-current replacement defeats protection and can turn a fault into equipment damage or fire.
 
-The green conductor in a three-wire AC cord bonds the equipment chassis to protective earth. If a fault connects the hot conductor to the chassis, the safety ground provides a low-impedance fault path so protection can operate.
+The green conductor in a three-wire AC cord bonds the equipment chassis to protective earth. If a fault connects the hot conductor to the chassis, the safety ground provides a low-impedance fault path so protection can operate, and the chassis doesn't stay energized where someone could touch it.
 
 Power-supply filter capacitors can retain charge after the unit is unplugged. Use the manufacturer's procedure or a properly insulated discharge tool with an inline resistor. Do not use a screwdriver as a casual shorting tool. It can arc, damage parts, or injure the person holding it.
 
@@ -127,7 +127,7 @@ When the station is not in use, grounding or disconnecting antenna and rotator c
 
 No amateur installation can be made lightning-proof. Plan so a surge has a low-impedance path outside the operating position. Do not operate or service antennas during storms.
 
-Antenna work adds fall and falling-object hazards. Use approved fall-arrest equipment for tower work. Wear a hard hat when assisting below. Horizontal wires, open-wire feedline, ground-mounted verticals, and antenna feed points must be located or guarded so people cannot touch energized RF conductors during transmitting.
+Antenna work adds fall and falling-object hazards. Use approved fall-arrest equipment for tower work. Wear a hard hat when assisting below. Horizontal wires, open-wire feedline, ground-mounted verticals, and antenna feed points must be located or guarded so people cannot touch energized RF conductors during transmitting. When possible, move an antenna outdoors and mount it as high as practical, out of reach.
 
 ### Worked example: feedline entry plan
 

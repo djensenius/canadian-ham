@@ -49,7 +49,7 @@ SWR means standing wave ratio. It is a match reading based on forward and reflec
 
 A low-pass filter passes the wanted HF signal and reduces higher-frequency harmonics. Harmonics are unwanted signals at whole-number multiples of the intended signal. The filter belongs close to the output stage that can make or amplify those harmonics.
 
-An antenna tuner transforms impedance so the transmitter sees a safer load. It does not remove harmonics. An antenna switch selects the antenna path, test load, or unused position.
+An antenna tuner transforms impedance so the transmitter sees a safer load. It does not remove harmonics. Antenna impedance changes with frequency, so you may need to readjust the tuner after moving to a new frequency. An antenna switch selects the antenna path, test load, or unused position.
 
 A dummy load is a non-radiating test load. It turns RF power into heat so you can tune or test without intentionally radiating a signal. Real dummy loads have power and time limits. If the case warms, stop and check the rating.
 
@@ -90,7 +90,7 @@ A basic FM transmitter can be followed from voice to antenna:
 microphone -> speech amplifier -> modulator -> oscillator -> frequency multiplier -> power amplifier -> antenna system
 ```
 
-The microphone changes sound into a small audio signal. The speech amplifier raises that signal. In FM, the modulator changes the oscillator frequency slightly above and below its centre value. Those small frequency changes carry the speech.
+The microphone turns the air-pressure changes of sound into a small electrical audio signal. The speech amplifier raises that signal. In FM, the modulator changes the oscillator frequency slightly above and below its centre value. Those small frequency changes carry the speech.
 
 A frequency multiplier produces a useful harmonic of the oscillator signal. This lets the oscillator run at a stable lower frequency while later stages reach the desired RF carrier frequency. The power amplifier delivers the largest RF power to the antenna system, so it draws the most electrical power in this simplified chain.
 

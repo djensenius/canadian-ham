@@ -47,7 +47,7 @@ Chirp is a small frequency movement each time the transmitter is keyed. The far-
 
 Key clicks are different. They sound like sharp ticks around the signal. They come from keying edges that are too abrupt. A key-click filter or proper shaping slows the edge enough to reduce splatter without making the Morse unreadable.
 
-A variable-frequency oscillator lets a CW transmitter tune across a range. That is useful only if the oscillator is stable. Keep VFOs away from heat, loose hardware, and changing supply conditions.
+A variable-frequency oscillator lets a CW transmitter tune anywhere across a range, instead of being limited to the few frequencies of the crystals on hand. That is useful only if the oscillator is electrically and mechanically stable, so the carrier doesn't drift over time. Keep VFOs away from heat, loose hardware, and changing supply conditions.
 
 ### In the real world: diagnosing two CW reports
 
@@ -131,9 +131,9 @@ For repeaters and local channels, transmitter deviation should match the system.
 
 Text formula: FM bandwidth by Carson's rule ≈ 2 x (peak deviation + highest audio frequency).
 
-For example, 2.5 kHz deviation with 3 kHz audio estimates to about 2 x (2.5 + 3) = 11 kHz. Higher deviation produces a wider channel by the same formula. Canadian occupied-bandwidth limits below 28 MHz leave only a few kilohertz for voice operation, so wide FM voice does not fit that plan.
+For example, 2.5 kHz deviation with 3 kHz audio estimates to about 2 x (2.5 + 3) = 11 kHz. A typical FM voice signal is somewhere between about 11 kHz and 16 kHz wide, so plan for a channel many kilohertz wide. Higher deviation produces a wider channel by the same formula. Canadian occupied-bandwidth limits below 28 MHz leave only a few kilohertz for voice operation, so wide FM voice does not fit that plan.
 
-An FM receiver often has high gain before the discriminator. With no usable signal present, that gain makes speaker noise loud unless squelch mutes it. When multiple FM signals are present, the receiver tends to demodulate the strongest one. This is the capture effect.
+FM is popular for local VHF and UHF voice because it gives a good signal-to-noise ratio even when the received signal is fairly weak. An FM receiver often has high gain before the discriminator. With no usable signal present, that gain makes speaker noise loud unless squelch mutes it. When multiple FM signals are present, the receiver tends to demodulate the strongest one. This is the capture effect.
 
 ### Worked example: repeater audio report
 
