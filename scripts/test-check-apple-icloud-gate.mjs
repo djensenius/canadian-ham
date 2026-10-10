@@ -44,7 +44,8 @@ ${projectDebug}		};
 		buildSettings = {
 			"CODE_SIGN_ENTITLEMENTS[sdk=iphone*]" = "";
 			"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = CanadianHam/Resources/CanadianHam.macOS.entitlements;
-${appDebug}			PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHam;
+${appDebug}			PRODUCT_BUNDLE_IDENTIFIER = org.davidjensenius.CanadianHam;
+			PRODUCT_NAME = CanadianHam;
 		};
 		name = Debug;
 	};
@@ -53,7 +54,8 @@ ${appDebug}			PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHam;
 		buildSettings = {
 			"CODE_SIGN_ENTITLEMENTS[sdk=iphone*]" = "";
 			"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = CanadianHam/Resources/CanadianHam.macOS.entitlements;
-			PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHam;
+			PRODUCT_BUNDLE_IDENTIFIER = org.davidjensenius.CanadianHam;
+			PRODUCT_NAME = CanadianHam;
 		};
 		name = Release;
 	};
@@ -63,14 +65,16 @@ ${appDebug}			PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHam;
 			"CODE_SIGN_ENTITLEMENTS[sdk=iphone*]" = CanadianHam/Resources/CanadianHam.iOS.CloudKit.entitlements;
 			"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = ${macEntitlement};
 			"INFOPLIST_KEY_UIBackgroundModes[sdk=iphone*]" = "remote-notification";
-			PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHam;
+			PRODUCT_BUNDLE_IDENTIFIER = org.davidjensenius.CanadianHam;
+			PRODUCT_NAME = CanadianHam;
 		};
 		name = DebugCloudKit;
 	};
 	CCCC0001 /* Debug */ = {
 		isa = XCBuildConfiguration;
 		buildSettings = {
-${tvDebug}			PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHam.TV;
+${tvDebug}			PRODUCT_BUNDLE_IDENTIFIER = org.davidjensenius.CanadianHam;
+			PRODUCT_NAME = CanadianHamTV;
 		};
 		name = Debug;
 	};
@@ -101,8 +105,8 @@ targets:
           INFOPLIST_KEY_UIBackgroundModes: remote-notification
 `);
   writeFileSync(join(resources, 'CanadianHam.macOS.entitlements'), options.defaultMacEntitlements ?? '<plist><dict><key>com.apple.security.app-sandbox</key><true/></dict></plist>');
-  writeFileSync(join(resources, 'CanadianHam.iOS.CloudKit.entitlements'), options.iosEntitlements ?? '<plist><dict><key>aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.com.djensenius.CanadianHam</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>');
-  writeFileSync(join(resources, 'CanadianHam.macOS.CloudKit.entitlements'), options.macEntitlements ?? '<plist><dict><key>com.apple.developer.aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.com.djensenius.CanadianHam</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>');
+  writeFileSync(join(resources, 'CanadianHam.iOS.CloudKit.entitlements'), options.iosEntitlements ?? '<plist><dict><key>aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.org.davidjensenius.CanadianHam</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>');
+  writeFileSync(join(resources, 'CanadianHam.macOS.CloudKit.entitlements'), options.macEntitlements ?? '<plist><dict><key>com.apple.developer.aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.org.davidjensenius.CanadianHam</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>');
   writeFileSync(join(root, 'apps/apple/CanadianHam.xcodeproj/project.pbxproj'), options.pbxproj ?? basePbxproj(options));
   return root;
 }
@@ -149,12 +153,12 @@ assertFail('app Debug CloudKit Info plist leak', { appDebug: '\t\t\tINFOPLIST_FI
 assertFail('CloudKit Info plist resource leak', { resourceLeak: '\tDDDD0001 /* CanadianHam.iOS.CloudKit.Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DDDD0002 /* CanadianHam.iOS.CloudKit.Info.plist */; };\n' }, 'CloudKit Info.plist must not be copied in any resources build phase');
 assertFail('other target Debug CloudKit entitlements leak', { tvDebug: '\t\t\tCODE_SIGN_ENTITLEMENTS = CanadianHam/Resources/CanadianHam.iOS.CloudKit.entitlements;\n' }, 'Debug build settings unexpectedly match gated iCloud token');
 assertFail('default mac entitlements iCloud leak', { defaultMacEntitlements: '<plist><dict><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>' }, 'Default macOS entitlements unexpectedly match');
-assertFail('macOS wrong push key', { macEntitlements: '<plist><dict><key>aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.com.djensenius.CanadianHam</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>' }, 'macOS CloudKit entitlements must use com.apple.developer.aps-environment');
-assertFail('iOS wrong push key', { iosEntitlements: '<plist><dict><key>com.apple.developer.aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.com.djensenius.CanadianHam</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>' }, 'iOS CloudKit entitlements must use aps-environment');
+assertFail('macOS wrong push key', { macEntitlements: '<plist><dict><key>aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.org.davidjensenius.CanadianHam</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>' }, 'macOS CloudKit entitlements must use com.apple.developer.aps-environment');
+assertFail('iOS wrong push key', { iosEntitlements: '<plist><dict><key>com.apple.developer.aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.org.davidjensenius.CanadianHam</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>' }, 'iOS CloudKit entitlements must use aps-environment');
 
-const extraContainer = '<plist><dict><key>aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.com.djensenius.CanadianHam</string><string>iCloud.com.example.Other</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>';
+const extraContainer = '<plist><dict><key>aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.org.davidjensenius.CanadianHam</string><string>iCloud.com.example.Other</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>';
 assertFail('iOS extra iCloud container', { iosEntitlements: extraContainer }, 'com.apple.developer.icloud-container-identifiers must be exactly');
-assertFail('macOS extra iCloud service', { macEntitlements: '<plist><dict><key>com.apple.developer.aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.com.djensenius.CanadianHam</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string><string>CloudDocuments</string></array></dict></plist>' }, 'com.apple.developer.icloud-services must be exactly');
+assertFail('macOS extra iCloud service', { macEntitlements: '<plist><dict><key>com.apple.developer.aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.org.davidjensenius.CanadianHam</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string><string>CloudDocuments</string></array></dict></plist>' }, 'com.apple.developer.icloud-services must be exactly');
 assertFail('iOS extra entitlement key', { iosEntitlements: extraContainer.replace('</dict>', '<key>com.apple.developer.ubiquity-kvstore-identifier</key><string>x</string></dict>') }, 'outside the approved scope');
 
 if (failures !== 0) {
