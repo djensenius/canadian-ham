@@ -711,6 +711,12 @@ struct RootView: View {
             preferences.activeBankId = bankId
             changed = true
         }
+        if let rawMorseTimingProfile = AppLaunchArguments.value(after: "-CanadianHamMorseTimingProfile"),
+           let timingProfile = MorseTrainerSettings.TimingProfile(rawValue: rawMorseTimingProfile) {
+            morseSettings.timingProfile = timingProfile
+            morseSettings = morseSettings.normalized()
+            morseSettings.save()
+        }
         if changed {
             try? progressStore.updatePreferences(preferences)
         }
