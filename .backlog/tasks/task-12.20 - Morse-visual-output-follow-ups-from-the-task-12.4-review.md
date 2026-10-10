@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-07 12:14'
-updated_date: '2026-10-09 18:10'
+updated_date: '2026-10-10 04:44'
 labels: []
 dependencies:
   - TASK-12.4
@@ -44,6 +44,8 @@ Implemented visual-output follow-ups: post-settle UI audit assertions now cover 
 Final validation passed on tip 6b892eaafeae1c5a29da15f01cdb7da6d860e962. Failed-run record: an earlier full iOS run failed new post-settle checks in testAccessibilityAuditMorseCourseLessonAndSummaryLight/Dark and testAccessibilityAuditMorseSendingMainScreenLight/Dark because assertions required full visibility; after parent guidance, the assertions now use partial below-bar visibility and the audit state is re-settled before performAccessibilityAudit. Required targeted reruns then passed twice: visibility-targeted-1 and visibility-targeted-2 each passed testAccessibilityAuditMorseCourseLessonAndSummaryLight, testAccessibilityAuditMorseCourseLessonAndSummaryDark, and testAccessibilityAuditMorseSendingMainScreenDark (3/3 each). Full suites passed on final code: iOS 139/139, macOS 67/67, tvOS 15/15, visionOS 12/12. Relevant passing iOS tests include MorseTrainerTests/testReduceFlashingStopsOnlyRunningVisualBeacon, /testMorseVisualPlaybackPlanUsesBeaconWhenSafeAndTapeWhenRequestedOrReduced, /testMorseBeaconPaletteMatchesDesignTokensAndKeepsAreaAndContrastMargins, ProgressStoreTests/testProgressExportRoundTripsMorseSettingsInWebCompatiblePreferences, and the Morse accessibility audits. Package/web checks passed: pnpm --dir packages/morse-engine test (21/21), DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test in packages/morse-swift (4/4 XCTest), pnpm --dir apps/web test src/App.test.tsx src/lib/morseSettings.test.ts (76/76), pnpm typecheck, pnpm test, pnpm build:web, node scripts/check-apple-text-sources.ts, and pnpm check:apple-l10n.
 
 Review r1 reopened task: AC #1, #3, and #6 were unchecked because post-settle target assertions were made after an extra scroll, web lamp styling diverged from Apple/engine palette, and exported Morse settings were not fully web/schema compatible. Implementing requested fixes after merging origin/main.
+
+Coordinator (846d42b): merged origin/main (including the task-13.4 iCloud keys, which the branch catalogue had been missing) and rebuilt Localizable.xcstrings as main's file in main's order plus exactly the task changes. Added: 'Beacon area %@ square points…', 'Exam-style check' (fr: Vérification d’examen), 'Send the displayed passage, then end and grade when ready…' (fr/fr-CA). Removed: 'Beacon area %.0f points…'. Changed: '%lld total errors…' (French per-count agreement). pnpm check:apple-l10n exit 0, and the export leaves the catalogue unchanged.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
