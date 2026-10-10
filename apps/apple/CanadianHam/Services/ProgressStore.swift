@@ -522,6 +522,14 @@ enum ICloudLocalDataChoice: Equatable, Sendable {
 struct ICloudProgressDeletionClient: Sendable {
     let deletePrivateDatabaseProgressZones: @Sendable () async throws -> Void
 
+    init(deletePrivateDatabaseProgressZones: @escaping @Sendable () async throws -> Void) {
+        self.deletePrivateDatabaseProgressZones = deletePrivateDatabaseProgressZones
+    }
+
+    init(_ deletePrivateDatabaseProgressZones: @escaping @Sendable () async throws -> Void) {
+        self.deletePrivateDatabaseProgressZones = deletePrivateDatabaseProgressZones
+    }
+
     static let noop = ICloudProgressDeletionClient(deletePrivateDatabaseProgressZones: {})
 }
 
