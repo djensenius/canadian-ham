@@ -1,9 +1,11 @@
 ---
 id: TASK-39.4
 title: 'Lesson text revision: M7 propagation and M8 interference'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-10 22:15'
+updated_date: '2026-10-10 22:51'
 labels:
   - content
 dependencies:
