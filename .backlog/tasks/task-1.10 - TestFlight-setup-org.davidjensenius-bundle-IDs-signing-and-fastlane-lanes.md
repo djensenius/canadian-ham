@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 12:40'
-updated_date: '2026-10-10 16:40'
+updated_date: '2026-10-10 16:41'
 labels: []
 dependencies: []
 parent_task_id: TASK-1
@@ -55,6 +55,8 @@ visionOS (13): CanadianHamVisionTests.CanadianHamVisionTests testAppBundleContai
 Final validation: XcodeGen run twice plus cmp-stability check passed; stale com.djensenius / old iCloud container / .TV/.Vision bundle references are absent outside historical Backlog notes; fastlane lanes parse with fastlane lanes; register_bundle_ids created org.davidjensenius.CanadianHam; default iCloud/network gates passed; full iOS/macOS/tvOS/visionOS xbuild suites passed. Release archive/export/upload attempts stopped after iOS/macOS CodeSign errSecInternalComponent per coordinator; evidence shows profiles/signing identity resolve and the archive reaches CodeSign, but signed export/upload requires interactive keychain access.
 
 Review r1 fixes: AGENTS.md and docs/content-licensing.md now allow internal-only TestFlight (team members) and keep external testers, public links and App Store submission blocked until task-1.7; Fastfile no longer overrides MARKETING_VERSION (project.yml is the single source); new icloud-gate self-test 'shared-bundle-ID tvOS DebugCloudKit entitlements leak'; stale containerRegistrationNote removed; create_app_record description corrected; task-13 note records the confirmed container. Checks: test:apple-icloud-gate, check:apple-icloud-gate, check:apple-network pass; ruby -c Fastfile OK. Signing root cause: Herdr/pi panes run in launchd's Background session (launchctl managername = Background), so the keychain can't prompt; run beta lanes from a GUI Terminal window or unlock the keychain first in that shell.
+
+Re-review r2 (61d2c4ac): APPROVE WITH NOTES. Notes addressed: content-licensing vendoring line references the internal-TestFlight exception; runbook says unlock only helps if the key ACL allows codesign, else use set-key-partition-list. Coordinator ran: test-check-apple-icloud-gate (pass), check-apple-icloud-gate (pass), ruby -c Fastfile (Syntax OK), rg containerRegistrationNote apps/scripts/docs (no refs), check:links.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
