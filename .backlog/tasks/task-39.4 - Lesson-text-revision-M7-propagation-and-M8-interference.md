@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-10 22:52'
+updated_date: '2026-10-10 22:57'
 labels:
   - content
 dependencies:
@@ -34,3 +34,9 @@ Revise all lessons in m7-propagation and m8-interference-suppression to the teac
 <!-- SECTION:PLAN:BEGIN -->
 1. Revise M7 lesson bodies first, preserving all front matter, covers, quizIds, and Illustration brief sections exactly.\n2. Run the required content, link, web, and Swift package checks after the M7 module slice, fix any lesson-originality or parser issues, then commit that slice.\n3. Revise M8 lesson bodies with practical interference examples, ferrite/common-mode caveats, filter placement, 60 Hz hum distinction, and preserve protected metadata/briefs exactly.\n4. Run the same full check set after M8 and again as final verification if fixes are needed, update pinned expectations only if touched (not expected for L-007/L-008), then record evidence, check ACs, summarize, and mark Done.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+M7 revision complete. L-007-01: tightened path/layer prose, added valley/ridge/town real-world example, D/E/F order and D daytime damping memory tricks, and skip-zone power misconception; facts checked against B-007-001/002/003 including radio horizon, D/E/F order, midday/minimum ionization, skip geometry, 2 000 km E and 4 000 km F2 planning scales. L-007-02: added AM broadcast nighttime example, fading misconception, OWF worked calculation (18.6 MHz x 0.85 = 15.8 MHz), and clearer MUF/LUF guidance; facts checked against B-007-004/005/006 including D-region absorption, AM/daytime absorption, 11-year solar cycle, 20 m daylight usefulness, SID higher-frequency response, and OWF below MUF. L-007-03: added radio-horizon worked estimate (1.8 m handheld plus 100 m repeater gives 46.7 km), FM/VHF range teaching, and VHF-power misconception; facts checked against B-007-007/008 including sporadic E, 800 km normal VHF planning scale, aurora/CW, meteor scatter 30-100 MHz, and scatter clues. Required post-M7 checks passed: coverage, quizzes, explanations, lesson originality, links, TZ=UTC pnpm test, and content-swift swift test.
+<!-- SECTION:NOTES:END -->
