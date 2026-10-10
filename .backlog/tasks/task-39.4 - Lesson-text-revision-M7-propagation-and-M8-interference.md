@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-10 22:51'
+updated_date: '2026-10-10 22:52'
 labels:
   - content
 dependencies:
@@ -28,3 +28,9 @@ Revise all lessons in m7-propagation and m8-interference-suppression to the teac
 - [ ] #3 Memory tricks from the guide are added where they help, are accurate and inoffensive, and say what they help remember
 - [ ] #4 Coverage, quiz, explanation, originality and link checks pass; lesson IDs, front matter coverage and quiz references are unchanged; Illustration brief sections are left intact for task-38
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Revise M7 lesson bodies first, preserving all front matter, covers, quizIds, and Illustration brief sections exactly.\n2. Run the required content, link, web, and Swift package checks after the M7 module slice, fix any lesson-originality or parser issues, then commit that slice.\n3. Revise M8 lesson bodies with practical interference examples, ferrite/common-mode caveats, filter placement, 60 Hz hum distinction, and preserve protected metadata/briefs exactly.\n4. Run the same full check set after M8 and again as final verification if fixes are needed, update pinned expectations only if touched (not expected for L-007/L-008), then record evidence, check ACs, summarize, and mark Done.
+<!-- SECTION:PLAN:END -->
