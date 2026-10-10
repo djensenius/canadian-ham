@@ -348,12 +348,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
         start.tap()
         let debugFill = app.buttons["morse-sending-debug-fill-button"].firstMatch
         XCTAssertTrue(debugFill.waitForExistence(timeout: 5), "DEBUG-only deterministic sending hook should be present in UI tests")
+        scrollUntilHittable(debugFill, in: app, maxSwipes: 8)
         debugFill.tap()
         let grade = app.buttons["morse-sending-grade-exam-button"].firstMatch
         XCTAssertTrue(grade.waitForExistence(timeout: 5))
-        if !grade.isHittable {
-            app.swipeUp()
-        }
+        scrollUntilHittable(grade, in: app, maxSwipes: 8)
         grade.tap()
 
         let heading = app.descendants(matching: .any)["morse-sending-results-heading"].firstMatch
@@ -1510,8 +1509,14 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let start = app.buttons["morse-sending-start-exam-button"].firstMatch
         XCTAssertTrue(start.waitForExistence(timeout: 10))
         start.tap()
-        app.buttons["morse-sending-debug-fill-button"].firstMatch.tap()
-        app.buttons["morse-sending-grade-exam-button"].firstMatch.tap()
+        let debugFill = app.buttons["morse-sending-debug-fill-button"].firstMatch
+        XCTAssertTrue(debugFill.waitForExistence(timeout: 5))
+        scrollUntilHittable(debugFill, in: app, maxSwipes: 8)
+        debugFill.tap()
+        let grade = app.buttons["morse-sending-grade-exam-button"].firstMatch
+        XCTAssertTrue(grade.waitForExistence(timeout: 5))
+        scrollUntilHittable(grade, in: app, maxSwipes: 8)
+        grade.tap()
         XCTAssertTrue(app.descendants(matching: .any)["morse-sending-results-heading"].firstMatch.waitForExistence(timeout: 5))
         try performAudit(on: app, context: "Morse sending results \(appearance)")
     }
