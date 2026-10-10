@@ -54,6 +54,17 @@ Phase describes timing between waveforms. A pair of AC signals may have the same
 
 A sine wave is the smooth waveform associated with ideal AC. Household mains from a receptacle is AC and is intended to be sinusoidal. A harmonic is a signal at an integer multiple of a fundamental frequency, so harmonic signals sit above the fundamental at regular frequency intervals.
 
+### Memory trick: ELI the ICE man
+
+- Helps remember: ideal AC phase in inductors and capacitors.
+- Trick: in an inductor L, E leads I, so E-L-I. In a capacitor C, I leads E, so I-C-E.
+- Limit: this is for ideal L and C phase memory. The Basic bank mainly tests reactance trends, not detailed phase calculations.
+
+### Misconception: phase is the same as DC polarity
+
+- Mistaken idea: phase and polarity are two names for the same thing.
+- Correction: phase is timing between AC waveforms. DC polarity is positive and negative direction.
+
 ## Decibels as power ratios
 
 The decibel compares two levels. Receiver signal reports may use an S-meter reading such as S9, then add a number of decibels above S9 for stronger signals. For example, a monitor reading of S9 plus 18 dB that loses 6 dB would be expected near S9 plus 12 dB, because the change is subtracted from the amount above S9.
@@ -75,25 +86,40 @@ For Basic-level estimating, use practical power shortcuts:
 
 A 4 W handheld feeds a 7 dB gain amplifier. A 7 dB power increase is roughly a fivefold power change.
 
-- Estimate the ratio as about 5:1.
-- 4 W x 5 gives about 20 W.
-
-The output is about 20 W.
+- Given: starting power = 4 W; gain = about 5:1.
+- Find: estimated output power.
+- Formula: output power = starting power x power ratio.
+- Substitute: 4 W x 5.
+- Answer: about 20 W.
+- Sanity check: the estimate is above the starting power but still in a small-amplifier range.
 
 ### Worked example: feedline loss
 
-A transmitter is 30 W and the line loss is 5 dB.
+A transmitter is 30 W and the line loss is 5 dB. A 5 dB loss leaves a bit less than a third of the original power.
 
-- A 5 dB loss leaves a bit less than a third of the original power.
-- Use about 9 W as a quick estimate.
-
-About 9 W reaches the antenna.
+- Given: starting power = 30 W; remaining ratio is about 0.3.
+- Find: power reaching the antenna.
+- Formula: antenna power = starting power x remaining ratio.
+- Substitute: 30 W x 0.3.
+- Answer: about 9 W.
+- Sanity check: a loss must leave less power than the transmitter started with.
 
 ### Worked example: large power reduction
 
-If a station needs a large reduction for a close-range test, combine standard attenuator steps rather than guessing. For example, an attenuator that leaves one-fifth of the power followed by one that leaves one-quarter gives one-twentieth of the starting power.
+A test setup uses attenuators that leave 0.20 and 0.25 of the incoming power.
 
-A 24 W signal through that pair of attenuators is reduced to about 1.2 W.
+- Given: starting power = 24 W; remaining ratios are 0.20 and 0.25.
+- Find: final power.
+- Formula: final power = starting power x first ratio x second ratio.
+- Substitute: 24 W x 0.20 x 0.25.
+- Answer: 1.2 W.
+- Sanity check: cascaded attenuators reduce power more than either attenuator alone.
+
+### In the real world: dB on a station checklist
+
+Antenna switches, filters, and feedlines may list gain or loss in dB. A short patch cable with a small loss may not matter much. A long feedline at VHF or UHF can lose enough power to change station performance.
+
+The dB number is a ratio, not a watt value. You need the starting power before you can estimate the final power.
 
 ## Inductors and capacitors in combinations
 
@@ -108,14 +134,16 @@ The reference sheet gives these relationships:
 
 Notice that capacitors are opposite to resistors for series and parallel totals. Inductors follow the resistor pattern in the simple ideal cases shown here.
 
-### Worked examples
+### Worked example: equal parts
 
-- A matched pair of inductors in series has the sum of both inductances.
-- A matched pair of inductors in parallel has less inductance than either part alone.
-- A matched pair of capacitors in series has less capacitance than either part alone.
-- A matched pair of capacitors in parallel has the sum of both capacitances.
+Equal parts often make the pattern easier to see.
 
-So a pair of 7 mH chokes in series make 14 mH. A pair of 18 mH inductors in parallel make 9 mH. A pair of 33 µF capacitors in series make 16.5 µF. A pair of 47 µF capacitors in parallel make 94 µF.
+- Given: two 7 mH inductors in series; two 18 mH inductors in parallel; two 33 µF capacitors in series; two 47 µF capacitors in parallel.
+- Find: each total value.
+- Formula: equal inductors add in series and halve in parallel; equal capacitors halve in series and add in parallel.
+- Substitute: 7 + 7; 18 / 2; 33 / 2; 47 + 47.
+- Answer: 14 mH, 9 mH, 16.5 µF, and 94 µF.
+- Sanity check: the capacitor series answer is smaller than either capacitor, while the capacitor parallel answer is larger.
 
 ## What sets inductance and capacitance?
 
@@ -124,6 +152,12 @@ For an air-core coil, inductance depends mainly on the coil's size, its winding 
 For a simple air-spaced capacitor, capacitance depends on plate area and spacing. Larger facing plate area gives more capacitance. More spacing gives less capacitance.
 
 Polarized electrolytic capacitors need correct polarity. Never apply reverse voltage to a polarized electrolytic capacitor.
+
+### In the real world: power-supply filter capacitor
+
+A filter capacitor in a power supply charges near the voltage peaks after rectification. Between peaks, it gives energy back to the load. That reduces ripple, which is unwanted rise and fall on the DC output.
+
+This does not make a capacitor a battery. A capacitor stores energy in an electric field and charges or discharges quickly. A battery stores energy chemically and is meant to supply energy for longer.
 
 ## Reactance and impedance
 
@@ -134,6 +168,17 @@ Inductive reactance increases as frequency increases. This is why an RF choke ca
 Capacitive reactance decreases as frequency increases. This is why a bypass capacitor can provide an easy path for unwanted RF while having little effect on audio when chosen correctly.
 
 Impedance is the combined effect of resistance and reactance in an AC circuit. You can find it by comparing AC voltage with AC current.
+
+### In the real world: ferrite choke on a noisy lead
+
+A ferrite choke around a cable acts like an inductor for unwanted RF current. At radio frequencies it can add high reactance. At DC or low audio frequencies, it has much less effect on the intended power or audio path.
+
+That is why snap-on ferrites are common on computer leads, charger leads, and station accessory cables. They are not magic noise erasers, but they can make an unwanted RF path harder to use.
+
+### Misconception: reactance is fixed like a resistor value
+
+- Mistaken idea: a stated reactance stays the same at every frequency.
+- Correction: inductive reactance rises with frequency, while capacitive reactance falls with frequency.
 
 ## Try it
 
