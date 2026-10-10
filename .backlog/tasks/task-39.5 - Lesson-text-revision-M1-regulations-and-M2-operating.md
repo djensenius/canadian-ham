@@ -1,9 +1,11 @@
 ---
 id: TASK-39.5
 title: 'Lesson text revision: M1 regulations and M2 operating'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-10 22:15'
+updated_date: '2026-10-10 22:51'
 labels:
   - content
 dependencies:
