@@ -5,6 +5,11 @@
     "reason": "Reviewed principle table: Basic-level dB power-ratio shortcuts are standard facts, not a copied worked example. Numerals are intentionally preserved for clarity."
   },
   {
+    "lessonId": "L-006-02",
+    "blockHeading": "In the real world: reflected-power estimates",
+    "reason": "Reviewed standard SWR reflected-power table requested by docs/teaching-guide.md for task-39.3. The values are calculated from the reflection-coefficient formula and are not copied from ISED question text."
+  },
+  {
     "lessonId": "L-005-05",
     "blockHeading": "Resonance and tuned circuits",
     "reason": "Reviewed principle definition: the series-RLC maximum-current statement is an accepted standard resonance fact needed for the lesson."

@@ -23,9 +23,9 @@ status: draft
 ---
 # Station filtering and radio blocks
 
-A station is easier to understand when you draw it as blocks instead of as a nest of cables. Each block has one main job. A filter cleans up unwanted RF products, a meter tells you how well the load is matched, an antenna tuner helps the transmitter see a usable load, and a receiver changes a radio signal into audio in several smaller steps.
+A station is easier to learn when you draw it as blocks. Each block has one main job. A filter reduces unwanted RF products. A meter reports a condition. A tuner transforms impedance. A receiver turns a radio signal into audio in stages.
 
-In this lesson, keep asking one question: where is the unwanted or wanted signal at this moment? The best place for a block is usually where it can act before the next cable, amplifier, or antenna carries the problem farther along.
+As you read, ask where the signal is at that moment. Put each block where it can act before the next cable, amplifier, or antenna carries the problem farther.
 
 ## Learning objectives
 
@@ -39,39 +39,48 @@ By the end of this lesson, you can:
 
 ## The HF station as a chain
 
-A simple HF station can be sketched as this chain:
+A simple HF station often follows this order:
 
 ```text
 transceiver -> low-pass filter -> SWR meter -> antenna tuner -> antenna switch -> antenna or dummy load
 ```
 
-If an external RF power amplifier is used, think of the amplifier as the new final RF source:
+SWR means standing wave ratio. It is a match reading based on forward and reflected waves on a transmission line. The SWR meter reports the match; it does not fix the match.
+
+A low-pass filter passes the wanted HF signal and reduces higher-frequency harmonics. Harmonics are unwanted signals at whole-number multiples of the intended signal. The filter belongs close to the output stage that can make or amplify those harmonics.
+
+An antenna tuner transforms impedance so the transmitter sees a safer load. It does not remove harmonics. An antenna switch selects the antenna path, test load, or unused position.
+
+A dummy load is a non-radiating test load. It turns RF power into heat so you can tune or test without intentionally radiating a signal. Real dummy loads have power and time limits. If the case warms, stop and check the rating.
+
+If an external RF power amplifier is used, the amplifier becomes the final RF source:
 
 ```text
 transceiver -> external RF amplifier -> low-pass filter -> SWR meter -> tuner -> switch -> antenna
 ```
 
-A low-pass filter passes the wanted HF signal while reducing energy at higher frequencies. Harmonics are higher-frequency multiples of the intended signal, so the filter belongs close to the output that can create or amplify those harmonics. Placing it later in the shack may leave an unnecessary length of cable carrying unwanted RF energy.
+### In the real world: filter before the long jumper
 
-An SWR meter samples forward and reflected power so you can judge how well the transmitter is matched to the antenna system. An antenna tuner does not magically make a poor antenna efficient; it transforms impedance so the transmitter or amplifier sees a safer load. Because antenna impedance changes with frequency, the tuner may need readjustment after a frequency change even though the cables have not moved. An antenna switch chooses which antenna path, test load, or unused position is connected.
+A 14.2 MHz HF transmitter can also produce a second harmonic at 28.4 MHz.
 
-A dummy load is a non-radiating test load. It turns RF power into heat so you can tune or test without intentionally putting a signal on the air. Real dummy loads also have power and time limits, so a warming case is a reason to pause and check the rating.
+- Given: wanted frequency = 14.2 MHz; harmonic number = 2.
+- Find: second-harmonic frequency.
+- Formula: harmonic frequency = operating frequency x harmonic number.
+- Substitute: harmonic frequency = 14.2 MHz x 2.
+- Answer: harmonic frequency = 28.4 MHz.
+- Sanity check: the harmonic is above the wanted HF signal, so a low-pass filter can reduce it.
 
-### In the real world: filter before the shack wiring
-
-A low-pass filter is most useful before unwanted harmonics travel through extra jumpers and switches. Put it near the transceiver output, or near the external amplifier output when an amplifier is in use.
-
-A dummy load is useful in the same practical way. Test into the load first, then move to the antenna path after the station blocks are in the right order.
+Place the low-pass filter before a long accessory cable. Then the cable is less likely to carry the unwanted harmonic around the station.
 
 ### Worked example: locating the filter
 
-A 20 m transceiver feeds a borrowed linear amplifier, then a short accessory tray with a power meter, a tuner, and a remote antenna switch. The filter question is not about which accessory is easiest to reach; it is about the first point after the last active RF source.
+A 20 m transceiver feeds a borrowed linear amplifier. The station also has a power meter, a tuner, and a remote antenna switch. Put the low-pass filter at the first point after the last active RF source.
 
 ```text
 20 m transceiver -> linear amplifier -> low-pass filter -> power meter -> tuner -> remote switch
 ```
 
-If the amplifier is removed for a low-power test, the transceiver becomes the last active RF source for that path. The same rule still applies: put the filter close to the output that is actually delivering RF to the rest of the station.
+If the amplifier is removed, the transceiver is the final RF source. The same rule still applies.
 
 ## FM transmitter blocks
 
@@ -81,23 +90,26 @@ A basic FM transmitter can be followed from voice to antenna:
 microphone -> speech amplifier -> modulator -> oscillator -> frequency multiplier -> power amplifier -> antenna system
 ```
 
-The microphone changes air pressure into a small electrical audio signal. The speech amplifier raises that signal to a useful level. In FM, the modulator changes the oscillator's frequency slightly above and below its centre value. Those frequency changes are the modulation.
+The microphone changes sound into a small audio signal. The speech amplifier raises that signal. In FM, the modulator changes the oscillator frequency slightly above and below its centre value. Those small frequency changes carry the speech.
 
-A frequency multiplier produces a useful harmonic of the oscillator signal. Multipliers let the oscillator run at a convenient stable frequency while later stages reach the desired RF carrier frequency. Because multiplication scales frequency, a small FM frequency deviation is multiplied by the same factor. The power amplifier is the block that delivers the largest RF power to the antenna system, so it draws the most electrical power in this simplified chain.
+A frequency multiplier produces a useful harmonic of the oscillator signal. This lets the oscillator run at a stable lower frequency while later stages reach the desired RF carrier frequency. The power amplifier delivers the largest RF power to the antenna system, so it draws the most electrical power in this simplified chain.
 
 ### Worked example: a multiplier chain
 
 A teaching transmitter uses an oscillator near 12.2 MHz and a multiplier stage that triples it.
 
-```text
-12.2 MHz x 3 = 36.6 MHz
-```
+- Given: oscillator frequency = 12.2 MHz; multiplier = 3.
+- Find: output frequency.
+- Formula: output frequency = oscillator frequency x multiplier.
+- Substitute: output frequency = 12.2 MHz x 3.
+- Answer: output frequency = 36.6 MHz.
+- Sanity check: the output is three times the oscillator frequency.
 
-If the voice modulator makes the oscillator frequency move slightly, the multiplied output moves too. The speech is carried as a controlled change in frequency, not as a change in RF amplitude.
+If voice modulation moves the oscillator frequency a little, the multiplied output moves too. FM carries speech as a controlled frequency change, not as a planned amplitude change.
 
 ## Superheterodyne receiver blocks
 
-A superheterodyne receiver does not process every signal at its original radio frequency all the way to the speaker. Instead, it converts the selected signal to an intermediate frequency, or IF, where filtering and gain can be made stable and repeatable.
+A superheterodyne receiver does not process every signal at its original radio frequency all the way to the speaker. It converts the selected signal to an intermediate frequency, or IF. Filtering and gain are easier to make stable at a fixed IF.
 
 A simplified FM receiver looks like this:
 
@@ -107,43 +119,34 @@ antenna -> RF amplifier -> mixer -> IF filter -> IF amplifier -> limiter -> disc
                          local oscillator
 ```
 
-The RF amplifier is the front-end block. It must add as little noise as practical because weak signals can be spoiled before later stages have a chance to help. The local oscillator sets the tune point. The mixer combines the incoming signal with the local oscillator signal to create the IF. The IF filter provides adjacent-channel selectivity. The IF amplifier supplies most of the gain before detection.
+The RF amplifier is the front end. It should add little noise, because weak signals can be spoiled before later stages help. The local oscillator sets the tune point. The mixer combines the incoming signal with the local oscillator signal to create the IF.
 
-For FM, the limiter removes unwanted amplitude variations. The discriminator recovers the original modulation from the frequency variations. The AF amplifier then raises the recovered audio to a useful level; volume and squelch are associated with this audio section in the block-level view.
+The IF filter provides adjacent-channel selectivity. The IF amplifier supplies most of the receiver gain before detection. For FM, the limiter removes unwanted amplitude changes. The discriminator recovers audio from frequency changes. The AF amplifier raises the recovered audio for headphones or a speaker.
 
 ### Worked example: IF conversion with original numbers
 
-Suppose a training receiver is tuned to 146.520 MHz and uses a 10.700 MHz IF with the local oscillator above the signal.
+A training receiver is tuned to 146.520 MHz. It uses a 10.700 MHz IF, and the local oscillator is above the signal.
 
-```text
-local oscillator frequency = received frequency + IF
-local oscillator frequency = 146.520 MHz + 10.700 MHz
-local oscillator frequency = 157.220 MHz
-```
+- Given: received frequency = 146.520 MHz; IF = 10.700 MHz.
+- Find: local oscillator frequency.
+- Formula: local oscillator = received frequency + IF.
+- Substitute: local oscillator = 146.520 MHz + 10.700 MHz.
+- Answer: local oscillator = 157.220 MHz.
+- Sanity check: with high-side injection, the oscillator is above the received signal.
 
-The mixer output includes several products, but the IF stages are designed to keep the 10.700 MHz difference product and reject the rest.
+The mixer makes several products. The IF stages keep the 10.700 MHz difference product and reject the rest.
 
 ## Try it
 
-Question: A 14.2 MHz transmitter can also create energy at 28.4 MHz. Explain why the harmonic filter should act before a long accessory cable.
-
-Worked answer: The unwanted 28.4 MHz energy should be reduced before the cable carries it around the station. Filtering late may leave extra wiring radiating or coupling the harmonic.
-
-Question: An FM exciter at 10.000 MHz has an instant when modulation nudges it 1.5 kHz above centre, and then a doubler follows. What are the doubled centre frequency and the doubled instant offset?
-
-Worked answer: The doubled centre frequency is 20.000 MHz. The 1.5 kHz upward deviation is doubled too, so the output is 3.0 kHz above its centre at that instant.
-
-Question: A superheterodyne receiver has a noisy first RF stage. Why can later audio gain not fully repair that problem?
-
-Worked answer: Later gain amplifies the wanted signal and the noise that was already added. A low-noise front end protects weak signals before conversion and detection.
-
-Question: In a receiver with a 9.000 MHz IF, a signal at 28.400 MHz uses a high-side oscillator. What oscillator frequency is the first estimate?
-
-Worked answer: Add the IF to the received signal: 28.400 MHz + 9.000 MHz = 37.400 MHz.
+1. A transmitter on 7.1 MHz can create a second harmonic. Where is that harmonic? It is at 7.1 MHz x 2 = 14.2 MHz.
+2. Why should the harmonic filter act before a long accessory cable? The unwanted energy should be reduced before the cable can carry it around the station.
+3. An FM exciter at 10.000 MHz has an instant when modulation nudges it 1.5 kHz above centre. A doubler follows. What are the doubled centre frequency and offset? The centre becomes 20.000 MHz, and the 1.5 kHz offset becomes 3.0 kHz.
+4. A superheterodyne receiver has a noisy first RF stage. Why can later audio gain not fully repair that problem? Later gain amplifies the wanted signal and the noise already added.
+5. A receiver with a 9.000 MHz IF tunes 28.400 MHz with a high-side oscillator. What oscillator frequency is the first estimate? Add the IF: 28.400 MHz + 9.000 MHz = 37.400 MHz.
 
 ## Radio connection
 
-When another station reports that your signal is causing TV or VHF interference, a low-pass filter near the transmitting output is one of the first station-layout items to check. When your receiver has poor adjacent-channel rejection, the IF filter is the block to think about. The same block-diagram habit turns a vague symptom into a likely area to inspect.
+Block diagrams turn a vague symptom into a place to look. A harmonic problem points near the final RF output and low-pass filter. Poor adjacent-channel rejection points toward receiver filtering. High SWR points toward the antenna system, feedline, matching device, or connectors.
 
 ## Common mistakes
 
@@ -161,8 +164,9 @@ Description: Draw a brush-style station chain across the top: transceiver or amp
 
 ## Summary
 
-- A low-pass filter belongs close to the final RF output stage: the transceiver output when no external amplifier is used, or the external amplifier output when one is used.
-- SWR meters measure match, antenna tuners transform impedance, antenna switches select paths, and dummy loads absorb RF without intended radiation.
-- In an FM transmitter, speech audio changes oscillator frequency through the modulator.
-- A superheterodyne receiver converts the selected RF signal to an IF so stable filtering and gain can be applied.
-- The RF amplifier, mixer, local oscillator, IF filter, IF amplifier, detector, and AF amplifier each solve a different part of the receive problem.
+- Draw station equipment as signal-flow blocks.
+- A low-pass filter belongs close to the final RF source.
+- An SWR meter measures match; a tuner transforms impedance; a dummy load absorbs RF as heat.
+- In an FM transmitter, speech changes oscillator frequency through the modulator.
+- A superheterodyne receiver converts the selected RF signal to an IF for stable filtering and gain.
+- The RF amplifier, mixer, local oscillator, IF filter, IF amplifier, detector, and AF amplifier each solve a different receive problem.

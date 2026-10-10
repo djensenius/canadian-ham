@@ -26,15 +26,9 @@ status: draft
 ---
 # Access, grounding, lightning, and RF safety
 
-A radio station has electrical energy, RF energy, and physical hazards in one place. Good safety practice is not a single part you buy; it is a system of access control, grounding, bonding, fusing, lightning planning, tower precautions, and RF exposure awareness.
+A radio station has electrical energy, RF energy, and physical hazards in one place. Good safety practice is not a single part you buy. It is a system of access control, grounding, bonding, fusing, lightning planning, tower precautions, and RF exposure awareness.
 
 This lesson is study guidance, not installation engineering advice. For real station wiring, towers, lightning protection, and exposure assessment, follow Canadian electrical requirements, manufacturer instructions, qualified trade practice, and Health Canada Safety Code 6 concepts for limiting RF exposure.
-
-### In the real world: code and local authority
-
-CSA C22.1, the Canadian Electrical Code, is a national model code. It becomes enforceable when a province or territory adopts an edition, often with local amendments.
-
-For station wiring, follow your provincial or territorial electrical code and the authority having jurisdiction. Do not treat a study lesson as a substitute for a qualified electrician or inspector.
 
 ## Learning objectives
 
@@ -48,15 +42,17 @@ By the end of this lesson, you can:
 
 ## Station access and electrical shock
 
-Station control begins with preventing unauthorized operation. At home, a key-operated switch or another positive power-control method is much stronger than a warning sign. In a vehicle, removing the microphone or control head can be more effective than simply turning the radio off because the radio is no longer ready to transmit.
+Station control begins with preventing unauthorized operation. At home, a key-operated switch or another positive power-control method is stronger than a warning sign. In a vehicle, removing the microphone or control head can be more effective than turning the radio off.
 
-Electrical shock risk depends on the path through the body, current, voltage, time, and conditions such as wet skin. Currents on the order of 20 mA can be fatal when the path includes the chest, because the heart can be driven into ventricular fibrillation. Voltages around 30 V and above are usually treated as hazardous to humans, especially in wet or conductive conditions. Do not troubleshoot live mains-operated supplies unless you are qualified and equipped to do so. Before opening equipment, turn it off, unplug it, and understand that capacitors may still hold charge. High-voltage supplies may include cabinet interlock switches that remove power when a cover is opened; never defeat an interlock, and never assume it has discharged stored energy.
+Electrical shock risk depends on current path, current amount, voltage, time, and conditions such as wet skin. Currents on the order of 20 mA can be fatal when the path includes the chest, because the heart can be driven into ventricular fibrillation. Voltages around 30 V and above are usually treated as hazardous to humans, especially in wet or conductive conditions.
 
-If someone is in contact with high voltage, do not become the second victim. De-energize the source if you can do so safely, call emergency help, and provide first aid only when it is safe and within your training.
+Do not troubleshoot live mains-operated supplies unless you are qualified and equipped. Before opening equipment, turn it off and unplug it. Capacitors may still hold charge. High-voltage supplies may include cabinet interlock switches that remove power when a cover opens. Never defeat an interlock, and never assume it discharged stored energy.
 
-### Worked example: making a home station unavailable
+If someone is in contact with high voltage, do not become the second victim. De-energize the source if you can do so safely. Call emergency help. Provide first aid only when it is safe and within your training.
 
-A family workstation shares a room with a transceiver. The operator wants a simple way to prevent accidental transmitting when visitors use the desk.
+### In the real world: making a home station unavailable
+
+A family workstation shares a room with a transceiver. The operator wants to prevent accidental transmitting when visitors use the desk.
 
 - Turn off the radio and disable the main station power path with a positive control.
 - Store the microphone or key where visitors cannot casually connect it.
@@ -64,55 +60,79 @@ A family workstation shares a room with a transceiver. The operator wants a simp
 
 The goal is to remove the ability to transmit, not merely to ask people not to touch it.
 
+### In the real world: code and local authority
+
+CSA C22.1, the Canadian Electrical Code, is a national model code. It becomes enforceable when a province or territory adopts an edition, often with local amendments.
+
+The authority having jurisdiction is the local body or official that enforces the adopted electrical code. For station wiring, follow your provincial or territorial electrical code and that authority's requirements. A study lesson is not a substitute for a qualified electrician or inspector.
+
 ## Grounding and bonding
 
-Grounding and bonding are related but not identical. Grounding connects equipment to earth or to the electrical safety grounding system as required. Bonding connects metal parts together so dangerous voltage differences are reduced. In a station, chassis ground terminals should meet at a single-point ground or bonding panel rather than wandering through long daisy chains.
+Grounding and bonding are related but not identical. Grounding connects equipment to earth or to the electrical safety grounding system as required. Bonding connects metal parts together so dangerous voltage differences are reduced.
 
-All ground electrodes on a property should be bonded together with heavy copper grounding conductors according to established practice. Separate unbonded electrodes can rise to different voltages during a fault or lightning event, creating a dangerous path through station equipment. A driven earth electrode is commonly copper-clad steel: the steel provides strength for driving, while the copper surface provides a corrosion-resistant conductive contact with the soil. A bonding connection also needs clean metal-to-metal contact, proper clamps or hardware, short conductors, and a continuity check rather than a strap sitting on paint or corrosion.
+In a station, chassis ground terminals should meet at a single-point ground or bonding panel. Avoid long daisy chains that depend on every device-to-device jumper.
 
-RF grounding has an extra complication: a long wire that looks like a ground at DC can have high impedance at radio frequencies. A third-floor wire running down a building may not cure RF burns at the operating desk. The real fix may involve antenna balance, common-mode choking, a better bonding layout, or moving the antenna system.
+All ground electrodes on a property should be bonded together with heavy copper grounding conductors according to established practice and local code. Separate unbonded electrodes can rise to different voltages during a fault or lightning event. That can create a dangerous path through station equipment.
 
-### Worked example: single-point station bonding
+A driven earth electrode is often copper-clad steel. The steel provides strength for driving. The copper surface provides corrosion-resistant conductive contact with soil. A bonding connection needs clean metal-to-metal contact, proper clamps or hardware, short conductors, and a continuity check.
+
+RF grounding has an extra complication. A long wire that looks like a ground at DC can have high impedance at radio frequencies. A third-floor wire down a building may not cure RF burns at the desk. The fix may involve antenna balance, common-mode choking, a better bonding layout, or moving the antenna.
+
+### In the real world: single-point station bonding
 
 A small station has a transceiver, tuner, power supply, and coax entry panel.
 
 - Bond each chassis to one station ground bar with short, direct conductors.
-- Bond the entry panel to the same grounding system used for the building electrodes.
-- Keep RF return currents off microphone cables and computer leads by using feedline chokes where needed.
+- Bond the coax entry panel to the same grounding system used for the building electrodes.
+- Keep RF return currents off microphone and computer leads with feedline chokes where needed.
+- Inspect the bond path for paint, corrosion, loose screws, or long loops.
 
-A neat star-like bond is easier to inspect than a chain that depends on every device-to-device jumper.
+A star-like bond is easier to inspect than a chain of jumpers.
+
+### Worked example: painted metal is not a bond
+
+A station ground bar shows high resistance to a radio chassis. The strap is clamped over painted metal.
+
+- Given: strap is tight, but contact is on paint.
+- Find: why the bond is poor.
+- Formula: a bond needs clean conductive contact, not just mechanical pressure.
+- Substitute: paint is in the current path, so the metal parts are not truly bonded.
+- Answer: clean to bare metal, use proper hardware, keep the bond short, and recheck continuity.
+- Sanity check: a shiny strap can still fail if the contact surface is insulated.
 
 ## Fuses, chassis safety, and stored charge
 
-Fuses have current and voltage ratings. The current rating controls when the fuse opens. The voltage rating says what voltage the fuse can interrupt safely without sustaining an arc. Replacing a specified fuse with a higher current rating defeats the protection and can turn a fault into equipment damage or fire.
+Fuses have current and voltage ratings. The current rating controls when the fuse opens. The voltage rating says what voltage the fuse can interrupt safely without sustaining an arc. A higher-current replacement defeats protection and can turn a fault into equipment damage or fire.
 
 ### Misconception: a fuse protects people from every shock
 
 - Mistaken idea: if equipment has a fuse, the operator is protected from electric shock.
 - Correction: a fuse protects wiring and equipment from excessive current. Shock safety also needs grounding, bonding, de-energizing before work, proper enclosures, and safe work practices.
 
-The green conductor in a three-wire AC cord bonds the equipment chassis to protective earth. If a fault connects the hot conductor to the chassis, the safety ground provides a low-impedance fault path so protection can operate and the chassis is less likely to remain energized.
+The green conductor in a three-wire AC cord bonds the equipment chassis to protective earth. If a fault connects the hot conductor to the chassis, the safety ground provides a low-impedance fault path so protection can operate.
 
-Power-supply filter capacitors can retain charge after the unit is unplugged. Use the manufacturer procedure or a properly insulated discharge tool with an inline resistor. Do not use a screwdriver as a casual shorting tool; it can arc, damage parts, or injure the person holding it.
+Power-supply filter capacitors can retain charge after the unit is unplugged. Use the manufacturer's procedure or a properly insulated discharge tool with an inline resistor. Do not use a screwdriver as a casual shorting tool. It can arc, damage parts, or injure the person holding it.
 
 ### Worked example: opening an offline supply
 
 A qualified repair mentor supervises a student inspecting an unplugged supply.
 
 - Confirm the power cord is unplugged and the unit cannot be accidentally energized.
-- Open the cabinet only after the safe work area is prepared.
+- Prepare the safe work area before opening the cabinet.
 - Discharge filter capacitors with an insulated resistor tool and verify with a meter.
-- Use the one-hand rule for necessary measurements: work with one hand and keep the other hand off the equipment, for example behind your back, so an accidental contact is less likely to put current across your chest.
+- Use the one-hand rule for necessary measurements so accidental contact is less likely to put current across the chest.
 
-The first action inside is to make stored energy safe, not to start replacing parts.
+The first action inside is to make stored energy safe.
 
 ## Lightning, towers, and antenna contact
 
-Lightning protection is a system: bonding, grounding, surge protectors, cable routing, and disconnection plans all work together. A coax surge protector belongs outside near the grounding entry point, not behind the radio as the first line of defence. When the station is not in use, grounding or disconnecting antenna and rotator cables helps reduce damage risk. For severe storms, disconnecting equipment from power and antenna cables is the most conservative protection.
+Lightning protection is a system. Bonding, grounding, surge protectors, cable routing, and disconnection plans all work together. A coax surge protector belongs outside near the grounding entry point, not behind the radio as the first line of defence.
 
-No amateur installation can be made lightning-proof. Plan so a surge has a low-impedance path outside the operating position, and do not operate or service antennas during storms.
+When the station is not in use, grounding or disconnecting antenna and rotator cables helps reduce damage risk. For severe storms, disconnecting equipment from power and antenna cables is the most conservative protection.
 
-Antenna work adds fall and falling-object hazards. Use approved fall-arrest equipment for tower work, and wear a hard hat when assisting below. Horizontal wires, open-wire feedline, ground-mounted verticals, and antenna feed points must be located or guarded so people cannot touch energized RF conductors during transmitting.
+No amateur installation can be made lightning-proof. Plan so a surge has a low-impedance path outside the operating position. Do not operate or service antennas during storms.
+
+Antenna work adds fall and falling-object hazards. Use approved fall-arrest equipment for tower work. Wear a hard hat when assisting below. Horizontal wires, open-wire feedline, ground-mounted verticals, and antenna feed points must be located or guarded so people cannot touch energized RF conductors during transmitting.
 
 ### Worked example: feedline entry plan
 
@@ -127,11 +147,13 @@ The protector location matters because the surge should be diverted before it re
 
 ## RF exposure and nearby people
 
-RF energy can heat body tissue when exposure is high enough. Eyes deserve particular care because they dissipate heat poorly compared with many other tissues. At UHF and microwave frequencies, antennas and amplifier openings can put significant RF energy close to people, so keep antennas away from eyes and make sure amplifiers cannot be energized while shielding is removed.
+RF energy can heat body tissue when exposure is high enough. Eyes deserve care because they shed heat poorly compared with many other tissues. At UHF and microwave frequencies, antennas and amplifier openings can put significant RF energy close to people.
 
-Power density falls rapidly with distance in free space, so separation is a powerful safety tool. For a simple free-space point-source model, RF field strength falls in proportion to `1/d`, while power density falls in proportion to `1/d^2`. Doubling distance can therefore greatly reduce exposure, even before considering duty cycle or antenna pattern. A low SWR is an equipment-match indication, not permission for people to stand close to an energized antenna. Keep handheld antennas away from your head and from other people while transmitting. Put UHF transmitting antennas where people cannot approach them during operation. Locate indoor antennas as far as practical from occupied living spaces, and mount directional high-gain antennas so their main beam is not aimed into nearby occupied structures.
+Power density falls rapidly with distance in free space. In a simple free-space point-source model, RF field strength falls in proportion to `1/d`. Power density falls in proportion to `1/d^2`. Doubling distance can greatly reduce exposure before you even consider duty cycle or antenna pattern.
 
-Health Canada Safety Code 6 is the general Canadian framework for RF exposure limits. It covers controlled and uncontrolled exposure situations, and no transmitter class is automatically outside RF exposure regulation. This lesson does not invent numeric limits or replace a proper exposure evaluation. When in doubt, reduce power, increase distance, shorten transmission time, use lower-gain antennas near people, or move the antenna outdoors and higher.
+A low standing wave ratio, or SWR, is an equipment-match indication. It is not permission for people to stand close to an energized antenna. Keep handheld antennas away from your head and from other people while transmitting. Put UHF transmitting antennas where people cannot approach them during operation. Aim directional high-gain antennas away from nearby occupied spaces.
+
+Health Canada Safety Code 6 is the general Canadian framework for RF exposure limits. It covers controlled and uncontrolled exposure situations. No transmitter class is automatically outside RF exposure regulation. This lesson does not invent numeric limits or replace a proper exposure evaluation.
 
 ### Worked example: indoor antenna decision
 
@@ -140,21 +162,21 @@ An apartment operator tests a compact indoor antenna for low-power contacts.
 - Place the antenna away from the chair, bed, and common walking paths.
 - Use the lowest power that reliably completes the contact.
 - Do not let visitors or pets approach the antenna while transmitting.
-- Reconsider the setup if a higher-gain antenna or amplifier is added.
+- Recheck the plan if a higher-gain antenna or amplifier is added.
 
 Indoor antennas can work, but the safety margin comes from distance, lower power, and controlled access.
 
 ## Try it
 
-1. A supply cover is opened and a cabinet interlock removes the input power. What unsafe assumption must you avoid? Do not assume the unit is harmless; filter capacitors can still hold charge, so stored energy must be discharged and verified safely.
+1. A supply cover is opened and a cabinet interlock removes input power. What unsafe assumption must you avoid? Do not assume the unit is harmless; filter capacitors can still hold charge.
 2. A temporary control circuit measures 48 V in a damp work area. How should it be treated? Treat it as hazardous because it is above the usual 30 V shock threshold, and wet conditions can lower body resistance.
-3. A station ground bar shows high resistance to a radio chassis after its bonding strap was clamped over painted, corroded metal. What should be corrected? Clean the contact area to bare metal, use a proper bonding clamp or hardware, keep the bond short, and re-verify continuity before operating.
-4. A club schedules roof-antenna maintenance for the same afternoon that thunderstorms are forecast nearby. What conservative change should the team make? Postpone the work and keep antennas disconnected or grounded during storm conditions; tower, roof, and feedline tasks can wait until weather is safely clear.
-5. An indoor antenna test is upgraded from a low-power whip to a directional antenna. What parts of the RF-safety plan should change? Recheck power, distance, access control, and beam direction so the main lobe is not aimed into occupied space.
+3. A station bonding strap is clamped over painted, corroded metal. What should be corrected? Clean the contact area to bare metal, use proper bonding hardware, keep the bond short, and recheck continuity.
+4. A club schedules roof-antenna maintenance for the same afternoon that thunderstorms are forecast nearby. What conservative change should the team make? Postpone the work and keep antennas disconnected or grounded during storm conditions.
+5. An indoor antenna test is upgraded from a low-power whip to a directional antenna. What parts of the RF-safety plan should change? Recheck power, distance, access control, and beam direction.
 
 ## Radio connection
 
-Safety choices affect station performance too. Good bonding can reduce hum and RF feedback. Correct fusing protects mobile wiring. Proper antenna placement keeps people away from RF conductors and often improves the signal by moving the antenna into a clearer location. A station that is safe to inspect is easier to maintain and less likely to cause interference.
+Safety choices affect station performance too. Good bonding can reduce hum and RF feedback. Correct fusing protects mobile wiring. Proper antenna placement keeps people away from RF conductors and often improves signals by moving the antenna into a clearer location.
 
 ## Common mistakes
 
@@ -174,9 +196,10 @@ Description: Draw an original room-and-wall cross-section. Inside, show a transc
 
 ## Summary
 
-- Prevent unauthorized transmitting by controlling power and removable controls, not merely by posting warnings.
+- Prevent unauthorized transmitting by controlling power and removable controls.
 - Turn off and unplug mains equipment before fault checks, and respect stored charge in capacitors.
 - Bond station equipment and grounding electrodes to reduce dangerous voltage differences.
 - Use correct fuse ratings, chassis safety grounding, and source-side mobile fusing.
 - Lightning protection combines outside entry protection, bonding, grounding, cable handling, and conservative disconnection.
-- RF exposure safety depends on distance, power, antenna gain, operating time, and keeping people away from energized antennas, guided by Safety Code 6 where an exposure evaluation is needed.
+- RF exposure safety depends on distance, power, antenna gain, operating time, and keeping people away from energized antennas.
+- Safety Code 6 guides RF exposure evaluation when one is needed.
