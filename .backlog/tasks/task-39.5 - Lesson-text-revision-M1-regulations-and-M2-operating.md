@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-10 23:17'
+updated_date: '2026-10-10 23:28'
 labels:
   - content
 dependencies:
@@ -52,6 +52,8 @@ Final validation passed after all lesson edits and Backlog notes: node packages/
 Review r1 fixes, finding by finding: 1 fixed by changing the S-unit example from 25 W -> 100 W to 10 W -> 40 W. 2 fixed by defining an S-unit as a marked step on a receiver signal-strength meter and restoring clear 6 dB per S-unit wording. 3 fixed by moving all four M1 memory tricks to the ends of their How these rules fit together sections. 4 fixed by defining PEP, ERP, and EIRP before the tables and restoring explanatory prose for the repeater/carrier/stability/modulation table. 5 fixed by removing learner-facing writer notes, rewriting the ITU phonetics Limit bullet, and keeping the Q-signal caveat as a learner-facing table-limit note. 6 fixed by adding the L-001-04 20 A x 13.8 V = 276 W whole-radio draw example versus the 250 W final-stage DC-input rule, correcting the power-supply-label wording, and adding a simple L-002-03 battery-runtime calculation. 7 fixed by adding illustrative procedure exchanges for repeater entry, simplex operation, and signal reports. 8 fixed by changing the UTC example to UTC minus 5 with recomputed 2100 -> 1600 and 0300 -> 2200 previous local date. 9 fixed by tightening address-change, interval-identification, and QTH/QRM/QRN memory wording. 10 fixed by rewriting the L-001-06 concern sentence, the public-service-net script sentence, and the distress break-in order wording. 11 fixed by tying L-001-06 to hardware details and strengthening L-001-02/L-001-05 real-world hardware context. No review finding was intentionally declined.
 
 Review r1 validation passed: node packages/content-tools/src/check-lesson-coverage.ts; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:explanations; pnpm check:links; TZ=UTC pnpm test; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift. Pinned L-005-01 and L-006-03 expectations were not updated because those lessons/tests were not touched.
+
+Review r2 (APPROVE WITH NOTES): coordinator applied the notes: EIRP spelled as in the bank (equivalent isotropically radiated power, B-001-017-008); full ITU alphabet restored in the l-002-01 memory trick; MAYDAY named in the l-002-03 break-in; unmodulated carrier 'only for brief tests below 30 MHz'; M1 tricks cue 30 (30-day address notice B-001-002-001/-003; 30-minute ID); l-001-04 intro split. Coverage, quizzes, originality :all, explanations and links pass.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
