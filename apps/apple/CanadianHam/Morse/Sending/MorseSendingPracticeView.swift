@@ -43,6 +43,11 @@ struct MorseSendingPracticeView: View {
 
     var body: some View {
         ScrollView {
+#if os(iOS)
+            Color.clear
+                .frame(height: DesignTokens.Spacing.tvSafe)
+                .accessibilityHidden(true)
+#endif
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                 Text("Sending practice") // l10n: localized
@@ -130,9 +135,6 @@ struct MorseSendingPracticeView: View {
                 .paperCard()
             }
             .pagePadding()
-#if os(iOS)
-            .padding(.top, DesignTokens.Spacing.tvSafe)
-#endif
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle("Sending practice") // l10n: localized
