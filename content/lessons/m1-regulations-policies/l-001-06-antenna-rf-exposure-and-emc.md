@@ -24,9 +24,9 @@ status: draft
 ---
 # Antenna consultation, RF exposure, and EMC
 
-Antenna projects are visible, RF fields are invisible, and interference complaints can become emotional. The exam groups these topics because a responsible station owner has to consider neighbours, land-use authorities, people near antennas, and affected electronic equipment.
+Antenna projects are visible, RF fields are invisible, and interference complaints can become emotional. A responsible station owner considers neighbours, land-use authorities, people near antennas, and affected electronic equipment.
 
-This lesson states verified reference facts. Use it to pass the exam and to build careful habits, then consult current ISED and Health Canada material before a real installation or RF exposure evaluation.
+This lesson states verified reference facts. Use it for the exam and for careful habits. For a real installation or RF exposure evaluation, consult current ISED and Health Canada material.
 
 ## Learning objectives
 
@@ -80,17 +80,25 @@ By the end of this lesson, you can:
 
 ## How these rules fit together
 
-Antenna-siting rows describe process. The station owner first finds the applicable local process or exclusion for the specific installation. If there is no local approval process, the ISED default process is the relevant path. Written concerns in the default process are handled according to the timeliness and relevance row, and unresolved non-public stakeholder disputes go to ISED for a final decision.
+Antenna-siting rows describe process. The station owner first finds the applicable local process or exclusion for the specific installation. If there is no local approval process, the ISED default process is the relevant path.
 
-The exposure-code rows describe human RF exposure. They connect the named publisher, the exposure-limit code, exposure situations, frequency-related effects, and universal consideration of transmitter types. Transmitter power matters as one factor among gain, distance, and frequency, and the exposure quantities include fields, currents, and absorption rate.
+Use the timeliness and relevance criteria in the table when responding to written concerns in the default process. If a proponent and a non-public stakeholder do not agree, ISED makes the final decision.
+
+The exposure rows describe human RF exposure. They connect the named publisher, the exposure-limit code, exposure situations, frequency-related effects, and universal consideration of transmitter types. Transmitter power matters as one factor among gain, distance, and frequency.
 
 EMCAB-2 rows describe interference cause decisions for affected equipment. The important comparison is field strength at the affected premises against ISED's specified immunity criterion, along with the equipment category.
 
 ## Radio connection
 
-These rules connect directly to station design. A tidy antenna installation is easier to discuss with neighbours. A station layout that keeps people away from radiating elements is easier to operate responsibly. A clean transmitter, good feedline, and proper filtering help, but an EMCAB-2 question still turns on field strength at the affected premises and the relevant equipment category.
+### In the real world: three folders for one station change
 
-Good operators document. Keep dates, contact names, notices, equipment settings used during complaint investigation, and changes made to the station. Documentation supports the rule check by showing what was checked and why.
+A useful installation file has three parts. One part tracks the antenna consultation path. One records RF exposure inputs such as power, gain, distance, and frequency. One records interference contacts, field-strength information if available, and equipment categories.
+
+Tie that file to the hardware. Note the mast or tower location, feedline route, antenna height, places where people can stand, and any station changes made during an interference investigation.
+
+Those notes do not replace the rules. They help the station owner show what was checked, who was contacted, what changed, and why.
+
+These rules connect directly to station design. A tidy antenna installation is easier to discuss with neighbours. A station layout that keeps people away from radiating elements is easier to operate responsibly. A clean transmitter, good feedline, and proper filtering help the technical side of that responsibility.
 
 ## Summary
 

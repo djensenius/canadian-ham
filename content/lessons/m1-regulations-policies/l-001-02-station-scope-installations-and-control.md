@@ -26,7 +26,9 @@ status: draft
 ---
 # Station scope, installations, and control
 
-An amateur station is defined by more than a radio and antenna. It includes the authorization of the people involved, the radio service in use, the purpose of the communication, and the control operator responsible during transmission. This reference-style lesson keeps the rule facts in tables and explains how to connect them before you answer the official quiz questions.
+An amateur station is more than a radio and antenna. It includes the people involved, the service being used, the purpose of the message, and the qualified operator who can stop or change a transmission.
+
+This reference-style lesson keeps official facts in tables. The prose builds a checklist you can use before equipment work, club operation, supervised guest operation, or remote control.
 
 ## Learning objectives
 
@@ -102,17 +104,23 @@ By the end of this lesson, you can:
 
 ## How these rules fit together
 
-The installation and repair rows begin with a two-sided authorization habit. Check the helper's qualification and the receiving person's authorization together. That same habit carries into dual-service equipment: an amateur certificate governs amateur operation, while another radio service keeps its own certification or licensing conditions.
+Start with a two-sided authorization habit. If you work on another person's transmitter, ask two questions: what are you allowed to do, and what authority does the other person hold for that apparatus?
 
-Communication rules then ask what the station is carrying. Open amateur communication, business traffic, public broadcasting, secret meaning, and retransmitted non-amateur audio belong to separate categories. Publishing a digital method handles the secrecy row only; business and broadcast limits still apply to the content being carried.
+The same habit applies to multi-service radios. An amateur certificate covers amateur operation. Land-mobile, marine, and aeronautical service use needs the authority for that service. Programming memories in one box does not merge the services.
 
-Station-privilege rows form a matrix. Basic is enough for some situations, while repeater installation, club-station installation, non-commercial/non-professional transmitting hardware, and remote control of key transmitter settings require Basic and Advanced. Beacon one-way communication is a station-type fact; public broadcasting is handled by a separate content rule.
+Communication rules ask what the station is carrying. Open amateur communication, business traffic, public broadcasting, secret meaning, and non-amateur audio are different categories. Publishing a digital method handles only the secrecy question; it does not turn business or broadcast content into amateur content.
 
-Control rows close the loop. A transmitting station needs a control operator at the control point, and the owner remains responsible for the station. Supervised participation is possible for someone without a certificate, but it depends on presence and supervision by a properly qualified person during the transmission.
+Station-privilege rows form a small matrix. Basic is enough for some station work. Repeater installation, club-station installation, transmitting hardware that is neither commercially manufactured nor professionally designed (home-built gear), and remote control of key transmitter settings require Basic and Advanced.
+
+Control rows close the loop. A transmitting station needs a control operator at the control point. The owner remains responsible for the station. A person without a certificate may participate only with the proper qualified person present and supervising.
 
 ## Radio connection
 
-These rules show up in ordinary station habits. Clubs ask who holds which qualifications before installing shared equipment. Operators label dual-service radios carefully so amateur memories stay in amateur service. Net controls keep traffic personal, open, and free of non-amateur audio pickup.
+### In the real world: a club work day
+
+A club may have one person bringing tools, another person donating a radio, and a third person testing the system into a dummy load. The safe checklist is not "who owns the screwdriver?" It is who holds the needed amateur qualifications, who owns the station, what service the equipment will use, and who is control operator during the test.
+
+The same idea helps at home. Label dual-service radios and channel banks clearly. Keep amateur memories in amateur service, check the selected channel before keying the microphone, and do not let background audio or business talk ride into the microphone.
 
 Good station control is also good engineering practice. The person at the controls can stop a transmitter, select the correct band, adjust power, and identify the station before a small mistake becomes an unlawful transmission.
 

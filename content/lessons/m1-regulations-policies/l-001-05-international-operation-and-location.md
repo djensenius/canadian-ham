@@ -23,9 +23,9 @@ status: draft
 ---
 # International operation and station location
 
-Amateur radio is international, and a Canadian certificate operates within destination-specific permissions. The operator has to consider message purpose, another administration's objection, the country or arrangement where the station is operating, and the voice-identification pattern required for that operation.
+Amateur radio crosses borders, but permission does not travel in a loose way. A Canadian operator has to consider message purpose, the place where the station is operating, the applicable visit arrangement, and the required identification pattern.
 
-Use these rows as exam facts. Before a real trip or maritime operation, check current official sources for the destination because travel operating rules can change.
+Use these rows as exam facts. Before a real trip, maritime operation, or foreign portable plan, check current official sources for the destination because travel operating rules can change.
 
 ## Learning objectives
 
@@ -70,17 +70,27 @@ By the end of this lesson, you can:
 
 International communication starts with purpose. Amateur-purpose messages and personal remarks fit the service. The ITU row adds the international regulatory source and the administration-objection rule.
 
-Region rows are map references. They help orient the operator while destination-specific band, power, and identification requirements still govern the trip. The operating location can make another administration's limits the relevant limits, as the United States rows show.
+Region rows are map references. They help orient the operator, but they do not replace the operating authority for the exact location. The United States rows show that location can make another administration's band limits the relevant limits.
 
-The United States and CEPT rows are easy to reverse because both involve a Canadian operator outside Canada. Treat each arrangement as its own paired pattern: qualification and spoken identification stay tied to the location arrangement.
+The United States and CEPT rows are easy to reverse because both involve a Canadian operator outside Canada. Treat each arrangement as its own pair: the minimum Canadian qualification and the spoken identification order stay tied to that visit arrangement.
 
-Morse-code authorization also belongs to the administration framework. Learn the decision-maker for Morse requirements as an administration fact.
+Morse-code authorization also belongs to the administration framework. Learn who decides the Morse requirement as an administration fact.
+
+### Memory trick: place first, pattern second
+
+- Helps remember: travel-operation identification depends on where the station is operating.
+- Trick: ask "where am I operating?" before asking "what order do I say the call signs or prefixes?"
+- Limit: this is only a study cue. Always check the current official visit rules before a real trip.
 
 ## Radio connection
 
-International operating combines legal awareness with ordinary operating skill. A clean signal, a good antenna, and a friendly contact still need matching message purpose, destination permission, and location-based limits.
+### In the real world: portable habits while travelling
 
-Portable and mobile operation make this discipline important. A station can move faster than habits do. Use the same care you use for frequency, mode, and power: know where the station is, then choose the rule set and identification pattern.
+A travel station can move faster than memory. Before transmitting, write the current location, visit arrangement, band limits, and identification pattern on the same operating note card.
+
+Keep the note card with the radio, headset, power lead, and portable antenna. That ties the rule check to the hardware you will actually use.
+
+A clean signal, a good antenna, and a friendly contact still need matching message purpose, destination permission, and location-based limits.
 
 ## Summary
 

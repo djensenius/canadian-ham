@@ -26,7 +26,9 @@ status: draft
 ---
 # Communications, interference, and third parties
 
-This lesson connects operating courtesy with legal limits. Interference, emergency communication, message privacy, compensation, identification, third-party traffic, and visiting operators all affect whether a transmission should begin, continue, change, or stop. The facts are in labelled reference tables; the prose explains how to use them together.
+Operating courtesy and legal limits meet in this lesson. Interference, emergency communication, privacy, payment, identification, third-party traffic, and visiting operators all affect whether a transmission should begin, continue, change, or stop.
+
+The tables hold the reference facts. The prose turns them into an operating sequence: listen, classify the situation, identify, and stand by when the rules or safety require it.
 
 ## Learning objectives
 
@@ -108,19 +110,27 @@ By the end of this lesson, you can:
 
 ## How these rules fit together
 
-Interference rules start with restraint. The station operator listens, protects other users from deliberate or harmful interference, and treats a harmful-interference finding as a requirement to stop or change operation. Secondary-service facts add a priority relationship: amateur operation in a shared band protects the primary service, with reduced protection for amateur users in some ranges.
+Interference rules start with restraint. Listen first, avoid deliberate or harmful interference, and treat a harmful-interference finding as a requirement to stop or change operation. Secondary-service facts add a priority relationship: amateur operation in a shared band protects the primary service.
 
-Emergency rules are narrow because they respond to immediate communication need. Distress, safety of life and property, disrupted normal systems, and direct involvement with a distress situation can change what is permitted. Keep routine amateur traffic, relief-net discipline, and distress response in their own categories.
+Emergency rules are narrow because they respond to immediate communication need. Distress, safety of life and property, disrupted normal systems, and direct involvement with a distress situation can change what is permitted. Keep routine traffic, relief-net discipline, and distress response in their own categories.
 
-Privacy and payment rows keep amateur service non-commercial. A public-service agency message can be legitimate, while payment for third-party messages and remuneration for exchanging messages sit outside the service. Media disclosure rules also depend on the kind of radiocommunication involved, so keep amateur-station permissions within amateur-station communications.
+Privacy and payment rows keep amateur service non-commercial. A public-service agency message can be legitimate. Payment for third-party messages and remuneration for exchanging messages do not fit amateur service.
 
-Identification rows are the operator's accountability layer. The same call-sign discipline applies to contacts and tests, with timing at the start, during longer transmissions, and at the end. Third-party and visiting-operator rows then add who is being represented and which country's permission or identification pattern applies.
+Third-party and visiting-operator rows add two questions. Who is the message for, and whose operating permission is being used? Ask those before sending the traffic.
+
+### Memory trick: start, stop, and the interval check
+
+- Helps remember: station identification timing.
+- Trick: identify when the contact starts, when it stops, and at least every 30 minutes in between. 30 is easy to pair with the 30-day address-change notice.
+- Limit: this does not replace the language and model-control rows in the table.
 
 ## Radio connection
 
-These rules become practical station design. A visible clock, a clear net script, an interference checklist, and a control-operator plan help the operator identify on time, stand by when needed, and keep traffic personal, permitted, and supported by the relevant third-party rules.
+### In the real world: a public-service net
 
-During public-service work, calm operators sound prepared because they have already separated routine practice, emergency relief, distress traffic, and casual conversation. The category of communication tells the operator how much room the rules provide.
+A net script, a visible clock, and a short interference checklist help the operator stay calm. The clock reminds the station to identify. The script keeps each message category clear, including public-service agency messages and routine third-party traffic. The checklist reminds the net to stand by for distress or relief traffic when needed.
+
+During public-service work, prepared operators sound calm because they have already separated routine practice, emergency relief, distress traffic, and casual conversation. The category of communication tells the operator how much room the rules provide.
 
 ## Summary
 
