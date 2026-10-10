@@ -44,7 +44,7 @@ The D region is the usual daylight troublemaker for lower HF. A lower-frequency 
 
 Fading can happen even when the band is open. A signal may arrive by a shorter hop and a longer hop at the same time. If those components arrive with different phase, they can partly cancel.
 
-Selective fading means some parts of the transmitted signal fade more than others. It can make a wider voice or data signal sound hollow, rough, or distorted.
+Selective fading happens when those phase differences cancel some parts of the transmitted signal more than others. It can make a wider voice or data signal sound hollow, rough, or distorted.
 
 On VHF and UHF, moving a handheld less than a metre in a city can change the received signal. Reflections from walls, vehicles, and metal structures create multiple paths. A small move can turn cancellation into reinforcement.
 
@@ -71,7 +71,7 @@ A likely explanation is multipath fading. Parts of the same transmission are arr
 
 ## Solar activity and the solar cycle
 
-Sunspots are visible signs of solar magnetic activity. More sunspots usually mean more radiation that can increase ionization in the upper atmosphere. That often raises usable HF frequencies.
+Sunspots are visible signs of solar magnetic activity. More sunspots usually mean more ultraviolet (UV) radiation that can increase ionization in the upper atmosphere. That often raises usable HF frequencies.
 
 Solar flux is radio-frequency energy from the Sun measured as a practical activity indicator. A higher solar-flux value often goes with stronger ionization. Forecasts must still account for geomagnetic disturbance, time of day, season, and path direction.
 

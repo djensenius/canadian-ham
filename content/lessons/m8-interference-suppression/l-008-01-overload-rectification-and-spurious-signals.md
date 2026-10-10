@@ -73,7 +73,7 @@ When the front end is overloaded, several things can happen:
 
 Desensitization means the receiver becomes less sensitive because a strong signal uses up the front end's headroom. Intermodulation means signals mix in a non-linear stage and create new sum-and-difference products. Both can be receiver-side effects.
 
-Simple intermodulation checks use sums and differences. Two signals at frequencies f1 and f2 can create products such as f1 + f2, |f1 - f2|, 2 x f1 - f2, or 2 x f2 - f1. The arithmetic suggests what to test; it does not prove which device is non-linear.
+Simple intermodulation checks use sums and differences. Two signals at frequencies f1 and f2 can create products such as f1 + f2, |f1 - f2|, 2 x f1 - f2, or 2 x f2 - f1. For example, a 104.3 MHz FM broadcast signal and an 18.1 MHz HF signal can mix to 104.3 - 18.1 = 86.2 MHz, inside a VHF receiver's tuning range. The arithmetic suggests what to test; it does not prove which device is non-linear.
 
 ### Worked example: overload clue
 
@@ -126,6 +126,8 @@ Good first steps are to keep the audio lead short, route it away from the antenn
 ## Ferrite chokes and bypass capacitors
 
 In this lesson, a ferrite choke means the whole cable passes through or around ferrite. The ferrite adds high RF impedance to common-mode current. Part of that impedance is inductive reactance, and part is resistive loss that turns the unwanted RF into a little heat. The wanted audio, DC, or data current usually flows out and back as a differential current, so the ferrite leaves it mostly unchanged.
+
+Ferrite chokes are standard cures when RF rides into equipment on speaker leads, intercom wiring, telephone cords, computer audio cables, and power leads. Shortening extra lead length also helps, because a shorter wire is a poorer pickup antenna.
 
 That limit matters. A snap-on ferrite is not a cure for every noisy charger, LED driver, or solar inverter. If the unwanted energy is differential noise inside the power leads, a proper line filter, better supply, repair, or equipment replacement may be needed.
 

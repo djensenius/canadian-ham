@@ -81,7 +81,7 @@ The local VHF repeater coverage has not changed. A good working explanation is a
 
 ## Tropospheric bending, ducting, and scatter
 
-The troposphere is the lower atmosphere where weather happens. Normal refraction slightly extends the radio horizon. Without an enhanced mode, VHF tropospheric communication is still limited. Treat roughly 800 km as a broad upper planning scale for normal VHF tropospheric range, not a daily promise.
+The troposphere is the lower atmosphere where weather happens. Normal refraction slightly extends the radio horizon. Without an enhanced mode, VHF tropospheric communication is still limited. Treat roughly 800 km as a broad upper planning scale for normal VHF tropospheric range, not a daily promise. A VHF path well beyond that scale is a clue that tropospheric ducting or another enhancement is present.
 
 Stronger changes in temperature, humidity, and pressure can bend VHF and UHF signals more than usual. A temperature inversion can form a duct. A duct traps part of the wave so it travels much farther than expected.
 
