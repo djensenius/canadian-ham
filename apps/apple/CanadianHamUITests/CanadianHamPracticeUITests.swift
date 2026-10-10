@@ -415,22 +415,25 @@ final class CanadianHamPracticeUITests: XCTestCase {
     func testMorseSendingPracticeClearsPendingCharacterWhenLeaving() throws {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [
-            "-CanadianHamInitialScreen", "morse"
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseSendingDebugHook"
         ])
         defer { app.terminate() }
 
         openSendingPractice(in: app)
-        let straightKey = app.buttons["morse-sending-straight-key-button"].firstMatch
-        XCTAssertTrue(straightKey.waitForExistence(timeout: 10))
-        straightKey.press(forDuration: 0.1)
-
-        openSendingExamStyleCheck(in: app)
+        let pendingOpen = app.buttons["morse-sending-debug-open-exam-pending-button"].firstMatch
+        XCTAssertTrue(pendingOpen.waitForExistence(timeout: 10), "DEBUG-only pending-finalization hook should be present in UI tests")
+        scrollUntilHittable(pendingOpen, in: app, maxSwipes: 8)
+        pendingOpen.tap()
         Thread.sleep(forTimeInterval: 2.0)
         tapCompactBack(in: app)
 
+        let currentElements = app.staticTexts["morse-sending-current-elements"].firstMatch
+        XCTAssertTrue(currentElements.waitForExistence(timeout: 5))
+        XCTAssertTrue(currentElements.label.hasSuffix("—"), "Pushing away from sending practice should clear pending samples before the original view reappears, got: \(currentElements.label)")
         let decoded = app.staticTexts["morse-sending-decoded-text"].firstMatch
         XCTAssertTrue(decoded.waitForExistence(timeout: 5))
-        XCTAssertTrue(decoded.label.hasSuffix("—"), "Pushing away from sending practice should cancel the delayed character finalization and clear pending samples before the original view reappears, got: \(decoded.label)")
+        XCTAssertTrue(decoded.label.hasSuffix("—"), "Pushing away from sending practice should cancel the delayed character finalization before the original view reappears, got: \(decoded.label)")
     }
 
     func testMorseExamGradingPushesResultsScreen() throws {

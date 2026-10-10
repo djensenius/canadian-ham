@@ -53,11 +53,7 @@ struct MorseSendingPracticeView: View {
                 Text("Practise tap timing with a straight key or iambic-style paddles. On Mac and iPad hardware keyboards, focus this screen first, then hold Space for the straight key; use J for dots and K for dashes. On iPhone and iPad, use the large touch targets.") // l10n: localized
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
-                morseTokenButton("Exam-style check") {
-                    stopAllKeying(finalizeStraight: false)
-                    clearPendingCharacterFinalization(clearPendingSamples: true)
-                    showingExam = true
-                }
+                morseTokenButton("Exam-style check") { openExamStyleCheck() }
                     .accessibilityIdentifier("morse-sending-exam-open-button")
                 sendingControls
                 }
@@ -167,6 +163,11 @@ struct MorseSendingPracticeView: View {
                                 .font(DesignTokens.FontScale.body.weight(.bold))
                         }
                         .accessibilityIdentifier("morse-sending-debug-grade-held-straight-button")
+                        Button(action: openExamWithPendingCharacterForUITest) {
+                            Text(verbatim: "Open exam with pending sending test") // l10n: verbatim DEBUG-only UI test hook
+                                .font(DesignTokens.FontScale.body.weight(.bold))
+                        }
+                        .accessibilityIdentifier("morse-sending-debug-open-exam-pending-button")
                     }
 #endif
                 }
@@ -403,6 +404,12 @@ struct MorseSendingPracticeView: View {
         return now < examDeadline
     }
 
+    private func openExamStyleCheck() {
+        stopAllKeying(finalizeStraight: false)
+        clearPendingCharacterFinalization(clearPendingSamples: true)
+        showingExam = true
+    }
+
     private func startExam() {
         resetSending(clearExam: false)
         do {
@@ -496,6 +503,12 @@ struct MorseSendingPracticeView: View {
         straightKeyDownAt = Date().addingTimeInterval(-profile.dotSeconds)
         playbackCoordinator.claim("sending-practice")
         gradeExam(completedWithinTime: true)
+    }
+
+    private func openExamWithPendingCharacterForUITest() {
+        pendingSamples = [MorseKeyTimingSample(element: .dot, durationSeconds: profile.dotSeconds, expectedSeconds: profile.dotSeconds, ratioToExpected: 1)]
+        scheduleFinalizeCharacter(finalizeAfterElementSeconds: profile.dotSeconds)
+        openExamStyleCheck()
     }
 #else
     private func fillExamTextForUITest() {}
@@ -626,6 +639,7 @@ private struct MorseSendingFeedbackView: View {
             LabeledContent("Current elements") { // l10n: localized
                 Text(pendingSamples.map(\.element.rawValue).joined().isEmpty ? "—" : pendingSamples.map(\.element.rawValue).joined()) // l10n: localized
                     .font(.body.monospaced())
+                    .accessibilityIdentifier("morse-sending-current-elements")
             }
             LabeledContent("Decoded text") { // l10n: localized
                 Text(decodedText.isEmpty ? "—" : decodedText) // l10n: localized
