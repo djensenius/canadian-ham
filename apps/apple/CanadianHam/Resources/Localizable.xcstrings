@@ -2391,18 +2391,18 @@
         }
       }
     },
-    "Sync practice and exam progress with iCloud" : {
+    "Sync learning progress with iCloud" : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Synchroniser la progression des exercices et des examens avec iCloud"
+            "value" : "Synchroniser la progression d’apprentissage avec iCloud"
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Synchroniser la progression des exercices et des examens avec iCloud"
+            "value" : "Synchroniser la progression d’apprentissage avec iCloud"
           }
         }
       }

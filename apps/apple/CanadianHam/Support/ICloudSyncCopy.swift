@@ -2,7 +2,7 @@ import Foundation
 
 enum ICloudSyncCopy {
     static let title = String(localized: "iCloud Sync")
-    static let toggleLabel = String(localized: "Sync practice and exam progress with iCloud")
+    static let toggleLabel = String(localized: "Sync learning progress with iCloud")
     static let deviceExplanation = String(localized: "Off by default. When enabled, learning progress can sync through your private iCloud database after restart; preferences stay on this device.")
     static let macExplanation = String(localized: "Off by default. When enabled, learning progress can sync through your private iCloud database after restart; preferences stay on this Mac.")
     static let enabledAfterRestart = String(localized: "iCloud Sync will turn on after you restart the app.")
