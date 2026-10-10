@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-10 22:59'
+updated_date: '2026-10-10 23:04'
 labels:
   - content
 dependencies:
@@ -39,4 +39,6 @@ Revise all lessons in m6-feedlines-antennas and m3-station-practice-safety to th
 
 <!-- SECTION:NOTES:BEGIN -->
 M6 slice revised: L-006-01 adds practical seventy-five-ohm home coax versus fifty-ohm amateur-radio coax and balun/feedpoint clarity (checked B-006-001-006, B-006-002-005, B-006-010-008); L-006-02 adds plain SWR/reflected-power caveat and tuner misconception without unsupported reflected-power fate claims (checked B-006-005-001, B-006-005-009, B-006-006-010); L-006-03 adds VHF wavelength worked example, 100 MHz wavelength memory trick, and practical dipole length example (checked B-006-008-003, B-006-008-011 and guide conventions); L-006-04 adds beam aiming example, Yagi element length and vertical length worked examples, and VHF half-wave convention note (checked B-006-010-001, B-006-010-003, B-006-011); L-006-05 adds support-direction example plus dipole/quad/loop worked examples (checked B-006-012 and B-006-013). M6 checks passed after originality fixes: coverage, quizzes, explanations, lesson originality, links, TZ=UTC pnpm test on rerun, and Swift package tests; first pnpm test attempt had transient web timing failures, rerun passed.
+
+M3 slice revised: L-003-01 adds real-world filter/dummy-load placement; L-003-02 adds chirp-from-power explanation; L-003-03 adds USB/data-interface level example and stored-charge LED caveat; L-003-04 adds waterfall/filter practical example; L-003-05 adds single-change signal-quality troubleshooting; L-003-06 adds headset/fan VOX example; L-003-07 adds 13.8 V x 19 A = 262.2 W station-supply example, P-over-I-E memory trick, source-fuse and fuse-not-shock-protection guidance; L-003-08 adds CSA C22.1 provincial/territorial code wording, fuse-shock misconception, and Safety Code 6 controlled/uncontrolled/no-exempt-transmitter scope. Facts checked against B-003-016, B-003-017, B-003-018, B-003-019, B-003-020, B-003-021 plus Safety Code 6 bank facts B-001-024-002, B-001-024-006, B-001-024-009 and docs/teaching-guide.md electrical-code note.
 <!-- SECTION:NOTES:END -->
