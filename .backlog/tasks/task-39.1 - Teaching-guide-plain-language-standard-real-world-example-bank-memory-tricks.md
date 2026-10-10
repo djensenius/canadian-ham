@@ -3,9 +3,11 @@ id: TASK-39.1
 title: >-
   Teaching guide: plain-language standard, real-world example bank, memory
   tricks
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-10 22:14'
+updated_date: '2026-10-10 22:19'
 labels:
   - content
   - docs
