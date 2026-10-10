@@ -22,9 +22,9 @@ status: draft
 ---
 # Distress, urgency, and safety traffic
 
-Emergency operating begins with calm decisions and plain facts. Distress traffic involves immediate danger to life. Urgent traffic involves a serious need for help with no immediate threat to life. Safety traffic carries hazard information. Good amateur procedure keeps those roles clear, gives distress traffic immediate access, and keeps capable stations listening while proper authorities are notified.
+Emergency operating begins with calm decisions and plain facts. Distress traffic involves immediate danger to life. Urgent traffic involves a serious need for help with no immediate threat to life. Safety traffic carries hazard information.
 
-This lesson teaches the priority relationships needed for Basic operating and keeps the focus on practical amateur conduct: recognize the situation, use the proper signal, interrupt cleanly, pass accurate details, and maintain a usable station.
+Good amateur procedure keeps those roles clear, gives distress traffic immediate access, and keeps capable stations listening while proper authorities are notified.
 
 ## Learning objectives
 
@@ -34,7 +34,7 @@ By the end of this lesson, you can:
 - state the voice distress signal and Morse distress signal taught here;
 - interrupt a repeater conversation in a distress situation with clear facts;
 - decide what to do after hearing distress traffic; and
-- list simple station preparations for communication during a power outage.
+- list simple station preparations for communication during power outages.
 
 ## Distress, urgency, and safety roles
 
@@ -54,19 +54,35 @@ In the priority comparison used in this module, distress immediately precedes em
 | Emergency message | The message level immediately after distress in the priority comparison. |
 | Safety traffic | Hazard information affecting people, navigation, weather, or operating conditions. |
 
+### Memory trick: life first, help next, hazards shared
+
+- Helps remember: the roles of distress, urgency, and safety traffic.
+- Trick: life at immediate risk is distress; serious help without immediate life risk is urgent; hazard information is safety traffic.
+- Limit: use the exact formal distress signals only when the situation warrants them.
+
 ## Breaking into routine traffic
 
-If you are in distress on a repeater that is already busy, break in between transmissions. State your call sign and the situation. Give the essential information clearly, then answer follow-up questions from stations that can help. The operators already using the repeater need enough facts to give the distress station immediate access and start assistance.
+If you are in distress on a repeater that is already busy, break in between transmissions. State your call sign and the situation. Give the essential information clearly, then answer follow-up questions from stations that can help.
 
 If you are one of the routine stations and you hear a distress break-in, acknowledge the distressed station. Find the location and assistance needed. If direct assistance is beyond your station, notify the appropriate authorities and keep listening in case your station becomes useful.
 
 A station unable to provide direct help still has a role. It can relay accurate information, contact the proper authority, and maintain watch for follow-up traffic. Staying engaged can preserve information that only your station heard.
+
+### In the real world: the first distress break-in
+
+A useful break-in is short and factual: your call sign, distress word if it applies, location, and the help needed. After that, pause for the station or net control that can organize assistance.
+
+The goal is not a polished speech. The goal is enough accurate information for other stations to clear the channel and contact help.
 
 ## Prepared stations are useful stations
 
 Emergency communication depends on equipment that works when commercial systems are unavailable. Preparing to operate on alternate power lets a station communicate during a power outage. A handheld emergency kit includes an adequate supply of charged batteries.
 
 Portable HF equipment may use simple antennas that can be carried and erected easily. A dipole or a vertical can be a practical portable HF choice for emergency setup when HF is the tool being deployed.
+
+### In the real world: small readiness checks
+
+A handheld with charged spare batteries is useful only if the operator knows the local repeater settings and simplex plan. A portable HF kit is useful only if the antenna, feedline, supports, and notebook are packed with the radio.
 
 ## Records during priority traffic
 
@@ -76,11 +92,13 @@ Use plain language when it prevents confusion. Abbreviations are useful only if 
 
 ## How these procedures fit together
 
-The operating chain is: recognize whether the situation is life-threatening distress, use the proper distress signal only when it applies, interrupt between transmissions with identification and facts, collect location and assistance details, contact people who can help, and keep listening while the incident is active. Station readiness supports that chain by making sure the radio, power source, batteries, and portable antenna can actually be used when commercial systems are unavailable.
+The operating chain is direct: recognize whether the situation is life-threatening distress, use the proper distress signal only when it applies, interrupt between transmissions with identification and facts, collect location and assistance details, contact people who can help, and keep listening while the incident is active.
+
+Station readiness supports that chain. The radio, power source, batteries, portable antenna, and written notes all have to work when commercial systems are unavailable.
 
 ## Radio connection
 
-A radio operator in an emergency is valuable because they can listen, classify the traffic carefully, and relay accurately. Calm procedure carries more value than raw transmitter power: give the distress station immediate access, acknowledge it, find the location and assistance needed, notify the authorities, and keep watch until released or no longer useful.
+A radio operator in an emergency is valuable because they can listen, classify the traffic carefully, and relay accurately. Calm procedure carries more value than raw transmitter power.
 
 Emergency readiness is also ordinary station maintenance. Charged batteries, a known-good portable antenna, and a way to operate without commercial AC power turn a hobby station into a communication resource when other systems are unavailable.
 

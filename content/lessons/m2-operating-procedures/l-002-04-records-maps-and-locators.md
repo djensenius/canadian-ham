@@ -22,9 +22,9 @@ status: draft
 ---
 # Records, maps, and locators
 
-Operating continues after the microphone is released. Contact records help you confirm communication, remember conditions, chase awards, respond to interference questions, and plan future contacts. Maps and locators turn a call sign exchange into a sense of direction and distance.
+Operating continues after the microphone is released. Contact records help you confirm communication, remember conditions, chase awards, respond to interference questions, and plan future contacts.
 
-This lesson covers QSL cards and web confirmations, logbook usefulness, grid squares, azimuthal maps, long path, UTC, and time/frequency standard stations.
+Maps and locators turn a call sign exchange into a sense of direction and distance. Time standards let two stations in different time zones describe the same moment.
 
 ## Learning objectives
 
@@ -44,6 +44,12 @@ A QSL card is written proof that two amateur stations communicated. Modern opera
 Canadian regulations make amateur station logbooks optional. Operators keep personal logs because they support award applications, preserve memories, help match confirmations, and help investigate neighbour interference complaints by showing when the station was transmitting.
 
 Useful log details include UTC date and time, call sign, band or frequency, mode, signal report, location information, and brief station notes. A complete note is more valuable than a memory reconstructed later.
+
+### In the real world: a log answers later questions
+
+If a neighbour reports interference at 0215 UTC, a log can show whether your station was transmitting then, what band and mode you used, and whether the antenna or power setting had changed.
+
+The log does not prove every cause by itself. It gives a clear starting point for a fair investigation.
 
 ## Grid locators
 
@@ -71,6 +77,12 @@ There are often two great-circle directions between places: the short path and t
 | Station-centred azimuthal map | Shows bearings from the station at the centre. |
 | Long path | Direction 180 degrees from the short-path heading. |
 
+### Memory trick: long path is the other way around
+
+- Helps remember: long-path direction relative to the short path.
+- Trick: turn the beam to the reciprocal direction, half a circle away.
+- Limit: propagation may still favour neither path, so the map is a direction tool, not a contact guarantee.
+
 ## UTC and time standards
 
 Amateur schedules, log entries, and confirmations commonly use UTC so operators in different time zones can agree on one clock. The reference meridian is Greenwich in the United Kingdom.
@@ -79,9 +91,17 @@ A time zone labelled UTC minus 6 hours is six hours behind UTC. To convert a UTC
 
 Stations CHU, WWV, and WWVH provide standard frequency and time references.
 
+### In the real world: UTC date and local date can differ
+
+If a net is listed at 2100 UTC and your local zone is UTC minus 6 hours, local time is 1500 because 21 - 6 = 15. If a contact is at 0300 UTC, the same subtraction gives 2100 on the previous local date.
+
+Write the UTC date with the UTC time. That prevents two operators from confirming the same contact under different local dates.
+
 ## How these procedures fit together
 
-Records, maps, and time standards make contacts verifiable and repeatable. QSL and web-log systems confirm that the contact happened. A station log preserves the details needed to match that confirmation and review later problems. Grid locators describe location compactly. Azimuthal maps turn location into bearing. UTC lets stations in different time zones describe the same moment without ambiguity.
+Records, maps, and time standards make contacts verifiable and repeatable. QSL and web-log systems confirm that the contact happened. A station log preserves the details needed to match that confirmation and review later problems.
+
+Grid locators describe location compactly. Azimuthal maps turn location into bearing. UTC lets stations in different time zones describe the same moment without ambiguity.
 
 ## Radio connection
 
