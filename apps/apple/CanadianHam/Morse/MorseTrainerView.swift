@@ -591,6 +591,7 @@ struct MorseSettingsSection: View {
                 Text(fixedTimingDescription) // l10n: localized
                     .font(DesignTokens.FontScale.body.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.ink)
+                    .accessibilityIdentifier("morse-settings-fixed-timing-description")
                     .padding(DesignTokens.Spacing.sm)
                     .background(DesignTokens.Colors.paper, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous))
                     .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))

@@ -1759,9 +1759,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.buttons["morse-course-open-button"].firstMatch.waitForExistence(timeout: 10))
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home top")
         let settings = app.staticTexts["Morse settings"].firstMatch
+        let fixedTimingNote = app.staticTexts["morse-settings-fixed-timing-description"].firstMatch
         scrollMorseHomeLowerContentIntoView(in: app)
+        XCTAssertTrue(fixedTimingNote.waitForExistence(timeout: 5), "\(appearance.rawValue) Morse settings fixed-timing note should be available before settling")
+        scrollUntilPartiallyVisible(fixedTimingNote, in: app, maxSwipes: 8)
         XCTAssertTrue(isPartiallyVisibleBelowNavigationBar(settings, in: app), "\(appearance.rawValue) Morse settings should be positioned before settling")
-        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse home lower content", preserving: settings)
+        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse home lower content", preserving: fixedTimingNote, preserveFullyVisible: true)
+        assertFullyVisibleBelowNavigationBar(fixedTimingNote, in: app, context: "\(appearance.rawValue) fixed timing note after settling")
         assertPartiallyVisibleBelowNavigationBar(settings, in: app, context: "\(appearance.rawValue) Morse settings after settling")
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home lower content")
         openMorseCourse(in: app)
@@ -2324,6 +2328,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         context: String,
         preserving target: XCUIElement? = nil,
         preserveByScrollingUp: Bool = false,
+        preserveFullyVisible: Bool = false,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
@@ -2335,7 +2340,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         if let target {
             for _ in 0..<40 {
                 let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
-                if offenders.isEmpty, isPartiallyVisibleBelowNavigationBar(target, in: app) { return }
+                let targetIsVisible = preserveFullyVisible ? isFullyVisible(target, in: app, requiresHittable: false) : isPartiallyVisibleBelowNavigationBar(target, in: app)
+                if offenders.isEmpty, targetIsVisible { return }
                 let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
                 if target.exists, target.frame.maxY > visibleFrame.maxY || preserveByScrollingUp {
                     scrollView.swipeUp()
@@ -2360,7 +2366,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 file: file,
                 line: line
             )
-            assertPartiallyVisibleBelowNavigationBar(target, in: app, context: context, file: file, line: line)
+            if preserveFullyVisible {
+                assertFullyVisibleBelowNavigationBar(target, in: app, context: context, file: file, line: line)
+            } else {
+                assertPartiallyVisibleBelowNavigationBar(target, in: app, context: context, file: file, line: line)
+            }
             return
         }
         for _ in 0..<60 {
