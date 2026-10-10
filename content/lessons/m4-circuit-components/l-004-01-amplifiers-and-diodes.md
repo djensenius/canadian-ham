@@ -22,9 +22,11 @@ status: draft
 ---
 # Amplifiers and diodes
 
-An amateur station is full of circuits that handle signals too small to be useful on their own. A receiver input may be listening for a tiny RF voltage from an antenna. A microphone may produce only a small audio signal. An amplifier raises a signal level so the next stage can use it.
+An amateur station is full of circuits that handle tiny signals. A receiver input may be listening for a weak radio-frequency signal, or RF signal, from an antenna. A microphone may produce only a small audio signal.
 
-Diodes are just as common. They are one-way semiconductor devices. They can steer current, make DC from AC, recover audio from some modulated signals, regulate voltage, glow as indicators, or protect equipment from a backwards supply connection.
+An amplifier raises a signal level so the next stage can use it.
+
+Diodes are just as common. They are one-way semiconductor devices. They can steer current and make direct current from alternating current. They can also recover audio from some modulated signals, regulate voltage, glow as indicators, or protect equipment from a backwards supply connection.
 
 ## Learning objectives
 
@@ -45,7 +47,9 @@ The increase is called gain. Gain may describe voltage, current, or power, depen
 
 An RF amplifier works with radio-frequency signals. In a receiver, it can raise a weak antenna signal before later stages select and process it. In a transmitter, later RF stages can raise a clean drive signal toward the power needed at the antenna connector.
 
-An audio amplifier works with sound-frequency signals after a microphone, detector, or audio processing stage. Human speech occupies a modest audio band compared with RF. For communications work, the important speech information is commonly treated as roughly 300 Hz to 3 000 Hz, so an audio stage is designed for voice clarity in that range rather than for a radio carrier frequency.
+An audio amplifier works with sound-frequency signals after a microphone, detector, or audio processing stage. Human speech occupies a modest audio band compared with RF.
+
+For communications work, the important speech information is commonly treated as roughly 300 Hz to 3 000 Hz. An audio stage is designed for voice clarity in that range, not for a radio carrier frequency.
 
 ### In the real world: following a signal through a receiver
 
@@ -68,13 +72,17 @@ A test generator applies 0.08 V of audio to a preamplifier. The preamplifier out
 
 A linear amplifier changes signal size without changing the shape more than intended. If the input waveform rises smoothly, the output should rise smoothly by the same proportion. If the input crosses through a low point, the output should cross through a matching low point.
 
-A non-linear amplifier does not preserve that shape. Peaks may flatten, one half of a waveform may be treated differently from the other, or the stage may be driven outside its proper operating range. The result is distortion. In radio work, distortion can create unwanted frequency products that waste power and may interfere with other users.
+A non-linear amplifier does not preserve that shape. Peaks may flatten. One half of a waveform may be treated differently from the other. The stage may also be driven outside its proper operating range.
 
-Efficiency is a different idea. Amplifier efficiency is the ratio of useful output power to DC input power. A clean amplifier can still waste heat, and an efficient stage can still be badly distorted if it is misused. Keep the ideas separate: linearity is about signal shape; efficiency is about power conversion.
+The result is distortion. In radio work, distortion can create unwanted frequency products that waste power and may interfere with other users.
+
+Efficiency is a different idea. Amplifier efficiency is the ratio of useful output power to DC power taken from the supply. A clean amplifier can still waste heat, and an efficient stage can still be badly distorted if it is misused. Keep the ideas separate: linearity is about signal shape; efficiency is about power conversion.
 
 ### Positive feedback and oscillation
 
-Feedback means a portion of an output signal is returned to an input or earlier point. Negative feedback can make many circuits more stable. Positive feedback reinforces the signal. A small amount may be part of an oscillator design, but too much positive feedback in an amplifier stage can make the stage oscillate when it was supposed to amplify.
+Feedback means a portion of an output signal is returned to an input or earlier point. Negative feedback can make many circuits more stable. Positive feedback reinforces the signal.
+
+A small amount may be part of an oscillator design. Too much positive feedback in an amplifier stage can make the stage oscillate when it was supposed to amplify.
 
 A squealing public-address system is an everyday analogy. Sound from the speaker re-enters the microphone, gets amplified again, and grows into a tone. RF circuits can do the same thing invisibly if layout, shielding, or feedback paths are poor.
 
@@ -103,7 +111,9 @@ Rectification is changing alternating current into current that flows one way. A
 
 Detection uses diode non-linearity to recover information from some RF signals. For example, a simple envelope detector can recover audio variations from an amplitude-varying RF signal. The important Basic-level idea is that a diode can recover information; receiver design details come later.
 
-A diode can also protect against reverse polarity. If a series diode is installed in the positive lead, it conducts when the supply is connected correctly and blocks if the supply is connected backwards. A fuse handles overcurrent; a diode in this example handles direction.
+A diode can also protect against reverse polarity. If a series diode is installed in the positive lead, it conducts when the supply is connected correctly. It blocks if the supply is connected backwards.
+
+A fuse handles overcurrent; a diode in this example handles direction.
 
 ### In the real world: reverse-polarity protection
 
@@ -143,15 +153,15 @@ The same red LED from a 9.0 V battery needs more series resistance because the r
 - Answer: R = 350 ohms ideal.
 - Sanity check: a higher source voltage needs more resistance for the same LED current.
 
-A common E12 choice above the ideal value is 390 ohms. Current becomes I = 7.0 V / 390 ohms = 0.0179 A, or 17.9 mA. Resistor power is P = 0.0179 A x 7.0 V = 0.125 W, so a 0.25 W resistor is suitable.
+E12 is a common resistor-value series. A common E12 choice above the ideal value is 390 ohms. Current becomes I = 7.0 V / 390 ohms = 0.0179 A, or 17.9 mA. Resistor power is about P = 0.0179 A x 7.0 V = 0.126 W, so a 0.25 W resistor is suitable.
 
 ## Try it
 
-- A receiver preselector already chose the station, but the signal is still too small for the mixer. The next block should raise the RF level without changing the station's frequency.
-- A speech processor receives a few millivolts from a headset mic and must feed a modulator input. Choose an audio gain stage because the information is still sound-frequency speech.
-- A battery-powered accessory includes a series diode and now measures about one diode drop less at its circuit board. Explain the trade-off: the diode can block a reversed battery, but it also drops some voltage during normal operation.
-- A waveform leaving an amplifier has clipped peaks. That is a warning sign of non-linearity and distortion.
-- A small diode circuit changes a sine-like AC waveform into pulses all in one direction. That action is rectification.
+1. A receiver preselector already chose the station, but the signal is still too small for the mixer. The next block should raise the RF level without changing the station's frequency.
+2. A speech processor receives a few millivolts from a headset mic and must feed a modulator input. Choose an audio gain stage because the information is still sound-frequency speech.
+3. A battery-powered accessory includes a series diode and now measures about one diode drop less at its circuit board. Explain the trade-off: the diode can block a reversed battery, but it also drops some voltage during normal operation.
+4. A waveform leaving an amplifier has clipped peaks. That is a warning sign of non-linearity and distortion.
+5. A small diode circuit changes a sine-like AC waveform into pulses all in one direction. That action is rectification.
 
 ## Radio connection
 

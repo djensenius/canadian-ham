@@ -23,7 +23,7 @@ status: draft
 ---
 # Power and Ohm’s law
 
-In Lesson 1, you learned the names of the quantities. Now we connect them. Ohm’s law describes how voltage, current, and resistance fit together. Power describes how quickly electrical energy is being used or changed into heat, light, sound, RF output, or motion.
+In Lesson 1, you learned the names of the quantities. Now we connect them. Ohm’s law describes how voltage, current, and resistance fit together. Power describes how quickly electrical energy is being used. It may be changed into heat, light, sound, RF output, or motion.
 
 The ISED reference sheet uses E for voltage, I for current, R for resistance, and P for power. These lessons use that notation so the formulas match the reference sheet you are given in the exam.
 
@@ -39,7 +39,7 @@ By the end of this lesson, you can:
 
 ## Power: how fast energy is used
 
-Power tells how quickly electrical energy is used or converted. The unit of electrical power is the watt. A 75 W work light uses electrical energy faster than a 15 W night-light. A hot resistor is often a sign that it is dissipating too much power as heat.
+Power tells how quickly electrical energy is used or converted. The unit of electrical power is the watt. A 75 W work light uses electrical energy faster than a 15 W night-light. A hot resistor is often a sign of too much power turning into heat.
 
 The power formula on the reference sheet is:
 
@@ -142,18 +142,33 @@ A panel lamp draws 80 mA through a 150 ohm limiting resistor.
 - Answer: E = 12 V.
 - Sanity check: converting 80 mA to 0.080 A keeps the answer in a normal low-voltage range.
 
-### In the real world: 9 V battery LED choice
+### In the real world: USB LED with a series resistor
 
-The same red LED from a 9.0 V battery needs a larger series resistor because the resistor must drop more voltage.
+An LED is a light-emitting diode. When it is on, it has a forward voltage drop. That means the LED takes part of the supply voltage, and the resistor must drop the rest.
 
-- Given: source E = 9.0 V; LED drop = 2.0 V; resistor E = 7.0 V; target I = 20 mA = 0.020 A.
+Suppose a red LED drops about 2.1 V and should run near 20 mA from a 5.0 V USB source. Use a series resistor so the LED current stays near the target.
+
+- Given: source E = 5.0 V; LED drop = 2.1 V; resistor E = 5.0 V - 2.1 V = 2.9 V; target I = 20 mA = 0.020 A.
 - Find: series resistance R.
 - Formula: R = resistor E / I.
-- Substitute: R = 7.0 V / 0.020 A.
-- Answer: R = 350 ohms ideal.
+- Substitute: R = 2.9 V / 0.020 A.
+- Answer: R = 145 ohms ideal.
+- Sanity check: the resistor drops the extra voltage that the LED does not use.
+
+E12 is a common resistor-value series. The nearest E12 value above 145 ohms is 150 ohms. With 150 ohms, current is I = 2.9 V / 150 ohms = 0.0193 A, or 19.3 mA. Resistor power is P = 0.0193 A x 2.9 V = 0.056 W, so a 0.25 W resistor has margin.
+
+### In the real world: 9 V battery LED choice
+
+The same red LED from a 9.0 V battery needs a larger series resistor. The resistor must drop more voltage.
+
+- Given: source E = 9.0 V; LED drop = 2.1 V; resistor E = 9.0 V - 2.1 V = 6.9 V; target I = 20 mA = 0.020 A.
+- Find: series resistance R.
+- Formula: R = resistor E / I.
+- Substitute: R = 6.9 V / 0.020 A.
+- Answer: R = 345 ohms ideal.
 - Sanity check: a higher supply voltage needs more resistance for the same LED current.
 
-A common E12 value above 350 ohms is 390 ohms. With 390 ohms, current is I = 7.0 V / 390 ohms = 0.0179 A, or 17.9 mA. Resistor power is P = 0.0179 A x 7.0 V = 0.125 W, so a 0.25 W resistor is suitable.
+A common E12 value above 345 ohms is 390 ohms. With 390 ohms, current is I = 6.9 V / 390 ohms = 0.0177 A, or 17.7 mA. Resistor power is P = 0.0177 A x 6.9 V = 0.122 W, so a 0.25 W resistor is suitable.
 
 ## Open, closed, and short circuits
 
@@ -167,7 +182,11 @@ A short circuit is an unintended low-resistance path. It can draw too much curre
 
 A fuse is a thin conductor chosen to melt before the wire overheats. It is placed in series with the load, so all load current passes through it.
 
-If a radio manual states a 20 A maximum DC draw at 13.8 V, the supply may deliver P = I x E = 20 A x 13.8 V = 276 W to the whole radio. Follow the manufacturer's fuse value for the radio and cable. Do not guess a universal fuse size from RF output power.
+If a radio manual states a 20 A maximum DC draw at 13.8 V, calculate the whole-radio supply power this way:
+
+P = I x E = 20 A x 13.8 V = 276 W
+
+That is the power at the radio's DC supply connector, not the Basic regulatory DC input limit. The Basic limit applies to DC input to the transmitter final RF stage. Follow the manufacturer's fuse value for the radio and cable. Do not guess a universal fuse size from RF output power.
 
 ## Try it
 
@@ -180,7 +199,7 @@ If a radio manual states a 20 A maximum DC draw at 13.8 V, the supply may delive
 
 A radio power connector, fuse, and supply are a practical Ohm’s law classroom. If the radio draws normal current, the fuse stays intact and voltage remains close to the supply voltage. If the radio input is shorted, current can become much larger than expected and the fuse opens to protect the wiring.
 
-Power ratings matter too. A transmitter may run from 12 V, but the current draw tells you how much DC input power the supply must handle. A receiver accessory may draw only a few hundred milliamperes, while a transmitter can draw many amperes.
+Power ratings matter too. A transmitter may run from 12 V, but the current draw tells you how much DC supply power the supply must handle. A receiver accessory may draw only a few hundred milliamperes, while a transmitter can draw many amperes.
 
 ## Common mistakes
 

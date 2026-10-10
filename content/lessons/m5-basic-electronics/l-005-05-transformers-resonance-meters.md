@@ -51,9 +51,9 @@ Coupling between wires is strongest when they are close and parallel. Transforme
 
 An older wall-wart supply may use a small transformer before rectifiers and filters. A 120 V AC primary and a 15 V AC secondary is an 8:1 voltage step-down.
 
-If the secondary supplies 15 V at 1.6 A to a resistive load, the output is 15 V x 1.6 A = 24 W. With reactive loads, 15 V x 1.6 A is 24 VA, or apparent power, and real watts can be lower.
+If the secondary supplies 15 V at 1.6 A to a purely resistive load, the output is 24 W. The calculation is 15 V x 1.6 A = 24 W. Real rectifier-and-filter loads are not purely resistive, so transformer labels often use VA. VA means apparent power.
 
-An ideal transformer delivering 24 W from a 120 V primary would draw I = P / E = 24 W / 120 V = 0.20 A. A real supply draws a little more because of losses.
+An ideal transformer delivering 24 W from a 120 V primary would draw I = P / E = 24 W / 120 V = 0.20 A. A real small transformer supply draws more input current than the ideal calculation because some power becomes heat.
 
 ## Transformer power calculations
 
@@ -98,9 +98,9 @@ A transformer primary has 800 turns and the secondary has 120 turns. The primary
 
 ### Worked example: current in a step-up transformer
 
-A 1:4 primary-to-secondary turns ratio steps voltage up by 4. The secondary current is 75 mA.
+A 1:4 primary-to-secondary turns ratio steps secondary voltage up to 4 times the primary voltage. The secondary current is 75 mA.
 
-- Given: voltage ratio = 4:1 step-up; secondary I = 75 mA.
+- Given: primary-to-secondary voltage ratio = 1:4; secondary I = 75 mA.
 - Find: ideal primary current.
 - Formula: primary current = secondary current x voltage ratio.
 - Substitute: primary current = 75 mA x 4.
@@ -115,7 +115,9 @@ A parallel tuned circuit has high impedance at resonance. A series tuned circuit
 
 The resonant frequency is the single centre frequency where the condition is exact. The useful range around it is called bandwidth.
 
-Receivers use resonant circuits to select desired signal frequencies and reject others. Adding a resistor to a simple coil-and-air-capacitor tuned circuit can change sharpness and losses, but it does not change the inductance or capacitance values that set the ideal resonant frequency.
+Receivers use resonant circuits to select desired signal frequencies and reject others. Adding a resistor to a simple coil-and-air-capacitor tuned circuit can change sharpness and losses.
+
+The resistor does not change the inductance or capacitance values that set the ideal resonant frequency.
 
 ### In the real world: tuning a receiver front end
 
@@ -154,7 +156,7 @@ Accuracy tells how close a meter reading is to the actual value being measured.
 
 ### In the real world: meter fuse check
 
-Most digital multimeters have a fuse in the current input. If you put the meter across a battery while it is set for current, the meter can create a near short circuit and blow that fuse.
+Most digital multimeters have a fuse in the current input. If you put the meter across a battery while it is set for current, the meter can create a near short circuit. That can blow the meter fuse.
 
 Before measuring current, move the lead to the current jack, choose the current range, and open the circuit so the meter can go in series.
 
@@ -168,7 +170,9 @@ Before measuring current, move the lead to the current jack, choose the current 
 
 ## Radio connection
 
-Transformers appear in power supplies, audio stages, and impedance-matching networks. Tuned circuits appear in receivers, filters, oscillators, and antenna matching. Meters are how you check a station safely: a multimeter for DC work, an ammeter for current, a voltmeter for voltage, and an RF wattmeter for transmitter output.
+Transformers appear in power supplies, audio stages, and impedance-matching networks. Tuned circuits appear in receivers, filters, oscillators, and antenna matching.
+
+Meters help you check a station safely. Use a multimeter for DC work, an ammeter for current, a voltmeter for voltage, and an RF wattmeter for transmitter output.
 
 Good operators measure before guessing. A wrong meter connection can blow a meter fuse or disturb the circuit, so knowing series versus parallel connections is a practical safety skill.
 
@@ -176,7 +180,6 @@ Good operators measure before guessing. A wrong meter connection can blow a mete
 
 - Forgetting that ideal transformer current changes opposite to voltage.
 - Using turns ratio backward. Compare secondary turns to primary turns when finding secondary voltage from primary voltage.
-- Thinking resonance always means high impedance. Parallel resonance is high impedance; series resonance is low impedance.
 - Calling bandwidth the same thing as the single resonant frequency.
 - Connecting a voltmeter in series or an ammeter in parallel.
 - Assuming real transformers are perfect. Warm laminations and other heating show losses.

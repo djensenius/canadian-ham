@@ -22,7 +22,7 @@ status: draft
 ---
 # Units, conductors, and current
 
-Radio starts with a few simple measurements. A receiver dial, a power supply label, a capacitor value, and a battery current reading all use the same metric-prefix idea: a prefix moves the decimal point by a known amount.
+Radio starts with a few simple measurements. A receiver dial, a power supply label, a capacitor value, and a battery current reading all use metric prefixes. A prefix moves the decimal point by a known amount.
 
 Do not try to memorize every possible conversion as a separate fact. Learn the common prefixes, keep the unit attached to the number, and ask whether the answer should become larger or smaller when you change units.
 
@@ -55,8 +55,8 @@ When you change from a large unit to a smaller unit, the number gets larger. Whe
 ### Memory trick: prefix ladder
 
 - Helps remember: the usual electronics prefix order from large to small.
-- Trick: Giga, mega, kilo, base, milli, micro, nano, pico can be remembered as "Great Mighty Kings Make Micro Nano Pico."
-- Limit: the sentence only gives the order. You still decide whether to multiply or divide by 1 000 at each step.
+- Trick: giga, mega, kilo, base, milli, micro, pico can be remembered as "Great Mighty Kings Balance Many Micro Picnics."
+- Limit: the sentence only gives the order used in the table. You still decide whether to multiply or divide by 1 000 at each step.
 
 ### Worked example: MHz to kHz
 
@@ -117,7 +117,7 @@ Current is charge moving through a complete circuit path. The symbol for current
 
 Resistance is opposition to current flow. Its symbol is R, and its unit is the ohm. Low resistance means current can flow easily. High resistance means current has a harder path.
 
-Conductance is the inverse of resistance. If resistance is high, conductance is low. If resistance is low, conductance is high. For Basic study, inverse means the same relationship is being described from the opposite direction.
+Conductance is the inverse of resistance. It describes how easily current can flow. If resistance is high, conductance is low. If resistance is low, conductance is high.
 
 ### Misconception: current can cross any gap
 
@@ -146,7 +146,9 @@ Do these in your head before checking the answer.
 
 A real station uses these conversions all the time. HF frequencies may be written as 14.230 MHz in a logging program and as 14 230 kHz in a band plan. A handheld may advertise 750 mW on low power, which is 0.75 W. A small accessory may draw 180 mA, which is 0.18 A from the battery.
 
-Conductors and insulators are just as practical. Coaxial cable works because the centre conductor carries RF current, an insulator keeps it separated from the shield, and the shield provides the return path and shielding. If the insulator fails or a conductor touches where it should not, the circuit behaviour changes immediately.
+Conductors and insulators are just as practical. Coaxial cable works because each layer has a job. The centre conductor carries RF current. The insulator keeps it separated from the shield. The shield provides the return path and shielding.
+
+If the insulator fails or a conductor touches where it should not, the circuit behaviour changes immediately.
 
 ## Common mistakes
 

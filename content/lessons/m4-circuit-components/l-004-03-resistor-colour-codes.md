@@ -22,9 +22,11 @@ status: draft
 ---
 # Resistor colour codes
 
-Many through-hole resistors are too small to print a value clearly, so coloured bands identify the nominal resistance and tolerance. The skill is a mix of lookup, place value, and common sense.
+Many through-hole resistors are too small to print a value clearly. Coloured bands identify the nominal resistance and tolerance. The skill is a mix of lookup, place value, and common sense.
 
-You do not need to guess from memory at first. Use the reference table, keep the bands in order, then check whether the result is reasonable for the circuit. A decoded value that seems wildly wrong is a signal to reread the bands from the other end or check the tolerance band.
+You do not need to guess from memory at first. Use the reference table, keep the bands in order, and check whether the result is reasonable for the circuit.
+
+A decoded value that seems wildly wrong is a signal to reread the bands from the other end. Also check whether you mistook the tolerance band for a value band.
 
 ## Learning objectives
 
@@ -45,7 +47,7 @@ A common colour-code resistor has bands grouped closer to one end, with a tolera
 - the multiplier band tells how many zeros, or what decimal multiplier, to apply; and
 - the separated tolerance band gives the allowed percentage variation.
 
-Think of the first two bands as making a two-digit number. Then multiply that number. The tolerance band does not change the nominal value; it tells how far the real part may be from that nominal value while still meeting its rating.
+Think of the first two bands as making a two-digit number. Then multiply that number. The tolerance band does not change the nominal value. It tells how far the real part may be from that value while still meeting its rating.
 
 ### Colour digits, multipliers, and tolerance
 
@@ -149,7 +151,7 @@ high end = nominal value + allowed change
 
 Suppose a kit calls for 4.7 kilohms in an audio filter. Yellow-violet-red-gold is a likely match, but brown-black-red-gold would be 1.0 kilohm and would change the circuit.
 
-Read the colour bands first. Then confirm critical values with an ohmmeter, especially if the bands are faded or the body colour makes violet, blue, and grey hard to tell apart.
+Read the colour bands first. Then confirm critical values with an ohmmeter. This matters when bands are faded or the body colour makes violet, blue, and grey hard to tell apart.
 
 ### Misconception: tolerance is a setting
 
@@ -162,7 +164,9 @@ The colour bands identify nominal resistance and tolerance. They do not tell you
 
 Power rating is about heat. A small and a large resistor can have the same ohmic value but different wattage ratings. If a circuit dissipates too much power in a resistor, the value code will not save it from overheating.
 
-Temperature coefficient describes how resistance changes as temperature changes. It is commonly specified as a small fractional change per degree of temperature, often in parts per million per degree Celsius. Some resistors rise in value with temperature, some fall, and precision parts are chosen when that drift matters.
+Temperature coefficient describes how resistance changes as temperature changes. It is commonly specified as a small fractional change per degree of temperature. The unit is often parts per million per degree Celsius.
+
+Some resistors rise in value with temperature, and some fall. Precision parts are chosen when that drift matters.
 
 Ohmic value is simply the nominal resistance in ohms. Tolerance is the permitted percentage variation. Power rating is the heat rating. Temperature coefficient is drift with temperature. Keep those four labels separate.
 
@@ -199,11 +203,11 @@ A resistor marked yellow violet red has the same value digits, but multiplier x 
 
 ## Try it
 
-- Orange orange brown gold: digits 3 and 3, multiplier x 10, so nominal value is 330 ohms with ±5% tolerance.
-- Yellow violet orange gold: digits 4 and 7, multiplier x 1 000, so nominal value is 47 kilohms with ±5% tolerance.
-- Brown green black brown: digits 1 and 5, multiplier x 1, so nominal value is 15 ohms with ±1% tolerance.
-- A ±1% part is more precise than a ±10% part because the allowed percentage spread is smaller.
-- If two resistors share the same first two digit bands but one has a larger multiplier, the multiplier band is what changed the value.
+1. Orange orange brown gold: digits 3 and 3, multiplier x 10, so nominal value is 330 ohms with ±5% tolerance.
+2. Yellow violet orange gold: digits 4 and 7, multiplier x 1 000, so nominal value is 47 kilohms with ±5% tolerance.
+3. Brown green black brown: digits 1 and 5, multiplier x 1, so nominal value is 15 ohms with ±1% tolerance.
+4. A ±1% part is more precise than a ±10% part because the allowed percentage spread is smaller.
+5. If two resistors share the same first two digit bands but one has a larger multiplier, the multiplier band is what changed the value.
 
 ## Radio connection
 
@@ -219,7 +223,6 @@ On the bench, colour-code reading is a first pass. Confirm critical parts with a
 - Assuming a resistor with the same ohmic value always has the same power rating.
 - Thinking every resistor increases in value as it warms. The direction and size of change depend on temperature coefficient.
 - Confusing higher precision with a larger percentage. Higher precision means a smaller tolerance percentage.
-- Quoting or repeating offensive colour-code mnemonics. Use the inoffensive order aid above or the reference table instead.
 
 ## Illustration brief
 

@@ -26,7 +26,7 @@ status: draft
 ---
 # AC, decibels, capacitors, inductors, and reactance
 
-Alternating current, or AC, changes direction repeatedly. Radio signals are AC at radio frequencies. Audio tones, household power, and RF carriers are different in frequency, but the same ideas of cycles, wavelength, phase, and reactance help describe them.
+Alternating current, or AC, changes direction repeatedly. Radio signals are AC at radio frequencies. Audio tones, household power, and RF carriers are different in frequency. The same ideas of cycles, wavelength, phase, and reactance help describe them.
 
 This lesson connects four areas: AC words, decibel shortcuts, simple capacitor and inductor combinations, and frequency-dependent opposition called reactance.
 
@@ -54,12 +54,6 @@ Phase describes timing between waveforms. A pair of AC signals may have the same
 
 A sine wave is the smooth waveform associated with ideal AC. Household mains from a receptacle is AC and is intended to be sinusoidal. A harmonic is a signal at an integer multiple of a fundamental frequency, so harmonic signals sit above the fundamental at regular frequency intervals.
 
-### Memory trick: ELI the ICE man
-
-- Helps remember: ideal AC phase in inductors and capacitors.
-- Trick: in an inductor L, E leads I, so E-L-I. In a capacitor C, I leads E, so I-C-E.
-- Limit: this is for ideal L and C phase memory. The Basic bank mainly tests reactance trends, not detailed phase calculations.
-
 ### Misconception: phase is the same as DC polarity
 
 - Mistaken idea: phase and polarity are two names for the same thing.
@@ -67,7 +61,9 @@ A sine wave is the smooth waveform associated with ideal AC. Household mains fro
 
 ## Decibels as power ratios
 
-The decibel compares two levels. Receiver signal reports may use an S-meter reading such as S9, then add a number of decibels above S9 for stronger signals. For example, a monitor reading of S9 plus 18 dB that loses 6 dB would be expected near S9 plus 12 dB, because the change is subtracted from the amount above S9.
+The decibel compares two levels. Receiver signal reports may use an S-meter reading such as S9. For stronger signals, the report may add decibels above S9.
+
+For example, a monitor reading of S9 plus 18 dB that loses 6 dB would be expected near S9 plus 12 dB. The change is subtracted from the amount above S9.
 
 For Basic-level estimating, use practical power shortcuts:
 
@@ -147,7 +143,7 @@ Equal parts often make the pattern easier to see.
 
 ## What sets inductance and capacitance?
 
-For an air-core coil, inductance depends mainly on the coil's size, its winding count, and its shape. Changing the diameter, length, or turn count changes the magnetic field and therefore the inductance.
+For an air-core coil, inductance depends mainly on the coil's size, its winding count, and its shape. Changing the diameter, length, or turn count changes the magnetic field. That changes the inductance.
 
 For a simple air-spaced capacitor, capacitance depends on plate area and spacing. Larger facing plate area gives more capacitance. More spacing gives less capacitance.
 

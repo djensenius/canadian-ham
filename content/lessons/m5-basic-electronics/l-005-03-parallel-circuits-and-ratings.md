@@ -25,7 +25,7 @@ status: draft
 
 Most useful circuits have more than one part. Resistors can be connected end-to-end in series or side-by-side in parallel. The total resistance changes differently in each arrangement.
 
-Power ratings are the other half of the story. A resistor value tells you how much it resists current. A wattage rating tells you how much heat it can safely dissipate.
+Power ratings are the other half of the story. A resistor value tells you how much it resists current. A wattage rating tells you how much heat it can safely release.
 
 ## Learning objectives
 
@@ -82,8 +82,8 @@ Rt = R / number of equal branches
 ### Memory trick: product over sum
 
 - Helps remember: the shortcut for two resistors in parallel.
-- Trick: for a pair of resistors, total resistance equals product over sum.
-- Limit: for larger networks, use the reciprocal formula or combine pairs carefully.
+- Trick: for a pair of resistors, Rt = (R1 x R2) / (R1 + R2).
+- Limit: this shortcut is for a pair. For larger networks, use the reciprocal formula or combine pairs carefully.
 
 ### Worked example: four 220 ohm resistors in parallel
 
@@ -102,10 +102,21 @@ A pair of equal 680 ohm resistors is in parallel across 10.2 V.
 
 - Given: R = 680 ohms in each branch; E = 10.2 V.
 - Find: total resistance Rt and current I.
-- Formula: equal branch resistance splits equally; I = E / Rt.
-- Substitute: Rt = 340 ohms; I = 10.2 V / 340 ohms.
+- Formula: Rt = R / 2; I = E / Rt.
+- Substitute: Rt = 680 / 2 = 340 ohms; I = 10.2 V / 340 ohms.
 - Answer: I = 0.030 A, or 30 mA.
 - Sanity check: adding an equal path lowers the total resistance.
+
+### Worked example: two unequal resistors in parallel
+
+Product over sum is handy when a pair of branch resistors are not equal.
+
+- Given: R1 = 330 ohms; R2 = 470 ohms.
+- Find: total resistance Rt.
+- Formula: Rt = (R1 x R2) / (R1 + R2).
+- Substitute: Rt = (330 x 470) / (330 + 470) = 155 100 / 800.
+- Answer: Rt = 193.875 ohms, about 194 ohms.
+- Sanity check: the total is lower than 330 ohms, the smaller branch value.
 
 ### Worked example: four 180 ohm resistors in parallel
 
@@ -126,11 +137,13 @@ That is just Ohm’s law again: I = E / R. With the same E, lower R gives higher
 
 ### In the real world: batteries in series and parallel
 
-Batteries follow the same series and parallel pattern as other sources, but battery safety matters. Use matched battery type, age, and state of charge when a pack is designed for series or parallel use.
+Battery packs can be wired in series or parallel. In series, voltages add. In parallel, capacity can add. Battery safety matters, so use matched battery type, age, and state of charge when a pack is designed for series or parallel use.
+
+Ah means ampere-hour, a battery capacity rating. Wh means watt-hour, an energy rating.
 
 Three 1.2 V cells in series make 3.6 V. If each cell is rated 2.4 Ah, the pack is still 2.4 Ah. Energy is 3.6 V x 2.4 Ah = 8.64 Wh.
 
-A matched pair of 7.4 V, 2.6 Ah packs in parallel keeps the voltage at 7.4 V and adds capacity to 5.2 Ah. Energy is 7.4 V x 5.2 Ah = 38.48 Wh.
+A matched pair of 7.4 V, 2.6 Ah packs in parallel keeps the voltage at 7.4 V. The capacity adds to 5.2 Ah. Energy is 7.4 V x 5.2 Ah = 38.48 Wh.
 
 ### In the real world: a voltage divider can be loaded
 
@@ -138,7 +151,7 @@ A voltage divider uses a top resistor and a lower resistor in series and takes t
 
 With a 15 kilohm top resistor and a 15 kilohm lower resistor across 9 V, the output across the lower resistor is 4.5 V.
 
-If a 15 kilohm load is connected across the lower resistor, that leg becomes 7.5 kilohms because the equal lower paths share current. Now Vout = 9 V x 7.5 / (15 + 7.5) = 3.0 V.
+If a 15 kilohm load is connected across the lower resistor, that leg becomes 7.5 kilohms because the equal lower paths share current. Now output E = 9 V x 7.5 / (15 + 7.5) = 3.0 V.
 
 The caveat is important: a divider is not a power supply. A load can pull the output away from the no-load value.
 
@@ -183,11 +196,11 @@ A temporary 72 ohm test load can be made from three 216 ohm resistors in paralle
 
 ## Try it
 
-- Equal resistors in parallel have a lower total resistance than any one branch.
-- A set of 16 ohm resistors in series across 9 V gives Rt = 64 ohms, I = 9 / 64 = 0.14 A, and P is about 1.3 W.
-- A 13.8 V cooling fan rated 18 W draws I = P / E = 18 / 13.8, or about 1.3 A.
-- Matched battery packs in parallel keep the same voltage but can supply more ampere-hours if the packs are designed for that use.
-- A temporary test load uses several identical resistors on a heat sink. Before increasing the test level, confirm that current is sharing evenly and that each part remains within its own heat rating.
+1. Equal resistors in parallel have a lower total resistance than any one branch.
+2. Three 18 ohm resistors in series across 8.1 V give Rt = 54 ohms, I = 8.1 / 54 = 0.15 A, and P is about 1.2 W.
+3. A 13.8 V cooling fan rated 18 W draws I = P / E = 18 / 13.8, or about 1.3 A.
+4. Matched battery packs in parallel keep the same voltage but can supply more ampere-hours if the packs are designed for that use.
+5. A temporary test load uses several identical resistors on a heat sink. Before increasing the test level, confirm that current is sharing evenly and that each part remains within its own heat rating.
 
 ## Radio connection
 
