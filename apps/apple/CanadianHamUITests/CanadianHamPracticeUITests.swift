@@ -2339,13 +2339,15 @@ final class CanadianHamPracticeUITests: XCTestCase {
         if let target {
             for _ in 0..<40 {
                 let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
+                let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+                let targetBottomMargin: CGFloat = preserveFullyVisible ? 48 : 0
                 if preserveFullyVisible {
-                    if isFullyVisible(target, in: app, requiresHittable: false) { return }
+                    if isFullyVisible(target, in: app, requiresHittable: false, bottomMargin: targetBottomMargin) { return }
                 } else if offenders.isEmpty, isPartiallyVisibleBelowNavigationBar(target, in: app) {
                     return
                 }
-                let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
-                if target.exists, target.frame.maxY > visibleFrame.maxY || preserveByScrollingUp {
+                let targetMaxY = visibleFrame.maxY - targetBottomMargin
+                if target.exists, target.frame.maxY > targetMaxY || preserveByScrollingUp {
                     scrollView.swipeUp()
                 } else {
                     let hasOffenderClippedAboveWindow = offenders.contains(where: \.isClippedAboveWindow)
@@ -2470,10 +2472,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
         return element.frame.intersects(visibleFrameExcludingNavigationBar(in: app))
     }
 
-    private func isFullyVisible(_ element: XCUIElement, in app: XCUIApplication, requiresHittable: Bool) -> Bool {
+    private func isFullyVisible(_ element: XCUIElement, in app: XCUIApplication, requiresHittable: Bool, bottomMargin: CGFloat = 0) -> Bool {
         guard element.exists else { return false }
         if requiresHittable && !element.isHittable { return false }
-        return visibleFrameExcludingNavigationBar(in: app).contains(element.frame)
+        var visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+        visibleFrame.size.height = max(0, visibleFrame.height - bottomMargin)
+        return visibleFrame.contains(element.frame)
     }
 
     private func visibleFrameExcludingNavigationBar(in app: XCUIApplication) -> CGRect {
