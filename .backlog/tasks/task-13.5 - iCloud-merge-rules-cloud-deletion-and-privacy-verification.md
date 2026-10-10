@@ -1,10 +1,11 @@
 ---
 id: TASK-13.5
 title: 'iCloud merge rules, cloud deletion and privacy verification'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-09 22:33'
+updated_date: '2026-10-10 20:56'
 labels:
   - apple
   - privacy
