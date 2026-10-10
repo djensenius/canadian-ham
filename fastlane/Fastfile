@@ -153,7 +153,9 @@ def create_canadian_ham_app_record
     app_name: APP_NAME,
     sku: APP_SKU,
     language: PRIMARY_LANGUAGE,
-    platforms: %w[ios osx appletvos xros],
+    # produce only supports ios, osx and tvos; add visionOS in App Store Connect
+    # (App Information → Add Platform) after the record exists.
+    platforms: %w[ios osx tvos],
     skip_devcenter: true
   )
 end
