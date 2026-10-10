@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-10 22:52'
+updated_date: '2026-10-10 23:00'
 labels:
   - content
 dependencies:
@@ -37,3 +37,9 @@ Revise all lessons in m1-regulations-policies and m2-operating-procedures to the
 3. For M2, add practical procedure descriptions and short on-air examples inside allowed reference-style sections, plus approved memory aids for phonetics, RST, Q signals, and UTC/logging where useful.
 4. Verify facts against questions.json and docs/exam-facts.md, run required content checks after M1, after M2, and final full checks, then record notes, AC evidence, and final summary through Backlog CLI.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+M1 pass: revised L-001-01 through L-001-06 in reference style without changing front matter, covers, quiz IDs, or Illustration brief blocks. L-001-01 added station-binder real-world context and certificate/address memory aid; facts checked against B-001-001 through B-001-004, B-001-022, and docs/exam-facts.md. L-001-02 added club work-day station-control context; facts checked against B-001-005 through B-001-009. L-001-03 added public-service net context and start/stop/half-hour identification memory aid; facts checked against B-001-010 through B-001-014. L-001-04 added power-display context and Basic-power memory aid; power and below-30-MHz facts checked against B-001-015 through B-001-019 and docs/exam-facts.md. L-001-05 added travel note-card context and place-first memory aid; facts checked against B-001-020 and B-001-021. L-001-06 added installation-file context; Safety Code 6 and EMCAB facts checked against B-001-023 through B-001-025. M1 check tranche passed after rerunning a transient web timeout: coverage, quizzes, originality, explanations, links, TZ=UTC pnpm test, and swift test.
+<!-- SECTION:NOTES:END -->
