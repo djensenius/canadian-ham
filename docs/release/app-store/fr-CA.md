@@ -9,8 +9,8 @@ Les décomptes sont des nombres de points de code Unicode pour le texte exact ci
 | Nom | 30 | 12 | Canadian Ham |
 | Sous-titre | 30 | 22 | Étude radio hors ligne |
 | Texte promotionnel | 170 | 136 | Étudiez le radioamateurisme hors ligne : leçons, examens simulés et Morse sur iPhone/iPad/Mac; exercices et Écoute rapide sur TV/Vision. |
-| Mots-clés | 100 | 76 | radioamateurisme,Canada,base,supérieure,Morse,CW,examen,exercices,hors ligne |
-| Nouveautés v1 | 4 000 | 277 | À conserver pour une version ultérieure : leçons, quiz, examens simulés de 100 questions, état de préparation et Morse complet sur iPhone/iPad/Mac; exercices de compétence supérieure avec examens de 50 questions; exercices par sujet et Écoute rapide sur Apple TV et Vision Pro. |
+| Mots-clés | 100 | 89 | radioamateur,radioamateurisme,Canada,base,supérieure,Morse,CW,examen,exercices,hors ligne |
+| Nouveautés v1 | 4 000 | 235 | Leçons, quiz, examens simulés de 100 questions, état de préparation et Morse complet sur iPhone/iPad/Mac; exercices de compétence supérieure avec examens de 50 questions; exercices par sujet et Écoute rapide sur Apple TV et Vision Pro. |
 | Description | 4 000 | 2 371 | Voir le bloc ci-dessous. |
 
 ## Description
@@ -32,7 +32,7 @@ Exercices de compétence supérieure sur iPhone, iPad et Mac
 Entraînement Morse sur iPhone, iPad et Mac
 - Apprenez les caractères avec un cours selon la méthode Koch.
 - Utilisez les exercices de copie et un examen simulé de réception.
-- Exercez-vous à l’envoi avec le minutage des touchers.
+- Exercez-vous à l’envoi avec le minutage des appuis.
 - Utilisez les sorties audio, visuelle et haptique là où elles sont prises en charge; les écrans Morse sont conçus pour fonctionner avec VoiceOver.
 
 Apple TV et Apple Vision Pro
@@ -45,7 +45,7 @@ Confidentialité et utilisation hors ligne
 - Sur iPhone, iPad et Mac, la progression reste sur l’appareil, sauf si vous l’exportez. Apple TV et Vision Pro gardent les séances d’exercices seulement pendant que l’app est ouverte.
 
 Accessibilité
-Canadian Ham est conçue pour prendre en charge VoiceOver, Police dynamique et Réduire les animations sur les plateformes Apple où ces fonctions s’appliquent.
+Canadian Ham est conçu pour prendre en charge VoiceOver, Police dynamique et Réduire les animations sur les plateformes Apple où ces fonctions s’appliquent.
 
 canadian-ham is an independent study tool. It is not affiliated with, sponsored by, or endorsed by the Government of Canada, Innovation, Science and Economic Development Canada (ISED), Radio Amateurs of Canada (RAC), or any accredited examiner.
 ```

@@ -10,7 +10,7 @@ Character counts are Unicode code-point counts for the exact draft text below. A
 | Subtitle | 30 | 23 | Offline ham radio study |
 | Promotional text | 170 | 136 | Study Canadian amateur radio offline: iPhone/iPad/Mac lessons, mocks and Morse training, plus TV/Vision Basic practice and Quick listen. |
 | Keywords | 100 | 91 | ham radio,amateur radio,Canada,Basic,Advanced,Morse,CW,exam prep,offline,radio,radioamateur |
-| What's new for v1 | 4,000 | 242 | Kept for later release: offline iPhone/iPad/Mac Basic lessons, quizzes, 100-question mocks, readiness, Advanced practice with 50-question mocks, and full Morse training; Apple TV and Vision Pro add Basic topic practice and Morse Quick listen. |
+| What's new for v1 | 4,000 | 218 | Offline iPhone/iPad/Mac Basic lessons, quizzes, 100-question mocks, readiness, Advanced practice with 50-question mocks, and full Morse training; Apple TV and Vision Pro add Basic topic practice and Morse Quick listen. |
 | Description | 4,000 | 1,835 | See block below. |
 
 ## Description

@@ -9,7 +9,7 @@ Use one simulator/device class at a time:
 | App Store class | Simulator/device name | Bundle identifier |
 |---|---|---|
 | iPhone 6.9" | `iPhone 17 Pro Max` | `com.djensenius.CanadianHam` |
-| iPad 13" | `iPad Pro 13-inch (M4)` | `com.djensenius.CanadianHam` |
+| iPad 13" | `iPad Pro 13-inch (M4) (or the current 13-inch iPad Pro listed by `xcrun simctl list devices`)` | `com.djensenius.CanadianHam` |
 | Mac | local Mac app build | `com.djensenius.CanadianHam` |
 | Apple TV | `Apple TV 4K (3rd generation)` | `com.djensenius.CanadianHam.TV` |
 | Vision Pro | `Apple Vision Pro` | `com.djensenius.CanadianHam.Vision` |
@@ -34,14 +34,16 @@ For French iPhone/iPad/Mac simulator captures, add these launch arguments before
 -AppleLanguages '(fr)' -AppleLocale fr_CA
 ```
 
-For Apple TV and Vision Pro French question-bank screenshots, add `-CanadianHamLanguage fr`; also add `-AppleLanguages '(fr)' -AppleLocale fr_CA` if the capture harness supports localized system formatting for that simulator runtime.
+These arguments change the interface language only. The question language is a separate stored preference (default English) with no launch argument on iPhone/iPad/Mac, and `-CanadianHamResetDataOnLaunch` resets it. For French question text: launch once with the reset flag, set Settings → Langue des questions → Français, then relaunch **without** `-CanadianHamResetDataOnLaunch` for the French practice, mock and quiz shots.
 
-For Mac screenshots, launch the built app and capture the window or screen with `screencapture`:
+For Apple TV and Vision Pro French screenshots, add both `-CanadianHamLanguage fr` (question bank) and `-AppleLanguages '(fr)' -AppleLocale fr_CA` (interface); both are required.
+
+For Mac screenshots, launch the built app and capture its window. **`-CanadianHamResetDataOnLaunch` wipes the local Canadian Ham store on this Mac, so export your progress first** (Settings → Data → Export). Capture a single window with `screencapture -w` (or `-l <windowid>`), then resize to an App Store Mac screenshot size (for example 2880×1800):
 
 ```sh
 APP="/path/to/CanadianHam.app"
 open -n "$APP" --args -CanadianHamResetDataOnLaunch -CanadianHamInitialScreen home -CanadianHamTheme light
-screencapture -x screenshots/mac-home-en-light.png
+screencapture -x -w screenshots/mac-home-en-light.png
 ```
 
 Mac Settings are a native Settings scene, not the sidebar Settings screen. `-CanadianHamInitialScreen settings` intentionally opens Home on macOS. To capture Mac Settings, launch a normal Mac shot first, then open the native Settings window and capture it:
@@ -49,8 +51,11 @@ Mac Settings are a native Settings scene, not the sidebar Settings screen. `-Can
 ```sh
 APP="/path/to/CanadianHam.app"
 open -n "$APP" --args -CanadianHamResetDataOnLaunch -CanadianHamCourseBankId advanced-2025-02-04 -CanadianHamTheme light
-osascript -e 'tell application "System Events" to keystroke "," using command down'
-screencapture -x screenshots/mac-settings-en-light.png
+sleep 2
+# Needs Accessibility permission for the terminal running this.
+osascript -e 'tell application "CanadianHam" to activate' -e 'delay 1' -e 'tell application "System Events" to keystroke "," using command down'
+sleep 1
+screencapture -x -w screenshots/mac-settings-en-light.png
 ```
 
 Repeat each selected screenshot in light and dark appearance:
@@ -73,7 +78,7 @@ These arguments are present in `RootView.swift` and the UI tests:
 | Practice category list | `-CanadianHamInitialScreen practice` |
 | Specific Basic practice question | `-CanadianHamInitialCategoryID B-001 -CanadianHamPracticeQuestionID B-001-002-002 -CanadianHamPracticeMode immediate -CanadianHamPracticeLimit 1 -CanadianHamPracticeSeed screenshot-basic-practice` |
 | Mock exam start / mock state | `-CanadianHamInitialScreen mock -CanadianHamMockExamSeed screenshot-basic-mock` |
-| Short mock for staged result screen | `-CanadianHamInitialScreen mock -CanadianHamMockExamSeed screenshot-basic-result -CanadianHamMockExamLimit 1` then answer and submit manually |
+| Short mock for staged result screen | `-CanadianHamInitialScreen mock -CanadianHamMockExamSeed screenshot-basic-result -CanadianHamMockExamLimit 1` then answer and submit manually. Use only for the results layout; don't present a 1-question result as a full 100-question mock in captions or copy |
 | Advanced course picker on iPhone/iPad | `-CanadianHamInitialScreen settings -CanadianHamCourseBankId advanced-2025-02-04` |
 | Advanced course picker on Mac | Open the native Settings window with `-CanadianHamCourseBankId advanced-2025-02-04`; do not use `-CanadianHamInitialScreen settings` on macOS |
 | Advanced lessons-unavailable state | `-CanadianHamInitialScreen learn -CanadianHamCourseBankId advanced-2025-02-04` |
