@@ -1,11 +1,11 @@
 ---
 id: TASK-39.3
 title: 'Lesson text revision: M6 feedlines/antennas and M3 station/safety'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-10 23:13'
+updated_date: '2026-10-10 23:21'
 labels:
   - content
 dependencies:
@@ -47,10 +47,12 @@ M3 slice revised: L-003-01 adds real-world filter/dummy-load placement; L-003-02
 Final validation: node packages/content-tools/src/check-lesson-coverage.ts passed (100/100 subsections); pnpm --dir packages/content-tools check:quizzes passed (36 quizzes, 504 official references, 78 concept checks); pnpm --dir packages/content-tools check:explanations passed (984 explanations); pnpm --dir packages/content-tools check:lesson-originality:all passed (0 issues); pnpm check:links passed; TZ=UTC pnpm test passed on final rerun (content-tools 108 tests, morse-engine 21 tests, web 152 tests; earlier web runs had transient loading timeouts and were rerun); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift passed (18 tests). A script confirmed front matter and Illustration brief blocks unchanged for all 13 scoped lesson files relative to merge base. No pinned test expectations were changed because the L-006-03 code-block assertion text remains present.
 
 Review r1 received REQUEST CHANGES. Reopened task for fixes. Findings to address: AC1 full rewrite needed for L-003-01 through L-003-06 and M6 prose; AC2 concrete examples/worked numbers needed; fix SWR percentages, battery/charger/fuse examples, supply-sag chirp, grounding/bonding example, VOX first-syllable advice, VHF 150/f exam convention, 262.2 W caveat, Yagi polarization wording, reflected-power grammar, double rounding, Try it #3 calculation, callout placement, term definitions, x/ohms style, and task-note overclaims.
+
+Review r1 fixes completed finding-by-finding: AC1 full rewrite fixed by replacing the prior append-only L-003-01 through L-003-06 text with genuine plain-language rewrites and rewriting M6 prose across all five lessons; long sentences split; ALC, DSP, SWR, and authority having jurisdiction defined at first lesson use; x style and spelled-out ohms used in running text. AC2 fixed by making In the real world sections concrete and adding worked numbers where useful: harmonic filter placement, supply-sag chirp, interface audio-level reduction, receiver filter choice, charger/radio-supply power, field-battery fusing, SWR reflected-power percentages, feedline/coax contrast, wavelength/dipole/Yagi/vertical/loop examples, and station bonding. AC3 retained with vetted 100 MHz wavelength and P-over-I-E memory tricks. Technical findings fixed: VOX first-syllable advice now points to sensitivity/attack, L-003-02 says steady at low power rather than clean on receive, L-006-03 says rotate Yagi elements from vertical to horizontal, L-006-02 reflected-power grammar/fate caveat rewritten, L-003-07 262.2 W caveat states whole-radio draw does not imply exceeding Basic final-stage DC-input limit, L-006-05 double rounding fixed to 3.78 m and 7.57 m, L-006-04 states 150/f plainly as the Basic VHF half-wave exam convention, and L-006-03 Try it #3 restored as a real 72 MHz calculation. Format findings fixed: no H3 callout before Learning objectives, and callouts no longer swallow main prose in L-006-01, L-006-02, L-003-06, or L-003-08. Task-record overclaims corrected by this note and final summary; no claims were dropped from lesson text except over-broad task-note wording from r1. Originality note: added a narrow allowlist entry for the standard SWR reflected-power table requested by the teaching guide; originality :all passes with 0 issues. Validation passed: coverage, quizzes, lesson originality :all, explanations, check:links, TZ=UTC pnpm test, and DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift. Script verification again confirmed front matter and Illustration brief blocks unchanged for all 13 scoped lessons.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Revised all M6 feedline/antenna and M3 station/safety lessons for plain-language teaching with practical examples, worked antenna/power calculations, vetted memory tricks, SWR/tuner caveats, station power/fusing/battery guidance, grounding/bonding, Safety Code 6, and provincial/territorial electrical-code wording. Preserved all lesson IDs, front matter coverage/quiz references, and Illustration brief sections; validation passed with coverage, quiz, explanation, originality, links, full pnpm tests, and Swift content package tests.
+Addressed review r1 by doing a full plain-language rewrite pass over all 13 M3/M6 lessons, fixing the append-only M3 issue, term definitions, heading/callout placement, x/ohms style, concrete worked examples, SWR percentages, battery/charger/fuse examples, supply-sag chirp, station grounding/bonding, and all listed technical corrections. Preserved front matter, covers, quiz references, and Illustration brief sections. Final validation passed: coverage, quizzes, originality :all, explanations, links, TZ=UTC pnpm test, and Swift content package tests.
 <!-- SECTION:FINAL_SUMMARY:END -->
