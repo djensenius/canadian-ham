@@ -23,10 +23,10 @@ Revise all lessons in m7-propagation and m8-interference-suppression to the teac
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Every lesson in scope is revised to docs/teaching-guide.md: plain language (terms defined at first use, short sentences, active voice), with a technical-accuracy pass
-- [ ] #2 Each technical lesson gains at least one 'In the real world' example tied to everyday or station hardware, with worked numbers where useful (rule-reference lessons follow the reference-style rules in content/lessons/README.md)
-- [ ] #3 Memory tricks from the guide are added where they help, are accurate and inoffensive, and say what they help remember
-- [ ] #4 Coverage, quiz, explanation, originality and link checks pass; lesson IDs, front matter coverage and quiz references are unchanged; Illustration brief sections are left intact for task-38
+- [x] #1 Every lesson in scope is revised to docs/teaching-guide.md: plain language (terms defined at first use, short sentences, active voice), with a technical-accuracy pass
+- [x] #2 Each technical lesson gains at least one 'In the real world' example tied to everyday or station hardware, with worked numbers where useful (rule-reference lessons follow the reference-style rules in content/lessons/README.md)
+- [x] #3 Memory tricks from the guide are added where they help, are accurate and inoffensive, and say what they help remember
+- [x] #4 Coverage, quiz, explanation, originality and link checks pass; lesson IDs, front matter coverage and quiz references are unchanged; Illustration brief sections are left intact for task-38
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -45,3 +45,9 @@ M7 revision complete. L-007-01: tightened path/layer prose, added valley/ridge/t
 
 M8 revision complete. L-008-01: tightened overload/audio-rectification/spurious-emission prose, added charger/LED/computer/solar-inverter real-world source examples, powered-speaker example, ferrite common-mode caveat, and speaker-complaint misconception; facts checked against B-008-001/002/003 plus ferrite reactance/ferrite-core cures in B-005-010-007 and B-008-002-001. L-008-02: added 60 Hz hum vs RF harmonics distinction with recomputed 1/60 s = 0.0167 s = 16.7 ms, pass-name memory trick, LED-lamp and solar-inverter examples, and filter-placement emphasis; facts checked against B-008-004/005 plus low-pass placement concepts from B-003-001-001/B-003-001-002 and 60 Hz meaning from B-005-007-008. Required post-M8 checks passed after rerunning a transient web timeout: coverage, quizzes, explanations, lesson originality, links, TZ=UTC pnpm test, and content-swift swift test. Protected front matter and Illustration brief sections verified unchanged against main for all five lesson files.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Revised all five M7/M8 lesson bodies for plain-language teaching, practical examples, memory aids, misconceptions, and technical accuracy. Added AM nighttime propagation, radio-horizon/FM range numbers, D/E/F memory aids, charger/LED/solar-inverter interference, common-mode ferrite limits, filter placement, and 60 Hz hum vs RF harmonic distinctions. Preserved all lesson IDs, front matter, covers, quizIds, and Illustration brief sections; no pinned L-005-01 or L-006-03 test expectations changed. Verified with coverage, quiz, explanation, originality, link, TZ=UTC pnpm test, and content-swift swift test checks.
+<!-- SECTION:FINAL_SUMMARY:END -->
