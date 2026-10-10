@@ -65,6 +65,17 @@ fastlane xros beta      # CanadianHamVision, generic/platform=visionOS, exports 
 
 Do not call `gym`, `build_app`, or `xcodebuild` directly for these uploads. The Fastfile uses only `xbuild` for archive/export.
 
+### Re-upload an existing export
+
+If archive and export succeeded but the upload step failed, upload the exported artifact without rebuilding:
+
+```sh
+fastlane ios beta artifact_path:$PWD/fastlane/builds/ios/<build-number>/CanadianHam.ipa
+fastlane mac beta artifact_path:$PWD/fastlane/builds/mac/<build-number>/CanadianHam.pkg
+```
+
+The Fastfile points fastlane's own Xcode lookup at `/Applications/Xcode.app` because `xcode-select` on the build host points at the Command Line Tools; without that, `upload_to_testflight` fails with `undefined method 'start_with?' for nil`.
+
 ## Versioning and build numbers
 
 - `apps/apple/project.yml` sets `MARKETING_VERSION` to `1.0.0` and generated Info.plists read `CFBundleShortVersionString` from `$(MARKETING_VERSION)` and `CFBundleVersion` from `$(CURRENT_PROJECT_VERSION)`.

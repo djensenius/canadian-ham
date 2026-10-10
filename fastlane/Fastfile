@@ -20,6 +20,12 @@ REPO_ROOT = File.expand_path("..", __dir__)
 PROJECT_PATH = File.join(REPO_ROOT, "apps/apple/CanadianHam.xcodeproj")
 EXPORT_OPTIONS_PLIST = File.join(REPO_ROOT, "fastlane/ExportOptions.plist")
 DEVELOPER_DIR = "/Applications/Xcode.app/Contents/Developer"
+# xcode-select on the build host points at the Command Line Tools. fastlane's
+# Helper.xcode_path ignores DEVELOPER_DIR and reads `xcode-select -p`, so pilot
+# cannot find xcodebuild/iTMSTransporter (nil xcode_version). Point fastlane at
+# full Xcode for this process only instead of changing xcode-select system-wide.
+ENV["DEVELOPER_DIR"] = DEVELOPER_DIR
+FastlaneCore::Helper.define_singleton_method(:xcode_path) { "#{DEVELOPER_DIR}/" }
 ARCHIVE_ROOT = File.join(REPO_ROOT, "fastlane/archives")
 BUILD_ROOT = File.join(REPO_ROOT, "fastlane/builds")
 
@@ -86,8 +92,8 @@ platform :ios do
   end
 
   desc "Archive/export the iOS Release build with xbuild and upload it to internal TestFlight."
-  lane :beta do
-    upload_beta(:ios)
+  lane :beta do |options|
+    upload_beta(:ios, options)
   end
 end
 
@@ -97,8 +103,8 @@ platform :mac do
   end
 
   desc "Archive/export the macOS Release build with xbuild and upload it to internal TestFlight."
-  lane :beta do
-    upload_beta(:mac)
+  lane :beta do |options|
+    upload_beta(:mac, options)
   end
 end
 
@@ -108,8 +114,8 @@ platform :appletvos do
   end
 
   desc "Archive/export the tvOS Release build with xbuild and upload it to internal TestFlight."
-  lane :beta do
-    upload_beta(:appletvos)
+  lane :beta do |options|
+    upload_beta(:appletvos, options)
   end
 end
 
@@ -119,8 +125,8 @@ platform :xros do
   end
 
   desc "Archive/export the visionOS Release build with xbuild and upload it to internal TestFlight."
-  lane :beta do
-    upload_beta(:xros)
+  lane :beta do |options|
+    upload_beta(:xros, options)
   end
 end
 
@@ -182,8 +188,18 @@ def print_asc_status
   end
 end
 
-def upload_beta(platform_key)
-  result = archive_and_export(platform_key)
+# Pass artifact_path:<exported .ipa/.pkg> to upload an existing export
+# without re-archiving (for example, after an upload-only failure).
+def upload_beta(platform_key, options = {})
+  result =
+    if options[:artifact_path]
+      config = BETA_PLATFORMS.fetch(platform_key)
+      path = File.expand_path(options[:artifact_path])
+      UI.user_error!("No artifact at #{path}") unless File.file?(path)
+      { artifact: config[:artifact], artifact_path: path, app_platform: config[:app_platform] }
+    else
+      archive_and_export(platform_key)
+    end
   upload_args = {
     app_identifier: PRIMARY_BUNDLE_ID,
     app_platform: result[:app_platform],
