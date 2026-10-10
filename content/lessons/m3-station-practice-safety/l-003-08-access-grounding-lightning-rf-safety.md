@@ -30,6 +30,12 @@ A radio station has electrical energy, RF energy, and physical hazards in one pl
 
 This lesson is study guidance, not installation engineering advice. For real station wiring, towers, lightning protection, and exposure assessment, follow Canadian electrical requirements, manufacturer instructions, qualified trade practice, and Health Canada Safety Code 6 concepts for limiting RF exposure.
 
+### In the real world: code and local authority
+
+CSA C22.1, the Canadian Electrical Code, is a national model code. It becomes enforceable when a province or territory adopts an edition, often with local amendments.
+
+For station wiring, follow your provincial or territorial electrical code and the authority having jurisdiction. Do not treat a study lesson as a substitute for a qualified electrician or inspector.
+
 ## Learning objectives
 
 By the end of this lesson, you can:
@@ -80,6 +86,11 @@ A neat star-like bond is easier to inspect than a chain that depends on every de
 
 Fuses have current and voltage ratings. The current rating controls when the fuse opens. The voltage rating says what voltage the fuse can interrupt safely without sustaining an arc. Replacing a specified fuse with a higher current rating defeats the protection and can turn a fault into equipment damage or fire.
 
+### Misconception: a fuse protects people from every shock
+
+- Mistaken idea: if equipment has a fuse, the operator is protected from electric shock.
+- Correction: a fuse protects wiring and equipment from excessive current. Shock safety also needs grounding, bonding, de-energizing before work, proper enclosures, and safe work practices.
+
 The green conductor in a three-wire AC cord bonds the equipment chassis to protective earth. If a fault connects the hot conductor to the chassis, the safety ground provides a low-impedance fault path so protection can operate and the chassis is less likely to remain energized.
 
 Power-supply filter capacitors can retain charge after the unit is unplugged. Use the manufacturer procedure or a properly insulated discharge tool with an inline resistor. Do not use a screwdriver as a casual shorting tool; it can arc, damage parts, or injure the person holding it.
@@ -120,7 +131,7 @@ RF energy can heat body tissue when exposure is high enough. Eyes deserve partic
 
 Power density falls rapidly with distance in free space, so separation is a powerful safety tool. For a simple free-space point-source model, RF field strength falls in proportion to `1/d`, while power density falls in proportion to `1/d^2`. Doubling distance can therefore greatly reduce exposure, even before considering duty cycle or antenna pattern. A low SWR is an equipment-match indication, not permission for people to stand close to an energized antenna. Keep handheld antennas away from your head and from other people while transmitting. Put UHF transmitting antennas where people cannot approach them during operation. Locate indoor antennas as far as practical from occupied living spaces, and mount directional high-gain antennas so their main beam is not aimed into nearby occupied structures.
 
-Health Canada Safety Code 6 is the general Canadian framework for RF exposure limits. This lesson does not invent numeric limits or replace a proper exposure evaluation. When in doubt, reduce power, increase distance, shorten transmission time, use lower-gain antennas near people, or move the antenna outdoors and higher.
+Health Canada Safety Code 6 is the general Canadian framework for RF exposure limits. It covers controlled and uncontrolled exposure situations, and no transmitter class is automatically outside RF exposure regulation. This lesson does not invent numeric limits or replace a proper exposure evaluation. When in doubt, reduce power, increase distance, shorten transmission time, use lower-gain antennas near people, or move the antenna outdoors and higher.
 
 ### Worked example: indoor antenna decision
 
@@ -153,6 +164,7 @@ Safety choices affect station performance too. Good bonding can reduce hum and R
 - Using a bigger fuse to stop nuisance blowing without finding the fault.
 - Putting a lightning protector at the radio end of a cable run as the only protection.
 - Treating handheld and indoor antennas as harmless because they are convenient.
+- Treating an SWR match as an RF exposure assessment.
 
 ## Illustration brief
 
@@ -167,4 +179,4 @@ Description: Draw an original room-and-wall cross-section. Inside, show a transc
 - Bond station equipment and grounding electrodes to reduce dangerous voltage differences.
 - Use correct fuse ratings, chassis safety grounding, and source-side mobile fusing.
 - Lightning protection combines outside entry protection, bonding, grounding, cable handling, and conservative disconnection.
-- RF exposure safety depends on distance, power, antenna gain, operating time, and keeping people away from energized antennas.
+- RF exposure safety depends on distance, power, antenna gain, operating time, and keeping people away from energized antennas, guided by Safety Code 6 where an exposure evaluation is needed.

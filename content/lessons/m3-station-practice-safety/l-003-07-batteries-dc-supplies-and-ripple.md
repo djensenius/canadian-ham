@@ -83,6 +83,19 @@ A linear supply is usually heavier and less efficient than a switching supply, b
 
 A simple supply often has a transformer, rectifier, and filter capacitor. If the filtering or regulation is poor, residual AC ripple can get into the transmitter. In CW, varying voltage can contribute to chirp. In voice, ripple can show up as low-frequency hum on the transmitted signal.
 
+### In the real world: radio current is not RF output power
+
+A transceiver manual may list 13.8 V DC input and 19 A transmit current. The whole-radio DC supply draw at that current is:
+
+- Given: E = 13.8 V; I = 19 A.
+- Find: DC input power to the whole radio.
+- Formula: P = I x E.
+- Substitute: P = 19 A x 13.8 V.
+- Answer: P = 262.2 W.
+- Sanity check: this is supply draw for the radio as equipment, not the regulatory DC input limit at the final RF stage.
+
+Use the manufacturer's fuse rating and cable instructions. Do not derive a universal fuse size from advertised RF output power.
+
 ### Worked example: choosing current headroom
 
 A transceiver manual lists a transmit current draw of 19 A on high power. Two supplies are available: one rated 18 A continuous and one rated 28 A continuous at the required voltage.
@@ -91,11 +104,19 @@ A transceiver manual lists a transmit current draw of 19 A on high power. Two su
 - The 28 A unit has headroom for transmit peaks and normal accessory loads.
 - The voltage still must match the radio's requirement, and the supply must be fused and wired correctly.
 
+### Memory trick: P over I E
+
+- Helps remember: P = I x E, I = P / E, and E = P / I.
+- Trick: put P above I and E. Cover the unknown.
+- Limit: this simple aid fits DC station-supply examples. AC circuits with reactance need more care.
+
 ## DC wiring, voltage drop, and fuses
 
 Current through a wire causes voltage drop. Long leads and small wire increase the drop. Heavy-gauge wire reduces it, which is why mobile transceivers often need substantial DC leads directly to the battery or a properly rated distribution point.
 
 Fuses protect wiring, not just the radio. A fuse near the source protects the length of wire that follows it. In a vehicle installation, the positive lead from the battery should be fused near the battery so a damaged wire cannot carry uncontrolled fault current through the vehicle.
+
+A fuse is not shock protection for the operator. It opens for excessive current in the circuit it protects. Keep separate habits for personal safety: de-energize equipment, avoid live mains work unless qualified, and keep RF conductors away from people.
 
 ### Worked example: checking wire drop
 
@@ -128,6 +149,7 @@ Power problems often masquerade as radio problems. Chirp, hum, resets on transmi
 - Choosing a supply by voltage alone and ignoring current capacity.
 - Assuming a small switching supply is quiet just because it powers the radio.
 - Placing the only fuse at the radio end of a long battery lead.
+- Treating the radio's RF output power as a fuse-size calculation.
 
 ## Illustration brief
 

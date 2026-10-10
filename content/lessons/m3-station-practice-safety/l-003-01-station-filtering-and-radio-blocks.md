@@ -57,6 +57,12 @@ An SWR meter samples forward and reflected power so you can judge how well the t
 
 A dummy load is a non-radiating test load. It turns RF power into heat so you can tune or test without intentionally putting a signal on the air. Real dummy loads also have power and time limits, so a warming case is a reason to pause and check the rating.
 
+### In the real world: filter before the shack wiring
+
+A low-pass filter is most useful before unwanted harmonics travel through extra jumpers and switches. Put it near the transceiver output, or near the external amplifier output when an amplifier is in use.
+
+A dummy load is useful in the same practical way. Test into the load first, then move to the antenna path after the station blocks are in the right order.
+
 ### Worked example: locating the filter
 
 A 20 m transceiver feeds a borrowed linear amplifier, then a short accessory tray with a power meter, a tuner, and a remote antenna switch. The filter question is not about which accessory is easiest to reach; it is about the first point after the last active RF source.

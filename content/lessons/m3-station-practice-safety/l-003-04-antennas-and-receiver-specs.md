@@ -75,6 +75,12 @@ Automatic gain control, or AGC, reduces the change in audio volume when signal s
 
 A waterfall display, or spectrogram, lets the operator see where signals sit across the tuned spectrum and how strong they appear by brightness or colour as time scrolls.
 
+### In the real world: use the display, then use your ears
+
+A bright line on a waterfall may be a strong signal, a steady carrier, or local noise. The display helps you tune and choose a filter, but listening tells you whether the signal is readable.
+
+If a nearby signal is bright and close to the wanted one, try a narrower IF filter before assuming the antenna is the problem.
+
 ### Worked example: filter choice
 
 A receiver has 300 Hz, 600 Hz, 2.7 kHz, and 8 kHz filters. For SSB voice, 2.7 kHz is the best match in this group because it is wide enough for speech but not as open as the 8 kHz filter.

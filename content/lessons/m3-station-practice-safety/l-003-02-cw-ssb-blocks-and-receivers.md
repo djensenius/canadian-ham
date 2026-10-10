@@ -52,6 +52,12 @@ The oscillator supplies the RF signal at the transmitted frequency in this basic
 
 The transmitter stages are powered by direct current from the station power supply. The RF signal is created and amplified by the stages; the DC supply is the energy source. The key controls the carrier so Morse characters become on-off RF energy. Practical keying also uses controlled rise and fall times; edges that are too abrupt can spread energy as clicks. At the output, the power amplifier raises the signal to the station's intended transmit power.
 
+### In the real world: chirp can start with power
+
+A small CW transmitter may sound clean on receive, then chirp when it transmits at higher power. The higher current can pull the supply voltage down for an instant. That voltage change can tug the oscillator unless the supply, oscillator, and buffer are stable.
+
+Before blaming the antenna, check supply voltage under load, keying shape, and whether the oscillator is isolated from the power stage.
+
 ### Worked example: why a buffer helps
 
 Imagine a practice oscillator adjusted to 7.040 MHz. When a power stage is connected directly, its input loading changes slightly as it heats. If that loading shifts the oscillator by even 120 Hz, the note heard by another operator can sound unsteady.

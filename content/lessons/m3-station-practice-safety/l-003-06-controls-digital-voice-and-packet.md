@@ -43,6 +43,12 @@ A microphone is also a station control, not just an accessory. Before using a di
 
 VOX, or voice-operated transmit switching, keys the transmitter when speech is detected. It is convenient for hands-free operating, but it must be adjusted so room noise does not trigger the transmitter and so syllables are not clipped at the start. Some radios also provide anti-VOX or anti-trip settings that keep received speaker audio from falsely keying VOX. Room noise is handled by VOX sensitivity, while VOX delay or hang time controls how long transmit remains on after speech stops. Do not confuse VOX with oscillator terms: a VFO is a variable frequency oscillator, a VXO is a variable crystal oscillator, and a VCO is a voltage-controlled oscillator.
 
+### In the real world: headset, fan, and VOX
+
+A headset microphone may work well in a quiet room and fail beside a cooling fan. If VOX triggers on the fan, lower VOX sensitivity or move the microphone. If the first syllable is cut off, adjust the VOX timing.
+
+The aim is not hands-free transmitting at any cost. The aim is clean switching that does not surprise other operators.
+
 A transceiver's transmit/receive switching lets one antenna serve both jobs. In receive, the antenna is connected to the receiver input; in transmit, it is connected to the transmitter output while the receiver is protected from transmit power.
 
 ### Worked example: setting up a new hand microphone

@@ -28,6 +28,12 @@ A transmitter can be legal and still be a poor neighbour if its signal is hard t
 
 This lesson focuses on three everyday cases: keyed continuous wave (CW), single-sideband voice (SSB), and frequency-modulated voice (FM). The details differ, but the operating idea is the same: keep the radio stable, set levels conservatively, and ask for on-air reports when you change equipment.
 
+### In the real world: change a single level at a time
+
+A new microphone, headset, audio interface, or power supply can change signal quality. Make a single change, test into a dummy load when appropriate, and ask for a specific report such as "wide," "rough," "quiet," or "chirpy."
+
+That approach is faster than changing power, microphone gain, processor level, and antenna tuning together.
+
 ## Learning objectives
 
 By the end of this lesson, you can:

@@ -54,6 +54,12 @@ Isolation transformers are often included in the audio lines. They pass audio wh
 
 Some radios do not need a separate sound-card box because an audio codec is built into the transceiver. In that design, the connector is only the access point; the internal codec is the block that converts between analog audio and digital samples.
 
+### In the real world: a data cable still needs level setting
+
+A USB cable can make a digital station look simple, but the same audio-level rule still applies. Too much computer audio can overdrive the radio's data input. Too little audio can make decoding unreliable.
+
+Set the software level, radio data gain, and push-to-talk method as separate checks. A successful transmit switch does not prove the audio path is clean.
+
 ### Worked example: setting interface levels
 
 A club laptop sends a digital-mode audio tone that is too hot for the radio's data input. The transmitted signal becomes wide and splattery. The cure is not more RF power. The operator lowers the computer audio level from 80 percent to 35 percent and raises the radio's data input gain only enough to reach the desired transmitter drive.
@@ -84,7 +90,7 @@ The numbers are approximate because real supplies include diode drops, ripple, a
 
 A training supply model exposes a rectifier-only test point before the smoothing capacitor and a filtered test point at the regulator input. Under the same load, the rectifier-only point shows a strongly rising and falling one-polarity waveform; the filtered point shows a much smaller ripple riding on DC, such as 0.35 V peak-to-peak. The filter has not regulated the final voltage; it has reduced the rise-and-fall component so the regulator has a steadier input to control.
 
-Never open or probe inside a mains-powered supply unless you are qualified to do that work with proper test equipment. Unplug the supply, use a proper resistor discharge tool or built-in bleeder path where the service procedure calls for it, and verify with a meter that stored charge is gone before handling the circuit. Do not short a filter capacitor with a screwdriver; large capacitors can retain dangerous energy after power is removed.
+Never open or probe inside a mains-powered supply unless you are qualified to do that work with proper test equipment. Unplug the supply, use a proper resistor discharge tool or built-in bleeder path where the service procedure calls for it, and verify with a meter that stored charge is gone before handling the circuit. Do not trust a dark pilot lamp or unlit power LED as proof that capacitors are discharged. Do not short a filter capacitor with a screwdriver; large capacitors can retain dangerous energy after power is removed.
 
 ### Worked example: regulator heat
 
