@@ -70,7 +70,7 @@ A station unable to provide direct help still has a role. It can relay accurate 
 
 ### In the real world: the first distress break-in
 
-A useful break-in is short and factual: your call sign, distress word if it applies, location, and the help needed. After that, pause for the station or net control that can organize assistance.
+A useful break-in is short and factual. In a life-threatening situation, use the distress word first, then give your call sign, location, and the help needed. After that, pause for the station or net control that can organize assistance.
 
 The goal is not a polished speech. The goal is enough accurate information for other stations to clear the channel and contact help.
 
@@ -83,6 +83,8 @@ Portable HF equipment may use simple antennas that can be carried and erected ea
 ### In the real world: small readiness checks
 
 A handheld with charged spare batteries is useful only if the operator knows the local repeater settings and simplex plan. A portable HF kit is useful only if the antenna, feedline, supports, and notebook are packed with the radio.
+
+For a simple power check, suppose a portable station averages 2 A from a 10 Ah battery during light emergency use. Estimated runtime is 10 Ah / 2 A = 5 h before allowing for battery age, cold weather, and a safety reserve.
 
 ## Records during priority traffic
 

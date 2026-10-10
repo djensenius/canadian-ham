@@ -48,7 +48,13 @@ Join a conversation already under way by identifying with your call sign during 
 
 ### In the real world: entering a repeater conversation
 
-A short procedure description is enough. Wait for the courtesy tone or clear pause, send your call sign once, and let the stations already talking invite you in. If you have distress traffic, state your call sign and situation during the break so the channel can be cleared.
+Wait for the courtesy tone or clear pause, send your call sign once, and let the stations already talking invite you in. If you have distress traffic, state your call sign and situation during the break so the channel can be cleared.
+
+An illustrative repeater entry can be this short:
+
+- VE3ABC: "VE3ABC."
+- VE3XYZ: "VE3ABC, go ahead."
+- VE3ABC: "Thanks. I have one quick question about tonight's club net."
 
 ## Coordination, tones, and offsets
 
@@ -82,7 +88,7 @@ Standard phonetic words give every listener the same spelling system. On repeate
 
 - Helps remember: formal call-sign spelling uses the ITU words, not homemade words.
 - Trick: practise your own call sign first, then practise common letters that sound alike, such as B, D, E, G, P, and V.
-- Limit: the full alphabet is fixed: Alfa, Bravo, Charlie, Delta, Echo, Foxtrot, Golf, Hotel, India, Juliett, Kilo, Lima, Mike, November, Oscar, Papa, Quebec, Romeo, Sierra, Tango, Uniform, Victor, Whiskey, X-ray, Yankee, Zulu.
+- Limit: this trick helps with practice, but the formal words are fixed. Do not replace ITU words with homemade words for identification.
 
 ## Calling on voice
 
@@ -113,6 +119,12 @@ For local communication, VHF and UHF are usually preferred over HF when they wil
 ### In the real world: repeater first, simplex next
 
 A pair of handheld operators may meet on a repeater, then test direct copy. If both can hear the repeater input signal clearly, they can move to a proper simplex channel and leave the repeater available.
+
+An illustrative simplex exchange uses the same identify-clearly habit:
+
+- VA3MOB: "VE3ABC, this is VA3MOB on simplex. How do you copy?"
+- VE3ABC: "VA3MOB, this is VE3ABC. I copy you clearly."
+- VA3MOB: "Thanks. We can stay simplex and leave the repeater clear."
 
 ## Sidebands, spacing, and clean tests
 

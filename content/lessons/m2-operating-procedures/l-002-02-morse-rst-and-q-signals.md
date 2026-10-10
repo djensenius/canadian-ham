@@ -106,15 +106,20 @@ A two-number voice report leaves off the tone digit. A three-number Morse report
 
 For a clear voice signal, an operator may give a two-number report such as 5 9. For a Morse signal with good copy, moderate strength, and clean tone, the same habit becomes a three-number RST report such as 5 7 9.
 
+An illustrative voice report exchange can be short:
+
+- VE3ABC: "VA3MOB, you are 5 9 here."
+- VA3MOB: "Thanks. You are 5 7 with light fading."
+
 The exact digits are observations at your receiver. Do not make every contact "perfect" out of politeness if the signal is actually hard to copy.
 
 ## S-units and power changes
 
-Some receiver S-meters use a one-step change for a 6 dB signal difference. In the simplified Basic relationship, that step matches a quadrupling or quartering of transmitter power when the path is otherwise stable.
+An S-unit is one marked step on a receiver's signal-strength meter. Some receiver S-meters use 6 dB per S-unit. In the simplified Basic relationship, that step matches a quadrupling or quartering of transmitter power when the path is otherwise stable.
 
 ### In the real world: one S-unit as a power clue
 
-If stable conditions let the shortcut apply, raising transmitter power from 25 W to 100 W is a quadrupling. That may move the other station's meter by about one S-unit on a meter using the Basic calibration model.
+If stable conditions let the shortcut apply, raising transmitter power from 10 W to 40 W is a quadrupling. That may move the other station's meter by about one S-unit on a meter using the Basic calibration model.
 
 Apply that shortcut only when the receive antenna, propagation path, and measurement conditions remain comparable. Otherwise the S-meter may have changed for reasons outside transmitter power.
 
@@ -147,8 +152,8 @@ Use Q signals when they make communication clearer. On voice, plain language is 
 ### Memory trick: Q codes group by job
 
 - Helps remember: QRM, QRN, QTH, QSY, and QRZ? from the Basic list.
-- Trick: interference, noise, home location, shift frequency, and who is calling are five common operating jobs.
-- Limit: do not over-teach extra Q signals from outside this lesson when preparing for the Basic bank.
+- Trick: M in QRM can point to man-made interference; N in QRN can point to natural noise. Pair QTH with "there" for station location, QSY with "shift," and QRZ? with "who is calling?"
+- Limit: this trick covers only the listed signals; use the reference table for the exact meaning.
 
 ## How these procedures fit together
 
