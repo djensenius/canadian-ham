@@ -2345,7 +2345,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
             for _ in 0..<40 {
                 let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
                 let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
-                let targetBottomMargin: CGFloat = preserveFullyVisible ? 48 : 0
+                let targetBottomMargin: CGFloat = preserveFullyVisible ? 200 : 0
                 if preserveFullyVisible {
                     if isFullyVisible(target, in: app, requiresHittable: false, bottomMargin: targetBottomMargin) { return }
                 } else if offenders.isEmpty, isPartiallyVisibleBelowNavigationBar(target, in: app) {
