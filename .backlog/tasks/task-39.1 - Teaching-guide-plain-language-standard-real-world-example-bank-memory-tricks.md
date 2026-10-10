@@ -3,7 +3,7 @@ id: TASK-39.1
 title: >-
   Teaching guide: plain-language standard, real-world example bank, memory
   tricks
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:14'
@@ -53,3 +53,9 @@ Implemented docs/teaching-guide.md. Verification evidence:
 - Corrected research-brief errors: Honours does not raise power to Advanced limits; 2.45 GHz has 12.2 cm wavelength but is in the 13 cm amateur region; invented mnemonic/source attributions were replaced with common/traditional source status; Break Break is not taught as casual entry; 146.520 MHz and 70 cm offsets were not treated as exam-bank facts; universal fuse-margin claims were dropped.
 - Validation passed: pnpm check:links; pnpm typecheck; cited-QID existence script. No docs/Markdown lint script exists in package.json scripts.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Wrote docs/teaching-guide.md for lesson writers with plain-language rules, renderer-safe Markdown templates, self-study teaching patterns, all-module example bank, vetted memory tricks, misconceptions, Canadian accuracy notes, originality rules, and a revision checklist. Verified all cited question IDs exist, checked regulatory/numeric claims against the active Basic bank and docs/exam-facts.md, corrected or dropped erroneous research-brief claims, and ran pnpm check:links plus pnpm typecheck.
+<!-- SECTION:FINAL_SUMMARY:END -->
