@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-10 22:51'
+updated_date: '2026-10-10 22:53'
 labels:
   - content
 dependencies:
@@ -28,3 +28,9 @@ Revise all lessons in m6-feedlines-antennas and m3-station-practice-safety to th
 - [ ] #3 Memory tricks from the guide are added where they help, are accurate and inoffensive, and say what they help remember
 - [ ] #4 Coverage, quiz, explanation, originality and link checks pass; lesson IDs, front matter coverage and quiz references are unchanged; Illustration brief sections are left intact for task-38
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Revise M6 lessons first, preserving front matter and Illustration brief blocks while adding practical feedline, SWR, wavelength, antenna-length, tuner, and memory-trick teaching from docs/teaching-guide.md.\n2. Run the required content checks after the M6 slice, fix originality or coverage issues, record per-lesson fact/source notes, and commit the slice.\n3. Revise M3 lessons, preserving metadata and Illustration brief blocks while strengthening station block, power-supply, fusing, battery, grounding/bonding, electrical-code, and Safety Code 6 explanations with practical examples.\n4. Run the full required validation set, update pinned test expectations only if asserted text changed, finalize Backlog acceptance criteria with evidence, and commit the completed task.
+<!-- SECTION:PLAN:END -->
