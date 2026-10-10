@@ -1764,7 +1764,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(fixedTimingNote.waitForExistence(timeout: 5), "\(appearance.rawValue) Morse settings fixed-timing note should be available before settling")
         scrollUntilPartiallyVisible(fixedTimingNote, in: app, maxSwipes: 8)
         XCTAssertTrue(isPartiallyVisibleBelowNavigationBar(settings, in: app), "\(appearance.rawValue) Morse settings should be positioned before settling")
-        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse home lower content", preserving: fixedTimingNote, preserveFullyVisible: true)
+        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse home lower content", preserving: fixedTimingNote, preserveByScrollingUp: true, preserveFullyVisible: true)
         assertFullyVisibleBelowNavigationBar(fixedTimingNote, in: app, context: "\(appearance.rawValue) fixed timing note after settling")
         assertPartiallyVisibleBelowNavigationBar(settings, in: app, context: "\(appearance.rawValue) Morse settings after settling")
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home lower content")
