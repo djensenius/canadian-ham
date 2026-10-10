@@ -591,7 +591,6 @@ struct MorseSettingsSection: View {
                 Text(fixedTimingDescription) // l10n: localized
                     .font(DesignTokens.FontScale.body.weight(.semibold))
                     .foregroundStyle(DesignTokens.Colors.ink)
-                    .accessibilityIdentifier("morse-settings-fixed-timing-description")
                     .padding(DesignTokens.Spacing.sm)
             }
             Slider(value: binding(\.volume), in: 0...1, step: 0.05) {
