@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-10 20:56'
+updated_date: '2026-10-10 20:57'
 labels:
   - apple
   - privacy
@@ -40,3 +40,13 @@ Why: progress from several devices must converge without losing or double-counti
 - [ ] #13 Harden the gated-file guards: the iCloud gate check rejects every top-level entitlement key outside the allowlist regardless of value type (integer, dict…), and the gated Info.plist's UIBackgroundModes must be exactly [remote-notification]; negative fixtures for both
 - [ ] #14 Morse course progress (lesson progress, character stats, daily activity) moves from the local JSON file into a CloudKit-compatible SwiftData entity in the learning-progress store, with a one-time migration that loses nothing, a convergent merge (cumulative attempts, best accuracy, union of daily activity), and export/import unchanged; Morse trainer settings stay local
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Inspect the existing gated iCloud store, export/import, reset, Morse progress, gate scripts, and web progress code; keep iCloud-only behavior inside ICLOUD_SYNC/DebugCloudKit and default builds offline.
+2. Add deterministic shared merge fixtures and pure merge logic/tests for Swift (and TypeScript if web has matching merge code), including dedup/export safety and bank-scoped submittedAt handling while preserving JSON import replace-all.
+3. Implement coordinated cloud-delete/reset/account-change behavior with injectable store/CloudKit seams, including no re-upload after restart, transient legacy-read retry, gated marker behavior, and immediate local-only reopen.
+4. Move remaining learning progress (lesson quiz/progress and Morse course progress excluding settings) into CloudKit-compatible SwiftData learning-progress storage with one-time migrations, convergent merge support, and unchanged export/import shape.
+5. Harden gate/network/localization/privacy docs, add generated pre-V2 migration fixture evidence, run targeted tests first, then required guard checks and final iOS/macOS default plus DebugCloudKit validation; record any owner-only device smoke-test gaps precisely.
+<!-- SECTION:PLAN:END -->
