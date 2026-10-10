@@ -101,7 +101,7 @@ Auroral propagation uses disturbed ionization near E-region height in high-latit
 
 CW is often more readable than analog voice through auroral distortion because it is narrow and uses a simple on-off tone. Wide, natural speech is harder to understand when the path adds rapid flutter.
 
-Meteor scatter uses brief ionized trails left by meteors. VHF energy can reflect or scatter from the trail for a short burst. The 30 MHz to 100 MHz range fits well because the trails can scatter those wavelengths for a moment, while lower HF effects and higher-frequency trail loss make the path less useful. Six metres sits in that useful range.
+Meteor scatter uses brief ionized trails left by meteors. VHF energy can reflect or scatter from the trail for a short burst. The 30 MHz to 100 MHz range fits well. Below about 30 MHz, ordinary ionospheric paths and absorption dominate. Above about 100 MHz, the trails return much less energy and fade faster. Six metres sits in that useful range.
 
 HF scatter can put weak, distorted signals into a skip zone. Only a small part of the transmitted energy is redirected toward the receiver, and multiple paths can smear the signal.
 

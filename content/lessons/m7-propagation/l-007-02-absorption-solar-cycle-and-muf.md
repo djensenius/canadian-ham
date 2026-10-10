@@ -50,7 +50,7 @@ On VHF and UHF, moving a handheld less than a metre in a city can change the rec
 
 Polarization means the orientation of the radio wave's electric field. On VHF and UHF line-of-sight contacts, matching antenna polarization can make a large difference. On HF sky-wave paths, the ionosphere can rotate or otherwise change the wave's polarization as it refracts the signal.
 
-Faraday rotation is that polarization twist as a wave travels through an ionized region. Reflection can also change the arriving polarization.
+Faraday rotation is that polarization twist as a wave travels through an ionized region in the Earth's magnetic field. Reflection can also change the arriving polarization.
 
 ### In the real world: why AM broadcast carries farther at night
 

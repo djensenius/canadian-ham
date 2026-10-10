@@ -49,7 +49,7 @@ Harmonics from a transmitter are unwanted because they can fall in other service
 
 Switching supplies can also make harmonics of their switching rate. For example, if a charger switches at 100 kHz, its 70th harmonic is 70 x 100 kHz = 7 000 kHz = 7.0 MHz.
 
-That number is before any filtering or shielding. It shows why small power supplies can matter to HF reception.
+Filtering and shielding reduce the strength of that harmonic, not its frequency. It shows why small power supplies can matter to HF reception.
 
 ### Worked example: finding a harmonic
 
