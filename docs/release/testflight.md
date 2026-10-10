@@ -90,6 +90,8 @@ If any guard reports iCloud, push, remote-notification, networking, telemetry, o
 
 If an archive reaches `CodeSign` and fails with `errSecInternalComponent`, the project has already resolved a signing identity and provisioning profile, but the non-interactive process cannot use the private key. This is usually a locked login keychain or a signing-key ACL prompt that the agent/CI session cannot answer.
 
+Terminal multiplexers (Herdr, tmux) and agent panes often run in launchd's `Background` session rather than the GUI (`Aqua`) session; check with `launchctl managername`. From a `Background` session, macOS can't show the keychain "Allow" prompt, and `security show-keychain-info ~/Library/Keychains/login.keychain-db` fails with "User interaction is not allowed", even when you run the lane yourself. Run the beta lanes from a new Terminal.app window (where `launchctl managername` prints `Aqua`), or run `security unlock-keychain ~/Library/Keychains/login.keychain-db` in the same shell first.
+
 Fix it from an interactive Terminal session, then rerun the same beta lane:
 
 1. Unlock the login keychain if needed:
