@@ -98,3 +98,16 @@ test("checkMarkdownLinks reports invalid URI encoding as one issue", async () =>
     assert.match(issues[0]?.message ?? "", /not valid URI-encoded text/);
   });
 });
+
+test("checkMarkdownLinks skips only generated fastlane release output", async () => {
+  await withTempRepo(async (root) => {
+    for (const dir of ["fastlane/archives/ios/App.xcarchive", "fastlane/builds/mac/1", "fastlane/docs"]) {
+      await mkdir(path.join(root, dir), { recursive: true });
+      await writeFile(path.join(root, dir, "README.md"), "[Missing](missing.md)\n", "utf8");
+    }
+
+    const issues = await checkMarkdownLinks(root);
+    assert.equal(issues.length, 1);
+    assert.match(issues[0]?.file ?? "", /fastlane[\\/]docs[\\/]README\.md$/);
+  });
+});

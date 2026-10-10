@@ -81,6 +81,10 @@ BETA_PLATFORMS = {
 
 desc "Create or fetch the Apple Development, Apple Distribution and Mac Installer Distribution certificates into the build keychain (API key, non-interactive)."
 lane :signing_certificates do
+  # get_certificates writes private keys (*.p12) to CERT_OUTPUT_DIR with the
+  # process umask; keep every invocation owner-only.
+  File.umask(0o077)
+  FileUtils.mkdir_p(CERT_OUTPUT_DIR, mode: 0o700)
   app_store_connect_api_key(**API_KEY)
   unlock_build_keychain
   common = {
@@ -92,6 +96,8 @@ lane :signing_certificates do
   get_certificates(**common, development: true, platform: "ios")
   get_certificates(**common, development: false, platform: "ios")
   get_certificates(**common, type: "mac_installer_distribution", platform: "macos")
+  FileUtils.chmod(0o700, CERT_OUTPUT_DIR)
+  FileUtils.chmod(0o600, Dir[File.join(CERT_OUTPUT_DIR, "*")])
 end
 
 platform :ios do
