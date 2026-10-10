@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-10 20:57'
+updated_date: '2026-10-10 23:20'
 labels:
   - apple
   - privacy
@@ -50,3 +50,9 @@ Why: progress from several devices must converge without losing or double-counti
 4. Move remaining learning progress (lesson quiz/progress and Morse course progress excluding settings) into CloudKit-compatible SwiftData learning-progress storage with one-time migrations, convergent merge support, and unchanged export/import shape.
 5. Harden gate/network/localization/privacy docs, add generated pre-V2 migration fixture evidence, run targeted tests first, then required guard checks and final iOS/macOS default plus DebugCloudKit validation; record any owner-only device smoke-test gaps precisely.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Progress update 2026-10-10: implemented and committed WIP through c6ddf57 after merging origin/main. Non-Apple checks passing: pnpm install --frozen-lockfile, pnpm typecheck, pnpm test (rerun passed after one transient web-test failure), pnpm build:web, pnpm --filter @canadian-ham/web audit:urls, pnpm check:apple-network, pnpm test:apple-network, pnpm test:apple-icloud-gate, pnpm check:apple-icloud-gate, node scripts/check-apple-text-sources.ts. Apple xbuild validation is queued in one nohup chain per coordinator guidance: /tmp/task135-macos-full.log, ios-full, ios-debugcloudkit, macos-debugcloudkit, apple-l10n with .exit files.
+<!-- SECTION:NOTES:END -->
