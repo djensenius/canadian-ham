@@ -43,6 +43,14 @@ XBUILD_AUTH_ARGS = [
   "-authenticationKeyIssuerID", API_KEY[:issuer_id]
 ].freeze
 
+# Dedicated signing keychain so any session on the build host (SSH, agents)
+# can sign without the login keychain. One-time setup: docs/release/testflight.md.
+# The password file holds a random password for this keychain only (not the
+# login password); it must stay mode 600 and is never committed or printed.
+BUILD_KEYCHAIN_PATH = File.expand_path("~/Library/Keychains/canadian-ham-build.keychain-db")
+BUILD_KEYCHAIN_PASSWORD_FILE = File.expand_path("~/.appstoreconnect/build-keychain.pw")
+CERT_OUTPUT_DIR = File.expand_path("~/.appstoreconnect/certs")
+
 BETA_PLATFORMS = {
   ios: {
     scheme: "CanadianHam",
@@ -70,6 +78,21 @@ BETA_PLATFORMS = {
     app_platform: "xros"
   }
 }.freeze
+
+desc "Create or fetch the Apple Development, Apple Distribution and Mac Installer Distribution certificates into the build keychain (API key, non-interactive)."
+lane :signing_certificates do
+  app_store_connect_api_key(**API_KEY)
+  unlock_build_keychain
+  common = {
+    generate_apple_certs: true,
+    keychain_path: BUILD_KEYCHAIN_PATH,
+    keychain_password: build_keychain_password,
+    output_path: CERT_OUTPUT_DIR
+  }
+  get_certificates(**common, development: true, platform: "ios")
+  get_certificates(**common, development: false, platform: "ios")
+  get_certificates(**common, type: "mac_installer_distribution", platform: "macos")
+end
 
 platform :ios do
   before_all do
@@ -209,7 +232,20 @@ def upload_beta(platform_key, options = {})
   upload_to_testflight(**upload_args)
 end
 
+def build_keychain_password
+  unless File.file?(BUILD_KEYCHAIN_PASSWORD_FILE)
+    UI.user_error!("Missing #{BUILD_KEYCHAIN_PASSWORD_FILE}; see the signing keychain setup in docs/release/testflight.md")
+  end
+  File.read(BUILD_KEYCHAIN_PASSWORD_FILE).strip
+end
+
+def unlock_build_keychain
+  UI.user_error!("Missing #{BUILD_KEYCHAIN_PATH}; see docs/release/testflight.md") unless File.exist?(BUILD_KEYCHAIN_PATH)
+  unlock_keychain(path: BUILD_KEYCHAIN_PATH, password: build_keychain_password, add_to_search_list: true, set_default: false)
+end
+
 def archive_and_export(platform_key)
+  unlock_build_keychain
   config = BETA_PLATFORMS.fetch(platform_key)
   build_number = Time.now.strftime("%Y%m%d%H%M")
   archive_path = File.join(ARCHIVE_ROOT, platform_key.to_s, "#{config[:scheme]}-#{build_number}.xcarchive")
