@@ -72,7 +72,7 @@ platform) and share one build lock, so don't run them by reflex.
 - The repo stays private until T-009, which requires T-007 permission records and T-607 release checks; never make it public, deploy, or distribute builds before then; see `docs/content-licensing.md`.
 - Apple app targets iOS/iPadOS 27.0, macOS 27.0, tvOS 27.0, and visionOS 27.0 minimums.
 - Apple app release builds for v1 must work fully offline and collect no data; no networking code, third-party SDKs, analytics, or iCloud sync in v1.
-- Optional CloudKit sync work may land on main only behind an off-by-default build gate for after v1: CloudKit, Push Notifications, and the remote-notification background mode are allowed only when that gate is explicitly enabled after the v1 release. v1 release builds must have no iCloud or push capability.
+- Optional CloudKit sync work may land on main only behind an off-by-default build gate for after v1: CloudKit, Push Notifications, and the remote-notification background mode are allowed only in the non-default `DebugCloudKit` Apple build configuration, which defines `ICLOUD_SYNC`. Default `Debug`/`Release`, CI, and the test commands below must have no iCloud or push capability, no remote-notification background mode, and no Settings iCloud toggle. v1 release builds must have no iCloud or push capability.
 - Use `xbuild` for Apple builds/tests; never call `xcodebuild` directly.
 
 ## Apple builds

@@ -1477,6 +1477,10 @@ struct SettingsView: View {
                 }
                 .paperCard()
 
+#if ICLOUD_SYNC
+                iCloudSyncCard
+#endif
+
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     Text("Local data")
                         .font(DesignTokens.FontScale.title.weight(.bold))
@@ -1501,9 +1505,15 @@ struct SettingsView: View {
                         .font(DesignTokens.FontScale.title.weight(.bold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                         .accessibilityAddTraits(.isHeader)
+#if ICLOUD_SYNC
+                    Text(ICloudSyncCopy.settingsPrivacySummary) // l10n: localized
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+#else
                     Text("No accounts, networking, analytics, telemetry, third-party SDKs, or iCloud sync. Import and export use local files you choose.")
                         .font(DesignTokens.FontScale.body)
                         .foregroundStyle(DesignTokens.Colors.ink)
+#endif
                     tokenButton("About Canadian Ham") { openAbout() }
                 }
                 .paperCard()
@@ -1549,6 +1559,27 @@ struct SettingsView: View {
             pendingCourseSwitch = nil
         }
     }
+
+#if ICLOUD_SYNC
+    private var iCloudSyncCard: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+            Text(ICloudSyncCopy.title) // l10n: localized
+                .font(DesignTokens.FontScale.title.weight(.bold))
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .accessibilityAddTraits(.isHeader)
+            Toggle(ICloudSyncCopy.toggleLabel, isOn: Binding(
+                get: { progressStore.isICloudSyncEnabled },
+                set: { enabled in updateICloudSync(enabled) }
+            )) // l10n: localized
+            .accessibilityIdentifier("icloud-sync-toggle")
+            Text(ICloudSyncCopy.deviceExplanation) // l10n: localized
+                .font(DesignTokens.FontScale.body)
+                .foregroundStyle(DesignTokens.Colors.ink)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .paperCard()
+    }
+#endif
 
     private var courseSwitchConfirmationPanel: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
@@ -1607,6 +1638,17 @@ struct SettingsView: View {
     private func saveCourseSwitch(to bankId: CourseBankID) {
         savePreferences { $0.activeBankId = bankId }
     }
+
+#if ICLOUD_SYNC
+    private func updateICloudSync(_ enabled: Bool) {
+        progressStore.updateICloudSyncOptIn(enabled)
+        statusMessage = enabled
+            ? ICloudSyncCopy.enabledAfterRestart
+            : ICloudSyncCopy.disabledAfterRestart
+        errorMessage = nil
+        onDataChanged(false)
+    }
+#endif
 
     private func savePreferences(_ mutate: (inout ApplePreferences) -> Void) {
         var next = progressStore.preferences

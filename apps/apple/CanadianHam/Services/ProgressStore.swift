@@ -1,5 +1,8 @@
 import CanadianHamEngine
 import CanadianHamMorseEngine
+#if ICLOUD_SYNC
+@preconcurrency import CloudKit
+#endif
 import Foundation
 import SwiftData
 
@@ -40,6 +43,115 @@ struct ApplePreferences: Codable, Equatable, Sendable {
         theme: .system,
         activeBankId: .basic
     )
+}
+
+enum ICloudSyncDatabaseSelection: Equatable, Sendable {
+    case none
+    case privateDatabase(String)
+}
+
+enum ICloudAccountSignal: Equatable, Sendable {
+    case accountChanged
+    case signedOut
+    case iCloudDisabled
+}
+
+enum ICloudAccountAvailability: Equatable, Sendable {
+    case available
+    case noAccount
+    case restricted
+    case temporarilyUnavailable
+    case couldNotDetermine
+}
+
+struct ICloudSyncSettings: Equatable, Sendable {
+    static let containerIdentifier = "iCloud.com.djensenius.CanadianHam"
+    static let containerRegistrationNote = "to be confirmed when the capability is registered"
+
+    private static let optInPreferenceKey = "CanadianHam.iCloudSyncOptIn"
+
+    static var isBuildEnabled: Bool {
+#if ICLOUD_SYNC
+        true
+#else
+        false
+#endif
+    }
+
+    static func storedOptIn(defaults: UserDefaults = .standard) -> Bool {
+        defaults.bool(forKey: optInPreferenceKey)
+    }
+
+    static func setStoredOptIn(_ enabled: Bool, defaults: UserDefaults = .standard) {
+        defaults.set(enabled, forKey: optInPreferenceKey)
+    }
+
+    static func clearStoredOptIn(defaults: UserDefaults = .standard) {
+        defaults.removeObject(forKey: optInPreferenceKey)
+    }
+
+    static func databaseSelection(storedOptIn: Bool, buildEnabled: Bool = isBuildEnabled) -> ICloudSyncDatabaseSelection {
+        guard buildEnabled, storedOptIn else { return .none }
+        return .privateDatabase(containerIdentifier)
+    }
+
+    static func signal(for availability: ICloudAccountAvailability) -> ICloudAccountSignal? {
+        switch availability {
+        case .available, .temporarilyUnavailable, .couldNotDetermine:
+            nil
+        case .noAccount:
+            .signedOut
+        case .restricted:
+            .iCloudDisabled
+        }
+    }
+
+    static func handleAccountSignal(_ signal: ICloudAccountSignal, defaults: UserDefaults = .standard) {
+        switch signal {
+        case .accountChanged, .signedOut, .iCloudDisabled:
+            setStoredOptIn(false, defaults: defaults)
+        }
+    }
+}
+
+struct ProgressStoreConfigurationPlan: Equatable, Sendable {
+    let progressDatabase: ICloudSyncDatabaseSelection
+    let preferencesDatabase: ICloudSyncDatabaseSelection
+}
+
+struct ProgressStoreURLs: Equatable, Sendable {
+    let persistentStoreURL: URL
+    let preferencesStoreURL: URL
+    let morseCourseProgressURL: URL
+    let legacyPreferencesCopyMarkerURL: URL
+
+    init(progressDirectory: URL) {
+        self.persistentStoreURL = progressDirectory.appending(path: "Progress.store")
+        self.preferencesStoreURL = progressDirectory.appending(path: "Preferences.store")
+        self.morseCourseProgressURL = progressDirectory.appending(path: "MorseCourseProgress.json")
+        self.legacyPreferencesCopyMarkerURL = progressDirectory.appending(path: "Preferences.store.legacy-copy-complete")
+    }
+
+    @MainActor
+    static var standard: ProgressStoreURLs {
+        ProgressStoreURLs(progressDirectory: ProgressStoreService.progressDirectory)
+    }
+}
+
+enum ProgressStoreConfigurationLayout: Equatable, Sendable {
+    case automatic
+    case legacySingleStore
+    case split
+}
+
+private struct PreferencesEntitySnapshot: Equatable, Sendable {
+    let key: String
+    let practiceMode: String
+    let examTimerEnabled: Bool
+    let language: String
+    let theme: String
+    let archivedLessonProgressData: Data
+    let archivedLessonQuizAttemptsData: Data
 }
 
 extension BankLanguage: Codable {}
@@ -401,11 +513,13 @@ private struct ProgressStoreSnapshot {
 @MainActor
 final class ProgressStoreService: ObservableObject {
     @Published private(set) var preferences: ApplePreferences = .default
+    @Published private(set) var isICloudSyncEnabled: Bool = ICloudSyncSettings.storedOptIn()
 
     let container: ModelContainer
     private let context: ModelContext
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
+    private let storeURLs: ProgressStoreURLs
     private let morseCourseProgressURL: URL
 #if DEBUG
     var morseCourseProgressURLForTesting: URL { morseCourseProgressURL }
@@ -414,39 +528,279 @@ final class ProgressStoreService: ObservableObject {
     var failNextLessonQuizSaveForTesting = false
     var failNextMorseCourseProgressRemovalForTesting = false
 #endif
+#if ICLOUD_SYNC
+    private var iCloudAccountChangedObserver: NSObjectProtocol?
+#endif
 
-    init(container: ModelContainer, morseCourseProgressURL: URL = ProgressStoreService.morseCourseProgressURL) throws {
+    init(
+        container: ModelContainer,
+        storeURLs: ProgressStoreURLs = .standard,
+        morseCourseProgressURL: URL? = nil,
+        iCloudSyncEnabled: Bool = ICloudSyncSettings.storedOptIn()
+    ) throws {
         self.container = container
         self.context = ModelContext(container)
-        self.morseCourseProgressURL = morseCourseProgressURL
-        try FileManager.default.createDirectory(at: morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+        self.storeURLs = storeURLs
+        self.morseCourseProgressURL = morseCourseProgressURL ?? storeURLs.morseCourseProgressURL
+        self.isICloudSyncEnabled = iCloudSyncEnabled
+        try FileManager.default.createDirectory(at: self.morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
         self.preferences = try loadPreferences()
+#if ICLOUD_SYNC
+        if iCloudSyncEnabled {
+            startICloudAccountMonitoring()
+        }
+#endif
     }
 
     static func open() throws -> ProgressStoreService {
+        try open(storeURLs: .standard)
+    }
+
+    static func open(
+        storeURLs: ProgressStoreURLs,
+        iCloudSyncEnabled: Bool = ICloudSyncSettings.storedOptIn(),
+        layout: ProgressStoreConfigurationLayout = .automatic
+    ) throws -> ProgressStoreService {
         do {
-            let schema = Schema(versionedSchema: CanadianHamProgressSchemaV2.self)
-            let configuration = ModelConfiguration(schema: schema, url: persistentStoreURL, cloudKitDatabase: .none)
-            let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
-            return try ProgressStoreService(container: container)
+            let resolvedLayout = resolvedLayout(layout)
+            let shouldAttemptLegacyCopy = shouldAttemptLegacyPreferencesCopy(storeURLs: storeURLs, layout: resolvedLayout)
+            let legacyPreferences = legacyPreferencesSnapshotsIfNeeded(storeURLs: storeURLs, shouldAttemptCopy: shouldAttemptLegacyCopy)
+            let container = try makeModelContainer(
+                iCloudSyncEnabled: iCloudSyncEnabled,
+                isStoredInMemoryOnly: false,
+                storeURLs: storeURLs,
+                layout: resolvedLayout
+            )
+            try copyLegacyPreferencesIfNeeded(legacyPreferences, into: container, layout: resolvedLayout)
+            if shouldAttemptLegacyCopy {
+                markLegacyPreferencesCopyComplete(storeURLs: storeURLs)
+            }
+            return try ProgressStoreService(
+                container: container,
+                storeURLs: storeURLs,
+                iCloudSyncEnabled: iCloudSyncEnabled
+            )
         } catch {
             throw ProgressStoreError.openFailed(error.localizedDescription)
         }
     }
 
-    static func inMemoryForTests() throws -> ProgressStoreService {
-        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV2.self)
-        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
-        let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
+    static func inMemoryForTests(iCloudSyncEnabled: Bool = false, layout: ProgressStoreConfigurationLayout = .automatic) throws -> ProgressStoreService {
+        let container = try makeModelContainer(
+            iCloudSyncEnabled: iCloudSyncEnabled,
+            isStoredInMemoryOnly: true,
+            storeURLs: .standard,
+            layout: resolvedLayout(layout)
+        )
         let directory = FileManager.default.temporaryDirectory
             .appending(path: "CanadianHamProgressStoreTests", directoryHint: .isDirectory)
             .appending(path: UUID().uuidString, directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        return try ProgressStoreService(container: container, morseCourseProgressURL: directory.appending(path: "MorseCourseProgress.json"))
+        return try ProgressStoreService(
+            container: container,
+            storeURLs: ProgressStoreURLs(progressDirectory: directory),
+            iCloudSyncEnabled: iCloudSyncEnabled
+        )
     }
 
+    static func configurationPlan(
+        iCloudSyncEnabled: Bool,
+        buildEnabled: Bool = ICloudSyncSettings.isBuildEnabled
+    ) -> ProgressStoreConfigurationPlan {
+        ProgressStoreConfigurationPlan(
+            progressDatabase: ICloudSyncSettings.databaseSelection(storedOptIn: iCloudSyncEnabled, buildEnabled: buildEnabled),
+            preferencesDatabase: .none
+        )
+    }
+
+    private static func resolvedLayout(_ layout: ProgressStoreConfigurationLayout) -> ProgressStoreConfigurationLayout {
+        switch layout {
+        case .legacySingleStore, .split:
+            layout
+        case .automatic:
+#if ICLOUD_SYNC
+            .split
+#else
+            .legacySingleStore
+#endif
+        }
+    }
+
+    private static func makeModelContainer(
+        iCloudSyncEnabled: Bool,
+        isStoredInMemoryOnly: Bool = false,
+        storeURLs: ProgressStoreURLs,
+        layout: ProgressStoreConfigurationLayout
+    ) throws -> ModelContainer {
+        switch layout {
+        case .automatic:
+            return try makeModelContainer(
+                iCloudSyncEnabled: iCloudSyncEnabled,
+                isStoredInMemoryOnly: isStoredInMemoryOnly,
+                storeURLs: storeURLs,
+                layout: resolvedLayout(layout)
+            )
+        case .legacySingleStore:
+            return try makeLegacySingleStoreModelContainer(isStoredInMemoryOnly: isStoredInMemoryOnly, storeURLs: storeURLs)
+        case .split:
+            return try makeSplitModelContainer(iCloudSyncEnabled: iCloudSyncEnabled, isStoredInMemoryOnly: isStoredInMemoryOnly, storeURLs: storeURLs)
+        }
+    }
+
+    private static func makeLegacySingleStoreModelContainer(isStoredInMemoryOnly: Bool, storeURLs: ProgressStoreURLs) throws -> ModelContainer {
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV2.self)
+        let configuration: ModelConfiguration
+        if isStoredInMemoryOnly {
+            configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+        } else {
+            configuration = ModelConfiguration(schema: schema, url: storeURLs.persistentStoreURL, cloudKitDatabase: .none)
+        }
+        return try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
+    }
+
+    private static func makeSplitModelContainer(iCloudSyncEnabled: Bool, isStoredInMemoryOnly: Bool, storeURLs: ProgressStoreURLs) throws -> ModelContainer {
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV2.self)
+        let plan = configurationPlan(iCloudSyncEnabled: iCloudSyncEnabled)
+        let progressSchema = Schema([QuestionProgressEntity.self, ExamAttemptEntity.self])
+        let preferencesSchema = Schema([PreferencesEntity.self])
+        let progressConfiguration: ModelConfiguration
+        let preferencesConfiguration: ModelConfiguration
+        if isStoredInMemoryOnly {
+#if ICLOUD_SYNC
+            progressConfiguration = ModelConfiguration(
+                "LearningProgress",
+                schema: progressSchema,
+                isStoredInMemoryOnly: true,
+                cloudKitDatabase: cloudKitDatabase(for: plan.progressDatabase)
+            )
+#else
+            progressConfiguration = ModelConfiguration(
+                "LearningProgress",
+                schema: progressSchema,
+                isStoredInMemoryOnly: true,
+                cloudKitDatabase: .none
+            )
+#endif
+            preferencesConfiguration = ModelConfiguration(
+                "LocalPreferences",
+                schema: preferencesSchema,
+                isStoredInMemoryOnly: true,
+                cloudKitDatabase: .none
+            )
+        } else {
+#if ICLOUD_SYNC
+            progressConfiguration = ModelConfiguration(
+                "LearningProgress",
+                schema: progressSchema,
+                url: storeURLs.persistentStoreURL,
+                cloudKitDatabase: cloudKitDatabase(for: plan.progressDatabase)
+            )
+#else
+            progressConfiguration = ModelConfiguration(
+                "LearningProgress",
+                schema: progressSchema,
+                url: storeURLs.persistentStoreURL,
+                cloudKitDatabase: .none
+            )
+#endif
+            preferencesConfiguration = ModelConfiguration(
+                "LocalPreferences",
+                schema: preferencesSchema,
+                url: storeURLs.preferencesStoreURL,
+                cloudKitDatabase: .none
+            )
+        }
+        return try ModelContainer(
+            for: schema,
+            migrationPlan: CanadianHamProgressMigrationPlan.self,
+            configurations: [progressConfiguration, preferencesConfiguration]
+        )
+    }
+
+    private static func shouldAttemptLegacyPreferencesCopy(
+        storeURLs: ProgressStoreURLs,
+        layout: ProgressStoreConfigurationLayout
+    ) -> Bool {
+        guard layout == .split else { return false }
+        guard !FileManager.default.fileExists(atPath: storeURLs.legacyPreferencesCopyMarkerURL.path(percentEncoded: false)) else { return false }
+        guard !FileManager.default.fileExists(atPath: storeURLs.preferencesStoreURL.path(percentEncoded: false)) else { return false }
+        return FileManager.default.fileExists(atPath: storeURLs.persistentStoreURL.path(percentEncoded: false))
+    }
+
+    private static func legacyPreferencesSnapshotsIfNeeded(
+        storeURLs: ProgressStoreURLs,
+        shouldAttemptCopy: Bool
+    ) -> [PreferencesEntitySnapshot] {
+        guard shouldAttemptCopy else { return [] }
+        do {
+            let legacyContainer = try makeLegacySingleStoreModelContainer(isStoredInMemoryOnly: false, storeURLs: storeURLs)
+            let legacyContext = ModelContext(legacyContainer)
+            let descriptor = FetchDescriptor<PreferencesEntity>(sortBy: [SortDescriptor(\.key)])
+            return try legacyContext.fetch(descriptor).map { entity in
+                PreferencesEntitySnapshot(
+                    key: entity.key,
+                    practiceMode: entity.practiceMode,
+                    examTimerEnabled: entity.examTimerEnabled,
+                    language: entity.language,
+                    theme: entity.theme,
+                    archivedLessonProgressData: entity.archivedLessonProgressData,
+                    archivedLessonQuizAttemptsData: entity.archivedLessonQuizAttemptsData
+                )
+            }
+        } catch {
+            NSLog("CanadianHam: unable to copy legacy preferences into split store: %@", String(describing: error))
+            return []
+        }
+    }
+
+    private static func copyLegacyPreferencesIfNeeded(
+        _ snapshots: [PreferencesEntitySnapshot],
+        into container: ModelContainer,
+        layout: ProgressStoreConfigurationLayout
+    ) throws {
+        guard layout == .split, !snapshots.isEmpty else { return }
+        let context = ModelContext(container)
+        let existing = try context.fetch(FetchDescriptor<PreferencesEntity>())
+        guard existing.isEmpty else { return }
+        for snapshot in snapshots {
+            let entity = PreferencesEntity(
+                key: snapshot.key,
+                practiceMode: snapshot.practiceMode,
+                examTimerEnabled: snapshot.examTimerEnabled,
+                language: snapshot.language,
+                theme: snapshot.theme,
+                archivedLessonProgressData: snapshot.archivedLessonProgressData,
+                archivedLessonQuizAttemptsData: snapshot.archivedLessonQuizAttemptsData
+            )
+            context.insert(entity)
+        }
+        try context.save()
+    }
+
+    private static func markLegacyPreferencesCopyComplete(storeURLs: ProgressStoreURLs) {
+        try? FileManager.default.createDirectory(at: storeURLs.legacyPreferencesCopyMarkerURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+        if !FileManager.default.fileExists(atPath: storeURLs.legacyPreferencesCopyMarkerURL.path(percentEncoded: false)) {
+            FileManager.default.createFile(atPath: storeURLs.legacyPreferencesCopyMarkerURL.path(percentEncoded: false), contents: Data(), attributes: nil)
+        }
+    }
+
+#if ICLOUD_SYNC
+    private static func cloudKitDatabase(for selection: ICloudSyncDatabaseSelection) -> ModelConfiguration.CloudKitDatabase {
+        switch selection {
+        case .none:
+            .none
+        case .privateDatabase(let identifier):
+            .private(identifier)
+        }
+    }
+#endif
+
     static var persistentStoreURL: URL {
-        progressDirectory.appending(path: "Progress.store")
+        ProgressStoreURLs.standard.persistentStoreURL
+    }
+
+    static var preferencesStoreURL: URL {
+        ProgressStoreURLs.standard.preferencesStoreURL
     }
 
     static var progressDirectory: URL {
@@ -458,19 +812,79 @@ final class ProgressStoreService: ObservableObject {
     }
 
     static var morseCourseProgressURL: URL {
-        progressDirectory.appending(path: "MorseCourseProgress.json")
+        ProgressStoreURLs.standard.morseCourseProgressURL
     }
 
     private static let activeBankPreferenceKey = "CanadianHam.activeBankId"
 
     static func resetPersistentStoreFiles() {
         UserDefaults.standard.removeObject(forKey: activeBankPreferenceKey)
-        let url = persistentStoreURL
-        for suffix in ["", "-shm", "-wal"] {
-            try? FileManager.default.removeItem(at: URL(fileURLWithPath: url.path + suffix))
+        ICloudSyncSettings.clearStoredOptIn()
+        let urls = ProgressStoreURLs.standard
+        for url in [urls.persistentStoreURL, urls.preferencesStoreURL] {
+            for suffix in ["", "-shm", "-wal"] {
+                try? FileManager.default.removeItem(at: URL(fileURLWithPath: url.path + suffix))
+            }
         }
-        try? FileManager.default.removeItem(at: morseCourseProgressURL)
+        try? FileManager.default.removeItem(at: urls.legacyPreferencesCopyMarkerURL)
+        try? FileManager.default.removeItem(at: urls.morseCourseProgressURL)
     }
+
+    func updateICloudSyncOptIn(_ enabled: Bool, defaults: UserDefaults = .standard) {
+        ICloudSyncSettings.setStoredOptIn(enabled, defaults: defaults)
+        isICloudSyncEnabled = ICloudSyncSettings.storedOptIn(defaults: defaults)
+    }
+
+    func handleICloudAccountSignal(_ signal: ICloudAccountSignal, defaults: UserDefaults = .standard) {
+        ICloudSyncSettings.handleAccountSignal(signal, defaults: defaults)
+        isICloudSyncEnabled = ICloudSyncSettings.storedOptIn(defaults: defaults)
+    }
+
+    func handleICloudAccountAvailability(_ availability: ICloudAccountAvailability, defaults: UserDefaults = .standard) {
+        guard let signal = ICloudSyncSettings.signal(for: availability) else { return }
+        handleICloudAccountSignal(signal, defaults: defaults)
+    }
+
+#if ICLOUD_SYNC
+    private func startICloudAccountMonitoring() {
+        iCloudAccountChangedObserver = NotificationCenter.default.addObserver(
+            forName: .CKAccountChanged,
+            object: nil,
+            queue: nil
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.handleICloudAccountSignal(.accountChanged)
+            }
+        }
+        checkICloudAccountStatusAtLaunch()
+    }
+
+    private func checkICloudAccountStatusAtLaunch() {
+        CKContainer(identifier: ICloudSyncSettings.containerIdentifier).accountStatus { [weak self] status, error in
+            guard error == nil else { return }
+            Task { @MainActor in
+                self?.handleICloudAccountAvailability(Self.availability(for: status))
+            }
+        }
+    }
+
+    private static func availability(for status: CKAccountStatus) -> ICloudAccountAvailability {
+        switch status {
+        case .available:
+            .available
+        case .noAccount:
+            .noAccount
+        case .restricted:
+            .restricted
+        case .temporarilyUnavailable:
+            .temporarilyUnavailable
+        case .couldNotDetermine:
+            .couldNotDetermine
+        @unknown default:
+            .couldNotDetermine
+        }
+    }
+#endif
 
     func questionProgressRecords() throws -> [QuestionProgressRecord] {
         let descriptor = FetchDescriptor<QuestionProgressEntity>(sortBy: [SortDescriptor(\.questionId)])
@@ -599,7 +1013,11 @@ final class ProgressStoreService: ObservableObject {
             try removeMorseCourseProgressIfPresent()
             UserDefaults.standard.removeObject(forKey: Self.activeBankPreferenceKey)
             preferences = .default
+            Self.markLegacyPreferencesCopyComplete(storeURLs: storeURLs)
             try context.save()
+            // Reset all data also turns iCloud sync back off, but only once the reset has been saved.
+            ICloudSyncSettings.clearStoredOptIn()
+            isICloudSyncEnabled = false
             objectWillChange.send()
         } catch {
             context.rollback()

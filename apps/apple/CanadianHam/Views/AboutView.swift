@@ -43,7 +43,11 @@ struct AboutView: View {
                 }
 
                 paperSection("Privacy") {
+#if ICLOUD_SYNC
+                    Text(ICloudSyncCopy.aboutPrivacySummary) // l10n: localized
+#else
                     Text("This Apple app works fully offline with bundled content, has no accounts, analytics, telemetry, ads, networking code, iCloud sync, push notifications, remote config, or third-party SDKs, and stores progress only on this device unless you export it.")
+#endif
                 }
             }
             .padding(DesignTokens.Spacing.xl)
