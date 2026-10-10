@@ -96,9 +96,25 @@ For repeater contacts, report the relayed station's intelligibility and audio qu
 
 A two-number voice report leaves off the tone digit. A three-number Morse report reads the digits in order: readability, strength, and tone. A report marked as S9 plus a decibel value means the signal is stronger than S9 by the stated amount.
 
+### Memory trick: RST reads in order
+
+- Helps remember: RST means readability, signal strength, and tone.
+- Trick: read the letters left to right, then read the report digits left to right.
+- Limit: voice reports normally use readability and strength; tone is for Morse or keyed-signal quality.
+
+### In the real world: giving a report
+
+For a clear voice signal, an operator may give a two-number report such as 5 9. For a Morse signal with good copy, moderate strength, and clean tone, the same habit becomes a three-number RST report such as 5 7 9.
+
+The exact digits are observations at your receiver. Do not make every contact "perfect" out of politeness if the signal is actually hard to copy.
+
 ## S-units and power changes
 
-Some receiver S-meters are calibrated with 6 dB per S-unit. In the simplified Basic relationship, that step corresponds to a quadrupling or quartering of transmitter power. Under stable propagation, antenna, and other path conditions, one S-unit can represent one such power step.
+Some receiver S-meters use a one-step change for a 6 dB signal difference. In the simplified Basic relationship, that step matches a quadrupling or quartering of transmitter power when the path is otherwise stable.
+
+### In the real world: one S-unit as a power clue
+
+If stable conditions let the shortcut apply, raising transmitter power from 25 W to 100 W is a quadrupling. That may move the other station's meter by about one S-unit on a meter using the Basic calibration model.
 
 Apply that shortcut only when the receive antenna, propagation path, and measurement conditions remain comparable. Otherwise the S-meter may have changed for reasons outside transmitter power.
 
@@ -128,9 +144,17 @@ Q signals are three-letter operating abbreviations. In Morse they can be sent as
 
 Use Q signals when they make communication clearer. On voice, plain language is often better until both operators expect the abbreviation.
 
+### Memory trick: Q codes group by job
+
+- Helps remember: QRM, QRN, QTH, QSY, and QRZ? from the Basic list.
+- Trick: interference, noise, home location, shift frequency, and who is calling are five common operating jobs.
+- Limit: do not over-teach extra Q signals from outside this lesson when preparing for the Basic bank.
+
 ## How these procedures fit together
 
-Morse procedure reduces a contact to compact, recognizable pieces: check that the frequency is clear, call at a speed you can receive, identify who is calling whom, exchange a realistic report, and leave enough spacing from other contacts. The Q signals and short groups are purposeful shortcuts, and each one serves one of those operating steps.
+Morse procedure reduces a contact to compact, recognizable pieces: check that the frequency is clear, call at a speed you can receive, identify who is calling whom, exchange a realistic report, and leave enough spacing from other contacts.
+
+The Q signals and short groups are purposeful shortcuts. Each one serves an operating step: asking whether a frequency is busy, calling, inviting a reply, reporting copy, changing frequency, or closing politely.
 
 ## Radio connection
 
