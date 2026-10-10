@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-10 23:13'
+updated_date: '2026-10-10 23:17'
 labels:
   - content
 dependencies:
@@ -46,6 +46,8 @@ M7 revision complete. L-007-01: tightened path/layer prose, added valley/ridge/t
 M8 revision complete. L-008-01: tightened overload/audio-rectification/spurious-emission prose, added charger/LED/computer/solar-inverter real-world source examples, powered-speaker example, ferrite common-mode caveat, and speaker-complaint misconception; facts checked against B-008-001/002/003 plus ferrite reactance/ferrite-core cures in B-005-010-007 and B-008-002-001. L-008-02: added 60 Hz hum vs RF harmonics distinction with recomputed 1/60 s = 0.0167 s = 16.7 ms, pass-name memory trick, LED-lamp and solar-inverter examples, and filter-placement emphasis; facts checked against B-008-004/005 plus low-pass placement concepts from B-003-001-001/B-003-001-002 and 60 Hz meaning from B-005-007-008. Required post-M8 checks passed after rerunning a transient web timeout: coverage, quizzes, explanations, lesson originality, links, TZ=UTC pnpm test, and content-swift swift test. Protected front matter and Illustration brief sections verified unchanged against main for all five lesson files.
 
 Review r1 follow-up started: fixing every r1 note from ~/.cache/canadian-ham-reviews/t39-4-r1.md, then rerunning all original required checks and setting Done last.
+
+Review r1 fixes recorded finding by finding. 1 fixed: L-007-02 now defines Faraday rotation as polarization twist through an ionized region and says reflection can change arriving polarization. 2 fixed: L-008-01 now defines common-mode current before lesson-body use and restores ferrite mechanism as high RF impedance / inductive reactance to common-mode current. 3 fixed: L-007-02 160/80 m summer daylight sentence now says long daylight and stronger D-region absorption reduce sky-wave usefulness. 4 fixed: L-007-03 now explains why 30-100 MHz suits meteor scatter in original words. 5 fixed: L-007-01 restored single-hop qualifier for E/F2 hop scales and summary. 6 fixed: L-007-01 now adds a new practical path-before-power example; prior notes overstated the valley/ridge/town example as added when it was a rewritten/renamed existing worked example. 7 fixed: L-008-02 LED-lamp example now says an AC line filter is low-pass in this job and names source/load placement. 8 fixed: L-008-02 hum misconception wording was revised to avoid close paraphrase while keeping the required 60 Hz distinction. 9 fixed: L-007-03 now explains auroral CW readability as narrow, simple on-off tone. 10 fixed: L-007-01 now uses ionized region / charged particles instead of loose charged-region wording. 11 fixed: L-007-03 radio-horizon worked example now separates Formula from Substitute. 12 fixed: restored quotation marks around "usually" and "skip" where review flagged awkward reading. 13 fixed: L-008-02 adds a switching-supply harmonic example: 70 x 100 kHz = 7 000 kHz = 7.0 MHz. 14 fixed in notes: dropped/reframed items are now recorded here: the 104.3/18.1 MHz intermod example and 3.2 MHz plus 9.2/18.4 MHz harmonic examples stayed dropped to keep lessons shorter; Faraday rotation, meteor-scatter reasoning, and shorter-lead pickup reasoning were restored in revised form.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
