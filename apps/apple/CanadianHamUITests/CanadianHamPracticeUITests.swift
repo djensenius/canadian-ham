@@ -1444,7 +1444,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func auditMorseSendingMainScreen(appearance: AuditAppearance) throws {
-        let app = launchApp(arguments: [
+        var app = launchApp(arguments: [
             "-CanadianHamInitialScreen", "morse",
             "-CanadianHamMorseSendingDebugHook",
             "-CanadianHamMorseSendingExamSeconds", "600"
@@ -1456,6 +1456,14 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app.buttons["morse-sending-start-exam-button"].firstMatch.tap()
         XCTAssertTrue(app.staticTexts["morse-sending-exam-text"].firstMatch.waitForExistence(timeout: 5), "\(appearance.rawValue) sending main audit should show the exam card")
         try performAudit(on: app, context: "Morse sending main screen \(appearance)")
+
+        app.terminate()
+        app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseSendingDebugHook",
+            "-CanadianHamMorseSendingExamSeconds", "600"
+        ])
+        openSendingPractice(in: app)
         // Audit the lower half too: the paddles and feedback panel start below the fold.
         let feedback = app.staticTexts["morse-sending-feedback-summary"].firstMatch
         scrollUntilHittable(feedback, in: app, maxSwipes: 8)
