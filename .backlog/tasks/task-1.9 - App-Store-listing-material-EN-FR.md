@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 04:04'
-updated_date: '2026-10-10 04:16'
+updated_date: '2026-10-10 04:21'
 labels: []
 dependencies: []
 parent_task_id: TASK-1
@@ -43,6 +43,12 @@ Implemented docs/release/app-store/ with EN and fr-CA metadata drafts, submissio
 Review requested changes: platform scope, fr-CA terminology, screenshot capture details, attribution/disclaimer/accessibility wording, keyword and What's New notes. Set task back to In Progress and unchecked AC #1, #3 and #4 before fixing.
 
 Review fixes implemented: platform scope now separates iPhone/iPad/Mac Basic lessons/quizzes/mocks/readiness/full Morse from Apple TV/Vision Pro Basic topic practice and Morse Quick listen; fr-CA copy now uses radioamateurisme, compétence supérieure, Écoute rapide, Police dynamique and no English Advanced/Quick listen/taps terms; screenshot plan names simulators and exact simctl/screencapture steps, removes the sending debug hook from capture args, and documents native Mac Settings capture; ISED keyword removed from keywords; What's New marked as later-release text; age rating notes say to complete App Store Connect's current questionnaire; attribution drafts cover Basic and Advanced and follow-up TASK-35 was created depending on task-1.4. Validation passed: pnpm check:links; field recounts EN 12/30, 23/30, 136/170, 91/100, 242/4000, 1835/4000 and FR 12/30, 22/30, 136/170, 76/100, 277/4000, 2371/4000; copy/style/overclaim/debug-hook check; git diff --check origin/main...HEAD.
+
+Re-review APPROVE WITH NOTES (~/.cache/canadian-ham-reviews/t1.9-r2.md). Coordinator applied the notes in dcc4e12:
+- 'conçu'; 'minutage des appuis' (the app's term);
+- FR keyword 'radioamateur' added (89/100);
+- the What's New 'kept for later' prefix moved out of the counted text (EN 218/4000, FR 235/4000);
+- the screenshot plan explains setting the question language to French (no launch argument; don't reset after setting it), says both language arguments are required on TV/Vision, exports Mac progress before reset, uses window capture and activate/delay for Mac Settings, adds the iPad simulator fallback, and adds the short-mock caption caveat.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
