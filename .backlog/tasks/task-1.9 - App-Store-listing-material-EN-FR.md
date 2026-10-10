@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 04:04'
-updated_date: '2026-10-10 04:21'
+updated_date: '2026-10-10 04:28'
 labels: []
 dependencies: []
 parent_task_id: TASK-1
@@ -49,6 +49,8 @@ Re-review APPROVE WITH NOTES (~/.cache/canadian-ham-reviews/t1.9-r2.md). Coordin
 - FR keyword 'radioamateur' added (89/100);
 - the What's New 'kept for later' prefix moved out of the counted text (EN 218/4000, FR 235/4000);
 - the screenshot plan explains setting the question language to French (no launch argument; don't reset after setting it), says both language arguments are required on TV/Vision, exports Mac progress before reset, uses window capture and activate/delay for Mac Settings, adds the iPad simulator fallback, and adds the short-mock caption caveat.
+
+PR #164 Copilot fixes (b4b109a, coordinator): EN/FR descriptions say the interface and official ISED question banks are bilingual and the original lessons are English-only for now (counts EN 1,941/4,000, FR 2,504/4,000). The screenshot plan drops every question/session limit argument and the iPhone size-class override; the mock result shot uses a real submitted 100-question mock; iPad uses its native regular width.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
