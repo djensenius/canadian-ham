@@ -6,6 +6,8 @@ import { isMainModule } from "./cli.ts";
 
 const REPO_ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const SKIPPED_DIRECTORIES = new Set([".git", "node_modules", "dist", "build", "coverage", ".pnpm-store"]);
+// Gitignored local release output (archives contain bundled app copies of Markdown).
+const SKIPPED_RELATIVE_DIRECTORIES = new Set(["fastlane/archives", "fastlane/builds"]);
 
 export interface LinkIssue {
   readonly file: string;
@@ -150,8 +152,10 @@ async function findMarkdownFiles(root: string, current = root): Promise<string[]
   const files: string[] = [];
   for (const entry of entries) {
     if (entry.isDirectory()) {
-      if (!SKIPPED_DIRECTORIES.has(entry.name)) {
-        files.push(...await findMarkdownFiles(root, path.join(current, entry.name)));
+      const directory = path.join(current, entry.name);
+      const relativeDirectory = path.relative(root, directory).split(path.sep).join("/");
+      if (!SKIPPED_DIRECTORIES.has(entry.name) && !SKIPPED_RELATIVE_DIRECTORIES.has(relativeDirectory)) {
+        files.push(...await findMarkdownFiles(root, directory));
       }
     } else if (entry.isFile() && entry.name.endsWith(".md")) {
       files.push(path.join(current, entry.name));
