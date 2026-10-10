@@ -67,6 +67,8 @@ Three 47 ohm resistors are connected in series.
 - Answer: Rt = 141 ohms.
 - Sanity check: the string is near 140 ohms, before tolerance is considered.
 
+That series string can stand in for a single part near 140 ohms, if the tolerance and power ratings suit the circuit. Three resistors in series also share the heat, so each one dissipates a third of the total power.
+
 ## Parallel resistors make more paths
 
 In a parallel circuit, each branch is connected across the same voltage. Current can flow through each branch. The total current is the sum of the branch currents.

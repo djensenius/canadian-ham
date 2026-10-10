@@ -124,14 +124,14 @@ A field-effect transistor, usually shortened to FET, controls current through a 
 - drain: the terminal where carriers leave the channel; and
 - gate: the control terminal that changes channel conduction.
 
+The two channel polarities are N channel and P channel. Those names describe the semiconductor channel type between source and drain. Do not mix them up with NPN and PNP, which are bipolar transistor types.
+
 At a Basic level, the FET gate is treated as high impedance because it draws little or no steady current in normal operation. That makes FETs useful where a circuit should not load the previous stage heavily.
 
 ### Misconception: a FET gate is a low-resistance input
 
 - Mistaken idea: the gate behaves like a low-value resistor to the source.
 - Correction: at the Basic level, the gate is treated as high impedance and draws little steady current in normal operation.
-
-The two channel polarities are N channel and P channel. Those names describe the semiconductor channel type between source and drain. Do not mix them up with NPN and PNP, which are bipolar transistor types.
 
 ### Gate control and channel current
 

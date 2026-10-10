@@ -137,7 +137,7 @@ A resistor has green, blue, black, and brown bands.
 
 ## Tolerance ranges
 
-Tolerance is not an error you add on purpose. It is the allowed manufacturing variation around the nominal value. A smaller percentage means higher precision.
+Tolerance is not an error you add on purpose. It is the allowed manufacturing variation around the nominal value. A smaller percentage means higher precision. For example, a ±0.5% resistor is more precise than a ±10% resistor, because its allowed spread is narrower.
 
 For a tolerance range:
 
