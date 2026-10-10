@@ -423,13 +423,14 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let straightKey = app.buttons["morse-sending-straight-key-button"].firstMatch
         XCTAssertTrue(straightKey.waitForExistence(timeout: 10))
         straightKey.press(forDuration: 0.1)
-        tapCompactBack(in: app)
-        Thread.sleep(forTimeInterval: 2.0)
 
-        openSendingPractice(in: app)
+        openSendingExamStyleCheck(in: app)
+        Thread.sleep(forTimeInterval: 2.0)
+        tapCompactBack(in: app)
+
         let decoded = app.staticTexts["morse-sending-decoded-text"].firstMatch
         XCTAssertTrue(decoded.waitForExistence(timeout: 5))
-        XCTAssertTrue(decoded.label.hasSuffix("—"), "Leaving sending practice should cancel the delayed character finalization and clear pending samples, got: \(decoded.label)")
+        XCTAssertTrue(decoded.label.hasSuffix("—"), "Pushing away from sending practice should cancel the delayed character finalization and clear pending samples before the original view reappears, got: \(decoded.label)")
     }
 
     func testMorseExamGradingPushesResultsScreen() throws {
