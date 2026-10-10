@@ -1,11 +1,11 @@
 ---
 id: TASK-39.3
 title: 'Lesson text revision: M6 feedlines/antennas and M3 station/safety'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-10 23:04'
+updated_date: '2026-10-10 23:13'
 labels:
   - content
 dependencies:
@@ -33,6 +33,8 @@ Revise all lessons in m6-feedlines-antennas and m3-station-practice-safety to th
 
 <!-- SECTION:PLAN:BEGIN -->
 1. Revise M6 lessons first, preserving front matter and Illustration brief blocks while adding practical feedline, SWR, wavelength, antenna-length, tuner, and memory-trick teaching from docs/teaching-guide.md.\n2. Run the required content checks after the M6 slice, fix originality or coverage issues, record per-lesson fact/source notes, and commit the slice.\n3. Revise M3 lessons, preserving metadata and Illustration brief blocks while strengthening station block, power-supply, fusing, battery, grounding/bonding, electrical-code, and Safety Code 6 explanations with practical examples.\n4. Run the full required validation set, update pinned test expectations only if asserted text changed, finalize Backlog acceptance criteria with evidence, and commit the completed task.
+
+5. Address review r1 by doing a full plain-language rewrite pass across all 13 scoped lessons, fixing every technical, format, and task-record finding while preserving front matter and Illustration brief blocks.\n6. Rerun the required content and package checks, record finding-by-finding results, update the final summary, and move the task back to Done as the final change.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -43,6 +45,8 @@ M6 slice revised: L-006-01 adds practical seventy-five-ohm home coax versus fift
 M3 slice revised: L-003-01 adds real-world filter/dummy-load placement; L-003-02 adds chirp-from-power explanation; L-003-03 adds USB/data-interface level example and stored-charge LED caveat; L-003-04 adds waterfall/filter practical example; L-003-05 adds single-change signal-quality troubleshooting; L-003-06 adds headset/fan VOX example; L-003-07 adds 13.8 V x 19 A = 262.2 W station-supply example, P-over-I-E memory trick, source-fuse and fuse-not-shock-protection guidance; L-003-08 adds CSA C22.1 provincial/territorial code wording, fuse-shock misconception, and Safety Code 6 controlled/uncontrolled/no-exempt-transmitter scope. Facts checked against B-003-016, B-003-017, B-003-018, B-003-019, B-003-020, B-003-021 plus Safety Code 6 bank facts B-001-024-002, B-001-024-006, B-001-024-009 and docs/teaching-guide.md electrical-code note.
 
 Final validation: node packages/content-tools/src/check-lesson-coverage.ts passed (100/100 subsections); pnpm --dir packages/content-tools check:quizzes passed (36 quizzes, 504 official references, 78 concept checks); pnpm --dir packages/content-tools check:explanations passed (984 explanations); pnpm --dir packages/content-tools check:lesson-originality:all passed (0 issues); pnpm check:links passed; TZ=UTC pnpm test passed on final rerun (content-tools 108 tests, morse-engine 21 tests, web 152 tests; earlier web runs had transient loading timeouts and were rerun); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift passed (18 tests). A script confirmed front matter and Illustration brief blocks unchanged for all 13 scoped lesson files relative to merge base. No pinned test expectations were changed because the L-006-03 code-block assertion text remains present.
+
+Review r1 received REQUEST CHANGES. Reopened task for fixes. Findings to address: AC1 full rewrite needed for L-003-01 through L-003-06 and M6 prose; AC2 concrete examples/worked numbers needed; fix SWR percentages, battery/charger/fuse examples, supply-sag chirp, grounding/bonding example, VOX first-syllable advice, VHF 150/f exam convention, 262.2 W caveat, Yagi polarization wording, reflected-power grammar, double rounding, Try it #3 calculation, callout placement, term definitions, x/ohms style, and task-note overclaims.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
