@@ -88,6 +88,7 @@ Standard phonetic words give every listener the same spelling system. On repeate
 
 - Helps remember: formal call-sign spelling uses the ITU words, not homemade words.
 - Trick: practise your own call sign first, then practise common letters that sound alike, such as B, D, E, G, P, and V.
+- Full ITU alphabet: Alfa, Bravo, Charlie, Delta, Echo, Foxtrot, Golf, Hotel, India, Juliett, Kilo, Lima, Mike, November, Oscar, Papa, Quebec, Romeo, Sierra, Tango, Uniform, Victor, Whiskey, X-ray, Yankee, Zulu.
 - Limit: this trick helps with practice, but the formal words are fixed. Do not replace ITU words with homemade words for identification.
 
 ## Calling on voice

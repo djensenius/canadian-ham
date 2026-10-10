@@ -70,7 +70,7 @@ A station unable to provide direct help still has a role. It can relay accurate 
 
 ### In the real world: the first distress break-in
 
-A useful break-in is short and factual. In a life-threatening situation, use the distress word first, then give your call sign, location, and the help needed. After that, pause for the station or net control that can organize assistance.
+A useful break-in is short and factual. In a life-threatening situation, say MAYDAY three times first, then give your call sign, location, and the help needed. After that, pause for the station or net control that can organize assistance.
 
 The goal is not a polished speech. The goal is enough accurate information for other stations to clear the channel and contact help.
 

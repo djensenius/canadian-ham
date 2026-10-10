@@ -28,7 +28,9 @@ status: draft
 
 Privileges set the operating edge of the certificate. They answer who may control the station, which frequencies are available, how wide the signal may be, how much power may be used, and which station-quality requirements apply.
 
-This lesson uses reference tables for official facts and prose for relationships. Pay special attention to measurement words. Peak envelope power (PEP) describes the crest of an SSB voice envelope. Effective radiated power (ERP) includes antenna-system gain compared with a reference dipole. Effective isotropic radiated power (EIRP) uses an ideal isotropic radiator as the reference.
+This lesson uses reference tables for official facts and prose for relationships. Pay special attention to measurement words.
+
+Peak envelope power (PEP) describes the crest of an SSB voice envelope. Effective radiated power (ERP) includes antenna-system gain compared with a reference dipole. Equivalent isotropically radiated power (EIRP) uses an ideal isotropic radiator as the reference.
 
 ## Learning objectives
 
@@ -117,7 +119,7 @@ Power rows attach a number to a measurement point and quantity. DC input is elec
 
 The minimum-power rule and numeric ceilings work together with RF-exposure and radiated-power limits. Choose the measurement quantity first, then compare it at the correct point in the station.
 
-Repeater and signal-quality rows explain station behaviour after the frequency and power checks. Automatic retransmission defines a repeater. Brief unmodulated-carrier tests are narrow, and voice operation still needs frequency stability, reliable frequency measurement, and overmodulation control.
+Repeater and signal-quality rows explain station behaviour after the frequency and power checks. Automatic retransmission defines a repeater. An unmodulated carrier is allowed only for brief tests below 30 MHz. Voice operation still needs frequency stability, reliable frequency measurement, and overmodulation control.
 
 ### Memory trick: Basic power stays Basic
 

@@ -107,7 +107,7 @@ Exam rows describe a path. Basic is the first amateur qualification. After the c
 ### Memory trick: life record, address-change notice
 
 - Helps remember: certificate validity and the mailing-address duty are different facts.
-- Trick: think "life for the certificate, one notice after an address change."
+- Trick: think "life for the certificate, 30 days to report a mailing-address change." The same number, 30, also appears in station identification (minutes between IDs).
 - Limit: this is a memory cue only. Use the table when you need the exact deadline in days.
 
 ## Radio connection

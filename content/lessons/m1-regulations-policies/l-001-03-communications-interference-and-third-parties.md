@@ -121,7 +121,7 @@ Third-party and visiting-operator rows add two questions. Who is the message for
 ### Memory trick: start, stop, and the interval check
 
 - Helps remember: station identification timing.
-- Trick: identify when the contact starts, when it stops, and before any longer contact or test runs more than the allowed interval without identification.
+- Trick: identify when the contact starts, when it stops, and at least every 30 minutes in between. 30 is easy to pair with the 30-day address-change notice.
 - Limit: this does not replace the language and model-control rows in the table.
 
 ## Radio connection
