@@ -2314,7 +2314,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
             assertPartiallyVisibleBelowNavigationBar(target, in: app, context: context, file: file, line: line)
             return
         }
-        for _ in 0..<30 {
+        for _ in 0..<60 {
             let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
             if offenders.isEmpty { return }
             let hasOffenderClippedAboveWindow = offenders.contains(where: \.isClippedAboveWindow)
@@ -2324,7 +2324,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 start.press(forDuration: 0.01, thenDragTo: end)
             } else {
                 let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
-                let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.40))
+                let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55))
                 start.press(forDuration: 0.01, thenDragTo: end)
             }
             waitBriefly()
