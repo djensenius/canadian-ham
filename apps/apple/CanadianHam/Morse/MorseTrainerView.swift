@@ -589,7 +589,7 @@ struct MorseSettingsSection: View {
             }
             if let fixedTimingDescription {
                 Text(fixedTimingDescription) // l10n: localized
-                    .font(DesignTokens.FontScale.body.weight(.semibold))
+                    .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .padding(DesignTokens.Spacing.sm)
                     .background(DesignTokens.Colors.paper, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous))
