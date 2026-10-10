@@ -68,52 +68,70 @@ If a resistor has no separate tolerance band, treat the tolerance as ±20%.
 
 This table is a reference aid. Real exam reference material may provide a colour-code table, and real bench work often uses a meter to confirm the part.
 
+### Memory trick: colour order
+
+- Helps remember: the digit order from 0 to 9.
+- Trick: black, brown, red, orange, yellow, green, blue, violet, grey, white can be remembered as "Better Be Right Or Your Great Big Venture Goes Wrong."
+- Limit: the sentence only helps with order. You still need the band position to know whether a colour is a digit, multiplier, or tolerance.
+
+An offensive historical colour-code mnemonic exists. Never quote it or use it for teaching.
+
 ## Worked examples
+
+### Worked example: yellow violet red gold
+
+A resistor has yellow, violet, red, and gold bands.
+
+- Given: yellow = 4; violet = 7; red multiplier = x 100; gold tolerance = ±5%.
+- Find: nominal resistance and tolerance range.
+- Formula: value = two-digit number x multiplier; tolerance amount = value x 0.05.
+- Substitute: value = 47 x 100 = 4 700 ohms; tolerance amount = 4 700 x 0.05 = 235 ohms.
+- Answer: nominal value = 4.7 kilohms; range = 4 465 ohms to 4 935 ohms.
+- Sanity check: red as a multiplier adds two zeros to 47, so the value is in kilohms.
+
+### Worked example: red red brown gold
+
+A resistor has red, red, brown, and gold bands.
+
+- Given: red = 2; red = 2; brown multiplier = x 10; gold tolerance = ±5%.
+- Find: nominal resistance and tolerance range.
+- Formula: value = two-digit number x multiplier; tolerance amount = value x 0.05.
+- Substitute: value = 22 x 10 = 220 ohms; tolerance amount = 220 x 0.05 = 11 ohms.
+- Answer: nominal value = 220 ohms; range = 209 ohms to 231 ohms.
+- Sanity check: brown as a multiplier adds one zero to 22.
 
 ### Worked example: brown black orange gold
 
-Read the bands in order:
+A resistor has brown, black, orange, and gold bands.
 
-- brown = 1;
-- black = 0;
-- orange multiplier = x 1 000; and
-- gold tolerance = ±5%.
-
-The first two bands make 10. Apply the multiplier:
-
-10 x 1 000 = 10 000 ohms.
-
-So the nominal value is 10 kilohms, with a tolerance of ±5%.
+- Given: brown = 1; black = 0; orange multiplier = x 1 000; gold tolerance = ±5%.
+- Find: nominal resistance.
+- Formula: value = two-digit number x multiplier.
+- Substitute: value = 10 x 1 000.
+- Answer: value = 10 000 ohms, or 10 kilohms.
+- Sanity check: orange as a multiplier moves the value into kilohms.
 
 ### Worked example: blue grey brown silver
 
-Read the bands in order:
+A resistor has blue, grey, brown, and silver bands.
 
-- blue = 6;
-- grey = 8;
-- brown multiplier = x 10; and
-- silver tolerance = ±10%.
-
-The first two bands make 68. Apply the multiplier:
-
-68 x 10 = 680 ohms.
-
-So the nominal value is 680 ohms, with a tolerance of ±10%.
+- Given: blue = 6; grey = 8; brown multiplier = x 10; silver tolerance = ±10%.
+- Find: nominal resistance.
+- Formula: value = two-digit number x multiplier.
+- Substitute: value = 68 x 10.
+- Answer: value = 680 ohms.
+- Sanity check: the silver band is tolerance, not another digit.
 
 ### Worked example: green blue black brown
 
-Read the bands in order:
+A resistor has green, blue, black, and brown bands.
 
-- green = 5;
-- blue = 6;
-- black multiplier = x 1; and
-- brown tolerance = ±1%.
-
-The first two bands make 56. Apply the multiplier:
-
-56 x 1 = 56 ohms.
-
-So the nominal value is 56 ohms, with a tolerance of ±1%.
+- Given: green = 5; blue = 6; black multiplier = x 1; brown tolerance = ±1%.
+- Find: nominal resistance.
+- Formula: value = two-digit number x multiplier.
+- Substitute: value = 56 x 1.
+- Answer: value = 56 ohms.
+- Sanity check: black as a multiplier means the two-digit value stays unchanged.
 
 ## Tolerance ranges
 
@@ -127,19 +145,16 @@ low end = nominal value - allowed change
 
 high end = nominal value + allowed change
 
-### Worked example: tolerance around a nominal value
+### In the real world: check a part before soldering
 
-A 220 ohm resistor has a ±5% tolerance.
+Suppose a kit calls for 4.7 kilohms in an audio filter. Yellow-violet-red-gold is a likely match, but brown-black-red-gold would be 1.0 kilohm and would change the circuit.
 
-- Convert 5% to 0.05.
-- allowed change = 220 x 0.05.
-- allowed change = 11 ohms.
-- low end = 220 - 11 = 209 ohms.
-- high end = 220 + 11 = 231 ohms.
+Read the colour bands first. Then confirm critical values with an ohmmeter, especially if the bands are faded or the body colour makes violet, blue, and grey hard to tell apart.
 
-So a part in that tolerance class could measure from 209 ohms to 231 ohms and still match its nominal rating.
+### Misconception: tolerance is a setting
 
-Higher precision means the allowed band is narrower. For example, a ±0.1% resistor is more precise than a ±5% resistor because its allowed percentage variation is smaller. A ±20% resistor is much less precise because it permits a wider spread.
+- Mistaken idea: a 5% tolerance means you should add 5% to the value when installing the part.
+- Correction: tolerance is the allowed manufacturing range around the nominal value. You do not add it on purpose.
 
 ## What the colour code does not tell you
 
@@ -151,6 +166,11 @@ Temperature coefficient describes how resistance changes as temperature changes.
 
 Ohmic value is simply the nominal resistance in ohms. Tolerance is the permitted percentage variation. Power rating is the heat rating. Temperature coefficient is drift with temperature. Keep those four labels separate.
 
+### Misconception: same ohms means same power rating
+
+- Mistaken idea: every 220 ohm resistor can handle the same heat.
+- Correction: ohmic value and wattage rating are separate. A small 220 ohm part and a large 220 ohm part can have very different power ratings.
+
 ## Differentiating similar values
 
 The band that changes depends on which part of the value changes.
@@ -159,23 +179,31 @@ If two resistors have the same multiplier and the same first digit but different
 
 ### Worked example: same digits, different multiplier
 
-A resistor marked yellow violet brown has value digits 4 and 7, with multiplier x 10:
+A resistor marked yellow violet brown has value digits 4 and 7, with multiplier x 10.
 
-47 x 10 = 470 ohms.
+- Given: yellow = 4; violet = 7; brown multiplier = x 10.
+- Find: nominal value.
+- Formula: value = two-digit number x multiplier.
+- Substitute: value = 47 x 10.
+- Answer: value = 470 ohms.
+- Sanity check: the brown multiplier adds one zero.
 
-A resistor marked yellow violet red has the same value digits, but multiplier x 100:
+A resistor marked yellow violet red has the same value digits, but multiplier x 100.
 
-47 x 100 = 4 700 ohms.
-
-Only the multiplier band changed, so the nominal resistance changed by a factor of ten.
+- Given: yellow = 4; violet = 7; red multiplier = x 100.
+- Find: nominal value.
+- Formula: value = two-digit number x multiplier.
+- Substitute: value = 47 x 100.
+- Answer: value = 4 700 ohms.
+- Sanity check: only the multiplier band changed, so the nominal resistance changed by a factor of ten.
 
 ## Try it
 
-1. Orange orange brown gold: digits 3 and 3, multiplier x 10, so nominal value is 330 ohms with ±5% tolerance.
-2. Yellow violet orange gold: digits 4 and 7, multiplier x 1 000, so nominal value is 47 kilohms with ±5% tolerance.
-3. Brown green black brown: digits 1 and 5, multiplier x 1, so nominal value is 15 ohms with ±1% tolerance.
-4. A ±1% part is more precise than a ±10% part because the allowed percentage spread is smaller.
-5. If two resistors share the same first two digit bands but one has a larger multiplier, the multiplier band is what changed the value.
+- Orange orange brown gold: digits 3 and 3, multiplier x 10, so nominal value is 330 ohms with ±5% tolerance.
+- Yellow violet orange gold: digits 4 and 7, multiplier x 1 000, so nominal value is 47 kilohms with ±5% tolerance.
+- Brown green black brown: digits 1 and 5, multiplier x 1, so nominal value is 15 ohms with ±1% tolerance.
+- A ±1% part is more precise than a ±10% part because the allowed percentage spread is smaller.
+- If two resistors share the same first two digit bands but one has a larger multiplier, the multiplier band is what changed the value.
 
 ## Radio connection
 
@@ -191,6 +219,7 @@ On the bench, colour-code reading is a first pass. Confirm critical parts with a
 - Assuming a resistor with the same ohmic value always has the same power rating.
 - Thinking every resistor increases in value as it warms. The direction and size of change depend on temperature coefficient.
 - Confusing higher precision with a larger percentage. Higher precision means a smaller tolerance percentage.
+- Quoting or repeating offensive colour-code mnemonics. Use the inoffensive order aid above or the reference table instead.
 
 ## Illustration brief
 
@@ -207,3 +236,4 @@ Description: Draw a simple horizontal resistor in ink brush style. Put four band
 - Power rating, tolerance, ohmic value, and temperature coefficient are different ratings.
 - Temperature coefficient determines how resistance changes with temperature.
 - Use a meter when the value is critical or the colour bands are hard to read.
+- Use the inoffensive colour-order memory trick only as an aid, not as a substitute for checking the table.

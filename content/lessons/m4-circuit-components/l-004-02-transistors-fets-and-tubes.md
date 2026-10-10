@@ -52,13 +52,25 @@ The three electrodes are:
 
 In many common explanations, a small base current controls a larger collector-emitter current. That is enough to understand why a transistor can act as an amplifier. A small changing input at the base can produce a larger changing output in the collector circuit, as long as the transistor is biased in its active region.
 
+### Memory trick: transistor terminal jobs
+
+- Helps remember: the bipolar terminal names.
+- Trick: the emitter emits carriers, the base controls, and the collector collects.
+- Limit: the phrase helps with names only. It does not replace polarity, bias, or datasheet checks.
+
 ### NPN and PNP polarity
 
 The two main bipolar polarities are NPN and PNP. They are not drop-in replacements for each other because the required polarities are reversed. A circuit designed for one type has its supply, signal, and bias directions arranged for that type.
 
 A useful memory aid is the emitter-arrow symbol. In an NPN symbol, the emitter arrow points out. In a PNP symbol, the emitter arrow points in. The arrow is part of the schematic symbol and helps prevent mixing the two in a real circuit.
 
-### Worked example: transistor as a small audio amplifier
+### Memory trick: NPN arrow
+
+- Helps remember: the NPN emitter arrow direction.
+- Trick: NPN can mean "not pointing in." The NPN emitter arrow points out.
+- Limit: this only helps read the symbol. It does not identify a loose transistor package without its part number or datasheet.
+
+### In the real world: transistor as a small audio amplifier
 
 A simple audio preamplifier receives a 12 mV microphone signal. Its transistor is biased so the base signal makes the collector current vary smoothly. The output taken from the collector circuit is a larger audio voltage with the same speech pattern.
 
@@ -72,11 +84,29 @@ A switching transistor is often used to control a relay, lamp, fan, or logic sig
 
 Heat is a common way to destroy semiconductors. Too much current, too much voltage, poor heat sinking, or incorrect bias can raise the device temperature beyond its rating. Saturation and cut-off are useful operating states for switching; excessive heat is a failure condition.
 
-### Worked example: switching a cooling fan
+### In the real world: relay switch with a flyback diode
+
+A 3.3 V control pin can drive an NPN transistor through a base resistor. The transistor then switches a separate 12 V relay coil, if the relay and transistor ratings allow it.
+
+- Given: control E = 3.3 V; base-emitter drop is about 0.7 V; base resistor = 560 ohms.
+- Find: base current.
+- Formula: I = resistor E / R.
+- Substitute: I = (3.3 V - 0.7 V) / 560 ohms = 2.6 V / 560 ohms.
+- Answer: I = 0.0046 A, or 4.6 mA.
+- Sanity check: a few milliamperes is reasonable for a small control output, but the transistor datasheet still decides what load it can switch.
+
+A relay coil is an inductor. When the transistor turns off, the coil can make a voltage spike. A flyback diode across a DC relay coil gives that current a safe path and helps protect the transistor.
+
+### In the real world: switching a cooling fan
 
 A microcontroller output cannot supply a station accessory fan directly. It drives a resistor connected to a transistor base instead. When the base drive is present, the collector-emitter path conducts and the fan runs. When the base drive is removed, the transistor turns off and the fan stops.
 
 The small control signal is not doing the fan's work by itself. It is controlling current from the supply through the transistor and fan.
+
+### Misconception: saturation is always bad
+
+- Mistaken idea: a saturated transistor is always faulty.
+- Correction: saturation is often the intended on state for a switching transistor. It is not the same as overheating.
 
 ## Field-effect transistors: voltage-controlled channel devices
 
@@ -96,11 +126,16 @@ In a junction FET style explanation, reverse bias at the gate narrows the channe
 
 The source of a FET corresponds roughly to the emitter of a bipolar transistor. The drain corresponds roughly to the collector. The gate corresponds to the base as the control terminal, while remembering that gate current is normally much smaller.
 
-### Worked example: high-impedance sensing
+### In the real world: high-impedance sensing
 
 Suppose a receiver accessory samples a tuned circuit without wanting to disturb it. A FET input stage can be a good choice because its gate takes very little current. The tuned circuit sees a light load, while the FET output can drive the next stage more comfortably.
 
 This is why the phrase high impedance is so closely associated with FET input circuits.
+
+### Misconception: a FET gate is a low-resistance input
+
+- Mistaken idea: the gate behaves like a low-value resistor to the source.
+- Correction: at the Basic level, a FET gate is treated as high impedance and draws little steady current in normal operation.
 
 ## Triode vacuum tubes
 
@@ -110,6 +145,12 @@ The output current path in a triode is between cathode and plate. The control el
 
 Vacuum tubes are larger, run hotter, and usually require higher voltages than semiconductor transistors. They still appear in some RF power amplifiers and specialist equipment because a suitable tube can handle high RF power and high voltage. That does not make tubes automatically better; it means the device family has strengths in particular jobs.
 
+### In the real world: why tube amplifiers need caution
+
+A tube RF amplifier may keep high voltage on capacitors after power is turned off. That stored energy can be dangerous. Service instructions, bleeder resistors, and safe discharge procedures matter.
+
+For Basic study, the key point is simpler: cathode, grid, and plate identify a triode, and the grid is the control element.
+
 ### Tube and FET similarity
 
 A FET often feels more like a tube than a bipolar transistor does because both use an electric field at a control terminal to influence a current path. A triode grid controls electron flow through a vacuum; a FET gate controls conduction through a semiconductor channel.
@@ -118,11 +159,11 @@ The materials are completely different, but the control analogy helps with exam-
 
 ## Try it
 
-1. An NPN symbol in a driver circuit has its emitter arrow pointing away from the base. Use the arrow to confirm the part family and polarity before replacing it.
-2. A sensor node must watch a tuned circuit without drawing much current from it. Choose a FET input stage and explain that the gate is the light-loading control terminal.
-3. A circuit drives a transistor fully on and fully off to operate a relay. Name the role: electronic switch.
-4. A high-power RF stage uses a hot glass device whose grid voltage changes the current drawn by the plate. Explain which element is doing the controlling and why high voltage caution matters.
-5. A circuit was biased for an N-channel FET, but the parts drawer has only a P-channel device. Do not assume it is a drop-in substitute; the channel type and bias polarity matter.
+- An NPN symbol in a driver circuit has its emitter arrow pointing away from the base. Use the arrow to confirm the part family and polarity before replacing it.
+- A sensor node must watch a tuned circuit without drawing much current from it. Choose a FET input stage and explain that the gate is the light-loading control terminal.
+- A circuit drives a transistor fully on and fully off to operate a relay. Name the role: electronic switch.
+- A high-power RF stage uses a hot glass device whose grid voltage changes the current drawn by the plate. Explain which element is doing the controlling and why high voltage caution matters.
+- A circuit was biased for an N-channel FET, but the parts drawer has only a P-channel device. Do not assume it is a drop-in substitute; the channel type and bias polarity matter.
 
 ## Radio connection
 
@@ -150,6 +191,7 @@ Description: Draw three ink-brush component sketches. Label the bipolar transist
 - Bipolar transistors use collector, base, and emitter terminals.
 - NPN and PNP devices require opposite circuit polarities.
 - A bipolar transistor can amplify in its active region or switch between cut-off and saturation.
+- A transistor can switch a relay or fan when ratings and protection parts are chosen correctly.
 - A FET uses gate, source, and drain terminals; the gate controls channel conduction.
 - FET gates are treated as high-impedance inputs in normal operation.
 - In FET-to-bipolar comparisons, source is like emitter and drain is like collector.
