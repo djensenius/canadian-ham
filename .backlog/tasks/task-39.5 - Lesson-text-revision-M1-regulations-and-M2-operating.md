@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-10 23:28'
+updated_date: '2026-10-10 23:34'
 labels:
   - content
 dependencies:
@@ -54,6 +54,8 @@ Review r1 fixes, finding by finding: 1 fixed by changing the S-unit example from
 Review r1 validation passed: node packages/content-tools/src/check-lesson-coverage.ts; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:explanations; pnpm check:links; TZ=UTC pnpm test; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift. Pinned L-005-01 and L-006-03 expectations were not updated because those lessons/tests were not touched.
 
 Review r2 (APPROVE WITH NOTES): coordinator applied the notes: EIRP spelled as in the bank (equivalent isotropically radiated power, B-001-017-008); full ITU alphabet restored in the l-002-01 memory trick; MAYDAY named in the l-002-03 break-in; unmodulated carrier 'only for brief tests below 30 MHz'; M1 tricks cue 30 (30-day address notice B-001-002-001/-003; 30-minute ID); l-001-04 intro split. Coverage, quizzes, originality :all, explanations and links pass.
+
+Taught-facts regression review (fx39-5): coordinator restored: a repeater increases the range of portable and mobile stations (B-002-001-002); output limits are checked at the transmitter or external amplifier output, before feedline or tuner (B-001-017-003 reasoning); distress break-in 'between transmissions' (B-002-008-005). Checks pass.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
