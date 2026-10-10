@@ -1,9 +1,11 @@
 ---
 id: TASK-36
 title: Apple bundles exclude content README.md files
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-10 17:18'
+updated_date: '2026-10-10 18:48'
 labels:
   - apple
 dependencies: []
