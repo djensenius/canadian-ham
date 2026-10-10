@@ -607,6 +607,7 @@ struct MorseSettingsSection: View {
                 update(settings.applyingISEDExamPreset())
             }
         }
+        .background(DesignTokens.Colors.paper, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous))
     }
 
     private func binding<Value>(_ keyPath: WritableKeyPath<MorseTrainerSettings, Value>) -> Binding<Value> {
