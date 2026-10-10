@@ -1,11 +1,11 @@
 ---
 id: TASK-39.2
 title: 'Lesson text revision: M5 basic electronics and M4 components'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:14'
-updated_date: '2026-10-10 23:05'
+updated_date: '2026-10-10 23:13'
 labels:
   - content
 dependencies:
@@ -32,10 +32,9 @@ Revise all lessons in m5-basic-electronics and m4-circuit-components to the teac
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Revise M5 lesson bodies first, preserving front matter, quiz IDs, and each Illustration brief while adding practical examples, worked numbers, vetted memory tricks, and misconception notes.
-2. Run the required content checks after M5 and record per-lesson notes with checked question IDs.
-3. Revise M4 lesson bodies with component-focused examples: diodes, transistor switching, wall-wart context, capacitors/inductors, and resistor colour mnemonic.
-4. Run the required checks after M4 and at final, update pinned expectations only if text changes require it, then finalize Backlog acceptance criteria.
+1. Address every r1 finding in the scoped lesson prose while preserving front matter, coverage, quiz IDs, and Illustration brief sections.
+2. Run a real readability pass over all 8 existing lessons: split long sentences, define E12/Ah/Wh/bleeder resistors and unclear terms, remove premature or duplicate callouts, and keep examples original.
+3. Rerun the full required content/test command set, compare front matter/Illustration briefs against merge-base, record finding-by-finding notes, then set Done last.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -46,6 +45,8 @@ M5 pass: revised L-005-01 through L-005-05. Added prefix, Ohm/power and meter me
 M4 pass: revised L-004-01 through L-004-03. Added diode symbol/protection memory aid, USB and 9 V LED resistor examples with E12/power checks, NPN/terminal memory aids, transistor relay switch with flyback diode, tube safety context, and resistor colour-code mnemonic/examples including 4.7 kilohm and 220 ohm tolerance ranges. Facts checked against B-004-001 through B-004-006 and teaching-guide example bank; no regulatory facts added. Required checks after M4 all passed.
 
 Final validation: coverage, quiz, explanation, originality, link, TZ=UTC pnpm test, and Swift content package tests all passed after M5 and again after M4/final. Script comparison against merge-base confirmed all 8 scoped lesson front matter blocks and Illustration brief sections are unchanged. Pinned L-005-01 tests still pass without expected-value updates.
+
+Reviving for review r1 fixes: set task back to In Progress before edits. Will fix all Must fix, Should fix, and Minor notes unless explicitly answered in notes.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
