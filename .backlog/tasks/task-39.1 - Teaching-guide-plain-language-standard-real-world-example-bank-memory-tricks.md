@@ -3,11 +3,11 @@ id: TASK-39.1
 title: >-
   Teaching guide: plain-language standard, real-world example bank, memory
   tricks
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:14'
-updated_date: '2026-10-10 22:24'
+updated_date: '2026-10-10 22:32'
 labels:
   - content
   - docs
@@ -52,6 +52,8 @@ Implemented docs/teaching-guide.md. Verification evidence:
 - Checked diode, resistor colour-code, Ohm/power, series/parallel battery, reactance/ferrite, wavelength, SWR, tuner, low-pass-filter, and propagation claims against the question IDs cited inline in the guide.
 - Corrected research-brief errors: Honours does not raise power to Advanced limits; 2.45 GHz has 12.2 cm wavelength but is in the 13 cm amateur region; invented mnemonic/source attributions were replaced with common/traditional source status; Break Break is not taught as casual entry; 146.520 MHz and 70 cm offsets were not treated as exam-bank facts; universal fuse-margin claims were dropped.
 - Validation passed: pnpm check:links; pnpm typecheck; cited-QID existence script. No docs/Markdown lint script exists in package.json scripts.
+
+Review r1 fixes started: addressing all 18 findings from ~/.cache/canadian-ham-reviews/t39-1-r1.md.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
