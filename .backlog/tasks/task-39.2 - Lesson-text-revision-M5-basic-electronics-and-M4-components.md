@@ -1,11 +1,11 @@
 ---
 id: TASK-39.2
 title: 'Lesson text revision: M5 basic electronics and M4 components'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:14'
-updated_date: '2026-10-10 23:19'
+updated_date: '2026-10-10 23:29'
 labels:
   - content
 dependencies:
@@ -59,6 +59,8 @@ Review r1 fixes:
 - Should 8 fixed: prefix memory trick now matches the table and omits nano.
 - Minor notes fixed: conductance wording clarified; L-005-03 uses output E instead of Vout and explains battery series/parallel directly; L-005-05 turns-ratio direction and wall-wart VA/loss caveats revised; LED resistor power rounded consistently; repeated offensive-mnemonic warning reduced; duplicate misconception/common-mistake repeats removed or reworded; M4 and L-005-03 Try it sections are numbered.
 - Validation: final full run passed coverage, quizzes, lesson originality all, explanations, check:links, TZ=UTC pnpm test, and Swift content package tests. An interim Swift run failed after splitting the L-005-01 intro into a new paragraph; I restored the asserted block structure without weakening tests, and the final Swift run passed. Front matter and Illustration brief sections were script-compared against merge-base and remained unchanged.
+
+Reviving for review r2 fixes: set task back to In Progress. Will fix prefix-ladder skip rule, restore L-004-02 misconception callouts without duplicate Common-mistakes bullets, align turns-ratio wording, fix partial/new low notes, run taught-facts self-check for every lesson changed, and report the frozen L-005-01 Illustration brief ladder-arrow issue as a task-38 follow-up.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
