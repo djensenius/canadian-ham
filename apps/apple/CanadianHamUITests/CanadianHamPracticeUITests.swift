@@ -1463,7 +1463,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app.swipeUp()
         waitBriefly()
         XCTAssertTrue(isPartiallyVisibleBelowNavigationBar(feedback, in: app), "\(appearance.rawValue) sending feedback should be positioned before settling")
-        settleScrollableContentBelowNavigationBar(in: app, context: "Morse sending main screen lower half \(appearance)")
+        settleScrollableContentBelowNavigationBar(in: app, context: "Morse sending main screen lower half \(appearance)", preserving: feedback)
         assertPartiallyVisibleBelowNavigationBar(feedback, in: app, context: "\(appearance.rawValue) sending feedback after settling")
         try performAudit(on: app, context: "Morse sending main screen lower half \(appearance)")
     }
@@ -1723,7 +1723,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let settings = app.staticTexts["Morse settings"].firstMatch
         scrollMorseHomeLowerContentIntoView(in: app)
         XCTAssertTrue(isPartiallyVisibleBelowNavigationBar(settings, in: app), "\(appearance.rawValue) Morse settings should be positioned before settling")
-        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse home lower content")
+        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse home lower content", preserving: settings)
         assertPartiallyVisibleBelowNavigationBar(settings, in: app, context: "\(appearance.rawValue) Morse settings after settling")
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home lower content")
         openMorseCourse(in: app)
@@ -1732,7 +1732,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let lastUnit = app.buttons["morse-course-unit-8"].firstMatch
         scrollToMorseCourseLastUnit(in: app)
         XCTAssertTrue(isPartiallyVisibleBelowNavigationBar(lastUnit, in: app), "\(appearance.rawValue) final Morse course unit should be positioned before settling")
-        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse course home lower units")
+        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse course home lower units", preserving: lastUnit)
         assertPartiallyVisibleBelowNavigationBar(lastUnit, in: app, context: "\(appearance.rawValue) final Morse course unit after settling")
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home lower units")
 
@@ -2283,12 +2283,35 @@ final class CanadianHamPracticeUITests: XCTestCase {
     private func settleScrollableContentBelowNavigationBar(
         in app: XCUIApplication,
         context: String,
+        preserving target: XCUIElement? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
         let scrollView = app.scrollViews.firstMatch
         guard scrollView.waitForExistence(timeout: 1) else {
             XCTFail("\(context): expected a scroll view before settling content below the navigation bar", file: file, line: line)
+            return
+        }
+        if let target {
+            for _ in 0..<40 {
+                let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
+                if offenders.isEmpty, isPartiallyVisibleBelowNavigationBar(target, in: app) { return }
+                let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+                if target.exists, target.frame.maxY <= visibleFrame.minY {
+                    scrollView.swipeDown()
+                } else {
+                    scrollView.swipeUp()
+                }
+                waitBriefly()
+            }
+            let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
+            XCTAssertTrue(
+                offenders.isEmpty,
+                "\(context): expected no scrollable text or buttons to intersect the protected navigation/status area; offenders: \(offenders.map(\.description).joined(separator: "; "))",
+                file: file,
+                line: line
+            )
+            assertPartiallyVisibleBelowNavigationBar(target, in: app, context: context, file: file, line: line)
             return
         }
         for _ in 0..<30 {
