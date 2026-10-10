@@ -1772,6 +1772,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
         settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse home lower content", preserving: fixedTimingNote, preserveFullyVisible: true)
         assertFullyVisibleBelowNavigationBar(fixedTimingNote, in: app, context: "\(appearance.rawValue) fixed timing note after settling")
         assertPartiallyVisibleBelowNavigationBar(settings, in: app, context: "\(appearance.rawValue) Morse settings after settling")
+        positionElementInMiddleVisibleBand(fixedTimingNote, in: app, context: "\(appearance.rawValue) fixed timing note before lower Morse audit")
+        assertFullyVisibleInMiddleBand(fixedTimingNote, in: app, context: "\(appearance.rawValue) fixed timing note before lower Morse audit")
+        assertPartiallyVisibleBelowNavigationBar(settings, in: app, context: "\(appearance.rawValue) Morse settings before lower Morse audit")
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home lower content")
         openMorseCourse(in: app)
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
@@ -2328,6 +2331,37 @@ final class CanadianHamPracticeUITests: XCTestCase {
         }
     }
 
+    private func positionElementInMiddleVisibleBand(
+        _ element: XCUIElement,
+        in app: XCUIApplication,
+        context: String,
+        maxSwipes: Int = 10,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let scrollView = scrollView(containing: element, in: app)
+        guard scrollView.waitForExistence(timeout: 1) else {
+            XCTFail("\(context): expected a scroll view before positioning element in the visible audit band", file: file, line: line)
+            return
+        }
+        for _ in 0..<maxSwipes where !isFullyVisibleInMiddleBand(element, in: app) {
+            let frame = element.frame
+            let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+            let bottomLimit = middleBandBottomLimit(in: app)
+            if frame.maxY > bottomLimit {
+                scrollView.swipeUp()
+            } else if frame.minY < visibleFrame.minY {
+                scrollView.swipeDown()
+            } else if !visibleFrame.contains(frame) {
+                scrollView.swipeUp()
+            } else {
+                break
+            }
+            waitBriefly()
+        }
+        assertFullyVisibleInMiddleBand(element, in: app, context: context, file: file, line: line)
+    }
+
     private func settleScrollableContentBelowNavigationBar(
         in app: XCUIApplication,
         context: String,
@@ -2480,6 +2514,39 @@ final class CanadianHamPracticeUITests: XCTestCase {
         guard element.exists else { return false }
         if requiresHittable && !element.isHittable { return false }
         return visibleFrameExcludingNavigationBar(in: app).contains(element.frame)
+    }
+
+    private func isFullyVisibleInMiddleBand(_ element: XCUIElement, in app: XCUIApplication) -> Bool {
+        guard element.exists else { return false }
+        let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+        let bottomLimit = middleBandBottomLimit(in: app)
+        let band = CGRect(
+            x: visibleFrame.minX,
+            y: visibleFrame.minY,
+            width: visibleFrame.width,
+            height: max(0, bottomLimit - visibleFrame.minY)
+        )
+        return band.contains(element.frame)
+    }
+
+    private func assertFullyVisibleInMiddleBand(
+        _ element: XCUIElement,
+        in app: XCUIApplication,
+        context: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        XCTAssertTrue(
+            isFullyVisibleInMiddleBand(element, in: app),
+            "\(context) should be fully visible below the navigation bar and clear of the bottom safe area. Frame: \(frameDescription(element.frame))",
+            file: file,
+            line: line
+        )
+    }
+
+    private func middleBandBottomLimit(in app: XCUIApplication) -> CGFloat {
+        let windowFrame = app.windows.firstMatch.frame
+        return windowFrame.maxY - (windowFrame.height * 0.15)
     }
 
     private func visibleFrameExcludingNavigationBar(in app: XCUIApplication) -> CGRect {
