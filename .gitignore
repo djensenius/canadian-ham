@@ -16,6 +16,7 @@ xcuserdata/
 .swiftpm/
 fastlane/archives/
 fastlane/builds/
+fastlane/report.xml
 fastlane/test_output/
 
 # Editor / tooling cruft
@@ -24,5 +25,3 @@ fastlane/test_output/
 *.swp
 *.swo
 *~
-
-fastlane/report.xml
