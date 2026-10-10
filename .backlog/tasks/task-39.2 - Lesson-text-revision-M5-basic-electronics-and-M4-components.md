@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:14'
-updated_date: '2026-10-10 22:52'
+updated_date: '2026-10-10 23:01'
 labels:
   - content
 dependencies:
@@ -34,3 +34,9 @@ Revise all lessons in m5-basic-electronics and m4-circuit-components to the teac
 <!-- SECTION:PLAN:BEGIN -->
 1. Revise M5 lesson bodies first, preserving front matter, quiz IDs, and each Illustration brief while adding practical examples, worked numbers, vetted memory tricks, and misconception notes.\n2. Run the required content checks after M5 and record per-lesson notes with checked question IDs.\n3. Revise M4 lesson bodies with component-focused examples: diodes, transistor switching, wall-wart context, capacitors/inductors, and resistor colour mnemonic.\n4. Run the required checks after M4 and at final, update pinned expectations only if text changes require it, then finalize Backlog acceptance criteria.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+M5 pass: revised L-005-01 through L-005-05. Added prefix, Ohm/power and meter memory aids; phone-charger, LED, fuse, battery series/parallel, loaded divider, capacitor filter, ferrite choke, wall-wart transformer, resonance and meter examples. Numeric facts checked against B-005-001 through B-005-013 and teaching-guide example bank; no regulatory facts added. Required checks after M5 all passed.
+<!-- SECTION:NOTES:END -->
