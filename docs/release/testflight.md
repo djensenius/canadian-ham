@@ -14,6 +14,8 @@ Status: internal TestFlight setup for Backlog `task-1.10`. Do not invite externa
 
 ## One-time local setup
 
+Before any beta lane can run, the build host needs the dedicated signing keychain, its password file (mode 600) and certificates. See [Dedicated signing keychain](#dedicated-signing-keychain-build-host): `archive_and_export` and `signing_certificates` stop with an error if the keychain or password file is missing.
+
 1. Install fastlane if it is not already available:
 
    ```sh
@@ -124,19 +126,21 @@ If any guard reports iCloud, push, remote-notification, networking, telemetry, o
 
 ### `errSecInternalComponent` during CodeSign
 
-If an archive reaches `CodeSign` and fails with `errSecInternalComponent`, the project has already resolved a signing identity and provisioning profile, but the non-interactive process cannot use the private key. This is usually a locked login keychain or a signing-key ACL prompt that the agent/CI session cannot answer.
+`errSecInternalComponent` at `CodeSign` means the signing process found an identity but can't use its private key. The lanes sign with the dedicated build keychain, so check that keychain, not the login keychain:
 
-Terminal multiplexers (Herdr, tmux) and agent panes often run in launchd's `Background` session rather than the GUI (`Aqua`) session; check with `launchctl managername`. From a `Background` session, macOS can't show the keychain "Allow" prompt, and `security show-keychain-info ~/Library/Keychains/login.keychain-db` fails with "User interaction is not allowed", even when you run the lane yourself. Run the beta lanes from a new Terminal.app window (where `launchctl managername` prints `Aqua`), or run `security unlock-keychain ~/Library/Keychains/login.keychain-db` in the same shell first. Unlocking only helps if the signing key's access control already allows `codesign`; if CodeSign still fails, use step 3 below (`security set-key-partition-list`).
-
-Fix it from an interactive Terminal session, then rerun the same beta lane:
-
-1. Unlock the login keychain if needed:
+1. Confirm the keychain and password file exist (`ls -l ~/Library/Keychains/canadian-ham-build.keychain-db ~/.appstoreconnect/build-keychain.pw`) and that the keychain is in the search list (`security list-keychains -d user`).
+2. Confirm it holds the identities: `security find-identity -v ~/Library/Keychains/canadian-ham-build.keychain-db` should list Apple Development, Apple Distribution and 3rd Party Mac Developer Installer. If not, run `fastlane signing_certificates`.
+3. Reapply the key partition list, then rerun the lane:
 
    ```sh
-   security unlock-keychain ~/Library/Keychains/login.keychain-db
+   KC=~/Library/Keychains/canadian-ham-build.keychain-db
+   security set-key-partition-list -S apple-tool:,apple:,codesign:,productbuild: -s -k "$(cat ~/.appstoreconnect/build-keychain.pw)" "$KC"
    ```
 
-2. Rerun the lane interactively and choose **Always Allow** if macOS prompts for access to the signing key.
-3. If the prompt cannot be used, update the key partition list for the signing identity from an interactive session according to the local signing-key policy, then rerun the lane.
+Background: the original setup signed with the login keychain. Terminal multiplexers (Herdr, tmux), SSH and agent sessions run outside the GUI (`Aqua`) session (`launchctl managername` prints `Background`), so they can't show the keychain "Allow" prompt, and the login keychain stays locked there. The dedicated keychain avoids that; never put the login keychain password in scripts or agent sessions.
 
-Do not switch to `DebugCloudKit`, do not disable Release signing for uploads, and do not retry repeatedly from a headless/agent session that cannot show the keychain prompt.
+Do not switch to `DebugCloudKit` or disable Release signing for uploads.
+
+### Internal-only builds
+
+`fastlane/ExportOptions.plist` sets `testFlightInternalTestingOnly`, so App Store Connect only allows these builds for internal testing. Builds uploaded before that flag was added (2026-10-10, 13:06–13:16) aren't flagged; no external groups exist, so they stay internal. Remove the flag only as part of task-1.7.

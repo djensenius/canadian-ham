@@ -8,6 +8,9 @@
 	<string>automatic</string>
 	<key>teamID</key>
 	<string>9JALHNGRBQ</string>
+	<!-- Internal TestFlight only until task-1.7 (ISED permission); remove for external testing/App Store. -->
+	<key>testFlightInternalTestingOnly</key>
+	<true/>
 	<key>manageAppVersionAndBuildNumber</key>
 	<false/>
 </dict>

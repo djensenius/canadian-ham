@@ -182,11 +182,20 @@ def create_canadian_ham_app_record
     app_name: APP_NAME,
     sku: APP_SKU,
     language: PRIMARY_LANGUAGE,
+    app_version: marketing_version,
     # produce only supports ios, osx and tvos; add visionOS in App Store Connect
     # (App Information → Add Platform) after the record exists.
     platforms: %w[ios osx tvos],
     skip_devcenter: true
   )
+end
+
+# project.yml is the single source of truth for the marketing version.
+def marketing_version
+  project_yml = File.read(File.join(REPO_ROOT, "apps/apple/project.yml"))
+  version = project_yml[/^\s*MARKETING_VERSION:\s*"?([0-9][0-9.]*)"?\s*$/, 1]
+  UI.user_error!("MARKETING_VERSION not found in apps/apple/project.yml") unless version
+  version
 end
 
 def print_asc_status
