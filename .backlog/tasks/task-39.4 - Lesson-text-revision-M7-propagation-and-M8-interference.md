@@ -32,10 +32,10 @@ Revise all lessons in m7-propagation and m8-interference-suppression to the teac
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Revise M7 lesson bodies first, preserving all front matter, covers, quizIds, and Illustration brief sections exactly.
-2. Run the required content, link, web, and Swift package checks after the M7 module slice, fix any lesson-originality or parser issues, then commit that slice.
-3. Revise M8 lesson bodies with practical interference examples, ferrite/common-mode caveats, filter placement, 60 Hz hum distinction, and preserve protected metadata/briefs exactly.
-4. Run the same full check set after M8 and final verification, update pinned expectations only if touched (not needed for L-007/L-008), then record evidence, check ACs, summarize, and mark Done.
+1. Apply every r1 review note in L-007-01, L-007-02, L-007-03, L-008-01, and L-008-02 while preserving front matter and Illustration brief sections exactly.
+2. Run focused content checks/originality after the text edits, fix any issues, and commit the lesson fixes.
+3. Rerun the complete original required check set: coverage, quizzes, originality all, explanations, check:links, TZ=UTC pnpm test, and content-swift swift test with DEVELOPER_DIR.
+4. Record finding-by-finding notes and validation evidence in Backlog, refresh the final summary, and set Done as the last change.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
