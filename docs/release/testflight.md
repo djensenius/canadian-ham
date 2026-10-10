@@ -83,3 +83,22 @@ pnpm test:apple-network
 ```
 
 If any guard reports iCloud, push, remote-notification, networking, telemetry, or third-party SDK leakage in default builds, stop and fix that before any archive or upload.
+
+## Troubleshooting
+
+### `errSecInternalComponent` during CodeSign
+
+If an archive reaches `CodeSign` and fails with `errSecInternalComponent`, the project has already resolved a signing identity and provisioning profile, but the non-interactive process cannot use the private key. This is usually a locked login keychain or a signing-key ACL prompt that the agent/CI session cannot answer.
+
+Fix it from an interactive Terminal session, then rerun the same beta lane:
+
+1. Unlock the login keychain if needed:
+
+   ```sh
+   security unlock-keychain ~/Library/Keychains/login.keychain-db
+   ```
+
+2. Rerun the lane interactively and choose **Always Allow** if macOS prompts for access to the signing key.
+3. If the prompt cannot be used, update the key partition list for the signing identity from an interactive session according to the local signing-key policy, then rerun the lane.
+
+Do not switch to `DebugCloudKit`, do not disable Release signing for uploads, and do not retry repeatedly from a headless/agent session that cannot show the keychain prompt.
