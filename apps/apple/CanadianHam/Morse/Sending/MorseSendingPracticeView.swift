@@ -506,6 +506,9 @@ struct MorseSendingPracticeView: View {
     }
 
     private func openExamWithPendingCharacterForUITest() {
+        decodedText = ""
+        lastFeedback = nil
+        statusMessage = ""
         pendingSamples = [MorseKeyTimingSample(element: .dot, durationSeconds: profile.dotSeconds, expectedSeconds: profile.dotSeconds, ratioToExpected: 1)]
         scheduleFinalizeCharacter(finalizeAfterElementSeconds: profile.dotSeconds)
         openExamStyleCheck()
