@@ -487,9 +487,10 @@ struct MorseSendingPracticeView: View {
     }
 
     private func gradeHeldStraightKeyForUITest() {
-        if straightKeyDownAt == nil {
-            beginHeldStraightKeyForUITest()
-        }
+        pendingSamples = []
+        decodedText = ""
+        straightKeyDownAt = Date().addingTimeInterval(-profile.dotSeconds)
+        playbackCoordinator.claim("sending-practice")
         gradeExam(completedWithinTime: true)
     }
 #else
