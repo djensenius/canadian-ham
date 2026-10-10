@@ -2297,10 +2297,19 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
                 if offenders.isEmpty, isPartiallyVisibleBelowNavigationBar(target, in: app) { return }
                 let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
-                if target.exists, target.frame.maxY <= visibleFrame.minY {
-                    scrollView.swipeDown()
-                } else {
+                if target.exists, target.frame.maxY > visibleFrame.maxY {
                     scrollView.swipeUp()
+                } else {
+                    let hasOffenderClippedAboveWindow = offenders.contains(where: \.isClippedAboveWindow)
+                    if hasOffenderClippedAboveWindow {
+                        let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
+                        let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
+                        start.press(forDuration: 0.01, thenDragTo: end)
+                    } else {
+                        let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
+                        let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55))
+                        start.press(forDuration: 0.01, thenDragTo: end)
+                    }
                 }
                 waitBriefly()
             }
