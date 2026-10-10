@@ -53,7 +53,11 @@ struct MorseSendingPracticeView: View {
                 Text("Practise tap timing with a straight key or iambic-style paddles. On Mac and iPad hardware keyboards, focus this screen first, then hold Space for the straight key; use J for dots and K for dashes. On iPhone and iPad, use the large touch targets.") // l10n: localized
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
-                morseTokenButton("Exam-style check") { showingExam = true }
+                morseTokenButton("Exam-style check") {
+                    stopAllKeying(finalizeStraight: false)
+                    clearPendingCharacterFinalization(clearPendingSamples: true)
+                    showingExam = true
+                }
                     .accessibilityIdentifier("morse-sending-exam-open-button")
                 sendingControls
                 }
