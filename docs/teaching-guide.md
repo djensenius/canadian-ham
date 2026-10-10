@@ -23,7 +23,7 @@ Use this guide with [content/lessons/README.md](../content/lessons/README.md), [
 - Use `x` for multiply in prose and worked examples: `P = I x E`. This is the single course standard; when revising older lessons, replace `×` with `x` in learning prose and examples.
 - Use `/` for division and keep formulas as real text, not images.
 - Put a space between a number and a unit: `13.8 V`, `20 mA`, `146 MHz`.
-- Use SI space grouping for thousands with a normal space character (`U+0020`): `1 000`, `2 250 W`, `3 525 kHz`, `13 800 mV`. Do not use commas or no-break spaces in authored lesson Markdown; the existing lessons and content checks expect normal spaces.
+- Use SI space grouping for thousands with a normal space character (`U+0020`): `1 000`, `2 250 W`, `3 525 kHz`, `13 800 mV`. Do not use commas or no-break spaces in authored lesson Markdown; the existing lessons use normal spaces, so keep them consistent (the originality tokenizer accepts either).
 - Spell out ohms in running text. Use `Ω` only in compact tables when it improves readability.
 - Convert before calculating. State the conversion step when a question gives milliamperes, kilohms, or kilohertz.
 - Use `E` in Ohm's law and power examples even when an outside source uses `V` as the voltage symbol.
@@ -88,13 +88,13 @@ Module 1 regulation lessons follow the reference style in `content/lessons/READM
 For M1 and M2 reference-style lessons:
 
 - keep single official facts in `## Reference facts: ...` tables;
-- use `## How these rules fit together` for relationships and operating flow;
+- use `## How these rules fit together` (or the M2 equivalent, `## How these procedures fit together`) for relationships and operating flow; keep each module's existing heading names;
 - use positive rule statements;
 - avoid restating wrong answer options from the bank;
 - do not include `## Try it`, worked question-and-answer examples, original practice items, or `## Common mistakes`; and
 - keep lesson quiz JSON exhaustive for official question IDs and set `conceptChecks: []`.
 
-If a misconception needs coverage in an M1 or M2 lesson, handle it as a positive rule or procedure explanation in `How these rules fit together`, not as a `Misconception` or `Common mistakes` section. Avoid naming wrong answer options from the bank.
+If a misconception needs coverage in an M1 or M2 lesson, handle it as a positive rule or procedure explanation in `How these rules fit together` (M2: `How these procedures fit together`), not as a `Misconception` or `Common mistakes` section. Avoid naming wrong answer options from the bank.
 
 ## 3. Teaching patterns for self-study
 
@@ -213,7 +213,7 @@ All numbers below have been recomputed for this guide. When an example depends o
 | Flashlight power | A two-cell flashlight using two 1.5 V cells in series has a 3.0 V supply. If the lamp or LED module draws 0.25 A, P = 0.25 x 3.0 = 0.75 W. | Original everyday power example; do not imply all flashlights use this current. |
 | Voltage divider | With R1 = 10 kilohms and R2 = 10 kilohms across 12 V, Vout = 12 x 10 / (10 + 10) = 6.0 V. Loading caveat: if a 10 kilohm load is connected across R2, the lower leg becomes 5 kilohms, so Vout = 12 x 5 / (10 + 5) = 4.0 V. | Use only after series/parallel resistance. The loading caveat prevents overconfidence. |
 | kWh cost | A 100 W device is 0.100 kW. For 10 h, energy = 0.100 x 10 = 1.0 kWh. At an example rate of $0.15 per kWh, cost = $0.15. | Mark the price as an example rate, not a Canadian rule. |
-| 60 Hz mains | Canadian household AC is 60 Hz. One cycle is 1 / 60 s = 0.0167 s = 16.7 ms. A half-cycle is 8.33 ms. | The Basic bank checks the meaning of 60 Hz as 60 cycles per second in B-005-007-008. Also teach that 60 Hz hum is not a harmonic emission; harmonics are multiples of the operating frequency. |
+| 60 Hz mains | Canadian household AC is 60 Hz. One cycle is 1 / 60 s = 0.0167 s = 16.7 ms. A half-cycle is 8.33 ms. | The Basic bank checks the meaning of 60 Hz as 60 cycles per second in B-005-007-008. Also teach that 60 Hz hum is not a harmonic emission; harmonics are multiples of the operating frequency. Originality warning: B-005-007-008's question and answer both contain the number 60, so any M5 (B-005) lesson block containing a standalone "60" fails `check:lesson-originality`. Keep the 60 Hz example out of B-005 lesson blocks (put it in M3 power-supply or M8 hum context, or use another frequency such as 400 Hz as l-005-04 does), or route it through a reviewed allowlist entry. |
 | dB rules of thumb | +3 dB is about 2 x power; -3 dB is about half power; +10 dB is 10 x power; +20 dB is 100 x power. If an S-meter follows 6 dB per S-unit, one S-unit is 4 x power. | S-meter 6 dB / power factor checks: B-002-006-007 and B-002-006-008. Do not copy the 6 dB/S-unit power-factor wording directly into M2 lessons; rewrite it with original numbers or prose. |
 
 ### M4: Circuit components
@@ -226,7 +226,7 @@ All numbers below have been recomputed for this guide. When an example depends o
 | Inductor everyday use | A ferrite choke on a cable has high reactance at RF and low effect at low frequencies or DC. | Bank verifies high reactance at radio frequencies in B-005-010-007. |
 | Diode reverse-polarity protection | A series diode in the positive lead conducts when polarity is correct and blocks when polarity is reversed. | Bank directly verifies the series-diode purpose in B-004-002-001. Note that a fuse handles overcurrent; a diode handles direction. |
 | Transistor as relay switch | A 3.3 V control pin drives a base resistor into an NPN transistor. With a 560 ohm base resistor and about 0.7 V base-emitter drop, base current is (3.3 - 0.7) / 560 = 0.0046 A, or 4.6 mA. That can switch a 12 V relay coil if the transistor and relay ratings allow it. | Keep ratings conditional. Add a flyback diode across a DC relay coil in practical diagrams so the coil's voltage spike does not damage the transistor. Bank verifies bipolar transistors can amplify small signals at low voltages in B-004-003-001; switching is a practical extension. |
-| Speaker impedance | An 8 ohm speaker carrying 0.5 A dissipates P = I x I x R = 0.5 x 0.5 x 8 = 2 W. | Original audio-load example for impedance and power. Keep it practical; do not turn speaker impedance into an antenna-feedline match rule. |
+| Speaker impedance | An 8 ohm speaker carrying 0.5 A dissipates P = I x I x R = 0.5 x 0.5 x 8 = 2 W. | Original audio-load example for impedance and power. Don't add "1" or "one" to this block: with 0.5 and 2 it would match B-005-004-001. Keep it practical; do not turn speaker impedance into an antenna-feedline match rule. |
 | Wall-wart transformer | A 120 V AC primary to 12 V AC secondary is a 10:1 step-down voltage ratio. If the secondary supplies 12 V at 2 A, output power is 24 W. Ideal primary current is 24 W / 120 V = 0.20 A. | Bank transformer calculations appear in B-005-011, including primary current from power and voltage. |
 
 ### M6: Feedlines and antennas
@@ -237,7 +237,7 @@ All numbers below have been recomputed for this guide. When an example depends o
 | 2.45 GHz wavelength | 2.45 GHz = 2 450 MHz. Wavelength = 300 / 2 450 = 0.122 m = 12.2 cm. The amateur band name is 13 cm, not 12 cm. | Corrects the research brief. Do not imply microwave ovens are amateur transmitters. |
 | Dipole and half-wave length conventions | The practical shortening-factor formula is 142.5 / f(MHz), so a 146 MHz wire dipole starting point is 142.5 / 146 = 0.976 m, or 48.8 cm per leg. For bank explanations, match the convention of the covered item: B-006-012-001 and B-006-012-009 use about 143 / f for half-wave dipoles, while B-006-010-003 uses about 150 / f for a VHF half-wavelength vertical. | Cite the half-wave bank items when explaining their answers. Bank also gives the related quarter-wave below-30-MHz formula 71.3 / f in B-006-010-001. |
 | 75 ohm TV coax vs 50 ohm radio coax | Teach only the practical contrast: TV/cable systems often use 75 ohm coax, while amateur transmitters and dummy loads commonly expect 50 ohms. A 50 ohm line needs a 50 ohm load for full absorption. | Bank verifies 50 ohm matching in B-006-001-006 and 50 ohm coax examples in B-006-002-005 and B-006-010-008. The reason 75 ohms is common in TV is outside the Basic bank; mark it as background if used. |
-| SWR reflected power | Reflection coefficient = (SWR - 1) / (SWR + 1). At 1.5:1, reflected power is 0.2 x 0.2 = 4%. At 2:1, it is 0.333 x 0.333 = 11%. At 3:1, it is 0.5 x 0.5 = 25%. | Bank verifies SWR meaning and forward/reflected voltage in B-006-005-001 and B-006-005-009. Do not say reflected power is simply lost; it can be re-reflected, dissipated as heat in the line or transmitter protection circuits, or reduced by matching changes. |
+| SWR reflected power | Reflection coefficient = (SWR - 1) / (SWR + 1). At 1.5:1, reflected power is 0.2 x 0.2 = 4%. At 2:1, it is 0.333 x 0.333 = 11%. At 3:1, it is 0.5 x 0.5 = 25%. | Bank verifies SWR meaning and forward/reflected voltage in B-006-005-001 and B-006-005-009. Do not say reflected power is simply lost: it is mostly re-reflected toward the antenna, with some lost as heat in the feedline. A mismatch may also make the transmitter's protection reduce (fold back) its output. |
 
 ### M3: Station assembly, practice, and safety
 
@@ -327,7 +327,7 @@ Do not attribute common mnemonics to IEEE, ARRL, NEETS, or any other source unle
 - Basic band access: Basic gives amateur bands above 30 MHz according to `docs/exam-facts.md`; below 30 MHz also needs 80% on Basic, Advanced, or Morse. Cite B-001-015-003 for the below-30-MHz gate and the privilege rows in `docs/exam-facts.md` for the above-30-MHz summary.
 - Power: Basic, with or without Honours or Morse, is 250 W DC input to the final RF stage, 560 W PEP for SSB, and 190 W carrier power for non-SSB emissions unless the operator also has Advanced. Advanced is 1 000 W DC input and 2 250 W PEP SSB. Honours and Morse add below-30-MHz access, not extra power. Cite B-001-017-009, B-001-017-004, B-001-017-005, B-001-017-010, B-001-017-007, and B-001-017-002. Remind writers that the DC-input limit applies to the final RF stage, not the whole radio's supply draw.
 - Band plans: the bank defines band plans as voluntary divisions to avoid interference. Cite B-002-004-010. Verify specific calling frequencies, repeater channels, and 70 cm offsets against current RAC or local coordinator material before teaching them as facts.
-- 60 Hz: use it as Canadian/North American mains context and cite B-005-007-008 for 60 cycles per second. Do not call 60 Hz hum a harmonic emission; harmonics are unwanted emissions at multiples of the operating frequency, checked by B-008-004-002.
+- 60 Hz: use it as Canadian/North American mains context and cite B-005-007-008 for 60 cycles per second (keep it out of B-005 lesson blocks; see the originality warning in the example bank). Do not call 60 Hz hum a harmonic emission; harmonics are unwanted emissions at multiples of the operating frequency, checked by B-008-004-002.
 - Safety Code 6: Health Canada publishes RF exposure limits. It covers controlled and uncontrolled environments, and no transmitters are exempt. Cite B-001-024-001, B-001-024-002, B-001-024-006, and B-001-024-009.
 - CSA C22.1: this is not tested in the Basic question bank and is not summarized in `docs/exam-facts.md`. If a lesson needs Canadian Electrical Code details, verify the exact CSA C22.1 claim from an approved source before using it; do not copy code text or invent section-level requirements.
 - 2.45 GHz: wavelength is 12.2 cm, and the amateur band name in that region is 13 cm. Do not call it the 12 cm band.
@@ -379,7 +379,7 @@ Use this checklist for tasks 39.2 through 39.5.
     - `pnpm --dir packages/content-tools check:lesson-originality:all`
     - `pnpm check:links`
     - `pnpm test`
-    - `cd packages/content-swift && swift test`
+    - `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift` (run from the repository root; `xcode-select` on the build host points at the Command Line Tools)
 14. If a task changes TypeScript or renderer behaviour, also run `pnpm typecheck`. Lesson-text-only changes usually do not require Apple app builds, but they still need the Swift package test above because it parses real lesson Markdown.
 15. Watch pinned lesson tests: web tests assert content from `L-005-01` and `L-006-03`, while Swift `ContentLibraryTests` assert block order, table data, and illustration-brief parsing for real lessons including `L-005-01` and every lesson file.
 16. Record in Backlog notes which regulatory and numeric claims were checked and which were dropped.
