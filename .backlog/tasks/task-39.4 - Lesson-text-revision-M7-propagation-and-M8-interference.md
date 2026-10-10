@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-10 23:22'
+updated_date: '2026-10-10 23:34'
 labels:
   - content
 dependencies:
@@ -52,6 +52,8 @@ Review r1 fixes recorded finding by finding. 1 fixed: L-007-02 now defines Farad
 Review r1 validation passed after fixes: git diff --check; node packages/content-tools/src/check-lesson-coverage.ts; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:explanations; pnpm check:links; TZ=UTC pnpm test; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift. Protected front matter and Illustration brief sections reverified unchanged against main for all five lesson files. No L-005-01 or L-006-03 pinned expectations changed.
 
 Review r2 (APPROVE WITH NOTES): coordinator applied the notes: meteor-scatter 30-100 MHz reasoning, filtering reduces harmonic strength not frequency, Faraday rotation tied to the Earth's magnetic field. Coverage, originality :all, quizzes and links pass.
+
+Taught-facts regression review (fx39-4): 5 weakened facts restored by the coordinator: ferrite cures for speaker/intercom/telephone/audio/power leads (B-008-002-001/-002/-008); FM + HF difference-product example 104.3 - 18.1 = 86.2 MHz (B-008-001-010); selective fading caused by phase differences (B-007-004-008); UV radiation raises ionization and usable frequencies (B-007-006-008); VHF well beyond the ~800 km scale indicates ducting (B-007-007-011). Coverage, quizzes, originality :all and links pass.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
