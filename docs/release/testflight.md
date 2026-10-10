@@ -50,6 +50,31 @@ Status: internal TestFlight setup for Backlog `task-1.10`. Do not invite externa
    fastlane ios asc_status
    ```
 
+### Dedicated signing keychain (build host)
+
+Signing uses a dedicated keychain, so the lanes work from SSH, terminal multiplexers and agent sessions without unlocking the login keychain:
+
+- Keychain: `~/Library/Keychains/canadian-ham-build.keychain-db` (no auto-lock, first in the user search list).
+- Password: a random password for this keychain only (not the login password) in `~/.appstoreconnect/build-keychain.pw`, mode 600. Never commit or print it.
+- Identities: Apple Development ("Created via API"), Apple Distribution and 3rd Party Mac Developer Installer for team 9JALHNGRBQ, created with the API key. Certificate files are in `~/.appstoreconnect/certs/` (mode 600).
+
+One-time setup on a new build host:
+
+```sh
+umask 077
+openssl rand -base64 32 | tr -d '\n' > ~/.appstoreconnect/build-keychain.pw
+KC=~/Library/Keychains/canadian-ham-build.keychain-db
+security create-keychain -p "$(cat ~/.appstoreconnect/build-keychain.pw)" "$KC"
+security set-keychain-settings "$KC"
+security list-keychains -d user -s "$KC" $(security list-keychains -d user | tr -d '"')
+fastlane signing_certificates   # idempotent: reuses certificates whose keys are in the keychain
+security set-key-partition-list -S apple-tool:,apple:,codesign:,productbuild: -s -k "$(cat ~/.appstoreconnect/build-keychain.pw)" "$KC"
+```
+
+Every beta lane unlocks this keychain before archiving. Archives sign with the Apple Development identity, and the export step re-signs for App Store Connect with the distribution identities.
+
+To revoke access, delete the keychain, remove it from the search list, and revoke the three certificates in the Developer Portal.
+
 ## Internal beta lanes
 
 Each beta lane archives and exports a **Release** build through `xbuild` with `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`, automatic signing, team `9JALHNGRBQ`, `fastlane/ExportOptions.plist` (`method=app-store-connect`), and App Store Connect API-key signing arguments. The lanes then upload the exported `.ipa` or `.pkg` with `upload_to_testflight(skip_waiting_for_build_processing: true)`.

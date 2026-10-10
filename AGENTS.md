@@ -30,6 +30,11 @@
   suites only if the merge combined Apple changes from more than one branch) before starting any
   dependent worker, then remove the task worktree with `git worktree remove`.
 
+## Internal TestFlight builds
+- After a feature merges to main, the coordinator uploads internal TestFlight builds from the main checkout for all four platforms (`fastlane ios beta`, `mac beta`, `appletvos beta`, `xros beta`). Run the post-merge iOS/macOS checks first. Build numbers are timestamps.
+- Signing uses the dedicated build keychain described in `docs/release/testflight.md`; never ask for or handle the login keychain password.
+- Internal testers only until task-1.7: no external groups, public links or App Store submission.
+
 ## Build and test rules (all agents)
 - Never call `xcodebuild` directly. Always use `xbuild` with the same arguments;
   it serializes builds across all agents and cleans up simulators.
