@@ -1,11 +1,11 @@
 ---
 id: TASK-1.9
 title: App Store listing material (EN/FR)
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 04:04'
-updated_date: '2026-10-10 04:13'
+updated_date: '2026-10-10 04:16'
 labels: []
 dependencies: []
 parent_task_id: TASK-1
@@ -21,10 +21,10 @@ Why: v1 needs App Store Connect metadata ready for the day ISED permission arriv
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 docs/release/app-store/ has EN and FR (fr-CA) drafts within Apple's limits: name (30), subtitle (30), promotional text (170), description (4000), keywords (100, comma-separated), what's new for v1; claims are accurate to the shipping v1 (offline, no data collected, Basic course; Advanced, Morse and iCloud described only as they ship)
+- [x] #1 docs/release/app-store/ has EN and FR (fr-CA) drafts within Apple's limits: name (30), subtitle (30), promotional text (170), description (4000), keywords (100, comma-separated), what's new for v1; claims are accurate to the shipping v1 (offline, no data collected, Basic course; Advanced, Morse and iCloud described only as they ship)
 - [x] #2 Age rating questionnaire answers, the App Privacy answers (consistent with docs/release/privacy-label-evidence.md: Data Not Collected), the category choice, support and marketing URL plan, and the ISED attribution wording for the listing (draft, pending task-1.1 permission)
-- [ ] #3 A screenshot plan per required device class (iPhone 6.9", iPad 13", Mac, Apple TV, Vision Pro) listing the screens, states, light/dark and EN/FR, with how to capture them using the app's existing DEBUG launch arguments; no screenshots committed yet
-- [ ] #4 French follows docs/french-style.md, and no wording overclaims accessibility, ISED endorsement or exam outcomes
+- [x] #3 A screenshot plan per required device class (iPhone 6.9", iPad 13", Mac, Apple TV, Vision Pro) listing the screens, states, light/dark and EN/FR, with how to capture them using the app's existing DEBUG launch arguments; no screenshots committed yet
+- [x] #4 French follows docs/french-style.md, and no wording overclaims accessibility, ISED endorsement or exam outcomes
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -41,4 +41,12 @@ Why: v1 needs App Store Connect metadata ready for the day ISED permission arriv
 Implemented docs/release/app-store/ with EN and fr-CA metadata drafts, submission notes, and screenshot plan. Validation passed: pnpm check:links; custom character-count/style/overclaim check; git diff --cached --check before commit. No Apple builds/tests were run because this is docs-only.
 
 Review requested changes: platform scope, fr-CA terminology, screenshot capture details, attribution/disclaimer/accessibility wording, keyword and What's New notes. Set task back to In Progress and unchecked AC #1, #3 and #4 before fixing.
+
+Review fixes implemented: platform scope now separates iPhone/iPad/Mac Basic lessons/quizzes/mocks/readiness/full Morse from Apple TV/Vision Pro Basic topic practice and Morse Quick listen; fr-CA copy now uses radioamateurisme, compétence supérieure, Écoute rapide, Police dynamique and no English Advanced/Quick listen/taps terms; screenshot plan names simulators and exact simctl/screencapture steps, removes the sending debug hook from capture args, and documents native Mac Settings capture; ISED keyword removed from keywords; What's New marked as later-release text; age rating notes say to complete App Store Connect's current questionnaire; attribution drafts cover Basic and Advanced and follow-up TASK-35 was created depending on task-1.4. Validation passed: pnpm check:links; field recounts EN 12/30, 23/30, 136/170, 91/100, 242/4000, 1835/4000 and FR 12/30, 22/30, 136/170, 76/100, 277/4000, 2371/4000; copy/style/overclaim/debug-hook check; git diff --check origin/main...HEAD.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Addressed review feedback for task-1.9: corrected platform-scoped listing claims, updated fr-CA terminology to match the app, expanded screenshot capture instructions with simulator names and exact commands, documented native Mac Settings capture, removed the ISED keyword, marked What's New as later-release text, expanded age-rating notes, and created TASK-35 for future Advanced About attribution after permission. Verified with pnpm check:links, limited-field recounts, copy/style/overclaim checks, and git diff --check.
+<!-- SECTION:FINAL_SUMMARY:END -->
