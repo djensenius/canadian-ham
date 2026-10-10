@@ -127,7 +127,7 @@ When the station is not in use, grounding or disconnecting antenna and rotator c
 
 No amateur installation can be made lightning-proof. Plan so a surge has a low-impedance path outside the operating position. Do not operate or service antennas during storms.
 
-Antenna work adds fall and falling-object hazards. Use approved fall-arrest equipment for tower work. Wear a hard hat when assisting below. Horizontal wires, open-wire feedline, ground-mounted verticals, and antenna feed points must be located or guarded so people cannot touch energized RF conductors during transmitting. When possible, move an antenna outdoors and mount it as high as practical, out of reach.
+Antenna work adds fall and falling-object hazards. Use approved fall-arrest equipment for tower work. Wear a hard hat when assisting below. Horizontal wires, open-wire feedline, ground-mounted verticals, and antenna feed points must be located or guarded so people cannot touch energized RF conductors during transmitting.
 
 ### Worked example: feedline entry plan
 
@@ -146,7 +146,7 @@ RF energy can heat body tissue when exposure is high enough. Eyes deserve care b
 
 Power density falls rapidly with distance in free space. In a simple free-space point-source model, RF field strength falls in proportion to `1/d`. Power density falls in proportion to `1/d^2`. Doubling distance can greatly reduce exposure before you even consider duty cycle or antenna pattern.
 
-A low standing wave ratio, or SWR, is an equipment-match indication. It is not permission for people to stand close to an energized antenna. Keep handheld antennas away from your head and from other people while transmitting. Put UHF transmitting antennas where people cannot approach them during operation. Locate indoor antennas as far as practical from occupied living spaces. Aim directional high-gain antennas away from nearby occupied structures.
+A low standing wave ratio, or SWR, is an equipment-match indication. It is not permission for people to stand close to an energized antenna. Keep handheld antennas away from your head and from other people while transmitting. Put UHF transmitting antennas where people cannot approach them during operation. Locate indoor antennas as far as practical from occupied living spaces. Better still, move the antenna outdoors and mount it as high as practical, out of reach. Aim directional high-gain antennas away from nearby occupied structures.
 
 Health Canada Safety Code 6 is the general Canadian framework for RF exposure limits. It covers controlled and uncontrolled exposure situations. No transmitter class is automatically outside RF exposure regulation. This lesson does not invent numeric limits or replace a proper exposure evaluation.
 

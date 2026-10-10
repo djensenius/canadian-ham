@@ -188,5 +188,10 @@
     "lessonId": "L-001-06",
     "blockHeading": "Summary",
     "reason": "Reviewed summary rule: Safety Code 6 exposure-limit wording distinguishes limit quantities from transmitter power as an exposure factor."
+  },
+  {
+    "lessonId": "L-006-05",
+    "blockHeading": "Dipole patterns",
+    "reason": "Reviewed teaching fact: the free-space centre-fed half-wave dipole feed-point impedance of about 73 ohms (B-006-012-004) was a pre-existing coverage gap. It is stated in original prose; 'half-wave' tokenizes to 0.5, so the numeric heuristic flags the unavoidable term plus value."
   }
 ]

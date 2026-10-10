@@ -39,7 +39,7 @@ By the end of this lesson, you can:
 
 ## Dipole patterns
 
-A half-wave dipole radiates strongest broadside to the wire and weakest off the ends. In three dimensions, the free-space pattern looks like a doughnut around the conductor.
+A half-wave dipole radiates strongest broadside to the wire and weakest off the ends. In three dimensions, the free-space pattern looks like a doughnut around the conductor. Fed at its centre in free space, a half-wave dipole has a feed-point impedance of about 73 ohms. Real installations near the ground vary from that figure.
 
 Near real ground, the pattern changes with height, soil, and nearby objects. The broadside idea is still the starting point. Do not expect strongest radiation straight out of the wire ends.
 

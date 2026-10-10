@@ -69,7 +69,7 @@ A receiver bandwidth that is too narrow can remove part of the information you w
 
 Sensitivity describes how small an RF input signal can be while still producing a specified signal-to-noise result. It is a weak-signal measurement for the receiver input.
 
-Selectivity describes how well the receiver separates the desired signal from nearby signals. IF filters usually provide most of this ability.
+Selectivity describes how well the receiver separates the desired signal from nearby signals. IF filters usually provide most of this ability. For CW, a narrow audio band-pass filter about 100 Hz wide, centred on your tone, works well; with an 800 Hz tone, that is roughly 750 Hz to 850 Hz.
 
 Dynamic range describes how well the receiver handles strong and weak signals at the same time. A receiver with poor dynamic range may overload, block, or make unwanted mixing products.
 

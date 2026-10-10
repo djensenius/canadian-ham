@@ -47,7 +47,7 @@ Chirp is a small frequency movement each time the transmitter is keyed. The far-
 
 Key clicks are different. They sound like sharp ticks around the signal. They come from keying edges that are too abrupt. A key-click filter or proper shaping slows the edge enough to reduce splatter without making the Morse unreadable.
 
-A variable-frequency oscillator lets a CW transmitter tune anywhere across a range, instead of being limited to the few frequencies of the crystals on hand. That is useful only if the oscillator is electrically and mechanically stable, so the carrier doesn't drift over time. Keep VFOs away from heat, loose hardware, and changing supply conditions.
+A variable-frequency oscillator lets a CW transmitter tune anywhere across a range, instead of being limited to the few frequencies of the fixed-frequency quartz crystals on hand. That is useful only if the oscillator is electrically and mechanically stable, so the carrier doesn't drift over time. Keep VFOs away from heat, loose hardware, and changing supply conditions.
 
 ### In the real world: diagnosing two CW reports
 
