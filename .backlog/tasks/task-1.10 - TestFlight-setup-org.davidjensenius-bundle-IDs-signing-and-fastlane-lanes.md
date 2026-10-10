@@ -1,9 +1,11 @@
 ---
 id: TASK-1.10
 title: 'TestFlight setup: org.davidjensenius bundle IDs, signing and fastlane lanes'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-10 12:40'
+updated_date: '2026-10-10 12:40'
 labels: []
 dependencies: []
 parent_task_id: TASK-1
@@ -24,3 +26,12 @@ Why: the owner wants internal TestFlight builds now, following the Telephone Boo
 - [ ] #3 fastlane/ (Appfile, Fastfile) mirrors Telephone Booth's lanes (register_bundle_ids, create_app_record, asc_status, iOS and Mac beta, tvOS/visionOS beta) but archives and exports through xbuild rather than calling xcodebuild directly, and reads the API key only by path; no secrets are committed
 - [ ] #4 docs/release/testflight.md runbook (setup, lanes, versioning, internal-testers-only rule); the four platform suites pass on the final code; bundle IDs are registered on the Developer Portal via the API-key lane
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Update Apple project settings for org.davidjensenius universal bundle IDs, team/signing, marketing version and encryption keys, then regenerate the Xcode project twice and verify deterministic output.
+2. Replace the gated iCloud container ID everywhere in entitlements/code/docs/gate checks/self-tests and update stale com.djensenius bundle references in docs/tests/scripts.
+3. Add fastlane Appfile/Fastfile plus ExportOptions plists and gitignore coverage for xbuild archive/export beta lanes and Developer Portal registration.
+4. Add the TestFlight runbook, run the required guard checks, project suites, register_bundle_ids, and an iOS Release archive/export proof, then record objective evidence in Backlog and commit.
+<!-- SECTION:PLAN:END -->
