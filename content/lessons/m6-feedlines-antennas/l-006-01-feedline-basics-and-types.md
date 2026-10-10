@@ -51,7 +51,13 @@ The shorter piece may have less total loss, but its characteristic impedance is 
 
 ## Coaxial cable
 
-Coaxial cable, usually called coax, has a centre conductor, insulation around that conductor, and a surrounding shield. The shield helps keep RF energy inside the cable and helps keep external noise out. Most modern amateur transceivers are designed around fifty-ohm coaxial connections.
+Coaxial cable, usually called coax, has a centre conductor, insulation around that conductor, and a surrounding shield. The shield helps keep RF energy inside the cable and helps keep external noise out. Most modern amateur transceivers are designed around fifty-ohm coaxial connections. TV and cable-television systems in homes often use seventy-five-ohm coax. That is useful background, but it is not the usual match for a transmitter, SWR meter, dummy load, or antenna system designed for fifty ohms.
+
+### In the real world: TV coax and radio coax
+
+A house may already have seventy-five-ohm TV coax in the walls. A handheld, mobile radio, HF transceiver, or dummy load will usually expect fifty ohms. Use the impedance the radio system needs; do not assume every cable with a coax connector is the right line.
+
+A short receive-only experiment may work with many cable types. Transmitting is less forgiving because a fifty-ohm transmitter and a fifty-ohm dummy load are meant to work with a fifty-ohm line for best power transfer.
 
 Coax is unbalanced because one side is normally the shield and is often connected to equipment ground. That makes it convenient near equipment, through walls, near masts, and near some metal supports. It is also the usual feedline when the route must tolerate moisture, ice, or casual contact with building materials.
 
@@ -122,7 +128,7 @@ Description: Draw a simple ink-brush station chain. At left, a transceiver conne
 
 - A feedline guides RF energy between the radio and the antenna.
 - Characteristic impedance depends on the line's construction and dielectric, not on ordinary DC resistance.
-- Coax is shielded, unbalanced, and practical near equipment and metal.
+- Coax is shielded, unbalanced, and practical near equipment and metal; amateur transmitters commonly use fifty-ohm coax, while home TV systems often use seventy-five-ohm coax.
 - Twin-lead, window line, and open-wire line are balanced lines that need clear routing.
 - A balun connects balanced and unbalanced parts and can help control common-mode current.
 - Connectors, moisture, ice, and nearby metal are part of the feedline choice.

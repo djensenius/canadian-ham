@@ -58,6 +58,12 @@ SWR stands for standing wave ratio. It compares the forward and reflected RF vol
 
 A low reading is useful, but it is not a complete proof that the antenna system is efficient. A lossy feedline can attenuate the reflected wave before it returns to the meter. The station-end meter can therefore look better than the antenna-end mismatch really is.
 
+### In the real world: what reflected power means
+
+SWR does not say a fixed fate for reflected power. Some of it may be lost as heat in the feedline. Some may return to the transmitter-end matching network. Many solid-state radios reduce, or fold back, output when the load looks unsafe.
+
+The practical lesson is plain: a better match reflects less power, but SWR alone is not a complete antenna-efficiency report. Check cable loss, connector condition, tuner placement, and on-air results before judging the whole antenna system.
+
 ### Worked example: line loss masks trouble
 
 Station A and Station B show similarly low SWR at the transmitter. Station A uses a short, low-loss feedline. Station B uses a long, old run that is warm after transmitting. The same meter reading does not mean the antennas are performing the same. In the lossy system, less reflected energy returns to the meter, and less forward energy reaches the antenna.
@@ -71,6 +77,11 @@ An antenna analyzer is useful because it can sweep or sample a range of frequenc
 ## Matching networks and tuners
 
 An antenna tuner does not tune the air. It transforms impedance so the transceiver sees a load it can safely drive. Many solid-state transmitters reduce power when the load at the radio is too far from the expected range. A tuner can help the transmitter deliver power into a mismatched antenna system.
+
+### Misconception: the tuner changes antenna length
+
+- Mistaken idea: an antenna tuner at the radio makes the antenna physically resonant on the new frequency.
+- Correction: the tuner changes the impedance seen by the transmitter. It does not change wire length, feedline loss, or the antenna's radiation pattern.
 
 A tuner near the transceiver protects the radio, but it does not remove loss in a feedline that is carrying high SWR. A tuner or matching transformer near the antenna feed point can reduce the mismatch on the main feedline and therefore reduce feedline loss.
 
@@ -101,7 +112,7 @@ Modern transceivers protect their output stages. If the load looks unsafe, the r
 ## Common mistakes
 
 - Believing that an SWR meter directly measures antenna gain or radiation pattern.
-- Thinking a tuner at the radio removes all feedline loss.
+- Thinking a tuner at the radio changes the physical antenna or removes all feedline loss.
 - Leaving a long coil of unused small coax in the system and blaming the antenna for weak signals.
 - Ignoring intermittent connectors because the antenna looked fine yesterday.
 - Assuming that high SWR stops all radiation; usually it reduces transfer and increases losses, but some power may still radiate.

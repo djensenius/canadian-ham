@@ -41,13 +41,22 @@ A half-wave dipole radiates strongest broadside to the wire and weakest off the 
 
 Near real ground, the pattern changes with height, soil, and nearby objects. The broadside idea is still the starting point: do not expect strongest radiation straight out of the wire ends.
 
+### In the real world: choosing tree supports
+
+If two good trees run east-west from the shack, a dipole between them is broadside north-south in its simplest free-space picture. That can be helpful if the stations you want are mostly north or south.
+
+If the wanted direction is east-west, the same yard may need a different wire route, a vertical, or a rotatable antenna. The support locations are part of the antenna choice.
+
 ### Worked example: original dipole cut
 
 A club wants a first-cut dipole near 18.9 MHz for a practice exercise.
 
-- half-wave length ≈ 143 / 18.9
-- half-wave length ≈ 7.57 m overall
-- each leg is roughly 3.79 m before trimming
+- Given: frequency = 18.9 MHz.
+- Find: overall dipole starting length and single leg length.
+- Formula: length ≈ 143 / f(MHz).
+- Substitute: length ≈ 143 / 18.9.
+- Answer: length ≈ 7.57 m overall; each leg is roughly 3.79 m before trimming.
+- Sanity check: the feed point is in the centre, so each leg is 7.57 m / 2 = 3.79 m.
 
 The installed antenna should then be checked with an analyzer and shortened or lengthened in small steps.
 
@@ -73,9 +82,12 @@ For a quad driven loop near 24.6 MHz, use the one-wavelength loop estimate:
 loop length in metres ≈ 306 / f(MHz)
 ```
 
-- loop length ≈ 306 / 24.6
-- loop length ≈ 12.44 m around the full square
-- each side is about 3.11 m before final adjustment
+- Given: frequency = 24.6 MHz.
+- Find: total wire around a square driven loop and one side length.
+- Formula: loop length ≈ 306 / f(MHz).
+- Substitute: loop length ≈ 306 / 24.6.
+- Answer: loop length ≈ 12.44 m around the full square; each side is about 3.11 m.
+- Sanity check: a square has four sides, so 12.44 m / 4 = 3.11 m.
 
 The same total-wire idea applies to delta loops, but the shape is triangular instead of square. Notice the formula distinction: 300 / f is the free-space wavelength estimate, while 306 / f is the practical full-wave loop starting estimate used for these wire-loop questions.
 
@@ -89,10 +101,14 @@ The feed point and height affect impedance and pattern, so practical loop antenn
 
 A full-wave horizontal loop is planned near 10.1 MHz.
 
-- loop length ≈ 306 / 10.1
-- loop length ≈ 30.30 m total wire
+- Given: frequency = 10.1 MHz.
+- Find: total wire for a full-wave loop.
+- Formula: loop length ≈ 306 / f(MHz).
+- Substitute: loop length ≈ 306 / 10.1.
+- Answer: loop length ≈ 30.30 m total wire.
+- Sanity check: if it is a square loop, each side starts near 30.30 m / 4 = 7.58 m.
 
-If it is a square loop, each side starts near 7.58 m. The final shape may be irregular if the available trees are not in perfect positions, so expect to measure and adjust.
+The final shape may be irregular if the available trees are not in perfect positions, so expect to measure and adjust.
 
 ## Try it
 

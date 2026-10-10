@@ -43,6 +43,12 @@ A straight dipole or whip tends to radiate with the same polarization as the ele
 
 Matching polarization matters most for local line-of-sight VHF and UHF contacts. A mobile whip is vertical, so a vertical receiving antenna is normally the better match. For ionospheric HF paths, the wave can be twisted by reflection and refraction, so polarization can be less predictable at the far end.
 
+### In the real world: matching a mobile whip
+
+A car whip is usually vertical. A repeater antenna is usually vertical too. That shared orientation helps the electric fields line up for local VHF and UHF contacts.
+
+If one station turns a portable Yagi sideways while the other station stays vertical, the contact may drop by many decibels. The radio did not become weak; the antennas stopped agreeing on polarization.
+
 ## Isotropic and dipole reference ideas
 
 An isotropic radiator is an imaginary point source that radiates equally in every direction. It is not a buildable antenna, but it is useful as a reference. A perfect isotropic pattern would be a sphere.
@@ -61,13 +67,22 @@ The symbol often used for wavelength is lambda, written here as λ. Frequency an
 
 ### Worked example: free-space wavelength
 
-A signal is at 18.75 MHz. Estimate its wavelength:
+A signal is at 146 MHz. Estimate its wavelength:
 
-- λ = 300 / f(MHz)
-- λ = 300 / 18.75
-- λ = 16 m
+- Given: frequency = 146 MHz.
+- Find: free-space wavelength in metres.
+- Formula: λ = 300 / f(MHz).
+- Substitute: λ = 300 / 146.
+- Answer: λ = 2.05 m.
+- Sanity check: this is why 146 MHz is part of the two-metre amateur band.
 
-So the free-space wavelength is about 16 m.
+At 440 MHz, the same rule gives λ = 300 / 440 = 0.682 m, or about 68 cm.
+
+### Memory trick: 100 MHz is 3 m
+
+- Helps remember: wavelength in metres = 300 / frequency in MHz.
+- Trick: anchor the rule at 100 MHz, because 300 / 100 = 3 m.
+- Limit: this gives free-space wave size. Real antennas often need shortening factors, loading, or matching.
 
 ### Free-space estimates versus practical wire estimates
 
@@ -85,13 +100,16 @@ half-wave length in metres ≈ 143 / f(MHz)
 
 To move a wire antenna lower in frequency, make it longer. To move it higher in frequency, make it shorter. That rule is more important than any single trimmed length, because real installations need final adjustment.
 
-### Worked example: original dipole estimate
+### Worked example: practical dipole starting length
 
-You want a first cut for a dipole near 10.6 MHz.
+You want a first cut for a wire dipole near 10.6 MHz.
 
-- length ≈ 143 / 10.6
-- length ≈ 13.49 m overall
-- each side is about 6.75 m before final trimming
+- Given: frequency = 10.6 MHz.
+- Find: overall half-wave dipole starting length.
+- Formula: length ≈ 143 / f(MHz).
+- Substitute: length ≈ 143 / 10.6.
+- Answer: length ≈ 13.49 m overall, or about 6.75 m per side.
+- Sanity check: this is shorter than the free-space half-wave estimate, 150 / 10.6 = 14.15 m.
 
 After installation, an analyzer can show whether the resonant point is above or below the desired frequency.
 
@@ -107,7 +125,7 @@ End insulators on a suspended wire mark where the antenna conductor ends electri
 
 1. A vertical handheld whip is used with a vertical repeater antenna. Do their polarizations match? Yes. Both electric fields are vertical, which is normally best for local VHF/UHF work.
 2. A horizontal dipole is made slightly shorter. What happens to resonant frequency? It moves upward because shorter antennas resonate at higher frequencies.
-3. A 60 MHz signal is being estimated as a free-space wave. What wavelength should you use? λ = 300 / 60 = 5 m, so the free-space wavelength is about 5 m.
+3. A 100 MHz signal is being estimated as a free-space wave. What wavelength should you use? λ = 300 / 100 = 3 m, so the free-space wavelength is about 3 m.
 4. A resonant wire dipole is planned for 14.2 MHz. Which first-cut formula is the practical antenna estimate: 150 / f or 143 / f? Use 143 / 14.2 = 10.07 m overall as a practical starting length; 150 / f is the free-space fraction estimate.
 5. A short mobile HF whip is far shorter than a quarter wavelength. What part helps it tune? A loading coil adds series inductance so the short whip behaves electrically longer.
 

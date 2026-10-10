@@ -42,6 +42,12 @@ A reference antenna makes gain numbers meaningful. Gain in dBi compares an anten
 
 Bandwidth is the range of frequencies over which an antenna performs acceptably. Beamwidth is the angular width of the main lobe. Front-to-back ratio compares radiation in the forward direction with radiation in the opposite direction.
 
+### In the real world: aiming a small beam
+
+A handheld beam for a fox hunt or satellite contact does not make the transmitter more powerful. It puts more of the pattern in one direction and less in another.
+
+That is useful in practice. Point the main lobe at the wanted signal, or point the back or side of the antenna toward a noise source you want to reduce.
+
 ### Worked example: dBi and dBd
 
 A small beam is listed as 8.6 dBi. To compare it with a dipole reference, subtract about 2.1 dB:
@@ -65,20 +71,14 @@ Element diameter also matters. Larger-diameter elements can broaden the useful f
 
 ### Worked example: original Yagi element estimates
 
-For an exercise near 24.2 MHz, use the half-wave estimate for the driven element:
+For an exercise near 24.2 MHz, use the practical half-wave estimate for the driven element.
 
-- driven element length ≈ 143 / 24.2
-- driven element length ≈ 5.91 m
-
-A director might be about 5 percent shorter:
-
-- director estimate ≈ 5.91 x 0.95
-- director estimate ≈ 5.61 m
-
-A reflector might be about 5 percent longer:
-
-- reflector estimate ≈ 5.91 x 1.05
-- reflector estimate ≈ 6.21 m
+- Given: frequency = 24.2 MHz; director about 5% shorter; reflector about 5% longer.
+- Find: first-cut driven element, director, and reflector lengths.
+- Formula: driven element length ≈ 143 / f(MHz).
+- Substitute: driven element length ≈ 143 / 24.2.
+- Answer: driven element length ≈ 5.91 m; director ≈ 5.91 x 0.95 = 5.61 m; reflector ≈ 5.91 x 1.05 = 6.21 m.
+- Sanity check: the director is shorter than the driven element, and the reflector is longer.
 
 Real Yagi dimensions are design-specific, but the relationships are the key: director shorter, reflector longer.
 
@@ -98,8 +98,12 @@ Some reference material rounds the constant slightly; keep the formula style and
 
 A portable vertical is planned near 18.1 MHz.
 
-- length ≈ 71.3 / 18.1
-- length ≈ 3.94 m
+- Given: frequency = 18.1 MHz.
+- Find: quarter-wave starting length.
+- Formula: length ≈ 71.3 / f(MHz).
+- Substitute: length ≈ 71.3 / 18.1.
+- Answer: length ≈ 3.94 m.
+- Sanity check: the free-space quarter-wave estimate is 75 / 18.1 = 4.14 m, so the practical starting length is a little shorter.
 
 The antenna will still need trimming and matching after it is installed, especially because nearby ground and supports change the feed point impedance.
 
@@ -108,6 +112,8 @@ The antenna will still need trimming and matching after it is installed, especia
 A mobile HF whip is often much shorter than a natural quarter wavelength. Electrically, that short conductor looks capacitive, so a loading coil adds series inductance to tune out some of that capacitive reactance. The tradeoff is that compact loaded antennas may be narrow-band and less efficient than full-sized antennas.
 
 A five-eighths-wavelength VHF or UHF vertical can have more gain at useful low angles than a quarter-wave vertical, but it usually needs matching because its feed impedance is not the same as the simple quarter-wave case.
+
+For VHF half-wavelength vertical questions, use the convention in the question. A 146 MHz half wavelength by the free-space fraction is about 150 / 146 = 1.03 m. A practical HF wire dipole uses about 143 / f instead, because the wire antenna is shortened from the free-space fraction.
 
 ## Try it
 
