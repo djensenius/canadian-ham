@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-10 23:13'
+updated_date: '2026-10-10 23:17'
 labels:
   - content
 dependencies:
@@ -48,6 +48,10 @@ M1 pass: revised L-001-01 through L-001-06 in reference style without changing f
 M2 pass: revised L-002-01 through L-002-04 in existing reference-style operating format without changing front matter, covers, quiz IDs, or Illustration brief blocks. L-002-01 added repeater-entry and simplex procedure examples, a 146.940 MHz minus 600 kHz offset calculation, and ITU phonetic memory aid; facts checked against B-002-001 through B-002-004. L-002-02 added RST and Q-signal memory aids plus real-world report and S-unit power examples; facts checked against B-002-005 through B-002-007. Adjusted the S-unit wording to avoid originality overlap while preserving the 6 dB/S-unit and quadrupling relationship. L-002-03 added distress-role memory aid and break-in/readiness examples; facts checked against B-002-008. L-002-04 added log-investigation and UTC conversion examples plus long-path memory aid; facts checked against B-002-009. M2 check tranche passed: coverage, quizzes, originality, explanations, links, TZ=UTC pnpm test, and swift test.
 
 Final validation passed after all lesson edits and Backlog notes: node packages/content-tools/src/check-lesson-coverage.ts; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:explanations; pnpm check:links; TZ=UTC pnpm test; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift. Pinned L-005-01 and L-006-03 expectations were not touched because this task did not change those lessons.
+
+Review r1 fixes, finding by finding: 1 fixed by changing the S-unit example from 25 W -> 100 W to 10 W -> 40 W. 2 fixed by defining an S-unit as a marked step on a receiver signal-strength meter and restoring clear 6 dB per S-unit wording. 3 fixed by moving all four M1 memory tricks to the ends of their How these rules fit together sections. 4 fixed by defining PEP, ERP, and EIRP before the tables and restoring explanatory prose for the repeater/carrier/stability/modulation table. 5 fixed by removing learner-facing writer notes, rewriting the ITU phonetics Limit bullet, and keeping the Q-signal caveat as a learner-facing table-limit note. 6 fixed by adding the L-001-04 20 A x 13.8 V = 276 W whole-radio draw example versus the 250 W final-stage DC-input rule, correcting the power-supply-label wording, and adding a simple L-002-03 battery-runtime calculation. 7 fixed by adding illustrative procedure exchanges for repeater entry, simplex operation, and signal reports. 8 fixed by changing the UTC example to UTC minus 5 with recomputed 2100 -> 1600 and 0300 -> 2200 previous local date. 9 fixed by tightening address-change, interval-identification, and QTH/QRM/QRN memory wording. 10 fixed by rewriting the L-001-06 concern sentence, the public-service-net script sentence, and the distress break-in order wording. 11 fixed by tying L-001-06 to hardware details and strengthening L-001-02/L-001-05 real-world hardware context. No review finding was intentionally declined.
+
+Review r1 validation passed: node packages/content-tools/src/check-lesson-coverage.ts; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:explanations; pnpm check:links; TZ=UTC pnpm test; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift. Pinned L-005-01 and L-006-03 expectations were not updated because those lessons/tests were not touched.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
