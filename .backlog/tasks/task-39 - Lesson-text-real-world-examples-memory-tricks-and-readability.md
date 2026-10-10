@@ -1,9 +1,10 @@
 ---
 id: TASK-39
 title: 'Lesson text: real-world examples, memory tricks and readability'
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-10-10 22:14'
+updated_date: '2026-10-10 22:19'
 labels:
   - content
 dependencies: []
