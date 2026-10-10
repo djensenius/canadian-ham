@@ -4165,6 +4165,22 @@
         }
       }
     },
+    "Exam-style check" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérification d’examen"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérification d’examen"
+          }
+        }
+      }
+    },
     "Exercise %lld of %lld" : {
       "localizations" : {
         "fr" : {
@@ -10423,6 +10439,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Envoyer un point"
+          }
+        }
+      }
+    },
+    "Send the displayed passage, then end and grade when ready. Unsent characters at 0:00 count as errors." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyez le passage affiché, puis terminez et corrigez quand vous êtes prêt. Les caractères non envoyés à 0:00 comptent comme erreurs."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyez le passage affiché, puis terminez et corrigez quand vous êtes prêt. Les caractères non envoyés à 0:00 comptent comme erreurs."
           }
         }
       }
