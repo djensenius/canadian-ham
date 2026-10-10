@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-10 23:04'
+updated_date: '2026-10-10 23:05'
 labels:
   - content
 dependencies:
@@ -23,10 +23,10 @@ Revise all lessons in m1-regulations-policies and m2-operating-procedures to the
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Every lesson in scope is revised to docs/teaching-guide.md: plain language (terms defined at first use, short sentences, active voice), with a technical-accuracy pass
-- [ ] #2 Each technical lesson gains at least one 'In the real world' example tied to everyday or station hardware, with worked numbers where useful (rule-reference lessons follow the reference-style rules in content/lessons/README.md)
-- [ ] #3 Memory tricks from the guide are added where they help, are accurate and inoffensive, and say what they help remember
-- [ ] #4 Coverage, quiz, explanation, originality and link checks pass; lesson IDs, front matter coverage and quiz references are unchanged; Illustration brief sections are left intact for task-38
+- [x] #1 Every lesson in scope is revised to docs/teaching-guide.md: plain language (terms defined at first use, short sentences, active voice), with a technical-accuracy pass
+- [x] #2 Each technical lesson gains at least one 'In the real world' example tied to everyday or station hardware, with worked numbers where useful (rule-reference lessons follow the reference-style rules in content/lessons/README.md)
+- [x] #3 Memory tricks from the guide are added where they help, are accurate and inoffensive, and say what they help remember
+- [x] #4 Coverage, quiz, explanation, originality and link checks pass; lesson IDs, front matter coverage and quiz references are unchanged; Illustration brief sections are left intact for task-38
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -44,4 +44,6 @@ Revise all lessons in m1-regulations-policies and m2-operating-procedures to the
 M1 pass: revised L-001-01 through L-001-06 in reference style without changing front matter, covers, quiz IDs, or Illustration brief blocks. L-001-01 added station-binder real-world context and certificate/address memory aid; facts checked against B-001-001 through B-001-004, B-001-022, and docs/exam-facts.md. L-001-02 added club work-day station-control context; facts checked against B-001-005 through B-001-009. L-001-03 added public-service net context and start/stop/half-hour identification memory aid; facts checked against B-001-010 through B-001-014. L-001-04 added power-display context and Basic-power memory aid; power and below-30-MHz facts checked against B-001-015 through B-001-019 and docs/exam-facts.md. L-001-05 added travel note-card context and place-first memory aid; facts checked against B-001-020 and B-001-021. L-001-06 added installation-file context; Safety Code 6 and EMCAB facts checked against B-001-023 through B-001-025. M1 check tranche passed after rerunning a transient web timeout: coverage, quizzes, originality, explanations, links, TZ=UTC pnpm test, and swift test.
 
 M2 pass: revised L-002-01 through L-002-04 in existing reference-style operating format without changing front matter, covers, quiz IDs, or Illustration brief blocks. L-002-01 added repeater-entry and simplex procedure examples, a 146.940 MHz minus 600 kHz offset calculation, and ITU phonetic memory aid; facts checked against B-002-001 through B-002-004. L-002-02 added RST and Q-signal memory aids plus real-world report and S-unit power examples; facts checked against B-002-005 through B-002-007. Adjusted the S-unit wording to avoid originality overlap while preserving the 6 dB/S-unit and quadrupling relationship. L-002-03 added distress-role memory aid and break-in/readiness examples; facts checked against B-002-008. L-002-04 added log-investigation and UTC conversion examples plus long-path memory aid; facts checked against B-002-009. M2 check tranche passed: coverage, quizzes, originality, explanations, links, TZ=UTC pnpm test, and swift test.
+
+Final validation passed after all lesson edits and Backlog notes: node packages/content-tools/src/check-lesson-coverage.ts; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:explanations; pnpm check:links; TZ=UTC pnpm test; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift. Pinned L-005-01 and L-006-03 expectations were not touched because this task did not change those lessons.
 <!-- SECTION:NOTES:END -->
