@@ -45,7 +45,7 @@ The radio horizon sits a little beyond what your eyes can see. The reason is ord
 
 A ground wave is the part of a signal that follows the Earth's surface and is affected by it. Ground wave matters most at lower frequencies. On lower HF, it can cover nearby stations that a higher band may not reach.
 
-A sky wave is an HF signal that goes upward and is refracted by the ionosphere. The ionosphere is a charged upper-atmosphere region. It is not a hard mirror; it bends the wave gradually.
+A sky wave is an HF signal that goes upward and is refracted by the ionosphere. The ionosphere is an ionized upper-atmosphere region with charged particles that affect radio waves. It is not a hard mirror; it bends the wave gradually.
 
 Near vertical incidence sky wave, or NVIS, uses a high-angle HF signal. The signal goes mostly upward and returns over a regional area. NVIS can help in hilly or forested terrain, but it still depends on band choice and ionospheric conditions.
 
@@ -55,9 +55,13 @@ A volunteer group needs links between a valley shelter, a ridge control point, a
 
 The planners use VHF through the ridge for local traffic. They add an HF NVIS circuit as a regional backup. The two paths solve different problems.
 
+### In the real world: choosing a path before adding power
+
+A club tries to link two low sites across town. Handheld VHF fails because buildings and a ridge block the direct path. A repeater site, a relay station, or a regional HF path may solve the problem better than extra handheld power.
+
 ## The ionosphere in layers
 
-The ionosphere forms when solar radiation removes electrons from atoms and molecules in the upper atmosphere. Ultraviolet radiation is especially important. The charged region changes with sunlight, season, solar activity, and time of day.
+The ionosphere forms when solar radiation removes electrons from atoms and molecules in the upper atmosphere. Ultraviolet radiation is especially important. The ionized region changes with sunlight, season, solar activity, and time of day.
 
 Daily ionization is usually strongest around midday. It is often weakest shortly before sunrise because the night gives charged particles time to recombine.
 
@@ -94,7 +98,7 @@ Skip distance is the distance from the transmitter to the closest point reached 
 
 Hop length is the distance covered by a sky-wave return. After the wave reaches Earth, some energy may reflect from the surface and go up again for another hop. Long HF contacts often use several hops.
 
-Typical upper hop scales are about 2 000 km for an E-region return and about 4 000 km for an F2-region return. E is lower, so its path is shorter. A longer route may need more hops or a different time or band.
+Typical upper single-hop scales are about 2 000 km for an E-region return and about 4 000 km for an F2-region return. E is lower, so its single-hop path is shorter. A longer route may need more hops or a different time or band.
 
 Geometry ideas matter:
 
@@ -105,9 +109,9 @@ Accessible text formula: lower launch angle plus similar layer height means long
 
 ### Worked example: comparing hop scales
 
-A field station needs to report expected coverage to a served agency. For a mid-distance check-in area, the operator treats an E-region return as a shorter path, up to about 2 000 km in good conditions.
+A field station needs to report expected coverage to a served agency. For a mid-distance check-in area, the operator treats an E-region return as a shorter single-hop path, up to about 2 000 km in good conditions.
 
-For a farther route, the operator looks for an F2-region path. Its hop planning scale can be about 4 000 km. The actual opening still depends on frequency, time, and ionization.
+For a farther route, the operator looks for an F2-region path. Its single-hop planning scale can be about 4 000 km. The actual opening still depends on frequency, time, and ionization.
 
 ### Misconception: more power fills the skip zone
 
@@ -136,7 +140,7 @@ For emergency practice, avoid promising that any mode is automatic. NVIS, repeat
 - Assuming more transmitter power eliminates a skip zone.
 - Confusing ground wave with sky wave just because both can be heard beyond the visible horizon.
 - Forgetting that the D region is lower than E and F and often causes loss rather than useful long-distance return.
-- Calling every VHF opening skip when ordinary line of sight or tropospheric bending may explain it.
+- Calling every VHF opening "skip" when ordinary line of sight or tropospheric bending may explain it.
 
 ## Illustration brief
 
@@ -152,5 +156,5 @@ Description: Draw a gentle curved Earth at the bottom with three stations. Show 
 - Solar ultraviolet radiation is a major source of ionization; daily ionization is usually highest around midday and lowest shortly before sunrise.
 - D, E, F1, and F2 are ordered upward, and the D region is often a daylight absorber on lower HF.
 - Skip distance is the first sky-wave return distance, and the skip zone is the uncovered gap before that return.
-- E-region paths are shorter than F2 paths; use about 2 000 km and about 4 000 km as planning scales.
+- E-region single-hop paths are shorter than F2 single-hop paths; use about 2 000 km and about 4 000 km as planning scales.
 - Layer height and launch angle set skip geometry more directly than transmitter power does.

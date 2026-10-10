@@ -27,6 +27,8 @@ Interference work starts with diagnosis, not blame. A clean amateur signal can s
 
 The skill is to separate those cases calmly. This lesson covers strong-signal overload, audio rectification in household equipment, unwanted signals from transmitting equipment, and common first cures.
 
+Common-mode current is unwanted RF flowing the same way on cable conductors, or on the outside of a coax shield.
+
 ## Learning objectives
 
 By the end of this lesson, you can:
@@ -114,7 +116,7 @@ The clues are different from ordinary receiver tuning:
 
 A temporary classroom station uses a compact end-fed antenna outside a window. During voice transmissions, powered computer speakers on the table produce raspy syllables. The symptom is strongest when a spare 3 m audio extension is plugged in. It nearly disappears when that extension is removed.
 
-Good first steps are to keep the audio lead short, route it away from the antenna lead, and add ferrite turns close to the powered-speaker input. If a common-mode choke at the feedline entry point changes the symptom, the station's RF-current path was part of the coupling.
+Good first steps are to keep the audio lead short, route it away from the antenna lead, and add ferrite turns close to the powered-speaker input. Shorter leads usually make poorer pickup antennas. If a common-mode choke at the feedline entry point changes the symptom, the station's RF-current path was part of the coupling.
 
 ### Misconception: every speaker complaint means dirty transmit audio
 
@@ -123,7 +125,7 @@ Good first steps are to keep the audio lead short, route it away from the antenn
 
 ## Ferrite chokes and bypass capacitors
 
-In this lesson, a ferrite choke means the whole cable passes through or around ferrite so the ferrite acts on common-mode RF. Common-mode current flows in the same direction on the cable conductors or on the outside of a coax shield. The wanted audio, DC, or data current usually flows out and back as a differential current, so the ferrite leaves it mostly unchanged.
+In this lesson, a ferrite choke means the whole cable passes through or around ferrite. The ferrite adds high RF impedance, or inductive reactance, to common-mode current. The wanted audio, DC, or data current usually flows out and back as a differential current, so the ferrite leaves it mostly unchanged.
 
 That limit matters. A snap-on ferrite is not a cure for every noisy charger, LED driver, or solar inverter. If the unwanted energy is differential noise inside the power leads, a proper line filter, better supply, repair, or equipment replacement may be needed.
 

@@ -47,6 +47,10 @@ harmonic frequency = fundamental frequency x harmonic number
 
 Harmonics from a transmitter are unwanted because they can fall in other services or other amateur bands. A harmonic problem often affects only devices or receivers whose frequency range lines up with a multiple. That differs from broad receiver overload, which tends to be less selective.
 
+Switching supplies can also make harmonics of their switching rate. For example, if a charger switches at 100 kHz, its 70th harmonic is 70 x 100 kHz = 7 000 kHz = 7.0 MHz.
+
+That number is before any filtering or shielding. It shows why small power supplies can matter to HF reception.
+
 ### Worked example: finding a harmonic
 
 A transmitter is operating on 4.6 MHz in a workshop test. A measuring receiver hears an unwanted signal at 13.8 MHz.
@@ -66,9 +70,9 @@ Canadian household AC power is 60 Hz. A full cycle takes 1 / 60 s = 0.0167 s, or
 
 A transmitter harmonic is different. If an RF signal starts at 3.7 MHz, the next integer multiples are 7.4 MHz and 11.1 MHz. Those are RF frequencies, not a 60 Hz hum.
 
-### Misconception: hum proves RF harmonics
+### Misconception: hum is the same as RF harmonics
 
-- Mistaken idea: any steady hum heard during transmitting proves harmonic RF emissions.
+- Mistaken idea: a power-line hum during transmitting is the same problem as RF harmonics.
 - Correction: hum and RF harmonics have different causes and frequencies. Check the symptom before choosing a filter.
 
 ## Overdrive, flat topping, and splatter
@@ -121,7 +125,7 @@ A low-pass filter ahead of the receiver with a cut-off above 4.2 MHz and well be
 
 A desk receiver hears a buzz whenever a nearby LED lamp is on. The buzz is strongest below 10 MHz and drops when the lamp is unplugged.
 
-A ferrite on the lamp lead may reduce common-mode RF on the cord. A mains-rated line filter may help if RF noise is returning through the power lead. If the lamp itself is poorly designed or failing, replacing it may be safer and more effective than adding parts around it.
+A ferrite on the lamp lead may reduce common-mode RF on the cord. A mains-rated AC line filter is a low-pass filter in this job: it passes power-line frequency and attenuates RF noise. If used, it belongs in the noisy lamp's power path or at the affected equipment's power input, according to the filter design. If the lamp itself is poorly designed or failing, replacing it may be safer and more effective than adding parts around it.
 
 ## High-pass filters
 

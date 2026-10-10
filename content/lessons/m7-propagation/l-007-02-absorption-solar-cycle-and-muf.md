@@ -50,6 +50,8 @@ On VHF and UHF, moving a handheld less than a metre in a city can change the rec
 
 Polarization means the orientation of the radio wave's electric field. On VHF and UHF line-of-sight contacts, matching antenna polarization can make a large difference. On HF sky-wave paths, the ionosphere can rotate or otherwise change the wave's polarization as it refracts the signal.
 
+Faraday rotation is that polarization twist as a wave travels through an ionized region. Reflection can also change the arriving polarization.
+
 ### In the real world: why AM broadcast carries farther at night
 
 Many AM broadcast stations are in the medium-frequency range, below the amateur HF bands. In daytime, the D region absorbs much of that lower-frequency sky-wave energy. The station may be heard mainly by ground wave.
@@ -112,7 +114,7 @@ The 20-metre band is comfortably inside that usable window. The 17-metre band is
 
 When a lower HF band is poor in bright daylight, try a higher HF band if the path and licence privileges allow it. The higher frequency may suffer less D-region absorption while still being below the MUF. If a high band suddenly stops supporting the path, try a lower band because the MUF may have fallen.
 
-Season changes the low bands too. Summer daylight is usually hardest on 160 and 80 metres for sky-wave paths beyond ground-wave range. Winter evenings are often friendlier because darkness weakens the D region.
+Season changes the low bands too. Summer daylight is usually hardest on 160 and 80 metres for sky-wave paths beyond ground-wave range because long daylight and stronger D-region absorption reduce sky-wave usefulness. Winter evenings are often friendlier because darkness weakens the D region.
 
 During a sudden ionospheric disturbance, lower HF can be heavily absorbed on sunlit paths. The practical response is not to change sideband or blame microphone gain. Try a higher frequency or wait for the disturbance to pass.
 

@@ -23,7 +23,7 @@ status: draft
 ---
 # VHF, UHF, and unusual propagation modes
 
-VHF and UHF are usually local, but usually does not mean always. The lower atmosphere can bend or scatter signals. Dense patches near the E region can open six metres. Aurora and meteor trails can create brief or distorted paths.
+VHF and UHF are usually local, but "usually" does not mean always. The lower atmosphere can bend or scatter signals. Dense patches near the E region can open six metres. Aurora and meteor trails can create brief or distorted paths.
 
 These modes are exciting because they break the everyday range expectation. They are not dependable replacements for ordinary coverage.
 
@@ -53,7 +53,7 @@ This is a planning estimate, not an ISED exam formula.
 
 - Given: handheld antenna height = 1.8 m; repeater antenna height = 100 m.
 - Find: combined horizon estimate.
-- Formula: path estimate = 4.12 x square root of 1.8 + 4.12 x square root of 100.
+- Formula: path estimate = handheld horizon + repeater horizon; each horizon = 4.12 x square root of antenna height in metres.
 - Substitute: path estimate = 4.12 x 1.34 + 4.12 x 10.
 - Answer: path estimate = 5.5 km + 41.2 km = 46.7 km.
 - Sanity check: the tall repeater site does most of the work, and terrain can still shorten the path.
@@ -99,9 +99,9 @@ The path follows the weather boundary for a while. The opening may vanish when w
 
 Auroral propagation uses disturbed ionization near E-region height in high-latitude directions. In the northern hemisphere, operators often aim antennas northward to use the auroral region. The reflected or scattered signal can sound raspy or fluttery because the aurora is moving and irregular.
 
-CW is often more readable than analog voice through auroral distortion. Short characters survive rough audio better than wide, natural speech.
+CW is often more readable than analog voice through auroral distortion because it is narrow and uses a simple on-off tone. Wide, natural speech is harder to understand when the path adds rapid flutter.
 
-Meteor scatter uses brief ionized trails left by meteors. VHF energy can reflect or scatter from the trail for a short burst. It is most effective for extended-range work from about 30 MHz to 100 MHz. Six metres sits in that useful range.
+Meteor scatter uses brief ionized trails left by meteors. VHF energy can reflect or scatter from the trail for a short burst. The 30 MHz to 100 MHz range fits well because the trails can scatter those wavelengths for a moment, while lower HF effects and higher-frequency trail loss make the path less useful. Six metres sits in that useful range.
 
 HF scatter can put weak, distorted signals into a skip zone. Only a small part of the transmitted energy is redirected toward the receiver, and multiple paths can smear the signal.
 
@@ -158,6 +158,6 @@ Description: Draw four labelled sketches on a single page. Panel A shows a six-m
 - Tropospheric bending slightly extends VHF/UHF range; ordinary VHF tropospheric range is roughly limited to an 800 km planning scale unless enhancement is present.
 - Tropospheric scatter redirects a small amount of VHF/UHF energy beyond the normal horizon.
 - Auroral propagation is often distorted; CW is usually more readable than analog voice FM.
-- Meteor scatter uses brief ionized trails and is most useful from about 30 MHz to 100 MHz, including six metres.
+- Meteor scatter uses brief ionized trails and is most useful from about 30 MHz to 100 MHz, where trails can scatter VHF wavelengths for short bursts.
 - Scattering redirects parts of a wave in many directions, so received signals are often weak or smeared.
 - Unusual modes are opportunities, not guaranteed everyday coverage.
