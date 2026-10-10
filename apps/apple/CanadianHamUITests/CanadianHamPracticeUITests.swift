@@ -2292,24 +2292,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
         }
         for _ in 0..<60 {
             let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
-            if let target, target.exists {
+            if let target, target.exists, offenders.isEmpty {
+                if isPartiallyVisibleBelowNavigationBar(target, in: app) { return }
                 let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
-                if offenders.isEmpty {
-                    if isPartiallyVisibleBelowNavigationBar(target, in: app) { return }
-                    if target.frame.maxY > visibleFrame.maxY {
-                        scrollView.swipeUp()
-                    } else {
-                        scrollView.swipeDown()
-                    }
-                    waitBriefly()
-                    continue
-                }
-                if target.frame.maxY <= visibleFrame.minY {
-                    scrollView.swipeDown()
+                if target.frame.maxY > visibleFrame.maxY {
+                    scrollView.swipeUp()
                 } else {
-                    let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
-                    let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
-                    start.press(forDuration: 0.01, thenDragTo: end)
+                    scrollView.swipeDown()
                 }
                 waitBriefly()
                 continue
