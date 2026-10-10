@@ -1,0 +1,125 @@
+{
+  "questionProgress": {
+    "input": [
+      {
+        "questionId": "B-001-001-001",
+        "bankId": "basic-2025-07-15",
+        "attempts": 2,
+        "correctAttempts": 1,
+        "lastAttemptedAt": "2026-01-02T03:04:05.000Z",
+        "lastResult": "correct",
+        "recentResults": [false, true],
+        "leitner": { "box": 1, "dueAt": "2026-01-03T03:04:05.000Z" },
+        "notes": "device-a"
+      },
+      {
+        "questionId": "B-001-001-001",
+        "bankId": "basic-2025-07-15",
+        "attempts": 3,
+        "correctAttempts": 2,
+        "lastAttemptedAt": "2026-01-02T03:04:05.000Z",
+        "lastResult": "incorrect",
+        "recentResults": [true, false, true],
+        "leitner": { "box": 2, "dueAt": "2026-01-04T03:04:05.000Z" },
+        "notes": "device-b"
+      }
+    ],
+    "expected": [
+      {
+        "questionId": "B-001-001-001",
+        "bankId": "basic-2025-07-15",
+        "attempts": 5,
+        "correctAttempts": 3,
+        "lastAttemptedAt": "2026-01-02T03:04:05.000Z",
+        "lastResult": "incorrect",
+        "recentResults": [false, true, true, false, true],
+        "leitner": { "box": 2, "dueAt": "2026-01-04T03:04:05.000Z" },
+        "notes": "device-b"
+      }
+    ]
+  },
+  "examAttempts": {
+    "input": [
+      {
+        "id": "attempt-a",
+        "bankId": "basic-2025-07-15",
+        "mode": "mock-exam",
+        "seed": "seed-a",
+        "startedAt": "2026-01-02T03:00:00.000Z",
+        "submittedAt": "2026-01-02T04:00:00.000Z",
+        "timer": { "enabled": false, "secondsAllowed": null, "secondsElapsed": 0 },
+        "items": [],
+        "score": { "bankId": "basic-2025-07-15", "correct": 1, "total": 1, "percent": 100, "passed": true, "honours": true, "categoryBreakdown": [], "weakSubsectionIds": [] }
+      },
+      {
+        "id": "attempt-b",
+        "bankId": "basic-2025-07-15",
+        "mode": "mock-exam",
+        "seed": "seed-b",
+        "startedAt": "2026-01-02T03:05:00.000Z",
+        "submittedAt": "2026-01-02T04:00:00.000Z",
+        "timer": { "enabled": false, "secondsAllowed": null, "secondsElapsed": 5 },
+        "items": [],
+        "score": { "bankId": "basic-2025-07-15", "correct": 0, "total": 1, "percent": 0, "passed": false, "honours": false, "categoryBreakdown": [], "weakSubsectionIds": [] }
+      },
+      {
+        "id": "advanced-same-time",
+        "bankId": "advanced-2025-02-04",
+        "mode": "mock-exam",
+        "seed": "advanced-seed",
+        "startedAt": "2026-01-02T03:10:00.000Z",
+        "submittedAt": "2026-01-02T04:00:00.000Z",
+        "timer": { "enabled": false, "secondsAllowed": null, "secondsElapsed": 10 },
+        "items": [],
+        "score": { "bankId": "advanced-2025-02-04", "correct": 1, "total": 1, "percent": 100, "passed": true, "honours": false, "categoryBreakdown": [], "weakSubsectionIds": [] }
+      }
+    ],
+    "expectedSubmittedAtById": {
+      "attempt-a": "2026-01-02T04:00:00.000Z",
+      "attempt-b": "2026-01-02T04:00:00.001Z",
+      "advanced-same-time": "2026-01-02T04:00:00.000Z"
+    }
+  },
+  "morseCourseProgress": {
+    "input": [
+      {
+        "courseId": "ised-koch-g4fon-v1",
+        "lessonProgress": [
+          { "lessonId": "koch-001", "attempts": 1, "bestAccuracy": 0.9, "lastAccuracy": 0.9, "lastAttemptedAt": "2026-01-02T04:00:00.000Z" }
+        ],
+        "characterStats": [
+          { "character": "K", "attempts": 2, "correctAttempts": 1, "recentResults": [false, true], "lastPracticedAt": "2026-01-02T04:00:00.000Z" }
+        ],
+        "dailyActivity": [
+          { "date": "2026-01-02", "lessonsCompleted": 1 }
+        ]
+      },
+      {
+        "courseId": "ised-koch-g4fon-v1",
+        "lessonProgress": [
+          { "lessonId": "koch-001", "attempts": 2, "bestAccuracy": 1, "lastAccuracy": 1, "lastAttemptedAt": "2026-01-03T04:00:00.000Z", "completedAt": "2026-01-03T04:00:00.000Z" }
+        ],
+        "characterStats": [
+          { "character": "K", "attempts": 1, "correctAttempts": 1, "recentResults": [true], "lastPracticedAt": "2026-01-03T04:00:00.000Z" }
+        ],
+        "dailyActivity": [
+          { "date": "2026-01-02", "lessonsCompleted": 1 },
+          { "date": "2026-01-03", "lessonsCompleted": 1 }
+        ]
+      }
+    ],
+    "expected": {
+      "courseId": "ised-koch-g4fon-v1",
+      "lessonProgress": [
+        { "lessonId": "koch-001", "attempts": 3, "bestAccuracy": 1, "lastAccuracy": 1, "lastAttemptedAt": "2026-01-03T04:00:00.000Z", "completedAt": "2026-01-03T04:00:00.000Z" }
+      ],
+      "characterStats": [
+        { "character": "K", "attempts": 3, "correctAttempts": 2, "recentResults": [false, true, true], "lastPracticedAt": "2026-01-03T04:00:00.000Z" }
+      ],
+      "dailyActivity": [
+        { "date": "2026-01-02", "lessonsCompleted": 2 },
+        { "date": "2026-01-03", "lessonsCompleted": 1 }
+      ]
+    }
+  }
+}

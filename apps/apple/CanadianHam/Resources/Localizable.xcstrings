@@ -2359,18 +2359,18 @@
         }
       }
     },
-    "This development build includes bundled content and has no accounts, analytics, telemetry, ads, remote config, third-party SDKs, or developer-operated servers. iCloud Sync is optional and off until you turn it on; import and export use local files you choose." : {
+    "This development build bundles all study content locally. It has no accounts, analytics, telemetry, ads, remote config, third-party SDKs, or developer-operated servers. iCloud Sync is optional and off until you turn it on; import and export use local files you choose." : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cette version de développement comprend du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucune configuration distante, aucun SDK tiers ni aucun serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
+            "value" : "Cette version de développement regroupe tout le contenu d’étude localement. Elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucune configuration distante, aucun SDK tiers ni aucun serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cette version de développement comprend du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucune configuration distante, aucun SDK tiers ni aucun serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
+            "value" : "Cette version de développement regroupe tout le contenu d’étude localement. Elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucune configuration distante, aucun SDK tiers ni aucun serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
           }
         }
       }
@@ -2407,34 +2407,34 @@
         }
       }
     },
-    "Off by default. When enabled, question practice and mock exam progress can sync through your private iCloud database after restart; lesson progress and preferences stay on this device." : {
+    "Off by default. When enabled, learning progress can sync through your private iCloud database after restart; preferences stay on this device." : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Désactivée par défaut. Une fois activée, la progression des exercices et des examens simulés peut se synchroniser avec votre base de données iCloud privée après le redémarrage; la progression des leçons et les préférences restent sur cet appareil."
+            "value" : "Désactivée par défaut. Une fois activée, la progression d’apprentissage peut se synchroniser avec votre base de données iCloud privée après le redémarrage; les préférences restent sur cet appareil."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Désactivée par défaut. Une fois activée, la progression des exercices et des examens simulés peut se synchroniser avec votre base de données iCloud privée après le redémarrage; la progression des leçons et les préférences restent sur cet appareil."
+            "value" : "Désactivée par défaut. Une fois activée, la progression d’apprentissage peut se synchroniser avec votre base de données iCloud privée après le redémarrage; les préférences restent sur cet appareil."
           }
         }
       }
     },
-    "Off by default. When enabled, question practice and mock exam progress can sync through your private iCloud database after restart; lesson progress and preferences stay on this Mac." : {
+    "Off by default. When enabled, learning progress can sync through your private iCloud database after restart; preferences stay on this Mac." : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Désactivée par défaut. Une fois activée, la progression des exercices et des examens simulés peut se synchroniser avec votre base de données iCloud privée après le redémarrage; la progression des leçons et les préférences restent sur ce Mac."
+            "value" : "Désactivée par défaut. Une fois activée, la progression d’apprentissage peut se synchroniser avec votre base de données iCloud privée après le redémarrage; les préférences restent sur ce Mac."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Désactivée par défaut. Une fois activée, la progression des exercices et des examens simulés peut se synchroniser avec votre base de données iCloud privée après le redémarrage; la progression des leçons et les préférences restent sur ce Mac."
+            "value" : "Désactivée par défaut. Une fois activée, la progression d’apprentissage peut se synchroniser avec votre base de données iCloud privée après le redémarrage; les préférences restent sur ce Mac."
           }
         }
       }

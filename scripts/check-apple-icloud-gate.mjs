@@ -10,12 +10,14 @@ const pbxprojPath = join(root, 'apps/apple/CanadianHam.xcodeproj/project.pbxproj
 const defaultMacEntitlementsPath = join(root, 'apps/apple/CanadianHam/Resources/CanadianHam.macOS.entitlements');
 const cloudIOSEntitlementsPath = join(root, 'apps/apple/CanadianHam/Resources/CanadianHam.iOS.CloudKit.entitlements');
 const cloudMacEntitlementsPath = join(root, 'apps/apple/CanadianHam/Resources/CanadianHam.macOS.CloudKit.entitlements');
+const cloudInfoPlistPath = join(root, 'apps/apple/CanadianHam/Resources/CanadianHam.iOS.CloudKit.Info.plist');
 
 const projectYml = readFileSync(projectYmlPath, 'utf8');
 const pbxproj = readFileSync(pbxprojPath, 'utf8');
 const defaultMacEntitlements = readFileSync(defaultMacEntitlementsPath, 'utf8');
 const cloudIOSEntitlements = readFileSync(cloudIOSEntitlementsPath, 'utf8');
 const cloudMacEntitlements = readFileSync(cloudMacEntitlementsPath, 'utf8');
+const cloudInfoPlist = readFileSync(cloudInfoPlistPath, 'utf8');
 
 const errors = [];
 const fail = (message) => errors.push(message);
@@ -63,14 +65,17 @@ for (const [label, text] of [
 }
 // Exact entitlement scope: only the approved keys, each with exactly the approved value.
 function parseTopLevelEntitlements(text) {
+  const dictBody = text.match(/<dict>([\s\S]*)<\/dict>/)?.[1] ?? text;
   const entries = new Map();
-  const pattern = /<key>([^<]+)<\/key>\s*(<string>([^<]*)<\/string>|<true\/>|<false\/>|<array>([\s\S]*?)<\/array>)/g;
-  for (const match of text.matchAll(pattern)) {
+  const pattern = /<key>([^<]+)<\/key>\s*(<string>([^<]*)<\/string>|<true\/>|<false\/>|<integer>([^<]*)<\/integer>|<array>([\s\S]*?)<\/array>|<dict>([\s\S]*?)<\/dict>)/g;
+  for (const match of dictBody.matchAll(pattern)) {
     let value;
     if (match[3] !== undefined) value = match[3];
     else if (match[2] === '<true/>') value = true;
     else if (match[2] === '<false/>') value = false;
-    else value = [...(match[4] ?? '').matchAll(/<string>([^<]*)<\/string>/g)].map((item) => item[1]);
+    else if (match[4] !== undefined) value = Number(match[4]);
+    else if (match[5] !== undefined) value = [...match[5].matchAll(/<string>([^<]*)<\/string>/g)].map((item) => item[1]);
+    else value = { type: 'dict' };
     entries.set(match[1], value);
   }
   return entries;
@@ -118,6 +123,12 @@ if (!cloudMacEntitlements.includes('<key>com.apple.developer.aps-environment</ke
 }
 if (cloudMacEntitlements.includes('<key>aps-environment</key>')) {
   fail('macOS CloudKit entitlements must not use the iOS aps-environment key.');
+}
+
+const backgroundModes = cloudInfoPlist.match(/<key>UIBackgroundModes<\/key>\s*<array>([\s\S]*?)<\/array>/)?.[1];
+const backgroundModeValues = backgroundModes === undefined ? [] : [...backgroundModes.matchAll(/<string>([^<]*)<\/string>/g)].map((item) => item[1]);
+if (JSON.stringify(backgroundModeValues) !== JSON.stringify(['remote-notification'])) {
+  fail(`CloudKit Info.plist UIBackgroundModes must be exactly ["remote-notification"], found ${JSON.stringify(backgroundModeValues)}.`);
 }
 
 if (/CloudKit\.Info\.plist in Resources/.test(pbxproj)) {

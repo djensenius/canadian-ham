@@ -312,6 +312,74 @@ export class ProgressStore {
 
 export const defaultProgressStore = new ProgressStore();
 
+export function deduplicateQuestionProgressForSync(records: readonly QuestionProgressRecord[]): QuestionProgressRecord[] {
+  const groups = groupBy(records, (record) => `${record.bankId}\u0000${record.questionId}`);
+  return [...groups.values()]
+    .map((group) => mergeQuestionProgressForSync(group))
+    .sort((a, b) => (a.bankId === b.bankId ? a.questionId.localeCompare(b.questionId) : a.bankId.localeCompare(b.bankId)));
+}
+
+export function mergeQuestionProgressForSync(records: readonly QuestionProgressRecord[]): QuestionProgressRecord {
+  if (records.length === 0) throw new Error("Cannot merge an empty question-progress group.");
+  const ordered = [...records].sort(questionProgressTieBreak);
+  const latest = ordered[ordered.length - 1];
+  return {
+    ...latest,
+    attempts: records.reduce((sum, record) => sum + record.attempts, 0),
+    correctAttempts: records.reduce((sum, record) => sum + record.correctAttempts, 0),
+    recentResults: ordered.flatMap((record) => record.recentResults).slice(-5),
+    notes: ordered.map((record) => record.notes).filter((note): note is string => note !== null && note !== undefined).at(-1) ?? null,
+  };
+}
+
+export function deduplicateExamAttemptsForSync(attempts: readonly ExamAttempt[]): ExamAttempt[] {
+  const byIdentity = [...groupBy(attempts, (attempt) => `${attempt.bankId}\u0000${attempt.id}`).values()]
+    .map((group) => [...group].sort(examAttemptTieBreak).at(-1)!)
+    .sort(examAttemptTieBreak);
+  const usedSubmittedAtByBank = new Map<string, Set<string>>();
+  return byIdentity.map((attempt) => {
+    const used = usedSubmittedAtByBank.get(attempt.bankId) ?? new Set<string>();
+    const submittedAt = uniqueSubmittedAt(attempt.submittedAt, used);
+    used.add(submittedAt);
+    usedSubmittedAtByBank.set(attempt.bankId, used);
+    return submittedAt === attempt.submittedAt ? attempt : { ...attempt, submittedAt };
+  });
+}
+
+function groupBy<T>(values: readonly T[], keyForValue: (value: T) => string): Map<string, T[]> {
+  const groups = new Map<string, T[]>();
+  for (const value of values) {
+    const key = keyForValue(value);
+    const group = groups.get(key);
+    if (group === undefined) groups.set(key, [value]);
+    else group.push(value);
+  }
+  return groups;
+}
+
+function questionProgressTieBreak(a: QuestionProgressRecord, b: QuestionProgressRecord): number {
+  return a.lastAttemptedAt.localeCompare(b.lastAttemptedAt)
+    || a.leitner.dueAt.localeCompare(b.leitner.dueAt)
+    || a.lastResult.localeCompare(b.lastResult)
+    || (a.notes ?? "").localeCompare(b.notes ?? "");
+}
+
+function examAttemptTieBreak(a: ExamAttempt, b: ExamAttempt): number {
+  return a.bankId.localeCompare(b.bankId) || a.submittedAt.localeCompare(b.submittedAt) || a.id.localeCompare(b.id);
+}
+
+function uniqueSubmittedAt(submittedAt: string, used: ReadonlySet<string>): string {
+  if (!used.has(submittedAt)) return submittedAt;
+  const match = /^(.*\.)(\d{3})Z$/.exec(submittedAt);
+  if (match === null) return submittedAt;
+  const milliseconds = Number(match[2]);
+  for (let offset = 1; offset <= 999; offset += 1) {
+    const candidate = `${match[1]}${String((milliseconds + offset) % 1000).padStart(3, "0")}Z`;
+    if (!used.has(candidate)) return candidate;
+  }
+  return submittedAt;
+}
+
 export function serializeProgressExport(data: ProgressExportV1): string {
   return `${JSON.stringify(data, null, 2)}\n`;
 }

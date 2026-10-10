@@ -130,6 +130,86 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertFalse(store.isICloudSyncEnabled)
     }
 
+    func testSharedICloudMergeFixtureCoversQuestionExamAndMorseRules() throws {
+        struct Fixture: Decodable {
+            struct QuestionProgress: Decodable {
+                let input: [QuestionProgressRecord]
+                let expected: [QuestionProgressRecord]
+            }
+            struct ExamAttempts: Decodable {
+                let input: [StoredExamAttempt]
+                let expectedSubmittedAtById: [String: String]
+            }
+            struct MorseProgress: Decodable {
+                let input: [MorseCourseProgressExport]
+                let expected: MorseCourseProgressExport
+            }
+            let questionProgress: QuestionProgress
+            let examAttempts: ExamAttempts
+            let morseCourseProgress: MorseProgress
+        }
+        let fixtureURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appending(path: "fixtures/progress/icloud-merge.json")
+        let fixture = try JSONDecoder().decode(Fixture.self, from: Data(contentsOf: fixtureURL))
+
+        XCTAssertEqual(ProgressSyncMerge.deduplicateQuestionProgress(fixture.questionProgress.input), fixture.questionProgress.expected)
+        let examAttempts = ProgressSyncMerge.deduplicateExamAttempts(fixture.examAttempts.input)
+        XCTAssertEqual(Dictionary(uniqueKeysWithValues: examAttempts.map { ($0.id, $0.submittedAt) }), fixture.examAttempts.expectedSubmittedAtById)
+        XCTAssertEqual(ProgressSyncMerge.mergeMorseCourseProgress(fixture.morseCourseProgress.input), fixture.morseCourseProgress.expected)
+    }
+
+    func testICloudDeleteStopsSyncBeforeDeletingZoneAndKeepsLocalWithoutReupload() async throws {
+        let store = try ProgressStoreService.inMemoryForTests(iCloudSyncEnabled: true, layout: .split)
+        let record = QuestionProgressRecord(
+            questionId: "B-001-001-001",
+            bankId: basicBankId,
+            attempts: 1,
+            correctAttempts: 1,
+            lastAttemptedAt: "2026-01-02T03:04:05.000Z",
+            lastResult: .correct,
+            recentResults: [true],
+            leitner: LeitnerState(box: 1, dueAt: "2026-01-03T03:04:05.000Z")
+        )
+        try store.saveQuestionProgress([record])
+        var deletedAfterLocalReopen = false
+        let client = ICloudProgressDeletionClient {
+            deletedAfterLocalReopen = !store.isICloudSyncEnabled
+        }
+
+        try await store.deleteICloudProgress(localDataChoice: .keepLocal, client: client)
+
+        XCTAssertTrue(deletedAfterLocalReopen)
+        XCTAssertFalse(store.isICloudSyncEnabled)
+        XCTAssertEqual(try store.questionProgressRecords(), [record])
+        let restarted = try ProgressStoreService.inMemoryForTests(iCloudSyncEnabled: ICloudSyncSettings.storedOptIn(), layout: .split)
+        XCTAssertFalse(restarted.isICloudSyncEnabled)
+    }
+
+    func testICloudDeleteCanDeleteLocalDataAfterZoneDelete() async throws {
+        let store = try ProgressStoreService.inMemoryForTests(iCloudSyncEnabled: true, layout: .split)
+        let record = QuestionProgressRecord(
+            questionId: "B-001-001-001",
+            bankId: basicBankId,
+            attempts: 1,
+            correctAttempts: 1,
+            lastAttemptedAt: "2026-01-02T03:04:05.000Z",
+            lastResult: .correct,
+            recentResults: [true],
+            leitner: LeitnerState(box: 1, dueAt: "2026-01-03T03:04:05.000Z")
+        )
+        try store.saveQuestionProgress([record])
+        var deleteCalled = false
+
+        try await store.deleteICloudProgress(localDataChoice: .deleteLocal, client: ICloudProgressDeletionClient { deleteCalled = true })
+
+        XCTAssertTrue(deleteCalled)
+        XCTAssertFalse(store.isICloudSyncEnabled)
+        XCTAssertEqual(try store.questionProgressRecords(), [])
+    }
+
     func testICloudSyncToggleAndAccountSignalsPreserveLocalProgress() throws {
         let defaultsSuiteName = "ProgressStoreTests.iCloudSync.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: defaultsSuiteName))
@@ -175,6 +255,26 @@ final class ProgressStoreTests: XCTestCase {
         store.handleICloudAccountAvailability(.restricted, defaults: defaults)
         XCTAssertFalse(ICloudSyncSettings.storedOptIn(defaults: defaults))
         XCTAssertEqual(try store.questionProgressRecords(), [record])
+    }
+
+    func testDefaultLayoutResetDoesNotWriteGatedLegacyCopyMarker() throws {
+        let directory = try temporaryProgressStoreDirectory()
+        let urls = ProgressStoreURLs(progressDirectory: directory)
+        let store = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
+
+        try store.resetAllData()
+
+        XCTAssertFalse(FileManager.default.fileExists(atPath: urls.legacyPreferencesCopyMarkerURL.path(percentEncoded: false)))
+    }
+
+    func testSplitStoreFailedLegacyPreferencesReadDoesNotCreateMarkerAndRetries() throws {
+        let directory = try temporaryProgressStoreDirectory()
+        let urls = ProgressStoreURLs(progressDirectory: directory)
+        try Data("not a swiftdata store".utf8).write(to: urls.persistentStoreURL)
+
+        _ = try? ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .split)
+
+        XCTAssertFalse(FileManager.default.fileExists(atPath: urls.legacyPreferencesCopyMarkerURL.path(percentEncoded: false)))
     }
 
     func testSplitStoreFirstOpenCopiesLegacyPreferencesWithoutLosingProgress() throws {
@@ -358,7 +458,9 @@ final class ProgressStoreTests: XCTestCase {
             dailyActivity: [MorseDailyActivityRecord(date: "2026-01-02", lessonsCompleted: 1)]
         )
         try store.saveMorseCourseProgress(morseProgress)
-        XCTAssertTrue(FileManager.default.fileExists(atPath: store.morseCourseProgressURLForTesting.path(percentEncoded: false)))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: store.morseCourseProgressURLForTesting.path(percentEncoded: false)))
+        let entityContext = ModelContext(store.container)
+        XCTAssertEqual(try entityContext.fetch(FetchDescriptor<MorseCourseProgressEntity>()).count, 1)
 
         let exported = try store.exportData(bank: bank, exportedAt: "2026-01-02T05:04:05.000Z")
         XCTAssertEqual(exported.schema, "canadian-ham.progress-export")
@@ -384,6 +486,19 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(try importedStore.examAttempts().count, 0)
         XCTAssertNil(try importedStore.morseCourseProgress())
         XCTAssertEqual(importedStore.preferences, .default)
+    }
+
+    func testMigratesLegacyMorseCourseProgressJSONIntoSwiftDataEntity() throws {
+        let directory = try temporaryProgressStoreDirectory()
+        let urls = ProgressStoreURLs(progressDirectory: directory)
+        let legacyProgress = sampleMorseCourseProgress()
+        try JSONEncoder().encode(legacyProgress).write(to: urls.morseCourseProgressURL, options: [.atomic])
+
+        let store = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
+
+        XCTAssertEqual(try store.morseCourseProgress(), legacyProgress)
+        let entityContext = ModelContext(store.container)
+        XCTAssertEqual(try entityContext.fetch(FetchDescriptor<MorseCourseProgressEntity>()).count, 1)
     }
 
     func testImportsOlderExportWithoutMorseCourseProgressKeepsExistingMorseProgress() throws {
@@ -1167,7 +1282,7 @@ final class ProgressStoreTests: XCTestCase {
             try context.save()
         }
 
-        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV2.self)
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
         let configuration = ModelConfiguration(schema: schema, url: storeURL, cloudKitDatabase: .none)
         let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
         let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL())
@@ -1178,11 +1293,26 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertTrue(store.preferences.examTimerEnabled)
         XCTAssertEqual(store.preferences.language, .french)
         XCTAssertEqual(store.preferences.theme, .dark)
+
+        let verificationContext = ModelContext(container)
+        verificationContext.insert(QuestionProgressEntity(
+            questionId: record.questionId,
+            bankId: record.bankId,
+            attempts: 1,
+            correctAttempts: 0,
+            lastAttemptedAt: "2026-01-02T05:04:05.000Z",
+            lastResult: AnswerResult.incorrect.rawValue,
+            recentResultsData: try encoder.encode([false]),
+            leitnerBox: 0,
+            dueAt: "2026-01-02T05:04:05.000Z"
+        ))
+        try verificationContext.save()
+        XCTAssertEqual(try verificationContext.fetch(FetchDescriptor<QuestionProgressEntity>(predicate: #Predicate { $0.questionId == record.questionId })).count, 2)
     }
 
     func testProgressStoreDeduplicatesV2EntitiesWithoutUniqueConstraints() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
-        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV2.self)
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
         let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
         let context = ModelContext(container)
@@ -1260,6 +1390,74 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(try verificationContext.fetch(FetchDescriptor<QuestionProgressEntity>()).count, 1)
         XCTAssertEqual(try verificationContext.fetch(FetchDescriptor<ExamAttemptEntity>()).count, 1)
         XCTAssertEqual(try verificationContext.fetch(FetchDescriptor<PreferencesEntity>()).count, 1)
+    }
+
+    func testExportDeduplicatesSyncedDuplicatesAndBankScopedSubmittedAt() throws {
+        let basicBank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let advancedBank = try QuestionBankStore.load(bankId: .advanced, from: Bundle(for: Self.self))
+        let store = try ProgressStoreService.inMemoryForTests()
+        let context = ModelContext(store.container)
+        let encoder = JSONEncoder()
+        let firstRecord = try applyAnswer(existing: nil, update: AnswerUpdate(
+            questionId: "B-001-001-001",
+            bankId: basicBank.manifest.bankId,
+            isCorrect: true,
+            now: "2026-01-02T03:04:05.000Z"
+        ))
+        let secondRecord = try applyAnswer(existing: firstRecord, update: AnswerUpdate(
+            questionId: firstRecord.questionId,
+            bankId: firstRecord.bankId,
+            isCorrect: false,
+            now: "2026-01-02T03:05:05.000Z"
+        ))
+        for record in [firstRecord, secondRecord] {
+            context.insert(QuestionProgressEntity(
+                questionId: record.questionId,
+                bankId: record.bankId,
+                attempts: record.attempts,
+                correctAttempts: record.correctAttempts,
+                lastAttemptedAt: record.lastAttemptedAt,
+                lastResult: record.lastResult.rawValue,
+                recentResultsData: try encoder.encode(record.recentResults),
+                leitnerBox: record.leitner.box,
+                dueAt: record.leitner.dueAt,
+                notes: record.notes
+            ))
+        }
+        let basicAttemptA = try mockAttempt(bank: basicBank, seed: "same-submitted-a", submittedAt: "2026-01-02T04:04:05.000Z")
+        let basicAttemptB = try mockAttempt(bank: basicBank, seed: "same-submitted-b", submittedAt: "2026-01-02T04:04:05.000Z")
+        let basicAttemptBDifferentId = StoredExamAttempt(
+            id: "different-id-same-submitted",
+            bankId: basicAttemptB.bankId,
+            mode: basicAttemptB.mode,
+            seed: basicAttemptB.seed,
+            startedAt: basicAttemptB.startedAt,
+            submittedAt: basicAttemptB.submittedAt,
+            timer: basicAttemptB.timer,
+            items: basicAttemptB.items,
+            score: basicAttemptB.score
+        )
+        let advancedAttemptSameSubmittedAt = try mockAttempt(bank: advancedBank, seed: "advanced-same-submitted", submittedAt: "2026-01-02T04:04:05.000Z")
+        for attempt in [basicAttemptA, basicAttemptBDifferentId, advancedAttemptSameSubmittedAt] {
+            context.insert(ExamAttemptEntity(
+                id: attempt.id,
+                bankId: attempt.bankId,
+                seed: attempt.seed,
+                startedAt: attempt.startedAt,
+                submittedAt: attempt.submittedAt,
+                payloadData: try encoder.encode(attempt)
+            ))
+        }
+        try context.save()
+
+        let exported = try store.exportData(bank: basicBank, exportedAt: "2026-01-02T05:04:05.000Z")
+
+        XCTAssertEqual(exported.questionProgress.count, 1)
+        XCTAssertEqual(exported.questionProgress[0].attempts, 3)
+        XCTAssertEqual(exported.examAttempts.count, 2)
+        XCTAssertEqual(Set(exported.examAttempts.map(\.submittedAt)).count, 2)
+        XCTAssertTrue(store.validate(exported, bank: basicBank).isEmpty)
+        XCTAssertEqual(try store.examAttempts().filter { $0.bankId == advancedBank.manifest.bankId }.map(\.submittedAt), ["2026-01-02T04:04:05.000Z"])
     }
 
     private struct StoreSnapshot: Equatable {

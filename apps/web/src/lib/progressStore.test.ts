@@ -1,11 +1,12 @@
 import assert from "node:assert/strict";
 import path from "node:path";
+import { readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { afterEach, beforeEach, describe, it } from "vitest";
 import { IDBFactory } from "fake-indexeddb";
 
 import { advancedBank, bankId } from "../data/bank";
-import { ProgressStore, defaultPreferences, validateProgressImport, type ExamAttempt, type LessonProgressRecord, type LessonQuizAttempt, type ProgressExportV1 } from "./progressStore";
+import { ProgressStore, deduplicateExamAttemptsForSync, deduplicateQuestionProgressForSync, defaultPreferences, validateProgressImport, type ExamAttempt, type LessonProgressRecord, type LessonQuizAttempt, type ProgressExportV1 } from "./progressStore";
 import type { QuestionProgressRecord } from "@canadian-ham/engine-ts";
 import type { MorseCourseProgressExport } from "@canadian-ham/morse-engine";
 
@@ -176,6 +177,17 @@ async function createVersion2Database(name: string): Promise<void> {
 }
 
 describe("ProgressStore", () => {
+  it("deduplicates sync collisions using the shared iCloud merge fixture", () => {
+    const fixture = JSON.parse(readFileSync(path.resolve(__dirname, "../../../../fixtures/progress/icloud-merge.json"), "utf8")) as {
+      questionProgress: { input: QuestionProgressRecord[]; expected: QuestionProgressRecord[] };
+      examAttempts: { input: ExamAttempt[]; expectedSubmittedAtById: Record<string, string> };
+    };
+
+    assert.deepEqual(deduplicateQuestionProgressForSync(fixture.questionProgress.input), fixture.questionProgress.expected);
+    const examAttempts = deduplicateExamAttemptsForSync(fixture.examAttempts.input);
+    assert.deepEqual(Object.fromEntries(examAttempts.map((attempt) => [attempt.id, attempt.submittedAt])), fixture.examAttempts.expectedSubmittedAtById);
+  });
+
   it("stores progress in IndexedDB and exports/imports a validated round trip", async () => {
     const first = createStore("roundtrip-a");
     await first.putQuestionProgress(record);

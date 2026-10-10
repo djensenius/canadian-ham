@@ -115,6 +115,7 @@ targets:
   writeFileSync(join(resources, 'CanadianHam.macOS.entitlements'), options.defaultMacEntitlements ?? '<plist><dict><key>com.apple.security.app-sandbox</key><true/></dict></plist>');
   writeFileSync(join(resources, 'CanadianHam.iOS.CloudKit.entitlements'), options.iosEntitlements ?? '<plist><dict><key>aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.org.davidjensenius.CanadianHam</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>');
   writeFileSync(join(resources, 'CanadianHam.macOS.CloudKit.entitlements'), options.macEntitlements ?? '<plist><dict><key>com.apple.developer.aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.org.davidjensenius.CanadianHam</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>');
+  writeFileSync(join(resources, 'CanadianHam.iOS.CloudKit.Info.plist'), options.cloudInfoPlist ?? '<plist><dict><key>UIBackgroundModes</key><array><string>remote-notification</string></array></dict></plist>');
   writeFileSync(join(root, 'apps/apple/CanadianHam.xcodeproj/project.pbxproj'), options.pbxproj ?? basePbxproj(options));
   return root;
 }
@@ -169,6 +170,10 @@ const extraContainer = '<plist><dict><key>aps-environment</key><string>developme
 assertFail('iOS extra iCloud container', { iosEntitlements: extraContainer }, 'com.apple.developer.icloud-container-identifiers must be exactly');
 assertFail('macOS extra iCloud service', { macEntitlements: '<plist><dict><key>com.apple.developer.aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.org.davidjensenius.CanadianHam</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string><string>CloudDocuments</string></array></dict></plist>' }, 'com.apple.developer.icloud-services must be exactly');
 assertFail('iOS extra entitlement key', { iosEntitlements: extraContainer.replace('</dict>', '<key>com.apple.developer.ubiquity-kvstore-identifier</key><string>x</string></dict>') }, 'outside the approved scope');
+assertFail('iOS extra integer entitlement key', { iosEntitlements: extraContainer.replace('</dict>', '<key>com.apple.developer.extra-integer</key><integer>1</integer></dict>') }, 'outside the approved scope');
+assertFail('macOS extra dict entitlement key', { macEntitlements: '<plist><dict><key>com.apple.developer.aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.org.davidjensenius.CanadianHam</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array><key>com.apple.developer.extra-dict</key><dict><key>nested</key><string>x</string></dict></dict></plist>' }, 'outside the approved scope');
+assertFail('CloudKit Info plist extra background mode', { cloudInfoPlist: '<plist><dict><key>UIBackgroundModes</key><array><string>remote-notification</string><string>fetch</string></array></dict></plist>' }, 'UIBackgroundModes must be exactly');
+assertFail('CloudKit Info plist missing background mode', { cloudInfoPlist: '<plist><dict></dict></plist>' }, 'UIBackgroundModes must be exactly');
 
 if (failures !== 0) {
   console.error(`icloud-gate-test: failed with ${failures} failure(s).`);
