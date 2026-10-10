@@ -1,9 +1,11 @@
 ---
 id: TASK-39.3
 title: 'Lesson text revision: M6 feedlines/antennas and M3 station/safety'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-10 22:15'
+updated_date: '2026-10-10 22:51'
 labels:
   - content
 dependencies:
