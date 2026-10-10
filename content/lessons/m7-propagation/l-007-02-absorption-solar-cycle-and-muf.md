@@ -24,9 +24,9 @@ status: draft
 ---
 # Absorption, solar cycle, and usable frequencies
 
-HF propagation changes because the ionosphere changes. Sunlight can make the upper atmosphere more useful for long paths, while the lower daylight ionosphere can soak up energy on lower HF bands. The same signal can also arrive over several paths and fade as those paths add or cancel at the receiver.
+HF propagation changes because the ionosphere changes. Sunlight can make the upper atmosphere more useful for long paths. The lower daylight ionosphere can also soak up energy on lower HF bands.
 
-This lesson gives you the vocabulary to read a propagation forecast without treating it as a promise. The goal is to choose a workable band and to know what to try when conditions change.
+The same signal can arrive over several paths and fade as those paths add or cancel at the receiver. This lesson gives you the words to read a propagation forecast without treating it as a promise.
 
 ## Learning objectives
 
@@ -40,51 +40,83 @@ By the end of this lesson, you can:
 
 ## Absorption and fading
 
-The D region is the usual daylight troublemaker for lower HF. A lower-frequency HF wave may be absorbed before enough energy reaches a higher region and returns. That is why lower HF and medium-frequency signals often improve after sunset, when the D region weakens.
+The D region is the usual daylight troublemaker for lower HF. A lower-frequency HF wave may lose too much energy before it reaches a higher region and returns. That is why lower HF and medium-frequency signals often improve after sunset, when the D region weakens.
 
-Fading can happen even when the band is open. A signal may arrive by more than one path: perhaps a shorter hop and a longer hop, or different parts of a broad wavefront. If those components arrive with different phase, they can partly cancel. When the cancellation affects some audio frequencies or parts of a wider signal more than others, the result is selective fading and distortion.
+Fading can happen even when the band is open. A signal may arrive by a shorter hop and a longer hop at the same time. If those components arrive with different phase, they can partly cancel.
 
-On VHF and UHF, moving a handheld a small distance in a city can change the received signal dramatically. Reflections from walls, vehicles, and metal structures create multiple paths, so the signal strength can vary over a distance smaller than the operator's stride.
+Selective fading happens when those phase differences cancel some parts of the transmitted signal more than others. It can make a wider voice or data signal sound hollow, rough, or distorted.
 
-Polarization also changes along some paths. On VHF and UHF line-of-sight contacts, matching the receive antenna's polarization to the transmit antenna can make a large difference. On HF sky-wave paths, the ionosphere can rotate or otherwise change the wave's polarization as it refracts the signal; Faraday rotation is a common name for that rotation in an ionized medium. Refraction, reflection, and Faraday rotation can all leave the arriving polarization different from the launched polarization.
+On VHF and UHF, moving a handheld less than a metre in a city can change the received signal. Reflections from walls, vehicles, and metal structures create multiple paths. A small move can turn cancellation into reinforcement.
 
-### Worked example: a fading voice signal
+Polarization means the orientation of the radio wave's electric field. On VHF and UHF line-of-sight contacts, matching antenna polarization can make a large difference. On HF sky-wave paths, the ionosphere can rotate or otherwise change the wave's polarization as it refracts the signal.
 
-During an evening HF net, a station's signal is readable for a minute, then becomes hollow and weak, then returns. The operator at the receiver hears no local noise burst and sees no loose cable. A likely explanation is multipath fading: components of the same transmission are arriving with changing phase relationships as the ionosphere moves.
+Faraday rotation is that polarization twist as a wave travels through an ionized region in the Earth's magnetic field. Reflection can also change the arriving polarization.
+
+### In the real world: why AM broadcast carries farther at night
+
+Many AM broadcast stations are in the medium-frequency range, below the amateur HF bands. In daytime, the D region absorbs much of that lower-frequency sky-wave energy. The station may be heard mainly by ground wave.
+
+After sunset, the D region weakens. Less energy is absorbed on the way up, so higher ionospheric regions can return some signals to Earth. That is why distant AM stations often appear at night.
+
+### Worked example: fading in an evening net
+
+During an evening HF net, a station is readable for a minute, then becomes hollow and weak, then returns. The receiver hears no local noise burst and the antenna connection is sound.
+
+A likely explanation is multipath fading. Parts of the same transmission are arriving over changing paths as the ionosphere moves.
+
+### Misconception: volume fixes propagation fading
+
+- Mistaken idea: a louder speaker setting fixes a fading radio path.
+- Correction: volume changes audio after reception. Fading happens before that, along the RF path.
 
 ## Solar activity and the solar cycle
 
-Sunspots are visible signs of solar magnetic activity. More sunspots usually mean more extreme-ultraviolet and related radiation that can increase ionization in the upper atmosphere. That tends to raise usable HF frequencies and can make higher HF bands more productive.
+Sunspots are visible signs of solar magnetic activity. More sunspots usually mean more ultraviolet (UV) radiation that can increase ionization in the upper atmosphere. That often raises usable HF frequencies.
 
-Solar flux is a measured radio-frequency output from the Sun and is used as a practical indicator of solar activity. A higher solar-flux value often goes with stronger ionization, though forecasts must still account for geomagnetic disturbance, time of day, season, and path direction.
+Solar flux is radio-frequency energy from the Sun measured as a practical activity indicator. A higher solar-flux value often goes with stronger ionization. Forecasts must still account for geomagnetic disturbance, time of day, season, and path direction.
 
-The solar cycle rises and falls over an average of about 11 years. Near a strong high part of the cycle, upper HF and sometimes the lower edge of VHF can produce exciting long-distance openings. Near a low part of the cycle, lower HF may still work well, but higher HF bands may be quiet for long periods. The 20-metre band is a useful exception to remember for daylight planning: it often supports worldwide propagation during low, middle, and high parts of the cycle, even though the exact hours and paths still change.
+The solar cycle rises and falls over an average of about 11 years. Near a strong high part of the cycle, upper HF and sometimes the lower edge of VHF can produce long-distance openings. Near a low part, lower HF may still work well, but higher HF bands may be quiet for long periods.
 
-### Worked example: alternate band plans for a route
+The 20-metre band is a useful daylight planning anchor. It often supports worldwide propagation during low, middle, and high parts of the cycle, although the exact hours and paths still change.
 
-A station wants an afternoon contact across the continent. In a low-activity month, the operator starts on a mid-HF band and keeps a lower band ready for evening. In a high-activity month, the operator also checks a higher HF band because the ionosphere may support a higher frequency. The route is the same, but the Sun changed the menu of likely bands.
+### In the real world: a changing band menu
+
+A station wants an afternoon contact across the continent. In a low-activity month, the operator starts on a mid-HF band and keeps a lower band ready for evening.
+
+In a high-activity month, the operator also checks a higher HF band because the ionosphere may support it. The route is the same, but the Sun changed the menu of likely bands.
 
 ## MUF, LUF, critical frequency, and OWF
 
-Critical frequency is measured for a region using a signal sent straight upward. It is the highest frequency that region can return for that vertical-incidence test at that moment.
+Critical frequency is measured with a signal sent straight upward. It is the highest frequency that an ionospheric region can return for that vertical test at that moment.
 
-Maximum usable frequency, or MUF, is path-specific. It means the highest frequency expected to support communication between two chosen places over a chosen ionospheric path. A signal sent at an oblique angle can work on a frequency above the local vertical critical frequency because the slanted path spends more distance in the refracting region.
+Maximum usable frequency, or MUF, is path-specific. It means the highest frequency expected to support communication between two chosen places over a chosen ionospheric path.
 
-Lowest usable frequency, or LUF, is the low-frequency limit set mainly by absorption and required signal strength. If a frequency is below the LUF, too much energy is lost or the received signal is not usable.
+A signal sent at a slant can work above the local vertical critical frequency. The slanted path spends more distance in the refracting region.
+
+Lowest usable frequency, or LUF, is the low-frequency limit set mainly by absorption and needed signal strength. If a frequency is below the LUF, too much energy is lost or the received signal is not usable.
 
 Optimum working frequency, or OWF, is the practical choice a little below the MUF. Accessible text formula: choose a working frequency below the MUF but above the LUF. Too high may pass through; too low may be absorbed.
 
 ### Worked example: picking a working frequency
 
-A forecast for a coastal-to-prairie path suggests the LUF is near 5.8 MHz and the MUF is near 18.6 MHz during the afternoon. A common planning estimate for OWF is about 85% of the MUF, so 0.85 × 18.6 MHz is about 15.8 MHz. The 20-metre band sits comfortably below that estimate and inside the usable window, while 17 metres is closer to the upper edge below the MUF. A voice operator would start with a real band inside the window rather than park at the top edge. If fading or absorption appears, the operator can test a nearby lower or higher band and compare actual signals.
+A forecast for a coastal-to-prairie path suggests the LUF is near 5.8 MHz and the MUF is near 18.6 MHz during the afternoon. A common planning estimate for OWF is about 85% of the MUF.
+
+- Given: MUF = 18.6 MHz; planning factor = 85% = 0.85.
+- Find: estimated OWF.
+- Formula: OWF = MUF x 0.85.
+- Substitute: OWF = 18.6 MHz x 0.85.
+- Answer: OWF = 15.8 MHz, rounded to one decimal place.
+- Sanity check: 15.8 MHz is below the MUF and above the example LUF.
+
+The 20-metre band is comfortably inside that usable window. The 17-metre band is closer to the upper edge. A voice operator would start with a real band inside the window rather than park at the top edge.
 
 ## What to try when a path fails
 
 When a lower HF band is poor in bright daylight, try a higher HF band if the path and licence privileges allow it. The higher frequency may suffer less D-region absorption while still being below the MUF. If a high band suddenly stops supporting the path, try a lower band because the MUF may have fallen.
 
-Season changes the low bands too. Summer daylight is usually most punishing on the two lowest HF bands, 160 and 80 metres, because long daylight and stronger lower-ionosphere ionization reduce sky-wave usefulness beyond ground-wave range. Winter evenings are often friendlier to those bands because darkness weakens the D region.
+Season changes the low bands too. Summer daylight is usually hardest on 160 and 80 metres for sky-wave paths beyond ground-wave range because long daylight and stronger D-region absorption reduce sky-wave usefulness. Winter evenings are often friendlier because darkness weakens the D region.
 
-During a sudden ionospheric disturbance, lower HF can be heavily absorbed on sunlit paths. The practical response is not to change sideband or blame microphone gain; it is to try a higher frequency or wait for the disturbance to pass.
+During a sudden ionospheric disturbance, lower HF can be heavily absorbed on sunlit paths. The practical response is not to change sideband or blame microphone gain. Try a higher frequency or wait for the disturbance to pass.
 
 Beacons and known broadcast or time-signal stations are useful clues. If signals near the frequency you want are being heard from the right direction, the band may be open. If they are absent, the path may still be closed or too weak for your station.
 
@@ -100,7 +132,7 @@ Beacons and known broadcast or time-signal stations are useful clues. If signals
 
 Propagation reports are tools for deciding what to try first. MUF, LUF, solar flux, and sunspot numbers guide your plan, but your receiver gives the final evidence. Tune for beacons, check the noise floor, listen for other stations on the same path, and be ready to move.
 
-For contesting and emergency exercises alike, the best operator is flexible. When a band closes, record what happened, try a band with a better reason to work, and keep the antenna and radio settings simple enough that you know the propagation changed rather than the station failing.
+For contesting and emergency exercises alike, the best operator is flexible. When a band closes, record what happened, try a band with a better reason to work, and keep the station settings simple enough that you know propagation changed rather than the station failing.
 
 ## Common mistakes
 
@@ -118,11 +150,11 @@ Description: Draw two panels. In the first, show the Sun lighting the lower iono
 
 ## Summary
 
-- The D region often absorbs lower HF energy during daylight.
+- The D region often absorbs lower HF and medium-frequency energy during daylight.
+- Distant AM broadcast signals often carry farther at night because D-region absorption is reduced.
 - Multipath propagation can cause fading, selective fading, and phase distortion.
 - More sunspots and higher solar flux usually indicate stronger ionization and higher usable HF frequencies; the average solar cycle is about 11 years.
 - HF sky-wave paths can change polarization through refraction, reflection, and Faraday rotation.
 - Critical frequency is a vertical-incidence measurement; MUF is for a particular path.
 - A practical working frequency is below the MUF and above the LUF, often estimated near 85% of the MUF for planning.
-- Summer daylight is usually hardest on the two lowest HF bands, while 20 metres can remain useful for worldwide daylight paths during low, middle, and high solar-cycle conditions.
 - When propagation changes, changing band is often more useful than changing audio settings or adding power.
