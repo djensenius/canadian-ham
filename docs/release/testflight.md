@@ -42,7 +42,7 @@ Status: internal TestFlight setup for Backlog `task-1.10`. Do not invite externa
    fastlane ios create_app_record
    ```
 
-   The lane requests platforms `ios`, `osx`, `appletvos`, and `xros` for the same universal-purchase bundle ID. Do not run this from automation.
+   The lane requests platforms `ios`, `osx`, and `tvos` for the same universal-purchase bundle ID. Fastlane `produce` does not accept the App Store Connect API names `appletvos` or `xros`; after the record exists, add visionOS manually in App Store Connect with **App Information → Add Platform**. Do not run this from automation.
 
 5. Check App Store Connect state when needed:
 

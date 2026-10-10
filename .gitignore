@@ -16,6 +16,7 @@ xcuserdata/
 .swiftpm/
 fastlane/archives/
 fastlane/builds/
+fastlane/README.md
 fastlane/report.xml
 fastlane/test_output/
 
