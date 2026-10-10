@@ -1471,7 +1471,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try performAudit(on: app, context: "Morse sending main screen \(appearance)")
 
         // Audit the lower half too: the paddles and feedback panel start below the fold.
-        let feedback = app.staticTexts["morse-sending-feedback-summary"].firstMatch
+        let feedback = firstVisibleElement(app.staticTexts.matching(identifier: "morse-sending-feedback-summary"), in: app)
         scrollUntilHittable(feedback, in: app, maxSwipes: 8)
         XCTAssertTrue(isFullyVisible(feedback, in: app, requiresHittable: false), "\(appearance.rawValue) sending main audit should scroll the feedback panel into view")
         let sendingScrollView = app.scrollViews.firstMatch
@@ -2388,9 +2388,20 @@ final class CanadianHamPracticeUITests: XCTestCase {
         )
     }
 
+    private func firstVisibleElement(_ query: XCUIElementQuery, in app: XCUIApplication) -> XCUIElement {
+        let windowFrame = app.windows.firstMatch.frame
+        for element in query.allElementsBoundByIndex where element.exists && element.frame.intersects(windowFrame) {
+            return element
+        }
+        return query.firstMatch
+    }
+
     private func scrollView(containing element: XCUIElement?, in app: XCUIApplication) -> XCUIElement {
         guard let element, element.exists else { return app.scrollViews.firstMatch }
         let scrollViews = app.scrollViews.allElementsBoundByIndex
+        for scrollView in scrollViews where scrollView.frame.intersects(element.frame) {
+            return scrollView
+        }
         if !element.identifier.isEmpty {
             for scrollView in scrollViews where scrollView.descendants(matching: .any)[element.identifier].firstMatch.exists {
                 return scrollView
@@ -2403,9 +2414,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
                     return scrollView
                 }
             }
-        }
-        for scrollView in scrollViews where scrollView.frame.intersects(element.frame) {
-            return scrollView
         }
         return app.scrollViews.firstMatch
     }
