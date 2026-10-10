@@ -590,9 +590,10 @@ struct MorseSettingsSection: View {
             if let fixedTimingDescription {
                 Text(fixedTimingDescription) // l10n: localized
                     .font(DesignTokens.FontScale.body.weight(.semibold))
-                    .foregroundStyle(DesignTokens.Colors.accentStrong)
+                    .foregroundStyle(DesignTokens.Colors.paper)
                     .accessibilityIdentifier("morse-settings-fixed-timing-description")
                     .padding(DesignTokens.Spacing.sm)
+                    .background(DesignTokens.Colors.ink, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous))
             }
             Slider(value: binding(\.volume), in: 0...1, step: 0.05) {
                 Text("Trainer volume") // l10n: localized
