@@ -125,7 +125,7 @@ Good first steps are to keep the audio lead short, route it away from the antenn
 
 ## Ferrite chokes and bypass capacitors
 
-In this lesson, a ferrite choke means the whole cable passes through or around ferrite. The ferrite adds high RF impedance, or inductive reactance, to common-mode current. The wanted audio, DC, or data current usually flows out and back as a differential current, so the ferrite leaves it mostly unchanged.
+In this lesson, a ferrite choke means the whole cable passes through or around ferrite. The ferrite adds high RF impedance to common-mode current. Part of that impedance is inductive reactance, and part is resistive loss that turns the unwanted RF into a little heat. The wanted audio, DC, or data current usually flows out and back as a differential current, so the ferrite leaves it mostly unchanged.
 
 That limit matters. A snap-on ferrite is not a cure for every noisy charger, LED driver, or solar inverter. If the unwanted energy is differential noise inside the power leads, a proper line filter, better supply, repair, or equipment replacement may be needed.
 

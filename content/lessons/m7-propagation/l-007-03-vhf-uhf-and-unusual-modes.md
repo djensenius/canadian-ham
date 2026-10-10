@@ -129,7 +129,7 @@ Do not turn these clues into guarantees. The same station may need a higher ante
 2. A two-metre contact reaches just beyond the normal planning scale during a calm evening over water. What evidence should the operator record before calling it a new everyday range? Note the weather layering, antenna direction, time, and distance so the contact can be tied to enhanced lower-atmosphere conditions.
 3. During a northern VHF opening, a club hears raspy signals but needs only short call-sign and grid exchanges. What operating style fits the clue? Use a narrow, simple mode and short messages that tolerate rapid flutter and distortion.
 4. A marginal HF path produces intelligible peaks followed by smeared audio on the same frequency. What should the operator log before blaming the radio? Record the frequency, time, signal strength, and distortion pattern so mixed propagation can be compared with later openings.
-5. A meteor-shower schedule uses fast digital bursts instead of long voice overs. Explain the timing choice. The ionized trails last briefly, so short structured messages have a better chance of fitting into each reflection.
+5. A meteor-shower schedule uses fast digital bursts instead of long voice transmissions. Explain the timing choice. The ionized trails last briefly, so short structured messages have a better chance of fitting into each reflection.
 
 ## Radio connection
 
