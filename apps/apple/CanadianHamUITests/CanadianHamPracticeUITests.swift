@@ -1460,8 +1460,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let feedback = app.staticTexts["morse-sending-feedback-summary"].firstMatch
         scrollUntilHittable(feedback, in: app, maxSwipes: 8)
         XCTAssertTrue(isFullyVisible(feedback, in: app, requiresHittable: false), "\(appearance.rawValue) sending main audit should scroll the feedback panel into view")
-        scrollUntilPartiallyVisible(feedback, in: app, maxSwipes: 4)
-        settleScrollableContentBelowNavigationBar(in: app, context: "Morse sending main screen lower half \(appearance)", preserving: feedback)
+        app.swipeUp()
+        waitBriefly()
+        XCTAssertTrue(isPartiallyVisibleBelowNavigationBar(feedback, in: app), "\(appearance.rawValue) sending feedback should be positioned before settling")
+        settleScrollableContentBelowNavigationBar(in: app, context: "Morse sending main screen lower half \(appearance)")
         assertPartiallyVisibleBelowNavigationBar(feedback, in: app, context: "\(appearance.rawValue) sending feedback after settling")
         try performAudit(on: app, context: "Morse sending main screen lower half \(appearance)")
     }
@@ -1720,8 +1722,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home top")
         let settings = app.staticTexts["Morse settings"].firstMatch
         scrollMorseHomeLowerContentIntoView(in: app)
-        scrollUntilPartiallyVisible(settings, in: app, maxSwipes: 4)
-        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse home lower content", preserving: settings)
+        XCTAssertTrue(isPartiallyVisibleBelowNavigationBar(settings, in: app), "\(appearance.rawValue) Morse settings should be positioned before settling")
+        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse home lower content")
         assertPartiallyVisibleBelowNavigationBar(settings, in: app, context: "\(appearance.rawValue) Morse settings after settling")
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home lower content")
         openMorseCourse(in: app)
@@ -1729,8 +1731,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home top")
         let lastUnit = app.buttons["morse-course-unit-8"].firstMatch
         scrollToMorseCourseLastUnit(in: app)
-        scrollUntilPartiallyVisible(lastUnit, in: app, maxSwipes: 4)
-        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse course home lower units", preserving: lastUnit)
+        XCTAssertTrue(isPartiallyVisibleBelowNavigationBar(lastUnit, in: app), "\(appearance.rawValue) final Morse course unit should be positioned before settling")
+        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse course home lower units")
         assertPartiallyVisibleBelowNavigationBar(lastUnit, in: app, context: "\(appearance.rawValue) final Morse course unit after settling")
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home lower units")
 
@@ -2281,7 +2283,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
     private func settleScrollableContentBelowNavigationBar(
         in app: XCUIApplication,
         context: String,
-        preserving target: XCUIElement? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
@@ -2290,19 +2291,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
             XCTFail("\(context): expected a scroll view before settling content below the navigation bar", file: file, line: line)
             return
         }
-        for _ in 0..<60 {
+        for _ in 0..<30 {
             let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
-            if let target, target.exists, offenders.isEmpty {
-                if isPartiallyVisibleBelowNavigationBar(target, in: app) { return }
-                let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
-                if target.frame.maxY > visibleFrame.maxY {
-                    scrollView.swipeUp()
-                } else {
-                    scrollView.swipeDown()
-                }
-                waitBriefly()
-                continue
-            }
             if offenders.isEmpty { return }
             let hasOffenderClippedAboveWindow = offenders.contains(where: \.isClippedAboveWindow)
             if hasOffenderClippedAboveWindow {
@@ -2311,8 +2301,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 start.press(forDuration: 0.01, thenDragTo: end)
             } else {
                 let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
-                let endOffsetY = target == nil ? 0.40 : 0.55
-                let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: endOffsetY))
+                let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.40))
                 start.press(forDuration: 0.01, thenDragTo: end)
             }
             waitBriefly()
@@ -2324,9 +2313,6 @@ final class CanadianHamPracticeUITests: XCTestCase {
             file: file,
             line: line
         )
-        if let target {
-            assertPartiallyVisibleBelowNavigationBar(target, in: app, context: context, file: file, line: line)
-        }
     }
 
     private func scrollableElementsIntersectingProtectedArea(in app: XCUIApplication, scrollView: XCUIElement) -> [ProtectedAreaOffender] {
