@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:14'
-updated_date: '2026-10-10 22:20'
+updated_date: '2026-10-10 22:24'
 labels:
   - content
   - docs
@@ -32,5 +32,8 @@ Research and write docs/teaching-guide.md: a plain-language standard (target rea
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Verify renderer-supported Markdown and lesson conventions from existing docs, sample lessons, and parser code.\n2. Check regulatory and numeric claims from the research brief against docs/exam-facts.md and content/generated/basic-2025-07-15/questions.json; drop or mark unverified claims.\n3. Write docs/teaching-guide.md with concise writer guidance, supported templates, verified example bank, memory tricks, misconceptions, Canadian accuracy notes, originality rules, and revision checklist.\n4. Run docs/content checks, record evidence in task notes, check acceptance criteria, finalize task, and commit.
+1. Verify renderer-supported Markdown and lesson conventions from existing docs, sample lessons, and parser code.
+2. Check regulatory and numeric claims from the research brief against docs/exam-facts.md and content/generated/basic-2025-07-15/questions.json; drop or mark unverified claims.
+3. Write docs/teaching-guide.md with concise writer guidance, supported templates, verified example bank, memory tricks, misconceptions, Canadian accuracy notes, originality rules, and revision checklist.
+4. Run docs/content checks, record evidence in task notes, check acceptance criteria, finalize task, and commit.
 <!-- SECTION:PLAN:END -->
