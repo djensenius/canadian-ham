@@ -2267,14 +2267,15 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func scrollUntilHittable(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
+        let scrollView = scrollView(containing: element, in: app)
         for _ in 0..<maxSwipes where !isFullyVisible(element, in: app, requiresHittable: true) {
-            app.scrollViews.firstMatch.swipeUp()
+            scrollView.swipeUp()
             waitBriefly()
         }
     }
 
     private func scrollUntilPartiallyVisible(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
-        let scrollView = app.scrollViews.firstMatch
+        let scrollView = scrollView(containing: element, in: app)
         guard scrollView.waitForExistence(timeout: 1) else {
             XCTFail("Expected a scroll view while scrolling element into view. Identifier: \(element.identifier); label: \(element.label)")
             return
@@ -2298,7 +2299,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        let scrollView = app.scrollViews.firstMatch
+        let scrollView = scrollView(containing: target, in: app)
         guard scrollView.waitForExistence(timeout: 1) else {
             XCTFail("\(context): expected a scroll view before settling content below the navigation bar", file: file, line: line)
             return
@@ -2356,6 +2357,28 @@ final class CanadianHamPracticeUITests: XCTestCase {
             file: file,
             line: line
         )
+    }
+
+    private func scrollView(containing element: XCUIElement?, in app: XCUIApplication) -> XCUIElement {
+        guard let element, element.exists else { return app.scrollViews.firstMatch }
+        let scrollViews = app.scrollViews.allElementsBoundByIndex
+        if !element.identifier.isEmpty {
+            for scrollView in scrollViews where scrollView.descendants(matching: .any)[element.identifier].firstMatch.exists {
+                return scrollView
+            }
+        }
+        if !element.label.isEmpty {
+            let sameLabel = NSPredicate(format: "label == %@", element.label)
+            for scrollView in scrollViews {
+                if scrollView.staticTexts.matching(sameLabel).firstMatch.exists || scrollView.buttons.matching(sameLabel).firstMatch.exists {
+                    return scrollView
+                }
+            }
+        }
+        for scrollView in scrollViews where scrollView.frame.intersects(element.frame) {
+            return scrollView
+        }
+        return app.scrollViews.firstMatch
     }
 
     private func scrollableElementsIntersectingProtectedArea(in app: XCUIApplication, scrollView: XCUIElement) -> [ProtectedAreaOffender] {
