@@ -1,9 +1,11 @@
 ---
 id: TASK-38.1
 title: 'Figure pipeline, hide placeholders, Ohm''s law set'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-10 20:55'
+updated_date: '2026-10-10 20:56'
 labels:
   - content
   - apple
