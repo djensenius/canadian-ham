@@ -1,7 +1,7 @@
 ---
 id: TASK-39.5
 title: 'Lesson text revision: M1 regulations and M2 operating'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
@@ -57,5 +57,5 @@ Review r1 validation passed: node packages/content-tools/src/check-lesson-covera
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Revised all six M1 regulation lessons and all four M2 operating lessons to the teaching guide in reference style. Added practical real-world context, procedure examples, approved memory aids, and worked operating numbers where useful while preserving lesson IDs, front matter coverage, quiz references, and Illustration brief sections. Verified regulatory and operating facts against content/generated/basic-2025-07-15/questions.json and docs/exam-facts.md; final checks passed for coverage, quizzes, originality, explanations, links, TZ=UTC pnpm test, and content-swift swift test.
+Revised task-39.5 after review r1. Fixed every requested-change, note, and minor item: S-unit originality/readability, M1 memory-trick placement, ERP/EIRP definitions and repeater/stability prose, learner-facing writer notes, L-001-04 final-stage power example, M2 sample on-air exchanges, UTC originality, wording slips, and light real-world hardware context. Verified with coverage, quizzes, lesson originality :all, explanations, links, TZ=UTC pnpm test, and content-swift swift test.
 <!-- SECTION:FINAL_SUMMARY:END -->
