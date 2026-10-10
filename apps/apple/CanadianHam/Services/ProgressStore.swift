@@ -538,10 +538,10 @@ extension ICloudProgressDeletionClient {
     static func cloudKit(containerIdentifier: String = ICloudSyncSettings.containerIdentifier) -> ICloudProgressDeletionClient {
         ICloudProgressDeletionClient {
             let database = CKContainer(identifier: containerIdentifier).privateCloudDatabase
-            let zones = try await fetchRecordZones(database: database)
+            let zones = try await Self.fetchRecordZones(database: database)
             let zoneIDs = zones.map(\.zoneID).filter { $0.zoneName != CKRecordZone.default().zoneID.zoneName }
             guard !zoneIDs.isEmpty else { return }
-            try await deleteRecordZones(zoneIDs, database: database)
+            try await Self.deleteRecordZones(zoneIDs, database: database)
         }
     }
 
