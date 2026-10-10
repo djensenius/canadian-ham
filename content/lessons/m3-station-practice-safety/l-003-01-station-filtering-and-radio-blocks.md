@@ -121,7 +121,7 @@ antenna -> RF amplifier -> mixer -> IF filter -> IF amplifier -> limiter -> disc
 
 The RF amplifier is the front end. It should add little noise, because weak signals can be spoiled before later stages help. The local oscillator sets the tune point. The mixer combines the incoming signal with the local oscillator signal to create the IF.
 
-The IF filter provides adjacent-channel selectivity. The IF amplifier supplies most of the receiver gain before detection. For FM, the limiter removes unwanted amplitude changes. The discriminator recovers audio from frequency changes. The AF amplifier raises the recovered audio for headphones or a speaker.
+The IF filter provides adjacent-channel selectivity. The IF amplifier supplies most of the receiver gain before detection. For FM, the limiter removes unwanted amplitude changes. The discriminator recovers audio from frequency changes. The AF amplifier raises the recovered audio for headphones or a speaker. In this block view, volume and squelch controls act in the AF amplifier section.
 
 ### Worked example: IF conversion with original numbers
 

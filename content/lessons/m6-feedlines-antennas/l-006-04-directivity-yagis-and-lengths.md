@@ -100,7 +100,7 @@ Some VHF half-wave vertical exam items use the plain free-space half-wave conven
 half-wave length in metres ≈ 150 / f(MHz)
 ```
 
-Use that convention when the question is asking for the Basic bank's approximate VHF half-wave vertical length. Practical antennas may still need end effects, element diameter, matching, and installation details.
+Use that convention when the question is asking for the Basic bank's approximate VHF half-wave vertical length. A real antenna design may still account for end effects, element diameter, matching, and installation details.
 
 ### Worked example: original vertical estimate
 

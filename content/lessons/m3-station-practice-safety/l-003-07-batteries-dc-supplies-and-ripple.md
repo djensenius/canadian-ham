@@ -148,12 +148,7 @@ A fuse is not shock protection for the operator. Use separate personal-safety ha
 
 A field station uses a battery box feeding a radio through 2.5 m of positive lead and 2.5 m of negative lead. The radio manual specifies a 15 A fuse in the DC lead.
 
-- Given: source is the battery; protected positive lead length = 2.5 m; specified fuse = 15 A.
-- Find: where the first fuse belongs.
-- Formula: protect wiring as close to the energy source as practical.
-- Substitute: the battery is the high-current source, so the fuse belongs near the battery end of the positive lead.
-- Answer: put the specified 15 A fuse near the battery, then run the protected lead to the radio.
-- Sanity check: a fuse only at the radio end would leave the long battery lead less protected.
+The battery is the high-current source. Put the specified 15 A fuse near the battery end of the positive lead, then run the protected lead to the radio. A fuse only at the radio end would leave the long battery lead less protected.
 
 Use the fuse value and cable supplied or specified by the manufacturer unless a qualified design says otherwise.
 

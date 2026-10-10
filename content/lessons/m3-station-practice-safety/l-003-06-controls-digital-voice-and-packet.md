@@ -41,7 +41,18 @@ By the end of this lesson, you can:
 
 A straight key depends on the operator's hand for timing. An electronic keyer still needs operator skill, but it automatically controls dit and dah length after the paddle is moved. That helps make readable characters at a steady speed.
 
-A microphone is also a station control. Before using a different microphone, adjust microphone gain and check the transmitted audio. A dynamic microphone uses a coil and magnet principle. Crystal microphones use a piezoelectric element. Condenser and electret microphones are capacitor-style elements that may need bias voltage and different gain.
+A microphone is also a station control. Before using a different microphone, adjust microphone gain and check the transmitted audio. A dynamic microphone uses a coil and magnet principle, like a small loudspeaker working in reverse. Crystal microphones use a piezoelectric element. Condenser and electret microphones are capacitor-style elements that may need bias voltage and different gain.
+
+### Worked example: setting up a new hand microphone
+
+A borrowed microphone sounds louder than the desk microphone it replaces.
+
+- Reduce microphone gain before the first transmission.
+- Transmit into a dummy load or on a clear test frequency as appropriate.
+- Watch the ALC or deviation indication for the mode in use.
+- Make a brief on-air audio check with a nearby station.
+
+The safe habit is to start low and increase only as needed.
 
 VOX means voice-operated transmit switching. It keys the transmitter when speech is detected. VOX is convenient, but it must be adjusted so room noise does not trigger transmit and speech starts are not clipped.
 
@@ -65,17 +76,6 @@ Speech processing changes audio so quiet parts are lifted and loud peaks are con
 
 Do not confuse average power with peak envelope power. A processor can raise average RF output without raising the allowed peak. If the transmitter is already at its clean peak limit, reduce processing or drive.
 
-### Worked example: setting up a new hand microphone
-
-A borrowed microphone sounds louder than the desk microphone it replaces.
-
-- Reduce microphone gain before the first transmission.
-- Transmit into a dummy load or on a clear test frequency as appropriate.
-- Watch the ALC or deviation indication for the mode in use.
-- Make a brief on-air audio check with a nearby station.
-
-The safe habit is to start low and increase only as needed.
-
 ## Receiver noise controls
 
 Noise tools work best when they match the noise problem.
@@ -96,7 +96,7 @@ Analog information varies smoothly. A microphone voltage rising and falling with
 
 Digital voice is not analog FM with a new label. A vocoder samples and encodes speech. The transmitter sends digital symbols. The receiver decodes those symbols and rebuilds audio. If the link becomes too weak, digital voice may sound broken or disappear instead of fading smoothly.
 
-Narrow digital modes can share spectrum efficiently. An FT8 transmission is roughly 50 Hz wide. An SSB voice channel is a few kilohertz wide, before guard spacing and tuning accuracy are considered. RTTY is wider than very narrow weak-signal modes, so practical signal spacing is a few hundred hertz rather than a single tone width.
+Narrow digital modes can share spectrum efficiently. An FT8 transmission is roughly 50 Hz wide, so many FT8 contacts can fit in the space of one SSB voice signal. FT8 is also the listed weak-signal mode for the very low signal-to-noise-ratio case in this lesson's bank. RTTY is wider than very narrow weak-signal modes, so practical centre-to-centre spacing is a few hundred hertz rather than a single tone width.
 
 ### In the real world: choosing a weak-path mode
 
@@ -108,7 +108,7 @@ If the task is a conversation, SSB or digital voice may fit better. Match the mo
 
 Packet radio sends data in framed chunks. A digipeater receives digital packets and retransmits packets marked for forwarding. That is different from a voice repeater that retransmits analog FM audio.
 
-Some digital protocols use automatic repeat request, or ARQ. The receiver can detect a missing or damaged frame and request a repeat. Instead of showing corrupted data silently, the link gets a clean copy within its retry limit or reports failure.
+Some digital protocols use automatic repeat request, or ARQ. The receiver can detect a missing or damaged frame and request a repeat. That retransmission process provides error correction. Instead of showing corrupted data silently, the link gets a clean copy within its retry limit or reports failure.
 
 Sound-card digital modes use audio from a computer or interface to drive the transmitter. Excessive audio has the same bad result as excessive SSB microphone gain. It can make splatter and out-of-channel emissions.
 

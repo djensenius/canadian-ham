@@ -7,7 +7,7 @@
   {
     "lessonId": "L-006-02",
     "blockHeading": "In the real world: reflected-power estimates",
-    "reason": "Reviewed standard SWR reflected-power table requested by docs/teaching-guide.md for task-39.3. The values are calculated from the reflection-coefficient formula and are not copied from ISED question text."
+    "reason": "Reviewed standard SWR reflected-power table requested by docs/teaching-guide.md for task-39.3. The values are calculated from the reflection-coefficient formula and are not copied from ISED question text. The numeric false-positive trigger was B-006-011-010, where the bank's Yagi-spacing numbers overlap the unrelated 3:1 and 0.2 SWR table values."
   },
   {
     "lessonId": "L-005-05",

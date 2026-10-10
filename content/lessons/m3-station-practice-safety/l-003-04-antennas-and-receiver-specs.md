@@ -83,10 +83,10 @@ A receiver has 300 Hz, 600 Hz, 2.7 kHz, and 8 kHz filters. The waterfall shows a
 
 - Given: wanted mode = CW; nearby spacing = 500 Hz; available filters = 300 Hz, 600 Hz, 2.7 kHz, 8 kHz.
 - Find: the best first filter choice for rejecting the nearby signal.
-- Formula: choose a filter narrower than the spacing when it still passes the wanted signal.
-- Substitute: 300 Hz is narrower than 500 Hz; 600 Hz is wider than 500 Hz.
+- Rule of thumb: choose the narrowest filter that still passes the wanted signal comfortably.
+- Compare: 300 Hz gives stronger rejection; 600 Hz may tune more comfortably but has wider skirts.
 - Answer: try the 300 Hz filter first.
-- Sanity check: the 600 Hz filter may tune more comfortably, but it lets more nearby energy through.
+- Sanity check: the nearby signal may still leak through real filter skirts, but the narrower filter is the better first test.
 
 For SSB voice, 2.7 kHz is the better match in this filter set.
 

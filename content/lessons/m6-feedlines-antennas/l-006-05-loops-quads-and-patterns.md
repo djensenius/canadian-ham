@@ -57,7 +57,7 @@ A club wants a first-cut dipole near 18.9 MHz for a practice exercise.
 - Find: overall dipole starting length and single leg length.
 - Formula: length ≈ 143 / f(MHz).
 - Substitute: length ≈ 143 / 18.9.
-- Answer: length ≈ 7.57 m overall; each leg is 7.57 m / 2 = 3.78 m before trimming.
+- Answer: length ≈ 7.57 m overall; each leg is 143 / 18.9 / 2 ≈ 3.78 m before trimming.
 - Sanity check: each leg is half of the overall dipole length.
 
 The installed antenna should be checked with an analyzer and adjusted in small steps.
@@ -108,7 +108,7 @@ A full-wave horizontal loop is planned near 10.1 MHz.
 - Formula: loop length ≈ 306 / f(MHz).
 - Substitute: loop length ≈ 306 / 10.1.
 - Answer: loop length ≈ 30.30 m total wire.
-- Sanity check: if it is a square loop, each side starts near 30.30 m / 4 = 7.57 m.
+- Sanity check: if it is a square loop, each side starts near 306 / 10.1 / 4 ≈ 7.57 m.
 
 The final shape may be irregular if the available trees are not in perfect positions.
 

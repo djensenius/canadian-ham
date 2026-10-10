@@ -85,7 +85,7 @@ antenna -> RF amplifier -> mixer -> IF filter -> IF amplifier -> product detecto
 
 The antenna converts the radio wave into a tiny current. The RF amplifier improves sensitivity if it adds useful gain without much noise. The mixer and local oscillator convert the selected RF signal to IF. The IF filter keeps the desired narrow slice and rejects nearby signals.
 
-The IF amplifier provides most receiver gain after the desired signal has been selected. The product detector needs a beat frequency oscillator, or BFO. The BFO supplies the reference needed to recover SSB or CW audio. The AF amplifier raises the recovered audio level for headphones or a speaker.
+The IF amplifier provides most receiver gain after the desired signal has been selected. The product detector needs a beat frequency oscillator, or BFO. The BFO supplies the reference needed to recover SSB or CW audio. The AF amplifier raises the recovered audio level for headphones or a speaker. An audio band-pass filter for CW tone shaping can sit in the AF amplifier chain.
 
 ### Worked example: product detection idea
 
@@ -111,7 +111,7 @@ microphone -> speech amplifier -> balanced modulator -> sideband filter -> mixer
 
 The microphone signal is small, so the speech amplifier raises the audio. The fixed RF oscillator supplies a carrier frequency for the balanced modulator. The balanced modulator combines audio and RF while suppressing most of the carrier. It creates upper and lower sideband energy.
 
-The sideband filter removes the unwanted sideband. The remaining single-sideband signal may still be at an internal frequency. A mixer uses a variable frequency oscillator, or VFO, to move it to the chosen transmit frequency. Driver and final amplifier stages then raise it to useful output power.
+The sideband filter removes the unwanted sideband. The remaining single-sideband signal may still be at an internal frequency. A mixer uses a variable frequency oscillator, or VFO, to move it to the chosen transmit frequency. Driver and final amplifier stages then raise it to useful output power. The final amplifier is also where many SSB transmitters monitor load conditions and protect against excessive SWR.
 
 ### Worked example: translating an SSB signal
 

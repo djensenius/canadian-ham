@@ -89,29 +89,24 @@ A small station has a transceiver, tuner, power supply, and coax entry panel.
 
 A star-like bond is easier to inspect than a chain of jumpers.
 
-### Worked example: painted metal is not a bond
+### In the real world: painted metal is not a bond
 
-A station ground bar shows high resistance to a radio chassis. The strap is clamped over painted metal.
+A station ground bar shows high resistance to a radio chassis. The strap is tight, but it is clamped over painted metal.
 
-- Given: strap is tight, but contact is on paint.
-- Find: why the bond is poor.
-- Formula: a bond needs clean conductive contact, not just mechanical pressure.
-- Substitute: paint is in the current path, so the metal parts are not truly bonded.
-- Answer: clean to bare metal, use proper hardware, keep the bond short, and recheck continuity.
-- Sanity check: a shiny strap can still fail if the contact surface is insulated.
+A bond needs clean conductive contact, not just mechanical pressure. Clean the contact area to bare metal, use proper hardware, keep the bond short, and recheck continuity. A shiny strap can still fail if the contact surface is insulated.
 
 ## Fuses, chassis safety, and stored charge
 
 Fuses have current and voltage ratings. The current rating controls when the fuse opens. The voltage rating says what voltage the fuse can interrupt safely without sustaining an arc. A higher-current replacement defeats protection and can turn a fault into equipment damage or fire.
 
+The green conductor in a three-wire AC cord bonds the equipment chassis to protective earth. If a fault connects the hot conductor to the chassis, the safety ground provides a low-impedance fault path so protection can operate.
+
+Power-supply filter capacitors can retain charge after the unit is unplugged. Use the manufacturer's procedure or a properly insulated discharge tool with an inline resistor. Do not use a screwdriver as a casual shorting tool. It can arc, damage parts, or injure the person holding it.
+
 ### Misconception: a fuse protects people from every shock
 
 - Mistaken idea: if equipment has a fuse, the operator is protected from electric shock.
 - Correction: a fuse protects wiring and equipment from excessive current. Shock safety also needs grounding, bonding, de-energizing before work, proper enclosures, and safe work practices.
-
-The green conductor in a three-wire AC cord bonds the equipment chassis to protective earth. If a fault connects the hot conductor to the chassis, the safety ground provides a low-impedance fault path so protection can operate.
-
-Power-supply filter capacitors can retain charge after the unit is unplugged. Use the manufacturer's procedure or a properly insulated discharge tool with an inline resistor. Do not use a screwdriver as a casual shorting tool. It can arc, damage parts, or injure the person holding it.
 
 ### Worked example: opening an offline supply
 
@@ -147,11 +142,11 @@ The protector location matters because the surge should be diverted before it re
 
 ## RF exposure and nearby people
 
-RF energy can heat body tissue when exposure is high enough. Eyes deserve care because they shed heat poorly compared with many other tissues. At UHF and microwave frequencies, antennas and amplifier openings can put significant RF energy close to people.
+RF energy can heat body tissue when exposure is high enough. Eyes deserve care because they shed heat poorly compared with many other tissues. At UHF and microwave frequencies, keep antennas away from eyes while RF is applied. Before removing shielding from a UHF power amplifier, disable and secure the power path so it cannot start accidentally.
 
 Power density falls rapidly with distance in free space. In a simple free-space point-source model, RF field strength falls in proportion to `1/d`. Power density falls in proportion to `1/d^2`. Doubling distance can greatly reduce exposure before you even consider duty cycle or antenna pattern.
 
-A low standing wave ratio, or SWR, is an equipment-match indication. It is not permission for people to stand close to an energized antenna. Keep handheld antennas away from your head and from other people while transmitting. Put UHF transmitting antennas where people cannot approach them during operation. Aim directional high-gain antennas away from nearby occupied spaces.
+A low standing wave ratio, or SWR, is an equipment-match indication. It is not permission for people to stand close to an energized antenna. Keep handheld antennas away from your head and from other people while transmitting. Put UHF transmitting antennas where people cannot approach them during operation. Locate indoor antennas as far as practical from occupied living spaces. Aim directional high-gain antennas away from nearby occupied structures.
 
 Health Canada Safety Code 6 is the general Canadian framework for RF exposure limits. It covers controlled and uncontrolled exposure situations. No transmitter class is automatically outside RF exposure regulation. This lesson does not invent numeric limits or replace a proper exposure evaluation.
 

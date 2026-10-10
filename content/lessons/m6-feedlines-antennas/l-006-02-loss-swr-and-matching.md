@@ -79,7 +79,7 @@ Reflection coefficient = (SWR - 1) / (SWR + 1). Reflected power fraction is the 
 | 2:1 | (2 - 1) / (2 + 1) = 0.333 | 0.333 x 0.333 = 0.111, or about 11% |
 | 3:1 | (3 - 1) / (3 + 1) = 0.5 | 0.5 x 0.5 = 0.25, or 25% |
 
-These are line-at-that-point estimates. Reflected power is not simply "lost." Some may be lost as heat in the feedline, and the transmitter-end network or protection circuit affects what happens next.
+These estimates apply at the point where the SWR is measured. Reflected power is not simply "lost." Some may be lost as heat in the feedline, and the transmitter-end network or protection circuit affects what happens next.
 
 ### Worked example: line loss masks trouble
 

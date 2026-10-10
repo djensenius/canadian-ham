@@ -82,11 +82,11 @@ That estimate assumes a clean signal. Distortion or overdrive can make the occup
 
 ## SSB: linear amplification and level control
 
-Single sideband removes the carrier and one sideband. Most useful output is in the remaining sideband. Typical amateur SSB voice fits in a few kilohertz and needs a linear RF power amplifier.
+Single sideband removes the carrier and one sideband. Most useful output is in the remaining sideband. Typical amateur SSB voice is about 2 kHz to 3 kHz wide and needs a linear RF power amplifier.
 
 A non-linear amplifier does not follow the voice envelope faithfully. Speech becomes distorted, and unwanted products appear beside the signal.
 
-A balanced modulator is an earlier block in many SSB transmitters. It suppresses the carrier and passes two sidebands. A later filter or phasing stage selects one sideband. Carrier suppression alone does not halve the bandwidth; one sideband must also be removed.
+A balanced modulator is an earlier block in many SSB transmitters. It suppresses the carrier and passes two sidebands. Suppressing the carrier lets more output power go into the sidebands that carry information. A later filter or phasing stage selects one sideband. Carrier suppression alone does not halve the bandwidth; one sideband must also be removed.
 
 Peak envelope power, or PEP, is RF output power at the highest point of the voice envelope, averaged over the RF cycle at that instant. The practical meaning is simple. SSB power rises on voice peaks, so the crest of the envelope matters.
 

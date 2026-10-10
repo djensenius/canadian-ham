@@ -58,12 +58,7 @@ Some radios include their own audio codec. A codec converts between analog audio
 
 A club laptop sends a digital-mode audio tone that is too strong for the radio data input. The transmitted signal becomes wide and splattery. The cure is not more RF power.
 
-- Given: computer playback level starts at 80%; clean test level is 35%.
-- Find: how much the slider was reduced.
-- Formula: reduction = starting level - clean level.
-- Substitute: reduction = 80% - 35%.
-- Answer: reduction = 45 percentage points.
-- Sanity check: a large audio reduction can clean the signal without changing antenna power.
+The operator lowers the computer playback level from 80% to 35%. That is a 45 percentage-point reduction in audio drive. The large audio reduction can clean the signal without changing antenna power.
 
 After that, raise the radio data input gain only enough to reach the needed transmitter drive.
 
@@ -92,6 +87,8 @@ The numbers are approximate because real supplies include diode drops, ripple, a
 A training supply has a rectifier-only test point and a filtered test point. Under the same load, the rectifier-only point has a strong rising and falling waveform. The filtered point has a smaller ripple riding on DC, such as 0.35 V peak-to-peak.
 
 The filter has not regulated the final voltage. It has given the regulator a steadier input to control.
+
+### In the real world: stored charge after unplugging
 
 Never open or probe inside a mains-powered supply unless you are qualified and equipped for that work. Unplug the supply. Use the service procedure, a proper resistor discharge tool, or a built-in bleeder path where specified. Verify with a meter that stored charge is gone. Do not trust a dark pilot lamp or unlit power LED as proof that capacitors are discharged.
 

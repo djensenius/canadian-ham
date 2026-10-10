@@ -45,16 +45,11 @@ A transmission line has characteristic impedance, often written as Z0. This is n
 
 When the load at the far end suits the line, energy is absorbed with minimal reflection. When the load does not suit the line, some energy is reflected back toward the source.
 
-### Worked example: line length and Z0
+### In the real world: cutting coax does not change Z0
 
-A roll of fifty-ohm coax is cut into a 12 m piece and an 8 m piece.
+A roll of fifty-ohm coax is cut into a 12 m piece and an 8 m piece. Both pieces are still fifty-ohm coax.
 
-- Given: original cable type = fifty-ohm coax.
-- Find: characteristic impedance after cutting.
-- Formula: Z0 depends on cable geometry and dielectric, not total length.
-- Substitute: cutting length did not change the centre conductor, dielectric, or shield spacing.
-- Answer: both pieces are still fifty-ohm coax.
-- Sanity check: the shorter piece may have less total loss, but it is not a different impedance line.
+Cutting length did not change the centre conductor, dielectric, or shield spacing. The shorter piece may have less total loss, but it is not a different impedance line.
 
 ## Coaxial cable
 
