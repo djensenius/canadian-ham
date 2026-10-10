@@ -1,11 +1,11 @@
 ---
 id: TASK-39.3
 title: 'Lesson text revision: M6 feedlines/antennas and M3 station/safety'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-10 23:21'
+updated_date: '2026-10-10 23:32'
 labels:
   - content
 dependencies:
@@ -35,6 +35,8 @@ Revise all lessons in m6-feedlines-antennas and m3-station-practice-safety to th
 1. Revise M6 lessons first, preserving front matter and Illustration brief blocks while adding practical feedline, SWR, wavelength, antenna-length, tuner, and memory-trick teaching from docs/teaching-guide.md.\n2. Run the required content checks after the M6 slice, fix originality or coverage issues, record per-lesson fact/source notes, and commit the slice.\n3. Revise M3 lessons, preserving metadata and Illustration brief blocks while strengthening station block, power-supply, fusing, battery, grounding/bonding, electrical-code, and Safety Code 6 explanations with practical examples.\n4. Run the full required validation set, update pinned test expectations only if asserted text changed, finalize Backlog acceptance criteria with evidence, and commit the completed task.
 
 5. Address review r1 by doing a full plain-language rewrite pass across all 13 scoped lessons, fixing every technical, format, and task-record finding while preserving front matter and Illustration brief blocks.\n6. Rerun the required content and package checks, record finding-by-finding results, update the final summary, and move the task back to Done as the final change.
+
+7. Address review r2 by restoring all deleted exam-relevant facts, fixing remaining callout/arithmetic/phrasing/task-note issues, and performing a per-lesson taught-facts self-check against covered question correct answers before final validation.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -49,6 +51,8 @@ Final validation: node packages/content-tools/src/check-lesson-coverage.ts passe
 Review r1 received REQUEST CHANGES. Reopened task for fixes. Findings to address: AC1 full rewrite needed for L-003-01 through L-003-06 and M6 prose; AC2 concrete examples/worked numbers needed; fix SWR percentages, battery/charger/fuse examples, supply-sag chirp, grounding/bonding example, VOX first-syllable advice, VHF 150/f exam convention, 262.2 W caveat, Yagi polarization wording, reflected-power grammar, double rounding, Try it #3 calculation, callout placement, term definitions, x/ohms style, and task-note overclaims.
 
 Review r1 fixes completed finding-by-finding: AC1 full rewrite fixed by replacing the prior append-only L-003-01 through L-003-06 text with genuine plain-language rewrites and rewriting M6 prose across all five lessons; long sentences split; ALC, DSP, SWR, and authority having jurisdiction defined at first lesson use; x style and spelled-out ohms used in running text. AC2 fixed by making In the real world sections concrete and adding worked numbers where useful: harmonic filter placement, supply-sag chirp, interface audio-level reduction, receiver filter choice, charger/radio-supply power, field-battery fusing, SWR reflected-power percentages, feedline/coax contrast, wavelength/dipole/Yagi/vertical/loop examples, and station bonding. AC3 retained with vetted 100 MHz wavelength and P-over-I-E memory tricks. Technical findings fixed: VOX first-syllable advice now points to sensitivity/attack, L-003-02 says steady at low power rather than clean on receive, L-006-03 says rotate Yagi elements from vertical to horizontal, L-006-02 reflected-power grammar/fate caveat rewritten, L-003-07 262.2 W caveat states whole-radio draw does not imply exceeding Basic final-stage DC-input limit, L-006-05 double rounding fixed to 3.78 m and 7.57 m, L-006-04 states 150/f plainly as the Basic VHF half-wave exam convention, and L-006-03 Try it #3 restored as a real 72 MHz calculation. Format findings fixed: no H3 callout before Learning objectives, and callouts no longer swallow main prose in L-006-01, L-006-02, L-003-06, or L-003-08. Task-record overclaims corrected by this note and final summary; no claims were dropped from lesson text except over-broad task-note wording from r1. Originality note: added a narrow allowlist entry for the standard SWR reflected-power table requested by the teaching guide; originality :all passes with 0 issues. Validation passed: coverage, quizzes, lesson originality :all, explanations, check:links, TZ=UTC pnpm test, and DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift. Script verification again confirmed front matter and Illustration brief blocks unchanged for all 13 scoped lessons.
+
+Review r2 received REQUEST CHANGES. Reopened task for fixes. Findings to address: restore deleted covered-item facts in L-003-01, L-003-02, L-003-05, L-003-06, and L-003-08; fix L-003-08 misconception callout placement; correct L-006-05 shown arithmetic for 3.78 m and 7.57 m; improve awkward phrases in L-006-02 and L-006-04; fix L-003-04 filter rule and low/minor pseudo-formula placement issues; update inaccurate r1 task-note claims with r2 results; run a taught-facts self-check for every scoped lesson.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
