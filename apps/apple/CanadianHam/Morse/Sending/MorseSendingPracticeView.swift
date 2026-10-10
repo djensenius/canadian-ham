@@ -132,6 +132,9 @@ struct MorseSendingPracticeView: View {
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
+#if os(iOS)
+        .safeAreaPadding(.top, DesignTokens.Spacing.tvSafe)
+#endif
         .navigationTitle("Sending practice") // l10n: localized
         .focusable(true)
         .focused($keyFocusActive)
