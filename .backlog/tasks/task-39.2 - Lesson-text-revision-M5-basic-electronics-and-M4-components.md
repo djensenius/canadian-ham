@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:14'
-updated_date: '2026-10-10 23:35'
+updated_date: '2026-10-10 23:50'
 labels:
   - content
 dependencies:
@@ -77,6 +77,8 @@ Taught-facts self-check for changed lessons: checked each listed correct answer 
 - L-005-05 covers B-005-011/B-005-012/B-005-013. Correct-answer list checked: B-005-011-001=2.1 amperes; B-005-011-002=By carrying different voltages and currents in each winding; B-005-011-003=5 amperes; B-005-011-004=240 V; B-005-011-005=directly proportional to the current in the conductor; B-005-011-006=current is going through its greatest rate of change; B-005-011-007=2 amperes; B-005-011-008=250 mA; B-005-011-009=When the wires are close and parallel; B-005-011-010=steel; B-005-011-011=Warm iron laminations; B-005-012-001=inductive reactance and capacitive reactance are equal; B-005-012-002=High impedance; B-005-012-003=Bandwidth; B-005-012-004=Inductor and capacitor; B-005-012-005=resonant frequency; B-005-012-006=high impedance; B-005-012-007=low impedance; B-005-012-008=add a resistor to the circuit; B-005-012-009=select the desired signal frequencies; B-005-012-010=inductive reactance and capacitive reactance are equal and opposite in sign; B-005-012-011=It reaches maximum; B-005-013-001=In parallel with the circuit; B-005-013-002=In series with the circuit; B-005-013-003=Voltage, current and resistance; B-005-013-004=An ammeter; B-005-013-005=A high value resistance; B-005-013-006=A low value resistance; B-005-013-007=RF wattmeter; B-005-013-008=a voltmeter; B-005-013-009=Ammeter; B-005-013-010=Accuracy. Result: retained transformer ideal power/turns/current/magnetic-coupling/core-loss facts, resonance/series/parallel/bandwidth/selectivity facts, and meter selection/series-parallel/high-low-resistance/accuracy facts.
 
 Validation after r2 fixes: content checks passed (coverage, quizzes, lesson-originality all, explanations, links). First full run and first TZ=UTC pnpm test rerun hit unrelated web timing failures in different App.test.tsx cases; reran the required `TZ=UTC pnpm test` unchanged and it passed. Swift content package test with DEVELOPER_DIR and --package-path passed. Script comparison confirmed front matter and Illustration brief sections unchanged for all 8 scoped lessons.
+
+Review r3 (APPROVE WITH NOTES, no taught-fact regressions). Coordinator applied the notes: restored the tolerance precision example with non-answer values (±0.5% vs ±10%, B-004-006-006/-007); restored the series-string replacement caveat (tolerance and power) at l-005-03; moved the N/P-channel paragraph out from under the FET misconception callout; added the B-005-011-010 fact (permanent magnets from hard magnetic materials such as steel) to L-005-05, which neither version taught before. Correction to earlier notes: 'steel retained' was wrong (it was a pre-existing gap, now taught); per-lesson question lists for L-004-03 (B-004-006) and L-005-04 (B-005-007 to -010) were verified by reviewer r3 with no regressions. Follow-ups: task-38.2 AC for the L-005-01 ladder figure arrows; new task for the flaky M4/M6 web test. Efficiency wording 'DC power taken from the supply' kept on purpose (less overlap with the question stem; same meaning). Checks: coverage, quizzes, originality :all, explanations, links, content-swift tests pass.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
