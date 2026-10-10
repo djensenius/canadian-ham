@@ -74,13 +74,13 @@ Region rows are map references. They help orient the operator, but they do not r
 
 The United States and CEPT rows are easy to reverse because both involve a Canadian operator outside Canada. Treat each arrangement as its own pair: the minimum Canadian qualification and the spoken identification order stay tied to that visit arrangement.
 
+Morse-code authorization also belongs to the administration framework. Learn who decides the Morse requirement as an administration fact.
+
 ### Memory trick: place first, pattern second
 
 - Helps remember: travel-operation identification depends on where the station is operating.
 - Trick: ask "where am I operating?" before asking "what order do I say the call signs or prefixes?"
 - Limit: this is only a study cue. Always check the current official visit rules before a real trip.
-
-Morse-code authorization also belongs to the administration framework. Learn who decides the Morse requirement as an administration fact.
 
 ## Radio connection
 
@@ -88,7 +88,9 @@ Morse-code authorization also belongs to the administration framework. Learn who
 
 A travel station can move faster than memory. Before transmitting, write the current location, visit arrangement, band limits, and identification pattern on the same operating note card.
 
-That note card supports ordinary radio skill. A clean signal, a good antenna, and a friendly contact still need matching message purpose, destination permission, and location-based limits.
+Keep the note card with the radio, headset, power lead, and portable antenna. That ties the rule check to the hardware you will actually use.
+
+A clean signal, a good antenna, and a friendly contact still need matching message purpose, destination permission, and location-based limits.
 
 ## Summary
 

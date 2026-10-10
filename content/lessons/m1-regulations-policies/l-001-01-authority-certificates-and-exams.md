@@ -100,15 +100,15 @@ The legal-source rows are the top layer. The Act gives authority, the Regulation
 
 Certificate rows combine two ideas. Your certificate lasts for your lifetime, but record duties continue. Keep the station copy, keep the address current, and be ready to show the certificate or a copy when a radio inspector properly asks.
 
-### Memory trick: life record, monthly address habit
-
-- Helps remember: certificate validity and the mailing-address duty are different facts.
-- Trick: think "life for the certificate, one month for the address file."
-- Limit: the official duty is counted in days, so use the table when you need the exact number.
-
 Offence rows protect trust in radio. False information, false distress traffic, and unlawful obstruction can harm people and services. The same group also includes process protections, such as the limits on dwelling entry and the suspension process.
 
 Exam rows describe a path. Basic is the first amateur qualification. After the certificate is issued, later qualifications can be examined in any order. Accommodation rows change delivery, not the required examination content.
+
+### Memory trick: life record, address-change notice
+
+- Helps remember: certificate validity and the mailing-address duty are different facts.
+- Trick: think "life for the certificate, one notice after an address change."
+- Limit: this is a memory cue only. Use the table when you need the exact deadline in days.
 
 ## Radio connection
 

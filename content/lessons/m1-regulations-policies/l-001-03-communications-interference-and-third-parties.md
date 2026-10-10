@@ -116,19 +116,19 @@ Emergency rules are narrow because they respond to immediate communication need.
 
 Privacy and payment rows keep amateur service non-commercial. A public-service agency message can be legitimate. Payment for third-party messages and remuneration for exchanging messages do not fit amateur service.
 
-### Memory trick: start, stop, and the half-hour check
+Third-party and visiting-operator rows add two questions. Who is the message for, and whose operating permission is being used? Ask those before sending the traffic.
+
+### Memory trick: start, stop, and the interval check
 
 - Helps remember: station identification timing.
-- Trick: identify when the contact starts, when it stops, and before the half-hour mark passes during a longer contact or test.
+- Trick: identify when the contact starts, when it stops, and before any longer contact or test runs more than the allowed interval without identification.
 - Limit: this does not replace the language and model-control rows in the table.
-
-Third-party and visiting-operator rows add two questions. Who is the message for, and whose operating permission is being used? Ask those before sending the traffic.
 
 ## Radio connection
 
 ### In the real world: a public-service net
 
-A net script, a visible clock, and a short interference checklist help the operator stay calm. The clock reminds the station to identify. The script keeps traffic personal and non-commercial. The checklist reminds the net to stand by for distress or relief traffic when needed.
+A net script, a visible clock, and a short interference checklist help the operator stay calm. The clock reminds the station to identify. The script keeps each message category clear, including public-service agency messages and routine third-party traffic. The checklist reminds the net to stand by for distress or relief traffic when needed.
 
 During public-service work, prepared operators sound calm because they have already separated routine practice, emergency relief, distress traffic, and casual conversation. The category of communication tells the operator how much room the rules provide.
 

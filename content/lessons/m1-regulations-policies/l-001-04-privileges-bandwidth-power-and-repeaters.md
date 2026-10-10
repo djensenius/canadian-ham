@@ -28,7 +28,7 @@ status: draft
 
 Privileges set the operating edge of the certificate. They answer who may control the station, which frequencies are available, how wide the signal may be, how much power may be used, and which station-quality requirements apply.
 
-This lesson uses reference tables for official facts and prose for relationships. Pay special attention to measurement words such as DC input, carrier power, PEP, ERP, and EIRP.
+This lesson uses reference tables for official facts and prose for relationships. Pay special attention to measurement words. Peak envelope power (PEP) describes the crest of an SSB voice envelope. Effective radiated power (ERP) includes antenna-system gain compared with a reference dipole. Effective isotropic radiated power (EIRP) uses an ideal isotropic radiator as the reference.
 
 ## Learning objectives
 
@@ -109,11 +109,15 @@ By the end of this lesson, you can:
 
 Privilege rows describe the current control situation. A station can contain equipment for many bands and powers. Another person can have more qualifications. The transmission still has to stay inside the privileges attached to the operator and call sign governing that operation.
 
-Learn the below-30-MHz gate with the repeater allowance. Basic by itself covers amateur bands above 30 MHz. Below 30 MHz normally needs the additional Basic-with-Honours, Advanced, or Morse path. The Basic-only repeater allowance is a specific repeater-output rule beginning at the range shown in the table.
+Learn the below-30-MHz gate with the repeater allowance. Basic by itself covers amateur bands above 30 MHz. Below 30 MHz normally needs the additional Basic-with-Honours, Advanced, or Morse path. The Basic-only repeater allowance is a specific repeater-output rule beginning at 29.500 MHz.
 
 Bandwidth, mode, and band-edge rows all describe occupied spectrum. Near an edge, compare the whole signal to the band boundary. A dial display may show the carrier or suppressed carrier; the emitted signal still has width.
 
-Power rows attach a number to a measurement point and quantity. DC input is electrical power going into the final RF stage before RF conversion. Carrier power is steady RF output for non-SSB emissions. PEP is the crest of an SSB voice envelope. ERP and EIRP move outward to radiated power by including antenna-system gain.
+Power rows attach a number to a measurement point and quantity. DC input is electrical power going into the final RF stage before RF conversion. Carrier power is steady RF output for non-SSB emissions. PEP captures the crest of an SSB voice envelope. ERP and EIRP move outward to radiated power by including antenna-system gain.
+
+The minimum-power rule and numeric ceilings work together with RF-exposure and radiated-power limits. Choose the measurement quantity first, then compare it at the correct point in the station.
+
+Repeater and signal-quality rows explain station behaviour after the frequency and power checks. Automatic retransmission defines a repeater. Brief unmodulated-carrier tests are narrow, and voice operation still needs frequency stability, reliable frequency measurement, and overmodulation control.
 
 ### Memory trick: Basic power stays Basic
 
@@ -121,13 +125,13 @@ Power rows attach a number to a measurement point and quantity. DC input is elec
 - Trick: Honours and Morse open below-30-MHz access; they do not turn the power row into the Advanced row.
 - Limit: special bands and radiated-power limits still use the exact quantities in the table.
 
-The minimum-power rule and numeric ceilings work together with RF-exposure and radiated-power limits. Choose the measurement quantity first, then compare it at the correct point in the station.
-
 ## Radio connection
 
 ### In the real world: the power number on the radio is not the rule by itself
 
-A transceiver display might show RF output, while a power supply label shows whole-radio DC input. The Basic DC-input limit in this lesson is measured at the final RF stage, not at the power cord for the entire radio.
+A transceiver display might show RF output, while the radio manual may list maximum whole-radio DC current. If the manual says the radio can draw 20 A from a 13.8 V supply, the whole-radio supply draw is P = I x E = 20 A x 13.8 V = 276 W.
+
+That 276 W is not the same as the Basic 250 W DC-input limit. The regulatory DC-input limit is measured at the final RF stage, not at the power cord for the entire radio.
 
 A practical station checklist is qualification, frequency range, occupied bandwidth, power quantity, identification, and whether the station is automatic or repeated. On modern radios, sidebands, digital bandwidth, amplifier output, and repeater output frequency can all be the value that matters.
 

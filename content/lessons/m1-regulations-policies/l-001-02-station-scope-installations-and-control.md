@@ -118,9 +118,9 @@ Control rows close the loop. A transmitting station needs a control operator at 
 
 ### In the real world: a club work day
 
-A club may have one person bringing tools, another person donating a radio, and a third person testing the system. The safe checklist is not "who owns the screwdriver?" It is who holds the needed amateur qualifications, who owns the station, what service the equipment will use, and who is control operator during the test.
+A club may have one person bringing tools, another person donating a radio, and a third person testing the system into a dummy load. The safe checklist is not "who owns the screwdriver?" It is who holds the needed amateur qualifications, who owns the station, what service the equipment will use, and who is control operator during the test.
 
-The same idea helps at home. Label dual-service radios and channel banks clearly. Keep amateur memories in amateur service, and do not let background audio or business talk ride into the microphone.
+The same idea helps at home. Label dual-service radios and channel banks clearly. Keep amateur memories in amateur service, check the selected channel before keying the microphone, and do not let background audio or business talk ride into the microphone.
 
 Good station control is also good engineering practice. The person at the controls can stop a transmitter, select the correct band, adjust power, and identify the station before a small mistake becomes an unlawful transmission.
 

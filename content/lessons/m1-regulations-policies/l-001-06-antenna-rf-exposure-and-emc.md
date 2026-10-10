@@ -82,7 +82,7 @@ By the end of this lesson, you can:
 
 Antenna-siting rows describe process. The station owner first finds the applicable local process or exclusion for the specific installation. If there is no local approval process, the ISED default process is the relevant path.
 
-Written concerns in the default process must be handled by the timeliness and relevance row. If a proponent and a non-public stakeholder do not agree, ISED makes the final decision.
+Use the timeliness and relevance criteria in the table when responding to written concerns in the default process. If a proponent and a non-public stakeholder do not agree, ISED makes the final decision.
 
 The exposure rows describe human RF exposure. They connect the named publisher, the exposure-limit code, exposure situations, frequency-related effects, and universal consideration of transmitter types. Transmitter power matters as one factor among gain, distance, and frequency.
 
@@ -94,9 +94,11 @@ EMCAB-2 rows describe interference cause decisions for affected equipment. The i
 
 A useful installation file has three parts. One part tracks the antenna consultation path. One records RF exposure inputs such as power, gain, distance, and frequency. One records interference contacts, field-strength information if available, and equipment categories.
 
-Those folders do not replace the rules. They help the station owner show what was checked, who was contacted, what changed, and why.
+Tie that file to the hardware. Note the mast or tower location, feedline route, antenna height, places where people can stand, and any station changes made during an interference investigation.
 
-These rules connect directly to station design. A tidy antenna installation is easier to discuss with neighbours. A station layout that keeps people away from radiating elements is easier to operate responsibly.
+Those notes do not replace the rules. They help the station owner show what was checked, who was contacted, what changed, and why.
+
+These rules connect directly to station design. A tidy antenna installation is easier to discuss with neighbours. A station layout that keeps people away from radiating elements is easier to operate responsibly. A clean transmitter, good feedline, and proper filtering help the technical side of that responsibility.
 
 ## Summary
 
