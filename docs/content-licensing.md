@@ -50,7 +50,7 @@ ISED's non-commercial reproduction conditions include:
 - identifying ISED as the source department and identifying the source work by title;
 - not representing the reproduction as an official version or as having been made in affiliation with or endorsed by the Government of Canada.
 
-This interim policy is the owner's risk decision and is not legal advice. This policy does not allow making the repository public, deploying the web app publicly, distributing Apple builds, adding outside collaborators, or any other redistribution.
+This interim policy is the owner's risk decision and is not legal advice. This policy does not allow making the repository public, deploying the web app publicly, distributing Apple builds, adding outside collaborators, or any other redistribution. The one exception is internal TestFlight builds uploaded to App Store Connect and installable only by the owner's App Store Connect team members (see [TestFlight runbook](release/testflight.md)); external testers, public TestFlight links, and App Store submission stay blocked by the gate below.
 
 ## Public-release gate
 

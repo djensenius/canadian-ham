@@ -12,7 +12,7 @@ function fail(message) {
   failures += 1;
 }
 
-function basePbxproj({ projectDebug = '', appDebug = '', tvDebug = '', macEntitlement = 'CanadianHam/Resources/CanadianHam.macOS.CloudKit.entitlements', resourceLeak = '' } = {}) {
+function basePbxproj({ projectDebug = '', appDebug = '', tvDebug = '', tvCloudKit = '', macEntitlement = 'CanadianHam/Resources/CanadianHam.macOS.CloudKit.entitlements', resourceLeak = '' } = {}) {
   return `// !$*UTF8*$!
 /* Begin PBXBuildFile section */
 ${resourceLeak}/* End PBXBuildFile section */
@@ -78,7 +78,15 @@ ${tvDebug}			PRODUCT_BUNDLE_IDENTIFIER = org.davidjensenius.CanadianHam;
 		};
 		name = Debug;
 	};
-/* End XCBuildConfiguration section */
+${tvCloudKit ? `	CCCC0003 /* DebugCloudKit */ = {
+		isa = XCBuildConfiguration;
+		buildSettings = {
+${tvCloudKit}			PRODUCT_BUNDLE_IDENTIFIER = org.davidjensenius.CanadianHam;
+			PRODUCT_NAME = CanadianHamTV;
+		};
+		name = DebugCloudKit;
+	};
+` : ''}/* End XCBuildConfiguration section */
 `;
 }
 
@@ -152,6 +160,7 @@ assertFail('app Debug CloudKit entitlements leak', { appDebug: '\t\t\t"CODE_SIGN
 assertFail('app Debug CloudKit Info plist leak', { appDebug: '\t\t\tINFOPLIST_FILE = CanadianHam/Resources/CanadianHam.iOS.CloudKit.Info.plist;\n' }, 'Debug build settings unexpectedly match gated iCloud token');
 assertFail('CloudKit Info plist resource leak', { resourceLeak: '\tDDDD0001 /* CanadianHam.iOS.CloudKit.Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DDDD0002 /* CanadianHam.iOS.CloudKit.Info.plist */; };\n' }, 'CloudKit Info.plist must not be copied in any resources build phase');
 assertFail('other target Debug CloudKit entitlements leak', { tvDebug: '\t\t\tCODE_SIGN_ENTITLEMENTS = CanadianHam/Resources/CanadianHam.iOS.CloudKit.entitlements;\n' }, 'Debug build settings unexpectedly match gated iCloud token');
+assertFail('shared-bundle-ID tvOS DebugCloudKit entitlements leak', { tvCloudKit: '\t\t\tCODE_SIGN_ENTITLEMENTS = CanadianHam/Resources/CanadianHam.iOS.CloudKit.entitlements;\n' }, 'Only the CanadianHam app target may carry CloudKit entitlements in DebugCloudKit.');
 assertFail('default mac entitlements iCloud leak', { defaultMacEntitlements: '<plist><dict><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>' }, 'Default macOS entitlements unexpectedly match');
 assertFail('macOS wrong push key', { macEntitlements: '<plist><dict><key>aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.org.davidjensenius.CanadianHam</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>' }, 'macOS CloudKit entitlements must use com.apple.developer.aps-environment');
 assertFail('iOS wrong push key', { iosEntitlements: '<plist><dict><key>com.apple.developer.aps-environment</key><string>development</string><key>com.apple.developer.icloud-container-identifiers</key><array><string>iCloud.org.davidjensenius.CanadianHam</string></array><key>com.apple.developer.icloud-services</key><array><string>CloudKit</string></array></dict></plist>' }, 'iOS CloudKit entitlements must use aps-environment');
