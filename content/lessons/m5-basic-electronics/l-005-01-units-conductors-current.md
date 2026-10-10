@@ -56,7 +56,7 @@ When you change from a large unit to a smaller unit, the number gets larger. Whe
 
 - Helps remember: the usual electronics prefix order from large to small.
 - Trick: giga, mega, kilo, base, milli, micro, pico can be remembered as "Great Mighty Kings Balance Many Micro Picnics."
-- Limit: the sentence only gives the order used in the table. You still decide whether to multiply or divide by 1 000 at each step.
+- Limit: the sentence only gives the order used in the table. Most adjacent rows differ by 1 000, but this table skips nano, so micro to pico is a jump of 1 000 000.
 
 ### Worked example: MHz to kHz
 

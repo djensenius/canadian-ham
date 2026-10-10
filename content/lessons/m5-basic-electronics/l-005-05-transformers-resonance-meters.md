@@ -100,9 +100,9 @@ A transformer primary has 800 turns and the secondary has 120 turns. The primary
 
 A 1:4 primary-to-secondary turns ratio steps secondary voltage up to 4 times the primary voltage. The secondary current is 75 mA.
 
-- Given: primary-to-secondary voltage ratio = 1:4; secondary I = 75 mA.
+- Given: primary-to-secondary voltage ratio = 1:4, so secondary-to-primary voltage ratio = 4; secondary I = 75 mA.
 - Find: ideal primary current.
-- Formula: primary current = secondary current x voltage ratio.
+- Formula: primary current = secondary current x secondary-to-primary voltage ratio.
 - Substitute: primary current = 75 mA x 4.
 - Answer: primary current = 300 mA.
 - Sanity check: current changes in the opposite direction to voltage when power is conserved.

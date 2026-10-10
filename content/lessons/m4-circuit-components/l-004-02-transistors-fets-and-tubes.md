@@ -92,6 +92,11 @@ The circuit deliberately drives the device between off and on states. It does no
 
 Heat is a common way to destroy semiconductors. Too much current, too much voltage, poor heat sinking, or incorrect bias can raise the device temperature beyond its rating.
 
+### Misconception: saturation is always bad
+
+- Mistaken idea: a saturated transistor is always faulty.
+- Correction: saturation is often the intended on state for a switching transistor. It is not the same as overheating.
+
 ### In the real world: relay switch with a flyback diode
 
 A 3.3 V control pin can drive an NPN transistor through a base resistor. The transistor then switches a separate 12 V relay coil, if the relay and transistor ratings allow it.
@@ -121,6 +126,11 @@ A field-effect transistor, usually shortened to FET, controls current through a 
 
 At a Basic level, the FET gate is treated as high impedance because it draws little or no steady current in normal operation. That makes FETs useful where a circuit should not load the previous stage heavily.
 
+### Misconception: a FET gate is a low-resistance input
+
+- Mistaken idea: the gate behaves like a low-value resistor to the source.
+- Correction: at the Basic level, the gate is treated as high impedance and draws little steady current in normal operation.
+
 The two channel polarities are N channel and P channel. Those names describe the semiconductor channel type between source and drain. Do not mix them up with NPN and PNP, which are bipolar transistor types.
 
 ### Gate control and channel current
@@ -139,7 +149,7 @@ This is why the phrase high impedance is so closely associated with FET input ci
 
 A triode is a vacuum tube with a cathode, one control grid, and a plate. The cathode emits electrons inside an evacuated envelope. The plate attracts electrons because it is at a high positive voltage compared with the cathode.
 
-The grid sits between them and controls the electron stream.
+The grid sits between the cathode and plate. It controls the electron stream.
 
 The output current path in a triode is between cathode and plate. The control element is the grid. A small change at the grid can control a larger plate current, so a triode can amplify signals.
 
@@ -179,9 +189,7 @@ When reading a block diagram or schematic, terminal names give fast clues. Base 
 
 - Swapping NPN and PNP parts without checking circuit polarity.
 - Calling every three-terminal semiconductor a bipolar transistor. FETs also have three terminals but use gate, source, and drain names.
-- Assuming a FET gate behaves like a low-resistance input. In normal Basic-level operation it is treated as high impedance.
 - Forgetting that source and drain are the channel ends, while the gate controls the channel.
-- Thinking saturation is always a fault. In switching service, saturation can be the intended on state, while cut-off is the intended off state.
 - Forgetting that tube circuits can contain dangerous high voltages even after power is removed.
 
 ## Illustration brief

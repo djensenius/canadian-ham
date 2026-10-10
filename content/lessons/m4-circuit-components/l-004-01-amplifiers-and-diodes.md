@@ -131,29 +131,29 @@ Diode ratings matter. A real diode has a maximum forward current, a reverse-volt
 
 ### In the real world: USB LED indicator
 
-An LED needs a series resistor. Suppose a red LED drops about 2.0 V and should run near 20 mA from a 5.0 V USB source.
+An LED needs a series resistor. Suppose a red LED drops about 2.1 V and should run near 20 mA from a 5.0 V USB source.
 
-- Given: source E = 5.0 V; LED drop = 2.0 V; resistor E = 3.0 V; target I = 20 mA = 0.020 A.
+- Given: source E = 5.0 V; LED drop = 2.1 V; resistor E = 2.9 V; target I = 20 mA = 0.020 A.
 - Find: series resistance R.
 - Formula: R = resistor E / I.
-- Substitute: R = 3.0 V / 0.020 A.
-- Answer: R = 150 ohms.
-- Sanity check: the resistor drops the extra 3.0 V, and 150 ohms is a common value.
+- Substitute: R = 2.9 V / 0.020 A.
+- Answer: R = 145 ohms ideal.
+- Sanity check: the resistor drops the extra voltage that the LED does not use.
 
-The resistor power is P = I x E = 0.020 A x 3.0 V = 0.060 W. A 0.25 W resistor has comfortable margin in this example.
+E12 is a common resistor-value series. The nearest E12 value above 145 ohms is 150 ohms. With 150 ohms, current is I = 2.9 V / 150 ohms = 0.0193 A, or 19.3 mA. Resistor power is P = 0.0193 A x 2.9 V = 0.056 W, so a 0.25 W resistor has margin.
 
 ### In the real world: 9 V battery LED indicator
 
 The same red LED from a 9.0 V battery needs more series resistance because the resistor must drop more voltage.
 
-- Given: source E = 9.0 V; LED drop = 2.0 V; resistor E = 7.0 V; target I = 20 mA = 0.020 A.
+- Given: source E = 9.0 V; LED drop = 2.1 V; resistor E = 6.9 V; target I = 20 mA = 0.020 A.
 - Find: series resistance R.
 - Formula: R = resistor E / I.
-- Substitute: R = 7.0 V / 0.020 A.
-- Answer: R = 350 ohms ideal.
+- Substitute: R = 6.9 V / 0.020 A.
+- Answer: R = 345 ohms ideal.
 - Sanity check: a higher source voltage needs more resistance for the same LED current.
 
-E12 is a common resistor-value series. A common E12 choice above the ideal value is 390 ohms. Current becomes I = 7.0 V / 390 ohms = 0.0179 A, or 17.9 mA. Resistor power is about P = 0.0179 A x 7.0 V = 0.126 W, so a 0.25 W resistor is suitable.
+A common E12 choice above the ideal value is 390 ohms. Current becomes I = 6.9 V / 390 ohms = 0.0177 A, or 17.7 mA. Resistor power is P = 0.0177 A x 6.9 V = 0.122 W, so a 0.25 W resistor is suitable.
 
 ## Try it
 

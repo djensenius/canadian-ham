@@ -91,7 +91,7 @@ Four equal 220 ohm resistors are in parallel across 11 V.
 
 - Given: R = 220 ohms; four equal branches; E = 11 V.
 - Find: total resistance Rt and total current I.
-- Formula: Rt = R / number of branches; I = E / R.
+- Formula: Rt = R / number of branches; I = E / Rt.
 - Substitute: Rt = 220 / 4 = 55 ohms; I = 11 V / 55 ohms.
 - Answer: I = 0.20 A, or 200 mA.
 - Sanity check: the total resistance is lower than 220 ohms, so the current is higher than one branch current.

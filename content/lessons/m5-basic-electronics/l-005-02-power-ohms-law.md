@@ -146,7 +146,7 @@ A panel lamp draws 80 mA through a 150 ohm limiting resistor.
 
 An LED is a light-emitting diode. When it is on, it has a forward voltage drop. That means the LED takes part of the supply voltage, and the resistor must drop the rest.
 
-Suppose a red LED drops about 2.1 V and should run near 20 mA from a 5.0 V USB source. Use a series resistor so the LED current stays near the target.
+Suppose a red LED drops about 2.1 V and should run near 20 mA from a 5.0 V USB source. Use a series resistor so the LED current stays near the target. Without that resistor, the LED can draw too much current and fail.
 
 - Given: source E = 5.0 V; LED drop = 2.1 V; resistor E = 5.0 V - 2.1 V = 2.9 V; target I = 20 mA = 0.020 A.
 - Find: series resistance R.
