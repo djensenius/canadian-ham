@@ -123,6 +123,12 @@ targets:
         INFOPLIST_KEY_CFBundleDisplayName: Canadian Ham
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.education
         INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
+        # App Store validation (iOS 27 SDK): a launch screen and all four iPad
+        # orientations (multitasking) are required. iPhone supports landscape too
+        # (WCAG 1.3.4: don't lock orientation without need).
+        INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphone*]: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad[sdk=iphone*]: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone[sdk=iphone*]: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         CODE_SIGN_ENTITLEMENTS[sdk=macosx*]: CanadianHam/Resources/CanadianHam.macOS.entitlements
