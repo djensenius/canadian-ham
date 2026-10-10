@@ -1471,7 +1471,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         app.swipeUp()
         waitBriefly()
         XCTAssertTrue(isPartiallyVisibleBelowNavigationBar(feedback, in: app), "\(appearance.rawValue) sending feedback should be positioned before settling")
-        settleScrollableContentBelowNavigationBar(in: app, context: "Morse sending main screen lower half \(appearance)", preserving: feedback)
+        settleScrollableContentBelowNavigationBar(in: app, context: "Morse sending main screen lower half \(appearance)", preserving: feedback, preserveByScrollingUp: true)
         assertPartiallyVisibleBelowNavigationBar(feedback, in: app, context: "\(appearance.rawValue) sending feedback after settling")
         try performAudit(on: app, context: "Morse sending main screen lower half \(appearance)")
     }
@@ -2292,6 +2292,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         in app: XCUIApplication,
         context: String,
         preserving target: XCUIElement? = nil,
+        preserveByScrollingUp: Bool = false,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
@@ -2305,7 +2306,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
                 if offenders.isEmpty, isPartiallyVisibleBelowNavigationBar(target, in: app) { return }
                 let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
-                if target.exists, target.frame.maxY > visibleFrame.maxY {
+                if target.exists, target.frame.maxY > visibleFrame.maxY || preserveByScrollingUp {
                     scrollView.swipeUp()
                 } else {
                     let hasOffenderClippedAboveWindow = offenders.contains(where: \.isClippedAboveWindow)
