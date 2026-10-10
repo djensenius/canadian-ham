@@ -1,9 +1,11 @@
 ---
 id: TASK-1.9
 title: App Store listing material (EN/FR)
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-10 04:04'
+updated_date: '2026-10-10 04:05'
 labels: []
 dependencies: []
 parent_task_id: TASK-1
@@ -24,3 +26,9 @@ Why: v1 needs App Store Connect metadata ready for the day ISED permission arriv
 - [ ] #3 A screenshot plan per required device class (iPhone 6.9", iPad 13", Mac, Apple TV, Vision Pro) listing the screens, states, light/dark and EN/FR, with how to capture them using the app's existing DEBUG launch arguments; no screenshots committed yet
 - [ ] #4 French follows docs/french-style.md, and no wording overclaims accessibility, ISED endorsement or exam outcomes
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Draft App Store listing metadata under docs/release/app-store/ in English and fr-CA, with character counts for each limited field and claims limited to the v1 Apple app.\n2. Add release/submission support material: age rating, App Privacy answers, category and URL plan, draft ISED attribution, and screenshot capture plan using existing DEBUG launch arguments.\n3. Verify French style, Apple field limits, link integrity, and commit the docs-only Backlog updates.
+<!-- SECTION:PLAN:END -->
