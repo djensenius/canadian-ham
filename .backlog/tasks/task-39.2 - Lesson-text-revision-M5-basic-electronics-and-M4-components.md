@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:14'
-updated_date: '2026-10-10 22:51'
+updated_date: '2026-10-10 22:52'
 labels:
   - content
 dependencies:
@@ -28,3 +28,9 @@ Revise all lessons in m5-basic-electronics and m4-circuit-components to the teac
 - [ ] #3 Memory tricks from the guide are added where they help, are accurate and inoffensive, and say what they help remember
 - [ ] #4 Coverage, quiz, explanation, originality and link checks pass; lesson IDs, front matter coverage and quiz references are unchanged; Illustration brief sections are left intact for task-38
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Revise M5 lesson bodies first, preserving front matter, quiz IDs, and each Illustration brief while adding practical examples, worked numbers, vetted memory tricks, and misconception notes.\n2. Run the required content checks after M5 and record per-lesson notes with checked question IDs.\n3. Revise M4 lesson bodies with component-focused examples: diodes, transistor switching, wall-wart context, capacitors/inductors, and resistor colour mnemonic.\n4. Run the required checks after M4 and at final, update pinned expectations only if text changes require it, then finalize Backlog acceptance criteria.
+<!-- SECTION:PLAN:END -->
