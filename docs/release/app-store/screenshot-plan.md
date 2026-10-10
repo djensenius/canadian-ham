@@ -63,7 +63,7 @@ Repeat each selected screenshot in light and dark appearance:
 - iPhone, iPad and Mac: `-CanadianHamTheme light` or `-CanadianHamTheme dark`.
 - Apple TV and Vision Pro: `-CanadianHamAppearance light` or `-CanadianHamAppearance dark`.
 
-Reset state before each capture with `-CanadianHamResetDataOnLaunch` where persistent progress would otherwise leak between shots. Use deterministic seeds from the existing DEBUG launch arguments to make screenshots repeatable. Never use the question/session limit arguments (`-CanadianHamLessonQuizLimit`, `-CanadianHamPracticeLimit`, `-CanadianHamMockExamLimit`) or `-CanadianHamForceRegularHorizontalSizeClass` on iPhone: they visibly change totals, controls or layout into states the release app never shows. Do not show a guaranteed exam outcome, official endorsement, private repository URL or unreleased public URL in any screenshot.
+Reset state before each capture with `-CanadianHamResetDataOnLaunch` where persistent progress would otherwise leak between shots. Use deterministic seeds from the existing DEBUG launch arguments to make screenshots repeatable. Never use the question/session limit or timing arguments (`-CanadianHamLessonQuizLimit`, `-CanadianHamPracticeLimit`, `-CanadianHamMockExamLimit`, `-CanadianHamMorse*PlaybackSeconds`, `-CanadianHamMorseExamReviewSeconds`) or `-CanadianHamForceRegularHorizontalSizeClass` on iPhone: they visibly change totals, controls or layout into states the release app never shows. Do not show a guaranteed exam outcome, official endorsement, private repository URL or unreleased public URL in any screenshot.
 
 ## Shared DEBUG launch arguments to stage iPhone, iPad and Mac screens
 
@@ -87,7 +87,7 @@ These arguments are present in `RootView.swift` and the UI tests:
 | Advanced 50-question mock start | `-CanadianHamInitialScreen mock -CanadianHamCourseBankId advanced-2025-02-04 -CanadianHamMockExamSeed screenshot-advanced-mock` |
 | Morse home / Quick listen | `-CanadianHamInitialScreen morse` |
 | Morse Koch course deterministic lesson | `-CanadianHamInitialScreen morse -CanadianHamMorseCourseSeed screenshot-morse-course` |
-| Morse copy/exam shortened playback | `-CanadianHamInitialScreen morse -CanadianHamMorseCopyPlaybackSeconds 0.1 -CanadianHamMorseExamPlaybackSeconds 0.1 -CanadianHamMorseExamReviewSeconds 1` |
+| Morse copy practice / exam | `-CanadianHamInitialScreen morse` with real timing. Capture the start screen, or the results after a real run. Never use the DEBUG playback or review-duration overrides: they change the visible countdown and announcements |
 | Morse sending practice | `-CanadianHamInitialScreen morse -CanadianHamMorseSendingExamSeconds 120`; stage the sending screen manually and do not use the sending debug-hook flag, because it shows a debug-only button |
 | About / privacy / attribution | `-CanadianHamInitialScreen about` |
 | iPad sidebar layout | iPad only: the regular size class is native there; don't force it on iPhone |
