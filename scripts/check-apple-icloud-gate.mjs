@@ -55,7 +55,7 @@ for (const [label, text] of [
   ['iOS CloudKit entitlements', cloudIOSEntitlements],
   ['macOS CloudKit entitlements', cloudMacEntitlements],
 ]) {
-  for (const token of ['com.apple.developer.icloud-container-identifiers', 'com.apple.developer.icloud-services', 'CloudKit', 'iCloud.com.djensenius.CanadianHam']) {
+  for (const token of ['com.apple.developer.icloud-container-identifiers', 'com.apple.developer.icloud-services', 'CloudKit', 'iCloud.org.davidjensenius.CanadianHam']) {
     if (!text.includes(token)) {
       fail(`${label} missing ${token}.`);
     }
@@ -75,7 +75,7 @@ function parseTopLevelEntitlements(text) {
   }
   return entries;
 }
-const containerScope = ['iCloud.com.djensenius.CanadianHam'];
+const containerScope = ['iCloud.org.davidjensenius.CanadianHam'];
 const serviceScope = ['CloudKit'];
 for (const [label, text, required, optional] of [
   ['iOS CloudKit entitlements', cloudIOSEntitlements, {
@@ -150,7 +150,10 @@ for (const { configName, buildSettings } of defaultBlocks) {
   }
 }
 
-const appCloudKitBlocks = cloudKitBlocks.filter(({ buildSettings }) => buildSettings.includes('PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHam;'));
+const isPrimaryCanadianHamAppBlock = (buildSettings) =>
+  buildSettings.includes('PRODUCT_BUNDLE_IDENTIFIER = org.davidjensenius.CanadianHam;')
+  && buildSettings.includes('PRODUCT_NAME = CanadianHam;');
+const appCloudKitBlocks = cloudKitBlocks.filter(({ buildSettings }) => isPrimaryCanadianHamAppBlock(buildSettings));
 if (appCloudKitBlocks.length === 0) {
   fail('Could not find the DebugCloudKit app build settings in the generated project.');
 } else {
@@ -163,7 +166,7 @@ if (appCloudKitBlocks.length === 0) {
 }
 for (const { buildSettings } of cloudKitBlocks) {
   const hasCloudKitEntitlement = /CloudKit\.entitlements/.test(buildSettings);
-  if (hasCloudKitEntitlement && !buildSettings.includes('PRODUCT_BUNDLE_IDENTIFIER = com.djensenius.CanadianHam;')) {
+  if (hasCloudKitEntitlement && !isPrimaryCanadianHamAppBlock(buildSettings)) {
     fail('Only the CanadianHam app target may carry CloudKit entitlements in DebugCloudKit.');
   }
 }

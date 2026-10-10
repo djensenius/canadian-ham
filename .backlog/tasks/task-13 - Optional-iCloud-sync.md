@@ -4,7 +4,7 @@ title: Optional iCloud sync
 status: To Do
 assignee: []
 created_date: '2026-10-01 02:27'
-updated_date: '2026-10-09 22:33'
+updated_date: '2026-10-10 16:40'
 labels:
   - apple
   - privacy
@@ -42,4 +42,6 @@ Owner decisions (2026-10-02, owner accepted all recommendations in docs/proposal
 2026-10-08 owner and coordinator update: the owner asked for iCloud sync now. v1 hasn't shipped (waiting on ISED permission), so decision 1 changes: the local-only SwiftData schema V2 (no .unique, declaration defaults, V1→V2 lightweight migration, query-before-insert dedup) lands BEFORE v1 ships (task-13.3), so only one schema is in the field. Decision 5 is refined: AGENTS.md now says v1 RELEASE builds stay offline with no iCloud or push capability, and CloudKit, Push and the remote-notification background mode are allowed only behind an off-by-default build gate after v1 (task-13.2). The gate and toggle are task-13.4.
 
 2026-10-09 owner decision: Morse course progress (lessons completed, character stats, daily activity) is learning progress and should sync with iCloud too when sync is enabled. Morse trainer settings (speed, tone, output mode) stay local like other preferences. Implementation is task-13.5.
+
+2026-10-10 (task-1.10): decision 4's container ID is confirmed as iCloud.org.davidjensenius.CanadianHam (bundle IDs moved to org.davidjensenius.* for universal purchase); iCloud.com.djensenius.CanadianHam above is superseded.
 <!-- SECTION:NOTES:END -->

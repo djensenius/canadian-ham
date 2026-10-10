@@ -29,7 +29,7 @@ Record the written permission here when available in project records.
 | Storage location for permission evidence | Pending: private owner records; do not commit private correspondence unless approved |
 | Release review status | Blocked until reference number/date/scope are recorded and the scope explicitly covers the release artifacts |
 
-Do not infer permission scope beyond the written clearance. T-007/task-1.1 records the permission reference number, date, scope, and explicit confirmation that the scope covers bundling verbatim question text as app data, including the Advanced bank already named in the request. The reference PDFs are retained only as source artifacts and are not shipped in the apps. Until permission is recorded, vendoring is allowed only for private, non-distributed development under the [interim private-development policy](#interim-private-development-policy); publication and distribution remain blocked by the [public-release gate](#public-release-gate).
+Do not infer permission scope beyond the written clearance. T-007/task-1.1 records the permission reference number, date, scope, and explicit confirmation that the scope covers bundling verbatim question text as app data, including the Advanced bank already named in the request. The reference PDFs are retained only as source artifacts and are not shipped in the apps. Until permission is recorded, vendoring is allowed only for private, non-distributed development under the [interim private-development policy](#interim-private-development-policy) (including its internal-TestFlight exception); publication and distribution remain blocked by the [public-release gate](#public-release-gate).
 
 ## Interim private-development policy
 
@@ -50,7 +50,7 @@ ISED's non-commercial reproduction conditions include:
 - identifying ISED as the source department and identifying the source work by title;
 - not representing the reproduction as an official version or as having been made in affiliation with or endorsed by the Government of Canada.
 
-This interim policy is the owner's risk decision and is not legal advice. This policy does not allow making the repository public, deploying the web app publicly, distributing Apple builds, adding outside collaborators, or any other redistribution.
+This interim policy is the owner's risk decision and is not legal advice. This policy does not allow making the repository public, deploying the web app publicly, distributing Apple builds, adding outside collaborators, or any other redistribution. The one exception is internal TestFlight builds uploaded to App Store Connect and installable only by the owner's App Store Connect team members (see [TestFlight runbook](release/testflight.md)); external testers, public TestFlight links, and App Store submission stay blocked by the gate below.
 
 ## Public-release gate
 
