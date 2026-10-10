@@ -525,6 +525,47 @@ struct ICloudProgressDeletionClient: Sendable {
     static let noop = ICloudProgressDeletionClient(deletePrivateDatabaseProgressZones: {})
 }
 
+#if ICLOUD_SYNC
+extension ICloudProgressDeletionClient {
+    static func cloudKit(containerIdentifier: String = ICloudSyncSettings.containerIdentifier) -> ICloudProgressDeletionClient {
+        ICloudProgressDeletionClient {
+            let database = CKContainer(identifier: containerIdentifier).privateCloudDatabase
+            let zones = try await fetchRecordZones(database: database)
+            let zoneIDs = zones.map(\.zoneID).filter { $0.zoneName != CKRecordZone.default().zoneID.zoneName }
+            guard !zoneIDs.isEmpty else { return }
+            try await deleteRecordZones(zoneIDs, database: database)
+        }
+    }
+
+    private static func fetchRecordZones(database: CKDatabase) async throws -> [CKRecordZone] {
+        try await withCheckedThrowingContinuation { continuation in
+            database.fetchAllRecordZones { zones, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume(returning: zones ?? [])
+                }
+            }
+        }
+    }
+
+    private static func deleteRecordZones(_ zoneIDs: [CKRecordZone.ID], database: CKDatabase) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            let operation = CKModifyRecordZonesOperation(recordZonesToSave: nil, recordZoneIDsToDelete: zoneIDs)
+            operation.modifyRecordZonesResultBlock = { result in
+                switch result {
+                case .success:
+                    continuation.resume(returning: ())
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+            database.add(operation)
+        }
+    }
+}
+#endif
+
 @MainActor
 final class ProgressStoreService: ObservableObject {
     @Published private(set) var preferences: ApplePreferences = .default
