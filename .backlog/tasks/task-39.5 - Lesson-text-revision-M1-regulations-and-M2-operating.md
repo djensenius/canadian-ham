@@ -1,11 +1,11 @@
 ---
 id: TASK-39.5
 title: 'Lesson text revision: M1 regulations and M2 operating'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-10 23:06'
+updated_date: '2026-10-10 23:13'
 labels:
   - content
 dependencies:
@@ -36,6 +36,8 @@ Revise all lessons in m1-regulations-policies and m2-operating-procedures to the
 2. For M1, tighten rule prose, add approved memory aids for certificate/address, identification, and power qualification limits, and add practical context without Try-its or Common mistakes.
 3. For M2, add practical procedure descriptions and short on-air examples inside allowed reference-style sections, plus approved memory aids for phonetics, RST, Q signals, and UTC/logging where useful.
 4. Verify facts against questions.json and docs/exam-facts.md, run required content checks after M1, after M2, and final full checks, then record notes, AC evidence, and final summary through Backlog CLI.
+
+5. Address review r1 requested changes: replace the S-unit example numbers and definition, relocate M1 memory tricks, define ERP/EIRP and restore L-001-04 explanatory prose, remove learner-facing writer notes, add required worked/on-air examples, fix minor wording/originality concerns, rerun the full content validation suite, then record finding-by-finding notes and move Done last.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
