@@ -152,6 +152,7 @@ final class ProgressStoreTests: XCTestCase {
             .deletingLastPathComponent()
             .deletingLastPathComponent()
             .deletingLastPathComponent()
+            .deletingLastPathComponent()
             .appending(path: "fixtures/progress/icloud-merge.json")
         let fixture = try JSONDecoder().decode(Fixture.self, from: Data(contentsOf: fixtureURL))
 
@@ -1232,6 +1233,31 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertTrue(errors.contains { $0.contains("duplicates another exam attempt") })
         XCTAssertTrue(errors.contains { $0.contains("preferences.practiceMode") })
         XCTAssertThrowsError(try store.importData(data, bank: bank))
+    }
+
+    func testMigratesCommittedPreV2StoreFixtureWithAllDataIntact() throws {
+        let fixtureURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appending(path: "fixtures/progress/pre-v2/Progress.store")
+        let directory = try temporaryProgressStoreDirectory()
+        let urls = ProgressStoreURLs(progressDirectory: directory)
+        try FileManager.default.copyItem(at: fixtureURL, to: urls.persistentStoreURL)
+
+        let store = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
+
+        let progress = try store.questionProgressRecords()
+        XCTAssertEqual(progress.count, 1)
+        XCTAssertEqual(progress.first?.questionId, "B-001-001-001")
+        XCTAssertEqual(progress.first?.attempts, 2)
+        XCTAssertEqual(try store.examAttempts().map(\.id), ["fixture-attempt-1"])
+        XCTAssertEqual(store.preferences.practiceMode, .reviewLater)
+        XCTAssertTrue(store.preferences.examTimerEnabled)
+        XCTAssertEqual(store.preferences.language, .french)
+        XCTAssertEqual(store.preferences.theme, .dark)
+        XCTAssertEqual(try store.lessonProgressRecords(), [LessonProgressRecord(lessonId: "L-005-01", readAt: "2026-01-02T03:30:00.000Z", readCount: 2)])
     }
 
     func testMigratesProgressStoreV1ToV2WithoutUniqueConstraints() throws {
