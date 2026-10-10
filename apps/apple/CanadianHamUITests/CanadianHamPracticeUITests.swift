@@ -1764,7 +1764,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.buttons["morse-course-open-button"].firstMatch.waitForExistence(timeout: 10))
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home top")
         let settings = app.staticTexts["Morse settings"].firstMatch
-        let fixedTimingNote = app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "This exam timing profile fixes speed controls")).firstMatch
+        let fixedTimingNote = app.staticTexts["morse-settings-fixed-timing-description"].firstMatch
         scrollMorseHomeLowerContentIntoView(in: app)
         XCTAssertTrue(fixedTimingNote.waitForExistence(timeout: 5), "\(appearance.rawValue) Morse settings fixed-timing note should be available before settling")
         scrollUntilPartiallyVisible(fixedTimingNote, in: app, maxSwipes: 8)
