@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:54'
-updated_date: '2026-10-11 17:36'
+updated_date: '2026-10-11 17:58'
 labels:
   - apple
   - web
@@ -38,3 +38,9 @@ Owner feedback 2026-10-10: the English/French switch is too prominent. By defaul
 4. Convert existing Apple and web tests from picker-presence coverage to absence-on-content-screens plus Settings persistence/system-language coverage, including tvOS/visionOS if pickers exist.
 5. Run targeted unit/UI/web/l10n/text-source checks, record evidence in Backlog, then finalize ACs and Done.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+WIP commit 24f62175: moved Apple/web language preference toward Settings-only, removed tvOS/visionOS prominent pickers, added web language resolution helper/tests, updated schema and converted key UI tests. Validation so far: pnpm typecheck passed; targeted web vitest command passed (it matched 15 files/160 tests due command syntax); pnpm check:schemas passed; apple text-source check passed; pnpm check:apple-l10n waited on xbuild lock and timed out twice, needs rerun. Remaining: fix any compile/test failures from targeted Apple tests, rerun l10n when lock available, add final notes/AC checks/Done.
+<!-- SECTION:NOTES:END -->
