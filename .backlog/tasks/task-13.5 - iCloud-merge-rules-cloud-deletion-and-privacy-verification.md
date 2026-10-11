@@ -1,7 +1,7 @@
 ---
 id: TASK-13.5
 title: 'iCloud merge rules, cloud deletion and privacy verification'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
