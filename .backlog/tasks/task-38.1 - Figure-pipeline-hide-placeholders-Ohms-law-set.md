@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-11 09:59'
+updated_date: '2026-10-11 13:15'
 labels:
   - content
   - apple
@@ -66,6 +66,10 @@ Validation after r1 fixes: pnpm typecheck; TZ=UTC pnpm --filter @canadian-ham/we
 Follow-up fixes: increased wheel formula SVG font sizes to satisfy the 11 pt at 300 pt display-width rule, added that minimum to scripts/check-figures.mjs and docs/figures.md, regenerated Apple assets/evidence, and retook real iOS app screenshots under docs/evidence/task-38.1/app/ including default light/dark, enlarged views, and a largest-accessibility-text wheel screenshot.
 
 Follow-up validation: pnpm check:figures; node scripts/check-figures.mjs --self-test; TZ=UTC pnpm --filter @canadian-ham/web test (161 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift (20 tests); node scripts/check-apple-text-sources.ts; targeted iOS xbuild tests: testLessonIllustrationBriefsAreHiddenInEnglishAndFrench plus testOhmsLawLessonFiguresAndAccessibilityLight/Dark in /tmp/task381-r7-screens.xcresult (3 tests passed), and testOhmsLawWheelFitsAndEnlargesAtLargestAccessibilityTextSize in /tmp/task381-large4.xcresult (1 test passed). Full platform suites remain deferred to pre-merge per updated policy.
+
+Final enlarged-view follow-up: changed enlarged figure sheet to compute a fitted size from available GeometryReader space so it opens with the whole figure aspect-fit and centered, while retaining pinch zoom and double-tap zoom toggle. Added launch-argument coverage for opening the enlarged wheel directly at largest accessibility text size and asserting the enlarged image fits below the navigation bar. Refreshed docs/evidence/task-38.1/app/ screenshots; enlarged light/dark views now show the whole figure.
+
+Validation for final follow-up: pnpm check:figures; node scripts/check-figures.mjs --self-test; TZ=UTC pnpm --filter @canadian-ham/web test (161 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift (20 tests); node scripts/check-apple-text-sources.ts; targeted iOS screenshots/tests testOhmsLawLessonFiguresAndAccessibilityLight/Dark in /tmp/task381-r11-screens.xcresult (2 tests passed); targeted largest-accessibility enlarged-view test testOhmsLawWheelFitsAndEnlargesAtLargestAccessibilityTextSize in /tmp/task381-large8.xcresult (1 test passed). Screenshots exported to docs/evidence/task-38.1/app/.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
