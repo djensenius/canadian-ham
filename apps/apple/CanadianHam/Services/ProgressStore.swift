@@ -68,6 +68,8 @@ struct ICloudSyncSettings: Equatable, Sendable {
     static let containerIdentifier = "iCloud.org.davidjensenius.CanadianHam"
 
     private static let optInPreferenceKey = "CanadianHam.iCloudSyncOptIn"
+    private static let localDeviceIdentifierKey = "CanadianHam.iCloudSyncLocalDeviceIdentifier"
+    private static let pendingProgressZoneDeletionKey = "CanadianHam.iCloudSyncPendingProgressZoneDeletion"
 
     static var isBuildEnabled: Bool {
 #if ICLOUD_SYNC
@@ -87,6 +89,24 @@ struct ICloudSyncSettings: Equatable, Sendable {
 
     static func clearStoredOptIn(defaults: UserDefaults = .standard) {
         defaults.removeObject(forKey: optInPreferenceKey)
+    }
+
+    static func localDeviceIdentifier(defaults: UserDefaults = .standard) -> String {
+        if let existing = defaults.string(forKey: localDeviceIdentifierKey), !existing.isEmpty {
+            return existing
+        }
+        let created = UUID().uuidString
+        defaults.set(created, forKey: localDeviceIdentifierKey)
+        return created
+    }
+
+    static func pendingProgressZoneDeletion(defaults: UserDefaults = .standard) -> Bool {
+        defaults.bool(forKey: pendingProgressZoneDeletionKey)
+    }
+
+    static func setPendingProgressZoneDeletion(_ pending: Bool, defaults: UserDefaults = .standard) {
+        if pending { defaults.set(true, forKey: pendingProgressZoneDeletionKey) }
+        else { defaults.removeObject(forKey: pendingProgressZoneDeletionKey) }
     }
 
     static func databaseSelection(storedOptIn: Bool, buildEnabled: Bool = isBuildEnabled) -> ICloudSyncDatabaseSelection {
@@ -165,6 +185,7 @@ struct ProgressExportV1: Codable, Equatable, Sendable {
     let lessonProgress: [ArchivedJSON]
     let lessonQuizAttempts: [ArchivedJSON]
     let morseCourseProgress: MorseCourseProgressExport?
+    let syncDeviceRows: ProgressSyncDeviceRows?
     let preferences: ExportedPreferences
 
     init(
@@ -177,6 +198,7 @@ struct ProgressExportV1: Codable, Equatable, Sendable {
         lessonProgress: [ArchivedJSON],
         lessonQuizAttempts: [ArchivedJSON],
         morseCourseProgress: MorseCourseProgressExport? = nil,
+        syncDeviceRows: ProgressSyncDeviceRows? = nil,
         preferences: ExportedPreferences
     ) {
         self.schema = schema
@@ -188,6 +210,7 @@ struct ProgressExportV1: Codable, Equatable, Sendable {
         self.lessonProgress = lessonProgress
         self.lessonQuizAttempts = lessonQuizAttempts
         self.morseCourseProgress = morseCourseProgress
+        self.syncDeviceRows = syncDeviceRows
         self.preferences = preferences
     }
 
@@ -202,6 +225,7 @@ struct ProgressExportV1: Codable, Equatable, Sendable {
         lessonProgress = try container.decodeIfPresent([ArchivedJSON].self, forKey: .lessonProgress) ?? []
         lessonQuizAttempts = try container.decodeIfPresent([ArchivedJSON].self, forKey: .lessonQuizAttempts) ?? []
         morseCourseProgress = try container.decodeIfPresent(MorseCourseProgressExport.self, forKey: .morseCourseProgress)
+        syncDeviceRows = try container.decodeIfPresent(ProgressSyncDeviceRows.self, forKey: .syncDeviceRows)
         preferences = try container.decode(ExportedPreferences.self, forKey: .preferences)
     }
 }
@@ -477,6 +501,7 @@ struct StoredExamAttempt: Codable, Equatable, Sendable, Identifiable {
 enum ProgressStoreError: LocalizedError, Equatable {
     case validationFailed([String])
     case openFailed(String)
+    case cloudResetRequiresAsyncDeletion
 
     var errorDescription: String? {
         switch self {
@@ -484,6 +509,8 @@ enum ProgressStoreError: LocalizedError, Equatable {
             errors.joined(separator: "\n")
         case .openFailed(let message):
             message
+        case .cloudResetRequiresAsyncDeletion:
+            String(localized: "Reset iCloud progress through the cloud deletion flow.")
         }
     }
 }
@@ -500,29 +527,100 @@ enum ProgressStoreInjectedFailure: Error, Equatable {
 private struct ProgressStoreSnapshot {
     let questionProgress: [QuestionProgressRecord]
     let examAttempts: [StoredExamAttempt]
+    let lessonProgress: [LessonProgressRecord]
+    let lessonQuizAttempts: [LessonQuizAttempt]
     let preferences: ApplePreferences
     let archivedLessonProgressData: Data
     let archivedLessonQuizAttemptsData: Data
-    let morseCourseProgressData: Data?
+    let morseCourseProgress: MorseCourseProgressExport?
+    let syncDeviceRows: ProgressSyncDeviceRows
 }
+
+private enum LegacyPreferencesReadResult {
+    case skipped
+    case failed
+    case loaded([PreferencesEntitySnapshot])
+}
+
+enum ICloudLocalDataChoice: Equatable, Sendable {
+    case keepLocal
+    case deleteLocal
+}
+
+struct ICloudProgressDeletionClient {
+    let deletePrivateDatabaseProgressZones: () async throws -> Void
+
+    init(deletePrivateDatabaseProgressZones: @escaping () async throws -> Void) {
+        self.deletePrivateDatabaseProgressZones = deletePrivateDatabaseProgressZones
+    }
+
+    static var noop: ICloudProgressDeletionClient { ICloudProgressDeletionClient(deletePrivateDatabaseProgressZones: {}) }
+}
+
+#if ICLOUD_SYNC
+extension ICloudProgressDeletionClient {
+    static func cloudKit(containerIdentifier: String = ICloudSyncSettings.containerIdentifier) -> ICloudProgressDeletionClient {
+        ICloudProgressDeletionClient {
+            let database = CKContainer(identifier: containerIdentifier).privateCloudDatabase
+            let zones = try await Self.fetchRecordZones(database: database)
+            let zoneIDs = zones.map(\.zoneID).filter { $0.zoneName != CKRecordZone.default().zoneID.zoneName }
+            guard !zoneIDs.isEmpty else { return }
+            try await Self.deleteRecordZones(zoneIDs, database: database)
+        }
+    }
+
+    private static func fetchRecordZones(database: CKDatabase) async throws -> [CKRecordZone] {
+        try await withCheckedThrowingContinuation { continuation in
+            database.fetchAllRecordZones { zones, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume(returning: zones ?? [])
+                }
+            }
+        }
+    }
+
+    private static func deleteRecordZones(_ zoneIDs: [CKRecordZone.ID], database: CKDatabase) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            let operation = CKModifyRecordZonesOperation(recordZonesToSave: nil, recordZoneIDsToDelete: zoneIDs)
+            operation.modifyRecordZonesResultBlock = { result in
+                switch result {
+                case .success:
+                    continuation.resume(returning: ())
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+            database.add(operation)
+        }
+    }
+}
+#endif
 
 @MainActor
 final class ProgressStoreService: ObservableObject {
     @Published private(set) var preferences: ApplePreferences = .default
     @Published private(set) var isICloudSyncEnabled: Bool = ICloudSyncSettings.storedOptIn()
+    @Published private(set) var iCloudAccountSignalError: String?
 
-    let container: ModelContainer
-    private let context: ModelContext
+    private(set) var container: ModelContainer
+    private var context: ModelContext
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
     private let storeURLs: ProgressStoreURLs
     private let morseCourseProgressURL: URL
+    private let layout: ProgressStoreConfigurationLayout
+    private let localDeviceID: String
+    private var modelContainerFactory: ((Bool) throws -> ModelContainer)?
+    private var pendingICloudProgressDeletionForReset = false
 #if DEBUG
     var morseCourseProgressURLForTesting: URL { morseCourseProgressURL }
     var failNextImportAfterDeleteForTesting = false
     var failNextImportAfterMorseWriteForTesting = false
     var failNextLessonQuizSaveForTesting = false
     var failNextMorseCourseProgressRemovalForTesting = false
+    private(set) var questionProgressWriteContextBuildCountForTesting = 0
 #endif
 #if ICLOUD_SYNC
     private var iCloudAccountChangedObserver: NSObjectProtocol?
@@ -532,17 +630,26 @@ final class ProgressStoreService: ObservableObject {
         container: ModelContainer,
         storeURLs: ProgressStoreURLs = .standard,
         morseCourseProgressURL: URL? = nil,
-        iCloudSyncEnabled: Bool = ICloudSyncSettings.storedOptIn()
+        iCloudSyncEnabled: Bool = ICloudSyncSettings.storedOptIn(),
+        layout: ProgressStoreConfigurationLayout = .automatic,
+        modelContainerFactory: ((Bool) throws -> ModelContainer)? = nil,
+        startICloudMonitoring: Bool = true,
+        localDeviceID: String = ICloudSyncSettings.localDeviceIdentifier()
     ) throws {
         self.container = container
         self.context = ModelContext(container)
         self.storeURLs = storeURLs
         self.morseCourseProgressURL = morseCourseProgressURL ?? storeURLs.morseCourseProgressURL
+        self.layout = Self.resolvedLayout(layout)
+        self.modelContainerFactory = modelContainerFactory
+        self.localDeviceID = localDeviceID
         self.isICloudSyncEnabled = iCloudSyncEnabled
         try FileManager.default.createDirectory(at: self.morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
         self.preferences = try loadPreferences()
+        try adoptLegacyDeviceRowsIfNeeded()
+        try migrateLearningProgressFromLegacyStorageIfNeeded()
 #if ICLOUD_SYNC
-        if iCloudSyncEnabled {
+        if iCloudSyncEnabled, startICloudMonitoring {
             startICloudAccountMonitoring()
         }
 #endif
@@ -567,21 +674,36 @@ final class ProgressStoreService: ObservableObject {
                 storeURLs: storeURLs,
                 layout: resolvedLayout
             )
-            try copyLegacyPreferencesIfNeeded(legacyPreferences, into: container, layout: resolvedLayout)
-            if shouldAttemptLegacyCopy {
+            switch legacyPreferences {
+            case .skipped:
+                break
+            case .failed:
+                break
+            case .loaded(let snapshots):
+                try copyLegacyPreferencesIfNeeded(snapshots, into: container, layout: resolvedLayout)
                 markLegacyPreferencesCopyComplete(storeURLs: storeURLs)
+            }
+            let factory: (Bool) throws -> ModelContainer = { enabled in
+                try makeModelContainer(
+                    iCloudSyncEnabled: enabled,
+                    isStoredInMemoryOnly: false,
+                    storeURLs: storeURLs,
+                    layout: resolvedLayout
+                )
             }
             return try ProgressStoreService(
                 container: container,
                 storeURLs: storeURLs,
-                iCloudSyncEnabled: iCloudSyncEnabled
+                iCloudSyncEnabled: iCloudSyncEnabled,
+                layout: resolvedLayout,
+                modelContainerFactory: factory
             )
         } catch {
             throw ProgressStoreError.openFailed(error.localizedDescription)
         }
     }
 
-    static func inMemoryForTests(iCloudSyncEnabled: Bool = false, layout: ProgressStoreConfigurationLayout = .automatic) throws -> ProgressStoreService {
+    static func inMemoryForTests(iCloudSyncEnabled: Bool = false, layout: ProgressStoreConfigurationLayout = .automatic, localDeviceID: String = "test-device") throws -> ProgressStoreService {
         let container = try makeModelContainer(
             iCloudSyncEnabled: iCloudSyncEnabled,
             isStoredInMemoryOnly: true,
@@ -592,10 +714,22 @@ final class ProgressStoreService: ObservableObject {
             .appending(path: "CanadianHamProgressStoreTests", directoryHint: .isDirectory)
             .appending(path: UUID().uuidString, directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let urls = ProgressStoreURLs(progressDirectory: directory)
         return try ProgressStoreService(
             container: container,
-            storeURLs: ProgressStoreURLs(progressDirectory: directory),
-            iCloudSyncEnabled: iCloudSyncEnabled
+            storeURLs: urls,
+            iCloudSyncEnabled: iCloudSyncEnabled,
+            layout: resolvedLayout(layout),
+            modelContainerFactory: { enabled in
+                try makeModelContainer(
+                    iCloudSyncEnabled: enabled,
+                    isStoredInMemoryOnly: true,
+                    storeURLs: urls,
+                    layout: resolvedLayout(layout)
+                )
+            },
+            startICloudMonitoring: false,
+            localDeviceID: localDeviceID
         )
     }
 
@@ -644,7 +778,7 @@ final class ProgressStoreService: ObservableObject {
     }
 
     private static func makeLegacySingleStoreModelContainer(isStoredInMemoryOnly: Bool, storeURLs: ProgressStoreURLs) throws -> ModelContainer {
-        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV2.self)
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
         let configuration: ModelConfiguration
         if isStoredInMemoryOnly {
             configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
@@ -655,28 +789,19 @@ final class ProgressStoreService: ObservableObject {
     }
 
     private static func makeSplitModelContainer(iCloudSyncEnabled: Bool, isStoredInMemoryOnly: Bool, storeURLs: ProgressStoreURLs) throws -> ModelContainer {
-        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV2.self)
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
         let plan = configurationPlan(iCloudSyncEnabled: iCloudSyncEnabled)
-        let progressSchema = Schema([QuestionProgressEntity.self, ExamAttemptEntity.self])
+        let progressSchema = Schema([QuestionProgressEntity.self, ExamAttemptEntity.self, LessonProgressEntity.self, LessonQuizAttemptEntity.self, MorseCourseProgressEntity.self])
         let preferencesSchema = Schema([PreferencesEntity.self])
         let progressConfiguration: ModelConfiguration
         let preferencesConfiguration: ModelConfiguration
         if isStoredInMemoryOnly {
-#if ICLOUD_SYNC
-            progressConfiguration = ModelConfiguration(
-                "LearningProgress",
-                schema: progressSchema,
-                isStoredInMemoryOnly: true,
-                cloudKitDatabase: cloudKitDatabase(for: plan.progressDatabase)
-            )
-#else
             progressConfiguration = ModelConfiguration(
                 "LearningProgress",
                 schema: progressSchema,
                 isStoredInMemoryOnly: true,
                 cloudKitDatabase: .none
             )
-#endif
             preferencesConfiguration = ModelConfiguration(
                 "LocalPreferences",
                 schema: preferencesSchema,
@@ -719,20 +844,19 @@ final class ProgressStoreService: ObservableObject {
     ) -> Bool {
         guard layout == .split else { return false }
         guard !FileManager.default.fileExists(atPath: storeURLs.legacyPreferencesCopyMarkerURL.path(percentEncoded: false)) else { return false }
-        guard !FileManager.default.fileExists(atPath: storeURLs.preferencesStoreURL.path(percentEncoded: false)) else { return false }
         return FileManager.default.fileExists(atPath: storeURLs.persistentStoreURL.path(percentEncoded: false))
     }
 
     private static func legacyPreferencesSnapshotsIfNeeded(
         storeURLs: ProgressStoreURLs,
         shouldAttemptCopy: Bool
-    ) -> [PreferencesEntitySnapshot] {
-        guard shouldAttemptCopy else { return [] }
+    ) -> LegacyPreferencesReadResult {
+        guard shouldAttemptCopy else { return .skipped }
         do {
             let legacyContainer = try makeLegacySingleStoreModelContainer(isStoredInMemoryOnly: false, storeURLs: storeURLs)
             let legacyContext = ModelContext(legacyContainer)
             let descriptor = FetchDescriptor<PreferencesEntity>(sortBy: [SortDescriptor(\.key)])
-            return try legacyContext.fetch(descriptor).map { entity in
+            let snapshots = try legacyContext.fetch(descriptor).map { entity in
                 PreferencesEntitySnapshot(
                     key: entity.key,
                     practiceMode: entity.practiceMode,
@@ -743,9 +867,10 @@ final class ProgressStoreService: ObservableObject {
                     archivedLessonQuizAttemptsData: entity.archivedLessonQuizAttemptsData
                 )
             }
+            return .loaded(snapshots)
         } catch {
             NSLog("CanadianHam: unable to copy legacy preferences into split store: %@", String(describing: error))
-            return []
+            return .failed
         }
     }
 
@@ -756,24 +881,42 @@ final class ProgressStoreService: ObservableObject {
     ) throws {
         guard layout == .split, !snapshots.isEmpty else { return }
         let context = ModelContext(container)
-        let existing = try context.fetch(FetchDescriptor<PreferencesEntity>())
-        guard existing.isEmpty else { return }
+        let existing = Dictionary(try context.fetch(FetchDescriptor<PreferencesEntity>()).map { ($0.key, $0) }, uniquingKeysWith: { first, duplicate in context.delete(duplicate); return first })
         for snapshot in snapshots {
-            let entity = PreferencesEntity(
-                key: snapshot.key,
-                practiceMode: snapshot.practiceMode,
-                examTimerEnabled: snapshot.examTimerEnabled,
-                language: snapshot.language,
-                theme: snapshot.theme,
-                archivedLessonProgressData: snapshot.archivedLessonProgressData,
-                archivedLessonQuizAttemptsData: snapshot.archivedLessonQuizAttemptsData
-            )
-            context.insert(entity)
+            if let entity = existing[snapshot.key] {
+                if entity.practiceMode == ApplePreferences.default.practiceMode.rawValue,
+                   !entity.examTimerEnabled,
+                   entity.language == ApplePreferences.default.language.rawValue,
+                   entity.theme == ApplePreferences.default.theme.rawValue {
+                    entity.practiceMode = snapshot.practiceMode
+                    entity.examTimerEnabled = snapshot.examTimerEnabled
+                    entity.language = snapshot.language
+                    entity.theme = snapshot.theme
+                }
+                if entity.archivedLessonProgressData == Data("[]".utf8) {
+                    entity.archivedLessonProgressData = snapshot.archivedLessonProgressData
+                }
+                if entity.archivedLessonQuizAttemptsData == Data("[]".utf8) {
+                    entity.archivedLessonQuizAttemptsData = snapshot.archivedLessonQuizAttemptsData
+                }
+            } else {
+                context.insert(PreferencesEntity(
+                    key: snapshot.key,
+                    practiceMode: snapshot.practiceMode,
+                    examTimerEnabled: snapshot.examTimerEnabled,
+                    language: snapshot.language,
+                    theme: snapshot.theme,
+                    archivedLessonProgressData: snapshot.archivedLessonProgressData,
+                    archivedLessonQuizAttemptsData: snapshot.archivedLessonQuizAttemptsData
+                ))
+            }
         }
         try context.save()
     }
 
     private static func markLegacyPreferencesCopyComplete(storeURLs: ProgressStoreURLs) {
+        // The original PreferencesEntity rows can remain in Progress.store after a split-store copy;
+        // this gated marker records that their learning-progress archives were copied into syncable rows.
         try? FileManager.default.createDirectory(at: storeURLs.legacyPreferencesCopyMarkerURL.deletingLastPathComponent(), withIntermediateDirectories: true)
         if !FileManager.default.fileExists(atPath: storeURLs.legacyPreferencesCopyMarkerURL.path(percentEncoded: false)) {
             FileManager.default.createFile(atPath: storeURLs.legacyPreferencesCopyMarkerURL.path(percentEncoded: false), contents: Data(), attributes: nil)
@@ -834,6 +977,48 @@ final class ProgressStoreService: ObservableObject {
     func handleICloudAccountSignal(_ signal: ICloudAccountSignal, defaults: UserDefaults = .standard) {
         ICloudSyncSettings.handleAccountSignal(signal, defaults: defaults)
         isICloudSyncEnabled = ICloudSyncSettings.storedOptIn(defaults: defaults)
+        do {
+            try reopenLocalOnlyAfterSyncStop()
+            iCloudAccountSignalError = nil
+        } catch {
+            iCloudAccountSignalError = error.localizedDescription
+            NSLog("CanadianHam: unable to reopen the progress store local-only after iCloud account signal: %@", String(describing: error))
+        }
+    }
+
+    func reopenLocalOnlyAfterSyncStop(factory: ((Bool) throws -> ModelContainer)? = nil) throws {
+        let snapshot = try snapshotForRollback()
+        let makeContainer = factory ?? modelContainerFactory ?? { [storeURLs, layout] enabled in
+            try Self.makeModelContainer(
+                iCloudSyncEnabled: enabled,
+                isStoredInMemoryOnly: false,
+                storeURLs: storeURLs,
+                layout: layout
+            )
+        }
+        let localOnlyContainer = try makeContainer(false)
+        let localOnlyContext = ModelContext(localOnlyContainer)
+        container = localOnlyContainer
+        context = localOnlyContext
+        isICloudSyncEnabled = false
+        if try isProgressStoreEmpty(in: localOnlyContext) {
+            try restore(snapshot)
+        } else {
+            preferences = try loadPreferences()
+        }
+        objectWillChange.send()
+    }
+
+    func deleteICloudProgress(localDataChoice: ICloudLocalDataChoice, client: ICloudProgressDeletionClient, defaults: UserDefaults = .standard) async throws {
+        ICloudSyncSettings.clearStoredOptIn(defaults: defaults)
+        try reopenLocalOnlyAfterSyncStop()
+        try await client.deletePrivateDatabaseProgressZones()
+        // The zone is gone, so any reset that was waiting on this deletion is satisfied.
+        pendingICloudProgressDeletionForReset = false
+        ICloudSyncSettings.setPendingProgressZoneDeletion(false, defaults: defaults)
+        if localDataChoice == .deleteLocal {
+            try resetAllData(defaults: defaults)
+        }
     }
 
     func handleICloudAccountAvailability(_ availability: ICloudAccountAvailability, defaults: UserDefaults = .standard) {
@@ -883,13 +1068,11 @@ final class ProgressStoreService: ObservableObject {
 #endif
 
     func questionProgressRecords() throws -> [QuestionProgressRecord] {
-        let descriptor = FetchDescriptor<QuestionProgressEntity>(sortBy: [SortDescriptor(\.questionId)])
-        return try context.fetch(descriptor).map { try questionProgressRecord(from: $0) }
+        ProgressSyncMerge.deduplicateDeviceQuestionProgress(try deviceQuestionProgressRows())
     }
 
     func examAttempts() throws -> [StoredExamAttempt] {
-        let descriptor = FetchDescriptor<ExamAttemptEntity>(sortBy: [SortDescriptor(\.submittedAt)])
-        return try context.fetch(descriptor).map { try decoder.decode(StoredExamAttempt.self, from: $0.payloadData) }
+        ProgressSyncMerge.deduplicateDeviceExamAttempts(try deviceExamAttemptRows())
     }
 
     func latestExamAttempt() throws -> StoredExamAttempt? {
@@ -897,45 +1080,40 @@ final class ProgressStoreService: ObservableObject {
     }
 
     func lessonProgressRecords() throws -> [LessonProgressRecord] {
-        let entity = try preferencesEntity(createIfMissing: true)
-        return try decoder.decode([LessonProgressRecord].self, from: entity.archivedLessonProgressData)
-            .sorted { $0.lessonId < $1.lessonId }
+        ProgressSyncMerge.deduplicateDeviceLessonProgress(try deviceLessonProgressRows())
     }
 
     func lessonQuizAttempts() throws -> [LessonQuizAttempt] {
-        let entity = try preferencesEntity(createIfMissing: true)
-        return try decoder.decode([LessonQuizAttempt].self, from: entity.archivedLessonQuizAttemptsData)
-            .sorted { $0.submittedAt < $1.submittedAt }
+        ProgressSyncMerge.deduplicateDeviceLessonQuizAttempts(try deviceLessonQuizAttemptRows())
     }
 
     func saveLessonProgress(_ record: LessonProgressRecord) throws {
-        let entity = try preferencesEntity(createIfMissing: true)
-        let current = try lessonProgressRecords().filter { $0.lessonId != record.lessonId }
-        entity.archivedLessonProgressData = try encoder.encode((current + [record]).sorted { $0.lessonId < $1.lessonId })
+        try upsertLessonProgress(record)
         try context.save()
         objectWillChange.send()
     }
 
     func morseCourseProgress() throws -> MorseCourseProgressExport? {
-        guard FileManager.default.fileExists(atPath: morseCourseProgressURL.path(percentEncoded: false)) else { return nil }
-        let data = try Data(contentsOf: morseCourseProgressURL)
-        return try decoder.decode(MorseCourseProgressExport.self, from: data)
+        let key = MorseCourseProgressEntity.defaultKey
+        let descriptor = FetchDescriptor<MorseCourseProgressEntity>(predicate: #Predicate { $0.key == key })
+        let rows = try context.fetch(descriptor).map { entity in
+            DeviceMorseCourseProgressRecord(deviceId: entity.deviceId.isEmpty ? localDeviceID : entity.deviceId, progress: try decoder.decode(MorseCourseProgressExport.self, from: entity.payloadData))
+        }
+        return ProgressSyncMerge.mergeDeviceMorseCourseProgress(rows)
     }
 
     func saveMorseCourseProgress(_ progress: MorseCourseProgressExport) throws {
-        let data = try encoder.encode(progress)
-        try FileManager.default.createDirectory(at: morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
-        try data.write(to: morseCourseProgressURL, options: [.atomic])
+        try upsertMorseCourseProgress(progress)
+        try context.save()
         objectWillChange.send()
     }
 
     func saveLessonQuizAttempt(_ attempt: LessonQuizAttempt, questionProgress: [QuestionProgressRecord]) throws {
         do {
-            let entity = try preferencesEntity(createIfMissing: true, saveIfCreated: false)
-            let attempts = try decoder.decode([LessonQuizAttempt].self, from: entity.archivedLessonQuizAttemptsData)
-            entity.archivedLessonQuizAttemptsData = try encoder.encode((attempts + [attempt]).sorted { $0.submittedAt < $1.submittedAt })
+            try upsertLessonQuizAttempt(attempt)
+            let writeContext = try questionProgressWriteContext(forDeviceId: localDeviceID)
             for record in questionProgress {
-                try upsertQuestionProgress(record)
+                try upsertQuestionProgress(record, writeContext: writeContext)
             }
 #if DEBUG
             if failNextLessonQuizSaveForTesting {
@@ -952,33 +1130,16 @@ final class ProgressStoreService: ObservableObject {
     }
 
     func saveQuestionProgress(_ records: [QuestionProgressRecord]) throws {
+        let writeContext = try questionProgressWriteContext(forDeviceId: localDeviceID)
         for record in records {
-            try upsertQuestionProgress(record)
+            try upsertQuestionProgress(record, writeContext: writeContext)
         }
         try context.save()
         objectWillChange.send()
     }
 
     func saveExamAttempt(_ attempt: StoredExamAttempt) throws {
-        let data = try encoder.encode(attempt)
-        // Web exports may regenerate local IDs; submittedAt is canonical and import validation forbids duplicates.
-        if let existing = try examAttemptEntity(id: attempt.id, submittedAt: attempt.submittedAt) {
-            existing.id = attempt.id
-            existing.bankId = attempt.bankId
-            existing.seed = attempt.seed
-            existing.startedAt = attempt.startedAt
-            existing.submittedAt = attempt.submittedAt
-            existing.payloadData = data
-        } else {
-            context.insert(ExamAttemptEntity(
-                id: attempt.id,
-                bankId: attempt.bankId,
-                seed: attempt.seed,
-                startedAt: attempt.startedAt,
-                submittedAt: attempt.submittedAt,
-                payloadData: data
-            ))
-        }
+        try saveExamAttemptWithoutSave(attempt)
         try context.save()
         objectWillChange.send()
     }
@@ -1000,19 +1161,41 @@ final class ProgressStoreService: ObservableObject {
         self.preferences = preferences
     }
 
-    func resetAllData() throws {
+    func resetAllData(client: ICloudProgressDeletionClient, defaults: UserDefaults = .standard) async throws {
+        if isICloudSyncEnabled || ICloudSyncSettings.storedOptIn(defaults: defaults) || pendingICloudProgressDeletionForReset || ICloudSyncSettings.pendingProgressZoneDeletion(defaults: defaults) {
+            pendingICloudProgressDeletionForReset = true
+            ICloudSyncSettings.setPendingProgressZoneDeletion(true, defaults: defaults)
+            ICloudSyncSettings.clearStoredOptIn(defaults: defaults)
+            try reopenLocalOnlyAfterSyncStop()
+            try await client.deletePrivateDatabaseProgressZones()
+            pendingICloudProgressDeletionForReset = false
+            ICloudSyncSettings.setPendingProgressZoneDeletion(false, defaults: defaults)
+        }
+        try resetAllData(defaults: defaults)
+    }
+
+    func resetAllData(defaults: UserDefaults = .standard) throws {
+#if ICLOUD_SYNC
+        if isICloudSyncEnabled || ICloudSyncSettings.storedOptIn(defaults: defaults) || pendingICloudProgressDeletionForReset || ICloudSyncSettings.pendingProgressZoneDeletion(defaults: defaults) {
+            throw ProgressStoreError.cloudResetRequiresAsyncDeletion
+        }
+#endif
         let previousSnapshot = try snapshotForRollback()
         do {
             try context.delete(model: QuestionProgressEntity.self)
             try context.delete(model: ExamAttemptEntity.self)
-            try context.delete(model: PreferencesEntity.self)
+            try context.delete(model: LessonProgressEntity.self)
+            try context.delete(model: LessonQuizAttemptEntity.self)
             try removeMorseCourseProgressIfPresent()
-            UserDefaults.standard.removeObject(forKey: Self.activeBankPreferenceKey)
+            try context.delete(model: PreferencesEntity.self)
+            defaults.removeObject(forKey: Self.activeBankPreferenceKey)
             preferences = .default
-            Self.markLegacyPreferencesCopyComplete(storeURLs: storeURLs)
+            if layout == .split {
+                Self.markLegacyPreferencesCopyComplete(storeURLs: storeURLs)
+            }
             try context.save()
             // Reset all data also turns iCloud sync back off, but only once the reset has been saved.
-            ICloudSyncSettings.clearStoredOptIn()
+            ICloudSyncSettings.clearStoredOptIn(defaults: defaults)
             isICloudSyncEnabled = false
             objectWillChange.send()
         } catch {
@@ -1024,19 +1207,30 @@ final class ProgressStoreService: ObservableObject {
 
     func exportData(bank: QuestionBank, exportedAt: String) throws -> ProgressExportV1 {
         try CanonicalTimestamp.require(exportedAt, fieldName: "exportedAt")
-        let entity = try preferencesEntity(createIfMissing: true)
-        let lessonProgress = try decoder.decode([ArchivedJSON].self, from: entity.archivedLessonProgressData)
-        let lessonQuizAttempts = try decoder.decode([ArchivedJSON].self, from: entity.archivedLessonQuizAttemptsData)
+        _ = try preferencesEntity(createIfMissing: true)
+        let questionProgress = try questionProgressRecords().filter { $0.bankId == bank.manifest.bankId }
+        let examAttempts = try examAttempts().filter { $0.bankId == bank.manifest.bankId }
+        let lessonRecords = bank.courseBankID.hasLessons ? try lessonProgressRecords() : []
+        let lessonQuizRecords = bank.courseBankID.hasLessons ? try lessonQuizAttempts() : []
+        let morseProgress = try morseCourseProgress()
         return ProgressExportV1(
             schema: "canadian-ham.progress-export",
             version: 1,
             exportedAt: exportedAt,
             bankId: bank.manifest.bankId,
-            questionProgress: try questionProgressRecords().filter { $0.bankId == bank.manifest.bankId },
-            examAttempts: try examAttempts().filter { $0.bankId == bank.manifest.bankId },
-            lessonProgress: bank.courseBankID.hasLessons ? lessonProgress : [],
-            lessonQuizAttempts: bank.courseBankID.hasLessons ? lessonQuizAttempts : [],
-            morseCourseProgress: try morseCourseProgress(),
+            questionProgress: questionProgress,
+            examAttempts: examAttempts,
+            lessonProgress: try archivedArray(lessonRecords),
+            lessonQuizAttempts: try archivedArray(lessonQuizRecords),
+            morseCourseProgress: morseProgress,
+            syncDeviceRows: try syncDeviceRowsSnapshot(
+                bank: bank,
+                questionProgress: questionProgress,
+                examAttempts: examAttempts,
+                lessonProgress: lessonRecords,
+                lessonQuizAttempts: lessonQuizRecords,
+                includesMorse: morseProgress != nil
+            ),
             preferences: ExportedPreferences(
                 practiceMode: preferences.practiceMode.rawValue,
                 examTimerEnabled: preferences.examTimerEnabled,
@@ -1057,6 +1251,7 @@ final class ProgressStoreService: ObservableObject {
             throw ProgressStoreError.validationFailed(errors)
         }
 
+        let usableSyncDeviceRows = try usableSyncDeviceRows(from: data, bank: bank)
         let previousSnapshot = try snapshotForRollback()
         do {
             try deleteQuestionProgress(bankId: bank.manifest.bankId)
@@ -1070,11 +1265,20 @@ final class ProgressStoreService: ObservableObject {
             // Commit deletions before reinserting replacement records so the bank-scoped
             // replace-all import has a clean rollback boundary.
             try context.save()
-            for record in data.questionProgress {
-                try upsertQuestionProgress(record)
-            }
-            for attempt in data.examAttempts {
-                try saveExamAttemptWithoutSave(attempt)
+            if let syncDeviceRows = usableSyncDeviceRows {
+                for row in syncDeviceRows.questionProgress where row.record.bankId == bank.manifest.bankId {
+                    try upsertQuestionProgress(row.record, deviceId: row.deviceId)
+                }
+                for row in syncDeviceRows.examAttempts where row.attempt.bankId == bank.manifest.bankId {
+                    try saveExamAttemptWithoutSave(row.attempt, deviceId: row.deviceId)
+                }
+            } else {
+                for record in data.questionProgress {
+                    try upsertQuestionProgress(record)
+                }
+                for attempt in data.examAttempts {
+                    try saveExamAttemptWithoutSave(attempt)
+                }
             }
             var nextPreferences = preferences
             if let mode = ApplePreferences.PracticeMode(rawValue: data.preferences.practiceMode) {
@@ -1091,16 +1295,25 @@ final class ProgressStoreService: ObservableObject {
             entity.language = nextPreferences.language.rawValue
             entity.theme = nextPreferences.theme.rawValue
             if bank.courseBankID.hasLessons {
-                entity.archivedLessonProgressData = try encoder.encode(data.lessonProgress)
-                entity.archivedLessonQuizAttemptsData = try encoder.encode(data.lessonQuizAttempts)
+                if let syncDeviceRows = usableSyncDeviceRows {
+                    try replaceDeviceLessonProgress(syncDeviceRows.lessonProgress)
+                    try replaceDeviceLessonQuizAttempts(syncDeviceRows.lessonQuizAttempts)
+                } else {
+                    try replaceLessonProgress(try decodeArchivedArray(data.lessonProgress, as: LessonProgressRecord.self))
+                    try replaceLessonQuizAttempts(try decodeArchivedArray(data.lessonQuizAttempts, as: LessonQuizAttempt.self))
+                }
+                entity.archivedLessonProgressData = Data("[]".utf8)
+                entity.archivedLessonQuizAttemptsData = Data("[]".utf8)
             }
-            if let morseCourseProgress = data.morseCourseProgress {
-                try FileManager.default.createDirectory(at: morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
-                try encoder.encode(morseCourseProgress).write(to: morseCourseProgressURL, options: [.atomic])
+            if let syncDeviceRows = usableSyncDeviceRows, !syncDeviceRows.morseCourseProgress.isEmpty {
+                try replaceDeviceMorseCourseProgress(syncDeviceRows.morseCourseProgress)
+            } else if let morseCourseProgress = data.morseCourseProgress {
+                try replaceDeviceMorseCourseProgress([DeviceMorseCourseProgressRecord(deviceId: localDeviceID, progress: morseCourseProgress)])
             }
 #if DEBUG
             if failNextImportAfterMorseWriteForTesting {
                 failNextImportAfterMorseWriteForTesting = false
+                try context.save()
                 throw ProgressStoreInjectedFailure.importAfterMorseWrite
             }
 #endif
@@ -1168,6 +1381,9 @@ final class ProgressStoreService: ObservableObject {
         if let morseCourseProgress = data.morseCourseProgress {
             validateMorseCourseProgress(morseCourseProgress, errors: &errors)
         }
+        if let syncDeviceRows = data.syncDeviceRows {
+            validateSyncDeviceRows(syncDeviceRows, bank: bank, errors: &errors)
+        }
 
         if ApplePreferences.PracticeMode(rawValue: data.preferences.practiceMode) == nil {
             errors.append(String(localized: "Import preferences.practiceMode is invalid."))
@@ -1178,36 +1394,220 @@ final class ProgressStoreService: ObservableObject {
         return errors
     }
 
-    private func upsertQuestionProgress(_ record: QuestionProgressRecord) throws {
-        let data = try encoder.encode(record.recentResults)
-        if let entity = try questionProgressEntity(questionId: record.questionId) {
-            entity.bankId = record.bankId
-            entity.attempts = record.attempts
-            entity.correctAttempts = record.correctAttempts
-            entity.lastAttemptedAt = record.lastAttemptedAt
-            entity.lastResult = record.lastResult.rawValue
-            entity.recentResultsData = data
-            entity.leitnerBox = record.leitner.box
-            entity.dueAt = record.leitner.dueAt
-            entity.notes = record.notes
-        } else {
-            context.insert(QuestionProgressEntity(
+    private func validateSyncDeviceRows(_ rows: ProgressSyncDeviceRows, bank: QuestionBank, errors: inout [String]) {
+        let knownQuestionIds = Set(bank.questions.map(\.id))
+        let knownCategoryIds = Set(bank.categories.map(\.id))
+        let knownSubsectionIds = Set(bank.subsections.map(\.id))
+        for (index, row) in rows.questionProgress.enumerated() {
+            let prefix = "Import syncDeviceRows.questionProgress[\(index)]"
+            if row.deviceId.isEmpty { errors.append(String(localized: "\(prefix).deviceId must be non-empty.")) }
+            let record = row.record
+            if record.bankId == bank.manifest.bankId && !knownQuestionIds.contains(record.questionId) { errors.append(String(localized: "\(prefix).record.questionId must be a known question ID.")) }
+            if record.attempts < 0 { errors.append(String(localized: "\(prefix).record.attempts must be a non-negative integer.")) }
+            if record.correctAttempts < 0 || record.correctAttempts > record.attempts { errors.append(String(localized: "\(prefix).record.correctAttempts must be between 0 and attempts.")) }
+            appendTimestampError(&errors, value: record.lastAttemptedAt, field: "\(prefix).record.lastAttemptedAt")
+            if record.recentResults.count > 5 { errors.append(String(localized: "\(prefix).record.recentResults must contain at most five booleans.")) }
+            if !(0...5).contains(record.leitner.box) { errors.append(String(localized: "\(prefix).record.leitner.box must be an integer between 0 and 5.")) }
+            appendTimestampError(&errors, value: record.leitner.dueAt, field: "\(prefix).record.leitner.dueAt")
+        }
+        for (index, row) in rows.examAttempts.enumerated() {
+            let prefix = "Import syncDeviceRows.examAttempts[\(index)]"
+            if row.deviceId.isEmpty { errors.append(String(localized: "\(prefix).deviceId must be non-empty.")) }
+            let attempt = row.attempt
+            if attempt.id.isEmpty { errors.append(String(localized: "\(prefix).attempt.id must be a non-empty string.")) }
+            if attempt.mode != "mock-exam" { errors.append(String(localized: "\(prefix).attempt.mode must be mock-exam.")) }
+            appendTimestampError(&errors, value: attempt.startedAt, field: "\(prefix).attempt.startedAt")
+            appendTimestampError(&errors, value: attempt.submittedAt, field: "\(prefix).attempt.submittedAt")
+            if attempt.timer.secondsAllowed != nil && attempt.timer.secondsAllowed! < 0 { errors.append(String(localized: "\(prefix).attempt.timer.secondsAllowed must be null or non-negative.")) }
+            if attempt.timer.secondsElapsed < 0 { errors.append(String(localized: "\(prefix).attempt.timer.secondsElapsed must be non-negative.")) }
+            if attempt.bankId == bank.manifest.bankId {
+                validateScore(attempt.score, prefix: "\(prefix).attempt.score", bankId: bank.manifest.bankId, hasHonours: bank.courseBankID.hasHonours, knownCategoryIds: knownCategoryIds, knownSubsectionIds: knownSubsectionIds, errors: &errors)
+                for (itemIndex, item) in attempt.items.enumerated() {
+                    validateAttemptItem(item, prefix: "\(prefix).attempt.items[\(itemIndex)]", knownQuestionIds: knownQuestionIds, knownCategoryIds: knownCategoryIds, knownSubsectionIds: knownSubsectionIds, errors: &errors)
+                }
+            }
+        }
+        for (index, row) in rows.lessonProgress.enumerated() {
+            let prefix = "Import syncDeviceRows.lessonProgress[\(index)]"
+            if row.deviceId.isEmpty { errors.append(String(localized: "\(prefix).deviceId must be non-empty.")) }
+            if let archived = try? archivedArray([row.record]) {
+                if bank.courseBankID.hasLessons { validateLessonProgress(archived, knownLessonIds: bank.knownLessonIds, errors: &errors) }
+            } else {
+                errors.append(String.localizedStringWithFormat(String(localized: "%@.record must be a valid lesson progress record."), "Import syncDeviceRows.lessonProgress[\(index)]"))
+            }
+        }
+        for (index, row) in rows.lessonQuizAttempts.enumerated() {
+            let prefix = "Import syncDeviceRows.lessonQuizAttempts[\(index)]"
+            if row.deviceId.isEmpty { errors.append(String(localized: "\(prefix).deviceId must be non-empty.")) }
+            if let archived = try? archivedArray([row.attempt]) {
+                if bank.courseBankID.hasLessons { validateLessonQuizAttempts(archived, knownQuestionIds: knownQuestionIds, knownLessonIds: bank.knownLessonIds, lessonQuizzesById: bank.lessonQuizzesById, errors: &errors) }
+            } else {
+                errors.append(String.localizedStringWithFormat(String(localized: "%@.attempt must be a valid lesson quiz attempt."), "Import syncDeviceRows.lessonQuizAttempts[\(index)]"))
+            }
+        }
+        for (index, row) in rows.morseCourseProgress.enumerated() {
+            let prefix = "Import syncDeviceRows.morseCourseProgress[\(index)]"
+            if row.deviceId.isEmpty { errors.append(String(localized: "\(prefix).deviceId must be non-empty.")) }
+            validateMorseCourseProgress(row.progress, errors: &errors)
+        }
+    }
+
+    private func usableSyncDeviceRows(from data: ProgressExportV1, bank: QuestionBank) throws -> ProgressSyncDeviceRows? {
+        guard let rows = data.syncDeviceRows else { return nil }
+        let questionIds = Set(data.questionProgress.map(\.questionId))
+        let examSubmittedAt = Set(data.examAttempts.map { "\($0.bankId)\u{0}\($0.submittedAt)" })
+        let lessonProgress = try decodeArchivedArray(data.lessonProgress, as: LessonProgressRecord.self)
+        let lessonIds = Set(lessonProgress.map(\.lessonId))
+        let lessonQuizAttempts = try decodeArchivedArray(data.lessonQuizAttempts, as: LessonQuizAttempt.self)
+        let lessonQuizIds = Set(lessonQuizAttempts.map(\.id))
+        let filtered = ProgressSyncDeviceRows(
+            questionProgress: rows.questionProgress.filter { $0.record.bankId == bank.manifest.bankId && questionIds.contains($0.record.questionId) },
+            examAttempts: rows.examAttempts.filter { $0.attempt.bankId == bank.manifest.bankId && examSubmittedAt.contains("\($0.attempt.bankId)\u{0}\($0.attempt.submittedAt)") },
+            lessonProgress: bank.courseBankID.hasLessons ? rows.lessonProgress.filter { lessonIds.contains($0.record.lessonId) } : [],
+            lessonQuizAttempts: bank.courseBankID.hasLessons ? rows.lessonQuizAttempts.filter { lessonQuizIds.contains($0.attempt.id) } : [],
+            morseCourseProgress: data.morseCourseProgress == nil ? [] : rows.morseCourseProgress
+        )
+        let mergedQuestions = ProgressSyncMerge.deduplicateDeviceQuestionProgress(filtered.questionProgress)
+        guard sortedQuestions(mergedQuestions) == sortedQuestions(data.questionProgress) else { return nil }
+        let mergedAttempts = ProgressSyncMerge.deduplicateDeviceExamAttempts(filtered.examAttempts)
+        guard sortedAttempts(mergedAttempts) == sortedAttempts(data.examAttempts) else { return nil }
+        guard ProgressSyncMerge.deduplicateDeviceLessonProgress(filtered.lessonProgress) == lessonProgress.sorted(by: { $0.lessonId < $1.lessonId }) else { return nil }
+        guard ProgressSyncMerge.deduplicateDeviceLessonQuizAttempts(filtered.lessonQuizAttempts) == lessonQuizAttempts.sorted(by: { $0.submittedAt == $1.submittedAt ? $0.id < $1.id : $0.submittedAt < $1.submittedAt }) else { return nil }
+        guard ProgressSyncMerge.mergeDeviceMorseCourseProgress(filtered.morseCourseProgress) == data.morseCourseProgress else { return nil }
+        return filtered
+    }
+
+    private func sortedQuestions(_ records: [QuestionProgressRecord]) -> [QuestionProgressRecord] {
+        records.sorted { lhs, rhs in
+            if lhs.bankId != rhs.bankId { return lhs.bankId < rhs.bankId }
+            return lhs.questionId < rhs.questionId
+        }
+    }
+
+    private func sortedAttempts(_ attempts: [StoredExamAttempt]) -> [StoredExamAttempt] {
+        attempts.sorted { lhs, rhs in
+            if lhs.bankId != rhs.bankId { return lhs.bankId < rhs.bankId }
+            if lhs.submittedAt != rhs.submittedAt { return lhs.submittedAt < rhs.submittedAt }
+            return lhs.id < rhs.id
+        }
+    }
+
+    private struct CounterSums {
+        var attempts: Int
+        var correctAttempts: Int
+    }
+
+    private struct QuestionProgressWriteContext {
+        var mergedByKey: [String: QuestionProgressRecord]
+        var otherDeviceSumsByKey: [String: CounterSums]
+    }
+
+    private func questionProgressKey(bankId: String, questionId: String) -> String {
+        "\(bankId)\u{0}\(questionId)"
+    }
+
+    private func questionProgressWriteContext(forDeviceId deviceId: String) throws -> QuestionProgressWriteContext {
+#if DEBUG
+        questionProgressWriteContextBuildCountForTesting += 1
+#endif
+        let rows = try deviceQuestionProgressRows()
+        let mergedByKey = Dictionary(uniqueKeysWithValues: ProgressSyncMerge.deduplicateDeviceQuestionProgress(rows).map {
+            (questionProgressKey(bankId: $0.bankId, questionId: $0.questionId), $0)
+        })
+        let otherRowsByDevice = Dictionary(grouping: rows.filter { $0.deviceId != deviceId }) {
+            "\(questionProgressKey(bankId: $0.record.bankId, questionId: $0.record.questionId))\u{0}\($0.deviceId)"
+        }
+        var otherDeviceSumsByKey: [String: CounterSums] = [:]
+        for group in otherRowsByDevice.values {
+            guard let first = group.first else { continue }
+            let key = questionProgressKey(bankId: first.record.bankId, questionId: first.record.questionId)
+            let maxAttempts = group.map(\.record.attempts).max() ?? 0
+            let maxCorrectAttempts = group.map(\.record.correctAttempts).max() ?? 0
+            let existing = otherDeviceSumsByKey[key, default: CounterSums(attempts: 0, correctAttempts: 0)]
+            otherDeviceSumsByKey[key] = CounterSums(
+                attempts: existing.attempts + maxAttempts,
+                correctAttempts: existing.correctAttempts + maxCorrectAttempts
+            )
+        }
+        return QuestionProgressWriteContext(mergedByKey: mergedByKey, otherDeviceSumsByKey: otherDeviceSumsByKey)
+    }
+
+    private func upsertQuestionProgress(_ record: QuestionProgressRecord, deviceId: String? = nil, writeContext: QuestionProgressWriteContext? = nil) throws {
+        let rowDeviceId = deviceId ?? localDeviceID
+        let key = questionProgressKey(bankId: record.bankId, questionId: record.questionId)
+        if deviceId == nil, let currentMerged = writeContext?.mergedByKey[key], currentMerged == record {
+            return
+        }
+        let existing = try questionProgressEntity(questionId: record.questionId, bankId: record.bankId, deviceId: rowDeviceId)
+        let ownOldAttempts = existing?.attempts ?? 0
+        let ownOldCorrectAttempts = existing?.correctAttempts ?? 0
+        let writeRecord: QuestionProgressRecord
+        if deviceId == nil {
+            let otherSums: CounterSums
+            if let writeContext {
+                otherSums = writeContext.otherDeviceSumsByKey[key, default: CounterSums(attempts: 0, correctAttempts: 0)]
+            } else {
+                otherSums = try otherDeviceQuestionProgressSums(questionId: record.questionId, bankId: record.bankId, excludingDeviceId: rowDeviceId)
+            }
+            let ownAttempts = max(ownOldAttempts, record.attempts - otherSums.attempts)
+            let ownCorrectAttempts = min(ownAttempts, max(ownOldCorrectAttempts, record.correctAttempts - otherSums.correctAttempts))
+            writeRecord = QuestionProgressRecord(
                 questionId: record.questionId,
                 bankId: record.bankId,
-                attempts: record.attempts,
-                correctAttempts: record.correctAttempts,
+                attempts: ownAttempts,
+                correctAttempts: ownCorrectAttempts,
                 lastAttemptedAt: record.lastAttemptedAt,
-                lastResult: record.lastResult.rawValue,
-                recentResultsData: data,
-                leitnerBox: record.leitner.box,
-                dueAt: record.leitner.dueAt,
+                lastResult: record.lastResult,
+                recentResults: record.recentResults,
+                leitner: record.leitner,
                 notes: record.notes
+            )
+        } else {
+            writeRecord = record
+        }
+        let data = try encoder.encode(writeRecord.recentResults)
+        if let entity = existing {
+            entity.bankId = writeRecord.bankId
+            entity.attempts = writeRecord.attempts
+            entity.correctAttempts = writeRecord.correctAttempts
+            entity.lastAttemptedAt = writeRecord.lastAttemptedAt
+            entity.lastResult = writeRecord.lastResult.rawValue
+            entity.recentResultsData = data
+            entity.leitnerBox = writeRecord.leitner.box
+            entity.dueAt = writeRecord.leitner.dueAt
+            entity.notes = writeRecord.notes
+            entity.deviceId = rowDeviceId
+        } else {
+            context.insert(QuestionProgressEntity(
+                questionId: writeRecord.questionId,
+                bankId: writeRecord.bankId,
+                attempts: writeRecord.attempts,
+                correctAttempts: writeRecord.correctAttempts,
+                lastAttemptedAt: writeRecord.lastAttemptedAt,
+                lastResult: writeRecord.lastResult.rawValue,
+                recentResultsData: data,
+                leitnerBox: writeRecord.leitner.box,
+                dueAt: writeRecord.leitner.dueAt,
+                notes: writeRecord.notes,
+                deviceId: rowDeviceId
             ))
         }
     }
 
-    private func questionProgressEntity(questionId: String) throws -> QuestionProgressEntity? {
-        let entities = try questionProgressEntities(questionId: questionId)
+    private func otherDeviceQuestionProgressSums(questionId: String, bankId: String, excludingDeviceId deviceId: String) throws -> CounterSums {
+        let otherRowsByDevice = Dictionary(grouping: try questionProgressEntities(questionId: questionId, bankId: bankId).filter { ($0.deviceId.isEmpty ? localDeviceID : $0.deviceId) != deviceId }) { entity in
+            entity.deviceId.isEmpty ? localDeviceID : entity.deviceId
+        }
+        var sums = CounterSums(attempts: 0, correctAttempts: 0)
+        for rows in otherRowsByDevice.values {
+            sums.attempts += rows.map(\.attempts).max() ?? 0
+            sums.correctAttempts += rows.map(\.correctAttempts).max() ?? 0
+        }
+        return sums
+    }
+
+    private func questionProgressEntity(questionId: String, bankId: String, deviceId: String) throws -> QuestionProgressEntity? {
+        let entities = try questionProgressEntities(questionId: questionId, bankId: bankId, deviceId: deviceId)
         guard let survivor = entities.first else { return nil }
         for duplicate in entities.dropFirst() {
             context.delete(duplicate)
@@ -1215,9 +1615,18 @@ final class ProgressStoreService: ObservableObject {
         return survivor
     }
 
-    private func questionProgressEntities(questionId: String) throws -> [QuestionProgressEntity] {
+    private func questionProgressEntities(questionId: String, bankId: String, deviceId: String) throws -> [QuestionProgressEntity] {
         let targetQuestionId = questionId
-        let descriptor = FetchDescriptor<QuestionProgressEntity>(predicate: #Predicate { $0.questionId == targetQuestionId })
+        let targetBankId = bankId
+        let targetDeviceId = deviceId
+        let descriptor = FetchDescriptor<QuestionProgressEntity>(predicate: #Predicate { $0.questionId == targetQuestionId && $0.bankId == targetBankId && $0.deviceId == targetDeviceId })
+        return try context.fetch(descriptor)
+    }
+
+    private func questionProgressEntities(questionId: String, bankId: String) throws -> [QuestionProgressEntity] {
+        let targetQuestionId = questionId
+        let targetBankId = bankId
+        let descriptor = FetchDescriptor<QuestionProgressEntity>(predicate: #Predicate { $0.questionId == targetQuestionId && $0.bankId == targetBankId })
         return try context.fetch(descriptor)
     }
 
@@ -1237,19 +1646,8 @@ final class ProgressStoreService: ObservableObject {
         }
     }
 
-    private func examAttemptEntity(id: String, submittedAt: String? = nil) throws -> ExamAttemptEntity? {
-        let idMatches = try examAttemptEntities(id: id)
-        let submittedAtMatches = try submittedAt.map { try examAttemptEntities(submittedAt: $0) } ?? []
-        let matches = uniqueExamAttemptEntities(idMatches + submittedAtMatches)
-        guard let survivor = matches.first else { return nil }
-        for duplicate in matches.dropFirst() {
-            context.delete(duplicate)
-        }
-        return survivor
-    }
-
-    private func examAttemptEntity(submittedAt: String) throws -> ExamAttemptEntity? {
-        let entities = try examAttemptEntities(submittedAt: submittedAt)
+    private func examAttemptEntity(bankId: String, submittedAt: String, deviceId: String) throws -> ExamAttemptEntity? {
+        let entities = try examAttemptEntities(submittedAt: submittedAt, bankId: bankId, deviceId: deviceId)
         guard let survivor = entities.first else { return nil }
         for duplicate in entities.dropFirst() {
             context.delete(duplicate)
@@ -1257,23 +1655,213 @@ final class ProgressStoreService: ObservableObject {
         return survivor
     }
 
-    private func examAttemptEntities(id: String) throws -> [ExamAttemptEntity] {
-        let targetId = id
-        let descriptor = FetchDescriptor<ExamAttemptEntity>(predicate: #Predicate { $0.id == targetId })
-        return try context.fetch(descriptor)
-    }
-
-    private func examAttemptEntities(submittedAt: String) throws -> [ExamAttemptEntity] {
+    private func examAttemptEntities(submittedAt: String, bankId: String, deviceId: String) throws -> [ExamAttemptEntity] {
         let targetSubmittedAt = submittedAt
-        let descriptor = FetchDescriptor<ExamAttemptEntity>(predicate: #Predicate { $0.submittedAt == targetSubmittedAt })
+        let targetBankId = bankId
+        let targetDeviceId = deviceId
+        let descriptor = FetchDescriptor<ExamAttemptEntity>(predicate: #Predicate { $0.submittedAt == targetSubmittedAt && $0.bankId == targetBankId && $0.deviceId == targetDeviceId })
         return try context.fetch(descriptor)
     }
 
-    private func uniqueExamAttemptEntities(_ entities: [ExamAttemptEntity]) -> [ExamAttemptEntity] {
-        var seen = Set<PersistentIdentifier>()
-        return entities.filter { entity in
-            seen.insert(entity.persistentModelID).inserted
+    private func upsertLessonProgress(_ record: LessonProgressRecord, deviceId: String? = nil, mergesExistingReadCount: Bool = false) throws {
+        let rowDeviceId = deviceId ?? localDeviceID
+        if deviceId == nil,
+           let currentMerged = try lessonProgressRecords().first(where: { $0.lessonId == record.lessonId }),
+           currentMerged == record {
+            return
         }
+        let targetLessonId = record.lessonId
+        let targetDeviceId = rowDeviceId
+        let descriptor = FetchDescriptor<LessonProgressEntity>(predicate: #Predicate { $0.lessonId == targetLessonId && $0.deviceId == targetDeviceId })
+        let entities = try context.fetch(descriptor)
+        let existing = entities.first
+        let ownOldReadCount = entities.map(\.readCount).max() ?? 0
+        let writeRecord: LessonProgressRecord
+        if deviceId == nil {
+            let otherReadCount = try otherDeviceLessonReadCount(lessonId: targetLessonId, excludingDeviceId: rowDeviceId)
+            writeRecord = LessonProgressRecord(
+                lessonId: record.lessonId,
+                readAt: record.readAt,
+                readCount: max(ownOldReadCount, record.readCount - otherReadCount)
+            )
+        } else if mergesExistingReadCount {
+            writeRecord = LessonProgressRecord(
+                lessonId: record.lessonId,
+                readAt: max(entities.map(\.readAt).max() ?? record.readAt, record.readAt),
+                readCount: max(ownOldReadCount, record.readCount)
+            )
+        } else {
+            writeRecord = record
+        }
+        let survivor = existing ?? LessonProgressEntity(lessonId: writeRecord.lessonId, readAt: writeRecord.readAt, readCount: writeRecord.readCount, deviceId: rowDeviceId)
+        if entities.isEmpty {
+            context.insert(survivor)
+        }
+        survivor.lessonId = writeRecord.lessonId
+        survivor.readAt = writeRecord.readAt
+        survivor.readCount = writeRecord.readCount
+        survivor.deviceId = rowDeviceId
+        for duplicate in entities.dropFirst() {
+            context.delete(duplicate)
+        }
+    }
+
+    private func otherDeviceLessonReadCount(lessonId: String, excludingDeviceId deviceId: String) throws -> Int {
+        let targetLessonId = lessonId
+        let descriptor = FetchDescriptor<LessonProgressEntity>(predicate: #Predicate { $0.lessonId == targetLessonId })
+        let otherRowsByDevice = Dictionary(grouping: try context.fetch(descriptor).filter { ($0.deviceId.isEmpty ? localDeviceID : $0.deviceId) != deviceId }) { entity in
+            entity.deviceId.isEmpty ? localDeviceID : entity.deviceId
+        }
+        return otherRowsByDevice.values.map { rows in rows.map(\.readCount).max() ?? 0 }.reduce(0, +)
+    }
+
+    private func upsertLessonQuizAttempt(_ attempt: LessonQuizAttempt, deviceId: String? = nil) throws {
+        let rowDeviceId = deviceId ?? localDeviceID
+        let targetId = attempt.id
+        let targetDeviceId = rowDeviceId
+        let descriptor = FetchDescriptor<LessonQuizAttemptEntity>(predicate: #Predicate { $0.id == targetId && $0.deviceId == targetDeviceId })
+        let entities = try context.fetch(descriptor)
+        let payload = try encoder.encode(attempt)
+        let survivor = entities.first ?? LessonQuizAttemptEntity(id: attempt.id, quizId: attempt.quizId, lessonId: attempt.lessonId, submittedAt: attempt.submittedAt, payloadData: payload, deviceId: rowDeviceId)
+        if entities.isEmpty {
+            context.insert(survivor)
+        }
+        survivor.id = attempt.id
+        survivor.quizId = attempt.quizId
+        survivor.lessonId = attempt.lessonId
+        survivor.submittedAt = attempt.submittedAt
+        survivor.payloadData = payload
+        survivor.deviceId = rowDeviceId
+        for duplicate in entities.dropFirst() {
+            context.delete(duplicate)
+        }
+    }
+
+    private func upsertMorseCourseProgress(_ progress: MorseCourseProgressExport, deviceId: String? = nil) throws {
+        let rowDeviceId = deviceId ?? localDeviceID
+        if deviceId == nil, let currentMerged = try morseCourseProgress(), currentMerged == progress {
+            return
+        }
+        let key = MorseCourseProgressEntity.defaultKey
+        let targetDeviceId = rowDeviceId
+        let descriptor = FetchDescriptor<MorseCourseProgressEntity>(predicate: #Predicate { $0.key == key && $0.deviceId == targetDeviceId })
+        let entities = try context.fetch(descriptor)
+        let existing = entities.first
+        let writeProgress: MorseCourseProgressExport
+        if deviceId == nil {
+            let ownProgress = try existing.map { try decoder.decode(MorseCourseProgressExport.self, from: $0.payloadData) } ?? MorseCourseProgressExport(courseId: progress.courseId, lessonProgress: [], characterStats: [], dailyActivity: [])
+            let allDescriptor = FetchDescriptor<MorseCourseProgressEntity>(predicate: #Predicate { $0.key == key })
+            let otherRows = try context.fetch(allDescriptor)
+                .filter { $0.deviceId != rowDeviceId }
+                .map { DeviceMorseCourseProgressRecord(deviceId: $0.deviceId, progress: try decoder.decode(MorseCourseProgressExport.self, from: $0.payloadData)) }
+            let otherProgress = ProgressSyncMerge.mergeDeviceMorseCourseProgress(otherRows)
+            let currentMerged = try morseCourseProgress()
+            var ownLessons = Dictionary(ownProgress.lessonProgress.map { ($0.lessonId, $0) }, uniquingKeysWith: { _, new in new })
+            let otherLessons = Dictionary((otherProgress?.lessonProgress ?? []).map { ($0.lessonId, $0) }, uniquingKeysWith: { _, new in new })
+            let currentLessons = Dictionary((currentMerged?.lessonProgress ?? []).map { ($0.lessonId, $0) }, uniquingKeysWith: { _, new in new })
+            for record in progress.lessonProgress where currentLessons[record.lessonId] != record && record.attempts > (currentLessons[record.lessonId]?.attempts ?? 0) {
+                let ownOldAttempts = ownLessons[record.lessonId]?.attempts ?? 0
+                let otherAttempts = otherLessons[record.lessonId]?.attempts ?? 0
+                ownLessons[record.lessonId] = MorseLessonProgressRecord(
+                    lessonId: record.lessonId,
+                    attempts: max(ownOldAttempts, record.attempts - otherAttempts),
+                    bestAccuracy: record.bestAccuracy,
+                    lastAccuracy: record.lastAccuracy,
+                    lastAttemptedAt: record.lastAttemptedAt,
+                    completedAt: record.completedAt
+                )
+            }
+            var ownCharacters = Dictionary(ownProgress.characterStats.map { ($0.character, $0) }, uniquingKeysWith: { _, new in new })
+            let otherCharacters = Dictionary((otherProgress?.characterStats ?? []).map { ($0.character, $0) }, uniquingKeysWith: { _, new in new })
+            let currentCharacters = Dictionary((currentMerged?.characterStats ?? []).map { ($0.character, $0) }, uniquingKeysWith: { _, new in new })
+            for record in progress.characterStats where currentCharacters[record.character] != record && record.attempts > (currentCharacters[record.character]?.attempts ?? 0) {
+                let ownOldAttempts = ownCharacters[record.character]?.attempts ?? 0
+                let ownOldCorrectAttempts = ownCharacters[record.character]?.correctAttempts ?? 0
+                let other = otherCharacters[record.character]
+                let ownAttempts = max(ownOldAttempts, record.attempts - (other?.attempts ?? 0))
+                let ownCorrectAttempts = min(ownAttempts, max(ownOldCorrectAttempts, record.correctAttempts - (other?.correctAttempts ?? 0)))
+                ownCharacters[record.character] = MorseCharacterStatRecord(
+                    character: record.character,
+                    attempts: ownAttempts,
+                    correctAttempts: ownCorrectAttempts,
+                    recentResults: record.recentResults,
+                    lastPracticedAt: record.lastPracticedAt
+                )
+            }
+            var ownDailyActivity = Dictionary(ownProgress.dailyActivity.map { ($0.date, $0) }, uniquingKeysWith: { old, new in old.lessonsCompleted >= new.lessonsCompleted ? old : new })
+            let otherDailyActivity = Dictionary((otherProgress?.dailyActivity ?? []).map { ($0.date, $0) }, uniquingKeysWith: { old, new in old.lessonsCompleted >= new.lessonsCompleted ? old : new })
+            let currentDailyActivity = Dictionary((currentMerged?.dailyActivity ?? []).map { ($0.date, $0) }, uniquingKeysWith: { old, new in old.lessonsCompleted >= new.lessonsCompleted ? old : new })
+            for record in progress.dailyActivity where currentDailyActivity[record.date] != record && record.lessonsCompleted > (currentDailyActivity[record.date]?.lessonsCompleted ?? 0) {
+                let ownOldLessonsCompleted = ownDailyActivity[record.date]?.lessonsCompleted ?? 0
+                let otherLessonsCompleted = otherDailyActivity[record.date]?.lessonsCompleted ?? 0
+                ownDailyActivity[record.date] = MorseDailyActivityRecord(
+                    date: record.date,
+                    lessonsCompleted: max(ownOldLessonsCompleted, record.lessonsCompleted - otherLessonsCompleted)
+                )
+            }
+            writeProgress = MorseCourseProgressExport(
+                courseId: progress.courseId,
+                lessonProgress: ownLessons.values.sorted { $0.lessonId < $1.lessonId },
+                characterStats: ownCharacters.values.sorted { $0.character < $1.character },
+                dailyActivity: ownDailyActivity.values.sorted { $0.date < $1.date }
+            )
+        } else {
+            writeProgress = progress
+        }
+        let payload = try encoder.encode(writeProgress)
+        let survivor = existing ?? MorseCourseProgressEntity(payloadData: payload, deviceId: rowDeviceId)
+        if entities.isEmpty {
+            context.insert(survivor)
+        }
+        survivor.key = key
+        survivor.payloadData = payload
+        survivor.deviceId = rowDeviceId
+        for duplicate in entities.dropFirst() {
+            context.delete(duplicate)
+        }
+    }
+
+    private func replaceLessonProgress(_ records: [LessonProgressRecord]) throws {
+        try context.delete(model: LessonProgressEntity.self)
+        for record in records {
+            try upsertLessonProgress(record)
+        }
+    }
+
+    private func replaceLessonQuizAttempts(_ attempts: [LessonQuizAttempt]) throws {
+        try context.delete(model: LessonQuizAttemptEntity.self)
+        for attempt in attempts {
+            try upsertLessonQuizAttempt(attempt)
+        }
+    }
+
+    private func replaceDeviceLessonProgress(_ rows: [DeviceLessonProgressRecord]) throws {
+        try context.delete(model: LessonProgressEntity.self)
+        for row in rows {
+            try upsertLessonProgress(row.record, deviceId: row.deviceId)
+        }
+    }
+
+    private func replaceDeviceLessonQuizAttempts(_ rows: [DeviceLessonQuizAttemptRecord]) throws {
+        try context.delete(model: LessonQuizAttemptEntity.self)
+        for row in rows {
+            try upsertLessonQuizAttempt(row.attempt, deviceId: row.deviceId)
+        }
+    }
+
+    private func replaceDeviceMorseCourseProgress(_ rows: [DeviceMorseCourseProgressRecord]) throws {
+        try context.delete(model: MorseCourseProgressEntity.self)
+        for row in rows {
+            try upsertMorseCourseProgress(row.progress, deviceId: row.deviceId)
+        }
+    }
+
+    private func archivedArray<T: Encodable>(_ values: [T]) throws -> [ArchivedJSON] {
+        try decoder.decode([ArchivedJSON].self, from: encoder.encode(values))
+    }
+
+    private func decodeArchivedArray<T: Decodable>(_ archived: [ArchivedJSON], as type: T.Type) throws -> [T] {
+        try decoder.decode([T].self, from: encoder.encode(archived))
     }
 
     private func existingPreferencesEntity() throws -> PreferencesEntity? {
@@ -1317,15 +1905,82 @@ final class ProgressStoreService: ObservableObject {
         )
     }
 
-    private func saveExamAttemptWithoutSave(_ attempt: StoredExamAttempt) throws {
+    private func adoptLegacyDeviceRowsIfNeeded() throws {
+        var changed = false
+        for entity in try context.fetch(FetchDescriptor<QuestionProgressEntity>()) where entity.deviceId.isEmpty {
+            entity.deviceId = localDeviceID
+            changed = true
+        }
+        for entity in try context.fetch(FetchDescriptor<ExamAttemptEntity>()) where entity.deviceId.isEmpty {
+            entity.deviceId = localDeviceID
+            changed = true
+        }
+        for entity in try context.fetch(FetchDescriptor<LessonProgressEntity>()) where entity.deviceId.isEmpty {
+            entity.deviceId = localDeviceID
+            changed = true
+        }
+        for entity in try context.fetch(FetchDescriptor<LessonQuizAttemptEntity>()) where entity.deviceId.isEmpty {
+            entity.deviceId = localDeviceID
+            changed = true
+        }
+        for entity in try context.fetch(FetchDescriptor<MorseCourseProgressEntity>()) where entity.deviceId.isEmpty {
+            entity.deviceId = localDeviceID
+            changed = true
+        }
+        if changed {
+            try context.save()
+        }
+    }
+
+    private func migrateLearningProgressFromLegacyStorageIfNeeded() throws {
+        let entity = try preferencesEntity(createIfMissing: true, saveIfCreated: false)
+        if let lessonProgress = try? decoder.decode([LessonProgressRecord].self, from: entity.archivedLessonProgressData), !lessonProgress.isEmpty {
+            for record in lessonProgress {
+                try upsertLessonProgress(record, deviceId: localDeviceID, mergesExistingReadCount: true)
+            }
+            entity.archivedLessonProgressData = Data("[]".utf8)
+        }
+        if let attempts = try? decoder.decode([LessonQuizAttempt].self, from: entity.archivedLessonQuizAttemptsData), !attempts.isEmpty {
+            for attempt in attempts {
+                try upsertLessonQuizAttempt(attempt)
+            }
+            entity.archivedLessonQuizAttemptsData = Data("[]".utf8)
+        }
+        let key = MorseCourseProgressEntity.defaultKey
+        let morseDescriptor = FetchDescriptor<MorseCourseProgressEntity>(predicate: #Predicate { $0.key == key })
+        var migratedMorseLegacyFile = false
+        if try context.fetch(morseDescriptor).isEmpty,
+           FileManager.default.fileExists(atPath: morseCourseProgressURL.path(percentEncoded: false)) {
+            do {
+                let data = try Data(contentsOf: morseCourseProgressURL)
+                let progress = try decoder.decode(MorseCourseProgressExport.self, from: data)
+                try upsertMorseCourseProgress(progress)
+                migratedMorseLegacyFile = true
+            } catch {
+                NSLog("CanadianHam: unable to migrate legacy Morse course progress JSON; leaving file in place: %@", String(describing: error))
+            }
+        }
+        try context.save()
+        if migratedMorseLegacyFile {
+            do {
+                try FileManager.default.removeItem(at: morseCourseProgressURL)
+            } catch {
+                NSLog("CanadianHam: unable to remove migrated legacy Morse course progress JSON; leaving file in place: %@", String(describing: error))
+            }
+        }
+    }
+
+    private func saveExamAttemptWithoutSave(_ attempt: StoredExamAttempt, deviceId: String? = nil) throws {
+        let rowDeviceId = deviceId ?? localDeviceID
         let data = try encoder.encode(attempt)
-        if let existing = try examAttemptEntity(id: attempt.id, submittedAt: attempt.submittedAt) {
+        if let existing = try examAttemptEntity(bankId: attempt.bankId, submittedAt: attempt.submittedAt, deviceId: rowDeviceId) {
             existing.id = attempt.id
             existing.bankId = attempt.bankId
             existing.seed = attempt.seed
             existing.startedAt = attempt.startedAt
             existing.submittedAt = attempt.submittedAt
             existing.payloadData = data
+            existing.deviceId = rowDeviceId
         } else {
             context.insert(ExamAttemptEntity(
                 id: attempt.id,
@@ -1333,7 +1988,8 @@ final class ProgressStoreService: ObservableObject {
                 seed: attempt.seed,
                 startedAt: attempt.startedAt,
                 submittedAt: attempt.submittedAt,
-                payloadData: data
+                payloadData: data,
+                deviceId: rowDeviceId
             ))
         }
     }
@@ -1343,37 +1999,50 @@ final class ProgressStoreService: ObservableObject {
         return ProgressStoreSnapshot(
             questionProgress: try questionProgressRecords(),
             examAttempts: try examAttempts(),
+            lessonProgress: try lessonProgressRecords(),
+            lessonQuizAttempts: try lessonQuizAttempts(),
             preferences: preferences,
             archivedLessonProgressData: entity?.archivedLessonProgressData ?? Data("[]".utf8),
             archivedLessonQuizAttemptsData: entity?.archivedLessonQuizAttemptsData ?? Data("[]".utf8),
-            morseCourseProgressData: try existingMorseCourseProgressDataForRollback()
+            morseCourseProgress: try morseCourseProgress(),
+            syncDeviceRows: try syncDeviceRowsSnapshot()
         )
     }
 
-    /// Returns nil only when there is no Morse progress file. Any other read error aborts the
-    /// operation before anything is changed, so a later rollback can always restore the prior bytes.
-    private func existingMorseCourseProgressDataForRollback() throws -> Data? {
-        guard FileManager.default.fileExists(atPath: morseCourseProgressURL.path(percentEncoded: false)) else {
-            return nil
-        }
-        return try Data(contentsOf: morseCourseProgressURL)
-    }
-
     private func removeMorseCourseProgressIfPresent() throws {
-        if FileManager.default.fileExists(atPath: morseCourseProgressURL.path(percentEncoded: false)) {
+        let key = MorseCourseProgressEntity.defaultKey
+        let descriptor = FetchDescriptor<MorseCourseProgressEntity>(predicate: #Predicate { $0.key == key })
+        let entities = try context.fetch(descriptor)
+        let hasLegacyFile = FileManager.default.fileExists(atPath: morseCourseProgressURL.path(percentEncoded: false))
+        if !entities.isEmpty || hasLegacyFile {
 #if DEBUG
             if failNextMorseCourseProgressRemovalForTesting {
                 failNextMorseCourseProgressRemovalForTesting = false
                 throw ProgressStoreInjectedFailure.morseCourseProgressRemoval
             }
 #endif
-            try FileManager.default.removeItem(at: morseCourseProgressURL)
+            for entity in entities {
+                context.delete(entity)
+            }
+            if hasLegacyFile {
+                try FileManager.default.removeItem(at: morseCourseProgressURL)
+            }
         }
+    }
+
+    private func isProgressStoreEmpty(in context: ModelContext) throws -> Bool {
+        try context.fetch(FetchDescriptor<QuestionProgressEntity>()).isEmpty
+            && context.fetch(FetchDescriptor<ExamAttemptEntity>()).isEmpty
+            && context.fetch(FetchDescriptor<LessonProgressEntity>()).isEmpty
+            && context.fetch(FetchDescriptor<LessonQuizAttemptEntity>()).isEmpty
+            && context.fetch(FetchDescriptor<MorseCourseProgressEntity>()).isEmpty
     }
 
     private func restore(_ snapshot: ProgressStoreSnapshot) throws {
         try context.delete(model: QuestionProgressEntity.self)
         try context.delete(model: ExamAttemptEntity.self)
+        try context.delete(model: LessonProgressEntity.self)
+        try context.delete(model: LessonQuizAttemptEntity.self)
         try context.delete(model: PreferencesEntity.self)
         let entity = PreferencesEntity(
             practiceMode: snapshot.preferences.practiceMode.rawValue,
@@ -1384,21 +2053,90 @@ final class ProgressStoreService: ObservableObject {
         entity.archivedLessonProgressData = snapshot.archivedLessonProgressData
         entity.archivedLessonQuizAttemptsData = snapshot.archivedLessonQuizAttemptsData
         context.insert(entity)
-        if let morseCourseProgressData = snapshot.morseCourseProgressData {
-            try FileManager.default.createDirectory(at: morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
-            try morseCourseProgressData.write(to: morseCourseProgressURL, options: [.atomic])
-        } else {
-            try removeMorseCourseProgressIfPresent()
+        try removeMorseCourseProgressIfPresent()
+        for row in snapshot.syncDeviceRows.questionProgress {
+            try upsertQuestionProgress(row.record, deviceId: row.deviceId)
         }
-        for record in snapshot.questionProgress {
-            try upsertQuestionProgress(record)
+        for row in snapshot.syncDeviceRows.examAttempts {
+            try saveExamAttemptWithoutSave(row.attempt, deviceId: row.deviceId)
         }
-        for attempt in snapshot.examAttempts {
-            try saveExamAttemptWithoutSave(attempt)
+        for row in snapshot.syncDeviceRows.lessonProgress {
+            try upsertLessonProgress(row.record, deviceId: row.deviceId)
+        }
+        for row in snapshot.syncDeviceRows.lessonQuizAttempts {
+            try upsertLessonQuizAttempt(row.attempt, deviceId: row.deviceId)
+        }
+        for row in snapshot.syncDeviceRows.morseCourseProgress {
+            try upsertMorseCourseProgress(row.progress, deviceId: row.deviceId)
         }
         try context.save()
         UserDefaults.standard.set(snapshot.preferences.activeBankId.rawValue, forKey: Self.activeBankPreferenceKey)
         preferences = snapshot.preferences
+    }
+
+    private func deviceQuestionProgressRows() throws -> [DeviceQuestionProgressRecord] {
+        let descriptor = FetchDescriptor<QuestionProgressEntity>(sortBy: [SortDescriptor(\.bankId), SortDescriptor(\.questionId), SortDescriptor(\.deviceId), SortDescriptor(\.lastAttemptedAt)])
+        return try context.fetch(descriptor).map { entity in
+            DeviceQuestionProgressRecord(deviceId: entity.deviceId.isEmpty ? localDeviceID : entity.deviceId, record: try questionProgressRecord(from: entity))
+        }
+    }
+
+    private func deviceExamAttemptRows() throws -> [DeviceExamAttemptRecord] {
+        let descriptor = FetchDescriptor<ExamAttemptEntity>(sortBy: [SortDescriptor(\.bankId), SortDescriptor(\.submittedAt), SortDescriptor(\.deviceId), SortDescriptor(\.id)])
+        return try context.fetch(descriptor).map { entity in
+            DeviceExamAttemptRecord(deviceId: entity.deviceId.isEmpty ? localDeviceID : entity.deviceId, attempt: try decoder.decode(StoredExamAttempt.self, from: entity.payloadData))
+        }
+    }
+
+    private func deviceLessonProgressRows() throws -> [DeviceLessonProgressRecord] {
+        let descriptor = FetchDescriptor<LessonProgressEntity>(sortBy: [SortDescriptor(\.lessonId), SortDescriptor(\.deviceId), SortDescriptor(\.readAt)])
+        return try context.fetch(descriptor).map { entity in
+            DeviceLessonProgressRecord(deviceId: entity.deviceId.isEmpty ? localDeviceID : entity.deviceId, record: LessonProgressRecord(lessonId: entity.lessonId, readAt: entity.readAt, readCount: entity.readCount))
+        }
+    }
+
+    private func deviceLessonQuizAttemptRows() throws -> [DeviceLessonQuizAttemptRecord] {
+        let descriptor = FetchDescriptor<LessonQuizAttemptEntity>(sortBy: [SortDescriptor(\.submittedAt), SortDescriptor(\.deviceId), SortDescriptor(\.id)])
+        return try context.fetch(descriptor).map { entity in
+            DeviceLessonQuizAttemptRecord(deviceId: entity.deviceId.isEmpty ? localDeviceID : entity.deviceId, attempt: try decoder.decode(LessonQuizAttempt.self, from: entity.payloadData))
+        }
+    }
+
+    private func syncDeviceRowsSnapshot() throws -> ProgressSyncDeviceRows {
+        let morseKey = MorseCourseProgressEntity.defaultKey
+        let morseDescriptor = FetchDescriptor<MorseCourseProgressEntity>(predicate: #Predicate { $0.key == morseKey })
+        let morseRows = try context.fetch(morseDescriptor).map { entity in
+            DeviceMorseCourseProgressRecord(deviceId: entity.deviceId.isEmpty ? localDeviceID : entity.deviceId, progress: try decoder.decode(MorseCourseProgressExport.self, from: entity.payloadData))
+        }
+        return ProgressSyncDeviceRows(
+            questionProgress: try deviceQuestionProgressRows(),
+            examAttempts: try deviceExamAttemptRows(),
+            lessonProgress: try deviceLessonProgressRows(),
+            lessonQuizAttempts: try deviceLessonQuizAttemptRows(),
+            morseCourseProgress: morseRows
+        )
+    }
+
+    private func syncDeviceRowsSnapshot(
+        bank: QuestionBank,
+        questionProgress: [QuestionProgressRecord],
+        examAttempts: [StoredExamAttempt],
+        lessonProgress: [LessonProgressRecord],
+        lessonQuizAttempts: [LessonQuizAttempt],
+        includesMorse: Bool
+    ) throws -> ProgressSyncDeviceRows {
+        let snapshot = try syncDeviceRowsSnapshot()
+        let questionIds = Set(questionProgress.map(\.questionId))
+        let examSubmittedAt = Set(examAttempts.map { "\($0.bankId)\u{0}\($0.submittedAt)" })
+        let lessonIds = Set(lessonProgress.map(\.lessonId))
+        let lessonQuizIds = Set(lessonQuizAttempts.map(\.id))
+        return ProgressSyncDeviceRows(
+            questionProgress: snapshot.questionProgress.filter { $0.record.bankId == bank.manifest.bankId && questionIds.contains($0.record.questionId) },
+            examAttempts: snapshot.examAttempts.filter { $0.attempt.bankId == bank.manifest.bankId && examSubmittedAt.contains("\($0.attempt.bankId)\u{0}\($0.attempt.submittedAt)") },
+            lessonProgress: bank.courseBankID.hasLessons ? snapshot.lessonProgress.filter { lessonIds.contains($0.record.lessonId) } : [],
+            lessonQuizAttempts: bank.courseBankID.hasLessons ? snapshot.lessonQuizAttempts.filter { lessonQuizIds.contains($0.attempt.id) } : [],
+            morseCourseProgress: includesMorse ? snapshot.morseCourseProgress : []
+        )
     }
 
     private func questionProgressRecord(from entity: QuestionProgressEntity) throws -> QuestionProgressRecord {
@@ -1476,9 +2214,11 @@ private func validateMorseCourseProgress(_ progress: MorseCourseProgressExport, 
         if record.recentResults.count > 20 { errors.append(String(localized: "\(prefix).recentResults must contain at most 20 booleans.")) }
         appendTimestampError(&errors, value: record.lastPracticedAt, field: "\(prefix).lastPracticedAt")
     }
+    var activityDates = Set<String>()
     for (index, record) in progress.dailyActivity.enumerated() {
         let prefix = "Import morseCourseProgress.dailyActivity[\(index)]"
         if record.date.range(of: #"^\d{4}-\d{2}-\d{2}$"#, options: .regularExpression) == nil { errors.append(String(localized: "\(prefix).date must be YYYY-MM-DD.")) }
+        if !activityDates.insert(record.date).inserted { errors.append(String(localized: "\(prefix).date duplicates another daily activity record.")) }
         if record.lessonsCompleted < 0 { errors.append(String(localized: "\(prefix).lessonsCompleted must be non-negative.")) }
     }
 }

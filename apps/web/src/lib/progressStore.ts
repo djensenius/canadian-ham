@@ -73,6 +73,34 @@ export interface LessonQuizAttempt {
   readonly incorrectConceptCheckIds: readonly string[];
 }
 
+export interface DeviceQuestionProgressRecord {
+  readonly deviceId: string;
+  readonly record: QuestionProgressRecord;
+}
+
+export interface DeviceExamAttemptRecord {
+  readonly deviceId: string;
+  readonly attempt: ExamAttempt;
+}
+
+export interface DeviceLessonProgressRecord {
+  readonly deviceId: string;
+  readonly record: LessonProgressRecord;
+}
+
+export interface DeviceMorseCourseProgressRecord {
+  readonly deviceId: string;
+  readonly progress: MorseCourseProgressExport;
+}
+
+export interface ProgressSyncDeviceRows {
+  readonly questionProgress: readonly DeviceQuestionProgressRecord[];
+  readonly examAttempts: readonly DeviceExamAttemptRecord[];
+  readonly lessonProgress: readonly DeviceLessonProgressRecord[];
+  readonly lessonQuizAttempts?: readonly unknown[];
+  readonly morseCourseProgress: readonly DeviceMorseCourseProgressRecord[];
+}
+
 export interface ProgressExportV1 {
   readonly schema: "canadian-ham.progress-export";
   readonly version: 1;
@@ -83,6 +111,7 @@ export interface ProgressExportV1 {
   readonly lessonProgress?: readonly LessonProgressRecord[];
   readonly lessonQuizAttempts?: readonly LessonQuizAttempt[];
   readonly morseCourseProgress?: MorseCourseProgressExport;
+  readonly syncDeviceRows?: ProgressSyncDeviceRows;
   readonly preferences: WebPreferences;
 }
 
@@ -100,9 +129,10 @@ export const defaultPreferences: WebPreferences = {
   morse: defaultMorsePreferences,
 };
 
-const DB_VERSION = 4;
+const DB_VERSION = 5;
 const DEFAULT_DB_NAME = "canadian-ham-web-progress";
 const PREFERENCES_KEY = "preferences";
+const SYNC_DEVICE_ROWS_KEY = "syncDeviceRows";
 
 interface StoredPreferenceRecord {
   readonly key: string;
@@ -124,11 +154,12 @@ export class ProgressStore {
 
   async putQuestionProgressMany(records: readonly QuestionProgressRecord[]): Promise<void> {
     const db = await this.open();
-    await runTransaction(db, ["questionProgress"], "readwrite", (transaction) => {
+    await runTransaction(db, ["questionProgress", "syncMetadata"], "readwrite", (transaction) => {
       const store = transaction.objectStore("questionProgress");
       for (const record of records) {
         store.put(record);
       }
+      transaction.objectStore("syncMetadata").delete(SYNC_DEVICE_ROWS_KEY);
     });
   }
 
@@ -174,12 +205,13 @@ export class ProgressStore {
 
   async putLessonQuizAttemptWithQuestionProgress(attempt: LessonQuizAttempt, records: readonly QuestionProgressRecord[]): Promise<void> {
     const db = await this.open();
-    await runTransaction(db, ["lessonQuizAttempts", "questionProgress"], "readwrite", (transaction) => {
+    await runTransaction(db, ["lessonQuizAttempts", "questionProgress", "syncMetadata"], "readwrite", (transaction) => {
       transaction.objectStore("lessonQuizAttempts").put(attempt);
       const questionStore = transaction.objectStore("questionProgress");
       for (const record of records) {
         questionStore.put(record);
       }
+      transaction.objectStore("syncMetadata").delete(SYNC_DEVICE_ROWS_KEY);
     });
   }
 
@@ -198,16 +230,23 @@ export class ProgressStore {
   async exportData(exportedAt: string, bank: BankData = basicBank): Promise<ProgressExportV1> {
     const allQuestionProgress = await this.getQuestionProgress();
     const allExamAttempts = await this.getExamAttempts();
+    const questionProgress = allQuestionProgress.filter((record) => record.bankId === bank.bankId);
+    const examAttempts = allExamAttempts.filter((attempt) => attempt.bankId === bank.bankId);
+    const lessonProgress = bank.hasLessons ? await this.getLessonProgress() : [];
+    const lessonQuizAttempts = bank.hasLessons ? await this.getLessonQuizAttempts() : [];
+    const morseCourseProgress = await this.getMorseCourseProgress();
+    const syncDeviceRows = filterSyncDeviceRowsForExport(await this.getSyncDeviceRowsMetadata(), bank);
     return {
       schema: "canadian-ham.progress-export",
       version: 1,
       exportedAt,
       bankId: bank.bankId,
-      questionProgress: allQuestionProgress.filter((record) => record.bankId === bank.bankId),
-      examAttempts: allExamAttempts.filter((attempt) => attempt.bankId === bank.bankId),
-      lessonProgress: bank.hasLessons ? await this.getLessonProgress() : [],
-      lessonQuizAttempts: bank.hasLessons ? await this.getLessonQuizAttempts() : [],
-      morseCourseProgress: await this.getMorseCourseProgress(),
+      questionProgress,
+      examAttempts,
+      lessonProgress,
+      lessonQuizAttempts,
+      morseCourseProgress,
+      ...(syncDeviceRows === undefined ? {} : { syncDeviceRows }),
       preferences: { ...(await this.getPreferences()), activeBankId: bank.bankId },
     };
   }
@@ -217,7 +256,7 @@ export class ProgressStore {
     const importBank = bankDataForId(data.bankId);
     const existingQuestionProgress = (await this.getQuestionProgress()).filter((record) => record.bankId !== importBank.bankId);
     const existingExamAttempts = (await this.getExamAttempts()).filter((attempt) => attempt.bankId !== importBank.bankId);
-    await runTransaction(db, ["questionProgress", "examAttempts", "lessonProgress", "lessonQuizAttempts", "morseCourseProgress", "preferences"], "readwrite", (transaction) => {
+    await runTransaction(db, ["questionProgress", "examAttempts", "lessonProgress", "lessonQuizAttempts", "morseCourseProgress", "preferences", "syncMetadata"], "readwrite", (transaction) => {
       transaction.objectStore("questionProgress").clear();
       transaction.objectStore("examAttempts").clear();
       const questionStore = transaction.objectStore("questionProgress");
@@ -245,18 +284,24 @@ export class ProgressStore {
         morseCourseStore.put({ ...data.morseCourseProgress, key: "default" });
       }
       transaction.objectStore("preferences").put({ key: PREFERENCES_KEY, value: normalizePreferences({ ...data.preferences, activeBankId: importBank.bankId }) });
+      if (data.syncDeviceRows === undefined) {
+        transaction.objectStore("syncMetadata").delete(SYNC_DEVICE_ROWS_KEY);
+      } else {
+        transaction.objectStore("syncMetadata").put({ key: SYNC_DEVICE_ROWS_KEY, value: data.syncDeviceRows });
+      }
     });
   }
 
   async resetAllData(): Promise<void> {
     const db = await this.open();
-    await runTransaction(db, ["questionProgress", "examAttempts", "lessonProgress", "lessonQuizAttempts", "morseCourseProgress", "preferences"], "readwrite", (transaction) => {
+    await runTransaction(db, ["questionProgress", "examAttempts", "lessonProgress", "lessonQuizAttempts", "morseCourseProgress", "preferences", "syncMetadata"], "readwrite", (transaction) => {
       transaction.objectStore("questionProgress").clear();
       transaction.objectStore("examAttempts").clear();
       transaction.objectStore("lessonProgress").clear();
       transaction.objectStore("lessonQuizAttempts").clear();
       transaction.objectStore("morseCourseProgress").clear();
       transaction.objectStore("preferences").clear();
+      transaction.objectStore("syncMetadata").clear();
     });
   }
 
@@ -277,10 +322,20 @@ export class ProgressStore {
     return requestToPromise<T[]>(db.transaction(storeName, "readonly").objectStore(storeName).getAll());
   }
 
+  private async getSyncDeviceRowsMetadata(): Promise<ProgressSyncDeviceRows | undefined> {
+    const db = await this.open();
+    const record = await requestToPromise<{ readonly value: ProgressSyncDeviceRows } | undefined>(
+      db.transaction("syncMetadata", "readonly").objectStore("syncMetadata").get(SYNC_DEVICE_ROWS_KEY),
+    );
+    return record?.value;
+  }
+
   private async put(storeName: string, value: unknown): Promise<void> {
     const db = await this.open();
-    await runTransaction(db, [storeName], "readwrite", (transaction) => {
+    const clearsSyncRows = ["questionProgress", "examAttempts", "lessonProgress", "lessonQuizAttempts", "morseCourseProgress"].includes(storeName);
+    await runTransaction(db, clearsSyncRows ? [storeName, "syncMetadata"] : [storeName], "readwrite", (transaction) => {
       transaction.objectStore(storeName).put(value);
+      if (clearsSyncRows) transaction.objectStore("syncMetadata").delete(SYNC_DEVICE_ROWS_KEY);
     });
   }
 
@@ -311,6 +366,111 @@ export class ProgressStore {
 }
 
 export const defaultProgressStore = new ProgressStore();
+
+export function deduplicateQuestionProgressForSync(records: readonly QuestionProgressRecord[]): QuestionProgressRecord[] {
+  return deduplicateDeviceQuestionProgressForSync(records.map((record) => ({ deviceId: "local", record })));
+}
+
+export function deduplicateDeviceQuestionProgressForSync(rows: readonly DeviceQuestionProgressRecord[]): QuestionProgressRecord[] {
+  const groups = groupBy(rows, (row) => `${row.record.bankId}\u0000${row.record.questionId}`);
+  return [...groups.values()]
+    .map((group) => mergeDeviceQuestionProgressForSync(group))
+    .sort((a, b) => codePointCompare(a.bankId, b.bankId) || codePointCompare(a.questionId, b.questionId));
+}
+
+export function mergeQuestionProgressForSync(records: readonly QuestionProgressRecord[]): QuestionProgressRecord {
+  return mergeDeviceQuestionProgressForSync(records.map((record) => ({ deviceId: "local", record })));
+}
+
+export function mergeDeviceQuestionProgressForSync(rows: readonly DeviceQuestionProgressRecord[]): QuestionProgressRecord {
+  if (rows.length === 0) throw new Error("Cannot merge an empty question-progress group.");
+  const deviceRows = [...groupBy(rows, (row) => row.deviceId).values()].map((group) => [...group].sort(deviceQuestionProgressTieBreak).at(-1)!);
+  const latest = [...deviceRows].sort(deviceQuestionProgressTieBreak).at(-1)!;
+  return {
+    ...latest.record,
+    attempts: deviceRows.reduce((sum, row) => sum + row.record.attempts, 0),
+    correctAttempts: deviceRows.reduce((sum, row) => sum + row.record.correctAttempts, 0),
+    recentResults: latest.record.recentResults.slice(-5),
+    notes: latest.record.notes ?? undefined,
+  };
+}
+
+export function deduplicateExamAttemptsForSync(attempts: readonly ExamAttempt[]): ExamAttempt[] {
+  return deduplicateDeviceExamAttemptsForSync(attempts.map((attempt) => ({ deviceId: "local", attempt })));
+}
+
+export function deduplicateDeviceExamAttemptsForSync(rows: readonly DeviceExamAttemptRecord[]): ExamAttempt[] {
+  return [...groupBy(rows, (row) => `${row.attempt.bankId}\u0000${row.attempt.submittedAt}`).values()]
+    .map((group) => [...group].sort(deviceExamAttemptTieBreak).at(-1)!.attempt)
+    .sort(examAttemptTieBreak);
+}
+
+export function deduplicateDeviceLessonProgressForSync(rows: readonly DeviceLessonProgressRecord[]): LessonProgressRecord[] {
+  return [...groupBy(rows, (row) => row.record.lessonId).values()]
+    .map((group) => {
+      const deviceRows = [...groupBy(group, (row) => row.deviceId).values()].map((deviceGroup) => [...deviceGroup].sort(deviceLessonProgressTieBreak).at(-1)!);
+      const latest = [...deviceRows].sort(deviceLessonProgressTieBreak).at(-1)!;
+      return {
+        lessonId: latest.record.lessonId,
+        readAt: latest.record.readAt,
+        readCount: deviceRows.reduce((sum, row) => sum + row.record.readCount, 0),
+      };
+    })
+    .sort((a, b) => codePointCompare(a.lessonId, b.lessonId));
+}
+
+
+function filterSyncDeviceRowsForExport(rows: ProgressSyncDeviceRows | undefined, bank: BankData): ProgressSyncDeviceRows | undefined {
+  if (rows === undefined) return undefined;
+  if (rows.questionProgress.some((row) => row.record.bankId !== bank.bankId)) return undefined;
+  if (rows.examAttempts.some((row) => row.attempt.bankId !== bank.bankId)) return undefined;
+  if (!bank.hasLessons && (rows.lessonProgress.length > 0 || (rows.lessonQuizAttempts?.length ?? 0) > 0)) return undefined;
+  return rows;
+}
+
+function groupBy<T>(values: readonly T[], keyForValue: (value: T) => string): Map<string, T[]> {
+  const groups = new Map<string, T[]>();
+  for (const value of values) {
+    const key = keyForValue(value);
+    const group = groups.get(key);
+    if (group === undefined) groups.set(key, [value]);
+    else group.push(value);
+  }
+  return groups;
+}
+
+function deviceQuestionProgressTieBreak(a: DeviceQuestionProgressRecord, b: DeviceQuestionProgressRecord): number {
+  return codePointCompare(a.record.lastAttemptedAt, b.record.lastAttemptedAt)
+    || codePointCompare(a.deviceId, b.deviceId)
+    || codePointCompare(a.record.leitner.dueAt, b.record.leitner.dueAt)
+    || a.record.leitner.box - b.record.leitner.box
+    || codePointCompare(a.record.lastResult, b.record.lastResult)
+    || codePointCompare(a.record.recentResults.map((value) => (value ? "1" : "0")).join(""), b.record.recentResults.map((value) => (value ? "1" : "0")).join(""))
+    || codePointCompare(a.record.notes ?? "", b.record.notes ?? "");
+}
+
+function examAttemptTieBreak(a: ExamAttempt, b: ExamAttempt): number {
+  return codePointCompare(a.bankId, b.bankId) || codePointCompare(a.submittedAt, b.submittedAt) || codePointCompare(a.id, b.id);
+}
+
+function deviceExamAttemptTieBreak(a: DeviceExamAttemptRecord, b: DeviceExamAttemptRecord): number {
+  return codePointCompare(a.attempt.bankId, b.attempt.bankId)
+    || codePointCompare(a.attempt.submittedAt, b.attempt.submittedAt)
+    || codePointCompare(a.deviceId, b.deviceId)
+    || codePointCompare(a.attempt.startedAt, b.attempt.startedAt)
+    || codePointCompare(a.attempt.id, b.attempt.id);
+}
+
+function deviceLessonProgressTieBreak(a: DeviceLessonProgressRecord, b: DeviceLessonProgressRecord): number {
+  return codePointCompare(a.record.readAt, b.record.readAt)
+    || codePointCompare(a.deviceId, b.deviceId)
+    || a.record.readCount - b.record.readCount
+    || codePointCompare(a.record.lessonId, b.record.lessonId);
+}
+
+function codePointCompare(a: string, b: string): number {
+  return a < b ? -1 : a > b ? 1 : 0;
+}
 
 export function serializeProgressExport(data: ProgressExportV1): string {
   return `${JSON.stringify(data, null, 2)}\n`;
@@ -351,6 +511,12 @@ function migrateDatabase(db: IDBDatabase, oldVersion: number, transaction: IDBTr
   if (oldVersion < 4) {
     if (!db.objectStoreNames.contains("morseCourseProgress")) {
       db.createObjectStore("morseCourseProgress", { keyPath: "key" });
+    }
+  }
+
+  if (oldVersion < 5) {
+    if (!db.objectStoreNames.contains("syncMetadata")) {
+      db.createObjectStore("syncMetadata", { keyPath: "key" });
     }
   }
 }
@@ -451,6 +617,7 @@ export function validateProgressImport(raw: unknown, bank: BankData = basicBank)
       lessonProgress: lessonProgress as LessonProgressRecord[],
       lessonQuizAttempts: lessonQuizAttempts as LessonQuizAttempt[],
       morseCourseProgress: raw.morseCourseProgress as MorseCourseProgressExport | undefined,
+      ...(isRecord(raw.syncDeviceRows) ? { syncDeviceRows: raw.syncDeviceRows as unknown as ProgressSyncDeviceRows } : {}),
       preferences: normalizePreferences(raw.preferences),
     },
   };
@@ -516,6 +683,7 @@ function validateMorseCourseProgress(value: unknown): string[] {
   if (!Array.isArray(value.dailyActivity)) {
     errors.push(`${prefix}.dailyActivity must be an array.`);
   } else {
+    const dates = new Set<string>();
     value.dailyActivity.forEach((record, index) => {
       const recordPrefix = `${prefix}.dailyActivity[${index}]`;
       if (!isRecord(record)) {
@@ -523,6 +691,8 @@ function validateMorseCourseProgress(value: unknown): string[] {
         return;
       }
       if (typeof record.date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(record.date)) errors.push(`${recordPrefix}.date must be YYYY-MM-DD.`);
+      else if (dates.has(record.date)) errors.push(`${recordPrefix}.date duplicates another daily activity record.`);
+      if (typeof record.date === "string") dates.add(record.date);
       if (!isNonNegativeInteger(record.lessonsCompleted)) errors.push(`${recordPrefix}.lessonsCompleted must be a non-negative integer.`);
     });
   }

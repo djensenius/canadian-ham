@@ -70,6 +70,12 @@ const fixtureCases = [
     expectedInvalidSubstring: "expected canonical UTC timestamp",
   },
   {
+    name: "progress export v1 sync device rows",
+    schema: "progress-export-v1.schema.json",
+    fixture: "progress-export-v1-sync-device-rows.json",
+    expectedInvalidSubstring: "expected string length >= 1",
+  },
+  {
     name: "engine fixture",
     schema: "engine-fixture.schema.json",
     fixture: "engine-fixture.json",

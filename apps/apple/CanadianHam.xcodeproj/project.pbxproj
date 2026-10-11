@@ -69,6 +69,7 @@
 		8490F17176EBB9E8968E07D0 /* QuestionBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */; };
 		883A3E64C9D89F484D72EFE5 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 641771DDA6C72AE924365999 /* manifest.json */; };
 		8A06B7AF447073AD26DAC6E9 /* QuestionBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */; };
+		8AD63D2FB881F6C3C07DD025 /* ProgressSyncMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6348B3A030558BDA24C971 /* ProgressSyncMerge.swift */; };
 		8EC1393EB1FF099433C29317 /* MorseTrainerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C0ADA4801D9094289C71DB /* MorseTrainerTests.swift */; };
 		916F171C8628700ACA3A58E0 /* EngineShuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */; };
 		92BA95D6FCD407A66C0ED1E8 /* categories.json in Resources */ = {isa = PBXBuildFile; fileRef = 5B61FF08B59BD2425E771B49 /* categories.json */; };
@@ -102,6 +103,7 @@
 		C36A6BEF7CD1655C4C09136A /* AccessibleSecondaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658B2A641A5BBF5D6B65B2DD /* AccessibleSecondaryButtonStyle.swift */; };
 		C67627A6755066FA8F2B034E /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543DA6642D20EAF6FA88693D /* Tokens.swift */; };
 		C79F4B014C66CBB77F1CECDF /* EngineShuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */; };
+		C85F7AC96B0A610FDC19BA88 /* ProgressSyncMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6348B3A030558BDA24C971 /* ProgressSyncMerge.swift */; };
 		CB82AC4522910B6DBBE8E338 /* AppSettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72C0FA8ECBD6EAFA6A5D34F /* AppSettingsModel.swift */; };
 		CBBD854076689D0E6F2EE822 /* lessons in Resources */ = {isa = PBXBuildFile; fileRef = EF0A093E186AB771F904629B /* lessons */; };
 		CBC1FACE31E263275CCC7AE3 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
@@ -201,6 +203,7 @@
 		7D22DC6BEB5258264EA424D3 /* CanadianHamTV-InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "CanadianHamTV-InfoPlist.strings"; path = "fr.lproj/CanadianHamTV-InfoPlist.strings"; sourceTree = "<group>"; };
 		86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineShuffle.swift; sourceTree = "<group>"; };
 		86CBBDFF03A04BC20799F5E4 /* CanadianHamTV.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CanadianHamTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D6348B3A030558BDA24C971 /* ProgressSyncMerge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressSyncMerge.swift; sourceTree = "<group>"; };
 		8D63616999E30A9A60763F71 /* CanadianHam.macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CanadianHam.macOS.entitlements; sourceTree = "<group>"; };
 		909B643DBB51DDC79E2D1DA1 /* MorseCopyExamView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorseCopyExamView.swift; sourceTree = "<group>"; };
 		A235069367EFC3776ADEE826 /* questions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = questions.json; sourceTree = "<group>"; };
@@ -410,6 +413,7 @@
 				76177BE24F1B7915BB916C63 /* AppleStudyEngine.swift */,
 				B72C0FA8ECBD6EAFA6A5D34F /* AppSettingsModel.swift */,
 				1DED9AA3F205BE249BD8DC23 /* ProgressStore.swift */,
+				8D6348B3A030558BDA24C971 /* ProgressSyncMerge.swift */,
 				31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */,
 			);
 			path = Services;
@@ -1059,6 +1063,7 @@
 				42B335E4F445B4521F5ACA40 /* ProgressModels.swift in Sources */,
 				5A1CE4F99519795442DFAA39 /* ProgressStore.swift in Sources */,
 				4CBF95D998062361B45D4394 /* ProgressStoreTests.swift in Sources */,
+				C85F7AC96B0A610FDC19BA88 /* ProgressSyncMerge.swift in Sources */,
 				1ACC1B99ACDE3E66DE37445D /* QuestionBankModels.swift in Sources */,
 				B9D65B4D05709AA74DE896F0 /* QuestionBankStore.swift in Sources */,
 				9405A070EB557B342A128819 /* QuestionBankTests.swift in Sources */,
@@ -1131,6 +1136,7 @@
 				28F2DC98A7E9840A41F7C1E4 /* NativeSettingsView.swift in Sources */,
 				3C5EF20558CB56EAB8005430 /* ProgressModels.swift in Sources */,
 				27736D9704E4F326B1A87197 /* ProgressStore.swift in Sources */,
+				8AD63D2FB881F6C3C07DD025 /* ProgressSyncMerge.swift in Sources */,
 				2C8F5043E3CA9DA4C9220BCF /* QuestionBankModels.swift in Sources */,
 				CBC1FACE31E263275CCC7AE3 /* QuestionBankStore.swift in Sources */,
 				A5C84AF9525F86DFA166EF45 /* RootView.swift in Sources */,

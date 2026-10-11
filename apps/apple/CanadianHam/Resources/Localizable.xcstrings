@@ -219,6 +219,22 @@
         }
       }
     },
+    "%@, dot/dash ratio %@, timing consistency %lld%%." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, ratio point/tiret %@, constance du minutage %lld %%."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, ratio point/tiret %@, constance du minutage %lld %%."
+          }
+        }
+      }
+    },
     "%@: " : {
       "localizations" : {
         "en" : {
@@ -281,6 +297,86 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@. %@."
+          }
+        }
+      }
+    },
+    "%@.attempt must be a valid lesson quiz attempt." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.attempt doit être une tentative de questionnaire de leçon valide."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.attempt doit être une tentative de questionnaire de leçon valide."
+          }
+        }
+      }
+    },
+    "%@.attempt.id must be a non-empty string." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.attempt.id doit être une chaîne non vide."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.attempt.id doit être une chaîne non vide."
+          }
+        }
+      }
+    },
+    "%@.attempt.mode must be mock-exam." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.attempt.mode doit être mock-exam."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.attempt.mode doit être mock-exam."
+          }
+        }
+      }
+    },
+    "%@.attempt.timer.secondsAllowed must be null or non-negative." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.attempt.timer.secondsAllowed doit être null ou non négatif."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.attempt.timer.secondsAllowed doit être null ou non négatif."
+          }
+        }
+      }
+    },
+    "%@.attempt.timer.secondsElapsed must be non-negative." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.attempt.timer.secondsElapsed doit être non négatif."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.attempt.timer.secondsElapsed doit être non négatif."
           }
         }
       }
@@ -569,6 +665,22 @@
         }
       }
     },
+    "%@.date duplicates another daily activity record." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.date duplique un autre enregistrement d’activité quotidienne."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.date duplique un autre enregistrement d’activité quotidienne."
+          }
+        }
+      }
+    },
     "%@.date must be YYYY-MM-DD." : {
       "localizations" : {
         "fr" : {
@@ -581,6 +693,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@.date doit être AAAA-MM-JJ."
+          }
+        }
+      }
+    },
+    "%@.deviceId must be non-empty." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.deviceId doit être non vide."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.deviceId doit être non vide."
           }
         }
       }
@@ -1271,6 +1399,102 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@.recentResults doit contenir au plus cinq booléens."
+          }
+        }
+      }
+    },
+    "%@.record must be a valid lesson progress record." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record doit être un enregistrement de progression de leçon valide."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record doit être un enregistrement de progression de leçon valide."
+          }
+        }
+      }
+    },
+    "%@.record.attempts must be a non-negative integer." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.attempts doit être un entier non négatif."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.attempts doit être un entier non négatif."
+          }
+        }
+      }
+    },
+    "%@.record.correctAttempts must be between 0 and attempts." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.correctAttempts doit être compris entre 0 et attempts."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.correctAttempts doit être compris entre 0 et attempts."
+          }
+        }
+      }
+    },
+    "%@.record.leitner.box must be an integer between 0 and 5." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.leitner.box doit être un entier de 0 à 5."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.leitner.box doit être un entier de 0 à 5."
+          }
+        }
+      }
+    },
+    "%@.record.questionId must be a known question ID." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.questionId doit être un identifiant de question connu."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.questionId doit être un identifiant de question connu."
+          }
+        }
+      }
+    },
+    "%@.record.recentResults must contain at most five booleans." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.recentResults doit contenir au plus cinq valeurs booléennes."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@.record.recentResults doit contenir au plus cinq valeurs booléennes."
           }
         }
       }
@@ -2146,12 +2370,6 @@
         "fr" : {
           "variations" : {
             "plural" : {
-              "zero" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%1$lld erreur au total : %2$lld erronée, %3$lld manquante, %4$lld ajoutée."
-                }
-              },
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -2162,6 +2380,12 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "%1$lld erreurs au total : %2$lld erronées, %3$lld manquantes, %4$lld ajoutées."
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$lld erreur au total : %2$lld erronée, %3$lld manquante, %4$lld ajoutée."
                 }
               }
             }
@@ -2170,12 +2394,6 @@
         "fr-CA" : {
           "variations" : {
             "plural" : {
-              "zero" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%1$lld erreur au total : %2$lld erronée, %3$lld manquante, %4$lld ajoutée."
-                }
-              },
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -2186,6 +2404,12 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "%1$lld erreurs au total : %2$lld erronées, %3$lld manquantes, %4$lld ajoutées."
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$lld erreur au total : %2$lld erronée, %3$lld manquante, %4$lld ajoutée."
                 }
               }
             }
@@ -2359,134 +2583,6 @@
         }
       }
     },
-    "This development build includes bundled content and has no accounts, analytics, telemetry, ads, remote config, third-party SDKs, or developer-operated servers. iCloud Sync is optional and off until you turn it on; import and export use local files you choose." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette version de développement comprend du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucune configuration distante, aucun SDK tiers ni aucun serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette version de développement comprend du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucune configuration distante, aucun SDK tiers ni aucun serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
-          }
-        }
-      }
-    },
-    "iCloud Sync" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Synchronisation iCloud"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Synchronisation iCloud"
-          }
-        }
-      }
-    },
-    "Sync practice and exam progress with iCloud" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Synchroniser la progression des exercices et des examens avec iCloud"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Synchroniser la progression des exercices et des examens avec iCloud"
-          }
-        }
-      }
-    },
-    "Off by default. When enabled, question practice and mock exam progress can sync through your private iCloud database after restart; lesson progress and preferences stay on this device." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Désactivée par défaut. Une fois activée, la progression des exercices et des examens simulés peut se synchroniser avec votre base de données iCloud privée après le redémarrage; la progression des leçons et les préférences restent sur cet appareil."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Désactivée par défaut. Une fois activée, la progression des exercices et des examens simulés peut se synchroniser avec votre base de données iCloud privée après le redémarrage; la progression des leçons et les préférences restent sur cet appareil."
-          }
-        }
-      }
-    },
-    "Off by default. When enabled, question practice and mock exam progress can sync through your private iCloud database after restart; lesson progress and preferences stay on this Mac." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Désactivée par défaut. Une fois activée, la progression des exercices et des examens simulés peut se synchroniser avec votre base de données iCloud privée après le redémarrage; la progression des leçons et les préférences restent sur ce Mac."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Désactivée par défaut. Une fois activée, la progression des exercices et des examens simulés peut se synchroniser avec votre base de données iCloud privée après le redémarrage; la progression des leçons et les préférences restent sur ce Mac."
-          }
-        }
-      }
-    },
-    "iCloud Sync will turn on after you restart the app." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La synchronisation iCloud s’activera après le redémarrage de l’app."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La synchronisation iCloud s’activera après le redémarrage de l’app."
-          }
-        }
-      }
-    },
-    "iCloud Sync will turn off after you restart the app." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La synchronisation iCloud se désactivera après le redémarrage de l’app."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La synchronisation iCloud se désactivera après le redémarrage de l’app."
-          }
-        }
-      }
-    },
-    "No accounts, analytics, telemetry, third-party SDKs, or developer-operated servers. iCloud Sync is optional and off until you turn it on; import and export use local files you choose." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucun compte, analytique, télémétrie, SDK tiers ni serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucun compte, analytique, télémétrie, SDK tiers ni serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
-          }
-        }
-      }
-    },
     "•" : {
       "localizations" : {
         "fr" : {
@@ -2499,6 +2595,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "•"
+          }
+        }
+      }
+    },
+    "3-minute sending check" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérification d’envoi de 3 minutes"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérification d’envoi de 3 minutes"
           }
         }
       }
@@ -3259,6 +3371,22 @@
         }
       }
     },
+    "Clear sending practice" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effacer l’exercice d’envoi"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effacer l’exercice d’envoi"
+          }
+        }
+      }
+    },
     "Coming soon" : {
       "localizations" : {
         "fr" : {
@@ -3613,6 +3741,22 @@
         }
       }
     },
+    "Current elements" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Éléments actuels"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Éléments actuels"
+          }
+        }
+      }
+    },
     "Daily streak" : {
       "localizations" : {
         "fr" : {
@@ -3645,6 +3789,38 @@
         }
       }
     },
+    "Dash" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiret"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiret"
+          }
+        }
+      }
+    },
+    "Dash paddle. Hold for repeated dashes." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palette de tirets. Maintenez pour répéter les tirets."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palette de tirets. Maintenez pour répéter les tirets."
+          }
+        }
+      }
+    },
     "Data" : {
       "localizations" : {
         "en" : {
@@ -3663,6 +3839,102 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Données"
+          }
+        }
+      }
+    },
+    "Decoded %@." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ décodé."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ décodé."
+          }
+        }
+      }
+    },
+    "Decoded text" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Texte décodé"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Texte décodé"
+          }
+        }
+      }
+    },
+    "Delete from iCloud and this device" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer d’iCloud et de cet appareil"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer d’iCloud et de cet appareil"
+          }
+        }
+      }
+    },
+    "Delete from iCloud, keep on device" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer d’iCloud et conserver sur l’appareil"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer d’iCloud et conserver sur l’appareil"
+          }
+        }
+      }
+    },
+    "Delete iCloud Progress" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer la progression iCloud"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer la progression iCloud"
+          }
+        }
+      }
+    },
+    "Delete iCloud Progress?" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer la progression iCloud?"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer la progression iCloud?"
           }
         }
       }
@@ -3777,6 +4049,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Terminé"
+          }
+        }
+      }
+    },
+    "Dot" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Point"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Point"
+          }
+        }
+      }
+    },
+    "Dot paddle. Hold for repeated dots." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palette de points. Maintenez pour répéter les points."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palette de points. Maintenez pour répéter les points."
           }
         }
       }
@@ -3981,6 +4285,22 @@
         }
       }
     },
+    "End and grade" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminer et corriger"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terminer et corriger"
+          }
+        }
+      }
+    },
     "End exam" : {
       "localizations" : {
         "en" : {
@@ -4037,6 +4357,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Entrez les caractères entendus, et non la notation en points et tirets."
+          }
+        }
+      }
+    },
+    "Error signal received: previous character deleted." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signal d’erreur reçu : le caractère précédent a été supprimé."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signal d’erreur reçu : le caractère précédent a été supprimé."
           }
         }
       }
@@ -4543,6 +4879,22 @@
         }
       }
     },
+    "Hold key" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maintenir la clé"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maintenir la clé"
+          }
+        }
+      }
+    },
     "Home" : {
       "localizations" : {
         "fr" : {
@@ -4571,6 +4923,102 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Prêt pour la distinction"
+          }
+        }
+      }
+    },
+    "Iambic paddle emulation" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Émulation de palettes iambiques"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Émulation de palettes iambiques"
+          }
+        }
+      }
+    },
+    "iCloud progress was deleted." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La progression iCloud a été supprimée."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La progression iCloud a été supprimée."
+          }
+        }
+      }
+    },
+    "iCloud Sync" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronisation iCloud"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronisation iCloud"
+          }
+        }
+      }
+    },
+    "iCloud sync status could not be updated." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’état de la synchronisation iCloud n’a pas pu être mis à jour."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’état de la synchronisation iCloud n’a pas pu être mis à jour."
+          }
+        }
+      }
+    },
+    "iCloud Sync will turn off after you restart the app." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La synchronisation iCloud se désactivera après le redémarrage de l’application."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La synchronisation iCloud se désactivera après le redémarrage de l’application."
+          }
+        }
+      }
+    },
+    "iCloud Sync will turn on after you restart the app." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La synchronisation iCloud s’activera après le redémarrage de l’application."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La synchronisation iCloud s’activera après le redémarrage de l’application."
           }
         }
       }
@@ -5151,6 +5599,22 @@
         }
       }
     },
+    "Latest feedback" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rétroaction récente"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rétroaction récente"
+          }
+        }
+      }
+    },
     "Latest result: %lld / %lld (%@%%). Attempts saved: %lld." : {
       "localizations" : {
         "en" : {
@@ -5469,6 +5933,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Leçons"
+          }
+        }
+      }
+    },
+    "Lessons %lld–%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lessons %1$lld–%2$lld"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçons %1$lld à %2$lld"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leçons %1$lld à %2$lld"
           }
         }
       }
@@ -6347,6 +6833,22 @@
         }
       }
     },
+    "No accounts, analytics, telemetry, third-party SDKs, or developer-operated servers. iCloud Sync is optional and off until you turn it on; import and export use local files you choose." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun compte, analytique, télémétrie, SDK tiers ni serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun compte, analytique, télémétrie, SDK tiers ni serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
+          }
+        }
+      }
+    },
     "No accounts, networking, analytics, telemetry, third-party SDKs, or iCloud sync. Import and export use local files you choose." : {
       "localizations" : {
         "fr" : {
@@ -6407,6 +6909,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aucune catégorie"
+          }
+        }
+      }
+    },
+    "No character matches %@." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun caractère ne correspond à %@."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun caractère ne correspond à %@."
           }
         }
       }
@@ -6507,6 +7025,22 @@
         }
       }
     },
+    "No text sent." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun texte envoyé."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun texte envoyé."
+          }
+        }
+      }
+    },
     "No weak subsections are available yet. Complete practice or a mock exam first." : {
       "localizations" : {
         "fr" : {
@@ -6555,6 +7089,22 @@
         }
       }
     },
+    "not enough dots and dashes" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pas assez de points et de tirets"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pas assez de points et de tirets"
+          }
+        }
+      }
+    },
     "Not marked read" : {
       "localizations" : {
         "fr" : {
@@ -6599,6 +7149,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Objectifs"
+          }
+        }
+      }
+    },
+    "Off by default. When enabled, learning progress can sync through your private iCloud database after restart; preferences stay on this device." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactivée par défaut. Une fois activée, la progression d’apprentissage peut se synchroniser avec votre base de données iCloud privée après le redémarrage; les préférences restent sur cet appareil."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactivée par défaut. Une fois activée, la progression d’apprentissage peut se synchroniser avec votre base de données iCloud privée après le redémarrage; les préférences restent sur cet appareil."
+          }
+        }
+      }
+    },
+    "Off by default. When enabled, learning progress can sync through your private iCloud database after restart; preferences stay on this Mac." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactivée par défaut. Une fois activée, la progression d’apprentissage peut se synchroniser avec votre base de données iCloud privée après le redémarrage; les préférences restent sur ce Mac."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactivée par défaut. Une fois activée, la progression d’apprentissage peut se synchroniser avec votre base de données iCloud privée après le redémarrage; les préférences restent sur ce Mac."
           }
         }
       }
@@ -6846,12 +7428,6 @@
         "fr" : {
           "variations" : {
             "plural" : {
-              "zero" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "RÉUSSITE, 100 %%, avec %lld erreur."
-                }
-              },
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -6862,6 +7438,12 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "RÉUSSITE, 100 %%, avec %lld erreurs."
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "RÉUSSITE, 100 %%, avec %lld erreur."
                 }
               }
             }
@@ -6870,12 +7452,6 @@
         "fr-CA" : {
           "variations" : {
             "plural" : {
-              "zero" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "RÉUSSITE, 100 %%, avec %lld erreur."
-                }
-              },
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -6886,6 +7462,12 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "RÉUSSITE, 100 %%, avec %lld erreurs."
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "RÉUSSITE, 100 %%, avec %lld erreur."
                 }
               }
             }
@@ -7179,6 +7761,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "S’exercer sur les points faibles"
+          }
+        }
+      }
+    },
+    "Practise tap timing with a straight key or iambic paddles." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exercez le minutage des appuis avec une clé droite ou des palettes iambiques."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exercez le minutage des appuis avec une clé droite ou des palettes iambiques."
+          }
+        }
+      }
+    },
+    "Practise tap timing with a straight key or iambic-style paddles. On Mac and iPad hardware keyboards, focus this screen first, then hold Space for the straight key; use J for dots and K for dashes. On iPhone and iPad, use the large touch targets." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exercez le minutage des appuis avec une clé droite ou des palettes de type iambique. Sur Mac et avec les claviers matériels iPad, placez d’abord le foyer sur cet écran, puis maintenez Espace pour la clé droite; utilisez J pour les points et K pour les tirets. Sur iPhone et iPad, utilisez les grandes cibles tactiles."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exercez le minutage des appuis avec une clé droite ou des palettes de type iambique. Sur Mac et avec les claviers matériels iPad, placez d’abord le foyer sur cet écran, puis maintenez Espace pour la clé droite; utilisez J pour les points et K pour les tirets. Sur iPhone et iPad, utilisez les grandes cibles tactiles."
           }
         }
       }
@@ -8011,6 +8625,22 @@
         }
       }
     },
+    "Rule: unsent characters at 0:00 count as errors; 5 or fewer errors count as 100% and pass." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Règle : les caractères non envoyés à 0:00 comptent comme erreurs; 5 erreurs ou moins donnent 100 % et la réussite."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Règle : les caractères non envoyés à 0:00 comptent comme erreurs; 5 erreurs ou moins donnent 100 % et la réussite."
+          }
+        }
+      }
+    },
     "Saved result: %lld / %lld (%@%%)." : {
       "localizations" : {
         "en" : {
@@ -8115,6 +8745,118 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sélectionne cette réponse"
+          }
+        }
+      }
+    },
+    "Send a character to see dot/dash ratio and timing consistency." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyez un caractère pour voir le ratio point/tiret et la constance du minutage."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyez un caractère pour voir le ratio point/tiret et la constance du minutage."
+          }
+        }
+      }
+    },
+    "Send dash" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyer un tiret"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyer un tiret"
+          }
+        }
+      }
+    },
+    "Send dot" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyer un point"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyer un point"
+          }
+        }
+      }
+    },
+    "Sending check started. Send the displayed passage within 3:00." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérification d’envoi commencée. Envoyez le passage affiché en 3:00."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérification d’envoi commencée. Envoyez le passage affiché en 3:00."
+          }
+        }
+      }
+    },
+    "Sending feedback" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rétroaction sur l’envoi"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rétroaction sur l’envoi"
+          }
+        }
+      }
+    },
+    "Sending practice" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoi"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoi"
+          }
+        }
+      }
+    },
+    "Sending results" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultats d’envoi"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultats d’envoi"
           }
         }
       }
@@ -8259,6 +9001,22 @@
         }
       }
     },
+    "Start a check to show the plain-language passage." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Démarrez une vérification pour afficher le passage en langage clair."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Démarrez une vérification pour afficher le passage en langage clair."
+          }
+        }
+      }
+    },
     "Start all questions. Draw from all %lld questions" : {
       "localizations" : {
         "en" : {
@@ -8357,6 +9115,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Commencer un autre examen simulé"
+          }
+        }
+      }
+    },
+    "Start another sending check" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Démarrer une autre vérification d’envoi"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Démarrer une autre vérification d’envoi"
           }
         }
       }
@@ -8527,6 +9301,22 @@
         }
       }
     },
+    "Start sending check" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Démarrer la vérification d’envoi"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Démarrer la vérification d’envoi"
+          }
+        }
+      }
+    },
     "Start simulated exam" : {
       "localizations" : {
         "fr" : {
@@ -8689,6 +9479,38 @@
         }
       }
     },
+    "Straight key" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clé droite"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clé droite"
+          }
+        }
+      }
+    },
+    "Straight key. Hold to send tone, release to classify dot or dash." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clé droite. Maintenez pour envoyer la tonalité, puis relâchez pour classer le point ou le tiret."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clé droite. Maintenez pour envoyer la tonalité, puis relâchez pour classer le point ou le tiret."
+          }
+        }
+      }
+    },
     "Structured lessons" : {
       "localizations" : {
         "fr" : {
@@ -8726,13 +9548,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Étudiez les huit modules dans l’ordre. Les leçons sont actuellement rédigées en anglais, comme dans l’app Web; les questions officielles d’exercices utilisent toujours le sélecteur de langue."
+            "value" : "Étudiez les huit modules dans l’ordre. Les leçons sont actuellement rédigées en anglais, comme dans l’application Web; les questions officielles d’exercices utilisent toujours le sélecteur de langue."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Étudiez les huit modules dans l’ordre. Les leçons sont actuellement rédigées en anglais, comme dans l’app Web; les questions officielles d’exercices utilisent toujours le sélecteur de langue."
+            "value" : "Étudiez les huit modules dans l’ordre. Les leçons sont actuellement rédigées en anglais, comme dans l’application Web; les questions officielles d’exercices utilisent toujours le sélecteur de langue."
           }
         }
       }
@@ -8925,6 +9747,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Le changement de cours abandonnera la séance d’exercices ou l’examen simulé non terminé. La progression enregistrée reste sur cet appareil."
+          }
+        }
+      }
+    },
+    "Sync learning progress with iCloud" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchroniser la progression d’apprentissage avec iCloud"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchroniser la progression d’apprentissage avec iCloud"
           }
         }
       }
@@ -9147,6 +9985,22 @@
         }
       }
     },
+    "This development build bundles all study content locally. It has no accounts, analytics, telemetry, ads, remote config, third-party SDKs, or developer-operated servers. iCloud Sync is optional and off until you turn it on; import and export use local files you choose." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette version de développement intègre tout le contenu d’étude sur l’appareil. Elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucune configuration distante, aucun SDK tiers ni aucun serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette version de développement intègre tout le contenu d’étude sur l’appareil. Elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucune configuration distante, aucun SDK tiers ni aucun serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
+          }
+        }
+      }
+    },
     "This exam timing profile fixes speed controls at %@ character speed and %@ effective speed. Choose General Farnsworth to edit speed settings." : {
       "localizations" : {
         "en" : {
@@ -9181,6 +10035,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ce plan est intégré afin que l’ordre des modules et les objectifs restent visibles hors ligne pendant la rédaction de la leçon complète."
+          }
+        }
+      }
+    },
+    "This stops iCloud Sync, deletes the app's private iCloud progress, and lets you choose whether to keep progress on this device. Other devices with iCloud Sync still on can upload their progress again." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ceci désactive la synchronisation iCloud, supprime la progression privée de l’application dans iCloud et vous permet de choisir de conserver ou non la progression sur cet appareil. Les autres appareils où la synchronisation iCloud est toujours activée peuvent téléverser de nouveau leur progression."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ceci désactive la synchronisation iCloud, supprime la progression privée de l’application dans iCloud et vous permet de choisir de conserver ou non la progression sur cet appareil. Les autres appareils où la synchronisation iCloud est toujours activée peuvent téléverser de nouveau leur progression."
+          }
+        }
+      }
+    },
+    "Time remaining: %@" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temps restant : %@"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temps restant : %@"
           }
         }
       }
@@ -9899,568 +10785,18 @@
         }
       }
     },
-    "%@, dot/dash ratio %@, timing consistency %lld%%." : {
+    "Reset iCloud progress through the cloud deletion flow." : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@, ratio point/tiret %@, constance du minutage %lld %%."
+            "value" : "Réinitialisez la progression iCloud au moyen de la suppression infonuagique."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@, ratio point/tiret %@, constance du minutage %lld %%."
-          }
-        }
-      }
-    },
-    "3-minute sending check" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vérification d’envoi de 3 minutes"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vérification d’envoi de 3 minutes"
-          }
-        }
-      }
-    },
-    "Clear sending practice" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Effacer l’exercice d’envoi"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Effacer l’exercice d’envoi"
-          }
-        }
-      }
-    },
-    "Current elements" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Éléments actuels"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Éléments actuels"
-          }
-        }
-      }
-    },
-    "Dash" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tiret"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tiret"
-          }
-        }
-      }
-    },
-    "Dash paddle. Hold for repeated dashes." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Palette de tirets. Maintenez pour répéter les tirets."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Palette de tirets. Maintenez pour répéter les tirets."
-          }
-        }
-      }
-    },
-    "Decoded %@." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ décodé."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ décodé."
-          }
-        }
-      }
-    },
-    "Decoded text" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Texte décodé"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Texte décodé"
-          }
-        }
-      }
-    },
-    "Dot" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Point"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Point"
-          }
-        }
-      }
-    },
-    "Dot paddle. Hold for repeated dots." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Palette de points. Maintenez pour répéter les points."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Palette de points. Maintenez pour répéter les points."
-          }
-        }
-      }
-    },
-    "End and grade" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Terminer et corriger"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Terminer et corriger"
-          }
-        }
-      }
-    },
-    "Error signal received: previous character deleted." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Signal d’erreur reçu : le caractère précédent a été supprimé."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Signal d’erreur reçu : le caractère précédent a été supprimé."
-          }
-        }
-      }
-    },
-    "Hold key" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Maintenir la clé"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Maintenir la clé"
-          }
-        }
-      }
-    },
-    "Iambic paddle emulation" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Émulation de palettes iambiques"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Émulation de palettes iambiques"
-          }
-        }
-      }
-    },
-    "Latest feedback" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rétroaction récente"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rétroaction récente"
-          }
-        }
-      }
-    },
-    "No character matches %@." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucun caractère ne correspond à %@."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucun caractère ne correspond à %@."
-          }
-        }
-      }
-    },
-    "No text sent." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucun texte envoyé."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucun texte envoyé."
-          }
-        }
-      }
-    },
-    "not enough dots and dashes" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "pas assez de points et de tirets"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "pas assez de points et de tirets"
-          }
-        }
-      }
-    },
-    "Practise tap timing with a straight key or iambic paddles." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exercez le minutage des appuis avec une clé droite ou des palettes iambiques."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exercez le minutage des appuis avec une clé droite ou des palettes iambiques."
-          }
-        }
-      }
-    },
-    "Send a character to see dot/dash ratio and timing consistency." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Envoyez un caractère pour voir le ratio point/tiret et la constance du minutage."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Envoyez un caractère pour voir le ratio point/tiret et la constance du minutage."
-          }
-        }
-      }
-    },
-    "Sending check started. Send the displayed passage within 3:00." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vérification d’envoi commencée. Envoyez le passage affiché en 3:00."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vérification d’envoi commencée. Envoyez le passage affiché en 3:00."
-          }
-        }
-      }
-    },
-    "Sending feedback" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rétroaction sur l’envoi"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rétroaction sur l’envoi"
-          }
-        }
-      }
-    },
-    "Sending practice" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Envoi"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Envoi"
-          }
-        }
-      }
-    },
-    "Sending results" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Résultats d’envoi"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Résultats d’envoi"
-          }
-        }
-      }
-    },
-    "Start a check to show the plain-language passage." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Démarrez une vérification pour afficher le passage en langage clair."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Démarrez une vérification pour afficher le passage en langage clair."
-          }
-        }
-      }
-    },
-    "Start another sending check" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Démarrer une autre vérification d’envoi"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Démarrer une autre vérification d’envoi"
-          }
-        }
-      }
-    },
-    "Start sending check" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Démarrer la vérification d’envoi"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Démarrer la vérification d’envoi"
-          }
-        }
-      }
-    },
-    "Straight key" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clé droite"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clé droite"
-          }
-        }
-      }
-    },
-    "Straight key. Hold to send tone, release to classify dot or dash." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clé droite. Maintenez pour envoyer la tonalité, puis relâchez pour classer le point ou le tiret."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clé droite. Maintenez pour envoyer la tonalité, puis relâchez pour classer le point ou le tiret."
-          }
-        }
-      }
-    },
-    "Time remaining: %@" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Temps restant : %@"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Temps restant : %@"
-          }
-        }
-      }
-    },
-    "Practise tap timing with a straight key or iambic-style paddles. On Mac and iPad hardware keyboards, focus this screen first, then hold Space for the straight key; use J for dots and K for dashes. On iPhone and iPad, use the large touch targets." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exercez le minutage des appuis avec une clé droite ou des palettes de type iambique. Sur Mac et avec les claviers matériels iPad, placez d’abord le foyer sur cet écran, puis maintenez Espace pour la clé droite; utilisez J pour les points et K pour les tirets. Sur iPhone et iPad, utilisez les grandes cibles tactiles."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exercez le minutage des appuis avec une clé droite ou des palettes de type iambique. Sur Mac et avec les claviers matériels iPad, placez d’abord le foyer sur cet écran, puis maintenez Espace pour la clé droite; utilisez J pour les points et K pour les tirets. Sur iPhone et iPad, utilisez les grandes cibles tactiles."
-          }
-        }
-      }
-    },
-    "Rule: unsent characters at 0:00 count as errors; 5 or fewer errors count as 100% and pass." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Règle : les caractères non envoyés à 0:00 comptent comme erreurs; 5 erreurs ou moins donnent 100 % et la réussite."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Règle : les caractères non envoyés à 0:00 comptent comme erreurs; 5 erreurs ou moins donnent 100 % et la réussite."
-          }
-        }
-      }
-    },
-    "Send dot" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Envoyer un point"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Envoyer un point"
-          }
-        }
-      }
-    },
-    "Send dash" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Envoyer un tiret"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Envoyer un tiret"
-          }
-        }
-      }
-    },
-    "Lessons %lld–%lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lessons %1$lld–%2$lld"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leçons %1$lld à %2$lld"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leçons %1$lld à %2$lld"
+            "value" : "Réinitialisez la progression iCloud au moyen de la suppression infonuagique."
           }
         }
       }
