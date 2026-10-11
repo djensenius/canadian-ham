@@ -46,7 +46,13 @@ Test what changed, once, at the right level. Full Apple suites are slow (20-40 m
 platform) and share one build lock, so don't run them by reflex.
 - **While iterating:** run only what you touched: the relevant web/package tests, Apple unit
   tests, and the specific UI test classes or methods with `-only-testing:` (one platform).
-- **Once per PR, before review:** run the full suite only for each platform whose code changed:
+- **During review (internal reviewer and Copilot):** keep running only the relevant tests: the
+  affected web/package tests and the specific Apple test classes or methods with
+  `-only-testing:` for what each fix touches. No full suites during review rounds.
+- **Once per PR, just before merge:** after internal review is approved and all Copilot feedback
+  is addressed (and the branch is merged up to date with main), run the full suite once for each
+  platform whose code changed, then merge. If it fails, fix with targeted tests and rerun only
+  the failed platform's full suite. Which platforms count as changed:
   - web or TS package changes: `pnpm typecheck`, `pnpm test`, plus the checks for what changed
     (`pnpm build:web` and the URL/CSP audit for web; `pnpm check:schemas` and `pnpm import:check`
     for content and schemas).
@@ -62,8 +68,8 @@ platform) and share one build lock, so don't run them by reflex.
     `node scripts/check-apple-text-sources.ts`, plus the affected platforms.
 - **No Apple suites** for web-only, docs-only or Backlog-only changes, and never rerun suites
   after a commit that only changes `.backlog/` or docs.
-- **Fix rounds:** rerun the failing or changed tests with `-only-testing:`, then one final full
-  run of the affected platforms only.
+- **Fix rounds:** rerun only the failing or changed tests with `-only-testing:`; the single full
+  run happens at merge time (above).
 - **Release candidate (task-1.6):** the full four-platform run with every accessibility audit,
   plus the manual checks in `docs/release/release-checklist.md`.
 - Record per-test results for the full runs you did in the task notes and PR body, and say
