@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-11 13:34'
+updated_date: '2026-10-11 15:14'
 labels:
   - content
   - apple
@@ -78,6 +78,8 @@ Final enlarged-view correction: updated the enlarged sheet layout so it computes
 Final validation: pnpm check:figures; node scripts/check-figures.mjs --self-test; TZ=UTC pnpm --filter @canadian-ham/web test (161 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift (20 tests); node scripts/check-apple-text-sources.ts; targeted iOS screenshot tests for light/dark figures in /tmp/task381-r11-screens.xcresult; targeted largest-accessibility enlarged-wheel test in /tmp/task381-large8.xcresult; placeholder-hiding test in /tmp/task381-placeholder.xcresult. Screenshots exported to docs/evidence/task-38.1/app/.
 
 Taking over after r2 REQUEST CHANGES at fa889257. First priority is restoring coverage removed by previous worker: default performAccessibilityAudit() remains unfiltered, AX5 must exercise real enlarge control and inline fit, and disclosure rows must be activated/asserted.
+
+R2 handoff/WIP after commit 3bf6c419: Done: restored parser fixture parity for invalid ids and import.meta.url fixture resolution; expanded wheel text equivalent to 12 rows and updated Swift fixture test; hardened check-figures for non-double-quoted attributes, DOCTYPE/ENTITY/CDATA, self-test coverage, stroke/text clearance, CI self-test wiring; moved figure labels/formulas clear of strokes, increased wheel formulas, regenerated Apple assets and qlmanage evidence; removed figure-card level tap/traits/actions/identifier; added explicit row identifiers, macOS sheet min frame, lesson-scoped navigation toolbar background, custom enlarged header, and RootView toolbar rollback. In progress: Apple UI test coverage restoration -- tests now target image/enlarge identifiers, assert 12 disclosure rows, exercise AX5 inline fit + real enlarge tap, and run full default performAccessibilityAudit after inline/enlarged/expanded states, but targeted iOS validation is still waiting on another xbuild lock and may need further tuning for audit viewport contrast. Not started/remaining: dark iOS targeted run, AX5 targeted run, placeholder targeted rerun, macOS build/targeted test, fresh app screenshot export into docs/evidence/task-38.1/app, final check:apple-l10n after any catalog changes, final task notes/Done after validation.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
