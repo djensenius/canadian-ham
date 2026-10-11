@@ -1235,6 +1235,7 @@ final class ProgressStoreService: ObservableObject {
 #if DEBUG
             if failNextImportAfterMorseWriteForTesting {
                 failNextImportAfterMorseWriteForTesting = false
+                try context.save()
                 throw ProgressStoreInjectedFailure.importAfterMorseWrite
             }
 #endif
