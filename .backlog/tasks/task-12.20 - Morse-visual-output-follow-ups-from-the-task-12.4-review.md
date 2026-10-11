@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-07 12:14'
-updated_date: '2026-10-11 10:23'
+updated_date: '2026-10-11 10:30'
 labels: []
 dependencies:
   - TASK-12.4
@@ -65,5 +65,5 @@ Review r2 follow-up on tip 6eeda354c240e6c3661ec2a13b9adcb3e29298af: restored th
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Addressed r2 visual-audit follow-ups: restored main's fixed-timing note styling, kept protected-area assertions on every settle-helper path, and verified lower Morse-home audits three times plus the other lower-half settle-helper audits. Full suites were deferred per updated coordinator policy.
+Morse visual-output follow-ups: lower-half audits assert their targets stay visible after settling, with the protected-area (nav bar) check on every path; the unreachable luminance reason removed (TS and Swift) with an exact-area-cap test; safety-note areas in square points / px² with grouped digits; the web unlit lamp on paper; Reduce Motion and Dim Flashing Lights stop the beacon in all four playback owners; the settle helper fails if the scroll view is missing; Apple export/import includes Morse settings (outputMode, web-compatible haptics mapping, partial imports) with a round-trip test. Main's fixed-timing note styling is kept; the audit false positive is handled by test-only precise positioning (lower Morse-home audits passed 3 times). Full suites at merge time.
 <!-- SECTION:FINAL_SUMMARY:END -->
