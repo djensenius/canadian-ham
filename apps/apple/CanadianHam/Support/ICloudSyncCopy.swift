@@ -9,7 +9,7 @@ enum ICloudSyncCopy {
     static let disabledAfterRestart = String(localized: "iCloud Sync will turn off after you restart the app.")
     static let deleteProgressButton = String(localized: "Delete iCloud Progress")
     static let deleteProgressTitle = String(localized: "Delete iCloud Progress?")
-    static let deleteProgressMessage = String(localized: "This stops iCloud Sync, deletes the app's private iCloud progress, and lets you choose whether to keep progress on this device.")
+    static let deleteProgressMessage = String(localized: "This stops iCloud Sync, deletes the app's private iCloud progress, and lets you choose whether to keep progress on this device. Other devices with iCloud Sync still on can upload their progress again.")
     static let deleteProgressKeepLocal = String(localized: "Delete from iCloud, keep on device")
     static let deleteProgressDeleteLocal = String(localized: "Delete from iCloud and this device")
     static let deleteProgressSuccess = String(localized: "iCloud progress was deleted.")

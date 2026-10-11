@@ -867,20 +867,35 @@ final class ProgressStoreService: ObservableObject {
     ) throws {
         guard layout == .split, !snapshots.isEmpty else { return }
         let context = ModelContext(container)
-        for entity in try context.fetch(FetchDescriptor<PreferencesEntity>()) {
-            context.delete(entity)
-        }
+        let existing = Dictionary(uniqueKeysWithValues: try context.fetch(FetchDescriptor<PreferencesEntity>()).map { ($0.key, $0) })
         for snapshot in snapshots {
-            let entity = PreferencesEntity(
-                key: snapshot.key,
-                practiceMode: snapshot.practiceMode,
-                examTimerEnabled: snapshot.examTimerEnabled,
-                language: snapshot.language,
-                theme: snapshot.theme,
-                archivedLessonProgressData: snapshot.archivedLessonProgressData,
-                archivedLessonQuizAttemptsData: snapshot.archivedLessonQuizAttemptsData
-            )
-            context.insert(entity)
+            if let entity = existing[snapshot.key] {
+                if entity.practiceMode == ApplePreferences.default.practiceMode.rawValue,
+                   !entity.examTimerEnabled,
+                   entity.language == ApplePreferences.default.language.rawValue,
+                   entity.theme == ApplePreferences.default.theme.rawValue {
+                    entity.practiceMode = snapshot.practiceMode
+                    entity.examTimerEnabled = snapshot.examTimerEnabled
+                    entity.language = snapshot.language
+                    entity.theme = snapshot.theme
+                }
+                if entity.archivedLessonProgressData == Data("[]".utf8) {
+                    entity.archivedLessonProgressData = snapshot.archivedLessonProgressData
+                }
+                if entity.archivedLessonQuizAttemptsData == Data("[]".utf8) {
+                    entity.archivedLessonQuizAttemptsData = snapshot.archivedLessonQuizAttemptsData
+                }
+            } else {
+                context.insert(PreferencesEntity(
+                    key: snapshot.key,
+                    practiceMode: snapshot.practiceMode,
+                    examTimerEnabled: snapshot.examTimerEnabled,
+                    language: snapshot.language,
+                    theme: snapshot.theme,
+                    archivedLessonProgressData: snapshot.archivedLessonProgressData,
+                    archivedLessonQuizAttemptsData: snapshot.archivedLessonQuizAttemptsData
+                ))
+            }
         }
         try context.save()
     }

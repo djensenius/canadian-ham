@@ -595,10 +595,10 @@ final class ProgressStoreTests: XCTestCase {
         try await store.deleteICloudProgress(localDataChoice: .keepLocal, client: client, defaults: defaults)
 
         XCTAssertTrue(deletedAfterLocalReopen)
-         XCTAssertFalse(ICloudSyncSettings.storedOptIn(defaults: defaults))
+        XCTAssertFalse(ICloudSyncSettings.storedOptIn(defaults: defaults))
         XCTAssertFalse(store.isICloudSyncEnabled)
         XCTAssertEqual(try store.questionProgressRecords(), [record])
-        let restarted = try ProgressStoreService.inMemoryForTests(iCloudSyncEnabled: ICloudSyncSettings.storedOptIn(), layout: .split)
+        let restarted = try ProgressStoreService.inMemoryForTests(iCloudSyncEnabled: ICloudSyncSettings.storedOptIn(defaults: defaults), layout: .split)
         XCTAssertFalse(restarted.isICloudSyncEnabled)
     }
 
@@ -1830,6 +1830,58 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertThrowsError(try store.importData(data, bank: bank))
     }
 
+    func testMigratesArchivedLessonQuizAttemptsEvenWhenLearningProgressEntitiesExist() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
+        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+        let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
+        let context = ModelContext(container)
+        let existingLesson = LessonProgressRecord(lessonId: "L-005-01", readAt: "2026-01-01T03:10:00.000Z", readCount: 1)
+        let archivedLesson = LessonProgressRecord(lessonId: "L-005-02", readAt: "2026-01-02T03:10:00.000Z", readCount: 2)
+        let existingAttempt = LessonQuizAttempt(
+            id: "existing-quiz-attempt",
+            quizId: "QZ-L-005-01-A",
+            lessonId: "L-005-01",
+            submittedAt: "2026-01-01T03:20:00.000Z",
+            correct: 1,
+            total: 1,
+            percent: 100,
+            officialQuestionIds: ["B-005-001-001"],
+            incorrectOfficialQuestionIds: [],
+            incorrectConceptCheckIds: []
+        )
+        let archivedAttempt = LessonQuizAttempt(
+            id: "archived-quiz-attempt",
+            quizId: "QZ-L-005-01-A",
+            lessonId: "L-005-01",
+            submittedAt: "2026-01-02T03:20:00.000Z",
+            correct: 1,
+            total: 1,
+            percent: 100,
+            officialQuestionIds: ["B-005-001-001"],
+            incorrectOfficialQuestionIds: [],
+            incorrectConceptCheckIds: []
+        )
+        context.insert(LessonProgressEntity(lessonId: existingLesson.lessonId, readAt: existingLesson.readAt, readCount: existingLesson.readCount, deviceId: "device"))
+        context.insert(LessonQuizAttemptEntity(id: existingAttempt.id, quizId: existingAttempt.quizId, lessonId: existingAttempt.lessonId, submittedAt: existingAttempt.submittedAt, payloadData: try JSONEncoder().encode(existingAttempt), deviceId: "device"))
+        context.insert(PreferencesEntity(
+            practiceMode: ApplePreferences.PracticeMode.immediate.rawValue,
+            examTimerEnabled: false,
+            language: BankLanguage.english.rawValue,
+            theme: ApplePreferences.Theme.system.rawValue,
+            archivedLessonProgressData: try JSONEncoder().encode(try archivedArray([archivedLesson])),
+            archivedLessonQuizAttemptsData: try JSONEncoder().encode(try archivedArray([archivedAttempt]))
+        ))
+        try context.save()
+
+        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL(), localDeviceID: "device")
+
+        XCTAssertEqual(try store.lessonProgressRecords(), [existingLesson, archivedLesson])
+        XCTAssertEqual(try store.lessonQuizAttempts(), [existingAttempt, archivedAttempt])
+        let exported = try store.exportData(bank: bank, exportedAt: "2026-01-02T05:04:05.000Z")
+        XCTAssertEqual(exported.lessonQuizAttempts, try archivedArray([existingAttempt, archivedAttempt]))
+    }
+
     func testMigratesCommittedPreV2StoreFixtureWithAllDataIntact() throws {
         let fixtureURL = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
@@ -1847,7 +1899,14 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(progress.count, 1)
         XCTAssertEqual(progress.first?.questionId, "B-001-001-001")
         XCTAssertEqual(progress.first?.attempts, 2)
-        XCTAssertEqual(try store.examAttempts().map(\.id), ["fixture-attempt-1"])
+        XCTAssertEqual(progress.first?.correctAttempts, 1)
+        XCTAssertEqual(progress.first?.recentResults, [false, true])
+        XCTAssertEqual(progress.first?.leitner, LeitnerState(box: 1, dueAt: "2026-01-03T03:04:05.000Z"))
+        XCTAssertEqual(progress.first?.notes, "pre-v2 fixture")
+        let attempts = try store.examAttempts()
+        XCTAssertEqual(attempts.map(\.id), ["fixture-attempt-1"])
+        XCTAssertEqual(attempts.first?.seed, "pre-v2-fixture")
+        XCTAssertEqual(attempts.first?.submittedAt, "2026-01-02T04:04:05.000Z")
         XCTAssertEqual(store.preferences.practiceMode, .reviewLater)
         XCTAssertTrue(store.preferences.examTimerEnabled)
         XCTAssertEqual(store.preferences.language, .french)

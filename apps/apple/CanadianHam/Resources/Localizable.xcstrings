@@ -2364,13 +2364,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cette version de développement regroupe tout le contenu d’étude localement. Elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucune configuration distante, aucun SDK tiers ni aucun serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
+            "value" : "Cette version de développement intègre tout le contenu d’étude sur l’appareil. Elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucune configuration distante, aucun SDK tiers ni aucun serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cette version de développement regroupe tout le contenu d’étude localement. Elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucune configuration distante, aucun SDK tiers ni aucun serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
+            "value" : "Cette version de développement intègre tout le contenu d’étude sur l’appareil. Elle n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucune configuration distante, aucun SDK tiers ni aucun serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
           }
         }
       }
@@ -2444,13 +2444,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La synchronisation iCloud s’activera après le redémarrage de l’app."
+            "value" : "La synchronisation iCloud s’activera après le redémarrage de l’application."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La synchronisation iCloud s’activera après le redémarrage de l’app."
+            "value" : "La synchronisation iCloud s’activera après le redémarrage de l’application."
           }
         }
       }
@@ -2460,13 +2460,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La synchronisation iCloud se désactivera après le redémarrage de l’app."
+            "value" : "La synchronisation iCloud se désactivera après le redémarrage de l’application."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La synchronisation iCloud se désactivera après le redémarrage de l’app."
+            "value" : "La synchronisation iCloud se désactivera après le redémarrage de l’application."
           }
         }
       }
@@ -2508,13 +2508,29 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ceci désactive la synchronisation iCloud, supprime la progression privée de l’app dans iCloud et vous permet de choisir de conserver ou non la progression sur cet appareil."
+            "value" : "Ceci désactive la synchronisation iCloud, supprime la progression privée de l’application dans iCloud et vous permet de choisir de conserver ou non la progression sur cet appareil."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ceci désactive la synchronisation iCloud, supprime la progression privée de l’app dans iCloud et vous permet de choisir de conserver ou non la progression sur cet appareil."
+            "value" : "Ceci désactive la synchronisation iCloud, supprime la progression privée de l’application dans iCloud et vous permet de choisir de conserver ou non la progression sur cet appareil."
+          }
+        }
+      }
+    },
+    "This stops iCloud Sync, deletes the app's private iCloud progress, and lets you choose whether to keep progress on this device. Other devices with iCloud Sync still on can upload their progress again." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ceci désactive la synchronisation iCloud, supprime la progression privée de l’application dans iCloud et vous permet de choisir de conserver ou non la progression sur cet appareil. Les autres appareils où la synchronisation iCloud est toujours activée peuvent téléverser de nouveau leur progression."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ceci désactive la synchronisation iCloud, supprime la progression privée de l’application dans iCloud et vous permet de choisir de conserver ou non la progression sur cet appareil. Les autres appareils où la synchronisation iCloud est toujours activée peuvent téléverser de nouveau leur progression."
           }
         }
       }
@@ -8822,13 +8838,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Étudiez les huit modules dans l’ordre. Les leçons sont actuellement rédigées en anglais, comme dans l’app Web; les questions officielles d’exercices utilisent toujours le sélecteur de langue."
+            "value" : "Étudiez les huit modules dans l’ordre. Les leçons sont actuellement rédigées en anglais, comme dans l’application Web; les questions officielles d’exercices utilisent toujours le sélecteur de langue."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Étudiez les huit modules dans l’ordre. Les leçons sont actuellement rédigées en anglais, comme dans l’app Web; les questions officielles d’exercices utilisent toujours le sélecteur de langue."
+            "value" : "Étudiez les huit modules dans l’ordre. Les leçons sont actuellement rédigées en anglais, comme dans l’application Web; les questions officielles d’exercices utilisent toujours le sélecteur de langue."
           }
         }
       }
