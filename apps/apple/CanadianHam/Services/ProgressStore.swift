@@ -1544,12 +1544,7 @@ final class ProgressStoreService: ObservableObject {
             if let writeContext {
                 otherSums = writeContext.otherDeviceSumsByKey[key, default: CounterSums(attempts: 0, correctAttempts: 0)]
             } else {
-                let otherRows = try questionProgressEntities(questionId: record.questionId, bankId: record.bankId)
-                    .filter { $0.deviceId != rowDeviceId }
-                otherSums = CounterSums(
-                    attempts: otherRows.map(\.attempts).reduce(0, +),
-                    correctAttempts: otherRows.map(\.correctAttempts).reduce(0, +)
-                )
+                otherSums = try otherDeviceQuestionProgressSums(questionId: record.questionId, bankId: record.bankId, excludingDeviceId: rowDeviceId)
             }
             let ownAttempts = max(ownOldAttempts, record.attempts - otherSums.attempts)
             let ownCorrectAttempts = min(ownAttempts, max(ownOldCorrectAttempts, record.correctAttempts - otherSums.correctAttempts))
@@ -1594,6 +1589,18 @@ final class ProgressStoreService: ObservableObject {
                 deviceId: rowDeviceId
             ))
         }
+    }
+
+    private func otherDeviceQuestionProgressSums(questionId: String, bankId: String, excludingDeviceId deviceId: String) throws -> CounterSums {
+        let otherRowsByDevice = Dictionary(grouping: try questionProgressEntities(questionId: questionId, bankId: bankId).filter { ($0.deviceId.isEmpty ? localDeviceID : $0.deviceId) != deviceId }) { entity in
+            entity.deviceId.isEmpty ? localDeviceID : entity.deviceId
+        }
+        var sums = CounterSums(attempts: 0, correctAttempts: 0)
+        for rows in otherRowsByDevice.values {
+            sums.attempts += rows.map(\.attempts).max() ?? 0
+            sums.correctAttempts += rows.map(\.correctAttempts).max() ?? 0
+        }
+        return sums
     }
 
     private func questionProgressEntity(questionId: String, bankId: String, deviceId: String) throws -> QuestionProgressEntity? {
@@ -1653,7 +1660,7 @@ final class ProgressStoreService: ObservableObject {
         return try context.fetch(descriptor)
     }
 
-    private func upsertLessonProgress(_ record: LessonProgressRecord, deviceId: String? = nil) throws {
+    private func upsertLessonProgress(_ record: LessonProgressRecord, deviceId: String? = nil, mergesExistingReadCount: Bool = false) throws {
         let rowDeviceId = deviceId ?? localDeviceID
         if deviceId == nil,
            let currentMerged = try lessonProgressRecords().first(where: { $0.lessonId == record.lessonId }),
@@ -1665,18 +1672,20 @@ final class ProgressStoreService: ObservableObject {
         let descriptor = FetchDescriptor<LessonProgressEntity>(predicate: #Predicate { $0.lessonId == targetLessonId && $0.deviceId == targetDeviceId })
         let entities = try context.fetch(descriptor)
         let existing = entities.first
-        let ownOldReadCount = existing?.readCount ?? 0
+        let ownOldReadCount = entities.map(\.readCount).max() ?? 0
         let writeRecord: LessonProgressRecord
         if deviceId == nil {
-            let allDescriptor = FetchDescriptor<LessonProgressEntity>(predicate: #Predicate { $0.lessonId == targetLessonId })
-            let otherReadCount = try context.fetch(allDescriptor)
-                .filter { $0.deviceId != rowDeviceId }
-                .map(\.readCount)
-                .reduce(0, +)
+            let otherReadCount = try otherDeviceLessonReadCount(lessonId: targetLessonId, excludingDeviceId: rowDeviceId)
             writeRecord = LessonProgressRecord(
                 lessonId: record.lessonId,
                 readAt: record.readAt,
                 readCount: max(ownOldReadCount, record.readCount - otherReadCount)
+            )
+        } else if mergesExistingReadCount {
+            writeRecord = LessonProgressRecord(
+                lessonId: record.lessonId,
+                readAt: max(entities.map(\.readAt).max() ?? record.readAt, record.readAt),
+                readCount: max(ownOldReadCount, record.readCount)
             )
         } else {
             writeRecord = record
@@ -1692,6 +1701,15 @@ final class ProgressStoreService: ObservableObject {
         for duplicate in entities.dropFirst() {
             context.delete(duplicate)
         }
+    }
+
+    private func otherDeviceLessonReadCount(lessonId: String, excludingDeviceId deviceId: String) throws -> Int {
+        let targetLessonId = lessonId
+        let descriptor = FetchDescriptor<LessonProgressEntity>(predicate: #Predicate { $0.lessonId == targetLessonId })
+        let otherRowsByDevice = Dictionary(grouping: try context.fetch(descriptor).filter { ($0.deviceId.isEmpty ? localDeviceID : $0.deviceId) != deviceId }) { entity in
+            entity.deviceId.isEmpty ? localDeviceID : entity.deviceId
+        }
+        return otherRowsByDevice.values.map { rows in rows.map(\.readCount).max() ?? 0 }.reduce(0, +)
     }
 
     private func upsertLessonQuizAttempt(_ attempt: LessonQuizAttempt, deviceId: String? = nil) throws {
@@ -1915,7 +1933,7 @@ final class ProgressStoreService: ObservableObject {
         let entity = try preferencesEntity(createIfMissing: true, saveIfCreated: false)
         if let lessonProgress = try? decoder.decode([LessonProgressRecord].self, from: entity.archivedLessonProgressData), !lessonProgress.isEmpty {
             for record in lessonProgress {
-                try upsertLessonProgress(record, deviceId: localDeviceID)
+                try upsertLessonProgress(record, deviceId: localDeviceID, mergesExistingReadCount: true)
             }
             entity.archivedLessonProgressData = Data("[]".utf8)
         }

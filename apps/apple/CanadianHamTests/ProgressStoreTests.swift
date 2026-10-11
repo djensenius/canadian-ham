@@ -535,6 +535,26 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(try store.questionProgressRecords(), [next])
     }
 
+    func testLessonWriteAfterImportedAndSyncedDuplicateRowsAddsExactlyOneRead() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let iphone = try ProgressStoreService.inMemoryForTests(localDeviceID: "iphone")
+        let iphoneLesson = LessonProgressRecord(lessonId: "L-005-01", readAt: "2026-01-02T03:00:00.000Z", readCount: 2)
+        try iphone.saveLessonProgress(iphoneLesson)
+        let exported = try iphone.exportData(bank: bank, exportedAt: "2026-01-02T04:00:00.000Z")
+
+        let ipad = try ProgressStoreService.inMemoryForTests(localDeviceID: "ipad")
+        try ipad.importData(exported, bank: bank)
+        let syncContext = ModelContext(ipad.container)
+        syncContext.insert(LessonProgressEntity(lessonId: iphoneLesson.lessonId, readAt: iphoneLesson.readAt, readCount: iphoneLesson.readCount, deviceId: "iphone"))
+        try syncContext.save()
+        XCTAssertEqual(try ipad.lessonProgressRecords(), [iphoneLesson])
+
+        let ipadRead = LessonProgressRecord(lessonId: iphoneLesson.lessonId, readAt: "2026-01-02T05:00:00.000Z", readCount: iphoneLesson.readCount + 1)
+        try ipad.saveLessonProgress(ipadRead)
+
+        XCTAssertEqual(try ipad.lessonProgressRecords(), [ipadRead])
+    }
+
     func testImportValidationRejectsDuplicateMorseDailyActivityDates() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let data = ProgressExportV1(
@@ -2009,6 +2029,29 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(try store.lessonQuizAttempts(), [existingAttempt, archivedAttempt])
         let exported = try store.exportData(bank: bank, exportedAt: "2026-01-02T05:04:05.000Z")
         XCTAssertEqual(exported.lessonQuizAttempts, try archivedArray([existingAttempt, archivedAttempt]))
+    }
+
+    func testMigratesArchivedLessonProgressKeepsMaxOwnReadCount() throws {
+        let schema = Schema(versionedSchema: CanadianHamProgressSchemaV3.self)
+        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+        let container = try ModelContainer(for: schema, migrationPlan: CanadianHamProgressMigrationPlan.self, configurations: [configuration])
+        let context = ModelContext(container)
+        let existingLesson = LessonProgressRecord(lessonId: "L-005-01", readAt: "2026-01-03T03:10:00.000Z", readCount: 5)
+        let archivedLesson = LessonProgressRecord(lessonId: existingLesson.lessonId, readAt: "2026-01-02T03:10:00.000Z", readCount: 2)
+        context.insert(LessonProgressEntity(lessonId: existingLesson.lessonId, readAt: existingLesson.readAt, readCount: existingLesson.readCount, deviceId: "device"))
+        context.insert(PreferencesEntity(
+            practiceMode: ApplePreferences.PracticeMode.immediate.rawValue,
+            examTimerEnabled: false,
+            language: BankLanguage.english.rawValue,
+            theme: ApplePreferences.Theme.system.rawValue,
+            archivedLessonProgressData: try JSONEncoder().encode(try archivedArray([archivedLesson])),
+            archivedLessonQuizAttemptsData: try JSONEncoder().encode([ArchivedJSON]())
+        ))
+        try context.save()
+
+        let store = try ProgressStoreService(container: container, morseCourseProgressURL: try temporaryMorseCourseProgressURL(), localDeviceID: "device")
+
+        XCTAssertEqual(try store.lessonProgressRecords(), [existingLesson])
     }
 
     func testMigratesCommittedPreV2StoreFixtureWithAllDataIntact() throws {
