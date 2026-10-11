@@ -2275,10 +2275,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
     private func nudgeScrollableContentUp(in app: XCUIApplication) {
         let scrollView = app.scrollViews.firstMatch
         guard scrollView.waitForExistence(timeout: 1) else { return }
-        let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.75))
-        let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
-        start.press(forDuration: 0.01, thenDragTo: end)
-        waitBriefly()
+        for _ in 0..<2 {
+            let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.75))
+            let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
+            start.press(forDuration: 0.01, thenDragTo: end)
+            waitBriefly()
+        }
     }
 
     private func scrollUntilHittable(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
