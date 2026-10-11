@@ -46,5 +46,5 @@ Review r2 follow-up on tip 6eeda354c240e6c3661ec2a13b9adcb3e29298af: removed the
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented Apple sending teardown cancellation, Apple/web held-key release before grading, and count-invariant French diff summary. Verified by web sending tests, targeted/full iOS UI/unit tests, and full affected Apple suites.
+Addressed r2 sending-practice follow-ups: removed the unused held-key DEBUG button/helper and added Back-from-running-exam cancellation for the pushed Exam-style check. Verified with targeted iOS UI tests: Back cancellation 1/1 passed and related sending tests passed in the 7/7 targeted run.
 <!-- SECTION:FINAL_SUMMARY:END -->
