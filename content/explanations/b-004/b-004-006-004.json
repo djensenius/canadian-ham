@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-006-004.\n\nWhy the correct answer is right: Ten percent of 100 ohms is 10 ohms, so the tolerance range is 100 - 10 to 100 + 10, or 90 ohms to 110 ohms.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"90 ohms to 100 ohms\": This gives only the lower half of the tolerance range. Calculation check: the upper limit should be 100 + 10 = 110 ohms.\n- sourceIndex 2: \"10 ohms to 100 ohms\": This mistakes the 10-ohm allowed change for the lower limit and leaves out the upper side. Calculation check: the low limit is 100 - 10 = 90 ohms, not 10 ohms.\n- sourceIndex 3: \"80 ohms to 120 ohms\": This uses a ±20-ohm spread. Calculation check: a 20-ohm change from 100 ohms would be 20%, not 10%.",
+    "en": "Question B-004-006-004.\n\nWhy the correct answer is right: Ten percent of 100 ohms is 10 ohms. The range is 100 - 10 to 100 + 10, or 90 ohms to 110 ohms.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"90 ohms to 100 ohms\": This gives only the lower half of the tolerance range. Calculation check: the upper limit should be 100 + 10 = 110 ohms.\n- sourceIndex 2: \"10 ohms to 100 ohms\": This mistakes the 10-ohm allowed change for the lower limit and leaves out the upper side. Calculation check: the low limit is 100 - 10 = 90 ohms, not 10 ohms.\n- sourceIndex 3: \"80 ohms to 120 ohms\": This uses a ±20-ohm spread. Calculation check: a 20-ohm change from 100 ohms would be 20%, not 10%.",
     "fr": null
   },
   "citations": [

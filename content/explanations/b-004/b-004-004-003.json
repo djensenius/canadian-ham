@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-004-003.\n\nWhy the correct answer is right: The FET gate controls channel resistance and therefore channel current.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Drain\": The drain is one end of the channel, not the control electrode.\n- sourceIndex 2: \"Source\": The source is the other channel terminal, not the control electrode.\n- sourceIndex 3: \"Collector\": Collector is a bipolar transistor terminal, not a FET control electrode.",
+    "en": "Question B-004-004-003.\n\nWhy the correct answer is right: The field-effect transistor gate controls channel resistance and therefore channel current.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Drain\": The drain is one end of the channel, not the control electrode.\n- sourceIndex 2: \"Source\": The source is the other channel terminal, not the control electrode.\n- sourceIndex 3: \"Collector\": Collector is a bipolar transistor terminal, not a FET control electrode.",
     "fr": null
   },
   "citations": [

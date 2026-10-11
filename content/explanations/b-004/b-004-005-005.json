@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-005-005.\n\nWhy the correct answer is right: A FET is most similar to a triode because a control electrode influences current through a channel or stream with very little input current.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Triac\": A triac is an AC switching device, not the closest triode amplifier analogue.\n- sourceIndex 2: \"Thyristor\": A thyristor is a latching switching device family, not the closest analogue to a triode amplifier.\n- sourceIndex 3: \"Bipolar transistor\": A bipolar transistor can amplify, but its base-current control is less like the triode grid than a FET gate is.",
+    "en": "Question B-004-005-005.\n\nWhy the correct answer is right: A field-effect transistor is most similar to a triode. In both devices, a control electrode influences current with very little input current.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Triac\": A triac is an AC switching device, not the closest triode amplifier analogue.\n- sourceIndex 2: \"Thyristor\": A thyristor is a latching switching device family, not the closest analogue to a triode amplifier.\n- sourceIndex 3: \"Bipolar transistor\": A bipolar transistor can amplify, but its base-current control is less like the triode grid than a FET gate is.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-004-008.\n\nWhy the correct answer is right: For the FET behaviour tested here, reducing reverse bias opens the channel more, so current increases.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The reverse bias is increased\": Increasing reverse bias narrows the channel and reduces current in this Basic-level model.\n- sourceIndex 2: \"A forward bias is applied\": A JFET gate is normally reverse biased so it changes channel width with little gate current; forward-biasing the gate junction would make it conduct like a diode instead of simply increasing channel current.\n- sourceIndex 3: \"A forward bias is removed\": The control action is reducing reverse bias. In the normal gate-bias condition there is no forward bias to remove, so this does not describe the channel-opening change.",
+    "en": "Question B-004-004-008.\n\nWhy the correct answer is right: For the field-effect transistor behaviour tested here, reducing reverse bias opens the channel more. Current increases.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The reverse bias is increased\": Increasing reverse bias narrows the channel and reduces current in this Basic-level model.\n- sourceIndex 2: \"A forward bias is applied\": A junction FET gate is normally reverse biased, so it changes channel width with little gate current. Forward-biasing the gate junction would make it conduct like a diode instead of simply increasing channel current.\n- sourceIndex 3: \"A forward bias is removed\": The control action is reducing reverse bias. In normal gate bias, there is no forward bias to remove, so this does not describe the channel-opening change.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-002-009.\n\nWhy the correct answer is right: Reverse-polarity protection depends on the diode conducting for one polarity and blocking for the opposite polarity.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It has a high response speed\": Fast response may matter in other diode uses, but it is not the reason a series diode blocks reversed polarity.\n- sourceIndex 2: \"Its peak inverse voltage is below 1 volt\": Peak inverse voltage below 1 volt would be an unsuitable rating, not the useful property. Numeric check: a reverse-protection part for a 12 V-class lead would need to withstand far more than 1 V in reverse.\n- sourceIndex 3: \"It has high forward resistance\": A useful conducting diode has low forward resistance compared with its reverse blocking state.",
+    "en": "Question B-004-002-009.\n\nWhy the correct answer is right: Reverse-polarity protection depends on the diode conducting for one polarity and blocking for the opposite polarity.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It has a high response speed\": Fast response may matter in other diode uses, but it is not the reason a series diode blocks reversed polarity.\n- sourceIndex 2: \"Its peak inverse voltage is below 1 volt\": Peak inverse voltage below 1 V would be an unsuitable rating, not the useful property. A reverse-protection part for a 12 V-class lead must withstand far more than 1 V in reverse.\n- sourceIndex 3: \"It has high forward resistance\": A useful conducting diode has low forward resistance compared with its reverse blocking state.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-003-003.\n\nWhy the correct answer is right: The three bipolar transistor electrodes are collector, emitter, and base.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Drain, base and source\": Drain and source are FET names, so this mixed list is not a bipolar transistor set.\n- sourceIndex 2: \"Collector, source and drain\": Source and drain are FET terms, not bipolar transistor electrodes.\n- sourceIndex 3: \"Gate, source and drain\": Gate, source, and drain identify a FET, not a bipolar transistor.",
+    "en": "Question B-004-003-003.\n\nWhy the correct answer is right: The three bipolar transistor electrodes are collector, emitter, and base.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Drain, base and source\": Drain and source are field-effect transistor names, so this mixed list is not a bipolar transistor set.\n- sourceIndex 2: \"Collector, source and drain\": Source and drain are FET terms, not bipolar transistor electrodes.\n- sourceIndex 3: \"Gate, source and drain\": Gate, source, and drain identify a FET, not a bipolar transistor.",
     "fr": null
   },
   "citations": [
