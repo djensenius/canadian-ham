@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-002-001.\n\nWhy the correct answer is right: A series diode in the positive direct-current lead conducts for correct polarity and blocks reversed polarity. That protects the transceiver from a backwards connection.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Protect against voltage transients\": Voltage-transient protection usually uses a different clamping arrangement, not merely a series positive-lead diode.\n- sourceIndex 2: \"Permit AC operation\": A diode in series with a DC lead does not make the transceiver suitable for AC power operation.\n- sourceIndex 3: \"Overcurrent protection\": Overcurrent protection is normally provided by a fuse, breaker, or current-limiting circuit.",
+    "en": "Question B-004-002-001.\n\nWhy the correct answer is right: A series diode in the positive direct-current lead conducts for correct polarity and blocks reversed polarity. That protects the transceiver from a backwards connection.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Protect against voltage transients\": Voltage-transient protection usually uses a different clamping arrangement, not merely a series positive-lead diode.\n- sourceIndex 2: \"Permit AC operation\": A diode in series with a direct-current (DC) lead does not make the transceiver suitable for alternating-current (AC) power operation.\n- sourceIndex 3: \"Overcurrent protection\": Overcurrent protection is normally provided by a fuse, breaker, or current-limiting circuit.",
     "fr": null
   },
   "citations": [
