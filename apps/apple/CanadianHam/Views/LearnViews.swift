@@ -625,7 +625,6 @@ private struct LessonFigureView: View {
                         .font(DesignTokens.FontScale.body.weight(.semibold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                 }
-                .accessibilityIdentifier("lesson-figure-\(figure.id)-text-equivalent")
             }
         }
         .padding(DesignTokens.Spacing.md)

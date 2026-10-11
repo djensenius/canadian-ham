@@ -1850,7 +1850,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
             XCTAssertFalse(app.descendants(matching: .any)["lesson-figure-\(figureID)-enlarged"].firstMatch.waitForExistence(timeout: 2), "Expected enlarged \(figureID) figure to close")
         }
 
-        let disclosure = app.buttons["lesson-figure-ohms-law-power-wheel-text-equivalent"].firstMatch
+        let disclosure = app.buttons["Figure text equivalent"].firstMatch
         scrollUntilFullyVisibleBelowNavigationBar(disclosure, in: app, maxSwipes: 40)
         XCTAssertTrue(disclosure.isHittable, "Wheel text-equivalent disclosure should be hittable")
         disclosure.tap()
