@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-10 23:20'
+updated_date: '2026-10-11 02:17'
 labels:
   - apple
   - privacy
@@ -55,4 +55,6 @@ Why: progress from several devices must converge without losing or double-counti
 
 <!-- SECTION:NOTES:BEGIN -->
 Progress update 2026-10-10: implemented and committed WIP through c6ddf57 after merging origin/main. Non-Apple checks passing: pnpm install --frozen-lockfile, pnpm typecheck, pnpm test (rerun passed after one transient web-test failure), pnpm build:web, pnpm --filter @canadian-ham/web audit:urls, pnpm check:apple-network, pnpm test:apple-network, pnpm test:apple-icloud-gate, pnpm check:apple-icloud-gate, node scripts/check-apple-text-sources.ts. Apple xbuild validation is queued in one nohup chain per coordinator guidance: /tmp/task135-macos-full.log, ios-full, ios-debugcloudkit, macos-debugcloudkit, apple-l10n with .exit files.
+
+Testing-policy steering update 2026-10-10: after owner/PR #191 policy change, the already-running full iOS xbuild is being allowed to finish, but the queued chain was stopped from starting further full DebugCloudKit/macOS/l10n runs. Current committed branch tip before this note is d834537. Earlier macOS full run passed after fixes, but per new policy further Apple work should use targeted ProgressStore/changed-class tests plus DebugCloudKit build/targeted tests until pre-merge full suites.
 <!-- SECTION:NOTES:END -->
