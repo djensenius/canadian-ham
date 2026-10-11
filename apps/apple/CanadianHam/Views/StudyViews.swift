@@ -1411,6 +1411,9 @@ struct SettingsView: View {
     @State private var pendingCourseSwitch: CourseBankID?
     @State private var confirmingImport = false
     @State private var confirmingReset = false
+#if ICLOUD_SYNC
+    @State private var confirmingICloudDelete = false
+#endif
     @AccessibilityFocusState private var coursePickerFocused: Bool
     @AccessibilityFocusState private var courseSwitchConfirmationFocused: Bool
 
@@ -1547,6 +1550,15 @@ struct SettingsView: View {
         } message: {
             Text("Deletes local progress, mock exams, and preferences. Bundled content remains installed.")
         }
+#if ICLOUD_SYNC
+        .alert(ICloudSyncCopy.deleteProgressTitle, isPresented: $confirmingICloudDelete) {
+            Button("Cancel", role: .cancel) {}
+            Button(ICloudSyncCopy.deleteProgressKeepLocal, role: .destructive) { deleteICloudProgress(.keepLocal) } // l10n: localized
+            Button(ICloudSyncCopy.deleteProgressDeleteLocal, role: .destructive) { deleteICloudProgress(.deleteLocal) } // l10n: localized
+        } message: {
+            Text(ICloudSyncCopy.deleteProgressMessage) // l10n: localized
+        }
+#endif
         .onChange(of: pendingCourseSwitch) { _, next in
             if next != nil {
                 focusCourseSwitchConfirmationAfterLayout()
@@ -1576,6 +1588,18 @@ struct SettingsView: View {
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .fixedSize(horizontal: false, vertical: true)
+            if let accountSignalError = progressStore.iCloudAccountSignalError {
+                Text(ICloudSyncCopy.accountSignalError) // l10n: localized
+                    .font(DesignTokens.FontScale.caption)
+                    .foregroundStyle(DesignTokens.Colors.warningText)
+                    .fixedSize(horizontal: false, vertical: true)
+                Text(accountSignalError) // l10n: verbatim
+                    .font(DesignTokens.FontScale.caption)
+                    .foregroundStyle(DesignTokens.Colors.warningText)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            tokenButton("Delete iCloud Progress") { confirmingICloudDelete = true }
+                .accessibilityIdentifier("icloud-delete-progress-button")
         }
         .paperCard()
     }
@@ -1665,7 +1689,7 @@ struct SettingsView: View {
 
     private func prepareExport() {
         do {
-            let text = try progressStore.serializedExport(bank: bank, exportedAt: AppleStudyEngine.canonicalNow())
+            let text = try progressStore.serializedExport(bank: bank, exportedAt: AppleStudyEngine.canonicalNow(), morseSettings: morseSettings.exportedPreferences)
             exportDocument = ProgressExportDocument(text: text)
             showingExporter = true
         } catch {
@@ -1696,6 +1720,8 @@ struct SettingsView: View {
         guard let pendingImport else { return }
         do {
             try progressStore.importData(pendingImport, bank: bank)
+            morseSettings = MorseTrainerSettings(exported: pendingImport.preferences.morse).normalized()
+            morseSettings.save()
             self.pendingImport = nil
             statusMessage = String(localized: "Progress imported.")
             errorMessage = nil
@@ -1706,6 +1732,21 @@ struct SettingsView: View {
     }
 
     private func resetAllData() {
+#if ICLOUD_SYNC
+        Task { @MainActor in
+            do {
+                try await progressStore.resetAllData(client: .cloudKit())
+                MorseTrainerSettings.reset()
+                morseSettings = .default
+                statusMessage = String(localized: "All local progress was reset.")
+                errorMessage = nil
+                onDataChanged(true)
+            } catch {
+                errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
+            }
+        }
+        return
+#endif
         do {
             try progressStore.resetAllData()
             MorseTrainerSettings.reset()
@@ -1717,6 +1758,25 @@ struct SettingsView: View {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
+
+#if ICLOUD_SYNC
+    private func deleteICloudProgress(_ localDataChoice: ICloudLocalDataChoice) {
+        Task { @MainActor in
+            do {
+                try await progressStore.deleteICloudProgress(localDataChoice: localDataChoice, client: .cloudKit())
+                if localDataChoice == .deleteLocal {
+                    MorseTrainerSettings.reset()
+                    morseSettings = .default
+                }
+                statusMessage = ICloudSyncCopy.deleteProgressSuccess
+                errorMessage = nil
+                onDataChanged(localDataChoice == .deleteLocal)
+            } catch {
+                errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
+            }
+        }
+    }
+#endif
 }
 
 struct ProgressExportDocument: FileDocument {

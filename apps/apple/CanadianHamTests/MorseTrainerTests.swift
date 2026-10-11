@@ -164,6 +164,23 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertTrue(shouldReduceMorseFlashing(flags: MorseReduceFlashingFlags(environmentReduceMotion: false, systemReduceMotion: false, dimFlashingLights: true)))
     }
 
+    func testReduceFlashingStopsOnlyRunningVisualBeacon() {
+        let enabledFlags = MorseReduceFlashingFlags(environmentReduceMotion: true, systemReduceMotion: false, dimFlashingLights: false)
+        let disabledFlags = MorseReduceFlashingFlags(environmentReduceMotion: false, systemReduceMotion: false, dimFlashingLights: false)
+        let completedBeaconState = MorseVisualPlaybackState(mode: .visualBeacon, beaconActive: false, tape: "", safetyNote: "finished")
+        var ownerState = completedBeaconState
+
+        XCTAssertTrue(shouldStopMorseVisualBeaconForReducedFlashing(state: MorseVisualPlaybackState(mode: .visualBeacon), isPlaybackRunning: true, flags: enabledFlags))
+        XCTAssertFalse(shouldStopMorseVisualBeaconForReducedFlashing(state: MorseVisualPlaybackState(mode: .visualTape), isPlaybackRunning: true, flags: enabledFlags))
+        XCTAssertFalse(shouldStopMorseVisualBeaconForReducedFlashing(state: MorseVisualPlaybackState(mode: .idle), isPlaybackRunning: true, flags: enabledFlags))
+        XCTAssertFalse(shouldStopMorseVisualBeaconForReducedFlashing(state: MorseVisualPlaybackState(mode: .visualBeacon), isPlaybackRunning: true, flags: disabledFlags))
+        XCTAssertFalse(shouldStopMorseVisualBeaconForReducedFlashing(state: completedBeaconState, isPlaybackRunning: false, flags: enabledFlags))
+        if shouldStopMorseVisualBeaconForReducedFlashing(state: ownerState, isPlaybackRunning: false, flags: enabledFlags) {
+            ownerState = MorseVisualPlaybackState()
+        }
+        XCTAssertEqual(ownerState, completedBeaconState, "Completed beacon output must not be cleared by a later Reduce Motion change")
+    }
+
     @MainActor
     func testScheduleMorseVisualPlaybackInitialStateAndFallback() throws {
         let sequence = try textToTimedMorse("E", profile: profileForName(.isedParis))
@@ -257,6 +274,16 @@ final class MorseTrainerTests: XCTestCase {
         XCTAssertFalse(fail.passed)
         XCTAssertEqual(fail.diff.score.missing, 6)
         XCTAssertEqual(fail.markPercent, 99)
+    }
+
+    func testMorseSendingPendingFinalizationHelperCancelsAndClears() throws {
+        var task: Task<Void, Never>? = Task { try? await Task.sleep(for: .seconds(60)) }
+        var pendingSamples = [MorseKeyTimingSample(element: .dot, durationSeconds: 0.1, expectedSeconds: 0.1, ratioToExpected: 1)]
+
+        clearMorseSendingPendingCharacterFinalization(finalizeTask: &task, pendingSamples: &pendingSamples, clearPendingSamples: true)
+
+        XCTAssertNil(task)
+        XCTAssertTrue(pendingSamples.isEmpty)
     }
 
     func testMorseSendingRemainingExamSecondsUsesFixedDeadline() throws {

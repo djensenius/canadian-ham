@@ -284,7 +284,7 @@ private struct NativeDataSettingsTab: View {
             return
         }
         do {
-            let text = try progressStore.serializedExport(bank: bank, exportedAt: AppleStudyEngine.canonicalNow())
+            let text = try progressStore.serializedExport(bank: bank, exportedAt: AppleStudyEngine.canonicalNow(), morseSettings: appSettings.morseSettings.exportedPreferences)
             exportDocument = ProgressExportDocument(text: text)
             showingExporter = true
         } catch {
@@ -322,6 +322,8 @@ private struct NativeDataSettingsTab: View {
         }
         do {
             try progressStore.importData(pendingImport, bank: bank)
+            appSettings.morseSettings = MorseTrainerSettings(exported: pendingImport.preferences.morse).normalized()
+            appSettings.morseSettings.save()
             appSettings.recordDataChanged(replacesLocalData: true)
             self.pendingImport = nil
             statusMessage = String(localized: "Progress imported.")
@@ -336,6 +338,21 @@ private struct NativeDataSettingsTab: View {
             errorMessage = String(localized: "Open a Canadian Ham window to load settings.")
             return
         }
+#if ICLOUD_SYNC
+        Task { @MainActor in
+            do {
+                try await progressStore.resetAllData(client: .cloudKit())
+                MorseTrainerSettings.reset()
+                appSettings.morseSettings = .default
+                appSettings.recordDataChanged(replacesLocalData: true)
+                statusMessage = String(localized: "All local progress was reset.")
+                errorMessage = ""
+            } catch {
+                errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
+            }
+        }
+        return
+#endif
         do {
             try progressStore.resetAllData()
             MorseTrainerSettings.reset()

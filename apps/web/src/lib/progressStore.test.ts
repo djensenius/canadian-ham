@@ -1,11 +1,12 @@
 import assert from "node:assert/strict";
 import path from "node:path";
+import { readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { afterEach, beforeEach, describe, it } from "vitest";
 import { IDBFactory } from "fake-indexeddb";
 
 import { advancedBank, bankId } from "../data/bank";
-import { ProgressStore, defaultPreferences, validateProgressImport, type ExamAttempt, type LessonProgressRecord, type LessonQuizAttempt, type ProgressExportV1 } from "./progressStore";
+import { ProgressStore, deduplicateDeviceExamAttemptsForSync, deduplicateDeviceLessonProgressForSync, deduplicateDeviceQuestionProgressForSync, defaultPreferences, validateProgressImport, type DeviceExamAttemptRecord, type DeviceLessonProgressRecord, type DeviceQuestionProgressRecord, type ExamAttempt, type LessonProgressRecord, type LessonQuizAttempt, type ProgressExportV1 } from "./progressStore";
 import type { QuestionProgressRecord } from "@canadian-ham/engine-ts";
 import type { MorseCourseProgressExport } from "@canadian-ham/morse-engine";
 
@@ -176,6 +177,72 @@ async function createVersion2Database(name: string): Promise<void> {
 }
 
 describe("ProgressStore", () => {
+  it("deduplicates sync collisions using the shared iCloud merge fixture", () => {
+    const fixture = JSON.parse(readFileSync(path.resolve(__dirname, "../../../../fixtures/progress/icloud-merge.json"), "utf8")) as {
+      questionProgress: { deviceRows: DeviceQuestionProgressRecord[]; expected: QuestionProgressRecord[] };
+      examAttempts: { deviceRows: DeviceExamAttemptRecord[]; expectedIdsBySubmittedAt: Record<string, string> };
+      lessonProgress: { deviceRows: DeviceLessonProgressRecord[]; expected: LessonProgressRecord[] };
+    };
+
+    assert.deepEqual(deduplicateDeviceQuestionProgressForSync(fixture.questionProgress.deviceRows), fixture.questionProgress.expected);
+    assert.deepEqual(deduplicateDeviceQuestionProgressForSync([...fixture.questionProgress.deviceRows].reverse()), fixture.questionProgress.expected);
+    assert.deepEqual(deduplicateDeviceQuestionProgressForSync([...fixture.questionProgress.deviceRows, ...fixture.questionProgress.deviceRows]), fixture.questionProgress.expected);
+    const examAttempts = deduplicateDeviceExamAttemptsForSync(fixture.examAttempts.deviceRows);
+    assert.deepEqual(Object.fromEntries(examAttempts.map((attempt) => [`${attempt.bankId}|${attempt.submittedAt}`, attempt.id])), fixture.examAttempts.expectedIdsBySubmittedAt);
+    assert.deepEqual(deduplicateDeviceLessonProgressForSync(fixture.lessonProgress.deviceRows), fixture.lessonProgress.expected);
+    assert.deepEqual(deduplicateDeviceLessonProgressForSync([...fixture.lessonProgress.deviceRows, ...fixture.lessonProgress.deviceRows]), fixture.lessonProgress.expected);
+  });
+
+  it("preserves opaque sync device rows on import/export until progress changes", async () => {
+    const syncDeviceRows = {
+      questionProgress: [{ deviceId: "iphone", record }],
+      examAttempts: [{ deviceId: "iphone", attempt }],
+      lessonProgress: [{ deviceId: "iphone", record: lessonProgressRecord }],
+      lessonQuizAttempts: [],
+      morseCourseProgress: [{ deviceId: "iphone", progress: morseCourseProgress }],
+    };
+    const store = createStore("sync-device-rows-passthrough");
+
+    await store.importData(validExport({ syncDeviceRows }));
+    const exported = await store.exportData("2026-01-02T05:00:00.000Z");
+
+    assert.deepEqual(exported.syncDeviceRows, syncDeviceRows);
+    await store.putQuestionProgress({ ...record, attempts: 2, correctAttempts: 1 });
+    assert.equal((await store.exportData("2026-01-02T06:00:00.000Z")).syncDeviceRows, undefined);
+  });
+
+  it("drops imported sync device rows when exporting a different bank", async () => {
+    const syncDeviceRows = {
+      questionProgress: [{ deviceId: "iphone", record }],
+      examAttempts: [{ deviceId: "iphone", attempt }],
+      lessonProgress: [{ deviceId: "iphone", record: lessonProgressRecord }],
+      lessonQuizAttempts: [],
+      morseCourseProgress: [],
+    };
+    const store = createStore("sync-device-rows-bank-switch");
+    await store.importData(validExport({ syncDeviceRows }));
+
+    const exported = await store.exportData("2026-01-02T06:00:00.000Z", advancedBank);
+
+    assert.equal(exported.syncDeviceRows, undefined);
+  });
+
+  it("drops imported sync device rows when the main practice bulk progress path writes", async () => {
+    const syncDeviceRows = {
+      questionProgress: [{ deviceId: "iphone", record }],
+      examAttempts: [],
+      lessonProgress: [],
+      lessonQuizAttempts: [],
+      morseCourseProgress: [],
+    };
+    const store = createStore("sync-device-rows-practice-write");
+    await store.importData(validExport({ syncDeviceRows }));
+
+    await store.putQuestionProgressMany([{ ...record, attempts: 2, correctAttempts: 1 }]);
+
+    assert.equal((await store.exportData("2026-01-02T06:00:00.000Z")).syncDeviceRows, undefined);
+  });
+
   it("stores progress in IndexedDB and exports/imports a validated round trip", async () => {
     const first = createStore("roundtrip-a");
     await first.putQuestionProgress(record);
@@ -296,6 +363,21 @@ describe("ProgressStore", () => {
     assert.match(errors, /officialQuestionIds must belong to the lesson quiz/);
     assert.match(errors, /incorrectOfficialQuestionIds must be a subset of officialQuestionIds/);
     assert.match(errors, /leitner\.box/);
+  });
+
+  it("rejects duplicate Morse daily activity dates", () => {
+    const validation = validateProgressImport(validExport({
+      morseCourseProgress: {
+        ...morseCourseProgress,
+        dailyActivity: [
+          { date: "2026-01-02", lessonsCompleted: 1 },
+          { date: "2026-01-02", lessonsCompleted: 2 },
+        ],
+      },
+    }));
+
+    assert.equal(validation.ok, false);
+    assert.match(validation.errors.join("\n"), /dailyActivity\[1\]\.date duplicates/);
   });
 
   it("resets a failed open promise so a later IndexedDB open can succeed", async () => {
