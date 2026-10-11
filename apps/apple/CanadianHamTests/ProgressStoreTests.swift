@@ -1073,6 +1073,7 @@ final class ProgressStoreTests: XCTestCase {
     func testProgressStoreRoundTripExportImportReset() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let store = try ProgressStoreService.inMemoryForTests()
+        XCTAssertEqual(store.preferences.language, .system)
         XCTAssertNotEqual(store.morseCourseProgressURLForTesting, ProgressStoreService.morseCourseProgressURL)
         let record = try applyAnswer(existing: nil, update: AnswerUpdate(
             questionId: "B-001-001-001",
@@ -1084,6 +1085,7 @@ final class ProgressStoreTests: XCTestCase {
         var preferences = store.preferences
         preferences.practiceMode = .reviewLater
         preferences.examTimerEnabled = true
+        preferences.language = .french
         preferences.theme = .dark
         try store.updatePreferences(preferences)
 
@@ -1130,6 +1132,7 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(exported.questionProgress.count, 1)
         XCTAssertEqual(exported.examAttempts.count, 1)
         XCTAssertEqual(exported.preferences.practiceMode, "review-later")
+        XCTAssertEqual(exported.preferences.language, "fr")
         XCTAssertEqual(exported.morseCourseProgress, morseProgress)
 
         let importedStore = try ProgressStoreService.inMemoryForTests()
@@ -1140,6 +1143,7 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(try importedStore.examAttempts(), exported.examAttempts)
         XCTAssertEqual(importedStore.preferences.practiceMode, .reviewLater)
         XCTAssertTrue(importedStore.preferences.examTimerEnabled)
+        XCTAssertEqual(importedStore.preferences.language, .french)
         XCTAssertEqual(importedStore.preferences.theme, .dark)
         XCTAssertEqual(try importedStore.morseCourseProgress(), morseProgress)
 
