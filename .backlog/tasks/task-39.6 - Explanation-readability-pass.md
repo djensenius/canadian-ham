@@ -23,8 +23,8 @@ Review the 984 per-question explanations in content/explanations for readability
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Every explanation in B-004 to B-008 is reviewed and revised where needed; B-001 to B-003 are reviewed for clarity
-- [ ] #2 Explanation checker, originality and allowlist checks pass
+- [x] #1 Every explanation in B-004 to B-008 is reviewed and revised where needed; B-001 to B-003 are reviewed for clarity
+- [x] #2 Explanation checker, originality and allowlist checks pass
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -57,3 +57,9 @@ r2 fix round completed (ACs intentionally not checked; status left In Progress):
 
 Review r3 (APPROVE WITH NOTES): coordinator fixed the remaining low items: CAT duplicate in b-003-007-006; RF defined in b-006-006-002; HF defined in b-003-013-009; hyphenated-noun forms in b-004-002-006, b-007-001-008, b-007-008-011, b-003-012-003, b-003-008-001 and b-008-002-007; FET order in b-004-003-003. Remaining cosmetic hyphenation inconsistency (adjective 'very high frequency (VHF) range' vs 'very-high-frequency (VHF) range') is accepted. Totals: all 984 explanations reviewed in 4 lanes, about 440 revised (body.en only), reviewed per category (4 reviewers) plus 2 fix-round re-reviews with bank checks; no explanation contradicts the bank, and no taught fact was lost (taught-facts checks in each review).
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Readability pass over all 984 per-question explanations to docs/teaching-guide.md: plain language, abbreviations defined at first use, clearer distractor reasoning, SI number grouping, x for multiply, and a few accurate real-world tie-ins in technical categories. Technical categories B-004 to B-008 reviewed in depth; B-001 to B-003 reviewed for clarity and accuracy. Every changed explanation was checked against the ISED Basic bank by category reviewers; a mechanical abbreviation pass that broke text (for example '1 PM' read as phase modulation) was caught in review and fixed by hand, with a report-only audit across all explanations. Checks: check:explanations (schema, citations, TEMPLATE and duplicate-note lints), check:links, web vitest suite (152/152).
+<!-- SECTION:FINAL_SUMMARY:END -->
