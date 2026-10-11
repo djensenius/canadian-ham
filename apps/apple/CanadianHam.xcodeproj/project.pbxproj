@@ -981,7 +981,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -euo pipefail\nresource_destination=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\nrm -f \"${resource_destination}/lessons/README.md\"\nrm -f \"${resource_destination}/quizzes/README.md\"\nrm -f \"${resource_destination}/explanations/README.md\"\n";
+			shellScript = "set -euo pipefail\nresource_destination=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\nfor content_directory in lessons quizzes explanations; do\n  destination=\"${resource_destination}/${content_directory}\"\n  if [ -d \"${destination}\" ]; then\n    find \"${destination}\" -type f -iname README.md -delete\n  fi\ndone\n";
 		};
 		2CB5C6A88CF14A45641BF6BC /* Copy Basic and Advanced generated content */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1035,7 +1035,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -euo pipefail\nresource_destination=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\nrm -f \"${resource_destination}/lessons/README.md\"\nrm -f \"${resource_destination}/quizzes/README.md\"\nrm -f \"${resource_destination}/explanations/README.md\"\n";
+			shellScript = "set -euo pipefail\nresource_destination=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\nfor content_directory in lessons quizzes explanations; do\n  destination=\"${resource_destination}/${content_directory}\"\n  if [ -d \"${destination}\" ]; then\n    find \"${destination}\" -type f -iname README.md -delete\n  fi\ndone\n";
 		};
 		F39EEE4D2D3C9993911AA3FC /* Copy Basic and Advanced generated content */ = {
 			isa = PBXShellScriptBuildPhase;

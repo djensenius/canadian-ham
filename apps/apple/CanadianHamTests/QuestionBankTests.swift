@@ -152,7 +152,7 @@ final class QuestionBankTests: XCTestCase {
 
         return try urls.compactMap { url in
             let values = try url.resourceValues(forKeys: [.isRegularFileKey])
-            guard values.isRegularFile == true, url.lastPathComponent == "README.md" else {
+            guard values.isRegularFile == true, url.lastPathComponent.caseInsensitiveCompare("README.md") == .orderedSame else {
                 return nil
             }
             return url.path.replacingOccurrences(of: resourceURL.path + "/", with: "")

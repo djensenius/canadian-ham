@@ -79,9 +79,12 @@ targets:
         script: |
           set -euo pipefail
           resource_destination="${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
-          rm -f "${resource_destination}/lessons/README.md"
-          rm -f "${resource_destination}/quizzes/README.md"
-          rm -f "${resource_destination}/explanations/README.md"
+          for content_directory in lessons quizzes explanations; do
+            destination="${resource_destination}/${content_directory}"
+            if [ -d "${destination}" ]; then
+              find "${destination}" -type f -iname README.md -delete
+            fi
+          done
       - name: Copy Basic and Advanced generated content
         basedOnDependencyAnalysis: false
         inputFiles:
@@ -191,9 +194,12 @@ targets:
         script: |
           set -euo pipefail
           resource_destination="${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
-          rm -f "${resource_destination}/lessons/README.md"
-          rm -f "${resource_destination}/quizzes/README.md"
-          rm -f "${resource_destination}/explanations/README.md"
+          for content_directory in lessons quizzes explanations; do
+            destination="${resource_destination}/${content_directory}"
+            if [ -d "${destination}" ]; then
+              find "${destination}" -type f -iname README.md -delete
+            fi
+          done
       - name: Copy Basic and Advanced generated content
         basedOnDependencyAnalysis: false
         inputFiles:
