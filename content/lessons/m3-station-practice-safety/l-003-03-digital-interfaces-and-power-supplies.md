@@ -70,7 +70,7 @@ A linear DC supply can be shown as:
 AC mains -> transformer -> rectifier -> filter -> regulator -> DC output
 ```
 
-The transformer changes the AC voltage and provides isolation from the mains. The rectifier changes alternating current into one-polarity, pulsating direct current. The filter, often a large capacitor, smooths the pulses. The regulator holds the output voltage closer to a constant value as line voltage and load current change.
+The transformer steps the AC voltage up or down, depending on its turns ratio, and provides isolation from the mains. A low-voltage station supply steps it down. The rectifier changes alternating current into one-polarity, pulsating direct current. The filter, often a large capacitor, smooths the pulses. The regulator holds the output voltage closer to a constant value as line voltage and load current change.
 
 A regulator that drops voltage while carrying current makes heat. That is why the regulator stage often needs a heat sink. Rectifiers and transformers can also get warm, but the regulator is the series control stage deliberately turning voltage drop times current into heat.
 
