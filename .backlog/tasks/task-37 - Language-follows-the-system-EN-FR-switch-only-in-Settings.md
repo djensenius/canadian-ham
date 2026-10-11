@@ -1,9 +1,11 @@
 ---
 id: TASK-37
 title: Language follows the system; EN/FR switch only in Settings
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-10 20:54'
+updated_date: '2026-10-11 17:34'
 labels:
   - apple
   - web
