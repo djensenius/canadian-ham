@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-014-007.\n\nWhy the correct answer is right: With peak modulation already at 100 percent, speech processing fills in lower-level speech and raises the average RF output without increasing the clean peak.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Increase the peak envelope power\": If the transmitter is already 100% modulated, raising PEP would overdrive it rather than be the normal processor effect.\n- sourceIndex 2: \"Decrease the average power\": Processing compresses the speech dynamic range so average power rises, not falls.\n- sourceIndex 3: \"Decrease the peak envelope power\": The processor is not intended to reduce the allowed clean peak; it keeps peaks controlled while raising average level.",
+    "en": "Question B-003-014-007.\n\nWhy the correct answer is right: With peak modulation already at 100 percent, speech processing fills in lower-level speech and raises the average radio-frequency (RF) output without increasing the clean peak.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Increase the peak envelope power\": If the transmitter is already 100% modulated, raising peak envelope power (PEP) would overdrive it rather than be the normal processor effect.\n- sourceIndex 2: \"Decrease the average power\": Processing compresses the speech dynamic range so average power rises, not falls.\n- sourceIndex 3: \"Decrease the peak envelope power\": The processor is not intended to reduce the allowed clean peak. It keeps peaks controlled while raising average level.",
     "fr": null
   },
   "citations": [

@@ -28,6 +28,7 @@ struct MorseSendingPracticeView: View {
     @State private var examTimerTask: Task<Void, Never>?
     @State private var finiteToneStopTask: Task<Void, Never>?
     @State private var finiteToneGeneration = 0
+    @State private var showingExam = false
     @State private var presentedResult: MorseSendingResult?
 
     private var profile: MorseTimingProfile { (try? settings.normalized().timingProfileValue()) ?? profileForName(.isedParis) }
@@ -52,12 +53,64 @@ struct MorseSendingPracticeView: View {
                 Text("Practise tap timing with a straight key or iambic-style paddles. On Mac and iPad hardware keyboards, focus this screen first, then hold Space for the straight key; use J for dots and K for dashes. On iPhone and iPad, use the large touch targets.") // l10n: localized
                     .font(DesignTokens.FontScale.body)
                     .foregroundStyle(DesignTokens.Colors.ink)
-                MorseSendingExamCard(
-                    examText: examText,
-                    examRemaining: examRemaining,
-                    start: startExam,
-                    grade: { gradeExam(completedWithinTime: examCompletedWithinDeadline()) }
-                )
+                morseTokenButton("Exam-style check") { openExamStyleCheck() }
+                    .accessibilityIdentifier("morse-sending-exam-open-button")
+                sendingControls
+                }
+                .paperCard()
+            }
+            .pagePadding()
+        }
+        .background(DesignTokens.Colors.paper)
+        .navigationTitle("Sending practice") // l10n: localized
+        .focusable(true)
+        .focused($keyFocusActive)
+        .onAppear {
+            keyFocusActive = true
+            // Another Morse mode starting playback stops any held key or paddle here.
+            playbackCoordinator.register("sending-practice") {
+                stopAllKeying(finalizeStraight: true)
+            }
+        }
+        .onKeyPress(phases: [.down, .up]) { press in
+            handleKeyPress(press)
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                refreshExamCountdown()
+            } else {
+                stopAllKeying(finalizeStraight: true)
+            }
+        }
+        .onChange(of: keyFocusActive) { _, isFocused in
+            if !isFocused { stopAllKeying(finalizeStraight: true) }
+        }
+        .navigationDestination(isPresented: $showingExam) {
+            sendingExamScreen
+        }
+        .onChange(of: showingExam) { _, isPresented in
+            if !isPresented, presentedResult == nil, !examText.isEmpty {
+                cancelRunningExam(clearExam: true)
+            }
+        }
+        .navigationDestination(isPresented: resultIsPresented) {
+            if let presentedResult {
+                MorseSendingResultsScreen(result: presentedResult) {
+                    resetSending(clearExam: true)
+                    self.presentedResult = nil
+                }
+            }
+        }
+        .onDisappear {
+            playbackCoordinator.unregister("sending-practice")
+            stopAllKeying(finalizeStraight: false)
+            clearPendingCharacterFinalization(clearPendingSamples: true)
+            examTimerTask?.cancel()
+        }
+    }
+
+    private var sendingControls: some View {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     Text("Straight key") // l10n: localized
                         .font(DesignTokens.FontScale.body.weight(.bold))
@@ -105,6 +158,16 @@ struct MorseSendingPracticeView: View {
                                 .font(DesignTokens.FontScale.body.weight(.bold))
                         }
                         .accessibilityIdentifier("morse-sending-debug-fill-button")
+                        Button(action: gradeHeldStraightKeyForUITest) {
+                            Text(verbatim: "Grade held straight key for sending test") // l10n: verbatim DEBUG-only UI test hook
+                                .font(DesignTokens.FontScale.body.weight(.bold))
+                        }
+                        .accessibilityIdentifier("morse-sending-debug-grade-held-straight-button")
+                        Button(action: openExamWithPendingCharacterForUITest) {
+                            Text(verbatim: "Open exam with pending sending test") // l10n: verbatim DEBUG-only UI test hook
+                                .font(DesignTokens.FontScale.body.weight(.bold))
+                        }
+                        .accessibilityIdentifier("morse-sending-debug-open-exam-pending-button")
                     }
 #endif
                 }
@@ -116,47 +179,44 @@ struct MorseSendingPracticeView: View {
                 if let errorMessage {
                     MessagePanel(title: "Morse error", message: errorMessage, kind: .warning)
                 }
+        }
+    }
+
+    private var sendingExamScreen: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
+                VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+                    Text("Exam-style check") // l10n: localized
+                        .font(DesignTokens.FontScale.title.weight(.bold))
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityAddTraits(.isHeader)
+                    Text("Send the displayed passage, then end and grade when ready. Unsent characters at 0:00 count as errors.") // l10n: localized
+                        .font(DesignTokens.FontScale.body)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                    MorseSendingExamCard(
+                        examText: examText,
+                        examRemaining: examRemaining,
+                        start: startExam,
+                        grade: { gradeExam(completedWithinTime: examCompletedWithinDeadline()) }
+                    )
+                    sendingControls
                 }
                 .paperCard()
             }
             .pagePadding()
         }
         .background(DesignTokens.Colors.paper)
-        .navigationTitle("Sending practice") // l10n: localized
+        .navigationTitle("Exam-style check") // l10n: localized
         .focusable(true)
         .focused($keyFocusActive)
-        .onAppear {
-            keyFocusActive = true
-            // Another Morse mode starting playback stops any held key or paddle here.
-            playbackCoordinator.register("sending-practice") {
-                stopAllKeying(finalizeStraight: true)
-            }
-        }
+        .onAppear { keyFocusActive = true }
         .onKeyPress(phases: [.down, .up]) { press in
             handleKeyPress(press)
         }
-        .onChange(of: scenePhase) { _, phase in
-            if phase == .active {
-                refreshExamCountdown()
-            } else {
-                stopAllKeying(finalizeStraight: true)
-            }
-        }
-        .onChange(of: keyFocusActive) { _, isFocused in
-            if !isFocused { stopAllKeying(finalizeStraight: true) }
-        }
-        .navigationDestination(isPresented: resultIsPresented) {
-            if let presentedResult {
-                MorseSendingResultsScreen(result: presentedResult) {
-                    resetSending(clearExam: true)
-                    self.presentedResult = nil
-                }
-            }
-        }
         .onDisappear {
-            playbackCoordinator.unregister("sending-practice")
-            stopAllKeying(finalizeStraight: false)
-            examTimerTask?.cancel()
+            if presentedResult == nil, !examText.isEmpty {
+                cancelRunningExam(clearExam: true)
+            }
         }
     }
 
@@ -349,11 +409,16 @@ struct MorseSendingPracticeView: View {
         return now < examDeadline
     }
 
+    private func openExamStyleCheck() {
+        resetSending(clearExam: true)
+        showingExam = true
+    }
+
     private func startExam() {
         resetSending(clearExam: false)
         do {
             let generated = try generateMorseExamText(seed: "apple-sending-\(Date().timeIntervalSince1970)", profile: profileForName(.isedParis), minDurationSeconds: 0)
-            examText = generated.text
+            examText = debugExamTextOverride ?? generated.text
             examRemaining = debugExamDurationSeconds
             examDeadline = Date().addingTimeInterval(TimeInterval(debugExamDurationSeconds))
             examRunning = true
@@ -372,11 +437,10 @@ struct MorseSendingPracticeView: View {
     }
 
     private func gradeExam(completedWithinTime: Bool) {
-        finalizeCharacter()
         guard !examText.isEmpty else { return }
-        examRunning = false
-        examDeadline = nil
-        examTimerTask?.cancel()
+        stopAllKeying(finalizeStraight: true)
+        finalizeCharacter()
+        cancelRunningExam(clearExam: false)
         do {
             let score = try scoreMorseSending(expected: examText, sent: decodedText, completedWithinTime: completedWithinTime)
             presentedResult = MorseSendingResult(score: score, decodedText: decodedText)
@@ -387,20 +451,24 @@ struct MorseSendingPracticeView: View {
 
     private func resetSending(clearExam: Bool) {
         stopAllKeying(finalizeStraight: false)
-        finalizeTask?.cancel()
-        finalizeTask = nil
-        pendingSamples = []
+        clearPendingCharacterFinalization(clearPendingSamples: true)
         decodedText = ""
         lastFeedback = nil
         statusMessage = ""
         errorMessage = nil
         if clearExam {
-            examTimerTask?.cancel()
-            examText = ""
-            examRemaining = debugExamDurationSeconds
-            examDeadline = nil
-            examRunning = false
+            cancelRunningExam(clearExam: true)
         }
+    }
+
+    private func cancelRunningExam(clearExam: Bool) {
+        examTimerTask?.cancel()
+        if clearExam {
+            examText = ""
+        }
+        examRemaining = debugExamDurationSeconds
+        examDeadline = nil
+        examRunning = false
     }
 
     private func stopAllKeying(finalizeStraight: Bool) {
@@ -419,14 +487,44 @@ struct MorseSendingPracticeView: View {
         paddleRepeatTask = nil
     }
 
+    private func clearPendingCharacterFinalization(clearPendingSamples: Bool) {
+        clearMorseSendingPendingCharacterFinalization(finalizeTask: &finalizeTask, pendingSamples: &pendingSamples, clearPendingSamples: clearPendingSamples)
+    }
+
 #if DEBUG
     private func fillExamTextForUITest() {
         decodedText = (try? canonicalMorseCharacters(examText).joined()) ?? examText.replacingOccurrences(of: " ", with: "")
         statusMessage = "Decoded exam text filled for UI testing."
     }
+
+    private func gradeHeldStraightKeyForUITest() {
+        pendingSamples = []
+        decodedText = ""
+        straightKeyDownAt = Date().addingTimeInterval(-profile.dotSeconds)
+        playbackCoordinator.claim("sending-practice")
+        gradeExam(completedWithinTime: true)
+    }
+
+    private func openExamWithPendingCharacterForUITest() {
+        openExamStyleCheck()
+        decodedText = ""
+        lastFeedback = nil
+        statusMessage = ""
+        pendingSamples = [MorseKeyTimingSample(element: .dot, durationSeconds: profile.dotSeconds, expectedSeconds: profile.dotSeconds, ratioToExpected: 1)]
+        scheduleFinalizeCharacter(finalizeAfterElementSeconds: profile.dotSeconds)
+    }
 #else
     private func fillExamTextForUITest() {}
+    private func gradeHeldStraightKeyForUITest() {}
 #endif
+}
+
+func clearMorseSendingPendingCharacterFinalization(finalizeTask: inout Task<Void, Never>?, pendingSamples: inout [MorseKeyTimingSample], clearPendingSamples: Bool) {
+    finalizeTask?.cancel()
+    finalizeTask = nil
+    if clearPendingSamples {
+        pendingSamples = []
+    }
 }
 
 private struct MorseSendingExamCard: View {
@@ -543,6 +641,7 @@ private struct MorseSendingFeedbackView: View {
             LabeledContent("Current elements") { // l10n: localized
                 Text(pendingSamples.map(\.element.rawValue).joined().isEmpty ? "—" : pendingSamples.map(\.element.rawValue).joined()) // l10n: localized
                     .font(.body.monospaced())
+                    .accessibilityIdentifier("morse-sending-current-elements")
             }
             LabeledContent("Decoded text") { // l10n: localized
                 Text(decodedText.isEmpty ? "—" : decodedText) // l10n: localized
@@ -665,4 +764,12 @@ private var debugExamDurationSeconds: Int {
     }
 #endif
     return 180
+}
+
+private var debugExamTextOverride: String? {
+#if DEBUG
+    AppLaunchArguments.value(after: "-CanadianHamMorseSendingExamText")
+#else
+    nil
+#endif
 }

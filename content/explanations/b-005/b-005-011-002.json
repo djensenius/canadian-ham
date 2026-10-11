@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-011-002.\n\nWhy the correct answer is right: A transformer changes the voltage and current relationship between windings. Because impedance is voltage divided by current in AC work, different voltage-current ratios transform impedance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"By using the correct magnetic coupling between windings\": Magnetic coupling transfers energy, but impedance change comes from the resulting voltage and current ratios.\n- sourceIndex 2: \"By allowing the difference to be dissipated in core losses\": Core losses waste energy as heat; they are not the useful mechanism for impedance transformation.\n- sourceIndex 3: \"By matching winding resistance to impedance\": Winding resistance is a loss component, not the transformer ratio principle used to change impedance.",
+    "en": "Question B-005-011-002.\n\nWhy the correct answer is right: A transformer changes the voltage and current relationship between windings. In alternating-current work, impedance is voltage divided by current, so different ratios transform impedance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"By using the correct magnetic coupling between windings\": Magnetic coupling transfers energy. The impedance change comes from the resulting voltage and current ratios.\n- sourceIndex 2: \"By allowing the difference to be dissipated in core losses\": Core losses waste energy as heat; they are not the useful mechanism for impedance transformation.\n- sourceIndex 3: \"By matching winding resistance to impedance\": Winding resistance is a loss component, not the transformer ratio principle used to change impedance.",
     "fr": null
   },
   "citations": [

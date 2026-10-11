@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-008-008.\n\nWhy the correct answer is right: For portable HF emergency setup, a dipole or vertical is practical because it can be carried and erected comparatively simply.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A parabolic dish\": At HF wavelengths a dish large enough to be useful would be unwieldy, so it is not a general portable HF emergency antenna.\n- sourceIndex 2: \"A three-element Yagi\": A three-element Yagi is larger and more complex than the simple portable HF options expected for quick emergency setup.\n- sourceIndex 3: \"A three-element quad\": A three-element quad also needs bulky support structure, which works against a portable HF station that must be set up quickly.",
+    "en": "Question B-002-008-008.\n\nWhy the correct answer is right: For a portable high-frequency (HF) emergency setup, a dipole or vertical is practical because it can be carried and put up fairly simply.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A parabolic dish\": At HF wavelengths, a useful dish would be very large, so it is not a general portable HF emergency antenna.\n- sourceIndex 2: \"A three-element Yagi\": A three-element Yagi is larger and more complex than the simple portable HF options expected for quick emergency setup.\n- sourceIndex 3: \"A three-element quad\": A three-element quad also needs bulky support structure, which works against a portable HF station that must be set up quickly.",
     "fr": null
   },
   "citations": [

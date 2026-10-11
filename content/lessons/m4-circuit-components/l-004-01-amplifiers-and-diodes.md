@@ -22,9 +22,11 @@ status: draft
 ---
 # Amplifiers and diodes
 
-An amateur station is full of circuits that handle signals too small to be useful on their own. A receiver input may be listening for a tiny RF voltage from an antenna. A microphone may produce only a small audio signal. An amplifier is the block that raises a signal level so the next stage can use it.
+An amateur station is full of circuits that handle tiny signals. A receiver input may be listening for a weak radio-frequency signal, or RF signal, from an antenna. A microphone may produce only a small audio signal.
 
-Diodes are just as common. They are one-way semiconductor devices, so they can steer current, make DC from AC, recover audio from some modulated signals, regulate voltage, glow as indicators, or protect equipment from a backwards supply connection.
+An amplifier raises a signal level so the next stage can use it.
+
+Diodes are just as common. They are one-way semiconductor devices. They can steer current and make direct current from alternating current. They can also recover audio from some modulated signals, regulate voltage, glow as indicators, or protect equipment from a backwards supply connection.
 
 ## Learning objectives
 
@@ -39,51 +41,69 @@ By the end of this lesson, you can:
 
 ## Amplifiers raise signal level
 
-An amplifier uses energy from a power supply to make a signal larger. The information in the signal should stay recognizable: the same voice waveform, code waveform, or RF pattern is present, but at a greater level.
+An amplifier uses energy from a power supply to make a signal larger. The information in the signal should stay recognizable. The same voice waveform, code waveform, or RF pattern is present, but at a greater level.
 
 The increase is called gain. Gain may describe voltage, current, or power, depending on what the circuit is meant to increase. A stage labelled with gain is therefore a stage that amplifies rather than one that intentionally reduces signal level.
 
 An RF amplifier works with radio-frequency signals. In a receiver, it can raise a weak antenna signal before later stages select and process it. In a transmitter, later RF stages can raise a clean drive signal toward the power needed at the antenna connector.
 
-An audio amplifier works with sound-frequency signals after a microphone, detector, or audio processing stage. Human speech occupies a modest audio band compared with RF. For communications work, the important speech information is commonly treated as roughly 300 Hz to 3 000 Hz, so an audio stage is designed for voice clarity in that range rather than for a radio carrier frequency.
+An audio amplifier works with sound-frequency signals after a microphone, detector, or audio processing stage. Human speech occupies a modest audio band compared with RF.
 
-### Worked example: following a signal through a receiver
+For communications work, the important speech information is commonly treated as roughly 300 Hz to 3 000 Hz. An audio stage is designed for voice clarity in that range, not for a radio carrier frequency.
 
-Imagine a small portable receiver connected to a short indoor antenna. The antenna delivers a weak RF signal. A front-end RF amplifier raises that RF signal while keeping the tuned frequency and modulation intact. Later, a detector recovers audio. The audio then goes to an audio amplifier so headphones or a speaker can be driven.
+### In the real world: following a signal through a receiver
 
-The two amplifiers do not do the same job. The first handles the radio-frequency signal. The second handles the sound-frequency signal.
+A small portable receiver starts with a weak RF signal from the antenna. A front-end RF amplifier raises that RF signal while keeping the tuned frequency and modulation intact.
+
+Later, a detector recovers audio. The audio then goes to an audio amplifier so headphones or a speaker can be driven. The first amplifier handles RF; the second handles sound-frequency audio.
 
 ### Worked example: voltage gain in plain language
 
 A test generator applies 0.08 V of audio to a preamplifier. The preamplifier output is 0.80 V with the same waveform shape.
 
-- The output voltage is larger than the input voltage.
-- The ratio is 0.80 / 0.08.
-- The voltage gain is 10 times.
-
-This example uses ordinary ratio thinking. It does not say the amplifier created energy from nothing. The extra output energy comes from the amplifier power supply.
+- Given: input E = 0.08 V; output E = 0.80 V.
+- Find: voltage gain ratio.
+- Formula: gain = output / input.
+- Substitute: gain = 0.80 / 0.08.
+- Answer: gain = 10 times.
+- Sanity check: the waveform is larger, but the extra output energy comes from the amplifier power supply.
 
 ## Linearity keeps signals clean
 
 A linear amplifier changes signal size without changing the shape more than intended. If the input waveform rises smoothly, the output should rise smoothly by the same proportion. If the input crosses through a low point, the output should cross through a matching low point.
 
-A non-linear amplifier does not preserve that shape. Peaks may flatten, one half of a waveform may be treated differently from the other, or the stage may be driven outside its proper operating range. The result is distortion. In radio work, distortion is not only unpleasant audio. It can create unwanted frequency products that waste power and may interfere with other users.
+A non-linear amplifier does not preserve that shape. Peaks may flatten. One half of a waveform may be treated differently from the other. The stage may also be driven outside its proper operating range.
 
-Efficiency is a different idea. Amplifier efficiency is the ratio of useful output power to DC input power. A perfectly clean amplifier can still waste heat, and an efficient stage can still be badly distorted if it is misused. Keep the ideas separate: linearity is about signal shape; efficiency is about power conversion.
+The result is distortion. In radio work, distortion can create unwanted frequency products that waste power and may interfere with other users.
+
+Efficiency is a different idea. Amplifier efficiency is the ratio of useful output power to DC power taken from the supply. A clean amplifier can still waste heat, and an efficient stage can still be badly distorted if it is misused. Keep the ideas separate: linearity is about signal shape; efficiency is about power conversion.
 
 ### Positive feedback and oscillation
 
-Feedback means a portion of an output signal is returned to an input or earlier point. Negative feedback can be used in many circuits to make behaviour more stable. Positive feedback reinforces the signal. A small amount may be part of an oscillator design, but too much positive feedback in an amplifier stage can make the stage oscillate when it was supposed to amplify.
+Feedback means a portion of an output signal is returned to an input or earlier point. Negative feedback can make many circuits more stable. Positive feedback reinforces the signal.
+
+A small amount may be part of an oscillator design. Too much positive feedback in an amplifier stage can make the stage oscillate when it was supposed to amplify.
 
 A squealing public-address system is an everyday analogy. Sound from the speaker re-enters the microphone, gets amplified again, and grows into a tone. RF circuits can do the same thing invisibly if layout, shielding, or feedback paths are poor.
 
+### Misconception: louder always means better
+
+- Mistaken idea: any larger output signal is an improvement.
+- Correction: the wanted signal must stay clean enough for the job. Distortion can create unwanted products.
+
 ## Diodes conduct mainly one way
 
-A semiconductor diode has two electrodes: an anode and a cathode. In ordinary circuit language, the diode conducts when it is forward biased and blocks, except for tiny leakage or special breakdown behaviour, when it is reverse biased.
+A semiconductor diode has two electrodes: an anode and a cathode. In ordinary circuit language, the diode conducts when it is forward biased. It blocks, except for tiny leakage or special breakdown behaviour, when it is reverse biased.
 
-Conventional current is described as flowing from anode to cathode when a diode conducts. Electron flow is opposite: electrons move from cathode toward anode. Both descriptions appear in electronics; always notice which convention is being used.
+Conventional current is described as flowing from anode to cathode when a diode conducts. Electron flow is opposite: electrons move from cathode toward anode. Both descriptions appear in electronics, so always notice which convention is being used.
 
-The circuit symbol is a triangle-like arrowhead or wedge touching a line. The line marks the cathode side in the usual schematic symbol. Real parts often have a band or marking near the cathode lead.
+The circuit symbol is a triangle-like wedge touching a line. The line marks the cathode side in the usual schematic symbol. Real parts often have a band or marking near the cathode lead.
+
+### Memory trick: cathode has the bar
+
+- Helps remember: the cathode end of a common diode symbol.
+- Trick: the cathode is on the line, or bar, side of the symbol.
+- Limit: this helps with the schematic symbol. Always check the datasheet or package marking for a real part.
 
 ## Rectifiers, detectors, and protectors
 
@@ -91,13 +111,15 @@ Rectification is changing alternating current into current that flows one way. A
 
 Detection uses diode non-linearity to recover information from some RF signals. For example, a simple envelope detector can recover audio variations from an amplitude-varying RF signal. The important Basic-level idea is that a diode can recover information; receiver design details come later.
 
-A diode can also protect against reverse polarity. If a series diode is installed in the positive lead, it conducts when the supply is connected correctly and blocks if the supply is connected backwards. Other protection arrangements use diodes across supply rails or relay coils, but the one-way behaviour is the shared idea.
+A diode can also protect against reverse polarity. If a series diode is installed in the positive lead, it conducts when the supply is connected correctly. It blocks if the supply is connected backwards.
 
-### Worked example: one-way protection path
+A fuse handles overcurrent; a diode in this example handles direction.
 
-A club builds a small accessory for field day. The accessory uses a series diode at the DC input. With the battery connected the intended way, the diode is forward biased and the accessory receives power. If the leads are accidentally swapped, the diode is reverse biased and current is blocked, helping prevent damage.
+### In the real world: reverse-polarity protection
 
-That protection has trade-offs, such as a voltage drop across the diode, but the Basic exam point is the direction-selective behaviour.
+A club builds a small field-day accessory with a series diode at the DC input. With the battery connected the intended way, the diode is forward biased and the accessory receives power.
+
+If the leads are accidentally swapped, the diode is reverse biased and current is blocked, helping prevent damage. That protection has trade-offs, such as a voltage drop across the diode.
 
 ## Special-purpose diodes
 
@@ -106,6 +128,32 @@ A Zener diode is designed to operate in reverse breakdown at a specified voltage
 A light-emitting diode, or LED, emits light when forward current flows through it. The colour depends mainly on the semiconductor material and device construction, not on the colour you see from the outside of the package. LEDs are common on radios as power, transmit, receive, and status indicators.
 
 Diode ratings matter. A real diode has a maximum forward current, a reverse-voltage rating, heat limits, and switching-speed limits. For this lesson, focus first on recognizing what the diode is being asked to do.
+
+### In the real world: USB LED indicator
+
+An LED needs a series resistor. Suppose a red LED drops about 2.1 V and should run near 20 mA from a 5.0 V USB source.
+
+- Given: source E = 5.0 V; LED drop = 2.1 V; resistor E = 2.9 V; target I = 20 mA = 0.020 A.
+- Find: series resistance R.
+- Formula: R = resistor E / I.
+- Substitute: R = 2.9 V / 0.020 A.
+- Answer: R = 145 ohms ideal.
+- Sanity check: the resistor drops the extra voltage that the LED does not use.
+
+E12 is a common resistor-value series. The nearest E12 value above 145 ohms is 150 ohms. With 150 ohms, current is I = 2.9 V / 150 ohms = 0.0193 A, or 19.3 mA. Resistor power is P = 0.0193 A x 2.9 V = 0.056 W, so a 0.25 W resistor has margin.
+
+### In the real world: 9 V battery LED indicator
+
+The same red LED from a 9.0 V battery needs more series resistance because the resistor must drop more voltage.
+
+- Given: source E = 9.0 V; LED drop = 2.1 V; resistor E = 6.9 V; target I = 20 mA = 0.020 A.
+- Find: series resistance R.
+- Formula: R = resistor E / I.
+- Substitute: R = 6.9 V / 0.020 A.
+- Answer: R = 345 ohms ideal.
+- Sanity check: a higher source voltage needs more resistance for the same LED current.
+
+A common E12 choice above the ideal value is 390 ohms. Current becomes I = 6.9 V / 390 ohms = 0.0177 A, or 17.7 mA. Resistor power is P = 0.0177 A x 6.9 V = 0.122 W, so a 0.25 W resistor is suitable.
 
 ## Try it
 
@@ -145,3 +193,4 @@ Description: Draw two ink-brush panels. In the first panel, a small sine wave en
 - Excess positive feedback can make an amplifier oscillate.
 - A diode has an anode and cathode and conducts mainly when forward biased.
 - Diodes are used for rectification, detection, voltage regulation, light emission, and polarity protection.
+- An LED indicator needs a series resistor sized for current and power.

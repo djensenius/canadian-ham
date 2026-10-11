@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-001-004.\n\nWhy the correct answer is right: An SWR meter indicates how much RF power is reflected by the antenna system, which is the usual station check for impedance match.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Frequency meter\": A frequency meter reads frequency, not the match between transmitter and antenna system.\n- sourceIndex 2: \"Multimeter\": A multimeter measures electrical quantities such as voltage, current, or resistance at low frequencies; it is not the RF match indicator in the station line.\n- sourceIndex 3: \"S-meter\": An S-meter reports received signal strength, so it belongs to reception rather than transmitter-to-antenna impedance matching.",
+    "en": "Question B-003-001-004.\n\nWhy the correct answer is right: A standing wave ratio (SWR) meter indicates how much radio frequency (RF) power is reflected by the antenna system. That is the usual station check for impedance match.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Frequency meter\": A frequency meter reads frequency, not the match between transmitter and antenna system.\n- sourceIndex 2: \"Multimeter\": A multimeter measures electrical quantities such as voltage, current, or resistance at low frequencies. It is not the RF match indicator in the station line.\n- sourceIndex 3: \"S-meter\": An S-meter reports received signal strength, so it belongs to reception rather than transmitter-to-antenna impedance matching.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-008-001.\n\nWhy the correct answer is right: Scatter-mode propagation can redirect a small amount of HF energy into the skip zone. Because only scattered energy arrives there, the signals are often weak.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Sky-wave with low radiation angle\": A low-angle sky wave usually lengthens the skip distance and can skip over nearby stations rather than fill the skip zone.\n- sourceIndex 2: \"Ducting\": Ducting is a guided lower-atmosphere VHF/UHF enhancement, not the usual explanation for weak HF signals inside a skip gap.\n- sourceIndex 3: \"Ground wave\": Ground wave follows the surface and fades with distance; it does not explain signals that are too far for ground wave but too near for normal sky wave.",
+    "en": "Question B-007-008-001.\n\nWhy the correct answer is right: Scatter-mode propagation can redirect a small amount of high frequency (HF) energy into the skip zone. Because only scattered energy arrives there, the signals are often weak.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Sky-wave with low radiation angle\": A low-angle sky wave usually lengthens the skip distance and can skip over nearby stations rather than fill the skip zone.\n- sourceIndex 2: \"Ducting\": Ducting guides signals through the lower atmosphere, chiefly on very high frequency (VHF) and ultra high frequency (UHF) paths. It is not the usual explanation for weak HF signals inside a skip gap.\n- sourceIndex 3: \"Ground wave\": Ground wave follows the surface and fades with distance. It does not explain signals that are too far for ground wave but too near for normal sky wave.",
     "fr": null
   },
   "citations": [

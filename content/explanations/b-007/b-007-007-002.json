@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-007-002.\n\nWhy the correct answer is right: Slight bending in the troposphere extends the radio horizon for VHF signals such as two metres. That lets stations communicate somewhat farther than a simple straight-line path would allow.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It causes them to travel shorter distances\": Tropospheric bending curves some energy with Earth instead of away from it, so the range tends to increase.\n- sourceIndex 2: \"It distorts the signal\": Distortion can occur on some unusual paths, but ordinary tropospheric bending is mainly a range-extension effect.\n- sourceIndex 3: \"It interferes with short-range communications\": The effect is not defined as interference; it is refraction that can help beyond-normal contacts.",
+    "en": "Question B-007-007-002.\n\nWhy the correct answer is right: Slight bending in the troposphere extends the radio horizon for very high frequency (VHF) signals such as two metres. That lets stations communicate somewhat farther than a simple straight-line path would allow.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It causes them to travel shorter distances\": Tropospheric bending curves some energy with Earth instead of away from it, so the range tends to increase.\n- sourceIndex 2: \"It distorts the signal\": Distortion can occur on some unusual paths, but ordinary tropospheric bending is mainly a range-extension effect.\n- sourceIndex 3: \"It interferes with short-range communications\": The effect is not defined as interference. It is refraction that can help beyond-normal contacts.",
     "fr": null
   },
   "citations": [

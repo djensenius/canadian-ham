@@ -165,6 +165,7 @@ targets:
       - path: CanadianHam/Models/QuestionBankModels.swift
       - path: CanadianHam/Services/QuestionBankStore.swift
       - path: CanadianHam/Services/ProgressStore.swift
+      - path: CanadianHam/Services/ProgressSyncMerge.swift
       - path: CanadianHam/Services/AppleStudyEngine.swift
       - path: CanadianHam/Models/ProgressModels.swift
       - path: CanadianHam/Practice/EngineShuffle.swift

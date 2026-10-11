@@ -1,5 +1,39 @@
 import Foundation
 
+struct ExportedMorseSettings: Codable, Equatable, Sendable {
+    let toneHz: Int
+    let characterWpm: Int
+    let effectiveWpm: Int
+    let timingProfile: String
+    let volume: Double
+    let outputMode: String
+
+    static let validTimingProfiles: Set<String> = ["isedParis", "ric1Literal", "general"]
+    static let validOutputModes: Set<String> = ["audio", "visualBeacon", "visualTape"]
+    static let `default` = ExportedMorseSettings(toneHz: 650, characterWpm: 15, effectiveWpm: 5, timingProfile: "isedParis", volume: 0.6, outputMode: "audio")
+
+    init(toneHz: Int, characterWpm: Int, effectiveWpm: Int, timingProfile: String, volume: Double, outputMode: String = "audio") {
+        self.toneHz = toneHz
+        self.characterWpm = characterWpm
+        self.effectiveWpm = effectiveWpm
+        self.timingProfile = timingProfile
+        self.volume = volume
+        self.outputMode = outputMode
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let defaults = Self.default
+        // Only a genuinely absent key gets the default; an explicit null is rejected (matches the schema and the web importer).
+        toneHz = container.contains(.toneHz) ? try container.decode(Int.self, forKey: .toneHz) : defaults.toneHz
+        characterWpm = container.contains(.characterWpm) ? try container.decode(Int.self, forKey: .characterWpm) : defaults.characterWpm
+        effectiveWpm = container.contains(.effectiveWpm) ? try container.decode(Int.self, forKey: .effectiveWpm) : defaults.effectiveWpm
+        timingProfile = container.contains(.timingProfile) ? try container.decode(String.self, forKey: .timingProfile) : defaults.timingProfile
+        volume = container.contains(.volume) ? try container.decode(Double.self, forKey: .volume) : defaults.volume
+        outputMode = container.contains(.outputMode) ? try container.decode(String.self, forKey: .outputMode) : defaults.outputMode
+    }
+}
+
 enum CourseBankID: String, CaseIterable, Identifiable, Codable, Sendable {
     case basic = "basic-2025-07-15"
     case advanced = "advanced-2025-02-04"

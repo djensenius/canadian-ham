@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-020-011.\n\nWhy the correct answer is right: A ground-mounted antenna can put energized conductors and strong near fields within reach, so people must be kept at a safe distance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Ensure the feed point is at eye level\": Eye-level feed points can make contact more likely; they do not create a safety barrier.\n- sourceIndex 2: \"Ensure the location is as dry as possible\": Dry conditions may reduce some shock risks, but dryness does not prevent RF exposure or contact with the antenna.\n- sourceIndex 3: \"All radials should be buried at least 15 cm deep\": Radial burial may be part of an installation design, but it does not by itself keep people away from the active antenna and feed point.",
+    "en": "Question B-003-020-011.\n\nWhy the correct answer is right: A ground-mounted antenna can put energized conductors and strong near fields within reach, so people must be kept at a safe distance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Ensure the feed point is at eye level\": Eye-level feed points can make contact more likely. They do not create a safety barrier.\n- sourceIndex 2: \"Ensure the location is as dry as possible\": Dry conditions may reduce some shock risks, but dryness does not prevent radio-frequency (RF) exposure or contact with the antenna.\n- sourceIndex 3: \"All radials should be buried at least 15 cm deep\": Radial burial may be part of an installation design, but it does not by itself keep people away from the active antenna and feed point.",
     "fr": null
   },
   "citations": [

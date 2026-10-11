@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-001-010.\n\nWhy the correct answer is right: Gigahertz is 1 000 times larger than megahertz, so a number in MHz is divided by 1 000 to state it in GHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Multiply by 1 000\": Multiplying would convert toward a smaller unit, not a larger one.\n- sourceIndex 2: \"Divide by 1 000 000\": Dividing by 1 000 000 skips too far.\n- sourceIndex 3: \"Multiply by 1 000 000\": Multiplying by 1 000 000 goes the wrong direction and by too large a factor.",
+    "en": "Question B-005-001-010.\n\nWhy the correct answer is right: Gigahertz is 1 000 times larger than megahertz, so a number in MHz is divided by 1 000 to state it in GHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Multiply by 1 000\": Multiplying would convert toward a smaller unit, not a larger one.\n- sourceIndex 2: \"Divide by 1 000 000\": Dividing by 1 000 000 skips too far.\n- sourceIndex 3: \"Multiply by 1 000 000\": Multiplying goes the wrong direction, and 1 000 000 is too large a factor.",
     "fr": null
   },
   "citations": [

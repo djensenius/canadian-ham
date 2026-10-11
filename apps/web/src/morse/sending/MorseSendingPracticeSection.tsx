@@ -447,6 +447,7 @@ export function MorseSendingPracticeSection({ interfaceLanguage, preferences, pl
 
   function gradeExam(completedWithinTime = examRemaining > 0): void {
     if (examTextRef.current === "" || !examRunningRef.current && examScore !== null) return;
+    releaseAllKeys({ finalizeStraight: true });
     const sentText = finalizePendingCharacter();
     const score = scoreMorseSending(examTextRef.current, sentText, completedWithinTime);
     setExamRunning(false);

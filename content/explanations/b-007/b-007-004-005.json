@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-004-005.\n\nWhy the correct answer is right: One-hop and two-hop components can arrive with changing phase relationships as the ionosphere moves. Those changing additions and cancellations produce variations in received signal strength.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Consistently weaker signals\": Multipath does not only reduce strength; the components can cancel at some moments and reinforce at others.\n- sourceIndex 2: \"Consistently stronger signals\": A steady improvement is not expected when changing paths are sometimes out of phase.\n- sourceIndex 3: \"A shift in signal frequency\": The main effect here is fading in amplitude, not moving the transmitted signal to another frequency.",
+    "en": "Question B-007-004-005.\n\nWhy the correct answer is right: One-hop and two-hop components can arrive with changing phase relationships as the ionosphere moves. Those changing additions and cancellations produce variations in received signal strength.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Consistently weaker signals\": Multipath does not only reduce strength. The components can cancel at some moments and reinforce at others.\n- sourceIndex 2: \"Consistently stronger signals\": A steady improvement is not expected when changing paths are sometimes out of phase.\n- sourceIndex 3: \"A shift in signal frequency\": The main effect here is fading in amplitude, not moving the transmitted signal to another frequency.",
     "fr": null
   },
   "citations": [
