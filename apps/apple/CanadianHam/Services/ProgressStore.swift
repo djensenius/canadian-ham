@@ -1155,19 +1155,29 @@ final class ProgressStoreService: ObservableObject {
     func exportData(bank: QuestionBank, exportedAt: String) throws -> ProgressExportV1 {
         try CanonicalTimestamp.require(exportedAt, fieldName: "exportedAt")
         _ = try preferencesEntity(createIfMissing: true)
-        let lessonProgress = try archivedArray(try lessonProgressRecords())
-        let lessonQuizAttempts = try archivedArray(try lessonQuizAttempts())
+        let questionProgress = try questionProgressRecords().filter { $0.bankId == bank.manifest.bankId }
+        let examAttempts = try examAttempts().filter { $0.bankId == bank.manifest.bankId }
+        let lessonRecords = bank.courseBankID.hasLessons ? try lessonProgressRecords() : []
+        let lessonQuizRecords = bank.courseBankID.hasLessons ? try lessonQuizAttempts() : []
+        let morseProgress = try morseCourseProgress()
         return ProgressExportV1(
             schema: "canadian-ham.progress-export",
             version: 1,
             exportedAt: exportedAt,
             bankId: bank.manifest.bankId,
-            questionProgress: try questionProgressRecords().filter { $0.bankId == bank.manifest.bankId },
-            examAttempts: try examAttempts().filter { $0.bankId == bank.manifest.bankId },
-            lessonProgress: bank.courseBankID.hasLessons ? lessonProgress : [],
-            lessonQuizAttempts: bank.courseBankID.hasLessons ? lessonQuizAttempts : [],
-            morseCourseProgress: try morseCourseProgress(),
-            syncDeviceRows: try syncDeviceRowsSnapshot(),
+            questionProgress: questionProgress,
+            examAttempts: examAttempts,
+            lessonProgress: try archivedArray(lessonRecords),
+            lessonQuizAttempts: try archivedArray(lessonQuizRecords),
+            morseCourseProgress: morseProgress,
+            syncDeviceRows: try syncDeviceRowsSnapshot(
+                bank: bank,
+                questionProgress: questionProgress,
+                examAttempts: examAttempts,
+                lessonProgress: lessonRecords,
+                lessonQuizAttempts: lessonQuizRecords,
+                includesMorse: morseProgress != nil
+            ),
             preferences: ExportedPreferences(
                 practiceMode: preferences.practiceMode.rawValue,
                 examTimerEnabled: preferences.examTimerEnabled,
@@ -1188,6 +1198,7 @@ final class ProgressStoreService: ObservableObject {
             throw ProgressStoreError.validationFailed(errors)
         }
 
+        let usableSyncDeviceRows = try usableSyncDeviceRows(from: data, bank: bank)
         let previousSnapshot = try snapshotForRollback()
         do {
             try deleteQuestionProgress(bankId: bank.manifest.bankId)
@@ -1201,7 +1212,7 @@ final class ProgressStoreService: ObservableObject {
             // Commit deletions before reinserting replacement records so the bank-scoped
             // replace-all import has a clean rollback boundary.
             try context.save()
-            if let syncDeviceRows = data.syncDeviceRows {
+            if let syncDeviceRows = usableSyncDeviceRows {
                 for row in syncDeviceRows.questionProgress where row.record.bankId == bank.manifest.bankId {
                     try upsertQuestionProgress(row.record, deviceId: row.deviceId)
                 }
@@ -1231,7 +1242,7 @@ final class ProgressStoreService: ObservableObject {
             entity.language = nextPreferences.language.rawValue
             entity.theme = nextPreferences.theme.rawValue
             if bank.courseBankID.hasLessons {
-                if let syncDeviceRows = data.syncDeviceRows {
+                if let syncDeviceRows = usableSyncDeviceRows {
                     try replaceDeviceLessonProgress(syncDeviceRows.lessonProgress)
                     try replaceDeviceLessonQuizAttempts(syncDeviceRows.lessonQuizAttempts)
                 } else {
@@ -1241,10 +1252,10 @@ final class ProgressStoreService: ObservableObject {
                 entity.archivedLessonProgressData = Data("[]".utf8)
                 entity.archivedLessonQuizAttemptsData = Data("[]".utf8)
             }
-            if let syncDeviceRows = data.syncDeviceRows, !syncDeviceRows.morseCourseProgress.isEmpty {
+            if let syncDeviceRows = usableSyncDeviceRows, !syncDeviceRows.morseCourseProgress.isEmpty {
                 try replaceDeviceMorseCourseProgress(syncDeviceRows.morseCourseProgress)
             } else if let morseCourseProgress = data.morseCourseProgress {
-                try upsertMorseCourseProgress(morseCourseProgress)
+                try replaceDeviceMorseCourseProgress([DeviceMorseCourseProgressRecord(deviceId: localDeviceID, progress: morseCourseProgress)])
             }
 #if DEBUG
             if failNextImportAfterMorseWriteForTesting {
@@ -1317,6 +1328,9 @@ final class ProgressStoreService: ObservableObject {
         if let morseCourseProgress = data.morseCourseProgress {
             validateMorseCourseProgress(morseCourseProgress, errors: &errors)
         }
+        if let syncDeviceRows = data.syncDeviceRows {
+            validateSyncDeviceRows(syncDeviceRows, bank: bank, errors: &errors)
+        }
 
         if ApplePreferences.PracticeMode(rawValue: data.preferences.practiceMode) == nil {
             errors.append(String(localized: "Import preferences.practiceMode is invalid."))
@@ -1325,6 +1339,101 @@ final class ProgressStoreService: ObservableObject {
             errors.append(String(localized: "Import preferences.theme is invalid."))
         }
         return errors
+    }
+
+    private func validateSyncDeviceRows(_ rows: ProgressSyncDeviceRows, bank: QuestionBank, errors: inout [String]) {
+        let knownQuestionIds = Set(bank.questions.map(\.id))
+        let knownCategoryIds = Set(bank.categories.map(\.id))
+        let knownSubsectionIds = Set(bank.subsections.map(\.id))
+        for (index, row) in rows.questionProgress.enumerated() {
+            let prefix = "Import syncDeviceRows.questionProgress[\(index)]"
+            if row.deviceId.isEmpty { errors.append(String(localized: "\(prefix).deviceId must be non-empty.")) }
+            let record = row.record
+            if !knownQuestionIds.contains(record.questionId) { errors.append(String(localized: "\(prefix).record.questionId must be a known question ID.")) }
+            if record.bankId != bank.manifest.bankId { errors.append(String(localized: "\(prefix).record.bankId must be \(bank.manifest.bankId).")) }
+            if record.attempts < 0 { errors.append(String(localized: "\(prefix).record.attempts must be a non-negative integer.")) }
+            if record.correctAttempts < 0 || record.correctAttempts > record.attempts { errors.append(String(localized: "\(prefix).record.correctAttempts must be between 0 and attempts.")) }
+            appendTimestampError(&errors, value: record.lastAttemptedAt, field: "\(prefix).record.lastAttemptedAt")
+            if record.recentResults.count > 5 { errors.append(String(localized: "\(prefix).record.recentResults must contain at most five booleans.")) }
+            if !(0...5).contains(record.leitner.box) { errors.append(String(localized: "\(prefix).record.leitner.box must be an integer between 0 and 5.")) }
+            appendTimestampError(&errors, value: record.leitner.dueAt, field: "\(prefix).record.leitner.dueAt")
+        }
+        for (index, row) in rows.examAttempts.enumerated() {
+            let prefix = "Import syncDeviceRows.examAttempts[\(index)]"
+            if row.deviceId.isEmpty { errors.append(String(localized: "\(prefix).deviceId must be non-empty.")) }
+            let attempt = row.attempt
+            if attempt.id.isEmpty { errors.append(String(localized: "\(prefix).attempt.id must be a non-empty string.")) }
+            if attempt.bankId != bank.manifest.bankId { errors.append(String(localized: "\(prefix).attempt.bankId must be \(bank.manifest.bankId).")) }
+            if attempt.mode != "mock-exam" { errors.append(String(localized: "\(prefix).attempt.mode must be mock-exam.")) }
+            appendTimestampError(&errors, value: attempt.startedAt, field: "\(prefix).attempt.startedAt")
+            appendTimestampError(&errors, value: attempt.submittedAt, field: "\(prefix).attempt.submittedAt")
+            if attempt.timer.secondsAllowed != nil && attempt.timer.secondsAllowed! < 0 { errors.append(String(localized: "\(prefix).attempt.timer.secondsAllowed must be null or non-negative.")) }
+            if attempt.timer.secondsElapsed < 0 { errors.append(String(localized: "\(prefix).attempt.timer.secondsElapsed must be non-negative.")) }
+            validateScore(attempt.score, prefix: "\(prefix).attempt.score", bankId: bank.manifest.bankId, hasHonours: bank.courseBankID.hasHonours, knownCategoryIds: knownCategoryIds, knownSubsectionIds: knownSubsectionIds, errors: &errors)
+            for (itemIndex, item) in attempt.items.enumerated() {
+                validateAttemptItem(item, prefix: "\(prefix).attempt.items[\(itemIndex)]", knownQuestionIds: knownQuestionIds, knownCategoryIds: knownCategoryIds, knownSubsectionIds: knownSubsectionIds, errors: &errors)
+            }
+        }
+        for (index, row) in rows.lessonProgress.enumerated() {
+            if row.deviceId.isEmpty { errors.append(String(localized: "Import syncDeviceRows.lessonProgress[\(index)].deviceId must be non-empty.")) }
+            if let archived = try? archivedArray([row.record]) {
+                validateLessonProgress(archived, knownLessonIds: bank.knownLessonIds, errors: &errors)
+            } else {
+                errors.append(String(localized: "Import syncDeviceRows.lessonProgress[\(index)].record must be a valid lesson progress record."))
+            }
+        }
+        for (index, row) in rows.lessonQuizAttempts.enumerated() {
+            if row.deviceId.isEmpty { errors.append(String(localized: "Import syncDeviceRows.lessonQuizAttempts[\(index)].deviceId must be non-empty.")) }
+            if let archived = try? archivedArray([row.attempt]) {
+                validateLessonQuizAttempts(archived, knownQuestionIds: knownQuestionIds, knownLessonIds: bank.knownLessonIds, lessonQuizzesById: bank.lessonQuizzesById, errors: &errors)
+            } else {
+                errors.append(String(localized: "Import syncDeviceRows.lessonQuizAttempts[\(index)].attempt must be a valid lesson quiz attempt."))
+            }
+        }
+        for (index, row) in rows.morseCourseProgress.enumerated() {
+            if row.deviceId.isEmpty { errors.append(String(localized: "Import syncDeviceRows.morseCourseProgress[\(index)].deviceId must be non-empty.")) }
+            validateMorseCourseProgress(row.progress, errors: &errors)
+        }
+    }
+
+    private func usableSyncDeviceRows(from data: ProgressExportV1, bank: QuestionBank) throws -> ProgressSyncDeviceRows? {
+        guard let rows = data.syncDeviceRows else { return nil }
+        let questionIds = Set(data.questionProgress.map(\.questionId))
+        let examSubmittedAt = Set(data.examAttempts.map { "\($0.bankId)\u{0}\($0.submittedAt)" })
+        let lessonProgress = try decodeArchivedArray(data.lessonProgress, as: LessonProgressRecord.self)
+        let lessonIds = Set(lessonProgress.map(\.lessonId))
+        let lessonQuizAttempts = try decodeArchivedArray(data.lessonQuizAttempts, as: LessonQuizAttempt.self)
+        let lessonQuizIds = Set(lessonQuizAttempts.map(\.id))
+        let filtered = ProgressSyncDeviceRows(
+            questionProgress: rows.questionProgress.filter { $0.record.bankId == bank.manifest.bankId && questionIds.contains($0.record.questionId) },
+            examAttempts: rows.examAttempts.filter { $0.attempt.bankId == bank.manifest.bankId && examSubmittedAt.contains("\($0.attempt.bankId)\u{0}\($0.attempt.submittedAt)") },
+            lessonProgress: bank.courseBankID.hasLessons ? rows.lessonProgress.filter { lessonIds.contains($0.record.lessonId) } : [],
+            lessonQuizAttempts: bank.courseBankID.hasLessons ? rows.lessonQuizAttempts.filter { lessonQuizIds.contains($0.attempt.id) } : [],
+            morseCourseProgress: data.morseCourseProgress == nil ? [] : rows.morseCourseProgress
+        )
+        let mergedQuestions = ProgressSyncMerge.deduplicateDeviceQuestionProgress(filtered.questionProgress)
+        guard sortedQuestions(mergedQuestions) == sortedQuestions(data.questionProgress) else { return nil }
+        let mergedAttempts = ProgressSyncMerge.deduplicateDeviceExamAttempts(filtered.examAttempts)
+        guard sortedAttempts(mergedAttempts) == sortedAttempts(data.examAttempts) else { return nil }
+        guard ProgressSyncMerge.deduplicateDeviceLessonProgress(filtered.lessonProgress) == lessonProgress.sorted(by: { $0.lessonId < $1.lessonId }) else { return nil }
+        guard ProgressSyncMerge.deduplicateDeviceLessonQuizAttempts(filtered.lessonQuizAttempts) == lessonQuizAttempts.sorted(by: { $0.submittedAt == $1.submittedAt ? $0.id < $1.id : $0.submittedAt < $1.submittedAt }) else { return nil }
+        guard ProgressSyncMerge.mergeDeviceMorseCourseProgress(filtered.morseCourseProgress) == data.morseCourseProgress else { return nil }
+        return filtered
+    }
+
+    private func sortedQuestions(_ records: [QuestionProgressRecord]) -> [QuestionProgressRecord] {
+        records.sorted { lhs, rhs in
+            if lhs.bankId != rhs.bankId { return lhs.bankId < rhs.bankId }
+            return lhs.questionId < rhs.questionId
+        }
+    }
+
+    private func sortedAttempts(_ attempts: [StoredExamAttempt]) -> [StoredExamAttempt] {
+        attempts.sorted { lhs, rhs in
+            if lhs.bankId != rhs.bankId { return lhs.bankId < rhs.bankId }
+            if lhs.submittedAt != rhs.submittedAt { return lhs.submittedAt < rhs.submittedAt }
+            return lhs.id < rhs.id
+        }
     }
 
     private func upsertQuestionProgress(_ record: QuestionProgressRecord, deviceId: String? = nil) throws {
@@ -1885,6 +1994,28 @@ final class ProgressStoreService: ObservableObject {
             lessonProgress: try deviceLessonProgressRows(),
             lessonQuizAttempts: try deviceLessonQuizAttemptRows(),
             morseCourseProgress: morseRows
+        )
+    }
+
+    private func syncDeviceRowsSnapshot(
+        bank: QuestionBank,
+        questionProgress: [QuestionProgressRecord],
+        examAttempts: [StoredExamAttempt],
+        lessonProgress: [LessonProgressRecord],
+        lessonQuizAttempts: [LessonQuizAttempt],
+        includesMorse: Bool
+    ) throws -> ProgressSyncDeviceRows {
+        let snapshot = try syncDeviceRowsSnapshot()
+        let questionIds = Set(questionProgress.map(\.questionId))
+        let examSubmittedAt = Set(examAttempts.map { "\($0.bankId)\u{0}\($0.submittedAt)" })
+        let lessonIds = Set(lessonProgress.map(\.lessonId))
+        let lessonQuizIds = Set(lessonQuizAttempts.map(\.id))
+        return ProgressSyncDeviceRows(
+            questionProgress: snapshot.questionProgress.filter { $0.record.bankId == bank.manifest.bankId && questionIds.contains($0.record.questionId) },
+            examAttempts: snapshot.examAttempts.filter { $0.attempt.bankId == bank.manifest.bankId && examSubmittedAt.contains("\($0.attempt.bankId)\u{0}\($0.attempt.submittedAt)") },
+            lessonProgress: bank.courseBankID.hasLessons ? snapshot.lessonProgress.filter { lessonIds.contains($0.record.lessonId) } : [],
+            lessonQuizAttempts: bank.courseBankID.hasLessons ? snapshot.lessonQuizAttempts.filter { lessonQuizIds.contains($0.attempt.id) } : [],
+            morseCourseProgress: includesMorse ? snapshot.morseCourseProgress : []
         )
     }
 

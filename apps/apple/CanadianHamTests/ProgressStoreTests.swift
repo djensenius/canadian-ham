@@ -405,6 +405,103 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(try iPad.exportData(bank: bank, exportedAt: "2026-01-02T06:04:05.000Z").questionProgress, [iPhoneRecord])
     }
 
+    func testImportRejectsInvalidSyncDeviceRows() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let validRecord = QuestionProgressRecord(
+            questionId: "B-001-001-001",
+            bankId: bank.manifest.bankId,
+            attempts: 1,
+            correctAttempts: 1,
+            lastAttemptedAt: "2026-01-02T03:04:05.000Z",
+            lastResult: .correct,
+            recentResults: [true],
+            leitner: LeitnerState(box: 1, dueAt: "2026-01-03T03:04:05.000Z")
+        )
+        let invalidRow = QuestionProgressRecord(
+            questionId: "B-999-999-999",
+            bankId: bank.manifest.bankId,
+            attempts: 1,
+            correctAttempts: 2,
+            lastAttemptedAt: "bad",
+            lastResult: .correct,
+            recentResults: [true, true, true, true, true, true],
+            leitner: LeitnerState(box: 6, dueAt: "bad")
+        )
+        let data = ProgressExportV1(
+            schema: "canadian-ham.progress-export",
+            version: 1,
+            exportedAt: "2026-01-02T05:04:05.000Z",
+            bankId: bank.manifest.bankId,
+            questionProgress: [validRecord],
+            examAttempts: [],
+            lessonProgress: [],
+            lessonQuizAttempts: [],
+            syncDeviceRows: ProgressSyncDeviceRows(
+                questionProgress: [DeviceQuestionProgressRecord(deviceId: "", record: invalidRow)],
+                examAttempts: [],
+                lessonProgress: [],
+                lessonQuizAttempts: [],
+                morseCourseProgress: []
+            ),
+            preferences: ExportedPreferences(practiceMode: "immediate", examTimerEnabled: false, theme: "system")
+        )
+        let errors = try ProgressStoreService.inMemoryForTests().validate(data, bank: bank)
+
+        XCTAssertTrue(errors.contains { $0.contains("syncDeviceRows.questionProgress[0].deviceId") })
+        XCTAssertTrue(errors.contains { $0.contains("syncDeviceRows.questionProgress[0].record.questionId") })
+        XCTAssertTrue(errors.contains { $0.contains("correctAttempts") })
+        XCTAssertThrowsError(try ProgressStoreService.inMemoryForTests().importData(data, bank: bank))
+    }
+
+    func testImportIgnoresStaleSyncDeviceRowsWhenMergedRowsDoNotMatchTopLevelFields() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let topLevel = QuestionProgressRecord(
+            questionId: "B-001-001-001",
+            bankId: bank.manifest.bankId,
+            attempts: 3,
+            correctAttempts: 2,
+            lastAttemptedAt: "2026-01-02T06:04:05.000Z",
+            lastResult: .correct,
+            recentResults: [false, true, true],
+            leitner: LeitnerState(box: 2, dueAt: "2026-01-05T03:04:05.000Z")
+        )
+        let staleRow = QuestionProgressRecord(
+            questionId: topLevel.questionId,
+            bankId: topLevel.bankId,
+            attempts: 2,
+            correctAttempts: 1,
+            lastAttemptedAt: "2026-01-02T03:04:05.000Z",
+            lastResult: .correct,
+            recentResults: [false, true],
+            leitner: LeitnerState(box: 1, dueAt: "2026-01-03T03:04:05.000Z")
+        )
+        let data = ProgressExportV1(
+            schema: "canadian-ham.progress-export",
+            version: 1,
+            exportedAt: "2026-01-02T07:04:05.000Z",
+            bankId: bank.manifest.bankId,
+            questionProgress: [topLevel],
+            examAttempts: [],
+            lessonProgress: [],
+            lessonQuizAttempts: [],
+            syncDeviceRows: ProgressSyncDeviceRows(
+                questionProgress: [DeviceQuestionProgressRecord(deviceId: "iphone", record: staleRow)],
+                examAttempts: [],
+                lessonProgress: [],
+                lessonQuizAttempts: [],
+                morseCourseProgress: []
+            ),
+            preferences: ExportedPreferences(practiceMode: "immediate", examTimerEnabled: false, theme: "system")
+        )
+        let store = try ProgressStoreService.inMemoryForTests(localDeviceID: "ipad")
+
+        XCTAssertTrue(store.validate(data, bank: bank).isEmpty)
+        try store.importData(data, bank: bank)
+
+        XCTAssertEqual(try store.questionProgressRecords(), [topLevel])
+        XCTAssertEqual(try store.exportData(bank: bank, exportedAt: "2026-01-02T08:04:05.000Z").syncDeviceRows?.questionProgress.map(\.deviceId), ["ipad"])
+    }
+
     func testICloudDeleteStopsSyncBeforeDeletingZoneAndKeepsLocalWithoutReupload() async throws {
         let store = try ProgressStoreService.inMemoryForTests(iCloudSyncEnabled: true, layout: .split)
         let record = QuestionProgressRecord(
@@ -870,6 +967,55 @@ final class ProgressStoreTests: XCTestCase {
         try store.importData(decoded, bank: bank)
 
         XCTAssertEqual(try store.morseCourseProgress(), originalMorseProgress)
+    }
+
+    func testOldFormatImportWithMorseProgressReplacesAllExistingDeviceRows() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let importedMorse = sampleMorseCourseProgress(lessonId: "koch-001")
+        let replacementMorse = MorseCourseProgressExport(
+            courseId: "ised-koch-g4fon-v1",
+            lessonProgress: [MorseLessonProgressRecord(lessonId: "koch-002", attempts: 1, bestAccuracy: 1, lastAccuracy: 1, lastAttemptedAt: "2026-01-03T04:30:00.000Z", completedAt: nil)],
+            characterStats: [MorseCharacterStatRecord(character: "M", attempts: 1, correctAttempts: 1, recentResults: [true], lastPracticedAt: "2026-01-03T04:30:00.000Z")],
+            dailyActivity: [MorseDailyActivityRecord(date: "2026-01-03", lessonsCompleted: 1)]
+        )
+        let store = try ProgressStoreService.inMemoryForTests(localDeviceID: "ipad")
+        let imported = ProgressExportV1(
+            schema: "canadian-ham.progress-export",
+            version: 1,
+            exportedAt: "2026-01-02T05:04:05.000Z",
+            bankId: bank.manifest.bankId,
+            questionProgress: [],
+            examAttempts: [],
+            lessonProgress: [],
+            lessonQuizAttempts: [],
+            morseCourseProgress: importedMorse,
+            syncDeviceRows: ProgressSyncDeviceRows(
+                questionProgress: [],
+                examAttempts: [],
+                lessonProgress: [],
+                lessonQuizAttempts: [],
+                morseCourseProgress: [DeviceMorseCourseProgressRecord(deviceId: "iphone", progress: importedMorse)]
+            ),
+            preferences: ExportedPreferences(practiceMode: "immediate", examTimerEnabled: false, theme: "system")
+        )
+        try store.importData(imported, bank: bank)
+        let oldFormat = ProgressExportV1(
+            schema: "canadian-ham.progress-export",
+            version: 1,
+            exportedAt: "2026-01-03T05:04:05.000Z",
+            bankId: bank.manifest.bankId,
+            questionProgress: [],
+            examAttempts: [],
+            lessonProgress: [],
+            lessonQuizAttempts: [],
+            morseCourseProgress: replacementMorse,
+            preferences: ExportedPreferences(practiceMode: "immediate", examTimerEnabled: false, theme: "system")
+        )
+
+        try store.importData(oldFormat, bank: bank)
+
+        XCTAssertEqual(try store.morseCourseProgress(), replacementMorse)
+        XCTAssertEqual(try store.exportData(bank: bank, exportedAt: "2026-01-03T06:04:05.000Z").syncDeviceRows?.morseCourseProgress.map(\.deviceId), ["ipad"])
     }
 
     func testImportingTheSameExportTwiceRestoresIdenticalProgressAttemptsAndLessons() throws {

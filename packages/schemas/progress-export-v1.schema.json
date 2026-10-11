@@ -26,8 +26,68 @@
       "items": { "$ref": "common.schema.json#/$defs/lessonQuizAttempt" }
     },
     "morseCourseProgress": { "$ref": "common.schema.json#/$defs/morseCourseProgress" },
-    "syncDeviceRows": { "type": "object" },
+    "syncDeviceRows": { "$ref": "#/$defs/syncDeviceRows" },
     "preferences": { "$ref": "common.schema.json#/$defs/webPreferences" }
+  },
+  "$defs": {
+    "syncDeviceRows": {
+      "type": "object",
+      "required": ["questionProgress", "examAttempts", "lessonProgress", "lessonQuizAttempts", "morseCourseProgress"],
+      "properties": {
+        "questionProgress": { "type": "array", "items": { "$ref": "#/$defs/deviceQuestionProgressRecord" } },
+        "examAttempts": { "type": "array", "items": { "$ref": "#/$defs/deviceExamAttempt" } },
+        "lessonProgress": { "type": "array", "items": { "$ref": "#/$defs/deviceLessonProgressRecord" } },
+        "lessonQuizAttempts": { "type": "array", "items": { "$ref": "#/$defs/deviceLessonQuizAttempt" } },
+        "morseCourseProgress": { "type": "array", "items": { "$ref": "#/$defs/deviceMorseCourseProgress" } }
+      },
+      "additionalProperties": false
+    },
+    "deviceId": { "type": "string", "minLength": 1 },
+    "deviceQuestionProgressRecord": {
+      "type": "object",
+      "required": ["deviceId", "record"],
+      "properties": {
+        "deviceId": { "$ref": "#/$defs/deviceId" },
+        "record": { "$ref": "common.schema.json#/$defs/questionProgressRecord" }
+      },
+      "additionalProperties": false
+    },
+    "deviceExamAttempt": {
+      "type": "object",
+      "required": ["deviceId", "attempt"],
+      "properties": {
+        "deviceId": { "$ref": "#/$defs/deviceId" },
+        "attempt": { "$ref": "common.schema.json#/$defs/progressExamAttempt" }
+      },
+      "additionalProperties": false
+    },
+    "deviceLessonProgressRecord": {
+      "type": "object",
+      "required": ["deviceId", "record"],
+      "properties": {
+        "deviceId": { "$ref": "#/$defs/deviceId" },
+        "record": { "$ref": "common.schema.json#/$defs/lessonProgressRecord" }
+      },
+      "additionalProperties": false
+    },
+    "deviceLessonQuizAttempt": {
+      "type": "object",
+      "required": ["deviceId", "attempt"],
+      "properties": {
+        "deviceId": { "$ref": "#/$defs/deviceId" },
+        "attempt": { "$ref": "common.schema.json#/$defs/lessonQuizAttempt" }
+      },
+      "additionalProperties": false
+    },
+    "deviceMorseCourseProgress": {
+      "type": "object",
+      "required": ["deviceId", "progress"],
+      "properties": {
+        "deviceId": { "$ref": "#/$defs/deviceId" },
+        "progress": { "$ref": "common.schema.json#/$defs/morseCourseProgress" }
+      },
+      "additionalProperties": false
+    }
   },
   "additionalProperties": false,
   "oneOf": [
