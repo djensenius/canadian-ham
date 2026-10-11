@@ -1362,7 +1362,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
         XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
         let wheel = app.buttons["Ohm’s law and power wheel with quadrants for P, E, I, and R and three formulas in each quadrant."].firstMatch
-        XCTAssertTrue(wheel.waitForExistence(timeout: 10), "Expected the Ohm's law wheel")
+        scrollUntilExists(wheel, in: app, maxSwipes: 80)
+        XCTAssertTrue(wheel.exists, "Expected the Ohm's law wheel")
         scrollUntilFullyVisibleBelowNavigationBar(wheel, in: app, maxSwipes: 120)
         assertFullyVisibleBelowNavigationBar(wheel, in: app, context: "largest text Ohm's law wheel")
         let windowFrame = app.windows.firstMatch.frame
@@ -1807,7 +1808,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
         for figureID in ["power-triangle", "ohms-law-triangle", "ohms-law-power-wheel"] {
             let figureButton = app.buttons[figureAltText[figureID]!].firstMatch
-            XCTAssertTrue(figureButton.waitForExistence(timeout: 10), "Expected \(figureID) figure")
+            scrollUntilExists(figureButton, in: app, maxSwipes: 80)
+            XCTAssertTrue(figureButton.exists, "Expected \(figureID) figure")
             scrollUntilFullyVisibleBelowNavigationBar(figureButton, in: app, maxSwipes: 80)
             assertFullyVisibleBelowNavigationBar(figureButton, in: app, context: "\(appearance.rawValue) \(figureID) screenshot")
             attachScreenshot(named: "task38-1-ios-\(appearance.rawValue)-\(figureID)", from: app)
@@ -2238,6 +2240,15 @@ final class CanadianHamPracticeUITests: XCTestCase {
             } else {
                 scrollView.swipeUp()
             }
+            waitBriefly()
+        }
+    }
+
+    private func scrollUntilExists(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
+        let scrollView = app.scrollViews.firstMatch
+        guard scrollView.waitForExistence(timeout: 1) else { return }
+        for _ in 0..<maxSwipes where !element.exists {
+            scrollView.swipeUp()
             waitBriefly()
         }
     }
