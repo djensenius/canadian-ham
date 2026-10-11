@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-11 00:16'
+updated_date: '2026-10-11 00:25'
 labels:
   - content
 dependencies:
@@ -30,7 +30,7 @@ Review the 984 per-question explanations in content/explanations for readability
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Review B-005 explanations against the generated question bank and teaching guide, updating only body.en for accuracy and readability.\n2. Run the B-005 explanation checker, inspect the diff for body.en-only changes, then commit that category.\n3. Review B-004 with the same body.en-only accuracy/readability pass and run its category checker.\n4. Run the full explanation checker plus link and test checks, add lane notes, and leave ACs/status for the coordinator.
+1. Apply all review findings in body.en only, checking official question data for each touched answer.\n2. Use a script to flag abbreviation first-use issues across every explanation changed on task-39.6, then make targeted body.en edits by category.\n3. Commit content fixes one category at a time, run the requested explanation/link/web checks, and append finding-by-finding task notes without checking ACs or moving status.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
