@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-11 00:09'
+updated_date: '2026-10-11 00:10'
 labels:
   - content
 dependencies:
@@ -26,3 +26,9 @@ Review the 984 per-question explanations in content/explanations for readability
 - [ ] #1 Every explanation in B-004 to B-008 is reviewed and revised where needed; B-001 to B-003 are reviewed for clarity
 - [ ] #2 Explanation checker, originality and allowlist checks pass
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Review B-005 explanations against the generated question bank and teaching guide, updating only body.en for accuracy and readability.\n2. Run the B-005 explanation checker, inspect the diff for body.en-only changes, then commit that category.\n3. Review B-004 with the same body.en-only accuracy/readability pass and run its category checker.\n4. Run the full explanation checker plus link and test checks, add lane notes, and leave ACs/status for the coordinator.
+<!-- SECTION:PLAN:END -->
