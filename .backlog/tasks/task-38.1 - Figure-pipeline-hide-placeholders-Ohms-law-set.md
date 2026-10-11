@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-11 13:16'
+updated_date: '2026-10-11 13:24'
 labels:
   - content
   - apple
@@ -70,6 +70,10 @@ Follow-up validation: pnpm check:figures; node scripts/check-figures.mjs --self-
 Final enlarged-view follow-up: changed enlarged figure sheet to compute a fitted size from available GeometryReader space so it opens with the whole figure aspect-fit and centered, while retaining pinch zoom and double-tap zoom toggle. Added launch-argument coverage for opening the enlarged wheel directly at largest accessibility text size and asserting the enlarged image fits below the navigation bar. Refreshed docs/evidence/task-38.1/app/ screenshots; enlarged light/dark views now show the whole figure.
 
 Validation for final follow-up: pnpm check:figures; node scripts/check-figures.mjs --self-test; TZ=UTC pnpm --filter @canadian-ham/web test (161 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift (20 tests); node scripts/check-apple-text-sources.ts; targeted iOS screenshots/tests testOhmsLawLessonFiguresAndAccessibilityLight/Dark in /tmp/task381-r11-screens.xcresult (2 tests passed); targeted largest-accessibility enlarged-view test testOhmsLawWheelFitsAndEnlargesAtLargestAccessibilityTextSize in /tmp/task381-large8.xcresult (1 test passed). Screenshots exported to docs/evidence/task-38.1/app/.
+
+Final enlarged-view correction: updated the enlarged sheet layout so it computes aspect-fit size from the sheet geometry and opens centered/fitted, retaining pinch zoom and double-tap zoom. The largest-accessibility UI test now opens the enlarged wheel directly via launch argument and asserts the enlarged image is fully visible below the nav bar.
+
+Final validation: pnpm check:figures; node scripts/check-figures.mjs --self-test; TZ=UTC pnpm --filter @canadian-ham/web test (161 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift (20 tests); node scripts/check-apple-text-sources.ts; targeted iOS screenshot tests for light/dark figures in /tmp/task381-r11-screens.xcresult; targeted largest-accessibility enlarged-wheel test in /tmp/task381-large8.xcresult; placeholder-hiding test in /tmp/task381-placeholder.xcresult. Screenshots exported to docs/evidence/task-38.1/app/.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
