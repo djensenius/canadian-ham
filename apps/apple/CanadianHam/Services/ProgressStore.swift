@@ -758,21 +758,12 @@ final class ProgressStoreService: ObservableObject {
         let progressConfiguration: ModelConfiguration
         let preferencesConfiguration: ModelConfiguration
         if isStoredInMemoryOnly {
-#if ICLOUD_SYNC
-            progressConfiguration = ModelConfiguration(
-                "LearningProgress",
-                schema: progressSchema,
-                isStoredInMemoryOnly: true,
-                cloudKitDatabase: cloudKitDatabase(for: plan.progressDatabase)
-            )
-#else
             progressConfiguration = ModelConfiguration(
                 "LearningProgress",
                 schema: progressSchema,
                 isStoredInMemoryOnly: true,
                 cloudKitDatabase: .none
             )
-#endif
             preferencesConfiguration = ModelConfiguration(
                 "LocalPreferences",
                 schema: preferencesSchema,
