@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-11 13:15'
+updated_date: '2026-10-11 13:16'
 labels:
   - content
   - apple
@@ -75,5 +75,5 @@ Validation for final follow-up: pnpm check:figures; node scripts/check-figures.m
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented task-38.1 and follow-up review fixes: hidden author illustration briefs, shared and checked SVG figure pipeline, Ohm’s law triangle/power triangle/wheel with text equivalent, parser parity fixtures for web and Swift, generated Apple assets and metadata, width-fitting Apple figures with enlarged view, robust figure checker and docs, refreshed real-app screenshot evidence, and localized UI strings. Verified with figure checks/self-test, web tests, content-swift tests, Apple text/l10n checks, and targeted iOS figure/placeholder/large-text tests. Full iOS/macOS suites are deferred to pre-merge under the updated owner testing policy.
+Implemented task-38.1 and review follow-ups: hidden author illustration briefs, shared and checked SVG figure pipeline, Ohm’s law triangle/power triangle/wheel with text equivalent, parser parity fixtures for web and Swift, generated Apple assets and metadata, width-fitting Apple figures with an enlarged view that opens fitted/centered and supports zoom, robust figure checker and docs, refreshed real-app screenshot evidence, and localized UI strings. Verified with figure checks/self-test, web tests, content-swift tests, Apple text/l10n checks, and targeted iOS figure/placeholder/large-text/enlarged-view tests. Full iOS/macOS suites are deferred to pre-merge under the updated owner testing policy.
 <!-- SECTION:FINAL_SUMMARY:END -->
