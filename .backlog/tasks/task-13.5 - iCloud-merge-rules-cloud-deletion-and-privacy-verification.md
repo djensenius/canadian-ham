@@ -38,7 +38,7 @@ Why: progress from several devices must converge without losing or double-counti
 - [x] #11 A failed legacy-preferences read is a distinct result: don't create the marker or finalise the copy, and retry on the next gated launch (the Preferences.store existence check must not block the retry); test the transient-failure path
 - [ ] #12 On an iCloud account change, sign-out or disable, tear down the live CloudKit-backed container immediately (reopen local-only) so the same container can't keep mirroring under a new account; test it with an injectable store factory
 - [x] #13 Harden the gated-file guards: the iCloud gate check rejects every top-level entitlement key outside the allowlist regardless of value type (integer, dict…), and the gated Info.plist's UIBackgroundModes must be exactly [remote-notification]; negative fixtures for both
-- [ ] #14 Morse course progress (lesson progress, character stats, daily activity) moves from the local JSON file into a CloudKit-compatible SwiftData entity in the learning-progress store, with a one-time migration that loses nothing, a convergent merge (cumulative attempts, best accuracy, union of daily activity), and export/import unchanged; Morse trainer settings stay local
+- [x] #14 Morse course progress (lesson progress, character stats, daily activity) moves from the local JSON file into a CloudKit-compatible SwiftData entity in the learning-progress store, with a one-time migration that loses nothing, a convergent merge (cumulative attempts, best accuracy, union of daily activity), and export/import unchanged; Morse trainer settings stay local
 <!-- AC:END -->
 
 ## Implementation Plan
