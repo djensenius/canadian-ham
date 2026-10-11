@@ -244,14 +244,20 @@ final class ProgressStoreTests: XCTestCase {
             leitner: LeitnerState(box: 1, dueAt: "2026-01-03T03:04:05.000Z")
         )
         try store.saveQuestionProgress([record])
+        let originalContainer = store.container
+        let defaultsSuiteName = "ProgressStoreTests.iCloudDelete.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: defaultsSuiteName))
+        defer { defaults.removePersistentDomain(forName: defaultsSuiteName) }
+        ICloudSyncSettings.setStoredOptIn(true, defaults: defaults)
         var deletedAfterLocalReopen = false
         let client = ICloudProgressDeletionClient(deletePrivateDatabaseProgressZones: {
-            deletedAfterLocalReopen = !store.isICloudSyncEnabled
+            deletedAfterLocalReopen = !store.isICloudSyncEnabled && store.container !== originalContainer
         })
 
-        try await store.deleteICloudProgress(localDataChoice: .keepLocal, client: client)
+        try await store.deleteICloudProgress(localDataChoice: .keepLocal, client: client, defaults: defaults)
 
         XCTAssertTrue(deletedAfterLocalReopen)
+         XCTAssertFalse(ICloudSyncSettings.storedOptIn(defaults: defaults))
         XCTAssertFalse(store.isICloudSyncEnabled)
         XCTAssertEqual(try store.questionProgressRecords(), [record])
         let restarted = try ProgressStoreService.inMemoryForTests(iCloudSyncEnabled: ICloudSyncSettings.storedOptIn(), layout: .split)
@@ -371,6 +377,37 @@ final class ProgressStoreTests: XCTestCase {
         _ = try? ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .split)
 
         XCTAssertFalse(FileManager.default.fileExists(atPath: urls.legacyPreferencesCopyMarkerURL.path(percentEncoded: false)))
+    }
+
+    func testSplitStoreLegacyPreferencesRetryRunsEvenWhenPreferencesStoreExists() throws {
+        let directory = try temporaryProgressStoreDirectory()
+        let urls = ProgressStoreURLs(progressDirectory: directory)
+        do {
+            let legacyStore = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
+            var preferences = legacyStore.preferences
+            preferences.practiceMode = .immediate
+            preferences.examTimerEnabled = false
+            preferences.theme = .system
+            try legacyStore.updatePreferences(preferences)
+        }
+        _ = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .split)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: urls.preferencesStoreURL.path(percentEncoded: false)))
+        try FileManager.default.removeItem(at: urls.legacyPreferencesCopyMarkerURL)
+        do {
+            let legacyStore = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
+            var preferences = legacyStore.preferences
+            preferences.practiceMode = .reviewLater
+            preferences.examTimerEnabled = true
+            preferences.theme = .dark
+            try legacyStore.updatePreferences(preferences)
+        }
+
+        let retriedStore = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .split)
+
+        XCTAssertEqual(retriedStore.preferences.practiceMode, .reviewLater)
+        XCTAssertTrue(retriedStore.preferences.examTimerEnabled)
+        XCTAssertEqual(retriedStore.preferences.theme, .dark)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: urls.legacyPreferencesCopyMarkerURL.path(percentEncoded: false)))
     }
 
     func testSplitStoreFirstOpenCopiesLegacyPreferencesWithoutLosingProgress() throws {
@@ -593,8 +630,20 @@ final class ProgressStoreTests: XCTestCase {
         let store = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
 
         XCTAssertEqual(try store.morseCourseProgress(), legacyProgress)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: urls.morseCourseProgressURL.path(percentEncoded: false)))
         let entityContext = ModelContext(store.container)
         XCTAssertEqual(try entityContext.fetch(FetchDescriptor<MorseCourseProgressEntity>()).count, 1)
+    }
+
+    func testCorruptLegacyMorseCourseProgressJSONDoesNotBlockOpeningStore() throws {
+        let directory = try temporaryProgressStoreDirectory()
+        let urls = ProgressStoreURLs(progressDirectory: directory)
+        try Data("not json".utf8).write(to: urls.morseCourseProgressURL, options: [.atomic])
+
+        let store = try ProgressStoreService.open(storeURLs: urls, iCloudSyncEnabled: false, layout: .legacySingleStore)
+
+        XCTAssertNil(try store.morseCourseProgress())
+        XCTAssertTrue(FileManager.default.fileExists(atPath: urls.morseCourseProgressURL.path(percentEncoded: false)))
     }
 
     func testMorseCourseProgressRoundTripsTwentyRecentCharacterResults() throws {

@@ -1411,6 +1411,9 @@ struct SettingsView: View {
     @State private var pendingCourseSwitch: CourseBankID?
     @State private var confirmingImport = false
     @State private var confirmingReset = false
+#if ICLOUD_SYNC
+    @State private var confirmingICloudDelete = false
+#endif
     @AccessibilityFocusState private var coursePickerFocused: Bool
     @AccessibilityFocusState private var courseSwitchConfirmationFocused: Bool
 
@@ -1547,6 +1550,15 @@ struct SettingsView: View {
         } message: {
             Text("Deletes local progress, mock exams, and preferences. Bundled content remains installed.")
         }
+#if ICLOUD_SYNC
+        .alert(ICloudSyncCopy.deleteProgressTitle, isPresented: $confirmingICloudDelete) {
+            Button("Cancel", role: .cancel) {}
+            Button(ICloudSyncCopy.deleteProgressKeepLocal, role: .destructive) { deleteICloudProgress(.keepLocal) } // l10n: localized
+            Button(ICloudSyncCopy.deleteProgressDeleteLocal, role: .destructive) { deleteICloudProgress(.deleteLocal) } // l10n: localized
+        } message: {
+            Text(ICloudSyncCopy.deleteProgressMessage) // l10n: localized
+        }
+#endif
         .onChange(of: pendingCourseSwitch) { _, next in
             if next != nil {
                 focusCourseSwitchConfirmationAfterLayout()
@@ -1576,6 +1588,8 @@ struct SettingsView: View {
                 .font(DesignTokens.FontScale.body)
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .fixedSize(horizontal: false, vertical: true)
+            tokenButton(ICloudSyncCopy.deleteProgressButton) { confirmingICloudDelete = true } // l10n: localized
+                .accessibilityIdentifier("icloud-delete-progress-button")
         }
         .paperCard()
     }
@@ -1717,6 +1731,25 @@ struct SettingsView: View {
             errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
         }
     }
+
+#if ICLOUD_SYNC
+    private func deleteICloudProgress(_ localDataChoice: ICloudLocalDataChoice) {
+        Task { @MainActor in
+            do {
+                try await progressStore.deleteICloudProgress(localDataChoice: localDataChoice, client: .cloudKit())
+                if localDataChoice == .deleteLocal {
+                    MorseTrainerSettings.reset()
+                    morseSettings = .default
+                }
+                statusMessage = ICloudSyncCopy.deleteProgressSuccess
+                errorMessage = nil
+                onDataChanged(localDataChoice == .deleteLocal)
+            } catch {
+                errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
+            }
+        }
+    }
+#endif
 }
 
 struct ProgressExportDocument: FileDocument {

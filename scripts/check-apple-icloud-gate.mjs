@@ -67,16 +67,28 @@ for (const [label, text] of [
 function parseTopLevelEntitlements(text) {
   const dictBody = text.match(/<dict>([\s\S]*)<\/dict>/)?.[1] ?? text;
   const entries = new Map();
-  const pattern = /<key>([^<]+)<\/key>\s*(<string>([^<]*)<\/string>|<true\/>|<false\/>|<integer>([^<]*)<\/integer>|<array>([\s\S]*?)<\/array>|<dict>([\s\S]*?)<\/dict>)/g;
-  for (const match of dictBody.matchAll(pattern)) {
+  const keyPattern = /<key>([^<]+)<\/key>/g;
+  const matches = [...dictBody.matchAll(keyPattern)];
+  for (let index = 0; index < matches.length; index += 1) {
+    const key = matches[index][1];
+    const valueStart = matches[index].index + matches[index][0].length;
+    const valueEnd = index + 1 < matches.length ? matches[index + 1].index : dictBody.length;
+    const valueText = dictBody.slice(valueStart, valueEnd).trim();
     let value;
-    if (match[3] !== undefined) value = match[3];
-    else if (match[2] === '<true/>') value = true;
-    else if (match[2] === '<false/>') value = false;
-    else if (match[4] !== undefined) value = Number(match[4]);
-    else if (match[5] !== undefined) value = [...match[5].matchAll(/<string>([^<]*)<\/string>/g)].map((item) => item[1]);
-    else value = { type: 'dict' };
-    entries.set(match[1], value);
+    if (/^<string\/>/.test(valueText)) value = '';
+    else if (/^<string>([\s\S]*?)<\/string>/.test(valueText)) value = valueText.match(/^<string>([\s\S]*?)<\/string>/)[1];
+    else if (/^<true\/>/.test(valueText)) value = true;
+    else if (/^<false\/>/.test(valueText)) value = false;
+    else if (/^<integer>([^<]*)<\/integer>/.test(valueText)) value = Number(valueText.match(/^<integer>([^<]*)<\/integer>/)[1]);
+    else if (/^<real>([^<]*)<\/real>/.test(valueText)) value = Number(valueText.match(/^<real>([^<]*)<\/real>/)[1]);
+    else if (/^<data>([\s\S]*?)<\/data>/.test(valueText)) value = { type: 'data', value: valueText.match(/^<data>([\s\S]*?)<\/data>/)[1].trim() };
+    else if (/^<date>([^<]*)<\/date>/.test(valueText)) value = { type: 'date', value: valueText.match(/^<date>([^<]*)<\/date>/)[1] };
+    else if (/^<array\/>/.test(valueText)) value = [];
+    else if (/^<array>/.test(valueText)) value = [...valueText.matchAll(/<string>([^<]*)<\/string>/g)].map((item) => item[1]);
+    else if (/^<dict\/>/.test(valueText)) value = { type: 'dict' };
+    else if (/^<dict>/.test(valueText)) value = { type: 'dict' };
+    else value = { type: 'unknown', value: valueText };
+    entries.set(key, value);
   }
   return entries;
 }
@@ -125,10 +137,14 @@ if (cloudMacEntitlements.includes('<key>aps-environment</key>')) {
   fail('macOS CloudKit entitlements must not use the iOS aps-environment key.');
 }
 
-const backgroundModes = cloudInfoPlist.match(/<key>UIBackgroundModes<\/key>\s*<array>([\s\S]*?)<\/array>/)?.[1];
-const backgroundModeValues = backgroundModes === undefined ? [] : [...backgroundModes.matchAll(/<string>([^<]*)<\/string>/g)].map((item) => item[1]);
-if (JSON.stringify(backgroundModeValues) !== JSON.stringify(['remote-notification'])) {
-  fail(`CloudKit Info.plist UIBackgroundModes must be exactly ["remote-notification"], found ${JSON.stringify(backgroundModeValues)}.`);
+const backgroundModeMatches = [...cloudInfoPlist.matchAll(/<key>UIBackgroundModes<\/key>\s*<array>([\s\S]*?)<\/array>/g)];
+if (backgroundModeMatches.length !== 1) {
+  fail(`CloudKit Info.plist must contain exactly one UIBackgroundModes key, found ${backgroundModeMatches.length}.`);
+} else {
+  const backgroundModeValues = [...backgroundModeMatches[0][1].matchAll(/<string>([^<]*)<\/string>/g)].map((item) => item[1]);
+  if (JSON.stringify(backgroundModeValues) !== JSON.stringify(['remote-notification'])) {
+    fail(`CloudKit Info.plist UIBackgroundModes must be exactly ["remote-notification"], found ${JSON.stringify(backgroundModeValues)}.`);
+  }
 }
 
 if (/CloudKit\.Info\.plist in Resources/.test(pbxproj)) {

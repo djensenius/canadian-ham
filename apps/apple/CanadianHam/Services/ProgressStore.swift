@@ -589,6 +589,7 @@ extension ICloudProgressDeletionClient {
 final class ProgressStoreService: ObservableObject {
     @Published private(set) var preferences: ApplePreferences = .default
     @Published private(set) var isICloudSyncEnabled: Bool = ICloudSyncSettings.storedOptIn()
+    @Published private(set) var iCloudAccountSignalError: String?
 
     private(set) var container: ModelContainer
     private var context: ModelContext
@@ -828,7 +829,6 @@ final class ProgressStoreService: ObservableObject {
     ) -> Bool {
         guard layout == .split else { return false }
         guard !FileManager.default.fileExists(atPath: storeURLs.legacyPreferencesCopyMarkerURL.path(percentEncoded: false)) else { return false }
-        guard !FileManager.default.fileExists(atPath: storeURLs.preferencesStoreURL.path(percentEncoded: false)) else { return false }
         return FileManager.default.fileExists(atPath: storeURLs.persistentStoreURL.path(percentEncoded: false))
     }
 
@@ -866,8 +866,9 @@ final class ProgressStoreService: ObservableObject {
     ) throws {
         guard layout == .split, !snapshots.isEmpty else { return }
         let context = ModelContext(container)
-        let existing = try context.fetch(FetchDescriptor<PreferencesEntity>())
-        guard existing.isEmpty else { return }
+        for entity in try context.fetch(FetchDescriptor<PreferencesEntity>()) {
+            context.delete(entity)
+        }
         for snapshot in snapshots {
             let entity = PreferencesEntity(
                 key: snapshot.key,
@@ -884,6 +885,8 @@ final class ProgressStoreService: ObservableObject {
     }
 
     private static func markLegacyPreferencesCopyComplete(storeURLs: ProgressStoreURLs) {
+        // The original PreferencesEntity rows can remain in Progress.store after a split-store copy;
+        // this gated marker records that their learning-progress archives were copied into syncable rows.
         try? FileManager.default.createDirectory(at: storeURLs.legacyPreferencesCopyMarkerURL.deletingLastPathComponent(), withIntermediateDirectories: true)
         if !FileManager.default.fileExists(atPath: storeURLs.legacyPreferencesCopyMarkerURL.path(percentEncoded: false)) {
             FileManager.default.createFile(atPath: storeURLs.legacyPreferencesCopyMarkerURL.path(percentEncoded: false), contents: Data(), attributes: nil)
@@ -944,7 +947,13 @@ final class ProgressStoreService: ObservableObject {
     func handleICloudAccountSignal(_ signal: ICloudAccountSignal, defaults: UserDefaults = .standard) {
         ICloudSyncSettings.handleAccountSignal(signal, defaults: defaults)
         isICloudSyncEnabled = ICloudSyncSettings.storedOptIn(defaults: defaults)
-        try? reopenLocalOnlyAfterSyncStop()
+        do {
+            try reopenLocalOnlyAfterSyncStop()
+            iCloudAccountSignalError = nil
+        } catch {
+            iCloudAccountSignalError = error.localizedDescription
+            NSLog("CanadianHam: unable to reopen the progress store local-only after iCloud account signal: %@", String(describing: error))
+        }
     }
 
     func reopenLocalOnlyAfterSyncStop(factory: ((Bool) throws -> ModelContainer)? = nil) throws {
@@ -958,15 +967,20 @@ final class ProgressStoreService: ObservableObject {
             )
         }
         let localOnlyContainer = try makeContainer(false)
+        let localOnlyContext = ModelContext(localOnlyContainer)
         container = localOnlyContainer
-        context = ModelContext(localOnlyContainer)
+        context = localOnlyContext
         isICloudSyncEnabled = false
-        try restore(snapshot)
+        if try isProgressStoreEmpty(in: localOnlyContext) {
+            try restore(snapshot)
+        } else {
+            preferences = try loadPreferences()
+        }
         objectWillChange.send()
     }
 
-    func deleteICloudProgress(localDataChoice: ICloudLocalDataChoice, client: ICloudProgressDeletionClient) async throws {
-        ICloudSyncSettings.clearStoredOptIn()
+    func deleteICloudProgress(localDataChoice: ICloudLocalDataChoice, client: ICloudProgressDeletionClient, defaults: UserDefaults = .standard) async throws {
+        ICloudSyncSettings.clearStoredOptIn(defaults: defaults)
         try reopenLocalOnlyAfterSyncStop()
         try await client.deletePrivateDatabaseProgressZones()
         if localDataChoice == .deleteLocal {
@@ -1567,15 +1581,13 @@ final class ProgressStoreService: ObservableObject {
 
     private func migrateLearningProgressFromLegacyStorageIfNeeded() throws {
         let entity = try preferencesEntity(createIfMissing: true, saveIfCreated: false)
-        if try context.fetch(FetchDescriptor<LessonProgressEntity>()).isEmpty,
-           let lessonProgress = try? decoder.decode([LessonProgressRecord].self, from: entity.archivedLessonProgressData) {
+        if let lessonProgress = try? decoder.decode([LessonProgressRecord].self, from: entity.archivedLessonProgressData), !lessonProgress.isEmpty {
             for record in lessonProgress {
                 try upsertLessonProgress(record)
             }
             entity.archivedLessonProgressData = Data("[]".utf8)
         }
-        if try context.fetch(FetchDescriptor<LessonQuizAttemptEntity>()).isEmpty,
-           let attempts = try? decoder.decode([LessonQuizAttempt].self, from: entity.archivedLessonQuizAttemptsData) {
+        if let attempts = try? decoder.decode([LessonQuizAttempt].self, from: entity.archivedLessonQuizAttemptsData), !attempts.isEmpty {
             for attempt in attempts {
                 try upsertLessonQuizAttempt(attempt)
             }
@@ -1583,13 +1595,26 @@ final class ProgressStoreService: ObservableObject {
         }
         let key = MorseCourseProgressEntity.defaultKey
         let morseDescriptor = FetchDescriptor<MorseCourseProgressEntity>(predicate: #Predicate { $0.key == key })
+        var migratedMorseLegacyFile = false
         if try context.fetch(morseDescriptor).isEmpty,
            FileManager.default.fileExists(atPath: morseCourseProgressURL.path(percentEncoded: false)) {
-            let data = try Data(contentsOf: morseCourseProgressURL)
-            let progress = try decoder.decode(MorseCourseProgressExport.self, from: data)
-            try upsertMorseCourseProgress(progress)
+            do {
+                let data = try Data(contentsOf: morseCourseProgressURL)
+                let progress = try decoder.decode(MorseCourseProgressExport.self, from: data)
+                try upsertMorseCourseProgress(progress)
+                migratedMorseLegacyFile = true
+            } catch {
+                NSLog("CanadianHam: unable to migrate legacy Morse course progress JSON; leaving file in place: %@", String(describing: error))
+            }
         }
         try context.save()
+        if migratedMorseLegacyFile {
+            do {
+                try FileManager.default.removeItem(at: morseCourseProgressURL)
+            } catch {
+                NSLog("CanadianHam: unable to remove migrated legacy Morse course progress JSON; leaving file in place: %@", String(describing: error))
+            }
+        }
     }
 
     private func saveExamAttemptWithoutSave(_ attempt: StoredExamAttempt, deviceId: String? = nil) throws {
@@ -1650,6 +1675,14 @@ final class ProgressStoreService: ObservableObject {
                 try FileManager.default.removeItem(at: morseCourseProgressURL)
             }
         }
+    }
+
+    private func isProgressStoreEmpty(in context: ModelContext) throws -> Bool {
+        try context.fetch(FetchDescriptor<QuestionProgressEntity>()).isEmpty
+            && context.fetch(FetchDescriptor<ExamAttemptEntity>()).isEmpty
+            && context.fetch(FetchDescriptor<LessonProgressEntity>()).isEmpty
+            && context.fetch(FetchDescriptor<LessonQuizAttemptEntity>()).isEmpty
+            && context.fetch(FetchDescriptor<MorseCourseProgressEntity>()).isEmpty
     }
 
     private func restore(_ snapshot: ProgressStoreSnapshot) throws {
