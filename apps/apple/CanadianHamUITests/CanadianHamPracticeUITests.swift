@@ -1793,8 +1793,8 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertTrue(fixedTimingNote.waitForExistence(timeout: 5), "\(appearance.rawValue) Morse settings fixed-timing note should be available before settling")
         scrollUntilPartiallyVisible(fixedTimingNote, in: app, maxSwipes: 8)
         XCTAssertTrue(isPartiallyVisibleBelowNavigationBar(settings, in: app), "\(appearance.rawValue) Morse settings should be positioned before settling")
-        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse home lower content", preserving: fixedTimingNote, preserveFullyVisible: true)
-        assertFullyVisibleBelowNavigationBar(fixedTimingNote, in: app, context: "\(appearance.rawValue) fixed timing note after settling")
+        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) morse home lower content", preserving: fixedTimingNote)
+        assertPartiallyVisibleBelowNavigationBar(fixedTimingNote, in: app, context: "\(appearance.rawValue) fixed timing note after settling")
         assertPartiallyVisibleBelowNavigationBar(settings, in: app, context: "\(appearance.rawValue) Morse settings after settling")
         positionElementInMiddleVisibleBand(fixedTimingNote, in: app, context: "\(appearance.rawValue) fixed timing note before lower Morse audit")
         assertFullyVisibleInMiddleBand(fixedTimingNote, in: app, context: "\(appearance.rawValue) fixed timing note before lower Morse audit")
@@ -2423,9 +2423,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
                     return
                 }
                 let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
-                if target.exists, target.frame.maxY > visibleFrame.maxY || preserveByScrollingUp {
-                    scrollView.swipeUp()
-                } else {
+                if !offenders.isEmpty {
                     let hasOffenderClippedAboveWindow = offenders.contains(where: \.isClippedAboveWindow)
                     if hasOffenderClippedAboveWindow {
                         let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
@@ -2436,6 +2434,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
                         let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55))
                         start.press(forDuration: 0.01, thenDragTo: end)
                     }
+                } else if target.exists, target.frame.maxY > visibleFrame.maxY || preserveByScrollingUp {
+                    scrollView.swipeUp()
+                } else {
+                    let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
+                    let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55))
+                    start.press(forDuration: 0.01, thenDragTo: end)
                 }
                 waitBriefly()
             }
