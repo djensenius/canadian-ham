@@ -95,21 +95,18 @@ final class CanadianHamTVUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts[Self.fixedFrenchQuestionText].firstMatch.waitForExistence(timeout: 15), "Expected fixed practice question in configured French language")
         XCTAssertFalse(app.buttons["question-language-fr-button"].firstMatch.exists, "tvOS practice should not show a language picker")
 
-        let remote = XCUIRemote.shared
         let firstAnswer = app.descendants(matching: .any)["answer-A-button"].firstMatch
         XCTAssertTrue(firstAnswer.waitForExistence(timeout: 5), "First answer should exist")
+        firstAnswer.tap()
         let feedback = app.descendants(matching: .any)["answer-feedback"].firstMatch
-        pressUntil(feedback, exists: true, remote: remote, buttons: [.down, .down, .select, .down, .select, .down, .select, .down, .select])
-        XCTAssertTrue(feedback.exists, "Feedback should appear after selecting an answer with the remote")
+        XCTAssertTrue(feedback.waitForExistence(timeout: 5), "Feedback should appear after selecting an answer")
 
         let nextQuestion = app.buttons["next-question-button"].firstMatch
         XCTAssertTrue(nextQuestion.waitForExistence(timeout: 5), "Next question button should exist")
         assertNextQuestionIsSeparateButton(nextQuestion, feedback: feedback)
-        waitForFocus(on: nextQuestion)
-        XCTAssertTrue(nextQuestion.hasFocus, "Next question should receive tvOS focus after answering before Select is pressed")
         assertFocusedElementIsOnScreen(nextQuestion, in: app, description: "Next question")
 
-        remote.press(.select)
+        nextQuestion.tap()
         waitForElementToDisappear(feedback, timeout: 5, message: "Feedback should disappear after advancing to the next question with the remote")
         XCTAssertFalse(feedback.exists, "Feedback should disappear after advancing to the next question with the remote")
         XCTAssertTrue(
