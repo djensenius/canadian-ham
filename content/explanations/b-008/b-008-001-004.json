@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-008-001-004.\n\nWhy the correct answer is right: A high-pass filter at the TV receiver input attenuates high-frequency (HF) amateur energy before it reaches the receiver front end. It still passes the higher TV signals the set is meant to receive.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Low-pass\": This would pass lower frequencies and attenuate higher ones, the opposite of what a TV input usually needs when HF energy is the overload source.\n- sourceIndex 2: \"Band-pass\": This can be useful for a known wanted range, but the first general cure for HF getting into a TV receiver input is a high-pass filter.\n- sourceIndex 3: \"AC line filter\": This treats interference entering by the power cord, not HF energy entering the TV receiver input or antenna lead.",
+    "en": "Question B-008-001-004.\n\nWhy the correct answer is right: A high-pass filter at the television (TV) receiver input attenuates high-frequency (HF) amateur energy before it reaches the receiver front end. It still passes the higher TV signals the set is meant to receive.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Low-pass\": This would pass lower frequencies and attenuate higher ones, the opposite of what a TV input usually needs when HF energy is the overload source.\n- sourceIndex 2: \"Band-pass\": This can be useful for a known wanted range, but the first general cure for HF getting into a TV receiver input is a high-pass filter.\n- sourceIndex 3: \"AC line filter\": This treats interference entering by the power cord, not HF energy entering the TV receiver input or antenna lead.",
     "fr": null
   },
   "citations": [
