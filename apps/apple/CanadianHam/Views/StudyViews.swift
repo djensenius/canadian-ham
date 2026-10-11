@@ -1589,7 +1589,7 @@ struct SettingsView: View {
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .fixedSize(horizontal: false, vertical: true)
             if let accountSignalError = progressStore.iCloudAccountSignalError {
-                Text("iCloud sync status could not be updated.") // l10n: localized
+                Text(ICloudSyncCopy.accountSignalError) // l10n: localized
                     .font(DesignTokens.FontScale.caption)
                     .foregroundStyle(DesignTokens.Colors.warningText)
                     .fixedSize(horizontal: false, vertical: true)
