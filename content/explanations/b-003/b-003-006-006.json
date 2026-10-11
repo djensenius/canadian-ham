@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-006-006.\n\nWhy the correct answer is right: The mixer translates the already formed single-sideband signal to the desired operating frequency using another oscillator signal.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Variable frequency oscillator\": The VFO supplies the adjustable frequency for the mixer, but the mixer performs the actual transposition.\n- sourceIndex 2: \"Balanced modulator\": The balanced modulator creates sidebands at the initial RF/IF frequency; it does not do the final frequency translation in this chain.\n- sourceIndex 3: \"Fixed RF oscillator\": The fixed RF oscillator supports sideband creation, not final movement to the operating frequency.",
+    "en": "Question B-003-006-006.\n\nWhy the correct answer is right: The mixer translates the already formed single-sideband signal to the desired operating frequency using another oscillator signal.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Variable frequency oscillator\": The VFO supplies the adjustable frequency for the mixer, but the mixer performs the actual transposition.\n- sourceIndex 2: \"Balanced modulator\": The balanced modulator creates sidebands at the initial RF/IF frequency. It does not do the final frequency translation in this chain.\n- sourceIndex 3: \"Fixed RF oscillator\": The fixed RF oscillator supports sideband creation, not final movement to the operating frequency.",
     "fr": null
   },
   "citations": [

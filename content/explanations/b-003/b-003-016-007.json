@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-016-007.\n\nWhy the correct answer is right: Lithium-based batteries can store relatively high energy for their weight, which is valuable when carrying a station for portable operation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Simple charging methods\": Lithium packs usually require specific chargers and protection circuits; they are not preferred because charging is simpler than lead-acid.\n- sourceIndex 2: \"Lower voltage per cell\": Lithium-ion cells have a higher nominal cell voltage than lead-acid cells, so lower cell voltage is not their advantage.\n- sourceIndex 3: \"High tolerance to overcharge\": Lithium cells are not tolerant of overcharge; overcharge can create serious fire or damage hazards, so protection is essential.",
+    "en": "Question B-003-016-007.\n\nWhy the correct answer is right: Lithium-based batteries can store relatively high energy for their weight, which is valuable when carrying a station for portable operation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Simple charging methods\": Lithium packs usually require specific chargers and protection circuits. They are not preferred because charging is simpler than lead-acid.\n- sourceIndex 2: \"Lower voltage per cell\": Lithium-ion cells have a higher nominal cell voltage than lead-acid cells, so lower cell voltage is not their advantage.\n- sourceIndex 3: \"High tolerance to overcharge\": Lithium cells are not tolerant of overcharge. Overcharge can create serious fire or damage hazards, so protection is essential.",
     "fr": null
   },
   "citations": [

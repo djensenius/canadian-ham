@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-006-003.\n\nWhy the correct answer is right: After the balanced modulator creates sideband energy, the sideband filter removes the sideband that is not wanted for transmission.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Suppress the RF carrier signal\": Carrier suppression is primarily produced by the balanced modulator; the following filter selects between sidebands.\n- sourceIndex 2: \"Shape the audio waveform\": Audio waveform shaping happens before modulation, not in the RF sideband filter.\n- sourceIndex 3: \"Remove harmonics from the transmitted signal\": Harmonic filtering at the transmitter output is a low-pass/filtering task later in the RF chain.",
+    "en": "Question B-003-006-003.\n\nWhy the correct answer is right: After the balanced modulator creates sideband energy, the sideband filter removes the sideband that is not wanted for transmission.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Suppress the RF carrier signal\": Carrier suppression is primarily produced by the balanced modulator. The following filter selects between sidebands.\n- sourceIndex 2: \"Shape the audio waveform\": Audio waveform shaping happens before modulation, not in the RF sideband filter.\n- sourceIndex 3: \"Remove harmonics from the transmitted signal\": Harmonic filtering at the transmitter output is a low-pass/filtering task later in the RF chain.",
     "fr": null
   },
   "citations": [

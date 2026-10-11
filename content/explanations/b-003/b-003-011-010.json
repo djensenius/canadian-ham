@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-011-010.\n\nWhy the correct answer is right: The amplifier takes in 200 W of DC and delivers 125 W as RF, so the remaining 75 W is loss, mainly heat in the final stage.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It has been used to provide greater efficiency\": Efficiency is RF output divided by DC input; losing 75 W reduces efficiency rather than creating more of it.\n- sourceIndex 2: \"It has been used to provide negative feedback\": Feedback may be part of an amplifier design, but it is not a 75 W destination for the missing input power.\n- sourceIndex 3: \"It has been used to provide positive feedback\": Positive feedback would risk instability or oscillation; it is not where normal amplifier losses go.",
+    "en": "Question B-003-011-010.\n\nWhy the correct answer is right: The amplifier takes in 200 W of DC and delivers 125 W as RF, so the remaining 75 W is loss, mainly heat in the final stage.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It has been used to provide greater efficiency\": Efficiency is RF output divided by DC input. Losing 75 W reduces efficiency rather than creating more of it.\n- sourceIndex 2: \"It has been used to provide negative feedback\": Feedback may be part of an amplifier design, but it is not a 75 W destination for the missing input power.\n- sourceIndex 3: \"It has been used to provide positive feedback\": Positive feedback would risk instability or oscillation. It is not where normal amplifier losses go.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-004-002.\n\nWhy the correct answer is right: The transmitter stages receive operating power as direct current from the power supply; the stages then generate and amplify RF.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Radio frequency current\": Radio-frequency current is the signal being generated or amplified, not the direct supply powering each stage.\n- sourceIndex 2: \"Audio frequency current\": Audio-frequency current is not the stage power source in a CW transmitter.\n- sourceIndex 3: \"Alternating current\": Mains alternating current may feed a power supply, but the transmitter stages themselves are directly powered by DC.",
+    "en": "Question B-003-004-002.\n\nWhy the correct answer is right: The transmitter stages receive operating power as direct current from the power supply. The stages then generate and amplify RF.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Radio frequency current\": Radio-frequency current is the signal being generated or amplified, not the direct supply powering each stage.\n- sourceIndex 2: \"Audio frequency current\": Audio-frequency current is not the stage power source in a CW transmitter.\n- sourceIndex 3: \"Alternating current\": Mains alternating current may feed a power supply, but the transmitter stages themselves are directly powered by DC.",
     "fr": null
   },
   "citations": [

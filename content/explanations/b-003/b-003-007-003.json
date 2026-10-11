@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-007-003.\n\nWhy the correct answer is right: Most interfaces include a way to key or command the transceiver between receive and transmit for computer-controlled operation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Display the transmit frequency\": Frequency display is handled by the radio, control software, or CAT features, not by the basic sound-card interface function.\n- sourceIndex 2: \"Translate the digital signal into alphanumeric characters\": Turning decoded signals into characters is a software modem/application job, not the interface's switching function.\n- sourceIndex 3: \"Modulate the received signal\": The received signal is demodulated by the transceiver and decoded by software; the interface does not modulate a received signal.",
+    "en": "Question B-003-007-003.\n\nWhy the correct answer is right: Most interfaces include a way to key or command the transceiver between receive and transmit for computer-controlled operation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Display the transmit frequency\": Frequency display is handled by the radio, control software, or CAT features, not by the basic sound-card interface function.\n- sourceIndex 2: \"Translate the digital signal into alphanumeric characters\": Turning decoded signals into characters is a software modem/application job, not the interface's switching function.\n- sourceIndex 3: \"Modulate the received signal\": The received signal is demodulated by the transceiver and decoded by software. The interface does not modulate a received signal.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-002-001.\n\nWhy the correct answer is right: The microphone converts voice sound pressure into a small electrical audio signal that feeds the speech amplifier.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"An electrical signal driving the oscillator\": The microphone output is audio, but in this block diagram it drives the speech amplifier rather than the RF oscillator directly.\n- sourceIndex 2: \"A radio frequency signal driving the speech amplifier\": A microphone does not generate a radio-frequency signal; it responds to sound pressure and produces audio-frequency voltage or current.\n- sourceIndex 3: \"A radio frequency signal driving the power amplifier\": The power amplifier needs RF drive later in the chain, not raw audio from the microphone.",
+    "en": "Question B-003-002-001.\n\nWhy the correct answer is right: The microphone converts voice sound pressure into a small electrical audio signal. That signal feeds the speech amplifier.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"An electrical signal driving the oscillator\": The microphone output is audio, but in this block diagram it drives the speech amplifier rather than the RF oscillator directly.\n- sourceIndex 2: \"A radio frequency signal driving the speech amplifier\": A microphone does not generate a radio-frequency signal. It responds to sound pressure and produces audio-frequency voltage or current.\n- sourceIndex 3: \"A radio frequency signal driving the power amplifier\": The power amplifier needs RF drive later in the chain, not raw audio from the microphone.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-007-001.\n\nWhy the correct answer is right: Six metres is in low VHF, and its best-known ionospheric openings are often caused by sporadic patches in the E region. Those E-region conditions can return signals that would normally continue into space.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The F2 region\": F2 is the main region for many HF sky-wave paths, but ordinary six-metre ionospheric openings are associated more with E-region effects.\n- sourceIndex 2: \"The F1 region\": F1 can matter on daylight HF paths, yet it is not the classic six-metre propagation region.\n- sourceIndex 3: \"The D region\": The D region is mostly known for absorption at lower frequencies, not for supporting six-metre sky-wave propagation.",
+    "en": "Question B-007-007-001.\n\nWhy the correct answer is right: Six metres is at the low end of very high frequency (VHF). Its best-known ionospheric openings are often caused by sporadic patches in the E region. Those E-region conditions can return signals that would normally continue into space.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The F2 region\": F2 is the main region for many HF sky-wave paths, but ordinary six-metre ionospheric openings are associated more with E-region effects.\n- sourceIndex 2: \"The F1 region\": F1 can matter on daylight HF paths, yet it is not the classic six-metre propagation region.\n- sourceIndex 3: \"The D region\": The D region is mostly known for absorption at lower frequencies, not for supporting six-metre sky-wave propagation.",
     "fr": null
   },
   "citations": [

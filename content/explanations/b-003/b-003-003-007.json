@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-003-007.\n\nWhy the correct answer is right: The FM limiter removes unwanted amplitude variations so the following discriminator responds mainly to frequency changes.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Suppress local oscillator harmonics\": Suppressing oscillator harmonics is a filtering or oscillator-cleanup concern, not the limiter's receive-chain job.\n- sourceIndex 2: \"Prevent overdriving the IF amplifier\": The limiter follows IF amplification in the simplified FM chain, so it is not protecting the IF amplifier input; it clips amplitude variation before discrimination.\n- sourceIndex 3: \"Maintain constant input level to the mixer\": The mixer input level is set ahead of IF limiting, so this does not describe the limiter's location or function.",
+    "en": "Question B-003-003-007.\n\nWhy the correct answer is right: The FM limiter removes unwanted amplitude variations so the following discriminator responds mainly to frequency changes.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Suppress local oscillator harmonics\": Suppressing oscillator harmonics is a filtering or oscillator-cleanup concern, not the limiter's receive-chain job.\n- sourceIndex 2: \"Prevent overdriving the IF amplifier\": The limiter follows IF amplification in the simplified FM chain, so it is not protecting the IF amplifier input. It clips amplitude variation before discrimination.\n- sourceIndex 3: \"Maintain constant input level to the mixer\": The mixer input level is set ahead of IF limiting, so this does not describe the limiter's location or function.",
     "fr": null
   },
   "citations": [

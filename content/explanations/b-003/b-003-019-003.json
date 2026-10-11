@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-019-003.\n\nWhy the correct answer is right: A fuse with too high a current rating may not open during a fault, allowing wires or components to overheat until damage or fire occurs.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The fuse may open during normal operation\": Nuisance opening is the usual symptom of a fuse rated too low or a real fault, not a fuse with too high a current rating.\n- sourceIndex 2: \"Voltage delivered to the circuit would be limited\": A fuse is not a voltage regulator; changing to a higher current rating does not intentionally limit circuit voltage.\n- sourceIndex 3: \"A low current circuit may not function properly\": Circuit function is not improved by oversizing protection; the danger is that the protection no longer opens soon enough in a fault.",
+    "en": "Question B-003-019-003.\n\nWhy the correct answer is right: A fuse with too high a current rating may not open during a fault, allowing wires or components to overheat until damage or fire occurs.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The fuse may open during normal operation\": Nuisance opening is the usual symptom of a fuse rated too low or a real fault, not a fuse with too high a current rating.\n- sourceIndex 2: \"Voltage delivered to the circuit would be limited\": A fuse is not a voltage regulator. Changing to a higher current rating does not intentionally limit circuit voltage.\n- sourceIndex 3: \"A low current circuit may not function properly\": Circuit function is not improved by oversizing protection. The danger is that the protection no longer opens soon enough in a fault.",
     "fr": null
   },
   "citations": [

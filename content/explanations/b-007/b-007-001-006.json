@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-001-006.\n\nWhy the correct answer is right: A ground wave is the portion of the radio signal guided by and attenuated by the Earth's surface. Frequency and ground conditions therefore affect that part of the signal directly.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Tropospheric wave\": Tropospheric propagation depends on lower-atmosphere bending or scatter, not on surface-guided travel.\n- sourceIndex 2: \"Ionospheric wave\": Ionospheric waves interact with charged upper-atmosphere regions after leaving the surface.\n- sourceIndex 3: \"Scattered wave\": A scattered wave has been redirected by irregularities; surface effect is not the defining feature of that term.",
+    "en": "Question B-007-001-006.\n\nWhy the correct answer is right: A ground wave is the part of the radio signal guided by the Earth's surface and weakened by it. Frequency and ground conditions therefore affect that part of the signal directly.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Tropospheric wave\": Tropospheric propagation depends on lower-atmosphere bending or scatter, not on surface-guided travel.\n- sourceIndex 2: \"Ionospheric wave\": Ionospheric waves interact with charged upper-atmosphere regions after leaving the surface.\n- sourceIndex 3: \"Scattered wave\": A scattered wave has been redirected by irregularities. Surface effect is not the defining feature of that term.",
     "fr": null
   },
   "citations": [

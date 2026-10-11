@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-021-006.\n\nWhy the correct answer is right: High RF exposure deposits energy in tissue, and the principal biological effect considered here is heating.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It lowers blood pressure\": Blood-pressure change is not the basic RF exposure mechanism; the concern here is tissue heating from absorbed RF energy.\n- sourceIndex 2: \"It paralyzes the tissue\": Paralysis fits nerve or muscle stimulation from low-frequency electric current, not the heating effect emphasized for RF energy absorption.\n- sourceIndex 3: \"It restricts blood flow\": Restricted blood flow is not the mechanism named here; RF safety focuses on deposited energy heating tissue.",
+    "en": "Question B-003-021-006.\n\nWhy the correct answer is right: High radio frequency (RF) exposure deposits energy in tissue. The main biological effect considered here is heating.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It lowers blood pressure\": Blood-pressure change is not the basic RF exposure mechanism. The concern here is tissue heating from absorbed RF energy.\n- sourceIndex 2: \"It paralyzes the tissue\": Paralysis fits nerve or muscle stimulation from low-frequency electric current, not the heating effect emphasized for RF energy absorption.\n- sourceIndex 3: \"It restricts blood flow\": Restricted blood flow is not the mechanism named here; RF safety focuses on deposited energy heating tissue.",
     "fr": null
   },
   "citations": [

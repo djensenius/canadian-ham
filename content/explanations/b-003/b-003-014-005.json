@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-014-005.\n\nWhy the correct answer is right: VOX means voice-operated transmit switching; it keys the transmitter automatically when microphone audio is detected.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"VXO\": A VXO is a variable crystal oscillator used for limited frequency tuning, not voice-operated transmit control.\n- sourceIndex 2: \"VCO\": A VCO is a voltage-controlled oscillator whose frequency follows a control voltage, not a microphone-operated switch.\n- sourceIndex 3: \"VFO\": A VFO is a variable frequency oscillator for tuning, not a circuit that keys the transmitter when the operator speaks.",
+    "en": "Question B-003-014-005.\n\nWhy the correct answer is right: VOX means voice-operated transmit switching. It keys the transmitter automatically when microphone audio is detected.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"VXO\": A VXO is a variable crystal oscillator used for limited frequency tuning, not voice-operated transmit control.\n- sourceIndex 2: \"VCO\": A VCO is a voltage-controlled oscillator whose frequency follows a control voltage, not a microphone-operated switch.\n- sourceIndex 3: \"VFO\": A VFO is a variable frequency oscillator for tuning, not a circuit that keys the transmitter when the operator speaks.",
     "fr": null
   },
   "citations": [

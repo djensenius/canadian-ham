@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-006-010.\n\nWhy the correct answer is right: The optimum working frequency is chosen below the MUF to give some margin as the ionosphere changes. Operating just under the limit usually gives better reliability than sitting at the exact edge.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"double the MUF\": Twice the MUF is far above the path limit, so the signal would be expected to pass through the ionosphere.\n- sourceIndex 2: \"half the MUF\": Half the MUF may work at times, but it is not the usual optimum and may be closer to absorption and noise problems.\n- sourceIndex 3: \"slightly higher\": Slightly above the MUF removes the needed margin and risks losing refraction entirely.",
+    "en": "Question B-007-006-010.\n\nWhy the correct answer is right: The optimum working frequency is chosen below the maximum usable frequency (MUF) to give some margin as the ionosphere changes. Operating just under the limit usually gives better reliability than sitting at the exact edge.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"double the MUF\": Twice the MUF is far above the path limit, so the signal would be expected to pass through the ionosphere.\n- sourceIndex 2: \"half the MUF\": Half the MUF may work at times, but it is not the usual optimum and may be closer to absorption and noise problems.\n- sourceIndex 3: \"slightly higher\": Slightly above the MUF removes the needed margin and risks losing refraction entirely.",
     "fr": null
   },
   "citations": [
