@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-06 18:25'
-updated_date: '2026-10-11 01:17'
+updated_date: '2026-10-11 10:23'
 labels: []
 dependencies:
   - TASK-12.17
@@ -53,6 +53,8 @@ Full Apple suite per-test results on merged code (tip 6c3724c8f931cc91a10db99bef
   Names: CanadianHamTVTests/testAppBundleContainsOnlyBasicQuestionBankResources() [Passed]; CanadianHamTVTests/testBundledQuestionBankLoadsForTVApp() [Passed]; CanadianHamTVTests/testTVPracticeQuestionDrawStaysInCategoryAndShufflesAnswers() [Passed]; CanadianHamTVTests/testTVPracticeSeedsVaryAcrossSessionIDs() [Passed]; CanadianHamTVUITests/testAboutAccessibilityAuditLightAndDark() [Passed]; CanadianHamTVUITests/testAboutLowerSectionsReachableWithRemote() [Passed]; CanadianHamTVUITests/testAboutShowsReleaseAttributionDisclaimerAndBankVersion() [Passed]; CanadianHamTVUITests/testCategoryGridAccessibilityAuditLightAndDark() [Passed]; CanadianHamTVUITests/testCategoryGridNavigatesToMorse() [Passed]; CanadianHamTVUITests/testFocusRingEvidenceScreenshots() [Passed]; CanadianHamTVUITests/testLayoutEvidenceScreenshots() [Passed]; CanadianHamTVUITests/testMorseAccessibilityAuditLightAndDark() [Passed]; CanadianHamTVUITests/testMorseScreenShowsPlaybackControls() [Passed]; CanadianHamTVUITests/testPracticeAccessibilityAuditLightAndDark() [Passed]; CanadianHamTVUITests/testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances() [Passed]; CanadianHamTVUITests/testRemoteMenuReturnsPracticeAndAboutToCategoryGrid() [Passed]
 - visionOS: 13/13 passed
   Names: CanadianHamVisionTests/testAppBundleContainsOnlyBasicQuestionBankResources() [Passed]; CanadianHamVisionTests/testBundledQuestionBankLoadsForVisionApp() [Passed]; CanadianHamVisionTests/testVisionPracticeQuestionDrawStaysInCategoryAndShufflesAnswers() [Passed]; CanadianHamVisionTests/testVisionPracticeSeedsVaryAcrossSessionIDs() [Passed]; CanadianHamVisionUITests/testAboutAccessibilityAuditLightAndDark() [Passed]; CanadianHamVisionUITests/testAboutShowsReleaseAttributionDisclaimerAndBankVersion() [Passed]; CanadianHamVisionUITests/testCategoryGridAccessibilityAuditLightAndDark() [Passed]; CanadianHamVisionUITests/testCategoryGridNavigatesToMorse() [Passed]; CanadianHamVisionUITests/testLongestQuestionSupportsLargestDynamicType() [Passed]; CanadianHamVisionUITests/testMorseAccessibilityAuditLightAndDark() [Passed]; CanadianHamVisionUITests/testMorseScreenShowsPlaybackControls() [Passed]; CanadianHamVisionUITests/testPracticeAccessibilityAuditLightAndDark() [Passed]; CanadianHamVisionUITests/testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances() [Passed]
+
+Review r2 follow-up on tip 6eeda354c240e6c3661ec2a13b9adcb3e29298af: tightened the Review weakest characters UI test to assert the pushed review session title "Weak-character review" before checking Exercise 1, and made the empty-review path safe by only setting showingReviewSession when prepareReview creates non-empty exercises (otherwise session is cleared and no stale/empty session is pushed). Verified by targeted iOS run /tmp/morse-polish-r2-other2.xcresult: CanadianHamPracticeUITests/testMorseCourseReviewAndFinishedLessonReentryOnIOS [Passed] (7/7 selected tests passed). Per coordinator policy update, full four-platform suites were not rerun in this review round.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
