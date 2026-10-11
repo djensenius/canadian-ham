@@ -137,7 +137,7 @@ final class ProgressStoreTests: XCTestCase {
                 let expected: [QuestionProgressRecord]
             }
             struct ExamAttempts: Decodable {
-                let input: [StoredExamAttempt]
+                let input: [CanadianHam.StoredExamAttempt]
                 let expectedSubmittedAtById: [String: String]
             }
             struct MorseProgress: Decodable {
@@ -176,9 +176,9 @@ final class ProgressStoreTests: XCTestCase {
         )
         try store.saveQuestionProgress([record])
         var deletedAfterLocalReopen = false
-        let client = ICloudProgressDeletionClient {
+        let client = ICloudProgressDeletionClient(deletePrivateDatabaseProgressZones: {
             deletedAfterLocalReopen = !store.isICloudSyncEnabled
-        }
+        })
 
         try await store.deleteICloudProgress(localDataChoice: .keepLocal, client: client)
 
@@ -204,7 +204,7 @@ final class ProgressStoreTests: XCTestCase {
         try store.saveQuestionProgress([record])
         var deleteCalled = false
 
-        try await store.deleteICloudProgress(localDataChoice: .deleteLocal, client: ICloudProgressDeletionClient { deleteCalled = true })
+        try await store.deleteICloudProgress(localDataChoice: .deleteLocal, client: ICloudProgressDeletionClient(deletePrivateDatabaseProgressZones: { deleteCalled = true }))
 
         XCTAssertTrue(deleteCalled)
         XCTAssertFalse(store.isICloudSyncEnabled)

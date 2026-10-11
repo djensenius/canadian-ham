@@ -526,10 +526,6 @@ struct ICloudProgressDeletionClient {
         self.deletePrivateDatabaseProgressZones = deletePrivateDatabaseProgressZones
     }
 
-    init(_ deletePrivateDatabaseProgressZones: @escaping () async throws -> Void) {
-        self.deletePrivateDatabaseProgressZones = deletePrivateDatabaseProgressZones
-    }
-
     static var noop: ICloudProgressDeletionClient { ICloudProgressDeletionClient(deletePrivateDatabaseProgressZones: {}) }
 }
 
