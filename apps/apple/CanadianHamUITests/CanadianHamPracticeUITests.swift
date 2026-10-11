@@ -2360,7 +2360,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         _ element: XCUIElement,
         in app: XCUIApplication,
         context: String,
-        maxSwipes: Int = 10,
+        maxSwipes: Int = 20,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
@@ -2369,22 +2369,31 @@ final class CanadianHamPracticeUITests: XCTestCase {
             XCTFail("\(context): expected a scroll view before positioning element in the visible audit band", file: file, line: line)
             return
         }
-        for _ in 0..<maxSwipes where !isFullyVisibleInMiddleBand(element, in: app) {
+        for _ in 0..<maxSwipes {
             let frame = element.frame
             let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
             let bottomLimit = middleBandBottomLimit(in: app)
-            if frame.maxY > bottomLimit {
+            let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
+            if isFullyVisibleInMiddleBand(element, in: app), offenders.isEmpty {
+                break
+            }
+            if !offenders.isEmpty, frame.minY > visibleFrame.minY + 24 {
+                scrollView.swipeUp()
+            } else if frame.maxY > bottomLimit {
                 scrollView.swipeUp()
             } else if frame.minY < visibleFrame.minY {
                 scrollView.swipeDown()
             } else if !visibleFrame.contains(frame) {
                 scrollView.swipeUp()
+            } else if !offenders.isEmpty {
+                scrollView.swipeDown()
             } else {
                 break
             }
             waitBriefly()
         }
         assertFullyVisibleInMiddleBand(element, in: app, context: context, file: file, line: line)
+        assertNoScrollableContentIntersectsProtectedArea(in: app, scrollView: scrollView, context: context, file: file, line: line)
     }
 
     private func settleScrollableContentBelowNavigationBar(

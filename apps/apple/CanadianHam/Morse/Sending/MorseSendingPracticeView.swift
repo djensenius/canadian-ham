@@ -209,7 +209,7 @@ struct MorseSendingPracticeView: View {
             handleKeyPress(press)
         }
         .onDisappear {
-            if examRunning {
+            if presentedResult == nil, !examText.isEmpty {
                 cancelRunningExam(clearExam: true)
             }
         }
