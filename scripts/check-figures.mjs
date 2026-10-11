@@ -8,8 +8,10 @@ const repoRoot = process.cwd();
 const figuresDir = path.join(repoRoot, "content", "figures");
 const lessonsDir = path.join(repoRoot, "content", "lessons");
 const appleCatalogDir = path.join(repoRoot, "apps", "apple", "CanadianHam", "Resources", "FigureAssets.xcassets");
+const appleMetadataPath = path.join(repoRoot, "apps", "apple", "CanadianHam", "Generated", "LessonFigureMetadata.swift");
 
 const fix = process.argv.includes("--fix");
+const selfTest = process.argv.includes("--self-test");
 const errors = [];
 
 function fail(message) {
@@ -71,15 +73,9 @@ function approximateTextWidth(text, fontSize) {
 }
 
 function checkTextBounds(file, source) {
-  const svgMatch = /<svg\b([^>]*)>/i.exec(source);
-  const viewBox = svgMatch === null ? null : /\bviewBox="([^\"]+)"/i.exec(svgMatch[1])?.[1];
-  if (viewBox === undefined || viewBox === null) {
-    fail(`${file}: root <svg> must include a viewBox so text bounds can be checked`);
-    return;
-  }
-  const [minX, minY, width, height] = viewBox.trim().split(/[\s,]+/).map(Number);
-  if (![minX, minY, width, height].every(Number.isFinite) || width <= 0 || height <= 0) {
-    fail(`${file}: root <svg> has an invalid viewBox`);
+  const viewBox = parseViewBox(source);
+  if (viewBox === null) {
+    fail(`${file}: root <svg> must include a valid viewBox so text bounds can be checked`);
     return;
   }
 
@@ -103,8 +99,62 @@ function checkTextBounds(file, source) {
     const right = anchor === "middle" ? x + textWidth / 2 : anchor === "end" ? x : x + textWidth;
     const top = y - fontSize;
     const bottom = y + fontSize * 0.25;
-    if (left < minX + padding || right > minX + width - padding || top < minY + padding || bottom > minY + height - padding) {
+    if (left < viewBox.minX + padding || right > viewBox.minX + viewBox.width - padding || top < viewBox.minY + padding || bottom > viewBox.minY + viewBox.height - padding) {
       fail(`${file}: <text> '${text}' may extend beyond the viewBox padding (estimated bounds ${left.toFixed(1)},${top.toFixed(1)} to ${right.toFixed(1)},${bottom.toFixed(1)})`);
+    }
+  }
+}
+
+function parseViewBox(source) {
+  const svgMatch = /<svg\b([^>]*)>/i.exec(source);
+  const viewBox = svgMatch === null ? null : /\bviewBox="([^"]+)"/i.exec(svgMatch[1])?.[1];
+  if (viewBox === undefined || viewBox === null) {
+    return null;
+  }
+  const values = viewBox.trim().split(/[\s,]+/).map(Number);
+  if (values.length !== 4 || !values.every(Number.isFinite) || values[2] <= 0 || values[3] <= 0) {
+    return null;
+  }
+  return { minX: values[0], minY: values[1], width: values[2], height: values[3] };
+}
+
+function validateSvgSafety(file, source) {
+  const allowedElements = new Set(["svg", "title", "desc", "g", "path", "circle", "ellipse", "line", "polyline", "polygon", "rect", "text", "tspan"]);
+  const allowedAttributes = new Set([
+    "id", "xmlns", "viewBox", "role", "fill", "stroke", "stroke-linecap", "stroke-linejoin", "stroke-width", "opacity",
+    "d", "cx", "cy", "r", "rx", "ry", "x", "y", "x1", "y1", "x2", "y2", "width", "height", "points",
+    "font-family", "font-size", "font-weight", "text-anchor"
+  ]);
+  for (const match of source.matchAll(/<\/?\s*([A-Za-z][A-Za-z0-9:-]*)([^>]*)>/g)) {
+    const element = match[1];
+    const elementName = element.toLowerCase();
+    if (!allowedElements.has(elementName)) {
+      fail(`${file}: SVG element <${element}> is not allowed`);
+    }
+    if (match[0].startsWith("</")) {
+      continue;
+    }
+    const attributes = parseAttributes(match[2]);
+    if (elementName === "tspan" && attributes.size > 0) {
+      fail(`${file}: <tspan> attributes are not allowed because the checker cannot model positioned tspan text`);
+    }
+    for (const [name, value] of attributes) {
+      const lowerName = name.toLowerCase();
+      if (lowerName.startsWith("on")) {
+        fail(`${file}: event handler attribute '${name}' is not allowed`);
+      }
+      if (!allowedAttributes.has(name)) {
+        fail(`${file}: SVG attribute '${name}' is not allowed`);
+      }
+      if (lowerName === "href" || lowerName === "xlink:href") {
+        fail(`${file}: SVG references via '${name}' are not allowed`);
+      }
+      if ((name === "fill" || name === "stroke") && value !== "currentColor" && value !== "none") {
+        fail(`${file}: ${name} must be currentColor or none, got '${value}'`);
+      }
+      if (value.includes("url(") || (name !== "xmlns" && /^https?:/i.test(value))) {
+        fail(`${file}: external references are not allowed in '${name}'`);
+      }
     }
   }
 }
@@ -121,6 +171,7 @@ function readFigures() {
       fail(`${file}: figure filenames must be lower-case stable ids with hyphens only`);
     }
     const source = readFileSync(path.join(figuresDir, file), "utf8");
+    validateSvgSafety(file, source);
     const rootId = /<svg\b[^>]*\bid="([^"]+)"/i.exec(source)?.[1];
     if (rootId !== id) {
       fail(`${file}: root <svg id> must equal filename id '${id}'`);
@@ -143,28 +194,47 @@ function readFigures() {
 function parseFigureReferences(markdown, relativePath) {
   const lines = markdown.replace(/\r\n/g, "\n").split("\n");
   const references = [];
+  const idsOnPage = new Set();
+  let inFence = false;
   for (let index = 0; index < lines.length; index += 1) {
-    const match = /^::figure\s+([a-z0-9][a-z0-9-]*)\s*$/.exec(lines[index]?.trim() ?? "");
+    const trimmedLine = lines[index]?.trim() ?? "";
+    if (/^```/.test(trimmedLine)) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) {
+      continue;
+    }
+    const match = /^::figure\s+([a-z0-9][a-z0-9-]*)\s*$/.exec(trimmedLine);
     if (match === null) {
       continue;
     }
     const id = match[1];
+    if (idsOnPage.has(id)) {
+      fail(`${relativePath}: figure '${id}' is referenced more than once, which would duplicate inline SVG ids`);
+    }
+    idsOnPage.add(id);
     let altText = "";
     let closed = false;
     index += 1;
     for (; index < lines.length; index += 1) {
       const line = lines[index] ?? "";
-      if (line.trim() === "::") {
+      const trimmed = line.trim();
+      if (trimmed === "::") {
         closed = true;
         break;
       }
-      const altMatch = /^Alt text:\s*(.+)\s*$/i.exec(line.trim());
+      if (trimmed === "" || /^(#{1,6})(?:\s|$)/.test(line)) {
+        index -= 1;
+        break;
+      }
+      const altMatch = /^Alt text:\s*(.+)\s*$/i.exec(trimmed);
       if (altMatch !== null) {
         altText = altMatch[1].trim();
       }
     }
     if (!closed) {
-      fail(`${relativePath}: figure '${id}' directive is missing its closing '::'`);
+      fail(`${relativePath}: figure '${id}' directive is missing its closing '::' before the next blank line or heading`);
     }
     if (altText.length === 0) {
       fail(`${relativePath}: figure '${id}' is missing non-empty Alt text`);
@@ -214,6 +284,22 @@ function expectedAssets(figures) {
   return assets;
 }
 
+function appleMetadataSource(figures) {
+  const entries = [...figures.values()].map((figure) => {
+    const viewBox = parseViewBox(figure.source);
+    if (viewBox === null) {
+      return null;
+    }
+    return `        \"${figure.id}\": CGSize(width: ${viewBox.width}, height: ${viewBox.height})`;
+  }).filter((entry) => entry !== null).join(",\n");
+  return `// Generated by scripts/check-figures.mjs. Do not edit by hand.\nimport CoreGraphics\n\nenum LessonFigureMetadata {\n    static let sizes: [String: CGSize] = [\n${entries}\n    ]\n\n    static func aspectRatio(for id: String) -> CGFloat {\n        guard let size = sizes[id], size.width > 0, size.height > 0 else {\n            return 4.0 / 3.0\n        }\n        return size.width / size.height\n    }\n}\n`;
+}
+
+function writeAppleMetadata(figures) {
+  mkdirSync(path.dirname(appleMetadataPath), { recursive: true });
+  writeFileSync(appleMetadataPath, appleMetadataSource(figures));
+}
+
 function writeAssets(figures) {
   rmSync(appleCatalogDir, { recursive: true, force: true });
   mkdirSync(appleCatalogDir, { recursive: true });
@@ -224,6 +310,7 @@ function writeAssets(figures) {
     writeFileSync(path.join(imageset, asset.svgFilename), asset.source);
     writeFileSync(path.join(imageset, "Contents.json"), asset.contents);
   }
+  writeAppleMetadata(figures);
 }
 
 function checkAssets(figures) {
@@ -261,6 +348,55 @@ function checkAssets(figures) {
       fail(`Apple figure asset '${assetName}' has no matching content/figures SVG`);
     }
   }
+  if (!existsSync(appleMetadataPath)) {
+    fail("Apple figure metadata is missing; run pnpm check:figures:fix");
+  } else if (readFileSync(appleMetadataPath, "utf8") !== appleMetadataSource(figures)) {
+    fail("Apple figure metadata is out of sync with content/figures viewBox sizes");
+  }
+}
+
+function runSelfTest() {
+  const previousErrorCount = errors.length;
+  const safeSvg = `<svg id="safe" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><title>Safe</title><desc>Safe</desc><g fill="currentColor" stroke="none" text-anchor="middle"><text x="50" y="55" font-size="20">OK</text></g></svg>`;
+  validateSvgSafety("safe.svg", safeSvg);
+  checkTextBounds("safe.svg", safeSvg);
+  const refs = parseFigureReferences("```\n::figure ignored\nAlt text: Nope\n::\n```\n\n::figure safe\nalt text: Safe alt\n::", "fixture.md");
+  if (refs.length !== 1 || refs[0].id !== "safe" || refs[0].altText !== "Safe alt") {
+    fail("self-test: figure reference parser did not skip fences or parse case-insensitive alt text");
+  }
+  function expectNewError(label, action) {
+    const before = errors.length;
+    action();
+    if (errors.length === before) {
+      fail(`self-test: ${label} was not rejected`);
+      return;
+    }
+    errors.splice(before);
+  }
+  for (const [name, svg] of [
+    ["script.svg", `<svg id="bad" viewBox="0 0 10 10"><script>alert(1)</script></svg>`],
+    ["handler.svg", `<svg id="bad" viewBox="0 0 10 10"><path onclick="x" d="M0 0"/></svg>`],
+    ["style.svg", `<svg id="bad" viewBox="0 0 10 10"><path style="fill:black" d="M0 0"/></svg>`],
+    ["colour.svg", `<svg id="bad" viewBox="0 0 10 10"><path fill="black" d="M0 0"/></svg>`],
+    ["external.svg", `<svg id="bad" viewBox="0 0 10 10"><use href="https://example.com/x.svg#x"/></svg>`]
+  ]) {
+    expectNewError(`unsafe SVG fixture ${name}`, () => validateSvgSafety(name, svg));
+  }
+  expectNewError("unclosed figure directive", () => parseFigureReferences("::figure safe\nAlt text: Safe\n\nNext paragraph", "unclosed.md"));
+  if (errors.length > previousErrorCount) {
+    throw new Error(errors.slice(previousErrorCount).join("\n"));
+  }
+}
+
+if (selfTest) {
+  try {
+    runSelfTest();
+    console.log("Figure checker self-test passed.");
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exit(1);
+  }
+  process.exit(0);
 }
 
 const figures = readFigures();

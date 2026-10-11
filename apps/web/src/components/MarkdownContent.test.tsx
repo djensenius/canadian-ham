@@ -1,10 +1,44 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { render, screen } from "@testing-library/react";
 import { describe, it } from "vitest";
 
 import { MarkdownContent, parseMarkdownBlocks } from "./MarkdownContent";
 
+interface FigureDirectiveFixture {
+  readonly name: string;
+  readonly markdown: string;
+  readonly expected: readonly Record<string, unknown>[];
+}
+
+const figureDirectiveFixtures = JSON.parse(readFileSync(path.resolve(process.cwd(), "../../fixtures/markdown-figure-directives.json"), "utf8")) as FigureDirectiveFixture[];
+
+function simplifiedBlocks(markdown: string) {
+  return parseMarkdownBlocks(markdown).map((block) => {
+    if (block.type === "figure") {
+      return { type: "figure", id: block.id, altText: block.alt, textEquivalent: block.textEquivalent };
+    }
+    if (block.type === "paragraph") {
+      return { type: "paragraph", text: block.text };
+    }
+    if (block.type === "code") {
+      return { type: "code", language: block.language, text: block.code };
+    }
+    if (block.type === "heading") {
+      return { type: "heading", text: block.text };
+    }
+    return { type: block.type };
+  });
+}
+
 describe("MarkdownContent parser", () => {
+  for (const fixture of figureDirectiveFixtures) {
+    it(`matches shared figure-directive fixture: ${fixture.name}`, () => {
+      assert.deepEqual(simplifiedBlocks(fixture.markdown), fixture.expected);
+    });
+  }
+
   it("handles dash, star, and plus unordered bullets", () => {
     const blocks = parseMarkdownBlocks("- dash\n* star\n+ plus");
 

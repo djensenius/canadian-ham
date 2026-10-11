@@ -1260,8 +1260,7 @@ input[type="checkbox"]:checked::after {
 .lesson-row,
 .lesson-quiz,
 .explanation-panel,
-.lesson-figure,
-.illustration-placeholder {
+.lesson-figure {
   padding: var(--ch-space-lg);
   border: 1px solid var(--ch-color-border);
   border-radius: var(--ch-radius-md);
@@ -1319,8 +1318,7 @@ input[type="checkbox"]:checked::after {
 .lesson-article > ol,
 .lesson-article > .markdown-table-wrapper,
 .lesson-article > .markdown-code-block,
-.lesson-article > .lesson-figure,
-.lesson-article > .illustration-placeholder {
+.lesson-article > .lesson-figure {
   margin-block-end: var(--ch-space-lg);
 }
 
@@ -1407,16 +1405,8 @@ input[type="checkbox"]:checked::after {
 .lesson-figure__art svg {
   display: block;
   width: 100%;
-  min-width: min(34rem, 140vw);
   height: auto;
-  max-height: 70vh;
   margin-inline: auto;
-}
-
-.lesson-figure[data-figure-id="ohms-law-triangle"] .lesson-figure__art svg,
-.lesson-figure[data-figure-id="power-triangle"] .lesson-figure__art svg {
-  max-width: 28rem;
-  min-width: min(22rem, 120vw);
 }
 
 .lesson-figure__text-equivalent {
@@ -1427,20 +1417,6 @@ input[type="checkbox"]:checked::after {
 .lesson-figure__text-equivalent summary {
   cursor: pointer;
   font-weight: 700;
-}
-
-.illustration-placeholder__art {
-  display: grid;
-  min-height: 10rem;
-  place-items: center;
-  margin-block-end: var(--ch-space-md);
-  border: 2px dashed var(--ch-color-border);
-  border-radius: var(--ch-radius-md);
-  background: var(--ch-color-paper-inset);
-  color: var(--ch-color-ink-muted);
-  font-family: var(--ch-font-display);
-  font-size: var(--ch-type-title-size);
-  text-align: center;
 }
 
 .explanation-panel {

@@ -41,10 +41,10 @@ function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: Int
     return <p key={index}>{block.text}</p>;
   }
   if (block.type === "unordered-list") {
-    return <ul key={index}>{block.items.map((item) => <li key={item}>{item}</li>)}</ul>;
+    return <ul key={index}>{block.items.map((item, itemIndex) => <li key={`${itemIndex}-${item}`}>{item}</li>)}</ul>;
   }
   if (block.type === "ordered-list") {
-    return <ol key={index}>{block.items.map((item) => <li key={item}>{item}</li>)}</ol>;
+    return <ol key={index}>{block.items.map((item, itemIndex) => <li key={`${itemIndex}-${item}`}>{item}</li>)}</ol>;
   }
   if (block.type === "table") {
     return (
@@ -88,7 +88,7 @@ function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: Int
           <details className="lesson-figure__text-equivalent">
             <summary>{t(interfaceLanguage, "markdownFigureTextEquivalent")}</summary>
             <ul>
-              {block.textEquivalent.map((item) => <li key={item}>{item}</li>)}
+              {block.textEquivalent.map((item, itemIndex) => <li key={`${itemIndex}-${item}`}>{item}</li>)}
             </ul>
           </details>
         ) : null}
@@ -253,6 +253,7 @@ function parseFigure(lines: readonly string[], startIndex: number): { readonly b
   let index = startIndex + 1;
   let alt = "";
   const textEquivalent: string[] = [];
+  const fallbackLines = [lines[startIndex]?.trim() ?? ""];
   let readingTextEquivalent = false;
 
   while (index < lines.length) {
@@ -269,6 +270,13 @@ function parseFigure(lines: readonly string[], startIndex: number): { readonly b
         nextIndex: index + 1,
       };
     }
+    if (trimmed === "" || /^(#{1,6})(?:\s|$)/.test(line)) {
+      return {
+        block: { type: "paragraph", text: stripInlineMarkdown(fallbackLines.join(" ")) },
+        nextIndex: index,
+      };
+    }
+    fallbackLines.push(trimmed);
 
     const altMatch = /^Alt text:\s*(.+)$/i.exec(trimmed);
     if (altMatch !== null) {
@@ -283,18 +291,13 @@ function parseFigure(lines: readonly string[], startIndex: number): { readonly b
       continue;
     }
     if (readingTextEquivalent && /^[-*+]\s+/.test(trimmed)) {
-      textEquivalent.push(stripInlineMarkdown(trimmed.replace(/^[-*+]\s+/, "")));
+      textEquivalent.push(stripInlineMarkdown(trimmed.replace(/^[-*+]\s+/, "").trim()));
     }
     index += 1;
   }
 
   return {
-    block: {
-      type: "figure",
-      id,
-      alt: stripInlineMarkdown(alt.length > 0 ? alt : id),
-      textEquivalent,
-    },
+    block: { type: "paragraph", text: stripInlineMarkdown(fallbackLines.join(" ")) },
     nextIndex: index,
   };
 }

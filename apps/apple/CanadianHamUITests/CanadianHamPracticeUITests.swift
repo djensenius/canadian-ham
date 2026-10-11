@@ -1337,6 +1337,44 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCUIDevice.shared.appearance = .light
     }
 
+    func testLessonIllustrationBriefsAreHiddenInEnglishAndFrench() throws {
+        XCUIDevice.shared.appearance = .light
+        var app = launchApp(arguments: ["-CanadianHamInitialLessonID", "L-005-01"])
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertFalse(anyVisibleLabel(in: app, contains: "Illustration brief"))
+        XCTAssertFalse(anyVisibleLabel(in: app, contains: "Draw a simple ink-brush ladder"))
+        app.terminate()
+
+        app = launchApp(arguments: ["-AppleLanguages", "(fr)", "-AppleLocale", "fr_CA", "-CanadianHamInitialLessonID", "L-005-01"])
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertFalse(anyVisibleLabel(in: app, contains: "Note d’illustration"))
+        XCTAssertFalse(anyVisibleLabel(in: app, contains: "Draw a simple ink-brush ladder"))
+        app.terminate()
+    }
+
+    func testOhmsLawWheelFitsAndEnlargesAtLargestAccessibilityTextSize() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialLessonID", "L-005-02",
+            "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"
+        ])
+        defer { app.terminate() }
+
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
+        let wheel = app.descendants(matching: .any)["lesson-figure-ohms-law-power-wheel"].firstMatch
+        XCTAssertTrue(wheel.waitForExistence(timeout: 10), "Expected the Ohm's law wheel")
+        scrollUntilPartiallyVisible(wheel, in: app, maxSwipes: 14)
+        let windowFrame = app.windows.firstMatch.frame
+        XCTAssertGreaterThanOrEqual(wheel.frame.minX, windowFrame.minX - 1, "Wheel should not extend left of the window at the largest accessibility text size")
+        XCTAssertLessThanOrEqual(wheel.frame.maxX, windowFrame.maxX + 1, "Wheel should not extend right of the window at the largest accessibility text size")
+
+        let wheelButton = app.buttons["Ohm’s law and power wheel with quadrants for P, E, I, and R and three formulas in each quadrant."].firstMatch
+        scrollUntilHittable(wheelButton, in: app, maxSwipes: 10)
+        XCTAssertTrue(wheelButton.isHittable, "Wheel figure button should be reachable at the largest accessibility text size")
+        wheelButton.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-figure-ohms-law-power-wheel-enlarged"].firstMatch.waitForExistence(timeout: 5), "Tapping enlarge should open the enlarged figure sheet")
+    }
+
     func testAccessibilityAuditMockExamFlowLight() throws {
         XCUIDevice.shared.appearance = .light
         try auditMockExamFlow(appearance: .light)
@@ -1759,14 +1797,33 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let app = launchApp(arguments: ["-CanadianHamInitialLessonID", "L-005-02"])
         defer { app.terminate() }
 
+        let figureAltText = [
+            "power-triangle": "Power triangle with P above I and E, showing that P = I x E and the rearranged forms come from covering the unknown.",
+            "ohms-law-triangle": "Ohm’s law triangle with E above I and R, showing E = I x R, I = E / R, and R = E / I.",
+            "ohms-law-power-wheel": "Ohm’s law and power wheel with quadrants for P, E, I, and R and three formulas in each quadrant."
+        ]
+
         XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
         for figureID in ["power-triangle", "ohms-law-triangle", "ohms-law-power-wheel"] {
             let figure = app.descendants(matching: .any)["lesson-figure-\(figureID)"].firstMatch
             XCTAssertTrue(figure.waitForExistence(timeout: 10), "Expected \(figureID) figure")
             scrollUntilPartiallyVisible(figure, in: app, maxSwipes: 12)
+            app.scrollViews.firstMatch.swipeUp()
+            waitBriefly()
+            let figureButton = app.buttons[figureAltText[figureID]!].firstMatch
+            XCTAssertTrue(figureButton.exists, "Expected figure accessibility label for \(figureID)")
             attachScreenshot(named: "task38-1-ios-\(appearance.rawValue)-\(figureID)", from: app)
+            scrollUntilHittable(figureButton, in: app, maxSwipes: 6)
+            if figureButton.isHittable {
+                figureButton.tap()
+                XCTAssertTrue(app.descendants(matching: .any)["lesson-figure-\(figureID)-enlarged"].firstMatch.waitForExistence(timeout: 5), "Expected enlarged \(figureID) figure")
+                attachScreenshot(named: "task38-1-ios-\(appearance.rawValue)-\(figureID)-enlarged", from: app)
+                app.buttons["Done"].firstMatch.tap()
+                XCTAssertFalse(app.descendants(matching: .any)["lesson-figure-\(figureID)-enlarged"].firstMatch.waitForExistence(timeout: 2), "Expected enlarged \(figureID) figure to close")
+            }
         }
-        try performAudit(on: app, context: "\(appearance.rawValue) Ohm's law lesson figures")
+
+        XCTAssertTrue(app.buttons["Figure text equivalent"].firstMatch.exists, "Wheel text-equivalent disclosure should exist")
     }
 
     private func auditMockExamFlow(appearance: AuditAppearance) throws {

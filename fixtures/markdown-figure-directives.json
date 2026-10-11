@@ -1,0 +1,59 @@
+[
+  {
+    "name": "valid figure directive",
+    "markdown": "::figure ohms-law-triangle\nAlt text: Ohm **triangle** with `E`.\nText equivalent:\n- To find E: I x R.\n* To find I: E / R.\n+ To find R: E / I.\n::",
+    "expected": [
+      { "type": "figure", "id": "ohms-law-triangle", "altText": "Ohm triangle with E.", "textEquivalent": ["To find E: I x R.", "To find I: E / R.", "To find R: E / I."] }
+    ]
+  },
+  {
+    "name": "unclosed directive stops before blank line",
+    "markdown": "::figure ohms-law-triangle\nAlt text: Unclosed\n\nThis paragraph remains.",
+    "expected": [
+      { "type": "paragraph", "text": "::figure ohms-law-triangle Alt text: Unclosed" },
+      { "type": "paragraph", "text": "This paragraph remains." }
+    ]
+  },
+  {
+    "name": "missing alt falls back to id",
+    "markdown": "::figure power-triangle\nText equivalent:\n- Same row.\n::",
+    "expected": [
+      { "type": "figure", "id": "power-triangle", "altText": "power-triangle", "textEquivalent": ["Same row."] }
+    ]
+  },
+  {
+    "name": "lowercase alt label",
+    "markdown": "::figure power-triangle\nalt text: Lowercase alt.\n::",
+    "expected": [
+      { "type": "figure", "id": "power-triangle", "altText": "Lowercase alt.", "textEquivalent": [] }
+    ]
+  },
+  {
+    "name": "tab whitespace after directive and bullet marker",
+    "markdown": "::figure\tohms-law-power-wheel\nAlt text:\tTabbed alt.\nText equivalent:\n-\tTabbed bullet.\n::",
+    "expected": [
+      { "type": "figure", "id": "ohms-law-power-wheel", "altText": "Tabbed alt.", "textEquivalent": ["Tabbed bullet."] }
+    ]
+  },
+  {
+    "name": "inline markdown stripped",
+    "markdown": "::figure ohms-law-triangle\nAlt text: [Link label](https://example.com) and _emphasis_.\nText equivalent:\n- Use `E = I x R`.\n::",
+    "expected": [
+      { "type": "figure", "id": "ohms-law-triangle", "altText": "Link label and emphasis.", "textEquivalent": ["Use E = I x R."] }
+    ]
+  },
+  {
+    "name": "invalid id renders normally",
+    "markdown": "::figure bad_id\nAlt text: Bad id.\n::",
+    "expected": [
+      { "type": "paragraph", "text": "::figure bad_id Alt text: Bad id. ::" }
+    ]
+  },
+  {
+    "name": "directive inside code fence stays code",
+    "markdown": "```text\n::figure ohms-law-triangle\nAlt text: Not a figure.\n::\n```",
+    "expected": [
+      { "type": "code", "language": "text", "text": "::figure ohms-law-triangle\nAlt text: Not a figure.\n::" }
+    ]
+  }
+]

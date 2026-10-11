@@ -149,6 +149,8 @@ struct RootView: View {
                     compactSettingsDestination(route, bank: bank)
                 }
         }
+        .toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
         .onAppear {
             language = progressStore.preferences.language
             applyLaunchNavigation(bank: bank, contentLibrary: contentLibrary)

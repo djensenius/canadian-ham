@@ -570,22 +570,33 @@ private struct LessonMarkdownView: View {
 
 private struct LessonFigureView: View {
     let figure: MarkdownFigure
+    @State private var showingEnlargedFigure = false
+
+    private var aspectRatio: CGFloat {
+        LessonFigureMetadata.aspectRatio(for: figure.id)
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
-            ScrollView(.horizontal) {
-                Image("lesson-figure-\(figure.id)")
-                    .renderingMode(.template)
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                    .frame(maxWidth: .infinity)
-                    .frame(minWidth: minimumFigureWidth, minHeight: minimumFigureHeight)
-                    .padding(DesignTokens.Spacing.md)
-                    .accessibilityLabel(Text(english(figure.altText))) // l10n: content(en)
+            Button("Enlarge figure") {
+                showingEnlargedFigure = true
             }
-            .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+            .buttonStyle(.bordered)
+            .accessibilityIdentifier("lesson-figure-\(figure.id)-enlarge")
+
+            Button {
+                showingEnlargedFigure = true
+            } label: {
+                figureImage
+                    .padding(DesignTokens.Spacing.md)
+                    .frame(maxWidth: .infinity)
+                    .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(Text(english(figure.altText))) // l10n: content(en)
+            .accessibilityHint(Text("Opens enlarged figure")) // l10n: localized
+            .accessibilityIdentifier("lesson-figure-\(figure.id)-image")
 
             if !figure.textEquivalent.isEmpty {
                 DisclosureGroup {
@@ -603,20 +614,68 @@ private struct LessonFigureView: View {
                         .font(DesignTokens.FontScale.body.weight(.semibold))
                         .foregroundStyle(DesignTokens.Colors.ink)
                 }
+                .accessibilityIdentifier("lesson-figure-\(figure.id)-text-equivalent")
             }
         }
         .padding(DesignTokens.Spacing.md)
         .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         .accessibilityIdentifier("lesson-figure-\(figure.id)")
+        .sheet(isPresented: $showingEnlargedFigure) {
+            EnlargedLessonFigureView(figure: figure, aspectRatio: aspectRatio)
+        }
     }
 
-    private var minimumFigureWidth: CGFloat {
-        figure.id == "ohms-law-power-wheel" ? 520 : 300
+    private var figureImage: some View {
+        Image("lesson-figure-\(figure.id)")
+            .renderingMode(.template)
+            .resizable()
+            .scaledToFit()
+            .aspectRatio(aspectRatio, contentMode: .fit)
+            .foregroundStyle(DesignTokens.Colors.ink)
     }
+}
 
-    private var minimumFigureHeight: CGFloat {
-        figure.id == "ohms-law-power-wheel" ? 520 : 220
+private struct EnlargedLessonFigureView: View {
+    let figure: MarkdownFigure
+    let aspectRatio: CGFloat
+    @Environment(\.dismiss) private var dismiss
+    @State private var scale: CGFloat = 1
+    @State private var lastScale: CGFloat = 1
+
+    var body: some View {
+        NavigationStack {
+            ScrollView([.horizontal, .vertical]) {
+                Image("lesson-figure-\(figure.id)")
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .aspectRatio(aspectRatio, contentMode: .fit)
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .scaleEffect(scale)
+                    .padding(DesignTokens.Spacing.xl)
+                    .frame(maxWidth: .infinity)
+                    .accessibilityLabel(Text(english(figure.altText))) // l10n: content(en)
+                    .accessibilityIdentifier("lesson-figure-\(figure.id)-enlarged-image")
+            }
+            .background(DesignTokens.Colors.paper)
+            .gesture(
+                MagnificationGesture()
+                    .onChanged { value in
+                        scale = min(max(lastScale * value, 1), 4)
+                    }
+                    .onEnded { _ in
+                        lastScale = scale
+                    }
+            )
+            .navigationTitle(Text("Enlarged figure")) // l10n: localized
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }
+                }
+            }
+        }
+        .accessibilityIdentifier("lesson-figure-\(figure.id)-enlarged")
     }
 }
 

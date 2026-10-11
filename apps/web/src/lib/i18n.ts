@@ -452,8 +452,6 @@ export const enMessages = defineMessages({
   markdownCodeBlockAria: "Lesson code block",
   markdownCodeBlockLanguageAria: (language: string) => `Lesson code block (${language})`,
   markdownFigureTextEquivalent: "Figure text equivalent",
-  markdownIllustrationPlaceholder: "Illustration placeholder",
-  markdownIllustrationBrief: "Illustration brief:",
 });
 
 export type MessageCatalogue = typeof enMessages;
@@ -897,8 +895,6 @@ export const frMessages = defineMessages({
   markdownCodeBlockAria: "Bloc de code de leçon",
   markdownCodeBlockLanguageAria: (language: string) => `Bloc de code de leçon (${language})`,
   markdownFigureTextEquivalent: "Équivalent textuel de la figure",
-  markdownIllustrationPlaceholder: "Espace réservé pour l’illustration",
-  markdownIllustrationBrief: "Résumé de l’illustration :",
 } satisfies MessageCatalogue);
 
 const catalogues: Record<InterfaceLanguage, MessageCatalogue> = {
