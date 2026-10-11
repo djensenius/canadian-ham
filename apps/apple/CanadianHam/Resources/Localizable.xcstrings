@@ -8167,23 +8167,6 @@
         }
       }
     },
-    "Question language" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Langue des questions"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Langue des questions"
-          }
-        }
-      }
-    },
     "Question navigator" : {
       "localizations" : {
         "fr" : {
