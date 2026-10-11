@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-11 18:37'
-updated_date: '2026-10-11 22:21'
+updated_date: '2026-10-11 22:23'
 labels:
   - apple
   - testing
@@ -31,6 +31,8 @@ On main after the Morse polish merge, testAccessibilityAuditMorseCourseLessonAnd
 
 <!-- SECTION:PLAN:BEGIN -->
 1. Inspect task-36 logs/xcresult artifacts and record the failing audit element/frame evidence. 2. Reproduce the Morse course light/dark audit failures with targeted xbuild runs before changing tests, preserving result bundles/logs. 3. Diagnose whether the failure is positional or genuine contrast; only make a test-only positioning fix unless measured colors genuinely fail. 4. Verify both audits with 5 consecutive targeted passes each, update task notes/ACs/final summary, and commit.
+
+5. Inspect Morse home/course animation sources, temporarily instrument screenshots around the lower Morse audit to verify timing, then replace instrumentation with a bounded visual-stability wait if confirmed.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
