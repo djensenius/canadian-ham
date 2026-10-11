@@ -2358,7 +2358,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         _ element: XCUIElement,
         in app: XCUIApplication,
         context: String,
-        maxSwipes: Int = 20,
+        maxAdjustments: Int = 20,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
@@ -2367,31 +2367,54 @@ final class CanadianHamPracticeUITests: XCTestCase {
             XCTFail("\(context): expected a scroll view before positioning element in the visible audit band", file: file, line: line)
             return
         }
-        for _ in 0..<maxSwipes {
+        var trace: [String] = []
+        for iteration in 0..<maxAdjustments {
             let frame = element.frame
             let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
             let bottomLimit = middleBandBottomLimit(in: app)
+            let protectedMaxY = protectedNavigationFrame(in: app).maxY + 1
             let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
+            trace.append("iteration \(iteration): target=\(frameDescription(frame)); offenders=\(offenders.map(\.description).joined(separator: " | "))")
             if isFullyVisibleInMiddleBand(element, in: app), offenders.isEmpty {
                 break
             }
             if frame.maxY > bottomLimit {
-                scrollView.swipeUp()
-            } else if frame.minY < visibleFrame.minY {
-                scrollView.swipeDown()
+                preciseScroll(scrollView, contentDeltaY: -(frame.maxY - bottomLimit + 8))
+            } else if frame.minY < visibleFrame.minY + 8 {
+                preciseScroll(scrollView, contentDeltaY: visibleFrame.minY + 8 - frame.minY)
+            } else if let offender = offenders.first {
+                let frame = offender.frame
+                let moveAbove = -(frame.maxY - app.windows.firstMatch.frame.minY + 8)
+                let moveBelow = protectedMaxY + 8 - frame.minY
+                preciseScroll(scrollView, contentDeltaY: abs(moveAbove) < abs(moveBelow) ? moveAbove : moveBelow)
             } else if !visibleFrame.contains(frame) {
-                scrollView.swipeUp()
-            } else if !offenders.isEmpty {
-                let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
-                let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55))
-                start.press(forDuration: 0.01, thenDragTo: end)
+                preciseScroll(scrollView, contentDeltaY: -24)
             } else {
                 break
             }
             waitBriefly()
         }
-        assertFullyVisibleInMiddleBand(element, in: app, context: context, file: file, line: line)
-        assertNoScrollableContentIntersectsProtectedArea(in: app, scrollView: scrollView, context: context, file: file, line: line)
+        XCTAssertTrue(
+            isFullyVisibleInMiddleBand(element, in: app),
+            "\(context) should be fully visible below the navigation bar and clear of the bottom safe area. Frame: \(frameDescription(element.frame)); trace: \(trace.joined(separator: " -> "))",
+            file: file,
+            line: line
+        )
+        let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
+        XCTAssertTrue(
+            offenders.isEmpty,
+            "\(context): expected no scrollable text or buttons to intersect the protected navigation/status area; offenders: \(offenders.map(\.description).joined(separator: "; ")); trace: \(trace.joined(separator: " -> "))",
+            file: file,
+            line: line
+        )
+    }
+
+    private func preciseScroll(_ scrollView: XCUIElement, contentDeltaY: CGFloat) {
+        let limitedMagnitude = min(40, max(8, abs(contentDeltaY)))
+        let fingerDeltaY = contentDeltaY > 0 ? limitedMagnitude : -limitedMagnitude
+        let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        let end = start.withOffset(CGVector(dx: 0, dy: fingerDeltaY))
+        start.press(forDuration: 0.05, thenDragTo: end)
     }
 
     private func settleScrollableContentBelowNavigationBar(
@@ -2558,12 +2581,14 @@ final class CanadianHamPracticeUITests: XCTestCase {
         guard frame.maxY > windowMinY, frame.minY < protectedMaxY else { return nil }
         return ProtectedAreaOffender(
             description: "\(elementDescription) id=\(element.identifier) label=\(element.label) frame=\(frameDescription(frame))",
+            frame: frame,
             isClippedAboveWindow: frame.minY < windowMinY
         )
     }
 
     private struct ProtectedAreaOffender {
         let description: String
+        let frame: CGRect
         let isClippedAboveWindow: Bool
     }
 
@@ -2582,11 +2607,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
         guard element.exists else { return false }
         let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
         let bottomLimit = middleBandBottomLimit(in: app)
+        let topLimit = visibleFrame.minY + 8
         let band = CGRect(
             x: visibleFrame.minX,
-            y: visibleFrame.minY,
+            y: topLimit,
             width: visibleFrame.width,
-            height: max(0, bottomLimit - visibleFrame.minY)
+            height: max(0, bottomLimit - topLimit)
         )
         return band.contains(element.frame)
     }
