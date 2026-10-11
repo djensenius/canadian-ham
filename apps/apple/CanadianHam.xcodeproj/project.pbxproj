@@ -103,6 +103,7 @@
 		C36A6BEF7CD1655C4C09136A /* AccessibleSecondaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658B2A641A5BBF5D6B65B2DD /* AccessibleSecondaryButtonStyle.swift */; };
 		C67627A6755066FA8F2B034E /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543DA6642D20EAF6FA88693D /* Tokens.swift */; };
 		C79F4B014C66CBB77F1CECDF /* EngineShuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86285B482FDCAE14BCCB1A65 /* EngineShuffle.swift */; };
+		C85F7AC96B0A610FDC19BA88 /* ProgressSyncMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6348B3A030558BDA24C971 /* ProgressSyncMerge.swift */; };
 		CB82AC4522910B6DBBE8E338 /* AppSettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72C0FA8ECBD6EAFA6A5D34F /* AppSettingsModel.swift */; };
 		CBBD854076689D0E6F2EE822 /* lessons in Resources */ = {isa = PBXBuildFile; fileRef = EF0A093E186AB771F904629B /* lessons */; };
 		CBC1FACE31E263275CCC7AE3 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
@@ -1062,6 +1063,7 @@
 				42B335E4F445B4521F5ACA40 /* ProgressModels.swift in Sources */,
 				5A1CE4F99519795442DFAA39 /* ProgressStore.swift in Sources */,
 				4CBF95D998062361B45D4394 /* ProgressStoreTests.swift in Sources */,
+				C85F7AC96B0A610FDC19BA88 /* ProgressSyncMerge.swift in Sources */,
 				1ACC1B99ACDE3E66DE37445D /* QuestionBankModels.swift in Sources */,
 				B9D65B4D05709AA74DE896F0 /* QuestionBankStore.swift in Sources */,
 				9405A070EB557B342A128819 /* QuestionBankTests.swift in Sources */,
