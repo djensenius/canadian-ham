@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-017-009.\n\nWhy the correct answer is right: For Basic Qualification, the maximum DC input power to the transmitter final amplifier stage is 250 watts.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"1000 watts\": 1000 watts is the Advanced DC input limit, not Basic.\n- sourceIndex 2: \"750 watts\": 750 watts is separate from the 250-watt Basic DC input value recorded in RBR-4 and the lesson reference table.\n- sourceIndex 3: \"560 watts\": That figure belongs to Basic single-sideband peak-envelope power, which is not the DC input quantity.",
+    "en": "Question B-001-017-009.\n\nWhy the correct answer is right: For Basic Qualification, the maximum direct-current (DC) input power to the transmitter final amplifier stage is 250 watts.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"1000 watts\": 1 000 watts is the Advanced DC input limit, not Basic.\n- sourceIndex 2: \"750 watts\": 750 watts is not the 250-watt Basic DC input limit recorded in RBR-4.\n- sourceIndex 3: \"560 watts\": That figure belongs to Basic single-sideband peak-envelope power, which is not the DC input quantity.",
     "fr": null
   },
   "citations": [

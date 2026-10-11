@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-008-002-008.\n\nWhy the correct answer is right: A ferrite-core choke on the wire adds RF impedance and reduces the RF current picked up by audio or telephone leads.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"High-pass filter\": A high-pass filter is a frequency-selective receiver input cure, not the usual suppression device for speaker or intercom leads acting as antennas.\n- sourceIndex 2: \"Attenuator\": An attenuator lowers wanted audio level but does not specifically stop RF current from entering the amplifier input.\n- sourceIndex 3: \"Surge suppressor\": A surge suppressor protects against voltage transients; it is not designed as the primary cure for RF pickup on audio wiring.",
+    "en": "Question B-008-002-008.\n\nWhy the correct answer is right: A ferrite-core choke on the wire adds radio-frequency (RF) impedance and reduces the RF current picked up by audio or telephone leads. The wanted audio still travels in the normal conductors.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"High-pass filter\": A high-pass filter is a frequency-selective receiver input cure, not the usual suppression device for speaker or intercom leads acting as antennas.\n- sourceIndex 2: \"Attenuator\": An attenuator lowers wanted audio level but does not specifically stop RF current from entering the amplifier input.\n- sourceIndex 3: \"Surge suppressor\": A surge suppressor protects against voltage transients; it is not designed as the primary cure for RF pickup on audio wiring.",
     "fr": null
   },
   "citations": [

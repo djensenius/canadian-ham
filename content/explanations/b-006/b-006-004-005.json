@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-004-005.\n\nWhy the correct answer is right: Transmission-line attenuation generally rises as frequency rises because skin effect and dielectric loss become more significant. The same cable that is acceptable on HF may be poor at VHF or UHF.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Signal loss increases with decreasing frequency\": This states the usual trend backward for ordinary RF feedlines.\n- sourceIndex 2: \"Signal loss increases as the square of frequency\": Loss does not follow a simple frequency-squared rule for practical coax; the exam point is the upward trend with frequency.\n- sourceIndex 3: \"Signal loss is the same for any frequency\": Cable loss charts exist because the attenuation changes with frequency.",
+    "en": "Question B-006-004-005.\n\nWhy the correct answer is right: Transmission-line attenuation generally rises as frequency rises because skin effect and dielectric loss become more significant. The same cable that is acceptable on high frequency (HF) may waste too much power at very high frequency (VHF) or ultra high frequency (UHF).\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Signal loss increases with decreasing frequency\": This states the usual trend backward for ordinary radio-frequency (RF) feedlines.\n- sourceIndex 2: \"Signal loss increases as the square of frequency\": Loss does not follow a simple frequency-squared rule for practical coax; the exam point is the upward trend with frequency.\n- sourceIndex 3: \"Signal loss is the same for any frequency\": Cable loss charts exist because the attenuation changes with frequency.",
     "fr": null
   },
   "citations": [

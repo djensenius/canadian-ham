@@ -22,7 +22,7 @@ status: draft
 ---
 # Units, conductors, and current
 
-Radio starts with a few simple measurements. A receiver dial, a power supply label, a capacitor value, and a battery current reading all use the same metric-prefix idea: a prefix moves the decimal point by a known amount.
+Radio starts with a few simple measurements. A receiver dial, a power supply label, a capacitor value, and a battery current reading all use metric prefixes. A prefix moves the decimal point by a known amount.
 
 Do not try to memorize every possible conversion as a separate fact. Learn the common prefixes, keep the unit attached to the number, and ask whether the answer should become larger or smaller when you change units.
 
@@ -52,42 +52,64 @@ A prefix tells you how many base units are being counted. In Basic exam electron
 
 When you change from a large unit to a smaller unit, the number gets larger. When you change from a small unit to a larger unit, the number gets smaller.
 
+### Memory trick: prefix ladder
+
+- Helps remember: the usual electronics prefix order from large to small.
+- Trick: giga, mega, kilo, base, milli, micro, pico can be remembered as "Great Mighty Kings Balance Many Micro Picnics."
+- Limit: the sentence only gives the order used in the table. Most adjacent rows differ by 1 000, but this table skips nano, so micro to pico is a jump of 1 000 000.
+
 ### Worked example: MHz to kHz
 
-A frequency is 14.230 MHz. Mega is the next larger prefix above kilo, and each step here is a factor of 1 000.
+A frequency is 14.230 MHz.
 
-- Mega to kilo is a single prefix step, so multiply the MHz value by 1 000.
-- 14.230 MHz = 14.230 x 1 000 kHz.
-- 14.230 x 1 000 = 14 230.
-
-So 14.230 MHz is 14 230 kHz.
+- Given: frequency = 14.230 MHz; mega is 1 000 times kilo.
+- Find: the frequency in kilohertz.
+- Formula: kHz = MHz x 1 000.
+- Substitute: 14.230 x 1 000 = 14 230.
+- Answer: 14.230 MHz = 14 230 kHz.
+- Sanity check: kilohertz is the smaller unit, so the number is larger.
 
 ### Worked example: mA to A
 
-A receiver accessory draws 450 mA. Milli means a thousandth of an ampere.
+A receiver accessory draws 450 mA.
 
-- Milli is a thousandth of the base unit.
-- To convert milliamperes to amperes, divide by 1 000.
-- 450 mA / 1 000 = 0.45 A.
-
-So 450 mA is 0.45 amperes.
+- Given: current = 450 mA; milli means a thousandth of the base unit.
+- Find: current in amperes.
+- Formula: amperes = milliamperes / 1 000.
+- Substitute: 450 / 1 000 = 0.45.
+- Answer: 450 mA = 0.45 A.
+- Sanity check: amperes are larger units, so the number is smaller.
 
 ### Worked example: pF to µF
 
-A small bypass capacitor is marked 470 000 pF. Pico is much smaller than micro.
+A small bypass capacitor is marked 470 000 pF.
 
-- A microfarad contains a million picofarads.
-- 470 000 pF is 0.47 of that amount, so it is 0.47 µF.
+- Given: capacitance = 470 000 pF; a microfarad contains a million picofarads.
+- Find: capacitance in microfarads.
+- Formula: µF = pF / 1 000 000.
+- Substitute: 470 000 / 1 000 000 = 0.47.
+- Answer: 470 000 pF = 0.47 µF.
+- Sanity check: picofarads are tiny, so the number is much smaller in microfarads.
 
-This is a good reminder that capacitor values may look huge in picofarads but ordinary in microfarads.
+### In the real world: reading a charger label
+
+A phone charger may say 9.0 V at 3.0 A. The volts tell the electrical pressure. The amperes tell the current the charger can supply under that rating.
+
+The same label might also list watts. If it says 27 W, that matches P = I x E because 3.0 A x 9.0 V = 27 W. You will use that power formula in the next lesson.
 
 ## Conductors, insulators, and semiconductors
 
-A conductor lets electric charge move easily. Copper, silver, gold, and aluminum are good conductors. Copper is widely used in radio equipment and house wiring because it conducts well and is practical to use.
+A conductor lets electric charge move easily. Copper, silver, gold, and aluminum are good conductors. Copper is common in radio gear, power cables, and house wiring because it conducts well and is practical to use.
 
 An insulator resists current flow. Glass, air, porcelain, many plastics, Teflon, mica, and dry wood are common insulating materials. Insulators hold conductors apart so current goes where the circuit designer intended.
 
-A semiconductor is between those two behaviours. Silicon is the everyday semiconductor example. Carbon can appear in resistive materials, so treat it separately from both good metal conductors and common insulators. Semiconductors become very important in diodes and transistors, but this lesson is about the basic material categories.
+A semiconductor is between those two behaviours. Silicon is the everyday semiconductor example. Carbon can appear in resistive materials, so treat it separately from both good metal conductors and common insulators.
+
+### In the real world: a coax cable cross-section
+
+A coaxial cable is a good parts lesson in one object. The centre conductor carries signal current. Plastic insulation keeps it from touching the shield. The shield provides a return path and helps keep unwanted fields out.
+
+If the centre conductor touches the shield, the cable can become a short circuit. If the centre conductor breaks, the cable can become an open circuit. The conductor and insulator jobs both matter.
 
 ## Current, resistance, and conductance
 
@@ -95,13 +117,18 @@ Current is charge moving through a complete circuit path. The symbol for current
 
 Resistance is opposition to current flow. Its symbol is R, and its unit is the ohm. Low resistance means current can flow easily. High resistance means current has a harder path.
 
-Conductance is the inverse of resistance. If resistance is high, conductance is low. If resistance is low, conductance is high. For the Basic exam, the important word is inverse: conductance is the opposite way of describing how easy a path is.
+Conductance is the inverse of resistance. It describes how easily current can flow. If resistance is high, conductance is low. If resistance is low, conductance is high.
+
+### Misconception: current can cross any gap
+
+- Mistaken idea: current can keep flowing through a simple broken wire because voltage is still present.
+- Correction: current in an ordinary low-voltage circuit needs a complete conductive path. Air is normally an insulator.
 
 ## Voltage drop and polarity
 
-Voltage is electrical pressure or potential difference. When current flows through a resistance, some voltage is used across that resistance. That is a voltage drop.
+Voltage is electrical pressure or potential difference. When current flows through a resistance, some voltage appears across that resistance. That is a voltage drop.
 
-In a DC circuit, polarity names the direction or sign of the voltage and current path: positive and negative. Many radio accessories care about polarity. Reversing DC polarity can damage equipment.
+In a DC circuit, polarity names the positive and negative direction of the connection. Many radio accessories care about polarity. Reversing DC polarity can damage equipment.
 
 Temperature can change the resistance of a conductor. In many metal conductors, resistance rises as the conductor gets hotter. That is one reason hot wires and hot resistors deserve attention.
 
@@ -119,7 +146,9 @@ Do these in your head before checking the answer.
 
 A real station uses these conversions all the time. HF frequencies may be written as 14.230 MHz in a logging program and as 14 230 kHz in a band plan. A handheld may advertise 750 mW on low power, which is 0.75 W. A small accessory may draw 180 mA, which is 0.18 A from the battery.
 
-Conductors and insulators are just as practical. Coaxial cable works because the centre conductor carries RF current, an insulator keeps it separated from the shield, and the shield provides the return path and shielding. If the insulator fails or a conductor touches where it should not, the circuit behaviour changes immediately.
+Conductors and insulators are just as practical. Coaxial cable works because each layer has a job. The centre conductor carries RF current. The insulator keeps it separated from the shield. The shield provides the return path and shielding.
+
+If the insulator fails or a conductor touches where it should not, the circuit behaviour changes immediately.
 
 ## Common mistakes
 

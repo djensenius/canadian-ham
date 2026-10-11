@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-008-005-008.\n\nWhy the correct answer is right: Band-pass filters on the receivers admit each assigned band and attenuate transmitters on other Field Day bands.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Low-pass\": A low-pass filter only rejects higher frequencies; it would not isolate one assigned band from all other bands.\n- sourceIndex 2: \"High-pass\": A high-pass filter only rejects lower frequencies, so it is not enough for separating multiple assigned bands.\n- sourceIndex 3: \"Band-reject\": A band-reject filter removes one range, but each receiver needs to pass its own band and reject the rest.",
+    "en": "Question B-008-005-008.\n\nWhy the correct answer is right: Band-pass filters on the receivers admit each assigned band and attenuate transmitters on other Field Day bands. Each receiver gets a clean window for its own band.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Low-pass\": A low-pass filter only rejects higher frequencies; it would not isolate one assigned band from all other bands.\n- sourceIndex 2: \"High-pass\": A high-pass filter only rejects lower frequencies, so it is not enough for separating multiple assigned bands.\n- sourceIndex 3: \"Band-reject\": A band-reject filter removes one range, but each receiver needs to pass its own band and reject the rest.",
     "fr": null
   },
   "citations": [

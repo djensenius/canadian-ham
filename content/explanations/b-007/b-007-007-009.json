@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-007-009.\n\nWhy the correct answer is right: Auroral paths can make analog signals raspy, fluttery, and spread out. CW's simple keyed carrier and narrow information content can remain readable when voice details are badly distorted.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"CW, because it resists fading\": CW is the right emission choice, but the reason here is wrong; auroral paths can still fade, and CW helps mainly because it tolerates distortion.\n- sourceIndex 2: \"FM, because it is readable even when distorted\": Analog FM voice tends to become hard to understand on rough auroral paths.\n- sourceIndex 3: \"FM, because it resists fading\": FM's capture behaviour does not solve the rapid distortion and flutter produced by auroral propagation.",
+    "en": "Question B-007-007-009.\n\nWhy the correct answer is right: Auroral paths can make analog signals raspy, fluttery, and spread out. A continuous-wave (CW) signal's simple keyed carrier and narrow information content can remain readable when voice details are badly distorted.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"CW, because it resists fading\": CW is the right emission choice, but the reason here is wrong. Auroral paths can still fade, and CW helps mainly because it tolerates distortion.\n- sourceIndex 2: \"FM, because it is readable even when distorted\": Analog frequency modulation (FM) voice tends to become hard to understand on rough auroral paths.\n- sourceIndex 3: \"FM, because it resists fading\": FM's capture behaviour does not solve the rapid distortion and flutter produced by auroral propagation.",
     "fr": null
   },
   "citations": [

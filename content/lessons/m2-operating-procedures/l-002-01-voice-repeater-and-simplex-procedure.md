@@ -26,7 +26,7 @@ status: draft
 
 Voice operating is courtesy made repeatable. The operator listens first, identifies clearly, chooses a suitable path, leaves room for others, and keeps the station adjusted so one contact uses only the spectrum and repeater time it needs.
 
-This lesson stays with practical operating principles: repeater use, coordination, CTCSS access, the two-metre FM offset, the ITU phonetic alphabet, CQ and directed calls, simplex choices, band plans, dummy loads, and shared-frequency manners.
+This lesson stays with practical operating principles: repeater use, coordination, access tones, the two-metre FM offset, the ITU phonetic alphabet, CQ and directed calls, simplex choices, band plans, dummy loads, and shared-frequency manners.
 
 ## Learning objectives
 
@@ -40,19 +40,29 @@ By the end of this lesson, you can:
 
 ## Repeaters are shared relays
 
-A repeater receives on one frequency and retransmits on another. Portable and mobile stations often have small antennas, low height, and moving locations. A repeater at a better site can hear those stations and retransmit from a stronger location, increasing their practical local range.
+A repeater receives on one frequency and retransmits on another. Portable and mobile stations often have small antennas, low height, and moving locations. A repeater at a better site can hear those stations and retransmit from a stronger location. That increases the practical range of portable and mobile stations.
 
-Because many operators share the same relay, repeater procedure is deliberately short. Listen before transmitting. Leave a clear pause after another station unkeys so new traffic can enter. Keep overs brief enough that other users, including emergency traffic, can get access. Join a conversation already under way by identifying with your call sign during a clear break between transmissions.
+Because many operators share the same relay, repeater procedure is short. Listen before transmitting. Leave a pause after another station unkeys so new traffic can enter. Keep overs brief so other users, including emergency traffic, can get access.
 
-A time-out timer is a protection device. It interrupts transmissions that run too long, including a stuck microphone. Courteous operating leaves pauses and keeps overs brief before the controller has to act.
+Join a conversation already under way by identifying with your call sign during a clear break between transmissions. Do not cover the end of another station's transmission. A time-out timer protects the repeater by interrupting transmissions that run too long, including a stuck microphone.
+
+### In the real world: entering a repeater conversation
+
+Wait for the courtesy tone or clear pause, send your call sign once, and let the stations already talking invite you in. If you have distress traffic, state your call sign and situation during the break so the channel can be cleared.
+
+An illustrative repeater entry can be this short:
+
+- VE3ABC: "VE3ABC."
+- VE3XYZ: "VE3ABC, go ahead."
+- VE3ABC: "Thanks. I have one quick question about tonight's club net."
 
 ## Coordination, tones, and offsets
 
 Frequency coordination is the organized recommendation process used on VHF and UHF to reduce conflicts among neighbouring repeaters. It considers repeater channels, offset, coverage area, and local practice.
 
-Many repeaters require a CTCSS tone. The tone is a low-frequency access signal sent with the user's transmission so the repeater receiver opens its audio path only for signals carrying the expected tone. Successful access depends on matching the repeater input frequency, offset direction, and tone.
+Many repeaters require a CTCSS tone. CTCSS is a low-frequency access tone sent with your voice transmission. The repeater receiver opens its audio path only for signals carrying the expected tone.
 
-On the two-metre FM repeater channels covered here, the standard difference between transmit and receive frequencies is 600 kHz. Radios may show the repeater output while automatically transmitting above or below it by the programmed offset.
+Successful access depends on matching the repeater output frequency, offset direction, input frequency, and tone. On the two-metre FM repeater channels covered here, the standard difference between transmit and receive frequencies is 600 kHz. If a repeater output is 146.940 MHz with a negative offset, the radio transmits on 146.340 MHz because 146.940 MHz - 0.600 MHz = 146.340 MHz.
 
 ## Voice identification and phonetics
 
@@ -74,11 +84,18 @@ Standard phonetic words give every listener the same spelling system. On repeate
 | P | Papa |
 | R | Romeo |
 
+### Memory trick: ITU words are fixed
+
+- Helps remember: formal call-sign spelling uses the ITU words, not homemade words.
+- Trick: practise your own call sign first, then practise common letters that sound alike, such as B, D, E, G, P, and V.
+- Full ITU alphabet: Alfa, Bravo, Charlie, Delta, Echo, Foxtrot, Golf, Hotel, India, Juliett, Kilo, Lima, Mike, November, Oscar, Papa, Quebec, Romeo, Sierra, Tango, Uniform, Victor, Whiskey, X-ray, Yankee, Zulu.
+- Limit: this trick helps with practice, but the formal words are fixed. Do not replace ITU words with homemade words for identification.
+
 ## Calling on voice
 
 A general voice call invites any station. A directed voice call names one station. Keep those jobs separate so listeners immediately know whether the call is open to everyone or meant for a particular station.
 
-For a directed call, put the desired station's call sign first and then identify your own station. For an answer to CQ, name the station whose CQ you are answering and then identify yourself. On repeaters, a short announcement with your call sign and listening status is friendlier to the shared machine.
+For a directed call, put the desired station's call sign first and then identify your own station. For an answer to CQ, name the station whose CQ you are answering and then identify yourself. On repeaters, a short announcement with your call sign and listening status is friendlier to the shared machine than a long CQ.
 
 ### Reference fact: voice calling patterns
 
@@ -94,31 +111,45 @@ The repetition in the CQ pattern gives listeners enough time to recognize a gene
 
 Simplex means both stations transmit and receive on the same frequency. If two stations can hear each other directly, moving from a repeater to simplex can free the repeater for mobiles, portables, and wider-area traffic.
 
-A useful simplex test while already using a repeater is to listen for the other station on the repeater's input frequency. If the input signal is clear at your station, direct communication may be practical. Choose the simplex frequency carefully. A channel that sounds quiet in your receiver may be the input to a local repeater; your transmitted signal can interfere with repeater users on that system. If you discover you are using a repeater channel for simplex, move to a proper simplex frequency.
+A useful simplex test while already using a repeater is to listen for the other station on the repeater's input frequency. If the input signal is clear at your station, direct communication may be practical.
+
+Choose the simplex frequency carefully. A channel that sounds quiet in your receiver may be the input to a local repeater; your transmitted signal can interfere with repeater users on that system. If you discover you are using a repeater channel for simplex, move to a proper simplex frequency.
 
 For local communication, VHF and UHF are usually preferred over HF when they will do the job. That keeps HF bands less cluttered for the longer-distance communication for which they are especially useful.
+
+### In the real world: repeater first, simplex next
+
+A pair of handheld operators may meet on a repeater, then test direct copy. If both can hear the repeater input signal clearly, they can move to a proper simplex channel and leave the repeater available.
+
+An illustrative simplex exchange uses the same identify-clearly habit:
+
+- VA3MOB: "VE3ABC, this is VA3MOB on simplex. How do you copy?"
+- VE3ABC: "VA3MOB, this is VE3ABC. I copy you clearly."
+- VA3MOB: "Thanks. We can stay simplex and leave the repeater clear."
 
 ## Sidebands, spacing, and clean tests
 
 Two sideband conventions in this lesson are upper sideband on twenty metres and lower sideband around 3755 kHz. Operators use these conventions so signals line up as expected and have the expected audio orientation.
 
-Before transmitting on any frequency, listen carefully. Listening is the first shared-channel action because it protects contacts already in progress. If propagation changes and interference grows during a contact, moving to another clear frequency is the courteous response.
+Before transmitting on any frequency, listen carefully. Listening protects contacts already in progress. If propagation changes and interference grows during a contact, moving to another clear frequency is the courteous response.
 
-For lengthy transmitter tests, use a dummy load. A dummy load gives the transmitter a proper load and keeps test energy off the air by turning RF power into heat. For a brief antenna tuner adjustment before joining a sideband net on HF, tune at a nearby clear spot between three and five kilohertz from the active net channel, then return only when the net frequency is clear for use.
+For lengthy transmitter tests, use a dummy load. A dummy load gives the transmitter a proper load and keeps test energy off the air by turning RF power into heat.
 
-Single-sideband voice signals need room. Allow approximately 3 kHz from a contact already in progress. Morse contacts use much less bandwidth and are covered in the next lesson with narrower spacing.
+For a brief antenna tuner adjustment before joining a sideband net on HF, tune at a nearby clear spot between 3 kHz and 5 kHz from the active net channel. Return only when the net frequency is clear for use. Single-sideband voice signals need room, so allow about 3 kHz from a contact already in progress.
 
 ## Nets, power, and band plans
 
 A band plan is a voluntary division of an amateur band by compatible activities and modes.
 
-A net shares its scheduled frequency with current users. If the normal net frequency is occupied before the net begins, the net control station should ask politely whether the occupants can accommodate the net. When the occupants are unable to accommodate it, the net should move to a clear frequency. If you are already using a frequency and a scheduled net is about to begin, the courteous action is to move if you can.
+A net shares its scheduled frequency with current users. If the normal net frequency is occupied before the net begins, the net control station should ask politely whether the occupants can accommodate the net. When the occupants are unable to accommodate it, the net should move to a clear frequency. If you are already using a frequency and a scheduled net is about to begin, move if you can.
 
 Courtesy includes power control. If the other station reports full readability and far more strength than needed, reduce transmitter power to the minimum that still maintains reliable communication. Lower power reduces unnecessary RF exposure, battery drain, and interference potential.
 
 ## How these procedures fit together
 
-The sequence is simple: listen, choose the correct operating path, identify clearly, keep transmissions short, and leave room for other stations. Repeater offsets and tones make the relay work technically. Coordination and band plans reduce conflicts among users. Phonetics and plain language make the message intelligible. Dummy loads, spacing, and minimum power reduce unnecessary radiation. Each procedure protects the same shared resource: a usable amateur frequency.
+The sequence is simple: listen, choose the correct path, identify clearly, keep transmissions short, and leave room for other stations. Repeater offsets and tones make the relay work technically. Coordination and band plans reduce conflicts among users. Phonetics and plain language make the message intelligible. Dummy loads, spacing, and minimum power reduce unnecessary radiation.
+
+Each procedure protects the same shared resource: a usable amateur frequency.
 
 ## Radio connection
 

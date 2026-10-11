@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-015-009.\n\nWhy the correct answer is right: Packet systems can provide reliable messaging by confirming delivery or reporting failure, which is valuable when emergency messages must not simply disappear.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Packet functionality is included in most modern radios\": Built-in availability varies and is not the emergency-communications advantage being tested.\n- sourceIndex 2: \"Capable of simultaneous voice, image and data transmission\": Packet radio is primarily framed data; simultaneous mixed media is not its key emergency feature here.\n- sourceIndex 3: \"Encrypted signals prevent eavesdropping\": Amateur radio generally does not use encryption for ordinary communications, and secrecy is not the packet advantage named.",
+    "en": "Question B-003-015-009.\n\nWhy the correct answer is right: Packet systems can provide reliable messaging by confirming delivery or reporting failure, which is valuable when emergency messages must not simply disappear.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Packet functionality is included in most modern radios\": Built-in availability varies and is not the emergency-communications advantage being tested.\n- sourceIndex 2: \"Capable of simultaneous voice, image and data transmission\": Packet radio is primarily framed data. Simultaneous mixed media is not its key emergency feature here.\n- sourceIndex 3: \"Encrypted signals prevent eavesdropping\": Amateur radio generally does not use encryption for ordinary communications, and secrecy is not the packet advantage named.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-004-006.\n\nWhy the correct answer is right: The FET is treated as high impedance because the gate normally draws essentially no current in Basic-level operation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It uses high resistance semiconductors\": High-impedance behaviour is not simply because the semiconductor material has high resistance everywhere.\n- sourceIndex 2: \"It functions at low voltage\": Low-voltage operation does not by itself make a device high impedance.\n- sourceIndex 3: \"It functions at high current\": High current would imply a lower impedance path, not the high-impedance gate property.",
+    "en": "Question B-004-004-006.\n\nWhy the correct answer is right: The field-effect transistor is treated as high impedance because the gate normally draws almost no current in Basic-level operation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It uses high resistance semiconductors\": High-impedance behaviour is not simply because the semiconductor material has high resistance everywhere.\n- sourceIndex 2: \"It functions at low voltage\": Low-voltage operation does not by itself make a device high impedance.\n- sourceIndex 3: \"It functions at high current\": High current would imply a lower impedance path, not the high-impedance gate property.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-003-005.\n\nWhy the correct answer is right: Modern handheld transceivers commonly use a small threaded SMA connector for the removable antenna. Its small size suits compact VHF/UHF radios.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A PL-259 connector\": A PL-259 is much larger and is associated with many HF station coax connections, not directly with most handheld antennas.\n- sourceIndex 2: \"An F-type connector\": F-type connectors belong mostly to cable-TV style 75-ohm systems and are not the usual hand-held radio antenna fitting.\n- sourceIndex 3: \"An RCA connector\": RCA connectors are common for audio or low-frequency accessory leads, not as the normal RF antenna connector on modern handhelds.",
+    "en": "Question B-006-003-005.\n\nWhy the correct answer is right: Modern handheld transceivers commonly use a small threaded SubMiniature version A (SMA) connector for the removable antenna. Its size suits compact very-high-frequency (VHF) and ultra-high-frequency (UHF) radios.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A PL-259 connector\": A PL-259 is much larger and is associated with many high-frequency (HF) station coax connections, not directly with most handheld antennas.\n- sourceIndex 2: \"An F-type connector\": F-type connectors belong mostly to cable-television (TV) style 75-ohm systems and are not the usual hand-held radio antenna fitting.\n- sourceIndex 3: \"An RCA connector\": RCA connectors are common for audio or low-frequency accessory leads, not as the normal radio-frequency (RF) antenna connector on modern handhelds.",
     "fr": null
   },
   "citations": [

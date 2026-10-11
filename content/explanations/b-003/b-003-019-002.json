@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-019-002.\n\nWhy the correct answer is right: Bonding all electrodes with heavy conductors helps them rise and fall together during a surge, reducing dangerous voltage differences through station gear.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Establishes a ground (reference) plane at the station\": A reference point may be useful for station layout, but the lightning-safety purpose here is equalizing electrode potentials.\n- sourceIndex 2: \"Drains static electricity on a continuous basis\": Static drainage is a different effect; bonding electrodes is primarily to prevent large surge voltage differences.\n- sourceIndex 3: \"Reduces induced current by adding impedance\": Heavy bonding conductors are used to lower impedance between electrodes, not to add impedance to a surge path.",
+    "en": "Question B-003-019-002.\n\nWhy the correct answer is right: Bonding all electrodes with heavy conductors helps them rise and fall together during a surge, reducing dangerous voltage differences through station gear.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Establishes a ground (reference) plane at the station\": A reference point may be useful for station layout, but the lightning-safety purpose here is equalizing electrode potentials.\n- sourceIndex 2: \"Drains static electricity on a continuous basis\": Static drainage is a different effect. Bonding electrodes is primarily to prevent large surge voltage differences.\n- sourceIndex 3: \"Reduces induced current by adding impedance\": Heavy bonding conductors are used to lower impedance between electrodes, not to add impedance to a surge path.",
     "fr": null
   },
   "citations": [

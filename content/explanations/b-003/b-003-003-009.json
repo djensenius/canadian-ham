@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-003-009.\n\nWhy the correct answer is right: The volume control varies the audio-frequency amplifier output level, changing how loud the recovered audio is.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Limiter\": A limiter is in the FM IF/detector chain and is not the user audio-volume stage.\n- sourceIndex 2: \"Discriminator\": The discriminator recovers FM audio but the listening level is adjusted in the AF amplifier section.\n- sourceIndex 3: \"IF amplifier\": Changing IF amplifier gain would affect receiver operation and AGC; ordinary volume control is placed in the audio path.",
+    "en": "Question B-003-003-009.\n\nWhy the correct answer is right: The volume control varies the audio-frequency amplifier output level, changing how loud the recovered audio is.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Limiter\": A limiter is in the frequency modulation (FM) intermediate-frequency (IF) and detector chain and is not the user audio-volume stage.\n- sourceIndex 2: \"Discriminator\": The discriminator recovers FM audio but the listening level is adjusted in the audio-frequency (AF) amplifier section.\n- sourceIndex 3: \"IF amplifier\": Changing IF amplifier gain would affect receiver operation and automatic gain control (AGC). Ordinary volume control is placed in the audio path.",
     "fr": null
   },
   "citations": [

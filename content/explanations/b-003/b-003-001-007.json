@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-001-007.\n\nWhy the correct answer is right: A dummy load is built to absorb transmitter RF power as heat while radiating as little as practical.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Lightning surge protector\": A surge protector is for transient protection from lightning-related or switching surges, not for absorbing intentional transmitter RF during tests.\n- sourceIndex 2: \"Low-pass filter\": A low-pass filter reduces unwanted harmonic frequencies but still passes the wanted RF toward a load or antenna.\n- sourceIndex 3: \"Heat sink\": A heat sink removes heat from a component; by itself it is not a matched RF load that prevents radiation.",
+    "en": "Question B-003-001-007.\n\nWhy the correct answer is right: A dummy load is built to absorb transmitter radio-frequency (RF) power as heat while radiating as little as practical.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Lightning surge protector\": A surge protector is for transient protection from lightning-related or switching surges, not for absorbing intentional transmitter RF during tests.\n- sourceIndex 2: \"Low-pass filter\": A low-pass filter reduces unwanted harmonic frequencies but still passes the wanted RF toward a load or antenna.\n- sourceIndex 3: \"Heat sink\": A heat sink removes heat from a component. By itself it is not a matched RF load that prevents radiation.",
     "fr": null
   },
   "citations": [

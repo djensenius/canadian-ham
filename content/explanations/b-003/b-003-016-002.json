@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-016-002.\n\nWhy the correct answer is right: A battery is a DC source with a positive terminal and a negative terminal, so polarity matters when it is connected to station equipment.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A potentiometer\": A potentiometer is an adjustable resistor with terminals for a resistive track and wiper; it is not a source with fixed positive and negative terminals.\n- sourceIndex 2: \"A fuse\": A fuse is an overcurrent protection link. In ordinary DC station wiring it is placed in series with a conductor, but it is not itself a polarized source.\n- sourceIndex 3: \"A resistor\": A resistor is a passive two-terminal component. It may have a voltage across it in a circuit, but its leads are not inherently positive and negative like a battery.",
+    "en": "Question B-003-016-002.\n\nWhy the correct answer is right: A battery is a direct-current (DC) source with a positive terminal and a negative terminal, so polarity matters when it is connected to station equipment.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A potentiometer\": A potentiometer is an adjustable resistor with terminals for a resistive track and wiper. It is not a source with fixed positive and negative terminals.\n- sourceIndex 2: \"A fuse\": A fuse is an overcurrent protection link. In ordinary DC station wiring it is placed in series with a conductor, but it is not itself a polarized source.\n- sourceIndex 3: \"A resistor\": A resistor is a passive two-terminal component. It may have a voltage across it in a circuit, but its leads are not inherently positive and negative like a battery.",
     "fr": null
   },
   "citations": [
