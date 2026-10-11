@@ -1361,16 +1361,17 @@ final class CanadianHamPracticeUITests: XCTestCase {
         defer { app.terminate() }
 
         XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
-        let wheel = app.descendants(matching: .any)["lesson-figure-ohms-law-power-wheel"].firstMatch
+        let wheel = app.buttons["Ohm’s law and power wheel with quadrants for P, E, I, and R and three formulas in each quadrant."].firstMatch
         XCTAssertTrue(wheel.waitForExistence(timeout: 10), "Expected the Ohm's law wheel")
-        scrollUntilPartiallyVisible(wheel, in: app, maxSwipes: 14)
+        scrollUntilFullyVisibleBelowNavigationBar(wheel, in: app, maxSwipes: 120)
+        assertFullyVisibleBelowNavigationBar(wheel, in: app, context: "largest text Ohm's law wheel")
         let windowFrame = app.windows.firstMatch.frame
         XCTAssertGreaterThanOrEqual(wheel.frame.minX, windowFrame.minX - 1, "Wheel should not extend left of the window at the largest accessibility text size")
         XCTAssertLessThanOrEqual(wheel.frame.maxX, windowFrame.maxX + 1, "Wheel should not extend right of the window at the largest accessibility text size")
 
         let wheelButton = app.buttons["Ohm’s law and power wheel with quadrants for P, E, I, and R and three formulas in each quadrant."].firstMatch
-        scrollUntilHittable(wheelButton, in: app, maxSwipes: 10)
         XCTAssertTrue(wheelButton.isHittable, "Wheel figure button should be reachable at the largest accessibility text size")
+        attachScreenshot(named: "task38-1-ios-large-text-ohms-law-power-wheel", from: app)
         wheelButton.tap()
         XCTAssertTrue(app.descendants(matching: .any)["lesson-figure-ohms-law-power-wheel-enlarged"].firstMatch.waitForExistence(timeout: 5), "Tapping enlarge should open the enlarged figure sheet")
     }
@@ -1805,15 +1806,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
         XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
         for figureID in ["power-triangle", "ohms-law-triangle", "ohms-law-power-wheel"] {
-            let figure = app.descendants(matching: .any)["lesson-figure-\(figureID)"].firstMatch
-            XCTAssertTrue(figure.waitForExistence(timeout: 10), "Expected \(figureID) figure")
-            scrollUntilPartiallyVisible(figure, in: app, maxSwipes: 12)
-            app.scrollViews.firstMatch.swipeUp()
-            waitBriefly()
             let figureButton = app.buttons[figureAltText[figureID]!].firstMatch
-            XCTAssertTrue(figureButton.exists, "Expected figure accessibility label for \(figureID)")
+            XCTAssertTrue(figureButton.waitForExistence(timeout: 10), "Expected \(figureID) figure")
+            scrollUntilFullyVisibleBelowNavigationBar(figureButton, in: app, maxSwipes: 80)
+            assertFullyVisibleBelowNavigationBar(figureButton, in: app, context: "\(appearance.rawValue) \(figureID) screenshot")
             attachScreenshot(named: "task38-1-ios-\(appearance.rawValue)-\(figureID)", from: app)
-            scrollUntilHittable(figureButton, in: app, maxSwipes: 6)
             if figureButton.isHittable {
                 figureButton.tap()
                 XCTAssertTrue(app.descendants(matching: .any)["lesson-figure-\(figureID)-enlarged"].firstMatch.waitForExistence(timeout: 5), "Expected enlarged \(figureID) figure")
@@ -2237,6 +2234,20 @@ final class CanadianHamPracticeUITests: XCTestCase {
         for _ in 0..<maxSwipes where !isPartiallyVisibleBelowNavigationBar(element, in: app) {
             let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
             if element.frame.maxY <= visibleFrame.minY {
+                scrollView.swipeDown()
+            } else {
+                scrollView.swipeUp()
+            }
+            waitBriefly()
+        }
+    }
+
+    private func scrollUntilFullyVisibleBelowNavigationBar(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
+        let scrollView = app.scrollViews.firstMatch
+        guard scrollView.waitForExistence(timeout: 1) else { return }
+        for _ in 0..<maxSwipes where !isFullyVisible(element, in: app, requiresHittable: false) {
+            let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+            if element.frame.minY < visibleFrame.minY {
                 scrollView.swipeDown()
             } else {
                 scrollView.swipeUp()

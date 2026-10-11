@@ -596,7 +596,7 @@ private struct LessonFigureView: View {
             .buttonStyle(.plain)
             .accessibilityLabel(Text(english(figure.altText))) // l10n: content(en)
             .accessibilityHint(Text("Opens enlarged figure")) // l10n: localized
-            .accessibilityIdentifier("lesson-figure-\(figure.id)-image")
+            .accessibilityIdentifier("lesson-figure-\(figure.id)")
 
             if !figure.textEquivalent.isEmpty {
                 DisclosureGroup {
@@ -620,7 +620,7 @@ private struct LessonFigureView: View {
         .padding(DesignTokens.Spacing.md)
         .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
-        .accessibilityIdentifier("lesson-figure-\(figure.id)")
+        .accessibilityIdentifier("lesson-figure-\(figure.id)-card")
         .sheet(isPresented: $showingEnlargedFigure) {
             EnlargedLessonFigureView(figure: figure, aspectRatio: aspectRatio)
         }

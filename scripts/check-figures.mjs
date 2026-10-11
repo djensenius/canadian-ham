@@ -93,6 +93,10 @@ function checkTextBounds(file, source) {
     }
 
     const text = decodeEntities(match[2].replace(/<[^>]+>/g, "").trim());
+    const minimumFontSize = viewBox.width * 0.0367;
+    if (fontSize < minimumFontSize) {
+      fail(`${file}: <text> '${text}' font-size ${fontSize} is below the minimum ${minimumFontSize.toFixed(1)} for an 11pt label at 300pt display width`);
+    }
     const anchor = attributes.get("text-anchor") ?? defaultTextAnchor;
     const textWidth = approximateTextWidth(text, fontSize);
     const left = anchor === "middle" ? x - textWidth / 2 : anchor === "end" ? x - textWidth : x;
