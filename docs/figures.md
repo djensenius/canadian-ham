@@ -13,7 +13,7 @@ Lesson figures are original SVG sources shared by web and Apple. They are supple
 - Use `currentColor` for fills and strokes. Do not hard-code colours in SVGs; web and Apple supply ink/paper colours from design tokens.
 - Keep all text comfortably inside the `viewBox` with padding. The check script estimates text bounds and rejects text near the edge.
 - No stroke may cross or touch text. Break dividers around labels/formulas or move labels into clear regions.
-- Keep label text large relative to the `viewBox`: for formula-heavy figures, prefer text at least about 3% of the shorter viewBox side; for large symbol labels, use substantially larger text. If smaller text is unavoidable, provide a tap-to-enlarge view and a text equivalent.
+- Keep label text large relative to the `viewBox`: every SVG `<text>` `font-size` must be at least `0.0367 × viewBox width`, which keeps text at least about 11 pt when a figure is displayed 300 pt wide. Use substantially larger text for primary symbol labels. If smaller text is unavoidable, provide a tap-to-enlarge view and a text equivalent.
 - Stay within the SVG subset accepted by `scripts/check-figures.mjs`: no script/style/foreignObject, no event handlers, no external references, and presentation attributes only. Use `fill`/`stroke` values of `currentColor` or `none`.
 
 ## Referencing a figure from a lesson

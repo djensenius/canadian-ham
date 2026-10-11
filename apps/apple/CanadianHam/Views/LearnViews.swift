@@ -646,29 +646,38 @@ private struct EnlargedLessonFigureView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView([.horizontal, .vertical]) {
-                Image("lesson-figure-\(figure.id)")
-                    .renderingMode(.template)
-                    .resizable()
-                    .scaledToFit()
-                    .aspectRatio(aspectRatio, contentMode: .fit)
-                    .foregroundStyle(DesignTokens.Colors.ink)
-                    .scaleEffect(scale)
-                    .padding(DesignTokens.Spacing.xl)
-                    .frame(maxWidth: .infinity)
-                    .accessibilityLabel(Text(english(figure.altText))) // l10n: content(en)
-                    .accessibilityIdentifier("lesson-figure-\(figure.id)-enlarged-image")
+            GeometryReader { geometry in
+                let fitSize = fittedSize(in: geometry.size)
+                ScrollView([.horizontal, .vertical]) {
+                    Image("lesson-figure-\(figure.id)")
+                        .renderingMode(.template)
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .frame(width: fitSize.width, height: fitSize.height)
+                        .scaleEffect(scale)
+                        .frame(width: fitSize.width * scale, height: fitSize.height * scale)
+                        .frame(minWidth: geometry.size.width, minHeight: geometry.size.height)
+                        .accessibilityLabel(Text(english(figure.altText))) // l10n: content(en)
+                        .accessibilityIdentifier("lesson-figure-\(figure.id)-enlarged-image")
+                        .onTapGesture(count: 2) {
+                            withAnimation(.easeInOut(duration: 0.18)) {
+                                scale = scale == 1 ? 2 : 1
+                                lastScale = scale
+                            }
+                        }
+                }
+                .background(DesignTokens.Colors.paper)
+                .gesture(
+                    MagnificationGesture()
+                        .onChanged { value in
+                            scale = min(max(lastScale * value, 1), 4)
+                        }
+                        .onEnded { _ in
+                            lastScale = scale
+                        }
+                )
             }
-            .background(DesignTokens.Colors.paper)
-            .gesture(
-                MagnificationGesture()
-                    .onChanged { value in
-                        scale = min(max(lastScale * value, 1), 4)
-                    }
-                    .onEnded { _ in
-                        lastScale = scale
-                    }
-            )
             .navigationTitle(Text("Enlarged figure")) // l10n: localized
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
@@ -677,6 +686,16 @@ private struct EnlargedLessonFigureView: View {
             }
         }
         .accessibilityIdentifier("lesson-figure-\(figure.id)-enlarged")
+    }
+
+    private func fittedSize(in container: CGSize) -> CGSize {
+        let availableWidth = max(1, container.width - DesignTokens.Spacing.xl * 2)
+        let availableHeight = max(1, container.height - DesignTokens.Spacing.xl * 2)
+        let availableAspectRatio = availableWidth / availableHeight
+        if aspectRatio >= availableAspectRatio {
+            return CGSize(width: availableWidth, height: availableWidth / aspectRatio)
+        }
+        return CGSize(width: availableHeight * aspectRatio, height: availableHeight)
     }
 }
 

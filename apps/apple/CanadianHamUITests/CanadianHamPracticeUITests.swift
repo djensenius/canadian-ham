@@ -1375,6 +1375,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
         attachScreenshot(named: "task38-1-ios-large-text-ohms-law-power-wheel", from: app)
         wheelButton.tap()
         XCTAssertTrue(app.descendants(matching: .any)["lesson-figure-ohms-law-power-wheel-enlarged"].firstMatch.waitForExistence(timeout: 5), "Tapping enlarge should open the enlarged figure sheet")
+        let enlargedImage = app.descendants(matching: .any)["lesson-figure-ohms-law-power-wheel-enlarged-image"].firstMatch
+        XCTAssertTrue(enlargedImage.waitForExistence(timeout: 5), "Expected enlarged wheel image")
+        assertFullyVisibleBelowNavigationBar(enlargedImage, in: app, context: "largest text enlarged Ohm's law wheel")
     }
 
     func testAccessibilityAuditMockExamFlowLight() throws {
