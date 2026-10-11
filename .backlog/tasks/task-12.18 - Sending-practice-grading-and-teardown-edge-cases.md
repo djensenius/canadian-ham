@@ -1,7 +1,7 @@
 ---
 id: TASK-12.18
 title: 'Sending practice: grading and teardown edge cases'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-06 11:55'
