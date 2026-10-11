@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:54'
-updated_date: '2026-10-11 17:34'
+updated_date: '2026-10-11 17:36'
 labels:
   - apple
   - web
@@ -28,3 +28,13 @@ Owner feedback 2026-10-10: the English/French switch is too prominent. By defaul
 - [ ] #4 Existing stored language preferences migrate sensibly (an explicit previous choice is kept as the override) and export/import still round-trip
 - [ ] #5 Accessibility audits pass on the changed screens in light and dark; French strings follow docs/french-style.md
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Add shared Apple/web language preference models with system/en/fr resolution from platform preferred languages, preserving existing en/fr records as explicit overrides and defaulting newly-created preferences to system.
+2. Move the manual selector into Settings only (Apple SettingsView/NativeSettingsView and web settings), remove question-language controls from headers/question flows, and wire immediate UI/question-language updates through the effective resolved language.
+3. Keep export/import compatible by accepting old exports without language and including the new optional setting where schema/types require it.
+4. Convert existing Apple and web tests from picker-presence coverage to absence-on-content-screens plus Settings persistence/system-language coverage, including tvOS/visionOS if pickers exist.
+5. Run targeted unit/UI/web/l10n/text-source checks, record evidence in Backlog, then finalize ACs and Done.
+<!-- SECTION:PLAN:END -->
