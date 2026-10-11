@@ -1036,15 +1036,11 @@ final class ProgressStoreService: ObservableObject {
         let key = MorseCourseProgressEntity.defaultKey
         let descriptor = FetchDescriptor<MorseCourseProgressEntity>(predicate: #Predicate { $0.key == key })
         let entities = try context.fetch(descriptor)
-        guard let survivor = entities.first else { return nil }
-        let merged = ProgressSyncMerge.mergeMorseCourseProgress(try entities.map { try decoder.decode(MorseCourseProgressExport.self, from: $0.payloadData) })
-        if let merged {
-            survivor.payloadData = try encoder.encode(merged)
+        guard !entities.isEmpty else { return nil }
+        if entities.count == 1 {
+            return try decoder.decode(MorseCourseProgressExport.self, from: entities[0].payloadData)
         }
-        for duplicate in entities.dropFirst() {
-            context.delete(duplicate)
-        }
-        return merged
+        return ProgressSyncMerge.mergeMorseCourseProgress(try entities.map { try decoder.decode(MorseCourseProgressExport.self, from: $0.payloadData) })
     }
 
     func saveMorseCourseProgress(_ progress: MorseCourseProgressExport) throws {

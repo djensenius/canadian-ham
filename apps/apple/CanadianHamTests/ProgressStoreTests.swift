@@ -528,6 +528,28 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(try entityContext.fetch(FetchDescriptor<MorseCourseProgressEntity>()).count, 1)
     }
 
+    func testMorseCourseProgressRoundTripsTwentyRecentCharacterResults() throws {
+        let store = try ProgressStoreService.inMemoryForTests()
+        let recentResults = (0..<20).map { $0.isMultiple(of: 2) }
+        let progress = MorseCourseProgressExport(
+            courseId: "ised-koch-g4fon-v1",
+            lessonProgress: [],
+            characterStats: [MorseCharacterStatRecord(
+                character: "K",
+                attempts: 20,
+                correctAttempts: 10,
+                recentResults: recentResults,
+                lastPracticedAt: "2026-01-02T04:30:00.000Z"
+            )],
+            dailyActivity: []
+        )
+
+        try store.saveMorseCourseProgress(progress)
+
+        XCTAssertEqual(try store.morseCourseProgress(), progress)
+        XCTAssertEqual(try store.exportData(bank: try QuestionBankStore.load(from: Bundle(for: Self.self)), exportedAt: "2026-01-02T05:04:05.000Z").morseCourseProgress, progress)
+    }
+
     func testImportsOlderExportWithoutMorseCourseProgressKeepsExistingMorseProgress() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let store = try ProgressStoreService.inMemoryForTests()

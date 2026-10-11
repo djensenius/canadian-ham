@@ -113,7 +113,7 @@ enum ProgressSyncMerge {
                 character: latest.character,
                 attempts: group.map(\.attempts).reduce(0, +),
                 correctAttempts: group.map(\.correctAttempts).reduce(0, +),
-                recentResults: Array(group.flatMap(\.recentResults).suffix(5)),
+                recentResults: Array(group.flatMap(\.recentResults).suffix(20)),
                 lastPracticedAt: latest.lastPracticedAt
             )
         }.sorted { $0.character < $1.character }
