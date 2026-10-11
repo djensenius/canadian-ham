@@ -11,7 +11,8 @@ struct MorseCourseView: View {
     @State private var course: MorseCourse?
     @State private var progress: MorseCourseProgressExport?
     @State private var session: MorseCourseSession?
-    @State private var showingSession = false
+    @State private var showingReviewSession = false
+    @State private var showingLessonSession = false
     @State private var typedAnswer = ""
     @State private var statusMessage = ""
     @State private var statusMessageIsCorrective = false
@@ -36,13 +37,17 @@ struct MorseCourseView: View {
 #endif
             .background(DesignTokens.Colors.paper)
             .morseCourseOpaqueNavigationBar()
-            .navigationDestination(isPresented: $showingSession) {
+            .navigationDestination(isPresented: $showingReviewSession) {
                 sessionScreen()
             }
             .task { loadCourse() }
             .onReceive(progressStore.objectWillChange) { _ in loadCourse() }
+            .onChange(of: reduceMotion) { _, _ in
+                stopBeaconPlaybackIfReducedFlashingIsEnabled()
+            }
             .onReceive(NotificationCenter.default.publisher(for: .morseDimFlashingLightsChanged)) { _ in
                 dimFlashingLightsEnabled = morseDimFlashingLightsEnabled()
+                stopBeaconPlaybackIfReducedFlashingIsEnabled()
             }
     }
 
@@ -67,11 +72,20 @@ struct MorseCourseView: View {
                 if let errorMessage {
                     MessagePanel(title: "Morse course error", message: errorMessage, kind: .warning)
                 }
+#if DEBUG
+                if ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseCoursePlaybackDebugStatus") {
+                    Text(verbatim: isPlaying ? "Course playback active" : "Course playback stopped") // l10n: verbatim DEBUG-only UI test hook
+                        .font(DesignTokens.FontScale.caption)
+                        .foregroundStyle(DesignTokens.Colors.ink)
+                        .accessibilityIdentifier("morse-course-playback-debug-status")
+                }
+#endif
                 if let course, let progress {
                     courseStats(course: course, progress: progress)
                     Button {
-                        prepareReview(course: course, progress: progress)
-                        showingSession = true
+                        if prepareReview(course: course, progress: progress) {
+                            showingReviewSession = true
+                        }
                     } label: {
                         AccessibleSecondaryButtonLabel(title: "Review weakest characters")
                     } // l10n: localized
@@ -171,6 +185,14 @@ struct MorseCourseView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
                 if let course, let progress, let unit = course.units.first(where: { $0.id == unitID }) {
+#if DEBUG
+                    if ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseCoursePlaybackDebugStatus") {
+                        Text(verbatim: isPlaying ? "Course playback active" : "Course playback stopped") // l10n: verbatim DEBUG-only UI test hook
+                            .font(DesignTokens.FontScale.caption)
+                            .foregroundStyle(DesignTokens.Colors.ink)
+                            .accessibilityIdentifier("morse-course-playback-debug-status")
+                    }
+#endif
                     courseCard {
                         Text("Unit \(unit.unitNumber)") // l10n: localized
                             .font(DesignTokens.FontScale.title.weight(.bold))
@@ -199,13 +221,16 @@ struct MorseCourseView: View {
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
 #endif
+        .navigationDestination(isPresented: $showingLessonSession) {
+            sessionScreen()
+        }
     }
 
     private func lessonButton(lesson: MorseCourseLesson, state: MorseLessonState) -> some View {
         Button {
             guard let course, let progress, state != .locked else { return }
             prepareLesson(lesson, course: course, progress: progress)
-            showingSession = true
+            showingLessonSession = true
         } label: {
             lessonButtonLabel(lesson: lesson, state: state)
         }
@@ -280,6 +305,14 @@ struct MorseCourseView: View {
                 exerciseView(session.currentExercise)
             }
             MorseVisualPlaybackView(state: visualPlaybackState)
+#if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("-CanadianHamMorseCoursePlaybackDebugStatus") {
+                Text(verbatim: isPlaying ? "Course playback active" : "Course playback stopped") // l10n: verbatim DEBUG-only UI test hook
+                    .font(DesignTokens.FontScale.caption)
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .accessibilityIdentifier("morse-course-playback-debug-status")
+            }
+#endif
             if !statusMessage.isEmpty && (!session.done || statusMessageIsCorrective) {
                 Text(statusMessage) // l10n: localized
                     .font(DesignTokens.FontScale.body)
@@ -432,12 +465,18 @@ struct MorseCourseView: View {
         refocusSession()
     }
 
-    private func prepareReview(course: MorseCourse, progress: MorseCourseProgressExport) {
+    private func prepareReview(course: MorseCourse, progress: MorseCourseProgressExport) -> Bool {
         let learned = learnedMorseCharacters(course: course, progress: progress)
         let weakest = selectWeakestMorseCharacters(stats: progress.characterStats, learnedCharacters: learned, limit: 5)
+        let reviewCharacters = weakest.isEmpty ? Array(learned.prefix(5)) : weakest
+        guard !reviewCharacters.isEmpty else {
+            session = nil
+            return false
+        }
         resetSessionFeedback()
-        session = MorseCourseSession(mode: .review, exercises: (weakest.isEmpty ? Array(learned.prefix(5)) : weakest).map { .typeCharacter($0) })
+        session = MorseCourseSession(mode: .review, exercises: reviewCharacters.map { .typeCharacter($0) })
         refocusSession()
+        return true
     }
 
     private func play(_ text: String) {
@@ -492,6 +531,13 @@ struct MorseCourseView: View {
         }
 #endif
         return text
+    }
+
+    private func stopBeaconPlaybackIfReducedFlashingIsEnabled() {
+        let flags = currentMorseReduceFlashingFlags(environmentReduceMotion: reduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)
+        if shouldStopMorseVisualBeaconForReducedFlashing(state: visualPlaybackState, isPlaybackRunning: isPlaying, flags: flags) {
+            stopCoursePlayback(message: String(localized: "Morse playback stopped."))
+        }
     }
 
     private func stopCoursePlayback(message: String = "") {

@@ -255,11 +255,13 @@ struct ExportedPreferences: Codable, Equatable, Sendable {
     let practiceMode: String
     let examTimerEnabled: Bool
     let theme: String
+    let morse: ExportedMorseSettings
 
-    init(practiceMode: String, examTimerEnabled: Bool, theme: String = ApplePreferences.Theme.system.rawValue) {
+    init(practiceMode: String, examTimerEnabled: Bool, theme: String = ApplePreferences.Theme.system.rawValue, morse: ExportedMorseSettings = .default) {
         self.practiceMode = practiceMode
         self.examTimerEnabled = examTimerEnabled
         self.theme = theme
+        self.morse = morse
     }
 
     init(from decoder: Decoder) throws {
@@ -267,6 +269,8 @@ struct ExportedPreferences: Codable, Equatable, Sendable {
         practiceMode = try container.decode(String.self, forKey: .practiceMode)
         examTimerEnabled = try container.decode(Bool.self, forKey: .examTimerEnabled)
         theme = try container.decodeIfPresent(String.self, forKey: .theme) ?? ApplePreferences.Theme.system.rawValue
+        // Older exports omit morse entirely; an explicit null is invalid (the schema requires an object).
+        morse = container.contains(.morse) ? try container.decode(ExportedMorseSettings.self, forKey: .morse) : .default
     }
 }
 
@@ -1205,7 +1209,7 @@ final class ProgressStoreService: ObservableObject {
         }
     }
 
-    func exportData(bank: QuestionBank, exportedAt: String) throws -> ProgressExportV1 {
+    func exportData(bank: QuestionBank, exportedAt: String, morseSettings: ExportedMorseSettings = .default) throws -> ProgressExportV1 {
         try CanonicalTimestamp.require(exportedAt, fieldName: "exportedAt")
         _ = try preferencesEntity(createIfMissing: true)
         let questionProgress = try questionProgressRecords().filter { $0.bankId == bank.manifest.bankId }
@@ -1234,13 +1238,14 @@ final class ProgressStoreService: ObservableObject {
             preferences: ExportedPreferences(
                 practiceMode: preferences.practiceMode.rawValue,
                 examTimerEnabled: preferences.examTimerEnabled,
-                theme: preferences.theme.rawValue
+                theme: preferences.theme.rawValue,
+                morse: morseSettings
             )
         )
     }
 
-    func serializedExport(bank: QuestionBank, exportedAt: String) throws -> String {
-        let data = try exportData(bank: bank, exportedAt: exportedAt)
+    func serializedExport(bank: QuestionBank, exportedAt: String, morseSettings: ExportedMorseSettings = .default) throws -> String {
+        let data = try exportData(bank: bank, exportedAt: exportedAt, morseSettings: morseSettings)
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         return String(decoding: try encoder.encode(data), as: UTF8.self) + "\n"
     }
@@ -1387,6 +1392,12 @@ final class ProgressStoreService: ObservableObject {
 
         if ApplePreferences.PracticeMode(rawValue: data.preferences.practiceMode) == nil {
             errors.append(String(localized: "Import preferences.practiceMode is invalid."))
+        }
+        if !ExportedMorseSettings.validTimingProfiles.contains(data.preferences.morse.timingProfile) {
+            errors.append(String(localized: "Import preferences.morse.timingProfile is invalid."))
+        }
+        if !ExportedMorseSettings.validOutputModes.contains(data.preferences.morse.outputMode) {
+            errors.append(String(localized: "Import preferences.morse.outputMode is invalid."))
         }
         if ApplePreferences.Theme(rawValue: data.preferences.theme) == nil {
             errors.append(String(localized: "Import preferences.theme is invalid."))

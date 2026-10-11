@@ -1150,6 +1150,190 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(importedStore.preferences, .default)
     }
 
+    func testProgressExportRoundTripsMorseSettingsInWebCompatiblePreferences() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let store = try ProgressStoreService.inMemoryForTests()
+        let morseSettings = MorseTrainerSettings(
+            toneHz: 700,
+            characterWpm: 18,
+            effectiveWpm: 6,
+            timingProfile: .general,
+            volume: 0.4,
+            outputMode: .visualTape
+        ).normalized()
+        let exportedMorseSettings = ExportedMorseSettings(
+            toneHz: morseSettings.exportedPreferences.toneHz,
+            characterWpm: morseSettings.exportedPreferences.characterWpm,
+            effectiveWpm: morseSettings.exportedPreferences.effectiveWpm,
+            timingProfile: morseSettings.exportedPreferences.timingProfile,
+            volume: morseSettings.exportedPreferences.volume,
+            outputMode: morseSettings.exportedPreferences.outputMode
+        )
+
+        let serialized = try store.serializedExport(bank: bank, exportedAt: "2026-01-02T05:04:05.000Z", morseSettings: exportedMorseSettings)
+        let decoded = try JSONDecoder().decode(ProgressExportV1.self, from: Data(serialized.utf8))
+        let decodedMorseForApp = CanadianHam.ExportedMorseSettings(
+            toneHz: decoded.preferences.morse.toneHz,
+            characterWpm: decoded.preferences.morse.characterWpm,
+            effectiveWpm: decoded.preferences.morse.effectiveWpm,
+            timingProfile: decoded.preferences.morse.timingProfile,
+            volume: decoded.preferences.morse.volume,
+            outputMode: decoded.preferences.morse.outputMode
+        )
+        let importedMorseSettings = CanadianHam.MorseTrainerSettings(exported: decodedMorseForApp).normalized()
+
+        XCTAssertEqual(decoded.preferences.morse, exportedMorseSettings)
+        XCTAssertEqual(importedMorseSettings, morseSettings)
+        XCTAssertTrue(serialized.contains("\"morse\""), "Apple exports should use the web preferences.morse shape.")
+        XCTAssertNoThrow(try ProgressStoreService.inMemoryForTests().importData(decoded, bank: bank))
+    }
+
+    func testMorseExportMapsHapticsToWebCompatibleAudio() {
+        let exported = MorseTrainerSettings(toneHz: 650, characterWpm: 15, effectiveWpm: 5, timingProfile: .isedParis, volume: 0.6, outputMode: .haptics).exportedPreferences
+
+        XCTAssertEqual(exported.outputMode, "audio")
+    }
+
+    func testMorseImportRejectsExplicitNullMorseValues() throws {
+        func export(_ morse: String) -> Data {
+            Data("""
+            {
+              "schema": "canadian-ham.progress-export",
+              "version": 1,
+              "exportedAt": "2026-01-02T05:04:05.000Z",
+              "bankId": "basic-2025-07-15",
+              "questionProgress": [],
+              "examAttempts": [],
+              "lessonProgress": [],
+              "lessonQuizAttempts": [],
+              "preferences": { "practiceMode": "immediate", "examTimerEnabled": false, "theme": "system"\(morse) }
+            }
+            """.utf8)
+        }
+        XCTAssertThrowsError(try JSONDecoder().decode(ProgressExportV1.self, from: export(", \"morse\": null")))
+        XCTAssertThrowsError(try JSONDecoder().decode(ProgressExportV1.self, from: export(", \"morse\": { \"outputMode\": null }")))
+        XCTAssertThrowsError(try JSONDecoder().decode(ProgressExportV1.self, from: export(", \"morse\": { \"toneHz\": null }")))
+        let missing = try JSONDecoder().decode(ProgressExportV1.self, from: export(""))
+        XCTAssertEqual(missing.preferences.morse, .default)
+        let partial = try JSONDecoder().decode(ProgressExportV1.self, from: export(", \"morse\": { \"toneHz\": 700 }"))
+        XCTAssertEqual(partial.preferences.morse.toneHz, 700)
+        XCTAssertEqual(partial.preferences.morse.outputMode, ExportedMorseSettings.default.outputMode)
+    }
+
+    func testMorseImportDecodesMissingAndPartialMorsePreferences() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let missingMorseJSON = """
+        {
+          "schema": "canadian-ham.progress-export",
+          "version": 1,
+          "exportedAt": "2026-01-02T05:04:05.000Z",
+          "bankId": "\(bank.manifest.bankId)",
+          "questionProgress": [],
+          "examAttempts": [],
+          "lessonProgress": [],
+          "lessonQuizAttempts": [],
+          "preferences": { "practiceMode": "immediate", "examTimerEnabled": false, "theme": "system" }
+        }
+        """
+        let task123WebJSON = """
+        {
+          "schema": "canadian-ham.progress-export",
+          "version": 1,
+          "exportedAt": "2026-01-02T05:04:05.000Z",
+          "bankId": "\(bank.manifest.bankId)",
+          "questionProgress": [],
+          "examAttempts": [],
+          "lessonProgress": [],
+          "lessonQuizAttempts": [],
+          "preferences": {
+            "practiceMode": "immediate",
+            "examTimerEnabled": false,
+            "theme": "system",
+            "morse": { "toneHz": 720, "characterWpm": 18, "effectiveWpm": 7, "timingProfile": "general", "volume": 0.45 }
+          }
+        }
+        """
+        let partialMorseJSON = """
+        {
+          "schema": "canadian-ham.progress-export",
+          "version": 1,
+          "exportedAt": "2026-01-02T05:04:05.000Z",
+          "bankId": "\(bank.manifest.bankId)",
+          "questionProgress": [],
+          "examAttempts": [],
+          "lessonProgress": [],
+          "lessonQuizAttempts": [],
+          "preferences": {
+            "practiceMode": "immediate",
+            "examTimerEnabled": false,
+            "theme": "system",
+            "morse": { "outputMode": "visualBeacon" }
+          }
+        }
+        """
+
+        let missingMorse = try JSONDecoder().decode(ProgressExportV1.self, from: Data(missingMorseJSON.utf8))
+        let task123Web = try JSONDecoder().decode(ProgressExportV1.self, from: Data(task123WebJSON.utf8))
+        let partialMorse = try JSONDecoder().decode(ProgressExportV1.self, from: Data(partialMorseJSON.utf8))
+
+        XCTAssertEqual(missingMorse.preferences.morse, .default)
+        XCTAssertEqual(task123Web.preferences.morse.outputMode, "audio")
+        let task123MorseForApp = CanadianHam.ExportedMorseSettings(
+            toneHz: task123Web.preferences.morse.toneHz,
+            characterWpm: task123Web.preferences.morse.characterWpm,
+            effectiveWpm: task123Web.preferences.morse.effectiveWpm,
+            timingProfile: task123Web.preferences.morse.timingProfile,
+            volume: task123Web.preferences.morse.volume,
+            outputMode: task123Web.preferences.morse.outputMode
+        )
+        XCTAssertEqual(CanadianHam.MorseTrainerSettings(exported: task123MorseForApp).normalized().outputMode, .audio)
+        XCTAssertEqual(partialMorse.preferences.morse.toneHz, ExportedMorseSettings.default.toneHz)
+        XCTAssertEqual(partialMorse.preferences.morse.outputMode, "visualBeacon")
+        XCTAssertNoThrow(try ProgressStoreService.inMemoryForTests().importData(missingMorse, bank: bank))
+        XCTAssertNoThrow(try ProgressStoreService.inMemoryForTests().importData(task123Web, bank: bank))
+        XCTAssertNoThrow(try ProgressStoreService.inMemoryForTests().importData(partialMorse, bank: bank))
+    }
+
+    func testMorseImportRejectsUnsupportedMorsePreferenceEnums() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let cases = [
+            (morseJSON: #"{ "outputMode": "haptics" }"#, expectedError: "Import preferences.morse.outputMode is invalid."),
+            (morseJSON: #"{ "timingProfile": "fast" }"#, expectedError: "Import preferences.morse.timingProfile is invalid.")
+        ]
+
+        for testCase in cases {
+            let json = """
+            {
+              "schema": "canadian-ham.progress-export",
+              "version": 1,
+              "exportedAt": "2026-01-02T05:04:05.000Z",
+              "bankId": "\(bank.manifest.bankId)",
+              "questionProgress": [],
+              "examAttempts": [],
+              "lessonProgress": [],
+              "lessonQuizAttempts": [],
+              "preferences": {
+                "practiceMode": "immediate",
+                "examTimerEnabled": false,
+                "theme": "system",
+                "morse": \(testCase.morseJSON)
+              }
+            }
+            """
+            let decoded = try JSONDecoder().decode(ProgressExportV1.self, from: Data(json.utf8))
+            let store = try ProgressStoreService.inMemoryForTests()
+            let errors = store.validate(decoded, bank: bank)
+
+            XCTAssertTrue(errors.contains(testCase.expectedError), "Expected \(testCase.expectedError), got: \(errors)")
+            XCTAssertThrowsError(try store.importData(decoded, bank: bank)) { error in
+                guard case ProgressStoreError.validationFailed(let validationErrors) = error else {
+                    return XCTFail("Expected validationFailed, got: \(error)")
+                }
+                XCTAssertTrue(validationErrors.contains(testCase.expectedError), "Expected \(testCase.expectedError), got: \(validationErrors)")
+            }
+        }
+    }
+
     func testMigratesLegacyMorseCourseProgressJSONIntoSwiftDataEntity() throws {
         let directory = try temporaryProgressStoreDirectory()
         let urls = ProgressStoreURLs(progressDirectory: directory)

@@ -2373,19 +2373,19 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%1$lld erreur au total : %2$lld erronée, %3$lld manquante, %4$lld ajoutée."
+                  "value" : "Total des erreurs : %1$lld; caractères erronés : %2$lld; caractères manquants : %3$lld; caractères ajoutés : %4$lld."
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%1$lld erreurs au total : %2$lld erronées, %3$lld manquantes, %4$lld ajoutées."
+                  "value" : "Total des erreurs : %1$lld; caractères erronés : %2$lld; caractères manquants : %3$lld; caractères ajoutés : %4$lld."
                 }
               },
               "zero" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%1$lld erreur au total : %2$lld erronée, %3$lld manquante, %4$lld ajoutée."
+                  "value" : "Total des erreurs : %1$lld; caractères erronés : %2$lld; caractères manquants : %3$lld; caractères ajoutés : %4$lld."
                 }
               }
             }
@@ -2397,19 +2397,19 @@
               "one" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%1$lld erreur au total : %2$lld erronée, %3$lld manquante, %4$lld ajoutée."
+                  "value" : "Total des erreurs : %1$lld; caractères erronés : %2$lld; caractères manquants : %3$lld; caractères ajoutés : %4$lld."
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%1$lld erreurs au total : %2$lld erronées, %3$lld manquantes, %4$lld ajoutées."
+                  "value" : "Total des erreurs : %1$lld; caractères erronés : %2$lld; caractères manquants : %3$lld; caractères ajoutés : %4$lld."
                 }
               },
               "zero" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%1$lld erreur au total : %2$lld erronée, %3$lld manquante, %4$lld ajoutée."
+                  "value" : "Total des erreurs : %1$lld; caractères erronés : %2$lld; caractères manquants : %3$lld; caractères ajoutés : %4$lld."
                 }
               }
             }
@@ -3091,28 +3091,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Balise"
-          }
-        }
-      }
-    },
-    "Beacon area %.0f points is below the %.0f-point WCAG flash cap; max %@." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beacon area %.0f points is below the %.0f-point WCAG flash cap; max %@."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La zone de balise de %.0f points est sous la limite WCAG de %.0f points; maximum %@."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La zone de balise de %.0f points est sous la limite WCAG de %.0f points; maximum %@."
           }
         }
       }
@@ -10797,6 +10775,104 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réinitialisez la progression iCloud au moyen de la suppression infonuagique."
+          }
+        }
+      }
+    },
+    "Beacon area %@ square points is below the %@ square-point WCAG flash cap; max %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beacon area %@ square points is below the %@ square-point WCAG flash cap; max %@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La zone de balise de %@ points carrés est sous la limite WCAG de %@ points carrés; maximum %@."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La zone de balise de %@ points carrés est sous la limite WCAG de %@ points carrés; maximum %@."
+          }
+        }
+      }
+    },
+    "Exam-style check" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérification d’examen"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérification d’examen"
+          }
+        }
+      }
+    },
+    "Import preferences.morse.outputMode is invalid." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import preferences.morse.outputMode is invalid."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.morse.outputMode est invalide."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.morse.outputMode est invalide."
+          }
+        }
+      }
+    },
+    "Import preferences.morse.timingProfile is invalid." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import preferences.morse.timingProfile is invalid."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.morse.timingProfile est invalide."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.morse.timingProfile est invalide."
+          }
+        }
+      }
+    },
+    "Send the displayed passage, then end and grade when ready. Unsent characters at 0:00 count as errors." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyez le passage affiché, puis terminez et corrigez quand vous êtes prêt. Les caractères non envoyés à 0:00 comptent comme erreurs."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyez le passage affiché, puis terminez et corrigez quand vous êtes prêt. Les caractères non envoyés à 0:00 comptent comme erreurs."
           }
         }
       }
