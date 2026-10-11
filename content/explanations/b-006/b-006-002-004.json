@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-002-004.\n\nWhy the correct answer is right: A balun connects a balanced system to an unbalanced system. In amateur stations, that often means connecting a balanced dipole or balanced line to unbalanced coax while reducing unwanted shield current.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Increase antenna gain\": A balun can improve feed behaviour, but it does not add directivity or create antenna gain by itself.\n- sourceIndex 2: \"Shunt common-mode current to ground\": A choke-style balun usually impedes common-mode current rather than simply dumping it to ground.\n- sourceIndex 3: \"Balance antenna impedance\": Some baluns also transform impedance, but the name and basic purpose are about balanced-to-unbalanced connection, not making the antenna's impedance itself balanced.",
+    "en": "Question B-006-002-004.\n\nWhy the correct answer is right: A balun connects a balanced system to an unbalanced system; the name comes from BALanced to UNbalanced. In a station, it often joins a balanced dipole or line to unbalanced coax while reducing unwanted shield current.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Increase antenna gain\": A balun can improve feed behaviour, but it does not add directivity or create antenna gain by itself.\n- sourceIndex 2: \"Shunt common-mode current to ground\": A choke-style balun usually impedes common-mode current rather than simply dumping it to ground.\n- sourceIndex 3: \"Balance antenna impedance\": Some baluns also transform impedance, but the name and basic purpose are about balanced-to-unbalanced connection, not making the antenna's impedance itself balanced.",
     "fr": null
   },
   "citations": [

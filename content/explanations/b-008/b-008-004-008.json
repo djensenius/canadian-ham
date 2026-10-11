@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-008-004-008.\n\nWhy the correct answer is right: Excessive microphone gain can overdrive SSB stages so signal peaks clip or flat top, producing non-linear distortion.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Defective sideband filter\": A defective sideband filter changes the passband, but flat topping is a clipping symptom from too much drive.\n- sourceIndex 2: \"Insufficient power supply current capacity\": Limited power-supply current can cause voltage sag, but the probable SSB flat-topping cause in this context is excessive audio drive.\n- sourceIndex 3: \"Defective low-pass filter\": A low-pass filter affects RF harmonics after the transmitter stages; it does not cause the SSB amplifier envelope to flat top.",
+    "en": "Question B-008-004-008.\n\nWhy the correct answer is right: Excessive microphone gain can overdrive single-sideband (SSB) stages. Signal peaks clip, or flat top, and that produces non-linear distortion.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Defective sideband filter\": A defective sideband filter changes the passband, but flat topping is a clipping symptom from too much drive.\n- sourceIndex 2: \"Insufficient power supply current capacity\": Limited power-supply current can cause voltage sag, but the probable SSB flat-topping cause in this context is excessive audio drive.\n- sourceIndex 3: \"Defective low-pass filter\": A low-pass filter affects RF harmonics after the transmitter stages; it does not cause the SSB amplifier envelope to flat top.",
     "fr": null
   },
   "citations": [

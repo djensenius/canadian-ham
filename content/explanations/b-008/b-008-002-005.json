@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-008-002-005.\n\nWhy the correct answer is right: If equipment with no intentional RF receiving circuitry reproduces the transmission, some non-linear part is rectifying RF into audio.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Front-end overload\": Front-end overload requires a receiver front end; the device described is not intended to receive RF.\n- sourceIndex 2: \"Splatter\": Splatter is a transmitted bandwidth problem and does not explain a non-radio device detecting RF as audio.\n- sourceIndex 3: \"Intermodulation\": Intermodulation creates new frequencies by mixing signals; the clue is accidental detection in a device with no RF section.",
+    "en": "Question B-008-002-005.\n\nWhy the correct answer is right: If equipment with no intentional RF receiving circuitry reproduces the transmission, some non-linear part is rectifying RF into audio. Rectifying means acting like a detector and turning RF into sound-frequency energy.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Front-end overload\": Front-end overload requires a receiver front end; the device described is not intended to receive RF.\n- sourceIndex 2: \"Splatter\": Splatter is a transmitted bandwidth problem and does not explain a non-radio device detecting RF as audio.\n- sourceIndex 3: \"Intermodulation\": Intermodulation creates new frequencies by mixing signals; the clue is accidental detection in a device with no RF section.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-008-005.\n\nWhy the correct answer is right: Adding series inductance increases the antenna system’s effective L. Since resonant frequency follows f = 1 / (2π√LC), increasing L lowers the resonant frequency.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"increase the resonant frequency\": This reverses the LC relationship; adding inductance increases L, and a larger L makes 1 / (2π√LC) smaller, not larger.\n- sourceIndex 2: \"increase its useful bandwidth\": A loading inductance often narrows useful bandwidth and adds loss; it is not a general method for increasing antenna bandwidth.\n- sourceIndex 3: \"reduce atmospheric noise pickup\": Atmospheric noise is picked up from the environment by the antenna system; adding a series inductor does not reduce that external noise source.",
+    "en": "Question B-006-008-005.\n\nWhy the correct answer is right: Adding series inductance is like adding electrical length to the antenna system. More inductance lowers the resonant frequency, so the antenna tunes lower.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"increase the resonant frequency\": This reverses the LC relationship; adding inductance increases L, and a larger L makes 1 / (2π√LC) smaller, not larger.\n- sourceIndex 2: \"increase its useful bandwidth\": A loading inductance often narrows useful bandwidth and adds loss; it is not a general method for increasing antenna bandwidth.\n- sourceIndex 3: \"reduce atmospheric noise pickup\": Atmospheric noise is picked up from the environment by the antenna system; adding a series inductor does not reduce that external noise source.",
     "fr": null
   },
   "citations": [

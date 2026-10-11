@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-008-005-011.\n\nWhy the correct answer is right: A low-pass filter attenuates frequencies above its cut-off while passing frequencies below it.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Band-pass\": A band-pass filter passes a range between lower and upper limits; it is not defined by attenuating only above one cut-off.\n- sourceIndex 2: \"High-pass\": A high-pass filter does the opposite: it attenuates below its cut-off and passes higher frequencies.\n- sourceIndex 3: \"Notch\": A notch filter attenuates one narrow frequency rather than all frequencies above a cut-off.",
+    "en": "Question B-008-005-011.\n\nWhy the correct answer is right: A low-pass filter attenuates frequencies above its cut-off while passing frequencies below it. The name means the lower frequencies pass.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Band-pass\": A band-pass filter passes a range between lower and upper limits; it is not defined by attenuating only above one cut-off.\n- sourceIndex 2: \"High-pass\": A high-pass filter does the opposite: it attenuates below its cut-off and passes higher frequencies.\n- sourceIndex 3: \"Notch\": A notch filter attenuates one narrow frequency rather than all frequencies above a cut-off.",
     "fr": null
   },
   "citations": [
