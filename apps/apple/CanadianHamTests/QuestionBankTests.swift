@@ -10,6 +10,10 @@ final class QuestionBankTests: XCTestCase {
         )
     }
 
+    func testAppBundleContainsNoReadmeFiles() throws {
+        XCTAssertEqual(try bundledReadmePaths(in: Bundle.main), [], "App bundle must not contain README.md files")
+    }
+
     func testBundledJSONDecodesExpectedCounts() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
 
@@ -137,6 +141,23 @@ final class QuestionBankTests: XCTestCase {
         for explanation in library.explanations {
             XCTAssertNoThrow(try ExplanationBodyParser.parse(explanation), "Explanation \(explanation.id) should parse")
         }
+    }
+
+    private func bundledReadmePaths(in bundle: Bundle) throws -> [String] {
+        let resourceURL = try XCTUnwrap(bundle.resourceURL)
+        let urls = FileManager.default.enumerator(
+            at: resourceURL,
+            includingPropertiesForKeys: [.isRegularFileKey]
+        )?.compactMap { $0 as? URL } ?? []
+
+        return try urls.compactMap { url in
+            let values = try url.resourceValues(forKeys: [.isRegularFileKey])
+            guard values.isRegularFile == true, url.lastPathComponent.caseInsensitiveCompare("README.md") == .orderedSame else {
+                return nil
+            }
+            return url.path.replacingOccurrences(of: resourceURL.path + "/", with: "")
+        }
+        .sorted()
     }
 
     private func bundledGeneratedBankIDs(in bundle: Bundle) throws -> Set<String> {
