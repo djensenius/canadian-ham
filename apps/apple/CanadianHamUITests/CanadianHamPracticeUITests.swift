@@ -1856,6 +1856,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         disclosure.tap()
         for (index, row) in wheelTextEquivalentRows.enumerated() {
             let rowElement = app.staticTexts["lesson-figure-ohms-law-power-wheel-text-equivalent-row-\(index)"].firstMatch
+            scrollUntilExists(rowElement, in: app, maxSwipes: 12)
             XCTAssertTrue(rowElement.waitForExistence(timeout: 3), "Expected wheel text-equivalent row \(index + 1): \(row)")
             XCTAssertEqual(rowElement.label, row)
         }
