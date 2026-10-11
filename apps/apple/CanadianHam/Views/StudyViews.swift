@@ -1598,7 +1598,7 @@ struct SettingsView: View {
                     .foregroundStyle(DesignTokens.Colors.warningText)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            tokenButton(ICloudSyncCopy.deleteProgressButton) { confirmingICloudDelete = true } // l10n: localized
+            tokenButton("Delete iCloud Progress") { confirmingICloudDelete = true }
                 .accessibilityIdentifier("icloud-delete-progress-button")
         }
         .paperCard()
