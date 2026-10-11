@@ -3095,6 +3095,28 @@
         }
       }
     },
+    "Beacon area %@ square points is below the %@ square-point WCAG flash cap; max %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beacon area %@ square points is below the %@ square-point WCAG flash cap; max %@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La zone de balise de %@ points carrés est sous la limite WCAG de %@ points carrés; maximum %@."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La zone de balise de %@ points carrés est sous la limite WCAG de %@ points carrés; maximum %@."
+          }
+        }
+      }
+    },
     "Beacon safety limits were exceeded, so playback uses the non-flashing tape." : {
       "localizations" : {
         "en" : {
@@ -4479,6 +4501,22 @@
         }
       }
     },
+    "Exam-style check" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérification d’examen"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérification d’examen"
+          }
+        }
+      }
+    },
     "Exercise %lld of %lld" : {
       "localizations" : {
         "fr" : {
@@ -5241,6 +5279,50 @@
         }
       }
     },
+    "Import preferences.morse.outputMode is invalid." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import preferences.morse.outputMode is invalid."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.morse.outputMode est invalide."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.morse.outputMode est invalide."
+          }
+        }
+      }
+    },
+    "Import preferences.morse.timingProfile is invalid." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import preferences.morse.timingProfile is invalid."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.morse.timingProfile est invalide."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.morse.timingProfile est invalide."
+          }
+        }
+      }
+    },
     "Import preferences.practiceMode is invalid." : {
       "localizations" : {
         "en" : {
@@ -5577,6 +5659,22 @@
         }
       }
     },
+    "Language" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Langue"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Langue"
+          }
+        }
+      }
+    },
     "Latest feedback" : {
       "localizations" : {
         "fr" : {
@@ -5627,22 +5725,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Apprendre"
-          }
-        }
-      }
-    },
-    "Language" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Langue"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Langue"
           }
         }
       }
@@ -8086,6 +8168,7 @@
       }
     },
     "Question language" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
@@ -8405,6 +8488,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réinitialiser toutes les données locales?"
+          }
+        }
+      }
+    },
+    "Reset iCloud progress through the cloud deletion flow." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réinitialisez la progression iCloud au moyen de la suppression infonuagique."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réinitialisez la progression iCloud au moyen de la suppression infonuagique."
           }
         }
       }
@@ -8787,6 +8886,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Envoyer un point"
+          }
+        }
+      }
+    },
+    "Send the displayed passage, then end and grade when ready. Unsent characters at 0:00 count as errors." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyez le passage affiché, puis terminez et corrigez quand vous êtes prêt. Les caractères non envoyés à 0:00 comptent comme erreurs."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyez le passage affiché, puis terminez et corrigez quand vous êtes prêt. Les caractères non envoyés à 0:00 comptent comme erreurs."
           }
         }
       }
@@ -9761,22 +9876,6 @@
         }
       }
     },
-    "System default" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réglage du système"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réglage du système"
-          }
-        }
-      }
-    },
     "System" : {
       "localizations" : {
         "fr" : {
@@ -9789,6 +9888,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Système"
+          }
+        }
+      }
+    },
+    "System default" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglage du système"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglage du système"
           }
         }
       }
@@ -10791,120 +10906,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Votre progression locale indique des catégories faibles, des questions à réviser ou moins d’examens simulés réussis que nécessaire. Révisez les questions faibles et les questions à réviser avant de vous fier à votre préparation à l’examen."
-          }
-        }
-      }
-    },
-    "Reset iCloud progress through the cloud deletion flow." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réinitialisez la progression iCloud au moyen de la suppression infonuagique."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réinitialisez la progression iCloud au moyen de la suppression infonuagique."
-          }
-        }
-      }
-    },
-    "Beacon area %@ square points is below the %@ square-point WCAG flash cap; max %@." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beacon area %@ square points is below the %@ square-point WCAG flash cap; max %@."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La zone de balise de %@ points carrés est sous la limite WCAG de %@ points carrés; maximum %@."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La zone de balise de %@ points carrés est sous la limite WCAG de %@ points carrés; maximum %@."
-          }
-        }
-      }
-    },
-    "Exam-style check" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vérification d’examen"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vérification d’examen"
-          }
-        }
-      }
-    },
-    "Import preferences.morse.outputMode is invalid." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import preferences.morse.outputMode is invalid."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importation : preferences.morse.outputMode est invalide."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importation : preferences.morse.outputMode est invalide."
-          }
-        }
-      }
-    },
-    "Import preferences.morse.timingProfile is invalid." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import preferences.morse.timingProfile is invalid."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importation : preferences.morse.timingProfile est invalide."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importation : preferences.morse.timingProfile est invalide."
-          }
-        }
-      }
-    },
-    "Send the displayed passage, then end and grade when ready. Unsent characters at 0:00 count as errors." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Envoyez le passage affiché, puis terminez et corrigez quand vous êtes prêt. Les caractères non envoyés à 0:00 comptent comme erreurs."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Envoyez le passage affiché, puis terminez et corrigez quand vous êtes prêt. Les caractères non envoyés à 0:00 comptent comme erreurs."
           }
         }
       }
