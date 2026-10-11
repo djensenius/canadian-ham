@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-11 15:14'
+updated_date: '2026-10-11 17:26'
 labels:
   - content
   - apple
@@ -80,6 +80,8 @@ Final validation: pnpm check:figures; node scripts/check-figures.mjs --self-test
 Taking over after r2 REQUEST CHANGES at fa889257. First priority is restoring coverage removed by previous worker: default performAccessibilityAudit() remains unfiltered, AX5 must exercise real enlarge control and inline fit, and disclosure rows must be activated/asserted.
 
 R2 handoff/WIP after commit 3bf6c419: Done: restored parser fixture parity for invalid ids and import.meta.url fixture resolution; expanded wheel text equivalent to 12 rows and updated Swift fixture test; hardened check-figures for non-double-quoted attributes, DOCTYPE/ENTITY/CDATA, self-test coverage, stroke/text clearance, CI self-test wiring; moved figure labels/formulas clear of strokes, increased wheel formulas, regenerated Apple assets and qlmanage evidence; removed figure-card level tap/traits/actions/identifier; added explicit row identifiers, macOS sheet min frame, lesson-scoped navigation toolbar background, custom enlarged header, and RootView toolbar rollback. In progress: Apple UI test coverage restoration -- tests now target image/enlarge identifiers, assert 12 disclosure rows, exercise AX5 inline fit + real enlarge tap, and run full default performAccessibilityAudit after inline/enlarged/expanded states, but targeted iOS validation is still waiting on another xbuild lock and may need further tuning for audit viewport contrast. Not started/remaining: dark iOS targeted run, AX5 targeted run, placeholder targeted rerun, macOS build/targeted test, fresh app screenshot export into docs/evidence/task-38.1/app, final check:apple-l10n after any catalog changes, final task notes/Done after validation.
+
+Progress after supervisor guidance: committed WIP through 4c79c27c. Reverted the lesson-scoped nav/background and SVG-internals workaround is NOT complete yet; current code still contains some attempted positioning and AX-collapse changes that need cleanup before review. Targeted light figure run remains failing, but now after multiple inline/enlarged audits: latest /tmp/task381-r2-light.xcresult fails during/after the expanded-disclosure section or inline wheel positioning depending on scroll position, with full default performAccessibilityAudit() still unfiltered. Next worker should first apply the Morse precise positioning helper from ../canadian-ham-morse-polish (positionElementInMiddleVisibleBand/preciseScroll/settleScrollableContentBelowNavigationBar/assertNoScrollableContentIntersectsProtectedArea) and revert unapproved visual/AX audit dodges per supervisor reply before rerunning the light test.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
