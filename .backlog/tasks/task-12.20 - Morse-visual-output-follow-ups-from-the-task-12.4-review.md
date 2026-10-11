@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-07 12:14'
-updated_date: '2026-10-11 14:26'
+updated_date: '2026-10-11 17:32'
 labels: []
 dependencies:
   - TASK-12.4
@@ -64,6 +64,8 @@ Review r2 follow-up on tip 6eeda354c240e6c3661ec2a13b9adcb3e29298af: restored th
 Review r3 follow-up: Apple import validation now rejects unsupported preferences.morse timingProfile/outputMode values (including outputMode haptics) while preserving missing/partial Morse preference defaults; haptics export still maps to audio. Reduce Motion/Dim Flashing Lights beacon-stop decisions now require the owner's actual running state (quick listen/course isPlaying, copy isPlaying, receiving exam stage == playing), so completed beacon state is not cleared after playback finishes. Validation: targeted macOS and iOS xbuild unit runs passed ProgressStoreTests/testMorseImportRejectsUnsupportedMorsePreferenceEnums, /testMorseImportDecodesMissingAndPartialMorsePreferences, MorseTrainerTests/testReduceFlashingDecisionUsesInjectedFlags, /testReduceFlashingStopsOnlyRunningVisualBeacon; targeted iOS UI run passed Quick Listen/course playback tests testMorseVisualOutputModeQuickListenOnIOS, testMorseStartingQuickListenStopsCopyPlayback, testLeavingMorseHomeStopsCopyPlaybackBeforeCourseLesson, testLeavingCourseLessonStopsCoursePlaybackBeforeQuickListen, testMorseQuickListenAfterFinishedCourseAudioDoesNotReportStop; pnpm check:apple-l10n and node scripts/check-apple-text-sources.ts passed. Task remains Done.
 
 Copilot round 2 on PR #193: explicit JSON null for preferences.morse or any Morse field is now rejected (only absent keys get defaults), matching the shared schema and the web importer. New test testMorseImportRejectsExplicitNullMorseValues; targeted macOS ProgressStoreTests and MorseTrainerTests 92/92.
+
+Pre-merge full suites (PR #191 policy) at c9f3139e: macOS 109/109; tvOS 4 unit + 12 UI; visionOS 4 unit + 9 UI; iOS 107 unit + 79/80 UI. The one failure was testAccessibilityAuditCoreScreensDark: 'com.apple.springboard crashed in SBSystemAppMain' during the Dark appearance setup (simulator infrastructure, task-33). A targeted rerun passed twice.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
