@@ -1,7 +1,7 @@
 ---
 id: TASK-12.19
 title: Morse course navigation and playback test gaps
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-06 18:25'
