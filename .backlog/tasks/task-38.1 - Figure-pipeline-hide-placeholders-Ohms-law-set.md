@@ -1,11 +1,11 @@
 ---
 id: TASK-38.1
 title: 'Figure pipeline, hide placeholders, Ohm''s law set'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-11 13:24'
+updated_date: '2026-10-11 13:34'
 labels:
   - content
   - apple
@@ -40,6 +40,8 @@ Build the shared figure pipeline and prove it with the Ohm's law set. Figures ar
 4. Add an Apple asset-generation/check pipeline that copies the SVGs into a generated vector asset catalog, wire the catalog into the iOS/macOS target, and render lesson figures with template tint plus optional disclosure text/enlarged view.
 5. Document the pipeline and add a CI/package check that validates figure references, alt text, SVG ids, and generated Apple assets.
 6. Run targeted checks, regenerate the Apple project twice, then run the required final web, content, localization, and iOS/macOS Apple suites.
+
+Review r2 fixes: restore/extend Apple UI coverage without weakening audits; remove card-level gestures; tighten SVG geometry/checker; align parser fixtures; undo out-of-scope toolbar change; add macOS sheet minimum; refresh evidence and validation notes honestly.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -74,6 +76,8 @@ Validation for final follow-up: pnpm check:figures; node scripts/check-figures.m
 Final enlarged-view correction: updated the enlarged sheet layout so it computes aspect-fit size from the sheet geometry and opens centered/fitted, retaining pinch zoom and double-tap zoom. The largest-accessibility UI test now opens the enlarged wheel directly via launch argument and asserts the enlarged image is fully visible below the nav bar.
 
 Final validation: pnpm check:figures; node scripts/check-figures.mjs --self-test; TZ=UTC pnpm --filter @canadian-ham/web test (161 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift (20 tests); node scripts/check-apple-text-sources.ts; targeted iOS screenshot tests for light/dark figures in /tmp/task381-r11-screens.xcresult; targeted largest-accessibility enlarged-wheel test in /tmp/task381-large8.xcresult; placeholder-hiding test in /tmp/task381-placeholder.xcresult. Screenshots exported to docs/evidence/task-38.1/app/.
+
+Taking over after r2 REQUEST CHANGES at fa889257. First priority is restoring coverage removed by previous worker: default performAccessibilityAudit() remains unfiltered, AX5 must exercise real enlarge control and inline fit, and disclosure rows must be activated/asserted.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
