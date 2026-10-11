@@ -364,6 +364,10 @@ private struct LessonReaderView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle(Text(english(lesson.title.en))) // l10n: content(en)
+#if os(iOS)
+        .toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+#endif
         .task { refresh() }
     }
 
@@ -593,7 +597,6 @@ private struct LessonFigureView: View {
                 showingEnlargedFigure = true
             } label: {
                 figureImage
-                    .padding(DesignTokens.Spacing.md)
                     .frame(maxWidth: .infinity)
                     .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
                     .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
@@ -607,11 +610,12 @@ private struct LessonFigureView: View {
             if !figure.textEquivalent.isEmpty {
                 DisclosureGroup {
                     VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-                        ForEach(Array(figure.textEquivalent.enumerated()), id: \.offset) { _, item in
+                        ForEach(Array(figure.textEquivalent.enumerated()), id: \.offset) { index, item in
                             Text(english(item)) // l10n: content(en)
                                 .font(DesignTokens.FontScale.body)
                                 .foregroundStyle(DesignTokens.Colors.ink)
                                 .textSelection(.enabled)
+                                .accessibilityIdentifier("lesson-figure-\(figure.id)-text-equivalent-row-\(index)")
                         }
                     }
                     .padding(.top, DesignTokens.Spacing.sm)
@@ -626,11 +630,6 @@ private struct LessonFigureView: View {
         .padding(DesignTokens.Spacing.md)
         .background(DesignTokens.Colors.paperElevated, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
-        .contentShape(Rectangle())
-        .onTapGesture { showingEnlargedFigure = true }
-        .accessibilityAddTraits(.isButton)
-        .accessibilityAction { showingEnlargedFigure = true }
-        .accessibilityIdentifier("lesson-figure-\(figure.id)-card")
         .sheet(isPresented: $showingEnlargedFigure) {
             EnlargedLessonFigureView(figure: figure, aspectRatio: aspectRatio)
         }
@@ -654,7 +653,30 @@ private struct EnlargedLessonFigureView: View {
     @State private var lastScale: CGFloat = 1
 
     var body: some View {
-        NavigationStack {
+        VStack(spacing: 0) {
+            VStack(spacing: DesignTokens.Spacing.sm) {
+                Text("Enlarged figure") // l10n: localized
+                    .font(DesignTokens.FontScale.bodyLarge.weight(.bold))
+                    .foregroundStyle(DesignTokens.Colors.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity)
+                    .accessibilityAddTraits(.isHeader)
+                Button {
+                    dismiss()
+                } label: {
+                    Text("Done") // l10n: localized
+                        .font(DesignTokens.FontScale.body.weight(.semibold))
+                        .padding(.horizontal, DesignTokens.Spacing.md)
+                        .padding(.vertical, DesignTokens.Spacing.sm)
+                }
+                .buttonStyle(.bordered)
+            }
+            .padding(.horizontal, DesignTokens.Spacing.lg)
+            .padding(.vertical, DesignTokens.Spacing.md)
+
+            Divider()
+
             GeometryReader { geometry in
                 let fitSize = fittedSize(in: geometry.size)
                 ScrollView([.horizontal, .vertical]) {
@@ -687,14 +709,12 @@ private struct EnlargedLessonFigureView: View {
                         }
                 )
             }
-            .navigationTitle(Text("Enlarged figure")) // l10n: localized
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { dismiss() }
-                }
-            }
         }
+        .background(DesignTokens.Colors.paper)
         .accessibilityIdentifier("lesson-figure-\(figure.id)-enlarged")
+#if os(macOS)
+        .frame(minWidth: 640, minHeight: 520)
+#endif
     }
 
     private func fittedSize(in container: CGSize) -> CGSize {
