@@ -1,0 +1,237 @@
+{
+  "schema": "canadian-ham.progress-export",
+  "version": 1,
+  "exportedAt": "2026-01-02T03:04:05.000Z",
+  "bankId": "basic-2025-07-15",
+  "questionProgress": [
+    {
+      "questionId": "B-001-001-001",
+      "bankId": "basic-2025-07-15",
+      "attempts": 1,
+      "correctAttempts": 1,
+      "lastAttemptedAt": "2026-01-02T03:00:00.000Z",
+      "lastResult": "correct",
+      "recentResults": [
+        true
+      ],
+      "leitner": {
+        "box": 1,
+        "dueAt": "2026-01-03T03:00:00.000Z"
+      },
+      "notes": null
+    }
+  ],
+  "examAttempts": [
+    {
+      "id": "attempt-2026-01-02T03:10:00.000Z-local-fixture",
+      "bankId": "basic-2025-07-15",
+      "mode": "mock-exam",
+      "seed": "fixture",
+      "startedAt": "2026-01-02T03:00:00.000Z",
+      "submittedAt": "2026-01-02T03:10:00.000Z",
+      "timer": {
+        "enabled": false,
+        "secondsAllowed": null,
+        "secondsElapsed": 600
+      },
+      "items": [
+        {
+          "position": 1,
+          "questionId": "B-001-001-001",
+          "subsectionId": "B-001-001",
+          "categoryId": "B-001",
+          "choicePermutation": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "selectedSourceIndex": 0,
+          "isCorrect": true,
+          "flagged": false
+        }
+      ],
+      "score": {
+        "bankId": "basic-2025-07-15",
+        "correct": 1,
+        "total": 1,
+        "percent": 100,
+        "passed": true,
+        "honours": true,
+        "categoryBreakdown": [
+          {
+            "categoryId": "B-001",
+            "correct": 1,
+            "total": 1,
+            "percent": 100
+          }
+        ],
+        "weakSubsectionIds": []
+      }
+    }
+  ],
+  "lessonProgress": [
+    {
+      "lessonId": "L-001-01",
+      "readAt": "2026-01-02T03:01:00.000Z",
+      "readCount": 1
+    }
+  ],
+  "lessonQuizAttempts": [],
+  "morseCourseProgress": {
+    "courseId": "ised-koch-g4fon-v1",
+    "lessonProgress": [
+      {
+        "lessonId": "koch-001",
+        "attempts": 1,
+        "bestAccuracy": 1,
+        "lastAccuracy": 1,
+        "lastAttemptedAt": "2026-01-02T03:02:00.000Z",
+        "completedAt": "2026-01-02T03:02:00.000Z"
+      }
+    ],
+    "characterStats": [
+      {
+        "character": "K",
+        "attempts": 1,
+        "correctAttempts": 1,
+        "recentResults": [
+          true
+        ],
+        "lastPracticedAt": "2026-01-02T03:02:00.000Z"
+      }
+    ],
+    "dailyActivity": [
+      {
+        "date": "2026-01-02",
+        "lessonsCompleted": 1
+      }
+    ]
+  },
+  "preferences": {
+    "practiceMode": "immediate",
+    "examTimerEnabled": false,
+    "theme": "system"
+  },
+  "syncDeviceRows": {
+    "questionProgress": [
+      {
+        "deviceId": "",
+        "record": {
+          "questionId": "B-001-001-001",
+          "bankId": "basic-2025-07-15",
+          "attempts": 1,
+          "correctAttempts": 1,
+          "lastAttemptedAt": "2026-01-02T03:00:00.000Z",
+          "lastResult": "correct",
+          "recentResults": [
+            true
+          ],
+          "leitner": {
+            "box": 1,
+            "dueAt": "2026-01-03T03:00:00.000Z"
+          },
+          "notes": null
+        }
+      }
+    ],
+    "examAttempts": [
+      {
+        "deviceId": "fixture-device",
+        "attempt": {
+          "id": "attempt-2026-01-02T03:10:00.000Z-local-fixture",
+          "bankId": "basic-2025-07-15",
+          "mode": "mock-exam",
+          "seed": "fixture",
+          "startedAt": "2026-01-02T03:00:00.000Z",
+          "submittedAt": "2026-01-02T03:10:00.000Z",
+          "timer": {
+            "enabled": false,
+            "secondsAllowed": null,
+            "secondsElapsed": 600
+          },
+          "items": [
+            {
+              "position": 1,
+              "questionId": "B-001-001-001",
+              "subsectionId": "B-001-001",
+              "categoryId": "B-001",
+              "choicePermutation": [
+                0,
+                1,
+                2,
+                3
+              ],
+              "selectedSourceIndex": 0,
+              "isCorrect": true,
+              "flagged": false
+            }
+          ],
+          "score": {
+            "bankId": "basic-2025-07-15",
+            "correct": 1,
+            "total": 1,
+            "percent": 100,
+            "passed": true,
+            "honours": true,
+            "categoryBreakdown": [
+              {
+                "categoryId": "B-001",
+                "correct": 1,
+                "total": 1,
+                "percent": 100
+              }
+            ],
+            "weakSubsectionIds": []
+          }
+        }
+      }
+    ],
+    "lessonProgress": [
+      {
+        "deviceId": "fixture-device",
+        "record": {
+          "lessonId": "L-001-01",
+          "readAt": "2026-01-02T03:01:00.000Z",
+          "readCount": 1
+        }
+      }
+    ],
+    "lessonQuizAttempts": [],
+    "morseCourseProgress": [
+      {
+        "deviceId": "fixture-device",
+        "progress": {
+          "courseId": "ised-koch-g4fon-v1",
+          "lessonProgress": [
+            {
+              "lessonId": "koch-001",
+              "attempts": 1,
+              "bestAccuracy": 1,
+              "lastAccuracy": 1,
+              "lastAttemptedAt": "2026-01-02T03:02:00.000Z",
+              "completedAt": "2026-01-02T03:02:00.000Z"
+            }
+          ],
+          "characterStats": [
+            {
+              "character": "K",
+              "attempts": 1,
+              "correctAttempts": 1,
+              "recentResults": [
+                true
+              ],
+              "lastPracticedAt": "2026-01-02T03:02:00.000Z"
+            }
+          ],
+          "dailyActivity": [
+            {
+              "date": "2026-01-02",
+              "lessonsCompleted": 1
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
