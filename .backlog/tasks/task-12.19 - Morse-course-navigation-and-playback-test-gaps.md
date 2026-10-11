@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-06 18:25'
-updated_date: '2026-10-11 10:23'
+updated_date: '2026-10-11 10:30'
 labels: []
 dependencies:
   - TASK-12.17
@@ -60,5 +60,5 @@ Review r2 follow-up on tip 6eeda354c240e6c3661ec2a13b9adcb3e29298af: tightened t
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Addressed r2 Morse course follow-ups: Review weakest now asserts the Weak-character review title, and empty review preparation cannot push an empty or stale session. Verified by targeted iOS testMorseCourseReviewAndFinishedLessonReentryOnIOS in the 7/7 targeted run.
+Morse course navigation and playback coverage: lesson Back returns to Unit 1 with the lesson list, reopening lesson 1 starts at Exercise 1, course playback stop is observable via a DEBUG status, the locked lesson is tapped before asserting no session, Review weakest characters opens a titled session, and finished-lesson re-entry starts fresh. Review r2 follow-ups: Review weakest asserts its title; an empty review can't push an empty or stale session. Targeted tests pass; full suites at merge time.
 <!-- SECTION:FINAL_SUMMARY:END -->
