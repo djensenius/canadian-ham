@@ -410,8 +410,7 @@ struct MorseSendingPracticeView: View {
     }
 
     private func openExamStyleCheck() {
-        stopAllKeying(finalizeStraight: false)
-        clearPendingCharacterFinalization(clearPendingSamples: true)
+        resetSending(clearExam: true)
         showingExam = true
     }
 
