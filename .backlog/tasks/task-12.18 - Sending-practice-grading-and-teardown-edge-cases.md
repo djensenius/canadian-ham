@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-06 11:55'
-updated_date: '2026-10-11 10:23'
+updated_date: '2026-10-11 10:30'
 labels: []
 dependencies:
   - TASK-12.7
@@ -46,5 +46,5 @@ Review r2 follow-up on tip 6eeda354c240e6c3661ec2a13b9adcb3e29298af: removed the
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Addressed r2 sending-practice follow-ups: removed the unused held-key DEBUG button/helper and added Back-from-running-exam cancellation for the pushed Exam-style check. Verified with targeted iOS UI tests: Back cancellation 1/1 passed and related sending tests passed in the 7/7 targeted run.
+Apple sending teardown cancels pending character finalisation; Apple and web grading first release all held keys (finishing a held straight-key element) and stop playback, with tests; the Morse diff summary agrees in French for each count. Review r2 follow-ups: removed an unused DEBUG hook, and Back from the pushed exam-style screen now stops a running exam (UI test). Targeted tests pass; the full four-platform suites run once at merge time per the testing policy.
 <!-- SECTION:FINAL_SUMMARY:END -->
