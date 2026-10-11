@@ -189,6 +189,32 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertFalse(restarted.isICloudSyncEnabled)
     }
 
+    func testICloudAccountTeardownUsesInjectedFactoryAndRestoresLocalSnapshot() throws {
+        let store = try ProgressStoreService.inMemoryForTests(iCloudSyncEnabled: true, layout: .split)
+        let record = QuestionProgressRecord(
+            questionId: "B-001-001-001",
+            bankId: basicBankId,
+            attempts: 1,
+            correctAttempts: 1,
+            lastAttemptedAt: "2026-01-02T03:04:05.000Z",
+            lastResult: .correct,
+            recentResults: [true],
+            leitner: LeitnerState(box: 1, dueAt: "2026-01-03T03:04:05.000Z")
+        )
+        try store.saveQuestionProgress([record])
+        var factoryCalls = 0
+
+        try store.reopenLocalOnlyAfterSyncStop { enabled in
+            factoryCalls += 1
+            XCTAssertFalse(enabled)
+            return try ProgressStoreService.inMemoryForTests(iCloudSyncEnabled: enabled, layout: .split).container
+        }
+
+        XCTAssertEqual(factoryCalls, 1)
+        XCTAssertFalse(store.isICloudSyncEnabled)
+        XCTAssertEqual(try store.questionProgressRecords(), [record])
+    }
+
     func testICloudDeleteCanDeleteLocalDataAfterZoneDelete() async throws {
         let store = try ProgressStoreService.inMemoryForTests(iCloudSyncEnabled: true, layout: .split)
         let record = QuestionProgressRecord(
