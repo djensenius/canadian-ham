@@ -1,9 +1,11 @@
 ---
 id: TASK-42
 title: Morse course lower audit is flaky (Contrast failed on settings description)
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@worker'
 created_date: '2026-10-11 18:37'
+updated_date: '2026-10-11 18:38'
 labels:
   - apple
   - testing
