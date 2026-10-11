@@ -22,7 +22,7 @@ Why: task-12.4's final review (~/.cache/canadian-ham-reviews/t124-r3.md) approve
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [x] #1 After the UI-test scroll-settling helper runs, each lower-half audit asserts its target (sending feedback, Morse settings, last course unit) is still visible below the bar
+- [ ] #1 After the UI-test scroll-settling helper runs, each lower-half audit asserts its target (sending feedback, Morse settings, last course unit) is still visible below the bar
 - [x] #2 Remove the unreachable luminance-too-high reason (TS and Swift) or document it; add a Swift test at exactly the area cap
 - [x] #3 Safety-note areas say square points / px² with grouped digits; the web unlit lamp sits on paper (not paper-inset) like Apple
 - [x] #4 Apple: turning on Reduce Motion or Dim Flashing Lights during beacon playback stops the beacon (or switches to tape) in all four playback owners
