@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-07 12:14'
-updated_date: '2026-10-11 01:17'
+updated_date: '2026-10-11 10:23'
 labels: []
 dependencies:
   - TASK-12.4
@@ -22,7 +22,7 @@ Why: task-12.4's final review (~/.cache/canadian-ham-reviews/t124-r3.md) approve
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 After the UI-test scroll-settling helper runs, each lower-half audit asserts its target (sending feedback, Morse settings, last course unit) is still visible below the bar
+- [x] #1 After the UI-test scroll-settling helper runs, each lower-half audit asserts its target (sending feedback, Morse settings, last course unit) is still visible below the bar
 - [x] #2 Remove the unreachable luminance-too-high reason (TS and Swift) or document it; add a Swift test at exactly the area cap
 - [x] #3 Safety-note areas say square points / px² with grouped digits; the web unlit lamp sits on paper (not paper-inset) like Apple
 - [x] #4 Apple: turning on Reduce Motion or Dim Flashing Lights during beacon playback stops the beacon (or switches to tape) in all four playback owners
@@ -58,6 +58,8 @@ Full Apple suite per-test results on merged code (tip 6c3724c8f931cc91a10db99bef
   Names: CanadianHamTVTests/testAppBundleContainsOnlyBasicQuestionBankResources() [Passed]; CanadianHamTVTests/testBundledQuestionBankLoadsForTVApp() [Passed]; CanadianHamTVTests/testTVPracticeQuestionDrawStaysInCategoryAndShufflesAnswers() [Passed]; CanadianHamTVTests/testTVPracticeSeedsVaryAcrossSessionIDs() [Passed]; CanadianHamTVUITests/testAboutAccessibilityAuditLightAndDark() [Passed]; CanadianHamTVUITests/testAboutLowerSectionsReachableWithRemote() [Passed]; CanadianHamTVUITests/testAboutShowsReleaseAttributionDisclaimerAndBankVersion() [Passed]; CanadianHamTVUITests/testCategoryGridAccessibilityAuditLightAndDark() [Passed]; CanadianHamTVUITests/testCategoryGridNavigatesToMorse() [Passed]; CanadianHamTVUITests/testFocusRingEvidenceScreenshots() [Passed]; CanadianHamTVUITests/testLayoutEvidenceScreenshots() [Passed]; CanadianHamTVUITests/testMorseAccessibilityAuditLightAndDark() [Passed]; CanadianHamTVUITests/testMorseScreenShowsPlaybackControls() [Passed]; CanadianHamTVUITests/testPracticeAccessibilityAuditLightAndDark() [Passed]; CanadianHamTVUITests/testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances() [Passed]; CanadianHamTVUITests/testRemoteMenuReturnsPracticeAndAboutToCategoryGrid() [Passed]
 - visionOS: 13/13 passed
   Names: CanadianHamVisionTests/testAppBundleContainsOnlyBasicQuestionBankResources() [Passed]; CanadianHamVisionTests/testBundledQuestionBankLoadsForVisionApp() [Passed]; CanadianHamVisionTests/testVisionPracticeQuestionDrawStaysInCategoryAndShufflesAnswers() [Passed]; CanadianHamVisionTests/testVisionPracticeSeedsVaryAcrossSessionIDs() [Passed]; CanadianHamVisionUITests/testAboutAccessibilityAuditLightAndDark() [Passed]; CanadianHamVisionUITests/testAboutShowsReleaseAttributionDisclaimerAndBankVersion() [Passed]; CanadianHamVisionUITests/testCategoryGridAccessibilityAuditLightAndDark() [Passed]; CanadianHamVisionUITests/testCategoryGridNavigatesToMorse() [Passed]; CanadianHamVisionUITests/testLongestQuestionSupportsLargestDynamicType() [Passed]; CanadianHamVisionUITests/testMorseAccessibilityAuditLightAndDark() [Passed]; CanadianHamVisionUITests/testMorseScreenShowsPlaybackControls() [Passed]; CanadianHamVisionUITests/testPracticeAccessibilityAuditLightAndDark() [Passed]; CanadianHamVisionUITests/testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances() [Passed]
+
+Review r2 follow-up on tip 6eeda354c240e6c3661ec2a13b9adcb3e29298af: restored the fixed-timing note visual styling exactly to main's paper rounded rectangle plus 1 pt border while keeping ink text; the earlier note saying the r1 fix was purely test-positioning-only is corrected here because r2 restored the approved main visual style and the remaining audit handling is test positioning only. The settle helper now runs the protected-area offender assertion on every path, including preserveFullyVisible and no-target early returns. Before the lower Morse-home audit the test now precisely scans for an offset where the fixed timing note is fully visible below the bar and at least 15% of the window height above the bottom while no scrollable text/button intersects the protected nav/status area; it then asserts Morse settings remains visible below the bar and runs the default performAccessibilityAudit() unchanged. Verified lower Morse-home audits three times: /tmp/morse-polish-r2-course10.xcresult, /tmp/morse-polish-r2-course11.xcresult, /tmp/morse-polish-r2-course12.xcresult each passed CanadianHamPracticeUITests/testAccessibilityAuditMorseCourseLessonAndSummaryLight and /Dark (2/2 each). Other settle-helper lower-half audits passed in /tmp/morse-polish-r2-other2.xcresult: testAccessibilityAuditMorseSendingMainScreenLight and /Dark (selected run 7/7). Per coordinator policy update, full four-platform suites were not rerun in this review round.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
