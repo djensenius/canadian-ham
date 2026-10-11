@@ -2358,7 +2358,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         _ element: XCUIElement,
         in app: XCUIApplication,
         context: String,
-        maxAdjustments: Int = 20,
+        maxAdjustments: Int = 8,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
@@ -2379,7 +2379,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         if !positioned() {
             for direction in [CGFloat(1), CGFloat(-1)] where !positioned() {
                 for step in 1...maxAdjustments where !positioned() {
-                    preciseScroll(scrollView, contentDeltaY: direction * 10)
+                    preciseScroll(scrollView, contentDeltaY: direction * 80)
                     waitBriefly()
                     record("scan \(direction > 0 ? "down" : "up") \(step)")
                 }
@@ -2401,7 +2401,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func preciseScroll(_ scrollView: XCUIElement, contentDeltaY: CGFloat) {
-        let limitedMagnitude = min(40, max(8, abs(contentDeltaY)))
+        let limitedMagnitude = min(80, max(8, abs(contentDeltaY)))
         let fingerDeltaY = contentDeltaY > 0 ? limitedMagnitude : -limitedMagnitude
         let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
         let end = start.withOffset(CGVector(dx: 0, dy: fingerDeltaY))
