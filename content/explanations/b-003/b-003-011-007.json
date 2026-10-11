@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-011-007.\n\nWhy the correct answer is right: A clean AM signal has an upper and a lower sideband, each extending to the highest audio frequency, so 2 x 3 kHz = 6 kHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"3 kHz\": This counts only one sideband's width from the carrier and forgets the matching sideband on the other side.\n- sourceIndex 2: \"12 kHz\": This doubles the correct two-sideband result again; AM bandwidth is twice the highest audio frequency, not four times it.\n- sourceIndex 3: \"9 kHz\": This adds an extra 3 kHz segment even though the two sidebands already account for the occupied width.",
+    "en": "Question B-003-011-007.\n\nWhy the correct answer is right: A clean amplitude modulation (AM) signal has an upper and a lower sideband, each extending to the highest audio frequency, so 2 x 3 kHz = 6 kHz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"3 kHz\": This counts only one sideband's width from the carrier and forgets the matching sideband on the other side.\n- sourceIndex 2: \"12 kHz\": This doubles the correct two-sideband result again. AM bandwidth is twice the highest audio frequency, not four times it.\n- sourceIndex 3: \"9 kHz\": This adds an extra 3 kHz segment even though the two sidebands already account for the occupied width.",
     "fr": null
   },
   "citations": [

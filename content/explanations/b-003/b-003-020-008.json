@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-020-008.\n\nWhy the correct answer is right: A transmitting antenna can have RF voltage and current on it, and touching it can cause painful RF burns.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Touching the antenna might reflect the signal back to the transmitter and cause damage\": Human contact can disturb an antenna, but the safety reason for keeping people away is injury from RF energy, not transmitter protection.\n- sourceIndex 2: \"Touching the antenna might radiate harmonics\": Harmonics are produced by transmitter nonlinearity or inadequate filtering, not by a person touching the antenna.\n- sourceIndex 3: \"Touching the antenna might cause television interference\": TVI is an interference problem. The immediate safety hazard to the person is an RF burn.",
+    "en": "Question B-003-020-008.\n\nWhy the correct answer is right: A transmitting antenna can have radio-frequency (RF) voltage and current on it, and touching it can cause painful RF burns.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Touching the antenna might reflect the signal back to the transmitter and cause damage\": Human contact can disturb an antenna, but the safety reason for keeping people away is injury from RF energy, not transmitter protection.\n- sourceIndex 2: \"Touching the antenna might radiate harmonics\": Harmonics are produced by transmitter nonlinearity or inadequate filtering, not by a person touching the antenna.\n- sourceIndex 3: \"Touching the antenna might cause television interference\": Television interference (TVI) is an interference problem. The immediate safety hazard to the person is an RF burn.",
     "fr": null
   },
   "citations": [

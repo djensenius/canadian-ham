@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-018-011.\n\nWhy the correct answer is right: A live power supply exposes the worker to energized mains and stored high-voltage circuits, so electric shock is the central risk.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Damaging connected equipment\": Equipment damage is possible during bad troubleshooting, but it is not the primary personal safety hazard of working on a live supply.\n- sourceIndex 2: \"Electromagnetic interference\": EMI may be a station problem, but it is not the immediate life-safety risk inside an energized power supply.\n- sourceIndex 3: \"Blowing the fuse\": A fuse opening is a protective response to overcurrent. The serious hazard to the troubleshooter is shock before protection operates.",
+    "en": "Question B-003-018-011.\n\nWhy the correct answer is right: A live power supply exposes the worker to energized mains and stored high-voltage circuits, so electric shock is the central risk.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Damaging connected equipment\": Equipment damage is possible during bad troubleshooting, but it is not the primary personal safety hazard of working on a live supply.\n- sourceIndex 2: \"Electromagnetic interference\": Electromagnetic interference (EMI) may be a station problem, but it is not the immediate life-safety risk inside an energized power supply.\n- sourceIndex 3: \"Blowing the fuse\": A fuse opening is a protective response to overcurrent. The serious hazard to the troubleshooter is shock before protection operates.",
     "fr": null
   },
   "citations": [

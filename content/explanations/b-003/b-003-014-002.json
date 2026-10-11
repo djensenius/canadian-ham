@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-014-002.\n\nWhy the correct answer is right: The keyer creates correctly proportioned dits and dahs after the operator moves the paddle, so element lengths stay regular.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"By eliminating key clicks\": Click reduction needs keying-edge shaping or filtering. A keyer mainly controls timing.\n- sourceIndex 2: \"By improving the tone of the CW signal\": Tone quality depends on oscillator stability and receiver audio, not directly on keyer timing.\n- sourceIndex 3: \"By ensuring that the dots and dashes have the same amplitude\": CW amplitude is set by the transmitter keying and power stages. A keyer does not make dits and dahs equal in amplitude as its main function.",
+    "en": "Question B-003-014-002.\n\nWhy the correct answer is right: The keyer creates correctly proportioned dits and dahs after the operator moves the paddle, so element lengths stay regular.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"By eliminating key clicks\": Click reduction needs keying-edge shaping or filtering. A keyer mainly controls timing.\n- sourceIndex 2: \"By improving the tone of the CW signal\": Tone quality depends on oscillator stability and receiver audio, not directly on keyer timing.\n- sourceIndex 3: \"By ensuring that the dots and dashes have the same amplitude\": Continuous wave (CW) amplitude is set by the transmitter keying and power stages. A keyer does not make dits and dahs equal in amplitude as its main function.",
     "fr": null
   },
   "citations": [

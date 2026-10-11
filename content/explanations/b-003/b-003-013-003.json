@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-013-003.\n\nWhy the correct answer is right: In FM, deviation is the amount the carrier frequency moves away from the centre frequency due to modulation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Spectrum spread\": Spectrum spread describes occupied bandwidth informally, not the specific frequency change caused by the modulating signal.\n- sourceIndex 2: \"Shift\": Shift is often used for repeater offset or FSK mark-space separation, not the general FM modulation swing.\n- sourceIndex 3: \"Modulation index\": Modulation index is a ratio involving deviation and modulating frequency. It is not simply the frequency change itself.",
+    "en": "Question B-003-013-003.\n\nWhy the correct answer is right: In frequency modulation (FM), deviation is the amount the carrier frequency moves away from the centre frequency due to modulation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Spectrum spread\": Spectrum spread describes occupied bandwidth informally, not the specific frequency change caused by the modulating signal.\n- sourceIndex 2: \"Shift\": Shift is often used for repeater offset or frequency-shift keying (FSK) mark-space separation, not the general FM modulation swing.\n- sourceIndex 3: \"Modulation index\": Modulation index is a ratio involving deviation and modulating frequency. It is not simply the frequency change itself.",
     "fr": null
   },
   "citations": [

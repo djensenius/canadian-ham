@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-002-003.\n\nWhy the correct answer is right: The frequency modulation (FM) modulator varies the oscillator frequency. That frequency deviation carries the audio information.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"as no effect on the frequency of the oscillator\": If the modulator had no effect on oscillator frequency, the transmitter would not be producing frequency modulation at that point.\n- sourceIndex 2: \"alters the radio's output signal amplitude\": Changing output amplitude describes AM-type action, not the frequency variation used in FM generation.\n- sourceIndex 3: \"produces amplitude changes in the oscillator\": Amplitude changes at the oscillator are not the desired FM mechanism. The carrier frequency is intentionally shifted.",
+    "en": "Question B-003-002-003.\n\nWhy the correct answer is right: The frequency modulation (FM) modulator varies the oscillator frequency. That frequency deviation carries the audio information.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"as no effect on the frequency of the oscillator\": If the modulator had no effect on oscillator frequency, the transmitter would not be producing frequency modulation at that point.\n- sourceIndex 2: \"alters the radio's output signal amplitude\": Changing output amplitude describes amplitude modulation (AM)-type action, not the frequency variation used in FM generation.\n- sourceIndex 3: \"produces amplitude changes in the oscillator\": Amplitude changes at the oscillator are not the desired FM mechanism. The carrier frequency is intentionally shifted.",
     "fr": null
   },
   "citations": [

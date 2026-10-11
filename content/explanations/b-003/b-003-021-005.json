@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-021-005.\n\nWhy the correct answer is right: The conservative handheld practice is to keep the transmitting antenna separated from both your head and other people.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Pointed towards the station you are contacting\": A handheld antenna is not a safe optical pointer. Aiming it at the other station can still put it close to your head or bystanders.\n- sourceIndex 2: \"Pointed at the horizon\": Pointing at the horizon does not guarantee separation from people or sensitive tissue near the antenna.\n- sourceIndex 3: \"Pointed down to bounce the signal off the ground\": Ground-bounce aiming is not a handheld RF-safety method and can leave the antenna close to the body.",
+    "en": "Question B-003-021-005.\n\nWhy the correct answer is right: The conservative handheld practice is to keep the transmitting antenna separated from both your head and other people.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Pointed towards the station you are contacting\": A handheld antenna is not a safe optical pointer. Aiming it at the other station can still put it close to your head or bystanders.\n- sourceIndex 2: \"Pointed at the horizon\": Pointing at the horizon does not guarantee separation from people or sensitive tissue near the antenna.\n- sourceIndex 3: \"Pointed down to bounce the signal off the ground\": Ground-bounce aiming is not a handheld radio-frequency (RF) safety method and can leave the antenna close to the body.",
     "fr": null
   },
   "citations": [

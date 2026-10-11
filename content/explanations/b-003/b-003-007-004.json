@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-007-004.\n\nWhy the correct answer is right: The interface provides audio-frequency coupling so computer audio and transceiver audio can pass at suitable levels.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To provide radio frequency coupling between a computer and a transceiver\": The computer sound interface is not an RF coupling network between computer and antenna circuits.\n- sourceIndex 2: \"To amplify the digital signals to be sent by the transceiver\": Amplifying digital signals is not the basic role. The interface passes or converts audio-frequency signals.\n- sourceIndex 3: \"To demodulate the transmitted signal\": The transmitted signal is modulated rather than demodulated. Demodulation applies on the receive side.",
+    "en": "Question B-003-007-004.\n\nWhy the correct answer is right: The interface provides audio-frequency coupling so computer audio and transceiver audio can pass at suitable levels.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To provide radio frequency coupling between a computer and a transceiver\": The computer sound interface is not a radio-frequency (RF) coupling network between computer and antenna circuits.\n- sourceIndex 2: \"To amplify the digital signals to be sent by the transceiver\": Amplifying digital signals is not the basic role. The interface passes or converts audio-frequency signals.\n- sourceIndex 3: \"To demodulate the transmitted signal\": The transmitted signal is modulated rather than demodulated. Demodulation applies on the receive side.",
     "fr": null
   },
   "citations": [

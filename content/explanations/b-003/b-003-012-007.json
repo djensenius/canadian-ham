@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-012-007.\n\nWhy the correct answer is right: Overmodulation drives the SSB transmitter beyond its linear range, so the voice becomes distorted and unwanted products widen the occupied bandwidth.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It increases the range of your signal\": Any apparent loudness comes with distortion and splatter. It is not a clean range improvement.\n- sourceIndex 2: \"It occupies less bandwidth and has a poor high frequency response\": Overdrive makes the signal wider, not narrower.\n- sourceIndex 3: \"It has higher fidelity and an improved signal-to-noise ratio\": Overmodulation reduces fidelity by clipping or distorting peaks and can worsen interference to others.",
+    "en": "Question B-003-012-007.\n\nWhy the correct answer is right: Overmodulation drives the single sideband (SSB) transmitter beyond its linear range, so the voice becomes distorted and unwanted products widen the occupied bandwidth.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It increases the range of your signal\": Any apparent loudness comes with distortion and splatter. It is not a clean range improvement.\n- sourceIndex 2: \"It occupies less bandwidth and has a poor high frequency response\": Overdrive makes the signal wider, not narrower.\n- sourceIndex 3: \"It has higher fidelity and an improved signal-to-noise ratio\": Overmodulation reduces fidelity by clipping or distorting peaks and can worsen interference to others.",
     "fr": null
   },
   "citations": [

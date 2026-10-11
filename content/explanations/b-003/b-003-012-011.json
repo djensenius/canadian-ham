@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-012-011.\n\nWhy the correct answer is right: ALC reduces or limits drive on voice peaks so the SSB transmitter is not pushed into overdrive.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"reduces transmitter audio feedback\": Audio feedback is cured by speaker, microphone, and monitoring changes; ALC controls transmitter drive level.\n- sourceIndex 2: \"increases the occupied bandwidth\": Proper ALC prevents overdrive that would widen the signal. Increasing bandwidth would be the opposite of its purpose.\n- sourceIndex 3: \"reduces system noise\": ALC is not a receiver noise-reduction system. It manages transmit audio or RF drive peaks.",
+    "en": "Question B-003-012-011.\n\nWhy the correct answer is right: Automatic level control (ALC) reduces or limits drive on voice peaks so the single sideband (SSB) transmitter is not pushed into overdrive.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"reduces transmitter audio feedback\": Audio feedback is cured by speaker, microphone, and monitoring changes. ALC controls transmitter drive level.\n- sourceIndex 2: \"increases the occupied bandwidth\": Proper ALC prevents overdrive that would widen the signal. Increasing bandwidth would be the opposite of its purpose.\n- sourceIndex 3: \"reduces system noise\": ALC is not a receiver noise-reduction system. It manages transmit audio or radio-frequency (RF) drive peaks.",
     "fr": null
   },
   "citations": [

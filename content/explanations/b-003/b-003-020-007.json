@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-020-007.\n\nWhy the correct answer is right: A hard hat protects a ground helper from tools, hardware, or small parts dropped by someone working above on the tower.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"So you won't be hurt if the tower should accidentally fall\": A hard hat cannot make someone safe under a falling tower. The work area must be controlled so people are not in that danger zone.\n- sourceIndex 2: \"To keep RF energy away from your head during antenna testing\": A hard hat is mechanical head protection, not an RF shield for antenna testing.\n- sourceIndex 3: \"So someone passing by will know that work is being done on the tower and will stay away\": Site control and barriers warn bystanders. The hard hat's direct purpose is impact protection.",
+    "en": "Question B-003-020-007.\n\nWhy the correct answer is right: A hard hat protects a ground helper from tools, hardware, or small parts dropped by someone working above on the tower.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"So you won't be hurt if the tower should accidentally fall\": A hard hat cannot make someone safe under a falling tower. The work area must be controlled so people are not in that danger zone.\n- sourceIndex 2: \"To keep RF energy away from your head during antenna testing\": A hard hat is mechanical head protection, not an radio-frequency (RF) shield for antenna testing.\n- sourceIndex 3: \"So someone passing by will know that work is being done on the tower and will stay away\": Site control and barriers warn bystanders. The hard hat's direct purpose is impact protection.",
     "fr": null
   },
   "citations": [

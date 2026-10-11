@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-002-006.\n\nWhy the correct answer is right: The frequency multiplier deliberately selects and amplifies a useful harmonic of the oscillator signal.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Modulator\": The modulator varies the oscillator according to audio. It is not the harmonic-producing RF multiplier stage.\n- sourceIndex 2: \"Power amplifier\": The power amplifier raises RF output power and should not be relied on to create the desired harmonic.\n- sourceIndex 3: \"Speech amplifier\": The speech amplifier handles audio gain before modulation, not RF harmonic generation.",
+    "en": "Question B-003-002-006.\n\nWhy the correct answer is right: The frequency multiplier deliberately selects and amplifies a useful harmonic of the oscillator signal.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Modulator\": The modulator varies the oscillator according to audio. It is not the harmonic-producing radio-frequency (RF) multiplier stage.\n- sourceIndex 2: \"Power amplifier\": The power amplifier raises RF output power and should not be relied on to create the desired harmonic.\n- sourceIndex 3: \"Speech amplifier\": The speech amplifier handles audio gain before modulation, not RF harmonic generation.",
     "fr": null
   },
   "citations": [

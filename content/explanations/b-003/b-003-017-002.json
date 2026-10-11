@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-017-002.\n\nWhy the correct answer is right: A DC power supply can take 120 V AC mains input and provide regulated 12 V DC output for station equipment.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Low-pass filter\": A low-pass filter passes lower-frequency components and attenuates higher ones. It does not by itself transform and rectify AC mains into DC.\n- sourceIndex 2: \"Inverter\": An inverter usually converts DC to AC, which is the opposite direction from the 120 V AC to 12 V DC conversion asked here.\n- sourceIndex 3: \"Power conditioner\": A power conditioner may filter or protect an AC line, but it is not the device that supplies the radio with 12 V DC.",
+    "en": "Question B-003-017-002.\n\nWhy the correct answer is right: A direct-current (DC) power supply can take 120 V alternating-current (AC) mains input and provide regulated 12 V DC output for station equipment.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Low-pass filter\": A low-pass filter passes lower-frequency components and attenuates higher ones. It does not by itself transform and rectify AC mains into DC.\n- sourceIndex 2: \"Inverter\": An inverter usually converts DC to AC, which is the opposite direction from the 120 V AC to 12 V DC conversion asked here.\n- sourceIndex 3: \"Power conditioner\": A power conditioner may filter or protect an AC line, but it is not the device that supplies the radio with 12 V DC.",
     "fr": null
   },
   "citations": [

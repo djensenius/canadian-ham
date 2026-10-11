@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-017-004.\n\nWhy the correct answer is right: A linear power supply may be preferred when RF quietness is important because it usually has lower switching-noise risk than a switch-mode supply.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Reduced physical dimensions and weight\": Smaller size and lower weight are typical advantages of a switching supply, not a reason to choose a linear supply.\n- sourceIndex 2: \"Higher efficiency\": Linear supplies are generally less efficient because excess voltage is dissipated as heat. Switching supplies are usually chosen for higher efficiency.\n- sourceIndex 3: \"Better regulation for FM equipment\": FM operation does not make a linear supply inherently better regulated. Either supply type can regulate well if properly designed.",
+    "en": "Question B-003-017-004.\n\nWhy the correct answer is right: A linear power supply may be preferred when radio-frequency (RF) quietness is important because it usually has lower switching-noise risk than a switch-mode supply.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Reduced physical dimensions and weight\": Smaller size and lower weight are typical advantages of a switching supply, not a reason to choose a linear supply.\n- sourceIndex 2: \"Higher efficiency\": Linear supplies are generally less efficient because excess voltage is dissipated as heat. Switching supplies are usually chosen for higher efficiency.\n- sourceIndex 3: \"Better regulation for FM equipment\": Frequency modulation (FM) operation does not make a linear supply inherently better regulated. Either supply type can regulate well if properly designed.",
     "fr": null
   },
   "citations": [

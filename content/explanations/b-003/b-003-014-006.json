@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-014-006.\n\nWhy the correct answer is right: Proper speech processing raises average speech energy while controlling peaks, making SSB voice easier to understand in noise.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It reduces average transmitter power requirements\": Speech processing usually increases average transmitted talk power rather than reducing the power needed.\n- sourceIndex 2: \"It reduces unwanted noise pickup from the microphone\": Processing can also raise background noise if misused. Microphone placement and gain control address noise pickup.\n- sourceIndex 3: \"It improves voice frequency fidelity\": Processing trades natural fidelity for intelligibility and punch, so high fidelity is not its purpose.",
+    "en": "Question B-003-014-006.\n\nWhy the correct answer is right: Proper speech processing raises average speech energy while controlling peaks, making single sideband (SSB) voice easier to understand in noise.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"It reduces average transmitter power requirements\": Speech processing usually increases average transmitted talk power rather than reducing the power needed.\n- sourceIndex 2: \"It reduces unwanted noise pickup from the microphone\": Processing can also raise background noise if misused. Microphone placement and gain control address noise pickup.\n- sourceIndex 3: \"It improves voice frequency fidelity\": Processing trades natural fidelity for intelligibility and punch, so high fidelity is not its purpose.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-005-006.\n\nWhy the correct answer is right: The intermediate frequency (IF) amplifier supplies most of the receiver gain after the signal has been converted and filtered.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Boost the signal as required for the mixer\": Mixer drive is provided by the local oscillator. The IF amplifier comes after the mixer rather than boosting a signal for it.\n- sourceIndex 2: \"Increase the level of the recovered modulation\": Recovered modulation is audio, so increasing that level is the AF amplifier's job after detection.\n- sourceIndex 3: \"Provide sufficient gain to activate the limiter circuit\": A limiter circuit is an FM block and is not the SSB/CW IF amplifier's purpose.",
+    "en": "Question B-003-005-006.\n\nWhy the correct answer is right: The intermediate frequency (IF) amplifier supplies most of the receiver gain after the signal has been converted and filtered.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Boost the signal as required for the mixer\": Mixer drive is provided by the local oscillator. The IF amplifier comes after the mixer rather than boosting a signal for it.\n- sourceIndex 2: \"Increase the level of the recovered modulation\": Recovered modulation is audio, so increasing that level is the audio-frequency (AF) amplifier's job after detection.\n- sourceIndex 3: \"Provide sufficient gain to activate the limiter circuit\": A limiter circuit is a frequency-modulation (FM) block. It is not the purpose of the intermediate-frequency (IF) amplifier used for single-sideband (SSB) and continuous-wave (CW) reception.",
     "fr": null
   },
   "citations": [

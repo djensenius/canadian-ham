@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-012-005.\n\nWhy the correct answer is right: SSB speech is carried by amplitude variations in the RF envelope, so the power amplifier must be linear to preserve the voice waveform intelligibly.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Hum and noise are reduced\": Linearity prevents waveform distortion. It does not act as a hum or noise filter.\n- sourceIndex 2: \"Power demand on the power supply is regulated\": Supply regulation is a power-system function, not the reason an SSB RF amplifier must be linear.\n- sourceIndex 3: \"Power output variations due to voice peaks are reduced\": SSB needs those output variations to follow the voice peaks. A non-linear stage would flatten or distort them.",
+    "en": "Question B-003-012-005.\n\nWhy the correct answer is right: Single sideband (SSB) speech is carried by amplitude variations in the radio-frequency (RF) envelope, so the power amplifier must be linear to preserve the voice waveform intelligibly.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Hum and noise are reduced\": Linearity prevents waveform distortion. It does not act as a hum or noise filter.\n- sourceIndex 2: \"Power demand on the power supply is regulated\": Supply regulation is a power-system function, not the reason an SSB RF amplifier must be linear.\n- sourceIndex 3: \"Power output variations due to voice peaks are reduced\": SSB needs those output variations to follow the voice peaks. A non-linear stage would flatten or distort them.",
     "fr": null
   },
   "citations": [

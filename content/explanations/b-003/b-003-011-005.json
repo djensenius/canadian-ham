@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-011-005.\n\nWhy the correct answer is right: In amplitude modulation, the RF envelope rises and falls with the audio, so the instantaneous amplitude varies as the voice or tone varies.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Frequency modulation\": FM represents audio as frequency deviation. Its RF amplitude is ideally constant.\n- sourceIndex 2: \"Pulse modulation\": Pulse methods vary pulse timing, width, or presence rather than the sinusoidal RF envelope described here.\n- sourceIndex 3: \"Frequency shift keying\": FSK switches between marked frequencies for data and does not make the RF envelope follow the audio waveform.",
+    "en": "Question B-003-011-005.\n\nWhy the correct answer is right: In amplitude modulation, the radio-frequency (RF) envelope rises and falls with the audio, so the instantaneous amplitude varies as the voice or tone varies.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Frequency modulation\": Frequency modulation (FM) represents audio as frequency deviation. Its RF amplitude is ideally constant.\n- sourceIndex 2: \"Pulse modulation\": Pulse methods vary pulse timing, width, or presence rather than the sinusoidal RF envelope described here.\n- sourceIndex 3: \"Frequency shift keying\": Frequency-shift keying (FSK) switches between marked frequencies for data and does not make the RF envelope follow the audio waveform.",
     "fr": null
   },
   "citations": [

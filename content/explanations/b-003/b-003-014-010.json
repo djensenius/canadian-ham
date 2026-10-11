@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-014-010.\n\nWhy the correct answer is right: Transmit/receive switching connects the shared antenna to the transmitter during transmit and to the receiver during receive.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To change antennas for operation on other frequencies\": Band or antenna selection is an antenna switch function, not the basic T/R switch job.\n- sourceIndex 2: \"To prevent RF currents entering the transmitter circuits\": During transmit, RF current must leave the transmitter. The protection concern is keeping transmit power out of the receiver.\n- sourceIndex 3: \"To allow more than one transmitter to be used\": Combining or selecting multiple transmitters requires other switching and interlock arrangements, not ordinary T/R switching.",
+    "en": "Question B-003-014-010.\n\nWhy the correct answer is right: Transmit/receive switching connects the shared antenna to the transmitter during transmit and to the receiver during receive.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To change antennas for operation on other frequencies\": Band or antenna selection is an antenna switch function, not the basic T/R switch job.\n- sourceIndex 2: \"To prevent RF currents entering the transmitter circuits\": During transmit, radio-frequency (RF) current must leave the transmitter. The protection concern is keeping transmit power out of the receiver.\n- sourceIndex 3: \"To allow more than one transmitter to be used\": Combining or selecting multiple transmitters requires other switching and interlock arrangements, not ordinary T/R switching.",
     "fr": null
   },
   "citations": [

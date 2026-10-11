@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-003-001.\n\nWhy the correct answer is right: The radio frequency (RF) amplifier is the receiver front end because it is the first active stage handling the incoming signal from the antenna path.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Local oscillator\": The local oscillator helps tune and mix, but it is not the front-end signal amplifier connected to the incoming RF path.\n- sourceIndex 2: \"AF amplifier\": The AF amplifier is late in the receiver after detection, so it is not the front end.\n- sourceIndex 3: \"Limiter\": A limiter is an FM IF/detector-chain block, not the first RF stage.",
+    "en": "Question B-003-003-001.\n\nWhy the correct answer is right: The radio frequency (RF) amplifier is the receiver front end because it is the first active stage handling the incoming signal from the antenna path.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Local oscillator\": The local oscillator helps tune and mix, but it is not the front-end signal amplifier connected to the incoming RF path.\n- sourceIndex 2: \"AF amplifier\": The audio-frequency (AF) amplifier is late in the receiver after detection, so it is not the front end.\n- sourceIndex 3: \"Limiter\": A limiter is a frequency-modulation (FM) intermediate-frequency (IF) and detector-chain block, not the first RF stage.",
     "fr": null
   },
   "citations": [
