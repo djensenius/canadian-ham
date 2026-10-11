@@ -163,6 +163,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         scrollUntilHittable(review, in: app, maxSwipes: 8)
         XCTAssertTrue(review.isHittable, "Review weakest characters should be hittable before tapping")
         review.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        XCTAssertTrue(app.staticTexts["Weak-character review"].firstMatch.waitForExistence(timeout: 5), "Review weakest characters should open the review session title")
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Exercise 1 of")).firstMatch.waitForExistence(timeout: 5), "Review weakest characters should open an exercise session")
 
         tapCompactBack(in: app)
@@ -381,6 +382,29 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let summary = app.staticTexts["morse-sending-results-summary"].firstMatch
         XCTAssertTrue(summary.waitForExistence(timeout: 5))
         XCTAssertTrue(summary.label.contains("FAIL"), "An unanswered one-second sending check should fail, got: \(summary.label)")
+    }
+
+    func testMorseSendingPracticeBackFromRunningExamStopsDeadlineGrading() throws {
+        XCUIDevice.shared.appearance = .light
+        let app = launchApp(arguments: [
+            "-CanadianHamInitialScreen", "morse",
+            "-CanadianHamMorseSendingExamSeconds", "2"
+        ])
+        defer { app.terminate() }
+
+        openSendingPractice(in: app)
+        openSendingExamStyleCheck(in: app)
+        let start = app.buttons["morse-sending-start-exam-button"].firstMatch
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        start.tap()
+        XCTAssertTrue(app.staticTexts["morse-sending-exam-text"].firstMatch.waitForExistence(timeout: 5))
+        tapCompactBack(in: app)
+
+        XCTAssertTrue(app.staticTexts["Sending practice"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.descendants(matching: .any)["morse-sending-results-heading"].firstMatch.waitForExistence(timeout: 4), "Back from the pushed exam screen should cancel the running deadline instead of auto-grading later")
+        openSendingExamStyleCheck(in: app)
+        XCTAssertTrue(app.buttons["morse-sending-start-exam-button"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["morse-sending-exam-text"].firstMatch.exists, "Back from a running exam should clear the stale passage before re-entry")
     }
 
     func testMorseSendingPracticeGradesHeldStraightKeyBeforeScoring() throws {
@@ -1775,6 +1799,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         positionElementInMiddleVisibleBand(fixedTimingNote, in: app, context: "\(appearance.rawValue) fixed timing note before lower Morse audit")
         assertFullyVisibleInMiddleBand(fixedTimingNote, in: app, context: "\(appearance.rawValue) fixed timing note before lower Morse audit")
         assertPartiallyVisibleBelowNavigationBar(settings, in: app, context: "\(appearance.rawValue) Morse settings before lower Morse audit")
+        assertNoScrollableContentIntersectsProtectedArea(in: app, containing: fixedTimingNote, context: "\(appearance.rawValue) morse home lower content before audit")
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home lower content")
         openMorseCourse(in: app)
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
@@ -2380,8 +2405,12 @@ final class CanadianHamPracticeUITests: XCTestCase {
             for _ in 0..<40 {
                 let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
                 if preserveFullyVisible {
-                    if isFullyVisible(target, in: app, requiresHittable: false) { return }
+                    if offenders.isEmpty, isFullyVisible(target, in: app, requiresHittable: false) {
+                        assertNoScrollableContentIntersectsProtectedArea(in: app, scrollView: scrollView, context: context, file: file, line: line)
+                        return
+                    }
                 } else if offenders.isEmpty, isPartiallyVisibleBelowNavigationBar(target, in: app) {
+                    assertNoScrollableContentIntersectsProtectedArea(in: app, scrollView: scrollView, context: context, file: file, line: line)
                     return
                 }
                 let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
@@ -2401,23 +2430,20 @@ final class CanadianHamPracticeUITests: XCTestCase {
                 }
                 waitBriefly()
             }
+            assertNoScrollableContentIntersectsProtectedArea(in: app, scrollView: scrollView, context: context, file: file, line: line)
             if preserveFullyVisible {
                 assertFullyVisibleBelowNavigationBar(target, in: app, context: context, file: file, line: line)
             } else {
-                let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
-                XCTAssertTrue(
-                    offenders.isEmpty,
-                    "\(context): expected no scrollable text or buttons to intersect the protected navigation/status area; offenders: \(offenders.map(\.description).joined(separator: "; "))",
-                    file: file,
-                    line: line
-                )
                 assertPartiallyVisibleBelowNavigationBar(target, in: app, context: context, file: file, line: line)
             }
             return
         }
         for _ in 0..<60 {
             let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
-            if offenders.isEmpty { return }
+            if offenders.isEmpty {
+                assertNoScrollableContentIntersectsProtectedArea(in: app, scrollView: scrollView, context: context, file: file, line: line)
+                return
+            }
             let hasOffenderClippedAboveWindow = offenders.contains(where: \.isClippedAboveWindow)
             if hasOffenderClippedAboveWindow {
                 let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
@@ -2430,6 +2456,31 @@ final class CanadianHamPracticeUITests: XCTestCase {
             }
             waitBriefly()
         }
+        assertNoScrollableContentIntersectsProtectedArea(in: app, scrollView: scrollView, context: context, file: file, line: line)
+    }
+
+    private func assertNoScrollableContentIntersectsProtectedArea(
+        in app: XCUIApplication,
+        containing target: XCUIElement,
+        context: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let scrollView = scrollView(containing: target, in: app)
+        guard scrollView.waitForExistence(timeout: 1) else {
+            XCTFail("\(context): expected a scroll view before checking protected navigation/status area", file: file, line: line)
+            return
+        }
+        assertNoScrollableContentIntersectsProtectedArea(in: app, scrollView: scrollView, context: context, file: file, line: line)
+    }
+
+    private func assertNoScrollableContentIntersectsProtectedArea(
+        in app: XCUIApplication,
+        scrollView: XCUIElement,
+        context: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
         let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
         XCTAssertTrue(
             offenders.isEmpty,

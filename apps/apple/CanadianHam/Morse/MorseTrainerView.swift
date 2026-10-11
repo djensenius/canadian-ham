@@ -593,6 +593,8 @@ struct MorseSettingsSection: View {
                     .foregroundStyle(DesignTokens.Colors.ink)
                     .accessibilityIdentifier("morse-settings-fixed-timing-description")
                     .padding(DesignTokens.Spacing.sm)
+                    .background(DesignTokens.Colors.paper, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
             }
             Slider(value: binding(\.volume), in: 0...1, step: 0.05) {
                 Text("Trainer volume") // l10n: localized

@@ -153,11 +153,6 @@ struct MorseSendingPracticeView: View {
                                 .font(DesignTokens.FontScale.body.weight(.bold))
                         }
                         .accessibilityIdentifier("morse-sending-debug-fill-button")
-                        Button(action: beginHeldStraightKeyForUITest) {
-                            Text(verbatim: "Hold straight key for sending test") // l10n: verbatim DEBUG-only UI test hook
-                                .font(DesignTokens.FontScale.body.weight(.bold))
-                        }
-                        .accessibilityIdentifier("morse-sending-debug-hold-straight-button")
                         Button(action: gradeHeldStraightKeyForUITest) {
                             Text(verbatim: "Grade held straight key for sending test") // l10n: verbatim DEBUG-only UI test hook
                                 .font(DesignTokens.FontScale.body.weight(.bold))
@@ -212,6 +207,11 @@ struct MorseSendingPracticeView: View {
         .onAppear { keyFocusActive = true }
         .onKeyPress(phases: [.down, .up]) { press in
             handleKeyPress(press)
+        }
+        .onDisappear {
+            if examRunning {
+                cancelRunningExam(clearExam: true)
+            }
         }
     }
 
@@ -436,9 +436,7 @@ struct MorseSendingPracticeView: View {
         guard !examText.isEmpty else { return }
         stopAllKeying(finalizeStraight: true)
         finalizeCharacter()
-        examRunning = false
-        examDeadline = nil
-        examTimerTask?.cancel()
+        cancelRunningExam(clearExam: false)
         do {
             let score = try scoreMorseSending(expected: examText, sent: decodedText, completedWithinTime: completedWithinTime)
             presentedResult = MorseSendingResult(score: score, decodedText: decodedText)
@@ -455,12 +453,18 @@ struct MorseSendingPracticeView: View {
         statusMessage = ""
         errorMessage = nil
         if clearExam {
-            examTimerTask?.cancel()
-            examText = ""
-            examRemaining = debugExamDurationSeconds
-            examDeadline = nil
-            examRunning = false
+            cancelRunningExam(clearExam: true)
         }
+    }
+
+    private func cancelRunningExam(clearExam: Bool) {
+        examTimerTask?.cancel()
+        if clearExam {
+            examText = ""
+        }
+        examRemaining = debugExamDurationSeconds
+        examDeadline = nil
+        examRunning = false
     }
 
     private func stopAllKeying(finalizeStraight: Bool) {
@@ -489,14 +493,6 @@ struct MorseSendingPracticeView: View {
         statusMessage = "Decoded exam text filled for UI testing."
     }
 
-    private func beginHeldStraightKeyForUITest() {
-        beginStraightKey()
-        if straightKeyDownAt != nil {
-            straightKeyDownAt = Date().addingTimeInterval(-profile.dotSeconds)
-        }
-        statusMessage = "Straight key held for UI testing."
-    }
-
     private func gradeHeldStraightKeyForUITest() {
         pendingSamples = []
         decodedText = ""
@@ -515,7 +511,6 @@ struct MorseSendingPracticeView: View {
     }
 #else
     private func fillExamTextForUITest() {}
-    private func beginHeldStraightKeyForUITest() {}
     private func gradeHeldStraightKeyForUITest() {}
 #endif
 }

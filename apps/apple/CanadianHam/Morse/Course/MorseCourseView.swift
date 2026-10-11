@@ -83,8 +83,9 @@ struct MorseCourseView: View {
                 if let course, let progress {
                     courseStats(course: course, progress: progress)
                     Button {
-                        prepareReview(course: course, progress: progress)
-                        showingReviewSession = true
+                        if prepareReview(course: course, progress: progress) {
+                            showingReviewSession = true
+                        }
                     } label: {
                         AccessibleSecondaryButtonLabel(title: "Review weakest characters")
                     } // l10n: localized
@@ -464,14 +465,18 @@ struct MorseCourseView: View {
         refocusSession()
     }
 
-    private func prepareReview(course: MorseCourse, progress: MorseCourseProgressExport) {
+    private func prepareReview(course: MorseCourse, progress: MorseCourseProgressExport) -> Bool {
         let learned = learnedMorseCharacters(course: course, progress: progress)
         let weakest = selectWeakestMorseCharacters(stats: progress.characterStats, learnedCharacters: learned, limit: 5)
         let reviewCharacters = weakest.isEmpty ? Array(learned.prefix(5)) : weakest
-        guard !reviewCharacters.isEmpty else { return }
+        guard !reviewCharacters.isEmpty else {
+            session = nil
+            return false
+        }
         resetSessionFeedback()
         session = MorseCourseSession(mode: .review, exercises: reviewCharacters.map { .typeCharacter($0) })
         refocusSession()
+        return true
     }
 
     private func play(_ text: String) {
