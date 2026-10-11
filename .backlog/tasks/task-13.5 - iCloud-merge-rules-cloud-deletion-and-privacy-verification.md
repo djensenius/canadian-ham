@@ -97,3 +97,9 @@ Review r5 (APPROVE WITH NOTES): coordinator fixed L1 (deleteICloudProgress clear
 
 AC3's owner parts (device smoke tests: airplane mode, no account, account switch; Reset zone deletion verified on device; the keep-or-remove decision after an account switch; App Store privacy re-check) moved to task-34, which covers signed-device iCloud checks. The code side of 'Reset covers cloud data' is implemented and tested here (resetAllData(client:), pending flag persisted, retry and relaunch tests). iCloud stays off by default (DebugCloudKit only) until task-34 is done.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+iCloud sync merge rules, cloud deletion and privacy verification (gated: DebugCloudKit only; default and Release builds stay offline). Per-device rows where each device stores only its own contribution, with deterministic read-time combining (sum across devices, max within a device, best/union/latest rules), so syncs are order-independent and idempotent and never double-count; no device deletes another's rows. Export carries optional syncDeviceRows (validated, bank-filtered, ignored if inconsistent) so export, import and sync don't double count; web treats them as opaque and drops them on edit or bank switch. Lesson progress, lesson quiz attempts and Morse course progress moved into syncable entities with lossless one-time migrations (corrupt legacy Morse JSON never blocks opening). Account change, sign-out or disable tears down to local-only with surfaced errors; Delete iCloud Progress UI; Reset deletes the zone with a persisted retry. Gate check hardened (any value type, UIBackgroundModes exact). Five review rounds; targeted ProgressStoreTests pass in default and DebugCloudKit on iOS and macOS. Owner device and privacy checks continue in task-34.
+<!-- SECTION:FINAL_SUMMARY:END -->
