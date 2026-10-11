@@ -34,7 +34,12 @@ Build the shared figure pipeline and prove it with the Ohm's law set. Figures ar
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Add a small lesson figure Markdown directive, keep Illustration brief sections parsed for authors but render them as hidden/no-op learner output on web and Apple, and add regression tests.\n2. Add original SVG sources for the L-005-02 Ohm's law triangle, power triangle, and combined formula wheel under content/figures/, then reference them from the lesson with alt text and the wheel text equivalent.\n3. Add web rendering that inlines referenced SVGs using currentColor/design-token styling plus details text equivalents.\n4. Add an Apple asset-generation/check pipeline that copies the SVGs into a generated vector asset catalog, wire the catalog into the iOS/macOS target, and render lesson figures with template tint plus optional disclosure text/enlarged view.\n5. Document the pipeline and add a CI/package check that validates figure references, alt text, SVG ids, and generated Apple assets.\n6. Run targeted checks, regenerate the Apple project twice, then run the required final web, content, localization, and iOS/macOS Apple suites.
+1. Add a small lesson figure Markdown directive, keep Illustration brief sections parsed for authors but render them as hidden/no-op learner output on web and Apple, and add regression tests.
+2. Add original SVG sources for the L-005-02 Ohm's law triangle, power triangle, and combined formula wheel under content/figures/, then reference them from the lesson with alt text and the wheel text equivalent.
+3. Add web rendering that inlines referenced SVGs using currentColor/design-token styling plus details text equivalents.
+4. Add an Apple asset-generation/check pipeline that copies the SVGs into a generated vector asset catalog, wire the catalog into the iOS/macOS target, and render lesson figures with template tint plus optional disclosure text/enlarged view.
+5. Document the pipeline and add a CI/package check that validates figure references, alt text, SVG ids, and generated Apple assets.
+6. Run targeted checks, regenerate the Apple project twice, then run the required final web, content, localization, and iOS/macOS Apple suites.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
