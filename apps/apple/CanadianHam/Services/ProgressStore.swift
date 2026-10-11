@@ -530,7 +530,7 @@ struct ICloudProgressDeletionClient {
         self.deletePrivateDatabaseProgressZones = deletePrivateDatabaseProgressZones
     }
 
-    static let noop = ICloudProgressDeletionClient(deletePrivateDatabaseProgressZones: {})
+    static var noop: ICloudProgressDeletionClient { ICloudProgressDeletionClient(deletePrivateDatabaseProgressZones: {}) }
 }
 
 #if ICLOUD_SYNC
@@ -1013,12 +1013,12 @@ final class ProgressStoreService: ObservableObject {
 
     func questionProgressRecords() throws -> [QuestionProgressRecord] {
         let descriptor = FetchDescriptor<QuestionProgressEntity>(sortBy: [SortDescriptor(\.bankId), SortDescriptor(\.questionId), SortDescriptor(\.lastAttemptedAt)])
-        return try ProgressSyncMerge.deduplicateQuestionProgress(try context.fetch(descriptor).map { try questionProgressRecord(from: $0) })
+        return ProgressSyncMerge.deduplicateQuestionProgress(try context.fetch(descriptor).map { try questionProgressRecord(from: $0) })
     }
 
     func examAttempts() throws -> [StoredExamAttempt] {
         let descriptor = FetchDescriptor<ExamAttemptEntity>(sortBy: [SortDescriptor(\.bankId), SortDescriptor(\.submittedAt), SortDescriptor(\.id)])
-        return try ProgressSyncMerge.deduplicateExamAttempts(try context.fetch(descriptor).map { try decoder.decode(StoredExamAttempt.self, from: $0.payloadData) })
+        return ProgressSyncMerge.deduplicateExamAttempts(try context.fetch(descriptor).map { try decoder.decode(StoredExamAttempt.self, from: $0.payloadData) })
     }
 
     func latestExamAttempt() throws -> StoredExamAttempt? {
@@ -1034,7 +1034,7 @@ final class ProgressStoreService: ObservableObject {
 
     func lessonQuizAttempts() throws -> [LessonQuizAttempt] {
         let descriptor = FetchDescriptor<LessonQuizAttemptEntity>(sortBy: [SortDescriptor(\.submittedAt), SortDescriptor(\.id)])
-        return try ProgressSyncMerge.deduplicateLessonQuizAttempts(try context.fetch(descriptor).map { try decoder.decode(LessonQuizAttempt.self, from: $0.payloadData) })
+        return ProgressSyncMerge.deduplicateLessonQuizAttempts(try context.fetch(descriptor).map { try decoder.decode(LessonQuizAttempt.self, from: $0.payloadData) })
     }
 
     func saveLessonProgress(_ record: LessonProgressRecord) throws {

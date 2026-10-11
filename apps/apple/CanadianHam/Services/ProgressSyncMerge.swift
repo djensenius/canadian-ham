@@ -15,10 +15,10 @@ enum ProgressSyncMerge {
 
     static func mergeQuestionProgress(_ records: [QuestionProgressRecord]) -> QuestionProgressRecord {
         precondition(!records.isEmpty)
-        let ordered = records.sorted(questionProgressTieBreak)
+        let ordered = records.sorted(by: questionProgressTieBreak)
         let latest = ordered.last!
-        let recentResults = ordered.flatMap(\.recentResults).suffix(5)
-        let notes = ordered.compactMap(\.notes).last
+        let recentResults = ordered.flatMap { $0.recentResults }.suffix(5)
+        let notes = ordered.compactMap { $0.notes }.last
         return QuestionProgressRecord(
             questionId: latest.questionId,
             bankId: latest.bankId,
@@ -35,8 +35,8 @@ enum ProgressSyncMerge {
     static func deduplicateExamAttempts(_ attempts: [StoredExamAttempt]) -> [StoredExamAttempt] {
         let byIdentity = Dictionary(grouping: attempts, by: { "\($0.bankId)\u{0}\($0.id)" })
             .values
-            .map { group in group.sorted(examAttemptTieBreak).last! }
-            .sorted(examAttemptTieBreak)
+            .map { group in group.sorted(by: examAttemptTieBreak).last! }
+            .sorted(by: examAttemptTieBreak)
         var usedSubmittedAtByBank: [String: Set<String>] = [:]
         return byIdentity.map { attempt in
             var used = usedSubmittedAtByBank[attempt.bankId, default: []]
