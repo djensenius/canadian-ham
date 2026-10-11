@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-008-003-006.\n\nWhy the correct answer is right: If the keyed carrier rises and falls too sharply, the waveform has wide side energy. Distant receivers hear that broad energy as key clicks.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"power supply hum modulating the carrier\": Power-supply hum modulates the carrier at low audio rates; it is not the broad click caused by abrupt RF envelope edges.\n- sourceIndex 2: \"sparks emitting RF from the key contacts\": Sparks at contacts can make local noise, but distant key clicks are primarily transmitted side energy from the carrier envelope shape.\n- sourceIndex 3: \"changes in oscillator frequency on keying\": Oscillator frequency changes during keying produce chirp, which is different from clicks caused by fast rise and decay times.",
+    "en": "Question B-008-003-006.\n\nWhy the correct answer is right: If the keyed carrier rises and falls too sharply, the waveform spreads energy to the sides of the signal. Distant receivers hear that broad energy as key clicks.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"power supply hum modulating the carrier\": Power-supply hum modulates the carrier at low audio rates; it is not the broad click caused by abrupt RF envelope edges.\n- sourceIndex 2: \"sparks emitting RF from the key contacts\": Sparks at contacts can make local noise, but distant key clicks are primarily transmitted side energy from the carrier envelope shape.\n- sourceIndex 3: \"changes in oscillator frequency on keying\": Oscillator frequency changes during keying produce chirp, which is different from clicks caused by fast rise and decay times.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-008-003-001.\n\nWhy the correct answer is right: Intermodulation is the creation of new frequency components when signals pass through a non-linear device.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Phase distortion\": Phase distortion changes timing relationships in a signal; it is not the name for new sum-and-difference frequency products.\n- sourceIndex 2: \"Linear distortion\": Linear distortion can change amplitude or phase response without creating the new components associated with non-linearity.\n- sourceIndex 3: \"Aliasing\": Aliasing is a sampling problem where frequencies fold in sampled systems, not the RF mixing process described here.",
+    "en": "Question B-008-003-001.\n\nWhy the correct answer is right: Intermodulation is the creation of new frequency components when signals pass through a non-linear device. Non-linear means the output is not a clean scaled copy of the input.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Phase distortion\": Phase distortion changes timing relationships in a signal; it is not the name for new sum-and-difference frequency products.\n- sourceIndex 2: \"Linear distortion\": Linear distortion can change amplitude or phase response without creating the new components associated with non-linearity.\n- sourceIndex 3: \"Aliasing\": Aliasing is a sampling problem where frequencies fold in sampled systems, not the RF mixing process described here.",
     "fr": null
   },
   "citations": [

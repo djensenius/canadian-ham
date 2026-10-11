@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-008-002-011.\n\nWhy the correct answer is right: An off-centre-fed unbalanced antenna can put RF current on the outside of the feedline. A common-mode choke reduces that current and the RF coupled into nearby amplified audio equipment.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A low-pass filter\": A low-pass filter reduces high-frequency transmitter harmonics, but the symptom points to common-mode RF from the antenna system entering audio equipment.\n- sourceIndex 2: \"A surge suppressor\": A surge suppressor handles transient voltage events, not steady RF current on the transmission line during SSB operation.\n- sourceIndex 3: \"An antenna tuner\": An antenna tuner may improve the transmitter load, but it does not directly choke common-mode current on the feedline.",
+    "en": "Question B-008-002-011.\n\nWhy the correct answer is right: An off-centre-fed (OCF) unbalanced antenna can put RF current on the outside of the feedline. A common-mode choke reduces that current and the RF coupled into nearby amplified audio equipment.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A low-pass filter\": A low-pass filter reduces high-frequency transmitter harmonics, but the symptom points to common-mode RF from the antenna system entering audio equipment.\n- sourceIndex 2: \"A surge suppressor\": A surge suppressor handles transient voltage events, not steady RF current on the transmission line during SSB operation.\n- sourceIndex 3: \"An antenna tuner\": An antenna tuner may improve the transmitter load, but it does not directly choke common-mode current on the feedline.",
     "fr": null
   },
   "citations": [
