@@ -1,11 +1,11 @@
 ---
 id: TASK-37
 title: Language follows the system; EN/FR switch only in Settings
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:54'
-updated_date: '2026-10-11 23:11'
+updated_date: '2026-10-11 23:18'
 labels:
   - apple
   - web
@@ -32,10 +32,7 @@ Owner feedback 2026-10-10: the English/French switch is too prominent. By defaul
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-1. Reopen task-37 and address review findings H1/H2/M1/M2 plus coordinator-approved lows within existing scope.
-2. Implement Apple migration to map old stored en defaults to system once, wire iOS/iPadOS/macOS Settings language to AppleLanguages for next-launch interface changes, and remove SwiftUI locale overrides.
-3. Tighten Apple import validation/null handling, restore weakened UI assertions, add required Apple/web tests and small cleanup for approved lows.
-4. Run targeted web/package/schema/l10n/text-source/Apple unit and UI checks, then re-check ACs with evidence and move the task back to Done.
+1. Fix Apple launch adoption so app-owned AppleLanguages is only written on explicit app actions while system-level per-app changes are adopted into stored preferences using injected defaults for tests.\n2. Isolate UI/unit tests from real AppleLanguages defaults, add reset teardown for French UI flow, and cover French-to-system immediate question switching plus hidden restart note.\n3. Clean web dead language leftovers, restore localization catalogue ordering, document DebugCloudKit/legacy-French notes, and run targeted validation before finalizing task-37.
 <!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
@@ -65,6 +62,8 @@ Review r1 reopened task-37. Coordinator decisions recorded: H1 maps old Apple st
 Review-fix implementation complete in commits f36e0c61 and bd032674. Apple: added one-time legacy stored-English migration to system behind a UserDefaults marker, preserved stored French, prevented remapping after a later explicit English choice, writes/removes AppleLanguages for iOS/iPadOS/macOS interface language on next launch, removed SwiftUI locale overrides, added restart notes in iOS/macOS Settings, tightened preferences.language import validation including explicit null, restored tvOS automatic Next question focus assertion, removed dead TVEvidenceFocus.language, and added Apple migration/import/settings/UI tests. Web: resolves system to the first supported preferred locale, mirrors explicit language preferences to localStorage to avoid load flash, keeps system clearing the mirror, removed dead language toggle strings/CSS, uses the current interface language for file-read errors, and added language import/round-trip tests. Notes: Apple question text switches immediately; Apple interface/VoiceOver/menu/window localization follows AppleLanguages on next launch; web still switches immediately. tvOS/visionOS remain system-only except debug launch arguments. Older exports without preferences.language import as system, matching theme. Full Apple suites remain deferred to merge per policy.
 
 Validation passed in this fix round: git diff --check; pnpm typecheck; pnpm test; pnpm --filter @canadian-ham/web exec vitest run src/lib/languagePreference.test.ts src/lib/progressStore.test.ts src/App.test.tsx (3 files / 97 tests); pnpm check:schemas; node scripts/check-apple-text-sources.ts; pnpm check:apple-l10n; targeted iOS unit xbuild for LocalizationCatalogTests/testLanguagePreferenceResolvesSystemAndOverrides plus ProgressStoreTests language migration/import/export tests (8 tests); targeted macOS unit xbuild for the same language/import/export tests plus NativeSettings language binding (9 tests); targeted iOS UI xbuild for French system language/questions, Settings language path/restart note/French feedback title, picker absence, regular-width picker absence, and changed navigation test (5 tests); targeted tvOS UI xbuild for practice language/focus/advance (1 test). VisionOS targeted UI rerun was attempted twice but timed out waiting for the xbuild lock before execution; the branch still compiled visionOS during pnpm check:apple-l10n.
+
+Review r2 reopened task-37. Addressing N1-N6 plus L4/L6/L8 with targeted tests only per policy; full suites remain deferred to merge.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
