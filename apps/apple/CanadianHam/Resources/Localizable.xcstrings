@@ -4976,7 +4976,6 @@
       }
     },
     "iCloud sync status could not be updated." : {
-      "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
