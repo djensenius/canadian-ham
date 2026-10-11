@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-001-001.\n\nWhy the correct answer is right: Two nearby VHF transceivers normally communicate over a direct lower-atmosphere path. Antenna height, terrain, and obstructions decide whether that line-of-sight path has enough clearance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Ducting\": A duct is a special weather-related enhancement, not the ordinary explanation for close VHF stations.\n- sourceIndex 2: \"Ionospheric\": The ionosphere is the usual long-range HF mechanism; nearby VHF contacts do not normally need an ionospheric return.\n- sourceIndex 3: \"Auroral\": Aurora is a disturbed high-latitude propagation mode with characteristic distortion, not routine local VHF coverage.",
+    "en": "Question B-007-001-001.\n\nWhy the correct answer is right: Two nearby very high frequency (VHF) transceivers normally communicate over a direct lower-atmosphere path. Antenna height, terrain, and obstructions decide whether that line-of-sight path has enough clearance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Ducting\": A duct is a special weather-related enhancement, not the ordinary explanation for close VHF stations.\n- sourceIndex 2: \"Ionospheric\": The ionosphere is the usual long-range HF mechanism. Nearby VHF contacts do not normally need an ionospheric return.\n- sourceIndex 3: \"Auroral\": Aurora is a disturbed high-latitude propagation mode with characteristic distortion, not routine local VHF coverage.",
     "fr": null
   },
   "citations": [
