@@ -67,13 +67,8 @@ final class CanadianHamVisionUITests: XCTestCase {
         app.launch()
         defer { app.terminate() }
 
-        XCTAssertTrue(PlatformAuditScreen.practice.waitElement(in: app).waitForExistence(timeout: 15), "Expected fixed practice question")
-
+        XCTAssertTrue(app.staticTexts[Self.fixedFrenchQuestionText].firstMatch.waitForExistence(timeout: 15), "Expected fixed practice question in configured French language")
         XCTAssertFalse(app.segmentedControls["question-language-picker"].firstMatch.exists, "visionOS practice should not show a language picker")
-        XCTAssertTrue(
-            app.staticTexts[Self.fixedFrenchQuestionText].firstMatch.waitForExistence(timeout: 5),
-            "Fixed question should use the configured French language"
-        )
 
         answerFirstVisibleQuestion(in: app)
         let feedback = app.descendants(matching: .any)["answer-feedback"].firstMatch

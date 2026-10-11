@@ -92,13 +92,8 @@ final class CanadianHamTVUITests: XCTestCase {
         app.launch()
         defer { app.terminate() }
 
-        XCTAssertTrue(PlatformAuditScreen.practice.waitElement(in: app).waitForExistence(timeout: 15), "Expected fixed practice question")
-
+        XCTAssertTrue(app.staticTexts[Self.fixedFrenchQuestionText].firstMatch.waitForExistence(timeout: 15), "Expected fixed practice question in configured French language")
         XCTAssertFalse(app.buttons["question-language-fr-button"].firstMatch.exists, "tvOS practice should not show a language picker")
-        XCTAssertTrue(
-            app.staticTexts[Self.fixedFrenchQuestionText].firstMatch.waitForExistence(timeout: 5),
-            "Fixed question should use the configured French language"
-        )
 
         let remote = XCUIRemote.shared
         let firstAnswer = app.descendants(matching: .any)["answer-A-button"].firstMatch
