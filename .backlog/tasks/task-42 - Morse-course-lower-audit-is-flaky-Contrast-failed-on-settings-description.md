@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-11 18:37'
-updated_date: '2026-10-11 22:31'
+updated_date: '2026-10-11 22:36'
 labels:
   - apple
   - testing
@@ -43,4 +43,6 @@ Evidence from task-36 failing iOS xcresult/log: xcresult at DerivedData/Canadian
 Blocked after approved narrower positioning attempt: I added a condition that visible Morse settings card text must be fully visible and kept the existing top protected-area/middle-band assertions, then ran targeted audits. Dark passed 5 consecutive post-change targeted runs (card-dark plus verify dark #2-#5), but Light failed on run #2 with the same Contrast failed at CanadianHamPracticeUITests.swift:2000. The failure screenshot /tmp/t42-verify/light2-pngs/png-2.png and crop /tmp/t42-verify/light2-pngs/png-1.png again show the settings description fully visible mid-screen; token contrast remains high (light ink on paper/paperElevated ~14.95/16.34:1). Per supervisor direction, stopping for owner decision rather than adding audit handlers/filters, hiding sections, or changing visuals.
 
 Timing investigation: MorseTrainerView/MorseCourseView grep found no .animation, withAnimation, .transition, TimelineView, repeatForever, phaseAnimator, or symbolEffect in the Morse home/course path. Relevant async sources are dormant visual playback Task schedules in MorseTrainerView/Course (only after Play), course load .task, playback stop tasks, and a DispatchQueue.main.async accessibility refocus only when entering lesson/review sessions. Temporary lower-audit probe captured 3 screenshots 200 ms apart just before the light lower Morse audit; /tmp/t42-light-instrumented-1.log recorded appRunningForeground=true, diff12=0, diff23=0, and the targeted light audit passed. Evidence points to needing a bounded test-side settle/stability wait before auditing rather than a running app animation.
+
+Blocked/timing hypothesis disproven: replacing the temporary probe with a bounded visual-stability wait (foreground wait plus up to 6 screenshots 200 ms apart, returning only after two consecutive screenshots matched pixel-for-pixel) did not fix the light lower audit. Targeted command DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamUITests/CanadianHamPracticeUITests/testAccessibilityAuditMorseCourseLessonAndSummaryLight test CODE_SIGNING_ALLOWED=NO failed at CanadianHamPracticeUITests.swift:2002 with Contrast failed on the same settings description after the wait (/tmp/t42-light-final-smoke.log; xcresult Test-CanadianHam-2026.10.11_18-31-54--0400.xcresult). Because the probe showed diff12=0/diff23=0 and the bounded stability wait still failed, I reverted the temporary test code and am stopping without app-side changes.
 <!-- SECTION:NOTES:END -->
