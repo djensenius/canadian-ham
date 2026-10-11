@@ -116,7 +116,6 @@ struct RootView: View {
         .onDisappear {
             appSettings.unregisterUnfinishedCourseWorkCheck(id: unfinishedCourseWorkCheckID)
         }
-        .environment(\.locale, Locale(identifier: language.accessibilityLanguageCode))
     }
 
     @ViewBuilder

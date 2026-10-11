@@ -1482,6 +1482,12 @@ struct SettingsView: View {
                     .pickerStyle(.segmented)
                     .accessibilityIdentifier("language-setting-picker")
                     .accessibilityLabel(Text("Language")) // l10n: localized
+                    if progressStore.preferences.language.requiresInterfaceRestart() {
+                        Text("Restart Canadian Ham to change the interface language.") // l10n: localized
+                            .font(DesignTokens.FontScale.caption)
+                            .foregroundStyle(DesignTokens.Colors.inkMuted)
+                            .accessibilityIdentifier("language-restart-note")
+                    }
                 }
                 .paperCard()
 

@@ -48,6 +48,13 @@ struct ApplePreferences: Codable, Equatable, Sendable {
             }
         }
 
+        func requiresInterfaceRestart(
+            currentLocalizations: [String] = Bundle.main.preferredLocalizations,
+            preferredLanguages: [String] = Locale.preferredLanguages
+        ) -> Bool {
+            resolvedLanguage(preferredLanguages: preferredLanguages) != BankLanguage.systemPreferred(preferredLanguages: currentLocalizations)
+        }
+
         static func systemLanguage(preferredLanguages: [String] = Locale.preferredLanguages) -> BankLanguage {
             BankLanguage.systemPreferred(preferredLanguages: preferredLanguages)
         }
@@ -275,6 +282,8 @@ struct LessonQuizAttempt: Codable, Equatable, Sendable, Identifiable {
 }
 
 struct ExportedPreferences: Codable, Equatable, Sendable {
+    static let invalidLanguageValue = "__canadian-ham-invalid-language__"
+
     let practiceMode: String
     let examTimerEnabled: Bool
     let language: String
@@ -299,7 +308,11 @@ struct ExportedPreferences: Codable, Equatable, Sendable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         practiceMode = try container.decode(String.self, forKey: .practiceMode)
         examTimerEnabled = try container.decode(Bool.self, forKey: .examTimerEnabled)
-        language = try container.decodeIfPresent(String.self, forKey: .language) ?? ApplePreferences.LanguagePreference.system.rawValue
+        if container.contains(.language) {
+            language = (try container.decodeNil(forKey: .language)) ? Self.invalidLanguageValue : try container.decode(String.self, forKey: .language)
+        } else {
+            language = ApplePreferences.LanguagePreference.system.rawValue
+        }
         theme = try container.decodeIfPresent(String.self, forKey: .theme) ?? ApplePreferences.Theme.system.rawValue
         // Older exports omit morse entirely; an explicit null is invalid (the schema requires an object).
         morse = container.contains(.morse) ? try container.decode(ExportedMorseSettings.self, forKey: .morse) : .default
@@ -640,6 +653,9 @@ final class ProgressStoreService: ObservableObject {
     @Published private(set) var isICloudSyncEnabled: Bool = ICloudSyncSettings.storedOptIn()
     @Published private(set) var iCloudAccountSignalError: String?
 
+    private static let legacyEnglishLanguageMigrationMarkerKey = "CanadianHam.preferences.legacyEnglishLanguageDefaultMigrationComplete"
+    private static let appleLanguagesPreferenceKey = "AppleLanguages"
+
     private(set) var container: ModelContainer
     private var context: ModelContext
     private let encoder = JSONEncoder()
@@ -682,6 +698,7 @@ final class ProgressStoreService: ObservableObject {
         self.isICloudSyncEnabled = iCloudSyncEnabled
         try FileManager.default.createDirectory(at: self.morseCourseProgressURL.deletingLastPathComponent(), withIntermediateDirectories: true)
         self.preferences = try loadPreferences()
+        Self.applyInterfaceLanguagePreference(self.preferences.language)
         try adoptLegacyDeviceRowsIfNeeded()
         try migrateLearningProgressFromLegacyStorageIfNeeded()
 #if ICLOUD_SYNC
@@ -768,6 +785,28 @@ final class ProgressStoreService: ObservableObject {
             localDeviceID: localDeviceID
         )
     }
+
+    static func applyInterfaceLanguagePreference(_ language: ApplePreferences.LanguagePreference, defaults: UserDefaults = .standard) {
+#if os(iOS) || os(macOS)
+        switch language {
+        case .system:
+            defaults.removeObject(forKey: appleLanguagesPreferenceKey)
+        case .english:
+            defaults.set([BankLanguage.english.rawValue], forKey: appleLanguagesPreferenceKey)
+        case .french:
+            defaults.set([BankLanguage.french.rawValue], forKey: appleLanguagesPreferenceKey)
+        }
+#else
+        _ = language
+        _ = defaults
+#endif
+    }
+
+#if DEBUG
+    static func clearLegacyEnglishLanguageDefaultMigrationMarkerForTesting(defaults: UserDefaults = .standard) {
+        defaults.removeObject(forKey: legacyEnglishLanguageMigrationMarkerKey)
+    }
+#endif
 
     static func configurationPlan(
         iCloudSyncEnabled: Bool,
@@ -1194,6 +1233,7 @@ final class ProgressStoreService: ObservableObject {
             throw error
         }
         UserDefaults.standard.set(preferences.activeBankId.rawValue, forKey: Self.activeBankPreferenceKey)
+        Self.applyInterfaceLanguagePreference(preferences.language)
         self.preferences = preferences
     }
 
@@ -1225,6 +1265,7 @@ final class ProgressStoreService: ObservableObject {
             try removeMorseCourseProgressIfPresent()
             try context.delete(model: PreferencesEntity.self)
             defaults.removeObject(forKey: Self.activeBankPreferenceKey)
+            Self.applyInterfaceLanguagePreference(.system, defaults: defaults)
             preferences = .default
             if layout == .split {
                 Self.markLegacyPreferencesCopyComplete(storeURLs: storeURLs)
@@ -1360,6 +1401,7 @@ final class ProgressStoreService: ObservableObject {
 #endif
             try context.save()
             UserDefaults.standard.set(nextPreferences.activeBankId.rawValue, forKey: Self.activeBankPreferenceKey)
+            Self.applyInterfaceLanguagePreference(nextPreferences.language)
             preferences = nextPreferences
             objectWillChange.send()
         } catch {
@@ -1428,6 +1470,9 @@ final class ProgressStoreService: ObservableObject {
 
         if ApplePreferences.PracticeMode(rawValue: data.preferences.practiceMode) == nil {
             errors.append(String(localized: "Import preferences.practiceMode is invalid."))
+        }
+        if ApplePreferences.LanguagePreference(rawValue: data.preferences.language) == nil {
+            errors.append(String(localized: "Import preferences.language is invalid."))
         }
         if !ExportedMorseSettings.validTimingProfiles.contains(data.preferences.morse.timingProfile) {
             errors.append(String(localized: "Import preferences.morse.timingProfile is invalid."))
@@ -1943,6 +1988,7 @@ final class ProgressStoreService: ObservableObject {
 
     private func loadPreferences() throws -> ApplePreferences {
         let entity = try preferencesEntity(createIfMissing: true)
+        try migrateLegacyEnglishLanguageDefaultIfNeeded(entity)
         return ApplePreferences(
             practiceMode: ApplePreferences.PracticeMode(rawValue: entity.practiceMode) ?? .immediate,
             examTimerEnabled: entity.examTimerEnabled,
@@ -1950,6 +1996,16 @@ final class ProgressStoreService: ObservableObject {
             theme: ApplePreferences.Theme(rawValue: entity.theme) ?? .system,
             activeBankId: CourseBankID(rawValue: UserDefaults.standard.string(forKey: Self.activeBankPreferenceKey) ?? "") ?? .basic
         )
+    }
+
+    private func migrateLegacyEnglishLanguageDefaultIfNeeded(_ entity: PreferencesEntity) throws {
+        let defaults = UserDefaults.standard
+        guard !defaults.bool(forKey: Self.legacyEnglishLanguageMigrationMarkerKey) else { return }
+        if entity.language == ApplePreferences.LanguagePreference.english.rawValue {
+            entity.language = ApplePreferences.LanguagePreference.system.rawValue
+            try context.save()
+        }
+        defaults.set(true, forKey: Self.legacyEnglishLanguageMigrationMarkerKey)
     }
 
     private func adoptLegacyDeviceRowsIfNeeded() throws {

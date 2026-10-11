@@ -106,7 +106,8 @@ final class CanadianHamTVUITests: XCTestCase {
         let nextQuestion = app.buttons["next-question-button"].firstMatch
         XCTAssertTrue(nextQuestion.waitForExistence(timeout: 5), "Next question button should exist")
         assertNextQuestionIsSeparateButton(nextQuestion, feedback: feedback)
-        pressUntilFocused(nextQuestion, remote: remote, buttons: [.down, .right], maxCycles: 6)
+        waitForFocus(on: nextQuestion)
+        XCTAssertTrue(nextQuestion.hasFocus, "Next question should receive focus automatically after answering")
         assertFocusedElementIsOnScreen(nextQuestion, in: app, description: "Next question")
 
         remote.press(.select)

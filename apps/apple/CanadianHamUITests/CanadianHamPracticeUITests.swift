@@ -53,6 +53,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
         app = launchApp(arguments: frenchLocaleArguments + ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
         XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
+        let frenchQuestionTexts = try bundledFrenchQuestionTexts(forCategoryID: "B-001")
+        let frenchQuestionPredicate = NSPredicate(format: "label IN %@", Array(frenchQuestionTexts))
+        XCTAssertTrue(app.staticTexts.matching(frenchQuestionPredicate).firstMatch.waitForExistence(timeout: 5), "Expected a French ISED question stem under the French system language")
         try performAudit(on: app, context: "French practice question")
     }
 
@@ -764,7 +767,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let languageSetting = app.segmentedControls["language-setting-picker"].firstMatch
         XCTAssertTrue(languageSetting.waitForExistence(timeout: 5), "Language setting should exist in Settings")
         languageSetting.buttons["Français"].firstMatch.tap()
-        XCTAssertTrue(app.staticTexts["Réglages"].firstMatch.waitForExistence(timeout: 10), "Switching language in Settings should apply immediately")
+        XCTAssertTrue(app.staticTexts["Restart Canadian Ham to change the interface language."].firstMatch.waitForExistence(timeout: 10), "Settings should explain that the Apple interface language changes after restart")
         app.terminate()
 
         app = launchApp(arguments: ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"], resetData: false)
@@ -780,7 +783,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
         answerFirstVisibleAnswer(in: app)
         _ = waitForAnswerFeedback(in: app)
-        XCTAssertTrue(app.staticTexts["answer-feedback-title"].firstMatch.waitForExistence(timeout: 5), "Feedback title should exist")
+        let feedbackTitle = app.staticTexts["answer-feedback-title"].firstMatch
+        XCTAssertTrue(feedbackTitle.waitForExistence(timeout: 5), "Feedback title should exist")
+        XCTAssertTrue(["Bonne réponse", "Mauvaise réponse"].contains(feedbackTitle.label), "Expected French feedback title text after relaunch, got \(feedbackTitle.label)")
     }
 
     func testLanguagePickerIsAbsentOnCategoryListAndPractice() throws {
@@ -852,6 +857,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
 #endif
         let app = launchApp(arguments: ["-CanadianHamForceRegularHorizontalSizeClass"])
         XCTAssertTrue(app.descendants(matching: .any)["root-sidebar"].firstMatch.waitForExistence(timeout: 10))
+        assertNoLanguagePicker(in: app, context: "regular-width root")
         tap("Learn", in: app)
         XCTAssertTrue(app.staticTexts["Learn"].firstMatch.waitForExistence(timeout: 10))
 

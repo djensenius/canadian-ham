@@ -60,7 +60,6 @@ private struct TVLaunchOptions {
 private enum TVEvidenceFocus: String {
     case category
     case answer
-    case language
 }
 
 private enum PlatformScreen: String {

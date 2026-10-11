@@ -5323,6 +5323,28 @@
         }
       }
     },
+    "Import preferences.language is invalid." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import preferences.language is invalid."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.language est invalide."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.language est invalide."
+          }
+        }
+      }
+    },
     "Import preferences.practiceMode is invalid." : {
       "localizations" : {
         "en" : {
@@ -8439,6 +8461,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réinitialiser"
+          }
+        }
+      }
+    },
+    "Restart Canadian Ham to change the interface language." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart Canadian Ham to change the interface language."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redémarrez Canadian Ham pour changer la langue de l’interface."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redémarrez Canadian Ham pour changer la langue de l’interface."
           }
         }
       }
