@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-002-008.\n\nWhy the correct answer is right: F2 is the highest commonly used ionospheric region, so the geometry allows a refracted HF wave to return much farther away. That height is why it dominates the longest ordinary paths.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Because it exists only at night\": F2 is the upper daytime F sub-region and remains important in many conditions. It is not a night-only layer.\n- sourceIndex 2: \"Because it is the lowest ionospheric region\": This reverses the layer order, since D is lowest and F2 is high.\n- sourceIndex 3: \"Because it does not absorb radio waves as much as other ionospheric regions\": Lower absorption helps, but the question's long-distance principle is the greater height of F2.",
+    "en": "Question B-007-002-008.\n\nWhy the correct answer is right: F2 is the highest commonly used ionospheric region, so the geometry allows a refracted high-frequency (HF) wave to return much farther away. That height is why it dominates the longest ordinary paths.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Because it exists only at night\": F2 is the upper daytime F sub-region and remains important in many conditions. It is not a night-only layer.\n- sourceIndex 2: \"Because it is the lowest ionospheric region\": This reverses the layer order, since D is lowest and F2 is high.\n- sourceIndex 3: \"Because it does not absorb radio waves as much as other ionospheric regions\": Lower absorption helps, but the question's long-distance principle is the greater height of F2.",
     "fr": null
   },
   "citations": [

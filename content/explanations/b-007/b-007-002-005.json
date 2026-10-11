@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-002-005.\n\nWhy the correct answer is right: During daylight, the F region is commonly described as separating into F1 and F2. The upper F2 part is especially important for longer HF paths.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The E region\": E-region behaviour can be patchy, but the named daytime split into two sub-regions belongs to F.\n- sourceIndex 2: \"The D region\": D appears mainly in daylight and absorbs energy. It is not the region divided into F1 and F2.\n- sourceIndex 3: \"The G region\": G is not a standard ionospheric region in this Basic propagation model.",
+    "en": "Question B-007-002-005.\n\nWhy the correct answer is right: During daylight, the F region is commonly described as separating into F1 and F2. The upper F2 part is especially important for longer high-frequency (HF) paths.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The E region\": E-region behaviour can be patchy, but the named daytime split into two sub-regions belongs to F.\n- sourceIndex 2: \"The D region\": D appears mainly in daylight and absorbs energy. It is not the region divided into F1 and F2.\n- sourceIndex 3: \"The G region\": G is not a standard ionospheric region in this Basic propagation model.",
     "fr": null
   },
   "citations": [

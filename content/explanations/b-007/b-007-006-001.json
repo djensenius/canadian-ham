@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-006-001.\n\nWhy the correct answer is right: Critical frequency is the highest frequency an ionospheric region can return when the test signal is sent straight up. Vertical-incidence sounders use it to describe the region's current ionization.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Maximum usable frequency\": MUF is for a specific oblique path between stations, not the vertical-incidence limit of one region.\n- sourceIndex 2: \"Optimum working frequency\": OWF is an operating choice below the MUF, so it is not the measurement made by probing straight upward.\n- sourceIndex 3: \"Doppler frequency\": Doppler concerns frequency shift from motion. It does not name the highest reflected vertical test frequency.",
+    "en": "Question B-007-006-001.\n\nWhy the correct answer is right: Critical frequency is the highest frequency an ionospheric region can return when the test signal is sent straight up. Vertical-incidence sounders use it to describe the region's current ionization.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Maximum usable frequency\": Maximum usable frequency (MUF) is for a specific oblique path between stations, not the vertical-incidence limit of one region.\n- sourceIndex 2: \"Optimum working frequency\": Optimum working frequency (OWF) is an operating choice below the MUF, so it is not the measurement made by probing straight upward.\n- sourceIndex 3: \"Doppler frequency\": Doppler concerns frequency shift from motion. It does not name the highest reflected vertical test frequency.",
     "fr": null
   },
   "citations": [

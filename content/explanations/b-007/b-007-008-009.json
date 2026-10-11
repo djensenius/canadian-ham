@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-008-009.\n\nWhy the correct answer is right: Meteor trails are brief ionized paths that work best at the lower end of the very high frequency (VHF) range used by amateurs. Six metres is the standard amateur band named for effective meteor-scatter contacts.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"40 metres\": Forty metres is an HF band and is below the range where meteor trails are most useful for this mode.\n- sourceIndex 2: \"15 metres\": Fifteen metres is also HF. Ordinary ionospheric propagation matters there more than meteor scatter.\n- sourceIndex 3: \"160 metres\": One hundred sixty metres is far below the usual meteor-scatter range and is dominated by ground-wave and lower-HF/MF ionospheric behaviour.",
+    "en": "Question B-007-008-009.\n\nWhy the correct answer is right: Meteor trails are brief ionized paths that work best at the lower end of the very high frequency (VHF) range used by amateurs. Six metres is the standard amateur band named for effective meteor-scatter contacts.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"40 metres\": Forty metres is a high-frequency (HF) band and is below the range where meteor trails are most useful for this mode.\n- sourceIndex 2: \"15 metres\": Fifteen metres is also HF. Ordinary ionospheric propagation matters there more than meteor scatter.\n- sourceIndex 3: \"160 metres\": One hundred sixty metres is far below the usual meteor-scatter range and is dominated by ground-wave and lower-high-frequency (HF) and medium-frequency (MF) ionospheric behaviour.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-001-005.\n\nWhy the correct answer is right: The common name sky wave refers to the ionospheric part of propagation. The signal travels upward, is bent by ionized regions, and returns to Earth.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Tropospheric wave\": A tropospheric wave is associated with the lower atmosphere where weather occurs, not with the ionosphere.\n- sourceIndex 2: \"Scattered wave\": Scattering redirects energy irregularly. It is not the basic name for an ionosphere-returned sky wave.\n- sourceIndex 3: \"Space wave\": Space wave describes direct and ground-reflected components near line-of-sight paths, not HF skip through ionized regions.",
+    "en": "Question B-007-001-005.\n\nWhy the correct answer is right: The common name sky wave refers to the ionospheric part of propagation. The signal travels upward, is bent by ionized regions, and returns to Earth.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Tropospheric wave\": A tropospheric wave is associated with the lower atmosphere where weather occurs, not with the ionosphere.\n- sourceIndex 2: \"Scattered wave\": Scattering redirects energy irregularly. It is not the basic name for an ionosphere-returned sky wave.\n- sourceIndex 3: \"Space wave\": Space wave describes direct and ground-reflected components near line-of-sight paths, not high-frequency (HF) skip through ionized regions.",
     "fr": null
   },
   "citations": [

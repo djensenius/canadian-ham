@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-004-006.\n\nWhy the correct answer is right: A sudden ionospheric disturbance can sharply increase absorption on sunlit high frequency (HF) paths, especially at lower frequencies. Moving to a higher band may reduce the absorption enough to continue communication.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Try the other sideband\": Changing sideband changes how the signal is modulated around the frequency, but it does not remove ionospheric absorption.\n- sourceIndex 2: \"Try a different antenna polarization\": Polarization does not fix a SID when the dominant problem is signal energy being absorbed along the path.\n- sourceIndex 3: \"Try a different frequency shift\": A repeater or digital shift setting is not the propagation adjustment needed for an absorbed HF path.",
+    "en": "Question B-007-004-006.\n\nWhy the correct answer is right: A sudden ionospheric disturbance can sharply increase absorption on sunlit high frequency (HF) paths, especially at lower frequencies. Moving to a higher band may reduce the absorption enough to continue communication.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Try the other sideband\": Changing sideband changes how the signal is modulated around the frequency, but it does not remove ionospheric absorption.\n- sourceIndex 2: \"Try a different antenna polarization\": Polarization does not fix a sudden ionospheric disturbance (SID) when the dominant problem is signal energy being absorbed along the path.\n- sourceIndex 3: \"Try a different frequency shift\": A repeater or digital shift setting is not the propagation adjustment needed for an absorbed HF path.",
     "fr": null
   },
   "citations": [
