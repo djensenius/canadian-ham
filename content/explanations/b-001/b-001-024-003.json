@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-024-003.\n\nWhy the correct answer is right: The 48 MHz to 300 MHz range causes the greatest RF-energy risk because the human body absorbs RF energy most strongly in that range.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"300 MHz to 3000 MHz\": This range starts above 300 MHz, while the greatest-risk range is 48 MHz through 300 MHz.\n- sourceIndex 2: \"Above 1500 MHz\": A threshold above 1500 MHz misses the lower VHF range where human-body absorption is strongest.\n- sourceIndex 3: \"3 MHz to 30 MHz\": This HF range sits below 48 MHz; the greatest RF-energy risk range is 48 MHz to 300 MHz.",
+    "en": "Question B-001-024-003.\n\nWhy the correct answer is right: The 48 MHz to 300 MHz range causes the greatest radio-frequency (RF) energy risk because the human body absorbs RF energy most strongly in that range.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"300 MHz to 3000 MHz\": This range starts above 300 MHz, while the greatest-risk range is 48 MHz through 300 MHz.\n- sourceIndex 2: \"Above 1500 MHz\": A threshold above 1500 MHz misses the lower VHF range where human-body absorption is strongest.\n- sourceIndex 3: \"3 MHz to 30 MHz\": This HF range sits below 48 MHz; the greatest RF-energy risk range is 48 MHz to 300 MHz.",
     "fr": null
   },
   "citations": [
