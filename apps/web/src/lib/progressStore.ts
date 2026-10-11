@@ -154,11 +154,12 @@ export class ProgressStore {
 
   async putQuestionProgressMany(records: readonly QuestionProgressRecord[]): Promise<void> {
     const db = await this.open();
-    await runTransaction(db, ["questionProgress"], "readwrite", (transaction) => {
+    await runTransaction(db, ["questionProgress", "syncMetadata"], "readwrite", (transaction) => {
       const store = transaction.objectStore("questionProgress");
       for (const record of records) {
         store.put(record);
       }
+      transaction.objectStore("syncMetadata").delete(SYNC_DEVICE_ROWS_KEY);
     });
   }
 

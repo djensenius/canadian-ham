@@ -211,6 +211,22 @@ describe("ProgressStore", () => {
     assert.equal((await store.exportData("2026-01-02T06:00:00.000Z")).syncDeviceRows, undefined);
   });
 
+  it("drops imported sync device rows when the main practice bulk progress path writes", async () => {
+    const syncDeviceRows = {
+      questionProgress: [{ deviceId: "iphone", record }],
+      examAttempts: [],
+      lessonProgress: [],
+      lessonQuizAttempts: [],
+      morseCourseProgress: [],
+    };
+    const store = createStore("sync-device-rows-practice-write");
+    await store.importData(validExport({ syncDeviceRows }));
+
+    await store.putQuestionProgressMany([{ ...record, attempts: 2, correctAttempts: 1 }]);
+
+    assert.equal((await store.exportData("2026-01-02T06:00:00.000Z")).syncDeviceRows, undefined);
+  });
+
   it("stores progress in IndexedDB and exports/imports a validated round trip", async () => {
     const first = createStore("roundtrip-a");
     await first.putQuestionProgress(record);
