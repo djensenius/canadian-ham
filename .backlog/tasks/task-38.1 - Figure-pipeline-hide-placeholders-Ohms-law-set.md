@@ -1,11 +1,11 @@
 ---
 id: TASK-38.1
 title: 'Figure pipeline, hide placeholders, Ohm''s law set'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-11 01:01'
+updated_date: '2026-10-11 01:02'
 labels:
   - content
   - apple
@@ -48,3 +48,9 @@ Validation blocked: pnpm check:apple-l10n fails because xbuild export rewrites u
 
 Originality: Ohm’s law triangle, power triangle, and wheel were drawn from scratch as simple ink-style formula aids using the standard formulas already taught in the lesson, not traced from ISED or third-party art. Contrast evidence and themed web/iOS source previews are under docs/evidence/task-38.1/.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Built the shared lesson figure pipeline: authored original SVGs in content/figures, added ::figure Markdown parsing for web and Swift, hid author Illustration brief placeholders from learners, generated Apple vector template assets, wired the asset catalog into the iOS/macOS target, documented the workflow in docs/figures.md, and added pnpm check:figures plus CI coverage. Added the L-005-02 Ohm’s law triangle, power triangle, and 12-formula wheel with a disclosure text equivalent. Verified with web/type/content checks, full iOS and macOS xbuild suites, figure checks, and documented l10n drift outside this task.
+<!-- SECTION:FINAL_SUMMARY:END -->
