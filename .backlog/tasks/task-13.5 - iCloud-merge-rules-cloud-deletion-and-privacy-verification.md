@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-11 09:28'
+updated_date: '2026-10-11 10:10'
 labels:
   - apple
   - privacy
@@ -93,4 +93,6 @@ Review r4 L-b fix: archived lesson-progress migration now preserves the max of e
 Review r4 schema-fixture fix: validate-fixtures now runs the valid progress-export-v1-sync-device-rows fixture and an invalid sync-device-row fixture with an empty deviceId that must fail schema validation.
 
 Review r4 validation on final fix set: web progressStore test passed (pnpm --filter @canadian-ham/web test src/lib/progressStore.test.ts: 18 tests); pnpm check:schemas passed (schema validation 1049 targets plus 46 node tests, including sync-device-row valid/invalid fixtures); node scripts/check-apple-text-sources.ts passed; pnpm test:apple-icloud-gate and pnpm check:apple-icloud-gate passed; pnpm test:apple-network and pnpm check:apple-network passed; pnpm check:apple-l10n passed on rerun (an earlier combined run timed out while waiting on an xbuild lock during l10n). Targeted xbuild ProgressStoreTests passed: default iOS 60 tests, default macOS 62 tests, DebugCloudKit iOS 60 tests, DebugCloudKit macOS 62 tests using CODE_SIGNING_ALLOWED=NO after the AGENTS-style local-signing command failed on iCloud entitlements requiring a development certificate. AC3 remains open for owner smoke/privacy work.
+
+Review r5 (APPROVE WITH NOTES): coordinator fixed L1 (deleteICloudProgress clears the pending reset flags after a successful zone deletion) and L2 (cloudResetRequiresAsyncDeletion error localised; fr/fr-CA added via round-trip). check:apple-l10n passes; targeted macOS ProgressStoreTests 62/62. Remaining lows L3-L5 recorded for follow-up. Full iOS/macOS/tvOS/visionOS suites run once at merge time per the testing policy (PR #191).
 <!-- SECTION:NOTES:END -->
