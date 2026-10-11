@@ -87,4 +87,6 @@ Review r4 M-6 fix: macOS NativeSettings reset now calls the async cloud deletion
 Review r4 M-5 leftover fix: the lesson, lesson-quiz, and Morse syncDeviceRows deviceId validation messages now use the existing localized "%@.deviceId must be non-empty." key, and the three empty catalogue keys were removed without unrelated catalogue churn.
 
 Review r4 M-7 fix: lesson writes now subtract other devices using a per-device maximum instead of summing duplicate rows, the no-context question-progress fallback now uses the same per-device max rule, and ProgressStoreTests includes duplicate imported+synced lesson rows where the next local read increases by exactly 1.
+
+Review r4 L-b fix: archived lesson-progress migration now preserves the max of existing same-device readCount and archived readCount instead of overwriting the local row downward; added a migration regression test for the max-own-read-count case.
 <!-- SECTION:NOTES:END -->
