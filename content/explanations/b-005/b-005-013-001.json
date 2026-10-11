@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-013-001.\n\nWhy the correct answer is right: A voltmeter measures potential difference across the part or circuit under test, so it is connected in parallel with that part.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"In series with the circuit\": A series connection is used for current measurement and would interrupt the normal circuit path.\n- sourceIndex 2: \"In quadrature with the circuit\": Quadrature means a 90-degree phase relationship; it is not a meter connection method.\n- sourceIndex 3: \"In phase with the circuit\": Phase timing is not how a voltmeter is connected for a voltage measurement.",
+    "en": "Question B-005-013-001.\n\nWhy the correct answer is right: A voltmeter measures potential difference across the part under test. That is why it connects in parallel with that part.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"In series with the circuit\": A series connection is used for current measurement and would interrupt the normal circuit path.\n- sourceIndex 2: \"In quadrature with the circuit\": Quadrature means a 90-degree phase relationship; it is not a meter connection method.\n- sourceIndex 3: \"In phase with the circuit\": Phase timing is not how a voltmeter is connected for a voltage measurement.",
     "fr": null
   },
   "citations": [

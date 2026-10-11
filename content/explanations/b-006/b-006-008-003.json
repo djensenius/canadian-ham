@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-008-003.\n\nWhy the correct answer is right: Free-space wavelength in metres is 300 / frequency in MHz. For 25 MHz, 300 / 25 = 12 metres.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"19 metres\": This is a feet value mislabeled as metres: the common practical half-wave dipole formula is 468 / 25 = 18.72 feet, about 19 feet. The question asks for free-space wavelength in metres, which is 12 metres.\n- sourceIndex 2: \"39 metres\": This is also a feet value mislabeled as metres: free-space wavelength in feet is about 984 / 25 = 39.36 feet. Converted to metres, the free-space wavelength is about 12 metres.\n- sourceIndex 3: \"6 metres\": This is the half-wave value 150 / 25 = 6 metres, but the question asks for the full free-space wavelength.",
+    "en": "Question B-006-008-003.\n\nWhy the correct answer is right: Use the memory rule: free-space wavelength in metres = 300 / frequency in MHz. For 25 MHz, 300 / 25 = 12 metres.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"19 metres\": This is a feet value mislabeled as metres: the common practical half-wave dipole formula is 468 / 25 = 18.72 feet, about 19 feet. The question asks for free-space wavelength in metres, which is 12 metres.\n- sourceIndex 2: \"39 metres\": This is also a feet value mislabeled as metres: free-space wavelength in feet is about 984 / 25 = 39.36 feet. Converted to metres, the free-space wavelength is about 12 metres.\n- sourceIndex 3: \"6 metres\": This is the half-wave value 150 / 25 = 6 metres, but the question asks for the full free-space wavelength.",
     "fr": null
   },
   "citations": [

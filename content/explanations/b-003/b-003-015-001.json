@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-015-001.\n\nWhy the correct answer is right: Voice, images, and sensor readings are analog information at first, but they can be sampled or encoded into digital data values for transmission.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Digital protocols can fall back to analog as needed\": A modern digital system carries non-data information by converting it to data, not by abandoning digital operation.\n- sourceIndex 2: \"Digital signals are continuously variable signals\": Digital information uses discrete agreed values; continuous variation is the analog idea.\n- sourceIndex 3: \"Modern transceivers have the necessary high efficiency amplifiers\": Amplifier efficiency does not explain how voice and pictures become digital payloads.",
+    "en": "Question B-003-015-001.\n\nWhy the correct answer is right: Voice, images, and sensor readings are analog information at first, but they can be sampled or encoded into digital data values for transmission.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Digital protocols can fall back to analog as needed\": A modern digital system carries non-data information by converting it to data, not by abandoning digital operation.\n- sourceIndex 2: \"Digital signals are continuously variable signals\": Digital information uses discrete agreed values. Continuous variation is the analog idea.\n- sourceIndex 3: \"Modern transceivers have the necessary high efficiency amplifiers\": Amplifier efficiency does not explain how voice and pictures become digital payloads.",
     "fr": null
   },
   "citations": [

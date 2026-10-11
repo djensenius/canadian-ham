@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-012-003.\n\nWhy the correct answer is right: Peak envelope power is the average RF power measured over one RF cycle at the crest of the modulation envelope.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"RMS power\": RMS is a voltage or current averaging method; it is not the specific RF power-at-envelope-crest term.\n- sourceIndex 2: \"Average radio frequency power\": Average RF power over a longer voice interval is lower and varies with speech; the question asks for the value at the crest.\n- sourceIndex 3: \"Peak transmitter input power\": Transmitter input power refers to DC supplied to the final stage, not RF output power at the modulation envelope peak.",
+    "en": "Question B-003-012-003.\n\nWhy the correct answer is right: Peak envelope power is the average radio-frequency (RF) power measured over one RF cycle at the crest of the modulation envelope.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"RMS power\": Root mean square (RMS) is a voltage or current averaging method. It is not the specific RF power-at-envelope-crest term.\n- sourceIndex 2: \"Average radio frequency power\": Average RF power over a longer voice interval is lower and varies with speech. The question asks for the value at the crest.\n- sourceIndex 3: \"Peak transmitter input power\": Transmitter input power refers to the direct current (DC) power supplied to the final stage, not RF output power at the modulation envelope peak.",
     "fr": null
   },
   "citations": [

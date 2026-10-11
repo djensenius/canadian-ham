@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-001-004.\n\nWhy the correct answer is right: One microfarad equals 1 000 000 picofarads, so the value is 1 microfarad.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"10 microfarads\": That answer would result from shifting the decimal one place too far right when converting 1 000 000 pF to microfarads.\n- sourceIndex 2: \"0.01 microfarads\": This is one hundred times too small.\n- sourceIndex 3: \"0.001 microfarads\": This is one thousand times too small.",
+    "en": "Question B-005-001-004.\n\nWhy the correct answer is right: A microfarad is 1 000 000 picofarads. So 1 000 000 pF is 1 microfarad.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"10 microfarads\": That shifts the decimal one place too far right during the pF-to-microfarad conversion.\n- sourceIndex 2: \"0.01 microfarads\": This is one hundred times too small.\n- sourceIndex 3: \"0.001 microfarads\": This is one thousand times too small.",
     "fr": null
   },
   "citations": [

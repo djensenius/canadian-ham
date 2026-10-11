@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-013-010.\n\nWhy the correct answer is right: A strong, on-frequency FM signal that is loud and distorted usually has too much transmit audio, such as speaking too loudly or too close to the microphone.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Setting the wrong CTCSS tone\": A wrong access tone may fail to open a repeater, but it does not make successfully received voice loud and distorted.\n- sourceIndex 2: \"Excessive transmit power\": More RF power can strengthen the signal, but it does not create audio distortion when the signal is already on frequency.\n- sourceIndex 3: \"Cross-polarized antenna\": Polarization mismatch reduces received signal strength; it does not make a full-strength FM signal sound overdeviated.",
+    "en": "Question B-003-013-010.\n\nWhy the correct answer is right: A strong, on-frequency frequency modulation (FM) signal that is loud and distorted usually has too much transmit audio, such as speaking too loudly or too close to the microphone.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Setting the wrong CTCSS tone\": A wrong access tone may fail to open a repeater, but it does not make successfully received voice loud and distorted.\n- sourceIndex 2: \"Excessive transmit power\": More radio-frequency (RF) power can strengthen the signal, but it does not create audio distortion when the signal is already on frequency.\n- sourceIndex 3: \"Cross-polarized antenna\": Polarization mismatch reduces received signal strength. It does not make a full-strength FM signal sound overdeviated.",
     "fr": null
   },
   "citations": [

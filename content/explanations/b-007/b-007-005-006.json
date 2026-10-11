@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-005-006.\n\nWhy the correct answer is right: Daily ionospheric propagation follows the Sun's electromagnetic radiation and particle output because those inputs create and disturb the charged particles that refract or absorb radio waves.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Solar wind\": Solar wind can disturb Earth's magnetic environment, but by itself it is not the complete daily ionizing input named in this question.\n- sourceIndex 2: \"Infrared radiation\": Infrared mainly warms matter; the ionosphere responds most to higher-energy solar radiation and particles that can create ions.\n- sourceIndex 3: \"Coronal mass ejections (CME)\": A CME is an episodic disturbance, not the normal day-by-day solar influence behind routine propagation changes.",
+    "en": "Question B-007-005-006.\n\nWhy the correct answer is right: Daily ionospheric propagation follows the Sun's electromagnetic radiation and particle output because those inputs create and disturb the charged particles that refract or absorb radio waves.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Solar wind\": Solar wind can disturb Earth's magnetic environment, but by itself it is not the complete daily ionizing input named in this question.\n- sourceIndex 2: \"Infrared radiation\": Infrared mainly warms matter. The ionosphere responds most to higher-energy solar radiation and particles that can create ions.\n- sourceIndex 3: \"Coronal mass ejections (CME)\": A coronal mass ejection (CME) is an episodic disturbance, not the normal day-by-day solar influence behind routine propagation changes.",
     "fr": null
   },
   "citations": [

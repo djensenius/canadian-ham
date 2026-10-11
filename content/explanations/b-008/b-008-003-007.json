@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-008-003-007.\n\nWhy the correct answer is right: Poor waveform shaping makes the keyed RF envelope too abrupt, spreading energy over a broader bandwidth and producing key clicks.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"frequency shifting during keying\": Frequency shifting during keying is chirp; broad click energy is caused by the shape of the on-off RF envelope.\n- sourceIndex 2: \"sparking at the key contacts\": Sparking key contacts can be a local interference source, but broad transmitted clicks at a distance point to waveform shaping.\n- sourceIndex 3: \"mechanical instability in the oscillator\": Mechanical oscillator instability would cause drift or chirp rather than the wideband side energy of key clicks.",
+    "en": "Question B-008-003-007.\n\nWhy the correct answer is right: Poor waveform shaping makes the keyed radio-frequency (RF) envelope too abrupt. That spreads energy over a broader bandwidth and produces key clicks.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"frequency shifting during keying\": Frequency shifting during keying is chirp; broad click energy is caused by the shape of the on-off RF envelope.\n- sourceIndex 2: \"sparking at the key contacts\": Sparking key contacts can be a local interference source, but broad transmitted clicks at a distance point to waveform shaping.\n- sourceIndex 3: \"mechanical instability in the oscillator\": Mechanical oscillator instability would cause drift or chirp rather than the wideband side energy of key clicks.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-013-003.\n\nWhy the correct answer is right: A multimeter combines common electrical meter functions. In Basic station work, the expected core functions are voltage, current, and resistance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Resistance, capacitance and inductance\": Some specialized meters measure capacitance or inductance, but those are not the standard core multimeter trio.\n- sourceIndex 2: \"Resistance and reactance\": Reactance is not one of the ordinary direct multimeter functions named here.\n- sourceIndex 3: \"SWR and power\": SWR and RF power are measured with RF station instruments, not the basic multimeter functions.",
+    "en": "Question B-005-013-003.\n\nWhy the correct answer is right: A multimeter combines common electrical meter functions. In Basic station work, the expected core functions are voltage, current, and resistance.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Resistance, capacitance and inductance\": Some specialized meters measure capacitance or inductance. Those are not the standard core multimeter trio.\n- sourceIndex 2: \"Resistance and reactance\": Reactance is not one of the ordinary direct multimeter functions named here.\n- sourceIndex 3: \"SWR and power\": Standing wave ratio (SWR) and radio-frequency (RF) power are measured with RF station instruments, not the basic multimeter functions.",
     "fr": null
   },
   "citations": [

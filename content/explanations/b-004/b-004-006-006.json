@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-006-006.\n\nWhy the correct answer is right: Highest precision means the smallest tolerance percentage, so 0.1% is the most precise listed value.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"5%\": This is less precise than 0.1%. Numeric check: 5% is fifty times larger than 0.1%.\n- sourceIndex 2: \"10%\": A 10% tolerance allows a much wider spread than 0.1%; on a 100-ohm part it permits about +/-10 ohms instead of about +/-0.1 ohm.\n- sourceIndex 3: \"20%\": This is the widest tolerance listed here, not the highest precision. Numeric check: 20% is larger than 10%, 5%, and 0.1%.",
+    "en": "Question B-004-006-006.\n\nWhy the correct answer is right: Highest precision means the smallest tolerance percentage, so 0.1% is the most precise listed value.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"5%\": This is less precise than 0.1%. Numeric check: 5% is fifty times larger than 0.1%.\n- sourceIndex 2: \"10%\": A 10% tolerance allows a much wider spread than 0.1%. On a 100-ohm part it permits about +/-10 ohms instead of about +/-0.1 ohm.\n- sourceIndex 3: \"20%\": This is the widest tolerance listed here, not the highest precision. Numeric check: 20% is larger than 10%, 5%, and 0.1%.",
     "fr": null
   },
   "citations": [
