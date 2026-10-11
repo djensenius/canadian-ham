@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-013-007.\n\nWhy the correct answer is right: In frequency modulation (FM), a stronger modulating signal produces greater frequency deviation of the carrier.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"By a larger amplitude of the carrier\": Carrier amplitude is ideally constant in frequency modulation (FM). Amplitude changes belong to amplitude modulation (AM).\n- sourceIndex 2: \"By a larger pulse width in the transmitted wave train\": Pulse width is a pulse modulation idea, not how FM represents louder audio.\n- sourceIndex 3: \"By a larger peak envelope power\": Peak envelope power (PEP) is an amplitude/envelope power concept; FM audio level is represented by deviation, not envelope peaks.",
+    "en": "Question B-003-013-007.\n\nWhy the correct answer is right: In frequency modulation (FM), a stronger modulating signal produces greater frequency deviation of the carrier.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"By a larger amplitude of the carrier\": Carrier amplitude is ideally constant in FM. Amplitude changes belong to amplitude modulation (AM).\n- sourceIndex 2: \"By a larger pulse width in the transmitted wave train\": Pulse width is a pulse modulation idea, not how FM represents louder audio.\n- sourceIndex 3: \"By a larger peak envelope power\": Peak envelope power (PEP) is an amplitude/envelope power concept. FM audio level is represented by deviation, not envelope peaks.",
     "fr": null
   },
   "citations": [

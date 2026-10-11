@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-008-005.\n\nWhy the correct answer is right: The power changes from 150 W to 15 W, a ten-to-one reduction. That is a 10 decibels (dB) decrease, so 20 dB over S9 becomes S9 plus 10 dB.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"S9 plus 5 dB\": This would be a 15 dB decrease from the starting report, but the power ratio gives 10 dB.\n- sourceIndex 2: \"S9 plus 3 dB\": Three dB over S9 would require removing 17 dB from the original report, not 10 dB.\n- sourceIndex 3: \"S9\": Dropping from 20 dB over S9 to S9 would require a 20 dB reduction, or a 100-to-one power change.",
+    "en": "Question B-005-008-005.\n\nWhy the correct answer is right: The power changes from 150 W to 15 W, a ten-to-one reduction. That is a 10-decibel (dB) decrease, so 20 dB over S9 becomes S9 plus 10 dB.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"S9 plus 5 dB\": This would be a 15 dB decrease from the starting report, but the power ratio gives 10 dB.\n- sourceIndex 2: \"S9 plus 3 dB\": Three dB over S9 would require removing 17 dB from the original report, not 10 dB.\n- sourceIndex 3: \"S9\": Dropping from 20 dB over S9 to S9 would require a 20 dB reduction, or a 100-to-one power change.",
     "fr": null
   },
   "citations": [

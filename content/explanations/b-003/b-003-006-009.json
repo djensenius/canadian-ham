@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-006-009.\n\nWhy the correct answer is right: The balanced modulator is where voice audio is combined with radio-frequency (RF) so the information is moved from audio into the radio-frequency sideband signal.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Mixer\": The mixer later moves the single sideband (SSB) signal from one RF frequency to another. It is not the first audio-to-RF transposition point.\n- sourceIndex 2: \"Variable frequency oscillator\": The variable-frequency oscillator (VFO) supplies an adjustable RF signal for mixing and does not by itself modulate voice onto RF.\n- sourceIndex 3: \"Fixed RF oscillator\": The fixed RF oscillator supplies carrier energy, but modulation requires the balanced modulator stage.",
+    "en": "Question B-003-006-009.\n\nWhy the correct answer is right: The balanced modulator is where voice audio is combined with a radio-frequency (RF) carrier so the information is moved from audio into the RF sideband signal.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Mixer\": The mixer later moves the single sideband (SSB) signal from one radio frequency to another. It is not the first audio-to-RF transposition point.\n- sourceIndex 2: \"Variable frequency oscillator\": The variable-frequency oscillator (VFO) supplies an adjustable RF signal for mixing and does not by itself modulate voice onto the carrier.\n- sourceIndex 3: \"Fixed RF oscillator\": The fixed RF oscillator supplies carrier energy, but modulation requires the balanced modulator stage.",
     "fr": null
   },
   "citations": [
