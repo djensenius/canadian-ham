@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 17:18'
-updated_date: '2026-10-11 17:39'
+updated_date: '2026-10-11 20:35'
 labels:
   - apple
 dependencies: []
@@ -332,6 +332,8 @@ Review follow-up after APPROVE WITH NOTES:
 
 Post-merge validation after merging origin/main at 3906eee5 (Morse polish blocker now merged):
 - iOS targeted bundle/content tests passed: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamTests/QuestionBankTests/testAppBundleContainsNoReadmeFiles -only-testing:CanadianHamTests/QuestionBankTests/testRealBundleKnownLessonIdsCoverBundledContentLibraryLessons test CODE_SIGNING_ALLOWED=NO` -> 2 tests, 0 failures.\n- macOS targeted bundle/content tests passed: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=macOS,arch=arm64' -skip-testing:CanadianHamUITests -only-testing:CanadianHamTests/QuestionBankTests/testAppBundleContainsNoReadmeFiles -only-testing:CanadianHamTests/QuestionBankTests/testRealBundleKnownLessonIdsCoverBundledContentLibraryLessons test SDKROOT=macosx SUPPORTED_PLATFORMS=macosx CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES` -> 2 tests, 0 failures.\n- tvOS targeted bundle guard passed: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamTV -destination 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation)' -only-testing:CanadianHamTVTests/CanadianHamTVTests/testAppBundleContainsOnlyBasicQuestionBankResources test CODE_SIGNING_ALLOWED=NO` -> 1 test, 0 failures; this test includes the no-README assertion.\n- visionOS targeted bundle guard passed: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamVision -destination 'platform=visionOS Simulator,name=Apple Vision Pro' -only-testing:CanadianHamVisionTests/CanadianHamVisionTests/testAppBundleContainsOnlyBasicQuestionBankResources test CODE_SIGNING_ALLOWED=NO` -> 1 test, 0 failures; this test includes the no-README assertion.\n- Full Apple suites are intentionally left to the coordinator at merge time per the current testing policy.
+
+Pre-merge full suites at d25a368d: macOS 110/110; tvOS 4 unit + 12 UI; visionOS 4 unit + 9 UI; iOS 108 unit + 78/80 UI. The two failures are testAccessibilityAuditMorseCourseLessonAndSummaryLight/Dark ('Contrast failed' on the Morse settings description). They're a pre-existing flaky audit on main since the Morse polish merge, unrelated to this change (the diff touches no Morse or UI-test code). Tracked and being fixed in task-42.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
