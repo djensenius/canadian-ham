@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 17:18'
-updated_date: '2026-10-11 01:03'
+updated_date: '2026-10-11 17:38'
 labels:
   - apple
 dependencies: []
@@ -20,8 +20,8 @@ Release archives copy content/lessons/README.md and content/explanations/README.
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 iOS/macOS/tvOS/visionOS app bundles contain no README.md (or other authoring Markdown) from content/
-- [ ] #2 The bundle guard tests (11.11) assert it
+- [x] #1 iOS/macOS/tvOS/visionOS app bundles contain no README.md (or other authoring Markdown) from content/
+- [x] #2 The bundle guard tests (11.11) assert it
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -329,4 +329,13 @@ Review follow-up after APPROVE WITH NOTES:
 - Targeted final-code bundle guard passed on iOS: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamTests/QuestionBankTests/testAppBundleContainsNoReadmeFiles test CODE_SIGNING_ALLOWED=NO` -> 1 test, 0 failures.
 - Targeted final-code bundle guard passed on macOS: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=macOS,arch=arm64' -skip-testing:CanadianHamUITests -only-testing:CanadianHamTests/QuestionBankTests/testAppBundleContainsNoReadmeFiles test SDKROOT=macosx SUPPORTED_PLATFORMS=macosx CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES` -> 1 test, 0 failures.
 - Negative proof rerun on the final mechanism: temporarily removed the pruning script and regenerated, then ran the iOS bundle guard. It failed as expected with `XCTAssertEqual failed: (["PlugIns/CanadianHamTests.xctest/explanations/README.md", "PlugIns/CanadianHamTests.xctest/lessons/README.md", "explanations/README.md", "lessons/README.md"]) is not equal to ([])`. Restored project.yml and project.pbxproj afterward; worktree clean.
+
+Post-merge validation after merging origin/main at 3906eee5 (Morse polish blocker now merged):
+- iOS targeted bundle/content tests passed: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamTests/QuestionBankTests/testAppBundleContainsNoReadmeFiles -only-testing:CanadianHamTests/QuestionBankTests/testRealBundleKnownLessonIdsCoverBundledContentLibraryLessons test CODE_SIGNING_ALLOWED=NO` -> 2 tests, 0 failures.\n- macOS targeted bundle/content tests passed: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=macOS,arch=arm64' -skip-testing:CanadianHamUITests -only-testing:CanadianHamTests/QuestionBankTests/testAppBundleContainsNoReadmeFiles -only-testing:CanadianHamTests/QuestionBankTests/testRealBundleKnownLessonIdsCoverBundledContentLibraryLessons test SDKROOT=macosx SUPPORTED_PLATFORMS=macosx CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES` -> 2 tests, 0 failures.\n- tvOS targeted bundle guard passed: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamTV -destination 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation)' -only-testing:CanadianHamTVTests/CanadianHamTVTests/testAppBundleContainsOnlyBasicQuestionBankResources test CODE_SIGNING_ALLOWED=NO` -> 1 test, 0 failures; this test includes the no-README assertion.\n- visionOS targeted bundle guard passed: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHamVision -destination 'platform=visionOS Simulator,name=Apple Vision Pro' -only-testing:CanadianHamVisionTests/CanadianHamVisionTests/testAppBundleContainsOnlyBasicQuestionBankResources test CODE_SIGNING_ALLOWED=NO` -> 1 test, 0 failures; this test includes the no-README assertion.\n- Full Apple suites are intentionally left to the coordinator at merge time per the current testing policy.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Implemented README pruning for Apple bundles and guard coverage across iOS/macOS/tvOS/visionOS. The merged branch keeps the reviewed sandboxing fallback: `ENABLE_USER_SCRIPT_SANDBOXING=NO` only on CanadianHam and CanadianHamTests because Xcode sandboxed variants either denied recursive find/delete of copied content README files or introduced an Xcode dependency cycle when declaring explicit README paths. Verified after merging origin/main with targeted xbuild runs for the iOS/macOS no-README and real-bundle lesson coverage tests plus the tvOS/visionOS basic bundle guards that include no-README assertions; all targeted tests passed. Full Apple suites are deferred to merge-time coordination per AGENTS.md testing policy.
+<!-- SECTION:FINAL_SUMMARY:END -->
