@@ -2258,11 +2258,16 @@ final class CanadianHamPracticeUITests: XCTestCase {
         guard scrollView.waitForExistence(timeout: 1) else { return }
         for _ in 0..<maxSwipes where !isFullyVisible(element, in: app, requiresHittable: false) {
             let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+            let start: XCUICoordinate
+            let end: XCUICoordinate
             if element.frame.minY < visibleFrame.minY {
-                scrollView.swipeDown()
+                start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.45))
+                end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.60))
             } else {
-                scrollView.swipeUp()
+                start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.60))
+                end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.45))
             }
+            start.press(forDuration: 0.01, thenDragTo: end)
             waitBriefly()
         }
     }
