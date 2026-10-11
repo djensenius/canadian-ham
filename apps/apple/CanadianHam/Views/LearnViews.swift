@@ -364,10 +364,6 @@ private struct LessonReaderView: View {
         }
         .background(DesignTokens.Colors.paper)
         .navigationTitle(Text(english(lesson.title.en))) // l10n: content(en)
-#if os(iOS)
-        .toolbarBackground(DesignTokens.Colors.paper, for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-#endif
         .task { refresh() }
     }
 
@@ -603,7 +599,6 @@ private struct LessonFigureView: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .accessibilityElement(children: .ignore)
             .accessibilityLabel(Text(english(figure.altText))) // l10n: content(en)
             .accessibilityHint(Text("Opens enlarged figure")) // l10n: localized
             .accessibilityIdentifier("lesson-figure-\(figure.id)")
@@ -642,7 +637,6 @@ private struct LessonFigureView: View {
             .scaledToFit()
             .aspectRatio(aspectRatio, contentMode: .fit)
             .foregroundStyle(DesignTokens.Colors.ink)
-            .accessibilityHidden(true)
     }
 }
 
@@ -690,7 +684,6 @@ private struct EnlargedLessonFigureView: View {
                         .scaleEffect(scale)
                         .frame(width: fitSize.width * scale, height: fitSize.height * scale)
                         .frame(minWidth: geometry.size.width, minHeight: geometry.size.height)
-                        .accessibilityElement(children: .ignore)
                         .accessibilityLabel(Text(english(figure.altText))) // l10n: content(en)
                         .accessibilityIdentifier("lesson-figure-\(figure.id)-enlarged-image")
                         .onTapGesture(count: 2) {
