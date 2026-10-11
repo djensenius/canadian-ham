@@ -1425,7 +1425,8 @@ final class ProgressStoreService: ObservableObject {
             }
         }
         for (index, row) in rows.lessonProgress.enumerated() {
-            if row.deviceId.isEmpty { errors.append(String(localized: "Import syncDeviceRows.lessonProgress[\(index)].deviceId must be non-empty.")) }
+            let prefix = "Import syncDeviceRows.lessonProgress[\(index)]"
+            if row.deviceId.isEmpty { errors.append(String(localized: "\(prefix).deviceId must be non-empty.")) }
             if let archived = try? archivedArray([row.record]) {
                 if bank.courseBankID.hasLessons { validateLessonProgress(archived, knownLessonIds: bank.knownLessonIds, errors: &errors) }
             } else {
@@ -1433,7 +1434,8 @@ final class ProgressStoreService: ObservableObject {
             }
         }
         for (index, row) in rows.lessonQuizAttempts.enumerated() {
-            if row.deviceId.isEmpty { errors.append(String(localized: "Import syncDeviceRows.lessonQuizAttempts[\(index)].deviceId must be non-empty.")) }
+            let prefix = "Import syncDeviceRows.lessonQuizAttempts[\(index)]"
+            if row.deviceId.isEmpty { errors.append(String(localized: "\(prefix).deviceId must be non-empty.")) }
             if let archived = try? archivedArray([row.attempt]) {
                 if bank.courseBankID.hasLessons { validateLessonQuizAttempts(archived, knownQuestionIds: knownQuestionIds, knownLessonIds: bank.knownLessonIds, lessonQuizzesById: bank.lessonQuizzesById, errors: &errors) }
             } else {
@@ -1441,7 +1443,8 @@ final class ProgressStoreService: ObservableObject {
             }
         }
         for (index, row) in rows.morseCourseProgress.enumerated() {
-            if row.deviceId.isEmpty { errors.append(String(localized: "Import syncDeviceRows.morseCourseProgress[\(index)].deviceId must be non-empty.")) }
+            let prefix = "Import syncDeviceRows.morseCourseProgress[\(index)]"
+            if row.deviceId.isEmpty { errors.append(String(localized: "\(prefix).deviceId must be non-empty.")) }
             validateMorseCourseProgress(row.progress, errors: &errors)
         }
     }

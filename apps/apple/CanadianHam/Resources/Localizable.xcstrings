@@ -5377,15 +5377,6 @@
         }
       }
     },
-    "Import syncDeviceRows.lessonProgress[%lld].deviceId must be non-empty." : {
-
-    },
-    "Import syncDeviceRows.lessonQuizAttempts[%lld].deviceId must be non-empty." : {
-
-    },
-    "Import syncDeviceRows.morseCourseProgress[%lld].deviceId must be non-empty." : {
-
-    },
     "Import…" : {
       "localizations" : {
         "en" : {
