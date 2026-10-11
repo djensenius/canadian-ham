@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-006-003-006.\n\nWhy the correct answer is right: Type N connectors are designed for good radio-frequency (RF) performance and better weather resistance than many older general-purpose RF connectors. They are common where outdoor VHF or UHF feedlines need robust connections.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"UHF\": UHF-style PL-259/SO-239 connections are common, but they normally need careful external weatherproofing outdoors.\n- sourceIndex 2: \"BNC\": BNC is convenient for quick connections on instruments and portable gear, but moisture resistance is not its main design identity here.\n- sourceIndex 3: \"SMA\": SMA is compact and threaded, yet its small size does not make it the standard moisture-resistant connector named in this question.",
+    "en": "Question B-006-003-006.\n\nWhy the correct answer is right: Type N connectors are designed for good radio-frequency (RF) performance and better weather resistance than many older general-purpose RF connectors. They are common where outdoor very-high-frequency (VHF) or ultra-high-frequency (UHF) feedlines need robust connections.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"UHF\": UHF-style PL-259/SO-239 connections are common, but they normally need careful external weatherproofing outdoors.\n- sourceIndex 2: \"BNC\": BNC is convenient for quick connections on instruments and portable gear, but moisture resistance is not its main design identity here.\n- sourceIndex 3: \"SMA\": SMA is compact and threaded, yet its small size does not make it the standard moisture-resistant connector named in this question.",
     "fr": null
   },
   "citations": [
