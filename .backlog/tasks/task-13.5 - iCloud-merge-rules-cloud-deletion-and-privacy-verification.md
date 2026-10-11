@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-11 05:57'
+updated_date: '2026-10-11 05:58'
 labels:
   - apple
   - privacy
@@ -73,4 +73,6 @@ Review takeover 2026-10-11: read r1 and unchecked AC1, AC2, AC9, AC11, AC13, and
 Review fixes 2026-10-11: fixed H1 Morse data loss (20 recent results, no read-time writeback), M3/M4 corrupt/one-time Morse migration, H2 per-device sync rows with optional export syncDeviceRows preserving original device ids, M8 submittedAt-canonical exam dedup, H3 retry after failed legacy prefs copy even when Preferences.store exists, H4 gated Delete iCloud Progress UI and defaults seam, M1/M2 local-only reopen restore only for fresh stores plus surfaced account-signal errors, M6 code/docs note for legacy rows, M7 entitlement parser/UIBackgroundModes hardening. Validation passed: web progressStore test, pnpm typecheck, pnpm check:schemas, pnpm test:apple-icloud-gate, pnpm check:apple-icloud-gate, node scripts/check-apple-text-sources.ts, macOS targeted ProgressStoreTests (46 tests), iOS targeted ProgressStoreTests (44 tests). pnpm check:apple-l10n passed once after adding keys; a rerun after trimming the string-catalog diff built successfully but timed out waiting on a subsequent xbuild lock, so it should be rerun before PR if strict fresh l10n evidence is required. Residual for owner/coordinator: AC3 remains (cloud reset/device smoke/privacy questionnaire), AC12 remains for full signed-device account switch semantics; current code keeps old local data after account switch, so owner should decide whether to wipe or preserve old-account local rows before re-enabling sync. Web imports preserve opaque syncDeviceRows until progress is edited; edited web data drops origin rows as documented.
 
 Review r2 takeover 2026-10-11: read r2 in full. Per coordinator N6, unchecked AC1 and AC14 until N1 per-device own-contribution writes are fixed and verified. Will first add targeted regression tests that fail on current code, record that evidence, then fix.
+
+N1 regression evidence before fix: targeted macOS xbuild for testLocalQuestionWritesAfterDeviceRowImportAddOnlyOwnContribution, testTwoDevicesEachQuestionWriteAddsExactlyOneAfterSync, and testLocalLessonAndMorseWritesAfterDeviceRowImportAddOnlyOwnContribution failed as expected on current code (3 tests, 9 assertion failures), showing question counts 5/8 instead of 3/4, two-device counts 5/7 instead of 3/4, lesson readCount 5 instead of 3, and Morse attempts/character/daily totals compounded.
 <!-- SECTION:NOTES:END -->
