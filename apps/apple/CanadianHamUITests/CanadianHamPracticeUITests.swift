@@ -1833,7 +1833,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
             assertFullyVisibleBelowNavigationBar(figureImageButton, in: app, context: "\(appearance.rawValue) \(figureID) screenshot")
             XCTAssertTrue(figureImageButton.label.localizedCaseInsensitiveContains(figureAltText[figureID]!), "Expected figure accessibility label for \(figureID); got \(figureImageButton.label)")
             attachScreenshot(named: "task38-1-ios-\(appearance.rawValue)-\(figureID)", from: app)
-            settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) \(figureID) inline figure")
+            nudgeScrollableContentUp(in: app)
             try performAudit(on: app, context: "\(appearance.rawValue) \(figureID) inline figure")
 
             let enlargeButton = app.buttons["lesson-figure-\(figureID)-enlarge"].firstMatch
@@ -1859,7 +1859,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
             XCTAssertTrue(rowElement.waitForExistence(timeout: 3), "Expected wheel text-equivalent row \(index + 1): \(row)")
             XCTAssertEqual(rowElement.label, row)
         }
-        settleScrollableContentBelowNavigationBar(in: app, context: "\(appearance.rawValue) Ohm's law wheel text equivalent expanded")
+        nudgeScrollableContentUp(in: app)
         try performAudit(on: app, context: "\(appearance.rawValue) Ohm's law wheel text equivalent expanded")
     }
 
@@ -2271,6 +2271,15 @@ final class CanadianHamPracticeUITests: XCTestCase {
         )
     }
 
+    private func nudgeScrollableContentUp(in app: XCUIApplication) {
+        let scrollView = app.scrollViews.firstMatch
+        guard scrollView.waitForExistence(timeout: 1) else { return }
+        let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.54))
+        let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.46))
+        start.press(forDuration: 0.01, thenDragTo: end)
+        waitBriefly()
+    }
+
     private func scrollUntilHittable(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
         for _ in 0..<maxSwipes where !isFullyVisible(element, in: app, requiresHittable: true) {
             app.scrollViews.firstMatch.swipeUp()
@@ -2375,6 +2384,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func protectedAreaOffender(for element: XCUIElement, elementDescription: String, windowMinY: CGFloat, protectedMaxY: CGFloat) -> ProtectedAreaOffender? {
+        guard element.exists else { return nil }
         let frame = element.frame
         guard frame.width > 0, frame.height > 0 else { return nil }
         guard frame.maxY > windowMinY, frame.minY < protectedMaxY else { return nil }
