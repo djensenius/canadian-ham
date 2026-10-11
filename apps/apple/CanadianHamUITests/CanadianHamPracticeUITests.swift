@@ -2382,13 +2382,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
             } else if !visibleFrame.contains(frame) {
                 scrollView.swipeUp()
             } else if !offenders.isEmpty {
-                if frame.minY > visibleFrame.minY + 80 {
-                    scrollView.swipeUp()
-                } else {
-                    let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
-                    let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55))
-                    start.press(forDuration: 0.01, thenDragTo: end)
-                }
+                let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
+                let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55))
+                start.press(forDuration: 0.01, thenDragTo: end)
             } else {
                 break
             }
