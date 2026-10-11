@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-11 01:10'
+updated_date: '2026-10-11 01:12'
 labels:
   - content
   - apple
@@ -56,6 +56,8 @@ Originality: Ohm’s law triangle, power triangle, and wheel were drawn from scr
 Review fix: redesigned the Ohm’s law/power wheel layout so quadrant labels/formulas sit clear of divider strokes, removed triangle decorative arcs and shortened the Ohm’s law triangle caption so all text stays inside the viewBox, regenerated Apple figure assets and refreshed light/dark evidence. Added an approximate SVG <text> bounds check to scripts/check-figures.mjs. Removed stale Apple localization keys for the now-hidden Illustration brief/Alt text placeholder UI; remaining check:apple-l10n drift is limited to the two unrelated Morse count keys under investigation separately.
 
 Review-fix validation passed: pnpm check:figures; TZ=UTC pnpm --filter @canadian-ham/web test (153 tests); node scripts/check-apple-text-sources.ts; targeted iOS xbuild tests testOhmsLawLessonFiguresAndAccessibilityLight and testOhmsLawLessonFiguresAndAccessibilityDark (2 tests) with result bundle /tmp/task381-ohms-targeted.xcresult. Render evidence refreshed under docs/evidence/task-38.1/, including qlmanage 800px and 1600px PNG renders.
+
+Localization follow-up: pnpm check:apple-l10n now passes on the branch. Catalog update removes the three stale placeholder keys (Alt text:, Illustration brief, Illustration brief.) and matches Xcode export for the two Morse plural keys by preserving their values while using the exported plural-variant ordering.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
