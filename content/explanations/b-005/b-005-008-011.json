@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-008-011.\n\nWhy the correct answer is right: Moving from 30 dB over S9 down to S9 is a 30 dB reduction. Thirty dB is three 10 dB steps, so power is divided by 10 x 10 x 10 = 1 000. Then 100 W / 1 000 = 0.1 W.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"1 W\": One watt is a 100-to-one reduction from 100 W, or 20 dB down, leaving 10 dB too much.\n- sourceIndex 2: \"10 W\": Ten watts is only one 10 dB step below 100 W, not the required 30 dB reduction.\n- sourceIndex 3: \"33.3 W\": This is about one third of the original power, only about a 4.8 dB reduction, far short of 30 dB.",
+    "en": "Question B-005-008-011.\n\nWhy the correct answer is right: Moving from 30 decibels (dB) over S9 down to S9 is a 30 dB reduction. Thirty dB is three 10 dB steps, so power is divided by 10 x 10 x 10 = 1 000. Then 100 W / 1 000 = 0.1 W.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"1 W\": One watt is a 100-to-one reduction from 100 W, or 20 dB down, leaving 10 dB too much.\n- sourceIndex 2: \"10 W\": Ten watts is only one 10 dB step below 100 W, not the required 30 dB reduction.\n- sourceIndex 3: \"33.3 W\": This is about one third of the original power, only about a 4.8 dB reduction, far short of 30 dB.",
     "fr": null
   },
   "citations": [

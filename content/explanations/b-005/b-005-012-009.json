@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-012-009.\n\nWhy the correct answer is right: Receiver tuned circuits respond strongly near selected frequencies and weakly away from them. That lets the receiver choose the wanted signals.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"filter direct current\": Direct current has no frequency to tune in this sense, and receiver selection is about RF signal frequency.\n- sourceIndex 2: \"amplify audio signals\": Resonant RF circuits select frequencies; audio amplification is a separate stage function.\n- sourceIndex 3: \"adjust voltage levels\": Voltage-level adjustment is not the purpose of receiver resonant selection.",
+    "en": "Question B-005-012-009.\n\nWhy the correct answer is right: Receiver tuned circuits respond strongly near selected frequencies and weakly away from them. That lets the receiver choose the wanted signals.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"filter direct current\": Direct current has no frequency to tune in this sense, and receiver selection is about radio-frequency (RF) signal frequency.\n- sourceIndex 2: \"amplify audio signals\": Resonant RF circuits select frequencies; audio amplification is a separate stage function.\n- sourceIndex 3: \"adjust voltage levels\": Voltage-level adjustment is not the purpose of receiver resonant selection.",
     "fr": null
   },
   "citations": [
