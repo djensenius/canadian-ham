@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-11 00:47'
+updated_date: '2026-10-11 00:52'
 labels:
   - content
 dependencies:
@@ -54,4 +54,6 @@ r2 fix round completed (ACs intentionally not checked; status left In Progress):
 - Hand-fixed each r2 grammar/duplication item: wrong articles, decibel adjective wording, hyphenated frequency nouns, repeated definitions, b-001-017-006 PEP wording, and the remaining semicolon notes in b-003-013-007 and b-007-006-003.
 - Final report-only audit across content/explanations: before counts article=4, decibels-adjective=3, digit-expanded=2, doubled/nested-parentheses=5, hyphenated-frequency-noun=21, duplicate-expansion=12, tautology=3, total=50; after counts total=0.
 - Verification after r2 fixes: pnpm --dir packages/content-tools check:explanations passed; pnpm check:links passed; cd apps/web && npx vitest run passed (14 files, 152 tests).
+
+Review r3 (APPROVE WITH NOTES): coordinator fixed the remaining low items: CAT duplicate in b-003-007-006; RF defined in b-006-006-002; HF defined in b-003-013-009; hyphenated-noun forms in b-004-002-006, b-007-001-008, b-007-008-011, b-003-012-003, b-003-008-001 and b-008-002-007; FET order in b-004-003-003. Remaining cosmetic hyphenation inconsistency (adjective 'very high frequency (VHF) range' vs 'very-high-frequency (VHF) range') is accepted. Totals: all 984 explanations reviewed in 4 lanes, about 440 revised (body.en only), reviewed per category (4 reviewers) plus 2 fix-round re-reviews with bank checks; no explanation contradicts the bank, and no taught fact was lost (taught-facts checks in each review).
 <!-- SECTION:NOTES:END -->
