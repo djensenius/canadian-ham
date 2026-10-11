@@ -623,6 +623,8 @@ private struct LessonFigureView: View {
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         .contentShape(Rectangle())
         .onTapGesture { showingEnlargedFigure = true }
+        .accessibilityAddTraits(.isButton)
+        .accessibilityAction { showingEnlargedFigure = true }
         .accessibilityIdentifier("lesson-figure-\(figure.id)-card")
         .sheet(isPresented: $showingEnlargedFigure) {
             EnlargedLessonFigureView(figure: figure, aspectRatio: aspectRatio)
