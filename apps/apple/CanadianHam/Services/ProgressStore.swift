@@ -935,6 +935,7 @@ final class ProgressStoreService: ObservableObject {
     }
 
     func reopenLocalOnlyAfterSyncStop(factory: ((Bool) throws -> ModelContainer)? = nil) throws {
+        let snapshot = try snapshotForRollback()
         let makeContainer = factory ?? modelContainerFactory ?? { [storeURLs, layout] enabled in
             try Self.makeModelContainer(
                 iCloudSyncEnabled: enabled,
@@ -947,8 +948,7 @@ final class ProgressStoreService: ObservableObject {
         container = localOnlyContainer
         context = ModelContext(localOnlyContainer)
         isICloudSyncEnabled = false
-        try migrateLearningProgressFromLegacyStorageIfNeeded()
-        preferences = try loadPreferences()
+        try restore(snapshot)
         objectWillChange.send()
     }
 
@@ -1605,7 +1605,6 @@ final class ProgressStoreService: ObservableObject {
         try context.delete(model: ExamAttemptEntity.self)
         try context.delete(model: LessonProgressEntity.self)
         try context.delete(model: LessonQuizAttemptEntity.self)
-        try context.delete(model: MorseCourseProgressEntity.self)
         try context.delete(model: PreferencesEntity.self)
         let entity = PreferencesEntity(
             practiceMode: snapshot.preferences.practiceMode.rawValue,
