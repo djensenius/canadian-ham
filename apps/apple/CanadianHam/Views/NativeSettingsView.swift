@@ -9,6 +9,10 @@ struct NativeSettingsView: View {
         appSettings.progressStore?.preferences.theme.nativeColorScheme
     }
 
+    var settingsLocale: Locale {
+        Locale(identifier: (appSettings.progressStore?.preferences.language.resolvedLanguage() ?? ApplePreferences.LanguagePreference.system.resolvedLanguage()).accessibilityLanguageCode)
+    }
+
     var body: some View {
         TabView {
             NativeGeneralSettingsTab(appSettings: appSettings)
@@ -21,6 +25,7 @@ struct NativeSettingsView: View {
         .frame(width: 560, height: 480)
         .padding(DesignTokens.Spacing.lg)
         .preferredColorScheme(preferredColorScheme)
+        .environment(\.locale, settingsLocale)
     }
 }
 
