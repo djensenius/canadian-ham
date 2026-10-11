@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-005-009.\n\nWhy the correct answer is right: Full break-in continuous wave (CW) lets the operator hear incoming signals between transmitted dots and dashes.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Automatic keyers are used instead of hand keys\": Using an automatic keyer does not by itself provide receiver recovery between code elements.\n- sourceIndex 2: \"An operator must activate a manual send/receive switch before and after every transmission\": Manual send/receive switching is the opposite of full break-in convenience.\n- sourceIndex 3: \"Stations wishing to break in must send the Morse code signal \\\"BK\\\"\": Sending BK is an interruption signal, not the definition of full break-in operation.",
+    "en": "Question B-002-005-009.\n\nWhy the correct answer is right: Full break-in (QSK) continuous wave (CW) operation lets the operator hear incoming signals between transmitted dots and dashes.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Automatic keyers are used instead of hand keys\": Using an automatic keyer does not by itself provide receiver recovery between code elements.\n- sourceIndex 2: \"An operator must activate a manual send/receive switch before and after every transmission\": Manual send/receive switching is the opposite of full break-in convenience.\n- sourceIndex 3: \"Stations wishing to break in must send the Morse code signal \\\"BK\\\"\": Sending BK is an interruption signal, not the definition of full break-in operation.",
     "fr": null
   },
   "citations": [
