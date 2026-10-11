@@ -2583,180 +2583,6 @@
         }
       }
     },
-    "Beacon area %.0f points is below the %.0f-point WCAG flash cap; max %@." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beacon area %.0f points is below the %.0f-point WCAG flash cap; max %@."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La zone de balise de %.0f points est sous la limite WCAG de %.0f points; maximum %@."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La zone de balise de %.0f points est sous la limite WCAG de %.0f points; maximum %@."
-          }
-        }
-      }
-    },
-    "Enlarge figure" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enlarge figure"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Agrandir la figure"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Agrandir la figure"
-          }
-        }
-      }
-    },
-    "Enlarged figure" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enlarged figure"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Figure agrandie"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Figure agrandie"
-          }
-        }
-      }
-    },
-    "Figure text equivalent" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Figure text equivalent"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Équivalent textuel de la figure"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Équivalent textuel de la figure"
-          }
-        }
-      }
-    },
-    "Off by default. When enabled, question practice and mock exam progress can sync through your private iCloud database after restart; lesson progress and preferences stay on this Mac." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Désactivée par défaut. Une fois activée, la progression des exercices et des examens simulés peut se synchroniser avec votre base de données iCloud privée après le redémarrage; la progression des leçons et les préférences restent sur ce Mac."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Désactivée par défaut. Une fois activée, la progression des exercices et des examens simulés peut se synchroniser avec votre base de données iCloud privée après le redémarrage; la progression des leçons et les préférences restent sur ce Mac."
-          }
-        }
-      }
-    },
-    "Off by default. When enabled, question practice and mock exam progress can sync through your private iCloud database after restart; lesson progress and preferences stay on this device." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Désactivée par défaut. Une fois activée, la progression des exercices et des examens simulés peut se synchroniser avec votre base de données iCloud privée après le redémarrage; la progression des leçons et les préférences restent sur cet appareil."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Désactivée par défaut. Une fois activée, la progression des exercices et des examens simulés peut se synchroniser avec votre base de données iCloud privée après le redémarrage; la progression des leçons et les préférences restent sur cet appareil."
-          }
-        }
-      }
-    },
-    "Opens enlarged figure" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Opens enlarged figure"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ouvre la figure agrandie"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ouvre la figure agrandie"
-          }
-        }
-      }
-    },
-    "Sync practice and exam progress with iCloud" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Synchroniser la progression des exercices et des examens avec iCloud"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Synchroniser la progression des exercices et des examens avec iCloud"
-          }
-        }
-      }
-    },
-    "This development build includes bundled content and has no accounts, analytics, telemetry, ads, remote config, third-party SDKs, or developer-operated servers. iCloud Sync is optional and off until you turn it on; import and export use local files you choose." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette version de développement comprend du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucune configuration distante, aucun SDK tiers ni aucun serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette version de développement comprend du contenu intégré et n’a aucun compte, aucune analytique, aucune télémétrie, aucune publicité, aucune configuration distante, aucun SDK tiers ni aucun serveur exploité par les développeurs. La synchronisation iCloud est facultative et désactivée jusqu’à ce que vous l’activiez; l’importation et l’exportation utilisent les fichiers locaux que vous choisissez."
-          }
-        }
-      }
-    },
     "•" : {
       "localizations" : {
         "fr" : {
@@ -2995,28 +2821,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Toutes les questions ont une réponse. Vous pouvez soumettre maintenant."
-          }
-        }
-      }
-    },
-    "Alt text: " : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alt text: "
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Texte de remplacement : "
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Texte de remplacement : "
           }
         }
       }
@@ -3265,6 +3069,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Balise"
+          }
+        }
+      }
+    },
+    "Beacon area %@ square points is below the %@ square-point WCAG flash cap; max %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beacon area %@ square points is below the %@ square-point WCAG flash cap; max %@."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La zone de balise de %@ points carrés est sous la limite WCAG de %@ points carrés; maximum %@."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La zone de balise de %@ points carrés est sous la limite WCAG de %@ points carrés; maximum %@."
           }
         }
       }
@@ -4497,6 +4323,50 @@
         }
       }
     },
+    "Enlarge figure" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enlarge figure"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrandir la figure"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrandir la figure"
+          }
+        }
+      }
+    },
+    "Enlarged figure" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enlarged figure"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Figure agrandie"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Figure agrandie"
+          }
+        }
+      }
+    },
     "Enter the characters you heard, not dot and dash notation." : {
       "localizations" : {
         "fr" : {
@@ -4653,6 +4523,22 @@
         }
       }
     },
+    "Exam-style check" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérification d’examen"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérification d’examen"
+          }
+        }
+      }
+    },
     "Exercise %lld of %lld" : {
       "localizations" : {
         "fr" : {
@@ -4773,6 +4659,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ÉCHEC, %1$lld %%, avec %2$lld erreurs."
+          }
+        }
+      }
+    },
+    "Figure text equivalent" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Figure text equivalent"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Équivalent textuel de la figure"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Équivalent textuel de la figure"
           }
         }
       }
@@ -5175,44 +5083,6 @@
         }
       }
     },
-    "Illustration brief" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Note d’illustration"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Note d’illustration"
-          }
-        }
-      }
-    },
-    "Illustration brief. " : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Illustration brief. "
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Note d’illustration. "
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Note d’illustration. "
-          }
-        }
-      }
-    },
     "Immediate feedback" : {
       "localizations" : {
         "fr" : {
@@ -5411,6 +5281,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import morseCourseProgress.courseId ne doit pas être vide."
+          }
+        }
+      }
+    },
+    "Import preferences.morse.outputMode is invalid." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import preferences.morse.outputMode is invalid."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.morse.outputMode est invalide."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.morse.outputMode est invalide."
+          }
+        }
+      }
+    },
+    "Import preferences.morse.timingProfile is invalid." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import preferences.morse.timingProfile is invalid."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.morse.timingProfile est invalide."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.morse.timingProfile est invalide."
           }
         }
       }
@@ -7493,6 +7407,28 @@
         }
       }
     },
+    "Opens enlarged figure" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens enlarged figure"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvre la figure agrandie"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvre la figure agrandie"
+          }
+        }
+      }
+    },
     "Outline available" : {
       "localizations" : {
         "fr" : {
@@ -8567,6 +8503,22 @@
         }
       }
     },
+    "Reset iCloud progress through the cloud deletion flow." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réinitialisez la progression iCloud au moyen de la suppression infonuagique."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réinitialisez la progression iCloud au moyen de la suppression infonuagique."
+          }
+        }
+      }
+    },
     "Reset local data and retry" : {
       "localizations" : {
         "fr" : {
@@ -8945,6 +8897,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Envoyer un point"
+          }
+        }
+      }
+    },
+    "Send the displayed passage, then end and grade when ready. Unsent characters at 0:00 count as errors." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyez le passage affiché, puis terminez et corrigez quand vous êtes prêt. Les caractères non envoyés à 0:00 comptent comme erreurs."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyez le passage affiché, puis terminez et corrigez quand vous êtes prêt. Les caractères non envoyés à 0:00 comptent comme erreurs."
           }
         }
       }
@@ -10933,120 +10901,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Votre progression locale indique des catégories faibles, des questions à réviser ou moins d’examens simulés réussis que nécessaire. Révisez les questions faibles et les questions à réviser avant de vous fier à votre préparation à l’examen."
-          }
-        }
-      }
-    },
-    "Reset iCloud progress through the cloud deletion flow." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réinitialisez la progression iCloud au moyen de la suppression infonuagique."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Réinitialisez la progression iCloud au moyen de la suppression infonuagique."
-          }
-        }
-      }
-    },
-    "Beacon area %@ square points is below the %@ square-point WCAG flash cap; max %@." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beacon area %@ square points is below the %@ square-point WCAG flash cap; max %@."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La zone de balise de %@ points carrés est sous la limite WCAG de %@ points carrés; maximum %@."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La zone de balise de %@ points carrés est sous la limite WCAG de %@ points carrés; maximum %@."
-          }
-        }
-      }
-    },
-    "Exam-style check" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vérification d’examen"
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vérification d’examen"
-          }
-        }
-      }
-    },
-    "Import preferences.morse.outputMode is invalid." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import preferences.morse.outputMode is invalid."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importation : preferences.morse.outputMode est invalide."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importation : preferences.morse.outputMode est invalide."
-          }
-        }
-      }
-    },
-    "Import preferences.morse.timingProfile is invalid." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import preferences.morse.timingProfile is invalid."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importation : preferences.morse.timingProfile est invalide."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importation : preferences.morse.timingProfile est invalide."
-          }
-        }
-      }
-    },
-    "Send the displayed passage, then end and grade when ready. Unsent characters at 0:00 count as errors." : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Envoyez le passage affiché, puis terminez et corrigez quand vous êtes prêt. Les caractères non envoyés à 0:00 comptent comme erreurs."
-          }
-        },
-        "fr-CA" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Envoyez le passage affiché, puis terminez et corrigez quand vous êtes prêt. Les caractères non envoyés à 0:00 comptent comme erreurs."
           }
         }
       }
