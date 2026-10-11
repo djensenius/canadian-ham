@@ -167,11 +167,18 @@ final class MorseTrainerTests: XCTestCase {
     func testReduceFlashingStopsOnlyRunningVisualBeacon() {
         let enabledFlags = MorseReduceFlashingFlags(environmentReduceMotion: true, systemReduceMotion: false, dimFlashingLights: false)
         let disabledFlags = MorseReduceFlashingFlags(environmentReduceMotion: false, systemReduceMotion: false, dimFlashingLights: false)
+        let completedBeaconState = MorseVisualPlaybackState(mode: .visualBeacon, beaconActive: false, tape: "", safetyNote: "finished")
+        var ownerState = completedBeaconState
 
-        XCTAssertTrue(shouldStopMorseVisualBeaconForReducedFlashing(state: MorseVisualPlaybackState(mode: .visualBeacon), flags: enabledFlags))
-        XCTAssertFalse(shouldStopMorseVisualBeaconForReducedFlashing(state: MorseVisualPlaybackState(mode: .visualTape), flags: enabledFlags))
-        XCTAssertFalse(shouldStopMorseVisualBeaconForReducedFlashing(state: MorseVisualPlaybackState(mode: .idle), flags: enabledFlags))
-        XCTAssertFalse(shouldStopMorseVisualBeaconForReducedFlashing(state: MorseVisualPlaybackState(mode: .visualBeacon), flags: disabledFlags))
+        XCTAssertTrue(shouldStopMorseVisualBeaconForReducedFlashing(state: MorseVisualPlaybackState(mode: .visualBeacon), isPlaybackRunning: true, flags: enabledFlags))
+        XCTAssertFalse(shouldStopMorseVisualBeaconForReducedFlashing(state: MorseVisualPlaybackState(mode: .visualTape), isPlaybackRunning: true, flags: enabledFlags))
+        XCTAssertFalse(shouldStopMorseVisualBeaconForReducedFlashing(state: MorseVisualPlaybackState(mode: .idle), isPlaybackRunning: true, flags: enabledFlags))
+        XCTAssertFalse(shouldStopMorseVisualBeaconForReducedFlashing(state: MorseVisualPlaybackState(mode: .visualBeacon), isPlaybackRunning: true, flags: disabledFlags))
+        XCTAssertFalse(shouldStopMorseVisualBeaconForReducedFlashing(state: completedBeaconState, isPlaybackRunning: false, flags: enabledFlags))
+        if shouldStopMorseVisualBeaconForReducedFlashing(state: ownerState, isPlaybackRunning: false, flags: enabledFlags) {
+            ownerState = MorseVisualPlaybackState()
+        }
+        XCTAssertEqual(ownerState, completedBeaconState, "Completed beacon output must not be cleared by a later Reduce Motion change")
     }
 
     @MainActor

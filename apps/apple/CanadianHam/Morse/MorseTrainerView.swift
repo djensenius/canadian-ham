@@ -155,8 +155,8 @@ func shouldReduceMorseFlashing(flags: MorseReduceFlashingFlags) -> Bool {
     flags.environmentReduceMotion || flags.systemReduceMotion || flags.dimFlashingLights
 }
 
-func shouldStopMorseVisualBeaconForReducedFlashing(state: MorseVisualPlaybackState, flags: MorseReduceFlashingFlags) -> Bool {
-    state.mode == .visualBeacon && shouldReduceMorseFlashing(flags: flags)
+func shouldStopMorseVisualBeaconForReducedFlashing(state: MorseVisualPlaybackState, isPlaybackRunning: Bool, flags: MorseReduceFlashingFlags) -> Bool {
+    isPlaybackRunning && state.mode == .visualBeacon && shouldReduceMorseFlashing(flags: flags)
 }
 
 @MainActor
@@ -398,7 +398,7 @@ struct MorseTrainerView: View {
 
     private func stopBeaconPlaybackIfReducedFlashingIsEnabled() {
         let flags = currentMorseReduceFlashingFlags(environmentReduceMotion: reduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)
-        if shouldStopMorseVisualBeaconForReducedFlashing(state: visualPlaybackState, flags: flags) {
+        if shouldStopMorseVisualBeaconForReducedFlashing(state: visualPlaybackState, isPlaybackRunning: isPlaying, flags: flags) {
             stopPlayback(reveal: false, message: String(localized: "Morse playback stopped."))
         }
     }

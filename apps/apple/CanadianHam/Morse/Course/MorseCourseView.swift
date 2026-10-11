@@ -535,7 +535,7 @@ struct MorseCourseView: View {
 
     private func stopBeaconPlaybackIfReducedFlashingIsEnabled() {
         let flags = currentMorseReduceFlashingFlags(environmentReduceMotion: reduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)
-        if shouldStopMorseVisualBeaconForReducedFlashing(state: visualPlaybackState, flags: flags) {
+        if shouldStopMorseVisualBeaconForReducedFlashing(state: visualPlaybackState, isPlaybackRunning: isPlaying, flags: flags) {
             stopCoursePlayback(message: String(localized: "Morse playback stopped."))
         }
     }

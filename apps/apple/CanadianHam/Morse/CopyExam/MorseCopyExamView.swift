@@ -325,7 +325,7 @@ private struct MorseCopyPracticeView: View {
 
     private func stopBeaconPlaybackIfReducedFlashingIsEnabled() {
         let flags = currentMorseReduceFlashingFlags(environmentReduceMotion: reduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)
-        if shouldStopMorseVisualBeaconForReducedFlashing(state: visualPlaybackState, flags: flags) {
+        if shouldStopMorseVisualBeaconForReducedFlashing(state: visualPlaybackState, isPlaybackRunning: isPlaying, flags: flags) {
             stopPracticeIfPlaying()
         }
     }
@@ -592,7 +592,7 @@ private struct MorseReceivingExamView: View {
 
     private func stopBeaconPlaybackIfReducedFlashingIsEnabled() {
         let flags = currentMorseReduceFlashingFlags(environmentReduceMotion: reduceMotion, dimFlashingLightsEnabled: dimFlashingLightsEnabled)
-        if shouldStopMorseVisualBeaconForReducedFlashing(state: visualPlaybackState, flags: flags) {
+        if shouldStopMorseVisualBeaconForReducedFlashing(state: visualPlaybackState, isPlaybackRunning: stage == .playing, flags: flags) {
             stopExamPlaybackIfPlaying()
         }
     }
