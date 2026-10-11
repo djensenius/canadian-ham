@@ -336,6 +336,21 @@ private struct NativeDataSettingsTab: View {
             errorMessage = String(localized: "Open a Canadian Ham window to load settings.")
             return
         }
+#if ICLOUD_SYNC
+        Task { @MainActor in
+            do {
+                try await progressStore.resetAllData(client: .cloudKit())
+                MorseTrainerSettings.reset()
+                appSettings.morseSettings = .default
+                appSettings.recordDataChanged(replacesLocalData: true)
+                statusMessage = String(localized: "All local progress was reset.")
+                errorMessage = ""
+            } catch {
+                errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
+            }
+        }
+        return
+#endif
         do {
             try progressStore.resetAllData()
             MorseTrainerSettings.reset()

@@ -124,10 +124,18 @@ final class ProgressStoreTests: XCTestCase {
         store.updateICloudSyncOptIn(true)
         XCTAssertTrue(ICloudSyncSettings.storedOptIn())
 
+#if ICLOUD_SYNC
+        XCTAssertThrowsError(try store.resetAllData()) { error in
+            XCTAssertEqual(error as? ProgressStoreError, .cloudResetRequiresAsyncDeletion)
+        }
+        XCTAssertTrue(ICloudSyncSettings.storedOptIn(), "Gated builds must use the cloud deletion reset flow before clearing opt-in")
+        XCTAssertTrue(store.isICloudSyncEnabled)
+#else
         try store.resetAllData()
 
         XCTAssertFalse(ICloudSyncSettings.storedOptIn(), "Reset all data must turn the iCloud opt-in off")
         XCTAssertFalse(store.isICloudSyncEnabled)
+#endif
     }
 
     func testResetAllDataWithICloudSyncDeletesCloudZoneThenWipesLocalData() async throws {

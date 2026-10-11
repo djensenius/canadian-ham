@@ -501,6 +501,7 @@ struct StoredExamAttempt: Codable, Equatable, Sendable, Identifiable {
 enum ProgressStoreError: LocalizedError, Equatable {
     case validationFailed([String])
     case openFailed(String)
+    case cloudResetRequiresAsyncDeletion
 
     var errorDescription: String? {
         switch self {
@@ -508,6 +509,8 @@ enum ProgressStoreError: LocalizedError, Equatable {
             errors.joined(separator: "\n")
         case .openFailed(let message):
             message
+        case .cloudResetRequiresAsyncDeletion:
+            "Reset iCloud progress through the cloud deletion flow."
         }
     }
 }
@@ -1169,6 +1172,11 @@ final class ProgressStoreService: ObservableObject {
     }
 
     func resetAllData(defaults: UserDefaults = .standard) throws {
+#if ICLOUD_SYNC
+        if isICloudSyncEnabled || ICloudSyncSettings.storedOptIn(defaults: defaults) || pendingICloudProgressDeletionForReset || ICloudSyncSettings.pendingProgressZoneDeletion(defaults: defaults) {
+            throw ProgressStoreError.cloudResetRequiresAsyncDeletion
+        }
+#endif
         let previousSnapshot = try snapshotForRollback()
         do {
             try context.delete(model: QuestionProgressEntity.self)
