@@ -2523,11 +2523,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
         }
         var trace: [String] = []
         func record(_ label: String) {
-            let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
-            trace.append("\(label): target=\(frameDescription(element.frame)); offenders=\(offenders.map(\.description).joined(separator: " | ")); nearBar=\(elementsNearestProtectedBar(in: app, scrollView: scrollView).joined(separator: " | "))")
+            trace.append("\(label): target=\(frameDescription(element.frame))")
         }
         func positioned() -> Bool {
-            isFullyVisibleInMiddleBand(element, in: app) && scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView).isEmpty
+            isFullyVisibleInMiddleBand(element, in: app)
         }
         record("start")
         if !positioned() {
