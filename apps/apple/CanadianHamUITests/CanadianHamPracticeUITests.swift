@@ -1371,7 +1371,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCTAssertLessThanOrEqual(wheel.frame.maxX, windowFrame.maxX + 1, "Wheel should not extend right of the window at the largest accessibility text size")
 
         attachScreenshot(named: "task38-1-ios-large-text-ohms-law-power-wheel", from: app)
-        wheel.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        wheel.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.08)).tap()
         XCTAssertTrue(app.descendants(matching: .any)["lesson-figure-ohms-law-power-wheel-enlarged"].firstMatch.waitForExistence(timeout: 5), "Tapping enlarge should open the enlarged figure sheet")
         let enlargedImage = app.descendants(matching: .any)["lesson-figure-ohms-law-power-wheel-enlarged-image"].firstMatch
         XCTAssertTrue(enlargedImage.waitForExistence(timeout: 5), "Expected enlarged wheel image")
