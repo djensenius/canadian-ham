@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-008-010.\n\nWhy the correct answer is right: A 6 dB loss is two 3 dB halvings. Starting with 100 W, the first halving gives 50 W and the second gives 25 W at the antenna.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"50 watts\": Fifty watts is only one 3 dB loss from 100 W. The line loss is 6 dB, which is two halvings.\n- sourceIndex 2: \"17 watts\": This roughly treats 6 dB as dividing by 6, but dB loss uses ratios; 6 dB corresponds to a factor of 4.\n- sourceIndex 3: \"33 watts\": Thirty-three watts is about one third of 100 W, not the quarter-power result of a 6 dB loss.",
+    "en": "Question B-005-008-010.\n\nWhy the correct answer is right: A 6 dB loss is two 3 dB halvings. Starting with 100 W, the first halving gives 50 W and the second gives 25 W at the antenna.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"50 watts\": Fifty watts is only one 3 dB loss from 100 W. The line loss is 6 dB, which is two halvings.\n- sourceIndex 2: \"17 watts\": This roughly treats 6 dB as dividing by 6, but dB loss uses ratios; 6 dB corresponds to a factor of 4.\n- sourceIndex 3: \"33 watts\": Thirty-three watts is about one third of 100 W. A 6 dB loss leaves one quarter of the power.",
     "fr": null
   },
   "citations": [

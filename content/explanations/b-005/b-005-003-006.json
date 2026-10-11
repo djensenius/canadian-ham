@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-003-006.\n\nWhy the correct answer is right: Power is expressed in watts.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"volts\": Volts express voltage.\n- sourceIndex 2: \"amperes\": Amperes express current.\n- sourceIndex 3: \"ohms\": Ohms express resistance.",
+    "en": "Question B-005-003-006.\n\nWhy the correct answer is right: Power is expressed in watts.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"volts\": Volts express voltage.\n- sourceIndex 2: \"amperes\": Amperes express current.\n- sourceIndex 3: \"ohms\": The ohm is the unit for resistance.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-008-004.\n\nWhy the correct answer is right: Reducing power from 200 W to 20 W is a factor of 10 decrease, which is 10 dB down. Starting at 10 dB over S9, subtracting 10 dB lands at S9.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"S9 plus 3 dB\": That would be only 7 dB below the original reading, not the full 10 dB caused by a ten-to-one power reduction.\n- sourceIndex 2: \"S9 minus 10 dB\": This subtracts 20 dB from the starting point of 10 dB over S9. The power change supplies a 10 dB reduction, not 20 dB.\n- sourceIndex 3: \"S9 plus 5 dB\": Five dB over S9 would leave half of the original dB margin; the 200 W to 20 W change removes all 10 dB over S9.",
+    "en": "Question B-005-008-004.\n\nWhy the correct answer is right: Reducing power from 200 W to 20 W is a factor-of-10 decrease, or 10 dB down. Starting at 10 dB over S9, subtract 10 dB and land at S9.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"S9 plus 3 dB\": That is only 7 dB below the original reading. The ten-to-one power reduction causes the full 10 dB change.\n- sourceIndex 2: \"S9 minus 10 dB\": This subtracts 20 dB from the starting point of 10 dB over S9. The power change supplies a 10 dB reduction, not 20 dB.\n- sourceIndex 3: \"S9 plus 5 dB\": Five dB over S9 would leave half of the original dB margin; the 200 W to 20 W change removes all 10 dB over S9.",
     "fr": null
   },
   "citations": [

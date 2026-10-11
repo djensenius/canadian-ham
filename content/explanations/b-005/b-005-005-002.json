@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-005-002.\n\nWhy the correct answer is right: Each 100-ohm branch has 12 V across it, so each branch draws I = 12 / 100 = 0.12 A, or 120 mA. Four equal branches draw 4 x 120 mA = 480 mA.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"48 mA\": This is one tenth of the correct total; it would come from moving the decimal one extra place after finding 0.48 A.\n- sourceIndex 2: \"120 mA\": This is the current in one 100-ohm branch, not the current supplied to all four branches.\n- sourceIndex 3: \"240 mA\": This counts only two of the four 120 mA branch currents.",
+    "en": "Question B-005-005-002.\n\nWhy the correct answer is right: Each 100-ohm branch has 12 V across it. One branch draws I = 12 / 100 = 0.12 A, or 120 mA. Four equal branches draw 4 x 120 mA = 480 mA.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"48 mA\": This is one tenth of the correct total. It moves the decimal one extra place after finding 0.48 A.\n- sourceIndex 2: \"120 mA\": This is the current in one 100-ohm branch, not the current supplied to all four branches.\n- sourceIndex 3: \"240 mA\": This counts only two of the four 120 mA branch currents.",
     "fr": null
   },
   "citations": [

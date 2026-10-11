@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-010-008.\n\nWhy the correct answer is right: Capacitive reactance decreases as frequency rises. At RF, the bypass capacitor can offer a low-reactance path that shunts interference away from the audio path.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"High reactance at radio frequencies\": High RF reactance would block the bypass path and leave the RF in the circuit.\n- sourceIndex 2: \"Low reactance at audio frequencies\": A low audio reactance would bypass wanted audio too, which is not the intended RF-only cure.\n- sourceIndex 3: \"High reactance at audio frequencies\": High audio reactance helps avoid loading audio, but the diversion of interfering RF depends on low reactance at radio frequencies.",
+    "en": "Question B-005-010-008.\n\nWhy the correct answer is right: Capacitive reactance decreases as frequency rises. At radio frequencies, the bypass capacitor can offer a low-reactance path that shunts interference away from the audio path.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"High reactance at radio frequencies\": High radio-frequency reactance would block the bypass path and leave the interference in the circuit.\n- sourceIndex 2: \"Low reactance at audio frequencies\": A low audio reactance would bypass wanted audio too, which is not the intended RF-only cure.\n- sourceIndex 3: \"High reactance at audio frequencies\": High audio reactance helps avoid loading audio, but the diversion of interfering RF depends on low reactance at radio frequencies.",
     "fr": null
   },
   "citations": [
