@@ -10784,6 +10784,22 @@
           }
         }
       }
+    },
+    "Reset iCloud progress through the cloud deletion flow." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réinitialisez la progression iCloud au moyen de la suppression infonuagique."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réinitialisez la progression iCloud au moyen de la suppression infonuagique."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

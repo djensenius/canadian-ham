@@ -510,7 +510,7 @@ enum ProgressStoreError: LocalizedError, Equatable {
         case .openFailed(let message):
             message
         case .cloudResetRequiresAsyncDeletion:
-            "Reset iCloud progress through the cloud deletion flow."
+            String(localized: "Reset iCloud progress through the cloud deletion flow.")
         }
     }
 }
@@ -1013,6 +1013,9 @@ final class ProgressStoreService: ObservableObject {
         ICloudSyncSettings.clearStoredOptIn(defaults: defaults)
         try reopenLocalOnlyAfterSyncStop()
         try await client.deletePrivateDatabaseProgressZones()
+        // The zone is gone, so any reset that was waiting on this deletion is satisfied.
+        pendingICloudProgressDeletionForReset = false
+        ICloudSyncSettings.setPendingProgressZoneDeletion(false, defaults: defaults)
         if localDataChoice == .deleteLocal {
             try resetAllData(defaults: defaults)
         }
