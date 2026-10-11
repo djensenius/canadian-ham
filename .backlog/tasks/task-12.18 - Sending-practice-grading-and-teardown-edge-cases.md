@@ -1,11 +1,11 @@
 ---
 id: TASK-12.18
 title: 'Sending practice: grading and teardown edge cases'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-06 11:55'
-updated_date: '2026-10-09 18:00'
+updated_date: '2026-10-11 01:17'
 labels: []
 dependencies:
   - TASK-12.7
