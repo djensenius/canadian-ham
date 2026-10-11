@@ -85,4 +85,6 @@ Review r4 H-A fix: replaced the gated Settings tokenButton call with the literal
 Review r4 M-6 fix: macOS NativeSettings reset now calls the async cloud deletion reset under ICLOUD_SYNC, and the synchronous resetAllData(defaults:) now throws ProgressStoreError.cloudResetRequiresAsyncDeletion in gated cloud/pending cases so cloud resets cannot bypass zone deletion. Store-level gated/default reset evidence is in ProgressStoreTests; xbuild validation pending.
 
 Review r4 M-5 leftover fix: the lesson, lesson-quiz, and Morse syncDeviceRows deviceId validation messages now use the existing localized "%@.deviceId must be non-empty." key, and the three empty catalogue keys were removed without unrelated catalogue churn.
+
+Review r4 M-7 fix: lesson writes now subtract other devices using a per-device maximum instead of summing duplicate rows, the no-context question-progress fallback now uses the same per-device max rule, and ProgressStoreTests includes duplicate imported+synced lesson rows where the next local read increases by exactly 1.
 <!-- SECTION:NOTES:END -->
