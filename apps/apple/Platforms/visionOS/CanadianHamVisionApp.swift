@@ -33,9 +33,7 @@ private struct VisionLaunchOptions {
         case "dark": colorScheme = .dark
         default: colorScheme = nil
         }
-        initialLanguage = AppLaunchArguments.value(after: "-CanadianHamLanguage", in: arguments)
-            .flatMap(ApplePreferences.LanguagePreference.init(rawValue:))?
-            .resolvedLanguage() ?? ApplePreferences.LanguagePreference.system.resolvedLanguage()
+        initialLanguage = BankLanguage.resolvedPreference(rawValue: AppLaunchArguments.value(after: "-CanadianHamLanguage", in: arguments))
 #else
         _ = arguments
         initialScreen = .categories
@@ -43,7 +41,7 @@ private struct VisionLaunchOptions {
         practiceQuestionID = nil
         answeredSourceIndex = nil
         colorScheme = nil
-        initialLanguage = ApplePreferences.LanguagePreference.system.resolvedLanguage()
+        initialLanguage = BankLanguage.systemPreferred()
 #endif
     }
 }

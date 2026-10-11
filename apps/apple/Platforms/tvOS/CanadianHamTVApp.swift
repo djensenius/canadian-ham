@@ -41,9 +41,7 @@ private struct TVLaunchOptions {
         case "disabled", "false", "0": reduceMotionOverride = false
         default: reduceMotionOverride = nil
         }
-        initialLanguage = AppLaunchArguments.value(after: "-CanadianHamLanguage", in: arguments)
-            .flatMap(ApplePreferences.LanguagePreference.init(rawValue:))?
-            .resolvedLanguage() ?? ApplePreferences.LanguagePreference.system.resolvedLanguage()
+        initialLanguage = BankLanguage.resolvedPreference(rawValue: AppLaunchArguments.value(after: "-CanadianHamLanguage", in: arguments))
         evidenceFocus = AppLaunchArguments.value(after: "-CanadianHamTVEvidenceFocus", in: arguments).flatMap(TVEvidenceFocus.init(rawValue:))
         #else
         _ = arguments
@@ -53,7 +51,7 @@ private struct TVLaunchOptions {
         answeredSourceIndex = nil
         colorScheme = nil
         reduceMotionOverride = nil
-        initialLanguage = ApplePreferences.LanguagePreference.system.resolvedLanguage()
+        initialLanguage = BankLanguage.systemPreferred()
         evidenceFocus = nil
         #endif
     }

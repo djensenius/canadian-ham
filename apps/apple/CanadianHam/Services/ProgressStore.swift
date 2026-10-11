@@ -49,9 +49,7 @@ struct ApplePreferences: Codable, Equatable, Sendable {
         }
 
         static func systemLanguage(preferredLanguages: [String] = Locale.preferredLanguages) -> BankLanguage {
-            let supportedLocalizations = BankLanguage.allCases.map(\.rawValue)
-            let preferredLocalization = Bundle.preferredLocalizations(from: supportedLocalizations, forPreferences: preferredLanguages).first
-            return preferredLocalization?.lowercased().hasPrefix(BankLanguage.french.rawValue) == true ? .french : .english
+            BankLanguage.systemPreferred(preferredLanguages: preferredLanguages)
         }
     }
 
