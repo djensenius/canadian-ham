@@ -10,6 +10,7 @@ final class CanadianHamVisionTests: XCTestCase {
         XCTAssertEqual(bank.subsections.count, 100)
         XCTAssertEqual(bank.manifest.bankId, "basic-2025-07-15")
         XCTAssertEqual(try bundledGeneratedBankIDs(in: appBundle), [])
+        XCTAssertEqual(try bundledReadmePaths(in: appBundle), [], "visionOS app bundle must not contain README.md files")
         XCTAssertTrue(try bundledAdvancedResourcePaths(in: appBundle).isEmpty, "visionOS app bundle must not contain Advanced generated resources")
     }
 
@@ -41,6 +42,23 @@ final class CanadianHamVisionTests: XCTestCase {
         let productsDirectory = Bundle(for: Self.self).bundleURL.deletingLastPathComponent()
         let appURL = productsDirectory.appendingPathComponent("\(name).app", isDirectory: true)
         return try XCTUnwrap(Bundle(url: appURL), "Expected built app bundle at \(appURL.path)")
+    }
+
+    private func bundledReadmePaths(in bundle: Bundle) throws -> [String] {
+        let resourceURL = try XCTUnwrap(bundle.resourceURL)
+        let urls = FileManager.default.enumerator(
+            at: resourceURL,
+            includingPropertiesForKeys: [.isRegularFileKey]
+        )?.compactMap { $0 as? URL } ?? []
+
+        return try urls.compactMap { url in
+            let values = try url.resourceValues(forKeys: [.isRegularFileKey])
+            guard values.isRegularFile == true, url.lastPathComponent.caseInsensitiveCompare("README.md") == .orderedSame else {
+                return nil
+            }
+            return url.path.replacingOccurrences(of: resourceURL.path + "/", with: "")
+        }
+        .sorted()
     }
 
     private func bundledGeneratedBankIDs(in bundle: Bundle) throws -> Set<String> {

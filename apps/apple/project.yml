@@ -76,6 +76,17 @@ targets:
         buildPhase: resources
         createIntermediateGroups: false
     postBuildScripts:
+      - name: Remove content authoring README files
+        basedOnDependencyAnalysis: false
+        script: |
+          set -euo pipefail
+          resource_destination="${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
+          for content_directory in lessons quizzes explanations; do
+            destination="${resource_destination}/${content_directory}"
+            if [ -d "${destination}" ]; then
+              find "${destination}" -type f -iname README.md -delete
+            fi
+          done
       - name: Copy Basic and Advanced generated content
         basedOnDependencyAnalysis: false
         inputFiles:
@@ -139,6 +150,7 @@ targets:
         SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
         SWIFT_EMIT_LOC_STRINGS: YES
         LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
       configs:
         DebugCloudKit:
           CODE_SIGN_ENTITLEMENTS[sdk=macosx*]: CanadianHam/Resources/CanadianHam.macOS.CloudKit.entitlements
@@ -180,6 +192,17 @@ targets:
         buildPhase: resources
         createIntermediateGroups: false
     postBuildScripts:
+      - name: Remove content authoring README files
+        basedOnDependencyAnalysis: false
+        script: |
+          set -euo pipefail
+          resource_destination="${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
+          for content_directory in lessons quizzes explanations; do
+            destination="${resource_destination}/${content_directory}"
+            if [ -d "${destination}" ]; then
+              find "${destination}" -type f -iname README.md -delete
+            fi
+          done
       - name: Copy Basic and Advanced generated content
         basedOnDependencyAnalysis: false
         inputFiles:
@@ -231,6 +254,7 @@ targets:
         SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
         BUNDLE_LOADER[sdk=macosx*]: $(TEST_HOST)
         TEST_HOST[sdk=macosx*]: $(BUILT_PRODUCTS_DIR)/CanadianHam.app/Contents/MacOS/CanadianHam
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
   CanadianHamUITests:
     type: bundle.ui-testing
     platform: auto
