@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-005-011.\n\nWhy the correct answer is right: At the source end of a parallel circuit, the branch currents join back together. The source current is therefore the sum of all current flowing through the separate parallel branches.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"source voltage divided by the value of one of the resistive elements\": That finds only the current in that one branch when the branch resistance is known. It omits the other branches.\n- sourceIndex 2: \"source voltage divided by the sum of the resistive elements\": Dividing by a simple sum of resistor values treats the resistors as series parts, not parallel branches.\n- sourceIndex 3: \"current in any one of the parallel branches\": One branch current is only part of the source current unless there is only one branch.",
+    "en": "Question B-005-005-011.\n\nWhy the correct answer is right: At the source end of a parallel circuit, the branch currents join back together. The source current is the sum of the separate branch currents.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"source voltage divided by the value of one of the resistive elements\": That finds only one branch current when that branch resistance is known. It omits the other branches.\n- sourceIndex 2: \"source voltage divided by the sum of the resistive elements\": Dividing by a simple sum treats the resistors as series parts, not parallel branches.\n- sourceIndex 3: \"current in any one of the parallel branches\": One branch current is only part of the source current unless there is only one branch.",
     "fr": null
   },
   "citations": [

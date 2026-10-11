@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-008-005-003.\n\nWhy the correct answer is right: A band-pass filter passes a selected range and attenuates frequencies both below and above that range.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"High-pass\": A high-pass filter attenuates only the lower side and passes higher frequencies, so it does not reject both sides of a range.\n- sourceIndex 2: \"Notch\": A notch filter removes one narrow frequency; it is not meant to pass an entire range while rejecting both sides.\n- sourceIndex 3: \"Low-pass\": A low-pass filter attenuates only the high side and passes lower frequencies, not a bounded middle range.",
+    "en": "Question B-008-005-003.\n\nWhy the correct answer is right: A band-pass filter passes a selected range, or band. It attenuates frequencies both below and above that range.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"High-pass\": A high-pass filter attenuates only the lower side and passes higher frequencies, so it does not reject both sides of a range.\n- sourceIndex 2: \"Notch\": A notch filter removes one narrow frequency; it is not meant to pass an entire range while rejecting both sides.\n- sourceIndex 3: \"Low-pass\": A low-pass filter attenuates only the high side and passes lower frequencies, not a bounded middle range.",
     "fr": null
   },
   "citations": [

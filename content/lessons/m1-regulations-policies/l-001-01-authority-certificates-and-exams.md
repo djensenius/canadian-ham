@@ -25,7 +25,9 @@ status: draft
 ---
 # Authority, certificates, and exams
 
-Canadian amateur radio is a licensed radio service. The rules in this lesson tell you where Canadian amateur authority comes from, how your certificate record is handled, and which exam and eligibility facts the current Basic question set uses. Treat these items as reference material: the lesson explains how the rows relate, and the quiz asks official questions.
+Canadian amateur radio is a licensed radio service. The rules in this lesson tell you who sets the rules, what your certificate record means, and how exams and eligibility work.
+
+Treat the tables as reference facts. The prose explains how the rows connect so the official quiz questions feel less like isolated memory work.
 
 ## Learning objectives
 
@@ -33,7 +35,7 @@ By the end of this lesson, you can:
 
 - match the Radiocommunication Act, the Radiocommunication Regulations, ISED, and operating standards to their roles;
 - keep certificate validity, address, inspection, and call-sign-fee facts separate;
-- describe why false information, false distress traffic, unlawful obstruction, and due process are grouped with legal authority; and
+- explain why false information, false distress traffic, unlawful obstruction, and due process belong with legal authority; and
 - state the Basic-entry, later-qualification, fee, and accommodation facts with their supported conditions.
 
 ## Reference facts: Authority and source roles
@@ -65,8 +67,8 @@ By the end of this lesson, you can:
 | Transmitting outside amateur bands | Prohibited; penalties could be assessed to the control operator. |
 | False distress wording when there is no emergency | A false or fraudulent message. |
 | Transmitting false information | Prohibited. |
-| False or fraudulent distress signal or message | Fine up to $5,000, prison term up to one year, or both. |
-| Interfering with or obstructing radio communication without lawful cause | Fine up to $5,000, prison term up to one year, or both. |
+| False or fraudulent distress signal or message | Fine up to $5 000, prison term up to one year, or both. |
+| Interfering with or obstructing radio communication without lawful cause | Fine up to $5 000, prison term up to one year, or both. |
 | Dwelling entry by inspector | Consent or a warrant is required for dwelling entry. |
 | Inspection warrant safeguards | When entry is refused and entry is needed for inspector duties, the inspector may obtain a warrant; warrant-related force requires authorization and a peace officer. |
 | Certificate suspension | Notice and an opportunity to make representations are part of the suspension process. |
@@ -94,19 +96,29 @@ By the end of this lesson, you can:
 
 ## How these rules fit together
 
-The legal-source rows explain why the rest of the lesson matters: amateur operating privileges come from Canadian radiocommunication law. Use the Act, Regulations, ISED, and operating standards as separate layers with separate roles.
+The legal-source rows are the top layer. The Act gives authority, the Regulations define the amateur service, ISED administers the Act, and the operating standards tell amateur stations how to operate.
 
-Certificate records have two ideas at the same time. The certificate continues through the holder's lifetime, and the holder still has record duties. Address updates, retention, and inspector requests are administrative duties that continue during the life of the certificate. Fee rows also depend on the exact service being requested, so learn each service with its own fee treatment.
+Certificate rows combine two ideas. Your certificate lasts for your lifetime, but record duties continue. Keep the station copy, keep the address current, and be ready to show the certificate or a copy when a radio inspector properly asks.
 
-The offence rows connect truthful operation with public trust. False information and false distress traffic carry legal consequences. The same section also preserves due-process limits, so enforcement authority and individual process protections should be learned together.
+Offence rows protect trust in radio. False information, false distress traffic, and unlawful obstruction can harm people and services. The same group also includes process protections, such as the limits on dwelling entry and the suspension process.
 
-The Basic-entry rows build the certification path. Basic is the first amateur qualification for the certificate, later qualifications follow after that certificate is issued, and an amateur qualification stays within the amateur service. Examination accommodation rows then explain delivery support without changing the required content of the exam.
+Exam rows describe a path. Basic is the first amateur qualification. After the certificate is issued, later qualifications can be examined in any order. Accommodation rows change delivery, not the required examination content.
+
+### Memory trick: life record, address-change notice
+
+- Helps remember: certificate validity and the mailing-address duty are different facts.
+- Trick: think "life for the certificate, 30 days to report a mailing-address change." The same number, 30, also appears in station identification (minutes between IDs).
+- Limit: this is a memory cue only. Use the table when you need the exact deadline in days.
 
 ## Radio connection
 
-A clean station has both RF discipline and regulatory discipline. Its operator knows which authority applies, where the certificate record belongs, when ISED must be told about an address change, and when a message or channel choice leaves amateur authority.
+### In the real world: the station binder
 
-During emergency-support practice, these facts reduce confusion. Operators who separate real distress traffic from drills and use current certificate and qualification rules are easier to trust when conditions are stressful.
+Many operators keep a small station binder or folder. It can hold the certificate copy, current call sign information, the station address, equipment manuals, and notes from any examiner or ISED contact.
+
+The folder is not a magic legal shield. It is a simple habit that keeps the lifetime certificate, address record, inspection duty, and exam path in one place.
+
+During emergency-support practice, these facts reduce confusion. Operators who separate real distress traffic from drills and keep current certificate records are easier to trust when conditions are stressful.
 
 ## Summary
 

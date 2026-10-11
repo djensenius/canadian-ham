@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-011-009.\n\nWhy the correct answer is right: Close, parallel wires share the most magnetic field linkage, so induction between them is strongest. Distance and right-angle crossing reduce coupling.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"When the wires are close and at right angles\": Being close helps, but right-angle orientation greatly reduces shared field linkage.\n- sourceIndex 2: \"When the wires are separated and parallel\": Parallel alignment helps, but separation weakens the coupling.\n- sourceIndex 3: \"When the wires are separated and at right angles\": This combines weak spacing with poor orientation, so it is the least favourable choice for maximum induction.",
+    "en": "Question B-005-011-009.\n\nWhy the correct answer is right: Close, parallel wires share the most magnetic field linkage, so induction between them is strongest. Distance and right-angle crossing both reduce coupling.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"When the wires are close and at right angles\": Being close helps, but right-angle orientation greatly reduces shared field linkage.\n- sourceIndex 2: \"When the wires are separated and parallel\": Parallel alignment helps, but separation weakens the coupling.\n- sourceIndex 3: \"When the wires are separated and at right angles\": This combines wide spacing with poor orientation. It is the least favourable choice for maximum induction.",
     "fr": null
   },
   "citations": [

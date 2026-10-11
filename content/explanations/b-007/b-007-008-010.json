@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-007-008-010.\n\nWhy the correct answer is right: Scattering means irregularities redirect the wave's energy into many directions instead of sending it along one clean refracted or reflected path. Only some of that redirected energy may reach the receiver.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The wave is gradually bent\": Gradual bending is refraction, not scattering.\n- sourceIndex 2: \"A portion of the wave abruptly changes direction\": That wording points more to a single reflection or sharp deflection, while scattering spreads energy in many directions.\n- sourceIndex 3: \"The wave is absorbed by the medium\": Absorption removes energy as heat or loss; scattering redirects energy rather than simply consuming it.",
+    "en": "Question B-007-008-010.\n\nWhy the correct answer is right: Scattering means irregularities redirect the wave's energy into many directions instead of sending it along one clean refracted or reflected path. Only some of that redirected energy may reach the receiver.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"The wave is gradually bent\": Gradual bending is refraction, not scattering.\n- sourceIndex 2: \"A portion of the wave abruptly changes direction\": That wording points more to a single reflection or sharp deflection, while scattering spreads energy in many directions.\n- sourceIndex 3: \"The wave is absorbed by the medium\": Absorption removes energy as heat or loss. Scattering redirects energy rather than simply consuming it.",
     "fr": null
   },
   "citations": [

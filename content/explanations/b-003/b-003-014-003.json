@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-014-003.\n\nWhy the correct answer is right: A new microphone can have a different output level, so microphone gain must be adjusted before normal transmitting.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Noise blanker threshold\": The noise blanker is a receiver impulse-noise control and does not set transmit audio level.\n- sourceIndex 2: \"Deviation control\": Deviation matters for FM, but the first general adjustment before using a microphone with a transceiver is microphone gain.\n- sourceIndex 3: \"Automatic gain control level\": AGC controls receiver gain; it does not prevent a new microphone from overdriving the transmitter.",
+    "en": "Question B-003-014-003.\n\nWhy the correct answer is right: A new microphone can have a different output level, so microphone gain must be adjusted before normal transmitting.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Noise blanker threshold\": The noise blanker is a receiver impulse-noise control and does not set transmit audio level.\n- sourceIndex 2: \"Deviation control\": Deviation matters for frequency modulation (FM), but the first general adjustment before using a microphone with a transceiver is microphone gain.\n- sourceIndex 3: \"Automatic gain control level\": Automatic gain control (AGC) controls receiver gain. It does not prevent a new microphone from overdriving the transmitter.",
     "fr": null
   },
   "citations": [

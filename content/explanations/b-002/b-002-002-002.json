@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-002-002.\n\nWhy the correct answer is right: For voice identification, the ITU phonetic alphabet is the recognized aid for spelling letters in a call sign.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Q codes\": Q codes are operating abbreviations, not the voice spelling alphabet for call signs.\n- sourceIndex 2: \"Unique words of your choice\": Unique personal words defeat the purpose of a common standard understood by other operators.\n- sourceIndex 3: \"A speech compressor\": A speech compressor changes audio dynamics; it does not supply correct station-identification words.",
+    "en": "Question B-002-002-002.\n\nWhy the correct answer is right: For voice identification, the International Telecommunication Union (ITU) phonetic alphabet is the recognized aid for spelling letters in a call sign.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Q codes\": Q codes are operating abbreviations, not the voice spelling alphabet for call signs.\n- sourceIndex 2: \"Unique words of your choice\": Unique personal words defeat the purpose of a common standard understood by other operators.\n- sourceIndex 3: \"A speech compressor\": A speech compressor changes audio dynamics; it does not supply correct station-identification words.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-010-010.\n\nWhy the correct answer is right: Inductive reactance is low at low frequencies. That lets intended low-frequency or DC-related current pass while the choke opposes RF more strongly.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"High reactance at low frequencies\": High low-frequency reactance would impede the signals that are meant to flow through the choke.\n- sourceIndex 2: \"Low reactance at high frequencies\": Low high-frequency reactance would fail to choke unwanted RF current.\n- sourceIndex 3: \"High reactance at high frequencies\": That describes the RF-blocking side of a choke, but the question asks why wanted signals can still flow through it.",
+    "en": "Question B-005-010-010.\n\nWhy the correct answer is right: Inductive reactance is low at low frequencies. That lets the wanted direct current (DC) and low-frequency current pass, while the choke strongly opposes radio frequency (RF) current.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"High reactance at low frequencies\": High low-frequency reactance would impede the signals that are meant to flow through the choke.\n- sourceIndex 2: \"Low reactance at high frequencies\": Low high-frequency reactance would fail to choke unwanted radio-frequency (RF) current.\n- sourceIndex 3: \"High reactance at high frequencies\": That describes the RF-blocking side of a choke. The question asks why wanted signals can still flow through it.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-019-002.\n\nWhy the correct answer is right: SSB requires a means to prevent or indicate overmodulation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"CW\": CW is a keyed carrier rather than an SSB speech signal, so the SSB overmodulation indicator requirement is not aimed at this mode.\n- sourceIndex 2: \"RTTY\": RTTY is a keyed data emission; overmodulation indication or prevention is an SSB voice-chain requirement.\n- sourceIndex 3: \"FM\": FM has its own audio and deviation controls; overmodulation indication or prevention is tied to SSB.",
+    "en": "Question B-001-019-002.\n\nWhy the correct answer is right: Single sideband (SSB) requires a means to prevent or indicate overmodulation.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"CW\": Continuous wave (CW) is a keyed carrier rather than an SSB speech signal, so this requirement is not aimed at that mode.\n- sourceIndex 2: \"RTTY\": Radioteletype (RTTY) is a keyed data emission, while overmodulation indication or prevention is an SSB voice-chain requirement.\n- sourceIndex 3: \"FM\": Frequency modulation (FM) has its own audio and deviation controls; this requirement is tied to SSB.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-012-004.\n\nWhy the correct answer is right: A tuned circuit needs an inductor and a capacitor so magnetic-field energy and electric-field energy exchange at the resonant frequency.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Resistor and transistor\": These parts can set gain or bias, but they do not form the basic LC tuned circuit.\n- sourceIndex 2: \"Capacitor and resistor\": An RC network can filter, but without an inductor it is not the basic resonant tuned circuit.\n- sourceIndex 3: \"Diode and transistor\": Semiconductor devices can be used around tuned stages, but they are not the two energy-storage parts that make the tuned circuit.",
+    "en": "Question B-005-012-004.\n\nWhy the correct answer is right: A tuned circuit needs an inductor and a capacitor. Energy trades between the magnetic field and electric field at the resonant frequency.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Resistor and transistor\": These parts can set gain or bias, but they do not form the basic inductor-capacitor (LC) tuned circuit.\n- sourceIndex 2: \"Capacitor and resistor\": A resistor-capacitor (RC) network can filter, but without an inductor it is not the basic resonant tuned circuit.\n- sourceIndex 3: \"Diode and transistor\": Semiconductor devices can be used around tuned stages. They are not the two energy-storage parts that make the tuned circuit.",
     "fr": null
   },
   "citations": [

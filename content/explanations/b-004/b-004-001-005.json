@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-004-001-005.\n\nWhy the correct answer is right: Speech audio in a transceiver is processed over the voice range used for communications audio: 300 Hz to 3 000 Hz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"3 Hz to 300 Hz\": This range stops where the communications speech passband is just beginning, so it would lose much of the intelligible voice content.\n- sourceIndex 2: \"300 Hz to 1 000 Hz\": This starts at the right lower edge but cuts off the upper part of the speech band needed for clear voice communication.\n- sourceIndex 3: \"40 Hz to 40 000 Hz\": This describes a very wide high-fidelity audio range, including sub-voice bass and ultrasonic content, instead of the narrower communications speech range.",
+    "en": "Question B-004-001-005.\n\nWhy the correct answer is right: A transceiver speech amplifier covers the main voice range used for communications audio: 300 Hz to 3 000 Hz.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"3 Hz to 300 Hz\": This range stops where the speech passband is just beginning. It would lose much of the intelligible voice content.\n- sourceIndex 2: \"300 Hz to 1 000 Hz\": This starts at the right lower edge but cuts off the upper speech range needed for clear voice.\n- sourceIndex 3: \"40 Hz to 40 000 Hz\": This is a very wide high-fidelity audio range. It includes sub-voice bass and ultrasonic content, not the narrower communications speech range.",
     "fr": null
   },
   "citations": [

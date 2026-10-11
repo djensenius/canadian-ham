@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-003-002.\n\nWhy the correct answer is right: At VHF, the RF amplifier must add very little noise because noise introduced at the first receive stage degrades weak signals before later gain.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Product detector\": A product detector recovers SSB/CW audio; low-noise design is most critical at the RF input stage.\n- sourceIndex 2: \"IF amplifier\": The IF amplifier matters, but noise added after front-end gain is less damaging than noise added before the signal is established.\n- sourceIndex 3: \"Limiter\": The limiter removes amplitude variation in FM; it is not the VHF low-noise front-end stage.",
+    "en": "Question B-003-003-002.\n\nWhy the correct answer is right: In the very high frequency (VHF) range, the radio-frequency (RF) amplifier must add very little noise because noise introduced at the first receive stage degrades weak signals before later gain.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Product detector\": A product detector recovers audio from single-sideband (SSB) or continuous-wave (CW) signals. Low-noise design is most critical at the RF input stage.\n- sourceIndex 2: \"IF amplifier\": The intermediate-frequency (IF) amplifier matters, but noise added after front-end gain is less damaging than noise added before the signal is established.\n- sourceIndex 3: \"Limiter\": The limiter removes amplitude variation in frequency modulation (FM). It is not the VHF low-noise front-end stage.",
     "fr": null
   },
   "citations": [
