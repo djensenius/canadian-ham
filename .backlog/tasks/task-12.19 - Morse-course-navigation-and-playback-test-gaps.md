@@ -60,5 +60,5 @@ Review r2 follow-up on tip 6eeda354c240e6c3661ec2a13b9adcb3e29298af: tightened t
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Completed Morse course navigation/playback coverage after review: lesson Back returns to Unit 1 with the lesson list still visible, reopening lesson 1 starts Exercise 1, Review weakest characters opens a session, and finished lesson re-entry starts fresh. Verified on merged d55acd8 code by full iOS (154/154) plus full macOS/tvOS/visionOS suites and recorded per-test names/counts in notes.
+Addressed r2 Morse course follow-ups: Review weakest now asserts the Weak-character review title, and empty review preparation cannot push an empty or stale session. Verified by targeted iOS testMorseCourseReviewAndFinishedLessonReentryOnIOS in the 7/7 targeted run.
 <!-- SECTION:FINAL_SUMMARY:END -->
