@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-11 10:10'
+updated_date: '2026-10-11 13:40'
 labels:
   - apple
   - privacy
@@ -96,6 +96,8 @@ Review r4 validation on final fix set: web progressStore test passed (pnpm --fil
 Review r5 (APPROVE WITH NOTES): coordinator fixed L1 (deleteICloudProgress clears the pending reset flags after a successful zone deletion) and L2 (cloudResetRequiresAsyncDeletion error localised; fr/fr-CA added via round-trip). check:apple-l10n passes; targeted macOS ProgressStoreTests 62/62. Remaining lows L3-L5 recorded for follow-up. Full iOS/macOS/tvOS/visionOS suites run once at merge time per the testing policy (PR #191).
 
 AC3's owner parts (device smoke tests: airplane mode, no account, account switch; Reset zone deletion verified on device; the keep-or-remove decision after an account switch; App Store privacy re-check) moved to task-34, which covers signed-device iCloud checks. The code side of 'Reset covers cloud data' is implemented and tested here (resetAllData(client:), pending flag persisted, retry and relaunch tests). iCloud stays off by default (DebugCloudKit only) until task-34 is done.
+
+Pre-merge full suites (testing policy, PR #191) at bb8a740f: macOS 102/102; tvOS 4 unit + 12 UI pass; visionOS 4 unit + 9 UI pass; iOS 100 unit pass and 73/74 UI. The one failure was testAccessibilityAuditAdvancedCourseScreensDark with 'com.apple.springboard crashed in SBSystemAppMain' (simulator infrastructure, see task-33); a targeted rerun passed twice (1/1 each).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
