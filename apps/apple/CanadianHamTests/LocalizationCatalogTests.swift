@@ -94,6 +94,14 @@ final class LocalizationCatalogTests: XCTestCase {
         }
     }
 
+    func testLanguagePreferenceResolvesSystemAndOverrides() {
+        XCTAssertEqual(ApplePreferences.LanguagePreference.system.resolvedLanguage(preferredLanguages: ["fr-CA", "en-CA"]), .french)
+        XCTAssertEqual(ApplePreferences.LanguagePreference.system.resolvedLanguage(preferredLanguages: ["en-CA", "fr-CA"]), .english)
+        XCTAssertEqual(ApplePreferences.LanguagePreference.system.resolvedLanguage(preferredLanguages: ["de-DE"]), .english)
+        XCTAssertEqual(ApplePreferences.LanguagePreference.english.resolvedLanguage(preferredLanguages: ["fr-CA"]), .english)
+        XCTAssertEqual(ApplePreferences.LanguagePreference.french.resolvedLanguage(preferredLanguages: ["en-CA"]), .french)
+    }
+
     func testLocalizedNullableTextAndLanguageFallsBackToEnglish() {
         let englishOnly = LocalizedNullableText(en: "English fallback", fr: nil)
         let englishFallback = englishOnly.textAndLanguage(for: .french)

@@ -45,6 +45,8 @@ export const enMessages = defineMessages({
   languageQuestionLegend: "Question language",
   languageQuestionAria: "Question language",
   languageInterfaceLegend: "Interface language",
+  languageSettingLegend: "Language",
+  languageSystemDefault: "System default",
   languageEnglish: "English",
   languageFrench: "Français",
   courseSwitcherAria: "Course selection",
@@ -284,8 +286,10 @@ export const enMessages = defineMessages({
   errorReset: (error: string) => `Unable to reset local progress: ${error}`,
   themeSaved: (theme: string) => `Theme preference saved: ${theme}.`,
   interfaceLanguageSaved: (language: string) => `Interface language saved: ${language}.`,
+  languageSaved: (language: string) => `Language preference saved: ${language}.`,
   errorThemeSave: (error: string) => `Unable to save theme preference: ${error}`,
   errorInterfaceLanguageSave: (error: string) => `Unable to save interface language: ${error}`,
+  errorLanguageSave: (error: string) => `Unable to save language preference: ${error}`,
   morseSectionTitle: "Morse",
   previewLabel: "Preview",
   morseSectionIntro: "Learn and practise Morse code offline. The Koch course, copy practice, and simulated exam are available below.",
@@ -489,6 +493,8 @@ export const frMessages = defineMessages({
   languageQuestionLegend: "Langue des questions",
   languageQuestionAria: "Langue des questions",
   languageInterfaceLegend: "Langue de l’interface",
+  languageSettingLegend: "Langue",
+  languageSystemDefault: "Réglage du système",
   languageEnglish: "English",
   languageFrench: "Français",
   courseSwitcherAria: "Sélection du cours",
@@ -728,8 +734,10 @@ export const frMessages = defineMessages({
   errorReset: (error: string) => `Impossible de réinitialiser la progression locale : ${error}`,
   themeSaved: (theme: string) => `Préférence de thème enregistrée : ${theme}.`,
   interfaceLanguageSaved: (language: string) => `Langue de l’interface enregistrée : ${language}.`,
+  languageSaved: (language: string) => `Préférence de langue enregistrée : ${language}.`,
   errorThemeSave: (error: string) => `Impossible d’enregistrer la préférence de thème : ${error}`,
   errorInterfaceLanguageSave: (error: string) => `Impossible d’enregistrer la langue de l’interface : ${error}`,
+  errorLanguageSave: (error: string) => `Impossible d’enregistrer la préférence de langue : ${error}`,
   morseSectionTitle: "Morse",
   previewLabel: "Aperçu",
   morseSectionIntro: "Apprenez le code Morse et exercez-vous hors ligne. Le cours Koch, la copie et l’examen simulé sont offerts ci-dessous.",
@@ -923,11 +931,16 @@ export function interfaceLanguageTag(language: InterfaceLanguage): "en-CA" | "fr
 }
 
 export function readStoredInterfaceLanguage(): InterfaceLanguage {
-  const storedLanguage = safeLocalStorage()?.getItem(INTERFACE_LANGUAGE_STORAGE_KEY);
-  if (isInterfaceLanguage(storedLanguage)) {
+  const storedLanguage = readStoredInterfaceLanguageOverride();
+  if (storedLanguage !== null) {
     return storedLanguage;
   }
   return navigatorLanguageStartsWithFrench() ? "fr" : "en";
+}
+
+export function readStoredInterfaceLanguageOverride(): InterfaceLanguage | null {
+  const storedLanguage = safeLocalStorage()?.getItem(INTERFACE_LANGUAGE_STORAGE_KEY);
+  return isInterfaceLanguage(storedLanguage) ? storedLanguage : null;
 }
 
 export function storeInterfaceLanguage(language: InterfaceLanguage): void {
@@ -942,7 +955,7 @@ function navigatorLanguageStartsWithFrench(): boolean {
   if (typeof navigator === "undefined") {
     return false;
   }
-  const preferredLanguage = navigator.language || navigator.languages?.[0] || "";
+  const preferredLanguage = navigator.languages?.find((language) => language.trim().length > 0) ?? navigator.language ?? "";
   return preferredLanguage.toLowerCase().startsWith("fr");
 }
 

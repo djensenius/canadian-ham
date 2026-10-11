@@ -33,7 +33,9 @@ private struct VisionLaunchOptions {
         case "dark": colorScheme = .dark
         default: colorScheme = nil
         }
-        initialLanguage = BankLanguage(rawValue: AppLaunchArguments.value(after: "-CanadianHamLanguage", in: arguments) ?? "en") ?? .english
+        initialLanguage = AppLaunchArguments.value(after: "-CanadianHamLanguage", in: arguments)
+            .flatMap(ApplePreferences.LanguagePreference.init(rawValue:))?
+            .resolvedLanguage() ?? ApplePreferences.LanguagePreference.system.resolvedLanguage()
 #else
         _ = arguments
         initialScreen = .categories
@@ -41,7 +43,7 @@ private struct VisionLaunchOptions {
         practiceQuestionID = nil
         answeredSourceIndex = nil
         colorScheme = nil
-        initialLanguage = .english
+        initialLanguage = ApplePreferences.LanguagePreference.system.resolvedLanguage()
 #endif
     }
 }
@@ -87,10 +89,6 @@ private struct CanadianHamVisionRootView: View {
                     .font(DesignTokens.FontScale.title)
                     .foregroundStyle(DesignTokens.Colors.ink)
             }
-        }
-        .ornament(attachmentAnchor: .scene(.bottom), contentAlignment: .top) {
-            VisionLanguageOrnament(language: $language)
-                .padding(.bottom, DesignTokens.Spacing.md)
         }
         .task { loadBankIfNeeded() }
     }
@@ -141,29 +139,6 @@ private struct CanadianHamVisionRootView: View {
         } catch {
             loadError = localizedErrorMessage(String(localized: "Unable to load question bank: \("")"), detail: error)
         }
-    }
-}
-
-private struct VisionLanguageOrnament: View {
-    @Binding var language: BankLanguage
-
-    var body: some View {
-        Picker("Question language", selection: $language) {
-            ForEach(BankLanguage.allCases) { language in
-                switch language {
-                case .english:
-                    Text(localizedVision(language.displayName, language: .english)).tag(language) // l10n: content(en)
-                case .french:
-                    Text(localizedVision(language.displayName, language: .french)).tag(language) // l10n: content(fr)
-                }
-            }
-        }
-        .pickerStyle(.segmented)
-        .frame(width: 320)
-        .padding(DesignTokens.Spacing.sm)
-        .glassBackgroundEffect()
-        .accessibilityLabel(Text("Question language")) // l10n: localized
-        .accessibilityIdentifier("question-language-picker")
     }
 }
 

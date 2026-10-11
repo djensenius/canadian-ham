@@ -5631,6 +5631,22 @@
         }
       }
     },
+    "Language" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Langue"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Langue"
+          }
+        }
+      }
+    },
     "Learn (course)" : {
       "localizations" : {
         "en" : {
@@ -9521,18 +9537,18 @@
         }
       }
     },
-    "Study the eight modules in order. Lessons are currently authored in English, matching the web app; official practice questions still use the language picker." : {
+    "Study the eight modules in order. Lessons are currently authored in English, matching the web app; official practice questions follow your Language setting." : {
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Étudiez les huit modules dans l’ordre. Les leçons sont actuellement rédigées en anglais, comme dans l’application Web; les questions officielles d’exercices utilisent toujours le sélecteur de langue."
+            "value" : "Étudiez les huit modules dans l’ordre. Les leçons sont actuellement rédigées en anglais, comme dans l’application Web; les questions officielles d’exercice suivent votre réglage de langue."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Étudiez les huit modules dans l’ordre. Les leçons sont actuellement rédigées en anglais, comme dans l’application Web; les questions officielles d’exercices utilisent toujours le sélecteur de langue."
+            "value" : "Étudiez les huit modules dans l’ordre. Les leçons sont actuellement rédigées en anglais, comme dans l’application Web; les questions officielles d’exercice suivent votre réglage de langue."
           }
         }
       }
@@ -9741,6 +9757,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Synchroniser la progression d’apprentissage avec iCloud"
+          }
+        }
+      }
+    },
+    "System default" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglage du système"
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglage du système"
           }
         }
       }

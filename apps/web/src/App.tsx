@@ -7,7 +7,6 @@ import {
 } from "@canadian-ham/engine-ts";
 import { Component, createRef, useEffect, useMemo, useRef, useState, type KeyboardEvent, type MouseEvent, type ReactNode, type RefObject } from "react";
 
-import { LanguageToggle } from "./components/LanguageToggle";
 import { textToTimedMorse } from "@canadian-ham/morse-engine";
 import { MorseCoursePanel } from "./morse/course/MorseCoursePanel";
 
@@ -46,7 +45,7 @@ import {
   clearStoredInterfaceLanguage,
   interfaceLanguageTag,
   readStoredInterfaceLanguage,
-  storeInterfaceLanguage,
+  readStoredInterfaceLanguageOverride,
   t,
   type InterfaceLanguage,
 } from "./lib/i18n";
@@ -54,6 +53,7 @@ import { MorseOutputView, useWebMorseOutput } from "./lib/morseOutput";
 import { morseISEDExamPreset, morseTimingFromPreferences, normalizeMorsePreferences, type WebMorseTimingProfileName } from "./lib/morseSettings";
 import { MorseCopyExamSection, type MorsePlaybackCoordinator } from "./morse/copyExam/MorseCopyExamSection";
 import { MorseSendingPracticeSection } from "./morse/sending/MorseSendingPracticeSection";
+import { resolveLanguagePreference } from "./lib/languagePreference";
 import { applyThemePreference, mirrorThemePreference, readStoredThemePreference } from "./lib/theme";
 import {
   applyPracticeAnswer,
@@ -137,8 +137,8 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
     if (this.state.errorMessage === null) {
       return this.props.children;
     }
-    const recoveryPreferences = this.state.recoveryPreferences ?? { ...defaultPreferences, theme: readStoredThemePreference() };
-    const interfaceLanguage = readStoredInterfaceLanguage();
+    const recoveryPreferences = this.state.recoveryPreferences ?? migrateLegacyStoredLanguagePreference({ ...defaultPreferences, theme: readStoredThemePreference() });
+    const interfaceLanguage = resolveLanguagePreference(recoveryPreferences.language);
     return (
       <div className="app-shell">
         <a className="skip-link" href="#main" onClick={this.handleSkipToMain}>{t(interfaceLanguage, "skipToMainContent")}</a>
@@ -167,11 +167,11 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
                 await this.props.store.putPreferences(nextPreferences);
                 applyThemePreference(nextPreferences.theme);
                 mirrorThemePreference(nextPreferences.theme);
+                clearStoredInterfaceLanguage();
                 this.setState({ recoveryPreferences: nextPreferences });
                 return true;
               }}
               interfaceLanguage={interfaceLanguage}
-              onInterfaceLanguageChange={(language) => { storeInterfaceLanguage(language); this.forceUpdate(); }}
               preferences={recoveryPreferences}
               statusMessage=""
               store={this.props.store}
@@ -186,10 +186,15 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
 
 async function readRecoverablePreferences(store: ProgressStore): Promise<WebPreferences> {
   try {
-    return await store.getPreferences();
+    return migrateLegacyStoredLanguagePreference(await store.getPreferences());
   } catch {
-    return { ...defaultPreferences, theme: readStoredThemePreference() };
+    return migrateLegacyStoredLanguagePreference({ ...defaultPreferences, theme: readStoredThemePreference() });
   }
+}
+
+function migrateLegacyStoredLanguagePreference(preferences: WebPreferences): WebPreferences {
+  const legacyLanguage = readStoredInterfaceLanguageOverride();
+  return preferences.language === "system" && legacyLanguage !== null ? { ...preferences, language: legacyLanguage } : preferences;
 }
 
 function routeFromHash(fallback: Route, hash = globalThis.location?.hash ?? ""): Route {
@@ -239,8 +244,6 @@ function AppContent({
   const initialPreferences = () => ({ ...defaultPreferences, theme: readStoredThemePreference() });
   const [locationHash, setLocationHash] = useState(() => globalThis.location?.hash ?? "");
   const [route, setRoute] = useState<Route>(() => routeFromHash(initialView));
-  const [language, setLanguage] = useState<Language>("en");
-  const [interfaceLanguage, setInterfaceLanguageState] = useState<InterfaceLanguage>(() => readStoredInterfaceLanguage());
   // Loaded questions are tagged with their course and only exposed while that course is active,
   // so a render never sees the previous course's questions after a switch.
   const [loadedBankQuestions, setLoadedBankQuestions] = useState<{ readonly bankId: CourseBankId; readonly questions: readonly Question[] } | null>(null);
@@ -250,6 +253,8 @@ function AppContent({
   const [lessonProgress, setLessonProgress] = useState<readonly LessonProgressRecord[]>([]);
   const [lessonQuizAttempts, setLessonQuizAttempts] = useState<readonly LessonQuizAttempt[]>([]);
   const [preferences, setPreferencesState] = useState<WebPreferences>(initialPreferences);
+  const language = resolveLanguagePreference(preferences.language);
+  const interfaceLanguage: InterfaceLanguage = language;
   const [practiceScope, setPracticeScope] = useState<PracticeScope>(() => scopeFromInitialId(initialScopeId));
   const [practiceSession, setPracticeSession] = useState<PracticeSession | null>(null);
   const [mockExam, setMockExam] = useState<MockExamSession | null>(null);
@@ -289,9 +294,14 @@ function AppContent({
           setExamAttempts(storedAttempts);
           setLessonProgress(storedLessonProgress);
           setLessonQuizAttempts(storedQuizAttempts);
-          savedPreferencesRef.current = storedPreferences;
-          latestRequestedPreferencesRef.current = storedPreferences;
-          setPreferencesState(storedPreferences);
+          const migratedPreferences = migrateLegacyStoredLanguagePreference(storedPreferences);
+          savedPreferencesRef.current = migratedPreferences;
+          latestRequestedPreferencesRef.current = migratedPreferences;
+          setPreferencesState(migratedPreferences);
+          if (migratedPreferences !== storedPreferences) {
+            await store.putPreferences(migratedPreferences);
+            clearStoredInterfaceLanguage();
+          }
           setAlertMessage("");
         }
       } catch (error) {
@@ -561,11 +571,6 @@ function AppContent({
     setAlertMessage(t(interfaceLanguage, "courseChanged", nextBank.course === "advanced" ? t(interfaceLanguage, "courseAdvanced") : t(interfaceLanguage, "courseBasic")));
   }
 
-  function setInterfaceLanguage(nextLanguage: InterfaceLanguage): void {
-    setInterfaceLanguageState(nextLanguage);
-    storeInterfaceLanguage(nextLanguage);
-  }
-
   async function commitProgress(nextProgress: readonly QuestionProgressRecord[]): Promise<void> {
     try {
       await store.putQuestionProgressMany(nextProgress);
@@ -643,7 +648,6 @@ function AppContent({
         <div className="header-actions">
           <CourseSwitcher activeBank={activeBank} fieldsetRef={courseSwitcherRef} interfaceLanguage={interfaceLanguage} onCourseChange={requestCourseChange} />
           <PwaStatus interfaceLanguage={interfaceLanguage} updateDisabled={mockExam !== null} />
-          <LanguageToggle interfaceLanguage={interfaceLanguage} language={language} onLanguageChange={setLanguage} />
         </div>
       </header>
 
@@ -792,12 +796,10 @@ function AppContent({
               setLatestResult(null);
               setPendingCourseSwitch(null);
               clearStoredInterfaceLanguage();
-              const resetInterfaceLanguage = readStoredInterfaceLanguage();
-              setInterfaceLanguageState(resetInterfaceLanguage);
+              const resetInterfaceLanguage = resolveLanguagePreference(defaultPreferences.language);
               setAlertMessage("");
               setStatusMessage(t(resetInterfaceLanguage, "statusAllLocalProgressReset"));
             }}
-            onInterfaceLanguageChange={setInterfaceLanguage}
             onSetPreferences={setPreferences}
             activeBank={activeBank}
             preferences={preferences}
@@ -2287,11 +2289,10 @@ interface SettingsProps {
   readonly statusMessage: string;
   readonly onProgressImported: (data: ProgressExportV1) => void;
   readonly onReset: () => void;
-  readonly onInterfaceLanguageChange: (language: InterfaceLanguage) => void;
   readonly onSetPreferences: (preferences: PreferencesPatch) => Promise<boolean>;
 }
 
-function Settings({ activeBank, interfaceLanguage, store, now, preferences, statusMessage, onProgressImported, onReset, onInterfaceLanguageChange, onSetPreferences }: SettingsProps) {
+function Settings({ activeBank, interfaceLanguage, store, now, preferences, statusMessage, onProgressImported, onReset, onSetPreferences }: SettingsProps) {
   const [errors, setErrors] = useState<readonly string[]>([]);
   const [pendingImport, setPendingImport] = useState<ProgressExportV1 | null>(null);
   const [message, setMessage] = useState(statusMessage);
@@ -2393,16 +2394,20 @@ function Settings({ activeBank, interfaceLanguage, store, now, preferences, stat
     }
   }
 
-  function chooseInterfaceLanguage(language: InterfaceLanguage): void {
+  async function chooseLanguage(language: WebPreferences["language"]): Promise<void> {
     try {
-      onInterfaceLanguageChange(language);
+      const savedLatestRequest = await onSetPreferences({ language });
+      if (!savedLatestRequest) {
+        return;
+      }
+      clearStoredInterfaceLanguage();
+      const resolvedLanguage = resolveLanguagePreference(language);
       setErrors([]);
-      setMessage(t(language, "interfaceLanguageSaved", language === "fr" ? t(language, "languageFrench") : t(language, "languageEnglish")));
+      setMessage(t(resolvedLanguage, "languageSaved", languagePreferenceLabel(resolvedLanguage, language)));
     } catch (error) {
-      setErrors([t(interfaceLanguage, "errorInterfaceLanguageSave", formatError(error))]);
+      setErrors([t(interfaceLanguage, "errorLanguageSave", formatError(error))]);
     }
   }
-
 
   return (
     <section className="card settings" aria-labelledby="settings-title">
@@ -2415,10 +2420,11 @@ function Settings({ activeBank, interfaceLanguage, store, now, preferences, stat
         <label><input type="radio" name="theme" checked={preferences.theme === "light"} onChange={() => void chooseTheme("light")} /> {t(interfaceLanguage, "themeLight")}</label>
         <label><input type="radio" name="theme" checked={preferences.theme === "dark"} onChange={() => void chooseTheme("dark")} /> {t(interfaceLanguage, "themeDark")}</label>
       </fieldset>
-      <fieldset className="segmented-control interface-language-toggle">
-        <legend>{t(interfaceLanguage, "languageInterfaceLegend")}</legend>
-        <label><input type="radio" name="interface-language" checked={interfaceLanguage === "en"} onChange={() => chooseInterfaceLanguage("en")} /> <span lang={englishTextLang(interfaceLanguage)}>{t(interfaceLanguage, "languageEnglish")}</span></label>
-        <label><input type="radio" name="interface-language" checked={interfaceLanguage === "fr"} onChange={() => chooseInterfaceLanguage("fr")} /> <span lang="fr">{t(interfaceLanguage, "languageFrench")}</span></label>
+      <fieldset className="segmented-control language-setting-toggle">
+        <legend>{t(interfaceLanguage, "languageSettingLegend")}</legend>
+        <label><input type="radio" name="language-setting" checked={preferences.language === "system"} onChange={() => void chooseLanguage("system")} /> {t(interfaceLanguage, "languageSystemDefault")}</label>
+        <label><input type="radio" name="language-setting" checked={preferences.language === "en"} onChange={() => void chooseLanguage("en")} /> <span lang={englishTextLang(interfaceLanguage)}>{t(interfaceLanguage, "languageEnglish")}</span></label>
+        <label><input type="radio" name="language-setting" checked={preferences.language === "fr"} onChange={() => void chooseLanguage("fr")} /> <span lang="fr">{t(interfaceLanguage, "languageFrench")}</span></label>
       </fieldset>
       <div className="action-row">
         <button type="button" onClick={() => void exportProgress()}>{t(interfaceLanguage, "exportProgress")}</button>
@@ -2443,6 +2449,17 @@ function Settings({ activeBank, interfaceLanguage, store, now, preferences, stat
       {errors.length > 0 ? <div role="alert"><ul>{errors.map((error) => <li key={error}>{error}</li>)}</ul></div> : null}
     </section>
   );
+}
+
+function languagePreferenceLabel(interfaceLanguage: InterfaceLanguage, language: WebPreferences["language"]): string {
+  switch (language) {
+    case "system":
+      return t(interfaceLanguage, "languageSystemDefault");
+    case "fr":
+      return t(interfaceLanguage, "languageFrench");
+    case "en":
+      return t(interfaceLanguage, "languageEnglish");
+  }
 }
 
 function readFileText(file: File): Promise<string> {

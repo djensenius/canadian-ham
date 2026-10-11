@@ -1464,19 +1464,24 @@ struct SettingsView: View {
                             Text(theme.localizedLabel).tag(theme) // l10n: localized
                         }
                     }
-                    Picker("Question language", selection: Binding(
+                    Picker("Language", selection: Binding(
                         get: { progressStore.preferences.language },
                         set: { language in savePreferences { $0.language = language } }
                     )) {
-                        ForEach(BankLanguage.allCases) { language in
+                        ForEach(ApplePreferences.LanguagePreference.allCases) { language in
                             switch language {
+                            case .system:
+                                Text("System default").tag(language) // l10n: localized
                             case .english:
-                                Text(localized(language.displayName, language: .english)).tag(language) // l10n: content(en)
+                                Text(localized(BankLanguage.english.displayName, language: .english)).tag(language) // l10n: content(en)
                             case .french:
-                                Text(localized(language.displayName, language: .french)).tag(language) // l10n: content(fr)
+                                Text(localized(BankLanguage.french.displayName, language: .french)).tag(language) // l10n: content(fr)
                             }
                         }
                     }
+                    .pickerStyle(.segmented)
+                    .accessibilityIdentifier("language-setting-picker")
+                    .accessibilityLabel(Text("Language")) // l10n: localized
                 }
                 .paperCard()
 

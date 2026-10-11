@@ -87,24 +87,20 @@ final class CanadianHamTVUITests: XCTestCase {
         attachScreenScreenshot(name: "tvos-about-lower-sections-focus")
     }
 
-    func testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances() throws {
-        let app = configuredApp(screen: .practice, appearance: "light")
+    func testPracticeInteractionUsesConfiguredLanguageShowsFeedbackAndAdvances() throws {
+        let app = configuredApp(screen: .practice, appearance: "light", language: "fr")
         app.launch()
         defer { app.terminate() }
 
         XCTAssertTrue(PlatformAuditScreen.practice.waitElement(in: app).waitForExistence(timeout: 15), "Expected fixed practice question")
 
-        let remote = XCUIRemote.shared
-        let frenchLanguage = app.buttons["question-language-fr-button"].firstMatch
-        XCTAssertTrue(frenchLanguage.waitForExistence(timeout: 5), "French language button should exist")
-        pressRemote([.right, .select, .right, .select], remote: remote)
+        XCTAssertFalse(app.buttons["question-language-fr-button"].firstMatch.exists, "tvOS practice should not show a language picker")
         XCTAssertTrue(
             app.staticTexts[Self.fixedFrenchQuestionText].firstMatch.waitForExistence(timeout: 5),
-            "Fixed question should switch to French through tvOS interaction"
+            "Fixed question should use the configured French language"
         )
-        waitForSelection(on: frenchLanguage)
-        XCTAssertTrue(frenchLanguage.isSelected, "French language button should become selected after switching languages")
 
+        let remote = XCUIRemote.shared
         let firstAnswer = app.descendants(matching: .any)["answer-A-button"].firstMatch
         XCTAssertTrue(firstAnswer.waitForExistence(timeout: 5), "First answer should exist")
         let feedback = app.descendants(matching: .any)["answer-feedback"].firstMatch
@@ -170,14 +166,6 @@ final class CanadianHamTVUITests: XCTestCase {
                 targetIdentifier: "next-question-button",
                 answeredSourceIndex: 0,
                 attachmentName: "tvos-primary-focus-ring\(suffix)"
-            )
-            try captureFocusRingEvidence(
-                screen: .categories,
-                appearance: appearance,
-                targetIdentifier: "question-language-fr-button",
-                language: "fr",
-                evidenceFocus: "language",
-                attachmentName: "tvos-language-focus-ring\(suffix)"
             )
         }
 

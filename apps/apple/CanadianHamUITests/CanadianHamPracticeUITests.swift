@@ -759,51 +759,43 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     func testCanPracticeInFrenchAndSeeFeedback() throws {
         XCUIDevice.shared.appearance = .light
-        let app = launchApp(arguments: ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
+        var app = launchApp(arguments: ["-CanadianHamInitialScreen", "settings"])
+        XCTAssertTrue(app.staticTexts["Settings"].firstMatch.waitForExistence(timeout: 10))
+        let languageSetting = app.segmentedControls["language-setting-picker"].firstMatch
+        XCTAssertTrue(languageSetting.waitForExistence(timeout: 5), "Language setting should exist in Settings")
+        languageSetting.buttons["Français"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["Réglages"].firstMatch.waitForExistence(timeout: 10), "Switching language in Settings should apply immediately")
+        app.terminate()
 
-        assertSingleLanguagePicker(in: app, context: "practice")
-        let languagePicker = app.segmentedControls["question-language-picker"].firstMatch
-        let frenchSegment = languagePicker.buttons["Français"].firstMatch
-        XCTAssertTrue(frenchSegment.waitForExistence(timeout: 2), "French segment should be available")
-        let selectedPredicate = NSPredicate(format: "selected == true")
-        for _ in 0..<3 where !frenchSegment.isSelected {
-            frenchSegment.tap()
-            let selectedExpectation = XCTNSPredicateExpectation(predicate: selectedPredicate, object: frenchSegment)
-            if XCTWaiter.wait(for: [selectedExpectation], timeout: 2) == .completed { break }
-        }
-        XCTAssertTrue(frenchSegment.isSelected, "Français segment should become selected")
+        app = launchApp(arguments: ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"], resetData: false)
+        assertNoLanguagePicker(in: app, context: "practice")
 
         let frenchQuestionTexts = try bundledFrenchQuestionTexts(forCategoryID: "B-001")
         let frenchQuestionPredicate = NSPredicate(format: "label IN %@", Array(frenchQuestionTexts))
         let visibleFrenchQuestion = app.staticTexts.matching(frenchQuestionPredicate).firstMatch
         XCTAssertTrue(
             visibleFrenchQuestion.waitForExistence(timeout: 5),
-            "Expected one of the bundled French B-001 question stems after switching language"
+            "Expected one of the bundled French B-001 question stems after switching language in Settings"
         )
 
         answerFirstVisibleAnswer(in: app)
         _ = waitForAnswerFeedback(in: app)
-        let feedbackTitle = app.staticTexts["answer-feedback-title"].firstMatch
-        XCTAssertTrue(feedbackTitle.waitForExistence(timeout: 5), "Feedback title should exist")
-        XCTAssertTrue(
-            feedbackTitle.label.hasPrefix("Correct") || feedbackTitle.label.hasPrefix("Incorrect"),
-            "Feedback title should start with Correct or Incorrect, got: \(feedbackTitle.label)"
-        )
+        XCTAssertTrue(app.staticTexts["answer-feedback-title"].firstMatch.waitForExistence(timeout: 5), "Feedback title should exist")
     }
 
-    func testLanguagePickerExistsOnCategoryListAndPractice() throws {
+    func testLanguagePickerIsAbsentOnCategoryListAndPractice() throws {
         XCUIDevice.shared.appearance = .light
         var app = launchApp(arguments: ["-CanadianHamInitialScreen", "practice"])
-        assertSingleLanguagePicker(in: app, context: "practice hub")
         XCTAssertTrue(app.staticTexts["Practice categories"].firstMatch.waitForExistence(timeout: 10))
+        assertNoLanguagePicker(in: app, context: "practice hub")
         app.terminate()
 
         app = launchApp(arguments: ["-CanadianHamInitialCategoryID", "B-001", "-CanadianHamPracticeQuestionID", "B-001-002-002"])
-        assertSingleLanguagePicker(in: app, context: "practice")
         XCTAssertTrue(app.descendants(matching: .any)["answer-A-button"].firstMatch.waitForExistence(timeout: 10))
+        assertNoLanguagePicker(in: app, context: "practice")
     }
 
-    func testLanguagePickerExistsOnCompactQuestionScreensAndIsAbsentOnMorse() throws {
+    func testLanguagePickerIsAbsentOnCompactQuestionScreensAndMorse() throws {
         XCUIDevice.shared.appearance = .light
         for (screen, expectedText) in [
             ("home", "Ready for Basic with Honours?"),
@@ -811,14 +803,18 @@ final class CanadianHamPracticeUITests: XCTestCase {
             ("mock", "Mock exam")
         ] {
             let app = launchApp(arguments: ["-CanadianHamInitialScreen", screen])
-            assertSingleLanguagePicker(in: app, context: screen)
             XCTAssertTrue(app.staticTexts[expectedText].firstMatch.waitForExistence(timeout: 10), "Expected \(screen) screen content")
+            assertNoLanguagePicker(in: app, context: screen)
             app.terminate()
         }
 
+        let settingsApp = launchApp(arguments: ["-CanadianHamInitialScreen", "settings"])
+        XCTAssertTrue(settingsApp.segmentedControls["language-setting-picker"].firstMatch.waitForExistence(timeout: 10), "Language setting should exist only in Settings")
+        settingsApp.terminate()
+
         let morseApp = launchApp(arguments: ["-CanadianHamInitialScreen", "morse"])
         XCTAssertTrue(morseApp.staticTexts["Quick listen"].firstMatch.waitForExistence(timeout: 10), "Expected Morse screen content")
-        XCTAssertFalse(morseApp.segmentedControls["question-language-picker"].firstMatch.exists, "Morse content should not show the question-bank language picker")
+        assertNoLanguagePicker(in: morseApp, context: "morse")
         morseApp.terminate()
     }
 
@@ -2253,10 +2249,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
         return feedback
     }
 
-    private func assertSingleLanguagePicker(in app: XCUIApplication, context: String) {
-        let languagePickers = app.segmentedControls.matching(identifier: "question-language-picker")
-        XCTAssertTrue(languagePickers.firstMatch.waitForExistence(timeout: 10), "Question language picker should exist on \(context)")
-        XCTAssertEqual(languagePickers.count, 1, "Exactly one question language picker should be visible on \(context)")
+    private func assertNoLanguagePicker(in app: XCUIApplication, context: String) {
+        XCTAssertFalse(app.segmentedControls["question-language-picker"].firstMatch.exists, "Question language picker should be absent on \(context)")
+        XCTAssertFalse(app.buttons["question-language-en-button"].firstMatch.exists, "English language button should be absent on \(context)")
+        XCTAssertFalse(app.buttons["question-language-fr-button"].firstMatch.exists, "French language button should be absent on \(context)")
     }
 
     private func anyVisibleLabel(in app: XCUIApplication, contains needle: String) -> Bool {

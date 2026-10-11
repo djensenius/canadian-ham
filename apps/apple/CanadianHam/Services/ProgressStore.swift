@@ -30,16 +30,41 @@ struct ApplePreferences: Codable, Equatable, Sendable {
         var label: String { rawValue.capitalized }
     }
 
+    enum LanguagePreference: String, Codable, CaseIterable, Identifiable, Sendable {
+        case system
+        case english = "en"
+        case french = "fr"
+
+        var id: String { rawValue }
+
+        func resolvedLanguage(preferredLanguages: [String] = Locale.preferredLanguages) -> BankLanguage {
+            switch self {
+            case .system:
+                Self.systemLanguage(preferredLanguages: preferredLanguages)
+            case .english:
+                .english
+            case .french:
+                .french
+            }
+        }
+
+        static func systemLanguage(preferredLanguages: [String] = Locale.preferredLanguages) -> BankLanguage {
+            let supportedLocalizations = BankLanguage.allCases.map(\.rawValue)
+            let preferredLocalization = Bundle.main.preferredLocalizations(from: supportedLocalizations, forPreferences: preferredLanguages).first
+            return preferredLocalization?.lowercased().hasPrefix(BankLanguage.french.rawValue) == true ? .french : .english
+        }
+    }
+
     var practiceMode: PracticeMode
     var examTimerEnabled: Bool
-    var language: BankLanguage
+    var language: LanguagePreference
     var theme: Theme
     var activeBankId: CourseBankID
 
     static let `default` = ApplePreferences(
         practiceMode: .immediate,
         examTimerEnabled: false,
-        language: .english,
+        language: .system,
         theme: .system,
         activeBankId: .basic
     )
@@ -254,12 +279,20 @@ struct LessonQuizAttempt: Codable, Equatable, Sendable, Identifiable {
 struct ExportedPreferences: Codable, Equatable, Sendable {
     let practiceMode: String
     let examTimerEnabled: Bool
+    let language: String
     let theme: String
     let morse: ExportedMorseSettings
 
-    init(practiceMode: String, examTimerEnabled: Bool, theme: String = ApplePreferences.Theme.system.rawValue, morse: ExportedMorseSettings = .default) {
+    init(
+        practiceMode: String,
+        examTimerEnabled: Bool,
+        language: String = ApplePreferences.LanguagePreference.system.rawValue,
+        theme: String = ApplePreferences.Theme.system.rawValue,
+        morse: ExportedMorseSettings = .default
+    ) {
         self.practiceMode = practiceMode
         self.examTimerEnabled = examTimerEnabled
+        self.language = language
         self.theme = theme
         self.morse = morse
     }
@@ -268,6 +301,7 @@ struct ExportedPreferences: Codable, Equatable, Sendable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         practiceMode = try container.decode(String.self, forKey: .practiceMode)
         examTimerEnabled = try container.decode(Bool.self, forKey: .examTimerEnabled)
+        language = try container.decodeIfPresent(String.self, forKey: .language) ?? ApplePreferences.LanguagePreference.system.rawValue
         theme = try container.decodeIfPresent(String.self, forKey: .theme) ?? ApplePreferences.Theme.system.rawValue
         // Older exports omit morse entirely; an explicit null is invalid (the schema requires an object).
         morse = container.contains(.morse) ? try container.decode(ExportedMorseSettings.self, forKey: .morse) : .default
@@ -1238,6 +1272,7 @@ final class ProgressStoreService: ObservableObject {
             preferences: ExportedPreferences(
                 practiceMode: preferences.practiceMode.rawValue,
                 examTimerEnabled: preferences.examTimerEnabled,
+                language: preferences.language.rawValue,
                 theme: preferences.theme.rawValue,
                 morse: morseSettings
             )
@@ -1290,6 +1325,9 @@ final class ProgressStoreService: ObservableObject {
                 nextPreferences.practiceMode = mode
             }
             nextPreferences.examTimerEnabled = data.preferences.examTimerEnabled
+            if let language = ApplePreferences.LanguagePreference(rawValue: data.preferences.language) {
+                nextPreferences.language = language
+            }
             if let theme = ApplePreferences.Theme(rawValue: data.preferences.theme) {
                 nextPreferences.theme = theme
             }
@@ -1910,7 +1948,7 @@ final class ProgressStoreService: ObservableObject {
         return ApplePreferences(
             practiceMode: ApplePreferences.PracticeMode(rawValue: entity.practiceMode) ?? .immediate,
             examTimerEnabled: entity.examTimerEnabled,
-            language: BankLanguage(rawValue: entity.language) ?? .english,
+            language: ApplePreferences.LanguagePreference(rawValue: entity.language) ?? .system,
             theme: ApplePreferences.Theme(rawValue: entity.theme) ?? .system,
             activeBankId: CourseBankID(rawValue: UserDefaults.standard.string(forKey: Self.activeBankPreferenceKey) ?? "") ?? .basic
         )
