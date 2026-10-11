@@ -1,11 +1,11 @@
 ---
 id: TASK-37
 title: Language follows the system; EN/FR switch only in Settings
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:54'
-updated_date: '2026-10-11 18:32'
+updated_date: '2026-10-11 22:20'
 labels:
   - apple
   - web
@@ -22,11 +22,11 @@ Owner feedback 2026-10-10: the English/French switch is too prominent. By defaul
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Apple (iOS/iPadOS/macOS) and web default to the system language with no stored override; fr* locales get French, all others English
-- [ ] #2 A Language setting (System default / English / Français) exists only in Settings on Apple and web, persists, and applies immediately
-- [ ] #3 No language picker remains on question, practice, mock exam, lesson or category screens on any platform (UI tests updated to assert absence and the Settings path, not deleted)
-- [ ] #4 Existing stored language preferences migrate sensibly (an explicit previous choice is kept as the override) and export/import still round-trip
-- [ ] #5 Accessibility audits pass on the changed screens in light and dark; French strings follow docs/french-style.md
+- [x] #1 Apple (iOS/iPadOS/macOS) and web default to the system language with no stored override; fr* locales get French, all others English
+- [x] #2 A Language setting (System default / English / Français) exists only in Settings on Apple and web, persists, and applies immediately
+- [x] #3 No language picker remains on question, practice, mock exam, lesson or category screens on any platform (UI tests updated to assert absence and the Settings path, not deleted)
+- [x] #4 Existing stored language preferences migrate sensibly (an explicit previous choice is kept as the override) and export/import still round-trip
+- [x] #5 Accessibility audits pass on the changed screens in light and dark; French strings follow docs/french-style.md
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -47,4 +47,23 @@ WIP commit 24f62175: moved Apple/web language preference toward Settings-only, r
 Validation update: fixed Apple system-language resolver in commit c3bfd149. Commands run: python3 -m json.tool Localizable.xcstrings passed; pnpm typecheck passed; targeted web vitest (src/lib/languagePreference.test.ts src/lib/progressStore.test.ts src/App.test.tsx) passed 3 files/95 tests; pnpm test passed (content-tools, morse-engine, web: 15 files/160 tests); pnpm check:schemas passed; node scripts/check-apple-text-sources.ts passed. Apple xbuild-dependent validation remains blocked by another branch's full iOS suite holding the xbuild lock for >45 min; pnpm check:apple-l10n and targeted iOS xbuild both timed out while waiting, with no test execution for this branch yet.
 
 Queued Apple validation chain under PID 73512: /tmp/task37-apple-l10n.log, ios-ui, ios-unit, mac-unit, tvos-ui, vision-ui logs/exit files. Chain blocks on xbuild lock and stops on first failure; polling at >=10 minute intervals per coordinator guidance.
+
+Final validation passed:
+- pnpm typecheck
+- pnpm test
+- pnpm --filter @canadian-ham/web exec vitest run src/lib/languagePreference.test.ts src/lib/progressStore.test.ts src/App.test.tsx (3 files / 95 tests)
+- pnpm check:schemas
+- node scripts/check-apple-text-sources.ts
+- pnpm check:apple-l10n (/tmp/task37-apple-l10n-rerun3.log, exit 0)
+- iOS UI targeted: testFrenchSystemLanguageNavigatesMainScreensAndAuditsHomeAndPractice, testCanPracticeInFrenchAndSeeFeedback, testLanguagePickerIsAbsentOnCategoryListAndPractice, testLanguagePickerIsAbsentOnCompactQuestionScreensAndMorse, and light/dark core/practice/learn/mock accessibility audits (/tmp/task37-ios-ui-rerun.log, exit 0)
+- iOS unit targeted: LocalizationCatalogTests/testLanguagePreferenceResolvesSystemAndOverrides plus ProgressStoreTests language/export/migration tests (/tmp/task37-ios-unit.log, exit 0)
+- macOS unit targeted: same language/export/migration tests (/tmp/task37-mac-unit.log, exit 0)
+- tvOS targeted: testPracticeInteractionUsesConfiguredLanguageShowsFeedbackAndAdvances and testFocusRingEvidenceScreenshots (/tmp/task37-tvos-ui-rerun3.log, exit 0)
+- visionOS targeted: testPracticeInteractionUsesConfiguredLanguageShowsFeedbackAndAdvances (/tmp/task37-vision-ui.log, exit 0)
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Implemented system-default language resolution and Settings-only EN/FR overrides across Apple and web. Removed prominent language pickers from study/practice/mock/lesson/category/platform screens, migrated legacy web localStorage language and Apple stored en/fr choices to overrides, added language to export/import schema compatibility, refreshed Apple localizations, and verified with targeted web/schema/Apple l10n/text-source/unit/UI/accessibility checks.
+<!-- SECTION:FINAL_SUMMARY:END -->
