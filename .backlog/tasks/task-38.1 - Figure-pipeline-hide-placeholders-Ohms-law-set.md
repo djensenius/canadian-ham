@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-11 01:02'
+updated_date: '2026-10-11 01:10'
 labels:
   - content
   - apple
@@ -52,6 +52,10 @@ Validation passed: pnpm typecheck; TZ=UTC pnpm test (content-tools 108, morse-en
 Validation blocked: pnpm check:apple-l10n fails because xbuild export rewrites unrelated existing Localizable.xcstrings entries. Per supervisor decision, did not commit the export churn. Export saved at /tmp/task381-xcstrings-export.json; key-level drift summary at /tmp/task381-l10n-drift.txt (0 added/removed keys, 5 existing keys changed by export; none introduced by task-38.1 except the committed Figure text equivalent key, which already has French).
 
 Originality: Ohm’s law triangle, power triangle, and wheel were drawn from scratch as simple ink-style formula aids using the standard formulas already taught in the lesson, not traced from ISED or third-party art. Contrast evidence and themed web/iOS source previews are under docs/evidence/task-38.1/.
+
+Review fix: redesigned the Ohm’s law/power wheel layout so quadrant labels/formulas sit clear of divider strokes, removed triangle decorative arcs and shortened the Ohm’s law triangle caption so all text stays inside the viewBox, regenerated Apple figure assets and refreshed light/dark evidence. Added an approximate SVG <text> bounds check to scripts/check-figures.mjs. Removed stale Apple localization keys for the now-hidden Illustration brief/Alt text placeholder UI; remaining check:apple-l10n drift is limited to the two unrelated Morse count keys under investigation separately.
+
+Review-fix validation passed: pnpm check:figures; TZ=UTC pnpm --filter @canadian-ham/web test (153 tests); node scripts/check-apple-text-sources.ts; targeted iOS xbuild tests testOhmsLawLessonFiguresAndAccessibilityLight and testOhmsLawLessonFiguresAndAccessibilityDark (2 tests) with result bundle /tmp/task381-ohms-targeted.xcresult. Render evidence refreshed under docs/evidence/task-38.1/, including qlmanage 800px and 1600px PNG renders.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
