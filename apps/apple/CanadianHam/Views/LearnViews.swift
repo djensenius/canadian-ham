@@ -603,6 +603,7 @@ private struct LessonFigureView: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .accessibilityElement(children: .ignore)
             .accessibilityLabel(Text(english(figure.altText))) // l10n: content(en)
             .accessibilityHint(Text("Opens enlarged figure")) // l10n: localized
             .accessibilityIdentifier("lesson-figure-\(figure.id)")
