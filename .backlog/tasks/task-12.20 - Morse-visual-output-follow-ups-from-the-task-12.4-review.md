@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-07 12:14'
-updated_date: '2026-10-11 13:42'
+updated_date: '2026-10-11 14:26'
 labels: []
 dependencies:
   - TASK-12.4
@@ -62,6 +62,8 @@ Full Apple suite per-test results on merged code (tip 6c3724c8f931cc91a10db99bef
 Review r2 follow-up on tip 6eeda354c240e6c3661ec2a13b9adcb3e29298af: restored the fixed-timing note visual styling exactly to main's paper rounded rectangle plus 1 pt border while keeping ink text; the earlier note saying the r1 fix was purely test-positioning-only is corrected here because r2 restored the approved main visual style and the remaining audit handling is test positioning only. The settle helper now runs the protected-area offender assertion on every path, including preserveFullyVisible and no-target early returns. Before the lower Morse-home audit the test now precisely scans for an offset where the fixed timing note is fully visible below the bar and at least 15% of the window height above the bottom while no scrollable text/button intersects the protected nav/status area; it then asserts Morse settings remains visible below the bar and runs the default performAccessibilityAudit() unchanged. Verified lower Morse-home audits three times: /tmp/morse-polish-r2-course10.xcresult, /tmp/morse-polish-r2-course11.xcresult, /tmp/morse-polish-r2-course12.xcresult each passed CanadianHamPracticeUITests/testAccessibilityAuditMorseCourseLessonAndSummaryLight and /Dark (2/2 each). Other settle-helper lower-half audits passed in /tmp/morse-polish-r2-other2.xcresult: testAccessibilityAuditMorseSendingMainScreenLight and /Dark (selected run 7/7). Per coordinator policy update, full four-platform suites were not rerun in this review round.
 
 Review r3 follow-up: Apple import validation now rejects unsupported preferences.morse timingProfile/outputMode values (including outputMode haptics) while preserving missing/partial Morse preference defaults; haptics export still maps to audio. Reduce Motion/Dim Flashing Lights beacon-stop decisions now require the owner's actual running state (quick listen/course isPlaying, copy isPlaying, receiving exam stage == playing), so completed beacon state is not cleared after playback finishes. Validation: targeted macOS and iOS xbuild unit runs passed ProgressStoreTests/testMorseImportRejectsUnsupportedMorsePreferenceEnums, /testMorseImportDecodesMissingAndPartialMorsePreferences, MorseTrainerTests/testReduceFlashingDecisionUsesInjectedFlags, /testReduceFlashingStopsOnlyRunningVisualBeacon; targeted iOS UI run passed Quick Listen/course playback tests testMorseVisualOutputModeQuickListenOnIOS, testMorseStartingQuickListenStopsCopyPlayback, testLeavingMorseHomeStopsCopyPlaybackBeforeCourseLesson, testLeavingCourseLessonStopsCoursePlaybackBeforeQuickListen, testMorseQuickListenAfterFinishedCourseAudioDoesNotReportStop; pnpm check:apple-l10n and node scripts/check-apple-text-sources.ts passed. Task remains Done.
+
+Copilot round 2 on PR #193: explicit JSON null for preferences.morse or any Morse field is now rejected (only absent keys get defaults), matching the shared schema and the web importer. New test testMorseImportRejectsExplicitNullMorseValues; targeted macOS ProgressStoreTests and MorseTrainerTests 92/92.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
