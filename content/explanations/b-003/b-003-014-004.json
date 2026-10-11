@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-014-004.\n\nWhy the correct answer is right: DSP noise reduction samples the received audio or IF signal, analyzes signal and noise patterns, and subtracts or reduces some noise components.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Noise canceller (phasing)\": A phasing noise canceller combines antennas or signals to null a noise source; it is not the DSP analysis system described.\n- sourceIndex 2: \"Noise limiter\": A limiter clips large noise peaks but does not analyze noise and signal characteristics.\n- sourceIndex 3: \"Noise blanker\": A blanker detects brief impulse pulses and mutes them; it is not a general DSP pattern-reduction tool.",
+    "en": "Question B-003-014-004.\n\nWhy the correct answer is right: DSP noise reduction samples the received audio or IF signal, analyzes signal and noise patterns, and subtracts or reduces some noise components.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Noise canceller (phasing)\": A phasing noise canceller combines antennas or signals to null a noise source. It is not the DSP analysis system described.\n- sourceIndex 2: \"Noise limiter\": A limiter clips large noise peaks but does not analyze noise and signal characteristics.\n- sourceIndex 3: \"Noise blanker\": A blanker detects brief impulse pulses and mutes them. It is not a general DSP pattern-reduction tool.",
     "fr": null
   },
   "citations": [

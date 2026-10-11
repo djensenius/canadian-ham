@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-008-001.\n\nWhy the correct answer is right: Overvoltage protection must watch the regulator output because that is the voltage actually delivered to the radio load.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"At the output of the filter\": The filter output can differ from the final regulated output, so sensing there could miss a regulator fault.\n- sourceIndex 2: \"At the input of the rectifier\": The rectifier input is still AC from the transformer secondary and is far upstream of the protected DC output.\n- sourceIndex 3: \"At the input of the transformer\": The transformer input is the mains side; it cannot verify the DC voltage being applied to equipment.",
+    "en": "Question B-003-008-001.\n\nWhy the correct answer is right: Overvoltage protection must watch the regulator output because that is the voltage actually delivered to the radio load.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"At the output of the filter\": The filter output can differ from the final regulated output, so sensing there could miss a regulator fault.\n- sourceIndex 2: \"At the input of the rectifier\": The rectifier input is still AC from the transformer secondary and is far upstream of the protected DC output.\n- sourceIndex 3: \"At the input of the transformer\": The transformer input is the mains side. It cannot verify the DC voltage being applied to equipment.",
     "fr": null
   },
   "citations": [

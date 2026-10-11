@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-014-009.\n\nWhy the correct answer is right: Noise blankers are designed for short impulse bursts, such as ignition-like clicks, because the receiver can blank those brief intervals.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Continuous wideband background noise\": Continuous hiss is present all the time, so blanking brief moments will not remove it effectively.\n- sourceIndex 2: \"Interfering signals on the same frequency\": A blanker cannot separate another station sharing the channel; filtering, timing, or operating practice is needed.\n- sourceIndex 3: \"Distortion from overdeviated signals\": Overdeviation is a transmitter audio problem in FM and cannot be repaired by a receiver impulse blanker.",
+    "en": "Question B-003-014-009.\n\nWhy the correct answer is right: Noise blankers are designed for short impulse bursts, such as ignition-like clicks, because the receiver can blank those brief intervals.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Continuous wideband background noise\": Continuous hiss is present all the time, so blanking brief moments will not remove it effectively.\n- sourceIndex 2: \"Interfering signals on the same frequency\": A blanker cannot separate another station sharing the channel. Filtering, timing, or operating practice is needed.\n- sourceIndex 3: \"Distortion from overdeviated signals\": Overdeviation is a transmitter audio problem in FM and cannot be repaired by a receiver impulse blanker.",
     "fr": null
   },
   "citations": [

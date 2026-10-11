@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-007-002.\n\nWhy the correct answer is right: On transmit, the computer's digital samples must become analog audio tones that the transceiver can modulate and send.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To convert the analog signal from the computer into a digital signal that can be transmitted\": The computer output begins as digital data or samples, not an analog signal needing digitizing for transmission.\n- sourceIndex 2: \"To amplify the digital signals to be sent by the transceiver\": The sound-card interface is not a digital-signal power amplifier for the transceiver RF stages.\n- sourceIndex 3: \"To demodulate the transmitted signal\": Demodulation is a receive function; the transmit path is creating audio to feed the radio.",
+    "en": "Question B-003-007-002.\n\nWhy the correct answer is right: On transmit, the computer's digital samples must become analog audio tones that the transceiver can modulate and send.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To convert the analog signal from the computer into a digital signal that can be transmitted\": The computer output begins as digital data or samples, not an analog signal needing digitizing for transmission.\n- sourceIndex 2: \"To amplify the digital signals to be sent by the transceiver\": The sound-card interface is not a digital-signal power amplifier for the transceiver RF stages.\n- sourceIndex 3: \"To demodulate the transmitted signal\": Demodulation is a receive function. The transmit path is creating audio to feed the radio.",
     "fr": null
   },
   "citations": [

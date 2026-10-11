@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-011-003.\n\nWhy the correct answer is right: A variable frequency oscillator lets the CW transmitter tune within a range instead of being locked to only the frequencies of installed crystals.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Use of higher speed Morse code is supported\": Morse speed is set by the operator or keyer timing, not by whether the RF oscillator is variable or crystal controlled.\n- sourceIndex 2: \"Greater suppression of key clicks\": Key-click suppression comes from keying waveform shaping or filtering; a VFO mainly changes tuning flexibility.\n- sourceIndex 3: \"Greater suppression of harmonics\": Harmonic suppression is handled by output filtering and amplifier design, not by replacing crystals with a VFO.",
+    "en": "Question B-003-011-003.\n\nWhy the correct answer is right: A variable frequency oscillator lets the CW transmitter tune within a range instead of being locked to only the frequencies of installed crystals.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Use of higher speed Morse code is supported\": Morse speed is set by the operator or keyer timing, not by whether the RF oscillator is variable or crystal controlled.\n- sourceIndex 2: \"Greater suppression of key clicks\": Key-click suppression comes from keying waveform shaping or filtering. A VFO mainly changes tuning flexibility.\n- sourceIndex 3: \"Greater suppression of harmonics\": Harmonic suppression is handled by output filtering and amplifier design, not by replacing crystals with a VFO.",
     "fr": null
   },
   "citations": [

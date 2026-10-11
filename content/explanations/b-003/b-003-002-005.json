@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-002-005.\n\nWhy the correct answer is right: A frequency multiplier uses a harmonic to reach the desired FM output carrier frequency from a lower oscillator frequency.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"allows the oscillator to be run at very high frequencies\": This reverses the reason for the block; using a multiplier lets the oscillator run lower and more conveniently, not at the final very high frequency.\n- sourceIndex 2: \"is the major load fed by the power supply\": The largest power demand is normally in the RF power amplifier, not in the multiplier stage.\n- sourceIndex 3: \"produces a low distortion audio response\": Audio distortion is handled in audio and modulation stages; a frequency multiplier is an RF frequency-conversion block.",
+    "en": "Question B-003-002-005.\n\nWhy the correct answer is right: A frequency multiplier uses a harmonic to reach the desired FM output carrier frequency from a lower oscillator frequency.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"allows the oscillator to be run at very high frequencies\": This reverses the reason for the block. Using a multiplier lets the oscillator run lower and more conveniently, not at the final very high frequency.\n- sourceIndex 2: \"is the major load fed by the power supply\": The largest power demand is normally in the RF power amplifier, not in the multiplier stage.\n- sourceIndex 3: \"produces a low distortion audio response\": Audio distortion is handled in audio and modulation stages. A frequency multiplier is an RF frequency-conversion block.",
     "fr": null
   },
   "citations": [

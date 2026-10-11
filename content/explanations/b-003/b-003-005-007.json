@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-005-007.\n\nWhy the correct answer is right: The product detector recovers the transmitted audio or CW information from the IF signal with help from the BFO.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"For SSB reception, reject the unwanted sideband\": Unwanted-sideband rejection is primarily a filtering function, not the product detector's basic job.\n- sourceIndex 2: \"Convert audio frequency electrical signals into sound\": Converting electrical audio into sound is done by a speaker or headphones, not the product detector.\n- sourceIndex 3: \"Detect frequency drift to control the local oscillator\": That describes an automatic frequency control (AFC) idea; the product detector is for SSB/CW demodulation, not steering the local oscillator.",
+    "en": "Question B-003-005-007.\n\nWhy the correct answer is right: The product detector recovers the transmitted audio or continuous wave (CW) information from the intermediate frequency (IF) signal with help from the beat frequency oscillator (BFO).\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"For SSB reception, reject the unwanted sideband\": Unwanted-sideband rejection is primarily a filtering function, not the product detector's basic job.\n- sourceIndex 2: \"Convert audio frequency electrical signals into sound\": Converting electrical audio into sound is done by a speaker or headphones, not the product detector.\n- sourceIndex 3: \"Detect frequency drift to control the local oscillator\": That describes an automatic frequency control (AFC) idea. The product detector is for SSB/CW demodulation, not steering the local oscillator.",
     "fr": null
   },
   "citations": [

@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-011-009.\n\nWhy the correct answer is right: Electrical and mechanical stability keep the oscillator frequency from wandering as parts warm, vibrate, or see supply changes.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"become overmodulated\": Overmodulation is an audio-drive or modulation-level problem, not a result of oscillator mechanical instability.\n- sourceIndex 2: \"generate key clicks\": Key clicks come from abrupt CW keying edges; a stable oscillator alone does not shape those edges.\n- sourceIndex 3: \"cause undue distortion\": Distortion can come from non-linear audio or RF stages, whereas this question is about frequency drift in the oscillator.",
+    "en": "Question B-003-011-009.\n\nWhy the correct answer is right: Electrical and mechanical stability keep the oscillator frequency from wandering as parts warm, vibrate, or see supply changes.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"become overmodulated\": Overmodulation is an audio-drive or modulation-level problem, not a result of oscillator mechanical instability.\n- sourceIndex 2: \"generate key clicks\": Key clicks come from abrupt CW keying edges. A stable oscillator alone does not shape those edges.\n- sourceIndex 3: \"cause undue distortion\": Distortion can come from non-linear audio or RF stages, whereas this question is about frequency drift in the oscillator.",
     "fr": null
   },
   "citations": [

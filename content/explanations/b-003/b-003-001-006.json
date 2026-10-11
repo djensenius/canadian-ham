@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-001-006.\n\nWhy the correct answer is right: An antenna tuner transforms impedance so the transmitter can operate into an antenna system that is not naturally matched on that band.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A low-pass filter\": A low-pass filter reduces harmonics; it does not transform the antenna impedance for another band.\n- sourceIndex 2: \"A high-pass filter\": A high-pass filter is not the matching network used to make an off-band antenna usable by the transmitter.\n- sourceIndex 3: \"An SWR meter\": An SWR meter reports the match condition but does not adjust the impedance.",
+    "en": "Question B-003-001-006.\n\nWhy the correct answer is right: An antenna tuner transforms impedance so the transmitter can operate into an antenna system that is not naturally matched on that band.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A low-pass filter\": A low-pass filter reduces harmonics. It does not transform the antenna impedance for another band.\n- sourceIndex 2: \"A high-pass filter\": A high-pass filter is not the matching network used to make an off-band antenna usable by the transmitter.\n- sourceIndex 3: \"An SWR meter\": An SWR meter reports the match condition but does not adjust the impedance.",
     "fr": null
   },
   "citations": [

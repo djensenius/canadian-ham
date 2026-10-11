@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-005-009.\n\nWhy the correct answer is right: The AF amplifier increases the level of recovered audio so it can drive headphones or a speaker.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Convert audio frequency electrical signals into sound\": Changing electrical audio into sound is the job of the speaker or headphones after amplification.\n- sourceIndex 2: \"Increase the BFO signal for driving the product detector\": The BFO is a local oscillator for product detection and is not driven by the AF amplifier.\n- sourceIndex 3: \"Provide audible warning of receiver overload\": Overload warnings are auxiliary indications; the AF amplifier's normal function is audio gain.",
+    "en": "Question B-003-005-009.\n\nWhy the correct answer is right: The AF amplifier increases the level of recovered audio so it can drive headphones or a speaker.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Convert audio frequency electrical signals into sound\": Changing electrical audio into sound is the job of the speaker or headphones after amplification.\n- sourceIndex 2: \"Increase the BFO signal for driving the product detector\": The BFO is a local oscillator for product detection and is not driven by the AF amplifier.\n- sourceIndex 3: \"Provide audible warning of receiver overload\": Overload warnings are auxiliary indications. The AF amplifier's normal function is audio gain.",
     "fr": null
   },
   "citations": [
