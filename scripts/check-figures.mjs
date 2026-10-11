@@ -36,6 +36,79 @@ function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
 }
 
+function parseAttributes(tag) {
+  const attributes = new Map();
+  for (const match of tag.matchAll(/([A-Za-z_:][-A-Za-z0-9_:.]*)="([^"]*)"/g)) {
+    attributes.set(match[1], match[2]);
+  }
+  return attributes;
+}
+
+function decodeEntities(value) {
+  return value
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'");
+}
+
+function approximateTextWidth(text, fontSize) {
+  const normalized = decodeEntities(text.replace(/<[^>]+>/g, "").trim());
+  let units = 0;
+  for (const character of normalized) {
+    if (/\s/.test(character)) {
+      units += 0.35;
+    } else if (/[A-Z0-9]/.test(character)) {
+      units += 0.68;
+    } else if (/[ilI.,;:/'|]/.test(character)) {
+      units += 0.35;
+    } else {
+      units += 0.62;
+    }
+  }
+  return units * fontSize;
+}
+
+function checkTextBounds(file, source) {
+  const svgMatch = /<svg\b([^>]*)>/i.exec(source);
+  const viewBox = svgMatch === null ? null : /\bviewBox="([^\"]+)"/i.exec(svgMatch[1])?.[1];
+  if (viewBox === undefined || viewBox === null) {
+    fail(`${file}: root <svg> must include a viewBox so text bounds can be checked`);
+    return;
+  }
+  const [minX, minY, width, height] = viewBox.trim().split(/[\s,]+/).map(Number);
+  if (![minX, minY, width, height].every(Number.isFinite) || width <= 0 || height <= 0) {
+    fail(`${file}: root <svg> has an invalid viewBox`);
+    return;
+  }
+
+  const padding = 12;
+  const defaultTextAnchor = /<g\b[^>]*\btext-anchor="([^"]+)"/i.exec(source)?.[1] ?? "start";
+  const textPattern = /<text\b([^>]*)>([\s\S]*?)<\/text>/gi;
+  for (const match of source.matchAll(textPattern)) {
+    const attributes = parseAttributes(match[1]);
+    const fontSize = Number(attributes.get("font-size") ?? "16");
+    const x = Number(attributes.get("x") ?? "0");
+    const y = Number(attributes.get("y") ?? "0");
+    if (![fontSize, x, y].every(Number.isFinite) || fontSize <= 0) {
+      fail(`${file}: <text> '${match[2].trim()}' must have numeric x, y, and font-size attributes`);
+      continue;
+    }
+
+    const text = decodeEntities(match[2].replace(/<[^>]+>/g, "").trim());
+    const anchor = attributes.get("text-anchor") ?? defaultTextAnchor;
+    const textWidth = approximateTextWidth(text, fontSize);
+    const left = anchor === "middle" ? x - textWidth / 2 : anchor === "end" ? x - textWidth : x;
+    const right = anchor === "middle" ? x + textWidth / 2 : anchor === "end" ? x : x + textWidth;
+    const top = y - fontSize;
+    const bottom = y + fontSize * 0.25;
+    if (left < minX + padding || right > minX + width - padding || top < minY + padding || bottom > minY + height - padding) {
+      fail(`${file}: <text> '${text}' may extend beyond the viewBox padding (estimated bounds ${left.toFixed(1)},${top.toFixed(1)} to ${right.toFixed(1)},${bottom.toFixed(1)})`);
+    }
+  }
+}
+
 function readFigures() {
   if (!existsSync(figuresDir)) {
     fail("content/figures does not exist");
@@ -58,6 +131,7 @@ function readFigures() {
     if (!/<title>[^<]+<\/title>/i.test(source) || !/<desc>[^<]+<\/desc>/i.test(source)) {
       fail(`${file}: SVG source must include <title> and <desc> for authoring context`);
     }
+    checkTextBounds(file, source);
     figures.set(id, { id, file, source });
   }
   if (figures.size === 0) {

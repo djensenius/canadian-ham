@@ -4,12 +4,12 @@
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
     <path d="M320 58 C314 77 292 113 264 158 C220 229 171 309 126 398 C173 388 239 386 320 386 C401 386 467 388 514 398 C469 309 420 229 376 158 C348 113 326 77 320 58 Z" stroke-width="18"/>
     <path d="M190 267 C239 258 307 256 450 267" stroke-width="14"/>
-    <path d="M238 320 C265 306 296 301 320 302 C346 302 377 307 404 320" stroke-width="8" opacity="0.75"/>
+    <path d="M320 290 C316 315 316 345 320 375" stroke-width="10"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
     <text x="320" y="208" font-size="96" font-weight="700">E</text>
     <text x="248" y="358" font-size="84" font-weight="700">I</text>
     <text x="392" y="358" font-size="84" font-weight="700">R</text>
-    <text x="320" y="442" font-size="26">cover what you need; multiply side-by-side, divide top by bottom</text>
+    <text x="320" y="442" font-size="24">cover the unknown; use x or /</text>
   </g>
 </g></svg>
