@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-001-003.\n\nWhy the correct answer is right: Innovation, Science and Economic Development Canada (ISED) administers the Radiocommunication Act.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Transport Canada\": Transport Canada has transportation responsibilities; ISED administers this Act.\n- sourceIndex 2: \"Communications Security Establishment Canada\": CSE has security responsibilities; ISED administers amateur radio regulation.\n- sourceIndex 3: \"National Defence\": National Defence is separate from the civilian spectrum-management role in amateur radio regulation.",
+    "en": "Question B-001-001-003.\n\nWhy the correct answer is right: Innovation, Science and Economic Development Canada (ISED) administers the Radiocommunication Act.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Transport Canada\": Transport Canada has transportation responsibilities; ISED administers this Act.\n- sourceIndex 2: \"Communications Security Establishment Canada\": Communications Security Establishment Canada (CSE) has security responsibilities; ISED administers amateur radio regulation.\n- sourceIndex 3: \"National Defence\": National Defence is separate from the civilian spectrum-management role in amateur radio regulation.",
     "fr": null
   },
   "citations": [
