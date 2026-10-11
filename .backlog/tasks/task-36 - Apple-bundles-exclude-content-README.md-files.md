@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 17:18'
-updated_date: '2026-10-11 00:48'
+updated_date: '2026-10-11 01:03'
 labels:
   - apple
 dependencies: []
@@ -321,4 +321,12 @@ Per-test names:
   - CanadianHamVisionUITests.CanadianHamVisionUITests.testMorseScreenShowsPlaybackControls
   - CanadianHamVisionUITests.CanadianHamVisionUITests.testPracticeAccessibilityAuditLightAndDark
   - CanadianHamVisionUITests.CanadianHamVisionUITests.testPracticeInteractionSwitchesLanguageShowsFeedbackAndAdvances
+
+Review follow-up after APPROVE WITH NOTES:
+- Commit fe2dbd85628714aa9460dc3ce8a9dda269a13b75 updates README pruning to use `find "${destination}" -type f -iname README.md -delete` across lessons/quizzes/explanations and updates bundle guard helpers to match README.md case-insensitively.
+- Tried to keep ENABLE_USER_SCRIPT_SANDBOXING at the project default. With no declarations, the final `find` mechanism failed under the sandbox: `Sandbox: find(...) deny(1) file-read-data .../CanadianHam.app/lessons` and `find: .../lessons: Operation not permitted`. With the destination directories declared as inputFiles, the sandbox still denied recursive directory reads/deletion, e.g. `Sandbox: find(...) deny(1) file-read-data .../CanadianHam.app/lessons/m5-basic-electronics` plus `find: -delete: unlink(.../lessons/README.md): Operation not permitted`. With the three explicit README paths declared as inputFiles/outputFiles, Xcode refused with a dependency cycle: `Cycle inside CanadianHam ... script phase “Remove content authoring README files” ... node .../CanadianHam.app/explanations/README.md`. Because Xcode refused the sandboxed forms, the fallback keeps ENABLE_USER_SCRIPT_SANDBOXING=NO only on CanadianHam and CanadianHamTests where the post-resource pruning phase runs.
+- Regenerated with `cd apps/apple && /opt/homebrew/bin/xcodegen generate --spec project.yml` repeatedly; the final no-op repeat kept project.pbxproj unchanged (sha a75012cd8f8f85e07dd628a84124e245894c6752).
+- Targeted final-code bundle guard passed on iOS: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:CanadianHamTests/QuestionBankTests/testAppBundleContainsNoReadmeFiles test CODE_SIGNING_ALLOWED=NO` -> 1 test, 0 failures.
+- Targeted final-code bundle guard passed on macOS: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xbuild -project apps/apple/CanadianHam.xcodeproj -scheme CanadianHam -destination 'platform=macOS,arch=arm64' -skip-testing:CanadianHamUITests -only-testing:CanadianHamTests/QuestionBankTests/testAppBundleContainsNoReadmeFiles test SDKROOT=macosx SUPPORTED_PLATFORMS=macosx CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES` -> 1 test, 0 failures.
+- Negative proof rerun on the final mechanism: temporarily removed the pruning script and regenerated, then ran the iOS bundle guard. It failed as expected with `XCTAssertEqual failed: (["PlugIns/CanadianHamTests.xctest/explanations/README.md", "PlugIns/CanadianHamTests.xctest/lessons/README.md", "explanations/README.md", "lessons/README.md"]) is not equal to ([])`. Restored project.yml and project.pbxproj afterward; worktree clean.
 <!-- SECTION:NOTES:END -->
