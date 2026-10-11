@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-017-002.\n\nWhy the correct answer is right: For Advanced Qualification SSB operation, the maximum transmitter peak envelope power is 2250 watts.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"560 watts\": This is the project fact value for Basic SSB PEP, so it is too low for the Advanced SSB maximum being asked.\n- sourceIndex 2: \"250 watts\": That number belongs to Basic final-stage DC input, so it has both the wrong qualification and the wrong power quantity for Advanced SSB.\n- sourceIndex 3: \"190 watts\": 190 watts is the Basic carrier-power limit for non-SSB emissions, not Advanced SSB peak envelope power.",
+    "en": "Question B-001-017-002.\n\nWhy the correct answer is right: For Advanced Qualification single-sideband (SSB) operation, the maximum transmitter peak-envelope power (PEP) is 2 250 watts.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"560 watts\": 560 watts is the Basic SSB PEP limit, so it is too low for the Advanced SSB maximum.\n- sourceIndex 2: \"250 watts\": That number belongs to Basic final-stage DC input, so it has both the wrong qualification and the wrong power quantity for Advanced SSB.\n- sourceIndex 3: \"190 watts\": 190 watts is the Basic carrier-power limit for non-SSB emissions, not Advanced SSB peak-envelope power.",
     "fr": null
   },
   "citations": [

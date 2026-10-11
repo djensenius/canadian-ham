@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-009-001.\n\nWhy the correct answer is right: A QSL card is written proof that two amateur radio operators made a contact.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A notice of an apparent infraction from Innovation, Science and Economic Development Canada\": An infraction notice from ISED is an enforcement document, not a QSL confirmation.\n- sourceIndex 2: \"A postcard reminding you when your certificate will expire\": Certificate-expiry reminders are licensing administration, not proof of a radio contact.\n- sourceIndex 3: \"A letter or postcard from an amateur radio operator\": A generic letter or postcard is not necessarily proof unless it confirms the communication details.",
+    "en": "Question B-002-009-001.\n\nWhy the correct answer is right: A QSL card is written proof that two amateur radio operators made a contact.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"A notice of an apparent infraction from Innovation, Science and Economic Development Canada\": An infraction notice from Innovation, Science and Economic Development Canada (ISED) is an enforcement document, not a QSL confirmation.\n- sourceIndex 2: \"A postcard reminding you when your certificate will expire\": Certificate-expiry reminders are licensing administration, not proof of a radio contact.\n- sourceIndex 3: \"A letter or postcard from an amateur radio operator\": A generic letter or postcard is not necessarily proof unless it confirms the communication details.",
     "fr": null
   },
   "citations": [
