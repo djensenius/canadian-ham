@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-11 05:58'
+updated_date: '2026-10-11 07:26'
 labels:
   - apple
   - privacy
@@ -25,7 +25,7 @@ Why: progress from several devices must converge without losing or double-counti
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 A convergent merge meets the proposal's section 6 requirements (cumulative attempts/correctAttempts, stable tie-breakers, unique submittedAt) with shared TS/Swift fixtures; JSON import stays replace-all
+- [x] #1 A convergent merge meets the proposal's section 6 requirements (cumulative attempts/correctAttempts, stable tie-breakers, unique submittedAt) with shared TS/Swift fixtures; JSON import stays replace-all
 - [x] #2 Delete iCloud Progress stops sync (local-only) before deleting the zone, honours the user's keep-or-delete-local choice, and a test shows no re-upload after restart
 - [ ] #3 Reset all data covers cloud data; airplane-mode, no-account and account-switch smoke tests pass; App Store privacy answers are re-checked
 - [x] #4 Exam-attempt dedup matches submittedAt only within the same bankId (task-13.3 review); remove the unused examAttemptEntity(submittedAt:) helper
@@ -36,9 +36,9 @@ Why: progress from several devices must converge without losing or double-counti
 - [x] #9 Gate the legacy-copy marker so default (v1) builds never write gated-only state; test the marker on its own and the failed-legacy-read path; mention the legacy rows left in Progress.store
 - [x] #10 Reword the gated privacy/About copy (EN: no 'includes bundled content, no accounts…' construction; FR: no anglicised 'avec gate') before the gate is ever enabled
 - [x] #11 A failed legacy-preferences read is a distinct result: don't create the marker or finalise the copy, and retry on the next gated launch (the Preferences.store existence check must not block the retry); test the transient-failure path
-- [ ] #12 On an iCloud account change, sign-out or disable, tear down the live CloudKit-backed container immediately (reopen local-only) so the same container can't keep mirroring under a new account; test it with an injectable store factory
+- [x] #12 On an iCloud account change, sign-out or disable, tear down the live CloudKit-backed container immediately (reopen local-only) so the same container can't keep mirroring under a new account; test it with an injectable store factory
 - [x] #13 Harden the gated-file guards: the iCloud gate check rejects every top-level entitlement key outside the allowlist regardless of value type (integer, dict…), and the gated Info.plist's UIBackgroundModes must be exactly [remote-notification]; negative fixtures for both
-- [ ] #14 Morse course progress (lesson progress, character stats, daily activity) moves from the local JSON file into a CloudKit-compatible SwiftData entity in the learning-progress store, with a one-time migration that loses nothing, a convergent merge (cumulative attempts, best accuracy, union of daily activity), and export/import unchanged; Morse trainer settings stay local
+- [x] #14 Morse course progress (lesson progress, character stats, daily activity) moves from the local JSON file into a CloudKit-compatible SwiftData entity in the learning-progress store, with a one-time migration that loses nothing, a convergent merge (cumulative attempts, best accuracy, union of daily activity), and export/import unchanged; Morse trainer settings stay local
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -75,4 +75,6 @@ Review fixes 2026-10-11: fixed H1 Morse data loss (20 recent results, no read-ti
 Review r2 takeover 2026-10-11: read r2 in full. Per coordinator N6, unchecked AC1 and AC14 until N1 per-device own-contribution writes are fixed and verified. Will first add targeted regression tests that fail on current code, record that evidence, then fix.
 
 N1 regression evidence before fix: targeted macOS xbuild for testLocalQuestionWritesAfterDeviceRowImportAddOnlyOwnContribution, testTwoDevicesEachQuestionWriteAddsExactlyOneAfterSync, and testLocalLessonAndMorseWritesAfterDeviceRowImportAddOnlyOwnContribution failed as expected on current code (3 tests, 9 assertion failures), showing question counts 5/8 instead of 3/4, two-device counts 5/7 instead of 3/4, lesson readCount 5 instead of 3, and Morse attempts/character/daily totals compounded.
+
+Review r2 fixes 2026-10-11: N1 fixed by keeping local rows to this device own contribution on local question/lesson/Morse writes (own_new = max(old_own, merged_new - other_devices_sum)) and skipping unchanged records; the three new regression tests failed before the fix and now pass. N2 clears web syncDeviceRows metadata in putQuestionProgressMany with a passthrough/practice-bulk-write test. N3/N5 validates and filters syncDeviceRows, ignores stale rows when merged values differ from top-level, and defines schema $defs for syncDeviceRows. N4 old-format Morse import now replaces all Morse rows when morseCourseProgress is present. M9 added reset-all cloud delete flow with fake-client success/offline retry tests. M2 shows account-signal errors in gated Settings and tests init-injected factory for .accountChanged/.signedOut/.iCloudDisabled. Also added archived lesson-quiz migration test, committed pre-V2 generator and widened fixture assertions, docs/privacy per-install device ID note, device-ID/adoption caveat docs, and French/delete-warning copy updates. Validation passed: pnpm --filter @canadian-ham/web test src/lib/progressStore.test.ts (16 tests), pnpm typecheck, pnpm check:schemas, pnpm test (web 155 tests plus package tests), pnpm build:web, pnpm --filter @canadian-ham/web audit:urls, pnpm test:apple-icloud-gate, pnpm check:apple-icloud-gate, pnpm test:apple-network, pnpm check:apple-network, node scripts/check-apple-text-sources.ts, default macOS ProgressStoreTests (56 tests), default iOS ProgressStoreTests (54 tests). DebugCloudKit iOS ProgressStoreTests and pnpm check:apple-l10n were attempted but timed out waiting on the shared xbuild lock after 900s; DebugCloudKit macOS not run because the lock remained busy.
 <!-- SECTION:NOTES:END -->
