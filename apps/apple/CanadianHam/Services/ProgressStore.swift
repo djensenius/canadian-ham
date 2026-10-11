@@ -600,6 +600,7 @@ final class ProgressStoreService: ObservableObject {
     private let layout: ProgressStoreConfigurationLayout
     private let localDeviceID: String
     private var modelContainerFactory: ((Bool) throws -> ModelContainer)?
+    private var pendingICloudProgressDeletionForReset = false
 #if DEBUG
     var morseCourseProgressURLForTesting: URL { morseCourseProgressURL }
     var failNextImportAfterDeleteForTesting = false
@@ -984,7 +985,7 @@ final class ProgressStoreService: ObservableObject {
         try reopenLocalOnlyAfterSyncStop()
         try await client.deletePrivateDatabaseProgressZones()
         if localDataChoice == .deleteLocal {
-            try resetAllData()
+            try resetAllData(defaults: defaults)
         }
     }
 
@@ -1126,7 +1127,18 @@ final class ProgressStoreService: ObservableObject {
         self.preferences = preferences
     }
 
-    func resetAllData() throws {
+    func resetAllData(client: ICloudProgressDeletionClient, defaults: UserDefaults = .standard) async throws {
+        if isICloudSyncEnabled || ICloudSyncSettings.storedOptIn(defaults: defaults) || pendingICloudProgressDeletionForReset {
+            pendingICloudProgressDeletionForReset = true
+            ICloudSyncSettings.clearStoredOptIn(defaults: defaults)
+            try reopenLocalOnlyAfterSyncStop()
+            try await client.deletePrivateDatabaseProgressZones()
+            pendingICloudProgressDeletionForReset = false
+        }
+        try resetAllData(defaults: defaults)
+    }
+
+    func resetAllData(defaults: UserDefaults = .standard) throws {
         let previousSnapshot = try snapshotForRollback()
         do {
             try context.delete(model: QuestionProgressEntity.self)
@@ -1135,14 +1147,14 @@ final class ProgressStoreService: ObservableObject {
             try context.delete(model: LessonQuizAttemptEntity.self)
             try removeMorseCourseProgressIfPresent()
             try context.delete(model: PreferencesEntity.self)
-            UserDefaults.standard.removeObject(forKey: Self.activeBankPreferenceKey)
+            defaults.removeObject(forKey: Self.activeBankPreferenceKey)
             preferences = .default
             if layout == .split {
                 Self.markLegacyPreferencesCopyComplete(storeURLs: storeURLs)
             }
             try context.save()
             // Reset all data also turns iCloud sync back off, but only once the reset has been saved.
-            ICloudSyncSettings.clearStoredOptIn()
+            ICloudSyncSettings.clearStoredOptIn(defaults: defaults)
             isICloudSyncEnabled = false
             objectWillChange.send()
         } catch {

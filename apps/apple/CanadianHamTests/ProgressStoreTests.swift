@@ -130,6 +130,73 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertFalse(store.isICloudSyncEnabled)
     }
 
+    func testResetAllDataWithICloudSyncDeletesCloudZoneThenWipesLocalData() async throws {
+        let defaultsSuiteName = "ProgressStoreTests.resetICloud.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: defaultsSuiteName))
+        defer { defaults.removePersistentDomain(forName: defaultsSuiteName) }
+        let store = try ProgressStoreService.inMemoryForTests(iCloudSyncEnabled: true, layout: .split)
+        let record = QuestionProgressRecord(
+            questionId: "B-001-001-001",
+            bankId: basicBankId,
+            attempts: 1,
+            correctAttempts: 1,
+            lastAttemptedAt: "2026-01-02T03:04:05.000Z",
+            lastResult: .correct,
+            recentResults: [true],
+            leitner: LeitnerState(box: 1, dueAt: "2026-01-03T03:04:05.000Z")
+        )
+        try store.saveQuestionProgress([record])
+        ICloudSyncSettings.setStoredOptIn(true, defaults: defaults)
+        var zoneDeleteSawLocalOnlyBeforeWipe = false
+        let client = ICloudProgressDeletionClient(deletePrivateDatabaseProgressZones: {
+            zoneDeleteSawLocalOnlyBeforeWipe = !store.isICloudSyncEnabled && ((try? store.questionProgressRecords()) == [record])
+        })
+
+        try await store.resetAllData(client: client, defaults: defaults)
+
+        XCTAssertTrue(zoneDeleteSawLocalOnlyBeforeWipe)
+        XCTAssertFalse(ICloudSyncSettings.storedOptIn(defaults: defaults))
+        XCTAssertEqual(try store.questionProgressRecords(), [])
+    }
+
+    func testResetAllDataWithICloudSyncKeepsLocalDataAndRetriesAfterCloudDeleteFailure() async throws {
+        enum Offline: Error, Equatable { case unavailable }
+        let defaultsSuiteName = "ProgressStoreTests.resetICloudFailure.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: defaultsSuiteName))
+        defer { defaults.removePersistentDomain(forName: defaultsSuiteName) }
+        let store = try ProgressStoreService.inMemoryForTests(iCloudSyncEnabled: true, layout: .split)
+        let record = QuestionProgressRecord(
+            questionId: "B-001-001-001",
+            bankId: basicBankId,
+            attempts: 1,
+            correctAttempts: 1,
+            lastAttemptedAt: "2026-01-02T03:04:05.000Z",
+            lastResult: .correct,
+            recentResults: [true],
+            leitner: LeitnerState(box: 1, dueAt: "2026-01-03T03:04:05.000Z")
+        )
+        try store.saveQuestionProgress([record])
+        ICloudSyncSettings.setStoredOptIn(true, defaults: defaults)
+        var attempts = 0
+        let client = ICloudProgressDeletionClient(deletePrivateDatabaseProgressZones: {
+            attempts += 1
+            if attempts == 1 { throw Offline.unavailable }
+        })
+
+        do {
+            try await store.resetAllData(client: client, defaults: defaults)
+            XCTFail("Expected the first cloud-zone deletion to fail")
+        } catch {
+            XCTAssertEqual(error as? Offline, .unavailable)
+        }
+        XCTAssertEqual(try store.questionProgressRecords(), [record])
+
+        try await store.resetAllData(client: client, defaults: defaults)
+
+        XCTAssertEqual(attempts, 2)
+        XCTAssertEqual(try store.questionProgressRecords(), [])
+    }
+
     func testSharedICloudMergeFixtureCoversQuestionExamLessonAndMorseRules() throws {
         struct Fixture: Decodable {
             struct QuestionProgress: Decodable {
@@ -559,6 +626,48 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(factoryCalls, 1)
         XCTAssertFalse(store.isICloudSyncEnabled)
         XCTAssertEqual(try store.questionProgressRecords(), [record])
+    }
+
+    func testICloudAccountSignalsUseInitInjectedFactory() throws {
+        let defaultsSuiteName = "ProgressStoreTests.iCloudSignalsFactory.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: defaultsSuiteName))
+        defer { defaults.removePersistentDomain(forName: defaultsSuiteName) }
+        let urls = ProgressStoreURLs(progressDirectory: try temporaryProgressStoreDirectory())
+        let seed = try ProgressStoreService.inMemoryForTests(iCloudSyncEnabled: true, layout: .split, localDeviceID: "device")
+        var factoryCalls: [Bool] = []
+        let store = try ProgressStoreService(
+            container: seed.container,
+            storeURLs: urls,
+            iCloudSyncEnabled: true,
+            layout: .split,
+            modelContainerFactory: { enabled in
+                factoryCalls.append(enabled)
+                return try ProgressStoreService.inMemoryForTests(iCloudSyncEnabled: enabled, layout: .split, localDeviceID: "device").container
+            },
+            startICloudMonitoring: false,
+            localDeviceID: "device"
+        )
+        let record = QuestionProgressRecord(
+            questionId: "B-001-001-001",
+            bankId: basicBankId,
+            attempts: 1,
+            correctAttempts: 1,
+            lastAttemptedAt: "2026-01-02T03:04:05.000Z",
+            lastResult: .correct,
+            recentResults: [true],
+            leitner: LeitnerState(box: 1, dueAt: "2026-01-03T03:04:05.000Z")
+        )
+        try store.saveQuestionProgress([record])
+
+        for signal in [ICloudAccountSignal.accountChanged, .signedOut, .iCloudDisabled] {
+            store.updateICloudSyncOptIn(true, defaults: defaults)
+            store.handleICloudAccountSignal(signal, defaults: defaults)
+            XCTAssertFalse(store.isICloudSyncEnabled)
+            XCTAssertNil(store.iCloudAccountSignalError)
+            XCTAssertEqual(try store.questionProgressRecords(), [record])
+        }
+
+        XCTAssertEqual(factoryCalls, [false, false, false])
     }
 
     func testICloudDeleteCanDeleteLocalDataAfterZoneDelete() async throws {
