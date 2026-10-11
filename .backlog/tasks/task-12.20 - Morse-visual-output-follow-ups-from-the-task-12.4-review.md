@@ -65,5 +65,5 @@ Review r2 follow-up on tip 6eeda354c240e6c3661ec2a13b9adcb3e29298af: restored th
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Completed Morse visual-output follow-ups after review: post-settle lower audit target checks now keep targets visible and position the fixed timing note clear of the bottom safe area before default audits, safety-note wording/web lamp styling remain aligned, and Apple Morse settings export/import (including outputMode and web-compatible haptics mapping/partial imports) is covered by round-trip tests. Verified on merged d55acd8 code by package/web/localization checks and full iOS/macOS/tvOS/visionOS suites with per-test names/counts recorded in notes.
+Addressed r2 visual-audit follow-ups: restored main's fixed-timing note styling, kept protected-area assertions on every settle-helper path, and verified lower Morse-home audits three times plus the other lower-half settle-helper audits. Full suites were deferred per updated coordinator policy.
 <!-- SECTION:FINAL_SUMMARY:END -->
