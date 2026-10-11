@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-11 06:53'
+updated_date: '2026-10-11 09:59'
 labels:
   - content
   - apple
@@ -62,6 +62,10 @@ Localization follow-up: pnpm check:apple-l10n now passes on the branch. Catalog 
 Review r1 fixes: aligned web/Swift figure directive parsing with shared fixtures; added SVG safety/text-bounds/self-test checks; generated Apple figure metadata from viewBox; removed per-id sizing and fit figures to available width; added enlarged figure sheet; refreshed docs and real-app screenshot evidence under docs/evidence/task-38.1/app/. Removed dead web placeholder i18n/CSS and added compact navigation bar background to avoid translucent contrast issues.
 
 Validation after r1 fixes: pnpm typecheck; TZ=UTC pnpm --filter @canadian-ham/web test (161 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift (20 tests); pnpm check:figures; node scripts/check-figures.mjs --self-test; node scripts/check-apple-text-sources.ts; pnpm check:apple-l10n; targeted iOS xbuild figure tests testOhmsLawLessonFiguresAndAccessibilityLight/Dark plus placeholder assertion (3 tests) in /tmp/task381-r1-screens.xcresult; targeted largest-text/enlarge iOS test testOhmsLawWheelFitsAndEnlargesAtLargestAccessibilityTextSize in /tmp/task381-large.xcresult. Full iOS/macOS reruns intentionally skipped per coordinator owner-decision testing policy update; full affected-platform suites run once before merge.
+
+Follow-up fixes: increased wheel formula SVG font sizes to satisfy the 11 pt at 300 pt display-width rule, added that minimum to scripts/check-figures.mjs and docs/figures.md, regenerated Apple assets/evidence, and retook real iOS app screenshots under docs/evidence/task-38.1/app/ including default light/dark, enlarged views, and a largest-accessibility-text wheel screenshot.
+
+Follow-up validation: pnpm check:figures; node scripts/check-figures.mjs --self-test; TZ=UTC pnpm --filter @canadian-ham/web test (161 tests); DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift (20 tests); node scripts/check-apple-text-sources.ts; targeted iOS xbuild tests: testLessonIllustrationBriefsAreHiddenInEnglishAndFrench plus testOhmsLawLessonFiguresAndAccessibilityLight/Dark in /tmp/task381-r7-screens.xcresult (3 tests passed), and testOhmsLawWheelFitsAndEnlargesAtLargestAccessibilityTextSize in /tmp/task381-large4.xcresult (1 test passed). Full platform suites remain deferred to pre-merge per updated policy.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
