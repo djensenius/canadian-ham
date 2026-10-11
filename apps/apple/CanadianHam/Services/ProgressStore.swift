@@ -1329,30 +1329,60 @@ final class ProgressStoreService: ObservableObject {
 
     private func upsertQuestionProgress(_ record: QuestionProgressRecord, deviceId: String? = nil) throws {
         let rowDeviceId = deviceId ?? localDeviceID
-        let data = try encoder.encode(record.recentResults)
-        if let entity = try questionProgressEntity(questionId: record.questionId, bankId: record.bankId, deviceId: rowDeviceId) {
-            entity.bankId = record.bankId
-            entity.attempts = record.attempts
-            entity.correctAttempts = record.correctAttempts
-            entity.lastAttemptedAt = record.lastAttemptedAt
-            entity.lastResult = record.lastResult.rawValue
+        if deviceId == nil,
+           let currentMerged = try questionProgressRecords().first(where: { $0.bankId == record.bankId && $0.questionId == record.questionId }),
+           currentMerged == record {
+            return
+        }
+        let existing = try questionProgressEntity(questionId: record.questionId, bankId: record.bankId, deviceId: rowDeviceId)
+        let ownOldAttempts = existing?.attempts ?? 0
+        let ownOldCorrectAttempts = existing?.correctAttempts ?? 0
+        let writeRecord: QuestionProgressRecord
+        if deviceId == nil {
+            let otherRows = try questionProgressEntities(questionId: record.questionId, bankId: record.bankId)
+                .filter { $0.deviceId != rowDeviceId }
+            let otherAttempts = otherRows.map(\.attempts).reduce(0, +)
+            let otherCorrectAttempts = otherRows.map(\.correctAttempts).reduce(0, +)
+            let ownAttempts = max(ownOldAttempts, record.attempts - otherAttempts)
+            let ownCorrectAttempts = min(ownAttempts, max(ownOldCorrectAttempts, record.correctAttempts - otherCorrectAttempts))
+            writeRecord = QuestionProgressRecord(
+                questionId: record.questionId,
+                bankId: record.bankId,
+                attempts: ownAttempts,
+                correctAttempts: ownCorrectAttempts,
+                lastAttemptedAt: record.lastAttemptedAt,
+                lastResult: record.lastResult,
+                recentResults: record.recentResults,
+                leitner: record.leitner,
+                notes: record.notes
+            )
+        } else {
+            writeRecord = record
+        }
+        let data = try encoder.encode(writeRecord.recentResults)
+        if let entity = existing {
+            entity.bankId = writeRecord.bankId
+            entity.attempts = writeRecord.attempts
+            entity.correctAttempts = writeRecord.correctAttempts
+            entity.lastAttemptedAt = writeRecord.lastAttemptedAt
+            entity.lastResult = writeRecord.lastResult.rawValue
             entity.recentResultsData = data
-            entity.leitnerBox = record.leitner.box
-            entity.dueAt = record.leitner.dueAt
-            entity.notes = record.notes
+            entity.leitnerBox = writeRecord.leitner.box
+            entity.dueAt = writeRecord.leitner.dueAt
+            entity.notes = writeRecord.notes
             entity.deviceId = rowDeviceId
         } else {
             context.insert(QuestionProgressEntity(
-                questionId: record.questionId,
-                bankId: record.bankId,
-                attempts: record.attempts,
-                correctAttempts: record.correctAttempts,
-                lastAttemptedAt: record.lastAttemptedAt,
-                lastResult: record.lastResult.rawValue,
+                questionId: writeRecord.questionId,
+                bankId: writeRecord.bankId,
+                attempts: writeRecord.attempts,
+                correctAttempts: writeRecord.correctAttempts,
+                lastAttemptedAt: writeRecord.lastAttemptedAt,
+                lastResult: writeRecord.lastResult.rawValue,
                 recentResultsData: data,
-                leitnerBox: record.leitner.box,
-                dueAt: record.leitner.dueAt,
-                notes: record.notes,
+                leitnerBox: writeRecord.leitner.box,
+                dueAt: writeRecord.leitner.dueAt,
+                notes: writeRecord.notes,
                 deviceId: rowDeviceId
             ))
         }
@@ -1372,6 +1402,13 @@ final class ProgressStoreService: ObservableObject {
         let targetBankId = bankId
         let targetDeviceId = deviceId
         let descriptor = FetchDescriptor<QuestionProgressEntity>(predicate: #Predicate { $0.questionId == targetQuestionId && $0.bankId == targetBankId && $0.deviceId == targetDeviceId })
+        return try context.fetch(descriptor)
+    }
+
+    private func questionProgressEntities(questionId: String, bankId: String) throws -> [QuestionProgressEntity] {
+        let targetQuestionId = questionId
+        let targetBankId = bankId
+        let descriptor = FetchDescriptor<QuestionProgressEntity>(predicate: #Predicate { $0.questionId == targetQuestionId && $0.bankId == targetBankId })
         return try context.fetch(descriptor)
     }
 
@@ -1410,17 +1447,39 @@ final class ProgressStoreService: ObservableObject {
 
     private func upsertLessonProgress(_ record: LessonProgressRecord, deviceId: String? = nil) throws {
         let rowDeviceId = deviceId ?? localDeviceID
+        if deviceId == nil,
+           let currentMerged = try lessonProgressRecords().first(where: { $0.lessonId == record.lessonId }),
+           currentMerged == record {
+            return
+        }
         let targetLessonId = record.lessonId
         let targetDeviceId = rowDeviceId
         let descriptor = FetchDescriptor<LessonProgressEntity>(predicate: #Predicate { $0.lessonId == targetLessonId && $0.deviceId == targetDeviceId })
         let entities = try context.fetch(descriptor)
-        let survivor = entities.first ?? LessonProgressEntity(lessonId: record.lessonId, readAt: record.readAt, readCount: record.readCount, deviceId: rowDeviceId)
+        let existing = entities.first
+        let ownOldReadCount = existing?.readCount ?? 0
+        let writeRecord: LessonProgressRecord
+        if deviceId == nil {
+            let allDescriptor = FetchDescriptor<LessonProgressEntity>(predicate: #Predicate { $0.lessonId == targetLessonId })
+            let otherReadCount = try context.fetch(allDescriptor)
+                .filter { $0.deviceId != rowDeviceId }
+                .map(\.readCount)
+                .reduce(0, +)
+            writeRecord = LessonProgressRecord(
+                lessonId: record.lessonId,
+                readAt: record.readAt,
+                readCount: max(ownOldReadCount, record.readCount - otherReadCount)
+            )
+        } else {
+            writeRecord = record
+        }
+        let survivor = existing ?? LessonProgressEntity(lessonId: writeRecord.lessonId, readAt: writeRecord.readAt, readCount: writeRecord.readCount, deviceId: rowDeviceId)
         if entities.isEmpty {
             context.insert(survivor)
         }
-        survivor.lessonId = record.lessonId
-        survivor.readAt = record.readAt
-        survivor.readCount = record.readCount
+        survivor.lessonId = writeRecord.lessonId
+        survivor.readAt = writeRecord.readAt
+        survivor.readCount = writeRecord.readCount
         survivor.deviceId = rowDeviceId
         for duplicate in entities.dropFirst() {
             context.delete(duplicate)
@@ -1451,12 +1510,77 @@ final class ProgressStoreService: ObservableObject {
 
     private func upsertMorseCourseProgress(_ progress: MorseCourseProgressExport, deviceId: String? = nil) throws {
         let rowDeviceId = deviceId ?? localDeviceID
+        if deviceId == nil, let currentMerged = try morseCourseProgress(), currentMerged == progress {
+            return
+        }
         let key = MorseCourseProgressEntity.defaultKey
         let targetDeviceId = rowDeviceId
         let descriptor = FetchDescriptor<MorseCourseProgressEntity>(predicate: #Predicate { $0.key == key && $0.deviceId == targetDeviceId })
         let entities = try context.fetch(descriptor)
-        let payload = try encoder.encode(progress)
-        let survivor = entities.first ?? MorseCourseProgressEntity(payloadData: payload, deviceId: rowDeviceId)
+        let existing = entities.first
+        let writeProgress: MorseCourseProgressExport
+        if deviceId == nil {
+            let ownProgress = try existing.map { try decoder.decode(MorseCourseProgressExport.self, from: $0.payloadData) } ?? MorseCourseProgressExport(courseId: progress.courseId, lessonProgress: [], characterStats: [], dailyActivity: [])
+            let allDescriptor = FetchDescriptor<MorseCourseProgressEntity>(predicate: #Predicate { $0.key == key })
+            let otherRows = try context.fetch(allDescriptor)
+                .filter { $0.deviceId != rowDeviceId }
+                .map { DeviceMorseCourseProgressRecord(deviceId: $0.deviceId, progress: try decoder.decode(MorseCourseProgressExport.self, from: $0.payloadData)) }
+            let otherProgress = ProgressSyncMerge.mergeDeviceMorseCourseProgress(otherRows)
+            let currentMerged = try morseCourseProgress()
+            var ownLessons = Dictionary(uniqueKeysWithValues: ownProgress.lessonProgress.map { ($0.lessonId, $0) })
+            let otherLessons = Dictionary(uniqueKeysWithValues: (otherProgress?.lessonProgress ?? []).map { ($0.lessonId, $0) })
+            let currentLessons = Dictionary(uniqueKeysWithValues: (currentMerged?.lessonProgress ?? []).map { ($0.lessonId, $0) })
+            for record in progress.lessonProgress where currentLessons[record.lessonId] != record {
+                let ownOldAttempts = ownLessons[record.lessonId]?.attempts ?? 0
+                let otherAttempts = otherLessons[record.lessonId]?.attempts ?? 0
+                ownLessons[record.lessonId] = MorseLessonProgressRecord(
+                    lessonId: record.lessonId,
+                    attempts: max(ownOldAttempts, record.attempts - otherAttempts),
+                    bestAccuracy: record.bestAccuracy,
+                    lastAccuracy: record.lastAccuracy,
+                    lastAttemptedAt: record.lastAttemptedAt,
+                    completedAt: record.completedAt
+                )
+            }
+            var ownCharacters = Dictionary(uniqueKeysWithValues: ownProgress.characterStats.map { ($0.character, $0) })
+            let otherCharacters = Dictionary(uniqueKeysWithValues: (otherProgress?.characterStats ?? []).map { ($0.character, $0) })
+            let currentCharacters = Dictionary(uniqueKeysWithValues: (currentMerged?.characterStats ?? []).map { ($0.character, $0) })
+            for record in progress.characterStats where currentCharacters[record.character] != record {
+                let ownOldAttempts = ownCharacters[record.character]?.attempts ?? 0
+                let ownOldCorrectAttempts = ownCharacters[record.character]?.correctAttempts ?? 0
+                let other = otherCharacters[record.character]
+                let ownAttempts = max(ownOldAttempts, record.attempts - (other?.attempts ?? 0))
+                let ownCorrectAttempts = min(ownAttempts, max(ownOldCorrectAttempts, record.correctAttempts - (other?.correctAttempts ?? 0)))
+                ownCharacters[record.character] = MorseCharacterStatRecord(
+                    character: record.character,
+                    attempts: ownAttempts,
+                    correctAttempts: ownCorrectAttempts,
+                    recentResults: record.recentResults,
+                    lastPracticedAt: record.lastPracticedAt
+                )
+            }
+            var ownDailyActivity = Dictionary(uniqueKeysWithValues: ownProgress.dailyActivity.map { ($0.date, $0) })
+            let otherDailyActivity = Dictionary(uniqueKeysWithValues: (otherProgress?.dailyActivity ?? []).map { ($0.date, $0) })
+            let currentDailyActivity = Dictionary(uniqueKeysWithValues: (currentMerged?.dailyActivity ?? []).map { ($0.date, $0) })
+            for record in progress.dailyActivity where currentDailyActivity[record.date] != record {
+                let ownOldLessonsCompleted = ownDailyActivity[record.date]?.lessonsCompleted ?? 0
+                let otherLessonsCompleted = otherDailyActivity[record.date]?.lessonsCompleted ?? 0
+                ownDailyActivity[record.date] = MorseDailyActivityRecord(
+                    date: record.date,
+                    lessonsCompleted: max(ownOldLessonsCompleted, record.lessonsCompleted - otherLessonsCompleted)
+                )
+            }
+            writeProgress = MorseCourseProgressExport(
+                courseId: progress.courseId,
+                lessonProgress: ownLessons.values.sorted { $0.lessonId < $1.lessonId },
+                characterStats: ownCharacters.values.sorted { $0.character < $1.character },
+                dailyActivity: ownDailyActivity.values.sorted { $0.date < $1.date }
+            )
+        } else {
+            writeProgress = progress
+        }
+        let payload = try encoder.encode(writeProgress)
+        let survivor = existing ?? MorseCourseProgressEntity(payloadData: payload, deviceId: rowDeviceId)
         if entities.isEmpty {
             context.insert(survivor)
         }
