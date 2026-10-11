@@ -1176,6 +1176,12 @@ final class ProgressStoreService: ObservableObject {
         if ApplePreferences.PracticeMode(rawValue: data.preferences.practiceMode) == nil {
             errors.append(String(localized: "Import preferences.practiceMode is invalid."))
         }
+        if !ExportedMorseSettings.validTimingProfiles.contains(data.preferences.morse.timingProfile) {
+            errors.append(String(localized: "Import preferences.morse.timingProfile is invalid."))
+        }
+        if !ExportedMorseSettings.validOutputModes.contains(data.preferences.morse.outputMode) {
+            errors.append(String(localized: "Import preferences.morse.outputMode is invalid."))
+        }
         if ApplePreferences.Theme(rawValue: data.preferences.theme) == nil {
             errors.append(String(localized: "Import preferences.theme is invalid."))
         }

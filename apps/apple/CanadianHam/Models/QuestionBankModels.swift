@@ -8,6 +8,8 @@ struct ExportedMorseSettings: Codable, Equatable, Sendable {
     let volume: Double
     let outputMode: String
 
+    static let validTimingProfiles: Set<String> = ["isedParis", "ric1Literal", "general"]
+    static let validOutputModes: Set<String> = ["audio", "visualBeacon", "visualTape"]
     static let `default` = ExportedMorseSettings(toneHz: 650, characterWpm: 15, effectiveWpm: 5, timingProfile: "isedParis", volume: 0.6, outputMode: "audio")
 
     init(toneHz: Int, characterWpm: Int, effectiveWpm: Int, timingProfile: String, volume: Double, outputMode: String = "audio") {

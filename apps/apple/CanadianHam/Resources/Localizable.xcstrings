@@ -4831,6 +4831,50 @@
         }
       }
     },
+    "Import preferences.morse.outputMode is invalid." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import preferences.morse.outputMode is invalid."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.morse.outputMode est invalide."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.morse.outputMode est invalide."
+          }
+        }
+      }
+    },
+    "Import preferences.morse.timingProfile is invalid." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import preferences.morse.timingProfile is invalid."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.morse.timingProfile est invalide."
+          }
+        },
+        "fr-CA" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importation : preferences.morse.timingProfile est invalide."
+          }
+        }
+      }
+    },
     "Import preferences.practiceMode is invalid." : {
       "localizations" : {
         "en" : {

@@ -504,6 +504,46 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertNoThrow(try ProgressStoreService.inMemoryForTests().importData(partialMorse, bank: bank))
     }
 
+    func testMorseImportRejectsUnsupportedMorsePreferenceEnums() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let cases = [
+            (morseJSON: #"{ "outputMode": "haptics" }"#, expectedError: "Import preferences.morse.outputMode is invalid."),
+            (morseJSON: #"{ "timingProfile": "fast" }"#, expectedError: "Import preferences.morse.timingProfile is invalid.")
+        ]
+
+        for testCase in cases {
+            let json = """
+            {
+              "schema": "canadian-ham.progress-export",
+              "version": 1,
+              "exportedAt": "2026-01-02T05:04:05.000Z",
+              "bankId": "\(bank.manifest.bankId)",
+              "questionProgress": [],
+              "examAttempts": [],
+              "lessonProgress": [],
+              "lessonQuizAttempts": [],
+              "preferences": {
+                "practiceMode": "immediate",
+                "examTimerEnabled": false,
+                "theme": "system",
+                "morse": \(testCase.morseJSON)
+              }
+            }
+            """
+            let decoded = try JSONDecoder().decode(ProgressExportV1.self, from: Data(json.utf8))
+            let store = try ProgressStoreService.inMemoryForTests()
+            let errors = store.validate(decoded, bank: bank)
+
+            XCTAssertTrue(errors.contains(testCase.expectedError), "Expected \(testCase.expectedError), got: \(errors)")
+            XCTAssertThrowsError(try store.importData(decoded, bank: bank)) { error in
+                guard case ProgressStoreError.validationFailed(let validationErrors) = error else {
+                    return XCTFail("Expected validationFailed, got: \(error)")
+                }
+                XCTAssertTrue(validationErrors.contains(testCase.expectedError), "Expected \(testCase.expectedError), got: \(validationErrors)")
+            }
+        }
+    }
+
     func testImportsOlderExportWithoutMorseCourseProgressKeepsExistingMorseProgress() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let store = try ProgressStoreService.inMemoryForTests()
