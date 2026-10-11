@@ -1,7 +1,7 @@
 ---
 id: TASK-39.6
 title: Explanation readability pass
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
