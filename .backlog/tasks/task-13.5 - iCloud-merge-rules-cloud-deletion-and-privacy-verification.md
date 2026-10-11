@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-11 08:19'
+updated_date: '2026-10-11 08:20'
 labels:
   - apple
   - privacy
@@ -83,4 +83,6 @@ Review r3 fixes 2026-10-11: addressed H-1 by building one question-progress writ
 Review r4 H-A fix: replaced the gated Settings tokenButton call with the literal localized key so DebugCloudKit no longer passes a runtime String into tokenButton(LocalizedStringKey). DebugCloudKit iOS/macOS targeted xbuild validation still pending after the full fix set.
 
 Review r4 M-6 fix: macOS NativeSettings reset now calls the async cloud deletion reset under ICLOUD_SYNC, and the synchronous resetAllData(defaults:) now throws ProgressStoreError.cloudResetRequiresAsyncDeletion in gated cloud/pending cases so cloud resets cannot bypass zone deletion. Store-level gated/default reset evidence is in ProgressStoreTests; xbuild validation pending.
+
+Review r4 M-5 leftover fix: the lesson, lesson-quiz, and Morse syncDeviceRows deviceId validation messages now use the existing localized "%@.deviceId must be non-empty." key, and the three empty catalogue keys were removed without unrelated catalogue churn.
 <!-- SECTION:NOTES:END -->
