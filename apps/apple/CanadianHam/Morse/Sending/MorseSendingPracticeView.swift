@@ -88,6 +88,11 @@ struct MorseSendingPracticeView: View {
         .navigationDestination(isPresented: $showingExam) {
             sendingExamScreen
         }
+        .onChange(of: showingExam) { _, isPresented in
+            if !isPresented, presentedResult == nil, !examText.isEmpty {
+                cancelRunningExam(clearExam: true)
+            }
+        }
         .navigationDestination(isPresented: resultIsPresented) {
             if let presentedResult {
                 MorseSendingResultsScreen(result: presentedResult) {
