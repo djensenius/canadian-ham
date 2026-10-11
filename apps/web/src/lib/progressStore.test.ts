@@ -211,6 +211,22 @@ describe("ProgressStore", () => {
     assert.equal((await store.exportData("2026-01-02T06:00:00.000Z")).syncDeviceRows, undefined);
   });
 
+  it("drops imported sync device rows when exporting a different bank", async () => {
+    const syncDeviceRows = {
+      questionProgress: [{ deviceId: "iphone", record }],
+      examAttempts: [{ deviceId: "iphone", attempt }],
+      lessonProgress: [{ deviceId: "iphone", record: lessonProgressRecord }],
+      lessonQuizAttempts: [],
+      morseCourseProgress: [],
+    };
+    const store = createStore("sync-device-rows-bank-switch");
+    await store.importData(validExport({ syncDeviceRows }));
+
+    const exported = await store.exportData("2026-01-02T06:00:00.000Z", advancedBank);
+
+    assert.equal(exported.syncDeviceRows, undefined);
+  });
+
   it("drops imported sync device rows when the main practice bulk progress path writes", async () => {
     const syncDeviceRows = {
       questionProgress: [{ deviceId: "iphone", record }],
@@ -347,6 +363,21 @@ describe("ProgressStore", () => {
     assert.match(errors, /officialQuestionIds must belong to the lesson quiz/);
     assert.match(errors, /incorrectOfficialQuestionIds must be a subset of officialQuestionIds/);
     assert.match(errors, /leitner\.box/);
+  });
+
+  it("rejects duplicate Morse daily activity dates", () => {
+    const validation = validateProgressImport(validExport({
+      morseCourseProgress: {
+        ...morseCourseProgress,
+        dailyActivity: [
+          { date: "2026-01-02", lessonsCompleted: 1 },
+          { date: "2026-01-02", lessonsCompleted: 2 },
+        ],
+      },
+    }));
+
+    assert.equal(validation.ok, false);
+    assert.match(validation.errors.join("\n"), /dailyActivity\[1\]\.date duplicates/);
   });
 
   it("resets a failed open promise so a later IndexedDB open can succeed", async () => {

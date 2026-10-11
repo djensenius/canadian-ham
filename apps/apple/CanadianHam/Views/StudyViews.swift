@@ -1589,7 +1589,7 @@ struct SettingsView: View {
                 .foregroundStyle(DesignTokens.Colors.ink)
                 .fixedSize(horizontal: false, vertical: true)
             if let accountSignalError = progressStore.iCloudAccountSignalError {
-                Text("iCloud sync status could not be updated: \(accountSignalError)") // l10n: localized
+                Text(String.localizedStringWithFormat(String(localized: "iCloud sync status could not be updated: %@"), accountSignalError)) // l10n: localized
                     .font(DesignTokens.FontScale.caption)
                     .foregroundStyle(DesignTokens.Colors.warningText)
                     .fixedSize(horizontal: false, vertical: true)
@@ -1727,21 +1727,19 @@ struct SettingsView: View {
 
     private func resetAllData() {
 #if ICLOUD_SYNC
-        if progressStore.isICloudSyncEnabled {
-            Task { @MainActor in
-                do {
-                    try await progressStore.resetAllData(client: .cloudKit())
-                    MorseTrainerSettings.reset()
-                    morseSettings = .default
-                    statusMessage = String(localized: "All local progress was reset.")
-                    errorMessage = nil
-                    onDataChanged(true)
-                } catch {
-                    errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
-                }
+        Task { @MainActor in
+            do {
+                try await progressStore.resetAllData(client: .cloudKit())
+                MorseTrainerSettings.reset()
+                morseSettings = .default
+                statusMessage = String(localized: "All local progress was reset.")
+                errorMessage = nil
+                onDataChanged(true)
+            } catch {
+                errorMessage = localizedErrorMessage(String(localized: "Unable to complete this operation: \("")"), detail: error)
             }
-            return
         }
+        return
 #endif
         do {
             try progressStore.resetAllData()

@@ -230,17 +230,22 @@ export class ProgressStore {
   async exportData(exportedAt: string, bank: BankData = basicBank): Promise<ProgressExportV1> {
     const allQuestionProgress = await this.getQuestionProgress();
     const allExamAttempts = await this.getExamAttempts();
-    const syncDeviceRows = await this.getSyncDeviceRowsMetadata();
+    const questionProgress = allQuestionProgress.filter((record) => record.bankId === bank.bankId);
+    const examAttempts = allExamAttempts.filter((attempt) => attempt.bankId === bank.bankId);
+    const lessonProgress = bank.hasLessons ? await this.getLessonProgress() : [];
+    const lessonQuizAttempts = bank.hasLessons ? await this.getLessonQuizAttempts() : [];
+    const morseCourseProgress = await this.getMorseCourseProgress();
+    const syncDeviceRows = filterSyncDeviceRowsForExport(await this.getSyncDeviceRowsMetadata(), bank);
     return {
       schema: "canadian-ham.progress-export",
       version: 1,
       exportedAt,
       bankId: bank.bankId,
-      questionProgress: allQuestionProgress.filter((record) => record.bankId === bank.bankId),
-      examAttempts: allExamAttempts.filter((attempt) => attempt.bankId === bank.bankId),
-      lessonProgress: bank.hasLessons ? await this.getLessonProgress() : [],
-      lessonQuizAttempts: bank.hasLessons ? await this.getLessonQuizAttempts() : [],
-      morseCourseProgress: await this.getMorseCourseProgress(),
+      questionProgress,
+      examAttempts,
+      lessonProgress,
+      lessonQuizAttempts,
+      morseCourseProgress,
       ...(syncDeviceRows === undefined ? {} : { syncDeviceRows }),
       preferences: { ...(await this.getPreferences()), activeBankId: bank.bankId },
     };
@@ -412,6 +417,15 @@ export function deduplicateDeviceLessonProgressForSync(rows: readonly DeviceLess
       };
     })
     .sort((a, b) => codePointCompare(a.lessonId, b.lessonId));
+}
+
+
+function filterSyncDeviceRowsForExport(rows: ProgressSyncDeviceRows | undefined, bank: BankData): ProgressSyncDeviceRows | undefined {
+  if (rows === undefined) return undefined;
+  if (rows.questionProgress.some((row) => row.record.bankId !== bank.bankId)) return undefined;
+  if (rows.examAttempts.some((row) => row.attempt.bankId !== bank.bankId)) return undefined;
+  if (!bank.hasLessons && (rows.lessonProgress.length > 0 || (rows.lessonQuizAttempts?.length ?? 0) > 0)) return undefined;
+  return rows;
 }
 
 function groupBy<T>(values: readonly T[], keyForValue: (value: T) => string): Map<string, T[]> {
@@ -669,6 +683,7 @@ function validateMorseCourseProgress(value: unknown): string[] {
   if (!Array.isArray(value.dailyActivity)) {
     errors.push(`${prefix}.dailyActivity must be an array.`);
   } else {
+    const dates = new Set<string>();
     value.dailyActivity.forEach((record, index) => {
       const recordPrefix = `${prefix}.dailyActivity[${index}]`;
       if (!isRecord(record)) {
@@ -676,6 +691,8 @@ function validateMorseCourseProgress(value: unknown): string[] {
         return;
       }
       if (typeof record.date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(record.date)) errors.push(`${recordPrefix}.date must be YYYY-MM-DD.`);
+      else if (dates.has(record.date)) errors.push(`${recordPrefix}.date duplicates another daily activity record.`);
+      if (typeof record.date === "string") dates.add(record.date);
       if (!isNonNegativeInteger(record.lessonsCompleted)) errors.push(`${recordPrefix}.lessonsCompleted must be a non-negative integer.`);
     });
   }

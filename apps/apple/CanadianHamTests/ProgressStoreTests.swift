@@ -190,11 +190,13 @@ final class ProgressStoreTests: XCTestCase {
             XCTAssertEqual(error as? Offline, .unavailable)
         }
         XCTAssertEqual(try store.questionProgressRecords(), [record])
+        XCTAssertTrue(ICloudSyncSettings.pendingProgressZoneDeletion(defaults: defaults))
 
-        try await store.resetAllData(client: client, defaults: defaults)
+        let relaunchedStore = try ProgressStoreService.inMemoryForTests(iCloudSyncEnabled: false, layout: .split)
+        try await relaunchedStore.resetAllData(client: client, defaults: defaults)
 
         XCTAssertEqual(attempts, 2)
-        XCTAssertEqual(try store.questionProgressRecords(), [])
+        XCTAssertFalse(ICloudSyncSettings.pendingProgressZoneDeletion(defaults: defaults))
     }
 
     func testSharedICloudMergeFixtureCoversQuestionExamLessonAndMorseRules() throws {
@@ -258,6 +260,27 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(ProgressSyncMerge.deduplicateDeviceLessonProgress(fixture.lessonProgress.deviceRows + fixture.lessonProgress.deviceRows), fixture.lessonProgress.expected)
         XCTAssertEqual(ProgressSyncMerge.mergeDeviceMorseCourseProgress(Array(fixture.morseCourseProgress.deviceRows.reversed())), fixture.morseCourseProgress.expected)
         XCTAssertEqual(ProgressSyncMerge.mergeDeviceMorseCourseProgress(fixture.morseCourseProgress.deviceRows + fixture.morseCourseProgress.deviceRows), fixture.morseCourseProgress.expected)
+    }
+
+    func testSavingLargeQuestionProgressBatchBuildsOneWriteContext() throws {
+        let store = try ProgressStoreService.inMemoryForTests(localDeviceID: "device")
+        let records = (0..<1_000).map { index in
+            QuestionProgressRecord(
+                questionId: String(format: "B-001-001-%03d", index + 1),
+                bankId: basicBankId,
+                attempts: 1,
+                correctAttempts: index.isMultiple(of: 2) ? 1 : 0,
+                lastAttemptedAt: "2026-01-02T03:04:05.000Z",
+                lastResult: index.isMultiple(of: 2) ? .correct : .incorrect,
+                recentResults: [index.isMultiple(of: 2)],
+                leitner: LeitnerState(box: 1, dueAt: "2026-01-03T03:04:05.000Z")
+            )
+        }
+
+        try store.saveQuestionProgress(records)
+
+        XCTAssertEqual(store.questionProgressWriteContextBuildCountForTesting, 1)
+        XCTAssertEqual(try store.questionProgressRecords().count, 1_000)
     }
 
     func testLocalQuestionWritesAfterDeviceRowImportAddOnlyOwnContribution() throws {
@@ -428,8 +451,13 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(try store.lessonProgressRecords(), [updatedLesson])
         XCTAssertEqual(try store.morseCourseProgress(), updatedMorse)
         let exportedOnce = try store.exportData(bank: bank, exportedAt: "2026-01-02T07:04:05.000Z")
+        XCTAssertEqual(Set(exportedOnce.syncDeviceRows?.lessonProgress.map(\.deviceId) ?? []), ["iphone", "ipad"])
+        XCTAssertEqual(Set(exportedOnce.syncDeviceRows?.morseCourseProgress.map(\.deviceId) ?? []), ["iphone", "ipad"])
         try store.importData(exportedOnce, bank: bank)
         try store.importData(exportedOnce, bank: bank)
+        let exportedAfterReimport = try store.exportData(bank: bank, exportedAt: "2026-01-02T08:04:05.000Z")
+        XCTAssertEqual(Set(exportedAfterReimport.syncDeviceRows?.lessonProgress.map(\.deviceId) ?? []), ["iphone", "ipad"])
+        XCTAssertEqual(Set(exportedAfterReimport.syncDeviceRows?.morseCourseProgress.map(\.deviceId) ?? []), ["iphone", "ipad"])
         XCTAssertEqual(try store.lessonProgressRecords(), [updatedLesson])
         XCTAssertEqual(try store.morseCourseProgress(), updatedMorse)
     }
@@ -470,6 +498,99 @@ final class ProgressStoreTests: XCTestCase {
 
         XCTAssertEqual(try iPad.questionProgressRecords(), [iPhoneRecord])
         XCTAssertEqual(try iPad.exportData(bank: bank, exportedAt: "2026-01-02T06:04:05.000Z").questionProgress, [iPhoneRecord])
+        let afterSyncWrite = QuestionProgressRecord(
+            questionId: iPhoneRecord.questionId,
+            bankId: iPhoneRecord.bankId,
+            attempts: 3,
+            correctAttempts: 2,
+            lastAttemptedAt: "2026-01-02T07:04:05.000Z",
+            lastResult: .correct,
+            recentResults: [false, true, true],
+            leitner: LeitnerState(box: 2, dueAt: "2026-01-04T03:04:05.000Z")
+        )
+        try iPad.saveQuestionProgress([afterSyncWrite])
+        XCTAssertEqual(try iPad.questionProgressRecords(), [afterSyncWrite])
+    }
+
+    func testStaleSameDeviceQuestionRowDoesNotLoseNextLocalWrite() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let store = try ProgressStoreService.inMemoryForTests(localDeviceID: "ipad")
+        let fresh = QuestionProgressRecord(questionId: "B-001-001-001", bankId: bank.manifest.bankId, attempts: 2, correctAttempts: 1, lastAttemptedAt: "2026-01-02T03:04:05.000Z", lastResult: .correct, recentResults: [false, true], leitner: LeitnerState(box: 1, dueAt: "2026-01-03T03:04:05.000Z"))
+        try store.saveQuestionProgress([fresh])
+        let context = ModelContext(store.container)
+        context.insert(QuestionProgressEntity(questionId: fresh.questionId, bankId: fresh.bankId, attempts: 1, correctAttempts: 0, lastAttemptedAt: "2026-01-01T03:04:05.000Z", lastResult: AnswerResult.incorrect.rawValue, recentResultsData: try JSONEncoder().encode([false]), leitnerBox: 0, dueAt: "2026-01-01T03:04:05.000Z", deviceId: "ipad"))
+        try context.save()
+        let next = QuestionProgressRecord(questionId: fresh.questionId, bankId: fresh.bankId, attempts: 3, correctAttempts: 2, lastAttemptedAt: "2026-01-02T04:04:05.000Z", lastResult: .correct, recentResults: [false, true, true], leitner: LeitnerState(box: 2, dueAt: "2026-01-04T03:04:05.000Z"))
+
+        try store.saveQuestionProgress([next])
+
+        XCTAssertEqual(try store.questionProgressRecords(), [next])
+    }
+
+    func testImportValidationRejectsDuplicateMorseDailyActivityDates() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let data = ProgressExportV1(
+            schema: "canadian-ham.progress-export",
+            version: 1,
+            exportedAt: "2026-01-02T05:04:05.000Z",
+            bankId: bank.manifest.bankId,
+            questionProgress: [],
+            examAttempts: [],
+            lessonProgress: [],
+            lessonQuizAttempts: [],
+            morseCourseProgress: MorseCourseProgressExport(
+                courseId: "ised-koch-g4fon-v1",
+                lessonProgress: [],
+                characterStats: [],
+                dailyActivity: [
+                    MorseDailyActivityRecord(date: "2026-01-02", lessonsCompleted: 1),
+                    MorseDailyActivityRecord(date: "2026-01-02", lessonsCompleted: 1),
+                ]
+            ),
+            preferences: ExportedPreferences(practiceMode: "immediate", examTimerEnabled: false, theme: "system")
+        )
+
+        let errors = try ProgressStoreService.inMemoryForTests().validate(data, bank: bank)
+
+        XCTAssertTrue(errors.contains { $0.contains("dailyActivity[1].date duplicates") })
+        XCTAssertThrowsError(try ProgressStoreService.inMemoryForTests().importData(data, bank: bank))
+    }
+
+    func testImportFiltersSyncDeviceRowsFromOtherBanksInsteadOfFailing() throws {
+        let basicBank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let advancedRecord = QuestionProgressRecord(
+            questionId: "A-001-001-001",
+            bankId: syntheticAdvancedBankId,
+            attempts: 3,
+            correctAttempts: 2,
+            lastAttemptedAt: "2026-01-02T06:04:05.000Z",
+            lastResult: .correct,
+            recentResults: [false, true, true],
+            leitner: LeitnerState(box: 2, dueAt: "2026-01-05T03:04:05.000Z")
+        )
+        let data = ProgressExportV1(
+            schema: "canadian-ham.progress-export",
+            version: 1,
+            exportedAt: "2026-01-02T07:04:05.000Z",
+            bankId: basicBank.manifest.bankId,
+            questionProgress: [],
+            examAttempts: [],
+            lessonProgress: [],
+            lessonQuizAttempts: [],
+            syncDeviceRows: ProgressSyncDeviceRows(
+                questionProgress: [DeviceQuestionProgressRecord(deviceId: "advanced-device", record: advancedRecord)],
+                examAttempts: [],
+                lessonProgress: [],
+                lessonQuizAttempts: [],
+                morseCourseProgress: []
+            ),
+            preferences: ExportedPreferences(practiceMode: "immediate", examTimerEnabled: false, theme: "system")
+        )
+        let store = try ProgressStoreService.inMemoryForTests()
+
+        XCTAssertTrue(store.validate(data, bank: basicBank).isEmpty)
+        XCTAssertNoThrow(try store.importData(data, bank: basicBank))
+        XCTAssertEqual(try store.questionProgressRecords(), [])
     }
 
     func testImportRejectsInvalidSyncDeviceRows() throws {

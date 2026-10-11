@@ -69,6 +69,7 @@ struct ICloudSyncSettings: Equatable, Sendable {
 
     private static let optInPreferenceKey = "CanadianHam.iCloudSyncOptIn"
     private static let localDeviceIdentifierKey = "CanadianHam.iCloudSyncLocalDeviceIdentifier"
+    private static let pendingProgressZoneDeletionKey = "CanadianHam.iCloudSyncPendingProgressZoneDeletion"
 
     static var isBuildEnabled: Bool {
 #if ICLOUD_SYNC
@@ -97,6 +98,15 @@ struct ICloudSyncSettings: Equatable, Sendable {
         let created = UUID().uuidString
         defaults.set(created, forKey: localDeviceIdentifierKey)
         return created
+    }
+
+    static func pendingProgressZoneDeletion(defaults: UserDefaults = .standard) -> Bool {
+        defaults.bool(forKey: pendingProgressZoneDeletionKey)
+    }
+
+    static func setPendingProgressZoneDeletion(_ pending: Bool, defaults: UserDefaults = .standard) {
+        if pending { defaults.set(true, forKey: pendingProgressZoneDeletionKey) }
+        else { defaults.removeObject(forKey: pendingProgressZoneDeletionKey) }
     }
 
     static func databaseSelection(storedOptIn: Bool, buildEnabled: Bool = isBuildEnabled) -> ICloudSyncDatabaseSelection {
@@ -607,6 +617,7 @@ final class ProgressStoreService: ObservableObject {
     var failNextImportAfterMorseWriteForTesting = false
     var failNextLessonQuizSaveForTesting = false
     var failNextMorseCourseProgressRemovalForTesting = false
+    private(set) var questionProgressWriteContextBuildCountForTesting = 0
 #endif
 #if ICLOUD_SYNC
     private var iCloudAccountChangedObserver: NSObjectProtocol?
@@ -867,7 +878,7 @@ final class ProgressStoreService: ObservableObject {
     ) throws {
         guard layout == .split, !snapshots.isEmpty else { return }
         let context = ModelContext(container)
-        let existing = Dictionary(uniqueKeysWithValues: try context.fetch(FetchDescriptor<PreferencesEntity>()).map { ($0.key, $0) })
+        let existing = Dictionary(try context.fetch(FetchDescriptor<PreferencesEntity>()).map { ($0.key, $0) }, uniquingKeysWith: { first, duplicate in context.delete(duplicate); return first })
         for snapshot in snapshots {
             if let entity = existing[snapshot.key] {
                 if entity.practiceMode == ApplePreferences.default.practiceMode.rawValue,
@@ -1094,8 +1105,9 @@ final class ProgressStoreService: ObservableObject {
     func saveLessonQuizAttempt(_ attempt: LessonQuizAttempt, questionProgress: [QuestionProgressRecord]) throws {
         do {
             try upsertLessonQuizAttempt(attempt)
+            let writeContext = try questionProgressWriteContext(forDeviceId: localDeviceID)
             for record in questionProgress {
-                try upsertQuestionProgress(record)
+                try upsertQuestionProgress(record, writeContext: writeContext)
             }
 #if DEBUG
             if failNextLessonQuizSaveForTesting {
@@ -1112,8 +1124,9 @@ final class ProgressStoreService: ObservableObject {
     }
 
     func saveQuestionProgress(_ records: [QuestionProgressRecord]) throws {
+        let writeContext = try questionProgressWriteContext(forDeviceId: localDeviceID)
         for record in records {
-            try upsertQuestionProgress(record)
+            try upsertQuestionProgress(record, writeContext: writeContext)
         }
         try context.save()
         objectWillChange.send()
@@ -1143,12 +1156,14 @@ final class ProgressStoreService: ObservableObject {
     }
 
     func resetAllData(client: ICloudProgressDeletionClient, defaults: UserDefaults = .standard) async throws {
-        if isICloudSyncEnabled || ICloudSyncSettings.storedOptIn(defaults: defaults) || pendingICloudProgressDeletionForReset {
+        if isICloudSyncEnabled || ICloudSyncSettings.storedOptIn(defaults: defaults) || pendingICloudProgressDeletionForReset || ICloudSyncSettings.pendingProgressZoneDeletion(defaults: defaults) {
             pendingICloudProgressDeletionForReset = true
+            ICloudSyncSettings.setPendingProgressZoneDeletion(true, defaults: defaults)
             ICloudSyncSettings.clearStoredOptIn(defaults: defaults)
             try reopenLocalOnlyAfterSyncStop()
             try await client.deletePrivateDatabaseProgressZones()
             pendingICloudProgressDeletionForReset = false
+            ICloudSyncSettings.setPendingProgressZoneDeletion(false, defaults: defaults)
         }
         try resetAllData(defaults: defaults)
     }
@@ -1376,8 +1391,7 @@ final class ProgressStoreService: ObservableObject {
             let prefix = "Import syncDeviceRows.questionProgress[\(index)]"
             if row.deviceId.isEmpty { errors.append(String(localized: "\(prefix).deviceId must be non-empty.")) }
             let record = row.record
-            if !knownQuestionIds.contains(record.questionId) { errors.append(String(localized: "\(prefix).record.questionId must be a known question ID.")) }
-            if record.bankId != bank.manifest.bankId { errors.append(String(localized: "\(prefix).record.bankId must be \(bank.manifest.bankId).")) }
+            if record.bankId == bank.manifest.bankId && !knownQuestionIds.contains(record.questionId) { errors.append(String(localized: "\(prefix).record.questionId must be a known question ID.")) }
             if record.attempts < 0 { errors.append(String(localized: "\(prefix).record.attempts must be a non-negative integer.")) }
             if record.correctAttempts < 0 || record.correctAttempts > record.attempts { errors.append(String(localized: "\(prefix).record.correctAttempts must be between 0 and attempts.")) }
             appendTimestampError(&errors, value: record.lastAttemptedAt, field: "\(prefix).record.lastAttemptedAt")
@@ -1390,31 +1404,32 @@ final class ProgressStoreService: ObservableObject {
             if row.deviceId.isEmpty { errors.append(String(localized: "\(prefix).deviceId must be non-empty.")) }
             let attempt = row.attempt
             if attempt.id.isEmpty { errors.append(String(localized: "\(prefix).attempt.id must be a non-empty string.")) }
-            if attempt.bankId != bank.manifest.bankId { errors.append(String(localized: "\(prefix).attempt.bankId must be \(bank.manifest.bankId).")) }
             if attempt.mode != "mock-exam" { errors.append(String(localized: "\(prefix).attempt.mode must be mock-exam.")) }
             appendTimestampError(&errors, value: attempt.startedAt, field: "\(prefix).attempt.startedAt")
             appendTimestampError(&errors, value: attempt.submittedAt, field: "\(prefix).attempt.submittedAt")
             if attempt.timer.secondsAllowed != nil && attempt.timer.secondsAllowed! < 0 { errors.append(String(localized: "\(prefix).attempt.timer.secondsAllowed must be null or non-negative.")) }
             if attempt.timer.secondsElapsed < 0 { errors.append(String(localized: "\(prefix).attempt.timer.secondsElapsed must be non-negative.")) }
-            validateScore(attempt.score, prefix: "\(prefix).attempt.score", bankId: bank.manifest.bankId, hasHonours: bank.courseBankID.hasHonours, knownCategoryIds: knownCategoryIds, knownSubsectionIds: knownSubsectionIds, errors: &errors)
-            for (itemIndex, item) in attempt.items.enumerated() {
-                validateAttemptItem(item, prefix: "\(prefix).attempt.items[\(itemIndex)]", knownQuestionIds: knownQuestionIds, knownCategoryIds: knownCategoryIds, knownSubsectionIds: knownSubsectionIds, errors: &errors)
+            if attempt.bankId == bank.manifest.bankId {
+                validateScore(attempt.score, prefix: "\(prefix).attempt.score", bankId: bank.manifest.bankId, hasHonours: bank.courseBankID.hasHonours, knownCategoryIds: knownCategoryIds, knownSubsectionIds: knownSubsectionIds, errors: &errors)
+                for (itemIndex, item) in attempt.items.enumerated() {
+                    validateAttemptItem(item, prefix: "\(prefix).attempt.items[\(itemIndex)]", knownQuestionIds: knownQuestionIds, knownCategoryIds: knownCategoryIds, knownSubsectionIds: knownSubsectionIds, errors: &errors)
+                }
             }
         }
         for (index, row) in rows.lessonProgress.enumerated() {
             if row.deviceId.isEmpty { errors.append(String(localized: "Import syncDeviceRows.lessonProgress[\(index)].deviceId must be non-empty.")) }
             if let archived = try? archivedArray([row.record]) {
-                validateLessonProgress(archived, knownLessonIds: bank.knownLessonIds, errors: &errors)
+                if bank.courseBankID.hasLessons { validateLessonProgress(archived, knownLessonIds: bank.knownLessonIds, errors: &errors) }
             } else {
-                errors.append(String(localized: "Import syncDeviceRows.lessonProgress[\(index)].record must be a valid lesson progress record."))
+                errors.append(String.localizedStringWithFormat(String(localized: "%@.record must be a valid lesson progress record."), "Import syncDeviceRows.lessonProgress[\(index)]"))
             }
         }
         for (index, row) in rows.lessonQuizAttempts.enumerated() {
             if row.deviceId.isEmpty { errors.append(String(localized: "Import syncDeviceRows.lessonQuizAttempts[\(index)].deviceId must be non-empty.")) }
             if let archived = try? archivedArray([row.attempt]) {
-                validateLessonQuizAttempts(archived, knownQuestionIds: knownQuestionIds, knownLessonIds: bank.knownLessonIds, lessonQuizzesById: bank.lessonQuizzesById, errors: &errors)
+                if bank.courseBankID.hasLessons { validateLessonQuizAttempts(archived, knownQuestionIds: knownQuestionIds, knownLessonIds: bank.knownLessonIds, lessonQuizzesById: bank.lessonQuizzesById, errors: &errors) }
             } else {
-                errors.append(String(localized: "Import syncDeviceRows.lessonQuizAttempts[\(index)].attempt must be a valid lesson quiz attempt."))
+                errors.append(String.localizedStringWithFormat(String(localized: "%@.attempt must be a valid lesson quiz attempt."), "Import syncDeviceRows.lessonQuizAttempts[\(index)]"))
             }
         }
         for (index, row) in rows.morseCourseProgress.enumerated() {
@@ -1463,11 +1478,50 @@ final class ProgressStoreService: ObservableObject {
         }
     }
 
-    private func upsertQuestionProgress(_ record: QuestionProgressRecord, deviceId: String? = nil) throws {
+    private struct CounterSums {
+        var attempts: Int
+        var correctAttempts: Int
+    }
+
+    private struct QuestionProgressWriteContext {
+        var mergedByKey: [String: QuestionProgressRecord]
+        var otherDeviceSumsByKey: [String: CounterSums]
+    }
+
+    private func questionProgressKey(bankId: String, questionId: String) -> String {
+        "\(bankId)\u{0}\(questionId)"
+    }
+
+    private func questionProgressWriteContext(forDeviceId deviceId: String) throws -> QuestionProgressWriteContext {
+#if DEBUG
+        questionProgressWriteContextBuildCountForTesting += 1
+#endif
+        let rows = try deviceQuestionProgressRows()
+        let mergedByKey = Dictionary(uniqueKeysWithValues: ProgressSyncMerge.deduplicateDeviceQuestionProgress(rows).map {
+            (questionProgressKey(bankId: $0.bankId, questionId: $0.questionId), $0)
+        })
+        let otherRowsByDevice = Dictionary(grouping: rows.filter { $0.deviceId != deviceId }) {
+            "\(questionProgressKey(bankId: $0.record.bankId, questionId: $0.record.questionId))\u{0}\($0.deviceId)"
+        }
+        var otherDeviceSumsByKey: [String: CounterSums] = [:]
+        for group in otherRowsByDevice.values {
+            guard let first = group.first else { continue }
+            let key = questionProgressKey(bankId: first.record.bankId, questionId: first.record.questionId)
+            let maxAttempts = group.map(\.record.attempts).max() ?? 0
+            let maxCorrectAttempts = group.map(\.record.correctAttempts).max() ?? 0
+            let existing = otherDeviceSumsByKey[key, default: CounterSums(attempts: 0, correctAttempts: 0)]
+            otherDeviceSumsByKey[key] = CounterSums(
+                attempts: existing.attempts + maxAttempts,
+                correctAttempts: existing.correctAttempts + maxCorrectAttempts
+            )
+        }
+        return QuestionProgressWriteContext(mergedByKey: mergedByKey, otherDeviceSumsByKey: otherDeviceSumsByKey)
+    }
+
+    private func upsertQuestionProgress(_ record: QuestionProgressRecord, deviceId: String? = nil, writeContext: QuestionProgressWriteContext? = nil) throws {
         let rowDeviceId = deviceId ?? localDeviceID
-        if deviceId == nil,
-           let currentMerged = try questionProgressRecords().first(where: { $0.bankId == record.bankId && $0.questionId == record.questionId }),
-           currentMerged == record {
+        let key = questionProgressKey(bankId: record.bankId, questionId: record.questionId)
+        if deviceId == nil, let currentMerged = writeContext?.mergedByKey[key], currentMerged == record {
             return
         }
         let existing = try questionProgressEntity(questionId: record.questionId, bankId: record.bankId, deviceId: rowDeviceId)
@@ -1475,12 +1529,19 @@ final class ProgressStoreService: ObservableObject {
         let ownOldCorrectAttempts = existing?.correctAttempts ?? 0
         let writeRecord: QuestionProgressRecord
         if deviceId == nil {
-            let otherRows = try questionProgressEntities(questionId: record.questionId, bankId: record.bankId)
-                .filter { $0.deviceId != rowDeviceId }
-            let otherAttempts = otherRows.map(\.attempts).reduce(0, +)
-            let otherCorrectAttempts = otherRows.map(\.correctAttempts).reduce(0, +)
-            let ownAttempts = max(ownOldAttempts, record.attempts - otherAttempts)
-            let ownCorrectAttempts = min(ownAttempts, max(ownOldCorrectAttempts, record.correctAttempts - otherCorrectAttempts))
+            let otherSums: CounterSums
+            if let writeContext {
+                otherSums = writeContext.otherDeviceSumsByKey[key, default: CounterSums(attempts: 0, correctAttempts: 0)]
+            } else {
+                let otherRows = try questionProgressEntities(questionId: record.questionId, bankId: record.bankId)
+                    .filter { $0.deviceId != rowDeviceId }
+                otherSums = CounterSums(
+                    attempts: otherRows.map(\.attempts).reduce(0, +),
+                    correctAttempts: otherRows.map(\.correctAttempts).reduce(0, +)
+                )
+            }
+            let ownAttempts = max(ownOldAttempts, record.attempts - otherSums.attempts)
+            let ownCorrectAttempts = min(ownAttempts, max(ownOldCorrectAttempts, record.correctAttempts - otherSums.correctAttempts))
             writeRecord = QuestionProgressRecord(
                 questionId: record.questionId,
                 bankId: record.bankId,
@@ -1663,10 +1724,10 @@ final class ProgressStoreService: ObservableObject {
                 .map { DeviceMorseCourseProgressRecord(deviceId: $0.deviceId, progress: try decoder.decode(MorseCourseProgressExport.self, from: $0.payloadData)) }
             let otherProgress = ProgressSyncMerge.mergeDeviceMorseCourseProgress(otherRows)
             let currentMerged = try morseCourseProgress()
-            var ownLessons = Dictionary(uniqueKeysWithValues: ownProgress.lessonProgress.map { ($0.lessonId, $0) })
-            let otherLessons = Dictionary(uniqueKeysWithValues: (otherProgress?.lessonProgress ?? []).map { ($0.lessonId, $0) })
-            let currentLessons = Dictionary(uniqueKeysWithValues: (currentMerged?.lessonProgress ?? []).map { ($0.lessonId, $0) })
-            for record in progress.lessonProgress where currentLessons[record.lessonId] != record {
+            var ownLessons = Dictionary(ownProgress.lessonProgress.map { ($0.lessonId, $0) }, uniquingKeysWith: { _, new in new })
+            let otherLessons = Dictionary((otherProgress?.lessonProgress ?? []).map { ($0.lessonId, $0) }, uniquingKeysWith: { _, new in new })
+            let currentLessons = Dictionary((currentMerged?.lessonProgress ?? []).map { ($0.lessonId, $0) }, uniquingKeysWith: { _, new in new })
+            for record in progress.lessonProgress where currentLessons[record.lessonId] != record && record.attempts > (currentLessons[record.lessonId]?.attempts ?? 0) {
                 let ownOldAttempts = ownLessons[record.lessonId]?.attempts ?? 0
                 let otherAttempts = otherLessons[record.lessonId]?.attempts ?? 0
                 ownLessons[record.lessonId] = MorseLessonProgressRecord(
@@ -1678,10 +1739,10 @@ final class ProgressStoreService: ObservableObject {
                     completedAt: record.completedAt
                 )
             }
-            var ownCharacters = Dictionary(uniqueKeysWithValues: ownProgress.characterStats.map { ($0.character, $0) })
-            let otherCharacters = Dictionary(uniqueKeysWithValues: (otherProgress?.characterStats ?? []).map { ($0.character, $0) })
-            let currentCharacters = Dictionary(uniqueKeysWithValues: (currentMerged?.characterStats ?? []).map { ($0.character, $0) })
-            for record in progress.characterStats where currentCharacters[record.character] != record {
+            var ownCharacters = Dictionary(ownProgress.characterStats.map { ($0.character, $0) }, uniquingKeysWith: { _, new in new })
+            let otherCharacters = Dictionary((otherProgress?.characterStats ?? []).map { ($0.character, $0) }, uniquingKeysWith: { _, new in new })
+            let currentCharacters = Dictionary((currentMerged?.characterStats ?? []).map { ($0.character, $0) }, uniquingKeysWith: { _, new in new })
+            for record in progress.characterStats where currentCharacters[record.character] != record && record.attempts > (currentCharacters[record.character]?.attempts ?? 0) {
                 let ownOldAttempts = ownCharacters[record.character]?.attempts ?? 0
                 let ownOldCorrectAttempts = ownCharacters[record.character]?.correctAttempts ?? 0
                 let other = otherCharacters[record.character]
@@ -1695,10 +1756,10 @@ final class ProgressStoreService: ObservableObject {
                     lastPracticedAt: record.lastPracticedAt
                 )
             }
-            var ownDailyActivity = Dictionary(uniqueKeysWithValues: ownProgress.dailyActivity.map { ($0.date, $0) })
-            let otherDailyActivity = Dictionary(uniqueKeysWithValues: (otherProgress?.dailyActivity ?? []).map { ($0.date, $0) })
-            let currentDailyActivity = Dictionary(uniqueKeysWithValues: (currentMerged?.dailyActivity ?? []).map { ($0.date, $0) })
-            for record in progress.dailyActivity where currentDailyActivity[record.date] != record {
+            var ownDailyActivity = Dictionary(ownProgress.dailyActivity.map { ($0.date, $0) }, uniquingKeysWith: { old, new in old.lessonsCompleted >= new.lessonsCompleted ? old : new })
+            let otherDailyActivity = Dictionary((otherProgress?.dailyActivity ?? []).map { ($0.date, $0) }, uniquingKeysWith: { old, new in old.lessonsCompleted >= new.lessonsCompleted ? old : new })
+            let currentDailyActivity = Dictionary((currentMerged?.dailyActivity ?? []).map { ($0.date, $0) }, uniquingKeysWith: { old, new in old.lessonsCompleted >= new.lessonsCompleted ? old : new })
+            for record in progress.dailyActivity where currentDailyActivity[record.date] != record && record.lessonsCompleted > (currentDailyActivity[record.date]?.lessonsCompleted ?? 0) {
                 let ownOldLessonsCompleted = ownDailyActivity[record.date]?.lessonsCompleted ?? 0
                 let otherLessonsCompleted = otherDailyActivity[record.date]?.lessonsCompleted ?? 0
                 ownDailyActivity[record.date] = MorseDailyActivityRecord(
@@ -1843,7 +1904,7 @@ final class ProgressStoreService: ObservableObject {
         let entity = try preferencesEntity(createIfMissing: true, saveIfCreated: false)
         if let lessonProgress = try? decoder.decode([LessonProgressRecord].self, from: entity.archivedLessonProgressData), !lessonProgress.isEmpty {
             for record in lessonProgress {
-                try upsertLessonProgress(record)
+                try upsertLessonProgress(record, deviceId: localDeviceID)
             }
             entity.archivedLessonProgressData = Data("[]".utf8)
         }
@@ -2121,9 +2182,11 @@ private func validateMorseCourseProgress(_ progress: MorseCourseProgressExport, 
         if record.recentResults.count > 20 { errors.append(String(localized: "\(prefix).recentResults must contain at most 20 booleans.")) }
         appendTimestampError(&errors, value: record.lastPracticedAt, field: "\(prefix).lastPracticedAt")
     }
+    var activityDates = Set<String>()
     for (index, record) in progress.dailyActivity.enumerated() {
         let prefix = "Import morseCourseProgress.dailyActivity[\(index)]"
         if record.date.range(of: #"^\d{4}-\d{2}-\d{2}$"#, options: .regularExpression) == nil { errors.append(String(localized: "\(prefix).date must be YYYY-MM-DD.")) }
+        if !activityDates.insert(record.date).inserted { errors.append(String(localized: "\(prefix).date duplicates another daily activity record.")) }
         if record.lessonsCompleted < 0 { errors.append(String(localized: "\(prefix).lessonsCompleted must be non-negative.")) }
     }
 }

@@ -31,7 +31,7 @@ Allowed local data on platforms that implement persistence, currently iOS, iPadO
 - Local preferences such as selected language and theme.
 - User-initiated imported progress JSON.
 - User-initiated exported progress JSON.
-- Gate-enabled Apple exports may include a random per-install device ID so per-device progress counters can converge; it is not a hardware or vendor identifier and leaves the device only in user-initiated exports or the user's private CloudKit database.
+- Apple exports include a random per-install device ID, stored locally in app preferences, so per-device progress counters can converge; it is not a hardware or vendor identifier and leaves the device only in user-initiated exports or the user's private CloudKit database in gated sync builds.
 
 Allowed in-memory state on tvOS and visionOS:
 
