@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 22:15'
-updated_date: '2026-10-11 00:35'
+updated_date: '2026-10-11 00:47'
 labels:
   - content
 dependencies:
@@ -44,4 +44,14 @@ Fix round completed finding-by-finding (ACs intentionally not checked; status le
 - t39-6-c-r1 B-003/B-007: fixed b-007-006-008 to teach highest returning frequency / maximum usable frequency (MUF); fixed b-007-005-007 so 40 MHz is above the HF range; changed b-007-002-009 and b-007-004-001 to 'lower-frequency end of the HF range'; defined first-use abbreviations across changed B-003/B-007 explanations; made b-003-021-008 use 1/d squared consistently; split the flagged semicolon distractor notes.
 - t39-6-d-r1 B-001/B-002: rewrote b-001-017-006 to avoid echoing the ERP/PEP question phrase; restored width comparisons in b-001-016-009; added ISED definitions where flagged; clarified b-001-003-005 notice/representation wording and b-001-023-005 written-notice/response wording; restored full break-in (QSK) wording; defined RS/S9 in b-002-006-005; tightened CTCSS tone wording.
 - Verification: pnpm --dir packages/content-tools check:explanations passed; pnpm check:links passed; cd apps/web && npx vitest run passed (14 files, 152 tests).
+
+r2 fix round completed (ACs intentionally not checked; status left In Progress):
+- Fixed the high issue in b-002-009-010 by restoring the clock times 1 PM and 1 AM.
+- Rewrote b-003-014-005 VOX/VXO/VCO/VFO notes to define once and avoid circular definitions.
+- Replaced the garbled FT8 expansion with 'FT8, a narrow digital mode' in b-001-016-009, b-001-016-011, and b-003-015-006.
+- Corrected garbled B-007 HF wording in b-007-001-004, b-007-002-004, b-007-007-008, b-007-008-008, and b-007-008-009.
+- Defined BFO in b-003-005-004, b-003-005-005, b-003-005-008, and b-003-005-009.
+- Hand-fixed each r2 grammar/duplication item: wrong articles, decibel adjective wording, hyphenated frequency nouns, repeated definitions, b-001-017-006 PEP wording, and the remaining semicolon notes in b-003-013-007 and b-007-006-003.
+- Final report-only audit across content/explanations: before counts article=4, decibels-adjective=3, digit-expanded=2, doubled/nested-parentheses=5, hyphenated-frequency-noun=21, duplicate-expansion=12, tautology=3, total=50; after counts total=0.
+- Verification after r2 fixes: pnpm --dir packages/content-tools check:explanations passed; pnpm check:links passed; cd apps/web && npx vitest run passed (14 files, 152 tests).
 <!-- SECTION:NOTES:END -->
