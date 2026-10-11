@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-11 02:17'
+updated_date: '2026-10-11 04:45'
 labels:
   - apple
   - privacy
@@ -57,4 +57,14 @@ Why: progress from several devices must converge without losing or double-counti
 Progress update 2026-10-10: implemented and committed WIP through c6ddf57 after merging origin/main. Non-Apple checks passing: pnpm install --frozen-lockfile, pnpm typecheck, pnpm test (rerun passed after one transient web-test failure), pnpm build:web, pnpm --filter @canadian-ham/web audit:urls, pnpm check:apple-network, pnpm test:apple-network, pnpm test:apple-icloud-gate, pnpm check:apple-icloud-gate, node scripts/check-apple-text-sources.ts. Apple xbuild validation is queued in one nohup chain per coordinator guidance: /tmp/task135-macos-full.log, ios-full, ios-debugcloudkit, macos-debugcloudkit, apple-l10n with .exit files.
 
 Testing-policy steering update 2026-10-10: after owner/PR #191 policy change, the already-running full iOS xbuild is being allowed to finish, but the queued chain was stopped from starting further full DebugCloudKit/macOS/l10n runs. Current committed branch tip before this note is d834537. Earlier macOS full run passed after fixes, but per new policy further Apple work should use targeted ProgressStore/changed-class tests plus DebugCloudKit build/targeted tests until pre-merge full suites.
+
+Implementation/validation evidence 2026-10-11 (branch tip before this note 27f43c2):
+- Implemented ProgressSyncMerge.swift plus shared fixture fixtures/progress/icloud-merge.json and web TS merge helpers/tests.
+- Moved lesson progress, lesson quiz attempts, and Morse course progress into V3 SwiftData learning-progress entities; preferences remain local-only; export/import JSON shape unchanged.
+- Added pre-V2 SwiftData fixture fixtures/progress/pre-v2/Progress.store generated from 3a54632 model shape; migration test verifies data.
+- Implemented local-only reopen/delete iCloud seams and CloudKit zone deletion client behind ICLOUD_SYNC; in-memory tests stay .none under DebugCloudKit.
+- Hardened iCloud gate script for integer/dict extra entitlement keys and exact UIBackgroundModes [remote-notification], with negative self-tests.
+- Reworded gated iCloud/About copy and updated Localizable.xcstrings with Python OrderedDict JSON round-trip.
+Validation passed: pnpm install --frozen-lockfile; pnpm typecheck; pnpm test (rerun passed after one transient web failure); pnpm build:web; pnpm --filter @canadian-ham/web audit:urls; pnpm test:apple-icloud-gate; pnpm check:apple-icloud-gate; pnpm test:apple-network; pnpm check:apple-network; node scripts/check-apple-text-sources.ts; default macOS full xbuild /tmp/task135-macos-full.log (80 tests, 0 failures); targeted iOS ProgressStoreTests /tmp/task135-targeted-ios-progressstore.log (38 tests, 0 failures); DebugCloudKit iOS ProgressStoreTests /tmp/task135-targeted-ios-debugcloudkit-progressstore.log (38 tests, 0 failures after fixing in-memory/account monitor); DebugCloudKit macOS ProgressStoreTests /tmp/task135-targeted-macos-debugcloudkit-progressstore.log (40 tests, 0 failures); pnpm check:apple-l10n /tmp/task135-targeted-apple-l10n.log passed. Full iOS run was already in flight under the old policy but ended with exit 143/BUILD INTERRUPTED after the owner changed testing policy; not rerun per PR #191 policy.
+Residual: AC3 device smoke tests (airplane mode, no account, account switch on signed devices) and App Store Connect privacy questionnaire re-check remain owner/task-34 work; do not check AC3 here. A final one-test xbuild for the newly-added injectable-factory teardown test was attempted but timed out waiting for the shared build lock; the test is included in ProgressStoreTests for the next targeted/full Apple run.
 <!-- SECTION:NOTES:END -->
