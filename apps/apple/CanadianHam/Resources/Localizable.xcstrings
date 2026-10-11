@@ -4975,19 +4975,19 @@
         }
       }
     },
-    "iCloud sync status could not be updated: %@" : {
+    "iCloud sync status could not be updated." : {
       "extractionState" : "stale",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "L’état de la synchronisation iCloud n’a pas pu être mis à jour : %@"
+            "value" : "L’état de la synchronisation iCloud n’a pas pu être mis à jour."
           }
         },
         "fr-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "L’état de la synchronisation iCloud n’a pas pu être mis à jour : %@"
+            "value" : "L’état de la synchronisation iCloud n’a pas pu être mis à jour."
           }
         }
       }
