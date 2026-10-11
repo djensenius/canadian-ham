@@ -1,11 +1,11 @@
 ---
 id: TASK-37
 title: Language follows the system; EN/FR switch only in Settings
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:54'
-updated_date: '2026-10-11 22:27'
+updated_date: '2026-10-11 23:11'
 labels:
   - apple
   - web
@@ -22,11 +22,11 @@ Owner feedback 2026-10-10: the English/French switch is too prominent. By defaul
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Apple (iOS/iPadOS/macOS) and web default to the system language with no stored override; fr* locales get French, all others English
-- [ ] #2 A Language setting (System default / English / Français) exists only in Settings on Apple and web, persists, applies immediately on web, and on Apple applies ISED question text immediately while the full interface language applies on next launch
-- [ ] #3 No language picker remains on question, practice, mock exam, lesson or category screens on any platform (UI tests updated to assert absence and the Settings path, not deleted)
-- [ ] #4 Existing stored language preferences migrate sensibly (an explicit previous choice is kept as the override) and export/import still round-trip
-- [ ] #5 Accessibility audits pass on the changed screens in light and dark; French strings follow docs/french-style.md
+- [x] #1 Apple (iOS/iPadOS/macOS) and web default to the system language with no stored override; fr* locales get French, all others English
+- [x] #2 A Language setting (System default / English / Français) exists only in Settings on Apple and web, persists, applies immediately on web, and on Apple applies ISED question text immediately while the full interface language applies on next launch
+- [x] #3 No language picker remains on question, practice, mock exam, lesson or category screens on any platform (UI tests updated to assert absence and the Settings path, not deleted)
+- [x] #4 Existing stored language preferences migrate sensibly (an explicit previous choice is kept as the override) and export/import still round-trip
+- [x] #5 Accessibility audits pass on the changed screens in light and dark; French strings follow docs/french-style.md
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -61,4 +61,14 @@ Final validation passed:
 - visionOS targeted: testPracticeInteractionUsesConfiguredLanguageShowsFeedbackAndAdvances (/tmp/task37-vision-ui.log, exit 0)
 
 Review r1 reopened task-37. Coordinator decisions recorded: H1 maps old Apple stored preferences language "en" to "system" once behind a UserDefaults migration marker while preserving stored "fr" and later explicit English choices; H2 uses AppleLanguages on iOS/iPadOS/macOS so interface language changes after restart while ISED question text changes immediately. Full suites remain deferred to merge per testing policy; this fix round will run targeted tests only.
+
+Review-fix implementation complete in commits f36e0c61 and bd032674. Apple: added one-time legacy stored-English migration to system behind a UserDefaults marker, preserved stored French, prevented remapping after a later explicit English choice, writes/removes AppleLanguages for iOS/iPadOS/macOS interface language on next launch, removed SwiftUI locale overrides, added restart notes in iOS/macOS Settings, tightened preferences.language import validation including explicit null, restored tvOS automatic Next question focus assertion, removed dead TVEvidenceFocus.language, and added Apple migration/import/settings/UI tests. Web: resolves system to the first supported preferred locale, mirrors explicit language preferences to localStorage to avoid load flash, keeps system clearing the mirror, removed dead language toggle strings/CSS, uses the current interface language for file-read errors, and added language import/round-trip tests. Notes: Apple question text switches immediately; Apple interface/VoiceOver/menu/window localization follows AppleLanguages on next launch; web still switches immediately. tvOS/visionOS remain system-only except debug launch arguments. Older exports without preferences.language import as system, matching theme. Full Apple suites remain deferred to merge per policy.
+
+Validation passed in this fix round: git diff --check; pnpm typecheck; pnpm test; pnpm --filter @canadian-ham/web exec vitest run src/lib/languagePreference.test.ts src/lib/progressStore.test.ts src/App.test.tsx (3 files / 97 tests); pnpm check:schemas; node scripts/check-apple-text-sources.ts; pnpm check:apple-l10n; targeted iOS unit xbuild for LocalizationCatalogTests/testLanguagePreferenceResolvesSystemAndOverrides plus ProgressStoreTests language migration/import/export tests (8 tests); targeted macOS unit xbuild for the same language/import/export tests plus NativeSettings language binding (9 tests); targeted iOS UI xbuild for French system language/questions, Settings language path/restart note/French feedback title, picker absence, regular-width picker absence, and changed navigation test (5 tests); targeted tvOS UI xbuild for practice language/focus/advance (1 test). VisionOS targeted UI rerun was attempted twice but timed out waiting for the xbuild lock before execution; the branch still compiled visionOS during pnpm check:apple-l10n.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Addressed review r1 for task-37: Apple now migrates legacy stored English defaults to system once, applies iOS/iPadOS/macOS interface overrides through AppleLanguages on next launch while question text updates immediately, removes locale overrides, validates imported language values/nulls, restores tvOS auto-focus coverage, and fills the missing Apple/web language tests. Web now matches Apple system-language resolution, mirrors explicit language overrides to localStorage, removes dead language toggle leftovers, and keeps import/export language behavior covered. Verified with targeted web/schema/text-source/l10n/iOS/macOS/tvOS xbuild checks; full suites are deferred to merge per policy.
+<!-- SECTION:FINAL_SUMMARY:END -->
