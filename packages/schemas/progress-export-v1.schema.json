@@ -26,6 +26,7 @@
       "items": { "$ref": "common.schema.json#/$defs/lessonQuizAttempt" }
     },
     "morseCourseProgress": { "$ref": "common.schema.json#/$defs/morseCourseProgress" },
+    "syncDeviceRows": { "type": "object" },
     "preferences": { "$ref": "common.schema.json#/$defs/webPreferences" }
   },
   "additionalProperties": false,

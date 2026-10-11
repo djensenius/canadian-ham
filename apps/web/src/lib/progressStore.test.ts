@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, it } from "vitest";
 import { IDBFactory } from "fake-indexeddb";
 
 import { advancedBank, bankId } from "../data/bank";
-import { ProgressStore, deduplicateExamAttemptsForSync, deduplicateQuestionProgressForSync, defaultPreferences, validateProgressImport, type ExamAttempt, type LessonProgressRecord, type LessonQuizAttempt, type ProgressExportV1 } from "./progressStore";
+import { ProgressStore, deduplicateDeviceExamAttemptsForSync, deduplicateDeviceLessonProgressForSync, deduplicateDeviceQuestionProgressForSync, defaultPreferences, validateProgressImport, type DeviceExamAttemptRecord, type DeviceLessonProgressRecord, type DeviceQuestionProgressRecord, type ExamAttempt, type LessonProgressRecord, type LessonQuizAttempt, type ProgressExportV1 } from "./progressStore";
 import type { QuestionProgressRecord } from "@canadian-ham/engine-ts";
 import type { MorseCourseProgressExport } from "@canadian-ham/morse-engine";
 
@@ -179,13 +179,36 @@ async function createVersion2Database(name: string): Promise<void> {
 describe("ProgressStore", () => {
   it("deduplicates sync collisions using the shared iCloud merge fixture", () => {
     const fixture = JSON.parse(readFileSync(path.resolve(__dirname, "../../../../fixtures/progress/icloud-merge.json"), "utf8")) as {
-      questionProgress: { input: QuestionProgressRecord[]; expected: QuestionProgressRecord[] };
-      examAttempts: { input: ExamAttempt[]; expectedSubmittedAtById: Record<string, string> };
+      questionProgress: { deviceRows: DeviceQuestionProgressRecord[]; expected: QuestionProgressRecord[] };
+      examAttempts: { deviceRows: DeviceExamAttemptRecord[]; expectedIdsBySubmittedAt: Record<string, string> };
+      lessonProgress: { deviceRows: DeviceLessonProgressRecord[]; expected: LessonProgressRecord[] };
     };
 
-    assert.deepEqual(deduplicateQuestionProgressForSync(fixture.questionProgress.input), fixture.questionProgress.expected);
-    const examAttempts = deduplicateExamAttemptsForSync(fixture.examAttempts.input);
-    assert.deepEqual(Object.fromEntries(examAttempts.map((attempt) => [attempt.id, attempt.submittedAt])), fixture.examAttempts.expectedSubmittedAtById);
+    assert.deepEqual(deduplicateDeviceQuestionProgressForSync(fixture.questionProgress.deviceRows), fixture.questionProgress.expected);
+    assert.deepEqual(deduplicateDeviceQuestionProgressForSync([...fixture.questionProgress.deviceRows].reverse()), fixture.questionProgress.expected);
+    assert.deepEqual(deduplicateDeviceQuestionProgressForSync([...fixture.questionProgress.deviceRows, ...fixture.questionProgress.deviceRows]), fixture.questionProgress.expected);
+    const examAttempts = deduplicateDeviceExamAttemptsForSync(fixture.examAttempts.deviceRows);
+    assert.deepEqual(Object.fromEntries(examAttempts.map((attempt) => [`${attempt.bankId}|${attempt.submittedAt}`, attempt.id])), fixture.examAttempts.expectedIdsBySubmittedAt);
+    assert.deepEqual(deduplicateDeviceLessonProgressForSync(fixture.lessonProgress.deviceRows), fixture.lessonProgress.expected);
+    assert.deepEqual(deduplicateDeviceLessonProgressForSync([...fixture.lessonProgress.deviceRows, ...fixture.lessonProgress.deviceRows]), fixture.lessonProgress.expected);
+  });
+
+  it("preserves opaque sync device rows on import/export until progress changes", async () => {
+    const syncDeviceRows = {
+      questionProgress: [{ deviceId: "iphone", record }],
+      examAttempts: [{ deviceId: "iphone", attempt }],
+      lessonProgress: [{ deviceId: "iphone", record: lessonProgressRecord }],
+      lessonQuizAttempts: [],
+      morseCourseProgress: [{ deviceId: "iphone", progress: morseCourseProgress }],
+    };
+    const store = createStore("sync-device-rows-passthrough");
+
+    await store.importData(validExport({ syncDeviceRows }));
+    const exported = await store.exportData("2026-01-02T05:00:00.000Z");
+
+    assert.deepEqual(exported.syncDeviceRows, syncDeviceRows);
+    await store.putQuestionProgress({ ...record, attempts: 2, correctAttempts: 1 });
+    assert.equal((await store.exportData("2026-01-02T06:00:00.000Z")).syncDeviceRows, undefined);
   });
 
   it("stores progress in IndexedDB and exports/imports a validated round trip", async () => {

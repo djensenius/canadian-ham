@@ -130,22 +130,27 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertFalse(store.isICloudSyncEnabled)
     }
 
-    func testSharedICloudMergeFixtureCoversQuestionExamAndMorseRules() throws {
+    func testSharedICloudMergeFixtureCoversQuestionExamLessonAndMorseRules() throws {
         struct Fixture: Decodable {
             struct QuestionProgress: Decodable {
-                let input: [QuestionProgressRecord]
+                let deviceRows: [DeviceQuestionProgressRecord]
                 let expected: [QuestionProgressRecord]
             }
             struct ExamAttempts: Decodable {
-                let input: [StoredExamAttempt]
-                let expectedSubmittedAtById: [String: String]
+                let deviceRows: [DeviceExamAttemptRecord]
+                let expectedIdsBySubmittedAt: [String: String]
+            }
+            struct LessonProgress: Decodable {
+                let deviceRows: [DeviceLessonProgressRecord]
+                let expected: [LessonProgressRecord]
             }
             struct MorseProgress: Decodable {
-                let input: [MorseCourseProgressExport]
+                let deviceRows: [DeviceMorseCourseProgressRecord]
                 let expected: MorseCourseProgressExport
             }
             let questionProgress: QuestionProgress
             let examAttempts: ExamAttempts
+            let lessonProgress: LessonProgress
             let morseCourseProgress: MorseProgress
         }
         let fixtureURL = URL(fileURLWithPath: #filePath)
@@ -156,10 +161,74 @@ final class ProgressStoreTests: XCTestCase {
             .appending(path: "fixtures/progress/icloud-merge.json")
         let fixture = try JSONDecoder().decode(Fixture.self, from: Data(contentsOf: fixtureURL))
 
-        XCTAssertEqual(ProgressSyncMerge.deduplicateQuestionProgress(fixture.questionProgress.input), fixture.questionProgress.expected)
-        let examAttempts = ProgressSyncMerge.deduplicateExamAttempts(fixture.examAttempts.input)
-        XCTAssertEqual(Dictionary(uniqueKeysWithValues: examAttempts.map { ($0.id, $0.submittedAt) }), fixture.examAttempts.expectedSubmittedAtById)
-        XCTAssertEqual(ProgressSyncMerge.mergeMorseCourseProgress(fixture.morseCourseProgress.input), fixture.morseCourseProgress.expected)
+        XCTAssertEqual(ProgressSyncMerge.deduplicateDeviceQuestionProgress(fixture.questionProgress.deviceRows), fixture.questionProgress.expected)
+        let examAttempts = ProgressSyncMerge.deduplicateDeviceExamAttempts(fixture.examAttempts.deviceRows)
+        XCTAssertEqual(Dictionary(uniqueKeysWithValues: examAttempts.map { ("\($0.bankId)|\($0.submittedAt)", $0.id) }), fixture.examAttempts.expectedIdsBySubmittedAt)
+        XCTAssertEqual(ProgressSyncMerge.deduplicateDeviceLessonProgress(fixture.lessonProgress.deviceRows), fixture.lessonProgress.expected)
+        XCTAssertEqual(ProgressSyncMerge.mergeDeviceMorseCourseProgress(fixture.morseCourseProgress.deviceRows), fixture.morseCourseProgress.expected)
+    }
+
+    func testICloudMergeFixtureIsPermutationIndependentAndIdempotent() throws {
+        struct Fixture: Decodable {
+            struct QuestionProgress: Decodable { let deviceRows: [DeviceQuestionProgressRecord]; let expected: [QuestionProgressRecord] }
+            struct LessonProgress: Decodable { let deviceRows: [DeviceLessonProgressRecord]; let expected: [LessonProgressRecord] }
+            struct MorseProgress: Decodable { let deviceRows: [DeviceMorseCourseProgressRecord]; let expected: MorseCourseProgressExport }
+            let questionProgress: QuestionProgress
+            let lessonProgress: LessonProgress
+            let morseCourseProgress: MorseProgress
+        }
+        let fixtureURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appending(path: "fixtures/progress/icloud-merge.json")
+        let fixture = try JSONDecoder().decode(Fixture.self, from: Data(contentsOf: fixtureURL))
+
+        XCTAssertEqual(ProgressSyncMerge.deduplicateDeviceQuestionProgress(Array(fixture.questionProgress.deviceRows.reversed())), fixture.questionProgress.expected)
+        XCTAssertEqual(ProgressSyncMerge.deduplicateDeviceQuestionProgress(fixture.questionProgress.deviceRows + fixture.questionProgress.deviceRows), fixture.questionProgress.expected)
+        XCTAssertEqual(ProgressSyncMerge.deduplicateDeviceLessonProgress(Array(fixture.lessonProgress.deviceRows.reversed())), fixture.lessonProgress.expected)
+        XCTAssertEqual(ProgressSyncMerge.deduplicateDeviceLessonProgress(fixture.lessonProgress.deviceRows + fixture.lessonProgress.deviceRows), fixture.lessonProgress.expected)
+        XCTAssertEqual(ProgressSyncMerge.mergeDeviceMorseCourseProgress(Array(fixture.morseCourseProgress.deviceRows.reversed())), fixture.morseCourseProgress.expected)
+        XCTAssertEqual(ProgressSyncMerge.mergeDeviceMorseCourseProgress(fixture.morseCourseProgress.deviceRows + fixture.morseCourseProgress.deviceRows), fixture.morseCourseProgress.expected)
+    }
+
+    func testImportingExportWithDeviceRowsThenSyncingOriginalRowsDoesNotDoubleCount() throws {
+        let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
+        let iPhone = try ProgressStoreService.inMemoryForTests(localDeviceID: "iphone")
+        let iPhoneRecord = QuestionProgressRecord(
+            questionId: "B-001-001-001",
+            bankId: bank.manifest.bankId,
+            attempts: 2,
+            correctAttempts: 1,
+            lastAttemptedAt: "2026-01-02T03:04:05.000Z",
+            lastResult: .correct,
+            recentResults: [false, true],
+            leitner: LeitnerState(box: 1, dueAt: "2026-01-03T03:04:05.000Z")
+        )
+        try iPhone.saveQuestionProgress([iPhoneRecord])
+        let exported = try iPhone.exportData(bank: bank, exportedAt: "2026-01-02T05:04:05.000Z")
+        XCTAssertEqual(exported.syncDeviceRows?.questionProgress.map(\.deviceId), ["iphone"])
+
+        let iPad = try ProgressStoreService.inMemoryForTests(localDeviceID: "ipad")
+        try iPad.importData(exported, bank: bank)
+        let syncContext = ModelContext(iPad.container)
+        syncContext.insert(QuestionProgressEntity(
+            questionId: iPhoneRecord.questionId,
+            bankId: iPhoneRecord.bankId,
+            attempts: iPhoneRecord.attempts,
+            correctAttempts: iPhoneRecord.correctAttempts,
+            lastAttemptedAt: iPhoneRecord.lastAttemptedAt,
+            lastResult: iPhoneRecord.lastResult.rawValue,
+            recentResultsData: try JSONEncoder().encode(iPhoneRecord.recentResults),
+            leitnerBox: iPhoneRecord.leitner.box,
+            dueAt: iPhoneRecord.leitner.dueAt,
+            deviceId: "iphone"
+        ))
+        try syncContext.save()
+
+        XCTAssertEqual(try iPad.questionProgressRecords(), [iPhoneRecord])
+        XCTAssertEqual(try iPad.exportData(bank: bank, exportedAt: "2026-01-02T06:04:05.000Z").questionProgress, [iPhoneRecord])
     }
 
     func testICloudDeleteStopsSyncBeforeDeletingZoneAndKeepsLocalWithoutReupload() async throws {
@@ -1527,9 +1596,9 @@ final class ProgressStoreTests: XCTestCase {
         let exported = try store.exportData(bank: basicBank, exportedAt: "2026-01-02T05:04:05.000Z")
 
         XCTAssertEqual(exported.questionProgress.count, 1)
-        XCTAssertEqual(exported.questionProgress[0].attempts, 3)
-        XCTAssertEqual(exported.examAttempts.count, 2)
-        XCTAssertEqual(Set(exported.examAttempts.map(\.submittedAt)).count, 2)
+        XCTAssertEqual(exported.questionProgress[0].attempts, 2)
+        XCTAssertEqual(exported.examAttempts.count, 1)
+        XCTAssertEqual(Set(exported.examAttempts.map(\.submittedAt)).count, 1)
         XCTAssertTrue(store.validate(exported, bank: basicBank).isEmpty)
         XCTAssertEqual(try store.examAttempts().filter { $0.bankId == advancedBank.manifest.bankId }.map(\.submittedAt), ["2026-01-02T04:04:05.000Z"])
     }

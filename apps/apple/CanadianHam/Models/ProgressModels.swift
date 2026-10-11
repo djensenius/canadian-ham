@@ -216,6 +216,7 @@ enum CanadianHamProgressSchemaV3: VersionedSchema {
         var leitnerBox: Int = 0
         var dueAt: String = ""
         var notes: String?
+        var deviceId: String = ""
 
         init(
             questionId: String,
@@ -227,7 +228,8 @@ enum CanadianHamProgressSchemaV3: VersionedSchema {
             recentResultsData: Data,
             leitnerBox: Int,
             dueAt: String,
-            notes: String? = nil
+            notes: String? = nil,
+            deviceId: String = ""
         ) {
             self.questionId = questionId
             self.bankId = bankId
@@ -239,6 +241,7 @@ enum CanadianHamProgressSchemaV3: VersionedSchema {
             self.leitnerBox = leitnerBox
             self.dueAt = dueAt
             self.notes = notes
+            self.deviceId = deviceId
         }
     }
 
@@ -250,14 +253,16 @@ enum CanadianHamProgressSchemaV3: VersionedSchema {
         var startedAt: String = ""
         var submittedAt: String = ""
         var payloadData: Data = Data()
+        var deviceId: String = ""
 
-        init(id: String, bankId: String, seed: String, startedAt: String, submittedAt: String, payloadData: Data) {
+        init(id: String, bankId: String, seed: String, startedAt: String, submittedAt: String, payloadData: Data, deviceId: String = "") {
             self.id = id
             self.bankId = bankId
             self.seed = seed
             self.startedAt = startedAt
             self.submittedAt = submittedAt
             self.payloadData = payloadData
+            self.deviceId = deviceId
         }
     }
 
@@ -297,11 +302,13 @@ enum CanadianHamProgressSchemaV3: VersionedSchema {
         var lessonId: String = ""
         var readAt: String = ""
         var readCount: Int = 0
+        var deviceId: String = ""
 
-        init(lessonId: String, readAt: String, readCount: Int) {
+        init(lessonId: String, readAt: String, readCount: Int, deviceId: String = "") {
             self.lessonId = lessonId
             self.readAt = readAt
             self.readCount = readCount
+            self.deviceId = deviceId
         }
     }
 
@@ -312,13 +319,15 @@ enum CanadianHamProgressSchemaV3: VersionedSchema {
         var lessonId: String = ""
         var submittedAt: String = ""
         var payloadData: Data = Data()
+        var deviceId: String = ""
 
-        init(id: String, quizId: String, lessonId: String, submittedAt: String, payloadData: Data) {
+        init(id: String, quizId: String, lessonId: String, submittedAt: String, payloadData: Data, deviceId: String = "") {
             self.id = id
             self.quizId = quizId
             self.lessonId = lessonId
             self.submittedAt = submittedAt
             self.payloadData = payloadData
+            self.deviceId = deviceId
         }
     }
 
@@ -326,10 +335,12 @@ enum CanadianHamProgressSchemaV3: VersionedSchema {
     final class MorseCourseProgressEntity {
         var key: String = defaultKey
         var payloadData: Data = Data()
+        var deviceId: String = ""
 
-        init(key: String = defaultKey, payloadData: Data) {
+        init(key: String = defaultKey, payloadData: Data, deviceId: String = "") {
             self.key = key
             self.payloadData = payloadData
+            self.deviceId = deviceId
         }
 
         static let defaultKey = "default"
