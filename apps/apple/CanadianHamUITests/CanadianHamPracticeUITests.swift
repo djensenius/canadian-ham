@@ -2375,23 +2375,20 @@ final class CanadianHamPracticeUITests: XCTestCase {
             if isFullyVisibleInMiddleBand(element, in: app), offenders.isEmpty {
                 break
             }
-            if !offenders.isEmpty {
-                let hasOffenderClippedAboveWindow = offenders.contains(where: \.isClippedAboveWindow)
-                if hasOffenderClippedAboveWindow {
-                    let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
-                    let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
-                    start.press(forDuration: 0.01, thenDragTo: end)
-                } else {
-                    let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
-                    let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55))
-                    start.press(forDuration: 0.01, thenDragTo: end)
-                }
-            } else if frame.maxY > bottomLimit {
+            if frame.maxY > bottomLimit {
                 scrollView.swipeUp()
             } else if frame.minY < visibleFrame.minY {
                 scrollView.swipeDown()
             } else if !visibleFrame.contains(frame) {
                 scrollView.swipeUp()
+            } else if !offenders.isEmpty {
+                if frame.minY > visibleFrame.minY + 80 {
+                    scrollView.swipeUp()
+                } else {
+                    let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.35))
+                    let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55))
+                    start.press(forDuration: 0.01, thenDragTo: end)
+                }
             } else {
                 break
             }
