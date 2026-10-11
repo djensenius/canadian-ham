@@ -1,11 +1,11 @@
 ---
 id: TASK-12.20
 title: 'Morse visual output: follow-ups from the task-12.4 review'
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-07 12:14'
-updated_date: '2026-10-11 01:09'
+updated_date: '2026-10-11 01:17'
 labels: []
 dependencies:
   - TASK-12.4
