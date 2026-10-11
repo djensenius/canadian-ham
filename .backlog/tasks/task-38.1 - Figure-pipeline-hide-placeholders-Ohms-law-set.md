@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-10 20:58'
+updated_date: '2026-10-11 01:01'
 labels:
   - content
   - apple
@@ -24,11 +24,11 @@ Build the shared figure pipeline and prove it with the Ohm's law set. Figures ar
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Lessons without a drawn figure no longer show an 'Illustration placeholder'/'Illustration brief' card on web or Apple (brief kept in source; tests assert it)
-- [ ] #2 Documented pipeline: SVG source location and naming, how lessons reference figures, how web and Apple render them, light/dark theming via design tokens, and a check that every referenced figure exists and every figure has alt text
-- [ ] #3 Figures: Ohm's law triangle (E over I x R), power triangle (P over I x E), and Ohm's law/power wheel (P, E, I, R, 12 formulas) in the power/Ohm's law lesson; the wheel has a full text equivalent (formulas grouped by unknown) available to screen readers
-- [ ] #4 Accessibility: text in figures meets 4.5:1 and graphics 3:1 in light and dark; figures scale with width and stay legible at the largest text sizes (zoom or enlarged view where needed); no meaning by colour alone; audits pass on the lesson screen in light and dark
-- [ ] #5 Figures are original work (not traced from ISED reference material); an originality note is recorded
+- [x] #1 Lessons without a drawn figure no longer show an 'Illustration placeholder'/'Illustration brief' card on web or Apple (brief kept in source; tests assert it)
+- [x] #2 Documented pipeline: SVG source location and naming, how lessons reference figures, how web and Apple render them, light/dark theming via design tokens, and a check that every referenced figure exists and every figure has alt text
+- [x] #3 Figures: Ohm's law triangle (E over I x R), power triangle (P over I x E), and Ohm's law/power wheel (P, E, I, R, 12 formulas) in the power/Ohm's law lesson; the wheel has a full text equivalent (formulas grouped by unknown) available to screen readers
+- [x] #4 Accessibility: text in figures meets 4.5:1 and graphics 3:1 in light and dark; figures scale with width and stay legible at the largest text sizes (zoom or enlarged view where needed); no meaning by colour alone; audits pass on the lesson screen in light and dark
+- [x] #5 Figures are original work (not traced from ISED reference material); an originality note is recorded
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -36,3 +36,15 @@ Build the shared figure pipeline and prove it with the Ohm's law set. Figures ar
 <!-- SECTION:PLAN:BEGIN -->
 1. Add a small lesson figure Markdown directive, keep Illustration brief sections parsed for authors but render them as hidden/no-op learner output on web and Apple, and add regression tests.\n2. Add original SVG sources for the L-005-02 Ohm's law triangle, power triangle, and combined formula wheel under content/figures/, then reference them from the lesson with alt text and the wheel text equivalent.\n3. Add web rendering that inlines referenced SVGs using currentColor/design-token styling plus details text equivalents.\n4. Add an Apple asset-generation/check pipeline that copies the SVGs into a generated vector asset catalog, wire the catalog into the iOS/macOS target, and render lesson figures with template tint plus optional disclosure text/enlarged view.\n5. Document the pipeline and add a CI/package check that validates figure references, alt text, SVG ids, and generated Apple assets.\n6. Run targeted checks, regenerate the Apple project twice, then run the required final web, content, localization, and iOS/macOS Apple suites.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented figure directive pipeline and Ohm’s law figure set. Evidence: web hides author Illustration brief cards and renders the three L-005-02 figures; Apple hides .illustrationBrief blocks and renders generated template SVG assets. Pipeline documented in docs/figures.md; generated assets checked by pnpm check:figures.
+
+Validation passed: pnpm typecheck; TZ=UTC pnpm test (content-tools 108, morse-engine 21, web 153); pnpm check:schemas; pnpm import:check; pnpm check:figures; pnpm check:links; pnpm build:web; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift (19); full iOS xbuild suite (76 UI tests, including light/dark Ohm’s law figure accessibility audits) result bundle /tmp/task381-ios-full.xcresult; full macOS xbuild suite (72 unit tests) result bundle /tmp/task381-macos-full.xcresult; node scripts/check-apple-text-sources.ts.
+
+Validation blocked: pnpm check:apple-l10n fails because xbuild export rewrites unrelated existing Localizable.xcstrings entries. Per supervisor decision, did not commit the export churn. Export saved at /tmp/task381-xcstrings-export.json; key-level drift summary at /tmp/task381-l10n-drift.txt (0 added/removed keys, 5 existing keys changed by export; none introduced by task-38.1 except the committed Figure text equivalent key, which already has French).
+
+Originality: Ohm’s law triangle, power triangle, and wheel were drawn from scratch as simple ink-style formula aids using the standard formulas already taught in the lesson, not traced from ISED or third-party art. Contrast evidence and themed web/iOS source previews are under docs/evidence/task-38.1/.
+<!-- SECTION:NOTES:END -->
