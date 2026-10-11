@@ -600,7 +600,8 @@ final class ProgressStoreService: ObservableObject {
         morseCourseProgressURL: URL? = nil,
         iCloudSyncEnabled: Bool = ICloudSyncSettings.storedOptIn(),
         layout: ProgressStoreConfigurationLayout = .automatic,
-        modelContainerFactory: ((Bool) throws -> ModelContainer)? = nil
+        modelContainerFactory: ((Bool) throws -> ModelContainer)? = nil,
+        startICloudMonitoring: Bool = true
     ) throws {
         self.container = container
         self.context = ModelContext(container)
@@ -613,7 +614,7 @@ final class ProgressStoreService: ObservableObject {
         self.preferences = try loadPreferences()
         try migrateLearningProgressFromLegacyStorageIfNeeded()
 #if ICLOUD_SYNC
-        if iCloudSyncEnabled {
+        if iCloudSyncEnabled, startICloudMonitoring {
             startICloudAccountMonitoring()
         }
 #endif
@@ -691,7 +692,8 @@ final class ProgressStoreService: ObservableObject {
                     storeURLs: urls,
                     layout: resolvedLayout(layout)
                 )
-            }
+            },
+            startICloudMonitoring: false
         )
     }
 
