@@ -144,10 +144,18 @@ final class ContentLibraryTests: XCTestCase {
         let wheel = try XCTUnwrap(rendered.figures.last)
         XCTAssertTrue(wheel.altText.contains("quadrants for P, E, I, and R"))
         XCTAssertEqual(wheel.textEquivalent, [
-            "To find P: I x E; I² x R; E² / R.",
-            "To find E: I x R; P / I; √(P x R).",
-            "To find I: E / R; P / E; √(P / R).",
-            "To find R: E / I; E² / P; P / I²."
+            "To find P: I x E.",
+            "To find P: I² x R.",
+            "To find P: E² / R.",
+            "To find E: I x R.",
+            "To find E: P / I.",
+            "To find E: √(P x R).",
+            "To find I: E / R.",
+            "To find I: P / E.",
+            "To find I: √(P / R).",
+            "To find R: E / I.",
+            "To find R: E² / P.",
+            "To find R: P / I²."
         ])
     }
 

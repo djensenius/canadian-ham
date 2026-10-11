@@ -43,10 +43,10 @@
     ]
   },
   {
-    "name": "invalid id renders normally",
-    "markdown": "::figure bad_id\nAlt text: Bad id.\n::",
+    "name": "invalid id renders normally through following text",
+    "markdown": "::figure bad_id\nAlt text: Bad id.\n::\nMore text in the same paragraph.",
     "expected": [
-      { "type": "paragraph", "text": "::figure bad_id Alt text: Bad id. ::" }
+      { "type": "paragraph", "text": "::figure bad_id Alt text: Bad id. :: More text in the same paragraph." }
     ]
   },
   {

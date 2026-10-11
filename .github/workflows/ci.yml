@@ -159,6 +159,10 @@ jobs:
         if: needs.changes.outputs.full_checks == 'true'
         run: pnpm check:links
 
+      - name: Test figure checker
+        if: needs.changes.outputs.full_checks == 'true'
+        run: node scripts/check-figures.mjs --self-test
+
       - name: Figure check
         if: needs.changes.outputs.full_checks == 'true'
         run: pnpm check:figures

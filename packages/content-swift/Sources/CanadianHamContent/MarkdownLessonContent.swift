@@ -329,9 +329,6 @@ public enum LessonMarkdownRenderer {
             }
             fallbackLines.append(trimmed)
             index += 1
-            if trimmed == "::" {
-                break
-            }
         }
         return (try inlineAttributedString(for: fallbackLines.joined(separator: " ")), index)
     }

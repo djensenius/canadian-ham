@@ -9,7 +9,7 @@ Lesson figures are original SVG sources shared by web and Apple. They are supple
 - Set the root `<svg id="...">` to the same id as the filename.
 - Include `<title>` and `<desc>` in the SVG for authoring context.
 - Draw from scratch. Do not trace or copy ISED, RAC, or other third-party reference figures.
-- Use labels as SVG `<text>` where feasible so formula labels remain inspectable in the web source. Before review, confirm the generated Apple asset renders every label in the real app screenshots.
+- Use labels as SVG `<text>` where feasible so formula labels remain inspectable in the web source. Before review, confirm the generated Apple asset renders every label in the real app screenshots. Apple's CoreSVG path may ignore SVG `font-family` and `font-weight`, so leave enough clearance for a wider proportional fallback font.
 - Use `currentColor` for fills and strokes. Do not hard-code colours in SVGs; web and Apple supply ink/paper colours from design tokens.
 - Keep all text comfortably inside the `viewBox` with padding. The check script estimates text bounds and rejects text near the edge.
 - No stroke may cross or touch text. Break dividers around labels/formulas or move labels into clear regions.
@@ -81,7 +81,8 @@ The check verifies:
 - every figure reference has non-empty alt text and no duplicate figure id on the same page;
 - each SVG filename is a stable id and the root `<svg id>` matches it;
 - SVGs include `<title>`/`<desc>`, avoid hard-coded colours, use only allowed elements/attributes, and have no script/style/event-handler/external-reference surface;
-- SVG text stays within the `viewBox` padding according to the checker's monospace text-bounds estimate; and
+- SVG text stays within the `viewBox` padding according to the checker's conservative proportional text-bounds estimate;
+- sampled strokes and circle outlines stay clear of estimated text boxes; and
 - generated Apple vector assets and generated Apple figure metadata are in sync with `content/figures/`.
 
 Run the checker self-test when changing the checker itself:
@@ -90,7 +91,7 @@ Run the checker self-test when changing the checker itself:
 node scripts/check-figures.mjs --self-test
 ```
 
-`pnpm check:figures` is wired into GitHub CI. Use `pnpm check:figures:fix` to regenerate Apple assets, then rerun `pnpm check:figures` before committing.
+`pnpm check:figures` and `node scripts/check-figures.mjs --self-test` are wired into GitHub CI. Use `pnpm check:figures:fix` to regenerate Apple assets, then rerun both commands before committing.
 
 ## Contrast and evidence
 

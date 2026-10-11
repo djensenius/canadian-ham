@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import path from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { render, screen } from "@testing-library/react";
 import { describe, it } from "vitest";
 
@@ -12,7 +13,11 @@ interface FigureDirectiveFixture {
   readonly expected: readonly Record<string, unknown>[];
 }
 
-const figureDirectiveFixtures = JSON.parse(readFileSync(path.resolve(process.cwd(), "../../fixtures/markdown-figure-directives.json"), "utf8")) as FigureDirectiveFixture[];
+const moduleUrl = new URL(import.meta.url);
+const modulePath = moduleUrl.protocol === "file:"
+  ? fileURLToPath(moduleUrl)
+  : join(process.cwd(), moduleUrl.pathname.replace(/^\/+/, ""));
+const figureDirectiveFixtures = JSON.parse(readFileSync(join(dirname(modulePath), "../../../../fixtures/markdown-figure-directives.json"), "utf8")) as FigureDirectiveFixture[];
 
 function simplifiedBlocks(markdown: string) {
   return parseMarkdownBlocks(markdown).map((block) => {

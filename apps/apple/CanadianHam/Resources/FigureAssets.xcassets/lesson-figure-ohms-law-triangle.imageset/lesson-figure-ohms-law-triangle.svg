@@ -7,9 +7,9 @@
     <path d="M320 290 C316 315 316 345 320 375" stroke-width="10"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
-    <text x="320" y="208" font-size="96" font-weight="700">E</text>
-    <text x="248" y="358" font-size="84" font-weight="700">I</text>
-    <text x="392" y="358" font-size="84" font-weight="700">R</text>
+    <text x="320" y="230" font-size="68" font-weight="700">E</text>
+    <text x="248" y="350" font-size="64" font-weight="700">I</text>
+    <text x="392" y="350" font-size="64" font-weight="700">R</text>
     <text x="320" y="442" font-size="24">cover the unknown; use x or /</text>
   </g>
 </svg>
