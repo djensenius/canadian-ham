@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-011-006.\n\nWhy the correct answer is right: Radio CW normally sends Morse by turning a carrier on for dits and dahs and off for spaces, so it is an interrupted carrier.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"a series of key clicks\": Key clicks are unwanted by-products of abrupt keying; they are not the intended Morse signal.\n- sourceIndex 2: \"a continuous carrier\": A carrier left on continuously would not contain the on-off timing that forms Morse characters.\n- sourceIndex 3: \"a phase-shifted carrier\": Phase shifting is used by some data methods, but ordinary CW Morse is keyed on and off rather than phase-coded.",
+    "en": "Question B-003-011-006.\n\nWhy the correct answer is right: Radio continuous wave (CW) normally sends Morse by turning a carrier on for dits and dahs and off for spaces, so it is an interrupted carrier.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"a series of key clicks\": Key clicks are unwanted by-products of abrupt keying. They are not the intended Morse signal.\n- sourceIndex 2: \"a continuous carrier\": A carrier left on continuously would not contain the on-off timing that forms Morse characters.\n- sourceIndex 3: \"a phase-shifted carrier\": Phase shifting is used by some data methods, but ordinary CW Morse is keyed on and off rather than phase-coded.",
     "fr": null
   },
   "citations": [

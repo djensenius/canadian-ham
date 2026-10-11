@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-001-005.\n\nWhy the correct answer is right: One watt is 1 000 milliwatts. 500 mW divided by 1 000 is 0.5 W.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"5 watts\": That watt value comes from dividing 500 milliwatts by 100 instead of by the required 1 000.\n- sourceIndex 2: \"50 watts\": This is one hundred times too large.\n- sourceIndex 3: \"0.05 watts\": This is ten times too small.",
+    "en": "Question B-005-001-005.\n\nWhy the correct answer is right: One watt is 1 000 milliwatts. 500 mW divided by 1 000 is 0.5 W.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"5 watts\": That divides 500 milliwatts by 100 instead of by 1 000.\n- sourceIndex 2: \"50 watts\": This is one hundred times too large.\n- sourceIndex 3: \"0.05 watts\": This is ten times too small.",
     "fr": null
   },
   "citations": [

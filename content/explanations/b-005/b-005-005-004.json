@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-005-004.\n\nWhy the correct answer is right: Each 1000-ohm resistor has 12 V across it, so each branch current is 12 / 1000 = 0.012 A, or 12 mA. Two branches draw 12 mA + 12 mA = 24 mA.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"12 milliamperes\": This is the current through one 1000-ohm branch only. The source current must include both branches.\n- sourceIndex 2: \"60 milliamperes\": This would require an equivalent resistance of 200 ohms at 12 V, not the 500-ohm equivalent of two 1000-ohm resistors in parallel.\n- sourceIndex 3: \"120 milliamperes\": This treats each branch as if it were 100 ohms because 12 V / 100 ohms = 0.12 A.",
+    "en": "Question B-005-005-004.\n\nWhy the correct answer is right: Each 1 000-ohm resistor has 12 V across it. One branch current is 12 / 1 000 = 0.012 A, or 12 mA. Two branches draw 24 mA.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"12 milliamperes\": This is the current through one 1 000-ohm branch only. The source current must include both branches.\n- sourceIndex 2: \"60 milliamperes\": This would require 200 ohms at 12 V, not the 500-ohm equivalent of two 1 000-ohm resistors in parallel.\n- sourceIndex 3: \"120 milliamperes\": This treats each branch as if it were 100 ohms because 12 V / 100 ohms = 0.12 A.",
     "fr": null
   },
   "citations": [

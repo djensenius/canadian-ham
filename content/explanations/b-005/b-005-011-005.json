@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-005-011-005.\n\nWhy the correct answer is right: Current in a conductor creates the magnetic field around it. In air, increasing current increases the field strength in direct proportion for this Basic-level relationship.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"inversely proportional to the diameter of the conductor\": Conductor diameter is not the stated proportional control of field strength around the conductor.\n- sourceIndex 2: \"directly proportional to the diameter of the conductor\": Making the conductor wider is not what makes the magnetic field stronger in this relationship.\n- sourceIndex 3: \"inversely proportional to the voltage on the conductor\": Voltage by itself does not set the magnetic field; current flow does.",
+    "en": "Question B-005-011-005.\n\nWhy the correct answer is right: Current in a conductor creates the magnetic field around it. In air, increasing current increases field strength in direct proportion.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"inversely proportional to the diameter of the conductor\": Conductor diameter is not the stated proportional control of field strength around the conductor.\n- sourceIndex 2: \"directly proportional to the diameter of the conductor\": Making the conductor wider is not what makes the magnetic field stronger in this relationship.\n- sourceIndex 3: \"inversely proportional to the voltage on the conductor\": Voltage by itself does not set the magnetic field; current flow does.",
     "fr": null
   },
   "citations": [

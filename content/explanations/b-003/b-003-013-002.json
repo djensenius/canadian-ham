@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-013-002.\n\nWhy the correct answer is right: If the repeater expects 5 kHz deviation and your transmitter only swings 2.5 kHz, the recovered audio level will be low.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Your audio will be distorted\": Too much deviation or audio overdrive causes rough distorted audio; too little deviation mainly sounds quiet.\n- sourceIndex 2: \"Your range will be shorter\": RF range is set by signal strength and path conditions; reducing deviation does not by itself reduce carrier coverage.\n- sourceIndex 3: \"The repeater will not respond\": Access depends on signal, tone, and receiver settings; a half-deviation voice signal can still key the repeater but sound low.",
+    "en": "Question B-003-013-002.\n\nWhy the correct answer is right: If the repeater expects 5 kHz deviation and your transmitter only swings 2.5 kHz, the recovered audio level will be low.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Your audio will be distorted\": Too much deviation or audio overdrive causes rough distorted audio. Too little deviation mainly sounds quiet.\n- sourceIndex 2: \"Your range will be shorter\": Radio-frequency (RF) range is set by signal strength and path conditions. Reducing deviation does not by itself reduce carrier coverage.\n- sourceIndex 3: \"The repeater will not respond\": Access depends on signal, tone, and receiver settings. A half-deviation voice signal can still key the repeater but sound low.",
     "fr": null
   },
   "citations": [

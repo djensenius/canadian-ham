@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-020-009.\n\nWhy the correct answer is right: Open-wire line can carry high RF voltage during transmission, so a person touching it can receive an RF burn.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Because contact might break the transmission line\": Mechanical damage is possible, but the reason for keeping people away is the burn hazard to the person.\n- sourceIndex 2: \"Because contact might cause spurious emissions\": Spurious emissions come from transmitter or system faults; the personal safety issue is RF energy on the line.\n- sourceIndex 3: \"Because contact might cause a short circuit and damage the transmitter\": Protecting the transmitter is secondary here; the stated safety concern is injury from high-voltage RF.",
+    "en": "Question B-003-020-009.\n\nWhy the correct answer is right: Open-wire line can carry high radio-frequency (RF) voltage during transmission, so a person touching it can receive an RF burn.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Because contact might break the transmission line\": Mechanical damage is possible, but the reason for keeping people away is the burn hazard to the person.\n- sourceIndex 2: \"Because contact might cause spurious emissions\": Spurious emissions come from transmitter or system faults. The personal safety issue is RF energy on the line.\n- sourceIndex 3: \"Because contact might cause a short circuit and damage the transmitter\": Protecting the transmitter is secondary here. The stated safety concern is injury from high-voltage RF.",
     "fr": null
   },
   "citations": [

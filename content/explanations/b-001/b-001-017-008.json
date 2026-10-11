@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-001-017-008.\n\nWhy the correct answer is right: For EIRP limits on 630 metres and 2200 metres, antenna gain is the key characteristic because EIRP includes antenna directivity.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Bandwidth\": Bandwidth affects occupied spectrum, not the antenna factor used to calculate EIRP compliance.\n- sourceIndex 2: \"Impedance\": Impedance matters for matching, but antenna gain is the characteristic used to determine EIRP power limitations.\n- sourceIndex 3: \"Resonance\": Resonance can affect efficiency and tuning, yet the EIRP limit specifically requires accounting for gain.",
+    "en": "Question B-001-017-008.\n\nWhy the correct answer is right: For equivalent isotropically radiated power (EIRP) limits on 630 metres and 2 200 metres, antenna gain is the key characteristic because EIRP includes antenna directivity.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Bandwidth\": Bandwidth affects occupied spectrum, not the antenna factor used to calculate EIRP compliance.\n- sourceIndex 2: \"Impedance\": Impedance matters for matching, but antenna gain is the characteristic used to determine EIRP power limitations.\n- sourceIndex 3: \"Resonance\": Resonance can affect efficiency and tuning, yet the EIRP limit specifically requires accounting for gain.",
     "fr": null
   },
   "citations": [

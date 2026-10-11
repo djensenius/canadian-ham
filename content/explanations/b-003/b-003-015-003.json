@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-003-015-003.\n\nWhy the correct answer is right: A digipeater is a digital relay that receives packets and retransmits those marked or addressed for forwarding.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To receive digital data and export to the internet\": Internet gateway service is a separate function; a digipeater can forward packets over radio without internet export.\n- sourceIndex 2: \"To receive analog FM, convert to digital data and retransmit\": That describes conversion of voice-like analog audio, not packet digipeating.\n- sourceIndex 3: \"To receive digital data, convert to analog FM and retransmit\": A digipeater forwards digital packet data; it does not turn the payload into analog voice for retransmission.",
+    "en": "Question B-003-015-003.\n\nWhy the correct answer is right: A digipeater is a digital relay that receives packets and retransmits those marked or addressed for forwarding.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"To receive digital data and export to the internet\": Internet gateway service is a separate function. A digipeater can forward packets over radio without internet export.\n- sourceIndex 2: \"To receive analog FM, convert to digital data and retransmit\": That describes conversion of voice-like analog audio, not packet digipeating.\n- sourceIndex 3: \"To receive digital data, convert to analog FM and retransmit\": A digipeater forwards digital packet data. It does not turn the payload into analog voice for retransmission.",
     "fr": null
   },
   "citations": [
