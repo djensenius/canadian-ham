@@ -2368,31 +2368,22 @@ final class CanadianHamPracticeUITests: XCTestCase {
             return
         }
         var trace: [String] = []
-        for iteration in 0..<maxAdjustments {
-            let frame = element.frame
-            let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
-            let bottomLimit = middleBandBottomLimit(in: app)
-            let protectedMaxY = protectedNavigationFrame(in: app).maxY + 1
+        func record(_ label: String) {
             let offenders = scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
-            trace.append("iteration \(iteration): target=\(frameDescription(frame)); offenders=\(offenders.map(\.description).joined(separator: " | "))")
-            if isFullyVisibleInMiddleBand(element, in: app), offenders.isEmpty {
-                break
+            trace.append("\(label): target=\(frameDescription(element.frame)); offenders=\(offenders.map(\.description).joined(separator: " | ")); nearBar=\(elementsNearestProtectedBar(in: app, scrollView: scrollView).joined(separator: " | "))")
+        }
+        func positioned() -> Bool {
+            isFullyVisibleInMiddleBand(element, in: app) && scrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView).isEmpty
+        }
+        record("start")
+        if !positioned() {
+            for direction in [CGFloat(1), CGFloat(-1)] where !positioned() {
+                for step in 1...maxAdjustments where !positioned() {
+                    preciseScroll(scrollView, contentDeltaY: direction * 10)
+                    waitBriefly()
+                    record("scan \(direction > 0 ? "down" : "up") \(step)")
+                }
             }
-            if frame.maxY > bottomLimit {
-                preciseScroll(scrollView, contentDeltaY: -(frame.maxY - bottomLimit + 8))
-            } else if frame.minY < visibleFrame.minY + 8 {
-                preciseScroll(scrollView, contentDeltaY: visibleFrame.minY + 8 - frame.minY)
-            } else if let offender = offenders.first {
-                let frame = offender.frame
-                let moveAbove = -(frame.maxY - app.windows.firstMatch.frame.minY + 8)
-                let moveBelow = protectedMaxY + 8 - frame.minY
-                preciseScroll(scrollView, contentDeltaY: abs(moveAbove) < abs(moveBelow) ? moveAbove : moveBelow)
-            } else if !visibleFrame.contains(frame) {
-                preciseScroll(scrollView, contentDeltaY: -24)
-            } else {
-                break
-            }
-            waitBriefly()
         }
         XCTAssertTrue(
             isFullyVisibleInMiddleBand(element, in: app),
@@ -2414,7 +2405,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let fingerDeltaY = contentDeltaY > 0 ? limitedMagnitude : -limitedMagnitude
         let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
         let end = start.withOffset(CGVector(dx: 0, dy: fingerDeltaY))
-        start.press(forDuration: 0.05, thenDragTo: end)
+        start.press(forDuration: 0.1, thenDragTo: end, withVelocity: XCUIGestureVelocity.slow, thenHoldForDuration: 0.4)
     }
 
     private func settleScrollableContentBelowNavigationBar(
@@ -2572,6 +2563,27 @@ final class CanadianHamPracticeUITests: XCTestCase {
             protectedAreaOffender(for: element, elementDescription: "button", windowMinY: windowMinY, protectedMaxY: protectedMaxY)
         }
         return textOffenders + buttonOffenders
+    }
+
+    private func elementsNearestProtectedBar(in app: XCUIApplication, scrollView: XCUIElement) -> [String] {
+        let protectedMaxY = protectedNavigationFrame(in: app).maxY + 1
+        let windowMinY = app.windows.firstMatch.frame.minY
+        let candidates = scrollView.staticTexts.allElementsBoundByIndex.map { ("staticText", $0) } + scrollView.buttons.allElementsBoundByIndex.map { ("button", $0) }
+        return candidates
+            .filter { _, element in
+                guard element.exists else { return false }
+                let frame = element.frame
+                return frame.width > 0 && frame.height > 0 && frame.maxY > windowMinY && frame.minY < protectedMaxY + 80
+            }
+            .sorted { lhs, rhs in
+                let left = min(abs(lhs.1.frame.minY - protectedMaxY), abs(lhs.1.frame.maxY - protectedMaxY))
+                let right = min(abs(rhs.1.frame.minY - protectedMaxY), abs(rhs.1.frame.maxY - protectedMaxY))
+                return left < right
+            }
+            .prefix(4)
+            .map { kind, element in
+                "\(kind) id=\(element.identifier) label=\(element.label) frame=\(frameDescription(element.frame))"
+            }
     }
 
     private func protectedAreaOffender(for element: XCUIElement, elementDescription: String, windowMinY: CGFloat, protectedMaxY: CGFloat) -> ProtectedAreaOffender? {
