@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-07 12:14'
-updated_date: '2026-10-11 01:08'
+updated_date: '2026-10-11 01:09'
 labels: []
 dependencies:
   - TASK-12.4
@@ -63,5 +63,5 @@ Full Apple suite per-test results on merged code (tip 6c3724c8f931cc91a10db99bef
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Implemented visual-output follow-ups: lower audit target visibility checks, flash-safety reason cleanup and exact cap test, square-area wording and web lamp styling, reduce-flashing beacon stops, scroll helper failure behavior, and Morse settings export/import round trip. Verified by targeted reruns, web/package checks, and full Apple suites.
+Completed Morse visual-output follow-ups after review: post-settle lower audit target checks now keep targets visible and position the fixed timing note clear of the bottom safe area before default audits, safety-note wording/web lamp styling remain aligned, and Apple Morse settings export/import (including outputMode and web-compatible haptics mapping/partial imports) is covered by round-trip tests. Verified on merged d55acd8 code by package/web/localization checks and full iOS/macOS/tvOS/visionOS suites with per-test names/counts recorded in notes.
 <!-- SECTION:FINAL_SUMMARY:END -->
