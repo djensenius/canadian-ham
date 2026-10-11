@@ -642,6 +642,7 @@ private struct LessonFigureView: View {
             .scaledToFit()
             .aspectRatio(aspectRatio, contentMode: .fit)
             .foregroundStyle(DesignTokens.Colors.ink)
+            .accessibilityHidden(true)
     }
 }
 
@@ -689,6 +690,7 @@ private struct EnlargedLessonFigureView: View {
                         .scaleEffect(scale)
                         .frame(width: fitSize.width * scale, height: fitSize.height * scale)
                         .frame(minWidth: geometry.size.width, minHeight: geometry.size.height)
+                        .accessibilityElement(children: .ignore)
                         .accessibilityLabel(Text(english(figure.altText))) // l10n: content(en)
                         .accessibilityIdentifier("lesson-figure-\(figure.id)-enlarged-image")
                         .onTapGesture(count: 2) {
