@@ -137,7 +137,7 @@ final class ProgressStoreTests: XCTestCase {
                 let expected: [QuestionProgressRecord]
             }
             struct ExamAttempts: Decodable {
-                let input: [CanadianHam.StoredExamAttempt]
+                let input: [StoredExamAttempt]
                 let expectedSubmittedAtById: [String: String]
             }
             struct MorseProgress: Decodable {
