@@ -24,12 +24,13 @@ struct ExportedMorseSettings: Codable, Equatable, Sendable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let defaults = Self.default
-        toneHz = try container.decodeIfPresent(Int.self, forKey: .toneHz) ?? defaults.toneHz
-        characterWpm = try container.decodeIfPresent(Int.self, forKey: .characterWpm) ?? defaults.characterWpm
-        effectiveWpm = try container.decodeIfPresent(Int.self, forKey: .effectiveWpm) ?? defaults.effectiveWpm
-        timingProfile = try container.decodeIfPresent(String.self, forKey: .timingProfile) ?? defaults.timingProfile
-        volume = try container.decodeIfPresent(Double.self, forKey: .volume) ?? defaults.volume
-        outputMode = try container.decodeIfPresent(String.self, forKey: .outputMode) ?? defaults.outputMode
+        // Only a genuinely absent key gets the default; an explicit null is rejected (matches the schema and the web importer).
+        toneHz = container.contains(.toneHz) ? try container.decode(Int.self, forKey: .toneHz) : defaults.toneHz
+        characterWpm = container.contains(.characterWpm) ? try container.decode(Int.self, forKey: .characterWpm) : defaults.characterWpm
+        effectiveWpm = container.contains(.effectiveWpm) ? try container.decode(Int.self, forKey: .effectiveWpm) : defaults.effectiveWpm
+        timingProfile = container.contains(.timingProfile) ? try container.decode(String.self, forKey: .timingProfile) : defaults.timingProfile
+        volume = container.contains(.volume) ? try container.decode(Double.self, forKey: .volume) : defaults.volume
+        outputMode = container.contains(.outputMode) ? try container.decode(String.self, forKey: .outputMode) : defaults.outputMode
     }
 }
 

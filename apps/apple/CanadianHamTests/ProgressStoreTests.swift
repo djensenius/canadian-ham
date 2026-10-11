@@ -1194,6 +1194,32 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(exported.outputMode, "audio")
     }
 
+    func testMorseImportRejectsExplicitNullMorseValues() throws {
+        func export(_ morse: String) -> Data {
+            Data("""
+            {
+              "schema": "canadian-ham.progress-export",
+              "version": 1,
+              "exportedAt": "2026-01-02T05:04:05.000Z",
+              "bankId": "basic-2025-07-15",
+              "questionProgress": [],
+              "examAttempts": [],
+              "lessonProgress": [],
+              "lessonQuizAttempts": [],
+              "preferences": { "practiceMode": "immediate", "examTimerEnabled": false, "theme": "system"\(morse) }
+            }
+            """.utf8)
+        }
+        XCTAssertThrowsError(try JSONDecoder().decode(ProgressExportV1.self, from: export(", \"morse\": null")))
+        XCTAssertThrowsError(try JSONDecoder().decode(ProgressExportV1.self, from: export(", \"morse\": { \"outputMode\": null }")))
+        XCTAssertThrowsError(try JSONDecoder().decode(ProgressExportV1.self, from: export(", \"morse\": { \"toneHz\": null }")))
+        let missing = try JSONDecoder().decode(ProgressExportV1.self, from: export(""))
+        XCTAssertEqual(missing.preferences.morse, .default)
+        let partial = try JSONDecoder().decode(ProgressExportV1.self, from: export(", \"morse\": { \"toneHz\": 700 }"))
+        XCTAssertEqual(partial.preferences.morse.toneHz, 700)
+        XCTAssertEqual(partial.preferences.morse.outputMode, ExportedMorseSettings.default.outputMode)
+    }
+
     func testMorseImportDecodesMissingAndPartialMorsePreferences() throws {
         let bank = try QuestionBankStore.load(from: Bundle(for: Self.self))
         let missingMorseJSON = """

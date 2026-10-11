@@ -269,7 +269,8 @@ struct ExportedPreferences: Codable, Equatable, Sendable {
         practiceMode = try container.decode(String.self, forKey: .practiceMode)
         examTimerEnabled = try container.decode(Bool.self, forKey: .examTimerEnabled)
         theme = try container.decodeIfPresent(String.self, forKey: .theme) ?? ApplePreferences.Theme.system.rawValue
-        morse = try container.decodeIfPresent(ExportedMorseSettings.self, forKey: .morse) ?? .default
+        // Older exports omit morse entirely; an explicit null is invalid (the schema requires an object).
+        morse = container.contains(.morse) ? try container.decode(ExportedMorseSettings.self, forKey: .morse) : .default
     }
 }
 
