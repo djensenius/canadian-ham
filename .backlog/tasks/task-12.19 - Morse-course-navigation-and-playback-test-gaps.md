@@ -58,5 +58,5 @@ Full Apple suite per-test results on merged code (tip 6c3724c8f931cc91a10db99bef
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Added Morse course UI coverage for back-stack/fresh-session behavior, observable playback stop, disabled locked-lesson tap, review weakest characters, and finished lesson re-entry. Verified by targeted iOS tests and full Apple suites.
+Completed Morse course navigation/playback coverage after review: lesson Back returns to Unit 1 with the lesson list still visible, reopening lesson 1 starts Exercise 1, Review weakest characters opens a session, and finished lesson re-entry starts fresh. Verified on merged d55acd8 code by full iOS (154/154) plus full macOS/tvOS/visionOS suites and recorded per-test names/counts in notes.
 <!-- SECTION:FINAL_SUMMARY:END -->
