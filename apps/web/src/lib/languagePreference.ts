@@ -2,8 +2,16 @@ import type { Language } from "../data/bank";
 import type { LanguagePreference } from "./progressStore";
 
 export function languageForPreferredLocales(preferredLocales: readonly string[] | undefined): Language {
-  const primaryLocale = preferredLocales?.find((locale) => locale.trim().length > 0) ?? "";
-  return primaryLocale.toLowerCase().startsWith("fr") ? "fr" : "en";
+  for (const locale of preferredLocales ?? []) {
+    const normalized = locale.trim().toLowerCase();
+    if (normalized.startsWith("fr")) {
+      return "fr";
+    }
+    if (normalized.startsWith("en")) {
+      return "en";
+    }
+  }
+  return "en";
 }
 
 export function navigatorPreferredLocales(navigatorLike: Pick<Navigator, "languages" | "language"> | undefined = globalThis.navigator): readonly string[] {

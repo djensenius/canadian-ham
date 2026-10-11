@@ -602,7 +602,7 @@ describe("App accessibility and flows", () => {
       const languageGroup = await screen.findByRole("group", { name: "Langue" });
       await user.click(within(languageGroup).getByRole("radio", { name: "English" }));
 
-      assert.equal(window.localStorage.getItem(INTERFACE_LANGUAGE_STORAGE_KEY), null);
+      assert.equal(window.localStorage.getItem(INTERFACE_LANGUAGE_STORAGE_KEY), "en");
       await screen.findByRole("heading", { name: "Settings and local data" });
       const exported = await store.exportData(fixedNow);
       assert.equal(exported.preferences.language, "en");
@@ -633,6 +633,7 @@ describe("App accessibility and flows", () => {
     const languageGroup = screen.getByRole("group", { name: "Language" });
     await user.click(within(languageGroup).getByRole("radio", { name: "Français" }));
     await screen.findByRole("heading", { name: "Réglages et données locales" });
+    assert.equal(window.localStorage.getItem(INTERFACE_LANGUAGE_STORAGE_KEY), "fr");
 
     for (const spy of readSpies) {
       assert.equal(spy.mock.calls.length, 0);
@@ -659,6 +660,7 @@ describe("App accessibility and flows", () => {
     assert.equal(screen.queryByRole("group", { name: "Langue des questions" }), null);
     assert.ok(document.querySelector(".question-text[lang='fr-CA']"));
     assert.equal((await store.getPreferences()).language, "fr");
+    assert.equal(window.localStorage.getItem(INTERFACE_LANGUAGE_STORAGE_KEY), "fr");
   });
 
   it("shows the French explanation notice only when no French explanation body exists", () => {

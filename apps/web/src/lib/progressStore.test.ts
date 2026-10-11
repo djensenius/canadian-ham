@@ -249,7 +249,7 @@ describe("ProgressStore", () => {
     await first.putLessonProgress(lessonProgressRecord);
     await first.putLessonQuizAttempt(lessonQuizAttempt);
     await first.putMorseCourseProgress(morseCourseProgress);
-    const preferencesWithOutputMode = { ...defaultPreferences, practiceMode: "review-later" as const, examTimerEnabled: true, theme: "dark" as const, morse: { ...defaultPreferences.morse, outputMode: "visualTape" as const } };
+    const preferencesWithOutputMode = { ...defaultPreferences, practiceMode: "review-later" as const, examTimerEnabled: true, language: "fr" as const, theme: "dark" as const, morse: { ...defaultPreferences.morse, outputMode: "visualTape" as const } };
     await first.putPreferences(preferencesWithOutputMode);
 
     const exported = await first.exportData("2026-01-02T04:00:00.000Z");
@@ -391,6 +391,26 @@ describe("ProgressStore", () => {
 
     Object.defineProperty(globalThis, "indexedDB", { value: originalIndexedDB, configurable: true });
     assert.deepEqual(await store.getQuestionProgress(), []);
+  });
+
+  it("rejects unsupported and null language preferences", () => {
+    for (const language of ["de", null]) {
+      const invalid = validExport({ preferences: { ...defaultPreferences, language: language as never } });
+
+      const validation = validateProgressImport(invalid);
+
+      assert.equal(validation.ok, false);
+      assert.match(validation.errors.join("\n"), /Import preferences are invalid/);
+    }
+  });
+
+  it("normalises older exports without a language preference to system", () => {
+    const legacy = validExport({ preferences: { ...defaultPreferences, language: undefined as never } });
+
+    const validation = validateProgressImport(legacy);
+
+    assert.equal(validation.ok, true);
+    assert.equal(validation.data?.preferences.language, "system");
   });
 
   it("rejects web exports that try to import unsupported haptic output mode", () => {

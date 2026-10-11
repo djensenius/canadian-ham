@@ -42,9 +42,6 @@ export const enMessages = defineMessages({
   englishOnlyLessonNotice: "Lesson available in English only.",
   englishOnlyExplanationNotice: "Explanation available in English only.",
   englishOnlyContentNotice: "Content available in English only.",
-  languageQuestionLegend: "Question language",
-  languageQuestionAria: "Question language",
-  languageInterfaceLegend: "Interface language",
   languageSettingLegend: "Language",
   languageSystemDefault: "System default",
   languageEnglish: "English",
@@ -490,9 +487,6 @@ export const frMessages = defineMessages({
   englishOnlyLessonNotice: "Leçon offerte en anglais seulement.",
   englishOnlyExplanationNotice: "Explication offerte en anglais seulement.",
   englishOnlyContentNotice: "Contenu offert en anglais seulement.",
-  languageQuestionLegend: "Langue des questions",
-  languageQuestionAria: "Langue des questions",
-  languageInterfaceLegend: "Langue de l’interface",
   languageSettingLegend: "Langue",
   languageSystemDefault: "Réglage du système",
   languageEnglish: "English",
@@ -943,7 +937,11 @@ export function readStoredInterfaceLanguageOverride(): InterfaceLanguage | null 
   return isInterfaceLanguage(storedLanguage) ? storedLanguage : null;
 }
 
-export function storeInterfaceLanguage(language: InterfaceLanguage): void {
+export function mirrorStoredInterfaceLanguagePreference(language: InterfaceLanguage | "system"): void {
+  if (language === "system") {
+    clearStoredInterfaceLanguage();
+    return;
+  }
   safeLocalStorage()?.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, language);
 }
 

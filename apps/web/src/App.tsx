@@ -44,7 +44,7 @@ import {
 import {
   clearStoredInterfaceLanguage,
   interfaceLanguageTag,
-  readStoredInterfaceLanguage,
+  mirrorStoredInterfaceLanguagePreference,
   readStoredInterfaceLanguageOverride,
   t,
   type InterfaceLanguage,
@@ -167,7 +167,7 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
                 await this.props.store.putPreferences(nextPreferences);
                 applyThemePreference(nextPreferences.theme);
                 mirrorThemePreference(nextPreferences.theme);
-                clearStoredInterfaceLanguage();
+                mirrorStoredInterfaceLanguagePreference(nextPreferences.language);
                 this.setState({ recoveryPreferences: nextPreferences });
                 return true;
               }}
@@ -241,7 +241,7 @@ function AppContent({
   now = defaultNow,
   seedFactory = defaultSeed,
 }: AppProps) {
-  const initialPreferences = () => ({ ...defaultPreferences, theme: readStoredThemePreference() });
+  const initialPreferences = () => migrateLegacyStoredLanguagePreference({ ...defaultPreferences, theme: readStoredThemePreference() });
   const [locationHash, setLocationHash] = useState(() => globalThis.location?.hash ?? "");
   const [route, setRoute] = useState<Route>(() => routeFromHash(initialView));
   // Loaded questions are tagged with their course and only exposed while that course is active,
@@ -300,8 +300,8 @@ function AppContent({
           setPreferencesState(migratedPreferences);
           if (migratedPreferences !== storedPreferences) {
             await store.putPreferences(migratedPreferences);
-            clearStoredInterfaceLanguage();
           }
+          mirrorStoredInterfaceLanguagePreference(migratedPreferences.language);
           setAlertMessage("");
         }
       } catch (error) {
@@ -483,6 +483,7 @@ function AppContent({
       }
       const savedLatestRequest = saveSequence === preferencesSaveSequenceRef.current;
       if (savedLatestRequest) {
+        mirrorStoredInterfaceLanguagePreference(nextPreferences.language);
         setAlertMessage("");
       }
       return savedLatestRequest;
@@ -774,6 +775,7 @@ function AppContent({
               }
               savedPreferencesRef.current = importedPreferences;
               latestRequestedPreferencesRef.current = importedPreferences;
+              mirrorStoredInterfaceLanguagePreference(importedPreferences.language);
               setPreferencesState(importedPreferences);
               setPracticeSession(null);
               setMockExam(null);
@@ -2339,7 +2341,7 @@ function Settings({ activeBank, interfaceLanguage, store, now, preferences, stat
       return;
     }
     try {
-      const parsed = JSON.parse(await readFileText(file)) as unknown;
+      const parsed = JSON.parse(await readFileText(file, interfaceLanguage)) as unknown;
       const result = validateProgressImport(parsed, activeBank);
       if (!result.ok || result.data === undefined) {
         setErrors(result.errors);
@@ -2400,7 +2402,6 @@ function Settings({ activeBank, interfaceLanguage, store, now, preferences, stat
       if (!savedLatestRequest) {
         return;
       }
-      clearStoredInterfaceLanguage();
       const resolvedLanguage = resolveLanguagePreference(language);
       setErrors([]);
       setMessage(t(resolvedLanguage, "languageSaved", languagePreferenceLabel(resolvedLanguage, language)));
@@ -2462,13 +2463,13 @@ function languagePreferenceLabel(interfaceLanguage: InterfaceLanguage, language:
   }
 }
 
-function readFileText(file: File): Promise<string> {
+function readFileText(file: File, interfaceLanguage: InterfaceLanguage): Promise<string> {
   if (typeof file.text === "function") {
     return file.text();
   }
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onerror = () => reject(reader.error ?? new Error(t(readStoredInterfaceLanguage(), "fileReadError")));
+    reader.onerror = () => reject(reader.error ?? new Error(t(interfaceLanguage, "fileReadError")));
     reader.onload = () => resolve(String(reader.result ?? ""));
     reader.readAsText(file);
   });
