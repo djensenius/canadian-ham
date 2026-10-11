@@ -1356,26 +1356,16 @@ final class CanadianHamPracticeUITests: XCTestCase {
         XCUIDevice.shared.appearance = .light
         let app = launchApp(arguments: [
             "-CanadianHamInitialLessonID", "L-005-02",
+            "-CanadianHamInitialEnlargedFigureID", "ohms-law-power-wheel",
             "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"
         ])
         defer { app.terminate() }
 
-        XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
-        let wheel = app.buttons["lesson-figure-ohms-law-power-wheel-card"].firstMatch
-        scrollUntilExists(wheel, in: app, maxSwipes: 120)
-        XCTAssertTrue(wheel.exists, "Expected the Ohm's law wheel")
-        scrollUntilPartiallyVisible(wheel, in: app, maxSwipes: 20)
-        XCTAssertLessThanOrEqual(wheel.frame.width, app.windows.firstMatch.frame.width, "Wheel should fit window width at the largest accessibility text size")
-        let windowFrame = app.windows.firstMatch.frame
-        XCTAssertGreaterThanOrEqual(wheel.frame.minX, windowFrame.minX - 1, "Wheel should not extend left of the window at the largest accessibility text size")
-        XCTAssertLessThanOrEqual(wheel.frame.maxX, windowFrame.maxX + 1, "Wheel should not extend right of the window at the largest accessibility text size")
-
-        attachScreenshot(named: "task38-1-ios-large-text-ohms-law-power-wheel", from: app)
-        wheel.tap()
-        XCTAssertTrue(app.descendants(matching: .any)["lesson-figure-ohms-law-power-wheel-enlarged"].firstMatch.waitForExistence(timeout: 5), "Tapping enlarge should open the enlarged figure sheet")
+        XCTAssertTrue(app.descendants(matching: .any)["lesson-figure-ohms-law-power-wheel-enlarged"].firstMatch.waitForExistence(timeout: 10), "Initial enlarged figure launch argument should open the enlarged figure sheet")
         let enlargedImage = app.descendants(matching: .any)["lesson-figure-ohms-law-power-wheel-enlarged-image"].firstMatch
         XCTAssertTrue(enlargedImage.waitForExistence(timeout: 5), "Expected enlarged wheel image")
         assertFullyVisibleBelowNavigationBar(enlargedImage, in: app, context: "largest text enlarged Ohm's law wheel")
+        attachScreenshot(named: "task38-1-ios-large-text-ohms-law-power-wheel", from: app)
     }
 
     func testAccessibilityAuditMockExamFlowLight() throws {

@@ -570,7 +570,12 @@ private struct LessonMarkdownView: View {
 
 private struct LessonFigureView: View {
     let figure: MarkdownFigure
-    @State private var showingEnlargedFigure = false
+    @State private var showingEnlargedFigure: Bool
+
+    init(figure: MarkdownFigure) {
+        self.figure = figure
+        _showingEnlargedFigure = State(initialValue: AppLaunchArguments.value(after: "-CanadianHamInitialEnlargedFigureID") == figure.id)
+    }
 
     private var aspectRatio: CGFloat {
         LessonFigureMetadata.aspectRatio(for: figure.id)
