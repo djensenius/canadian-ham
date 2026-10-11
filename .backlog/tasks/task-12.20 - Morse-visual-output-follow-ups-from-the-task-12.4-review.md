@@ -1,7 +1,7 @@
 ---
 id: TASK-12.20
 title: 'Morse visual output: follow-ups from the task-12.4 review'
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-07 12:14'
