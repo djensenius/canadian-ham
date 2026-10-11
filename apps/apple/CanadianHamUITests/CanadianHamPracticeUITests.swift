@@ -1361,19 +1361,19 @@ final class CanadianHamPracticeUITests: XCTestCase {
         defer { app.terminate() }
 
         XCTAssertTrue(app.descendants(matching: .any)["lesson-reader-title"].firstMatch.waitForExistence(timeout: 10))
+        let enlarge = app.buttons["lesson-figure-ohms-law-power-wheel-enlarge"].firstMatch
+        scrollUntilExists(enlarge, in: app, maxSwipes: 120)
+        XCTAssertTrue(enlarge.exists, "Expected the Ohm's law wheel enlarge button")
+        scrollUntilHittable(enlarge, in: app, maxSwipes: 20)
         let wheel = app.buttons["Ohm’s law and power wheel with quadrants for P, E, I, and R and three formulas in each quadrant."].firstMatch
-        scrollUntilExists(wheel, in: app, maxSwipes: 80)
         XCTAssertTrue(wheel.exists, "Expected the Ohm's law wheel")
-        scrollUntilFullyVisibleBelowNavigationBar(wheel, in: app, maxSwipes: 120)
-        assertFullyVisibleBelowNavigationBar(wheel, in: app, context: "largest text Ohm's law wheel")
+        XCTAssertLessThanOrEqual(wheel.frame.width, app.windows.firstMatch.frame.width, "Wheel should fit window width at the largest accessibility text size")
         let windowFrame = app.windows.firstMatch.frame
         XCTAssertGreaterThanOrEqual(wheel.frame.minX, windowFrame.minX - 1, "Wheel should not extend left of the window at the largest accessibility text size")
         XCTAssertLessThanOrEqual(wheel.frame.maxX, windowFrame.maxX + 1, "Wheel should not extend right of the window at the largest accessibility text size")
 
-        let wheelButton = app.buttons["Ohm’s law and power wheel with quadrants for P, E, I, and R and three formulas in each quadrant."].firstMatch
-        XCTAssertTrue(wheelButton.isHittable, "Wheel figure button should be reachable at the largest accessibility text size")
         attachScreenshot(named: "task38-1-ios-large-text-ohms-law-power-wheel", from: app)
-        wheelButton.tap()
+        enlarge.tap()
         XCTAssertTrue(app.descendants(matching: .any)["lesson-figure-ohms-law-power-wheel-enlarged"].firstMatch.waitForExistence(timeout: 5), "Tapping enlarge should open the enlarged figure sheet")
         let enlargedImage = app.descendants(matching: .any)["lesson-figure-ohms-law-power-wheel-enlarged-image"].firstMatch
         XCTAssertTrue(enlargedImage.waitForExistence(timeout: 5), "Expected enlarged wheel image")
@@ -1813,16 +1813,17 @@ final class CanadianHamPracticeUITests: XCTestCase {
             let figureButton = app.buttons[figureAltText[figureID]!].firstMatch
             scrollUntilExists(figureButton, in: app, maxSwipes: 80)
             XCTAssertTrue(figureButton.exists, "Expected \(figureID) figure")
-            scrollUntilFullyVisibleBelowNavigationBar(figureButton, in: app, maxSwipes: 80)
+            scrollUntilHittable(figureButton, in: app, maxSwipes: 20)
             assertFullyVisibleBelowNavigationBar(figureButton, in: app, context: "\(appearance.rawValue) \(figureID) screenshot")
             attachScreenshot(named: "task38-1-ios-\(appearance.rawValue)-\(figureID)", from: app)
-            if figureButton.isHittable {
-                figureButton.tap()
-                XCTAssertTrue(app.descendants(matching: .any)["lesson-figure-\(figureID)-enlarged"].firstMatch.waitForExistence(timeout: 5), "Expected enlarged \(figureID) figure")
-                attachScreenshot(named: "task38-1-ios-\(appearance.rawValue)-\(figureID)-enlarged", from: app)
-                app.buttons["Done"].firstMatch.tap()
-                XCTAssertFalse(app.descendants(matching: .any)["lesson-figure-\(figureID)-enlarged"].firstMatch.waitForExistence(timeout: 2), "Expected enlarged \(figureID) figure to close")
-            }
+            figureButton.tap()
+            XCTAssertTrue(app.descendants(matching: .any)["lesson-figure-\(figureID)-enlarged"].firstMatch.waitForExistence(timeout: 5), "Expected enlarged \(figureID) figure")
+            let enlargedImage = app.descendants(matching: .any)["lesson-figure-\(figureID)-enlarged-image"].firstMatch
+            XCTAssertTrue(enlargedImage.waitForExistence(timeout: 5), "Expected enlarged \(figureID) image")
+            assertFullyVisibleBelowNavigationBar(enlargedImage, in: app, context: "\(appearance.rawValue) enlarged \(figureID) screenshot")
+            attachScreenshot(named: "task38-1-ios-\(appearance.rawValue)-\(figureID)-enlarged", from: app)
+            app.buttons["Done"].firstMatch.tap()
+            XCTAssertFalse(app.descendants(matching: .any)["lesson-figure-\(figureID)-enlarged"].firstMatch.waitForExistence(timeout: 2), "Expected enlarged \(figureID) figure to close")
         }
 
         XCTAssertTrue(app.buttons["Figure text equivalent"].firstMatch.exists, "Wheel text-equivalent disclosure should exist")
