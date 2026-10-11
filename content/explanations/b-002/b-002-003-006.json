@@ -4,7 +4,7 @@
   "bankId": "basic-2025-07-15",
   "status": "draft",
   "body": {
-    "en": "Question B-002-003-006.\n\nWhy the correct answer is right: A VHF/UHF simplex choice should avoid repeater inputs; otherwise your direct contact may interfere with repeater users you cannot hear.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Some frequencies cannot accommodate simplex operation\": Many VHF/UHF frequencies can support simplex when band plans permit; the trap is choosing an input channel.\n- sourceIndex 2: \"Implanted medical devices share the same spectrum\": Medical-device spectrum is not the amateur simplex-channel selection issue.\n- sourceIndex 3: \"Some frequencies are designated for narrow band FM and others for wideband FM\": Bandwidth designations can matter in band plans, but the specific courtesy problem is avoiding repeater inputs.",
+    "en": "Question B-002-003-006.\n\nWhy the correct answer is right: A very-high-frequency (VHF) or ultra-high-frequency (UHF) simplex choice should avoid repeater inputs. Otherwise your direct contact may interfere with repeater users you cannot hear.\n\nWhy the distractors are wrong:\n- sourceIndex 1: \"Some frequencies cannot accommodate simplex operation\": Many VHF/UHF frequencies can support simplex when band plans permit; the trap is choosing an input channel.\n- sourceIndex 2: \"Implanted medical devices share the same spectrum\": Medical-device spectrum is not the amateur simplex-channel selection issue.\n- sourceIndex 3: \"Some frequencies are designated for narrow band FM and others for wideband FM\": Bandwidth designations can matter in band plans, but the specific courtesy problem is avoiding repeater inputs.",
     "fr": null
   },
   "citations": [
