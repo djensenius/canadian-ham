@@ -25,7 +25,7 @@ Why: progress from several devices must converge without losing or double-counti
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 A convergent merge meets the proposal's section 6 requirements (cumulative attempts/correctAttempts, stable tie-breakers, unique submittedAt) with shared TS/Swift fixtures; JSON import stays replace-all
+- [x] #1 A convergent merge meets the proposal's section 6 requirements (cumulative attempts/correctAttempts, stable tie-breakers, unique submittedAt) with shared TS/Swift fixtures; JSON import stays replace-all
 - [ ] #2 Delete iCloud Progress stops sync (local-only) before deleting the zone, honours the user's keep-or-delete-local choice, and a test shows no re-upload after restart
 - [ ] #3 Reset all data covers cloud data; airplane-mode, no-account and account-switch smoke tests pass; App Store privacy answers are re-checked
 - [ ] #4 Exam-attempt dedup matches submittedAt only within the same bankId (task-13.3 review); remove the unused examAttemptEntity(submittedAt:) helper
