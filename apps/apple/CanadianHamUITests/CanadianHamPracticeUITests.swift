@@ -1833,6 +1833,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
             assertFullyVisibleBelowNavigationBar(figureImageButton, in: app, context: "\(appearance.rawValue) \(figureID) screenshot")
             XCTAssertTrue(figureImageButton.label.localizedCaseInsensitiveContains(figureAltText[figureID]!), "Expected figure accessibility label for \(figureID); got \(figureImageButton.label)")
             attachScreenshot(named: "task38-1-ios-\(appearance.rawValue)-\(figureID)", from: app)
+            nudgeScrollableContentUp(in: app)
             try performAudit(on: app, context: "\(appearance.rawValue) \(figureID) inline figure")
 
             let enlargeButton = app.buttons["lesson-figure-\(figureID)-enlarge"].firstMatch
@@ -1858,6 +1859,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
             XCTAssertTrue(rowElement.waitForExistence(timeout: 3), "Expected wheel text-equivalent row \(index + 1): \(row)")
             XCTAssertEqual(rowElement.label, row)
         }
+        nudgeScrollableContentUp(in: app)
         try performAudit(on: app, context: "\(appearance.rawValue) Ohm's law wheel text equivalent expanded")
     }
 
@@ -2267,6 +2269,15 @@ final class CanadianHamPracticeUITests: XCTestCase {
             file: file,
             line: line
         )
+    }
+
+    private func nudgeScrollableContentUp(in app: XCUIApplication) {
+        let scrollView = app.scrollViews.firstMatch
+        guard scrollView.waitForExistence(timeout: 1) else { return }
+        let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.75))
+        let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
+        start.press(forDuration: 0.01, thenDragTo: end)
+        waitBriefly()
     }
 
     private func scrollUntilHittable(_ element: XCUIElement, in app: XCUIApplication, maxSwipes: Int) {
