@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-02 01:12'
-updated_date: '2026-10-11 05:49'
+updated_date: '2026-10-11 05:57'
 labels:
   - apple
   - privacy
@@ -25,7 +25,7 @@ Why: progress from several devices must converge without losing or double-counti
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [x] #1 A convergent merge meets the proposal's section 6 requirements (cumulative attempts/correctAttempts, stable tie-breakers, unique submittedAt) with shared TS/Swift fixtures; JSON import stays replace-all
+- [ ] #1 A convergent merge meets the proposal's section 6 requirements (cumulative attempts/correctAttempts, stable tie-breakers, unique submittedAt) with shared TS/Swift fixtures; JSON import stays replace-all
 - [x] #2 Delete iCloud Progress stops sync (local-only) before deleting the zone, honours the user's keep-or-delete-local choice, and a test shows no re-upload after restart
 - [ ] #3 Reset all data covers cloud data; airplane-mode, no-account and account-switch smoke tests pass; App Store privacy answers are re-checked
 - [x] #4 Exam-attempt dedup matches submittedAt only within the same bankId (task-13.3 review); remove the unused examAttemptEntity(submittedAt:) helper
@@ -38,7 +38,7 @@ Why: progress from several devices must converge without losing or double-counti
 - [x] #11 A failed legacy-preferences read is a distinct result: don't create the marker or finalise the copy, and retry on the next gated launch (the Preferences.store existence check must not block the retry); test the transient-failure path
 - [ ] #12 On an iCloud account change, sign-out or disable, tear down the live CloudKit-backed container immediately (reopen local-only) so the same container can't keep mirroring under a new account; test it with an injectable store factory
 - [x] #13 Harden the gated-file guards: the iCloud gate check rejects every top-level entitlement key outside the allowlist regardless of value type (integer, dict…), and the gated Info.plist's UIBackgroundModes must be exactly [remote-notification]; negative fixtures for both
-- [x] #14 Morse course progress (lesson progress, character stats, daily activity) moves from the local JSON file into a CloudKit-compatible SwiftData entity in the learning-progress store, with a one-time migration that loses nothing, a convergent merge (cumulative attempts, best accuracy, union of daily activity), and export/import unchanged; Morse trainer settings stay local
+- [ ] #14 Morse course progress (lesson progress, character stats, daily activity) moves from the local JSON file into a CloudKit-compatible SwiftData entity in the learning-progress store, with a one-time migration that loses nothing, a convergent merge (cumulative attempts, best accuracy, union of daily activity), and export/import unchanged; Morse trainer settings stay local
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -71,4 +71,6 @@ Residual: AC3 device smoke tests (airplane mode, no account, account switch on s
 Review takeover 2026-10-11: read r1 and unchecked AC1, AC2, AC9, AC11, AC13, and AC14 because the review found unmet behavior (H1-H4/M4/M6/M7). Starting with data-safety fixes, then per-device merge rows and gated deletion/teardown gaps.
 
 Review fixes 2026-10-11: fixed H1 Morse data loss (20 recent results, no read-time writeback), M3/M4 corrupt/one-time Morse migration, H2 per-device sync rows with optional export syncDeviceRows preserving original device ids, M8 submittedAt-canonical exam dedup, H3 retry after failed legacy prefs copy even when Preferences.store exists, H4 gated Delete iCloud Progress UI and defaults seam, M1/M2 local-only reopen restore only for fresh stores plus surfaced account-signal errors, M6 code/docs note for legacy rows, M7 entitlement parser/UIBackgroundModes hardening. Validation passed: web progressStore test, pnpm typecheck, pnpm check:schemas, pnpm test:apple-icloud-gate, pnpm check:apple-icloud-gate, node scripts/check-apple-text-sources.ts, macOS targeted ProgressStoreTests (46 tests), iOS targeted ProgressStoreTests (44 tests). pnpm check:apple-l10n passed once after adding keys; a rerun after trimming the string-catalog diff built successfully but timed out waiting on a subsequent xbuild lock, so it should be rerun before PR if strict fresh l10n evidence is required. Residual for owner/coordinator: AC3 remains (cloud reset/device smoke/privacy questionnaire), AC12 remains for full signed-device account switch semantics; current code keeps old local data after account switch, so owner should decide whether to wipe or preserve old-account local rows before re-enabling sync. Web imports preserve opaque syncDeviceRows until progress is edited; edited web data drops origin rows as documented.
+
+Review r2 takeover 2026-10-11: read r2 in full. Per coordinator N6, unchecked AC1 and AC14 until N1 per-device own-contribution writes are fixed and verified. Will first add targeted regression tests that fail on current code, record that evidence, then fix.
 <!-- SECTION:NOTES:END -->
