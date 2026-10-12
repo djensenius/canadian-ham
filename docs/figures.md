@@ -72,10 +72,15 @@ The check verifies:
 - every `::figure` lesson reference resolves to `content/figures/<id>.svg`;
 - every figure reference has non-empty alt text;
 - each SVG filename is a stable id and the root `<svg id>` matches it;
-- SVGs avoid hard-coded hex colours and include `<title>`/`<desc>`; and
+- SVGs avoid hard-coded hex colours and include `<title>`/`<desc>`;
+- estimated text bounds stay inside the viewBox with a small edge margin;
+- estimated text bounds do not overlap each other and keep at least `0.25 × min(font-size)` clearance;
+- estimated text ink bounds do not intersect stroked `line`, `polyline`, `rect`, `circle`, `ellipse`, or sampled `path` outlines; and
 - generated Apple vector assets are in sync with `content/figures/`.
 
-`pnpm check:figures` is wired into GitHub CI. Use `pnpm check:figures:fix` to regenerate Apple assets, then rerun `pnpm check:figures` before committing.
+The text estimate intentionally errs wide because Apple CoreSVG can ignore SVG font-family and font-weight. It handles `text-anchor="start|middle|end"`, inherited `font-size`/`font-weight`, bold text, and simple `<tspan>` runs. Path stroke checks sample `M/L/H/V/C/Q/A/Z` commands, absolute or relative, including curves and arcs, and include half the stroke width as padding.
+
+`pnpm check:figures` is wired into GitHub CI. Use `pnpm check:figures:fix` to regenerate Apple assets, then rerun `pnpm check:figures` before committing. Use `node scripts/check-figures.mjs --self-test` when changing checker geometry rules.
 
 ## Originality note for task-38.1
 
