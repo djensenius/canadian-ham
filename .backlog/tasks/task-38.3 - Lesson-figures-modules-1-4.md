@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-12 15:09'
+updated_date: '2026-10-12 15:32'
 labels:
   - content
   - apple
@@ -61,10 +61,12 @@ Figure notes batch m3d: L-003-07 batteries-dc-supplies-ripple shows DC source, f
 Validation passed: qlmanage rendered all 23 SVGs to docs/evidence/task-38.3/ and previews were inspected for text clearance/legibility; no Apple xbuild app validation was run in this lane per instruction, so real Apple app screenshot validation remains deferred until task-38.1/main integration. Automated checks passed: pnpm check:figures:fix; pnpm check:figures; node scripts/check-figures.mjs --self-test; content coverage/quizzes/originality:all/explanations/links; web Vitest; DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --package-path packages/content-swift.
 
 Review follow-up: unchecking AC #2 because Apple app validation/light-dark screenshot audits are deferred until after task-38.1 merges; this round addresses review findings and reruns non-xbuild checks.
+
+Review follow-up fixed: redrew the requested technical figures (CW keying now controls PA, RX/TX audio arrows corrected, FM receiver includes discriminator, station grounds are bonded, triode grid is between cathode and plate), moved all 20 directives inline beside teaching sections, rewrote text equivalents to match drawn labels, added the task-38.3 originality note, removed 38.1 evidence from docs/evidence/task-38.3, regenerated Apple assets, rendered 20 task-38.3 qlmanage PNGs, and inspected each PNG for label collisions/clearance.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Added 20 original SVG lesson figures for modules 1-4 (excluding L-004-03), inserted lesson ::figure directives with alt text/text equivalents where dense, regenerated Apple figure assets, saved qlmanage render evidence under docs/evidence/task-38.3/, and verified with figure/content/web/Swift checks. Task remains In Progress because task-38.1 is still a dependency and Apple app validation is deferred.
+Review follow-up addressed for task-38.3: 20 module 1-4 figures redrawn/simplified for technical accuracy and legibility, directives moved inline, text equivalents synced to visible labels, Apple figure assets regenerated, task-38.3 originality note added, and evidence refreshed with only the 20 task-38.3 qlmanage PNGs. AC #2 remains unchecked because Apple app validation/light-dark screenshots are deferred until after task-38.1 merges.
 <!-- SECTION:FINAL_SUMMARY:END -->
