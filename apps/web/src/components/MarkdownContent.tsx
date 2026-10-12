@@ -6,6 +6,7 @@ interface MarkdownContentProps {
   readonly markdown: string;
   readonly title?: string;
   readonly interfaceLanguage?: InterfaceLanguage;
+  readonly tableLabel?: string;
 }
 
 type MarkdownBlock =
@@ -17,11 +18,18 @@ type MarkdownBlock =
   | { readonly type: "code"; readonly language: string | null; readonly code: string }
   | { readonly type: "illustration"; readonly alt: string; readonly description: string };
 
-export function MarkdownContent({ markdown, title, interfaceLanguage = "en" }: MarkdownContentProps) {
-  return <>{parseMarkdownBlocks(markdown, title).map((block, index) => renderBlock(block, index, interfaceLanguage))}</>;
+export function MarkdownContent({ markdown, title, interfaceLanguage = "en", tableLabel = t(interfaceLanguage, "markdownTableAria") }: MarkdownContentProps) {
+  let tableIndex = 0;
+  return <>{parseMarkdownBlocks(markdown, title).map((block, index) => {
+    if (block.type === "table") {
+      tableIndex += 1;
+      return renderBlock(block, index, interfaceLanguage, `${tableLabel} ${tableIndex}`);
+    }
+    return renderBlock(block, index, interfaceLanguage, tableLabel);
+  })}</>;
 }
 
-function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: InterfaceLanguage): ReactNode {
+function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: InterfaceLanguage, tableLabel: string): ReactNode {
   if (block.type === "heading") {
     const Tag = `h${Math.min(block.depth + 1, 6)}` as "h2" | "h3" | "h4" | "h5" | "h6";
     return <Tag key={index}>{block.text}</Tag>;
@@ -37,7 +45,7 @@ function renderBlock(block: MarkdownBlock, index: number, interfaceLanguage: Int
   }
   if (block.type === "table") {
     return (
-      <div className="markdown-table-wrapper" key={index} role="region" aria-label={`${t(interfaceLanguage, "markdownTableAria")} ${index + 1}`} tabIndex={0}>
+      <div className="markdown-table-wrapper" key={index} role="region" aria-label={tableLabel} tabIndex={0}>
         <table>
           <thead>
             <tr>{block.headers.map((header) => <th key={header} scope="col">{header}</th>)}</tr>

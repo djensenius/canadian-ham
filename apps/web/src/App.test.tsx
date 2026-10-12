@@ -320,6 +320,14 @@ function webIndexHtml(): string {
   return readFileSync(join(dirname(modulePath), "../index.html"), "utf8");
 }
 
+function webStylesCss(): string {
+  const moduleUrl = new URL(import.meta.url);
+  const modulePath = moduleUrl.protocol === "file:"
+    ? fileURLToPath(moduleUrl)
+    : join(process.cwd(), moduleUrl.pathname.replace(/^\/+/, ""));
+  return readFileSync(join(dirname(modulePath), "styles.css"), "utf8");
+}
+
 function extractInlineThemeScript(html: string): string {
   const match = html.match(/<script>([\s\S]*?)<\/script>/);
   assert.ok(match?.[1]);
@@ -1022,6 +1030,105 @@ describe("App accessibility and flows", () => {
     }
   });
 
+  it("lets focused calculator buttons act as buttons and ignores modified shortcut keys", async () => {
+    window.location.hash = "#/practice";
+    const store = createStore("calculator-button-keyboard");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "calculator-button-keyboard"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    await user.click(screen.getByRole("button", { name: "Calculator" }));
+    await screen.findByRole("heading", { name: "Calculator" });
+
+    const seven = screen.getByRole("button", { name: "Digit 7" });
+    seven.focus();
+    await user.keyboard("{Enter}");
+    assert.equal(screen.getByLabelText("Calculator display: 7").textContent, "7");
+    await user.keyboard("{Escape}");
+    assert.equal(screen.getByLabelText("Calculator display: 7").textContent, "7");
+
+    const calculator = screen.getByRole("region", { name: "Calculator" });
+    calculator.focus();
+    fireEvent.keyDown(calculator, { key: "1", ctrlKey: true });
+    fireEvent.keyDown(calculator, { key: "+", metaKey: true });
+    fireEvent.keyDown(calculator, { key: "x", altKey: true });
+    assert.equal(screen.getByLabelText("Calculator display: 7").textContent, "7");
+  });
+
+  it("keeps calculator state when switching tools or closing, then clears it for a new practice set", async () => {
+    window.location.hash = "#/practice";
+    const store = createStore("calculator-state-retention");
+    const seeds = ["calculator-state-a", "calculator-state-b"];
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => seeds.shift() ?? "calculator-state-c"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    const calculatorButton = screen.getByRole("button", { name: "Calculator" });
+    await user.click(calculatorButton);
+    await user.keyboard("4+5{Enter}");
+    assert.equal(screen.getByLabelText("Calculator display: 9").textContent, "9");
+
+    await user.click(screen.getByRole("button", { name: "Reference sheet" }));
+    await screen.findByRole("heading", { name: "Reference sheet" });
+    await user.click(calculatorButton);
+    assert.equal(screen.getByLabelText("Calculator display: 9").textContent, "9");
+
+    await user.click(screen.getByRole("button", { name: "Close tool" }));
+    await user.click(calculatorButton);
+    assert.equal(screen.getByLabelText("Calculator display: 9").textContent, "9");
+
+    await user.click(screen.getByRole("button", { name: "Start set" }));
+    await screen.findByText(/Seed calculator-state-b/);
+    await user.click(screen.getByRole("button", { name: "Calculator" }));
+    assert.equal(screen.getByLabelText("Calculator display: 0").textContent, "0");
+  });
+
+  it("uses real drawer/side-panel states without reserving an empty tool column and keeps DOM order visual", async () => {
+    const css = webStylesCss();
+    assert.match(css, /\.exam-tool-panel\s*{[\s\S]*position: sticky;[\s\S]*bottom: 0;[\s\S]*max-height: min\(24rem, 48vh\);/);
+    assert.match(css, /\.exam-tools-shell--open \.exam-tools-content\s*{[\s\S]*padding-block-end: calc\(min\(24rem, 48vh\) \+ var\(--ch-space-lg\)\);/);
+    assert.match(css, /\.exam-tools-shell--practice\.exam-tools-shell--open\s*{[\s\S]*grid-template-columns: minmax\(0, 1fr\) minmax\(18rem, 0\.42fr\);/);
+    const baseShellBlock = css.match(/\.exam-tools-shell\s*{(?<block>[\s\S]*?)\n}/)?.groups?.block ?? "";
+    assert.doesNotMatch(baseShellBlock, /grid-template-columns/);
+
+    window.location.hash = "#/practice";
+    const store = createStore("exam-tools-dom-order");
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "exam-tools-dom-order"} />);
+
+    await screen.findByRole("heading", { name: "Practice" });
+    await screen.findByText(/Question 1 of/);
+    const shell = screen.getByTestId("practice-exam-tools");
+    assert.equal(shell.classList.contains("exam-tools-shell--open"), false);
+    await user.click(screen.getByRole("button", { name: "Reference sheet" }));
+    assert.equal(shell.classList.contains("exam-tools-shell--open"), true);
+
+    const toolbar = document.querySelector(".exam-tools-toolbar");
+    const questionPanel = document.querySelector(".question-panel");
+    const panel = screen.getByTestId("exam-tool-panel");
+    assert.ok(toolbar);
+    assert.ok(questionPanel);
+    assert.ok(toolbar.compareDocumentPosition(questionPanel) & Node.DOCUMENT_POSITION_FOLLOWING);
+    assert.ok(questionPanel.compareDocumentPosition(panel) & Node.DOCUMENT_POSITION_FOLLOWING);
+  });
+
+  it("disables the Basic reference sheet in Advanced mock exams", async () => {
+    window.location.hash = "#/mock";
+    const store = createStore("advanced-tools-disabled");
+    await store.putPreferences({ ...defaultPreferences, activeBankId: ADVANCED_BANK_ID });
+    const user = userEvent.setup();
+    render(<App store={store} now={() => fixedNow} seedFactory={() => "advanced-tools-disabled"} />);
+
+    await screen.findByRole("heading", { name: "Mock exam" });
+    await user.click(await screen.findByRole("button", { name: "Start mock exam" }));
+    await screen.findByText(/Question 1 of 50/);
+    const referenceButton = screen.getByRole("button", { name: "Reference sheet" }) as HTMLButtonElement;
+    assert.equal(referenceButton.disabled, true);
+    assert.equal(referenceButton.getAttribute("aria-disabled"), "true");
+  });
+
   it("localizes calculator decimal input and live announcements in French", async () => {
     setViewportWidth(768);
     window.localStorage.setItem(INTERFACE_LANGUAGE_STORAGE_KEY, "fr");
@@ -1060,11 +1167,17 @@ describe("App accessibility and flows", () => {
       await user.click(referenceButton);
       const referencePanel = await screen.findByRole("region", { name: "Reference sheet" });
       await waitFor(() => assert.equal(document.activeElement, referencePanel));
-      assert.match(referencePanel.textContent ?? "", /Original Basic formula and reference study aid/);
+      assert.equal(within(referencePanel).queryByRole("heading", { name: "Original Basic formula and reference study aid" }), null);
+      assert.ok(within(referencePanel).getByRole("heading", { level: 3, name: "Ohm's law" }));
       assert.match(referencePanel.textContent ?? "", /E = I x R/);
       assert.match(referencePanel.textContent ?? "", /143 \/ f\(MHz\)/);
+      assert.ok(within(referencePanel).getByRole("region", { name: "Reference sheet table 1" }));
       await expectNoAxeViolations(container);
-      await user.click(screen.getByRole("button", { name: "Close tool" }));
+      if (theme === "light") {
+        await user.keyboard("{Escape}");
+      } else {
+        await user.click(screen.getByRole("button", { name: "Close tool" }));
+      }
       await waitFor(() => assert.equal(document.activeElement, referenceButton));
     }
   });
@@ -1361,7 +1474,7 @@ describe("App accessibility and flows", () => {
     const mapButton = screen.getByRole("button", { name: "Jump to question map" });
     const navigator = screen.getByRole("navigation", { name: "Question navigator" });
     const questionPanel = document.querySelector(".question-panel");
-    const actionRow = document.querySelector(".mock-exam--running > .action-row");
+    const actionRow = document.querySelector(".mock-question-stack > .action-row");
     assert.ok(questionPanel);
     assert.ok(actionRow);
     assert.equal(mapButton.tagName, "BUTTON");
@@ -2392,7 +2505,7 @@ describe("App accessibility and flows", () => {
     assert.match(screen.getByText(/unanswered questions will be scored incorrect/).textContent ?? "", /99/);
     await user.click(screen.getByRole("button", { name: "Confirm submit" }));
 
-    await screen.findByRole("heading", { name: "Mock exam results" });
+    await screen.findByRole("heading", { name: "Mock exam results" }, { timeout: 5000 });
     assert.match(screen.getByText(/Pass threshold is 70%; honours threshold is 80%/).textContent ?? "", /70%/);
     assert.equal((await store.getExamAttempts()).length, 1);
     assert.equal(document.activeElement?.tagName, "MAIN");

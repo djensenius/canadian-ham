@@ -502,25 +502,31 @@ li {
   gap: var(--ch-space-lg);
 }
 
-.exam-workspace {
+.exam-tools-shell {
   display: grid;
   grid-template-areas:
     "tools"
-    "content"
-    "panel";
+    "content";
   gap: var(--ch-space-lg);
   align-items: start;
 }
 
-.exam-workspace__content {
+.exam-tools-shell--open {
+  grid-template-areas:
+    "tools"
+    "content"
+    "panel";
+}
+
+.exam-tools-content {
   display: grid;
   grid-area: content;
   gap: var(--ch-space-lg);
   min-width: 0;
 }
 
-.exam-tools {
-  display: contents;
+.exam-tools-shell--open .exam-tools-content {
+  padding-block-end: calc(min(24rem, 48vh) + var(--ch-space-lg));
 }
 
 .exam-tools-toolbar {
@@ -536,10 +542,13 @@ li {
 }
 
 .exam-tool-panel {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
   grid-area: panel;
   display: grid;
   gap: var(--ch-space-lg);
-  max-height: min(34rem, 72vh);
+  max-height: min(24rem, 48vh);
   overflow: auto;
   padding: var(--ch-space-lg);
   border: 1px solid var(--ch-color-border);
@@ -602,7 +611,6 @@ li {
   padding-inline: var(--ch-space-sm);
 }
 
-.reference-sheet-tool > h2,
 .reference-sheet-tool > h3,
 .reference-sheet-tool > p,
 .reference-sheet-tool > ul,
@@ -854,20 +862,6 @@ input[type="checkbox"]:checked::after {
   justify-self: start;
 }
 
-.mock-exam--running {
-  grid-template-areas:
-    "title"
-    "summary"
-    "timer"
-    "maplink"
-    "tools"
-    "question"
-    "actions"
-    "panel"
-    "navigator"
-    "confirm";
-}
-
 .question-navigator {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(3.75rem, 1fr));
@@ -938,53 +932,51 @@ input[type="checkbox"]:checked::after {
     top: var(--ch-space-lg);
   }
 
-  .exam-workspace {
+  .exam-tools-shell {
+    grid-template-areas:
+      "tools"
+      "content";
+  }
+
+  .exam-tools-shell--practice.exam-tools-shell--open {
     grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.42fr);
     grid-template-areas:
       "tools tools"
       "content panel";
   }
 
+  .exam-tools-shell--mock.exam-tools-shell--open {
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.42fr);
+    grid-template-areas:
+      "tools tools"
+      "content panel";
+  }
+
+  .exam-tools-shell--open .exam-tools-content {
+    padding-block-end: 0;
+  }
+
   .exam-tool-panel {
-    position: sticky;
     top: var(--ch-space-lg);
+    bottom: auto;
     max-height: calc(100vh - (2 * var(--ch-space-lg)));
     border-radius: var(--ch-radius-lg);
   }
 
-  .mock-exam--running {
-    grid-template-columns: minmax(14rem, 0.35fr) minmax(0, 1fr);
-    grid-template-areas:
-      "title title"
-      "summary summary"
-      "timer timer"
-      "maplink maplink"
-      "tools tools"
-      "navigator question"
-      "navigator actions"
-      "navigator panel"
-      "navigator confirm";
+  .mock-exam-body {
+    display: grid;
+    grid-template-columns: minmax(12rem, 0.3fr) minmax(0, 1fr);
+    gap: var(--ch-space-xl);
     align-items: start;
   }
 
-  .mock-exam--running > h2 {
-    grid-area: title;
-  }
-
-  .mock-exam--running > .session-summary {
-    grid-area: summary;
-  }
-
-  .mock-exam--running > .timer-panel,
-  .mock-exam--running > .timer-off-note {
-    grid-area: timer;
+  .mock-question-stack {
+    display: grid;
+    gap: var(--ch-space-lg);
+    min-width: 0;
   }
 
   /* At wide widths the navigator is already visible; keep this as a keyboard skip using the visually-hidden-focusable pattern. */
-  .mock-exam--running > .question-map-link {
-    grid-area: maplink;
-  }
-
   .mock-exam--running > .question-map-link:not(:focus):not(:focus-visible) {
     position: absolute;
     width: 1px;
@@ -995,70 +987,13 @@ input[type="checkbox"]:checked::after {
     clip-path: inset(50%);
     white-space: nowrap;
   }
-
-  .mock-exam--running > .question-panel {
-    grid-area: question;
-  }
-
-  .mock-exam--running > .action-row {
-    grid-area: actions;
-  }
-
-  .mock-exam--running > .question-navigator {
-    grid-area: navigator;
-    align-self: start;
-  }
-
-  .mock-exam--running > .confirm-panel {
-    grid-area: confirm;
-  }
 }
 
-.mock-exam--running > h2 {
-  grid-area: title;
-}
-
-.mock-exam--running > .session-summary {
-  grid-area: summary;
-}
-
-.mock-exam--running > .timer-panel,
-.mock-exam--running > .timer-off-note {
-  grid-area: timer;
-}
-
-.mock-exam--running > .question-map-link {
-  grid-area: maplink;
-}
-
-.mock-exam--running > .question-panel {
-  grid-area: question;
-}
-
-.mock-exam--running > .action-row {
-  grid-area: actions;
-}
-
-.mock-exam--running > .question-navigator {
-  grid-area: navigator;
-}
-
-.mock-exam--running > .confirm-panel {
-  grid-area: confirm;
-}
-
-@media (min-width: 72rem) {
-  .mock-exam--running {
-    grid-template-columns: minmax(12rem, 0.28fr) minmax(0, 1fr) minmax(18rem, 0.42fr);
-    grid-template-areas:
-      "title title title"
-      "summary summary summary"
-      "timer timer timer"
-      "maplink tools tools"
-      "navigator question panel"
-      "navigator actions panel"
-      "navigator confirm panel";
-  }
+.mock-exam-body,
+.mock-question-stack {
+  display: grid;
+  gap: var(--ch-space-lg);
+  min-width: 0;
 }
 
 @media (max-width: 48rem) {
