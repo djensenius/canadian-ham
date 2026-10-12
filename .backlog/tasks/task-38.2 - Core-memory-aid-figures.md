@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-12 15:07'
+updated_date: '2026-10-12 15:13'
 labels:
   - content
   - apple
@@ -50,4 +50,6 @@ Review fix for 7134d35: redrew series-parallel-current-paths with the cell in th
 Review-fix validation passed: pnpm check:figures; node scripts/check-figures.mjs --self-test; node packages/content-tools/src/check-lesson-coverage.ts; pnpm --dir packages/content-tools check:quizzes; pnpm --dir packages/content-tools check:lesson-originality:all; pnpm --dir packages/content-tools check:explanations; pnpm check:links. qlmanage evidence updated for metric-prefix-ladder, series-parallel-current-paths, db-power-ratio-table, and wavelength-dipole-example under docs/evidence/task-38.2/.
 
 Follow-up metric-prefix fix: inserted a visible skipped-nano marker between µ and p in metric-prefix-ladder, kept the µ-to-p ×/÷ 1 000 000 note, updated L-005-01 alt text/text equivalent, regenerated Apple figure assets, rerendered and visually inspected docs/evidence/task-38.2/metric-prefix-ladder.svg.png. Validation passed: pnpm check:figures; node scripts/check-figures.mjs --self-test; lesson coverage; lesson originality all.
+
+Approved-notes polish: updated dB table decreases to approximately ÷2/÷4 and standardized × in the table/text equivalent; widened/reflowed metric-prefix boxes so milli has room and moved the larger-unit label closer to its arrow; nudged the series arrowhead off the wire; removed the undrawn final-adjustment phrase from the wavelength text equivalent and added an explained-below pointer for 143 / f. Regenerated Apple figure assets, rerendered and visually inspected changed PNGs. Validation passed: pnpm check:figures; node scripts/check-figures.mjs --self-test; coverage, quizzes, originality, explanations, and links content checks. Apple xbuild not run per lane.
 <!-- SECTION:NOTES:END -->
