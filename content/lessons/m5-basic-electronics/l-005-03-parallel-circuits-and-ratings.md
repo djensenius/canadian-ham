@@ -81,6 +81,13 @@ For equal-value resistors, there is a shortcut:
 
 Rt = R / number of equal branches
 
+::figure series-parallel-current-paths
+Alt text: Series circuit with one current path and parallel circuit with separate branch current arrows that join again.
+Text equivalent:
+- Series: current has one path through every part, and series resistances add.
+- Parallel: current splits into branch currents and rejoins; total current equals the sum of the branch currents.
+::
+
 ### Memory trick: product over sum
 
 - Helps remember: the shortcut for two resistors in parallel.

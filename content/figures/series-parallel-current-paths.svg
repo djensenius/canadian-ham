@@ -1,0 +1,46 @@
+<svg id="series-parallel-current-paths" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 690" role="img">
+  <title>Series and parallel current paths</title>
+  <desc>Two circuit sketches comparing a single series current path with separate parallel branch currents that join again.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="90" y1="150" x2="90" y2="250" stroke-width="8"/>
+    <line x1="120" y1="175" x2="120" y2="225" stroke-width="8"/>
+    <line x1="120" y1="175" x2="260" y2="175" stroke-width="7"/>
+    <polyline points="260 175 278 150 296 200 314 150 332 200 350 150 368 200 386 175" stroke-width="7"/>
+    <line x1="386" y1="175" x2="560" y2="175" stroke-width="7"/>
+    <polyline points="560 175 578 150 596 200 614 150 632 200 650 150 668 200 686 175" stroke-width="7"/>
+    <line x1="686" y1="175" x2="860" y2="175" stroke-width="7"/>
+    <line x1="860" y1="175" x2="860" y2="250" stroke-width="7"/>
+    <line x1="860" y1="250" x2="120" y2="250" stroke-width="7"/>
+    <line x1="120" y1="250" x2="120" y2="225" stroke-width="7"/>
+    <path d="M435 150 C500 137 571 137 635 150" stroke-width="8"/>
+
+    <line x1="90" y1="430" x2="90" y2="570" stroke-width="8"/>
+    <line x1="120" y1="465" x2="120" y2="535" stroke-width="8"/>
+    <line x1="120" y1="465" x2="850" y2="465" stroke-width="7"/>
+    <line x1="120" y1="535" x2="850" y2="535" stroke-width="7"/>
+    <line x1="850" y1="465" x2="850" y2="535" stroke-width="7"/>
+    <line x1="355" y1="465" x2="355" y2="485" stroke-width="7"/>
+    <polyline points="355 485 330 498 380 511 330 524 355 535" stroke-width="7"/>
+    <line x1="620" y1="465" x2="620" y2="485" stroke-width="7"/>
+    <polyline points="620 485 595 498 645 511 595 524 620 535" stroke-width="7"/>
+    <path d="M240 430 C279 413 326 413 365 430" stroke-width="8"/>
+    <path d="M505 430 C544 413 591 413 630 430" stroke-width="8"/>
+    <path d="M725 430 C763 414 805 414 840 430" stroke-width="8"/>
+  </g>
+  <g fill="currentColor">
+    <polygon points="635 150 610 137 614 165"/>
+    <polygon points="365 430 340 417 344 445"/>
+    <polygon points="630 430 605 417 609 445"/>
+    <polygon points="840 430 815 417 819 445"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="500" y="65" font-size="44" font-weight="700">Series: one current path</text>
+    <text x="535" y="120" font-size="38">same I through every part</text>
+    <text x="500" y="315" font-size="38">series resistance adds</text>
+    <text x="500" y="365" font-size="44" font-weight="700">Parallel: branch currents add</text>
+    <text x="280" y="590" font-size="38">I1</text>
+    <text x="545" y="590" font-size="38">I2</text>
+    <text x="765" y="590" font-size="38">I total</text>
+    <text x="500" y="650" font-size="38">I total = I1 + I2</text>
+  </g>
+</svg>

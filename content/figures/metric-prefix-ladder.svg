@@ -1,0 +1,36 @@
+<svg id="metric-prefix-ladder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 620" role="img">
+  <title>Metric prefix ladder</title>
+  <desc>A ladder of electronics metric prefixes from giga to pico, with conversion direction notes and a MHz to kHz example.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="15" y="205" width="150" height="160" stroke-width="6"/>
+    <rect x="165" y="205" width="150" height="160" stroke-width="6"/>
+    <rect x="315" y="205" width="150" height="160" stroke-width="6"/>
+    <rect x="465" y="205" width="150" height="160" stroke-width="6"/>
+    <rect x="615" y="205" width="150" height="160" stroke-width="6"/>
+    <rect x="765" y="205" width="150" height="160" stroke-width="6"/>
+    <rect x="915" y="205" width="150" height="160" stroke-width="6"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+    <text x="60" y="70" font-size="40">toward smaller: x 1 000</text>
+    <text x="60" y="118" font-size="40">toward larger: ÷ 1 000</text>
+    <text x="60" y="166" font-size="40">µ to p: x or ÷ 1 000 000</text>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="90" y="270" font-size="50" font-weight="700">G</text>
+    <text x="90" y="330" font-size="40">giga</text>
+    <text x="240" y="270" font-size="50" font-weight="700">M</text>
+    <text x="240" y="330" font-size="40">mega</text>
+    <text x="390" y="270" font-size="50" font-weight="700">k</text>
+    <text x="390" y="330" font-size="40">kilo</text>
+    <text x="540" y="270" font-size="50" font-weight="700">1</text>
+    <text x="540" y="330" font-size="40">base</text>
+    <text x="690" y="270" font-size="50" font-weight="700">m</text>
+    <text x="690" y="330" font-size="40">milli</text>
+    <text x="840" y="270" font-size="50" font-weight="700">µ</text>
+    <text x="840" y="330" font-size="40">micro</text>
+    <text x="990" y="270" font-size="50" font-weight="700">p</text>
+    <text x="990" y="330" font-size="40">pico</text>
+    <text x="540" y="448" font-size="42">example</text>
+    <text x="540" y="545" font-size="42">14.230 MHz → 14 230 kHz</text>
+  </g>
+</svg>
