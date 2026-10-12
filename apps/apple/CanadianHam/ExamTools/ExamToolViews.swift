@@ -4,6 +4,7 @@ import CanadianHamContent
 import SwiftUI
 
 struct ExamToolButtons: View {
+    var availableTools: [ExamTool] = ExamTool.allCases
     let openTool: (ExamTool) -> Void
 
     var body: some View {
@@ -21,22 +22,9 @@ struct ExamToolButtons: View {
 
     @ViewBuilder
     private var buttons: some View {
-        toolButton(.calculator)
-        toolButton(.referenceSheet)
-    }
-
-    @ViewBuilder
-    private func toolButton(_ tool: ExamTool) -> some View {
-        switch tool {
-        case .calculator:
+        ForEach(availableTools) { tool in
             Button { openTool(tool) } label: {
-                AccessibleSecondaryButtonLabel(title: "Calculator")
-            }
-            .buttonStyle(AccessibleSecondaryButtonStyle())
-            .accessibilityIdentifier("exam-tool-\(tool.rawValue)-button")
-        case .referenceSheet:
-            Button { openTool(tool) } label: {
-                AccessibleSecondaryButtonLabel(title: "Reference sheet")
+                AccessibleSecondaryButtonLabel(title: tool.buttonTitle)
             }
             .buttonStyle(AccessibleSecondaryButtonStyle())
             .accessibilityIdentifier("exam-tool-\(tool.rawValue)-button")
@@ -50,6 +38,7 @@ struct ExamToolPresentationModifier: ViewModifier {
     let referenceSheetConfiguration: ReferenceSheetConfiguration
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var selectedSheetDetent = PresentationDetent.medium
+    @State private var compactSheetHeight: CGFloat = 0
 
     private var isPresented: Binding<Bool> {
         Binding(
@@ -62,22 +51,33 @@ struct ExamToolPresentationModifier: ViewModifier {
 #if os(iOS)
         if horizontalUsesInspector {
             content.inspector(isPresented: isPresented) {
-                toolPanel(fillsAvailableHeight: true)
+                toolPanel
                     .inspectorColumnWidth(min: 320, ideal: 380, max: 460)
             }
         } else {
-            content.sheet(item: $selectedTool) { tool in
-                toolPanel(for: tool, fillsAvailableHeight: true)
-                    .presentationDetents([.medium, .large], selection: $selectedSheetDetent)
-                    .presentationBackgroundInteraction(.enabled(upThrough: .medium))
-                    .presentationDragIndicator(.visible)
-                    .onAppear { selectedSheetDetent = preferredSheetDetent(for: tool) }
-                    .onChange(of: dynamicTypeSize) { _, _ in selectedSheetDetent = preferredSheetDetent(for: tool) }
-            }
+            content
+                .safeAreaInset(edge: .bottom) {
+                    Color.clear.frame(height: selectedTool == nil ? 0 : compactSheetHeight)
+                }
+                .sheet(item: $selectedTool) { tool in
+                    toolPanel(for: tool)
+                        .background {
+                            GeometryReader { proxy in
+                                Color.clear
+                                    .onAppear { compactSheetHeight = proxy.size.height }
+                                    .onChange(of: proxy.size.height) { _, height in compactSheetHeight = height }
+                            }
+                        }
+                        .presentationDetents([.medium, .large], selection: $selectedSheetDetent)
+                        .presentationBackgroundInteraction(.enabled(upThrough: .medium))
+                        .presentationDragIndicator(.visible)
+                        .onAppear { selectedSheetDetent = preferredSheetDetent(for: tool) }
+                        .onChange(of: dynamicTypeSize) { _, _ in selectedSheetDetent = preferredSheetDetent(for: tool) }
+                }
         }
 #elseif os(macOS)
         content.inspector(isPresented: isPresented) {
-            toolPanel(fillsAvailableHeight: true)
+            toolPanel
                 .inspectorColumnWidth(min: 320, ideal: 380, max: 460)
         }
 #else
@@ -98,13 +98,11 @@ struct ExamToolPresentationModifier: ViewModifier {
 #endif
 
     @ViewBuilder
-    private func toolPanel(fillsAvailableHeight: Bool) -> some View {
-        Group {
-            if let selectedTool {
-                toolPanel(for: selectedTool, fillsAvailableHeight: fillsAvailableHeight)
-            } else {
-                EmptyView()
-            }
+    private var toolPanel: some View {
+        if let selectedTool {
+            toolPanel(for: selectedTool)
+        } else {
+            EmptyView()
         }
     }
 
@@ -120,8 +118,7 @@ struct ExamToolPresentationModifier: ViewModifier {
             Image(systemName: tool.systemImage)
                 .imageScale(.large)
             Text(toolTitle(for: tool)) // l10n: localized
-                .lineLimit(1)
-                .minimumScaleFactor(0.55)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .font(DesignTokens.FontScale.body.weight(.bold))
         .frame(minHeight: 44, alignment: .center)
@@ -129,7 +126,7 @@ struct ExamToolPresentationModifier: ViewModifier {
         .accessibilityLabel(Text(toolTitle(for: tool))) // l10n: localized
     }
 
-    private func toolPanel(for tool: ExamTool, fillsAvailableHeight: Bool) -> some View {
+    private func toolPanel(for tool: ExamTool) -> some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
             HStack(alignment: .center) {
                 toolHeader(for: tool)
@@ -162,7 +159,7 @@ struct ExamToolPresentationModifier: ViewModifier {
             }
         }
         .padding(DesignTokens.Spacing.lg)
-        .frame(maxWidth: .infinity, maxHeight: fillsAvailableHeight ? .infinity : nil, alignment: .topLeading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(DesignTokens.Colors.paper)
     }
 }
@@ -180,6 +177,7 @@ extension View {
 struct CalculatorToolView: View {
     @ObservedObject var viewModel: ExamCalculatorViewModel
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @FocusState private var hasKeyboardFocus: Bool
 
     private let rows: [[CalculatorKey]] = [
         [.allClear, .clearEntry, .backspace, .divide],
@@ -207,6 +205,12 @@ struct CalculatorToolView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .focusable(true)
+        .focused($hasKeyboardFocus)
+        .onAppear { hasKeyboardFocus = true }
+        .onKeyPress { press in
+            handleKeyPress(press)
+        }
     }
 
     private func calculatorContent(layout: CalculatorToolLayout) -> some View {
@@ -233,19 +237,18 @@ struct CalculatorToolView: View {
             .accessibilityIdentifier("calculator-key-grid")
 
             if layout.showsHelpText {
-                Text("No formulas, text, or history saved.")
+                Text("Keyboard: digits and operators, Return or = equals, Backspace deletes, Escape clears entry, Delete clears all. No formulas, text, or history saved.")
                     .font(DesignTokens.FontScale.caption)
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.85)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("calculator-keyboard-help")
             }
         }
     }
 
     private func calculatorButton(_ key: CalculatorKey, layout: CalculatorToolLayout) -> some View {
         Button {
-            let announcement = viewModel.press(key)
-            AccessibilityNotification.Announcement(announcement).post()
+            pressKey(key)
         } label: {
             Text(displayTitle(for: key)) // l10n: verbatim
                 .font(layout.keyFont)
@@ -259,7 +262,56 @@ struct CalculatorToolView: View {
         .buttonStyle(.plain)
         .accessibilityLabel(Text(accessibilityLabel(for: key))) // l10n: localized
         .accessibilityIdentifier("calculator-key-\(accessibilityIdentifierSuffix(for: key))")
-        .modifier(CalculatorKeyboardShortcut(key: key))
+    }
+
+    private func pressKey(_ key: CalculatorKey) {
+        let announcement = viewModel.press(key)
+        AccessibilityNotification.Announcement(announcement).post()
+    }
+
+    private func handleKeyPress(_ press: KeyPress) -> KeyPress.Result {
+        guard let key = calculatorKey(for: press) else { return .ignored }
+        pressKey(key)
+        return .handled
+    }
+
+    private func calculatorKey(for press: KeyPress) -> CalculatorKey? {
+        guard press.modifiers.subtracting(.shift).isEmpty else { return nil }
+        switch press.key {
+        case .return:
+            return .equals
+        case .delete:
+            return .backspace
+        case .escape:
+            return .clearEntry
+        default:
+            break
+        }
+        switch press.characters {
+        case "0": return .zero
+        case "1": return .one
+        case "2": return .two
+        case "3": return .three
+        case "4": return .four
+        case "5": return .five
+        case "6": return .six
+        case "7": return .seven
+        case "8": return .eight
+        case "9": return .nine
+        case ".", ",": return .decimalPoint
+        case "+": return .add
+        case "-", "−": return .subtract
+        case "*", "×", "x", "X": return .multiply
+        case "/", "÷": return .divide
+        case "=": return .equals
+        case "%": return .percent
+        case "r", "R", "√": return .squareRoot
+        case "s", "S": return .square
+        case "i", "I": return .reciprocal
+        case "n", "N": return .toggleSign
+        default:
+            return nil
+        }
     }
 
     private func buttonBackground(for key: CalculatorKey) -> Color {
@@ -347,7 +399,7 @@ private struct CalculatorToolLayout {
     var displayHeight: CGFloat { usesScrolling ? 72 : compactDisplayHeight }
     var displayHorizontalPadding: CGFloat { usesScrolling ? DesignTokens.Spacing.lg : DesignTokens.Spacing.md }
     var displayVerticalPadding: CGFloat { usesScrolling ? DesignTokens.Spacing.lg : compactDisplayVerticalPadding }
-    var keyHeight: CGFloat { usesScrolling ? 64 : max(44, compactKeyHeight) }
+    var keyHeight: CGFloat { usesScrolling ? 64 : min(64, max(44, compactKeyHeight)) }
     var displayFont: Font { (usesScrolling ? DesignTokens.FontScale.display : DesignTokens.FontScale.title).monospacedDigit().weight(.bold) }
     var keyFont: Font { (usesScrolling ? DesignTokens.FontScale.body : DesignTokens.FontScale.caption).weight(.semibold) }
     var showsHelpText: Bool { !usesScrolling && showsCompactHelpText }
@@ -375,39 +427,6 @@ private struct CalculatorToolLayout {
     private var rowCount: Int { 6 }
 }
 
-private struct CalculatorKeyboardShortcut: ViewModifier {
-    let key: CalculatorKey
-
-    func body(content: Content) -> some View {
-        switch key {
-        case .zero: content.keyboardShortcut("0", modifiers: [])
-        case .one: content.keyboardShortcut("1", modifiers: [])
-        case .two: content.keyboardShortcut("2", modifiers: [])
-        case .three: content.keyboardShortcut("3", modifiers: [])
-        case .four: content.keyboardShortcut("4", modifiers: [])
-        case .five: content.keyboardShortcut("5", modifiers: [])
-        case .six: content.keyboardShortcut("6", modifiers: [])
-        case .seven: content.keyboardShortcut("7", modifiers: [])
-        case .eight: content.keyboardShortcut("8", modifiers: [])
-        case .nine: content.keyboardShortcut("9", modifiers: [])
-        case .decimalPoint: content.keyboardShortcut(".", modifiers: [])
-        case .add: content.keyboardShortcut("+", modifiers: [])
-        case .subtract: content.keyboardShortcut("-", modifiers: [])
-        case .multiply: content.keyboardShortcut("*", modifiers: [])
-        case .divide: content.keyboardShortcut("/", modifiers: [])
-        case .equals: content.keyboardShortcut(.return, modifiers: [])
-        case .squareRoot: content.keyboardShortcut("r", modifiers: [])
-        case .square: content.keyboardShortcut("s", modifiers: [])
-        case .reciprocal: content.keyboardShortcut("i", modifiers: [])
-        case .toggleSign: content.keyboardShortcut("n", modifiers: [])
-        case .percent: content.keyboardShortcut("%", modifiers: [])
-        case .clearEntry: content.keyboardShortcut("c", modifiers: [])
-        case .allClear: content.keyboardShortcut("a", modifiers: [])
-        case .backspace: content.keyboardShortcut(.delete, modifiers: [])
-        }
-    }
-}
-
 struct ReferenceSheetToolView: View {
     let configuration: ReferenceSheetConfiguration
     @State private var document: ReferenceSheetDocument?
@@ -419,15 +438,11 @@ struct ReferenceSheetToolView: View {
                 VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                     zoomControls
                     ScrollView([.vertical, .horizontal]) {
-                        ExamToolMarkdownView(markdown: document.markdown, title: String(localized: "Basic reference sheet"))
-                            .scaleEffect(zoom, anchor: .topLeading)
+                        ExamToolMarkdownView(markdown: document.markdown, title: String(localized: "Basic reference sheet"), zoom: zoom)
                             .frame(maxWidth: .infinity, alignment: .topLeading)
                             .padding(.bottom, DesignTokens.Spacing.xl)
                     }
-                    .scrollIndicators(.hidden)
-                    .accessibilityElement(children: .ignore)
                     .accessibilityLabel(Text("Basic reference sheet")) // l10n: localized
-                    .accessibilityValue(Text(document.accessibilityText)) // l10n: content(en)
                     .accessibilityIdentifier("reference-sheet-scroll")
                 }
             } else {
@@ -491,8 +506,7 @@ private struct ReferenceZoomButtonLabel: View {
         Text(title) // l10n: localized
             .font(DesignTokens.FontScale.caption.weight(.semibold))
             .foregroundStyle(isEnabled ? DesignTokens.Colors.paper : DesignTokens.Colors.inkMuted)
-            .lineLimit(1)
-            .minimumScaleFactor(0.75)
+            .fixedSize(horizontal: false, vertical: true)
             .padding(.horizontal, DesignTokens.Spacing.md)
             .frame(minWidth: 96, minHeight: 44)
             .background(isEnabled ? DesignTokens.Colors.accentStrong : DesignTokens.Colors.paperInset, in: Capsule())
@@ -500,22 +514,14 @@ private struct ReferenceZoomButtonLabel: View {
     }
 }
 
-private extension ReferenceSheetDocument {
-    var accessibilityText: String {
-        markdown
-            .replacingOccurrences(of: "#", with: "")
-            .replacingOccurrences(of: "|", with: " ")
-            .replacingOccurrences(of: "-", with: " ")
-    }
-}
-
 private struct ExamToolMarkdownView: View {
     let markdown: String
     let title: String?
+    let zoom: Double
 
     var body: some View {
         let rendered = (try? LessonMarkdownRenderer.render(markdown)) ?? RenderedLessonMarkdown(blocks: [.paragraph(AttributedString(markdown))])
-        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
+        VStack(alignment: .leading, spacing: DesignTokens.Spacing.md * zoomScale) {
             ForEach(Array(rendered.blocks.enumerated()), id: \.offset) { _, block in
                 blockView(block)
             }
@@ -523,64 +529,76 @@ private struct ExamToolMarkdownView: View {
         .accessibilityElement(children: .contain)
     }
 
+    private var zoomScale: CGFloat { CGFloat(zoom) }
+
     @ViewBuilder
     private func blockView(_ block: LessonBlock) -> some View {
         switch block {
         case .heading(let level, let text):
             if !(level == 1 && title != nil && plainString(text) == title) {
                 Text(strippingLinks(from: text)) // l10n: content(en)
-                    .font(level <= 2 ? DesignTokens.FontScale.title.weight(.bold) : DesignTokens.FontScale.bodyLarge.weight(.bold))
+                    .font(referenceFont(level <= 2 ? 24 : 20, weight: .bold, design: level <= 2 ? .serif : .default))
                     .foregroundStyle(DesignTokens.Colors.ink)
+                    .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
             }
         case .paragraph(let text):
             Text(strippingLinks(from: text)) // l10n: content(en)
-                .font(DesignTokens.FontScale.body)
+                .font(referenceFont(17))
                 .foregroundStyle(DesignTokens.Colors.ink)
+                .fixedSize(horizontal: false, vertical: true)
         case .list(let ordered, let items):
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs * zoomScale) {
                 ForEach(Array(items.enumerated()), id: \.offset) { index, item in
-                    HStack(alignment: .top, spacing: DesignTokens.Spacing.sm) {
+                    HStack(alignment: .top, spacing: DesignTokens.Spacing.sm * zoomScale) {
                         Text(ordered ? "\(index + 1)." : "•") // l10n: verbatim
-                            .font(DesignTokens.FontScale.body.weight(.semibold))
+                            .font(referenceFont(17, weight: .semibold))
                             .foregroundStyle(DesignTokens.Colors.ink)
                         Text(strippingLinks(from: item)) // l10n: content(en)
-                            .font(DesignTokens.FontScale.body)
+                            .font(referenceFont(17))
                             .foregroundStyle(DesignTokens.Colors.ink)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
             }
         case .code(_, let text):
             ScrollView(.horizontal) {
                 Text(AttributedString(text)) // l10n: content(en)
-                    .font(.system(.body, design: .monospaced))
+                    .font(referenceFont(17, design: .monospaced))
                     .foregroundStyle(DesignTokens.Colors.ink)
-                    .padding(DesignTokens.Spacing.sm)
+                    .padding(DesignTokens.Spacing.sm * zoomScale)
+                    .fixedSize(horizontal: true, vertical: true)
             }
-            .scrollIndicators(.hidden)
             .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.sm, style: .continuous))
         case .table(let table):
-            ExamToolMarkdownTableView(table: table)
+            ExamToolMarkdownTableView(table: table, zoom: zoom)
         case .illustrationBrief(let brief):
-            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm * zoomScale) {
                 Text("Illustration brief")
-                    .font(DesignTokens.FontScale.body.weight(.bold))
+                    .font(referenceFont(17, weight: .bold))
                     .foregroundStyle(DesignTokens.Colors.ink)
                 Text(AttributedString(brief.description)) // l10n: content(en)
-                    .font(DesignTokens.FontScale.body)
+                    .font(referenceFont(17))
                     .foregroundStyle(DesignTokens.Colors.ink)
+                    .fixedSize(horizontal: false, vertical: true)
                 Text(AttributedString(brief.altText)) // l10n: content(en)
-                    .font(DesignTokens.FontScale.caption)
+                    .font(referenceFont(13))
                     .foregroundStyle(DesignTokens.Colors.inkMuted)
+                    .fixedSize(horizontal: false, vertical: true)
             }
-            .padding(DesignTokens.Spacing.md)
+            .padding(DesignTokens.Spacing.md * zoomScale)
             .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         case .blockquote(let text):
             Text(strippingLinks(from: text)) // l10n: content(en)
-                .font(DesignTokens.FontScale.body.italic())
+                .font(referenceFont(17).italic())
                 .foregroundStyle(DesignTokens.Colors.ink)
-                .padding(.leading, DesignTokens.Spacing.md)
+                .padding(.leading, DesignTokens.Spacing.md * zoomScale)
+                .fixedSize(horizontal: false, vertical: true)
         }
+    }
+
+    private func referenceFont(_ size: CGFloat, weight: Font.Weight = .regular, design: Font.Design = .default) -> Font {
+        .system(size: size * zoomScale, weight: weight, design: design)
     }
 
     private func strippingLinks(from value: AttributedString) -> AttributedString {
@@ -599,35 +617,59 @@ private struct ExamToolMarkdownView: View {
 
 private struct ExamToolMarkdownTableView: View {
     let table: MarkdownTable
+    let zoom: Double
 
     var body: some View {
         ScrollView(.horizontal) {
-            Grid(alignment: .leading, horizontalSpacing: DesignTokens.Spacing.md, verticalSpacing: DesignTokens.Spacing.sm) {
-                GridRow {
-                    ForEach(Array(table.headers.enumerated()), id: \.offset) { _, header in
-                        Text(header) // l10n: content(en)
-                            .font(DesignTokens.FontScale.body.weight(.bold))
-                            .foregroundColor(DesignTokens.Colors.ink)
-                            .fixedSize(horizontal: true, vertical: true)
-                    }
-                }
+            VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm * zoomScale) {
+                headerRow
                 ForEach(Array(table.rows.enumerated()), id: \.offset) { _, row in
-                    GridRow {
-                        ForEach(Array(row.enumerated()), id: \.offset) { _, cell in
-                            Text(cell) // l10n: content(en)
-                                .font(DesignTokens.FontScale.body)
-                                .foregroundColor(DesignTokens.Colors.ink)
-                                .fixedSize(horizontal: true, vertical: true)
-                        }
-                    }
+                    tableRow(row)
                 }
             }
-            .padding(DesignTokens.Spacing.md)
+            .padding(DesignTokens.Spacing.md * zoomScale)
         }
-        .scrollIndicators(.hidden)
         .background(DesignTokens.Colors.paperInset, in: RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: DesignTokens.Radius.md, style: .continuous).strokeBorder(DesignTokens.Colors.border, lineWidth: 1))
         .accessibilityElement(children: .contain)
         .accessibilityLabel(Text("Reference sheet table")) // l10n: localized
+    }
+
+    private var zoomScale: CGFloat { CGFloat(zoom) }
+    private var columnWidth: CGFloat { 180 * zoomScale }
+
+    private var headerRow: some View {
+        HStack(alignment: .top, spacing: DesignTokens.Spacing.md * zoomScale) {
+            ForEach(Array(table.headers.enumerated()), id: \.offset) { _, header in
+                Text(header) // l10n: content(en)
+                    .font(.system(size: 17 * zoomScale, weight: .bold))
+                    .foregroundColor(DesignTokens.Colors.ink)
+                    .frame(width: columnWidth, alignment: .leading)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+
+    private func tableRow(_ row: [AttributedString]) -> some View {
+        HStack(alignment: .top, spacing: DesignTokens.Spacing.md * zoomScale) {
+            ForEach(Array(row.enumerated()), id: \.offset) { _, cell in
+                Text(strippingLinks(from: cell)) // l10n: content(en)
+                    .font(.system(size: 17 * zoomScale))
+                    .foregroundColor(DesignTokens.Colors.ink)
+                    .frame(width: columnWidth, alignment: .leading)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(row.map { String($0.characters) }.joined(separator: ", "))) // l10n: content(en)
+    }
+
+    private func strippingLinks(from value: AttributedString) -> AttributedString {
+        var copy = value
+        let ranges = copy.runs.map(\.range)
+        for range in ranges {
+            copy[range].link = nil
+        }
+        return copy
     }
 }

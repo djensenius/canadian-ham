@@ -428,18 +428,9 @@ struct PracticeSessionView: View {
                         questionView(state.items[state.currentIndex])
                     }
                 }
-                .padding(.bottom, selectedExamTool == nil ? 0 : 440)
                 .pagePadding()
             }
             .background(DesignTokens.Colors.paper)
-            .onChange(of: selectedExamTool) { _, next in
-                guard next != nil else { return }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        proxy.scrollTo("practice-answers-anchor", anchor: .top)
-                    }
-                }
-            }
         }
         .navigationTitle(Text(scopeTitleAttributed)) // l10n: localized
         .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel)
@@ -539,7 +530,7 @@ struct PracticeSessionView: View {
         let question = item.question
         let selected = state.selectedByQuestionId[question.id]
         return VStack(alignment: .leading, spacing: DesignTokens.Spacing.lg) {
-            ExamToolButtons { selectedExamTool = $0 }
+            ExamToolButtons(availableTools: availableExamTools) { selectedExamTool = $0 }
             QuestionCard(question: question, language: language)
             VStack(alignment: .leading, spacing: DesignTokens.Spacing.md) {
                 Text("Answers")
@@ -582,6 +573,10 @@ struct PracticeSessionView: View {
                 .accessibilityHint(selected == nil ? Text("Choose an answer before continuing") : Text("Continues without feedback until review")) // l10n: localized
             }
         }
+    }
+
+    private var availableExamTools: [ExamTool] {
+        bank.courseBankID == .advanced ? [.calculator] : ExamTool.allCases
     }
 
     private var practiceReview: some View {
@@ -865,19 +860,10 @@ struct MockExamView: View {
                         MessagePanel(title: "Mock exam unavailable", message: errorMessage, kind: .warning)
                     }
                 }
-                .padding(.bottom, selectedExamTool == nil ? 0 : 440)
                 .pagePadding()
             }
             .id(state.result?.id ?? "mock-exam-active")
             .background(DesignTokens.Colors.paper)
-            .onChange(of: selectedExamTool) { _, next in
-                guard next != nil else { return }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        proxy.scrollTo("mock-answers-anchor", anchor: .top)
-                    }
-                }
-            }
         }
         .navigationTitle("Mock exam")
         .examToolPresentation(selectedTool: $selectedExamTool, calculator: calculatorViewModel)
@@ -951,7 +937,7 @@ struct MockExamView: View {
             }
             .paperCard()
 
-            ExamToolButtons { selectedExamTool = $0 }
+            ExamToolButtons(availableTools: availableExamTools) { selectedExamTool = $0 }
 
             QuestionCard(question: question, language: language)
                 .accessibilityAction(named: Text("Next unanswered")) {
@@ -1019,6 +1005,10 @@ struct MockExamView: View {
 #else
         false
 #endif
+    }
+
+    private var availableExamTools: [ExamTool] {
+        bank.courseBankID == .advanced ? [.calculator] : ExamTool.allCases
     }
 
     @ViewBuilder

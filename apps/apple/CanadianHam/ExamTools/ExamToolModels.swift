@@ -1,5 +1,6 @@
 import CanadianHamCalculatorEngine
 import Foundation
+import SwiftUI
 
 enum ExamTool: String, CaseIterable, Identifiable {
     case calculator
@@ -8,6 +9,13 @@ enum ExamTool: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 
     var title: LocalizedStringResource {
+        switch self {
+        case .calculator: "Calculator"
+        case .referenceSheet: "Reference sheet"
+        }
+    }
+
+    var buttonTitle: LocalizedStringKey {
         switch self {
         case .calculator: "Calculator"
         case .referenceSheet: "Reference sheet"
@@ -64,7 +72,20 @@ final class ExamCalculatorViewModel: ObservableObject {
 
     func updateLocale(_ locale: CalculatorLocale) {
         guard state.locale != locale else { return }
-        state = runCalculatorKeys([], locale: locale)
+        state = CalculatorState(
+            locale: locale,
+            display: state.display,
+            displayValue: state.displayValue,
+            error: state.error,
+            accumulator: state.accumulator,
+            pendingOperator: state.pendingOperator,
+            currentEntry: state.currentEntry,
+            entering: state.entering,
+            displayedValue: state.displayedValue,
+            awaitingOperand: state.awaitingOperand,
+            lastOperation: state.lastOperation,
+            justEvaluated: state.justEvaluated
+        )
     }
 }
 

@@ -7,7 +7,6 @@ dist/
 build/
 coverage/
 .pnpm-store/
-logs/
 
 # Xcode / Swift
 DerivedData/

@@ -33,6 +33,7 @@
 		2C8F5043E3CA9DA4C9220BCF /* QuestionBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0DAE8D8802C6DA325230F5 /* QuestionBankModels.swift */; };
 		2F050C4A4E0713BC8DA97210 /* subsection-titles.json in Resources */ = {isa = PBXBuildFile; fileRef = 0CE325C0851B44E13EA76E8A /* subsection-titles.json */; };
 		310B2A12D242A918D8BBC716 /* MorseTrainerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEEF26B42EFF8EC647A3971 /* MorseTrainerSettings.swift */; };
+		34730D4F3AD434676D64C065 /* reference-sheet in Resources */ = {isa = PBXBuildFile; fileRef = 4A74CF9820A6C3C99B05EEB0 /* reference-sheet */; };
 		3611785543C180B0E9D40510 /* ExamToolModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5581AFE7785D06E74DC2FC46 /* ExamToolModels.swift */; };
 		3BD841E056F7CDC54828C327 /* QuestionBankStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31814E0F7B2453CF868F44B9 /* QuestionBankStore.swift */; };
 		3C1B7F75096DB44648DDD167 /* explanations in Resources */ = {isa = PBXBuildFile; fileRef = CB336527869B374AEC035D2F /* explanations */; };
@@ -748,7 +749,6 @@
 				FE99BEB5CDFBA2F79EC4ED86 /* Frameworks */,
 				3DF185F25EDB7A03ED8C3208 /* Remove content authoring README files */,
 				F39EEE4D2D3C9993911AA3FC /* Copy Basic and Advanced generated content */,
-				EDDC2CDE94EC325300C64EE0 /* Copy optional Basic reference sheet */,
 			);
 			buildRules = (
 			);
@@ -958,6 +958,7 @@
 				3C1B7F75096DB44648DDD167 /* explanations in Resources */,
 				C35F4DB3660A226431C7A5B4 /* lessons in Resources */,
 				B0482ACB36AF22C5E174F05E /* quizzes in Resources */,
+				34730D4F3AD434676D64C065 /* reference-sheet in Resources */,
 				405BC94A2E3B2953E7FD1C5C /* subsection-titles.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1075,25 +1076,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -euo pipefail\nresource_destination=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}\"\nfor content_directory in lessons quizzes explanations; do\n  destination=\"${resource_destination}/${content_directory}\"\n  if [ -d \"${destination}\" ]; then\n    find \"${destination}\" -type f -iname README.md -delete\n  fi\ndone\n";
-		};
-		EDDC2CDE94EC325300C64EE0 /* Copy optional Basic reference sheet */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Copy optional Basic reference sheet";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "set -euo pipefail\nsource=\"${SRCROOT}/../../content/reference-sheet/basic.md\"\nif [ -f \"${source}\" ]; then\n  destination=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/reference-sheet\"\n  mkdir -p \"${destination}\"\n  cp \"${source}\" \"${destination}/basic.md\"\nfi\n";
 		};
 		F39EEE4D2D3C9993911AA3FC /* Copy Basic and Advanced generated content */ = {
 			isa = PBXShellScriptBuildPhase;
