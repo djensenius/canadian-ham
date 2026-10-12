@@ -1,11 +1,11 @@
 ---
 id: TASK-44.2
 title: Exam tools on web (calculator and reference sheet panels)
-status: Done
+status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-12 16:37'
+updated_date: '2026-10-12 16:56'
 labels:
   - web
 dependencies:
@@ -60,6 +60,8 @@ Review r442-2 fixes: mock exam desktop grid now gives the question stack the wid
 Third review fix pass started: remove calculator click focus-return, adjust calculator button-focus tests, make mid-width mock layout stack navigator under question while preserving wide desktop columns, use 100svh desktop panel height, and harden CSS rule-block test parsing.
 
 Review follow-up after 05ef341: removed pointer/AT click focus-return from calculator keys, kept focused keypad buttons native for Enter/Space while allowing physical digit/operator/Backspace/Delete input, added click/detail and focused-key typing regressions, stacked the mock question map under the question for open panels below 64rem, changed desktop panel height to 100svh, and hardened CSS rule-block parsing in tests. Validation: pnpm typecheck passed; TZ=UTC pnpm test passed (content-tools 108, morse-engine 21, calculator-engine 127, web 169); pnpm build:web passed with existing large-chunk warning; pnpm --filter @canadian-ham/web audit:urls passed.
+
+Copilot PR #207 fix pass started: remove focused-button Enter override, keep tool labels localized while sheet content is English, let Escape clear entry on calculator buttons, parameterize/test reference-sheet checker, then rerun validation and resolve PR review threads.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
