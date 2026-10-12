@@ -4,25 +4,25 @@
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
     <line x1="255" y1="95" x2="945" y2="95" stroke-width="8"/>
     <line x1="945" y1="185" x2="255" y2="185" stroke-width="8"/>
-    <rect x="15" y="245" width="150" height="160" stroke-width="6"/>
-    <rect x="165" y="245" width="150" height="160" stroke-width="6"/>
-    <rect x="315" y="245" width="150" height="160" stroke-width="6"/>
-    <rect x="465" y="245" width="150" height="160" stroke-width="6"/>
-    <rect x="615" y="245" width="150" height="160" stroke-width="6"/>
-    <rect x="765" y="245" width="165" height="160" stroke-width="6"/>
-    <line x1="930" y1="245" x2="955" y2="245" stroke-width="6"/>
-    <line x1="975" y1="245" x2="1000" y2="245" stroke-width="6"/>
-    <line x1="930" y1="245" x2="930" y2="275" stroke-width="6"/>
-    <line x1="930" y1="295" x2="930" y2="325" stroke-width="6"/>
-    <line x1="930" y1="345" x2="930" y2="375" stroke-width="6"/>
-    <line x1="930" y1="395" x2="930" y2="405" stroke-width="6"/>
-    <line x1="1020" y1="245" x2="1020" y2="275" stroke-width="6"/>
-    <line x1="1020" y1="295" x2="1020" y2="325" stroke-width="6"/>
-    <line x1="1020" y1="345" x2="1020" y2="375" stroke-width="6"/>
-    <line x1="1020" y1="395" x2="1020" y2="405" stroke-width="6"/>
-    <line x1="930" y1="405" x2="955" y2="405" stroke-width="6"/>
-    <line x1="975" y1="405" x2="1000" y2="405" stroke-width="6"/>
-    <rect x="1020" y="245" width="150" height="160" stroke-width="6"/>
+    <rect x="15" y="245" width="145" height="160" stroke-width="6"/>
+    <rect x="160" y="245" width="145" height="160" stroke-width="6"/>
+    <rect x="305" y="245" width="145" height="160" stroke-width="6"/>
+    <rect x="450" y="245" width="150" height="160" stroke-width="6"/>
+    <rect x="600" y="245" width="185" height="160" stroke-width="6"/>
+    <rect x="785" y="245" width="165" height="160" stroke-width="6"/>
+    <line x1="950" y1="245" x2="975" y2="245" stroke-width="6"/>
+    <line x1="995" y1="245" x2="1020" y2="245" stroke-width="6"/>
+    <line x1="950" y1="245" x2="950" y2="275" stroke-width="6"/>
+    <line x1="950" y1="295" x2="950" y2="325" stroke-width="6"/>
+    <line x1="950" y1="345" x2="950" y2="375" stroke-width="6"/>
+    <line x1="950" y1="395" x2="950" y2="405" stroke-width="6"/>
+    <line x1="1040" y1="245" x2="1040" y2="275" stroke-width="6"/>
+    <line x1="1040" y1="295" x2="1040" y2="325" stroke-width="6"/>
+    <line x1="1040" y1="345" x2="1040" y2="375" stroke-width="6"/>
+    <line x1="1040" y1="395" x2="1040" y2="405" stroke-width="6"/>
+    <line x1="950" y1="405" x2="975" y2="405" stroke-width="6"/>
+    <line x1="995" y1="405" x2="1020" y2="405" stroke-width="6"/>
+    <rect x="1040" y="245" width="145" height="160" stroke-width="6"/>
   </g>
   <g fill="currentColor">
     <polygon points="945 95 920 82 924 108"/>
@@ -30,23 +30,23 @@
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
     <text x="600" y="70" font-size="45">to a smaller unit → × 1 000</text>
-    <text x="600" y="150" font-size="45">to a larger unit ← ÷ 1 000</text>
-    <text x="90" y="310" font-size="56" font-weight="700">G</text>
-    <text x="90" y="370" font-size="45">giga</text>
-    <text x="240" y="310" font-size="56" font-weight="700">M</text>
-    <text x="240" y="370" font-size="45">mega</text>
-    <text x="390" y="310" font-size="56" font-weight="700">k</text>
-    <text x="390" y="370" font-size="45">kilo</text>
-    <text x="540" y="310" font-size="56" font-weight="700">1</text>
-    <text x="540" y="370" font-size="45">base</text>
-    <text x="690" y="310" font-size="56" font-weight="700">m</text>
-    <text x="690" y="370" font-size="45">milli</text>
-    <text x="848" y="310" font-size="56" font-weight="700">µ</text>
-    <text x="848" y="370" font-size="45">micro</text>
-    <text x="975" y="310" font-size="56" font-weight="700">n</text>
-    <text x="1095" y="310" font-size="56" font-weight="700">p</text>
-    <text x="1095" y="370" font-size="45">pico</text>
-    <text x="975" y="475" font-size="45">nano skipped</text>
+    <text x="600" y="164" font-size="45">to a larger unit ← ÷ 1 000</text>
+    <text x="88" y="310" font-size="56" font-weight="700">G</text>
+    <text x="88" y="370" font-size="45">giga</text>
+    <text x="233" y="310" font-size="56" font-weight="700">M</text>
+    <text x="233" y="370" font-size="45">mega</text>
+    <text x="378" y="310" font-size="56" font-weight="700">k</text>
+    <text x="378" y="370" font-size="45">kilo</text>
+    <text x="525" y="310" font-size="56" font-weight="700">1</text>
+    <text x="525" y="370" font-size="45">base</text>
+    <text x="693" y="310" font-size="56" font-weight="700">m</text>
+    <text x="693" y="370" font-size="45">milli</text>
+    <text x="868" y="310" font-size="56" font-weight="700">µ</text>
+    <text x="868" y="370" font-size="45">micro</text>
+    <text x="995" y="310" font-size="56" font-weight="700">n</text>
+    <text x="1113" y="310" font-size="56" font-weight="700">p</text>
+    <text x="1113" y="370" font-size="45">pico</text>
+    <text x="995" y="475" font-size="45">nano skipped</text>
     <text x="600" y="545" font-size="45">example</text>
     <text x="600" y="620" font-size="45">14.230 MHz → 14 230 kHz</text>
     <text x="600" y="690" font-size="45">µ to p: × or ÷ 1 000 000</text>

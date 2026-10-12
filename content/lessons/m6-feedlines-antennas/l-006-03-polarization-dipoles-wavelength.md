@@ -71,8 +71,10 @@ Text equivalent:
 - Use λ(m) = 300 / f(MHz) for a free-space wavelength estimate.
 - At 14.2 MHz, λ is about 21.1 m.
 - A free-space half-wave is about 10.6 m total, with the feed point at the centre gap between the two sides.
-- A practical wire-dipole first cut uses about 143 / f(MHz), or about 10.1 m at 14.2 MHz, before final adjustment after installation.
+- A practical wire-dipole first cut uses about 143 / f(MHz), or about 10.1 m at 14.2 MHz.
 ::
+
+The practical 143 / f first-cut estimate shown in the figure is explained below after the free-space wavelength examples.
 
 The symbol often used for wavelength is lambda, written here as λ. Frequency and wavelength move in opposite directions. Higher frequency means shorter wavelength. Lower frequency means longer wavelength.
 

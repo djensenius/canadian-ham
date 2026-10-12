@@ -31,7 +31,7 @@
     <line x1="570" y1="505" x2="570" y2="585" stroke-width="8"/>
   </g>
   <g fill="currentColor">
-    <polygon points="540 135 516 123 520 151"/>
+    <polygon points="540 129 516 117 520 145"/>
     <polygon points="330 480 305 467 309 495"/>
     <polygon points="330 585 316 560 344 560"/>
     <polygon points="570 585 556 560 584 560"/>
