@@ -69,13 +69,13 @@ A receiver bandwidth that is too narrow can remove part of the information you w
 
 Sensitivity describes how small an RF input signal can be while still producing a specified signal-to-noise result. It is a weak-signal measurement for the receiver input.
 
-Selectivity describes how well the receiver separates the desired signal from nearby signals. IF filters usually provide most of this ability. For CW, a narrow audio band-pass filter about 100 Hz wide, centred on your tone, works well; with an 800 Hz tone, that is roughly 750 Hz to 850 Hz.
+Selectivity describes how well the receiver separates the desired signal from nearby signals. IF filters usually provide most of this ability. For CW, a narrow audio band-pass filter about 100 Hz wide, centred on your tone, works well. With an 800 Hz tone, 100 Hz total width means about 50 Hz below and 50 Hz above the tone, so the passband is roughly 750 Hz to 850 Hz.
 
 Dynamic range describes how well the receiver handles strong and weak signals at the same time. A receiver with poor dynamic range may overload, block, or make unwanted mixing products.
 
 Automatic gain control, or AGC, reduces audio volume swings when signal strength changes. It does not replace filtering, and it does not make the receiver infinitely sensitive.
 
-A waterfall display, or spectrogram, shows signals across the tuned spectrum as time scrolls. Brightness or colour shows relative strength.
+A waterfall display, or spectrogram, shows signals across the tuned spectrum as time scrolls. Brightness or colour shows amplitude, or relative signal strength.
 
 ### In the real world: filter choice on a busy display
 
@@ -84,7 +84,7 @@ A receiver has 300 Hz, 600 Hz, 2.7 kHz, and 8 kHz filters. The waterfall shows a
 - Given: wanted mode = CW; nearby spacing = 500 Hz; available filters = 300 Hz, 600 Hz, 2.7 kHz, 8 kHz.
 - Find: the best first filter choice for rejecting the nearby signal.
 - Rule of thumb: choose the narrowest filter that still passes the wanted signal comfortably.
-- Compare: 300 Hz gives stronger rejection; 600 Hz may tune more comfortably but has wider skirts.
+- Compare: 300 Hz gives stronger rejection; 600 Hz may tune more comfortably but has wider skirts. Filter skirts are the sloped edges where rejection increases outside the passband.
 - Answer: try the 300 Hz filter first.
 - Sanity check: the nearby signal may still leak through real filter skirts, but the narrower filter is the better first test.
 
