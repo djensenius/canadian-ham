@@ -1500,7 +1500,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let inlineWheel = app.descendants(matching: .any)["lesson-figure-ohms-law-power-wheel"].firstMatch
         scrollUntilExists(inlineWheel, in: app, maxSwipes: 80)
         XCTAssertTrue(inlineWheel.exists, "Expected inline Ohm's law wheel image button at largest text size")
-        positionElementInMiddleVisibleBand(inlineWheel, in: app, context: "largest text inline Ohm's law wheel", maxAdjustments: 20)
+        positionLessonFigureFullyVisibleWithProtectedAreaClear(inlineWheel, in: app, context: "largest text inline Ohm's law wheel")
         assertFitsWindowWidth(inlineWheel, in: app, context: "largest text inline Ohm's law wheel")
         attachScreenshot(named: "task38-1-ios-ax5-ohms-law-power-wheel-inline", from: app)
 
@@ -2006,7 +2006,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
             let figureImageButton = app.descendants(matching: .any)["lesson-figure-\(figureID)"].firstMatch
             scrollUntilExists(figureImageButton, in: app, maxSwipes: 80)
             XCTAssertTrue(figureImageButton.exists, "Expected \(figureID) figure")
-            positionElementInMiddleVisibleBand(figureImageButton, in: app, context: "\(appearance.rawValue) \(figureID) inline figure", maxAdjustments: 20)
+            positionLessonFigureFullyVisibleWithProtectedAreaClear(figureImageButton, in: app, context: "\(appearance.rawValue) \(figureID) inline figure")
             XCTAssertTrue(figureImageButton.label.localizedCaseInsensitiveContains(figureAltText[figureID]!), "Expected figure accessibility label for \(figureID); got \(figureImageButton.label)")
             attachScreenshot(named: "task38-1-ios-\(appearance.rawValue)-\(figureID)", from: app)
             try performAudit(on: app, context: "\(appearance.rawValue) \(figureID) inline figure")
@@ -2553,6 +2553,50 @@ final class CanadianHamPracticeUITests: XCTestCase {
         )
     }
 
+    private func positionLessonFigureFullyVisibleWithProtectedAreaClear(
+        _ element: XCUIElement,
+        in app: XCUIApplication,
+        context: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let scrollView = scrollView(containing: element, in: app)
+        guard scrollView.waitForExistence(timeout: 1) else {
+            XCTFail("\(context): expected a scroll view before positioning lesson figure", file: file, line: line)
+            return
+        }
+        var trace: [String] = []
+        func record(_ label: String) {
+            trace.append("\(label): target=\(frameDescription(element.frame))")
+        }
+        func accepted() -> Bool {
+            isLessonFigureFullyVisibleForAudit(element, in: app) && !hasScrollableElementsIntersectingProtectedArea(in: app, scrollView: scrollView)
+        }
+
+        record("start")
+        if accepted() { return }
+        for step in 1...60 where !accepted() {
+            preciseScroll(scrollView, contentDeltaY: -10)
+            waitBriefly(0.05)
+            record("scan up \(step)")
+        }
+        for step in 1...120 where !accepted() {
+            preciseScroll(scrollView, contentDeltaY: 10)
+            waitBriefly(0.05)
+            record("scan down \(step)")
+        }
+        guard accepted() else {
+            attachScreenshot(named: "task38-1-positioning-failure-\(context)", from: app)
+            let nearest = elementsNearestProtectedBar(in: app, scrollView: scrollView).joined(separator: " | ")
+            XCTFail(
+                "\(context): expected figure fully visible below the protected navigation/status area with no scrollable text or buttons intersecting that protected area. Frame: \(frameDescription(element.frame)); nearest-to-bar-at-failure: \(nearest); trace: \(trace.joined(separator: " -> "))",
+                file: file,
+                line: line
+            )
+            return
+        }
+    }
+
     private func preciseScroll(_ scrollView: XCUIElement, contentDeltaY: CGFloat) {
         let limitedMagnitude = min(80, max(8, abs(contentDeltaY)))
         let fingerDeltaY = contentDeltaY > 0 ? limitedMagnitude : -limitedMagnitude
@@ -2812,6 +2856,21 @@ final class CanadianHamPracticeUITests: XCTestCase {
             file: file,
             line: line
         )
+    }
+
+    private func isLessonFigureFullyVisibleForAudit(_ element: XCUIElement, in app: XCUIApplication) -> Bool {
+        guard element.exists else { return false }
+        let frame = element.frame
+        let windowFrame = app.windows.firstMatch.frame
+        let protectedMaxY = protectedNavigationFrame(in: app).maxY
+        let topMargin = protectedMaxY + 8
+        let bottomMargin = windowFrame.maxY - 8
+        let availableHeight = max(0, bottomMargin - topMargin)
+        let horizontallyVisible = frame.minX >= windowFrame.minX && frame.maxX <= windowFrame.maxX
+        if frame.height > availableHeight {
+            return horizontallyVisible && frame.minY >= topMargin && frame.minY <= bottomMargin
+        }
+        return horizontallyVisible && frame.minY >= topMargin && frame.maxY <= bottomMargin
     }
 
     private func middleBandBottomLimit(in app: XCUIApplication) -> CGFloat {
