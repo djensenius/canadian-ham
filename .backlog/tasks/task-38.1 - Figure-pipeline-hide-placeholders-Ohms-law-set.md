@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-10 20:55'
-updated_date: '2026-10-12 00:08'
+updated_date: '2026-10-12 00:19'
 labels:
   - content
   - apple
@@ -92,6 +92,8 @@ Resume validation: merged origin/main on 2026-10-11 (merge commit ac7c72e0) and 
 Validation retry note: the first post-merge nohup validation was stopped after the dark figure UI test spent over an hour in the positioning helper's per-adjustment protected-area scans before reaching an assertion. Commit 75b00f2d keeps the final protected-area assertion and full default accessibility audits intact, but makes positioning responsive by tracing only the target frame during adjustment; rerunning the same targeted chain next.
 
 Validation retry fix: the responsive helper exposed the real protected-area failure before the first inline figure audit (top lesson bullets intersecting the nav/status protected area). Commit d057d280 restores the original pass condition (target in middle band and no protected-area offenders) using an early-exit offender probe, while keeping detailed final assertions and default audits unchanged.
+
+Supervisor decision applied: for lesson figures keep the protected-area offender assertion but stop requiring Morse-style centering. Commit c7c2304e positions inline figures by a momentum-free 10 pt scan, accepting the first offset where the figure is fully visible in the visible area (or top-visible if too tall) and no scrollable text/buttons straddle the nav/status protected area; full default audits remain unchanged.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
