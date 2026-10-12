@@ -2929,8 +2929,9 @@ final class CanadianHamPracticeUITests: XCTestCase {
         let range = NSRange(location: 0, length: nsLine.length)
         guard let match = regex.firstMatch(in: line, range: range), match.numberOfRanges == 7 else { return nil }
         func cgFloat(at index: Int) -> CGFloat? {
-            guard match.range(at: index).location != NSNotFound else { return nil }
-            return Double(nsLine.substring(with: match.range(at: index))).map(CGFloat.init)
+            guard match.range(at: index).location != NSNotFound,
+                  let value = Double(nsLine.substring(with: match.range(at: index))) else { return nil }
+            return CGFloat(value)
         }
         guard
             let x = cgFloat(at: 2),
