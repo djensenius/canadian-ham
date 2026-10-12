@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:38'
-updated_date: '2026-10-12 14:43'
+updated_date: '2026-10-12 14:45'
 labels:
   - content
   - web
@@ -43,4 +43,6 @@ Owner request 2026-10-12. Add accurate exam-day guidance citing ISED RIC-1 secti
 Verified RIC-1 §7.2/§7.2.1 and the ISED downloads page on 2026-10-12; added closed-book, reference-sheet, calculator, virtual-exam, and scrap-paper caution facts to docs/exam-facts.md.
 
 Added learner-facing Exam day material rules to L-001-01 in the reference-style format, including the ISED downloads page URL for the unlabelled Basic reference sheet and virtual-exam setup notes.
+
+Added an Exam day card to Learn on web and Apple linking to L-001-01, with web French strings and Apple Localizable.xcstrings translations added via a Python JSON round-trip.
 <!-- SECTION:NOTES:END -->
