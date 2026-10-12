@@ -183,6 +183,15 @@ Safety choices affect station performance too. Good bonding can reduce hum and R
 - Treating handheld and indoor antennas as harmless because they are convenient.
 - Treating an SWR match as an RF exposure assessment.
 
+::figure grounding-lightning-rf-safety
+Alt text: A station safety layout shows locked power control, single-point bonding, outside surge protection, and RF separation from people.
+Text equivalent:
+- Inside equipment, including transceiver, supply, and tuner, bonds to one ground bar.
+- Locked power control and unplugged microphone icons show access control.
+- At the wall, coax enters through outside surge protection bonded to the building grounding system, with a storm-disconnect reminder.
+- People are outside the marked RF keep-clear area around the antenna.
+::
+
 ## Illustration brief
 
 Alt text: A station safety layout shows locked power control, single-point bonding, outside surge protection, and RF separation from people.

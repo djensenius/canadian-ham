@@ -1,0 +1,41 @@
+<svg id="batteries-dc-supplies-ripple" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
+  <title>Station DC power and ripple</title>
+  <desc>A DC source feeds a fuse near the source, heavy leads to a transceiver, with regulation, ripple, series, and parallel battery insets.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="50" y="120" width="96" height="74" rx="12" ry="12" stroke-width="6"/>
+    <line x1="64" y1="108" x2="64" y2="120" stroke-width="5"/>
+    <line x1="92" y1="100" x2="92" y2="120" stroke-width="5"/>
+    <rect x="190" y="134" width="54" height="46" rx="8" ry="8" stroke-width="6"/>
+    <line x1="146" y1="146" x2="190" y2="146" stroke-width="7"/>
+    <line x1="146" y1="172" x2="190" y2="172" stroke-width="7"/>
+    <line x1="244" y1="146" x2="476" y2="146" stroke-width="8"/>
+    <line x1="244" y1="172" x2="476" y2="172" stroke-width="8"/>
+    <rect x="476" y="108" width="116" height="100" rx="18" ry="18" stroke-width="7"/>
+    <rect x="56" y="270" width="220" height="74" rx="16" ry="16" stroke-width="5"/>
+    <line x1="84" y1="306" x2="246" y2="306" stroke-width="5"/>
+    <rect x="330" y="270" width="220" height="74" rx="16" ry="16" stroke-width="5"/>
+    <path d="M356 306 C380 282 404 282 428 306 C452 330 476 330 520 306" stroke-width="5"/>
+    <rect x="96" y="390" width="36" height="42" rx="6" ry="6" stroke-width="4"/>
+    <rect x="152" y="390" width="36" height="42" rx="6" ry="6" stroke-width="4"/>
+    <line x1="132" y1="412" x2="152" y2="412" stroke-width="4"/>
+    <rect x="390" y="390" width="36" height="42" rx="6" ry="6" stroke-width="4"/>
+    <rect x="446" y="390" width="36" height="42" rx="6" ry="6" stroke-width="4"/>
+    <line x1="408" y1="390" x2="408" y2="370" stroke-width="4"/>
+    <line x1="464" y1="390" x2="464" y2="370" stroke-width="4"/>
+    <line x1="408" y1="370" x2="464" y2="370" stroke-width="4"/>
+    <line x1="408" y1="432" x2="408" y2="452" stroke-width="4"/>
+    <line x1="464" y1="432" x2="464" y2="452" stroke-width="4"/>
+    <line x1="408" y1="452" x2="464" y2="452" stroke-width="4"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="98" y="88" font-size="24">DC source</text>
+    <text x="217" y="120" font-size="24">fuse</text>
+    <text x="360" y="130" font-size="24">heavy leads</text>
+    <text x="534" y="94" font-size="24">transceiver</text>
+    <text x="166" y="252" font-size="24">good regulation</text>
+    <text x="440" y="252" font-size="24">ripple</text>
+    <text x="540" y="462" font-size="24">hum/chirp</text>
+    <text x="142" y="462" font-size="24">series</text>
+    <text x="560" y="462" font-size="24">parallel</text>
+  </g>
+</svg>

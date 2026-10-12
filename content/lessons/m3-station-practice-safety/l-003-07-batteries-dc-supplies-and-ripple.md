@@ -187,6 +187,14 @@ Power problems often look like radio problems. Chirp, hum, resets on transmit, a
 - Placing the only fuse at the radio end of a long battery lead.
 - Treating the radio's RF output power as a fuse-size calculation.
 
+::figure batteries-dc-supplies-ripple
+Alt text: A battery, fuse, heavy DC leads, regulated supply, and ripple waveform show how station power reaches a transceiver.
+Text equivalent:
+- Battery or DC supply feeds a fuse close to the source, then heavy positive and negative leads to the transceiver.
+- Smooth line represents good regulation; wavy line represents ripple that can cause hum or chirp.
+- Battery mini-icons show series connection and parallel connection.
+::
+
 ## Illustration brief
 
 Alt text: A battery, fuse, heavy DC leads, regulated supply, and ripple waveform show how station power reaches a transceiver.
