@@ -44,7 +44,7 @@
       "choices": [
         { "text": { "en": "A bypass capacitor chosen to shunt RF to ground.", "fr": null }, "isCorrect": false },
         { "text": { "en": "An inductor used as an RF choke.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "A coupling capacitor sized for the audio path.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "A small capacitor placed in the audio path.", "fr": null }, "isCorrect": false },
         { "text": { "en": "A resistor chosen for a DC voltage drop.", "fr": null }, "isCorrect": false }
       ],
       "explanation": { "en": "Inductive reactance increases with frequency, so a choke can impede RF.", "fr": null }
