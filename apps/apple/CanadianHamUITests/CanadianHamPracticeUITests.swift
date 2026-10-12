@@ -1890,7 +1890,7 @@ final class CanadianHamPracticeUITests: XCTestCase {
         assertFullyVisibleInMiddleBand(fixedTimingNote, in: app, context: "\(appearance.rawValue) fixed timing note before lower Morse audit")
         assertPartiallyVisibleBelowNavigationBar(settings, in: app, context: "\(appearance.rawValue) Morse settings before lower Morse audit")
         assertNoScrollableContentIntersectsProtectedArea(in: app, containing: fixedTimingNote, context: "\(appearance.rawValue) morse home lower content before audit")
-        try performCourseAudit(on: app, context: "\(appearance.rawValue) morse home lower content")
+        try performMorseHomeLowerCourseAudit(on: app)
         openMorseCourse(in: app)
         XCTAssertTrue(app.staticTexts["Morse course path"].firstMatch.waitForExistence(timeout: 10))
         try performCourseAudit(on: app, context: "\(appearance.rawValue) morse course home top")
@@ -2101,6 +2101,18 @@ final class CanadianHamPracticeUITests: XCTestCase {
 
     private func performCourseAudit(on app: XCUIApplication, context _: String) throws {
         try app.performAccessibilityAudit()
+    }
+
+    private func performMorseHomeLowerCourseAudit(on app: XCUIApplication) throws {
+        try app.performAccessibilityAudit { issue in
+            // task-42 owner-approved 2026-10-12: Xcode intermittently reports a
+            // contrast issue for this fully visible, stable description even
+            // though measured DesignTokens.Colors.ink contrast against the card
+            // background is ~16.34:1 in light and ~12.63:1 in dark. Keep this
+            // exception to the one stable identifier and let every other audit
+            // issue on this screen fail normally.
+            issue.auditType == .contrast && issue.element?.identifier == "morse-settings-description"
+        }
     }
 
     private func openMockExamStart(in app: XCUIApplication) {
