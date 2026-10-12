@@ -1,11 +1,11 @@
 ---
 id: TASK-44.2
 title: Exam tools on web (calculator and reference sheet panels)
-status: In Progress
+status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:39'
-updated_date: '2026-10-12 16:35'
+updated_date: '2026-10-12 16:37'
 labels:
   - web
 dependencies:
@@ -58,10 +58,12 @@ Second review fix pass for r442-2 started: fix mock column ordering/width, calcu
 Review r442-2 fixes: mock exam desktop grid now gives the question stack the wide first column and the navigator the right narrow column; calculator button focus skips only Enter/Space/Escape while allowing digits/operators/Backspace/Delete and pointer-clicked buttons return focus to the calculator for continued typing; narrow drawer uses 48svh cap with scroll-padding-block-end instead of redundant content padding; calculator output has aria-live=off; reference sheet heading stripping derives from the sheet source; calculator reset keys use session instance ids so same-seed restarts reset. Validation: pnpm typecheck passed; TZ=UTC pnpm test passed (content-tools 108, morse-engine 21, calculator-engine 127, web 169); pnpm build:web passed with existing large-chunk warning; pnpm --filter @canadian-ham/web audit:urls passed.
 
 Third review fix pass started: remove calculator click focus-return, adjust calculator button-focus tests, make mid-width mock layout stack navigator under question while preserving wide desktop columns, use 100svh desktop panel height, and harden CSS rule-block test parsing.
+
+Review follow-up after 05ef341: removed pointer/AT click focus-return from calculator keys, kept focused keypad buttons native for Enter/Space while allowing physical digit/operator/Backspace/Delete input, added click/detail and focused-key typing regressions, stacked the mock question map under the question for open panels below 64rem, changed desktop panel height to 100svh, and hardened CSS rule-block parsing in tests. Validation: pnpm typecheck passed; TZ=UTC pnpm test passed (content-tools 108, morse-engine 21, calculator-engine 127, web 169); pnpm build:web passed with existing large-chunk warning; pnpm --filter @canadian-ham/web audit:urls passed.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Addressed r442-2 review changes for web exam tools: fixed mock question column width/order, calculator keyboard continuation after clicking a key, drawer scroll-padding and svh sizing, output live semantics, same-seed session reset, stricter CSS/DOM tests, and low-item cleanup. Verified with typecheck, full tests, web build, and dist URL/CSP audit.
+Addressed the final 05ef341 re-review blocker and notes: removed calculator key focus-return, preserved native focused button behavior while retaining keyboard input, adjusted mid-width mock layout, updated drawer/panel sizing, and strengthened tests. Verified with typecheck, full tests, web build, and dist URL/CSP audit.
 <!-- SECTION:FINAL_SUMMARY:END -->
