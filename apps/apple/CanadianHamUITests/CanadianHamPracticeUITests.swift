@@ -2109,12 +2109,40 @@ final class CanadianHamPracticeUITests: XCTestCase {
         return app
     }
 
-    private func performAudit(on app: XCUIApplication, context _: String) throws {
-        try app.performAccessibilityAudit()
+    private func performAudit(on app: XCUIApplication, context: String) throws {
+        do {
+            try app.performAccessibilityAudit()
+        } catch {
+            attachLessonAuditGeometryDiagnostic(in: app, context: context)
+            throw error
+        }
     }
 
     private func performCourseAudit(on app: XCUIApplication, context _: String) throws {
         try app.performAccessibilityAudit()
+    }
+
+    private func attachLessonAuditGeometryDiagnostic(in app: XCUIApplication, context: String) {
+        let scrollView = app.scrollViews.firstMatch
+        let navFrame = protectedNavigationFrame(in: app)
+        let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
+        let textLines = scrollView.debugDescription.split(separator: "\n").compactMap { line -> String? in
+            guard let parsed = parsedDebugLine(String(line)), parsed.kind == "StaticText" else { return nil }
+            let relation: String
+            if parsed.frame.maxY < visibleFrame.minY {
+                relation = "above visible"
+            } else if parsed.frame.minY > visibleFrame.maxY {
+                relation = "below visible"
+            } else {
+                relation = "intersects visible"
+            }
+            return "\(parsed.kind) \(parsed.detail) frame=\(frameDescription(parsed.frame)) relation=\(relation) navDeltaMin=\(parsed.frame.minY - navFrame.maxY) navDeltaMax=\(parsed.frame.maxY - navFrame.maxY)"
+        }
+        let message = "context=\(context) navFrame=\(frameDescription(navFrame)) visibleFrame=\(frameDescription(visibleFrame)) scrollViewFrame=\(frameDescription(scrollView.frame))\n" + textLines.joined(separator: "\n")
+        let attachment = XCTAttachment(string: message)
+        attachment.name = "task38-1-diagnostic-audit-geometry-\(context)"
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     private func openMockExamStart(in app: XCUIApplication) {
@@ -2570,22 +2598,14 @@ final class CanadianHamPracticeUITests: XCTestCase {
             trace.append("\(label): target=\(frameDescription(element.frame))")
         }
         record("start")
-        for attempt in 0..<20 where !isLessonFigureFullyVisibleForAudit(element, in: app) {
-            let figureFrame = element.frame
-            let visibleFrame = visibleFrameExcludingNavigationBar(in: app)
-            if figureFrame.minY < visibleFrame.minY + 8 {
-                preciseScroll(scrollView, contentDeltaY: min(80, visibleFrame.minY + 8 - figureFrame.minY))
-                record("figure below opaque bar \(attempt + 1)")
-            } else if figureFrame.height <= visibleFrame.height, figureFrame.maxY > visibleFrame.maxY {
-                preciseScroll(scrollView, contentDeltaY: -min(80, figureFrame.maxY - visibleFrame.maxY + 8))
-                record("figure above bottom edge \(attempt + 1)")
-            } else if figureFrame.height > visibleFrame.height, figureFrame.minY > visibleFrame.minY + 8 {
-                preciseScroll(scrollView, contentDeltaY: -min(80, figureFrame.minY - visibleFrame.minY - 8))
-                record("oversized figure top into view \(attempt + 1)")
-            } else {
-                preciseScroll(scrollView, contentDeltaY: -12)
-                record("settle \(attempt + 1)")
+        for attempt in 0..<28 {
+            let desiredTop = protectedNavigationFrame(in: app).maxY + 80
+            let delta = desiredTop - element.frame.minY
+            if abs(delta) <= 8, staticTextElementsNearOpaqueNavigationBarLowerEdge(in: app, scrollView: scrollView, distance: 60).isEmpty {
+                break
             }
+            preciseScroll(scrollView, contentDeltaY: min(80, max(-80, delta)))
+            record("diagnostic top-visible scan \(attempt + 1)")
             waitBriefly()
         }
 
@@ -2772,10 +2792,11 @@ final class CanadianHamPracticeUITests: XCTestCase {
         line: UInt = #line
     ) {
         let straddlers = lessonScrollableContentStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView)
+        let nearTopTexts = staticTextElementsNearOpaqueNavigationBarLowerEdge(in: app, scrollView: scrollView, distance: 60)
         let traceDescription = trace.isEmpty ? "" : "; trace: \(trace.joined(separator: " -> "))"
         XCTAssertTrue(
-            straddlers.isEmpty,
-            "\(context): expected no lesson scrollable text or buttons to straddle the opaque navigation/status bar lower edge; straddlers: \(straddlers.map(\.description).joined(separator: "; "))\(traceDescription)",
+            straddlers.isEmpty && nearTopTexts.isEmpty,
+            "\(context): diagnostic expected no lesson scrollable text to straddle or sit within 60 pt below the opaque navigation/status bar lower edge; straddlers: \(straddlers.map(\.description).joined(separator: "; ")); nearTopTexts: \(nearTopTexts.map(\.description).joined(separator: "; "))\(traceDescription)",
             file: file,
             line: line
         )
@@ -2854,6 +2875,13 @@ final class CanadianHamPracticeUITests: XCTestCase {
             .compactMap { opaqueNavigationBarStraddler(fromDebugLine: String($0), protectedMaxY: protectedMaxY) }
     }
 
+    private func staticTextElementsNearOpaqueNavigationBarLowerEdge(in app: XCUIApplication, scrollView: XCUIElement, distance: CGFloat) -> [ProtectedAreaOffender] {
+        let protectedMaxY = protectedNavigationFrame(in: app).maxY
+        return scrollView.debugDescription
+            .split(separator: "\n")
+            .compactMap { staticTextNearOpaqueNavigationBar(fromDebugLine: String($0), protectedMaxY: protectedMaxY, distance: distance) }
+    }
+
     private func firstLessonScrollableElementStraddlingOpaqueNavigationBar(in app: XCUIApplication, scrollView: XCUIElement) -> ProtectedAreaOffender? {
         lessonScrollableContentStraddlingOpaqueNavigationBar(in: app, scrollView: scrollView).first
     }
@@ -2906,6 +2934,26 @@ final class CanadianHamPracticeUITests: XCTestCase {
     }
 
     private func opaqueNavigationBarStraddler(fromDebugLine line: String, protectedMaxY: CGFloat) -> ProtectedAreaOffender? {
+        guard let parsed = parsedDebugLine(line), parsed.frame.width > 0, parsed.frame.height > 0, parsed.frame.minY < protectedMaxY, parsed.frame.maxY > protectedMaxY else { return nil }
+        return ProtectedAreaOffender(
+            description: "\(parsed.kind) \(parsed.detail) frame=\(frameDescription(parsed.frame)) lowerEdgeY=\(protectedMaxY)",
+            frame: parsed.frame,
+            isClippedAboveWindow: false
+        )
+    }
+
+    private func staticTextNearOpaqueNavigationBar(fromDebugLine line: String, protectedMaxY: CGFloat, distance: CGFloat) -> ProtectedAreaOffender? {
+        guard let parsed = parsedDebugLine(line), parsed.kind == "StaticText", parsed.frame.width > 0, parsed.frame.height > 0 else { return nil }
+        let lowerBound = protectedMaxY + distance
+        guard parsed.frame.maxY > protectedMaxY, parsed.frame.minY < lowerBound else { return nil }
+        return ProtectedAreaOffender(
+            description: "\(parsed.kind) \(parsed.detail) frame=\(frameDescription(parsed.frame)) navLowerEdgeY=\(protectedMaxY) distance=\(distance)",
+            frame: parsed.frame,
+            isClippedAboveWindow: false
+        )
+    }
+
+    private func parsedDebugLine(_ line: String) -> (kind: String, frame: CGRect, detail: String)? {
         let pattern = #"^\s*(StaticText|Button),.*\{\{(-?[0-9.]+),\s*(-?[0-9.]+)\},\s*\{([0-9.]+),\s*([0-9.]+)\}\}(.*)$"#
         guard let regex = try? NSRegularExpression(pattern: pattern) else { return nil }
         let nsLine = line as NSString
@@ -2922,14 +2970,10 @@ final class CanadianHamPracticeUITests: XCTestCase {
             let width = cgFloat(at: 4),
             let height = cgFloat(at: 5)
         else { return nil }
-        let frame = CGRect(x: x, y: y, width: width, height: height)
-        guard frame.width > 0, frame.height > 0, frame.minY < protectedMaxY, frame.maxY > protectedMaxY else { return nil }
-        let elementDescription = nsLine.substring(with: match.range(at: 1))
-        let detail = nsLine.substring(with: match.range(at: 6)).trimmingCharacters(in: .whitespacesAndNewlines)
-        return ProtectedAreaOffender(
-            description: "\(elementDescription) \(detail) frame=\(frameDescription(frame)) lowerEdgeY=\(protectedMaxY)",
-            frame: frame,
-            isClippedAboveWindow: false
+        return (
+            kind: nsLine.substring(with: match.range(at: 1)),
+            frame: CGRect(x: x, y: y, width: width, height: height),
+            detail: nsLine.substring(with: match.range(at: 6)).trimmingCharacters(in: .whitespacesAndNewlines)
         )
     }
 
