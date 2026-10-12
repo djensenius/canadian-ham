@@ -81,12 +81,13 @@ The check verifies:
 - every figure reference has non-empty alt text and no duplicate figure id on the same page;
 - each SVG filename is a stable id and the root `<svg id>` matches it;
 - SVGs include `<title>`/`<desc>`, avoid hard-coded colours, use only allowed elements/attributes, and have no script/style/event-handler/external-reference surface;
-- estimated text bounds stay inside the viewBox with a small edge margin;
-- estimated text bounds do not overlap each other; side-by-side or offset labels keep at least `0.25 × min(font-size)` clearance, while aligned vertical stacks may use `0.08 × min(font-size)`;
-- estimated text ink bounds do not intersect stroked `line`, `polyline`, `rect`, `circle`, `ellipse`, or sampled `path` outlines; and
+- estimated text bounds stay inside the viewBox with about `0.25 × font-size` edge clearance;
+- estimated text bounds do not overlap each other; side-by-side or offset labels keep at least `0.25 × min(font-size)` clearance, while same-anchor vertical stacks may use `0.08 × min(font-size)`;
+- estimated text ink bounds do not intersect stroked `line`, `polyline`, `polygon`, `rect`, `circle`, `ellipse`, or sampled `path` outlines;
+- estimated text ink bounds do not intersect filled `polygon` or `circle` shapes used for arrowheads and dots; and
 - generated Apple vector assets and generated Apple figure metadata are in sync with `content/figures/`.
 
-The text estimate intentionally errs wide because Apple CoreSVG can ignore SVG font-family and font-weight. It handles `text-anchor="start|middle|end"`, inherited `font-size`/`font-weight`, bold text, and simple `<tspan>` runs. Path stroke checks sample `M/L/H/V/C/Q/A/Z` commands, absolute or relative, including curves and arcs, and include half the stroke width as padding.
+The text estimate intentionally errs wide for both the web's requested monospace font and Apple's CoreSVG fallback: character widths use the larger of the proportional estimate and `0.6 × character count × font-size`. It handles `text-anchor="start|middle|end"`, inherited `font-size`/`font-weight`, bold text, and simple `<tspan>` runs. Path stroke checks sample `M/L/H/V/C/Q/S/T/A/Z` commands, absolute or relative, including curves and arcs, and include half the stroke width as padding. The checker intentionally fails unsupported SVG features rather than guessing: transforms, CSS `style` or `class`, `<use>`, `<symbol>`, nested `<svg>`, `<textPath>`, `<foreignObject>`, baseline/letter-spacing/text-length text attributes, per-glyph coordinate lists, non-unitless font sizes, and unknown path commands are not allowed. Content in `<defs>`, `<marker>`, `<clipPath>`, `<mask>`, and `<pattern>` is skipped.
 
 Run the checker self-test when changing the checker itself:
 

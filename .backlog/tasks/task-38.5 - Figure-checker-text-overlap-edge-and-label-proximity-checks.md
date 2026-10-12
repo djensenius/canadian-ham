@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@worker'
 created_date: '2026-10-12 15:42'
-updated_date: '2026-10-12 15:53'
+updated_date: '2026-10-12 16:06'
 labels:
   - content
 dependencies: []
@@ -41,6 +41,8 @@ Implemented conservative text geometry and stroke intersection checks in scripts
 Validation passed: node scripts/check-figures.mjs --self-test (11 fixtures); pnpm check:figures (3 SVG sources, 3 lesson references, Apple assets in sync); pnpm build:web; pnpm --filter @canadian-ham/web test passed on rerun after one unrelated loading timeout; pnpm --filter @canadian-ham/content-tools test; pnpm check:links; pnpm check:schemas; pnpm import:check. No figure SVGs changed, so no Apple xbuild run.
 
 Follow-up refinement: relaxed text proximity to 0.08 × smaller font only for aligned vertical stacks; offset stacks/side neighbours stay at 0.25 × size and true overlaps still fail. Validation: self-test now has 13 fixtures; current branch pnpm check:figures passes 3 figures; running this script from task-38.2 passes 8 figures. qlmanage thumbnails for task-38.2 resistor-colour-code and metric-prefix-ladder showed no real overlap. Read-only task-38.3 still fails overlap cases in batteries-dc-supplies-ripple, control-terminals, distress-urgency-safety-board, grounding-lightning-rf-safety, records-maps-locators, and yagi-receiver-specs. Read-only task-38.4 still fails daytime-absorption-frequency-window, filter-response-sketches, loop-antenna-patterns, and transformer-resonance-meters.
+
+Review a1805a9 follow-up: fixed items 1-8 by adding a monospace width floor, loud failures for unsupported SVG/text/path features, per-line tspan measurement, S/T and relative path parsing self-tests, restored 0.25× font-size edge clearance, shape pass fixtures, and filled polygon/circle checks. Validation: node --check scripts/check-figures.mjs; node scripts/check-figures.mjs --self-test (33 fixtures); pnpm check:figures on this branch/38.1 (3 SVGs); read-only task-38.2 script run passed 8 SVGs after qlmanage review of newly flagged approved figures showed false positives; read-only task-38.3 still fails amplifiers-diodes, batteries-dc-supplies-ripple, control-terminals, controls-digital-voice-packet; read-only task-38.4 still fails daytime-absorption-frequency-window, interference-troubleshooting-map, loop-antenna-patterns, propagation-paths-skip-zone, transformer-resonance-meters, vhf-unusual-propagation-modes.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
