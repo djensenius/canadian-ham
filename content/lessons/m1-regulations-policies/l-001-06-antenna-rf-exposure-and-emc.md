@@ -109,6 +109,14 @@ These rules connect directly to station design. A tidy antenna installation is e
 - Safety Code 6 limits are expressed as fields, currents, and specific absorption rate; transmitter power is an exposure factor.
 - EMCAB-2 cause decisions use field strength at the affected premises relative to ISED immunity criteria, plus the relevant equipment category.
 
+::figure antenna-rf-emc-checklists
+Alt text: A station owner reviewing antenna, RF exposure, and interference checklists before transmitting.
+Text equivalent:
+- Antenna consultation panel: house, mast, neighbour, and consultation-path folder.
+- RF exposure panel: person outside a keep-clear area; factors are power, antenna gain, distance, and frequency.
+- EMC panel: transmitter, field-strength meter at neighbouring premises, home entertainment gear, and an affected control device.
+::
+
 ## Illustration brief
 
 Alt text: A station owner reviewing antenna, RF exposure, and interference checklists before transmitting.

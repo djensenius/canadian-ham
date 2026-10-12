@@ -1,0 +1,29 @@
+<svg id="international-location-checklist" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img">
+  <title>International operation and location checklist</title>
+  <desc>A travel operating desk and world-region map connect operating location to United States and CEPT visit reminders.</desc>
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="34" y="62" width="190" height="110" rx="18" ry="18" stroke-width="6"/>
+    <line x1="74" y1="110" x2="184" y2="110" stroke-width="5"/>
+    <circle cx="420" cy="154" r="102" stroke-width="7"/>
+    <rect x="330" y="308" width="116" height="76" rx="16" ry="16" stroke-width="5"/>
+    <rect x="486" y="308" width="116" height="76" rx="16" ry="16" stroke-width="5"/>
+    <line x1="222" y1="286" x2="330" y2="346" stroke-width="5"/>
+    <polygon points="330,346 307,344 319,325" fill="currentColor" stroke="none"/>
+    <line x1="222" y1="286" x2="486" y2="346" stroke-width="5"/>
+    <polygon points="486,346 464,350 474,329" fill="currentColor" stroke="none"/>
+  </g>
+  <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
+    <text x="129" y="40" font-size="24" font-weight="700">travel desk</text>
+    <text x="96" y="146" font-size="24">radio</text>
+    <text x="174" y="146" font-size="24">pass</text>
+    <text x="142" y="236" font-size="24">message</text>
+    <text x="142" y="282" font-size="24">location</text>
+    <text x="142" y="336" font-size="24">ID format</text>
+    <text x="420" y="40" font-size="24" font-weight="700">ITU map</text>
+    <text x="354" y="168" font-size="24">R1</text>
+    <text x="420" y="188" font-size="24">R2</text>
+    <text x="486" y="168" font-size="24">R3</text>
+    <text x="390" y="362" font-size="24">US</text>
+    <text x="544" y="354" font-size="24">CEPT</text>
+  </g>
+</svg>

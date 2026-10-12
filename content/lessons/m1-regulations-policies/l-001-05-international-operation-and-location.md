@@ -100,6 +100,14 @@ A clean signal, a good antenna, and a friendly contact still need matching messa
 - ITU regions serve as map references within a larger destination-permission check.
 - Travel arrangements pair Canadian qualification rows with location-specific voice-identification orders.
 
+::figure international-location-checklist
+Alt text: A travel-operating checklist beside a simplified world map divided into three ITU regions.
+Text equivalent:
+- Checklist items: message purpose, operating location, and identification format.
+- ITU map labels: Region 1, Region 2, and Region 3; Canada is in Region 2.
+- Operating-location checks point to separate United States visit and CEPT participating-country visit reminders.
+::
+
 ## Illustration brief
 
 Alt text: A travel-operating checklist beside a simplified world map divided into three ITU regions.
