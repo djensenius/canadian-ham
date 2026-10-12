@@ -4,26 +4,24 @@
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
     <path d="M150 172 C150 248 150 334 150 414" stroke-width="7"/>
     <path d="M192 172 C192 248 192 334 192 414" stroke-width="7"/>
-    <path d="M86 176 C86 196 86 198 86 210" stroke-width="7"/>
-    <path d="M86 210 C52 224 52 254 86 268" stroke-width="8"/>
-    <path d="M86 268 C120 282 120 312 86 326" stroke-width="8"/>
-    <path d="M86 326 C52 340 52 370 86 384" stroke-width="8"/>
-    <path d="M86 384 C86 398 86 404 86 418" stroke-width="7"/>
-    <path d="M256 176 C256 196 256 198 256 210" stroke-width="7"/>
-    <path d="M256 210 C290 224 290 254 256 268" stroke-width="8"/>
-    <path d="M256 268 C222 282 222 312 256 326" stroke-width="8"/>
-    <path d="M256 326 C290 340 290 370 256 384" stroke-width="8"/>
-    <path d="M256 384 C256 398 256 404 256 418" stroke-width="7"/>
-    <path d="M126 464 C148 482 172 482 194 464" stroke-width="6"/>
-    <path d="M198 464 C220 482 244 482 266 464" stroke-width="6"/>
+    <path d="M108 176 C108 188 108 194 108 202" stroke-width="7"/>
+    <path d="M108 202 C72 214 72 244 108 256" stroke-width="8"/>
+    <path d="M108 256 C72 268 72 298 108 310" stroke-width="8"/>
+    <path d="M108 310 C72 322 72 352 108 364" stroke-width="8"/>
+    <path d="M108 364 C72 376 72 406 108 418" stroke-width="8"/>
+    <path d="M234 176 C234 188 234 194 234 202" stroke-width="7"/>
+    <path d="M234 202 C270 214 270 244 234 256" stroke-width="8"/>
+    <path d="M234 256 C270 268 270 298 234 310" stroke-width="8"/>
+    <path d="M234 310 C270 322 270 352 234 364" stroke-width="8"/>
+    <path d="M234 364 C270 376 270 406 234 418" stroke-width="8"/>
 
     <path d="M374 210 C424 210 514 210 568 210" stroke-width="7"/>
     <path d="M374 410 C424 410 514 410 568 410" stroke-width="7"/>
-    <path d="M420 210 C420 228 420 238 420 250" stroke-width="7"/>
-    <path d="M420 250 C390 262 390 288 420 300" stroke-width="8"/>
-    <path d="M420 300 C450 312 450 338 420 350" stroke-width="8"/>
-    <path d="M420 350 C390 362 390 388 420 400" stroke-width="8"/>
-    <path d="M420 400 C420 404 420 406 420 410" stroke-width="7"/>
+    <path d="M420 210 C420 226 420 236 420 248" stroke-width="7"/>
+    <path d="M420 248 C386 260 386 286 420 298" stroke-width="8"/>
+    <path d="M420 298 C386 310 386 336 420 348" stroke-width="8"/>
+    <path d="M420 348 C386 360 386 386 420 398" stroke-width="8"/>
+    <path d="M420 398 C420 404 420 406 420 410" stroke-width="7"/>
     <path d="M532 210 C532 236 532 248 532 268" stroke-width="7"/>
     <path d="M498 268 C520 268 544 268 566 268" stroke-width="8"/>
     <path d="M498 348 C520 348 544 348 566 348" stroke-width="8"/>
@@ -50,7 +48,7 @@
     <text x="250" y="144" font-size="36">S</text>
 
     <text x="473" y="58" font-size="40" font-weight="700">LC tank</text>
-    <text x="384" y="330" font-size="36">L</text>
+    <text x="356" y="330" font-size="36">L</text>
     <text x="566" y="330" font-size="36">C</text>
 
     <text x="794" y="58" font-size="40" font-weight="700">meters</text>

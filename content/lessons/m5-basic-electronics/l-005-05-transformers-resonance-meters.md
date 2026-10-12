@@ -145,7 +145,7 @@ A meter should disturb the circuit as little as practical.
 ::figure transformer-resonance-meters
 Alt text: Multi-panel figure showing transformer windings on a core, a parallel LC tuned circuit, and ammeter and voltmeter placement around a load.
 Text equivalent:
-- Transformer panel: separate P and S windings sit on a shared two-bar core, with small flux marks below the windings.
+- Transformer panel: separate P and S coil windings sit on a shared two-bar core.
 - Parallel LC panel: an inductor branch and capacitor branch connect between the same top and bottom rails.
 - Meter panel: a battery source is in the left branch, an A meter is in series on the top wire, the zigzag load is in the right branch, and a V meter is wired across the load.
 ::

@@ -20,9 +20,9 @@
     <path d="M410 488 L380 460" stroke-width="8"/>
     <path d="M410 488 L368 498" stroke-width="8"/>
 
-    <path d="M520 418 C642 418 770 418 916 418" stroke-width="8"/>
-    <path d="M916 418 L880 398" stroke-width="8"/>
-    <path d="M916 418 L880 438" stroke-width="8"/>
+    <path d="M520 418 C650 418 806 418 944 418" stroke-width="8"/>
+    <path d="M944 418 L908 398" stroke-width="8"/>
+    <path d="M944 418 L908 438" stroke-width="8"/>
     <path d="M600 378 C600 402 600 434 600 462" stroke-width="6"/>
     <path d="M838 378 C838 402 838 434 838 462" stroke-width="6"/>
     <path d="M890 378 C890 402 890 434 890 462" stroke-width="6"/>
