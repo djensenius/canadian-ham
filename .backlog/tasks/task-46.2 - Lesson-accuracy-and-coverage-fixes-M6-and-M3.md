@@ -22,9 +22,9 @@ Apply the High findings (and Medium ones that are a sentence or two) from docs/l
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Every High finding in docs/lesson-review/m6-m3.md is fixed (or declined with a recorded reason), with question IDs listed in the notes
-- [ ] #2 Every covered question flagged as untaught or answer-key only is now taught with a reason
-- [ ] #3 Coverage, quizzes, originality, explanations and links checks pass; the taught-facts check finds no regressions
+- [x] #1 Every High finding in docs/lesson-review/m6-m3.md is fixed (or declined with a recorded reason), with question IDs listed in the notes
+- [x] #2 Every covered question flagged as untaught or answer-key only is now taught with a reason
+- [x] #3 Coverage, quizzes, originality, explanations and links checks pass; the taught-facts check finds no regressions
 <!-- AC:END -->
 
 ## Implementation Plan
