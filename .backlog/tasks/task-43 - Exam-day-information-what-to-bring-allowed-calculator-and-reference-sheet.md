@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@worker'
 created_date: '2026-10-12 14:38'
-updated_date: '2026-10-12 14:41'
+updated_date: '2026-10-12 14:42'
 labels:
   - content
   - web
@@ -36,3 +36,9 @@ Owner request 2026-10-12. Add accurate exam-day guidance citing ISED RIC-1 secti
 3. Add a short reachable Exam day note in existing Learn/About surfaces on web and Apple, with French UI translations where needed.
 4. Run content originality, coverage, quiz, explanation, link, web, and Apple localization/text-source checks; record evidence, check ACs, finalize, and commit each focused slice.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Verified RIC-1 §7.2/§7.2.1 and the ISED downloads page on 2026-10-12; added closed-book, reference-sheet, calculator, virtual-exam, and scrap-paper caution facts to docs/exam-facts.md.
+<!-- SECTION:NOTES:END -->
