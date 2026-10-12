@@ -14,25 +14,25 @@
   "conceptChecks": [
     {
       "id": "QZ-L-006-01-A-C1",
-      "prompt": { "en": "A 50-ohm coax jumper is cut shorter for a portable setup. What stays the same about that cable type?", "fr": null },
+      "prompt": { "en": "Two coax types have the same connector but different insulating material between the centre conductor and shield. Which cable property can change because of that material?", "fr": null },
       "choices": [
-        { "text": { "en": "Its characteristic impedance", "fr": null }, "isCorrect": true },
-        { "text": { "en": "Its total attenuation", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Its weatherproofing at the connectors", "fr": null }, "isCorrect": false },
-        { "text": { "en": "Its exact resonant frequency", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Velocity factor", "fr": null }, "isCorrect": true },
+        { "text": { "en": "The conductor-loss rating for a fixed length", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The connector's weather seal", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The antenna feed-point height", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Cutting a uniform cable shorter reduces length-dependent effects such as loss, but it does not change the cable geometry that sets characteristic impedance.", "fr": null }
+      "explanation": { "en": "Velocity factor is the fraction of light speed for RF in the cable, and the dielectric material is one reason it differs among coax types.", "fr": null }
     },
     {
       "id": "QZ-L-006-01-A-C2",
       "prompt": { "en": "Why is open-wire line usually kept away from metal gutters and railings?", "fr": null },
       "choices": [
-        { "text": { "en": "Metal nearby automatically improves its balance.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It needs a clear route so its balanced fields remain predictable.", "fr": null }, "isCorrect": true },
-        { "text": { "en": "It becomes coaxial cable when it touches metal.", "fr": null }, "isCorrect": false },
-        { "text": { "en": "It cannot carry HF signals through air.", "fr": null }, "isCorrect": false }
+        { "text": { "en": "Metal nearby can disturb the fields and change the line behaviour.", "fr": null }, "isCorrect": true },
+        { "text": { "en": "Metal nearby turns the route into a better balanced-line support.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "The line needs nearby metal to set its velocity factor.", "fr": null }, "isCorrect": false },
+        { "text": { "en": "Keeping it near metal is the normal way to reduce line loss.", "fr": null }, "isCorrect": false }
       ],
-      "explanation": { "en": "Balanced line depends on the geometry and surrounding fields; nearby conductors can upset the balance and impedance.", "fr": null }
+      "explanation": { "en": "Balanced line depends on geometry and surrounding fields; nearby conductors can upset the balance and impedance.", "fr": null }
     },
     {
       "id": "QZ-L-006-01-A-C3",
