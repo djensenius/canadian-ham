@@ -571,6 +571,7 @@ enum ProgressStoreInjectedFailure: Error, Equatable {
     case legacyLanguageMigrationSave
     case lessonQuizSave
     case morseCourseProgressRemoval
+    case resetAfterPreferenceDelete
 }
 #endif
 
@@ -673,6 +674,7 @@ final class ProgressStoreService: ObservableObject {
 #if DEBUG
     var morseCourseProgressURLForTesting: URL { morseCourseProgressURL }
     static var failNextLegacyLanguageMigrationSaveForTesting = false
+    var failNextResetAfterPreferenceDeleteForTesting = false
     var failNextImportAfterDeleteForTesting = false
     var failNextImportAfterMorseWriteForTesting = false
     var failNextLessonQuizSaveForTesting = false
@@ -723,7 +725,9 @@ final class ProgressStoreService: ObservableObject {
     static func open(
         storeURLs: ProgressStoreURLs,
         iCloudSyncEnabled: Bool = ICloudSyncSettings.storedOptIn(),
-        layout: ProgressStoreConfigurationLayout = .automatic
+        layout: ProgressStoreConfigurationLayout = .automatic,
+        defaults: UserDefaults = .standard,
+        defaultsDomainName: String? = Bundle.main.bundleIdentifier
     ) throws -> ProgressStoreService {
         do {
             let resolvedLayout = resolvedLayout(layout)
@@ -757,7 +761,9 @@ final class ProgressStoreService: ObservableObject {
                 storeURLs: storeURLs,
                 iCloudSyncEnabled: iCloudSyncEnabled,
                 layout: resolvedLayout,
-                modelContainerFactory: factory
+                modelContainerFactory: factory,
+                defaults: defaults,
+                defaultsDomainName: defaultsDomainName
             )
         } catch {
             throw ProgressStoreError.openFailed(error.localizedDescription)
@@ -768,8 +774,8 @@ final class ProgressStoreService: ObservableObject {
         iCloudSyncEnabled: Bool = false,
         layout: ProgressStoreConfigurationLayout = .automatic,
         localDeviceID: String = "test-device",
-        defaults: UserDefaults = .standard,
-        defaultsDomainName: String? = Bundle.main.bundleIdentifier
+        defaults: UserDefaults? = nil,
+        defaultsDomainName: String? = nil
     ) throws -> ProgressStoreService {
         let container = try makeModelContainer(
             iCloudSyncEnabled: iCloudSyncEnabled,
@@ -782,6 +788,20 @@ final class ProgressStoreService: ObservableObject {
             .appending(path: UUID().uuidString, directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         let urls = ProgressStoreURLs(progressDirectory: directory)
+        let resolvedDefaults: UserDefaults
+        let resolvedDefaultsDomainName: String?
+        if let defaults {
+            resolvedDefaults = defaults
+            resolvedDefaultsDomainName = defaultsDomainName ?? Bundle.main.bundleIdentifier
+        } else {
+            let suiteName = "ProgressStoreTests.\(UUID().uuidString)"
+            guard let testDefaults = UserDefaults(suiteName: suiteName) else {
+                throw ProgressStoreError.openFailed("Unable to create test defaults suite.")
+            }
+            testDefaults.removePersistentDomain(forName: suiteName)
+            resolvedDefaults = testDefaults
+            resolvedDefaultsDomainName = suiteName
+        }
         return try ProgressStoreService(
             container: container,
             storeURLs: urls,
@@ -797,8 +817,8 @@ final class ProgressStoreService: ObservableObject {
             },
             startICloudMonitoring: false,
             localDeviceID: localDeviceID,
-            defaults: defaults,
-            defaultsDomainName: defaultsDomainName
+            defaults: resolvedDefaults,
+            defaultsDomainName: resolvedDefaultsDomainName
         )
     }
 
@@ -829,11 +849,16 @@ final class ProgressStoreService: ObservableObject {
         return ApplePreferences.LanguagePreference(rawValue: rawValue)
     }
 
-    private static func persistentAppleLanguagesPreference(defaults: UserDefaults, domainName: String?) -> ApplePreferences.LanguagePreference {
+    private static func persistentAppleLanguages(defaults: UserDefaults, domainName: String?) -> [String]? {
         guard let domainName,
               let appleLanguages = defaults.persistentDomain(forName: domainName)?[appleLanguagesPreferenceKey] as? [String],
               !appleLanguages.isEmpty
-        else { return .system }
+        else { return nil }
+        return appleLanguages
+    }
+
+    private static func persistentAppleLanguagesPreference(defaults: UserDefaults, domainName: String?) -> ApplePreferences.LanguagePreference {
+        guard let appleLanguages = persistentAppleLanguages(defaults: defaults, domainName: domainName) else { return .system }
         return languagePreference(fromAppleLanguages: appleLanguages)
     }
 
@@ -845,13 +870,6 @@ final class ProgressStoreService: ObservableObject {
         if preferredLocalization?.hasPrefix(BankLanguage.french.rawValue) == true { return .french }
         if preferredLocalization?.hasPrefix(BankLanguage.english.rawValue) == true { return .english }
         return .system
-    }
-#endif
-
-#if DEBUG
-    static func clearLegacyEnglishLanguageDefaultMigrationMarkerForTesting(defaults: UserDefaults = .standard) {
-        defaults.removeObject(forKey: legacyEnglishLanguageMigrationMarkerKey)
-        defaults.removeObject(forKey: appleLanguagesLastAppliedPreferenceKey)
     }
 #endif
 
@@ -1287,7 +1305,8 @@ final class ProgressStoreService: ObservableObject {
         self.preferences = preferences
     }
 
-    func resetAllData(client: ICloudProgressDeletionClient, defaults: UserDefaults = .standard) async throws {
+    func resetAllData(client: ICloudProgressDeletionClient, defaults passedDefaults: UserDefaults? = nil) async throws {
+        let defaults = passedDefaults ?? self.defaults
         if isICloudSyncEnabled || ICloudSyncSettings.storedOptIn(defaults: defaults) || pendingICloudProgressDeletionForReset || ICloudSyncSettings.pendingProgressZoneDeletion(defaults: defaults) {
             pendingICloudProgressDeletionForReset = true
             ICloudSyncSettings.setPendingProgressZoneDeletion(true, defaults: defaults)
@@ -1300,7 +1319,8 @@ final class ProgressStoreService: ObservableObject {
         try resetAllData(defaults: defaults)
     }
 
-    func resetAllData(defaults: UserDefaults = .standard) throws {
+    func resetAllData(defaults passedDefaults: UserDefaults? = nil) throws {
+        let defaults = passedDefaults ?? self.defaults
 #if ICLOUD_SYNC
         if isICloudSyncEnabled || ICloudSyncSettings.storedOptIn(defaults: defaults) || pendingICloudProgressDeletionForReset || ICloudSyncSettings.pendingProgressZoneDeletion(defaults: defaults) {
             throw ProgressStoreError.cloudResetRequiresAsyncDeletion
@@ -1315,12 +1335,18 @@ final class ProgressStoreService: ObservableObject {
             try removeMorseCourseProgressIfPresent()
             try context.delete(model: PreferencesEntity.self)
             defaults.removeObject(forKey: Self.activeBankPreferenceKey)
-            Self.applyInterfaceLanguagePreference(.system, defaults: defaults)
             preferences = .default
             if layout == .split {
                 Self.markLegacyPreferencesCopyComplete(storeURLs: storeURLs)
             }
+#if DEBUG
+            if failNextResetAfterPreferenceDeleteForTesting {
+                failNextResetAfterPreferenceDeleteForTesting = false
+                throw ProgressStoreInjectedFailure.resetAfterPreferenceDelete
+            }
+#endif
             try context.save()
+            Self.applyInterfaceLanguagePreference(.system, defaults: defaults)
             // Reset all data also turns iCloud sync back off, but only once the reset has been saved.
             ICloudSyncSettings.clearStoredOptIn(defaults: defaults)
             isICloudSyncEnabled = false
@@ -1451,7 +1477,9 @@ final class ProgressStoreService: ObservableObject {
 #endif
             try context.save()
             defaults.set(nextPreferences.activeBankId.rawValue, forKey: Self.activeBankPreferenceKey)
-            Self.applyInterfaceLanguagePreference(nextPreferences.language, defaults: defaults)
+            if preferences.language != nextPreferences.language {
+                Self.applyInterfaceLanguagePreference(nextPreferences.language, defaults: defaults)
+            }
             preferences = nextPreferences
             objectWillChange.send()
         } catch {
@@ -2070,7 +2098,9 @@ final class ProgressStoreService: ObservableObject {
                 return false
             }
         case .french:
-            Self.applyInterfaceLanguagePreference(.french, defaults: defaults)
+            if Self.persistentAppleLanguages(defaults: defaults, domainName: defaultsDomainName) == nil {
+                Self.applyInterfaceLanguagePreference(.french, defaults: defaults)
+            }
             defaults.set(true, forKey: Self.legacyEnglishLanguageMigrationMarkerKey)
         case .system:
             defaults.set(true, forKey: Self.legacyEnglishLanguageMigrationMarkerKey)
