@@ -54,6 +54,16 @@ In the priority comparison used in this module, distress immediately precedes em
 | Emergency message | The message level immediately after distress in the priority comparison. |
 | Safety traffic | Hazard information affecting people, navigation, weather, or operating conditions. |
 
+::figure distress-urgency-safety-board
+Alt text: A priority note board showing distress facts and station-readiness items.
+Text equivalent:
+- The board labels distress as life threat, MAYDAY / SOS, and first priority.
+- The lower rows say urgent: serious help and safety: hazard info.
+- The go-kit drawing is labelled battery and dipole.
+::
+
+
+
 ### Memory trick: life first, help next, hazards shared
 
 - Helps remember: the roles of distress, urgency, and safety traffic.
@@ -85,14 +95,6 @@ Portable HF equipment may use simple antennas that can be carried and erected ea
 A handheld with charged spare batteries is useful only if the operator knows the local repeater settings and simplex plan. A portable HF kit is useful only if the antenna, feedline, supports, and notebook are packed with the radio.
 
 For a simple power check, suppose a portable station averages 2 A from a 10 Ah battery during light emergency use. Estimated runtime is 10 Ah / 2 A = 5 h before allowing for battery age, cold weather, and a safety reserve.
-
-::figure distress-urgency-safety-board
-Alt text: A priority note board showing distress facts and station-readiness items.
-Text equivalent:
-- The board labels distress as life threat, MAYDAY / SOS, and first priority.
-- The lower rows say urgent: serious help and safety: hazard info.
-- The go-kit drawing is labelled battery dipole.
-::
 
 ## Records during priority traffic
 

@@ -88,7 +88,7 @@ Alt text: A station log beside an azimuthal map centred on the operator, with a 
 Text equivalent:
 - The log column initials are U, C, B, M, R, and G.
 - The azimuthal map shows a short arrow and the opposite long arrow through the centre.
-- The clock is labelled UTC Greenwich and the log has a grid code label.
+- The clock is labelled UTC and the map has a grid label.
 ::
 
 ## UTC and time standards
