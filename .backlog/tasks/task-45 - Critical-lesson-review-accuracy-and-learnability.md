@@ -1,9 +1,11 @@
 ---
 id: TASK-45
 title: 'Critical lesson review: accuracy and learnability'
-status: To Do
-assignee: []
+status: In Progress
+assignee:
+  - '@coordinator'
 created_date: '2026-10-12 14:42'
+updated_date: '2026-10-12 14:43'
 labels:
   - content
 dependencies: []
