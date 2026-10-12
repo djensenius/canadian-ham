@@ -2,14 +2,14 @@
   <title>Station controls and packet relay</title>
   <desc>Control map with keyer, microphone controls, receiver noise tools, and packet relay.</desc>
   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="72" cy="104" r="18" stroke-width="5"/><rect x="138" y="74" width="90" height="60" rx="12" ry="12" stroke-width="5"/><line x1="90" y1="104" x2="138" y2="104" stroke-width="5"/><polygon points="138,104 118,92 118,116" fill="currentColor" stroke="none"/>
+    <circle cx="72" cy="104" r="18" stroke-width="5"/><rect x="138" y="74" width="90" height="60" rx="12" ry="12" stroke-width="5"/><rect x="276" y="74" width="86" height="60" rx="12" ry="12" stroke-width="5"/><line x1="90" y1="104" x2="138" y2="104" stroke-width="5"/><polygon points="138,104 118,92 118,116" fill="currentColor" stroke="none"/><line x1="228" y1="104" x2="276" y2="104" stroke-width="5"/><polygon points="276,104 256,92 256,116" fill="currentColor" stroke="none"/>
     <circle cx="72" cy="224" r="18" stroke-width="5"/><rect x="138" y="194" width="90" height="60" rx="12" ry="12" stroke-width="5"/><rect x="276" y="194" width="102" height="60" rx="12" ry="12" stroke-width="5"/><line x1="90" y1="224" x2="138" y2="224" stroke-width="5"/><line x1="228" y1="224" x2="276" y2="224" stroke-width="5"/>
-    <rect x="486" y="116" width="106" height="118" rx="18" ry="18" stroke-width="6"/><line x1="378" y1="224" x2="486" y2="174" stroke-width="5"/>
-    <rect x="276" y="86" width="76" height="48" rx="10" ry="10" stroke-width="5"/><line x1="314" y1="134" x2="314" y2="194" stroke-width="4"/>
+    <rect x="486" y="116" width="106" height="130" rx="18" ry="18" stroke-width="6"/><line x1="378" y1="224" x2="486" y2="174" stroke-width="5"/>
+    <rect x="276" y="140" width="76" height="40" rx="10" ry="10" stroke-width="5"/><line x1="314" y1="180" x2="314" y2="194" stroke-width="4"/>
     <rect x="94" y="336" width="92" height="54" rx="12" ry="12" stroke-width="5"/><rect x="274" y="336" width="92" height="54" rx="12" ry="12" stroke-width="5"/><rect x="454" y="336" width="92" height="54" rx="12" ry="12" stroke-width="5"/><line x1="186" y1="363" x2="274" y2="363" stroke-width="5"/><polygon points="274,363 254,351 254,375" fill="currentColor" stroke="none"/><line x1="366" y1="363" x2="454" y2="363" stroke-width="5"/><polygon points="454,363 434,351 434,375" fill="currentColor" stroke="none"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
-    <text x="72" y="64" font-size="24">paddle</text><text x="183" y="52" font-size="24">keyer</text><text x="314" y="64" font-size="24">VOX</text><text x="72" y="184" font-size="24">mic</text><text x="183" y="172" font-size="24">gain</text><text x="404" y="154" font-size="24">spch</text><text x="540" y="100" font-size="24">radio</text><text x="540" y="276" font-size="24">noise tools</text>
+    <text x="72" y="64" font-size="24">paddle</text><text x="183" y="52" font-size="24">keyer</text><text x="319" y="52" font-size="24">TX key</text><text x="72" y="184" font-size="24">mic</text><text x="183" y="172" font-size="24">gain</text><text x="327" y="286" font-size="24">spch</text><text x="314" y="118" font-size="24">VOX</text><text x="540" y="100" font-size="24">radio</text><text x="540" y="156" font-size="24">noise</text><text x="540" y="220" font-size="24">tools</text>
     <text x="140" y="424" font-size="24">station A</text><text x="320" y="424" font-size="24">digipeater</text><text x="500" y="424" font-size="24">station B</text><text x="320" y="316" font-size="24">packet frames</text>
   </g>
 </svg>

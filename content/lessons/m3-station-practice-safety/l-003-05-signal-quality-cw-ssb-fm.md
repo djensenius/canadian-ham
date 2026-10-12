@@ -49,6 +49,16 @@ Key clicks are different. They sound like sharp ticks around the signal. They co
 
 A variable-frequency oscillator lets a CW transmitter tune anywhere across a range, instead of being limited to the few frequencies of the fixed-frequency quartz crystals on hand. That is useful only if the oscillator is electrically and mechanically stable, so the carrier doesn't drift over time. Keep VFOs away from heat, loose hardware, and changing supply conditions.
 
+::figure signal-quality-cw-ssb-fm
+Alt text: Three small panels compare a clean CW carrier, an overdriven SSB voice envelope, and an FM carrier swinging too far from centre.
+Text equivalent:
+- CW panel: a smooth on envelope and a separate click risk sketch.
+- SSB panel: an envelope below the ALC limit and a flat-clips sketch.
+- FM panel: centre line, deviation arrow, and over-dev arrow.
+::
+
+
+
 ### In the real world: diagnosing two CW reports
 
 During a club practice net, one report says, "Your note slides at the start of each element." Another says, "I hear ticks above and below your signal."
@@ -140,14 +150,6 @@ FM is popular for local VHF and UHF voice because it gives a good signal-to-nois
 A repeater operator reports, "Your signal is full quieting, but your words are thin and quiet." The RF path is adequate, so increasing RF power is not the first fix.
 
 Check deviation, microphone gain, and microphone distance. If the next report says "loud and rough," back off the audio level.
-
-::figure signal-quality-cw-ssb-fm
-Alt text: Three small panels compare a clean CW carrier, an overdriven SSB voice envelope, and an FM carrier swinging too far from centre.
-Text equivalent:
-- CW panel: smooth on/off envelope and a separate click risk sketch.
-- SSB panel: an envelope below the ALC limit and a clipped-peaks sketch.
-- FM panel: centre line, deviation arrow, and over-dev arrow.
-::
 
 ## Try it
 

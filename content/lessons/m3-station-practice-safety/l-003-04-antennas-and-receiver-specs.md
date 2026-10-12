@@ -50,6 +50,16 @@ The boom is the mechanical support. The driven element is where the feedline att
 
 The parasitic elements are not directly fed. Their length and placement shape the pattern.
 
+::figure yagi-receiver-specs
+Alt text: A labelled Yagi antenna appears beside a receiver display and filter choices, with an image-frequency marker shown above the desired signal.
+Text equivalent:
+- Yagi labels are reflector, driven, director, boom, and feedline.
+- The receiver display has filter labels W, M, and N.
+- The frequency line labels desired, LO, image, and two IF spacings.
+::
+
+
+
 ### Worked example: identifying parts from a sketch
 
 A sketch shows three horizontal rods on a boom. The centre rod has the coax attached. The rear rod is 5.4 m long, the centre rod is 5.1 m long, and the forward rod is 4.8 m long.
@@ -121,14 +131,6 @@ The image is not the station you intended to hear. Front-end filtering helps rej
 SSB needs accurate tuning because the receiver must recreate audio from a signal with no full carrier. A small tuning error shifts the recovered speech frequencies. Voices become high, low, or distorted.
 
 AM carries its own carrier for envelope detection, so modest tuning error is usually less critical than with SSB voice. FM receivers recover audio from frequency deviation inside the receiver passband. CW also needs careful tuning, but a small tuning offset mainly changes the pitch of the received tone.
-
-::figure yagi-receiver-specs
-Alt text: A labelled Yagi antenna appears beside a receiver display and filter choices, with an image-frequency marker shown above the desired signal.
-Text equivalent:
-- Yagi labels are reflector, driven, director, boom, and feedline.
-- The receiver display has filter labels wide W, med M, and N.
-- The frequency line labels desired, LO, image, and two IF spacings.
-::
 
 ## Try it
 

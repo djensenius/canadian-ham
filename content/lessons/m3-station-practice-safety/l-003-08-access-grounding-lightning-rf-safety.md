@@ -78,6 +78,16 @@ A driven earth electrode is often copper-clad steel. The steel provides strength
 
 RF grounding has an extra complication. A long wire that looks like a ground at DC can have high impedance at radio frequencies. A third-floor wire down a building may not cure RF burns at the desk. The fix may involve antenna balance, common-mode choking, a better bonding layout, or moving the antenna.
 
+::figure grounding-lightning-rf-safety
+Alt text: A station safety layout shows locked power control, single-point bonding, outside surge protection, and RF separation from people.
+Text equivalent:
+- Radio, supply, and tuner connect to one bond that continues to the gnd label.
+- Coax runs from radio through the surge area to the antenna, with a storm off arrow.
+- The drawing also labels lock, mic off, and outside.
+::
+
+
+
 ### In the real world: single-point station bonding
 
 A small station has a transceiver, tuner, power supply, and coax entry panel.
@@ -160,14 +170,6 @@ An apartment operator tests a compact indoor antenna for low-power contacts.
 - Recheck the plan if a higher-gain antenna or amplifier is added.
 
 Indoor antennas can work, but the safety margin comes from distance, lower power, and controlled access.
-
-::figure grounding-lightning-rf-safety
-Alt text: A station safety layout shows locked power control, single-point bonding, outside surge protection, and RF separation from people.
-Text equivalent:
-- Radio, supply, and tuner connect to one bond that continues to the gnd label.
-- Coax runs from radio through the surge area to the antenna, with a storm off arrow.
-- The drawing also labels lock, mic off, and outside.
-::
 
 ## Try it
 

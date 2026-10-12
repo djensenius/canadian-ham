@@ -5,16 +5,16 @@
     <rect x="44" y="78" width="112" height="70" rx="12" ry="12" stroke-width="6"/><rect x="264" y="74" width="112" height="78" rx="14" ry="14" stroke-width="6"/><rect x="486" y="78" width="112" height="70" rx="12" ry="12" stroke-width="6"/>
     <line x1="486" y1="96" x2="376" y2="96" stroke-width="5"/><polygon points="376,96 396,84 396,108" fill="currentColor" stroke="none"/><line x1="264" y1="118" x2="156" y2="118" stroke-width="5"/><polygon points="156,118 176,106 176,130" fill="currentColor" stroke="none"/>
     <line x1="156" y1="170" x2="264" y2="170" stroke-width="5"/><polygon points="264,170 244,158 244,182" fill="currentColor" stroke="none"/><line x1="376" y1="170" x2="486" y2="170" stroke-width="5"/><polygon points="486,170 466,158 466,182" fill="currentColor" stroke="none"/>
-    <line x1="320" y1="152" x2="320" y2="214" stroke-width="4"/><line x1="320" y1="214" x2="486" y2="214" stroke-width="4"/><polygon points="486,214 466,202 466,226" fill="currentColor" stroke="none"/>
+    <line x1="320" y1="152" x2="320" y2="214" stroke-width="4"/><line x1="320" y1="214" x2="520" y2="214" stroke-width="4"/><line x1="520" y1="214" x2="520" y2="148" stroke-width="4"/><polygon points="520,148 508,168 532,168" fill="currentColor" stroke="none"/>
     <line x1="54" y1="346" x2="590" y2="346" stroke-width="5"/><polygon points="590,346 570,334 570,358" fill="currentColor" stroke="none"/>
     <rect x="70" y="318" width="66" height="56" rx="10" ry="10" stroke-width="5"/><path d="M178 306 C202 328 202 364 178 386" stroke-width="5"/><path d="M226 306 C202 328 202 364 226 386" stroke-width="5"/>
     <line x1="268" y1="312" x2="314" y2="346" stroke-width="5"/><line x1="268" y1="380" x2="314" y2="346" stroke-width="5"/><line x1="334" y1="312" x2="334" y2="380" stroke-width="5"/>
     <line x1="396" y1="346" x2="396" y2="404" stroke-width="5"/><line x1="378" y1="404" x2="414" y2="404" stroke-width="5"/><line x1="378" y1="424" x2="414" y2="424" stroke-width="5"/><line x1="396" y1="424" x2="396" y2="442" stroke-width="5"/>
-    <rect x="450" y="318" width="58" height="56" rx="10" ry="10" stroke-width="5"/><path d="M508 318 L542 306 L542 386 L508 374" stroke-width="5"/><line x1="556" y1="330" x2="600" y2="330" stroke-width="5"/><line x1="556" y1="362" x2="600" y2="362" stroke-width="5"/><circle cx="600" cy="330" r="5" stroke-width="4"/><circle cx="600" cy="362" r="5" stroke-width="4"/>
-    <circle cx="600" cy="402" r="14" stroke-width="4"/><line x1="600" y1="388" x2="600" y2="362" stroke-width="4"/>
+    <rect x="450" y="318" width="58" height="56" rx="10" ry="10" stroke-width="5"/><line x1="508" y1="346" x2="600" y2="346" stroke-width="5"/><circle cx="600" cy="330" r="5" stroke-width="4"/><circle cx="600" cy="362" r="5" stroke-width="4"/><line x1="600" y1="330" x2="600" y2="362" stroke-width="4"/>
+    <circle cx="584" cy="402" r="14" stroke-width="4"/><line x1="584" y1="388" x2="584" y2="362" stroke-width="4"/>
   </g>
   <g fill="currentColor" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">
     <text x="100" y="60" font-size="24">laptop</text><text x="320" y="56" font-size="24">interface</text><text x="542" y="60" font-size="24">radio</text><text x="430" y="52" font-size="24">RX</text><text x="210" y="214" font-size="24">TX</text><text x="408" y="246" font-size="24">PTT</text>
-    <text x="103" y="414" font-size="24">AC</text><text x="202" y="442" font-size="24">xfmr</text><text x="302" y="414" font-size="24">rect</text><text x="350" y="456" font-size="24">cap</text><text x="480" y="414" font-size="24">reg</text><text x="552" y="456" font-size="24">DC</text><text x="600" y="452" font-size="24">sns</text>
+    <text x="103" y="414" font-size="24">AC</text><text x="202" y="442" font-size="24">xfmr</text><text x="302" y="414" font-size="24">rect</text><text x="350" y="456" font-size="24">cap</text><text x="480" y="414" font-size="24">reg</text><text x="548" y="420" font-size="24">DC</text><text x="584" y="456" font-size="24">sense</text>
   </g>
 </svg>

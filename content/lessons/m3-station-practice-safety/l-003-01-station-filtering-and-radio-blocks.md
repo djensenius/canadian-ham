@@ -59,6 +59,15 @@ If an external RF power amplifier is used, the amplifier becomes the final RF so
 transceiver -> external RF amplifier -> low-pass filter -> SWR meter -> tuner -> switch -> antenna
 ```
 
+::figure station-filtering-radio-blocks
+Alt text: Two block diagrams show an HF station accessory chain and an FM superheterodyne receiver chain, with arrows marking signal flow.
+Text equivalent:
+- HF chain: TX/amp, LPF, SWR, tuner, switch, ant, with a branch to dummy.
+- FM receiver chain: ant, RF, mix with LO, IF, amp, lim, and disc.
+::
+
+
+
 ### In the real world: filter before the long jumper
 
 A 14.2 MHz HF transmitter can also produce a second harmonic at 28.4 MHz.
@@ -135,13 +144,6 @@ A training receiver is tuned to 146.520 MHz. It uses a 10.700 MHz IF, and the lo
 - Sanity check: with high-side injection, the oscillator is above the received signal.
 
 The mixer makes several products. The IF stages keep the 10.700 MHz difference product and reject the rest.
-
-::figure station-filtering-radio-blocks
-Alt text: Two block diagrams show an HF station accessory chain and an FM superheterodyne receiver chain, with arrows marking signal flow.
-Text equivalent:
-- HF chain: TX/amp, LPF, SWR, tuner, switch, ant, with a branch to dummy.
-- FM receiver chain: ant, RF, mix with LO, IF, amp, lim, and disc.
-::
 
 ## Try it
 
